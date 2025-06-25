@@ -64,12 +64,16 @@ function toPage() {
 
 // 获取单个参数值
   const path = urlParams.get('path'); // 比如 ?id=123 → "123"
-  console.log(path)
+
   const name = _formatPath(path)
-  console.log(name)
+
+
+  // 获取当前 hash
+  const currentHash = window.location.hash;
+  const decodedHash = decodeURIComponent(currentHash.replace(/^#/, ''));
 
   if (routeMap.has(name)) {
-    useRouterFunc.push({name: name})
+    useRouterFunc.push({name: name,hash: `#${decodedHash}`})
   } else {
     useRouterFunc.push({name: 'ProjectOverview'})
   }

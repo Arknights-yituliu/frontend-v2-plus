@@ -18,13 +18,14 @@ import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import NoticeBoard from "/src/components/layout/NoticeBoard.vue";
 import {dateFormat} from "/src/utils/dateUtil.js";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
+import ItemImage from "@/components/sprite/ItemImage.vue";
+import ModuleHeader from "@/components/layout/ModuleHeader.vue";
 
 const router = useRouter();
-
 const {mobile} = useDisplay()
 
 let dataSource = ref("Local")
-let legendDisplay = ref(false)
+let legendDisplay = ref(true)
 let hiddenPermStageFlag = ref(false)
 let currentItemTableIndex = ref(0)
 
@@ -67,7 +68,6 @@ function loadingLocalHostData() {
 // 获取关卡推荐数据
 function getStageResult() {
   const stageConfig = getStageConfig()
-  stageConfig.expCoefficient = 0
   getStageData(stageConfig).then(response => {
 
     const {recommendedStage, orundumRecommendedStageVO, historyActStage} = response
@@ -114,7 +114,7 @@ function getItemCardData() {
 
       // console.log(leT4MaxEfficiencyStage.leT4Efficiency, '<' ,leT4Efficiency ,'---', leT4MaxEfficiencyStage.leT4Efficiency < leT4Efficiency  )
 
-      if (hiddenPermStageFlag.value && 'Local' !== dataSource.value) {
+      if (hiddenPermStageFlag.value ) {
         if (stageType === "ACT_PERM") {
           continue
         }
@@ -177,7 +177,7 @@ function getItemTableData(index, isJump) {
 
   for (const item of stageResultList) {
     const {stageType} = item
-    if (hiddenPermStageFlag.value && 'Local' !== dataSource.value) {
+    if (hiddenPermStageFlag.value ) {
       if (stageType === "ACT_PERM") {
         continue
       }
@@ -297,74 +297,78 @@ onMounted(() => {
   <!-- 地图效率Start -->
   <div id="stage" class="stage-page">
     <!-- 标题区域 -->
-
-
-
-    <div class="module-header">
-      <div class="module-title">
-        <h1 style="font-size: 36px">推荐关卡</h1>
-        <h4>Best Stages</h4>
-      </div>
-
-      <div style="display: flex;flex-wrap: wrap;align-items: center;margin-top: 20px;">
-        <v-btn-group style="height: 36px;margin: 0 8px">
-          <v-btn color="primary" :size="getButtonSize()"
-                 @click="scrollToOrundumTable()">搓玉数据
-          </v-btn>
-          <v-btn color="primary" :size="getButtonSize()"
-                 @click="scrollToHistoryStageTable()">往期活动
-          </v-btn>
-          <v-btn color="primary" :size="getButtonSize()"
-                 @click="scrollToFrequentlyAskedQuestion()">常见问题
-          </v-btn>
-        </v-btn-group>
-        <v-btn color="primary" style="display:none" class="m-0-8" :size="getButtonSize()"
-               @click="router.push({name:'AccountHome'})" disabled>自定义一图流
+{{ stageCardData }}
+    <div class="flex flex-wrap align-center">
+      <ModuleHeader title="推荐关卡" title-en="Recommended Stage"></ModuleHeader>
+      <v-btn-group style="height: 36px;margin: 0 8px">
+        <v-btn color="primary" :size="getButtonSize()"
+               @click="scrollToOrundumTable()">搓玉数据
         </v-btn>
-        <v-btn color="secondary" variant="tonal" class="m-0-8" :size="getButtonSize()"
+        <v-btn color="primary" :size="getButtonSize()"
+               @click="scrollToHistoryStageTable()">往期活动
+        </v-btn>
+        <v-btn color="primary" :size="getButtonSize()"
+               @click="scrollToFrequentlyAskedQuestion()">常见问题
+        </v-btn>
+        <v-btn color="secondary"   :size="getButtonSize()"
                @click="legendDisplay = !legendDisplay">显示图例
         </v-btn>
+      </v-btn-group>
+      <v-btn color="primary" style="display:none" class="m-0-8" :size="getButtonSize()"
+             @click="router.push({name:'AccountHome'})" disabled>自定义一图流
+      </v-btn>
 
-        <v-switch hide-details v-model="hiddenPermStageFlag" @change="hiddenPermStage()"
-                  color="primary" class="m-0-8"
-                  label="隐藏常驻活动关卡">
-          <template v-slot:append>
-            <v-tooltip
+      <v-switch hide-details v-model="hiddenPermStageFlag" @change="hiddenPermStage()"
+                color="primary" class="m-0-8"
+                label="隐藏常驻活动关卡">
+        <template v-slot:append>
+          <v-tooltip
 
-                location="top"
-            >
-              <template v-slot:activator="{ props }">
-                <v-btn
-                    icon
-                    v-bind="props"
-                    size="xs"
-                >
-                  <v-icon icon="mdi-help">
-                  </v-icon>
-                </v-btn>
-              </template>
-              <span>常驻活动关卡在部分活动中不掉落活动代币</span>
-            </v-tooltip>
-          </template>
-        </v-switch>
+              location="top"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn
+                  icon
+                  v-bind="props"
+                  size="xs"
+              >
+                <v-icon icon="mdi-help">
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>常驻活动关卡在部分活动中不掉落活动代币</span>
+          </v-tooltip>
+        </template>
+      </v-switch>
 
-        <span class="module-tip">上次同步企鹅物流时间：{{ updateTime }}</span>
-      </div>
+      <span class="module-tip">上次同步企鹅物流时间：{{ updateTime }}</span>
     </div>
+
     <!-- 说明区域 -->
     <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>
 
-    <v-alert
-        border="start"
-        type="warning"
-        title="BUG修复提示"
-        variant="tonal"
-        density="compact"
-    >
-      <p> 官方修复了12-17掉率偏低的bug，数据源还需要一段时间更新，切削液推荐从12-17获取，详情可点击<a
-          style="color: orangered;cursor: pointer"
-          @click="openNewPage()">《史无前例的掉率降低！全网最速复盘12-17Bug事件始末！》</a>查看</p>
-    </v-alert>
+<!--    <v-alert-->
+<!--        border="start"-->
+<!--        type="warning"-->
+<!--        title="BUG修复提示"-->
+<!--        variant="tonal"-->
+<!--        density="compact"-->
+<!--    >-->
+<!--      <p> 官方修复了12-17掉率偏低的bug，数据源还需要一段时间更新，切削液推荐从12-17获取，详情可点击<a-->
+<!--          style="color: orangered;cursor: pointer"-->
+<!--          @click="openNewPage()">《史无前例的掉率降低！全网最速复盘12-17Bug事件始末！》</a>查看</p>-->
+<!--    </v-alert>-->
+
+        <v-alert
+            border="start"
+            type="warning"
+            title="数据加载失败解决方式"
+            variant="tonal"
+            density="compact"
+            class="m-12"
+        >
+          <p>如果遇到数据没有正常加载，请在<a href="/account/home">个人中心</a>点击自定义材料价值参数面板的重置为初始参数按钮</p>
+        </v-alert>
 
     <!-- 卡片区域 -->
     <div id="stageForCards" class="stage-card-wrap">
@@ -373,61 +377,49 @@ onMounted(() => {
         <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.T3)"></div>
         <div class="stage-card-bar-container">
           <div class="stage-card-bar">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite('AP_GAMEPLAY')"></div>
-            </div>
-            <div class="stage_card_3_2" style="display: none;">
-
-              {{ stage.maxEfficiencyStage.zoneName }}
-            </div>
+            <ItemImage :item-id="'AP_GAMEPLAY'" size="30" mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.maxEfficiencyStage.stageCode }}
             </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%
-            </div>
+<!--            <div class="stage-card-bar-stage-efficiency">-->
+<!--              {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%-->
+<!--            </div>-->
             <div class="stage-card-bar-stage-efficiency">
               {{ formatNumber(stage.maxEfficiencyStage.stageEfficiency * 100, 1) }}%
             </div>
           </div>
           <div class="stage-card-bar">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.T4)"></div>
-            </div>
+            <ItemImage :item-id="stage.series.T4" size="30" mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT4MaxEfficiencyStage.stageCode }}
             </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT4MaxEfficiencyStage.leT4Efficiency * 100, 1) }}%
-            </div>
+<!--            <div class="stage-card-bar-stage-efficiency">-->
+<!--              {{ formatNumber(stage.leT4MaxEfficiencyStage.leT4Efficiency * 100, 1) }}%-->
+<!--            </div>-->
             <div class="stage-card-bar-stage-efficiency">
               {{ formatNumber(stage.leT4MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
             </div>
           </div>
           <div class="stage-card-bar">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.T3)"></div>
-            </div>
+            <ItemImage :item-id="stage.series.T3" size="30" mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT3MaxEfficiencyStage.stageCode }}
             </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT3MaxEfficiencyStage.leT3Efficiency * 100, 1) }}%
-            </div>
+<!--            <div class="stage-card-bar-stage-efficiency">-->
+<!--              {{ formatNumber(stage.leT3MaxEfficiencyStage.leT3Efficiency * 100, 1) }}%-->
+<!--            </div>-->
             <div class="stage-card-bar-stage-efficiency">
               {{ formatNumber(stage.leT3MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
             </div>
           </div>
           <div class="stage-card-bar" v-show="stage.series.T2">
-            <div class="stage-card-item-icon">
-              <div :class="getCardIconSprite(stage.series.T2)"></div>
-            </div>
+            <ItemImage :item-id="stage.series.T2" size="30" mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT2MaxEfficiencyStage.stageCode }}
             </div>
-            <div class="stage-card-bar-stage-efficiency">
-              {{ formatNumber(stage.leT2MaxEfficiencyStage.leT2Efficiency * 100, 1) }}%
-            </div>
+<!--            <div class="stage-card-bar-stage-efficiency">-->
+<!--              {{ formatNumber(stage.leT2MaxEfficiencyStage.leT2Efficiency * 100, 1) }}%-->
+<!--            </div>-->
             <div class="stage-card-bar-stage-efficiency">
               {{ formatNumber(stage.leT2MaxEfficiencyStage.stageEfficiency * 100, 1) }}%
             </div>

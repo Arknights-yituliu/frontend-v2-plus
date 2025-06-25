@@ -4,7 +4,7 @@ import toolApi from "/src/api/tool.js";
 
 const router = createRouter({
     history: createWebHistory(),
-    routes: routes,
+    routes: routes
 })
 
 
@@ -14,7 +14,23 @@ router.beforeEach(async (to, from) => {
 
 
 // 可选地，在导航完成时重置加载状态
-router.afterEach((to,from) => {
+router.afterEach((to, from) => {
+    let count = 0
+    const intervalId = setInterval(() => {
+        if (to.hash) {
+            console.log(to.hash.replace(/^#/, ''))
+            const element = document.getElementById(to.hash.replace(/^#/, ''));
+            console.log(element)
+            if (element) {
+                element.scrollIntoView({behavior: 'smooth'});
+            }
+        }
+        count++
+        if(count>3){
+            clearInterval(intervalId)
+        }
+    }, 1000)
+
 
 })
 
@@ -23,7 +39,7 @@ function updateVisits(pathName) {
 
     //访问"/"直接更新
     if (pathName === "/") {
-        console.log("当前路径 {}",pathName);
+        console.log("当前路径 {}", pathName);
         toolApi.updateVisits(pathName).then(r => {
         });
         return;
