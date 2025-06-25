@@ -1,0 +1,452 @@
+[
+  {
+    "itemId": "30061",
+    "itemName": "破损装置",
+    "itemValueAp": 3.1451471170450396,
+    "rarity": 1,
+    "cardNum": 5,
+    "weight": 0.105,
+    "itemValue": 3.1451471170450396
+  },
+  {
+    "itemId": "30051",
+    "itemName": "双酮",
+    "itemValueAp": 2.3506196161536392,
+    "rarity": 1,
+    "cardNum": 5,
+    "weight": 0.14,
+    "itemValue": 2.3506196161536392
+  },
+  {
+    "itemId": "30041",
+    "itemName": "异铁碎片",
+    "itemValueAp": 2.311835463157196,
+    "rarity": 1,
+    "cardNum": 5,
+    "weight": 0.14,
+    "itemValue": 2.311835463157196
+  },
+  {
+    "itemId": "30031",
+    "itemName": "酯原料",
+    "itemValueAp": 1.9141741754433639,
+    "rarity": 1,
+    "cardNum": 5,
+    "weight": 0.175,
+    "itemValue": 1.9141741754433639
+  },
+  {
+    "itemId": "30021",
+    "itemName": "代糖",
+    "itemValueAp": 1.8928712209331264,
+    "rarity": 1,
+    "cardNum": 5,
+    "weight": 0.175,
+    "itemValue": 1.8928712209331264
+  },
+  {
+    "itemId": "30011",
+    "itemName": "源岩",
+    "itemValueAp": 1.188814978659532,
+    "rarity": 1,
+    "cardNum": 5,
+    "weight": 0.263,
+    "itemValue": 1.188814978659532
+  },
+  {
+    "itemId": "30062",
+    "itemName": "装置",
+    "itemValueAp": 9.403066477724101,
+    "rarity": 2,
+    "cardNum": 4,
+    "weight": 0.105,
+    "itemValue": 9.403066477724101
+  },
+  {
+    "itemId": "30052",
+    "itemName": "酮凝集",
+    "itemValueAp": 7.019483975049901,
+    "rarity": 2,
+    "cardNum": 4,
+    "weight": 0.14,
+    "itemValue": 7.019483975049901
+  },
+  {
+    "itemId": "30042",
+    "itemName": "异铁",
+    "itemValueAp": 6.903131516060572,
+    "rarity": 2,
+    "cardNum": 4,
+    "weight": 0.14,
+    "itemValue": 6.903131516060572
+  },
+  {
+    "itemId": "30032",
+    "itemName": "聚酸酯",
+    "itemValueAp": 5.710147652919075,
+    "rarity": 2,
+    "cardNum": 4,
+    "weight": 0.175,
+    "itemValue": 5.710147652919075
+  },
+  {
+    "itemId": "30022",
+    "itemName": "糖",
+    "itemValueAp": 5.646238789388363,
+    "rarity": 2,
+    "cardNum": 4,
+    "weight": 0.175,
+    "itemValue": 5.646238789388363
+  },
+  {
+    "itemId": "30012",
+    "itemName": "固源岩",
+    "itemValueAp": 3.5340700625675785,
+    "rarity": 2,
+    "cardNum": 4,
+    "weight": 0.263,
+    "itemValue": 3.5340700625675785
+  },
+  {
+    "itemId": "31083",
+    "itemName": "环烃聚质",
+    "itemValueAp": 38.28348797204346,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.03894080996884735,
+    "itemValue": 38.28348797204346
+  },
+  {
+    "itemId": "31093",
+    "itemName": "类凝结核",
+    "itemValueAp": 31.11996709199223,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.048286604361370715,
+    "itemValue": 31.11996709199223
+  },
+  {
+    "itemId": "30063",
+    "itemName": "全新装置",
+    "itemValueAp": 37.16160323118703,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.03894080996884735,
+    "itemValue": 37.16160323118703
+  },
+  {
+    "itemId": "30103",
+    "itemName": "RMA70-12",
+    "itemValueAp": 37.358613736801885,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.03894080996884735,
+    "itemValue": 37.358613736801885
+  },
+  {
+    "itemId": "31073",
+    "itemName": "褐素纤维",
+    "itemValueAp": 34.09809528092631,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.04361370716510903,
+    "itemValue": 34.09809528092631
+  },
+  {
+    "itemId": "31063",
+    "itemName": "转质盐组",
+    "itemValueAp": 32.956782459603666,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.04361370716510903,
+    "itemValue": 32.956782459603666
+  },
+  {
+    "itemId": "30093",
+    "itemName": "研磨石",
+    "itemValueAp": 31.658173180899826,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.048286604361370715,
+    "itemValue": 31.658173180899826
+  },
+  {
+    "itemId": "31053",
+    "itemName": "化合切削液",
+    "itemValueAp": 23.800407116531492,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.048286604361370715,
+    "itemValue": 23.800407116531492
+  },
+  {
+    "itemId": "31013",
+    "itemName": "凝胶",
+    "itemValueAp": 30.71023961855944,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.048286604361370715,
+    "itemValue": 30.71023961855944
+  },
+  {
+    "itemId": "31043",
+    "itemName": "半自然溶剂",
+    "itemValueAp": 31.27951501546926,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.048286604361370715,
+    "itemValue": 31.27951501546926
+  },
+  {
+    "itemId": "30083",
+    "itemName": "轻锰矿",
+    "itemValueAp": 2.16,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.056074766355140186,
+    "itemValue": 2.16
+  },
+  {
+    "itemId": "30053",
+    "itemName": "酮凝集组",
+    "itemValueAp": 27.62727322049023,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.056074766355140186,
+    "itemValue": 27.62727322049023
+  },
+  {
+    "itemId": "30043",
+    "itemName": "异铁组",
+    "itemValueAp": 27.161863384532914,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.056074766355140186,
+    "itemValue": 27.161863384532914
+  },
+  {
+    "itemId": "30073",
+    "itemName": "扭转醇",
+    "itemValueAp": 1.8,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.06542056074766354,
+    "itemValue": 1.8
+  },
+  {
+    "itemId": "31023",
+    "itemName": "炽合金",
+    "itemValueAp": 25.53886514275215,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.056074766355140186,
+    "itemValue": 25.53886514275215
+  },
+  {
+    "itemId": "30033",
+    "itemName": "聚酸酯组",
+    "itemValueAp": 22.389927931966927,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.06542056074766354,
+    "itemValue": 22.389927931966927
+  },
+  {
+    "itemId": "30023",
+    "itemName": "糖组",
+    "itemValueAp": 22.134292477844077,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.06542056074766354,
+    "itemValue": 22.134292477844077
+  },
+  {
+    "itemId": "31033",
+    "itemName": "晶体元件",
+    "itemValueAp": 19.434553437039348,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.056074766355140186,
+    "itemValue": 19.434553437039348
+  },
+  {
+    "itemId": "30013",
+    "itemName": "固源岩组",
+    "itemValueAp": 17.21968763312852,
+    "rarity": 3,
+    "cardNum": 3,
+    "weight": 0.0778816199376947,
+    "itemValue": 17.21968763312852
+  },
+  {
+    "itemId": "31094",
+    "itemName": "手性屈光体",
+    "itemValueAp": 87.70215187439159,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.05677290836653386,
+    "itemValue": 87.70215187439159
+  },
+  {
+    "itemId": "30044",
+    "itemName": "异铁块",
+    "itemValueAp": 110.03966226473162,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.046812749003984064,
+    "itemValue": 110.03966226473162
+  },
+  {
+    "itemId": "31084",
+    "itemName": "环烃预制体",
+    "itemValueAp": 101.50277004508526,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.049800796812749,
+    "itemValue": 101.50277004508526
+  },
+  {
+    "itemId": "30054",
+    "itemName": "酮阵列",
+    "itemValueAp": 75.71324325133638,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.046812749003984064,
+    "itemValue": 75.71324325133638
+  },
+  {
+    "itemId": "30064",
+    "itemName": "改量装置",
+    "itemValueAp": 99.42355601085572,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.0348605577689243,
+    "itemValue": 99.42355601085572
+  },
+  {
+    "itemId": "30104",
+    "itemName": "RMA70-24",
+    "itemValueAp": 95.58966655606098,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.046812749003984064,
+    "itemValue": 95.58966655606098
+  },
+  {
+    "itemId": "30094",
+    "itemName": "五水研磨石",
+    "itemValueAp": 92.14604412913161,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.052788844621513946,
+    "itemValue": 92.14604412913161
+  },
+  {
+    "itemId": "31074",
+    "itemName": "固化纤维板",
+    "itemValueAp": 92.26204311050051,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.052788844621513946,
+    "itemValue": 92.26204311050051
+  },
+  {
+    "itemId": "30024",
+    "itemName": "糖聚块",
+    "itemValueAp": 69.7548526727329,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.052788844621513946,
+    "itemValue": 69.7548526727329
+  },
+  {
+    "itemId": "31034",
+    "itemName": "晶体电路",
+    "itemValueAp": 91.28261596790212,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.046812749003984064,
+    "itemValue": 91.28261596790212
+  },
+  {
+    "itemId": "31024",
+    "itemName": "炽合金块",
+    "itemValueAp": 90.52304588735085,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.052788844621513946,
+    "itemValue": 90.52304588735085
+  },
+  {
+    "itemId": "31044",
+    "itemName": "精炼溶剂",
+    "itemValueAp": 81.95456608307204,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.052788844621513946,
+    "itemValue": 81.95456608307204
+  },
+  {
+    "itemId": "31054",
+    "itemName": "切削原液",
+    "itemValueAp": 76.75797862288456,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.052788844621513946,
+    "itemValue": 76.75797862288456
+  },
+  {
+    "itemId": "31064",
+    "itemName": "转质盐聚块",
+    "itemValueAp": 82.53499428542885,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.05677290836653386,
+    "itemValue": 82.53499428542885
+  },
+  {
+    "itemId": "31014",
+    "itemName": "聚合凝胶",
+    "itemValueAp": 79.57537247835634,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.060756972111553786,
+    "itemValue": 79.57537247835634
+  },
+  {
+    "itemId": "30084",
+    "itemName": "三水锰矿",
+    "itemValueAp": 24.674332264478764,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.052788844621513946,
+    "itemValue": 24.674332264478764
+  },
+  {
+    "itemId": "30034",
+    "itemName": "聚酸酯块",
+    "itemValueAp": 70.37153341693592,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.052788844621513946,
+    "itemValue": 70.37153341693592
+  },
+  {
+    "itemId": "30014",
+    "itemName": "提纯源岩",
+    "itemValueAp": 65.04315486502591,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.07071713147410359,
+    "itemValue": 65.04315486502591
+  },
+  {
+    "itemId": "30074",
+    "itemName": "白马醇",
+    "itemValueAp": 57.4573105471578,
+    "rarity": 4,
+    "cardNum": 2,
+    "weight": 0.060756972111553786,
+    "itemValue": 57.4573105471578
+  }
+]

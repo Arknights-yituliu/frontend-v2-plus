@@ -1,0 +1,300 @@
+#gachaCalculate {
+  @media screen and (max-width: 700px) {
+
+    .collapse-group1{
+      // width: 360px;
+      width: calc(100%);
+      min-width: 301px;
+
+    }
+
+    .collapse-group2{
+      // width: 360px;
+      width: calc(100%);
+      min-width: 301px;
+    }
+
+    .collapse-item {
+      margin: 8px 2px;
+      box-shadow: 1px 1px 8px var(--c-box-shadow-color);
+    }
+
+
+    /*卡池时间单选框的外容器*/
+    .radio-group-wrap {
+      justify-content: center;
+      .el-radio-group{
+        width: 330px;
+      }
+
+      .el-radio-button__inner{
+        width: 110px;
+        padding:12px 8px;
+      }
+    }
+
+    .el-radio-button__inner {
+      width: calc(50% - 54px);
+      min-width: 108px;
+      font-size: 10px;
+      box-sizing: border-box;
+      padding: 8px;
+    }
+
+    .el-checkbox-button {
+      margin: 2px;
+    }
+
+    .el-switch{
+      height: 18px;
+      line-height: 16px;
+    }
+
+    .el-switch > span{
+      height: 18px;
+    }
+
+    .el-collapse-item__content {
+      padding-bottom: 4px;
+    }
+
+    .el-collapse-item {
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .el-collapse-item__header {
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .el-checkbox-button__inner {
+      padding: 2px;
+      border: var(--el-border);
+      border-radius: 6px;
+    }
+
+
+    .gacha-act-selector{
+
+    }
+    .gacha-resources-chart-pie {
+      width: 300px;
+      height: 120px;
+    }
+
+    /*折叠面板的header的标志*/
+    .collapse-title-icon {
+      padding: 8px;
+      margin: 8px;
+      border-radius: 4px;
+    }
+
+    /*折叠面板的header的字体样式*/
+    .collapse-title-font {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    //抽卡资源统计表格样式
+    .gacha-resources-table {
+      font-size: 10px;
+      line-height: 12px;
+    }
+
+    .gacha-resources-table-title {
+      width: 60px;
+    }
+
+    .gacha-resources-table-quantity {
+      width: 40px;
+    }
+
+
+    //攒抽计算结果的四项氪金资源的条状容器
+    .resources-result-bar {
+      padding: 2px 6px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    //资源条状容器内的每个单项
+    .resources-result-single {
+      width: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    /*攒抽计算结果的四项氪金资源的条状容器内的文字样式*/
+    .resources-quantity {
+      font-size: 14px;
+      font-weight: bolder;
+      text-align: left;
+    }
+
+    .resources-quantity-small {
+      font-size: 10px;
+      font-weight: bolder;
+      text-align: left;
+
+    }
+
+    //雪碧图的容器，容器相对定位，内部雪碧图绝对定位，通过这种方式让图片展示的大小和外容器大小一致
+    .image-sprite {
+      width: 32px;
+      height: 32px;
+    }
+
+    //雪碧图的缩放
+    .image-sprite > div {
+      transform: scale(calc(32 / 44));
+      top: calc((-44px + 32px) / 2);
+      left: calc((-44px + 32px) / 2);
+    }
+
+
+    .switch-wrap {
+      margin: 4px 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .switch-wrap > span {
+      font-size: 12px;
+      padding: 0 12px;
+    }
+
+    /*折叠面板内的副标题*/
+    .collapse-content-subheading {
+      height: 24px;
+      width: 100%;
+      line-height: 24px;
+      font-size: 12px;
+      padding: 0 24px;
+
+    }
+
+    /*折叠面板内的副标题的图标*/
+    .collapse-content-subheading > span {
+      border-left: 8px solid transparent;
+      border-top: 12px solid rgb(255, 255, 255);
+      border-bottom: 2px solid transparent;
+      border-right: 8px solid transparent;
+      top: 6px;
+    }
+
+    .collapse-alert{
+      width: 320px;
+      margin: 8px;
+    }
+
+    .exist-resources-input-wrap{
+      flex-wrap: wrap;
+
+    }
+
+    .exist-resources-input {
+      width: 100%;
+      justify-content: center;
+
+    }
+
+    .exist-resources-input input {
+      width: 96px;
+      height: 24px;
+      font-size: 16px;
+      margin: 0 16px 0 4px;
+      background-color: var(--c-page-background-color);
+      color: var(--c-text-color);
+      border-color: var(--c-border-color);
+    }
+
+    .resources-line {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: bolder;
+      padding: 4px;
+      margin: 4px 0;
+    }
+
+
+    .resources-line-label {
+      width: 70px;
+    }
+
+    .resources-line-content {
+      display: flex;
+      width: 150px;
+    }
+
+    .resources-line-content > span {
+      font-weight: bolder;
+      padding-left: 4px;
+      width: 50px;
+    }
+
+    .resources-line > input {
+      width: 60px;
+      height: 22px;
+      margin: 0 2px;
+      font-size: 14px;
+      padding: 0 4px;
+    }
+
+    .tip {
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    .checkbox-button {
+      display: flex;
+      font-size: 12px;
+      align-items: center;
+    }
+
+    /*礼包的单次抽卡价格*/
+    .draw-efficiency {
+      margin-left: 2px;
+      margin-right: 4px;
+      font-size: 10px;
+      line-height: 16px;
+      text-align: center;
+      width: 30px;
+    }
+
+    .checkbox-button-zone-label-short{
+      width: 60px;
+    }
+
+    .checkbox-button-zone-label-long{
+      width: 120px;
+    }
+
+    .checkbox-button-zone-label{
+      width: 90px;
+    }
+
+    .checkbox-button-pack-label{
+      width: 120px;
+    }
+
+    /*多选盒的按钮的内容*/
+    .checkbox-button-gacha-resources {
+      display: flex;
+      align-items: center;
+    }
+
+    .checkbox-button-gacha-resources > span {
+      font-weight: bolder;
+      padding-left: 2px;
+      width: 40px;
+      text-align: left;
+    }
+
+    .checkbox-button-pack-gacha-resources{
+      width: 180px;
+      display: flex;
+      align-items: center;
+    }
+
+  }
+}

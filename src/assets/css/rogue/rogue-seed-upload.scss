@@ -1,0 +1,31 @@
+.rogue-seed-upload {
+
+  .rogue-seed-form{
+   width: 700px;
+
+  }
+
+  .settlement-chart-checkbox{
+    position: relative;
+    height: 150px;
+    width: 150px;
+    border: 1px dashed var(--c-border-color);
+    border-radius:3px;
+  }
+
+  .settlement-chart{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 500px;
+  }
+
+  .settlement-chart-upload-button{
+    position: absolute;
+    top: 45px;
+    left: 45px;
+    z-index: 0;
+  }
+
+}

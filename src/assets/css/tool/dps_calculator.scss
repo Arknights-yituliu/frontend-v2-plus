@@ -1,0 +1,22 @@
+.dps-calculator-page {
+  .operator-card {
+    width: 500px;
+  }
+
+  .potential-icon {
+    width: 40px;
+    margin: 4px;
+
+  }
+
+  .skill-rank-icon {
+    width: 50px;
+  }
+
+
+
+  .potential-icon-active {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+}

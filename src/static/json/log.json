@@ -1,0 +1,2270 @@
+[
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "干员调查",
+    "date": "2024.07.10",
+    "description": "更新干员基础数据"
+  },
+  {
+    "author": "yuzhan",
+    "type": "fix",
+    "module": "干员练度调查结果",
+    "date": "2024.07.10",
+    "description": "干员信息不存在时页面脚本报错"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "fix",
+    "module": "",
+    "date": "2024.07.09",
+    "description": "修正故事集攒抽数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.05",
+    "description": "更新文档"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.05",
+    "description": "更新文档"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.05",
+    "description": "更新文档"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.05",
+    "description": "更新文档"
+  },
+  {
+    "author": "yamazakura",
+    "type": "chore",
+    "module": "组件",
+    "date": "2024.07.05",
+    "description": "替换部分按钮组件"
+  },
+  {
+    "author": "yamazakura",
+    "type": "css",
+    "module": "组件",
+    "date": "2024.07.04",
+    "description": "按钮样式更新"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "fix",
+    "module": "排班表生成器",
+    "date": "2024.07.04",
+    "description": "修正一处技能筛选bug和一处typo"
+  },
+  {
+    "author": "yamazakura",
+    "type": "css",
+    "module": "组件",
+    "date": "2024.07.04",
+    "description": "样式更新"
+  },
+  {
+    "author": "yamazakura",
+    "type": "css",
+    "module": "组件",
+    "date": "2024.07.04",
+    "description": "样式更新"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "干员数据",
+    "date": "2024.07.04",
+    "description": "日常更新"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.04",
+    "description": "更新文档"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "chore",
+    "module": "",
+    "date": "2024.07.04",
+    "description": "调整半常驻礼包的位置"
+  },
+  {
+    "author": "bodayw",
+    "type": "fix",
+    "module": "排班表生成器",
+    "date": "2024.07.04",
+    "description": "修正一处技能筛选bug和一处typo"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.03",
+    "description": "更新文档"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "重命名文件",
+    "date": "2024.07.03",
+    "description": "重命名根域名所在文件的文件名"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "重命名文件",
+    "date": "2024.07.03",
+    "description": "重命名根域名所在文件的文件名"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.02",
+    "description": "更新文档"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.02",
+    "description": "更新文档"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "组件",
+    "date": "2024.07.02",
+    "description": "替换一些页面的按钮为新的MD风格按钮"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.02",
+    "description": "更新文档"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.02",
+    "description": "更新文档"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.02",
+    "description": "更新文档"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "礼包性价比",
+    "date": "2024.07.01",
+    "description": "归档礼包筛选功能"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "组件",
+    "date": "2024.07.01",
+    "description": "修改按钮的部分属性"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "i18n",
+    "date": "2024.07.01",
+    "description": "重命名一些文件"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.07.01",
+    "description": "文档移动"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "排班生成器",
+    "date": "2024.07.01",
+    "description": "替换按钮为新的MD风格按钮"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "组件",
+    "date": "2024.07.01",
+    "description": "增加一个MD风格的按钮组件"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "组件",
+    "date": "2024.07.01",
+    "description": "增加一个MD风格的按钮组件"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.06.30",
+    "description": "往年礼包无法选中"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "干员调查榜单",
+    "date": "2024.06.30",
+    "description": "将干员头像替换为组件"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "组件",
+    "date": "2024.06.30",
+    "description": "将攒抽计算器部分代码抽离为组件"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "攒抽计算器",
+    "date": "2024.06.30",
+    "description": "新增往年礼包的氪金选项"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "update",
+    "module": "",
+    "date": "2024.06.30",
+    "description": "更新排班表干员"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "排班生成器",
+    "date": "2024.06.30",
+    "description": "无法将排班上传到服务器"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.06.30",
+    "description": "文档重写"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "干员调查",
+    "date": "2024.06.26",
+    "description": "修复无法从鹰角网络通行证导入的问题"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "干员调查",
+    "date": "2024.06.26",
+    "description": "修复无法从鹰角网络通行证导入的问题"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "fix",
+    "module": "",
+    "date": "2024.06.24",
+    "description": "调整火山旅梦复刻排期"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.06.23",
+    "description": "每日赠送一抽计算错误"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.06.23",
+    "description": "每日赠送一抽计算错误"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "攒抽计算器",
+    "date": "2024.06.23",
+    "description": "增加计算开卡池开放当天的抽数选项"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "feat",
+    "module": "",
+    "date": "2024.06.23",
+    "description": "尝试添加计算卡池开放当天的数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "css",
+    "date": "2024.06.23",
+    "description": "将部分未正常生效的css重新分别引入"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "fix",
+    "module": "",
+    "date": "2024.06.23",
+    "description": "攒抽排期修复空想花亭复刻"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "css",
+    "date": "2024.06.22",
+    "description": "统一引入的css无法生效"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "css",
+    "date": "2024.06.22",
+    "description": "统一引入的css无法生效"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "css",
+    "date": "2024.06.22",
+    "description": "统一引入的css无法生效"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "optimized",
+    "module": "",
+    "date": "2024.06.22",
+    "description": " 优化礼包筛选"
+  },
+  {
+    "author": "yamazakura",
+    "type": "style",
+    "module": "项目目录",
+    "date": "2024.06.22",
+    "description": "调整了部分文件的目录"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "礼包性价比",
+    "date": "2024.06.21",
+    "description": "更新图片链接域名"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "图片资源",
+    "date": "2024.06.20",
+    "description": "替换为单独的静态资源域名"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "路由",
+    "date": "2024.06.20",
+    "description": "去除EP14专题页面"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "图片资源",
+    "date": "2024.06.20",
+    "description": "替换为单独的静态资源域名"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.06.19",
+    "description": "修复大月卡选中后无法计算抽数的问题"
+  },
+  {
+    "author": "bodayw",
+    "type": "feat",
+    "module": "",
+    "date": "2024.06.19",
+    "description": "基建排班表技能筛选typo"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.06.18",
+    "description": "修复无法获取礼包数据的问题"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "账号服务",
+    "date": "2024.06.18",
+    "description": "注册登录提示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "刷图推荐",
+    "date": "2024.06.18",
+    "description": "删除活动关卡表的孤星复刻"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "礼包性价比",
+    "date": "2024.06.18",
+    "description": "修改礼包左上角为价格"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "礼包性价比",
+    "date": "2024.06.18",
+    "description": "增加源石礼包分区"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "礼包性价比",
+    "date": "2024.06.18",
+    "description": "增加龙门币礼包分区"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.18",
+    "description": "细节调整"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.18",
+    "description": "暂时注释未写的说明"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.18",
+    "description": "新增礼包note显示功能"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "练度调查结果",
+    "date": "2024.06.17",
+    "description": " 表格首行冻结吸附显示"
+  },
+  {
+    "author": "Nyaasu66",
+    "type": "feat",
+    "module": "练度调查结果",
+    "date": "2024.06.17",
+    "description": " 表格首行冻结吸附显示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "材料模块",
+    "date": "2024.06.16",
+    "description": "恢复为从API获取数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "礼包性价比",
+    "date": "2024.06.15",
+    "description": "复原部分礼包"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "静态资源",
+    "date": "2024.06.14",
+    "description": "更新模组分支图标"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "静态资源",
+    "date": "2024.06.14",
+    "description": "删除部分无用资源"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "图片",
+    "date": "2024.06.14",
+    "description": "删除部分图片"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "通用组件",
+    "date": "2024.06.14",
+    "description": "将部分组件的颜色替换为变量"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "礼包性价比",
+    "date": "2024.06.14",
+    "description": "更新礼包图片"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "礼包性价比",
+    "date": "2024.06.14",
+    "description": "将礼包卡片重构为组件"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "账号系统",
+    "date": "2024.06.12",
+    "description": "修改部分提示文本"
+  },
+  {
+    "author": "yamazakura",
+    "type": "test",
+    "module": "干员练度调查",
+    "date": "2024.06.11",
+    "description": "测试新账号系统"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "干员练度调查",
+    "date": "2024.06.11",
+    "description": "将导入森空岛变成为单独导入页面"
+  },
+  {
+    "author": "yamazakura",
+    "type": null,
+    "module": "",
+    "date": "2024.06.11",
+    "description": "排班表编辑器干员筛选功能补充和调整"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "干员练度调查",
+    "date": "2024.06.11",
+    "description": "将导入森空岛变成为单独导入页面"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.10",
+    "description": "礼包页面重写"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "移动端适配",
+    "date": "2024.06.10",
+    "description": "适配新增的账号页面"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.09",
+    "description": "add graphic pages"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "临时修复",
+    "date": "2024.06.09",
+    "description": "维护公告"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "临时修复",
+    "date": "2024.06.09",
+    "description": "将部分API替换为本地数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.06.09",
+    "description": "重构登录流程"
+  },
+  {
+    "author": "bodayw",
+    "type": null,
+    "module": "",
+    "date": "2024.06.09",
+    "description": "排班表编辑器干员筛选功能补充和调整"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "导航",
+    "date": "2024.06.08",
+    "description": "修复顶栏显示的页面名称某些情况下不显示的问题"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "静态资源",
+    "date": "2024.06.08",
+    "description": "干员头像和技能图标"
+  },
+  {
+    "author": "yamazakura",
+    "type": "ci",
+    "module": "自动部署",
+    "date": "2024.06.08",
+    "description": "修改main分支自动部署"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "干员调查",
+    "date": "2024.06.08",
+    "description": "从森空岛导入干员数据流程"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.06.06",
+    "description": "去除官方月卡奖励"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "调查问卷",
+    "date": "2024.06.05",
+    "description": "因雪碧图原始高度导致页面底部渲染异常的问题"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.06.05",
+    "description": "导入流程重构"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.06.05",
+    "description": "优化暗色模式下活动商店紫色不明显的问题"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "携带率调查问卷",
+    "date": "2024.06.05",
+    "description": "用生成的数据暂时先实现了部分功能的模拟情况"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "干员专精率",
+    "date": "2024.06.05",
+    "description": "列表中去除技能图标，减少宽度"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "干员数据",
+    "date": "2024.06.05",
+    "description": "更新干员数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "调查问卷",
+    "date": "2024.06.03",
+    "description": "实现填写功能"
+  },
+  {
+    "author": "yamazakura",
+    "type": "docs",
+    "module": "文档",
+    "date": "2024.06.01",
+    "description": "提交格式"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.06.01",
+    "description": "每月黄票兑换月份错误"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.30",
+    "description": "问卷用element重构"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.05.30",
+    "description": "重构注册、登录、导入功能"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.29",
+    "description": "问卷新增组件"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.29",
+    "description": "调查问卷补充新组件"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.28",
+    "description": "开荒文件组件补充"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.28",
+    "description": " 添加开荒问卷UI组件"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.05.27",
+    "description": "重构注册、登录、导入功能"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "导航",
+    "date": "2024.05.26",
+    "description": "页面标题未能正确显示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "材料推荐",
+    "date": "2024.05.24",
+    "description": "关卡名称宽度溢出"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.05.24",
+    "description": "重构注册登录导入功能"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "账号系统",
+    "date": "2024.05.21",
+    "description": "因url编码问题导致无法获取用户信息"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "账号系统",
+    "date": "2024.05.21",
+    "description": "优化登录流程和导入流程"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "导航",
+    "date": "2024.05.19",
+    "description": "增加EP专题页面导航"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "导航",
+    "date": "2024.05.18",
+    "description": "增加EP专题页面导航"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "EP14专题页面",
+    "date": "2024.05.18",
+    "description": "增加移动端样式"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "EP14专题页面",
+    "date": "2024.05.18",
+    "description": "增加移动端样式"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": null,
+    "module": "",
+    "date": "2024.05.18",
+    "description": " 文本修正"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "EP14专题页面",
+    "date": "2024.05.17",
+    "description": "优化图片大小"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "EP14专题页面",
+    "date": "2024.05.17",
+    "description": "展示EP14关卡数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "网站公告",
+    "date": "2024.05.16",
+    "description": "开发版域名提示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "网站公告",
+    "date": "2024.05.16",
+    "description": "开发版域名提示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "resources",
+    "module": "图片",
+    "date": "2024.05.16",
+    "description": "增加图片"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "携带率问卷",
+    "date": "2024.05.16",
+    "description": "实现移除已选选项"
+  },
+  {
+    "author": "yamazakura",
+    "type": "ci",
+    "module": "自动部署",
+    "date": "2024.05.16",
+    "description": "dev分支自动部署到cos存储桶"
+  },
+  {
+    "author": "yamazakura",
+    "type": "style",
+    "module": "攒抽计算器",
+    "date": "2024.05.15",
+    "description": "干员调查重命名部分包名"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "攒抽计算器",
+    "date": "2024.05.15",
+    "description": "更新排期"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "文档",
+    "date": "2024.05.09",
+    "description": "更新内容"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "材料价值",
+    "date": "2024.05.08",
+    "description": "导出excel同时会错误的触发导出json"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "材料价值",
+    "date": "2024.05.08",
+    "description": "未能正常按价值倒叙进行展示"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "材料价值",
+    "date": "2024.05.08",
+    "description": "未能正常按价值倒叙进行展示"
+  },
+  {
+    "author": "Milkwind",
+    "type": "update",
+    "module": "自定义组件",
+    "date": "2024.05.08",
+    "description": "[专精时间减半计算器]新增使用指南"
+  },
+  {
+    "author": "Milkwind",
+    "type": "update",
+    "module": "自定义组件",
+    "date": "2024.05.07",
+    "description": "[专精时间减半计算器]新增阿斯卡纶中枢参数"
+  },
+  {
+    "author": "Milkwind",
+    "type": "update",
+    "module": "自定义组件",
+    "date": "2024.05.01",
+    "description": "[换艾丽妮专精时间点计算器]更名为[专精时间减半计算器]，新增自定义减半干员效率，重构排版"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "攒抽计算器",
+    "date": "2024.04.30",
+    "description": "增加官方免费月卡的计算网站"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "干员调查",
+    "date": "2024.04.30",
+    "description": "修复了无法注册账号的问题"
+  },
+  {
+    "author": "bodayw",
+    "type": "feat",
+    "module": "排班表生成器",
+    "date": "2024.04.25",
+    "description": "排班表生成器支持排班协议 description_post 字段"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "干员调查",
+    "date": "2024.04.25",
+    "description": "支持一个账号可以导入多个方舟账号的干员数据"
+  },
+  {
+    "author": "yamazakura",
+    "type": "feat",
+    "module": "静态资源",
+    "date": "2024.04.12",
+    "description": "干员数据更新"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "fix",
+    "module": "材料推荐",
+    "date": "2024.04.12",
+    "description": "优化stage页面布局细节"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.04.07",
+    "description": "用户攒抽设置不能保存在本地"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.04.07",
+    "description": "活动排期错误"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.04.07",
+    "description": "修正巴别塔ss的名称和石头数"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "其他",
+    "date": "2024.04.02",
+    "description": "适配森空岛内置浏览器"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "fix",
+    "module": "其他",
+    "date": "2024.03.23",
+    "description": "文字修正"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "style",
+    "module": "其他",
+    "date": "2024.03.22",
+    "description": "样式微调"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "其他",
+    "date": "2024.03.22",
+    "description": "页面转跳过渡"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "攒抽计算器",
+    "date": "2024.03.21",
+    "description": "更新排期"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "其他",
+    "date": "2024.03.16",
+    "description": "修复访问路径获取不正常的问题"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "干员调查",
+    "date": "2024.03.16",
+    "description": "修复部分限定干员被标记为常驻干员的错误"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.03.14",
+    "description": "修复了部分抽卡资源计算错误"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.03.11",
+    "description": "错误扣除抽卡资源"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.03.08",
+    "description": "攒抽计算器资源计算错误"
+  },
+  {
+    "author": "yamazakura",
+    "type": "fix",
+    "module": "商店性价比",
+    "date": "2024.03.07",
+    "description": "活动商店背景图字段名错误"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "其他",
+    "date": "2024.03.07",
+    "description": "礼包页面的移动端适配"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "其他",
+    "date": "2024.03.07",
+    "description": "重构为单页面应用"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "干员调查",
+    "date": "2024.03.07",
+    "description": "更新彩六联动二期干员数据"
+  },
+  {
+    "author": "David",
+    "type": "feat",
+    "module": "排班表生成器",
+    "date": "2024.03.03",
+    "description": " centered operators sprite + fixed file input + more i18n"
+  },
+  {
+    "author": "Constrat",
+    "type": "style",
+    "module": "排班表生成器",
+    "date": "2024.03.03",
+    "description": " bottom margins + timed tip"
+  },
+  {
+    "author": "Constrat",
+    "type": "refactor",
+    "module": "排班表生成器",
+    "date": "2024.03.03",
+    "description": " general vue formatting"
+  },
+  {
+    "author": "Constrat",
+    "type": "fix",
+    "module": "排班表生成器",
+    "date": "2024.03.03",
+    "description": " input by file + translated generated it message"
+  },
+  {
+    "author": "Constrat",
+    "type": "style",
+    "module": "排班表生成器",
+    "date": "2024.03.02",
+    "description": " centered \"selected operator\" + delete icon cursor"
+  },
+  {
+    "author": "Constrat",
+    "type": "chore",
+    "module": "排班表生成器",
+    "date": "2024.03.02",
+    "description": " implemented border radius for avatars + formatting"
+  },
+  {
+    "author": "Constrat",
+    "type": "style",
+    "module": "排班表生成器",
+    "date": "2024.03.02",
+    "description": " centered room avatar sprite + added border radius"
+  },
+  {
+    "author": "yamazakura",
+    "type": "update",
+    "module": "干员调查",
+    "date": "2024.03.02",
+    "description": "干员调查操作流程"
+  },
+  {
+    "author": "yamazakura",
+    "type": "chore",
+    "module": "其他",
+    "date": "2024.03.02",
+    "description": "调整部分颜色"
+  },
+  {
+    "author": "yamazakura",
+    "type": "refactor",
+    "module": "干员调查",
+    "date": "2024.03.02",
+    "description": "干员调查引导流程"
+  },
+  {
+    "author": "yamazakura",
+    "type": "log",
+    "module": "其他",
+    "date": "2024.03.02",
+    "description": "例行更新"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "干员调查",
+    "date": "2024.03.01",
+    "description": "修复导入森空岛数据时无法正确获取明日方舟绑定列表"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "网站布局",
+    "date": "2024.03.01",
+    "description": "修复导航栏移动端按钮堆挤问题"
+  },
+  {
+    "author": "Constrat",
+    "type": "feat",
+    "module": "排班生成器",
+    "date": "2024.03.01",
+    "description": "arrow shift looping"
+  },
+  {
+    "author": "Constrat",
+    "type": "i18n",
+    "module": "排班生成器",
+    "date": "2024.02.29",
+    "description": "translating new help guide"
+  },
+  {
+    "author": "Zirun-wang",
+    "type": "fix",
+    "module": "礼包性价比",
+    "date": "2024.02.29",
+    "description": "礼包性价比tag位置不正常"
+  },
+  {
+    "author": "Constrat",
+    "type": "i18n",
+    "module": "排班生成器",
+    "date": "2024.02.28",
+    "description": "GuidePopup icon translation"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "排班生成器",
+    "date": "2024.02.28",
+    "description": "调整排班生成器布局"
+  },
+  {
+    "author": "Constrat",
+    "type": "style",
+    "module": "排班生成器",
+    "date": "2024.02.28",
+    "description": "various spacings / indentations CSS"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "网站布局",
+    "date": "2024.02.27",
+    "description": "导航栏增加icon"
+  },
+  {
+    "author": "bodayw",
+    "type": "fix",
+    "module": "排班生成器",
+    "date": "2024.02.27",
+    "description": "莱茵科技类技能干员列表"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "网站布局",
+    "date": "2024.02.27",
+    "description": "顶部导航栏增加反馈按钮"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "排班生成器",
+    "date": "2024.02.27",
+    "description": "排班生成器增加引导"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "排班生成器",
+    "date": "2024.02.27",
+    "description": "基建技能页面未添加切换语言按钮"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "干员调查",
+    "date": "2024.02.27",
+    "description": "干员调查页面的根据模组是否实装筛选结果错误"
+  },
+  {
+    "author": "山桜",
+    "type": "refactor",
+    "module": "干员调查",
+    "date": "2024.02.26",
+    "description": "干员调查干员练度推荐功能"
+  },
+  {
+    "author": "山桜",
+    "type": "refactor",
+    "module": "干员调查",
+    "date": "2024.02.26",
+    "description": "干员调查统计结果功能"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "杂项",
+    "date": "2024.02.26",
+    "description": "调整反馈渠道"
+  },
+  {
+    "author": "Constrat",
+    "type": "chore",
+    "module": "排班生成器",
+    "date": "2024.02.25",
+    "description": "removed redundant CSS instructions"
+  },
+  {
+    "author": "Constrat",
+    "type": "style",
+    "module": "排班生成器",
+    "date": "2024.02.25",
+    "description": "spacing + indenting + alignment + margins"
+  },
+  {
+    "author": "Constrat",
+    "type": "style",
+    "module": "排班生成器",
+    "date": "2024.02.25",
+    "description": "number format changes"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "排班生成器",
+    "date": "2024.02.25",
+    "description": "调整排班生成器布局"
+  },
+  {
+    "author": "山桜",
+    "type": "feat/fix",
+    "module": "排班生成器",
+    "date": "2024.02.25",
+    "description": "spacing + small i18n"
+  },
+  {
+    "author": "Constrat",
+    "type": "fix",
+    "module": "排班生成器",
+    "date": "2024.02.24",
+    "description": "wrong CN i18n \"粘贴\"-> \"复制\""
+  },
+  {
+    "author": "Constrat",
+    "type": "chore",
+    "module": "排班生成器",
+    "date": "2024.02.24",
+    "description": "standardized copy -> paste"
+  },
+  {
+    "author": "Constrat",
+    "type": "fix",
+    "module": "排班生成器",
+    "date": "2024.02.24",
+    "description": "overlap in shift times and control center"
+  },
+  {
+    "author": "Constrat",
+    "type": "feat",
+    "module": "排班生成器",
+    "date": "2024.02.24",
+    "description": "selecting fiammetta avatar closes popup"
+  },
+  {
+    "author": "Constrat",
+    "type": "style",
+    "module": "排班生成器",
+    "date": "2024.02.24",
+    "description": "spacing consistency"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "排班生成器",
+    "date": "2024.02.21",
+    "description": "排班生成器部分按钮文本引用错误的字典key"
+  },
+  {
+    "author": "Constrat",
+    "type": "fix",
+    "module": "排班生成器",
+    "date": "2024.02.21",
+    "description": "error messages i18n + import/export + fiammetta avatar selection + spacing"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "排班生成器",
+    "date": "2024.02.21",
+    "description": "语言设置在亮色下字体颜色不正常"
+  },
+  {
+    "author": "山桜",
+    "type": "update",
+    "module": "网站布局",
+    "date": "2024.02.21",
+    "description": "修改导航icon"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "排班生成器",
+    "date": "2024.02.21",
+    "description": "仅在打开排班生成器页面时显示多语言选择设置"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "排班生成器",
+    "date": "2024.02.19",
+    "description": "排班生成器的en翻译无法正常显示"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "排班生成器",
+    "date": "2024.02.19",
+    "description": "排班生成器en翻译 @Constrat"
+  },
+  {
+    "author": "山桜",
+    "type": "i18n",
+    "module": "排班生成器",
+    "date": "2024.02.19",
+    "description": "Infrast schedule EN translation"
+  },
+  {
+    "author": "山桜",
+    "type": "update",
+    "module": "攒抽计算器",
+    "date": "2024.02.16",
+    "description": "下线春节攒抽"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "攒抽计算器",
+    "date": "2024.02.13",
+    "description": "攒抽计算器月卡计算错误"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "攒抽计算器",
+    "date": "2024.02.13",
+    "description": "攒抽计算器月卡计算错误"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "攒抽计算器",
+    "date": "2024.02.13",
+    "description": "攒抽计算器追加剿灭作战更新排期"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.02.13",
+    "description": "攒抽计算器活动排期调整"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "刷图推荐",
+    "date": "2024.02.12",
+    "description": "增加刷图推荐数据的更新时间"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.02.12",
+    "description": "解决position：sticky因与overflow-x冲突失效"
+  },
+  {
+    "author": "山桜",
+    "type": "chore",
+    "module": "静态资源",
+    "date": "2024.02.12",
+    "description": "删除无用图片资源"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "网站布局",
+    "date": "2024.02.12",
+    "description": "使用深度选择器防止某些页面的自定义样式污染其他页面的element组件样式"
+  },
+  {
+    "author": "山桜",
+    "type": "fix",
+    "module": "攒抽计算器",
+    "date": "2024.02.12",
+    "description": "攒抽计算器未正确扣除已过期抽卡资源"
+  },
+  {
+    "author": "山桜",
+    "type": "feat",
+    "module": "攒抽计算器",
+    "date": "2024.02.11",
+    "description": "攒抽计算器周年资源预载"
+  },
+  {
+    "author": "山桜",
+    "type": "refactor",
+    "module": "攒抽计算器",
+    "date": "2024.02.11",
+    "description": "攒抽计算器部分资源文件名"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "攒抽计算器",
+    "description": "周年资源预载",
+    "date": "2024.02.11"
+  },
+  {
+    "type": "refactor",
+    "author": "山桜",
+    "module": "攒抽计算器",
+    "description": "部分资源文件重命名，移入/static/json/tools",
+    "date": "2024.02.11"
+  },
+  {
+    "type": "feat",
+    "author": "山桜",
+    "module": "排班生成器",
+    "description": "移入干员头像时显示基建技能",
+    "date": "2024.02.08"
+  },
+  {
+    "type": "perf",
+    "author": "MilkWind",
+    "module": "排班生成器",
+    "description": "优化点击房间的涟漪特效",
+    "date": "2024.02.05"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "网站维护",
+    "description": "补上缺失的图片资源",
+    "date": "2024.02.05"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "网站维护",
+    "description": "更新图片资源",
+    "date": "2024.02.04"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "攒抽计算器",
+    "description": "修复活动抽卡资源遗漏",
+    "date": "2024.02.04"
+  },
+  {
+    "type": "feat",
+    "author": "山桜",
+    "module": "干员调查站",
+    "description": "根据干员等级排序",
+    "date": "2024.02.04"
+  },
+  {
+    "type": "perf",
+    "author": "山桜",
+    "module": "攒抽计算器",
+    "description": "优化页面加载过长导致问题",
+    "date": "2024.02.02"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "干员调查站",
+    "description": "更新干员数据",
+    "date": "2024.02.01"
+  },
+  {
+    "type": "refactor",
+    "author": "Zirun-wang",
+    "module": "礼包性价比",
+    "description": "页面UI重构",
+    "date": "2024.02.01"
+  },
+  {
+    "type": "perf",
+    "author": "Zirun-wang",
+    "module": "礼包性价比",
+    "description": "优化UI",
+    "date": "2024.02.01"
+  },
+  {
+    "type": "feat",
+    "author": "MilkWind",
+    "module": "排班生成器",
+    "description": "添加设施交互动画",
+    "date": "2024.01.31"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "攒抽计算器",
+    "description": "礼包API修复",
+    "date": "2024.01.31"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "网站维护",
+    "description": "组件库无法正确引入",
+    "date": "2024.01.31"
+  },
+  {
+    "type": "perf",
+    "author": "MilkWind",
+    "module": "自定义组件",
+    "description": "固钉导航栏、换艾丽妮专精时间点计算器代码块适配暗黑模式",
+    "date": "2024.01.30"
+  },
+  {
+    "type": "perf",
+    "author": "MilkWind",
+    "module": "自定义组件",
+    "description": "为固钉导航栏添加动态调节垂直居中位置功能",
+    "date": "2024.01.30"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "网站维护",
+    "description": "图片资源更新",
+    "date": "2024.01.30"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "肉鸽计算器",
+    "description": "更新规则",
+    "date": "2024.01.29"
+  },
+  {
+    "type": "perf",
+    "author": "MilkWind",
+    "module": "刷图推荐",
+    "description": "优化表格视觉效果",
+    "date": "2024.01.28"
+  },
+  {
+    "type": "feat",
+    "author": "MilkWind",
+    "module": "自定义组件",
+    "description": "新增屏幕右侧的固钉导航组件",
+    "date": "2024.01.28"
+  },
+  {
+    "type": "feat",
+    "author": "MilkWind",
+    "module": "刷图推荐",
+    "description": "新增漫游式导航引导",
+    "date": "2024.01.28"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "攒抽计算器",
+    "description": "月卡计算错误",
+    "date": "2024.01.28"
+  },
+  {
+    "type": "feat",
+    "author": "山桜",
+    "module": "基建技能一览",
+    "description": "新增基建技能一览页面",
+    "date": "2024.01.21"
+  },
+  {
+    "type": "perf",
+    "author": "MilkWind",
+    "module": "基建技能一览",
+    "description": "优化基建技能一览页面UI",
+    "date": "2024.01.21"
+  },
+  {
+    "type": "feat",
+    "author": "山桜",
+    "module": "排班生成器",
+    "description": "新增复制班次",
+    "date": "2024.01.21"
+  },
+  {
+    "type": "feat",
+    "author": "MilkWind",
+    "module": "基建技能一览",
+    "description": "新增同班次是否有同名干员检查",
+    "date": "2024.01.21"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "修复卡片样式在打包后样式冲突的问题",
+    "date": "2024.01.21"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "肉鸽计算器",
+    "description": "修复得分网站过多溢出盒子的问题",
+    "date": "2024.01.21"
+  },
+  {
+    "type": "update",
+    "author": "noname512",
+    "module": "肉鸽计算器",
+    "description": "更新exe文件",
+    "date": "2024.01.20"
+  },
+  {
+    "type": "update",
+    "author": "MilkWind",
+    "module": "网站维护",
+    "description": "调整API、超链接的域名",
+    "date": "2024.01.20"
+  },
+  {
+    "type": "update",
+    "author": "noname512",
+    "module": "肉鸽计算器",
+    "description": "调整部分规则",
+    "date": "2024.01.19"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "网站公告",
+    "description": "修复公告在错误的域名展示的问题",
+    "date": "2024.01.18"
+  },
+  {
+    "type": "perf",
+    "author": "山桜",
+    "module": "自定义组件",
+    "description": "优化消息弹窗样式",
+    "date": "2024.01.18"
+  },
+  {
+    "type": "perf",
+    "author": "MilkWind",
+    "module": "自定义组件",
+    "description": "优化消息弹窗样式",
+    "date": "2024.01.18"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "修复搓玉推荐关卡表格不能单独展示复刻活动关卡",
+    "date": "2024.01.18"
+  },
+  {
+    "type": "update",
+    "author": "MilkWind",
+    "module": "排班生成器",
+    "description": "调整部分提示弹窗类型",
+    "date": "2024.01.18"
+  },
+  {
+    "type": "fix",
+    "author": "Zirun-wang",
+    "module": "网站文档",
+    "description": "修复错误的友情链接",
+    "date": "2024.01.18"
+  },
+  {
+    "type": "feat",
+    "author": "MilkWind",
+    "module": "迷你工具箱",
+    "description": "新增换艾丽妮专精时间点计算器",
+    "date": "2024.01.17"
+  },
+  {
+    "type": "feat",
+    "author": "noname512",
+    "module": "肉鸽得分计算器",
+    "description": "新增打包的exe文件",
+    "date": "2024.01.17"
+  },
+  {
+    "type": "fix",
+    "author": "noname512",
+    "module": "肉鸽得分计算器",
+    "description": "修复样式不符预期的问题",
+    "date": "2024.01.17"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "排班生成器",
+    "description": "修复时间选择器在部分浏览器无法使用的问题",
+    "date": "2024.01.17"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "网站文档",
+    "description": "调整收支一览链接",
+    "date": "2024.01.17"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "排班生成器",
+    "description": "修复导入跨天排班错误的问题",
+    "date": "2024.01.16"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "攒抽计算器",
+    "description": "更新公告内容",
+    "date": "2024.01.16"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "网站布局",
+    "description": "调整样式",
+    "date": "2024.01.16"
+  },
+  {
+    "type": "update",
+    "author": "noname512",
+    "module": "肉鸽得分计算器",
+    "description": "更新计分规则",
+    "date": "2024.01.16"
+  },
+  {
+    "type": "update",
+    "author": "Zirun-wang",
+    "module": "攒抽计算器",
+    "description": "更新联动活动排期",
+    "date": "2024.01.16"
+  },
+  {
+    "type": "feat",
+    "author": "Zirun-wang",
+    "module": "攒抽计算器",
+    "description": "新增绿票换玉计算",
+    "date": "2024.01.16"
+  },
+  {
+    "type": "update",
+    "author": "Zirun-wang",
+    "module": "攒抽计算器",
+    "description": "更新部分提示说明",
+    "date": "2024.01.16"
+  },
+  {
+    "type": "feat",
+    "author": "Zirun-wang",
+    "module": "肉鸽得分计算器",
+    "description": "新增了一个新页面",
+    "date": "2024.01.15"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "排班生成器",
+    "description": "修复跨天排班时生成的时间段错误问题",
+    "date": "2024.01.15"
+  },
+  {
+    "type": "update",
+    "author": "Zirun-wang",
+    "module": "材料刷取推荐",
+    "description": "调整往期关卡表格样式,更换图例",
+    "date": "2024.01.15"
+  },
+  {
+    "type": "perf",
+    "author": "Zirun-wang",
+    "module": "材料刷取推荐",
+    "description": "优化材料卡片布局",
+    "date": "2024.01.15"
+  },
+  {
+    "type": "feat",
+    "author": "山桜",
+    "module": "排班生成器",
+    "description": "新增了干员搜索功能",
+    "date": "2024.01.15"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "排班生成器",
+    "description": "修复干员搜索功能与预设tag筛选的冲突问题",
+    "date": "2024.01.15"
+  },
+  {
+    "type": "test",
+    "author": "山桜",
+    "module": "肉鸽得分计算器",
+    "description": "测试有无bug",
+    "date": "2024.01.14"
+  },
+  {
+    "type": "refactor",
+    "author": "Zirun-wang",
+    "module": "材料刷取推荐",
+    "description": "重构材料卡片样式",
+    "date": "2024.01.14"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "干员练度调查",
+    "description": "修复干员练度推荐中推荐玩家未持有的干员",
+    "date": "2024.01.13"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "干员练度调查",
+    "description": "调整干员练度推荐样式",
+    "date": "2024.01.13"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "攒抽计算器",
+    "description": "更新部分资源",
+    "date": "2024.01.13"
+  },
+  {
+    "type": "feat",
+    "author": "Zirun-wang",
+    "module": "攒抽计算器",
+    "description": "新增森空岛年度作者投票链接",
+    "date": "2024.01.13"
+  },
+  {
+    "type": "refactor",
+    "author": "noname",
+    "module": "肉鸽得分计算器",
+    "description": "重构原html中的原生js转为vue语法",
+    "date": "2024.01.13"
+  },
+  {
+    "type": "refactor",
+    "author": "Chor",
+    "module": "肉鸽得分计算器",
+    "description": "重构原html中的原生js转为vue语法",
+    "date": "2024.01.13"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "用户访问体验优化",
+    "description": "替换部分第三方链接引入的cdn为本地打包",
+    "date": "2024.01.12"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "排班生成器V2",
+    "description": "修复导出文件加工站属性未写入的问题",
+    "date": "2024.01.12"
+  },
+  {
+    "type": "feat",
+    "author": "山桜",
+    "module": "排班生成器V2",
+    "description": "新增排班文件导入时导入换班时间段功能",
+    "date": "2024.01.12"
+  },
+  {
+    "type": "feat",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "新增关卡详情表格的期望理智指标",
+    "date": "2024.01.12"
+  },
+  {
+    "type": "perf",
+    "author": "Zirun-wang",
+    "module": "材料刷取推荐",
+    "description": "优化材料关卡UI",
+    "date": "2024.01.12"
+  },
+  {
+    "type": "perf",
+    "author": "山桜",
+    "module": "排班生成器V2",
+    "description": "优化时间选择器",
+    "date": "2024.01.11"
+  },
+  {
+    "type": "perf",
+    "author": "山桜",
+    "module": "排班生成器V2",
+    "description": "优化反馈渠道的描述",
+    "date": "2024.01.11"
+  },
+  {
+    "type": "perf",
+    "author": "Zirun-wang",
+    "module": "材料刷取推荐",
+    "description": "优化材料关卡UI",
+    "date": "2024.01.11"
+  },
+  {
+    "type": "perf",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "优化历史UP材料表格的排序",
+    "date": "2024.01.10"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "干员练度调查",
+    "description": "调整导入森空岛干员数据的导入限制",
+    "date": "2024.01.09"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "干员练度调查",
+    "description": "修复用户注册时无法立刻在本地保存用户凭证的问题",
+    "date": "2024.01.09"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "干员练度调查",
+    "description": "更新新活动“去咧嘴谷”干员数据",
+    "date": "2024.01.09"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "排班生成器",
+    "description": "更新新活动“去咧嘴谷”干员数据",
+    "date": "2024.01.09"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "修复表格显示数据错误和排序错误的问题",
+    "date": "2024.01.09"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "干员练度调查",
+    "description": "调整干员练度调查结果表样式",
+    "date": "2024.01.08"
+  },
+  {
+    "type": "feat",
+    "author": "山桜",
+    "module": "排班生成器V2",
+    "description": "新增从服务器导入排班功能",
+    "date": "2024.01.08"
+  },
+  {
+    "type": "feat",
+    "author": "山桜",
+    "module": "排班生成器V2",
+    "description": "新增宿舍设置冲突时的提示",
+    "date": "2024.01.08"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "排班生成器V2",
+    "description": "调整布局",
+    "date": "2024.01.08"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "调整材料推荐关卡效率条样式",
+    "date": "2024.01.07"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "网站首页维护公告",
+    "description": "调整样式",
+    "date": "2024.01.07"
+  },
+  {
+    "type": "perf",
+    "author": "山桜",
+    "module": "网站基础功能",
+    "description": "优化夜间模式的用户点击操作",
+    "date": "2024.01.06"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "排班生成器V2",
+    "description": "修复缺失四星干员头像问题",
+    "date": "2024.01.05"
+  },
+  {
+    "type": "feat",
+    "author": "Zirun-wang",
+    "module": "网站首页维护公告",
+    "description": "说明一下网站最近的问题",
+    "date": "2024.01.04"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "干员练度调查",
+    "description": "修复因域名注销瘫痪的服务",
+    "date": "2024.01.02"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "修复页面抖动问题",
+    "date": "2024.01.01"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "排班生成器V2",
+    "description": "修复部分干员导入时头像没有正确显示的问题",
+    "date": "2024.01.01"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "修复部分关卡的效率显示异常",
+    "date": "2023.12.30"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "网站维护",
+    "description": "调整API的域名",
+    "date": "2023.12.30"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "更新材料推荐卡为新版卡片布局",
+    "date": "2023.12.23"
+  },
+  {
+    "type": "test",
+    "author": "山桜",
+    "module": "排班生成器V2",
+    "description": "测试版本上线，布局参考了mower排班生成器",
+    "date": "2023.12.23"
+  },
+  {
+    "type": "feat",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "新增关卡效率类型切换",
+    "date": "2023.12.22"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "调整API字段",
+    "date": "2023.12.22"
+  },
+  {
+    "type": "update",
+    "author": "Zirun-wang",
+    "module": "材料刷取推荐",
+    "description": "调整往期活动UP材料表格的样式",
+    "date": "2023.12.22"
+  },
+  {
+    "type": "feat",
+    "author": "山桜",
+    "module": "干员练度调查",
+    "description": "新增森空岛导入干员信息失败时的错误弹窗提示",
+    "date": "2023.12.22"
+  },
+  {
+    "type": "fix",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "修复材料推荐卡片点击后无法滑动到关卡详情表格的问题",
+    "date": "2023.12.19"
+  },
+  {
+    "type": "perf",
+    "author": "Zirun-wang",
+    "module": "材料刷取推荐",
+    "description": "优化图例说明文案",
+    "date": "2023.12.19"
+  },
+  {
+    "type": "update",
+    "author": "Zirun-wang",
+    "module": "礼包性价比",
+    "description": "调整新礼包数据和图片资源",
+    "date": "2023.12.18"
+  },
+  {
+    "type": "fix",
+    "author": "Zirun-wang",
+    "module": "材料刷取推荐",
+    "description": "修复部分数据显示异常",
+    "date": "2023.12.18"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "调整关卡详情表格布局",
+    "date": "2023.12.18"
+  },
+  {
+    "type": "update",
+    "author": "Zirun-wang",
+    "module": "礼包性价比",
+    "description": "调整新礼包数据和图片资源",
+    "date": "2023.12.17"
+  },
+  {
+    "type": "refactor",
+    "author": "Zirun-wang",
+    "module": "材料刷取推荐",
+    "description": "重构页面",
+    "date": "2023.12.17"
+  },
+  {
+    "type": "update",
+    "author": "山桜",
+    "module": "材料刷取推荐",
+    "description": "调整关卡详情表格布局",
+    "date": "2023.12.17"
+  }
+]

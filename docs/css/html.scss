@@ -1,0 +1,177 @@
+// h1 {
+//   padding-top: 36px;
+//   padding-bottom: 12px;
+// }
+
+// h2 {
+//   padding-top: 24px;
+//   padding-bottom: 8px;
+// }
+
+// h3 {
+//   padding-top: 12px;
+//   padding-bottom: 4px;
+// }
+
+// h4 {
+//   padding-top: 8px;
+// }
+
+// p {
+//   padding: 4px 0;
+// }
+
+// ul {
+//   padding: 8px 16px;
+// }
+
+// ol {
+//   padding: 8px 16px;
+// }
+
+
+// img {
+//   display: block;
+//   width: 600px;
+//   margin: 12px;
+// }
+
+// code {
+//   display: block;
+//   background-color: #111111;
+//   padding: 12px;
+//   color: white;
+//   //white-space: wrap
+//   overflow: auto;
+// }
+
+
+// @media screen and (max-width: 600px) {
+
+//   h1 {
+//     font-size: 20px;
+//   }
+
+//   h2 {
+//     font-size: 16px;
+//   }
+
+//   h3 {
+//     font-size: 12px;
+//   }
+
+
+//   img {
+//     display: block;
+//     width: 90%;
+//     margin: auto;
+//   }
+
+// }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 1em;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.65em;
+}
+
+h4 {
+  font-size: 1.4em;
+}
+
+h5 {
+  font-size: 1.25em;
+}
+
+h6 {
+  font-size: 1.15em;
+}
+
+p {
+  margin: 0.7em 0;
+}
+
+a {
+  color: #0077b6;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #3d9ceb;
+}
+
+blockquote {
+  border-left: 0.3em solid #b8b8b8;
+  color: #585858;
+  margin-block: 2em;
+  margin-inline: 0;
+  padding: 0 0.8em;
+}
+
+.v-card img {
+  display: block;
+  margin: 12px;
+}
+
+main img:not(.v-card img) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem auto;
+  border-radius: 8px;
+  box-shadow: 0 0 8px 1px rgb(0 0 0 / 25%);
+}
+
+pre {
+  display: block;
+  padding: 0.5em 0.8em;
+  background-color: #f0f2f4;
+  border: 1px solid #b8b8b8;
+  border-radius: 5px;
+  margin: 0.7em 0;
+}
+
+code {
+  font-family: "Jetbrains Mono", Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace !important;
+  color: #0a3069;
+  // padding: 0.1em 0.3em !important;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+code p {
+  margin: 0;
+}
+
+ul {
+  padding-inline-start: 1em;
+}
+
+ol {
+  padding-inline-start: 2em;
+}
+
+li {
+  margin: 0.5em 0;
+}
+
+li::marker {
+  font-family: "Jetbrains Mono", Consolas, Menlo, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+}

@@ -1,0 +1,237 @@
+.score_page {
+  background: white;
+  /*max-width: 1280px;*/
+  margin: auto;
+}
+
+.image_rarity {
+  width: 18px;
+}
+
+.score_wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 8px;
+  /* border-left: 1px rgb(200, 200, 200) solid; */
+}
+
+.score_card {
+  display: flex;
+  width: 520px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  transition: all 0.2s;
+  background-color: rgba(255, 255, 255, 1);
+  margin: 6px 4px;
+
+}
+
+
+.score_wrap_title_6 {
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  border-radius: 2px;
+  background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(255, 98, 0, 0.5));
+}
+
+.score_wrap_title_5 {
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  border-radius: 2px;
+  background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(255, 221, 0, 0.5));
+}
+
+.score_wrap_title_4 {
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  border-radius: 2px;
+  background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(179, 0, 255, 0.5));
+}
+
+.score_wrap_title_3 {
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  border-radius: 2px;
+  background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(0, 166, 255, 0.5));
+}
+
+.score_wrap_title_2 {
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  border-radius: 2px;
+  background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(109, 109, 109, 0.5));
+}
+
+.score_wrap_title_1 {
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  border-radius: 2px;
+  background: linear-gradient(60deg, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0.5));
+}
+
+.score_card_header {
+  display: flex;
+  justify-self: flex-start;
+}
+
+.score_left_wrap {
+  /* height: 260px; */
+  width: 140px;
+  margin: 4px 0 0 4px;
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score_right_wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  font-weight: 600;
+}
+
+
+
+
+.score_portrait_wrap {
+  height: 250px;
+  width: 120px;
+  margin: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.score_portrait_bg_tl {
+  transform: scale(0.9);
+  position: absolute;
+  left: 0;
+  top: 10px;
+}
+
+.score_portrait_profession {
+  transform: scale(0.1);
+  position: absolute;
+  left: -106px;
+  z-index: 30;
+  top: 74px;
+  border: 2px solid #eeeeee;
+}
+
+.score_portrait_rarity {
+  position: absolute;
+  z-index: 30;
+  transform: scale(0.8);
+  left: 28px;
+  top: 198px;
+}
+
+.score_portrait_bg {
+  transform: scale(0.76);
+  position: absolute;
+  height: 216px;
+  left: -12px;
+  top: -12px;
+}
+
+.score_portrait_right {
+  transform: scale(0.78);
+  position: absolute;
+  z-index: 10;
+  top: 120px;
+  left: -12px;
+}
+
+.score_portrait_mask {
+  transform: scale(0.76);
+  position: absolute;
+  z-index: 21;
+  left: -18px;
+  top: 148px;
+}
+
+.score_portrait_bg_bl {
+  background: black;
+  width: 100px;
+  height: 30px;
+  position: absolute;
+  top: 214px;
+  left: 4px;
+  z-index: 20;
+}
+
+.score_portrait {
+  transform: scale(0.6);
+  /* border-radius: 50%; */
+  position: absolute;
+  top: -60px;
+  left: -30px;
+  /* border: 1px rgb(255, 0, 0) solid; */
+  box-shadow: 2px 2px 8px #000000;
+}
+
+.score_char_name {
+  color: white;
+  position: absolute;
+  top: 220px;
+  z-index: 30;
+  font-size: 16px;
+  font-weight: 500;
+  right: 8px;
+}
+
+.char_description {
+  height: 20px;
+  color: rgb(31, 31, 31);
+  font-size: 14px;
+  font-weight: 500;
+  padding-left: 2px;
+  padding-top: 2px;
+}
+
+.score_fastFill{
+  text-align: center;
+  height: 24px;
+  line-height: 24px;
+  width: 110px;
+  padding: 4px;
+  margin: 8px 8px 8px 12px;
+  background: #ff9600;
+  border-radius: 3px;
+}
+
+
+.score_bar_wrap {
+  margin-left: 20px;
+}
+
+.score_bar {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 8px auto;
+  /* width: 348px; */
+  display: flex;
+  line-height: 36px;
+  text-align: center;
+}
+
+.image_score {
+  width: 36px;
+  margin: 2px 2px 2px 16px;
+}
+
+.score_item {
+  height: 36px;
+  line-height: 36px;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.score_avg{
+  display: inline-block;
+  font-size: 15px;
+  color: rgb(128, 128, 128);
+  display: none;
+}

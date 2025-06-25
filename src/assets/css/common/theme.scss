@@ -1,0 +1,38 @@
+.theme-light {
+  /*基础样式变量*/
+  --c-box-shadow-color: rgba(185, 185, 185, 0.5);
+  --c-border-color: #d7d7d7;
+  --c-page-background-color: #ffffff;
+  --c-page-background-color-secondary: #F9F9F9;
+  --c-text-color: #191919;
+  --c-text-tip-color: #858585;
+  --c-card-background-color:#ffffff;
+  --c-background-color:#FFFFFF;
+
+  //vuetify的默认变量
+  --c-theme-primary:var(--v-theme-primary);
+  --c-theme-on-primary:var(--v-theme-on-primary);
+
+}
+
+.theme-dark {
+  /*基础样式*/
+  --c-box-shadow-color: #141414;
+  --c-border-color: #b6b6b6;
+  --c-page-background-color: #141414;
+  --c-page-background-color-secondary: #323232;
+  --c-text-color:  #e6e6e6;
+  --c-text-tip-color: #c0c0c0;
+  --c-card-background-color:#323232;
+  --c-background-color:#222222;
+
+  //vuetify的默认变量
+  --c-theme-primary:var(--v-theme-primary);
+  --c-theme-on-primary:var(--v-theme-on-primary);
+
+
+}
+
+
+
+

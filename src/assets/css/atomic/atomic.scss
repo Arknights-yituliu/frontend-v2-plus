@@ -1,0 +1,47 @@
+@import "margin";
+@import "padding";
+@import "flex";
+@import "color";
+@import "font";
+@import "opacity";
+
+
+.disabled {
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+
+.active {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+
+.w-full {
+  width: 100%;
+}
+
+.block {
+  display: block;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+
+
+
+
+
+
+
+
+.spacer-12 {
+  width: 12px;
+  height: 4px;
+}
+
+.spacer-40 {
+  width: 40px;
+}

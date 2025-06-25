@@ -1,0 +1,50 @@
+.survey-rank-page-v2 {
+  width: 96%;
+  margin: 6px auto;
+
+  .v-data-table-header__content {
+    font-weight: bold;
+  }
+
+  .rank-card {
+    margin: 12px 0;
+  }
+
+
+  .display-data {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .display-data:hover {
+    .display-detail-data {
+      display:block;
+    }
+  }
+
+  .display-detail-data {
+    position: absolute;
+    top: -70px;
+    right: 0;
+    display: none;
+    z-index:10;
+  }
+
+  .full-height-table {
+    height: calc(100vh - 104px);
+  }
+
+  .full-height-table::v-deep(.v-data-table-header) {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: white;
+  }
+
+
+}
+
+
+
+
+

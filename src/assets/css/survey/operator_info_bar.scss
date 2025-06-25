@@ -1,0 +1,129 @@
+.operator-info-card {
+  width: 500px;
+  margin: 8px;
+
+  .operator-info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+  }
+
+  .operator-info {
+    width: 80px;
+    height: 44px;
+    position: relative;
+    //border: 1px solid red;
+  }
+
+  .operator-name {
+    font-size: 12px;
+    position: absolute;
+    top: 0;
+    left: 4px;
+  }
+
+  .operator-elite-image {
+    width: 24px;
+    filter: drop-shadow(2px 2px 2px rgb(100, 100, 100));
+    position: absolute;
+    top: 22px;
+    left: 4px;
+  }
+
+  .operator-level-image {
+    width: 24px;
+    height: 24px;
+    color: white;
+    background: url("/image/survey/rank/lv-bg.png");
+    background-size: 24px;
+    font-size: 10px;
+    line-height: 8px;
+    padding-top: 14px;
+    box-sizing: border-box;
+    text-align: center;
+    position: absolute;
+    top: 20px;
+    left: 32px;
+  }
+
+  .bar-operator-skill-item {
+    position: relative;
+    text-align: center;
+    margin: 0 4px;
+    width: 40px;
+    height: 40px;
+    //overflow: hidden;
+  }
+
+
+  .skill-name {
+    text-align: center;
+    font-size: 10px;
+    line-height: 12px;
+  }
+
+  .operator-skill-rank-icon {
+    position: absolute;
+    left: -2px;
+    top: -2px;
+    width: 16px;
+    box-shadow: 1px 1px 2px white;
+  }
+
+  .operator-equip-group {
+    width: 40px;
+    height: 40px;
+    background-color: #4A90E2;
+    margin: 0 8px;
+    padding: 2px;
+    border-radius: 4px;
+  }
+
+
+  .operator-equip {
+    width: 36px;
+    height: 36px;
+    position: relative;
+    padding-top: 4px;
+    border-radius: 4px;
+    background-color: var(--c-background-color);
+  }
+
+  .equip-icon {
+    position: absolute;
+    top: 0;
+    left: 7px;
+  }
+
+  .equip-rank-icon {
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    width: 18px;
+  }
+
+  .equip-name {
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    position: absolute;
+    top: 20px;
+  }
+
+  .operator-ap-cost {
+    text-align: center;
+    font-size: 12px;
+    line-height: 18px;
+    margin: auto;
+  }
+
+  .operator-rank-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 16px;
+    box-shadow: 1px 1px 2px white;
+  }
+}
+
+

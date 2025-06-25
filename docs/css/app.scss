@@ -1,0 +1,103 @@
+.app {
+  line-height: 1.6;
+  font-size: 18px;
+}
+
+
+.side-menu {
+  position: fixed;
+  height: 80vh;
+  overflow: auto;
+  opacity: 0.8;
+
+  .side-menu-title {
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    display: block;
+    font-size: 1.2rem;
+    margin: 24px 4px 4px 6px;
+  }
+
+  .side-menu-H1,
+  .side-menu-H2,
+  .side-menu-H3,
+  .side-menu-H4,
+  .side-menu-H5,
+  .side-menu-H6 {
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.8);
+    display: block;
+    cursor: pointer;
+    margin: 0.5em 0.5em 0.5em 0.5em;
+  }
+
+  .side-menu-H1 {
+    margin-left: 0.5em;
+  }
+
+  .side-menu-H2 {
+    margin-left: 1.0em;
+  }
+
+  .side-menu-H3 {
+    margin-left: 1.5em;
+  }
+
+  .side-menu-H4 {
+    margin-left: 2.0em;
+  }
+
+  .current-menu {
+    border-left: 3px solid var(--v-theme-primary);
+  }
+
+}
+
+
+.drawer-btn {
+  display: none;
+}
+
+.navigation-drawer {
+
+  .v-list-item {
+    --indent-padding: 32px;
+  }
+
+  .v-list-item__spacer {
+    width: 12px !important;
+  }
+
+  .router-link {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+.v-container {
+  padding-left: 10% !important;
+  padding-right: 20% !important;
+}
+
+@media screen and (max-width: 1280px) {
+  .v-container {
+    padding: 0 12px !important;
+  }
+
+
+  .right-drawer {
+    display: none !important;
+  }
+}
+
+
+@media screen and (max-width: 700px) {
+  .app {
+    font-size: 16px;
+  }
+
+
+  .right-drawer {
+    display: none !important;
+  }
+}

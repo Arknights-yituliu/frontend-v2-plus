@@ -1,0 +1,570 @@
+[
+  {
+    "packName": "敌方索敌",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "我方索敌",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "攻击速度",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "异常状态",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "推力与拉力",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "敌方元素损伤",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "我方元素损伤",
+    "gachaOriginium": "0",
+    "gachaOrundum": "200",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "train"
+  },
+  {
+    "packName": "序章 黑暗时代·上",
+    "gachaOriginium": "19",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "突袭",
+    "gachaOriginium": "11",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第一章 黑暗时代·下",
+    "gachaOriginium": "15",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "突袭",
+    "gachaOriginium": "10",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第二章 异卵同生",
+    "gachaOriginium": "27",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "突袭",
+    "gachaOriginium": "10",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第三章 二次呼吸",
+    "gachaOriginium": "16",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "突袭",
+    "gachaOriginium": "8",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第四章 急性衰竭",
+    "gachaOriginium": "20",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "突袭",
+    "gachaOriginium": "10",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第五章 靶向药物",
+    "gachaOriginium": "20",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "突袭",
+    "gachaOriginium": "14",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第六章 局部坏死",
+    "gachaOriginium": "23",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "突袭",
+    "gachaOriginium": "17",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第七章 苦难摇篮",
+    "gachaOriginium": "23",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "突袭",
+    "gachaOriginium": "20",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第八章 怒号光明",
+    "gachaOriginium": "29",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "突袭",
+    "gachaOriginium": "20",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第九章 风暴瞭望",
+    "gachaOriginium": "25",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "突袭",
+    "gachaOriginium": "24",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第十章 破碎日冕",
+    "gachaOriginium": "20",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "磨难/H关",
+    "gachaOriginium": "18",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第十一章 淬火尘霾",
+    "gachaOriginium": "22",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "磨难/H关",
+    "gachaOriginium": "20",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第十二章 惊霆无声",
+    "gachaOriginium": "23",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "磨难/H关",
+    "gachaOriginium": "21",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第十三章 恶兆湍流",
+    "gachaOriginium": "23",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "磨难/H关",
+    "gachaOriginium": "23",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第十四章 慈悲灯塔",
+    "gachaOriginium": "24",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "磨难/H关/隐藏",
+    "gachaOriginium": "23",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "第十五章 离解复合",
+    "gachaOriginium": "22",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "磨难/H关/隐藏",
+    "gachaOriginium": "23",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main"
+  },
+  {
+    "packName": "骑兵与猎人",
+    "gachaOriginium": "15",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "火蓝之心",
+    "gachaOriginium": "29",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "喧闹法则",
+    "gachaOriginium": "29",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "生于黑夜",
+    "gachaOriginium": "22",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity-main"
+  },
+  {
+    "packName": "沃伦姆德的薄暮",
+    "gachaOriginium": "32",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "密林悍将归来",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "玛莉娅临光",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "孤岛风云",
+    "gachaOriginium": "27",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "画中人",
+    "gachaOriginium": "30",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "遗尘漫步",
+    "gachaOriginium": "27",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity-main"
+  },
+  {
+    "packName": "覆潮之下",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity-main"
+  },
+  {
+    "packName": "多索雷斯假日",
+    "gachaOriginium": "40",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "长夜临光",
+    "gachaOriginium": "42",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "愚人号",
+    "gachaOriginium": "36",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity-main"
+  },
+  {
+    "packName": "风雪过境",
+    "gachaOriginium": "30",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "将进酒",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "孤星",
+    "gachaOriginium": "40",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity-main"
+  },
+  {
+    "packName": "吾导先路",
+    "gachaOriginium": "27",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "尘影余音",
+    "gachaOriginium": "29",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "绿野幻梦",
+    "gachaOriginium": "27",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "理想城：长夏狂欢季",
+    "gachaOriginium": "37",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "叙拉古人",
+    "gachaOriginium": "37",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "照我以火",
+    "gachaOriginium": "29",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "登临意",
+    "gachaOriginium": "29",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "空想花庭",
+    "gachaOriginium": "29",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "火山旅梦",
+    "gachaOriginium": "40",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "不义之财",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "崔林特尔梅之金",
+    "gachaOriginium": "41",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "银心湖列车",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity"
+  },
+  {
+    "packName": "怀黍离",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "test"
+  },
+  {
+    "packName": "巴别塔",
+    "gachaOriginium": "39",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity-main"
+  },
+  {
+    "packName": "追迹日落以西",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity-main"
+  }
+]

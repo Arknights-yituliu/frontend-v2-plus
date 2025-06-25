@@ -1,0 +1,494 @@
+[
+  {
+    "module": "stage",
+    "title": "获取蓝材料推荐关",
+    "method": "GET",
+    "path": "/stage/result",
+    "description": "用于获取蓝色品质材料的推荐关卡，排列顺序为关卡效率倒序",
+    "params": [
+      {
+        "name": "expCoefficient",
+        "type": "double",
+        "value": 0.625,
+        "description": "经验书的价值系数"
+      },
+      {
+        "name": "sampleSize",
+        "type": "double",
+        "value": 300,
+        "description": "关卡掉落样本量"
+      }
+    ],
+    "response": [
+      {
+        "property": "data",
+        "description": "统一返回的结果对象属性",
+        "value": [
+          {
+            "name": "updateTime",
+            "description": "更新时间",
+            "type": "string"
+          },
+          {
+            "name": "recommendedStageList",
+            "description": "所有精英材料推荐关卡的集合(内部元素的属性见下面)",
+            "type": "array"
+          }
+        ]
+      },
+      {
+        "property": "data",
+        "description": "统一返回的结果对象属性",
+        "value": [
+          {
+            "name": "itemType",
+            "description": "材料类型",
+            "type": "string"
+          },
+          {
+            "name": "itemTypeId",
+            "description": "材料id",
+            "type": "string"
+          },
+          {
+            "name": "itemSeries",
+            "description": "材料所属的系列",
+            "type": "string"
+          },
+          {
+            "name": "itemSeriesId",
+            "description": "材料所属的系列的蓝材料id",
+            "type": "string"
+          },
+          {
+            "name": "stageResultList",
+            "description": "对应精英材料系列的推荐关卡集合",
+            "type": "array"
+          }
+        ]
+      },
+      {
+        "property": "recommendedStageList",
+        "description": "所有精英材料推荐关卡的集合",
+        "value": [
+          {
+            "name": "stageId",
+            "description": "关卡id",
+            "type": "string"
+          },
+          {
+            "name": "stageCode",
+            "description": "关卡名称",
+            "type": "string"
+          },
+          {
+            "name": "stageType",
+            "description": "关卡类型",
+            "type": "string"
+          },
+
+          {
+            "name": "itemId",
+            "description": "物品id",
+            "type": "string"
+          },
+          {
+            "name": "itemName",
+            "description": "材料名称",
+            "type": "string"
+          },
+          {
+            "name": "secondaryId",
+            "description": "副产物id",
+            "type": "string"
+          },
+          {
+            "name": "stageEfficiency",
+            "description": "理智转化率",
+            "type": "double"
+          },
+          {
+            "name": "apExpect",
+            "description": "期望理智",
+            "type": "double"
+          },
+          {
+            "name": "leT4Efficiency",
+            "description": "仅计算该系材料的t1-t4等级材料的理智转化率",
+            "type": "double"
+          },
+          {
+            "name": "leT3Efficiency",
+            "description": "仅计算该系材料的t1-t3等级材料的理智转化率",
+            "type": "double"
+          },
+          {
+            "name": "leT2Efficiency",
+            "description": "仅计算该系材料的t1-t2等级材料的理智转化率",
+            "type": "double"
+          },
+          {
+            "name": "knockRating",
+            "description": "物品掉落概率",
+            "type": "double"
+          },
+          {
+            "name": "sampleConfidence",
+            "description": "样本置信度",
+            "type": "double"
+          },
+          {
+            "name": "sampleSize",
+            "description": "样本次数",
+            "type": "int"
+          },
+          {
+            "name": "spm",
+            "description": "每分钟消耗理智",
+            "type": "double"
+          },
+          {
+            "name": "zoneName",
+            "description": "章节/活动名称",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "module": "stage",
+    "title": "获取绿材料推荐关",
+    "method": "GET",
+    "description": "用于获取绿色品质材料的推荐关卡，排列顺序为材料期望理智升序",
+    "path": "/stage/t2",
+    "params": [
+      {
+        "name": "expCoefficient",
+        "type": "double",
+        "value": 0.625,
+        "description": "经验书的价值系数"
+      }
+    ],
+    "response": {
+      "data": {
+        "description": "关卡计算结果的字段",
+        "value": [
+          {
+            "name": "stageCode",
+            "description": "关卡名称",
+            "type": "string"
+          },
+          {
+            "name": "stageId",
+            "description": "关卡id",
+            "type": "string"
+          },
+          {
+            "name": "stageEfficiency",
+            "description": "理智转化率",
+            "type": "double"
+          },
+          {
+            "name": "itemId",
+            "description": "物品id",
+            "type": "string"
+          },
+          {
+            "name": "itemType",
+            "description": "物品类型",
+            "type": "string"
+          },
+          {
+            "name": "apExpect",
+            "description": "期望理智",
+            "type": "double"
+          },
+          {
+            "name": "knockRating",
+            "description": "物品掉落概率",
+            "type": "double"
+          },
+          {
+            "name": "sampleConfidence",
+            "description": "样本置信度",
+            "type": "double"
+          },
+          {
+            "name": "sampleSize",
+            "description": "样本次数",
+            "type": "int"
+          },
+          {
+            "name": "secondary",
+            "description": "副产物",
+            "type": "string"
+          },
+          {
+            "name": "secondaryId",
+            "description": "副产物id",
+            "type": "string"
+          },
+          {
+            "name": "spm",
+            "description": "每分钟消耗理智",
+            "type": "double"
+          },
+          {
+            "name": "stageColor",
+            "description": "关卡标注颜色",
+            "type": "int"
+          },
+          {
+            "name": "updateTime",
+            "description": "更新时间",
+            "type": "string"
+          },
+          {
+            "name": "zoneName",
+            "description": "章节/活动名称",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "module": "item",
+    "title": "获取材料价值表",
+    "method": "GET",
+    "description": "用于获取各种常见精英化材料和其他材料的等效理智价值",
+    "path": "/item/value",
+    "params": [
+      {
+        "name": "expCoefficient",
+        "type": "double",
+        "value": 0.625,
+        "description": "经验书的价值系数"
+      }
+    ],
+    "response": {
+      "data": {
+        "description": "材料信息的字段",
+        "value": [
+          {
+            "name": "itemId",
+            "description": "物品id",
+            "type": "string"
+          },
+          {
+            "name": "itemName",
+            "description": "物品名称",
+            "type": "string"
+          },
+          {
+            "name": "itemValue",
+            "description": "物品价值 单位：绿票",
+            "type": "double"
+          },
+          {
+            "name": "itemValueAp",
+            "description": "物品价值 单位：理智",
+            "type": "double"
+          },
+          {
+            "name": "rarity",
+            "description": "物品稀有度",
+            "type": "int"
+          },
+          {
+            "name": "weight",
+            "description": "加工站爆率",
+            "type": "double"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "module": "stage",
+    "title": "获取往期活动关卡效率",
+    "method": "GET",
+    "path": "/stage/closed",
+    "description": "用于获取往期活动的活动关卡效率，仅返回掉落蓝色材料的关卡",
+    "params": [
+      {
+        "name": "expCoefficient",
+        "type": "double",
+        "value": 0.625,
+        "description": "经验书的价值系数"
+      }
+    ],
+    "response": {
+      "data": {
+        "description": "关卡计算结果的字段",
+        "type": "object",
+        "value": [
+          {
+            "name": "stageCode",
+            "description": "关卡名称",
+            "type": "string"
+          },
+          {
+            "name": "stageId",
+            "description": "关卡id",
+            "type": "string"
+          },
+          {
+            "name": "stageEfficiency",
+            "description": "理智转化率",
+            "type": "double"
+          },
+          {
+            "name": "itemId",
+            "description": "物品id",
+            "type": "string"
+          },
+          {
+            "name": "itemType",
+            "description": "物品类型",
+            "type": "string"
+          },
+          {
+            "name": "apExpect",
+            "description": "期望理智",
+            "type": "double"
+          },
+          {
+            "name": "knockRating",
+            "description": "物品掉落概率",
+            "type": "double"
+          },
+          {
+            "name": "sampleConfidence",
+            "description": "样本置信度",
+            "type": "double"
+          },
+          {
+            "name": "sampleSize",
+            "description": "样本次数",
+            "type": "int"
+          },
+          {
+            "name": "secondary",
+            "description": "副产物",
+            "type": "string"
+          },
+          {
+            "name": "secondaryId",
+            "description": "副产物id",
+            "type": "string"
+          },
+          {
+            "name": "spm",
+            "description": "每分钟消耗理智",
+            "type": "double"
+          },
+          {
+            "name": "stageColor",
+            "description": "关卡标注颜色",
+            "type": "int"
+          },
+          {
+            "name": "updateTime",
+            "description": "更新时间",
+            "type": "string"
+          },
+          {
+            "name": "zoneName",
+            "description": "章节/活动名称",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "module": "stage",
+    "title": "获取搓玉推荐关卡",
+    "method": "GET",
+    "description": "用于获取游戏内所有可刷取关卡的搓玉效率，仅展示大于20%搓玉效率的关卡，排序顺序为搓玉效率倒序",
+    "path": "/stage/orundum",
+    "response": {
+      "data": {
+        "description": "关卡计算结果的字段",
+        "value": [
+          {
+            "name": "stageCode",
+            "description": "关卡名称",
+            "type": "string"
+          },
+          {
+            "name": "orundumPerAp",
+            "description": "1理智可得合成玉",
+            "type": "double"
+          },
+          {
+            "name": "orundumPerApEfficiency",
+            "description": "搓玉效率(对比1-7)",
+            "type": "double"
+          },
+          {
+            "name": "stageEfficiency",
+            "description": "关卡效率",
+            "type": "double"
+          },
+          {
+            "name": "lmdcost",
+            "description": "龙门币消耗",
+            "type": "double"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "module": "store",
+    "title": "获取常驻商店性价比",
+    "method": "GET",
+    "description": "用于获取采购中心常驻商店的性价比，返回的数据是key-value格式，key为商店代币的颜色（green为绿票商店），value是对应商店的性价比集合",
+    "path": "/store/perm",
+    "response": {
+      "data": {
+        "description": "(商店性价比字段)",
+        "value": [
+          {
+            "name": "storeType",
+            "description": "商店类型",
+            "type": "string"
+          },
+          {
+            "name": "itemName",
+            "description": "物品名称",
+            "type": "string"
+          },
+          {
+            "name": "itemId",
+            "description": "物品id",
+            "type": "string"
+          },
+          {
+            "name": "cost",
+            "description": "售价",
+            "type": "int"
+          },
+          {
+            "name": "costPer",
+            "description": "性价比",
+            "type": "double"
+          },
+          {
+            "name": "quantity",
+            "description": "售卖数量",
+            "type": "int"
+          },
+          {
+            "name": "rarity",
+            "description": "物品星级",
+            "type": "int"
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,353 @@
+.weekly {
+  .shadowBlock {
+    background-color: #575757b7;
+  }
+
+  .reMaterial-image-32 {
+    transform: scale(0.175);
+    transform-origin: top left;
+    top: -32px;
+    left: -32px;
+  }
+  .reMaterial-image-48 {
+    transform: scale(0.262);
+    transform-origin: top left;
+    top: -48px;
+    left: -48px;
+  }
+  .reMaterial-image-64 {
+    transform: scale(0.35);
+    transform-origin: top left;
+    top: -32px;
+    left: -32px;
+  }
+
+  .weekly-P1 {
+    width: 1080px;
+    padding: 32px;
+    background: url('\\public\\image\\media\\background1.png') no-repeat center center;
+    ;
+    background-size: cover;
+
+    .P1-title {
+      background: url('\\public\\image\\media\\title.png') no-repeat center center;
+      ;
+      background-size: cover;
+      height: 480px;
+    }
+
+
+
+  }
+
+
+  .weekly-module {
+    width: calc(100% - 24px);
+    // outline宽度 x 2 + offset x 2, margin 不x2
+    margin: 12px;
+    // height: 114px;
+    background-color: rgba(255, 255, 255, 0.4);
+    outline: 4px solid rgba(255, 255, 255, 0.4);
+    outline-offset: 8px;
+    border-radius: 36px;
+    padding: 16px;
+
+    .module-pic {
+      width: calc(100% - 32px);
+      // 减去2倍margin
+      border-radius: 24px;
+      margin: 16px;
+    }
+
+    .module-title-pic {
+      width: calc(100% - 32px);
+      // 减去2倍margin
+      border-radius: 24px;
+      margin: 0px 16px 16px 16px;
+      height: 114px;
+    }
+
+    .module-drop {
+      width: calc(100% - 32px);
+      margin: auto;
+      // 减去2倍margin
+
+      .drop-blue {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+
+        .drop-blue-unit {
+          width: 300px;
+
+          .drop-unit-top {
+            width: 100%;
+            height: 120px;
+            border-radius: 12px;
+            background-color: #3f51b5;
+
+            .drop-unit-top-background {
+              background-color: #1a1a1a;
+              width: 100%;
+              height: 120px;
+              border-radius: 24px;
+
+              .drop-blue-sprite {
+                position: relative;
+                width: 132px;
+                height: 84px;
+                display: inline-block;
+
+                .drop-unit-image {
+                  // width: 96px;
+                  // height: 96px;
+                  transform: scale(0.57);
+                  position: absolute;
+                  top: -36px;
+                  left: -24px;
+                }
+              }
+
+              .drop-blue-info {
+                display: inline-block;
+                // background-color: #00a2a2;
+                top: 0px;
+                height: 120px;
+                // width: 90px;
+
+                .drop-unit-stage {
+                  color: #fff;
+                  font-weight: 600;
+                  font-size: 36px;
+                  margin-top: 16px;
+                }
+
+                .drop-unit-material {
+                  color: #f1cd00;
+                  font-weight: 600;
+                  font-size: 24px;
+                  line-height: 20px;
+                }
+              }
+            }
+          }
+
+          .drop-unit-bottom {
+            margin: 0px 12px;
+            padding: 8px;
+            border-bottom-right-radius: 12px;
+            border-bottom-left-radius: 12px;
+            background-color: #575757b7;
+
+            .drop-unit-table {
+              font-size: 24px;
+              border-collapse: separate;
+              border-spacing: 4px;
+              color: #ffffff;
+              text-align: center;
+              width: 270px;
+              // margin: 12px;
+              // border: 2px;
+            }
+
+
+            .drop-unit-table-title {
+              line-height: 28px;
+              width: 120px;
+              background-color: #ffffff80;
+              font-weight: 600;
+              color: #000;
+            }
+
+            .reAct-image {
+              // width: 96px;
+              height: 100px;
+              width: 126px;
+              background-size: 200%;
+            }
+
+            .reMaterial-wrapper {
+              width: 24px;
+              height: 24px;
+              display: inline-block;
+            }
+
+          }
+        }
+      }
+
+      .drop-green {
+        height: 150px;
+        border-radius: 75px;
+        margin: 32px auto;
+        display: flex;
+        // width: 666px;
+
+        .drop-green-sprite {
+          transform: scale(0.82);
+          transform-origin: top left;
+          display: inline-block;
+          height: 150px;
+          width: 144px;
+        }
+
+        .drop-green-table {
+          display: flex;
+          background-color: #00a2a2;
+          width: 750px;
+          height: 150px;
+          flex-wrap: nowrap;
+
+
+          .drop-green-module {
+            width: 216px;
+            margin: 15px;
+            /* 梯形的底边宽度 */
+            height: 120px;
+            /* 梯形的高度 */
+            background-color: #3498db;
+            /* 梯形的颜色 */
+            // border-right:2px solid #3f51b5;
+            // clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 0% 100%);
+            /* 左上(0% 0%)，右上(100% 0%)，右下(100% 100%)，左下(30% 100%) */
+
+
+            .T2-wrapper {
+              width: 64px;
+              height: 64px;
+              display: inline-block;
+              background-color: #f1cd00;
+              vertical-align: middle;
+            }
+
+            .T2-stage{
+              display: inline-block;
+              font-size: 28px;
+              line-height: 64px;
+              vertical-align: middle;
+            }
+
+            .T2-text{
+              font-size: 28px;
+              font-style: italic;
+            }
+          }
+
+
+        }
+      }
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .activity-store-good-area-4 {
+    border-left-color: #00a2a2;
+  }
+
+  .activity-store-good-area-5 {
+    border-left-color: #a0a0a0;
+  }
+
+  .header-top .logo {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    background: url('logo.png') no-repeat center center / contain;
+  }
+
+  .header-top .title {
+    font-size: 1.8rem;
+    margin-left: 1rem;
+    font-weight: bold;
+  }
+
+  .week-info p {
+    font-size: 1rem;
+    color: #aaa;
+  }
+
+  .banner {
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  .banner img {
+    width: 100%;
+    height: auto;
+  }
+
+  .event-info h2 {
+    font-size: 1.5rem;
+    margin: 1rem 0 0.5rem;
+  }
+
+  .event-info p {
+    font-size: 1.2rem;
+    color: #ffd700;
+  }
+
+  .content {
+    padding: 1rem;
+    background-color: #1a1a1a;
+  }
+
+  .mission-data h3,
+  .material-tips h3,
+  .data-section h3,
+  .rent-section h3 {
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.5rem;
+    font-size: 1.3rem;
+  }
+
+  .stats {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+  }
+
+  .stats .ep {
+    background: #333;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .data-section .operators img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0.5rem;
+  }
+
+  .rent-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  .rent-section table th,
+  .rent-section table td {
+    border: 1px solid #444;
+    text-align: center;
+    padding: 0.5rem;
+  }
+
+  footer {
+    text-align: center;
+    margin: 2rem 0;
+    font-size: 0.9rem;
+    color: #888;
+  }
+}

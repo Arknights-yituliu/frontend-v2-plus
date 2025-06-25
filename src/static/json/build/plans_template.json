@@ -1,0 +1,1220 @@
+[
+  {
+    "name": "第01班",
+    "description": "第01班的描述",
+    "description_post": "第01班完成后的描述",
+    "period": [
+      "00:00",
+      "00:00"
+    ],
+    "rooms": {
+      "trading": [
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "manufacture": [
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "power": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "dormitory": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "processing": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "control": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "hire": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "meeting": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ]
+    },
+    "Fiammetta": {
+      "enable": false,
+      "target": "",
+      "order": "pre"
+    },
+    "drones": {
+      "room": "trading",
+      "index": 1,
+      "enable": false,
+      "order": "pre"
+    }
+  },
+  {
+    "name": "第11班",
+    "description": "第11班的描述",
+    "description_post": "第11班完成后的描述",
+    "period": [
+      "00:00",
+      "00:00"
+    ],
+    "rooms": {
+      "trading": [
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "manufacture": [
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "power": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "dormitory": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "processing": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "control": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "hire": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "meeting": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ]
+    },
+    "Fiammetta": {
+      "enable": false,
+      "target": "",
+      "order": "pre"
+    },
+    "drones": {
+      "room": "trading",
+      "index": 1,
+      "enable": false,
+      "order": "pre"
+    }
+  },
+  {
+    "name": "第21班",
+    "description": "第21班的描述",
+    "description_post": "第21班完成后的描述",
+    "period": [
+      "00:00",
+      "00:00"
+    ],
+    "rooms": {
+      "trading": [
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "manufacture": [
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "power": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "dormitory": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "processing": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "control": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "hire": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "meeting": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ]
+    },
+    "Fiammetta": {
+      "enable": false,
+      "target": "",
+      "order": "pre"
+    },
+    "drones": {
+      "room": "trading",
+      "index": 1,
+      "enable": false,
+      "order": "pre"
+    }
+  },
+  {
+    "name": "第31班",
+    "description": "第31班的描述",
+    "description_post": "第31班完成后的描述",
+    "period": [
+      "00:00",
+      "00:00"
+    ],
+    "rooms": {
+      "trading": [
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "manufacture": [
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "power": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "dormitory": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "processing": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "control": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "hire": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "meeting": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ]
+    },
+    "Fiammetta": {
+      "enable": false,
+      "target": "",
+      "order": "pre"
+    },
+    "drones": {
+      "room": "trading",
+      "index": 1,
+      "enable": false,
+      "order": "pre"
+    }
+  },
+  {
+    "name": "第41班",
+    "description": "第41班的描述",
+    "description_post": "第41班完成后的描述",
+    "period": [
+      "00:00",
+      "00:00"
+    ],
+    "rooms": {
+      "trading": [
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "manufacture": [
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "power": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "dormitory": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "processing": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "control": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "hire": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "meeting": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ]
+    },
+    "Fiammetta": {
+      "enable": false,
+      "target": "",
+      "order": "pre"
+    },
+    "drones": {
+      "room": "trading",
+      "index": 1,
+      "enable": false,
+      "order": "pre"
+    }
+  },
+  {
+    "name": "第51班",
+    "description": "第51班的描述",
+    "description_post": "第51班完成后的描述",
+    "period": [
+      "00:00",
+      "00:00"
+    ],
+    "rooms": {
+      "trading": [
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "manufacture": [
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "power": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "dormitory": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "processing": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "control": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "hire": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "meeting": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ]
+    },
+    "Fiammetta": {
+      "enable": false,
+      "target": "",
+      "order": "pre"
+    },
+    "drones": {
+      "room": "trading",
+      "index": 1,
+      "enable": false,
+      "order": "pre"
+    }
+  },
+  {
+    "name": "第61班",
+    "description": "第61班的描述",
+    "description_post": "第61班完成后的描述",
+    "period": [
+      "00:00",
+      "00:00"
+    ],
+    "rooms": {
+      "trading": [
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "LMD",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "manufacture": [
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "product": "Battle Record",
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "power": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "dormitory": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        },
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "processing": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "control": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "hire": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "meeting": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ]
+    },
+    "Fiammetta": {
+      "enable": false,
+      "target": "",
+      "order": "pre"
+    },
+    "drones": {
+      "room": "trading",
+      "index": 1,
+      "enable": false,
+      "order": "pre"
+    }
+  }
+]

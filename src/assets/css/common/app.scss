@@ -1,0 +1,65 @@
+html {
+  .v-responsive {
+    overflow: visible !important;
+  }
+
+}
+
+.href-black {
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  font-size: 15px;
+  text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  overscroll-behavior: none;
+}
+
+
+
+.navigation-drawer {
+
+  .drawer-navigation {
+    .v-list-item {
+      --indent-padding: 32px;
+    }
+
+    .navigation-item-content {
+      display: flex;
+      align-items: center;
+
+      .navigation-item-content-spacer {
+        width: 16px;
+      }
+    }
+  }
+
+  .router-link {
+    text-decoration: none;
+    color: inherit;
+  }
+
+}
+
+.app-bar-content {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin-right: 20px;
+}
+
+.app-bar-content-spacer {
+  width:12px;
+}
+
+.v-container {
+  padding: 12px !important;
+}
+
+@media screen and (max-width: 700px) {
+  .v-container {
+    padding: 0 !important;
+  }
+}

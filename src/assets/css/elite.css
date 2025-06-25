@@ -1,0 +1,13 @@
+
+.profession-popper {
+  padding: 0 !important;
+  height: 285px;
+}
+.profession-popper .el-cascader-panel {
+  border: none !important;
+  height: 100% !important;
+}
+
+.profession-popper .el-scrollbar__wrap {
+  height: 100% !important;
+}

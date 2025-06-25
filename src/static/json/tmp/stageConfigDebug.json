@@ -1,0 +1,74 @@
+{
+  "id": 202412050002,
+  "expCoefficient": "0",
+  "lmdCoefficient": 1,
+  "useActivityStage": true,
+  "stageBlacklist": [],
+  "source": "penguin",
+  "customItem": [
+    {
+      "itemId": "30073",
+      "itemValue": 1.8
+    },
+    {
+      "itemId": "30083",
+      "itemValue": 2.16
+    },
+    {
+      "itemId": "30093",
+      "itemValue": "31.0347934883553"
+    },
+    {
+      "itemId": "30103",
+      "itemValue": "36.0379825688743"
+    },
+    {
+      "itemId": "30013",
+      "itemValue": "19.197152138589"
+    },
+    {
+      "itemId": "30063",
+      "itemValue": "36.1127927632626"
+    },
+    {
+      "itemId": "30033",
+      "itemValue": "21.6093848056154"
+    },
+    {
+      "itemId": "30023",
+      "itemValue": "21.6088134605579"
+    },
+    {
+      "itemId": "30043",
+      "itemValue": "27.0053970870139"
+    },
+    {
+      "itemId": "30053",
+      "itemValue": "26.984187203726"
+    },
+    {
+      "itemId": "31013",
+      "itemValue": "29.9068870933895"
+    },
+    {
+      "itemId": "31023",
+      "itemValue": "25.2145284651478"
+    },
+    {
+      "itemId": "31043",
+      "itemValue": "29.9585853356796"
+    },
+    {
+      "itemId": "31063",
+      "itemValue": "33.6341672108771"
+    },
+    {
+      "itemId": "31073",
+      "itemValue": "32.4168267634463"
+    },
+    {
+      "itemId": "31083",
+      "itemValue": "36.0225410468393"
+    }
+  ]
+}

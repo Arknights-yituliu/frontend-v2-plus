@@ -1,0 +1,88 @@
+@media screen and (max-width: 600px) {
+
+  .pack-efficiency-page {
+    .pack-card-container {
+      justify-content: flex-end;
+    }
+
+    .pack-card {
+      width: 350px;
+    }
+
+    .pack-card-part-left {
+      width: 120px;
+      height: 90px;
+    }
+
+    .pack-image {
+      width: 120px;
+      height: 90px;
+      border-radius: 6px;
+      box-shadow: 2px 2px 4px var(--c-box-shadow-color);
+    }
+
+    .pack-corner {
+      font-size: 10px;
+    }
+
+    .pack-display-name {
+      font-size: 10px;
+      top: 70px;
+      width: 120px;
+    }
+
+    .pack-info {
+      z-index: 10;
+      height: 84px;
+      width: 220px;
+      margin-top: 3px;
+      margin-left: -4px;
+    }
+
+    .pack-info-text {
+      margin-left: 4px;
+      width: 60px;
+      font-size: 10px;
+    }
+
+    .pack-info-text span {
+      line-height: 12px;
+    }
+
+    .pack-chart-line {
+      width: 150px;
+    }
+
+    .pack-chart-line-item {
+      font-size: 10px;
+    }
+
+    .pack-chart-line-label {
+      width: 50px;
+      text-align: center
+    }
+
+    .pack-content-material {
+      font-size: 10px;
+    }
+
+
+    .pack-line-bar {
+      height: 16px;
+      font-size: 10px;
+      line-height: 16px;
+    }
+
+    .pack-content {
+      width: 310px;
+      margin-left: 10px;
+      margin-top: -20px;
+      padding-top: 20px;
+      padding-left: 4px;
+      padding-right: 4px;
+      font-size: 10px;
+    }
+
+  }
+
+}

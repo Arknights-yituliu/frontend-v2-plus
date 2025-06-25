@@ -1,0 +1,54 @@
+.highlight {
+  background-color: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+}
+
+.bg-color-primary {
+  background-color: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+}
+
+.freeze-table-first-column{
+
+  text-wrap: nowrap;
+
+  td:first-child{
+    background: rgb(var(--v-theme-surface));
+    position: sticky;
+    left: 0;
+    z-index: 1;
+  }
+
+  th:first-child{
+    background: rgb(var(--v-theme-surface));
+    position: sticky;
+    left: 0;
+    z-index: 1;
+  }
+
+}
+
+
+@media screen and (max-width: 600px){
+  .v-mobile-table{
+    td{
+      font-size: 10px;
+      padding: 0 8px !important;
+      white-space: nowrap;
+    }
+
+    .v-data-table__th{
+      font-size: 12px;
+      padding: 0 4px !important;
+      white-space: nowrap;
+      text-align: center;
+      justify-content: center;
+    }
+
+    .v-data-table-header__content{
+      //justify-content: center;
+    }
+  }
+
+
+}

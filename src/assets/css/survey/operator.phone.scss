@@ -1,0 +1,159 @@
+@media screen and (max-width: 600px) {
+  .survey-operator-page {
+
+
+    .operator-card {
+      width: 99%;
+      margin: 4px;
+    }
+
+
+    .survey-guide-content-container {
+      padding: 8px;
+      box-sizing: border-box;
+      max-width: 340px;
+      font-size: 12px;
+
+      h2 {
+        margin-top: 16px;
+      }
+
+      p {
+        line-height: 18px;
+        padding: 0 12px;
+      }
+
+      img {
+        width: 90%;
+        margin: 0 12px;
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+    }
+
+    .operator-level-image {
+      width: 20px;
+      height: 20px;
+      background-size: 20px;
+      font-size: 8px;
+      line-height: 8px;
+      padding-top: 10px;
+      overflow: hidden;
+    }
+
+    .operator-elite-image {
+      width: 20px;
+    }
+
+    .operator-avatar-wrap {
+      width: 54px;
+    }
+
+    .operator-avatar {
+      width: 42px;
+      height: 42px;
+      margin-bottom: 2px;
+    }
+
+    .operator-avatar div {
+      position: absolute;
+      transform: scale(calc(42 / 180));
+      top: calc((42px - 180px) / 2);
+      left: calc((42px - 180px) / 2);
+    }
+
+
+
+    .operator-skill-icon-item {
+      width: 40px;
+      height: 40px;
+    }
+
+    .operator-skill-icon-sprite {
+      width: 28px;
+      height: 28px;
+    }
+
+    .operator-skill-icon-sprite div {
+      position: absolute;
+      transform: scale(calc(28 / 128));
+      top: calc((28px - 128px) / 2);
+      left: calc((28px - 128px) / 2);
+    }
+
+    .operator-skill-rank {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 12px;
+      height: 12px;
+    }
+
+
+
+    .operator-equip-image-wrap {
+      width: 40px;
+      position: relative;
+    }
+
+    .operator-equip-image {
+      height: 30px;
+      width: 30px;
+      display: block;
+      margin: auto;
+      filter: drop-shadow(2px 2px 2px rgb(100, 100, 100))
+    }
+
+    .equip-name {
+      text-align: center;
+      font-size: 10px;
+      line-height: 18px;
+    }
+
+    .operator-equip-rank {
+      position: absolute;
+      left: 10px;
+      top: 0;
+      width: 16px;
+    }
+
+
+    .item-cost-item {
+      height: 40px;
+      width: 50px;
+      margin: 4px;
+    }
+
+    .item-cost-num {
+      width: 50px;
+      top: 24px;
+      font-size: 14px;
+    }
+
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .operator-statistical-page {
+    .operator-statistical-card {
+      width: 520px;
+    }
+
+    .operator-ap-cost-rank-card {
+      width: 520px;
+    }
+  }
+}
+
+
+@media screen and (max-width: 360px) {
+  .operator-statistical-page {
+    .operator-statistical-card {
+      width: 100%;
+    }
+
+    .operator-ap-cost-rank-card {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,309 @@
+.stage-page {
+  padding: 4px;
+
+  .stage-legend-card{
+    width: fit-content;
+    padding: 8px;
+  }
+
+  .stage-legend-table {
+    border-collapse: collapse;
+
+  }
+
+  .stage-legend-sprite {
+    width: 30px;
+    height: 30px;
+    position: relative;
+  }
+
+  .stage-legend-sprite div {
+    transform: scale(calc(30 / 183));
+    position: absolute;
+    top: calc((-183px + 30px) / 2);
+    left: calc((-183px + 30px) / 2);
+    opacity: 0.7;
+  }
+
+
+  .stage-legend-text-1 {
+    padding: 4px;
+  }
+
+  .stage-legend-text-2 {
+    font-weight: bold;
+
+    padding: 8px;
+  }
+
+  .stage-legend-text-3 {
+    font-style: italic;
+    text-align: center;
+    padding: 4px;
+  }
+
+  .stage-legend-text-4 {
+    font-style: italic;
+    padding: 4px;
+  }
+
+  .stage-legend-text-bold {
+    font-weight: bold;
+  }
+
+  .stage-legend-text-underline {
+    border-bottom: 1px solid var(--c-border-color);
+    line-height: 16px;
+  }
+
+
+  .stage-card-wrap {
+    display: flex;
+    flex-wrap: wrap;
+
+  }
+
+  .stage-card {
+    overflow: hidden;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+    background: var(--c-page-background-color-secondary);
+    width: 240px;
+    height: 130px;
+    margin: 6px;
+    border-radius: 8px;
+    flex-grow: 1;
+    border: 1px solid #80808020;
+    position: relative;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .stage-card-item-icon {
+    width: 30px;
+    height: 30px;
+    position: relative;
+  }
+
+  .stage-card-item-icon div {
+    position: absolute;
+    transform: scale(calc(30 / 183));
+    top: calc((-183px + 30px) / 2);
+    left: calc((-183px + 30px) / 2);
+  }
+
+  .stage-card-bg-sprite {
+    position: absolute;
+    transform: scale(0.9);
+    opacity: 0.6;
+    left: -80px;
+    top: -24px;
+  }
+
+  .stage-card-bar-container {
+    position: absolute;
+    left: 70px;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    width: calc(100% - 74px);
+    height: 128px;
+    backdrop-filter: blur(4px);
+  }
+
+  .stage-card-bar {
+    height: 32px;
+    line-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-left: 4px;
+  }
+
+  .stage-card-bar-stage-code {
+    width: 80px;
+    top: 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .stage-card-bar-stage-efficiency {
+    width: 56px;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .stage-legend-description span {
+    line-height: 24px;
+    margin-left: 12px;
+    display: inline-block;
+    font-style: italic;
+    color: #1bbbf3;
+    font-size: 14px;
+    vertical-align: bottom;
+  }
+
+  .stage-detail-table {
+    // width: calc(100% - 20px);
+    // margin: 8px;
+    
+  }
+
+  .stage-detail-table-item-icon {
+    width: 36px;
+    height: 36px;
+    position: relative;
+  }
+
+  .stage-detail-table-item-icon div {
+    position: absolute;
+    transform: scale(calc(36 / 183));
+    top: calc((-183px + 36px) / 2);
+    left: calc((-183px + 36px) / 2);
+  }
+
+  .activity-table-pc-card {
+    width: 98%;
+    margin: auto;
+    overflow: hidden;
+    overflow-x: auto;
+    padding: -2px;
+  }
+
+  .activity-table-pc {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .activity-table-pc td {
+    border: 1px solid var(--c-border-color);
+  }
+
+  .activity-name-pc {
+    min-width: 120px;
+    max-width: 120px;
+    font-weight: 600;
+  }
+
+  .activity-stage-efficiency-pc {
+    padding-top: 4px;
+  }
+
+
+  .activity-pickup-item-pc {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    margin: auto;
+  }
+
+  .activity-pickup-item-pc div {
+    position: absolute;
+    transform: scale(calc(40 / 183));
+    top: calc((-183px + 40px) / 2);
+    left: calc((-183px + 40px) / 2);
+  }
+
+  .act-history-table-divider{
+    border-top: 2px solid var(--c-border-color);
+  }
+
+  .activity-table-phone-card {
+    display: none;
+    margin: 4px;
+    width: 600px;
+  }
+
+  .activity-table-phone {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .activity-table-phone tr {
+    border-bottom: 1px solid #e6e6e6;
+    height: 60px;
+  }
+
+  .activity-name-phone {
+    color: var(--c-blue-4);
+    font-weight: 600;
+  }
+
+  .activity-drop {
+    display: flex;
+  }
+
+  .activity-drop-detail {
+    padding: 0 4px;
+    line-height: 25px;
+    font-weight: 600;
+  }
+
+  .activity-pickup-item {
+    width: 50px;
+    height: 50px;
+    position: relative;
+  }
+
+  .activity-pickup-item div {
+    position: absolute;
+    transform: scale(calc(50 / 183));
+    top: calc((-183px + 50px) / 2);
+    left: calc((-183px + 50px) / 2);
+  }
+
+  .recommendation-table-wrap{
+    text-align: center;
+    flex-direction: column;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 20px;
+    color: antiquewhite;
+  }
+
+  .recommendation-table-wrap span{
+    line-height: 2;
+  }
+
+  .recommendation-table{
+    border-collapse: collapse;
+    text-align: center;
+
+  }
+
+  .recommendation-table tr:first-child{
+    font-size: 20px;
+    font-weight: bolder;
+  }
+
+  .recommendation-table tr:nth-child(2n+1) {
+    background-color: #464646; /* 或你希望的背景色 */
+  }
+
+  .recommendation-table td{
+    border: 1px solid black;
+    padding: 12px 0;
+  }
+
+  .orundum-table-icon {
+    width: 18px;
+    height: 18px;
+    position: relative;
+  }
+
+  .sprite-icon {
+    transform: scale(0.5);
+    position: absolute;
+    top: -14px;
+    left: -10px;
+  }
+
+}

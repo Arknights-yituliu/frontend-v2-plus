@@ -1,0 +1,119 @@
+.account-home-page {
+  .user-card {
+    width: 600px;
+    margin: 8px;
+
+    .v-list-item-title {
+      font-weight: bolder;
+    }
+
+    min-width: 330px;
+  }
+
+
+
+  .card-description {
+    opacity: 0.8;
+    display: block;
+    font-size: 12px;
+    margin: 0 0 12px 0;
+  }
+
+  .user-avatar-checkbox {
+    height: 300px;
+  }
+
+
+  .stage-config-card{
+    margin: 8px;
+    width: 600px;
+  }
+
+  .preset-parameter-card{
+    margin: 4px;
+    width: 272px;
+    position: relative;
+
+    .player-description{
+      padding: 2px 16px;
+      opacity: 0.6;
+      font-size: 12px;
+    }
+
+    .parameter-description{
+      padding: 2px 16px;
+      font-size: 12px;
+    }
+
+    .preset-parameter-card-action{
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+    }
+  }
+
+  .stage-checkbox{
+     height: 500px;
+     overflow-y: auto;
+  }
+
+  .out-item-unselected{
+    filter: grayscale(1);
+  }
+
+
+  //这里是调换vuetify组件的默认样式
+  .cover-v-card-subtitle{
+    padding: 4px 0 4px 4px;
+    opacity: 0.6;
+    font-size: 14px;
+  }
+
+  .cover-v-expansion-panel{
+    .cover-v-expansion-panel-subtitle{
+      padding: 4px 0 4px 16px;
+      opacity: 0.6;
+      font-size: 14px;
+    }
+
+    .v-expansion-panel-text__wrapper{
+      padding: 4px;
+    }
+
+  }
+
+
+}
+
+@media screen and (max-width: 600px) {
+  .account-home-page {
+    .user-card {
+      max-width: none;
+      width: 99%;
+      margin: 4px;
+
+    }
+
+    .stage-config-card-text{
+      padding: 4px;
+    }
+
+    .preset-parameter-card{
+      margin: 4px;
+      width: 150px;
+
+      .player-description{
+        padding: 4px;
+        font-size: 10px;
+      }
+
+      .parameter-description{
+        padding: 4px;
+        font-size: 10px;
+      }
+    }
+  }
+}
+
+
+
