@@ -28,7 +28,7 @@ async function calculationStageEfficiency(stageConfig) {
     const start = new Date().getTime()
 
     const itemMap = await getItemMap(stageConfig)
-    const stageDropCollect = await getStageDropCollect(stageConfig)
+    const stageDropCollect = await getStageDropCollect(stageConfig)  // TODO: getStageDropCollect 有 2 个参数
     const loading = new Date().getTime()
     // console.log("加载数据", loading - start, 'ms')
 

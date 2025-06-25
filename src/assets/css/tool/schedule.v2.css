@@ -1,132 +1,762 @@
-.schedule-v2-page {
-    margin-bottom: 40px;
+.schedule-page {
+    padding: 8px;
+    box-sizing: border-box;
 
-    .schedule-box-container {
-        width: 98% !important;
-        overflow: auto;
-        margin: auto;
+
+    .maa-schedule-wrap-v2 {
+
     }
 
-    .schedule-box {
-        width: fit-content;
-        margin: auto;
+    .maa-schedule-v2 {
+
     }
 
-    .schedule-item-card {
-        width: 300px;
-        margin: 8px;
-
-        .v-list-item__content {
-            overflow: initial;
-        }
+    .schedule-version {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        font-weight: bold;
     }
 
-    .room-template {
-        padding: 4px;
-        justify-content: center;
-        margin: 4px auto;
-        border-radius: 3px;
-        font-weight: 600;
-        width: 280px;
-        height: 80px;
-        user-select: none;
+    .guide-box {
     }
 
-    .room-title {
+    .guide-box h2 {
+        margin-top: 60px;
+    }
+
+    .guide-box p {
+        /*font-weight: bold;*/
+        padding: 8px 0;
+    }
+
+    .guide-keynote {
+        color: #1673ff;
+    }
+
+    .guide-image {
+        width: 70%;
+        box-shadow: 1px 1px 8px var(--c-box-shadow-color);
+    }
+
+    .schedule-header {
         width: 100%;
-        justify-content: center;
+        border-bottom: 1px solid var(--c-border-color);
+        margin-bottom: 12px;
+        padding: 8px 12px;
+        justify-content: space-between;
+        box-sizing: border-box;
+    }
+
+    .schedule-divider {
+        width: 100%;
+        height: 1px;
+        border-bottom: 1px solid var(--c-border-color)
+    }
+
+    .schedule-header-left {
+        display: flex;
+        align-items: center;
+    }
+
+    .schedule-header-right {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding-right: 40px;
+    }
+
+    .schedule-header-title {
+        padding: 8px;
+        font-size: 28px;
+        font-weight: 500;
+        float: left;
+    }
+
+    .schedule-set-form {
+        /*width: 1300px;*/
+        margin: auto;
+    }
+
+    .schedule-set-form td {
+        padding: 4px;
+        border: 1px solid grey;
+    }
+
+    .schedule-set-switch {
         display: flex;
     }
 
+    .schedule-set-form span {
+        font-weight: 600;
+    }
+
+
+    .schedule-set-card-body {
+        padding: 4px;
+    }
+
+    .schedule-set-option {
+        display: flex;
+        align-items: center;
+        padding: 4px 0;
+    }
+
+    .schedule-set-tip {
+        font-size: 14px;
+        font-style: italic;
+    }
+
+    .schedule-set-option span {
+        padding: 2px 8px 2px 4px;
+    }
+
+
+    .execution-time span {
+        padding: 2px 8px;
+    }
+
+    .room-wrap {
+        display: flex;
+        flex-wrap: wrap;
+
+        margin: auto;
+        justify-content: center;
+    }
+
+
+    .room-wrap-left {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: center;
+        width: 594px;
+        /*background-color: red;*/
+    }
+
+    .room-wrap-center {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 320px;
+        /*background-color: red;*/
+    }
+
+    .room-wrap-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 200px;
+        /*background-color: red;*/
+    }
+
+
+    .room-template {
+        padding: 4px;
+        display: flex;
+        justify-content: center;
+        margin: 4px;
+        border-radius: 3px;
+        flex-wrap: wrap;
+        font-weight: 600;
+        height: 80px;
+        --room-operator-short: 180px;
+        --room-operator-long: 300px;
+        border: 1px solid var(--c-page-background-color);
+        user-select: none;
+    }
+
+    .room-operators-skill-description {
+        width: 200px;
+        height: 300px;
+    }
+
+    .room-template:hover {
+    }
+
+
+    .copy-btn-wrap {
+        padding: 4px;
+        margin: 4px;
+        height: 70px;
+        width: 500px;
+        border: 1px solid var(--c-page-background-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /*background-color: #d0d0d0;*/
+    }
+
+    .copy-btn-wrap > span {
+        font-weight: bold;
+        line-height: 24px;
+        margin-right: 12px;
+    }
+
+    .blank {
+        box-shadow: none;
+    }
+
+
+    .room-product {
+        position: absolute;
+        top: -80px;
+        left: 76px;
+        transform: scale(.17);
+    }
+
+    .room-name {
+        width: 100%;
+        height: 22px;
+        font-size: 16px;
+        text-align: center;
+        position: relative;
+    }
 
     /* 设施样式 */
 
     .trading {
         background-color: #0288d115;
         color: #0288d1;
+        width: var(--room-operator-short);
     }
 
     .manufacture {
         background-color: #ffb50015;
         color: #ffb500;
+        width: var(--room-operator-short);
     }
 
     .power {
         background-color: #43a04715;
         color: #43a047;
+        width: var(--room-operator-short);
     }
 
     .control {
         background-color: #43a04715;
         color: #43a047;
+        width: var(--room-operator-long);
     }
 
     .dormitory {
         background-color: #009fb415;
         color: #009fb4;
+        width: var(--room-operator-long);
     }
 
     .meeting {
         background-color: #7e7e7e15;
         color: #7e7e7e;
+        width: var(--room-operator-short);
     }
 
     .processing {
         background-color: #7e7e7e15;
         color: #7e7e7e;
-
+        width: var(--room-operator-short);
     }
 
     .hire {
         background-color: #7e7e7e15;
         color: #7e7e7e;
-
+        width: var(--room-operator-short);
     }
 
-
-}
-
-.schedule-dialog {
-    .operator-option {
-        width: 60px;
-        height: 76px;
-        overflow: hidden;
-        cursor: pointer;
-        font-size: 0;
-        .operator-name {
-            font-size: 12px;
-            text-align: center;
-        }
+    .trading-selected {
+        background-color: transparent;
+        border: 1px solid #0288d1;
     }
-    .operator-checkbox{
-        height: 300px;
-        overflow-y: auto;
+
+    .manufacture-selected {
+        background-color: transparent;
+        border: 1px solid #ffb500;
     }
-    .selected-operator{
+
+    .power-selected {
+        background-color: transparent;
+        border: 1px solid #43a047;
+    }
+
+    .control-selected {
+        background-color: transparent;
+        border: 1px solid #43a047;
+    }
+
+    .dormitory-selected {
+        background-color: transparent;
+        border: 1px solid #009fb4;
+    }
+
+    .meeting-selected {
+        background-color: transparent;
+        border: 1px solid #7e7e7e;
+    }
+
+    .processing-selected {
+        background-color: transparent;
+        border: 1px solid #7e7e7e;
+    }
+
+    .hire-selected {
+        background-color: transparent;
+        border: 1px solid #7e7e7e;
+    }
+
+    .trading,
+    .manufacture,
+    .power,
+    .control,
+    .dormitory,
+    .meeting,
+    .processing,
+    .hire {
+        transition: background-color 0.3s;
+    }
+
+    /* 悬停时的背景颜色变化 */
+
+    .trading:hover {
+        background-color: #d0e9ff;
+    }
+
+    .manufacture:hover {
+        background-color: #ffebd0;
+    }
+
+    .power:hover {
+        background-color: #ceffd3;
+    }
+
+    .control:hover {
+        background-color: #d8ffdd;
+    }
+
+    .dormitory:hover {
+        background-color: #d4f1ff;
+    }
+
+    .meeting:hover {
+        background-color: #dedede;
+    }
+
+    .processing:hover {
+        background-color: #dedede;
+    }
+
+    .hire:hover {
+        background-color: #dedede;
+    }
+
+    .trading,
+    .manufacture,
+    .power,
+    .control,
+    .dormitory,
+    .meeting,
+    .processing,
+    .hire {
         position: relative;
-        .selected-operator-icon-close{
-            position: absolute;
-            right: -2px;
-            top: 0;
+        overflow: hidden;
+    }
+
+    /* 添加外层涟漪效果 */
+
+    :root {
+        --ripple-color: 128, 128, 128;
+    }
+
+    .trading:focus {
+        --ripple-color: 2, 136, 209;
+    }
+
+    .manufacture:focus {
+        --ripple-color: 255, 181, 0;
+    }
+
+    .power:focus,
+    .control:focus {
+        --ripple-color: 67, 160, 71;
+    }
+
+    .dormitory:focus {
+        --ripple-color: 0, 159, 180;
+    }
+
+    .meeting:focus,
+    .processing:focus,
+    .hire:focus {
+        --ripple-color: 126, 126, 126;
+    }
+
+    .trading:focus,
+    .manufacture:focus,
+    .power:focus,
+    .control:focus,
+    .dormitory:focus,
+    .meeting:focus,
+    .processing:focus,
+    .hire:focus {
+        animation: ripple 1s;
+    }
+
+    @keyframes ripple {
+        0% {
+            box-shadow: 0 0 0 0 rgba(var(--ripple-color), 1);
+        }
+
+        100% {
+            box-shadow: 0 0 0 5px rgba(var(--ripple-color), 0);
         }
     }
 
-    .room-set-label{
+    /* 添加内层涟漪效果 */
+    /*.trading::after, .manufacture::after, .power::after, .control::after, .dormitory::after, .meeting::after, .processing::after, .hire::after {*/
+    /*    content: "";*/
+    /*    display: block;*/
+    /*    position: absolute;*/
+    /*    width: 100%;*/
+    /*    height: 100%;*/
+    /*    top: 0;*/
+    /*    left: 0;*/
+    /*    pointer-events: none;*/
+    /*    background-image: radial-gradient(circle, #d3d3d3 10%, transparent 15%);*/
+    /*    background-repeat: no-repeat;*/
+    /*    background-position: 50%;*/
+    /*    transform: scale(10, 10);*/
+    /*    opacity: 0;*/
+    /*    transition: transform 0.5s, opacity 1s;*/
+    /*}*/
+
+    /* 点击时激活 */
+    /*.trading:active::after, .manufacture:active::after, .power:active::after, .control:active::after, .dormitory:active::after, .meeting:active::after, .processing:active::after, .hire:active::after {*/
+    /*    transform: scale(0, 0);*/
+    /*    opacity: 0.2;*/
+    /*    transition: 0s;*/
+    /*}*/
+
+
+    .room-avatar-sprite-wrap {
+        height: 44px;
+        width: 44px;
+        margin: 4px;
+        position: relative;
+        --base-border-radius: 4px;
+        --avatar-border-radius: calc(var(--base-border-radius) * 4);
+        --avatar-position: calc((44px - 180px) / 2);
+        --avatar-scale: scale(calc(44 / 180));
+        border-radius: var(--base-border-radius);
+        box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
+    }
+
+    .room-avatar-sprite {
+        position: absolute;
+        top: var(--avatar-position);
+        left: var(--avatar-position);
+        transform: var(--avatar-scale);
+    }
+
+    .show-name {
+        height: 70px;
+        margin: 8px;
+    }
+
+    .operator-name {
+        position: absolute;
+        top: 52px;
+        width: 90px;
         font-size: 14px;
-        font-weight: bolder;
+        overflow: hidden;
+        /*background-color: #0b73dc;*/
     }
-}
 
-@media screen and (max-width: 600px) {
-    .schedule-dialog {
-        .operator-option {
-            width: 36px;
-            .operator-name {
-                font-size: 8px;
-            }
+    .room-set-title {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+
+    .room-set-wrap {
+
+        margin: auto;
+    }
+
+    .room-set {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 12px;
+        justify-content: flex-start;
+    }
+
+    .room-set-description {
+        padding-left: 16px;
+        padding-right: 4px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .filter-condition-box {
+        display: inline-block;
+        padding: 12px 12px 6px;
+    }
+
+    .condition-bar {
+        margin-top: 4px;
+    }
+
+    .condition-tip {
+        display: inline-block;
+        font-style: italic;
+        font-size: 12px;
+        margin-top: 6px;
+        margin-left: 16px;
+    }
+
+    .condition-bar > span {
+        padding-left: 16px;
+        padding-right: 5px;
+        font-weight: 600;
+    }
+
+    .check-image-wrap {
+        width: 80px;
+        height: 80px;
+        margin: 4px;
+        position: relative;
+        border-radius: 4px;
+        border: 1px solid #858585;
+        overflow: hidden;
+    }
+
+    .check-image {
+        position: absolute;
+        top: -50px;
+        left: -50px;
+        transform: scale(0.5);
+    }
+
+    .selected-operator-wrap {
+        margin: 8px;
+        display: flex;
+        align-items: center;
+        vertical-align: center;
+        flex-wrap: wrap;
+        height: 52px;
+        width: 260px;
+        border: 1px solid var(--c-border-color);
+    }
+
+    .selected-operator-wrap span {
+        padding: 2px 8px 2px 4px;
+        font-size: 16px;
+    }
+
+    .room-popup-wrap {
+        margin: 4px;
+    }
+
+    .room-popup-title {
+        width: 100%;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .settlement-operator {
+        display: flex;
+        height: 74px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .room-operator {
+        position: relative;
+        width: 50px;
+    }
+
+    .operator-delete-icon {
+        cursor: pointer;
+        font-weight: 600;
+        position: absolute;
+        left: 32px;
+        top: -3px;
+        background-color: var(--c-page-background-color);
+        border-radius: 10px;
+        box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
+    }
+
+    .schedule-operator-search-input-box {
+        display: flex;
+        margin: 8px 16px;
+        height: 50px;
+        align-items: center;
+        /*background-color: #00a1d6;*/
+    }
+
+    .operator-check-box-group {
+        min-height: 360px;
+        margin: auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        justify-content: flex-start;
+    }
+
+    .operator-check-box-option {
+        cursor: pointer;
+        margin: 0 4px 29px;
+        position: relative;
+        font-size: 15px;
+        width: 60px;
+        height: 60px;
+        box-shadow: 1px 1px 10px var(--c-box-shadow-color);
+    }
+
+    .operator-check-box-description {
+        position: absolute;
+        bottom: 70px;
+        width: 200px;
+        display: none;
+        line-height: 22px;
+        background-color: var(--c-page-background-color);
+        z-index: 2000;
+        padding: 8px;
+        box-shadow: 1px 1px 4px var(--c-box-shadow-color);
+    }
+
+    .operator-check-box-option:hover {
+        .operator-check-box-description {
+            display: block;
         }
     }
+
+    .operator-check-box-option-v2 {
+        width: 80px;
+        height: 80px;
+        overflow: hidden;
+    }
+
+    .operator-check-label-v2 {
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .operator-check-label {
+        width: 60px;
+        position: absolute;
+        top: 60px;
+        padding-top: 1px;
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .option-avatar-sprite-wrap {
+        margin: 2px 8px 20px;
+        position: relative;
+        font-size: 15px;
+        width: 60px;
+        height: 60px;
+        box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
+    }
+
+
+    .operator-building-skill-description {
+        position: absolute;
+        bottom: 70px;
+        left: -80px;
+        width: 300px;
+        display: none;
+        line-height: 22px;
+        background-color: var(--c-page-background-color);
+        z-index: 2000;
+        padding: 8px;
+        box-shadow: 1px 1px 4px var(--c-box-shadow-color);
+    }
+
+    .operator-check-box-option:hover {
+        .operator-building-skill-description {
+            display: block;
+        }
+    }
+
+    .option-avatar-sprite-wrap:hover {
+        .operator-building-skill-description {
+            display: block;
+        }
+    }
+
+
+    .option-avatar-sprite {
+        position: absolute;
+        top: -60px;
+        left: -60px;
+        transform: scale(0.328);
+    }
+
+
+    .product-image-wrap {
+        height: 40px;
+        width: 40px;
+        margin-right: 12px;
+        margin-left: 4px;
+        position: relative;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .product-image {
+        position: absolute;
+        top: -71px;
+        left: -71px;
+        transform: scale(0.2197);
+    }
+
+
+    .product-image-select {
+        background-color: hotpink;
+    }
+
+
+    .schedule-set-wrap {
+        margin: auto;
+        font-size: 14px;
+    }
+
+    .schedule-set-bar {
+        margin: auto;
+
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        height: 60px;
+        justify-content: flex-start;
+    }
+
+    .schedule-set-bar > span {
+        min-width: 80px;
+        padding-left: 4px;
+        padding-right: 4px;
+        font-weight: 600;
+    }
+
+    .schedule-set-bar div {
+        /*width: 270px;*/
+    }
+
+
+    .schedule-set-bar-short {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        height: 60px;
+        justify-content: flex-start;
+    }
+
+    .schedule-set-bar-short > span {
+        padding-left: 4px;
+        padding-right: 4px;
+        font-weight: 600;
+    }
 }
-
-
-

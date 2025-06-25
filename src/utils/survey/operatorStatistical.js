@@ -14,11 +14,14 @@ for (const item of compositeTableJson) {
     compositeTable[itemId] = {resolve, pathway, rarity}
 }
 
+const itemInfoMap = new Map()
+
 async function getItemInfoMap() {
     const itemList = await itemCache.getItemValueCacheByConfig(stageConfig)
     let map = new Map()
     for (const item of itemList) {
         map.set(item.itemId, item)
+        itemInfoMap.set(item.itemId, item)
     }
 
     return map
@@ -51,6 +54,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     const charId = target.charId
     const rarity = target.rarity
 
+    const itemCostLog = []
 
     let itemCost = {}
     //解构当前练度属性
@@ -78,21 +82,32 @@ function getOperatorItemCost(current, target, itemInfoMap) {
 
     debug("获取材料消耗时，传入的干员对象", target, target)
 
+    let apCost = 0
+
     // 查不到干员返回空对象
     if (OPERATOR_ITEM_COST_TABLE[charId] === void 0) return {};
     //id对应的干员信息
     const operatorItemCost = OPERATOR_ITEM_COST_TABLE[charId];
     //解构出通用技能和专精技能的材料消耗
     const {allSkill, skills} = OPERATOR_ITEM_COST_TABLE[charId];
+
     //计算干员升级消耗
-    const levelApCost = getLevelUpCostByRarity(rarity,
-        {current_elite: currentElite, current_level: currentLevel},
-        {target_elite: targetElite, target_level: targetLevel});
+    const levelApCost = getLevelUpCostByRarityV2({rarity,
+        currentElite: currentElite, currentLevel: currentLevel,
+        targetElite: targetElite, targetLevel: targetLevel});
+
 
     debug("干员原始消耗", target, operatorItemCost)
 
 
     // console.log(name,'狗粮：',levelApCost["2003"]*1000,'龙门币：',levelApCost["4001"])
+
+    itemCostLog.push({"itemName": "经验书", "itemId": "2003", "num": levelApCost["2003"] * 1000})
+    itemCostLog.push({"itemName": "龙门币", "itemId": "4001", "num": levelApCost["4001"]})
+
+    // apCost+=itemInfoMap.get("4001").itemValue*levelApCost["4001"]
+    // apCost+=itemInfoMap.get("2003").itemValue*levelApCost["2003"]
+
 
     //统计材料消耗
     for (const itemId in levelApCost) {
@@ -102,6 +117,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
 
     // 下面的是计算从当前练度到目标练度的消耗
     // 精英化消耗的材料
+    itemCostLog.push({"itemName": "精英化", "itemId": 0, "num": 0})
 
     for (let e = currentElite; e <= targetElite; e++) {
         const costList = operatorItemCost.elite[e]
@@ -110,17 +126,28 @@ function getOperatorItemCost(current, target, itemInfoMap) {
 
             let count = operatorItemCost.elite[e][itemId];
             _addItemCost(itemId, count)
-            debug(`精英'+${e}`, target, itemId, count)
+            debug(`精英等级${e}`, target, itemId, count)
+
+            itemCostLog.push({"itemName": itemInfoMap.get(itemId).itemName, "itemId": itemId, "num": count})
+            // apCost+=itemInfoMap.get(itemId).itemValue*count
         }
     }
 
+
+    itemCostLog.push({"itemName": "主技能", "itemId": 0, "num": 0})
+
     // 通用技能消耗的材料
     for (let mainSkillRank = currentMainSkill; mainSkillRank <= targetMainSkill; mainSkillRank++) {
-        const list = allSkill[mainSkillRank-1]
+        if (mainSkillRank < 2) {
+            continue
+        }
+        const list = allSkill[mainSkillRank - 2]
         for (let itemId in list) {
             let count = list[itemId];
             _addItemCost(itemId, count)
-            debug(`主技能等级'+${mainSkillRank}`, target, itemId, count)
+            debug(`主技能等级${mainSkillRank}`, target, itemId, count)
+
+            itemCostLog.push({"itemName": itemInfoMap.get(itemId).itemName, "itemId": itemId, "num": count})
         }
     }
 
@@ -128,13 +155,15 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     _statisticsSkills(1, currentSkill2, targetSkill2)
     _statisticsSkills(2, currentSkill3, targetSkill3)
 
-    debug("11111", target, currentSkill2, targetSkill2)
+    // debug("11111", target, currentSkill2, targetSkill2)
 
     function _statisticsSkills(index, currentSkill, targetSkill) {
         const list = skills[index]
         if (!list) {
             return
         }
+
+        itemCostLog.push({"itemName": `技能-${index + 1}专精`, "itemId": 0, "num": 0})
 
         debug("干员专精的消耗", target, `技能${index + 1}`, list)
 
@@ -145,6 +174,8 @@ function getOperatorItemCost(current, target, itemInfoMap) {
                 const count = itemCost[id]
                 debug("干员专精每级的消耗", target, id, count)
                 _addItemCost(id, count)
+
+                itemCostLog.push({"itemName": itemInfoMap.get(id).itemName, "itemId": id, "num": count})
             }
         }
 
@@ -160,6 +191,8 @@ function getOperatorItemCost(current, target, itemInfoMap) {
             return;
         }
 
+        itemCostLog.push({"itemName": `模组-${type}专精`, "itemId": 0, "num": 0})
+
         const list = operatorItemCost[`mod${type}`]
 
         debug("干员模组消耗", target, `mod${type}`, list)
@@ -169,6 +202,11 @@ function getOperatorItemCost(current, target, itemInfoMap) {
                 let count = itemCost[id];
                 debug("干员模组每级的消耗", target, id, count)
                 _addItemCost(id, count)
+
+
+                if (itemInfoMap.get(id)) {
+                    itemCostLog.push({"itemName": itemInfoMap.get(id).itemName, "itemId": id, "num": count})
+                }
             }
         }
     }
@@ -183,6 +221,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
         if (itemCost[id]) {
             lastCount = itemCost[id].count
         }
+
         itemCost[id] = {
             id: id,
             rarity: rarity,
@@ -192,47 +231,132 @@ function getOperatorItemCost(current, target, itemInfoMap) {
         }
     }
 
+    // console.table(itemCostLog)
+    // console.table(itemCost)
 
     return itemCost;
 }
 
 
-/**
- * 将材料消耗情况转为根据材料等级分类的集合
- * @param itemCost 材料效率总和
- * @returns {{itemList:*[][], apCost: number }}  总材料消耗，根据材料等级分类的集合
- */
-function getItemList(itemCost) {
-    let itemList = [[], [], [], [], []]
+const operatorMaxLevelTable = {
+    6: {elite0MaxLevel: 50, elite1MaxLevel: 80, elite2MaxLevel: 90},
+    5: {elite0MaxLevel: 50, elite1MaxLevel: 70, elite2MaxLevel: 80},
+    4: {elite0MaxLevel: 45, elite1MaxLevel: 60, elite2MaxLevel: 70},
+    3: {elite0MaxLevel: 40, elite1MaxLevel: 55, elite2MaxLevel: 0},
+    2: {elite0MaxLevel: 30, elite1MaxLevel: 0, elite2MaxLevel: 0},
+    1: {elite0MaxLevel: 30, elite1MaxLevel: 0, elite2MaxLevel: 0}
+}
 
-    let apCost = 0;
-
-    for (const itemId in itemCost) {
-        const item = itemCost[itemId]
-        const rarity = item.rarity;
-        const itemValue = item.itemValue
-        const count = item.count;
-        apCost += (itemValue * count)
-        itemList[(5 - rarity)].push(item)
-    }
-
-    for (let list of itemList) {
-        list.sort((a, b) => {
-            return b.count - a.count
-        })
-    }
-
-    return {itemList, apCost}
+const operatorEliteCostTable = {
+    6: {elite1Cost: 30000, elite2Cost: 180000},
+    5: {elite1Cost: 20000, elite2Cost: 120000},
+    4: {elite1Cost: 15000, elite2Cost: 60000},
+    3: {elite1Cost: 10000, elite2Cost: 0},
+    2: {elite1Cost: 0, elite2Cost: 0},
+    1: {elite1Cost: 0, elite2Cost: 0},
 }
 
 
-const rarity_level_table = {
-    6: {elite0_max_level: 50, elite1_max_level: 80},
-    5: {elite0_max_level: 50, elite1_max_level: 70},
-    4: {elite0_max_level: 45, elite1_max_level: 60},
-    3: {elite0_max_level: 40, elite1_max_level: 55},
-    2: {elite0_max_level: 30, elite1_max_level: 0},
-    1: {elite0_max_level: 30, elite1_max_level: 0}
+// console.table(getLevelUpCostByRarityV2({rarity:6, currentElite: 0, currentLevel: 0, targetElite: 2, targetLevel: 90}))
+
+
+/**
+ *
+ * @param rarity 星级
+ * @param currentElite 当前精英等级
+ * @param currentLevel 当前等级
+ * @param targetElite 目标精英等级
+ * @param targetLevel 目标等级
+ * @returns {{"4001": number, "2003": number}}
+ */
+function getLevelUpCostByRarityV2({rarity, currentElite, currentLevel, targetElite, targetLevel}) {
+
+    let levelCost = {
+        "4001": 0, "2003": 0
+    }
+
+    if (!operatorMaxLevelTable[rarity]) return {
+        level_cost: levelCost
+    };
+
+    const {elite0MaxLevel, elite1MaxLevel, elite2MaxLevel,} = operatorMaxLevelTable[rarity]
+    let totalGold = 0;
+    let totalExp = 0;
+
+
+    // 辅助函数：获取某个阶段的等级上限
+    function _getMaxLevel(eliteLevel) {
+        if (eliteLevel === 0) return elite0MaxLevel;
+        else if (eliteLevel === 1) return elite1MaxLevel;
+        else return elite2MaxLevel; // 阶段2无上限
+    }
+
+    // 辅助函数：累加某阶段中一段等级区间的消耗
+    function _addCostBetween(eliteLevel, fromLevel, toLevel) {
+        const eliteKey = `elite${eliteLevel}`;
+        let levelCostTable = LEVEL_COST_TABLE[eliteKey]
+        let total = 0
+        if (fromLevel < 1) {
+            fromLevel = 1
+        }
+        for (let level = fromLevel; level < toLevel; level++) {
+            total += levelCostTable[level].gold
+            // console.log(`精英${eliteLevel}，等级${level}、gold+${levelCostTable[level].gold}、exp+${levelCostTable[level].exp},总计${total}`)
+            totalGold += levelCostTable[level].gold;
+            totalExp += levelCostTable[level].exp;
+        }
+    }
+
+
+
+    // 循环遍历每个阶段
+    for (let elite = currentElite; elite <= targetElite; elite++) {
+
+        const maxLevelInThisElite = _getMaxLevel(elite);
+        let startLevel = 1;
+        let endLevel = maxLevelInThisElite;
+
+        // 如果是第一个阶段（即 currentElite）
+        if (elite === currentElite) {
+            startLevel = currentLevel;
+        }
+
+        // 如果是最后一个阶段（即 targetElite）
+        if (elite === targetElite) {
+            endLevel = Math.min(targetLevel, maxLevelInThisElite);
+        }
+
+        // 如果该阶段最大等级为0（如2星以下精英阶段1），跳过
+        if (maxLevelInThisElite === 0) continue;
+
+
+
+        // 添加这一阶段内的经验与金币消耗
+        if (endLevel > startLevel) {
+
+            _addCostBetween(elite, startLevel, endLevel);
+        }
+
+        // 如果进入下一阶段，判断是否要添加跃迁费用
+        if (elite < targetElite) {
+            if (elite === 0) {
+                // 从阶段0到阶段1的额外费用
+                totalGold += operatorEliteCostTable[rarity].elite1Cost;
+            } else if (elite === 1) {
+                // 从阶段1到阶段2的额外费用
+                totalGold += operatorEliteCostTable[rarity].elite2Cost;
+            }
+        }
+    }
+
+    totalExp = totalExp/1000;
+
+
+    levelCost = {
+        "4001": totalGold,
+        "2003": totalExp
+    }
+    return levelCost
 }
 
 /**
@@ -250,24 +374,24 @@ function getLevelUpCostByRarity(rarity, {current_elite, current_level}, {target_
         "4001": 0, "2003": 0
     }
 
-    if (!rarity_level_table[rarity]) return {
+    if (!operatorMaxLevelTable[rarity]) return {
         level_cost
     };
 
     const {elite0, elite1, elite2} = LEVEL_COST_TABLE
-    const {elite0_max_level, elite1_max_level} = rarity_level_table[rarity]
+    const {elite0MaxLevel, elite1MaxLevel} = operatorMaxLevelTable[rarity]
 
     let current_level_0 = current_elite === 0 ? current_level : 0;
     let current_level_1 = current_elite === 1 ? current_level : 0;
     let current_level_2 = current_elite === 2 ? current_level : 0;
-    if (current_elite > 0) current_level_0 = elite0_max_level
-    if (current_elite > 1) current_level_1 = elite1_max_level
+    if (current_elite > 0) current_level_0 = elite0MaxLevel
+    if (current_elite > 1) current_level_1 = elite1MaxLevel
 
     let target_level_0 = target_elite === 0 ? target_level : 0;
     let target_level_1 = target_elite === 1 ? target_level : 0;
     let target_level_2 = target_elite === 2 ? target_level : 0;
-    if (target_elite > 0) target_level_0 = elite0_max_level
-    if (target_elite > 1) target_level_1 = elite1_max_level
+    if (target_elite > 0) target_level_0 = elite0MaxLevel
+    if (target_elite > 1) target_level_1 = elite1MaxLevel
 
 
     for (let i = current_level_0; i < target_level_0; i++) {
@@ -289,16 +413,20 @@ function getLevelUpCostByRarity(rarity, {current_elite, current_level}, {target_
     }
 
 
-    if (rarity > 2 && current_elite < 1 && target_elite > 0) {
-        level_cost["4001"] += (5000 * (rarity - 1))
-    }
+    if (rarity > 2 && target_elite > 0) {
+        if (current_elite < 1) {
+            level_cost["4001"] += 5000 * (rarity - 1);
+        }
 
-    if (rarity > 3 && current_elite < 2 && target_elite > 1) {
-        level_cost["4001"] += (60000 * (rarity - 3))
+        if (current_elite < 2 && target_elite > 1) {
+            level_cost["4001"] += 60000 * (rarity - 3);
+        }
     }
 
 
     level_cost["2003"] = level_cost["2003"] / 1000
+
+
     return level_cost;
 }
 
@@ -307,6 +435,9 @@ async function statisticsOperatorInfo(operatorList) {
     const itemInfoMap = await getItemInfoMap()
     // console.log(itemInfoMap)
     // console.log(operatorList)
+
+    // operatorList = operatorList.filter(item => item.charId === "char_4193_lemuen")
+
     try {
 
         let logs = []
@@ -409,7 +540,6 @@ async function statisticsOperatorInfo(operatorList) {
 
                 statisticalData.info[index].module = _getModule(index);
             }
-
 
 
             statisticalData.info[index].rarity = rarity
@@ -518,8 +648,8 @@ function splitMaterialByTier(tier, itemCollect) {
     // console.log("材料消耗：", newCollect)
 
     for (let t = 5; t > tier; t--) {
-        const  higherTier = `T${t}`
-        const  lowerTier = `T${t-1}`
+        const higherTier = `T${t}`
+        const lowerTier = `T${t - 1}`
         for (const itemId in newCollect[higherTier]) {
             const t5Item = newCollect[higherTier][itemId]
             const t5ItemCount = t5Item.count
@@ -532,10 +662,10 @@ function splitMaterialByTier(tier, itemCollect) {
             for (const item of pathway) {
                 const needCount = item.count
                 const needItemId = item.itemId
-                if(!newCollect[lowerTier][needItemId]){
+                if (!newCollect[lowerTier][needItemId]) {
                     newCollect[lowerTier][needItemId] = {
-                        id:needItemId,
-                        count:0
+                        id: needItemId,
+                        count: 0
                     }
                 }
                 let t4ItemCount = newCollect[lowerTier][needItemId].count;
@@ -547,11 +677,6 @@ function splitMaterialByTier(tier, itemCollect) {
         }
     }
 
-    
-     
-    
-
-    
 
     // console.log("拆分后材料消耗：", newCollect)
     const {T5, T4, T3, T2, T1} = newCollect
@@ -560,9 +685,10 @@ function splitMaterialByTier(tier, itemCollect) {
 
 
 function debug(breakpoint, operator, value1, value2, value3) {
-    return
+    const {name} = operator
+    // return
 
-    console.log(breakpoint, ' {} ', name, ' {} ', value1, ' {} ', value2, ' {} ', value3)
+    // console.log('debug',breakpoint, ' {} ', name, ' {} ', value1, ' {} ', value2, ' {} ', value3)
 }
 
 export {

@@ -1,553 +1,601 @@
+import { getStageDropCollect } from "@/plugins/indexedDB/penguinData.js";
 import ITEM_INFO from "@/static/json/material/item_info.json";
-import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
+import ITEM_SERIES_INFO from '/src/static/json/material/item_series_info.json';
+import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json';
+import { itemSeriesInfoByItemId } from "/src/utils/item/itemSeries.js";
 
-import {getStageDropCollect} from "@/plugins/indexedDB/penguinData.js";
-import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
-// import {updateItemInfoWeight} from "/src/utils/item/updateItemInfoWeight.js";
+/**
+ * @typedef {Object} ItemInfo
+ * @property {string} itemId - 物品 ID
+ * @property {string} itemName - 物品名称
+ * @property {number} itemValue - 物品价值
+ * @property {number} rarity - 物品稀有度
+ * @property {number} weight - 物品权重
+ */
 
-
-//加工站每级期望产出理智初始值
-let workShopProducts = {
-    t1: 1.9622015949221407,
-    t2: 5.853670784766422,
-    t3: 24.578868967312253,
-    t4: 79.8592285162492
-}
-
-//每种精英物品的初始迭代值
-let itemValueCorrectionTerm = {
-    30013: {correctionTerm: 1.00000137324044, itemName: '固源岩组'},
-    30023: {correctionTerm: 1.0000040009822255, itemName: '糖组'},
-    30033: {correctionTerm: 1.0000019925398336, itemName: '聚酸酯组'},
-    30043: {correctionTerm: 0.9999483750088554, itemName: '异铁组'},
-    30053: {correctionTerm: 1.0000022954075312, itemName: '酮凝集组'},
-    30063: {correctionTerm: 1.0000013169421755, itemName: '全新装置'},
-    30073: {correctionTerm: 0.9999649132885954, itemName: '扭转醇'},
-    30083: {correctionTerm: 1.000002240727396, itemName: '轻锰矿'},
-    30093: {correctionTerm: 1.0000022806201772, itemName: '研磨石'},
-    30103: {correctionTerm: 1.0000130948559616, itemName: 'RMA70-12'},
-    31013: {correctionTerm: 0.9999904276257087, itemName: '凝胶'},
-    31023: {correctionTerm: 1.0000248495124442, itemName: '炽合金'},
-    31033: {correctionTerm: 1.00000158366126, itemName: '晶体元件'},
-    31043: {correctionTerm: 0.999997836003829, itemName: '半自然溶剂'},
-    31053: {correctionTerm: 1.000006210539448, itemName: '化合切削液'},
-    31063: {correctionTerm: 0.9999981294168673, itemName: '转质盐组'},
-    31073: {correctionTerm: 1.0001889176671603, itemName: '褐素纤维'},
-    31083: {correctionTerm: 0.9996130718228801, itemName: '环烃聚质'},
-    31093: {correctionTerm: 0.9996130718228801, itemName: '类凝结核'}
-}
-
-//物品信息列表
-let itemInfoList = ITEM_INFO.filter(e => e.cardNum < 100)
-
-//按关卡id分组的关卡掉落数据
-let stageDropCollect = void 0
-
-//基础龙门币价值（按CE6  10000龙门币=36理智）
-const baseLMDValue = 0.0036
+/**
+ * @typedef {Object} StageDropInfo
+ * @property {string} stageId - 作战 ID
+ * @property {string} stageCode - 作战名称
+ * @property {number} apCost - 理智消耗
+ * @property {number} quantity - 掉落数
+ * @property {number} times - 样本数
+ */
 
 
 /**
- * 计算物品价值
- * @param stageConfig 关卡自定义配置
+ * 判断物品是否为精英材料
+ * 直接使用物品 ID 判断，不一定准确
+ * @param {string} item_id 物品 ID
+ * @return {boolean} 是否为精英材料
  */
-function calculatedItemValue(stageConfig) {
-    //解构关卡自定义配置  经验书系数  龙门币系数  加工站爆率  自定义物品列表
-    const {expCoefficient, lmdCoefficient, workShopProductKnockRating, customItem} = stageConfig
+function isEliteMaterial(item_id) {
+    return /^3[01]\d{3}/.test(item_id);
+}
 
-    //自定义物品map
-    let customItemMap = new Map()
 
-    //将自定义物品列表转为一个map
-    if (customItem) {
-        for (const item of customItem) {
-            customItemMap.set(item.itemId, item.itemValue)
+/**
+ * 物品信息列表，包含物品id、名称、价值、稀有度、权重等信息
+ * @type {Array<ItemInfo>}
+ */
+const itemInfoList = ITEM_INFO.filter(e => e.cardNum < 100);
+
+/**
+ * 物品信息映射，key 为物品 ID，value 为物品信息
+ * @type {Map<string, ItemInfo>}
+ */
+const itemInfoMap = new Map(itemInfoList.map(item => [item.itemId, item]));
+
+
+/**
+ * 加工产出副产品时，各种物品作为副产品的概率
+ * key 为物品稀有度，value 为副产品概率映射
+ * @type {Map<number, Map<string, number>>}
+ */
+const workshopByproductWeightMap = new Map([
+    [1, new Map()],
+    [2, new Map()],
+    [3, new Map()],
+    [4, new Map()],
+]);
+for (const item of itemInfoList) {
+    if (item.weight === 0) {
+        continue;  // 通过副产品排除非可加工物品
+    }
+    workshopByproductWeightMap.get(item.rarity).set(item.itemId, item.weight);
+}
+
+
+// 基础龙门币价值、基础 EXP 价值
+const baseLMDValue = 36 / 10000;
+const baseEXPValue = 36 / 10000;
+
+/**
+ * 公开招募结果的星级概率分布
+ * 来源：教捐
+ * 详见物品价值算法文档 (https://ark.yituliu.cn/docs/item-value-algorithm#%E6%8B%9B%E8%81%98%E8%AE%B8%E5%8F%AF)
+ */
+const recruitRarity = {
+    "3": 0.7882,
+    "4": 0.2027,
+    "5": 0.0069,
+    "6": 0.0022,
+};
+
+/** 公开招募获得的凭证数量 */
+const recruitTokenMap = {
+    "RECRUITMENT_PERMIT_PRICING_3_4": {
+        "3": { "4005": 10, "4004": 0 },
+        "4": { "4005": 30, "4004": 1 },
+        "5": { "4005": 0, "4004": 5 },
+        "6": { "4005": 0, "4004": 10 },
+    },
+    "RECRUITMENT_PERMIT_PRICING_3_4_5": {
+        "3": { "4005": 10, "4004": 0 },
+        "4": { "4005": 30, "4004": 1 },
+        "5": { "4005": 0, "4004": 13 },
+        "6": { "4005": 0, "4004": 10 },
+    },
+    "RECRUITMENT_PERMIT_PRICING_3_4_5_6": {
+        "3": { "4005": 10, "4004": 0 },
+        "4": { "4005": 30, "4004": 1 },
+        "5": { "4005": 0, "4004": 13 },
+        "6": { "4005": 0, "4004": 25 },
+    },
+};
+
+
+/**
+ * 根据自定义配置计算物品价值表
+ * @param stageConfig 自定义参数
+ * @return {Promise<Array<ItemInfo>>}
+ */
+async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.000001) {
+
+    /**
+     * 作战效率和主产物（仅包含定价作战集中的作战）
+     * key 为作战 ID，value 为作战效率和主产物 ID
+     * @type {Map<string, { stageEfficiency: number, mainItemId: string }>}
+     */
+    const stageDropInfoMap = new Map();
+
+    /**
+     * 每系列材料的最高效率作战的作战效率
+     * key 为物品系列 ID，
+     * value 为定价作战集中，以该系列材料为主产物的最高效率作战和对应的效率
+     * @type {Map<string, { stageId: string, stageEfficiency: number }>}
+     */
+    const maxStageEfficiencyMap = new Map(ITEM_SERIES_INFO.map(series => [series.seriesId, { stageId: "", stageEfficiency: -Infinity }]));
+
+
+    // 步骤 1. 确定定价作战集和自定义物品价值
+
+    /**
+     * 按作战 ID 分组的作战掉落数据
+     * - 已排除样本数小于 `stageConfig.sampleSize` 的作战
+     * - 已排除 `stageConfig.stageBlacklist` 中的作战
+     * - 无论 `stageConfig.useActivityStage` 和 `stageConfig.useActivityAverageStage` 真假，总是包含活动作战，需要进一步手动排除
+     * @type {Map<string, Array<StageDropInfo>>}
+     */
+    const stageDropCollect = await getStageDropCollect(stageConfig, true);
+    /**
+     * 定价作战集
+     * 从 `stageDropCollect` 中筛选出符合定价作战集条件的作战
+     * - 已排除样本数小于 `stageConfig.sampleSize` 的作战
+     * - 已排除 `stageConfig.stageBlacklist` 中的作战
+     * - 若 `stageConfig.useActivityStage` 为假，则已排除所有活动作战
+     * - 若 `stageConfig.useActivityAverageStage` 为假，则已排除所有活动平均作战
+     */
+    const stageDropCollectForPricing = new Map();
+    for (const [stageId, dropList] of stageDropCollect) {
+        // 提取关卡消耗理智、关卡代号、关卡类型
+        const { apCost, stageType } = dropList[0];
+        if (['MAIN', 'ACT_PERM'].includes(stageType)) {
+            // 主线和常驻活动关卡总是包含在定价作战集中
+        }
+        if (['ACT', 'ACT_REP'].includes(stageType) && !stageConfig.useActivityStage) {
+            continue;  // 如果不使用活动作战定价则跳过
+        }
+        if ('YTL_VIRTUAL' === stageType && !stageConfig.useActivityAverageStage) {
+            continue;  // 如果不使用活动平均作战定价则跳过
+        }
+        stageDropCollectForPricing.set(stageId, dropList);
+    }
+
+    /**
+     * 自定义精英材料价值映射，key 为物品 ID，value 为物品价值
+     * @type {Map<string, number>}
+     */
+    const customEliteMaterialValueMap = new Map(stageConfig.customItem.map(item => [item.itemId, item.itemValue]));
+
+
+    // 步骤 2. 设定初始值
+    // - 除已经自定义的蓝材料外，给每种其他蓝材料的价值分别设定初始值。
+    // - 给加工绿、蓝、紫、金材料时副产品价值的期望分别设定初始值。
+
+    /**
+     * 物品价值映射，key 为物品 ID，value 为物品价值
+     * - 精英材料初始价值设为 3 ** rarity，非精英材料初始价值设为 0
+     * - 精英材料的初始价值不能太小，否则迭代时会有很多作战的主产物为非精英材料，导致这部分作战永远不会被考虑
+     * @type {Map<string, number>}
+     */
+    const itemValueMap = new Map(itemInfoList.map(({ itemId, rarity }) => [itemId, isEliteMaterial(itemId) ? 3 ** rarity : 0]));
+
+    /**
+     * 白、绿、蓝、紫副产品价值的期望，也即一个随机材料的价值
+     * key 为副产品稀有度，value 为期望值
+     * - 初始值设为 3 ** rarity
+     * @type {Map<number, number>}
+     */
+    const workshopByproductExpectedValue = new Map([
+        [1, 3],
+        [2, 9],
+        [3, 27],
+        [4, 81],
+    ]);
+
+
+    // 重复步骤 3、4、5、6、7，迭代计算物品价值，一般 10 次之内就能得出结果
+    for (let i = 0; i < maxIteration; i++) {
+        console.log(`第${i + 1}次迭代`);
+
+        // 步骤 7. 计算非精英材料的价值
+        calculateCommonItemValue();
+        // console.log("itemValueMap", Object.fromEntries(itemValueMap));
+
+        // 步骤 3. 计算所有精英材料的价值
+        calculateEliteMaterialValueFromT3();
+        // console.log("itemValueMap", Object.fromEntries(itemValueMap));
+
+        // 步骤 4. 计算副产品价值的期望
+        calculateWorkshopByproductExpectedValue();
+        // console.log("workshopByproductExpectedValue", Object.fromEntries(workshopByproductExpectedValue));
+
+        // 步骤 5. 计算作战期望掉落物品的总价值
+        calculateStageDropExpectedValue();
+        // console.log("stageDropInfoMap", Object.fromEntries(stageDropInfoMap));
+
+        // 步骤 6. 修正蓝材料的价值
+        updateT3EliteMaterialValue();
+        console.log("maxStageEfficiencyMap", Object.fromEntries(maxStageEfficiencyMap));
+
+        // 检查是否满足停机条件
+        if (checkCompletion(tolerance)) {
+            // 如果满足停机条件，结束迭代
+            break;
         }
     }
 
-
-    //物品信息map 以物品id为key
-    let itemInfoMap = new Map()
-
-    //将物品信息列表循环处理一下，写入到物品信息map
-    for (let item of itemInfoList) {
-        const itemId = item.itemId
-        //这里处理经验书和龙门币的价值，根据经验书和龙门币系数计算价值
-        if (itemId === "2004") {
-            item.itemValue = baseLMDValue * expCoefficient * 2000
-        }
-        if (itemId === "2003") {
-            item.itemValue = baseLMDValue * expCoefficient * 1000
-        }
-        if (itemId === "2002") {
-            item.itemValue = baseLMDValue * expCoefficient * 400
-        }
-        if (itemId === "2001") {
-            item.itemValue = baseLMDValue * expCoefficient * 200
-        }
-        if (itemId === "4001") {
-            item.itemValue = baseLMDValue * lmdCoefficient
-        }
-
-        //迭代物品价值，  物品价值/对应最高效率关的理智转化率
-        if (itemValueCorrectionTerm[itemId]) {
-            // console.log(item.itemName, item.itemValue, '/', itemValueCorrectionTerm[itemId].correctionTerm)
-            item.itemValue = item.itemValue / itemValueCorrectionTerm[itemId].correctionTerm
-        }
-
-        //如果物品被自定义价值了，将自定义价值强制写入
-        if (customItemMap.get(itemId)) {
-            item.itemValue = customItemMap.get(itemId)
-        }
-
-        //写入物品信息map
-        itemInfoMap.set(itemId, item)
+    // 把物品信息列表中的物品价值更新为计算后的值
+    for (const item of itemInfoList) {
+        item.itemValue = itemValueMap.get(item.itemId);
     }
 
-    //将白绿紫金物品通过加工站合成路径得出价值
-    for (const table of COMPOSITE_TABLE) {
-        //解构加工路径表   合成或拆解的物品id  判断拆解还是合成  合成路径
-        const {itemId, resolve, pathway} = table
-        //如果这个物品被自定义了，不再通过合成路径得到价值
-        if (customItemMap.get(itemId)) {
-            continue
-        }
+    return itemInfoList;
 
-        //通过id得到对应的物品信息
-        let item = itemInfoMap.get(itemId);
+    // ========== 函数结束 ==========
 
-        //物品等级
-        const rarity = item.rarity
+    /**
+     * 步骤 3. 计算所有精英材料的价值
+     * 在已知所有蓝材料价值的情况下，根据加工配方，计算白、绿、紫、金材料的价值。
+     * 思想：所有精英材料配方的消耗总价值等于产出总价值
+     *
+     * 函数将修改 `itemValueMap` 中的白、绿、紫、金材料价值。
+     */
+    function calculateEliteMaterialValueFromT3() {
+        /** 龙门币价值 */
+        const lmdValue = itemValueMap.get("4001");
 
-        //物品新价值
-        let newValue = 0.0
+        for (const table of COMPOSITE_TABLE) {
+            // 解构加工路径表：合成或拆解的物品id、判断拆解还是合成、合成路径
+            const { itemId, resolve, pathway } = table;
 
-        if (resolve) {
-            //灰，绿色品质是向下拆解   灰，绿色物品 = （蓝物品价值 + 副产物 - 龙门币）/合成蓝物品的所需灰绿物品数量
-            const expectProductsValue = workShopProducts[`t${rarity}`] * workShopProductKnockRating
-            for (const cost of pathway) {
-                const rawItem = itemInfoMap.get(cost.itemId)
-                newValue = (rawItem.itemValue + expectProductsValue - 0.36 * lmdCoefficient * rarity) / cost.count
-                // console.log(item.itemName + '=' + rawItem.itemName + '=(' + rawItem.itemValue + "+" + expectProductsValue + '-' + (0.36 * rarity) + ')/' + cost.count + '=' + newValue)
+            // 如果这个物品被自定义了，不再通过合成路径得到价值
+            if (customEliteMaterialValueMap.has(itemId)) {
+                continue;
             }
-        } else {
-            //紫，金色品质是向上合成    紫，金色物品 =  合成所需蓝物品价值之和  + 龙门币 - 副产物
-            const expectProductsValue = workShopProducts[`t${rarity - 1}`] * workShopProductKnockRating
-            for (const cost of pathway) {
-                const rawItem = itemInfoMap.get(cost.itemId)
-                newValue += rawItem.itemValue * cost.count
-                // console.log(item.itemName + '=' + rawItem.itemName + '*' + cost.count + '=' + newValue)
 
+            // 通过id得到对应的物品信息
+            const rarity = itemInfoMap.get(itemId).rarity;
+
+            // 物品新价值
+            let newValue = 0.0;
+
+            if (resolve) {
+                // 灰、绿色品质是向下拆解   灰、绿色物品 = （蓝物品价值 + 副产品 - 龙门币）/合成蓝物品的所需灰绿物品数量
+                const expectProductsValue = workshopByproductExpectedValue.get(rarity) * stageConfig.workshopEliteMaterialByProductRate;
+                for (const cost of pathway) {
+                    const rawItemValue = itemValueMap.get(cost.itemId);
+                    newValue = (rawItemValue + expectProductsValue - 100 * rarity * lmdValue) / cost.count;
+                }
+            } else {
+                // 紫、金色品质是向上合成    紫、金色物品 = 合成所需蓝物品价值之和 + 龙门币 - 副产品
+                const expectProductsValue = workshopByproductExpectedValue.get(rarity - 1) * stageConfig.workshopEliteMaterialByProductRate;
+                for (const cost of pathway) {
+                    const rawItemValue = itemValueMap.get(cost.itemId);
+                    newValue += rawItemValue * cost.count;
+                }
+                newValue += 100 * (rarity - 1) * lmdValue - expectProductsValue;
             }
 
-            newValue = newValue + 0.36 * lmdCoefficient * (rarity - 1) - expectProductsValue
-            // console.log(item.itemName + '=' + (0.36 * (rarity - 1)) + '-' + expectProductsValue + '=' + newValue)
-
+            // 更新物品新价值
+            itemValueMap.set(itemId, newValue);
         }
-        // console.log(newValue)
-        // console.log(item)
-
-        //更新物品新价值
-        item.itemValue = newValue
-        // console.log(newValue)
     }
 
-    _getWorkShopProductValue(itemInfoList)
+    /**
+     * 步骤 4. 计算副产品价值的期望
+     * 使用上一步计算出的所有精英材料的价值，计算加工绿、蓝、紫、金材料时副产品价值的期望。
+     *
+     * 函数将修改 `workshopByproductExpectedValue`。
+     */
+    function calculateWorkshopByproductExpectedValue() {
 
-    // EXP价值 = 龙门币价值 * EXP系数 = 36/10000 * 145/229 = 261/114500
-    // 基础作战记录价值 = 200 * EXP价值 = 522/1145
-    // 初级作战记录价值 = 400 * EXP价值 = 1044/1145
-    // 中级作战记录价值 = 1000 * EXP价值 = 522/229
-    // 高级作战记录价值 = 2000 * EXP价值 = 1044/229
-    // 无人机价值 = EXP价值 * 无人机生产EXP数量 =  261/114500 * 50/3 = 87/2290
-    // 赤金价值 = 无人机价值 / 无人机生产赤金数量 = 1044/1145
-    // 芯片组价值 = 36 * (1 - 12 * 龙门币价值) = 21528/625
-    // 采购凭证价值 = AP-5消耗理智 * (1 - 12 * 龙门币价值) / AP-5掉落采购凭证 = 1196/875
-    // 芯片助剂价值 = 90 * 采购凭证价值 = 21528/175
-    // 双芯片价值 = 2 * 芯片组价值 + 芯片助剂价值 + 20 * 无人机价值 = 193027818/1001875
-    // 模组数据块价值 = 120 * 采购凭证价值 = 28704/175
-    // 事相碎片价值 = 20 * 采购凭证价值 = 4784/175
-
-    // - θ 为合成精英物品时的副产物出率（θ = 20%），
-    // - BM 为蓝物品价值关于加工站副产物出率的加权平均（简单来说就是 1 个随机蓝物品的价值），
-    // 解得：
-    // - 因果价值 = 10/9 * (1 - θ) * BM / 36
-    // - 碳素组价值 = 240/19 * 家具零件价值 + 4 * 因果价值 - 4000/19 * 龙门币价值
-    // - 碳素价值 = 11/30 * 碳素组价值 + 6/5 * 因果价值
-    // - 碳价值 = 11/30 * 碳素价值 + 3/5 * 因果价值
-
-    _calculatedCommonItemValue(stageConfig)
-
-    function _calculatedCommonItemValue(stageConfig) {
-        const itemValueLMD = itemInfoMap.get('4001').itemValue
-        const itemValueEXP = itemInfoMap.get('2001').itemValue / 200
-        //无人机
-        const itemValueBaseAp = itemValueEXP * 50 / 3
-        //采购凭证  （关卡AP - 龙门币价值*关卡掉落*倍率*关卡AP)/掉落数
-        const itemValue4006 = (30 - itemValueLMD * 12 * 30) / 21;
-        //芯片助剂
-        const itemValue32001 = itemValue4006 * 90;
-        //赤金
-        const itemValue3003 = itemValueBaseAp * 24
-        //技能书3
-        const itemValue3303 = (30 - itemValueLMD * 12 * 30) / (2 + 1.5 * (1 + 0.18) / 3 + 1.5 * (1 + 0.18) * (1 + 0.18) / 9);
-        //技能书2
-        const itemValue3302 = 1.18 * itemValue3303 / 3;
-        //技能书1
-        const itemValue3301 = 1.18 * itemValue3302 / 3;
-
-        //芯片 扣除龙门币
-        const chip1Value = 18 - 18 * itemValueLMD * 12;
-        //芯片组 扣除龙门币
-        const chip2Value = 36 - 36 * itemValueLMD * 12;
-        //双芯片
-        const chip3Value = chip2Value * 2 + itemValue32001;
-        //模组数据块
-        const itemValueModUnlockToken = 120 * itemValue4006;
-        //模组数据块
-        const itemValueSTORYREVIEWCOIN = 20 * itemValue4006;
-
-        const t3workShopProductsValue = workShopProducts.t3
-
-        const itemValueYinGuo = 10 / 9 * (1 - workShopProductKnockRating) * t3workShopProductsValue  / 36
-        // console.log(itemValueYinGuo)
-        // console.log(workShopProductKnockRating)
-        // console.log(t3workShopProductsValue)
-        const itemValue3114 = 240 / 19 * 0 + 4 * itemValueYinGuo - 4000 / 19 * itemValueLMD
-        const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * itemValueYinGuo
-        const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * itemValueYinGuo
-
-
-        const itemValue4003sp = (itemInfoMap.get('30012').itemValue * 2 + 1600 * itemValueLMD + 40 * itemValueBaseAp) / 10
-
-        itemInfoMap.get("base_ap").itemValue = itemValueBaseAp;
-        itemInfoMap.get("3003").itemValue = itemValue3003;
-        itemInfoMap.get("4006").itemValue = itemValue4006;
-        itemInfoMap.get("32001").itemValue = itemValue32001;
-        itemInfoMap.get("3303").itemValue = itemValue3303;
-        itemInfoMap.get("3302").itemValue = itemValue3302;
-        itemInfoMap.get("3301").itemValue = itemValue3301;
-        itemInfoMap.get("mod_unlock_token").itemValue = itemValueModUnlockToken;
-        itemInfoMap.get("STORY_REVIEW_COIN").itemValue = itemValueSTORYREVIEWCOIN;
-        itemInfoMap.get("3303").itemValue = itemValue3303;
-        itemInfoMap.get("3302").itemValue = itemValue3302;
-        itemInfoMap.get("3301").itemValue = itemValue3301;
-        itemInfoMap.get("4003sp").itemValue = itemValue4003sp;
-        itemInfoMap.get("3114").itemValue = itemValue3114;
-        itemInfoMap.get("3113").itemValue = itemValue3113;
-        itemInfoMap.get("3112").itemValue = itemValue3112;
-
-        const chip1 = ['3211', '3221', '3231', '3241', '3251', '3261', '3271', '3281']
-        const chip2 = ['3212', '3222', '3232', '3242', '3252', '3262', '3272', '3282']
-        const chip3 = ['3213', '3223', '3233', '3243', '3253', '3263', '3273', '3283']
-        for (const chipId of chip1) {
-            itemInfoMap.get(chipId).itemValue = chip1Value;
+        // 计算按物品等级分类后的加工站各级物品副产品期望产出
+        for (const [rarity, group] of workshopByproductWeightMap) {
+            let expectValue = 0.0;
+            for (const [itemId, weight] of group) {
+                expectValue += itemValueMap.get(itemId) * weight;
+            }
+            // 更新加工站各级物品副产品期望产出
+            workshopByproductExpectedValue.set(rarity, expectValue);
         }
-        for (const chipId of chip2) {
-            itemInfoMap.get(chipId).itemValue = chip2Value;
+    }
+
+    /**
+     * 步骤 5. 对于每个作战，计算作战期望掉落物品的总价值，进而计算作战效率。
+     * 作战效率 = 作战期望掉落物品的总价值 ÷ 作战的理智消耗
+     *
+     * 函数将修改 `stageDropInfoMap`。
+     */
+    function calculateStageDropExpectedValue() {
+
+        // 循环关卡的物品掉落集合，每个集合是根据关卡id分组的
+        for (const [stageId, dropList] of stageDropCollectForPricing) {
+
+            // 提取关卡消耗理智
+            const { apCost } = dropList[0];
+
+            // 关卡期望产出总理智
+            let stageExpectedOutput = 0;
+
+            // 主产物物品id
+            // 这里主产物定义为价值占比最高的物品
+            let mainItemId;
+            // 最高的单项物品产出价值
+            let maxValue = -Infinity;
+
+            // 循环关卡的物品掉落集合
+            for (const drop of dropList) {
+
+                // 解构出物品id，掉落次数，样本数
+                const { itemId, quantity, times } = drop;
+
+                // 从物品表里面取出对应掉落物的信息
+                const itemValue = itemValueMap.get(itemId);
+
+                // 如果查不到物品信息则跳过
+                if (!itemValue) {
+                    continue;
+                }
+
+                // 计算物品掉率
+                const knockRating = quantity / times;
+
+                // 计算单项物品期望产出价值
+                const expectedOutput = knockRating * itemValue;
+
+                // 比较单项物品最大产出，最大的为主产物
+                if (expectedOutput > maxValue) {
+                    mainItemId = itemId;
+                    maxValue = expectedOutput;
+                }
+
+                // 计算关卡期望产出总理智
+                stageExpectedOutput += expectedOutput;
+            }
+
+            stageDropInfoMap.set(stageId, {
+                stageEfficiency: stageExpectedOutput / apCost,
+                mainItemId: mainItemId,
+            });
         }
-        for (const chipId of chip3) {
-            itemInfoMap.get(chipId).itemValue = chip3Value;
+    }
+
+    /**
+     * 步骤 6. 修正蓝材料的价值
+     *
+     * 思想：
+     * 1. 定价作战集中的所有作战效率 ≤ 1；
+     * 2. 对于每一系列材料，在定价作战集中至少存在 1 个以该系列材料为主产物且效率等于 1 的作战。
+     *
+     * 固定一类材料，在定价作战集中寻找以该系列材料为主产物的所有作战，取其中作战效率最高的那个作战，作战效率记为 E。然后把对应的蓝材料的价值进行修正，将对应蓝材料的价值除以 E，得到新的价值。
+     * 这个步骤需要对每系列材料都做一遍（除了已经在步骤 1 自定义价值的材料）。
+     *
+     * 函数将修改 `maxStageEfficiencyMap` 与 `itemValueMap` 中的蓝材料价值。
+     */
+    function updateT3EliteMaterialValue() {
+
+        // 先清空 maxStageEfficiencyMap
+        for (const seriesId of maxStageEfficiencyMap.keys()) {
+            maxStageEfficiencyMap.set(seriesId, { stageId: "", stageEfficiency: -Infinity });
         }
 
+        // 遍历所有作战
+        for (const [stageId, { stageEfficiency, mainItemId }] of stageDropInfoMap) {
+
+            // 查询这个关卡的主产物是否是精英材料
+            if (!itemSeriesInfoByItemId.has(mainItemId)) {
+                continue;  // 如果不是精英材料则跳过
+            }
+
+            // 获取精英材料对应系列的信息  如凝胶系为[凝胶、聚合凝胶]
+            const seriesInfo = itemSeriesInfoByItemId.get(mainItemId);
+
+            // 物品系列的id和名称
+            const { seriesId } = seriesInfo;
+
+            // 该系列材料的最高作战效率
+            const currentMaxStageEfficiency = maxStageEfficiencyMap.get(seriesId).stageEfficiency;
+
+            if (stageEfficiency > currentMaxStageEfficiency) {
+                // 如果当前作战效率大于该系列材料的最高效率，则更新最高效率
+                maxStageEfficiencyMap.set(seriesId, { stageId, stageEfficiency });
+            }
+        }
+
+        // 更新蓝材料的价值
+        for (const [seriesId, { stageId, stageEfficiency }] of maxStageEfficiencyMap) {
+
+            // 获取该系列蓝材料的物品 ID，蓝材料物品 ID 就是系列 ID
+            const itemIdT3 = seriesId;
+
+            // 获取该系列蓝材料之前的价值
+            const itemValueT3 = itemValueMap.get(itemIdT3);
+
+            // 更新蓝材料的价值
+            itemValueMap.set(itemIdT3, itemValueT3 / stageEfficiency);
+        }
+
+        // 将自定义精英材料价值写入物品价值映射
+        for (const [itemId, itemValue] of customEliteMaterialValueMap) {
+            itemValueMap.set(itemId, itemValue);
+        }
     }
 
 
     /**
-     * 获取加工站物品合成时的各级物品副产品期望产出
-     * @param itemList
-     * @private
+     * 步骤 7. 计算非精英材料的价值
      */
-    function _getWorkShopProductValue(itemList) {
+    function calculateCommonItemValue() {
+        // 龙门币
+        const itemValue4001 = stageConfig.lmdCoefficient * baseLMDValue;
+        // EXP
+        const itemValueEXP = stageConfig.expCoefficient * baseEXPValue;
+        const itemValue2001 = itemValueEXP * 200;
+        const itemValue2002 = itemValueEXP * 400;
+        const itemValue2003 = itemValueEXP * 1000;
+        const itemValue2004 = itemValueEXP * 2000;
+        // 无人机
+        const itemValueBaseAp = itemValueEXP * 50 / 3;
+        // 赤金
+        const itemValue3003 = itemValueBaseAp * 24;
 
-        //根据星级分类
-        let collect = new Map()
-        //循环物品信息表
-        for (const item of itemList) {
-            //通过副产物排除非可加工物品
-            if (item.weight === 0) {
-                continue
-            }
-            //判断物品等级进行分类
-            if (!collect.get(item.rarity)) {
-                collect.set(item.rarity, [])
-            }
-
-            collect.get(item.rarity).push(item)
+        // 合成玉
+        let itemValue4003;
+        switch (stageConfig.orundumPricingStrategy) {
+            case "ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE":
+                itemValue4003 = (itemValueMap.get("30012") * 2 + 1600 * itemValue4001 + 40 * itemValueBaseAp) / 10; break;
+            case "ORUNDUM_PRICING_ORININUM_FARMING_DEVICE":
+                itemValue4003 = (itemValueMap.get("30062") + 1000 * itemValue4001 + 40 * itemValueBaseAp) / 10; break;
+            default:
+                itemValue4003 = stageConfig.orundumValue;
         }
-
-        //计算按物品等级分类后的加工站各级物品副产品期望产出
-        for (const [rarity, group] of collect) {
-            let expectValue = 0.0
-            for (const item of group) {
-                const {itemValue, itemName, weight} = item
-                expectValue += itemValue * weight
-                // console.log('+=',itemName+'='+itemValue+'*'+weight,'=',expectValue)
-            }
-            //更新加工站各级物品副产品期望产出
-            workShopProducts[`t${rarity}`] = expectValue
-        }
-    }
-
-}
-
-/**
- *  * 获取物品价值迭代系数
- * @param stageConfig 关卡配置
- * @param index  迭代次数
- * @returns {Promise<{nextItemCorrectionTerm: Map<any, any>}>}
- */
-async function getItemValueCorrectionTerm(stageConfig, index) {
-
-
-    //物品map
-    let itemMap = new Map()
-
-    //将物品信息集合转为一个物品信息map
-    for (const item of itemInfoList) {
-        itemMap.set(item.itemId, item)
-    }
-
-    //每个物品系列的最高效率关卡
-    let maxStageEfficiencyMap = new Map()
-    //虚拟SideStory关卡效率集合
-    let activityAverageStageEfficiency = new Map()
-
-    //循环关卡的物品掉落集合，每个集合是根据关卡id分组的
-    for (const [stageId, list] of stageDropCollect) {
-
-        //关卡消耗理智，关卡代号，关卡类型
-        const {apCost, stageCode, stageType} = list[0]
-
-        if (['MAIN', 'ACT_PERM'].includes(stageType)) {
-            //如果不使用活动关定价则跳出循环
-        }
-
-        if (['ACT', 'ACT_REP'].includes(stageType)) {
-            if (!stageConfig.useActivityStage) {
-                continue
-            }
-        }
-
-        if ('YTL_VIRTUAL' === stageType) {
-            if (!stageConfig.useActivityAverageStage) {
-                continue
-            }
-        }
-
-
-        //关卡效率
-        let stageEfficiency = 0.0
-        //关卡期望产出总理智
-        let stageExpectedOutput = 0.0
-
-        //如果是第一次迭代，需要给每个关卡的物品掉落添加一个龙门币掉落，
-        // if (index === 0) {
-        //     list.push({
-        //         stageId: stageId,
-        //         itemId: "4001",
-        //         quantity: apCost * 12,
-        //         times: 1
-        //     })
-        //     // 如果是活动再添加一个无限兑换龙门币，视为关卡掉落物
-        //     if ("ACT" === stageType || "ACT_REP" === stageType||"ACT_REP" === 'YTL_VIRTUAL') {
-        //         list.push({
-        //             stageId: stageId,
-        //             itemId: "4001",
-        //             quantity: apCost * 20,
-        //             times: 1
-        //         })
-        //     }
-        // }
-
-        //主产物物品id
-        let mainItemId = ''
-        //最高的单项物品产出价值
-        let maxValue = 0
-
-        let dropItemList = []
-
-        //循环关卡的物品掉落集合
-        for (const drop of list) {
-
-            //解构出物品id，掉落次数，样本数
-            const {itemId, quantity, times} = drop
-
-            // 从物品表里面取出对应掉落物的信息
-            const itemInfo = itemMap.get(itemId);
-
-            //如果查不到物品信息则跳过
-            if (!itemInfo) {
-                continue
-            }
-
-            //从物品信息中解构出物品价值
-            const {itemValue, itemName} = itemInfo;
-
-            //计算物品掉率
-            const knockRating = quantity / times
-
-            //计算单项物品期望产出价值
-            const expectedOutput = knockRating * itemValue
-
-            //比较单项物品最大产出，最大的为主产物
-            if (expectedOutput > maxValue) {
-                mainItemId = itemId
-                maxValue = expectedOutput
-            }
-
-            // if(stageId==='main_12-15'){
-            //     // console.log(stageCode, '---', itemName, '=', itemValue, '*', knockRating, '=', expectedOutput, '=', dropValueCount)
-            //     dropItemList.push({
-            //         itemId,
-            //         itemName,
-            //         knockRating,
-            //         itemValue
-            //     })
-            // }
-
-            //计算关卡期望产出总理智
-            stageExpectedOutput += expectedOutput
-        }
-
-        // console.log(JSON.stringify(dropItemList))
-
-        //计算关卡效率
-        stageEfficiency = stageExpectedOutput / apCost
-        // if (stageId === 'main_02-05') {
-        //     console.log(stageCode, '---', stageEfficiency, '=', dropValueCount, '/', apCost)
-        // }
-
-
-        //查询这个关卡的主产物是否是精英物品
-        if (!itemSeriesInfoByItemId.has(mainItemId)) {
-            // console.log(mainItemId,'不在18种物品中')
-            continue
-        }
-
-        //获取精英物品对应系列的信息  如凝胶系为[凝胶、聚合凝胶]
-        let seriesInfo = itemSeriesInfoByItemId.get(mainItemId)
-
-        //物品系列的id和名称
-        const {seriesId, seriesName} = seriesInfo
-
-        //物品系列的迭代值
-        const seriesCorrectionTerm = {
-            stageCode: stageCode,
-            seriesId: seriesId,
-            seriesName: seriesName,
-            correctionTerm: stageEfficiency,
-        }
-
-        // nextStageDropCollect.set(stageId, list)
-
-        //如果关卡系列为
-        if (stageType === 'YTL_VIRTUAL') {
-            activityAverageStageEfficiency.set(seriesId, seriesCorrectionTerm)
-        }
-
-
-        //判断是否有对应精英物品系列的迭代值
-        if (maxStageEfficiencyMap.has(seriesId)) {
-
-            //获取当前物品系列的迭代值
-            const correctionTerm = maxStageEfficiencyMap.get(seriesId).correctionTerm
-
-            //判断迭代值是否和已有的迭代值大小，如果更大则更新
-            if (stageEfficiency > correctionTerm) {
-                maxStageEfficiencyMap.set(seriesId, seriesCorrectionTerm)
-            }
+        // 至纯源石
+        let itemValue4002;
+        if (stageConfig.originitePrimeCoefficient === Infinity) {
+            itemValue4002 = Infinity;
         } else {
-            //没有对应物品系列迭代值新增
-            maxStageEfficiencyMap.set(seriesId, seriesCorrectionTerm)
+            itemValue4002 = stageConfig.originitePrimeCoefficient * itemValue4003;
         }
-    }
+        // 寻访凭证
+        const itemValue7003 = 600 * itemValue4003;
+        // 十连寻访凭证
+        const itemValue7004 = 10 * itemValue7003;
+        // 资质凭证价值根据经验法则定价为 0.8
+        const itemValue4005 = 0.8;
+        // 高级凭证
+        const itemValue4004 = 38 / 258 * itemValue7003;
+        // 中坚寻访凭证
+        let itemValueClassicGacha;
+        if (stageConfig.kernalHeadhuntingPermitCoefficient === 0) {
+            itemValueClassicGacha = 0;
+        } else {
+            itemValueClassicGacha = stageConfig.kernalHeadhuntingPermitCoefficient * itemValue7003;
+        }
+        // 十连中坚寻访凭证
+        const itemValueClassicGacha10 = 10 * itemValueClassicGacha;
 
-    //如果自定义关卡配置将虚拟关卡作为定价关，重新再判断一次定价关
-    if (stageConfig.useActivityAverageStage) {
-
-        for (const [seriesId, seriesCorrectionTerm] of activityAverageStageEfficiency) {
-
-            //获取当前物品系列的迭代值
-            const correctionTerm = maxStageEfficiencyMap.get(seriesId).correctionTerm
-
-            // if (!('31053' === seriesId || '31033' === seriesId)) {
-            //     maxStageEfficiencyMap.set(seriesId, seriesCorrectionTerm)
-            // }
-
-            if (seriesCorrectionTerm.correctionTerm > correctionTerm) {
-                maxStageEfficiencyMap.set(seriesId, seriesCorrectionTerm)
+        // 招聘许可
+        let itemValue7001 = 0;
+        if (itemValue4004 === Infinity) {
+            itemValue7001 = Infinity;
+        }
+        else {
+            for (const [rarity, recruitToken] of Object.entries(recruitTokenMap[stageConfig.recruitmentPermitPricingStrategy])) {
+                itemValue7001 += recruitRarity[rarity] * (recruitToken["4005"] * itemValue4005 + recruitToken["4004"] * itemValue4004);
             }
         }
-    }
+        // 加急许可
+        let itemValue7002;
+        switch (stageConfig.expeditedPlanPricingStrategy) {
+            case "EXPEDITED_PLAN_PRICING_RECRUITMENT_PERMIT":
+                itemValue7002 = itemValue7001; break;
+            default:
+                itemValue7002 = stageConfig.expeditedPlanValue;
+        }
+        // 家具零件
+        // TODO: 按 SK-5 定价
+        const itemValue3401 = stageConfig.furniturePartValue;
 
+        // 采购凭证
+        const itemValue4006 = 30 * (1 - itemValue4001 * 12) / 21;
+        // 芯片助剂
+        const itemValue32001 = itemValue4006 * 90;
+        // 芯片
+        const chip1Value = 18 * (1 - itemValue4001 * 12);
+        // 芯片组
+        const chip2Value = 36 * (1 - itemValue4001 * 12);
+        // 双芯片
+        const chip3Value = chip2Value * 2 + itemValue32001 + 1 / 180 * itemValueBaseAp;
+        // 模组数据块
+        let itemValueModUnlockToken;
+        switch (stageConfig.modUnlockTokenPricingStrategy) {
+            case "MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE":
+                itemValueModUnlockToken = 120 * itemValue4006; break;
+            case "MOD_UNLOCK_TOKEN_PRICING_DISTINCTION_CERTIFICATE":
+                itemValueModUnlockToken = 20 * itemValue4004; break;
+            case "MOD_UNLOCK_TOKEN_PRICING_CUSTOM":
+                itemValueModUnlockToken = stageConfig.modUnlockTokenValue; break;
+        }
+        // 事相碎片
+        const itemValueSTORYREVIEWCOIN = 20 * itemValue4006;
 
-    return {
-        nextItemCorrectionTerm: maxStageEfficiencyMap
-    }
+        const t3workShopProductsValue = workshopByproductExpectedValue.get(3);
+        // 因果
+        const itemValueYinGuo = 10 / 9 * (1 - stageConfig.workshopEliteMaterialByProductRate) * t3workShopProductsValue / 36;
+        // 碳素组
+        const itemValue3114 = 240 / 19 * itemValue3401 + 4 * itemValueYinGuo - 4000 / 19 * itemValue4001;
+        const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * itemValueYinGuo;
+        const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * itemValueYinGuo;
 
-}
+        // 技巧概要·卷3
+        const itemValue3303 = (30 * (1 - itemValue4001 * 12)
+            / (2 + 3 / 2 * (1 + stageConfig.workshopSkillSummaryByProductRate) / 3 + 1.5 * (1 + stageConfig.workshopSkillSummaryByProductRate) ** 2 / 3 ** 2));
 
-/**
- * 根据关卡自定义参数获取自定义材料价值表
- * @param stageConfig 关卡自定义参数
- * @return {Promise<*>}
- */
-async function getCustomItemList(stageConfig) {
+        // 技能概要·卷2
+        const itemValue3302 = (1 + stageConfig.workshopSkillSummaryByProductRate) * itemValue3303 / 3;
+        // 技能概要·卷1
+        const itemValue3301 = (1 + stageConfig.workshopSkillSummaryByProductRate) * itemValue3302 / 3;
 
-    //获取根据关卡id分类的关卡掉落数据
-    stageDropCollect = await getStageDropCollect(stageConfig)
+        // 回写物品价值
+        itemValueMap.set("4003", itemValue4003);
+        itemValueMap.set("4002", itemValue4002);
+        itemValueMap.set("7003", itemValue7003);
+        itemValueMap.set("7004", itemValue7004);
+        itemValueMap.set("4005", itemValue4005);
+        itemValueMap.set("4004", itemValue4004);
+        itemValueMap.set("classic_gacha", itemValueClassicGacha);
+        itemValueMap.set("classic_gacha_10", itemValueClassicGacha10);
+        itemValueMap.set("3401", itemValue3401);
+        itemValueMap.set("7002", itemValue7002);
+        itemValueMap.set("4001", itemValue4001);
+        itemValueMap.set("2001", itemValue2001);
+        itemValueMap.set("2002", itemValue2002);
+        itemValueMap.set("2003", itemValue2003);
+        itemValueMap.set("2004", itemValue2004);
+        itemValueMap.set("base_ap", itemValueBaseAp);
+        itemValueMap.set("3003", itemValue3003);
+        itemValueMap.set("4006", itemValue4006);
+        itemValueMap.set("32001", itemValue32001);
+        itemValueMap.set("mod_unlock_token", itemValueModUnlockToken);
+        itemValueMap.set("STORY_REVIEW_COIN", itemValueSTORYREVIEWCOIN);
+        itemValueMap.set("3114", itemValue3114);
+        itemValueMap.set("3113", itemValue3113);
+        itemValueMap.set("3112", itemValue3112);
+        itemValueMap.set("3303", itemValue3303);
+        itemValueMap.set("3302", itemValue3302);
+        itemValueMap.set("3301", itemValue3301);
+        itemValueMap.set("7001", itemValue7001);
 
-    const customItem = stageConfig.customItem
+        const chipIdList = ["3211", "3221", "3231", "3241", "3251", "3261", "3271", "3281"];
+        const chipPackIdList = ["3212", "3222", "3232", "3242", "3252", "3262", "3272", "3282"];
+        const dualChipIdList = ["3213", "3223", "3233", "3243", "3253", "3263", "3273", "3283"];
 
-    //自定义物品map
-    let customItemMap = new Map()
-
-    //将自定义物品列表转为一个map
-    if (customItem) {
-        for (const item of customItem) {
-            const {itemId, itemValue} = item
-            customItemMap.set(itemId, itemValue)
+        for (const chipId of chipIdList) {
+            itemValueMap.set(chipId, chip1Value);
+        }
+        for (const chipId of chipPackIdList) {
+            itemValueMap.set(chipId, chip2Value);
+        }
+        for (const chipId of dualChipIdList) {
+            itemValueMap.set(chipId, chip3Value);
         }
     }
 
 
-    //迭代物品价值，一般10次之内就能得出结果
-    for (let i = 0; i < 50; i++) {
-        // console.log(`第${i + 1}次迭代1`)
-        // console.table(itemList)
-        calculatedItemValue(stageConfig)
-
-        const {nextItemCorrectionTerm} = await getItemValueCorrectionTerm(stageConfig, i);
-
-        //是否迭代完成的标记
-        let completionFlag = true;
-
-        for (const [seriesId, item] of nextItemCorrectionTerm) {
-            itemValueCorrectionTerm[seriesId].correctionTerm = item.correctionTerm
-
-            //判断每个物品系列的最优关卡的理智转化率是否与1的误差小于0.0001
-            if (!customItemMap.get(seriesId)) {
-                // console.log(item.seriesName, '————', item.stageCode, '————', item.correctionTerm, '————', Math.abs(1 - item.correctionTerm))
-                completionFlag = completionFlag && Math.abs(1 - item.correctionTerm) < 0.0001
-            }
-        }
-
-        //如果上面的误差均小于0.0001，结束迭代
-        if (completionFlag) {
-            console.log(`第${i + 1}次迭代完成`)
-            break;
-        }
-
-
+    /**
+     * 检查是否满足停机条件
+     * 停机条件：对于每种未自定义价值的蓝材料，定价作战集中以该系列材料为主产物的最高效率作战的作战效率在 (1 - tolerance, 1 + tolerance) 之间。
+     * @returns {boolean} 是否满足停机条件
+     */
+    function checkCompletion(tolerance) {
+        return ITEM_SERIES_INFO.every(({ seriesId }) => (
+            customEliteMaterialValueMap.has(seriesId)  // 已经自定义的蓝材料不需要检查
+            || Math.abs(maxStageEfficiencyMap.get(seriesId).stageEfficiency - 1) < tolerance
+        ));
     }
-
-    // console.log("物品价值：",itemList)
-
-    return itemInfoList
 }
 
 
-export {
-    getCustomItemList
-}
+export { getCustomItemList };

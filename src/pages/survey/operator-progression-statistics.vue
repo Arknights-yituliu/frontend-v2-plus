@@ -114,7 +114,7 @@ let operatorsStatisticsDetailDialog = ref(false)
 function openOperatorsStatisticsDetail(operator) {
 
 
-  const {skill, equip, own} = operator
+  const {skill, equip, own,sampleSize} = operator
   const data = []
 
   for (let index = 0; index < 3; index++) {
@@ -150,7 +150,11 @@ function openOperatorsStatisticsDetail(operator) {
     data.push(item)
   }
 
-  operatorsStatisticsDetail.value = data
+  operatorsStatisticsDetail.value = {
+    skillAndModData:data,
+    own:own,
+    sampleSize:sampleSize,
+  }
   operatorsStatisticsDetailDialog.value = true
 
 }
@@ -230,9 +234,25 @@ onMounted(() => {
     <v-dialog v-model="operatorsStatisticsDetailDialog" max-width="500">
       <v-card>
         <v-card-text>
+
+          <v-table>
+            <tbody>
+            <tr>
+              <td>
+                样本量：
+              </td>
+              <td>{{ operatorsStatisticsDetail.sampleSize }}</td>
+              <td>
+                持有人数：
+              </td>
+              <td>{{ operatorsStatisticsDetail.own }}</td>
+            </tr>
+            </tbody>
+          </v-table>
+
           <v-data-table
               :headers="detailHeader"
-              :items="operatorsStatisticsDetail"
+              :items="operatorsStatisticsDetail.skillAndModData"
               hide-default-footer
               items-per-page="-1">
             <template v-slot:item="{ item }">

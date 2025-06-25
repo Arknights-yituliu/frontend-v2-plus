@@ -589,16 +589,25 @@
     "itemName": "招聘许可",
     "itemValueAp": 24.068,
     "rarity": 4,
-    "cardNum": 10,
+    "cardNum": 11,
     "weight": 0,
     "itemValue": 24.068
+  },
+  {
+    "itemId": "7002",
+    "itemName": "加急许可",
+    "itemValueAp": 0,
+    "rarity": 4,
+    "cardNum": 12,
+    "weight": 0,
+    "itemValue": 0
   },
   {
     "itemId": "4006",
     "itemName": "采购凭证",
     "itemValueAp": 1.366857142857143,
     "rarity": 3,
-    "cardNum": 10,
+    "cardNum": 11,
     "weight": 0,
     "itemValue": 1.366857142857143
   },
@@ -612,11 +621,20 @@
     "itemValue": 450
   },
   {
+    "itemId": "7004",
+    "itemName": "十连寻访凭证",
+    "itemValueAp": 4500,
+    "rarity": 5,
+    "cardNum": 10,
+    "weight": 0,
+    "itemValue": 4500
+  },
+  {
     "itemId": "32001",
     "itemName": "芯片助剂",
     "itemValueAp": 123.01714285714287,
     "rarity": 4,
-    "cardNum": 10,
+    "cardNum": 11,
     "weight": 0,
     "itemValue": 123.01714285714287
   },
@@ -670,7 +688,7 @@
     "itemName": "至纯源石",
     "itemValueAp": 135,
     "rarity": 4,
-    "cardNum": 11,
+    "cardNum": 10,
     "weight": 0,
     "itemValue": 135
   },
@@ -679,7 +697,7 @@
     "itemName": "无人机",
     "itemValueAp": 0.03798,
     "rarity": 4,
-    "cardNum": 11,
+    "cardNum": 12,
     "weight": 0,
     "itemValue": 0.03798
   },
@@ -814,7 +832,7 @@
     "itemName": "碳",
     "itemValueAp": 0.872,
     "rarity": 2,
-    "cardNum": 11,
+    "cardNum": 12,
     "weight": 0,
     "itemValue": 0.872
   },
@@ -823,7 +841,7 @@
     "itemName": "碳素",
     "itemValueAp": 1.368,
     "rarity": 3,
-    "cardNum": 11,
+    "cardNum": 12,
     "weight": 0,
     "itemValue": 1.368
   },
@@ -832,7 +850,7 @@
     "itemName": "碳素组",
     "itemValueAp": 1.711,
     "rarity": 4,
-    "cardNum": 11,
+    "cardNum": 12,
     "weight": 0,
     "itemValue": 1.711
   },
@@ -841,18 +859,18 @@
     "itemName": "高级凭证 ",
     "itemValueAp": 66.27906,
     "rarity": 5,
-    "cardNum": 10,
+    "cardNum": 11,
     "weight": 0,
     "itemValue": 66.27906
   },
   {
-    "itemId": "4003sp",
-    "itemName": "合成玉(搓玉)",
-    "itemValueAp": 1.43438,
-    "rarity": 5,
-    "cardNum": 10,
+    "itemId": "4005",
+    "itemName": "资质凭证",
+    "itemValueAp": 0.8,
+    "rarity": 3,
+    "cardNum": 11,
     "weight": 0,
-    "itemValue": 1.43438
+    "itemValue": 0.8
   },
   {
     "itemId": "classic_gacha",
@@ -1087,5 +1105,14 @@
     "cardNum": 9,
     "weight": 0,
     "itemValue": 191.9067428571429
+  },
+  {
+    "itemId": "3401",
+    "itemName": "家具零件",
+    "itemValueAp": 0,
+    "rarity": 3,
+    "cardNum": 12,
+    "weight": 0,
+    "itemValue": 0
   }
 ]

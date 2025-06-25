@@ -51,18 +51,18 @@ const translateKey = {
 </script>
 
 <template>
-  <div class="room-template" :class="props.roomType">
+  <div class="building-factory-template" :class="props.roomType">
     <div class="flex flex-wrap align-center justify-center">
-      <div>{{ translate('schedule', `schedule.${translateKey[props.roomType]}`) }}#{{ props.roomIndex }}</div>
+      <div class="building-factory-name">{{ translate('schedule', `schedule.${translateKey[props.roomType]}`) }}#{{ props.roomIndex }}</div>
       <div class="spacer-12"></div>
-      <ItemImage size="24" mobile-size="24"
+      <ItemImage size="32" mobile-size="32"
                  :item-id="props.product"></ItemImage>
     </div>
     <div class="flex justify-center">
       <OperatorAvatar
           v-for="(name, operatorIndex) in props.operators"
           :key="operatorIndex"
-          :char-id="characterIdAndName[name]" class="m-4" :size="44" :mobile-size="44">
+          :char-id="characterIdAndName[name]" class="m-4" :size="50" :mobile-size="50">
       </OperatorAvatar>
     </div>
   </div>

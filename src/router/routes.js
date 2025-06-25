@@ -252,7 +252,7 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "mdi-chart-bar",
-        component: () => import('/src/pages/survey/maarecruitdata.vue')
+        component: () => import('/src/pages/survey/maa-recruit-data.vue')
         // component: Notice
     },
     {
