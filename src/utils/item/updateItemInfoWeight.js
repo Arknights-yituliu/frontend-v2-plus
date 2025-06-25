@@ -7,17 +7,18 @@ import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json'
 function getNewItemInfo(){
     const list = []
     for(const item of itemInfo){
-        const {itemId,itemName,itemValue,rarity,weight} = item
+        const {itemId,itemName,itemValue,rarity,weight,cardNum} = item
         list.push({
-            itemId,itemName,itemValue,rarity,weight
+            itemId,itemName,itemValue,rarity,weight,cardNum,groupId:cardNum
         })
     }
 
+    list.sort((a,b)=>a.groupId-b.groupId)
     console.log(JSON.stringify(list))
 }
 
 
-getNewItemInfo()
+
 
 function updateItemInfoWeight() {
 
@@ -139,8 +140,9 @@ function getItemMinValue() {
     console.log(JSON.stringify(actStoreUnlimitedExchange))
 }
 
+getNewItemInfo()
 // updateItemInfoWeight()
-getYTLStageList()
+// getYTLStageList()
 
 export {
     updateItemInfoWeight
