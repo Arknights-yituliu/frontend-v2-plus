@@ -169,37 +169,37 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
         </thead>
         <tbody>
           <tr>
-            <td><ItemImage :item-id="30011"/></td>
+            <td><ItemImage item-id="30011"/></td>
             <td>源岩</td>
             <td>26.32%</td>
             <td>1.1471</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30021"/></td>
+            <td><ItemImage item-id="30021"/></td>
             <td>代糖</td>
             <td>17.54%</td>
             <td>1.6133</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30031"/></td>
+            <td><ItemImage item-id="30031"/></td>
             <td>酯原料</td>
             <td>17.54%</td>
             <td>1.6133</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30041"/></td>
+            <td><ItemImage item-id="30041"/></td>
             <td>异铁碎片</td>
             <td>14.04%</td>
             <td>2.0119</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30051"/></td>
+            <td><ItemImage item-id="30051"/></td>
             <td>双酮</td>
             <td>14.04%</td>
             <td>2.0097</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="30061"/></td>
+            <td><ItemImage item-id="30061"/></td>
             <td>破损装置</td>
             <td>10.53%</td>
             <td>2.6838</td>
@@ -238,91 +238,91 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
         </thead>
         <tbody>
           <tr>
-            <td><ItemImage :item-id="'4001'"/></td>
+            <td><ItemImage item-id="4001"/></td>
             <td>龙门币</td>
             <td>0.004</td>
             <td>252</td>
             <td>0.907</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'31054'"/></td>
+            <td><ItemImage item-id="31054"/></td>
             <td>切削原液</td>
             <td>79.245</td>
             <td>0.048</td>
             <td>3.813</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'3003'"/></td>
+            <td><ItemImage item-id="3003"/></td>
             <td>赤金</td>
             <td>0.912</td>
             <td>0.1</td>
             <td>0.091</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'31013'"/></td>
+            <td><ItemImage item-id="31013"/></td>
             <td>凝胶</td>
             <td>32</td>
             <td>0.016</td>
             <td>0.502</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'30062'"/></td>
+            <td><ItemImage item-id="30062"/></td>
             <td>装置</td>
             <td>9.851</td>
             <td>0.145</td>
             <td>1.431</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'30073'"/></td>
+            <td><ItemImage item-id="30073"/></td>
             <td>扭转醇</td>
             <td>1.8</td>
             <td>0.02</td>
             <td>0.037</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'31053'"/></td>
+            <td><ItemImage item-id="31053"/></td>
             <td>化合切削液</td>
             <td>32</td>
             <td>0.47</td>
             <td>15.029</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'30012'"/></td>
+            <td><ItemImage item-id="30012"/></td>
             <td>固源岩</td>
             <td>4.851</td>
             <td>0.364</td>
             <td>1.765</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'30013'"/></td>
+            <td><ItemImage item-id="30013"/></td>
             <td>固源岩组</td>
             <td>20</td>
             <td>0.026</td>
             <td>0.514</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'30063'"/></td>
+            <td><ItemImage item-id="30063"/></td>
             <td>全新装置</td>
             <td>36</td>
             <td>0.012</td>
             <td>0.432</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'30011'"/></td>
+            <td><ItemImage item-id="30011"/></td>
             <td>源岩</td>
             <td>1.377</td>
             <td>0.215</td>
             <td>0.297</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'30061'"/></td>
+            <td><ItemImage item-id="30061"/></td>
             <td>破损装置</td>
             <td>3.044</td>
             <td>0.086</td>
             <td>0.26</td>
           </tr>
           <tr>
-            <td><ItemImage :item-id="'31073'"/></td>
+            <td><ItemImage item-id="31073"/></td>
             <td>褐素纤维</td>
             <td>32</td>
             <td>0.016</td>
@@ -486,90 +486,90 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
       </thead>
       <tbody>
         <tr>
-          <td><ItemImage :item-id="'3213'"/></td>
+          <td><ItemImage item-id="3213"/></td>
           <td>先锋双芯片</td>
           <td>87</td>
-          <td><ItemImage :item-id="'3212'"/></td>
+          <td><ItemImage item-id="3212"/></td>
           <td>先锋芯片组</td>
           <td>25</td>
-          <td><ItemImage :item-id="'3211'"/></td>
+          <td><ItemImage item-id="3211"/></td>
           <td>先锋芯片</td>
           <td>128</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="'3223'"/></td>
+          <td><ItemImage item-id="3223"/></td>
           <td>近卫双芯片</td>
           <td>190</td>
-          <td><ItemImage :item-id="'3222'"/></td>
+          <td><ItemImage item-id="3222"/></td>
           <td>近卫芯片组</td>
           <td>75</td>
-          <td><ItemImage :item-id="'3221'"/></td>
+          <td><ItemImage item-id="3221"/></td>
           <td>近卫芯片</td>
           <td>290</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="'3233'"/></td>
+          <td><ItemImage item-id="3233"/></td>
           <td>重装双芯片</td>
           <td>105</td>
-          <td><ItemImage :item-id="'3232'"/></td>
+          <td><ItemImage item-id="3232"/></td>
           <td>重装芯片组</td>
           <td>30</td>
-          <td><ItemImage :item-id="'3231'"/></td>
+          <td><ItemImage item-id="3231"/></td>
           <td>重装芯片</td>
           <td>154</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="'3243'"/></td>
+          <td><ItemImage item-id="3243"/></td>
           <td>狙击双芯片</td>
           <td>127</td>
-          <td><ItemImage :item-id="'3242'"/></td>
+          <td><ItemImage item-id="3242"/></td>
           <td>狙击芯片组</td>
           <td>50</td>
-          <td><ItemImage :item-id="'3241'"/></td>
+          <td><ItemImage item-id="3241"/></td>
           <td>狙击芯片</td>
           <td>194</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="'3253'"/></td>
+          <td><ItemImage item-id="3253"/></td>
           <td>术师双芯片</td>
           <td>140</td>
-          <td><ItemImage :item-id="'3252'"/></td>
+          <td><ItemImage item-id="3252"/></td>
           <td>术师芯片组</td>
           <td>30</td>
-          <td><ItemImage :item-id="'3251'"/></td>
+          <td><ItemImage item-id="3251"/></td>
           <td>术师芯片</td>
           <td>198</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="'3263'"/></td>
+          <td><ItemImage item-id="3263"/></td>
           <td>医疗双芯片</td>
           <td>79</td>
-          <td><ItemImage :item-id="'3262'"/></td>
+          <td><ItemImage item-id="3262"/></td>
           <td>医疗芯片组</td>
           <td>30</td>
-          <td><ItemImage :item-id="'3261'"/></td>
+          <td><ItemImage item-id="3261"/></td>
           <td>医疗芯片</td>
           <td>121</td>
         </tr>
         <tr>
-          <td><ItemImage :item-id="'3273'"/></td>
+          <td><ItemImage item-id="3273"/></td>
           <td>辅助双芯片</td>
           <td>103</td>
-          <td><ItemImage :item-id="'3272'"/></td>
+          <td><ItemImage item-id="3272"/></td>
           <td>辅助芯片组</td>
           <td>20</td>
-          <td><ItemImage :item-id="'3271'"/></td>
+          <td><ItemImage item-id="3271"/></td>
           <td>辅助芯片</td>
           <td>146</td>
         </tr>
         <tr>
-        <td><ItemImage :item-id="'3283'"/></td>
+        <td><ItemImage item-id="3283"/></td>
           <td>特种双芯片</td>
           <td>124</td>
-          <td><ItemImage :item-id="'3282'"/></td>
+          <td><ItemImage item-id="3282"/></td>
           <td>特种芯片组</td>
           <td>35</td>
-          <td><ItemImage :item-id="'3281'"/></td>
+          <td><ItemImage item-id="3281"/></td>
           <td>特种芯片</td>
           <td>181</td>
         </tr>
