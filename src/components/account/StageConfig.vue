@@ -3,11 +3,8 @@ import { nextTick, onMounted, ref, watch } from "vue";
 import { formatNumber } from "/src/utils/format.js";
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
+import { getStageConfig, defaultConfig, parseConfig, stringifyConfig } from "@/utils/user/userConfig.js";
 import {
-  getStageConfig,
-  defaultConfig,
-  parseConfig,
-  stringifyConfig,
   orundumValueMap,
   originitePrimeCoefficientMap,
   kernelHeadhuntingPermitCoefficientMap,
@@ -17,7 +14,7 @@ import {
   recruitmentPermitValueMap,
   expeditedPlanValueMap,
   furniturePartValueMap
-} from "@/utils/user/userConfig.js";
+} from "@/utils/user/configParametersMap.js";
 import ActionButton from "@/components/account/ActionButton.vue";
 import ActStoreUnlimitedExchangeItem from '/src/static/json/material/act_store_unlimited_exchange_item.json';
 import PresetParameter from "../../static/json/material/preset_parameter.json";

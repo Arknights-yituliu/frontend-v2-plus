@@ -30,7 +30,7 @@ import { itemSeriesInfoByItemId } from "/src/utils/item/itemSeries.js";
  * @return {boolean} 是否为精英材料
  */
 function isEliteMaterial(item_id) {
-    return /^3[01]\d{3}/.test(item_id);
+    return /^3[01]\d{3}$/.test(item_id);
 }
 
 
