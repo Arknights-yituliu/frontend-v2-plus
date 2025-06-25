@@ -26,10 +26,10 @@ const originitePrimeCoefficientMap = {
 /**
  * 中坚寻访凭证价值系数
  */
-const kernalHeadhuntingPermitCoefficientMap = {
-    'KERNAL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE': 216 / 258,
-    'KERNAL_HEADHUNTING_PERMIT_PRICING_ZERO': 0,
-    'KERNAL_HEADHUNTING_PERMIT_PRICING_CUSTOM': undefined,
+const kernelHeadhuntingPermitCoefficientMap = {
+    'KERNEL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE': 216 / 258,
+    'KERNEL_HEADHUNTING_PERMIT_PRICING_ZERO': 0,
+    'KERNEL_HEADHUNTING_PERMIT_PRICING_CUSTOM': undefined,
 };
 
 /**
@@ -112,8 +112,8 @@ const defaultConfig = {
     originitePrimePricingStrategy: "ORIGINITE_PRIME_PRICING_ORUNDUM",  // 至纯源石定价策略
     originitePrimeCoefficient: 180,  // 至纯源石价值系数
 
-    kernalHeadhuntingPermitPricingStrategy: "KERNAL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE",  // 中坚寻访凭证定价策略
-    kernalHeadhuntingPermitCoefficient: 216 / 258,  // 中坚寻访凭证价值系数
+    kernelHeadhuntingPermitPricingStrategy: "KERNEL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE",  // 中坚寻访凭证定价策略
+    kernelHeadhuntingPermitCoefficient: 216 / 258,  // 中坚寻访凭证价值系数
 
     lmdPricingStrategy: "LMD_PRICING_CE-6",  // 龙门币定价策略
     lmdCoefficient: 1,  // 龙门币价值系数
@@ -304,7 +304,7 @@ export {
     stringifyConfig,
     orundumValueMap,
     originitePrimeCoefficientMap,
-    kernalHeadhuntingPermitCoefficientMap,
+    kernelHeadhuntingPermitCoefficientMap,
     lmdCoefficientMap,
     expCoefficientMap,
     modUnlockTokenValueMap,
