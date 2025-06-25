@@ -3,21 +3,18 @@ import { nextTick, onMounted, ref, watch } from "vue";
 import { formatNumber } from "/src/utils/format.js";
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
+import { getStageConfig, defaultConfig, parseConfig, stringifyConfig } from "@/utils/user/userConfig.js";
 import {
-  getStageConfig,
-  defaultConfig,
-  parseConfig,
-  stringifyConfig,
   orundumValueMap,
   originitePrimeCoefficientMap,
-  kernalHeadhuntingPermitCoefficientMap,
+  kernelHeadhuntingPermitCoefficientMap,
   lmdCoefficientMap,
   expCoefficientMap,
   modUnlockTokenValueMap,
   recruitmentPermitValueMap,
   expeditedPlanValueMap,
   furniturePartValueMap
-} from "@/utils/user/userConfig.js";
+} from "@/utils/user/configParametersMap.js";
 import ActionButton from "@/components/account/ActionButton.vue";
 import ActStoreUnlimitedExchangeItem from '/src/static/json/material/act_store_unlimited_exchange_item.json';
 import PresetParameter from "../../static/json/material/preset_parameter.json";
@@ -133,7 +130,7 @@ function choosePresetParameter(presetParameter) {
 // 输入框 ref
 const orundumValueInput = ref(null);
 const originitePrimeCoefficientInput = ref(null);
-const kernalHeadhuntingPermitCoefficientInput = ref(null);
+const kernelHeadhuntingPermitCoefficientInput = ref(null);
 const lmdCoefficientInput = ref(null);
 const expCoefficientInput = ref(null);
 const modUnlockTokenValueInput = ref(null);
@@ -169,15 +166,15 @@ watch(
   { immediate: true },
 );
 
-// 监听 kernalHeadhuntingPermitPricingStrategy 变化
+// 监听 kernelHeadhuntingPermitPricingStrategy 变化
 watch(
-  () => stageConfig.value.kernalHeadhuntingPermitPricingStrategy,
-  (kernalHeadhuntingPermitPricingStrategy) => {
-    const kernalHeadhuntingPermitCoefficient = kernalHeadhuntingPermitCoefficientMap[kernalHeadhuntingPermitPricingStrategy];
-    if (kernalHeadhuntingPermitCoefficient !== undefined) {  // 如果选中预设项
-      stageConfig.value.kernalHeadhuntingPermitCoefficient = kernalHeadhuntingPermitCoefficient;
+  () => stageConfig.value.kernelHeadhuntingPermitPricingStrategy,
+  (kernelHeadhuntingPermitPricingStrategy) => {
+    const kernelHeadhuntingPermitCoefficient = kernelHeadhuntingPermitCoefficientMap[kernelHeadhuntingPermitPricingStrategy];
+    if (kernelHeadhuntingPermitCoefficient !== undefined) {  // 如果选中预设项
+      stageConfig.value.kernelHeadhuntingPermitCoefficient = kernelHeadhuntingPermitCoefficient;
     } else {
-      nextTick(() => kernalHeadhuntingPermitCoefficientInput.value?.focus()); // 如果选中自定义，聚焦到输入框
+      nextTick(() => kernelHeadhuntingPermitCoefficientInput.value?.focus()); // 如果选中自定义，聚焦到输入框
     }
   },
   { immediate: true },
@@ -700,23 +697,23 @@ onMounted(() => {
 
               <!-- 中坚寻访系数 -->
               <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.kernalHeadhuntingPermitPricingStrategy">
+              <v-radio-group v-model="stageConfig.kernelHeadhuntingPermitPricingStrategy">
                 <template v-slot:label>
                   <div>
                     中坚寻访系数
                     <span class="card-description">
-                      1 中坚寻访凭证 = {{ typeof stageConfig.kernalHeadhuntingPermitCoefficient === "number" ?
-                      stageConfig.kernalHeadhuntingPermitCoefficient : "?" }} 寻访凭证
+                      1 中坚寻访凭证 = {{ typeof stageConfig.kernelHeadhuntingPermitCoefficient === "number" ?
+                      stageConfig.kernelHeadhuntingPermitCoefficient : "?" }} 寻访凭证
                     </span>
                   </div>
                 </template>
-                <v-radio value="KERNAL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE"
+                <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE"
                   label="38 中坚寻访凭证 = 216 高级凭证（默认）"></v-radio>
-                <v-radio value="KERNAL_HEADHUNTING_PERMIT_PRICING_ZERO" label="中坚寻访凭证价值为 0"></v-radio>
-                <v-radio value="KERNAL_HEADHUNTING_PERMIT_PRICING_CUSTOM" label="自定义"></v-radio>
-                <v-text-field ref="kernalHeadhuntingPermitCoefficientInput"
-                  v-model.number='stageConfig.kernalHeadhuntingPermitCoefficient' :rules="numberGe0"
-                  @focus="stageConfig.kernalHeadhuntingPermitPricingStrategy = 'KERNAL_HEADHUNTING_PERMIT_PRICING_CUSTOM'"
+                <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_ZERO" label="中坚寻访凭证价值为 0"></v-radio>
+                <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_CUSTOM" label="自定义"></v-radio>
+                <v-text-field ref="kernelHeadhuntingPermitCoefficientInput"
+                  v-model.number='stageConfig.kernelHeadhuntingPermitCoefficient' :rules="numberGe0"
+                  @focus="stageConfig.kernelHeadhuntingPermitPricingStrategy = 'KERNEL_HEADHUNTING_PERMIT_PRICING_CUSTOM'"
                   label="1 中坚寻访凭证 = ? 寻访凭证" placeholder="1 中坚寻访凭证 = ? 寻访凭证" variant="outlined" density="compact"
                   style="margin-left: 40px; width: 200px;">
                 </v-text-field>

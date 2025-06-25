@@ -30,7 +30,7 @@ import { itemSeriesInfoByItemId } from "/src/utils/item/itemSeries.js";
  * @return {boolean} 是否为精英材料
  */
 function isEliteMaterial(item_id) {
-    return /^3[01]\d{3}/.test(item_id);
+    return /^3[01]\d{3}$/.test(item_id);
 }
 
 
@@ -197,7 +197,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
 
     // 重复步骤 3、4、5、6、7，迭代计算物品价值，一般 10 次之内就能得出结果
     for (let i = 0; i < maxIteration; i++) {
-        console.log(`第${i + 1}次迭代`);
+        // console.log(`第${i + 1}次迭代`);
 
         // 步骤 7. 计算非精英材料的价值
         calculateCommonItemValue();
@@ -217,7 +217,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
 
         // 步骤 6. 修正蓝材料的价值
         updateT3EliteMaterialValue();
-        console.log("maxStageEfficiencyMap", Object.fromEntries(maxStageEfficiencyMap));
+        // console.log("maxStageEfficiencyMap", Object.fromEntries(maxStageEfficiencyMap));
 
         // 检查是否满足停机条件
         if (checkCompletion(tolerance)) {
@@ -468,10 +468,10 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         const itemValue4004 = 38 / 258 * itemValue7003;
         // 中坚寻访凭证
         let itemValueClassicGacha;
-        if (stageConfig.kernalHeadhuntingPermitCoefficient === 0) {
+        if (stageConfig.kernelHeadhuntingPermitCoefficient === 0) {
             itemValueClassicGacha = 0;
         } else {
-            itemValueClassicGacha = stageConfig.kernalHeadhuntingPermitCoefficient * itemValue7003;
+            itemValueClassicGacha = stageConfig.kernelHeadhuntingPermitCoefficient * itemValue7003;
         }
         // 十连中坚寻访凭证
         const itemValueClassicGacha10 = 10 * itemValueClassicGacha;

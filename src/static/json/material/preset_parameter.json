@@ -18,13 +18,13 @@
       "parameters": {
         "orundumPricingStrategy": "ORUNDUM_PRICING_ORIGINITE_PRIME",
         "originitePrimePricingStrategy": "ORIGINITE_PRIME_PRICING_ORUNDUM",
-        "kernalHeadhuntingPermitPricingStrategy": "KERNAL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE",
+        "kernelHeadhuntingPermitPricingStrategy": "KERNEL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE",
         "lmdPricingStrategy": "LMD_PRICING_CE-6",
         "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TP",
         "modUnlockTokenPricingStrategy": "MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE",
         "recruitmentPermitPricingStrategy": "RECRUITMENT_PERMIT_PRICING_3_4",
         "expeditedPlanPricingStrategy": "EXPEDITED_PLAN_PRICING_ZERO",
-        "furniturePartsPricingStrategy": "FURNITURE_PARTS_PRICING_ZERO",
+        "furniturePartPricingStrategy": "FURNITURE_PART_PRICING_ZERO",
         "useActivityAverageStage": false
       },
       "message": "已修改为默认配置",
@@ -92,7 +92,7 @@
         "lmdPricingStrategy": "LMD_PRICING_CE-6",
         "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TP_TEQUILA_2_PROVISO_2",
         "expeditedPlanPricingStrategy": "EXPEDITED_PLAN_PRICING_ZERO",
-        "furniturePartsPricingStrategy": "FURNITURE_PARTS_PRICING_ZERO",
+        "furniturePartPricingStrategy": "FURNITURE_PART_PRICING_ZERO",
         "useActivityAverageStage": true
       },
       "message": "已修改为老登配置",
