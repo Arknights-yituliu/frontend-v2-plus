@@ -40,12 +40,6 @@ function isEliteMaterial(item_id) {
  */
 const itemInfoList = ITEM_INFO.filter(e => e.cardNum < 100);
 
-/**
- * 物品信息映射，key 为物品 ID，value 为物品信息
- * @type {Map<string, ItemInfo>}
- */
-const itemInfoMap = new Map(itemInfoList.map(item => [item.itemId, item]));
-
 
 /**
  * 加工产出副产品时，各种物品作为副产品的概率
@@ -175,11 +169,14 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
 
     /**
      * 物品价值映射，key 为物品 ID，value 为物品价值
-     * - 精英材料初始价值设为 3 ** rarity，非精英材料初始价值设为 0
+     * - 精英材料初始价值设为 3 ** rarity
+     * - 非精英材料初始价值设为 0
+     * - 因果的初始价值设为 0
      * - 精英材料的初始价值不能太小，否则迭代时会有很多作战的主产物为非精英材料，导致这部分作战永远不会被考虑
      * @type {Map<string, number>}
      */
     const itemValueMap = new Map(itemInfoList.map(({ itemId, rarity }) => [itemId, isEliteMaterial(itemId) ? 3 ** rarity : 0]));
+    itemValueMap.set("causality", 0);
 
     /**
      * 白、绿、蓝、紫副产品价值的期望，也即一个随机材料的价值
@@ -246,40 +243,98 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         /** 龙门币价值 */
         const lmdValue = itemValueMap.get("4001");
 
+        // 计算因果价值
+        /** 随机蓝材料的价值 */
+        const t3workShopProductsValue = workshopByproductExpectedValue.get(3);
+        // 解构蓝合紫的加工站策略
+        const { strategy, byproductRateIncreasement } = stageConfig.workshopStrategy.eliteMaterialT3toT4;
+        /** 蓝合紫时消耗的龙门币数量 */
+        const lmdCost = (strategy === "WORKSHOP_STRATEGY_BLEMISHINE") ? (0) : (300);
+        /** 蓝合紫时的实际副产品产出概率 */
+        const byproductRate = (strategy === "WORKSHOP_STRATEGY_BLEMISHINE") ? (0.14) : (0.1 * (1 + byproductRateIncreasement));
+        /** 因果价值 */
+        const causalityValue = ((1 - byproductRate) * t3workShopProductsValue - (300 - lmdCost) * lmdValue) / (9 / 10 * 36);
+        // 更新因果价值
+        itemValueMap.set("causality", causalityValue);
+
         for (const table of COMPOSITE_TABLE) {
-            // 解构加工路径表：合成或拆解的物品id、判断拆解还是合成、合成路径
-            const { itemId, resolve, pathway } = table;
+            // 解构加工路径表：合成或拆解的物品 ID、判断拆解还是合成（resolve === true 为拆解）、合成路径、稀有度
+            const { itemId, resolve, pathway, rarity } = table;
 
             // 如果这个物品被自定义了，不再通过合成路径得到价值
             if (customEliteMaterialValueMap.has(itemId)) {
                 continue;
             }
 
-            // 通过id得到对应的物品信息
-            const rarity = itemInfoMap.get(itemId).rarity;
+            // 消耗材料和目标材料的稀有度
+            const sourceRarity = (new Map([[1, 1], [2, 2], [4, 3], [5, 4]])).get(rarity);
+            const targetRarity = sourceRarity + 1;
 
-            // 物品新价值
-            let newValue = 0.0;
+            /**
+             * 加工消耗的心情
+             * 等于 `2 ** (sourceRarity - 1)`
+             */
+            const morale = 2 ** (sourceRarity - 1);
 
-            if (resolve) {
-                // 灰、绿色品质是向下拆解   灰、绿色物品 = （蓝物品价值 + 副产品 - 龙门币）/合成蓝物品的所需灰绿物品数量
-                const expectProductsValue = workshopByproductExpectedValue.get(rarity) * stageConfig.workshopEliteMaterialByProductRate;
-                for (const cost of pathway) {
-                    const rawItemValue = itemValueMap.get(cost.itemId);
-                    newValue = (rawItemValue + expectProductsValue - 100 * rarity * lmdValue) / cost.count;
-                }
+            // 获取自定义加工策略和副产品产出概率提升量
+            const strategyPropertyName = `eliteMaterialT${sourceRarity}toT${targetRarity}`;
+            const { strategy, byproductRateIncreasement } = stageConfig.workshopStrategy[strategyPropertyName];
+
+            /**
+             * 实际的副产品产出概率
+             * - 使用九色鹿获取因果为 `0.1`
+             * - 使用瑕光为 `0.14`
+             * - 使用其他干员加工为 `0.1 * (1 + byproductRateIncreasement)`
+             */
+            let byproductRate;
+            switch (strategy) {
+                case "WORKSHOP_STRATEGY_NCDEER_OBTAIN":
+                    byproductRate = 0.1; break;
+                case "WORKSHOP_STRATEGY_BLEMISHINE":
+                    byproductRate = 0.14; break;
+                case "WORKSHOP_STRATEGY_COMMON":
+                    byproductRate = 0.1 * (1 + byproductRateIncreasement); break;
+            }
+
+            /**
+             * 副产品价值的期望
+             */
+            const expectedByproductValue = workshopByproductExpectedValue.get(sourceRarity);
+
+            /**
+             * 加工消耗的龙门币
+             * 对于精英材料，不使用瑕光的情况下，消耗的龙门币 = 100 * 原材料稀有度
+             */
+            const lmdCost = (strategy === "WORKSHOP_STRATEGY_BLEMISHINE") ? (0) : (sourceRarity * 100);
+
+            /**
+             * 期望获取的因果数量
+             * - 使用九色鹿获取因果时，期望获取的因果数量 = 0.9 * 加工消耗的心情
+             */
+            const expectedCausalityObtained = (strategy === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9 * morale) : (0);
+
+            /** 物品新价值 */
+            let thisItemValue = 0.0;
+
+            if (resolve) {  // 白、绿色材料是向下拆解
+                const target = pathway[0];  // 拆解路径只有一个物品
+                /** 目标材料价值 */
+                const targetItemValue = itemValueMap.get(target.itemId);
+                // 消耗材料价值 = (目标材料价值 + 副产品 + 因果（若有） - 龙门币) / 合成所需灰绿材料数量
+                thisItemValue = (targetItemValue + expectedByproductValue * byproductRate + expectedCausalityObtained * causalityValue - lmdCost * lmdValue) / target.count;
             } else {
-                // 紫、金色品质是向上合成    紫、金色物品 = 合成所需蓝物品价值之和 + 龙门币 - 副产品
-                const expectProductsValue = workshopByproductExpectedValue.get(rarity - 1) * stageConfig.workshopEliteMaterialByProductRate;
+                // 紫、金材料是向上合成
                 for (const cost of pathway) {
-                    const rawItemValue = itemValueMap.get(cost.itemId);
-                    newValue += rawItemValue * cost.count;
+                    /** 消耗材料价值 */
+                    const sourceItemValue = itemValueMap.get(cost.itemId);
+                    thisItemValue += sourceItemValue * cost.count;
                 }
-                newValue += 100 * (rarity - 1) * lmdValue - expectProductsValue;
+                // 目标材料价值 = 消耗材料价值之和 + 龙门币 - 副产品
+                thisItemValue += lmdCost * lmdValue - expectedByproductValue * byproductRate;
             }
 
             // 更新物品新价值
-            itemValueMap.set(itemId, newValue);
+            itemValueMap.set(itemId, thisItemValue);
         }
     }
 
@@ -428,55 +483,58 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
      * 步骤 7. 计算非精英材料的价值
      */
     function calculateCommonItemValue() {
-        // 龙门币
+        /** 因果价值 */
+        const causalityValue = itemValueMap.get("causality");
+
+        /** 龙门币价值 = (36 ÷ 10000) × 龙门币价值系数 */
         const itemValue4001 = stageConfig.lmdCoefficient * baseLMDValue;
-        // EXP
+        /** EXP 价值 = (36 ÷ 10000) × EXP 价值系数 */
         const itemValueEXP = stageConfig.expCoefficient * baseEXPValue;
         const itemValue2001 = itemValueEXP * 200;
         const itemValue2002 = itemValueEXP * 400;
         const itemValue2003 = itemValueEXP * 1000;
         const itemValue2004 = itemValueEXP * 2000;
-        // 无人机
+        /** 无人机价值 = EXP 价值 × 无人机生产 EXP 数量 */
         const itemValueBaseAp = itemValueEXP * 50 / 3;
-        // 赤金
+        /** 赤金价值 = 无人机价值 ÷ 无人机生产赤金数量 */
         const itemValue3003 = itemValueBaseAp * 24;
 
-        // 合成玉
+        /** 合成玉价值 @type {number} */
         let itemValue4003;
         switch (stageConfig.orundumPricingStrategy) {
-            case "ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE":
+            case "ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE":  // 搓玉途径定价（用固源岩搓玉）
                 itemValue4003 = (itemValueMap.get("30012") * 2 + 1600 * itemValue4001 + 40 * itemValueBaseAp) / 10; break;
-            case "ORUNDUM_PRICING_ORININUM_FARMING_DEVICE":
+            case "ORUNDUM_PRICING_ORININUM_FARMING_DEVICE":  // 搓玉途径定价（用装置搓玉）
                 itemValue4003 = (itemValueMap.get("30062") + 1000 * itemValue4001 + 40 * itemValueBaseAp) / 10; break;
             default:
                 itemValue4003 = stageConfig.orundumValue;
         }
-        // 至纯源石
+        /** 至纯源石价值 @type {number} */
         let itemValue4002;
         if (stageConfig.originitePrimeCoefficient === Infinity) {
             itemValue4002 = Infinity;
         } else {
             itemValue4002 = stageConfig.originitePrimeCoefficient * itemValue4003;
         }
-        // 寻访凭证
+        /** 寻访凭证价值 = 600 × 合成玉价值 */
         const itemValue7003 = 600 * itemValue4003;
-        // 十连寻访凭证
+        /** 十连寻访凭证价值 = 10 × 寻访凭证价值 */
         const itemValue7004 = 10 * itemValue7003;
-        // 资质凭证价值根据经验法则定价为 0.8
+        /** 资质凭证价值根据经验法则定价为 0.8 */
         const itemValue4005 = 0.8;
-        // 高级凭证
+        /** 高级凭证价值 = 38 ÷ 258 × 寻访凭证价值 */
         const itemValue4004 = 38 / 258 * itemValue7003;
-        // 中坚寻访凭证
+        /** 中坚寻访凭证价值 @type {number} */
         let itemValueClassicGacha;
         if (stageConfig.kernelHeadhuntingPermitCoefficient === 0) {
             itemValueClassicGacha = 0;
         } else {
             itemValueClassicGacha = stageConfig.kernelHeadhuntingPermitCoefficient * itemValue7003;
         }
-        // 十连中坚寻访凭证
+        /** 十连中坚寻访凭证价值 = 10 × 中坚寻访凭证价值 */
         const itemValueClassicGacha10 = 10 * itemValueClassicGacha;
 
-        // 招聘许可
+        /** 招聘许可价值 */
         let itemValue7001 = 0;
         if (itemValue4004 === Infinity) {
             itemValue7001 = Infinity;
@@ -486,7 +544,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
                 itemValue7001 += recruitRarity[rarity] * (recruitToken["4005"] * itemValue4005 + recruitToken["4004"] * itemValue4004);
             }
         }
-        // 加急许可
+        /** 加急许可价值 @type {number} */
         let itemValue7002;
         switch (stageConfig.expeditedPlanPricingStrategy) {
             case "EXPEDITED_PLAN_PRICING_RECRUITMENT_PERMIT":
@@ -494,51 +552,94 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
             default:
                 itemValue7002 = stageConfig.expeditedPlanValue;
         }
-        // 家具零件
+        /** 家具零件价值 */
         // TODO: 按 SK-5 定价
         const itemValue3401 = stageConfig.furniturePartValue;
 
-        // 采购凭证
+        /** 采购凭证价值 = AP-5消耗理智 × (1 - 12 × 龙门币价值) ÷ AP-5 掉落采购凭证数量 */
         const itemValue4006 = 30 * (1 - itemValue4001 * 12) / 21;
-        // 芯片助剂
+
+        /** 芯片助剂价值 = 90 × 采购凭证价值 */
         const itemValue32001 = itemValue4006 * 90;
+
+        // 用公式计算芯片、芯片组价值
         // 芯片
-        const chip1Value = 18 * (1 - itemValue4001 * 12);
+        const balancedChipValue = 18 * (1 - itemValue4001 * 12);
+        let strongChipValue, weakChipValue;
+        let { strategy, byproductRateIncreasement } = stageConfig.workshopStrategy.chip;
+        switch (strategy) {
+            case "WORKSHOP_STRATEGY_COMMON":
+                const byproductRate = 0.1 * (1 + byproductRateIncreasement);
+                strongChipValue = (6 - byproductRate) / 5 * 18 * (1 - itemValue4001 * 12);
+                weakChipValue = (4 + byproductRate) / 5 * 18 * (1 - itemValue4001 * 12);
+                break;
+            case "WORKSHOP_STRATEGY_NCDEER_OBTAIN":
+                strongChipValue = ((6 - 0.1) * 18 * (1 - itemValue4001 * 12) - causalityValue) / 5;
+                weakChipValue = ((4 + 0.1) * 18 * (1 - itemValue4001 * 12) + causalityValue) / 5;
+                break;
+            case "WORKSHOP_STRATEGY_NCDEER_CONSUME":
+                strongChipValue = (6 * 18 * (1 - itemValue4001 * 12) + 9 / 10 * 36 * causalityValue) / 6;
+                weakChipValue = (6 * 18 * (1 - itemValue4001 * 12) - 9 / 10 * 36 * causalityValue) / 6;
+                break;
+        }
+
         // 芯片组
-        const chip2Value = 36 * (1 - itemValue4001 * 12);
-        // 双芯片
-        const chip3Value = chip2Value * 2 + itemValue32001 + 1 / 180 * itemValueBaseAp;
-        // 模组数据块
+        const balancedChipPackValue = 36 * (1 - itemValue4001 * 12);
+        let strongChipPackValue, weakChipPackValue;
+        ({ strategy, byproductRateIncreasement } = stageConfig.workshopStrategy.chipPack);
+        switch (strategy) {
+            case "WORKSHOP_STRATEGY_COMMON":
+                const byproductRate = 0.1 * (1 + byproductRateIncreasement);
+                strongChipPackValue = (6 - byproductRate) / 5 * 36 * (1 - itemValue4001 * 12);
+                weakChipPackValue = (4 + byproductRate) / 5 * 36 * (1 - itemValue4001 * 12);
+                break;
+            case "WORKSHOP_STRATEGY_NCDEER_OBTAIN":
+                strongChipPackValue = ((6 - 0.1) * 36 * (1 - itemValue4001 * 12) - 2 * causalityValue) / 5;
+                weakChipPackValue = ((4 + 0.1) * 36 * (1 - itemValue4001 * 12) + 2 * causalityValue) / 5;
+                break;
+            case "WORKSHOP_STRATEGY_NCDEER_CONSUME":
+                strongChipPackValue = (6 * 36 * (1 - itemValue4001 * 12) + 9 / 10 * 36 * causalityValue) / 6;
+                weakChipPackValue = (6 * 36 * (1 - itemValue4001 * 12) - 9 / 10 * 36 * causalityValue) / 6;
+                break;
+        }
+
+        // 双芯片价值 = 2 × 芯片组价值 + 芯片助剂价值 + 1 ÷ 180 × 无人机价值
+        const balancedDualchipValue = balancedChipPackValue * 2 + itemValue32001 + 1 / 180 * itemValueBaseAp;
+        const strongDualchipValue = strongChipPackValue * 2 + itemValue32001 + 1 / 180 * itemValueBaseAp;
+        const weakDualchipValue = weakChipPackValue * 2 + itemValue32001 + 1 / 180 * itemValueBaseAp;
+
+        /** 模组数据块价值 @type {number} */
         let itemValueModUnlockToken;
         switch (stageConfig.modUnlockTokenPricingStrategy) {
-            case "MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE":
+            case "MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE":  // 采购凭证区定价
                 itemValueModUnlockToken = 120 * itemValue4006; break;
-            case "MOD_UNLOCK_TOKEN_PRICING_DISTINCTION_CERTIFICATE":
+            case "MOD_UNLOCK_TOKEN_PRICING_DISTINCTION_CERTIFICATE":  // 高级凭证区定价
                 itemValueModUnlockToken = 20 * itemValue4004; break;
-            case "MOD_UNLOCK_TOKEN_PRICING_CUSTOM":
+            case "MOD_UNLOCK_TOKEN_PRICING_CUSTOM":  // 自定义
                 itemValueModUnlockToken = stageConfig.modUnlockTokenValue; break;
         }
-        // 事相碎片
+        /** 事相碎片价值 = 20 × 采购凭证价值 */
         const itemValueSTORYREVIEWCOIN = 20 * itemValue4006;
 
-        const t3workShopProductsValue = workshopByproductExpectedValue.get(3);
-        // 因果
-        const itemValueYinGuo = 10 / 9 * (1 - stageConfig.workshopEliteMaterialByProductRate) * t3workShopProductsValue / 36;
-        // 碳素组
-        const itemValue3114 = 240 / 19 * itemValue3401 + 4 * itemValueYinGuo - 4000 / 19 * itemValue4001;
-        const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * itemValueYinGuo;
-        const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * itemValueYinGuo;
+        // 用公式计算碳素组、碳素、碳价值
+        /** 碳素组价值 = (240 / 19) × 家具零件价值 + 4 × 因果价值 - (4000 / 19) × 龙门币价值 */
+        const itemValue3114 = 240 / 19 * itemValue3401 + 4 * causalityValue - 4000 / 19 * itemValue4001;
+        /** 碳素价值 = (11 / 30) × 碳素组价值 + (6 / 5) × 因果价值 */
+        const itemValue3113 = 11 / 30 * itemValue3114 + 6 / 5 * causalityValue;
+        /** 碳价值 = (11 / 30) × 碳素价值 + (3 / 5) × 因果价值 */
+        const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * causalityValue;
 
-        // 技巧概要·卷3
-        const itemValue3303 = (30 * (1 - itemValue4001 * 12)
-            / (2 + 3 / 2 * (1 + stageConfig.workshopSkillSummaryByProductRate) / 3 + 1.5 * (1 + stageConfig.workshopSkillSummaryByProductRate) ** 2 / 3 ** 2));
+        // 技巧概要
+        const { itemValue3301, itemValue3302, itemValue3303 } = caculateSkillSummaryValue(
+            stageConfig.workshopStrategy.skillSummary1to2.strategy,
+            stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncreasement,
+            stageConfig.workshopStrategy.skillSummary2to3.strategy,
+            stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncreasement,
+            itemValue4001,
+            causalityValue,
+        );
 
-        // 技能概要·卷2
-        const itemValue3302 = (1 + stageConfig.workshopSkillSummaryByProductRate) * itemValue3303 / 3;
-        // 技能概要·卷1
-        const itemValue3301 = (1 + stageConfig.workshopSkillSummaryByProductRate) * itemValue3302 / 3;
-
-        // 回写物品价值
+        // 更新物品价值
         itemValueMap.set("4003", itemValue4003);
         itemValueMap.set("4002", itemValue4002);
         itemValueMap.set("7003", itemValue7003);
@@ -568,18 +669,80 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         itemValueMap.set("3301", itemValue3301);
         itemValueMap.set("7001", itemValue7001);
 
-        const chipIdList = ["3211", "3221", "3231", "3241", "3251", "3261", "3271", "3281"];
-        const chipPackIdList = ["3212", "3222", "3232", "3242", "3252", "3262", "3272", "3282"];
-        const dualChipIdList = ["3213", "3223", "3233", "3243", "3253", "3263", "3273", "3283"];
+        const chipPreferenceMap = new Map();
+        switch (stageConfig.chipPreference.TANK_MEDIC) {
+            case "TANK":
+                chipPreferenceMap.set("3", "STRONG"); chipPreferenceMap.set("6", "WEAK"); break;
+            case "MEDIC":
+                chipPreferenceMap.set("3", "WEAK"); chipPreferenceMap.set("6", "STRONG"); break;
+            case "BALANCED":
+                chipPreferenceMap.set("3", "BALANCED"); chipPreferenceMap.set("6", "BALANCED"); break;
+        }
+        switch (stageConfig.chipPreference.SNIPER_CASTER) {
+            case "SNIPER":
+                chipPreferenceMap.set("4", "STRONG"); chipPreferenceMap.set("5", "WEAK"); break;
+            case "CASTER":
+                chipPreferenceMap.set("4", "WEAK"); chipPreferenceMap.set("5", "STRONG"); break;
+            case "BALANCED":
+                chipPreferenceMap.set("4", "BALANCED"); chipPreferenceMap.set("5", "BALANCED"); break;
+        }
+        switch (stageConfig.chipPreference.PIONEER_SUPPORT) {
+            case "PIONEER":
+                chipPreferenceMap.set("1", "STRONG"); chipPreferenceMap.set("7", "WEAK"); break;
+            case "SUPPORT":
+                chipPreferenceMap.set("1", "WEAK"); chipPreferenceMap.set("7", "STRONG"); break;
+            case "BALANCED":
+                chipPreferenceMap.set("1", "BALANCED"); chipPreferenceMap.set("7", "BALANCED"); break;
+        }
+        switch (stageConfig.chipPreference.WARRIOR_SPECIAL) {
+            case "WARRIOR":
+                chipPreferenceMap.set("2", "STRONG"); chipPreferenceMap.set("8", "WEAK"); break;
+            case "SPECIAL":
+                chipPreferenceMap.set("2", "WEAK"); chipPreferenceMap.set("8", "STRONG"); break;
+            case "BALANCED":
+                chipPreferenceMap.set("2", "BALANCED"); chipPreferenceMap.set("8", "BALANCED"); break;
+        }
+        for (const [key, value] of chipPreferenceMap) {
+            switch (value) {
+                case "STRONG":
+                    itemValueMap.set(`32${key}1`, strongChipValue);
+                    itemValueMap.set(`32${key}2`, strongChipPackValue);
+                    itemValueMap.set(`32${key}3`, strongDualchipValue);
+                    break;
+                case "WEAK":
+                    itemValueMap.set(`32${key}1`, weakChipValue);
+                    itemValueMap.set(`32${key}2`, weakChipPackValue);
+                    itemValueMap.set(`32${key}3`, weakDualchipValue);
+                    break;
+                case "BALANCED":
+                    itemValueMap.set(`32${key}1`, balancedChipValue);
+                    itemValueMap.set(`32${key}2`, balancedChipPackValue);
+                    itemValueMap.set(`32${key}3`, balancedDualchipValue);
+                    break;
+            }
+        }
 
-        for (const chipId of chipIdList) {
-            itemValueMap.set(chipId, chip1Value);
-        }
-        for (const chipId of chipPackIdList) {
-            itemValueMap.set(chipId, chip2Value);
-        }
-        for (const chipId of dualChipIdList) {
-            itemValueMap.set(chipId, chip3Value);
+
+        /**
+         * 计算技巧概要的价值
+         * 公式在纸上推的，用代码写出来有点魔法
+         * @param {string} strategy1to2
+         * @param {number} rateIncreasement1to2
+         * @param {string} strategy2to3
+         * @param {number} rateIncreasement2to3
+         * @param {number} lmdValue
+         * @param {number} causalityValue
+         * @returns {{itemValue3301: number, itemValue3302: number, itemValue3303: number}}
+         */
+        function caculateSkillSummaryValue(strategy1to2, rateIncreasement1to2, strategy2to3, rateIncreasement2to3, lmdValue, causalityValue) {
+            const a1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncreasement1to2));
+            const a2 = (strategy2to3 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncreasement2to3));
+            const b1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9) : (0);
+            const b2 = (strategy2to3 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9) : (0);
+            const itemValue3302 = (30 * (1 - lmdValue * 12) - b1 * causalityValue / 2 + 4 * b2 * causalityValue / a2) / (a1 / 2 + 3 / 2 + 6 / a2);
+            const itemValue3301 = (a1 * itemValue3302 + b1 * causalityValue) / 3;
+            const itemValue3303 = (3 * itemValue3302 - 2 * b2 * causalityValue) / a2;
+            return { itemValue3301, itemValue3302, itemValue3303 };
         }
     }
 
@@ -587,6 +750,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
     /**
      * 检查是否满足停机条件
      * 停机条件：对于每种未自定义价值的蓝材料，定价作战集中以该系列材料为主产物的最高效率作战的作战效率在 (1 - tolerance, 1 + tolerance) 之间。
+     * @param {number} tolerance
      * @returns {boolean} 是否满足停机条件
      */
     function checkCompletion(tolerance) {
