@@ -6,13 +6,8 @@
         "一图流的默认配置"
       ],
       "paramDescription": [
-        "1 至纯源石 = 180 合成玉 = 135 理智",
-        "中坚寻访凭证按高级凭证区定价",
         "龙门币按 CE-6 定价",
         "EXP 按无人机定价（3 级站，无龙但裁缝）",
-        "模组数据块按采购凭证区定价",
-        "公招 5★、6★ 未满潜",
-        "加急许可、家具零件价值为 0",
         "精英材料主线定价"
       ],
       "parameters": {
@@ -25,7 +20,51 @@
         "recruitmentPermitPricingStrategy": "RECRUITMENT_PERMIT_PRICING_3_4",
         "expeditedPlanPricingStrategy": "EXPEDITED_PLAN_PRICING_ZERO",
         "furniturePartPricingStrategy": "FURNITURE_PART_PRICING_ZERO",
-        "useActivityAverageStage": false
+        "useActivityAverageStage": false,
+        "workshopStrategy": {
+          "eliteMaterialT1toT2": {
+            "strategy": "WORKSHOP_STRATEGY_COMMON",
+            "byproductRateIncreasement": 1
+          },
+          "eliteMaterialT2toT3": {
+            "strategy": "WORKSHOP_STRATEGY_COMMON",
+            "byproductRateIncreasement": 1
+          },
+          "eliteMaterialT3toT4": {
+            "strategy": "WORKSHOP_STRATEGY_COMMON",
+            "byproductRateIncreasement": 1
+          },
+          "eliteMaterialT4toT5": {
+            "strategy": "WORKSHOP_STRATEGY_COMMON",
+            "byproductRateIncreasement": 1
+          },
+          "skillSummary1to2": {
+            "strategy": "WORKSHOP_STRATEGY_COMMON",
+            "byproductRateIncreasement": 0.8
+          },
+          "skillSummary2to3": {
+            "strategy": "WORKSHOP_STRATEGY_COMMON",
+            "byproductRateIncreasement": 0.8
+          },
+          "baseMaterial": {
+            "strategy": "WORKSHOP_STRATEGY_NCDEER_OBTAIN",
+            "byproductRateIncreasement": null
+          },
+          "chip": {
+            "strategy": "WORKSHOP_STRATEGY_COMMON",
+            "byproductRateIncreasement": 0.8
+          },
+          "chipPack": {
+            "strategy": "WORKSHOP_STRATEGY_COMMON",
+            "byproductRateIncreasement": 0.8
+          }
+        },
+        "chipPreference": {
+          "TANK_MEDIC": "BALANCED",
+          "SNIPER_CASTER": "BALANCED",
+          "PIONEER_SUPPORT": "BALANCED",
+          "WARRIOR_SPECIAL": "BALANCED"
+        }
       },
       "message": "已修改为默认配置",
       "color": "primary",
@@ -41,7 +80,6 @@
       "paramDescription": [
         "龙门币按 CE-6 定价",
         "EXP 按 LS-6 定价",
-        "公招 5★、6★ 未满潜",
         "精英材料主线定价"
       ],
       "parameters": {
@@ -85,7 +123,6 @@
       "paramDescription": [
         "龙门币按 CE-6 定价",
         "EXP 按无人机定价（3 级站，有龙但）",
-        "加急许可、家具零件价值为 0",
         "精英材料活动定价"
       ],
       "parameters": {
@@ -98,28 +135,58 @@
       "message": "已修改为老登配置",
       "color": "primary",
       "active": false
-    },
+    }
+  ],
+  [
     {
-      "name": "仅抽卡",
+      "name": "我会刷龙门币",
       "description": [],
-      "paramDescription": [],
+      "paramDescription": [
+        "龙门币系数=1"
+      ],
       "parameters": {
-        "orundumPricingStrategy": "ORUNDUM_PRICING_INFINITY",
-        "originitePrimePricingStrategy": "ORIGINITE_PRIME_PRICING_ORUNDUM"
+        "lmdCoefficient": 1
       },
-      "message": "已修改为仅抽卡配置",
+      "message": "龙门币系数已修改为1",
       "color": "primary",
       "active": false
     },
     {
-      "name": "只看源石",
+      "name": "我龙门币溢出",
       "description": [],
-      "paramDescription": [],
+      "paramDescription": [
+        "龙门币系数=0"
+      ],
       "parameters": {
-        "orundumPricingStrategy": "ORUNDUM_PRICING_INFINITY",
-        "originitePrimePricingStrategy": "ORIGINITE_PRIME_PRICING_INFINITY"
+        "lmdCoefficient": 0
       },
-      "message": "已修改为只看源石配置",
+      "message": "龙门币系数已修改为0",
+      "color": "primary",
+      "active": false
+    },
+    {
+      "name": "我会刷经验书",
+      "description": [],
+      "paramDescription": [
+        "经验书系数=0.9568"
+      ],
+      "parameters": {
+        "expCoefficient": 0.9568
+      },
+      "message": "经验书系数已修改为0.9568",
+      "color": "primary",
+      "active": false
+    },
+    {
+      "name": "我经验书溢出",
+      "description": [],
+      "paramDescription": [
+        "经验书系数=0"
+      ],
+      "parameters": {
+        "expCoefficient": 0
+      },
+      "message": "经验书系数已修改为0",
       "color": "primary",
       "active": false
     }
