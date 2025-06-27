@@ -102,6 +102,8 @@ const recruitTokenMap = {
 /**
  * 根据自定义配置计算物品价值表
  * @param stageConfig 自定义参数
+ * @param maxIteration
+ * @param tolerance
  * @return {Promise<Array<ItemInfo>>}
  */
 async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.000001) {
@@ -376,7 +378,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
 
             // 主产物物品id
             // 这里主产物定义为价值占比最高的物品
-            let mainItemId;
+            let mainItemId = "";
             // 最高的单项物品产出价值
             let maxValue = -Infinity;
 
@@ -632,7 +634,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * causalityValue;
 
         // 技巧概要
-        const { itemValue3301, itemValue3302, itemValue3303 } = caculateSkillSummaryValue(
+        const { itemValue3301, itemValue3302, itemValue3303 } = calculateSkillSummaryValue(
             stageConfig.workshopStrategy.skillSummary1to2.strategy,
             stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncreasement,
             stageConfig.workshopStrategy.skillSummary2to3.strategy,
@@ -737,7 +739,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
          * @param {number} causalityValue
          * @returns {{itemValue3301: number, itemValue3302: number, itemValue3303: number}}
          */
-        function caculateSkillSummaryValue(strategy1to2, rateIncreasement1to2, strategy2to3, rateIncreasement2to3, lmdValue, causalityValue) {
+        function calculateSkillSummaryValue(strategy1to2, rateIncreasement1to2, strategy2to3, rateIncreasement2to3, lmdValue, causalityValue) {
             const a1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncreasement1to2));
             const a2 = (strategy2to3 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncreasement2to3));
             const b1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9) : (0);
