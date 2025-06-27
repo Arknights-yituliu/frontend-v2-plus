@@ -166,14 +166,14 @@ let stageConfig = ref(parseConfig(stringifyConfig(defaultConfig)));
 function getStageConfig() {
     const cacheStageConfig = localStorage.getItem("StageConfig");
     if (cacheStageConfig) {
-        let config = parseConfig(cacheStageConfig);
-        if (!config.customItem) {
-            config.customItem = [];
-        }
-
-        for (const key in config) {
-            stageConfig.value[key] = config[key];
-        }
+        // let config = parseConfig(cacheStageConfig);
+        // if (!config.customItem) {
+        //     config.customItem = [];
+        // }
+        //
+        // for (const key in config) {
+        //     stageConfig.value[key] = config[key];
+        // }
 
         return stageConfig.value;
     } else {
