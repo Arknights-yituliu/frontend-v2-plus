@@ -249,11 +249,11 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         /** 随机蓝材料的价值 */
         const t3workShopProductsValue = workshopByproductExpectedValue.get(3);
         // 解构蓝合紫的加工站策略
-        const { strategy, byproductRateIncreasement } = stageConfig.workshopStrategy.eliteMaterialT3toT4;
+        const { strategy, byproductRateIncrease } = stageConfig.workshopStrategy.eliteMaterialT3toT4;
         /** 蓝合紫时消耗的龙门币数量 */
         const lmdCost = (strategy === "WORKSHOP_STRATEGY_BLEMISHINE") ? (0) : (300);
         /** 蓝合紫时的实际副产品产出概率 */
-        const byproductRate = (strategy === "WORKSHOP_STRATEGY_BLEMISHINE") ? (0.14) : (0.1 * (1 + byproductRateIncreasement));
+        const byproductRate = (strategy === "WORKSHOP_STRATEGY_BLEMISHINE") ? (0.14) : (0.1 * (1 + byproductRateIncrease));
         /** 因果价值 */
         const causalityValue = ((1 - byproductRate) * t3workShopProductsValue - (300 - lmdCost) * lmdValue) / (9 / 10 * 36);
         // 更新因果价值
@@ -280,13 +280,13 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
 
             // 获取自定义加工策略和副产品产出概率提升量
             const strategyPropertyName = `eliteMaterialT${sourceRarity}toT${targetRarity}`;
-            const { strategy, byproductRateIncreasement } = stageConfig.workshopStrategy[strategyPropertyName];
+            const { strategy, byproductRateIncrease } = stageConfig.workshopStrategy[strategyPropertyName];
 
             /**
              * 实际的副产品产出概率
              * - 使用九色鹿获取因果为 `0.1`
              * - 使用瑕光为 `0.14`
-             * - 使用其他干员加工为 `0.1 * (1 + byproductRateIncreasement)`
+             * - 使用其他干员加工为 `0.1 * (1 + byproductRateIncrease)`
              */
             let byproductRate;
             switch (strategy) {
@@ -295,7 +295,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
                 case "WORKSHOP_STRATEGY_BLEMISHINE":
                     byproductRate = 0.14; break;
                 case "WORKSHOP_STRATEGY_COMMON":
-                    byproductRate = 0.1 * (1 + byproductRateIncreasement); break;
+                    byproductRate = 0.1 * (1 + byproductRateIncrease); break;
             }
 
             /**
@@ -569,10 +569,10 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         // 芯片
         const balancedChipValue = 18 * (1 - itemValue4001 * 12);
         let strongChipValue, weakChipValue;
-        let { strategy, byproductRateIncreasement } = stageConfig.workshopStrategy.chip;
+        let { strategy, byproductRateIncrease } = stageConfig.workshopStrategy.chip;
         switch (strategy) {
             case "WORKSHOP_STRATEGY_COMMON":
-                const byproductRate = 0.1 * (1 + byproductRateIncreasement);
+                const byproductRate = 0.1 * (1 + byproductRateIncrease);
                 strongChipValue = (6 - byproductRate) / 5 * 18 * (1 - itemValue4001 * 12);
                 weakChipValue = (4 + byproductRate) / 5 * 18 * (1 - itemValue4001 * 12);
                 break;
@@ -589,10 +589,10 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         // 芯片组
         const balancedChipPackValue = 36 * (1 - itemValue4001 * 12);
         let strongChipPackValue, weakChipPackValue;
-        ({ strategy, byproductRateIncreasement } = stageConfig.workshopStrategy.chipPack);
+        ({ strategy, byproductRateIncrease } = stageConfig.workshopStrategy.chipPack);
         switch (strategy) {
             case "WORKSHOP_STRATEGY_COMMON":
-                const byproductRate = 0.1 * (1 + byproductRateIncreasement);
+                const byproductRate = 0.1 * (1 + byproductRateIncrease);
                 strongChipPackValue = (6 - byproductRate) / 5 * 36 * (1 - itemValue4001 * 12);
                 weakChipPackValue = (4 + byproductRate) / 5 * 36 * (1 - itemValue4001 * 12);
                 break;
@@ -636,9 +636,9 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         // 技巧概要
         const { itemValue3301, itemValue3302, itemValue3303 } = calculateSkillSummaryValue(
             stageConfig.workshopStrategy.skillSummary1to2.strategy,
-            stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncreasement,
+            stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncrease,
             stageConfig.workshopStrategy.skillSummary2to3.strategy,
-            stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncreasement,
+            stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncrease,
             itemValue4001,
             causalityValue,
         );
@@ -732,16 +732,16 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
          * 公式在纸上推的，用代码写出来有点魔法
          * 看不懂请问 Bio
          * @param {string} strategy1to2
-         * @param {number} rateIncreasement1to2
+         * @param {number} rateIncrease1to2
          * @param {string} strategy2to3
-         * @param {number} rateIncreasement2to3
+         * @param {number} rateIncrease2to3
          * @param {number} lmdValue
          * @param {number} causalityValue
          * @returns {{itemValue3301: number, itemValue3302: number, itemValue3303: number}}
          */
-        function calculateSkillSummaryValue(strategy1to2, rateIncreasement1to2, strategy2to3, rateIncreasement2to3, lmdValue, causalityValue) {
-            const a1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncreasement1to2));
-            const a2 = (strategy2to3 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncreasement2to3));
+        function calculateSkillSummaryValue(strategy1to2, rateIncrease1to2, strategy2to3, rateIncrease2to3, lmdValue, causalityValue) {
+            const a1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncrease1to2));
+            const a2 = (strategy2to3 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncrease2to3));
             const b1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9) : (0);
             const b2 = (strategy2to3 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9) : (0);
             const itemValue3302 = (30 * (1 - lmdValue * 12) - b1 * causalityValue / 2 + 4 * b2 * causalityValue / a2) / (a1 / 2 + 3 / 2 + 6 / a2);

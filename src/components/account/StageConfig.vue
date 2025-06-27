@@ -1054,7 +1054,7 @@ onMounted(() => {
                   <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
                   <v-text-field ref="eliteMaterialT1toT2Input"
-                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT1toT2.byproductRateIncreasement"
+                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT1toT2.byproductRateIncrease"
                     :rules="numberGe0"
                     @focus="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
                     label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
@@ -1078,7 +1078,7 @@ onMounted(() => {
                   <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
                   <v-text-field ref="eliteMaterialT2toT3Input"
-                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT2toT3.byproductRateIncreasement"
+                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT2toT3.byproductRateIncrease"
                     :rules="numberGe0"
                     @focus="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
                     label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
@@ -1105,7 +1105,7 @@ onMounted(() => {
                   <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
                   <v-text-field ref="eliteMaterialT3toT4Input"
-                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT3toT4.byproductRateIncreasement"
+                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT3toT4.byproductRateIncrease"
                     :rules="numberGe0"
                     @focus="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy = 'WORKSHOP_STRATEGY_COMMON'"
                     label="副产品出率提升量" hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9" variant="outlined" density="compact"
@@ -1131,7 +1131,7 @@ onMounted(() => {
                   <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
                   <v-text-field ref="eliteMaterialT4toT5Input"
-                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT4toT5.byproductRateIncreasement"
+                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT4toT5.byproductRateIncrease"
                     :rules="numberGe0"
                     @focus="stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy = 'WORKSHOP_STRATEGY_COMMON'"
                     label="副产品出率提升量" hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9" variant="outlined" density="compact"
@@ -1154,7 +1154,7 @@ onMounted(() => {
                   <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
                   <v-text-field ref="skillSummary1to2Input"
-                    v-model.number="stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncreasement"
+                    v-model.number="stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncrease"
                     :rules="numberGe0"
                     @focus="stageConfig.workshopStrategy.skillSummary1to2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
                     label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
@@ -1177,7 +1177,7 @@ onMounted(() => {
                   <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
                   <v-text-field ref="skillSummary2to3Input"
-                    v-model.number="stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncreasement"
+                    v-model.number="stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncrease"
                     :rules="numberGe0"
                     @focus="stageConfig.workshopStrategy.skillSummary2to3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
                     label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
@@ -1200,7 +1200,7 @@ onMounted(() => {
                   <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用煌等通用干员" disabled></v-radio>
                   <v-text-field ref="baseMaterialInput"
-                    v-model.number="stageConfig.workshopStrategy.baseMaterial.byproductRateIncreasement"
+                    v-model.number="stageConfig.workshopStrategy.baseMaterial.byproductRateIncrease"
                     :rules="numberGe0"
                     @focus="stageConfig.workshopStrategy.baseMaterial.strategy = 'WORKSHOP_STRATEGY_COMMON'"
                     label="副产品出率提升量" hint="煌 0.8" variant="outlined" density="compact"
@@ -1224,7 +1224,7 @@ onMounted(() => {
                   <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
                   <v-text-field ref="chipInput"
-                    v-model.number="stageConfig.workshopStrategy.chip.byproductRateIncreasement" :rules="numberGe0"
+                    v-model.number="stageConfig.workshopStrategy.chip.byproductRateIncrease" :rules="numberGe0"
                     @focus="stageConfig.workshopStrategy.chip.strategy = 'WORKSHOP_STRATEGY_COMMON'" label="副产品出率提升量"
                     hint="风笛 0.8" variant="outlined" density="compact" style="margin-left: 40px; width: 200px;">
                   </v-text-field>
@@ -1246,7 +1246,7 @@ onMounted(() => {
                   <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
                   <v-text-field ref="chipPackInput"
-                    v-model.number="stageConfig.workshopStrategy.chipPack.byproductRateIncreasement" :rules="numberGe0"
+                    v-model.number="stageConfig.workshopStrategy.chipPack.byproductRateIncrease" :rules="numberGe0"
                     @focus="stageConfig.workshopStrategy.chipPack.strategy = 'WORKSHOP_STRATEGY_COMMON'"
                     label="副产品出率提升量" hint="风笛 0.8" variant="outlined" density="compact"
                     style="margin-left: 40px; width: 200px;">

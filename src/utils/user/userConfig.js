@@ -60,39 +60,39 @@ const defaultConfig = {
     workshopStrategy: {
         eliteMaterialT1toT2: {
             strategy: "WORKSHOP_STRATEGY_COMMON",
-            byproductRateIncreasement: 1,
+            byproductRateIncrease: 1,
         },
         eliteMaterialT2toT3: {
             strategy: "WORKSHOP_STRATEGY_COMMON",
-            byproductRateIncreasement: 1,
+            byproductRateIncrease: 1,
         },
         eliteMaterialT3toT4: {
             strategy: "WORKSHOP_STRATEGY_COMMON",
-            byproductRateIncreasement: 1,
+            byproductRateIncrease: 1,
         },
         eliteMaterialT4toT5: {
             strategy: "WORKSHOP_STRATEGY_COMMON",
-            byproductRateIncreasement: 1,
+            byproductRateIncrease: 1,
         },
         skillSummary1to2: {
             strategy: "WORKSHOP_STRATEGY_COMMON",
-            byproductRateIncreasement: 0.8,
+            byproductRateIncrease: 0.8,
         },
         skillSummary2to3: {
             strategy: "WORKSHOP_STRATEGY_COMMON",
-            byproductRateIncreasement: 0.8,
+            byproductRateIncrease: 0.8,
         },
         baseMaterial: {
             strategy: "WORKSHOP_STRATEGY_NCDEER_OBTAIN",
-            byproductRateIncreasement: null,
+            byproductRateIncrease: null,
         },
         chip: {
             strategy: "WORKSHOP_STRATEGY_COMMON",
-            byproductRateIncreasement: 0.8,
+            byproductRateIncrease: 0.8,
         },
         chipPack: {
             strategy: "WORKSHOP_STRATEGY_COMMON",
-            byproductRateIncreasement: 0.8,
+            byproductRateIncrease: 0.8,
         },
     },
 
@@ -156,7 +156,7 @@ function stringifyConfig(config) {
     );
 }
 
-// 冒充一下 deepcopy
+// 冒充一下 deepCopy
 let stageConfig = ref(parseConfig(stringifyConfig(defaultConfig)));
 
 /**
