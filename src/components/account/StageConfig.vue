@@ -646,94 +646,97 @@ onMounted(() => {
             </v-expansion-panel-title>
             <v-expansion-panel-text class="expansion-panel-text">
 
-              <!-- 合成玉定价策略 -->
-              <v-radio-group v-model="stageConfig.orundumPricingStrategy">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="4003"></ItemImage>
-                    合成玉定价策略
-                    <span class="card-description"
-                      v-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORIGINITE_PRIME'">
-                      180 合成玉 = 135 理智，1 合成玉 = 0.75 理智
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE'">
-                      10 合成玉 = 2 固源岩 + 1600 龙门币 + 40 无人机
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORININUM_FARMING_DEVICE'">
-                      10 合成玉 = 1 装置 + 1000 龙门币 + 40 无人机
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_INFINITY'">
-                      仅计算抽卡资源的价值，认为养成资源无价值（1 合成玉 = ∞ 理智）
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_CUSTOM'">
-                      1 合成玉 = {{ typeof stageConfig.orundumValue === "number" ? stageConfig.orundumValue : "?" }} 理智
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="ORUNDUM_PRICING_ORIGINITE_PRIME" label="碎石途径定价（默认）"></v-radio>
-                <v-radio value="ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE" label="搓玉途径定价（用固源岩搓玉）"></v-radio>
-                <v-radio value="ORUNDUM_PRICING_ORININUM_FARMING_DEVICE" label="搓玉途径定价（用装置搓玉）"></v-radio>
-                <v-radio value="ORUNDUM_PRICING_INFINITY" label="仅抽卡"></v-radio>
-                <v-radio value="ORUNDUM_PRICING_CUSTOM" label="自定义"></v-radio>
-                <v-text-field ref="orundumValueInput" v-model.number='stageConfig.orundumValue' :rules="numberGe0"
-                  label="1 合成玉 = ? 理智" @focus="stageConfig.orundumPricingStrategy = 'ORUNDUM_PRICING_CUSTOM'"
-                  placeholder="1 合成玉 = ? 理智" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
+              <!-- 前面的区域以后再来探索吧 -->
+              <span v-if="false">
+                <!-- 合成玉定价策略 -->
+                <v-radio-group v-model="stageConfig.orundumPricingStrategy">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="4003"></ItemImage>
+                      合成玉定价策略
+                      <span class="card-description"
+                        v-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORIGINITE_PRIME'">
+                        180 合成玉 = 135 理智，1 合成玉 = 0.75 理智
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE'">
+                        10 合成玉 = 2 固源岩 + 1600 龙门币 + 40 无人机
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORININUM_FARMING_DEVICE'">
+                        10 合成玉 = 1 装置 + 1000 龙门币 + 40 无人机
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_INFINITY'">
+                        仅计算抽卡资源的价值，认为养成资源无价值（1 合成玉 = ∞ 理智）
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_CUSTOM'">
+                        1 合成玉 = {{ typeof stageConfig.orundumValue === "number" ? stageConfig.orundumValue : "?" }} 理智
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="ORUNDUM_PRICING_ORIGINITE_PRIME" label="碎石途径定价（默认）"></v-radio>
+                  <v-radio value="ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE" label="搓玉途径定价（用固源岩搓玉）"></v-radio>
+                  <v-radio value="ORUNDUM_PRICING_ORININUM_FARMING_DEVICE" label="搓玉途径定价（用装置搓玉）"></v-radio>
+                  <v-radio value="ORUNDUM_PRICING_INFINITY" label="仅抽卡"></v-radio>
+                  <v-radio value="ORUNDUM_PRICING_CUSTOM" label="自定义"></v-radio>
+                  <v-text-field ref="orundumValueInput" v-model.number='stageConfig.orundumValue' :rules="numberGe0"
+                    label="1 合成玉 = ? 理智" @focus="stageConfig.orundumPricingStrategy = 'ORUNDUM_PRICING_CUSTOM'"
+                    placeholder="1 合成玉 = ? 理智" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-              <!-- 至纯源石定价策略 -->
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.originitePrimePricingStrategy">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="4002"></ItemImage>
-                    至纯源石价值系数 — {{ formatNumber(stageConfig.originitePrimeCoefficient, 4) }}
-                    <span class="card-description">
-                      用于计算礼包性价比，至纯源石价值 = 合成玉价值 × 至纯源石价值系数
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="ORIGINITE_PRIME_PRICING_ORUNDUM" label="1 至纯源石 = 180 合成玉（默认）"></v-radio>
-                <v-radio value="ORIGINITE_PRIME_PRICING_INFINITY" label="1 至纯源石 = ∞ 合成玉（源石仅买装扮）"></v-radio>
-                <v-radio value="ORIGINITE_PRIME_PRICING_CUSTOM" label="自定义"></v-radio>
-                <v-text-field ref="originitePrimeCoefficientInput"
-                  v-model.number='stageConfig.originitePrimeCoefficient' :rules="numberGe0" label="至纯源石价值系数"
-                  @click="stageConfig.originitePrimePricingStrategy = 'ORIGINITE_PRIME_PRICING_CUSTOM'"
-                  @focus="stageConfig.originitePrimePricingStrategy = 'ORIGINITE_PRIME_PRICING_CUSTOM'"
-                  placeholder="1 至纯源石 = ? 合成玉" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
+                <!-- 至纯源石定价策略 -->
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.originitePrimePricingStrategy">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="4002"></ItemImage>
+                      至纯源石价值系数 — {{ formatNumber(stageConfig.originitePrimeCoefficient, 4) }}
+                      <span class="card-description">
+                        用于计算礼包性价比，至纯源石价值 = 合成玉价值 × 至纯源石价值系数
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="ORIGINITE_PRIME_PRICING_ORUNDUM" label="1 至纯源石 = 180 合成玉（默认）"></v-radio>
+                  <v-radio value="ORIGINITE_PRIME_PRICING_INFINITY" label="1 至纯源石 = ∞ 合成玉（源石仅买装扮）"></v-radio>
+                  <v-radio value="ORIGINITE_PRIME_PRICING_CUSTOM" label="自定义"></v-radio>
+                  <v-text-field ref="originitePrimeCoefficientInput"
+                    v-model.number='stageConfig.originitePrimeCoefficient' :rules="numberGe0" label="至纯源石价值系数"
+                    @click="stageConfig.originitePrimePricingStrategy = 'ORIGINITE_PRIME_PRICING_CUSTOM'"
+                    @focus="stageConfig.originitePrimePricingStrategy = 'ORIGINITE_PRIME_PRICING_CUSTOM'"
+                    placeholder="1 至纯源石 = ? 合成玉" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-              <!-- 中坚寻访系数 -->
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.kernelHeadhuntingPermitPricingStrategy">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="classic_gacha"></ItemImage>
-                    中坚寻访系数
-                    <span class="card-description">
-                      1 中坚寻访凭证 = {{ typeof stageConfig.kernelHeadhuntingPermitCoefficient === "number" ?
-                      stageConfig.kernelHeadhuntingPermitCoefficient : "?" }} 寻访凭证
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE"
-                  label="38 中坚寻访凭证 = 216 高级凭证（默认）"></v-radio>
-                <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_ZERO" label="中坚寻访凭证价值为 0"></v-radio>
-                <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_CUSTOM" label="自定义"></v-radio>
-                <v-text-field ref="kernelHeadhuntingPermitCoefficientInput"
-                  v-model.number='stageConfig.kernelHeadhuntingPermitCoefficient' :rules="numberGe0"
-                  @focus="stageConfig.kernelHeadhuntingPermitPricingStrategy = 'KERNEL_HEADHUNTING_PERMIT_PRICING_CUSTOM'"
-                  label="1 中坚寻访凭证 = ? 寻访凭证" placeholder="1 中坚寻访凭证 = ? 寻访凭证" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
+                <!-- 中坚寻访系数 -->
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.kernelHeadhuntingPermitPricingStrategy">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="classic_gacha"></ItemImage>
+                      中坚寻访系数
+                      <span class="card-description">
+                        1 中坚寻访凭证 = {{ typeof stageConfig.kernelHeadhuntingPermitCoefficient === "number" ?
+                        stageConfig.kernelHeadhuntingPermitCoefficient : "?" }} 寻访凭证
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE"
+                    label="38 中坚寻访凭证 = 216 高级凭证（默认）"></v-radio>
+                  <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_ZERO" label="中坚寻访凭证价值为 0"></v-radio>
+                  <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_CUSTOM" label="自定义"></v-radio>
+                  <v-text-field ref="kernelHeadhuntingPermitCoefficientInput"
+                    v-model.number='stageConfig.kernelHeadhuntingPermitCoefficient' :rules="numberGe0"
+                    @focus="stageConfig.kernelHeadhuntingPermitPricingStrategy = 'KERNEL_HEADHUNTING_PERMIT_PRICING_CUSTOM'"
+                    label="1 中坚寻访凭证 = ? 寻访凭证" placeholder="1 中坚寻访凭证 = ? 寻访凭证" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
+              </span>
 
               <!-- 龙门币定价策略 -->
               <v-divider></v-divider>
@@ -826,141 +829,148 @@ onMounted(() => {
                 </v-text-field>
               </v-radio-group>
 
-              <!-- 模组数据块定价策略 -->
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.modUnlockTokenPricingStrategy">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="mod_unlock_token"></ItemImage>
-                    模组数据块定价策略
-                    <span class="card-description"
-                      v-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE'">
-                      1 模组数据块 = 120 采购凭证
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_DISTINCTION_CERTIFICATE'">
-                      1 模组数据块 = 20 高级凭证
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_CUSTOM'">
-                      1 模组数据块 = {{ typeof stageConfig.modUnlockTokenValue === "number" ? stageConfig.modUnlockTokenValue
-                      : "?" }} 理智
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE" label="采购凭证区定价（默认）"></v-radio>
-                <v-radio value="MOD_UNLOCK_TOKEN_PRICING_DISTINCTION_CERTIFICATE" label="高级凭证区定价"></v-radio>
-                <v-radio value="MOD_UNLOCK_TOKEN_PRICING_CUSTOM" label="自定义"></v-radio>
-                <v-text-field ref="modUnlockTokenValueInput" v-model.number='stageConfig.modUnlockTokenValue'
-                  :rules="numberGe0" label="1 模组数据块 = ? 理智"
-                  @focus="stageConfig.modUnlockTokenPricingStrategy = 'MOD_UNLOCK_TOKEN_PRICING_CUSTOM'"
-                  placeholder="1 模组数据块 = ? 理智" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
+              <!-- 前面的区域以后再来探索吧 -->
+              <span v-if="false">
+                <!-- 模组数据块定价策略 -->
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.modUnlockTokenPricingStrategy">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="mod_unlock_token"></ItemImage>
+                      模组数据块定价策略
+                      <span class="card-description"
+                        v-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE'">
+                        1 模组数据块 = 120 采购凭证
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_DISTINCTION_CERTIFICATE'">
+                        1 模组数据块 = 20 高级凭证
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_CUSTOM'">
+                        1 模组数据块 = {{ typeof stageConfig.modUnlockTokenValue === "number" ?
+                        stageConfig.modUnlockTokenValue
+                        : "?" }} 理智
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE" label="采购凭证区定价（默认）"></v-radio>
+                  <v-radio value="MOD_UNLOCK_TOKEN_PRICING_DISTINCTION_CERTIFICATE" label="高级凭证区定价"></v-radio>
+                  <v-radio value="MOD_UNLOCK_TOKEN_PRICING_CUSTOM" label="自定义"></v-radio>
+                  <v-text-field ref="modUnlockTokenValueInput" v-model.number='stageConfig.modUnlockTokenValue'
+                    :rules="numberGe0" label="1 模组数据块 = ? 理智"
+                    @focus="stageConfig.modUnlockTokenPricingStrategy = 'MOD_UNLOCK_TOKEN_PRICING_CUSTOM'"
+                    placeholder="1 模组数据块 = ? 理智" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-              <!-- 招聘许可定价策略 -->
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.recruitmentPermitPricingStrategy">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="7001"></ItemImage>
-                    招聘许可定价策略
-                    <span class="card-description"
-                      v-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4'">
-                      认为公开招募范围内的 3★、4★ 干员潜能均已满，5★、6★ 干员均已获得但潜能未满
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4_5'">
-                      认为公开招募范围内的 3★、4★、5★ 干员潜能均已满，6★ 干员均已获得但潜能未满
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4_5_6'">
-                      认为公开招募范围内的干员潜能均已满
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_CUSTOM'">
-                      1 招聘许可 = {{ typeof stageConfig.recruitmentPermitValue === "number" ?
-                      stageConfig.recruitmentPermitValue : "?" }} 理智
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="RECRUITMENT_PERMIT_PRICING_3_4" label="5★、6★ 未满潜（默认）"></v-radio>
-                <v-radio value="RECRUITMENT_PERMIT_PRICING_3_4_5" label="5★ 全满潜，6★ 未满潜"></v-radio>
-                <v-radio value="RECRUITMENT_PERMIT_PRICING_3_4_5_6" label="全满潜"></v-radio>
-                <v-radio value="RECRUITMENT_PERMIT_PRICING_CUSTOM" label="自定义"></v-radio>
-                <v-text-field ref="recruitmentPermitValueInput" v-model.number='stageConfig.recruitmentPermitValue'
-                  :rules="numberGe0" label="1 招聘许可 = ? 理智"
-                  @focus="stageConfig.recruitmentPermitPricingStrategy = 'RECRUITMENT_PERMIT_PRICING_CUSTOM'"
-                  placeholder="1 招聘许可 = ? 理智" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
+                <!-- 招聘许可定价策略 -->
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.recruitmentPermitPricingStrategy">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="7001"></ItemImage>
+                      招聘许可定价策略
+                      <span class="card-description"
+                        v-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4'">
+                        认为公开招募范围内的 3★、4★ 干员潜能均已满，5★、6★ 干员均已获得但潜能未满
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4_5'">
+                        认为公开招募范围内的 3★、4★、5★ 干员潜能均已满，6★ 干员均已获得但潜能未满
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4_5_6'">
+                        认为公开招募范围内的干员潜能均已满
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_CUSTOM'">
+                        1 招聘许可 = {{ typeof stageConfig.recruitmentPermitValue === "number" ?
+                        stageConfig.recruitmentPermitValue : "?" }} 理智
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="RECRUITMENT_PERMIT_PRICING_3_4" label="5★、6★ 未满潜（默认）"></v-radio>
+                  <v-radio value="RECRUITMENT_PERMIT_PRICING_3_4_5" label="5★ 全满潜，6★ 未满潜"></v-radio>
+                  <v-radio value="RECRUITMENT_PERMIT_PRICING_3_4_5_6" label="全满潜"></v-radio>
+                  <v-radio value="RECRUITMENT_PERMIT_PRICING_CUSTOM" label="自定义"></v-radio>
+                  <v-text-field ref="recruitmentPermitValueInput" v-model.number='stageConfig.recruitmentPermitValue'
+                    :rules="numberGe0" label="1 招聘许可 = ? 理智"
+                    @focus="stageConfig.recruitmentPermitPricingStrategy = 'RECRUITMENT_PERMIT_PRICING_CUSTOM'"
+                    placeholder="1 招聘许可 = ? 理智" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-              <!-- 加急许可定价策略 -->
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.expeditedPlanPricingStrategy">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="7002"></ItemImage>
-                    加急许可定价策略
-                    <span class="card-description"
-                      v-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_ZERO'">
-                      1 加急许可 = 0 理智
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_RECRUITMENT_PERMIT'">
-                      1 加急许可 = 1 招聘许可
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_CUSTOM'">
-                      1 加急许可 = {{ typeof stageConfig.expeditedPlanValue === "number" ? stageConfig.expeditedPlanValue :
-                      "?" }} 理智
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="EXPEDITED_PLAN_PRICING_ZERO" label="加急许可价值为 0（默认）"></v-radio>
-                <v-radio value="EXPEDITED_PLAN_PRICING_RECRUITMENT_PERMIT" label="等于招聘许可的价值"></v-radio>
-                <v-radio value="EXPEDITED_PLAN_PRICING_CUSTOM" label="自定义"></v-radio>
-                <v-text-field ref="expeditedPlanValueInput" v-model.number='stageConfig.expeditedPlanValue'
-                  :rules="numberGe0" label="1 加急许可 = ? 理智"
-                  @focus="stageConfig.expeditedPlanPricingStrategy = 'EXPEDITED_PLAN_PRICING_CUSTOM'"
-                  placeholder="1 加急许可 = ? 理智" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
+                <!-- 加急许可定价策略 -->
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.expeditedPlanPricingStrategy">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="7002"></ItemImage>
+                      加急许可定价策略
+                      <span class="card-description"
+                        v-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_ZERO'">
+                        1 加急许可 = 0 理智
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_RECRUITMENT_PERMIT'">
+                        1 加急许可 = 1 招聘许可
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_CUSTOM'">
+                        1 加急许可 = {{ typeof stageConfig.expeditedPlanValue === "number" ? stageConfig.expeditedPlanValue
+                        :
+                        "?" }} 理智
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="EXPEDITED_PLAN_PRICING_ZERO" label="加急许可价值为 0（默认）"></v-radio>
+                  <v-radio value="EXPEDITED_PLAN_PRICING_RECRUITMENT_PERMIT" label="等于招聘许可的价值"></v-radio>
+                  <v-radio value="EXPEDITED_PLAN_PRICING_CUSTOM" label="自定义"></v-radio>
+                  <v-text-field ref="expeditedPlanValueInput" v-model.number='stageConfig.expeditedPlanValue'
+                    :rules="numberGe0" label="1 加急许可 = ? 理智"
+                    @focus="stageConfig.expeditedPlanPricingStrategy = 'EXPEDITED_PLAN_PRICING_CUSTOM'"
+                    placeholder="1 加急许可 = ? 理智" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-              <!-- 家具零件定价策略 -->
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.furniturePartPricingStrategy">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="3401"></ItemImage>
-                    家具零件定价策略
-                    <span class="card-description"
-                      v-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_ZERO'">
-                      1 家具零件 = 0 理智
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_SK-5'">
-                      刷 SK-5 获取家具零件
-                    </span>
-                    <span class="card-description"
-                      v-else-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_CUSTOM'">
-                      1 家具零件 = {{ typeof stageConfig.furniturePartValue === "number" ? stageConfig.furniturePartValue :
-                      "?" }} 理智
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="FURNITURE_PART_PRICING_ZERO" label="家具零件价值为 0（默认）"></v-radio>
-                <v-radio value="FURNITURE_PART_PRICING_SK-5" label="按 SK-5 定价" disabled></v-radio>
-                <v-radio value="FURNITURE_PART_PRICING_CUSTOM" label="自定义"></v-radio>
-                <v-text-field ref="furniturePartValueInput" v-model.number='stageConfig.furniturePartValue'
-                  :rules="numberGe0" @focus="stageConfig.furniturePartPricingStrategy = 'FURNITURE_PART_PRICING_CUSTOM'"
-                  label="1 家具零件 = ? 理智" placeholder="1 家具零件 = ? 理智" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
+                <!-- 家具零件定价策略 -->
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.furniturePartPricingStrategy">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="3401"></ItemImage>
+                      家具零件定价策略
+                      <span class="card-description"
+                        v-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_ZERO'">
+                        1 家具零件 = 0 理智
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_SK-5'">
+                        刷 SK-5 获取家具零件
+                      </span>
+                      <span class="card-description"
+                        v-else-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_CUSTOM'">
+                        1 家具零件 = {{ typeof stageConfig.furniturePartValue === "number" ? stageConfig.furniturePartValue
+                        :
+                        "?" }} 理智
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="FURNITURE_PART_PRICING_ZERO" label="家具零件价值为 0（默认）"></v-radio>
+                  <v-radio value="FURNITURE_PART_PRICING_SK-5" label="按 SK-5 定价" disabled></v-radio>
+                  <v-radio value="FURNITURE_PART_PRICING_CUSTOM" label="自定义"></v-radio>
+                  <v-text-field ref="furniturePartValueInput" v-model.number='stageConfig.furniturePartValue'
+                    :rules="numberGe0"
+                    @focus="stageConfig.furniturePartPricingStrategy = 'FURNITURE_PART_PRICING_CUSTOM'"
+                    label="1 家具零件 = ? 理智" placeholder="1 家具零件 = ? 理智" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
+              </span>
             </v-expansion-panel-text>
           </v-expansion-panel>
 
@@ -1018,305 +1028,309 @@ onMounted(() => {
           </v-expansion-panel>
 
 
-          <!-- 折叠面板：自定义加工站策略 -->
-          <v-expansion-panel value="custom-workshop-strategy">
-            <v-expansion-panel-title>
-              自定义加工站策略
-            </v-expansion-panel-title>
-            <v-expansion-panel-text class="expansion-panel-text">
-              <span class="card-description">
-                自定义加工站策略的描述
-              </span>
-              <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy" @change="() => {
-                if (stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                  nextTick(() => eliteMaterialT1toT2Input?.focus());
-                }
-              }">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="30012"></ItemImage>
-                    精英材料 <span class="gray">白</span> → <span class="green">绿</span>
-                  </div>
-                </template>
-                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
-                <v-text-field ref="eliteMaterialT1toT2Input"
-                  v-model.number="stageConfig.workshopStrategy.eliteMaterialT1toT2.byproductRateIncreasement"
-                  :rules="numberGe0"
-                  @focus="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                  label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
-
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy" @change="() => {
-                if (stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                  nextTick(() => eliteMaterialT2toT3Input?.focus());
-                }
-              }">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="30013"></ItemImage>
-                    精英材料 <span class="green">绿</span> → <span class="blue">蓝</span>
-                  </div>
-                </template>
-                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
-                <v-text-field ref="eliteMaterialT2toT3Input"
-                  v-model.number="stageConfig.workshopStrategy.eliteMaterialT2toT3.byproductRateIncreasement"
-                  :rules="numberGe0"
-                  @focus="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                  label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
-
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy" @change="() => {
-                if (stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                  nextTick(() => eliteMaterialT3toT4Input?.focus());
-                }
-              }">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="30014"></ItemImage>
-                    <p>精英材料 <span class="blue">蓝</span> → <span class="purple">紫</span></p>
-                    <span class="card-description">
-                      <p><b>默认使用九色鹿消耗因果</b>，此处请选择因果用尽后的加工策略。</p>
-                      <p>不垫刀的九色鹿等效 +90% 副产品产出概率</p>
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
-                <v-text-field ref="eliteMaterialT3toT4Input"
-                  v-model.number="stageConfig.workshopStrategy.eliteMaterialT3toT4.byproductRateIncreasement"
-                  :rules="numberGe0"
-                  @focus="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                  label="副产品出率提升量" hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
-
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy" @change="() => {
-                if (stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                  nextTick(() => eliteMaterialT4toT5Input?.focus());
-                }
-              }">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="30115"></ItemImage>
-                    <p>精英材料 <span class="purple">紫</span> → <span class="yellow">金</span></p>
-                    <span class="card-description">
-                      <p>不垫刀的九色鹿等效 +90% 副产品产出概率</p>
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
-                <v-text-field ref="eliteMaterialT4toT5Input"
-                  v-model.number="stageConfig.workshopStrategy.eliteMaterialT4toT5.byproductRateIncreasement"
-                  :rules="numberGe0"
-                  @focus="stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                  label="副产品出率提升量" hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
-
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary1to2.strategy" @change="() => {
-                if (stageConfig.workshopStrategy.skillSummary1to2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                  nextTick(() => skillSummary1to2Input?.focus());
-                }
-              }">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="3302"></ItemImage>
-                    <p><span class="gray">技巧概要·卷1</span> → <span class="green">技巧概要·卷2</span></p>
-                  </div>
-                </template>
-                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
-                <v-text-field ref="skillSummary1to2Input"
-                  v-model.number="stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncreasement"
-                  :rules="numberGe0"
-                  @focus="stageConfig.workshopStrategy.skillSummary1to2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                  label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
-
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary2to3.strategy" @change="() => {
-                if (stageConfig.workshopStrategy.skillSummary2to3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                  nextTick(() => skillSummary2to3Input?.focus());
-                }
-              }">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="3303"></ItemImage>
-                    <p><span class="green">技巧概要·卷2</span> → <span class="blue">技巧概要·卷3</span></p>
-                  </div>
-                </template>
-                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
-                <v-text-field ref="skillSummary2to3Input"
-                  v-model.number="stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncreasement"
-                  :rules="numberGe0"
-                  @focus="stageConfig.workshopStrategy.skillSummary2to3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                  label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
-
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.workshopStrategy.baseMaterial.strategy" @change="() => {
-                if (stageConfig.workshopStrategy.baseMaterial.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                  nextTick(() => baseMaterialInput?.focus());
-                }
-              }">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="3112"></ItemImage>
-                    <p>加工基建材料</p>
-                  </div>
-                </template>
-                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用煌等通用干员" disabled></v-radio>
-                <v-text-field ref="baseMaterialInput"
-                  v-model.number="stageConfig.workshopStrategy.baseMaterial.byproductRateIncreasement"
-                  :rules="numberGe0"
-                  @focus="stageConfig.workshopStrategy.baseMaterial.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                  label="副产品出率提升量" hint="煌 0.8" variant="outlined" density="compact"
-                  style="margin-left: 40px; width: 200px;" disabled>
-                </v-text-field>
-              </v-radio-group>
-
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.workshopStrategy.chip.strategy" @change="() => {
-                if (stageConfig.workshopStrategy.chip.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                  nextTick(() => chipInput?.focus());
-                }
-              }">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="3211"></ItemImage>
-                    <p>加工芯片</p>
-                  </div>
-                </template>
-                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
-                <v-text-field ref="chipInput"
-                  v-model.number="stageConfig.workshopStrategy.chip.byproductRateIncreasement" :rules="numberGe0"
-                  @focus="stageConfig.workshopStrategy.chip.strategy = 'WORKSHOP_STRATEGY_COMMON'" label="副产品出率提升量"
-                  hint="风笛 0.8" variant="outlined" density="compact" style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
-
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.workshopStrategy.chipPack.strategy" @change="() => {
-                if (stageConfig.workshopStrategy.chipPack.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                  nextTick(() => chipPackInput?.focus());
-                }
-              }">
-                <template v-slot:label>
-                  <div>
-                    <ItemImage item-id="3212"></ItemImage>
-                    <p>加工芯片组</p>
-                  </div>
-                </template>
-                <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
-                <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
-                <v-text-field ref="chipPackInput"
-                  v-model.number="stageConfig.workshopStrategy.chipPack.byproductRateIncreasement" :rules="numberGe0"
-                  @focus="stageConfig.workshopStrategy.chipPack.strategy = 'WORKSHOP_STRATEGY_COMMON'" label="副产品出率提升量"
-                  hint="风笛 0.8" variant="outlined" density="compact" style="margin-left: 40px; width: 200px;">
-                </v-text-field>
-              </v-radio-group>
-
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.chipPreference.TANK_MEDIC">
-                <template v-slot:label>
-                  <div>
-                    <div class="flex items-center">
-                      <ItemImage item-id="3231"></ItemImage>
-                      <ItemImage item-id="3261"></ItemImage>
+          <!-- 前面的区域以后再来探索吧 -->
+          <span v-if="false">
+            <!-- 折叠面板：自定义加工站策略 -->
+            <v-expansion-panel value="custom-workshop-strategy">
+              <v-expansion-panel-title>
+                自定义加工站策略
+              </v-expansion-panel-title>
+              <v-expansion-panel-text class="expansion-panel-text">
+                <span class="card-description">
+                  自定义加工站策略的描述
+                </span>
+                <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => eliteMaterialT1toT2Input?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="30012"></ItemImage>
+                      精英材料 <span class="gray">白</span> → <span class="green">绿</span>
                     </div>
-                    <p>重装 − 医疗芯片加工策略</p>
-                    <span class="card-description">
-                      一般从 需求量小的芯片 往 需求量大的芯片 加工
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="MEDIC" label="重装芯片 → 医疗芯片"></v-radio>
-                <v-radio value="TANK" label="医疗芯片 → 重装芯片"></v-radio>
-                <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
-              </v-radio-group>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
+                  <v-text-field ref="eliteMaterialT1toT2Input"
+                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT1toT2.byproductRateIncreasement"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.chipPreference.SNIPER_CASTER">
-                <template v-slot:label>
-                  <div>
-                    <div class="flex items-center">
-                      <ItemImage item-id="3241"></ItemImage>
-                      <ItemImage item-id="3251"></ItemImage>
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => eliteMaterialT2toT3Input?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="30013"></ItemImage>
+                      精英材料 <span class="green">绿</span> → <span class="blue">蓝</span>
                     </div>
-                    <p>狙击 − 术师芯片加工策略</p>
-                    <span class="card-description">
-                      一般从 需求量小的芯片 往 需求量大的芯片 加工
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="CASTER" label="狙击芯片 → 术师芯片"></v-radio>
-                <v-radio value="SNIPER" label="术师芯片 → 狙击芯片"></v-radio>
-                <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
-              </v-radio-group>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
+                  <v-text-field ref="eliteMaterialT2toT3Input"
+                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT2toT3.byproductRateIncreasement"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.chipPreference.PIONEER_SUPPORT">
-                <template v-slot:label>
-                  <div>
-                    <div class="flex items-center">
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => eliteMaterialT3toT4Input?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="30014"></ItemImage>
+                      <p>精英材料 <span class="blue">蓝</span> → <span class="purple">紫</span></p>
+                      <span class="card-description">
+                        <p><b>默认使用九色鹿消耗因果</b>，此处请选择因果用尽后的加工策略。</p>
+                        <p>不垫刀的九色鹿等效 +90% 副产品产出概率</p>
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
+                  <v-text-field ref="eliteMaterialT3toT4Input"
+                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT3toT4.byproductRateIncreasement"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
+
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => eliteMaterialT4toT5Input?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="30115"></ItemImage>
+                      <p>精英材料 <span class="purple">紫</span> → <span class="yellow">金</span></p>
+                      <span class="card-description">
+                        <p>不垫刀的九色鹿等效 +90% 副产品产出概率</p>
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
+                  <v-text-field ref="eliteMaterialT4toT5Input"
+                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT4toT5.byproductRateIncreasement"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
+
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary1to2.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.skillSummary1to2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => skillSummary1to2Input?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="3302"></ItemImage>
+                      <p><span class="gray">技巧概要·卷1</span> → <span class="green">技巧概要·卷2</span></p>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
+                  <v-text-field ref="skillSummary1to2Input"
+                    v-model.number="stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncreasement"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.skillSummary1to2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
+
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary2to3.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.skillSummary2to3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => skillSummary2to3Input?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="3303"></ItemImage>
+                      <p><span class="green">技巧概要·卷2</span> → <span class="blue">技巧概要·卷3</span></p>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
+                  <v-text-field ref="skillSummary2to3Input"
+                    v-model.number="stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncreasement"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.skillSummary2to3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
+
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.baseMaterial.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.baseMaterial.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => baseMaterialInput?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="3112"></ItemImage>
+                      <p>加工基建材料</p>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用煌等通用干员" disabled></v-radio>
+                  <v-text-field ref="baseMaterialInput"
+                    v-model.number="stageConfig.workshopStrategy.baseMaterial.byproductRateIncreasement"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.baseMaterial.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="煌 0.8" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;" disabled>
+                  </v-text-field>
+                </v-radio-group>
+
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.chip.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.chip.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => chipInput?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
                       <ItemImage item-id="3211"></ItemImage>
-                      <ItemImage item-id="3271"></ItemImage>
+                      <p>加工芯片</p>
                     </div>
-                    <p>先锋 − 辅助芯片加工策略</p>
-                    <span class="card-description">
-                      一般从 需求量小的芯片 往 需求量大的芯片 加工
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="SUPPORT" label="先锋芯片 → 辅助芯片"></v-radio>
-                <v-radio value="PIONEER" label="辅助芯片 → 先锋芯片"></v-radio>
-                <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
-              </v-radio-group>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
+                  <v-text-field ref="chipInput"
+                    v-model.number="stageConfig.workshopStrategy.chip.byproductRateIncreasement" :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.chip.strategy = 'WORKSHOP_STRATEGY_COMMON'" label="副产品出率提升量"
+                    hint="风笛 0.8" variant="outlined" density="compact" style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-              <v-divider></v-divider>
-              <v-radio-group v-model="stageConfig.chipPreference.WARRIOR_SPECIAL">
-                <template v-slot:label>
-                  <div>
-                    <div class="flex items-center">
-                      <ItemImage item-id="3221"></ItemImage>
-                      <ItemImage item-id="3281"></ItemImage>
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.chipPack.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.chipPack.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => chipPackInput?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="3212"></ItemImage>
+                      <p>加工芯片组</p>
                     </div>
-                    <p>近卫 − 特种芯片加工策略</p>
-                    <span class="card-description">
-                      一般从 需求量小的芯片 往 需求量大的芯片 加工
-                    </span>
-                  </div>
-                </template>
-                <v-radio value="SPECIAL" label="近卫芯片 → 特种芯片"></v-radio>
-                <v-radio value="WARRIOR" label="特种芯片 → 近卫芯片"></v-radio>
-                <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
-              </v-radio-group>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
+                  <v-text-field ref="chipPackInput"
+                    v-model.number="stageConfig.workshopStrategy.chipPack.byproductRateIncreasement" :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.chipPack.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="风笛 0.8" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
+
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.chipPreference.TANK_MEDIC">
+                  <template v-slot:label>
+                    <div>
+                      <div class="flex items-center">
+                        <ItemImage item-id="3231"></ItemImage>
+                        <ItemImage item-id="3261"></ItemImage>
+                      </div>
+                      <p>重装 − 医疗芯片加工策略</p>
+                      <span class="card-description">
+                        一般从 需求量小的芯片 往 需求量大的芯片 加工
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="MEDIC" label="重装芯片 → 医疗芯片"></v-radio>
+                  <v-radio value="TANK" label="医疗芯片 → 重装芯片"></v-radio>
+                  <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
+                </v-radio-group>
+
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.chipPreference.SNIPER_CASTER">
+                  <template v-slot:label>
+                    <div>
+                      <div class="flex items-center">
+                        <ItemImage item-id="3241"></ItemImage>
+                        <ItemImage item-id="3251"></ItemImage>
+                      </div>
+                      <p>狙击 − 术师芯片加工策略</p>
+                      <span class="card-description">
+                        一般从 需求量小的芯片 往 需求量大的芯片 加工
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="CASTER" label="狙击芯片 → 术师芯片"></v-radio>
+                  <v-radio value="SNIPER" label="术师芯片 → 狙击芯片"></v-radio>
+                  <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
+                </v-radio-group>
+
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.chipPreference.PIONEER_SUPPORT">
+                  <template v-slot:label>
+                    <div>
+                      <div class="flex items-center">
+                        <ItemImage item-id="3211"></ItemImage>
+                        <ItemImage item-id="3271"></ItemImage>
+                      </div>
+                      <p>先锋 − 辅助芯片加工策略</p>
+                      <span class="card-description">
+                        一般从 需求量小的芯片 往 需求量大的芯片 加工
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="SUPPORT" label="先锋芯片 → 辅助芯片"></v-radio>
+                  <v-radio value="PIONEER" label="辅助芯片 → 先锋芯片"></v-radio>
+                  <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
+                </v-radio-group>
+
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.chipPreference.WARRIOR_SPECIAL">
+                  <template v-slot:label>
+                    <div>
+                      <div class="flex items-center">
+                        <ItemImage item-id="3221"></ItemImage>
+                        <ItemImage item-id="3281"></ItemImage>
+                      </div>
+                      <p>近卫 − 特种芯片加工策略</p>
+                      <span class="card-description">
+                        一般从 需求量小的芯片 往 需求量大的芯片 加工
+                      </span>
+                    </div>
+                  </template>
+                  <v-radio value="SPECIAL" label="近卫芯片 → 特种芯片"></v-radio>
+                  <v-radio value="WARRIOR" label="特种芯片 → 近卫芯片"></v-radio>
+                  <v-radio value="BALANCED" label="不加工 / 双向加工"></v-radio>
+                </v-radio-group>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </span>
 
 
           <!-- 折叠面板：定价作战集 -->

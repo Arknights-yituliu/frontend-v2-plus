@@ -563,6 +563,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         const itemValue32001 = itemValue4006 * 90;
 
         // 用公式计算芯片、芯片组价值
+        // 公式详见文档
         // 芯片
         const balancedChipValue = 18 * (1 - itemValue4001 * 12);
         let strongChipValue, weakChipValue;
@@ -622,6 +623,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         const itemValueSTORYREVIEWCOIN = 20 * itemValue4006;
 
         // 用公式计算碳素组、碳素、碳价值
+        // 公式详见文档
         /** 碳素组价值 = (240 / 19) × 家具零件价值 + 4 × 因果价值 - (4000 / 19) × 龙门币价值 */
         const itemValue3114 = 240 / 19 * itemValue3401 + 4 * causalityValue - 4000 / 19 * itemValue4001;
         /** 碳素价值 = (11 / 30) × 碳素组价值 + (6 / 5) × 因果价值 */
@@ -726,6 +728,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         /**
          * 计算技巧概要的价值
          * 公式在纸上推的，用代码写出来有点魔法
+         * 看不懂请问 Bio
          * @param {string} strategy1to2
          * @param {number} rateIncreasement1to2
          * @param {string} strategy2to3
