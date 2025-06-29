@@ -47,13 +47,13 @@ const expCoefficientMap = {
     // EXP 价值为 0
     'EXP_PRICING_ZERO': 0,
     // 按无人机定价（默认），3 级贸易站，不使用龙舌兰、但书、裁缝类技能
-    'EXP_PRICING_BASE_LVL_3_TP': 145 / 229,  // 0.6332
+    'EXP_PRICING_BASE_LVL_3_TRADING_POST': 145 / 229,  // 0.6332
     // 按无人机定价，3 级贸易站，使用精 2 龙舌兰、精 2 但书、不使用裁缝类技能
-    'EXP_PRICING_BASE_LVL_3_TP_TEQUILA_2_PROVISO_2': 235 / 293,  // 0.8020
+    'EXP_PRICING_BASE_LVL_3_TRADING_POST_TEQUILA_2_PROVISO_2': 235 / 293,  // 0.8020
     // 按无人机定价，2 级贸易站，使用精 2 但书，不使用龙舌兰、裁缝类技能
-    'EXP_PRICING_BASE_LVL_2_TP_PROVISO_2': 165 / 203,  // 0.8128
+    'EXP_PRICING_BASE_LVL_2_TRADING_POST_PROVISO_2': 165 / 203,  // 0.8128
     // 按无人机定价，1 级贸易站，使用精 2 但书，不使用龙舌兰、裁缝类技能
-    'EXP_PRICING_BASE_LVL_1_TP_PROVISO_2': 5 / 6,  // 0.8333
+    'EXP_PRICING_BASE_LVL_1_TRADING_POST_PROVISO_2': 5 / 6,  // 0.8333
     // 自定义
     'EXP_PRICING_CUSTOM': undefined,
 };

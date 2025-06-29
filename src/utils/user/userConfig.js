@@ -29,7 +29,7 @@ const defaultConfig = {
     lmdPricingStrategy: "LMD_PRICING_CE-6",  // 龙门币定价策略
     lmdCoefficient: 1,  // 龙门币价值系数
 
-    expPricingStrategy: "EXP_PRICING_BASE_LVL_3_TP",  // EXP 定价策略
+    expPricingStrategy: "EXP_PRICING_BASE_LVL_3_TRADING_POST",  // EXP 定价策略
     expCoefficient: 145 / 229,  // EXP 价值系数
 
     modUnlockTokenPricingStrategy: "MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE",  // 模组数据块定价策略

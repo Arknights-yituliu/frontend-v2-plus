@@ -777,7 +777,7 @@ onMounted(() => {
                 <!-- EXP 价值为 0 -->
                 <v-radio value="EXP_PRICING_ZERO" label="EXP 价值为 0"></v-radio>
                 <!-- 按无人机定价（默认），3 级贸易站，不使用龙舌兰、但书、裁缝类技能 -->
-                <v-radio value="EXP_PRICING_BASE_LVL_3_TP">
+                <v-radio value="EXP_PRICING_BASE_LVL_3_TRADING_POST">
                   <template v-slot:label>
                     <div>
                       按无人机定价（默认）
@@ -788,7 +788,7 @@ onMounted(() => {
                   </template>
                 </v-radio>
                 <!-- 按无人机定价，3 级贸易站，使用精 2 龙舌兰、精 2 但书、不使用裁缝类技能 -->
-                <v-radio value="EXP_PRICING_BASE_LVL_3_TP_TEQUILA_2_PROVISO_2">
+                <v-radio value="EXP_PRICING_BASE_LVL_3_TRADING_POST_TEQUILA_2_PROVISO_2">
                   <template v-slot:label>
                     <div>
                       按无人机定价
@@ -799,7 +799,7 @@ onMounted(() => {
                   </template>
                 </v-radio>
                 <!-- 按无人机定价，2 级贸易站，使用精 2 但书，不使用龙舌兰、裁缝类技能 -->
-                <v-radio value="EXP_PRICING_BASE_LVL_2_TP_PROVISO_2">
+                <v-radio value="EXP_PRICING_BASE_LVL_2_TRADING_POST_PROVISO_2">
                   <template v-slot:label>
                     <div>
                       按无人机定价
@@ -810,7 +810,7 @@ onMounted(() => {
                   </template>
                 </v-radio>
                 <!-- 按无人机定价，1 级贸易站，使用精 2 但书，不使用龙舌兰、裁缝类技能 -->
-                <v-radio value="EXP_PRICING_BASE_LVL_1_TP_PROVISO_2">
+                <v-radio value="EXP_PRICING_BASE_LVL_1_TRADING_POST_PROVISO_2">
                   <template v-slot:label>
                     <div>
                       按无人机定价

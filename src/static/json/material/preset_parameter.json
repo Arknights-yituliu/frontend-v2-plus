@@ -15,7 +15,7 @@
         "originitePrimePricingStrategy": "ORIGINITE_PRIME_PRICING_ORUNDUM",
         "kernelHeadhuntingPermitPricingStrategy": "KERNEL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE",
         "lmdPricingStrategy": "LMD_PRICING_CE-6",
-        "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TP",
+        "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TRADING_POST",
         "modUnlockTokenPricingStrategy": "MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE",
         "recruitmentPermitPricingStrategy": "RECRUITMENT_PERMIT_PRICING_3_4",
         "expeditedPlanPricingStrategy": "EXPEDITED_PLAN_PRICING_ZERO",
@@ -106,7 +106,7 @@
       ],
       "parameters": {
         "lmdPricingStrategy": "LMD_PRICING_CE-6",
-        "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TP",
+        "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TRADING_POST",
         "useActivityAverageStage": false
       },
       "message": "已修改为成长中的博士配置",
@@ -127,7 +127,7 @@
       ],
       "parameters": {
         "lmdPricingStrategy": "LMD_PRICING_CE-6",
-        "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TP_TEQUILA_2_PROVISO_2",
+        "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TRADING_POST_TEQUILA_2_PROVISO_2",
         "expeditedPlanPricingStrategy": "EXPEDITED_PLAN_PRICING_ZERO",
         "furniturePartPricingStrategy": "FURNITURE_PART_PRICING_ZERO",
         "useActivityAverageStage": true
