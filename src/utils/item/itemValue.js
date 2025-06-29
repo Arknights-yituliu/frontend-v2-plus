@@ -3,6 +3,7 @@ import ITEM_INFO from "@/static/json/material/item_info.json";
 import ITEM_SERIES_INFO from '/src/static/json/material/item_series_info.json';
 import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json';
 import { itemSeriesInfoByItemId } from "/src/utils/item/itemSeries.js";
+// import {updateItemInfoWeight} from "@/utils/item/updateItemInfoWeight.js";
 
 /**
  * @typedef {Object} ItemInfo
@@ -177,8 +178,17 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
      * - 精英材料的初始价值不能太小，否则迭代时会有很多作战的主产物为非精英材料，导致这部分作战永远不会被考虑
      * @type {Map<string, number>}
      */
-    const itemValueMap = new Map(itemInfoList.map(({ itemId, rarity }) => [itemId, isEliteMaterial(itemId) ? 3 ** rarity : 0]));
+    const itemValueMap = new Map();
     itemValueMap.set("causality", 0);
+    itemValueMap.set("AP_GAMEPLAY", 1);
+    itemValueMap.set("EXP", 0);
+    for (const item of itemInfoList) {
+        const { itemId, rarity } = item;
+        itemValueMap.set(itemId,isEliteMaterial(itemId) ? 3 ** rarity : 0)
+    }
+
+    // const itemValueMap = new Map(itemInfoList.map(({ itemId, rarity }) => [itemId, isEliteMaterial(itemId) ? 3 ** rarity : 0]));
+
 
     /**
      * 白、绿、蓝、紫副产品价值的期望，也即一个随机材料的价值
@@ -199,27 +209,27 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         // console.log(`第${i + 1}次迭代`);
 
         // 步骤 7. 计算非精英材料的价值
-        calculateCommonItemValue();
+        _calculateCommonItemValue();
         // console.log("itemValueMap", Object.fromEntries(itemValueMap));
 
         // 步骤 3. 计算所有精英材料的价值
-        calculateEliteMaterialValueFromT3();
+        _calculateEliteMaterialValueFromT3();
         // console.log("itemValueMap", Object.fromEntries(itemValueMap));
 
         // 步骤 4. 计算副产品价值的期望
-        calculateWorkshopByproductExpectedValue();
+        _calculateWorkshopByproductExpectedValue();
         // console.log("workshopByproductExpectedValue", Object.fromEntries(workshopByproductExpectedValue));
 
         // 步骤 5. 计算作战期望掉落物品的总价值
-        calculateStageDropExpectedValue();
+        _calculateStageDropExpectedValue();
         // console.log("stageDropInfoMap", Object.fromEntries(stageDropInfoMap));
 
         // 步骤 6. 修正蓝材料的价值
-        updateT3EliteMaterialValue();
+        _updateT3EliteMaterialValue();
         // console.log("maxStageEfficiencyMap", Object.fromEntries(maxStageEfficiencyMap));
 
         // 检查是否满足停机条件
-        if (checkCompletion(tolerance)) {
+        if (_checkCompletion(tolerance)) {
             // 如果满足停机条件，结束迭代
             break;
         }
@@ -227,6 +237,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
 
     // 把物品信息列表中的物品价值更新为计算后的值
     for (const item of itemInfoList) {
+        console.log(item)
         item.itemValue = itemValueMap.get(item.itemId);
     }
 
@@ -241,7 +252,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
      *
      * 函数将修改 `itemValueMap` 中的白、绿、紫、金材料价值。
      */
-    function calculateEliteMaterialValueFromT3() {
+    function _calculateEliteMaterialValueFromT3() {
         /** 龙门币价值 */
         const lmdValue = itemValueMap.get("4001");
 
@@ -346,7 +357,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
      *
      * 函数将修改 `workshopByproductExpectedValue`。
      */
-    function calculateWorkshopByproductExpectedValue() {
+    function _calculateWorkshopByproductExpectedValue() {
 
         // 计算按物品等级分类后的加工站各级物品副产品期望产出
         for (const [rarity, group] of workshopByproductWeightMap) {
@@ -365,7 +376,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
      *
      * 函数将修改 `stageDropInfoMap`。
      */
-    function calculateStageDropExpectedValue() {
+    function _calculateStageDropExpectedValue() {
 
         // 循环关卡的物品掉落集合，每个集合是根据关卡id分组的
         for (const [stageId, dropList] of stageDropCollectForPricing) {
@@ -431,7 +442,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
      *
      * 函数将修改 `maxStageEfficiencyMap` 与 `itemValueMap` 中的蓝材料价值。
      */
-    function updateT3EliteMaterialValue() {
+    function _updateT3EliteMaterialValue() {
 
         // 先清空 maxStageEfficiencyMap
         for (const seriesId of maxStageEfficiencyMap.keys()) {
@@ -484,7 +495,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
     /**
      * 步骤 7. 计算非精英材料的价值
      */
-    function calculateCommonItemValue() {
+    function _calculateCommonItemValue() {
         /** 因果价值 */
         const causalityValue = itemValueMap.get("causality");
 
@@ -634,7 +645,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         const itemValue3112 = 11 / 30 * itemValue3113 + 3 / 5 * causalityValue;
 
         // 技巧概要
-        const { itemValue3301, itemValue3302, itemValue3303 } = calculateSkillSummaryValue(
+        const { itemValue3301, itemValue3302, itemValue3303 } = _calculateSkillSummaryValue(
             stageConfig.workshopStrategy.skillSummary1to2.strategy,
             stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncrease,
             stageConfig.workshopStrategy.skillSummary2to3.strategy,
@@ -739,7 +750,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
          * @param {number} causalityValue
          * @returns {{itemValue3301: number, itemValue3302: number, itemValue3303: number}}
          */
-        function calculateSkillSummaryValue(strategy1to2, rateIncrease1to2, strategy2to3, rateIncrease2to3, lmdValue, causalityValue) {
+        function _calculateSkillSummaryValue(strategy1to2, rateIncrease1to2, strategy2to3, rateIncrease2to3, lmdValue, causalityValue) {
             const a1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncrease1to2));
             const a2 = (strategy2to3 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncrease2to3));
             const b1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9) : (0);
@@ -758,7 +769,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
      * @param {number} tolerance
      * @returns {boolean} 是否满足停机条件
      */
-    function checkCompletion(tolerance) {
+    function _checkCompletion(tolerance) {
         return ITEM_SERIES_INFO.every(({ seriesId }) => (
             customEliteMaterialValueMap.has(seriesId)  // 已经自定义的蓝材料不需要检查
             || Math.abs(maxStageEfficiencyMap.get(seriesId).stageEfficiency - 1) < tolerance

@@ -1114,5 +1114,14 @@
     "cardNum": 12,
     "weight": 0,
     "itemValue": 0
+  },
+  {
+    "itemId": "AP_GAMEPLAY",
+    "itemName": "理智",
+    "itemValueAp": 1,
+    "rarity": 5,
+    "cardNum": 12,
+    "weight": 0,
+    "itemValue": 1
   }
 ]

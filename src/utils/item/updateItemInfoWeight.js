@@ -19,6 +19,25 @@ function getNewItemInfo(){
 
 
 
+function customItemList(){
+    const list = []
+    for(let item of itemInfo){
+        if(item.cardNum===3){
+            list.push({itemId:item.itemId,itemName:item.itemName,count:1})
+        }
+        // if(item.cardNum===4){
+        //     list.push({itemId:item.itemId,itemName:item.itemName,count:4})
+        // }
+        if(item.cardNum===2){
+            list.push({itemId:item.itemId,itemName:item.itemName,count:1})
+        }
+        if(item.cardNum===1){
+            list.push({itemId:item.itemId,itemName:item.itemName,count:1})
+        }
+    }
+    console.log(JSON.stringify(list))
+}
+
 
 function updateItemInfoWeight() {
 
@@ -140,10 +159,10 @@ function getItemMinValue() {
     console.log(JSON.stringify(actStoreUnlimitedExchange))
 }
 
-getNewItemInfo()
+// getNewItemInfo()
 // updateItemInfoWeight()
 // getYTLStageList()
-
+customItemList()
 export {
     updateItemInfoWeight
 }

@@ -1,0 +1,976 @@
+{
+  "voucher_levelmax_4": {
+    "itemId": "voucher_levelmax_4",
+    "itemName": "专业干员特训装置",
+    "description": "将一名已达到精英阶段2的4星干员提升至精英阶段2等级70",
+    "list": [
+      {
+        "itemId": "4001",
+        "itemName": "龙门币",
+        "count": 275762
+      },
+      {
+        "itemId": "exp",
+        "itemName": "EXP",
+        "count": 333800
+      }
+    ]
+  },
+  "voucher_levelmax_5": {
+    "itemId": "voucher_levelmax_5",
+    "itemName": "资深干员特训装置",
+    "description": "将一名已达到精英阶段2的5星干员提升至精英阶段2等级80",
+    "list": [
+      {
+        "itemId": "4001",
+        "itemName": "龙门币",
+        "count": 447378
+      },
+      {
+        "itemId": "exp",
+        "itemName": "EXP",
+        "count": 495000
+      }
+    ]
+  },
+  "voucher_levelmax_6": {
+    "itemId": "voucher_levelmax_6",
+    "itemName": "高级资深干员特训装置",
+    "description": "将一名已达到精英阶段2的6星干员提升至精英阶段2等级90",
+    "list": [
+      {
+        "itemId": "4001",
+        "itemName": "龙门币",
+        "count": 744955
+      },
+      {
+        "itemId": "exp",
+        "itemName": "EXP",
+        "count": 750000
+      }
+    ]
+  },
+  "voucher_elite_II_4": {
+    "itemId": "voucher_elite_II_4",
+    "itemName": "专业干员特训邀请函",
+    "description": "将一名未达到精英阶段2的4星干员提升至精英阶段2等级1",
+    "list": [
+      {
+        "itemId": "4001",
+        "itemName": "龙门币",
+        "count": 206241
+      },
+      {
+        "itemId": "exp",
+        "itemName": "EXP",
+        "count": 150200
+      },
+      {
+        "itemId": "3251",
+        "itemName": "术师芯片",
+        "count": 3
+      },
+      {
+        "itemId": "3262",
+        "itemName": "医疗芯片组",
+        "count": 5
+      },
+      {
+        "itemId": "31083",
+        "itemName": "环烃聚质",
+        "count": 1
+      },
+      {
+        "itemId": "31093",
+        "itemName": "类凝结核",
+        "count": 1
+      },
+      {
+        "itemId": "30063",
+        "itemName": "全新装置",
+        "count": 1
+      },
+      {
+        "itemId": "30103",
+        "itemName": "RMA70-12",
+        "count": 1
+      },
+      {
+        "itemId": "31073",
+        "itemName": "褐素纤维",
+        "count": 1
+      },
+      {
+        "itemId": "31063",
+        "itemName": "转质盐组",
+        "count": 1
+      },
+      {
+        "itemId": "30093",
+        "itemName": "研磨石",
+        "count": 1
+      },
+      {
+        "itemId": "31053",
+        "itemName": "化合切削液",
+        "count": 1
+      },
+      {
+        "itemId": "31013",
+        "itemName": "凝胶",
+        "count": 1
+      },
+      {
+        "itemId": "31043",
+        "itemName": "半自然溶剂",
+        "count": 1
+      },
+      {
+        "itemId": "30083",
+        "itemName": "轻锰矿",
+        "count": 1
+      },
+      {
+        "itemId": "30053",
+        "itemName": "酮凝集组",
+        "count": 1
+      },
+      {
+        "itemId": "30043",
+        "itemName": "异铁组",
+        "count": 1
+      },
+      {
+        "itemId": "30073",
+        "itemName": "扭转醇",
+        "count": 1
+      },
+      {
+        "itemId": "31023",
+        "itemName": "炽合金",
+        "count": 1
+      },
+      {
+        "itemId": "30033",
+        "itemName": "聚酸酯组",
+        "count": 1
+      },
+      {
+        "itemId": "30023",
+        "itemName": "糖组",
+        "count": 1
+      },
+      {
+        "itemId": "31033",
+        "itemName": "晶体元件",
+        "count": 1
+      },
+      {
+        "itemId": "30013",
+        "itemName": "固源岩组",
+        "count": 1
+      },
+      {
+        "itemId": "30062",
+        "itemName": "装置",
+        "count": 4
+      },
+      {
+        "itemId": "30052",
+        "itemName": "酮凝集",
+        "count": 4
+      },
+      {
+        "itemId": "30042",
+        "itemName": "异铁",
+        "count": 4
+      },
+      {
+        "itemId": "30032",
+        "itemName": "聚酸酯",
+        "count": 4
+      },
+      {
+        "itemId": "30022",
+        "itemName": "糖",
+        "count": 4
+      },
+      {
+        "itemId": "30012",
+        "itemName": "固源岩",
+        "count": 4
+      }
+    ]
+  },
+  "voucher_elite_II_5": {
+    "itemId": "voucher_elite_II_5",
+    "itemName": "资深干员特训邀请函",
+    "description": "将一名未达到精英阶段2的5星干员提升至精英阶段2等级1",
+    "list": [
+      {
+        "itemId": "4001",
+        "itemName": "龙门币",
+        "count": 371947
+      },
+      {
+        "itemId": "exp",
+        "itemName": "EXP",
+        "count": 239400
+      },
+      {
+        "itemId": "3251",
+        "itemName": "术师芯片",
+        "count": 4
+      },
+      {
+        "itemId": "3263",
+        "itemName": "医疗双芯片",
+        "count": 3
+      },
+      {
+        "itemId": "31094",
+        "itemName": "手性屈光体",
+        "count": 1
+      },
+      {
+        "itemId": "31084",
+        "itemName": "环烃预制体",
+        "count": 1
+      },
+      {
+        "itemId": "30104",
+        "itemName": "RMA70-24",
+        "count": 1
+      },
+      {
+        "itemId": "30094",
+        "itemName": "五水研磨石",
+        "count": 1
+      },
+      {
+        "itemId": "31074",
+        "itemName": "固化纤维板",
+        "count": 1
+      },
+      {
+        "itemId": "31034",
+        "itemName": "晶体电路",
+        "count": 1
+      },
+      {
+        "itemId": "31024",
+        "itemName": "炽合金块",
+        "count": 1
+      },
+      {
+        "itemId": "31044",
+        "itemName": "精炼溶剂",
+        "count": 1
+      },
+      {
+        "itemId": "31054",
+        "itemName": "切削原液",
+        "count": 1
+      },
+      {
+        "itemId": "31064",
+        "itemName": "转质盐聚块",
+        "count": 1
+      },
+      {
+        "itemId": "31014",
+        "itemName": "聚合凝胶",
+        "count": 1
+      },
+      {
+        "itemId": "30084",
+        "itemName": "三水锰矿",
+        "count": 1
+      },
+      {
+        "itemId": "30074",
+        "itemName": "白马醇",
+        "count": 1
+      }
+    ]
+  },
+  "voucher_elite_II_6": {
+    "itemId": "voucher_elite_II_6",
+    "itemName": "高级资深干员特训邀请函",
+    "description": "将一名未达到精英阶段2的6星干员提升至精英阶段2等级1",
+    "list": [
+      {
+        "itemId": "4001",
+        "itemName": "龙门币",
+        "count": 589841
+      },
+      {
+        "itemId": "exp",
+        "itemName": "EXP",
+        "count": 361400
+      },
+      {
+        "itemId": "3251",
+        "itemName": "术师芯片",
+        "count": 5
+      },
+      {
+        "itemId": "3263",
+        "itemName": "医疗双芯片",
+        "count": 4
+      },
+      {
+        "itemId": "31094",
+        "itemName": "手性屈光体",
+        "count": 1
+      },
+      {
+        "itemId": "30044",
+        "itemName": "异铁块",
+        "count": 1
+      },
+      {
+        "itemId": "31084",
+        "itemName": "环烃预制体",
+        "count": 1
+      },
+      {
+        "itemId": "30054",
+        "itemName": "酮阵列",
+        "count": 1
+      },
+      {
+        "itemId": "30064",
+        "itemName": "改量装置",
+        "count": 1
+      },
+      {
+        "itemId": "30104",
+        "itemName": "RMA70-24",
+        "count": 1
+      },
+      {
+        "itemId": "30094",
+        "itemName": "五水研磨石",
+        "count": 1
+      },
+      {
+        "itemId": "31074",
+        "itemName": "固化纤维板",
+        "count": 1
+      },
+      {
+        "itemId": "30024",
+        "itemName": "糖聚块",
+        "count": 1
+      },
+      {
+        "itemId": "31034",
+        "itemName": "晶体电路",
+        "count": 1
+      },
+      {
+        "itemId": "31024",
+        "itemName": "炽合金块",
+        "count": 1
+      },
+      {
+        "itemId": "31044",
+        "itemName": "精炼溶剂",
+        "count": 1
+      },
+      {
+        "itemId": "31054",
+        "itemName": "切削原液",
+        "count": 1
+      },
+      {
+        "itemId": "31064",
+        "itemName": "转质盐聚块",
+        "count": 1
+      },
+      {
+        "itemId": "31014",
+        "itemName": "聚合凝胶",
+        "count": 1
+      },
+      {
+        "itemId": "30084",
+        "itemName": "三水锰矿",
+        "count": 1
+      },
+      {
+        "itemId": "30034",
+        "itemName": "聚酸酯块",
+        "count": 1
+      },
+      {
+        "itemId": "30014",
+        "itemName": "提纯源岩",
+        "count": 1
+      },
+      {
+        "itemId": "30074",
+        "itemName": "白马醇",
+        "count": 1
+      }
+    ]
+  },
+  "voucher_skill_specialLevelMax_4": {
+    "itemId": "voucher_skill_specialLevelMax_4",
+    "itemName": "专业干员技巧集",
+    "description": "将满足专精条件的4星干员的1个未达到专精3等级的技能提升至专精3级",
+    "list": [
+      {
+        "itemId": "3303",
+        "itemName": "技巧概要·卷3",
+        "count": 12
+      },
+      {
+        "itemId": "30155",
+        "itemName": "烧结核凝晶",
+        "count": 1
+      },
+      {
+        "itemId": "30165",
+        "itemName": "重相位对映体",
+        "count": 1
+      },
+      {
+        "itemId": "31083",
+        "itemName": "环烃聚质",
+        "count": 1
+      },
+      {
+        "itemId": "31093",
+        "itemName": "类凝结核",
+        "count": 1
+      },
+      {
+        "itemId": "30063",
+        "itemName": "全新装置",
+        "count": 1
+      },
+      {
+        "itemId": "30103",
+        "itemName": "RMA70-12",
+        "count": 1
+      },
+      {
+        "itemId": "31073",
+        "itemName": "褐素纤维",
+        "count": 1
+      },
+      {
+        "itemId": "31063",
+        "itemName": "转质盐组",
+        "count": 1
+      },
+      {
+        "itemId": "30093",
+        "itemName": "研磨石",
+        "count": 1
+      },
+      {
+        "itemId": "31053",
+        "itemName": "化合切削液",
+        "count": 1
+      },
+      {
+        "itemId": "31013",
+        "itemName": "凝胶",
+        "count": 1
+      },
+      {
+        "itemId": "31043",
+        "itemName": "半自然溶剂",
+        "count": 1
+      },
+      {
+        "itemId": "30083",
+        "itemName": "轻锰矿",
+        "count": 1
+      },
+      {
+        "itemId": "30053",
+        "itemName": "酮凝集组",
+        "count": 1
+      },
+      {
+        "itemId": "30043",
+        "itemName": "异铁组",
+        "count": 1
+      },
+      {
+        "itemId": "30073",
+        "itemName": "扭转醇",
+        "count": 1
+      },
+      {
+        "itemId": "31023",
+        "itemName": "炽合金",
+        "count": 1
+      },
+      {
+        "itemId": "30033",
+        "itemName": "聚酸酯组",
+        "count": 1
+      },
+      {
+        "itemId": "30023",
+        "itemName": "糖组",
+        "count": 1
+      },
+      {
+        "itemId": "31033",
+        "itemName": "晶体元件",
+        "count": 1
+      },
+      {
+        "itemId": "30013",
+        "itemName": "固源岩组",
+        "count": 1
+      }
+    ]
+  },
+  "voucher_skill_specialLevelMax_5": {
+    "itemId": "voucher_skill_specialLevelMax_5",
+    "itemName": "资深干员技巧集",
+    "description": "将满足专精条件的5星干员的1个未达到专精3等级的技能提升至专精3级",
+    "list": [
+      {
+        "itemId": "3303",
+        "itemName": "技巧概要·卷3",
+        "count": 21
+      },
+      {
+        "itemId": "30145",
+        "itemName": "晶体电子单元",
+        "count": 1
+      },
+      {
+        "itemId": "30155",
+        "itemName": "烧结核凝晶",
+        "count": 1
+      },
+      {
+        "itemId": "30135",
+        "itemName": "D32钢",
+        "count": 1
+      },
+      {
+        "itemId": "31094",
+        "itemName": "手性屈光体",
+        "count": 1
+      },
+      {
+        "itemId": "31084",
+        "itemName": "环烃预制体",
+        "count": 1
+      },
+      {
+        "itemId": "30064",
+        "itemName": "改量装置",
+        "count": 1
+      },
+      {
+        "itemId": "30104",
+        "itemName": "RMA70-24",
+        "count": 1
+      },
+      {
+        "itemId": "30094",
+        "itemName": "五水研磨石",
+        "count": 1
+      },
+      {
+        "itemId": "31074",
+        "itemName": "固化纤维板",
+        "count": 1
+      },
+      {
+        "itemId": "31034",
+        "itemName": "晶体电路",
+        "count": 1
+      },
+      {
+        "itemId": "31024",
+        "itemName": "炽合金块",
+        "count": 1
+      },
+      {
+        "itemId": "31044",
+        "itemName": "精炼溶剂",
+        "count": 1
+      },
+      {
+        "itemId": "31054",
+        "itemName": "切削原液",
+        "count": 1
+      },
+      {
+        "itemId": "31064",
+        "itemName": "转质盐聚块",
+        "count": 1
+      },
+      {
+        "itemId": "31014",
+        "itemName": "聚合凝胶",
+        "count": 1
+      },
+      {
+        "itemId": "30084",
+        "itemName": "三水锰矿",
+        "count": 1
+      },
+      {
+        "itemId": "30074",
+        "itemName": "白马醇",
+        "count": 1
+      }
+    ]
+  },
+  "voucher_skill_specialLevelMax_6": {
+    "itemId": "voucher_skill_specialLevelMax_6",
+    "itemName": "高级资深干员技巧集",
+    "description": "将满足专精条件的6星干员的1个未达到专精3等级的技能提升至专精3级",
+    "list": [
+      {
+        "itemId": "3303",
+        "itemName": "技巧概要·卷3",
+        "count": 35
+      },
+      {
+        "itemId": "30145",
+        "itemName": "晶体电子单元",
+        "count": 1
+      },
+      {
+        "itemId": "30155",
+        "itemName": "烧结核凝晶",
+        "count": 1
+      },
+      {
+        "itemId": "30115",
+        "itemName": "聚合剂",
+        "count": 1
+      },
+      {
+        "itemId": "30135",
+        "itemName": "D32钢",
+        "count": 1
+      },
+      {
+        "itemId": "30125",
+        "itemName": "双极纳米片",
+        "count": 1
+      },
+      {
+        "itemId": "30165",
+        "itemName": "重相位对映体",
+        "count": 1
+      },
+      {
+        "itemId": "31094",
+        "itemName": "手性屈光体",
+        "count": 1
+      },
+      {
+        "itemId": "30044",
+        "itemName": "异铁块",
+        "count": 1
+      },
+      {
+        "itemId": "31084",
+        "itemName": "环烃预制体",
+        "count": 1
+      },
+      {
+        "itemId": "30054",
+        "itemName": "酮阵列",
+        "count": 1
+      },
+      {
+        "itemId": "30064",
+        "itemName": "改量装置",
+        "count": 1
+      },
+      {
+        "itemId": "30104",
+        "itemName": "RMA70-24",
+        "count": 1
+      },
+      {
+        "itemId": "30094",
+        "itemName": "五水研磨石",
+        "count": 1
+      },
+      {
+        "itemId": "31074",
+        "itemName": "固化纤维板",
+        "count": 1
+      },
+      {
+        "itemId": "30024",
+        "itemName": "糖聚块",
+        "count": 1
+      },
+      {
+        "itemId": "31034",
+        "itemName": "晶体电路",
+        "count": 1
+      },
+      {
+        "itemId": "31024",
+        "itemName": "炽合金块",
+        "count": 1
+      },
+      {
+        "itemId": "31044",
+        "itemName": "精炼溶剂",
+        "count": 1
+      },
+      {
+        "itemId": "31054",
+        "itemName": "切削原液",
+        "count": 1
+      },
+      {
+        "itemId": "31064",
+        "itemName": "转质盐聚块",
+        "count": 1
+      },
+      {
+        "itemId": "31014",
+        "itemName": "聚合凝胶",
+        "count": 1
+      },
+      {
+        "itemId": "30084",
+        "itemName": "三水锰矿",
+        "count": 1
+      },
+      {
+        "itemId": "30034",
+        "itemName": "聚酸酯块",
+        "count": 1
+      },
+      {
+        "itemId": "30014",
+        "itemName": "提纯源岩",
+        "count": 1
+      },
+      {
+        "itemId": "30074",
+        "itemName": "白马醇",
+        "count": 1
+      },
+      {
+        "itemId": "31083",
+        "itemName": "环烃聚质",
+        "count": 1
+      },
+      {
+        "itemId": "31093",
+        "itemName": "类凝结核",
+        "count": 1
+      },
+      {
+        "itemId": "31073",
+        "itemName": "褐素纤维",
+        "count": 1
+      },
+      {
+        "itemId": "31063",
+        "itemName": "转质盐组",
+        "count": 1
+      },
+      {
+        "itemId": "31053",
+        "itemName": "化合切削液",
+        "count": 1
+      },
+      {
+        "itemId": "31013",
+        "itemName": "凝胶",
+        "count": 1
+      },
+      {
+        "itemId": "31043",
+        "itemName": "半自然溶剂",
+        "count": 1
+      },
+      {
+        "itemId": "31023",
+        "itemName": "炽合金",
+        "count": 1
+      },
+      {
+        "itemId": "31033",
+        "itemName": "晶体元件",
+        "count": 1
+      }
+    ]
+  },
+  "voucher_skin": {
+    "itemId": "voucher_skin",
+    "itemName": "时装自选凭证",
+    "description": "可兑换一件时装商店正在售卖且符合兑换条件的时装",
+    "list": [
+      {
+        "itemId": "4002",
+        "itemName": "至纯源石",
+        "count": 18
+      }
+    ]
+  },
+  "voucher_chipPackage": {
+    "itemId": "voucher_chipPackage",
+    "itemName": "自助芯片组印刻仪",
+    "description": "可以从所有8个职业中选择一种职业，获得对应职业的芯片和芯片组",
+    "list": [
+      {
+        "itemId": "3221",
+        "itemName": "近卫芯片",
+        "count": 5
+      },
+      {
+        "itemId": "3222",
+        "itemName": "近卫芯片组",
+        "count": 8
+      }
+    ]
+  },
+  "voucher_5chipPackage": {
+    "itemId": "voucher_5chipPackage",
+    "itemName": "自助芯片印刻仪",
+    "description": "可以从所有8个职业中选择一种职业，获得对应职业的5个芯片",
+    "list": [
+      {
+        "itemId": "3221",
+        "itemName": "近卫芯片",
+        "count": 5
+      }
+    ]
+  },
+  "ap_supply_lt_80": {
+    "itemId": "ap_supply_lt_80",
+    "itemName": "应急理智加强剂",
+    "description": "使用后回复'80'理智",
+    "list": [
+      {
+        "itemId": "ap",
+        "itemName": "理智",
+        "count": 80
+      }
+    ]
+  },
+  "avatar_special": {
+    "itemId": "avatar_special",
+    "itemName": "头像",
+    "description": "礼包内的头像",
+    "list": [
+      {
+        "itemId": "ap",
+        "itemName": "理智",
+        "count": 0
+      }
+    ]
+  },
+  "theme_scene": {
+    "itemId": "theme_scene",
+    "itemName": "主题场景",
+    "description": "礼包内的主题场景",
+    "list": [
+      {
+        "itemId": "ap",
+        "itemName": "理智",
+        "count": 0
+      }
+    ]
+  },
+  "interface_theme": {
+    "itemId": "interface_theme",
+    "itemName": "界面主题",
+    "description": "礼包内的界面主题",
+    "list": [
+      {
+        "itemId": "ap",
+        "itemName": "理智",
+        "count": 0
+      }
+    ]
+  },
+  "business_card_theme": {
+    "itemId": "business_card_theme",
+    "itemName": "名片主题",
+    "description": "礼包内的名片主题",
+    "list": [
+      {
+        "itemId": "ap",
+        "itemName": "理智",
+        "count": 0
+      }
+    ]
+  },
+  "premium_material_issue_voucher": {
+    "itemId": "premium_material_issue_voucher",
+    "itemName": "特级材料提货券",
+    "description": "使用后可获得任意一个T4紫色材料",
+    "list": [
+      {
+        "itemId": "30044",
+        "itemName": "异铁块",
+        "count": 1
+      }
+    ]
+  },
+  "advanced_material_issue_voucher": {
+    "itemId": "advanced_material_issue_voucher",
+    "itemName": "高级材料提货券",
+    "description": "使用后可获得任意一个T3蓝色材料",
+    "list": [
+      {
+        "itemId": "31083",
+        "itemName": "环烃聚质",
+        "count": 1
+      }
+    ]
+  },
+  "itempack_main": {
+    "itemId": "itempack_main",
+    "itemName": "罗德岛补给箱",
+    "description": "装有一个应急理智小样与一份罗德岛物资补给",
+    "list": [
+      {
+        "itemId": "ap",
+        "itemName": "理智",
+        "count":21.28
+      }
+    ]
+  },
+  "mod_update_token_2": {
+    "itemId": "mod_update_token_2",
+    "itemName": "数据增补仪",
+    "description": "模组升级材料",
+    "list": [
+      {
+        "itemId": "ap",
+        "itemName": "理智",
+        "count":0
+      }
+    ]
+  },
+  "mod_update_token_1": {
+    "itemId": "mod_update_token_1",
+    "itemName": "数据增补仪",
+    "description": "数据增补条",
+    "list": [
+      {
+        "itemId": "ap",
+        "itemName": "理智",
+        "count":0
+      }
+    ]
+  }
+}
