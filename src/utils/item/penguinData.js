@@ -1,5 +1,6 @@
 import itemCache from "@/plugins/indexedDB/itemCache.js";
 import ytlStageInfo from '/src/static/json/material/ytl_stage_info.json'
+import deepClone from "@/utils/deepClone.js";
 
 
 /**
@@ -9,7 +10,7 @@ import ytlStageInfo from '/src/static/json/material/ytl_stage_info.json'
  *
  * @param {StageConfig} stageConfig
  * @param {boolean} useStageBlacklist
- * @returns {Promise<Map<string, Array<StageDrop>>>}
+ * @returns {Promise<Map<string, Array<StageDropInfo>>>}
  * key 为作战 ID，value 为掉落列表，下标为 1 的元素为龙门币掉落，下标为 2 的元素为活动商店无限龙门币（如果是活动关）
  */
 async function getStageDropCollect(stageConfig, useStageBlacklist) {
@@ -116,20 +117,30 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
             zoneId: zoneId
         }
 
-
-        const lmdDrop = {
+        let lmdDropTemplate = {
             stageId: stageId,
             itemId: "4001",
             quantity: apCost * 12,
-            times: 1
+            times: 1,
+            start: stageInfo.start,
+            end: stageInfo.end,
+            stageCode: stageCode,
+            apCost: apCost,
+            spm: spm,
+            stageType: stageType,
+            zoneName: zoneName,
+            zoneId: zoneId
         }
 
-        const storeUnlimitedExchangeDrop = {
-            stageId: stageId,
-            itemId: "4001",
-            quantity: apCost * 20,
-            times: 1
-        }
+        const lmdDrop = deepClone(lmdDropTemplate)
+        const storeUnlimitedExchangeDrop =deepClone(lmdDropTemplate)
+        storeUnlimitedExchangeDrop.quantity = apCost * 20
+        // {
+        //     stageId: stageId,
+        //     itemId: "4001",
+        //     quantity: apCost * 20,
+        //     times: 1
+        // }
 
 
         if (stageDropCollect.get(stageId)) {
@@ -144,22 +155,30 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
 
 
     for (const itemId in ytlStageInfo) {
-        const drop = ytlStageInfo[itemId]
-        if (drop.times > 0) {
-            const lmdDrop = {
-                stageId: drop.stageId,
+        const dropInfo = ytlStageInfo[itemId]
+        if (dropInfo.times > 0) {
+
+            let lmdDropTemplate = {
+                stageId: dropInfo.stageId,
                 itemId: "4001",
-                quantity: 21 * 12,
-                times: 1
+                quantity: dropInfo.apCost * 12,
+                times: 1,
+                start: dropInfo.start,
+                end: dropInfo.end,
+                stageCode: dropInfo.stageCode,
+                apCost: dropInfo.apCost,
+                spm: dropInfo.spm,
+                stageType: dropInfo.stageType,
+                zoneName: dropInfo.zoneName,
+                zoneId: dropInfo.zoneId
             }
 
-            const storeUnlimitedExchangeDrop = {
-                stageId: drop.stageId,
-                itemId: "4001",
-                quantity: 21 * 20,
-                times: 1
-            }
-            stageDropCollect.set(drop.stageId, [drop, lmdDrop, storeUnlimitedExchangeDrop])
+            const lmdDrop = deepClone(lmdDropTemplate)
+            const storeUnlimitedExchangeDrop =deepClone(lmdDropTemplate)
+            storeUnlimitedExchangeDrop.quantity = dropInfo.apCost * 20
+
+
+            stageDropCollect.set(dropInfo.stageId, [dropInfo, lmdDrop, storeUnlimitedExchangeDrop])
         }
     }
 
