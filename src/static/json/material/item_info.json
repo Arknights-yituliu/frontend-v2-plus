@@ -2,1126 +2,1251 @@
   {
     "itemId": "30145",
     "itemName": "晶体电子单元",
-    "itemValueAp": 326.3672303416217,
+    "itemValue": 325.96250672267115,
+    "itemValueAp": 325.96250672267115,
     "rarity": 5,
-    "cardNum": 1,
     "weight": 0,
-    "itemValue": 326.3672303416217
+    "cardNum": 1,
+    "groupId": 1
   },
   {
     "itemId": "30155",
     "itemName": "烧结核凝晶",
-    "itemValueAp": 308.61292860411345,
+    "itemValue": 308.2495392178427,
+    "itemValueAp": 308.2495392178427,
     "rarity": 5,
-    "cardNum": 1,
     "weight": 0,
-    "itemValue": 308.61292860411345
+    "cardNum": 1,
+    "groupId": 1
   },
   {
     "itemId": "30115",
     "itemName": "聚合剂",
-    "itemValueAp": 236.2068839107499,
+    "itemValue": 236.04498968848958,
+    "itemValueAp": 236.04498968848958,
     "rarity": 5,
-    "cardNum": 1,
     "weight": 0,
-    "itemValue": 236.2068839107499
+    "cardNum": 1,
+    "groupId": 1
   },
   {
     "itemId": "30135",
     "itemName": "D32钢",
-    "itemValueAp": 197.82086647932732,
+    "itemValue": 197.57381082025847,
+    "itemValueAp": 197.57381082025847,
     "rarity": 5,
-    "cardNum": 1,
     "weight": 0,
-    "itemValue": 197.82086647932732
+    "cardNum": 1,
+    "groupId": 1
   },
   {
     "itemId": "30125",
     "itemName": "双极纳米片",
-    "itemValueAp": 199.7490006348273,
+    "itemValue": 200.2359082329665,
+    "itemValueAp": 200.2359082329665,
     "rarity": 5,
-    "cardNum": 1,
     "weight": 0,
-    "itemValue": 199.7490006348273
+    "cardNum": 1,
+    "groupId": 1
   },
   {
     "itemId": "30165",
     "itemName": "重相位对映体",
-    "itemValueAp": 354.57994043402493,
+    "itemValue": 354.8104988547263,
+    "itemValueAp": 354.8104988547263,
     "rarity": 5,
-    "cardNum": 1,
     "weight": 0,
-    "itemValue": 354.57994043402493
+    "cardNum": 1,
+    "groupId": 1
   },
   {
     "itemId": "31094",
     "itemName": "手性屈光体",
-    "itemValueAp": 87.70215187439159,
+    "itemValue": 87.85767936470859,
+    "itemValueAp": 87.85767936470859,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.05677290836653386,
-    "itemValue": 87.70215187439159
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "30044",
     "itemName": "异铁块",
-    "itemValueAp": 110.03966226473162,
+    "itemValue": 109.7106549172543,
+    "itemValueAp": 109.7106549172543,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.046812749003984064,
-    "itemValue": 110.03966226473162
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "31084",
     "itemName": "环烃预制体",
-    "itemValueAp": 101.50277004508526,
+    "itemValue": 101.58779341229437,
+    "itemValueAp": 101.58779341229437,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.049800796812749,
-    "itemValue": 101.50277004508526
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "30054",
     "itemName": "酮阵列",
-    "itemValueAp": 75.71324325133638,
+    "itemValue": 75.8751729890223,
+    "itemValueAp": 75.8751729890223,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.046812749003984064,
-    "itemValue": 75.71324325133638
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "30064",
     "itemName": "改量装置",
-    "itemValueAp": 99.42355601085572,
+    "itemValue": 99.34258259712878,
+    "itemValueAp": 99.34258259712878,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.0348605577689243,
-    "itemValue": 99.42355601085572
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "30104",
     "itemName": "RMA70-24",
-    "itemValueAp": 95.58966655606098,
+    "itemValue": 95.62383270655818,
+    "itemValueAp": 95.62383270655818,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.046812749003984064,
-    "itemValue": 95.58966655606098
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "30094",
     "itemName": "五水研磨石",
-    "itemValueAp": 92.14604412913161,
+    "itemValue": 91.95929519513199,
+    "itemValueAp": 91.95929519513199,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.052788844621513946,
-    "itemValue": 92.14604412913161
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "31074",
     "itemName": "固化纤维板",
-    "itemValueAp": 92.26204311050051,
+    "itemValue": 92.09264485162042,
+    "itemValueAp": 92.09264485162042,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.052788844621513946,
-    "itemValue": 92.26204311050051
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "30024",
     "itemName": "糖聚块",
-    "itemValueAp": 69.7548526727329,
+    "itemValue": 70.0866504764509,
+    "itemValueAp": 70.0866504764509,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.052788844621513946,
-    "itemValue": 69.7548526727329
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "31034",
     "itemName": "晶体电路",
-    "itemValueAp": 91.28261596790212,
+    "itemValue": 91.26657229411573,
+    "itemValueAp": 91.26657229411573,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.046812749003984064,
-    "itemValue": 91.28261596790212
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "31024",
     "itemName": "炽合金块",
-    "itemValueAp": 90.52304588735085,
+    "itemValue": 90.40196349330616,
+    "itemValueAp": 90.40196349330616,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.052788844621513946,
-    "itemValue": 90.52304588735085
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "31044",
     "itemName": "精炼溶剂",
-    "itemValueAp": 81.95456608307204,
+    "itemValue": 81.71949525310876,
+    "itemValueAp": 81.71949525310876,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.052788844621513946,
-    "itemValue": 81.95456608307204
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "31054",
     "itemName": "切削原液",
-    "itemValueAp": 76.75797862288456,
+    "itemValue": 76.79025909345242,
+    "itemValueAp": 76.79025909345242,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.052788844621513946,
-    "itemValue": 76.75797862288456
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "31064",
     "itemName": "转质盐聚块",
-    "itemValueAp": 82.53499428542885,
+    "itemValue": 82.60558775677849,
+    "itemValueAp": 82.60558775677849,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.05677290836653386,
-    "itemValue": 82.53499428542885
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "31014",
     "itemName": "聚合凝胶",
-    "itemValueAp": 79.57537247835634,
+    "itemValue": 79.43963453692749,
+    "itemValueAp": 79.43963453692749,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.060756972111553786,
-    "itemValue": 79.57537247835634
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "30084",
     "itemName": "三水锰矿",
-    "itemValueAp": 24.674332264478764,
+    "itemValue": 24.57598105717402,
+    "itemValueAp": 24.57598105717402,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.052788844621513946,
-    "itemValue": 24.674332264478764
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "30034",
     "itemName": "聚酸酯块",
-    "itemValueAp": 70.37153341693592,
+    "itemValue": 70.14268929582799,
+    "itemValueAp": 70.14268929582799,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.052788844621513946,
-    "itemValue": 70.37153341693592
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "30014",
     "itemName": "提纯源岩",
-    "itemValueAp": 65.04315486502591,
+    "itemValue": 65.0444599208187,
+    "itemValueAp": 65.0444599208187,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.07071713147410359,
-    "itemValue": 65.04315486502591
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "30074",
     "itemName": "白马醇",
-    "itemValueAp": 57.4573105471578,
+    "itemValue": 57.73931188722172,
+    "itemValueAp": 57.73931188722172,
     "rarity": 4,
-    "cardNum": 2,
     "weight": 0.060756972111553786,
-    "itemValue": 57.4573105471578
+    "cardNum": 2,
+    "groupId": 2
   },
   {
     "itemId": "31083",
     "itemName": "环烃聚质",
-    "itemValueAp": 38.28348797204346,
+    "itemValue": 38.27698937311449,
+    "itemValueAp": 38.27698937311449,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.03894080996884735,
-    "itemValue": 38.28348797204346
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "31093",
     "itemName": "类凝结核",
-    "itemValueAp": 31.11996709199223,
+    "itemValue": 31.061417533868774,
+    "itemValueAp": 31.061417533868774,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.048286604361370715,
-    "itemValue": 31.11996709199223
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "30063",
     "itemName": "全新装置",
-    "itemValueAp": 37.16160323118703,
+    "itemValue": 37.14401141506801,
+    "itemValueAp": 37.14401141506801,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.03894080996884735,
-    "itemValue": 37.16160323118703
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "30103",
     "itemName": "RMA70-12",
-    "itemValueAp": 37.358613736801885,
+    "itemValue": 37.42004775468339,
+    "itemValueAp": 37.42004775468339,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.03894080996884735,
-    "itemValue": 37.358613736801885
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "31073",
     "itemName": "褐素纤维",
-    "itemValueAp": 34.09809528092631,
+    "itemValue": 34.1285920069206,
+    "itemValueAp": 34.1285920069206,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.04361370716510903,
-    "itemValue": 34.09809528092631
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "31063",
     "itemName": "转质盐组",
-    "itemValueAp": 32.956782459603666,
+    "itemValue": 33.014976061674176,
+    "itemValueAp": 33.014976061674176,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.04361370716510903,
-    "itemValue": 32.956782459603666
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "30093",
     "itemName": "研磨石",
-    "itemValueAp": 31.658173180899826,
+    "itemValue": 31.59272923291632,
+    "itemValueAp": 31.59272923291632,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.048286604361370715,
-    "itemValue": 31.658173180899826
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "31053",
     "itemName": "化合切削液",
-    "itemValueAp": 23.800407116531492,
+    "itemValue": 23.761854001020826,
+    "itemValueAp": 23.761854001020826,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.048286604361370715,
-    "itemValue": 23.800407116531492
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "31013",
     "itemName": "凝胶",
-    "itemValueAp": 30.71023961855944,
+    "itemValue": 30.719098605252555,
+    "itemValueAp": 30.719098605252555,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.048286604361370715,
-    "itemValue": 30.71023961855944
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "31043",
     "itemName": "半自然溶剂",
-    "itemValueAp": 31.27951501546926,
+    "itemValue": 31.071327440162108,
+    "itemValueAp": 31.071327440162108,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.048286604361370715,
-    "itemValue": 31.27951501546926
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "30083",
     "itemName": "轻锰矿",
+    "itemValue": 2.16,
     "itemValueAp": 2.16,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.056074766355140186,
-    "itemValue": 2.16
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "30053",
     "itemName": "酮凝集组",
-    "itemValueAp": 27.62727322049023,
+    "itemValue": 27.59795005792826,
+    "itemValueAp": 27.59795005792826,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.056074766355140186,
-    "itemValue": 27.62727322049023
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "30043",
     "itemName": "异铁组",
-    "itemValueAp": 27.161863384532914,
+    "itemValue": 27.055332747446116,
+    "itemValueAp": 27.055332747446116,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.056074766355140186,
-    "itemValue": 27.161863384532914
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "30073",
     "itemName": "扭转醇",
+    "itemValue": 1.8,
     "itemValueAp": 1.8,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.06542056074766354,
-    "itemValue": 1.8
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "31023",
     "itemName": "炽合金",
-    "itemValueAp": 25.53886514275215,
+    "itemValue": 25.497991819204884,
+    "itemValueAp": 25.497991819204884,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.056074766355140186,
-    "itemValue": 25.53886514275215
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "30033",
     "itemName": "聚酸酯组",
-    "itemValueAp": 22.389927931966927,
+    "itemValue": 22.28875697265037,
+    "itemValueAp": 22.28875697265037,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.06542056074766354,
-    "itemValue": 22.389927931966927
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "30023",
     "itemName": "糖组",
-    "itemValueAp": 22.134292477844077,
+    "itemValue": 22.352050856721778,
+    "itemValueAp": 22.352050856721778,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.06542056074766354,
-    "itemValue": 22.134292477844077
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "31033",
     "itemName": "晶体元件",
-    "itemValueAp": 19.434553437039348,
+    "itemValue": 19.44112786100652,
+    "itemValueAp": 19.44112786100652,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.056074766355140186,
-    "itemValue": 19.434553437039348
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "30013",
     "itemName": "固源岩组",
-    "itemValueAp": 17.21968763312852,
+    "itemValue": 17.21930861268357,
+    "itemValueAp": 17.21930861268357,
     "rarity": 3,
-    "cardNum": 3,
     "weight": 0.0778816199376947,
-    "itemValue": 17.21968763312852
+    "cardNum": 3,
+    "groupId": 3
   },
   {
     "itemId": "30062",
     "itemName": "装置",
-    "itemValueAp": 9.403066477724101,
+    "itemValue": 9.398661731599262,
+    "itemValueAp": 9.398661731599262,
     "rarity": 2,
-    "cardNum": 4,
     "weight": 0.105,
-    "itemValue": 9.403066477724101
+    "cardNum": 4,
+    "groupId": 4
   },
   {
     "itemId": "30052",
     "itemName": "酮凝集",
-    "itemValueAp": 7.019483975049901,
+    "itemValue": 7.012146341155451,
+    "itemValueAp": 7.012146341155451,
     "rarity": 2,
-    "cardNum": 4,
     "weight": 0.14,
-    "itemValue": 7.019483975049901
+    "cardNum": 4,
+    "groupId": 4
   },
   {
     "itemId": "30042",
     "itemName": "异铁",
-    "itemValueAp": 6.903131516060572,
+    "itemValue": 6.876491367155433,
+    "itemValueAp": 6.876491367155433,
     "rarity": 2,
-    "cardNum": 4,
     "weight": 0.14,
-    "itemValue": 6.903131516060572
+    "cardNum": 4,
+    "groupId": 4
   },
   {
     "itemId": "30032",
     "itemName": "聚酸酯",
-    "itemValueAp": 5.710147652919075,
+    "itemValue": 5.684848052434745,
+    "itemValueAp": 5.684848052434745,
     "rarity": 2,
-    "cardNum": 4,
     "weight": 0.175,
-    "itemValue": 5.710147652919075
+    "cardNum": 4,
+    "groupId": 4
   },
   {
     "itemId": "30022",
     "itemName": "糖",
-    "itemValueAp": 5.646238789388363,
+    "itemValue": 5.700670687012618,
+    "itemValueAp": 5.700670687012618,
     "rarity": 2,
-    "cardNum": 4,
     "weight": 0.175,
-    "itemValue": 5.646238789388363
-  },
-  {
-    "itemId": "2004",
-    "itemName": "高级作战记录",
-    "itemValueAp": 4.5576,
-    "rarity": 5,
-    "cardNum": 6,
-    "weight": 0,
-    "itemValue": 4.5576
+    "cardNum": 4,
+    "groupId": 4
   },
   {
     "itemId": "30012",
     "itemName": "固源岩",
-    "itemValueAp": 3.5340700625675785,
+    "itemValue": 3.5339887538471935,
+    "itemValueAp": 3.5339887538471935,
     "rarity": 2,
-    "cardNum": 4,
     "weight": 0.263,
-    "itemValue": 3.5340700625675785
+    "cardNum": 4,
+    "groupId": 4
   },
   {
     "itemId": "30061",
     "itemName": "破损装置",
-    "itemValueAp": 3.1451471170450396,
+    "itemValue": 3.14367554304584,
+    "itemValueAp": 3.14367554304584,
     "rarity": 1,
-    "cardNum": 5,
     "weight": 0.105,
-    "itemValue": 3.1451471170450396
+    "cardNum": 5,
+    "groupId": 5
   },
   {
     "itemId": "30051",
     "itemName": "双酮",
-    "itemValueAp": 2.3506196161536392,
+    "itemValue": 2.3481704128979026,
+    "itemValueAp": 2.3481704128979026,
     "rarity": 1,
-    "cardNum": 5,
     "weight": 0.14,
-    "itemValue": 2.3506196161536392
+    "cardNum": 5,
+    "groupId": 5
   },
   {
     "itemId": "30041",
     "itemName": "异铁碎片",
-    "itemValueAp": 2.311835463157196,
+    "itemValue": 2.30295208823123,
+    "itemValueAp": 2.30295208823123,
     "rarity": 1,
-    "cardNum": 5,
     "weight": 0.14,
-    "itemValue": 2.311835463157196
-  },
-  {
-    "itemId": "2003",
-    "itemName": "中级作战记录",
-    "itemValueAp": 2.2788,
-    "rarity": 4,
-    "cardNum": 6,
-    "weight": 0,
-    "itemValue": 2.2788
+    "cardNum": 5,
+    "groupId": 5
   },
   {
     "itemId": "30031",
     "itemName": "酯原料",
-    "itemValueAp": 1.9141741754433639,
+    "itemValue": 1.9057376499910008,
+    "itemValueAp": 1.9057376499910008,
     "rarity": 1,
-    "cardNum": 5,
     "weight": 0.175,
-    "itemValue": 1.9141741754433639
+    "cardNum": 5,
+    "groupId": 5
   },
   {
     "itemId": "30021",
     "itemName": "代糖",
-    "itemValueAp": 1.8928712209331264,
+    "itemValue": 1.9110118615169585,
+    "itemValueAp": 1.9110118615169585,
     "rarity": 1,
-    "cardNum": 5,
     "weight": 0.175,
-    "itemValue": 1.8928712209331264
+    "cardNum": 5,
+    "groupId": 5
   },
   {
     "itemId": "30011",
     "itemName": "源岩",
-    "itemValueAp": 1.188814978659532,
+    "itemValue": 1.1887845504618169,
+    "itemValueAp": 1.1887845504618169,
     "rarity": 1,
-    "cardNum": 5,
     "weight": 0.263,
-    "itemValue": 1.188814978659532
+    "cardNum": 5,
+    "groupId": 5
+  },
+  {
+    "itemId": "2004",
+    "itemName": "高级作战记录",
+    "itemValue": 4.558951965065503,
+    "itemValueAp": 4.558951965065503,
+    "rarity": 5,
+    "weight": 0,
+    "cardNum": 6,
+    "groupId": 6
+  },
+  {
+    "itemId": "2003",
+    "itemName": "中级作战记录",
+    "itemValue": 2.2794759825327513,
+    "itemValueAp": 2.2794759825327513,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 6,
+    "groupId": 6
   },
   {
     "itemId": "2002",
     "itemName": "初级作战记录",
-    "itemValueAp": 0.91152,
+    "itemValue": 0.9117903930131005,
+    "itemValueAp": 0.9117903930131005,
     "rarity": 3,
-    "cardNum": 6,
     "weight": 0,
-    "itemValue": 0.91152
+    "cardNum": 6,
+    "groupId": 6
   },
   {
     "itemId": "2001",
     "itemName": "基础作战记录",
-    "itemValueAp": 0.45576,
+    "itemValue": 0.45589519650655025,
+    "itemValueAp": 0.45589519650655025,
     "rarity": 2,
-    "cardNum": 6,
     "weight": 0,
-    "itemValue": 0.45576
+    "cardNum": 6,
+    "groupId": 6
   },
   {
     "itemId": "4001",
     "itemName": "龙门币",
+    "itemValue": 0.0036,
     "itemValueAp": 0.0036,
     "rarity": 4,
-    "cardNum": 6,
     "weight": 0,
-    "itemValue": 0.0036
+    "cardNum": 6,
+    "groupId": 6
   },
   {
     "itemId": "3301",
     "itemName": "技巧概要·卷1",
-    "itemValueAp": 1.5736083721149985,
+    "itemValue": 1.5736083721149983,
+    "itemValueAp": 1.5736083721149983,
     "rarity": 2,
-    "cardNum": 6,
     "weight": 0,
-    "itemValue": 1.5736083721149985
+    "cardNum": 6,
+    "groupId": 6
   },
   {
     "itemId": "3302",
     "itemName": "技巧概要·卷2",
-    "itemValueAp": 4.000699251139827,
+    "itemValue": 4.000699251139826,
+    "itemValueAp": 4.000699251139826,
     "rarity": 3,
-    "cardNum": 6,
     "weight": 0,
-    "itemValue": 4.000699251139827
+    "cardNum": 6,
+    "groupId": 6
   },
   {
     "itemId": "3303",
     "itemName": "技巧概要·卷3",
+    "itemValue": 10.171269282558882,
     "itemValueAp": 10.171269282558882,
     "rarity": 4,
+    "weight": 0,
     "cardNum": 6,
-    "weight": 0,
-    "itemValue": 10.171269282558882
-  },
-  {
-    "itemId": "4003",
-    "itemName": "合成玉",
-    "itemValueAp": 0.75,
-    "rarity": 5,
-    "cardNum": 10,
-    "weight": 0,
-    "itemValue": 0.75
-  },
-  {
-    "itemId": "7001",
-    "itemName": "招聘许可",
-    "itemValueAp": 24.068,
-    "rarity": 4,
-    "cardNum": 11,
-    "weight": 0,
-    "itemValue": 24.068
-  },
-  {
-    "itemId": "7002",
-    "itemName": "加急许可",
-    "itemValueAp": 0,
-    "rarity": 4,
-    "cardNum": 12,
-    "weight": 0,
-    "itemValue": 0
-  },
-  {
-    "itemId": "4006",
-    "itemName": "采购凭证",
-    "itemValueAp": 1.366857142857143,
-    "rarity": 3,
-    "cardNum": 11,
-    "weight": 0,
-    "itemValue": 1.366857142857143
-  },
-  {
-    "itemId": "7003",
-    "itemName": "寻访凭证",
-    "itemValueAp": 450,
-    "rarity": 5,
-    "cardNum": 10,
-    "weight": 0,
-    "itemValue": 450
-  },
-  {
-    "itemId": "7004",
-    "itemName": "十连寻访凭证",
-    "itemValueAp": 4500,
-    "rarity": 5,
-    "cardNum": 10,
-    "weight": 0,
-    "itemValue": 4500
-  },
-  {
-    "itemId": "32001",
-    "itemName": "芯片助剂",
-    "itemValueAp": 123.01714285714287,
-    "rarity": 4,
-    "cardNum": 11,
-    "weight": 0,
-    "itemValue": 123.01714285714287
+    "groupId": 6
   },
   {
     "itemId": "3003",
     "itemName": "赤金",
-    "itemValueAp": 0.91152,
+    "itemValue": 0.9117903930131005,
+    "itemValueAp": 0.9117903930131005,
     "rarity": 4,
+    "weight": 0,
     "cardNum": 6,
-    "weight": 0,
-    "itemValue": 0.91152
-  },
-  {
-    "itemId": "ap_supply_lt_010",
-    "itemName": "应急理智小样",
-    "itemValueAp": 0,
-    "rarity": 4,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 0
-  },
-  {
-    "itemId": "randomMaterial_8",
-    "itemName": "罗德岛物资补给Ⅳ",
-    "itemValueAp": 11.28,
-    "rarity": 2,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 11.28
-  },
-  {
-    "itemId": "mod_unlock_token",
-    "itemName": "模组数据块",
-    "itemValueAp": 163.2,
-    "rarity": 5,
-    "cardNum": 11,
-    "weight": 0,
-    "itemValue": 163.2
-  },
-  {
-    "itemId": "STORY_REVIEW_COIN",
-    "itemName": "事相碎片",
-    "itemValueAp": 27.2,
-    "rarity": 5,
-    "cardNum": 11,
-    "weight": 0,
-    "itemValue": 27.2
-  },
-  {
-    "itemId": "4002",
-    "itemName": "至纯源石",
-    "itemValueAp": 135,
-    "rarity": 4,
-    "cardNum": 10,
-    "weight": 0,
-    "itemValue": 135
-  },
-  {
-    "itemId": "base_ap",
-    "itemName": "无人机",
-    "itemValueAp": 0.03798,
-    "rarity": 4,
-    "cardNum": 12,
-    "weight": 0,
-    "itemValue": 0.03798
-  },
-  {
-    "itemId": "charm_coin_1",
-    "itemName": "黄金筹码",
-    "itemValueAp": 0.015701,
-    "rarity": 1,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 0.015701
-  },
-  {
-    "itemId": "charm_coin_2",
-    "itemName": "错版硬币",
-    "itemValueAp": 0.815271,
-    "rarity": 3,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 0.815271
-  },
-  {
-    "itemId": "charm_coin_3",
-    "itemName": "双日城大乐透",
-    "itemValueAp": 0.039549,
-    "rarity": 4,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 0.039549
-  },
-  {
-    "itemId": "charm_coin_4",
-    "itemName": "翡翠庭院至臻",
-    "itemValueAp": 100,
-    "rarity": 5,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 100
-  },
-  {
-    "itemId": "charm_r1",
-    "itemName": "标志物 - 20代金券",
-    "itemValueAp": 15,
-    "rarity": 1,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 15
-  },
-  {
-    "itemId": "charm_r2",
-    "itemName": "标志物 - 40代金券",
-    "itemValueAp": 30,
-    "rarity": 3,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 30
-  },
-  {
-    "itemId": "trap_oxygen_3",
-    "itemName": "沙兹专业镀膜装置",
-    "itemValueAp": 45,
-    "rarity": 5,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 45
-  },
-  {
-    "itemId": "act24side_melding_1",
-    "itemName": "破碎的骨片",
-    "itemValueAp": 2,
-    "rarity": 1,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 2
-  },
-  {
-    "itemId": "act24side_melding_2",
-    "itemName": "源石虫的硬壳",
-    "itemValueAp": 3,
-    "rarity": 2,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 3
-  },
-  {
-    "itemId": "act24side_melding_3",
-    "itemName": "鬣犄兽的尖锐齿",
-    "itemValueAp": 5,
-    "rarity": 3,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 5
-  },
-  {
-    "itemId": "act24side_melding_4",
-    "itemName": "凶豕兽的厚实皮",
-    "itemValueAp": 10,
-    "rarity": 4,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 10
-  },
-  {
-    "itemId": "act24side_melding_5",
-    "itemName": "兽之泪",
-    "itemValueAp": 20,
-    "rarity": 5,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 20
-  },
-  {
-    "itemId": "act24side_gacha",
-    "itemName": "炼金池",
-    "itemValueAp": 0,
-    "rarity": 5,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 0
-  },
-  {
-    "itemId": "0",
-    "itemName": "0",
-    "itemValueAp": 0,
-    "rarity": 1,
-    "cardNum": 100,
-    "weight": 0,
-    "itemValue": 0
-  },
-  {
-    "itemId": "3112",
-    "itemName": "碳",
-    "itemValueAp": 0.872,
-    "rarity": 2,
-    "cardNum": 12,
-    "weight": 0,
-    "itemValue": 0.872
-  },
-  {
-    "itemId": "3113",
-    "itemName": "碳素",
-    "itemValueAp": 1.368,
-    "rarity": 3,
-    "cardNum": 12,
-    "weight": 0,
-    "itemValue": 1.368
-  },
-  {
-    "itemId": "3114",
-    "itemName": "碳素组",
-    "itemValueAp": 1.711,
-    "rarity": 4,
-    "cardNum": 12,
-    "weight": 0,
-    "itemValue": 1.711
-  },
-  {
-    "itemId": "4004",
-    "itemName": "高级凭证 ",
-    "itemValueAp": 66.27906,
-    "rarity": 5,
-    "cardNum": 11,
-    "weight": 0,
-    "itemValue": 66.27906
-  },
-  {
-    "itemId": "4005",
-    "itemName": "资质凭证",
-    "itemValueAp": 0.8,
-    "rarity": 3,
-    "cardNum": 11,
-    "weight": 0,
-    "itemValue": 0.8
-  },
-  {
-    "itemId": "classic_gacha",
-    "itemName": "中坚寻访凭证",
-    "itemValueAp": 376.7442,
-    "rarity": 4,
-    "cardNum": 10,
-    "weight": 0,
-    "itemValue": 376.7442
-  },
-  {
-    "itemId": "classic_gacha_10",
-    "itemName": "十连中坚寻访凭证",
-    "itemValueAp": 3767.442,
-    "rarity": 4,
-    "cardNum": 10,
-    "weight": 0,
-    "itemValue": 3767.442
+    "groupId": 6
   },
   {
     "itemId": "3261",
     "itemName": "医疗芯片",
+    "itemValue": 17.2224,
     "itemValueAp": 17.2224,
     "rarity": 3,
-    "cardNum": 7,
     "weight": 0,
-    "itemValue": 17.2224
+    "cardNum": 7,
+    "groupId": 7
   },
   {
     "itemId": "3271",
     "itemName": "辅助芯片",
+    "itemValue": 17.2224,
     "itemValueAp": 17.2224,
     "rarity": 3,
-    "cardNum": 7,
     "weight": 0,
-    "itemValue": 17.2224
+    "cardNum": 7,
+    "groupId": 7
   },
   {
     "itemId": "3211",
     "itemName": "先锋芯片",
+    "itemValue": 17.2224,
     "itemValueAp": 17.2224,
     "rarity": 3,
-    "cardNum": 7,
     "weight": 0,
-    "itemValue": 17.2224
+    "cardNum": 7,
+    "groupId": 7
   },
   {
     "itemId": "3281",
     "itemName": "特种芯片",
+    "itemValue": 17.2224,
     "itemValueAp": 17.2224,
     "rarity": 3,
-    "cardNum": 7,
     "weight": 0,
-    "itemValue": 17.2224
+    "cardNum": 7,
+    "groupId": 7
   },
   {
     "itemId": "3221",
     "itemName": "近卫芯片",
+    "itemValue": 17.2224,
     "itemValueAp": 17.2224,
     "rarity": 3,
-    "cardNum": 7,
     "weight": 0,
-    "itemValue": 17.2224
+    "cardNum": 7,
+    "groupId": 7
   },
   {
     "itemId": "3231",
     "itemName": "重装芯片",
+    "itemValue": 17.2224,
     "itemValueAp": 17.2224,
     "rarity": 3,
-    "cardNum": 7,
     "weight": 0,
-    "itemValue": 17.2224
+    "cardNum": 7,
+    "groupId": 7
   },
   {
     "itemId": "3241",
     "itemName": "狙击芯片",
+    "itemValue": 17.2224,
     "itemValueAp": 17.2224,
     "rarity": 3,
-    "cardNum": 7,
     "weight": 0,
-    "itemValue": 17.2224
+    "cardNum": 7,
+    "groupId": 7
   },
   {
     "itemId": "3251",
     "itemName": "术师芯片",
+    "itemValue": 17.2224,
     "itemValueAp": 17.2224,
     "rarity": 3,
-    "cardNum": 7,
     "weight": 0,
-    "itemValue": 17.2224
+    "cardNum": 7,
+    "groupId": 7
   },
   {
     "itemId": "3262",
     "itemName": "医疗芯片组",
+    "itemValue": 34.4448,
     "itemValueAp": 34.4448,
     "rarity": 4,
-    "cardNum": 8,
     "weight": 0,
-    "itemValue": 34.4448
+    "cardNum": 8,
+    "groupId": 8
   },
   {
     "itemId": "3272",
     "itemName": "辅助芯片组",
+    "itemValue": 34.4448,
     "itemValueAp": 34.4448,
     "rarity": 4,
-    "cardNum": 8,
     "weight": 0,
-    "itemValue": 34.4448
+    "cardNum": 8,
+    "groupId": 8
   },
   {
     "itemId": "3212",
     "itemName": "先锋芯片组",
+    "itemValue": 34.4448,
     "itemValueAp": 34.4448,
     "rarity": 4,
-    "cardNum": 8,
     "weight": 0,
-    "itemValue": 34.4448
+    "cardNum": 8,
+    "groupId": 8
   },
   {
     "itemId": "3282",
     "itemName": "特种芯片组",
+    "itemValue": 34.4448,
     "itemValueAp": 34.4448,
     "rarity": 4,
-    "cardNum": 8,
     "weight": 0,
-    "itemValue": 34.4448
+    "cardNum": 8,
+    "groupId": 8
   },
   {
     "itemId": "3222",
     "itemName": "近卫芯片组",
+    "itemValue": 34.4448,
     "itemValueAp": 34.4448,
     "rarity": 4,
-    "cardNum": 8,
     "weight": 0,
-    "itemValue": 34.4448
+    "cardNum": 8,
+    "groupId": 8
   },
   {
     "itemId": "3232",
     "itemName": "重装芯片组",
+    "itemValue": 34.4448,
     "itemValueAp": 34.4448,
     "rarity": 4,
-    "cardNum": 8,
     "weight": 0,
-    "itemValue": 34.4448
+    "cardNum": 8,
+    "groupId": 8
   },
   {
     "itemId": "3242",
     "itemName": "狙击芯片组",
+    "itemValue": 34.4448,
     "itemValueAp": 34.4448,
     "rarity": 4,
-    "cardNum": 8,
     "weight": 0,
-    "itemValue": 34.4448
+    "cardNum": 8,
+    "groupId": 8
   },
   {
     "itemId": "3252",
     "itemName": "术师芯片组",
+    "itemValue": 34.4448,
     "itemValueAp": 34.4448,
     "rarity": 4,
-    "cardNum": 8,
     "weight": 0,
-    "itemValue": 34.4448
+    "cardNum": 8,
+    "groupId": 8
   },
   {
     "itemId": "3263",
     "itemName": "医疗双芯片",
-    "itemValueAp": 191.9067428571429,
+    "itemValue": 191.90695391973387,
+    "itemValueAp": 191.90695391973387,
     "rarity": 5,
-    "cardNum": 9,
     "weight": 0,
-    "itemValue": 191.9067428571429
+    "cardNum": 9,
+    "groupId": 9
   },
   {
     "itemId": "3273",
     "itemName": "辅助双芯片",
-    "itemValueAp": 191.9067428571429,
+    "itemValue": 191.90695391973387,
+    "itemValueAp": 191.90695391973387,
     "rarity": 5,
-    "cardNum": 9,
     "weight": 0,
-    "itemValue": 191.9067428571429
+    "cardNum": 9,
+    "groupId": 9
   },
   {
     "itemId": "3213",
     "itemName": "先锋双芯片",
-    "itemValueAp": 191.9067428571429,
+    "itemValue": 191.90695391973387,
+    "itemValueAp": 191.90695391973387,
     "rarity": 5,
-    "cardNum": 9,
     "weight": 0,
-    "itemValue": 191.9067428571429
+    "cardNum": 9,
+    "groupId": 9
   },
   {
     "itemId": "3283",
     "itemName": "特种双芯片",
-    "itemValueAp": 191.9067428571429,
+    "itemValue": 191.90695391973387,
+    "itemValueAp": 191.90695391973387,
     "rarity": 5,
-    "cardNum": 9,
     "weight": 0,
-    "itemValue": 191.9067428571429
+    "cardNum": 9,
+    "groupId": 9
   },
   {
     "itemId": "3223",
     "itemName": "近卫双芯片",
-    "itemValueAp": 191.9067428571429,
+    "itemValue": 191.90695391973387,
+    "itemValueAp": 191.90695391973387,
     "rarity": 5,
-    "cardNum": 9,
     "weight": 0,
-    "itemValue": 191.9067428571429
+    "cardNum": 9,
+    "groupId": 9
   },
   {
     "itemId": "3233",
     "itemName": "重装双芯片",
-    "itemValueAp": 191.9067428571429,
+    "itemValue": 191.90695391973387,
+    "itemValueAp": 191.90695391973387,
     "rarity": 5,
-    "cardNum": 9,
     "weight": 0,
-    "itemValue": 191.9067428571429
+    "cardNum": 9,
+    "groupId": 9
   },
   {
     "itemId": "3243",
     "itemName": "狙击双芯片",
-    "itemValueAp": 191.9067428571429,
+    "itemValue": 191.90695391973387,
+    "itemValueAp": 191.90695391973387,
     "rarity": 5,
-    "cardNum": 9,
     "weight": 0,
-    "itemValue": 191.9067428571429
+    "cardNum": 9,
+    "groupId": 9
   },
   {
     "itemId": "3253",
     "itemName": "术师双芯片",
-    "itemValueAp": 191.9067428571429,
+    "itemValue": 191.90695391973387,
+    "itemValueAp": 191.90695391973387,
     "rarity": 5,
-    "cardNum": 9,
     "weight": 0,
-    "itemValue": 191.9067428571429
+    "cardNum": 9,
+    "groupId": 9
+  },
+  {
+    "itemId": "4003",
+    "itemName": "合成玉",
+    "itemValue": 0.75,
+    "itemValueAp": 0.75,
+    "rarity": 5,
+    "weight": 0,
+    "cardNum": 10,
+    "groupId": 10
+  },
+  {
+    "itemId": "7003",
+    "itemName": "寻访凭证",
+    "itemValue": 450,
+    "itemValueAp": 450,
+    "rarity": 5,
+    "weight": 0,
+    "cardNum": 10,
+    "groupId": 10
+  },
+  {
+    "itemId": "7004",
+    "itemName": "十连寻访凭证",
+    "itemValue": 4500,
+    "itemValueAp": 4500,
+    "rarity": 5,
+    "weight": 0,
+    "cardNum": 10,
+    "groupId": 10
+  },
+  {
+    "itemId": "4002",
+    "itemName": "至纯源石",
+    "itemValue": 135,
+    "itemValueAp": 135,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 10,
+    "groupId": 10
+  },
+  {
+    "itemId": "classic_gacha",
+    "itemName": "中坚寻访凭证",
+    "itemValue": 376.74418604651163,
+    "itemValueAp": 376.74418604651163,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 10,
+    "groupId": 10
+  },
+  {
+    "itemId": "classic_gacha_10",
+    "itemName": "十连中坚寻访凭证",
+    "itemValue": 3767.4418604651164,
+    "itemValueAp": 3767.4418604651164,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 10,
+    "groupId": 10
+  },
+  {
+    "itemId": "7001",
+    "itemName": "招聘许可",
+    "itemValue": 28.34993488372093,
+    "itemValueAp": 28.34993488372093,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 11,
+    "groupId": 11
+  },
+  {
+    "itemId": "4006",
+    "itemName": "采购凭证",
+    "itemValue": 1.366857142857143,
+    "itemValueAp": 1.366857142857143,
+    "rarity": 3,
+    "weight": 0,
+    "cardNum": 11,
+    "groupId": 11
+  },
+  {
+    "itemId": "32001",
+    "itemName": "芯片助剂",
+    "itemValue": 123.01714285714287,
+    "itemValueAp": 123.01714285714287,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 11,
+    "groupId": 11
+  },
+  {
+    "itemId": "mod_unlock_token",
+    "itemName": "模组数据块",
+    "itemValue": 164.02285714285716,
+    "itemValueAp": 164.02285714285716,
+    "rarity": 5,
+    "weight": 0,
+    "cardNum": 11,
+    "groupId": 11
+  },
+  {
+    "itemId": "STORY_REVIEW_COIN",
+    "itemName": "事相碎片",
+    "itemValue": 27.337142857142858,
+    "itemValueAp": 27.337142857142858,
+    "rarity": 5,
+    "weight": 0,
+    "cardNum": 11,
+    "groupId": 11
+  },
+  {
+    "itemId": "4004",
+    "itemName": "高级凭证 ",
+    "itemValue": 66.27906976744187,
+    "itemValueAp": 66.27906976744187,
+    "rarity": 5,
+    "weight": 0,
+    "cardNum": 11,
+    "groupId": 11
+  },
+  {
+    "itemId": "4005",
+    "itemName": "资质凭证",
+    "itemValue": 0.8,
+    "itemValueAp": 0.8,
+    "rarity": 3,
+    "weight": 0,
+    "cardNum": 11,
+    "groupId": 11
+  },
+  {
+    "itemId": "7002",
+    "itemName": "加急许可",
+    "itemValue": 0,
+    "itemValueAp": 0,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 12,
+    "groupId": 12
+  },
+  {
+    "itemId": "base_ap",
+    "itemName": "无人机",
+    "itemValue": 0.037991266375545854,
+    "itemValueAp": 0.037991266375545854,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 12,
+    "groupId": 12
+  },
+  {
+    "itemId": "3112",
+    "itemName": "碳",
+    "itemValue": 0.8550522400495634,
+    "itemValueAp": 0.8550522400495634,
+    "rarity": 2,
+    "weight": 0,
+    "cardNum": 12,
+    "groupId": 12
+  },
+  {
+    "itemId": "3113",
+    "itemName": "碳素",
+    "itemValue": 1.3394804353691656,
+    "itemValueAp": 1.3394804353691656,
+    "rarity": 3,
+    "weight": 0,
+    "cardNum": 12,
+    "groupId": 12
+  },
+  {
+    "itemId": "3114",
+    "itemName": "碳素组",
+    "itemValue": 1.6681680214748014,
+    "itemValueAp": 1.6681680214748014,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 12,
+    "groupId": 12
   },
   {
     "itemId": "3401",
     "itemName": "家具零件",
+    "itemValue": 0,
     "itemValueAp": 0,
     "rarity": 3,
-    "cardNum": 12,
     "weight": 0,
-    "itemValue": 0
+    "cardNum": 12,
+    "groupId": 12
   },
   {
     "itemId": "AP_GAMEPLAY",
     "itemName": "理智",
-    "itemValueAp": 1,
+    "itemValue": 0,
+    "itemValueAp": 0,
     "rarity": 5,
-    "cardNum": 12,
     "weight": 0,
-    "itemValue": 1
+    "cardNum": 12,
+    "groupId": 12
+  },
+  {
+    "itemId": "ap_supply_lt_010",
+    "itemName": "应急理智小样",
+    "itemValue": 0,
+    "itemValueAp": 0,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "randomMaterial_8",
+    "itemName": "罗德岛物资补给Ⅳ",
+    "itemValue": 11.28,
+    "itemValueAp": 11.28,
+    "rarity": 2,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "charm_coin_1",
+    "itemName": "黄金筹码",
+    "itemValue": 0.015701,
+    "itemValueAp": 0.015701,
+    "rarity": 1,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "charm_coin_2",
+    "itemName": "错版硬币",
+    "itemValue": 0.815271,
+    "itemValueAp": 0.815271,
+    "rarity": 3,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "charm_coin_3",
+    "itemName": "双日城大乐透",
+    "itemValue": 0.039549,
+    "itemValueAp": 0.039549,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "charm_coin_4",
+    "itemName": "翡翠庭院至臻",
+    "itemValue": 100,
+    "itemValueAp": 100,
+    "rarity": 5,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "charm_r1",
+    "itemName": "标志物 - 20代金券",
+    "itemValue": 15,
+    "itemValueAp": 15,
+    "rarity": 1,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "charm_r2",
+    "itemName": "标志物 - 40代金券",
+    "itemValue": 30,
+    "itemValueAp": 30,
+    "rarity": 3,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "trap_oxygen_3",
+    "itemName": "沙兹专业镀膜装置",
+    "itemValue": 45,
+    "itemValueAp": 45,
+    "rarity": 5,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "act24side_melding_1",
+    "itemName": "破碎的骨片",
+    "itemValue": 2,
+    "itemValueAp": 2,
+    "rarity": 1,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "act24side_melding_2",
+    "itemName": "源石虫的硬壳",
+    "itemValue": 3,
+    "itemValueAp": 3,
+    "rarity": 2,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "act24side_melding_3",
+    "itemName": "鬣犄兽的尖锐齿",
+    "itemValue": 5,
+    "itemValueAp": 5,
+    "rarity": 3,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "act24side_melding_4",
+    "itemName": "凶豕兽的厚实皮",
+    "itemValue": 10,
+    "itemValueAp": 10,
+    "rarity": 4,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "act24side_melding_5",
+    "itemName": "兽之泪",
+    "itemValue": 20,
+    "itemValueAp": 20,
+    "rarity": 5,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "act24side_gacha",
+    "itemName": "炼金池",
+    "itemValue": 0,
+    "itemValueAp": 0,
+    "rarity": 5,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
+  },
+  {
+    "itemId": "0",
+    "itemName": "0",
+    "itemValue": 0,
+    "itemValueAp": 0,
+    "rarity": 1,
+    "weight": 0,
+    "cardNum": 100,
+    "groupId": 100
   }
 ]

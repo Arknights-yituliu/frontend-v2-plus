@@ -105,8 +105,8 @@ watch(() => window.screen.width, (newVal) => {
         </div>
         <div class="pack-content-material">
           <div class="pack-content-material-item" v-for="(item, index) in packInfo.packContent" :key="index">
-            <ItemImage :item-id="item.itemId" :size="40" :mobile-size="30" v-show="!item.custom"></ItemImage>
-            <span class="pack-content-material-item-name" v-show="item.custom">{{ item.itemName }}</span>
+<!--            <ItemImage :item-id="item.itemId" :size="40" :mobile-size="30" v-show="!item.custom"></ItemImage>-->
+            <span class="pack-content-material-item-name" >{{ item.itemName }}</span>
             <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span>
           </div>
         </div>

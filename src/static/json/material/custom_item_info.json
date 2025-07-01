@@ -10,7 +10,7 @@
         "count": 275762
       },
       {
-        "itemId": "exp",
+        "itemId": "EXP",
         "itemName": "EXP",
         "count": 333800
       }
@@ -27,7 +27,7 @@
         "count": 447378
       },
       {
-        "itemId": "exp",
+        "itemId": "EXP",
         "itemName": "EXP",
         "count": 495000
       }
@@ -44,7 +44,7 @@
         "count": 744955
       },
       {
-        "itemId": "exp",
+        "itemId": "EXP",
         "itemName": "EXP",
         "count": 750000
       }
@@ -61,7 +61,7 @@
         "count": 206241
       },
       {
-        "itemId": "exp",
+        "itemId": "EXP",
         "itemName": "EXP",
         "count": 150200
       },
@@ -213,7 +213,7 @@
         "count": 371947
       },
       {
-        "itemId": "exp",
+        "itemId": "EXP",
         "itemName": "EXP",
         "count": 239400
       },
@@ -305,7 +305,7 @@
         "count": 589841
       },
       {
-        "itemId": "exp",
+        "itemId": "EXP",
         "itemName": "EXP",
         "count": 361400
       },
@@ -859,7 +859,7 @@
     "description": "使用后回复'80'理智",
     "list": [
       {
-        "itemId": "ap",
+        "itemId": "AP_GAMEPLAY",
         "itemName": "理智",
         "count": 80
       }
@@ -871,7 +871,7 @@
     "description": "礼包内的头像",
     "list": [
       {
-        "itemId": "ap",
+        "itemId": "AP_GAMEPLAY",
         "itemName": "理智",
         "count": 0
       }
@@ -883,7 +883,7 @@
     "description": "礼包内的主题场景",
     "list": [
       {
-        "itemId": "ap",
+        "itemId": "AP_GAMEPLAY",
         "itemName": "理智",
         "count": 0
       }
@@ -895,7 +895,7 @@
     "description": "礼包内的界面主题",
     "list": [
       {
-        "itemId": "ap",
+        "itemId": "AP_GAMEPLAY",
         "itemName": "理智",
         "count": 0
       }
@@ -907,7 +907,7 @@
     "description": "礼包内的名片主题",
     "list": [
       {
-        "itemId": "ap",
+        "itemId": "AP_GAMEPLAY",
         "itemName": "理智",
         "count": 0
       }
@@ -943,9 +943,9 @@
     "description": "装有一个应急理智小样与一份罗德岛物资补给",
     "list": [
       {
-        "itemId": "ap",
+        "itemId": "AP_GAMEPLAY",
         "itemName": "理智",
-        "count":21.28
+        "count": 21.28
       }
     ]
   },
@@ -955,9 +955,9 @@
     "description": "模组升级材料",
     "list": [
       {
-        "itemId": "ap",
+        "itemId": "AP_GAMEPLAY",
         "itemName": "理智",
-        "count":0
+        "count": 0
       }
     ]
   },
@@ -967,9 +967,57 @@
     "description": "数据增补条",
     "list": [
       {
-        "itemId": "ap",
+        "itemId": "AP_GAMEPLAY",
         "itemName": "理智",
-        "count":0
+        "count": 0
+      }
+    ]
+  },
+  "voucher_item_pick6": {
+    "itemId": "voucher_item_pick6",
+    "itemName": "高级干员调用凭证",
+    "description": "可在一定范围内自选一位六星干员",
+    "list": [
+      {
+        "itemId": "AP_GAMEPLAY",
+        "itemName": "理智",
+        "count": 0
+      }
+    ]
+  },
+  "voucher_recruitR5_pick": {
+    "itemId": "voucher_recruitR5_pick",
+    "itemName": "资深干员调用凭证",
+    "description": "可在一定范围内自选一位五星干员",
+    "list": [
+      {
+        "itemId": "AP_GAMEPLAY",
+        "itemName": "理智",
+        "count": 0
+      }
+    ]
+  },
+  "voucher_class_pick6": {
+    "itemId": "voucher_class_pick6",
+    "itemName": "中坚高级干员调用凭证",
+    "description": "可在一定范围内自选一位六星中坚干员",
+    "list": [
+      {
+        "itemId": "AP_GAMEPLAY",
+        "itemName": "理智",
+        "count": 0
+      }
+    ]
+  },
+  "recruitment10": {
+    "itemId": "recruitment10",
+    "itemName": "新年寻访凭证",
+    "description": "从定制寻访凭证内出现的六星干员中随机必得一位",
+    "list": [
+      {
+        "itemId": "AP_GAMEPLAY",
+        "itemName": "理智",
+        "count": 0
       }
     ]
   }

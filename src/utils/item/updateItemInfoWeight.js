@@ -9,7 +9,7 @@ function getNewItemInfo(){
     for(const item of itemInfo){
         const {itemId,itemName,itemValue,rarity,weight,cardNum} = item
         list.push({
-            itemId,itemName,itemValue,rarity,weight,cardNum,groupId:cardNum
+            itemId,itemName,itemValue,itemValueAp:itemValue,rarity,weight,cardNum,groupId:cardNum
         })
     }
 
@@ -159,10 +159,10 @@ function getItemMinValue() {
     console.log(JSON.stringify(actStoreUnlimitedExchange))
 }
 
-// getNewItemInfo()
+getNewItemInfo()
 // updateItemInfoWeight()
 // getYTLStageList()
-customItemList()
+// customItemList()
 export {
     updateItemInfoWeight
 }

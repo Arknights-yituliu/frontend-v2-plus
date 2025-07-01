@@ -1,5 +1,5 @@
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
-import {getStageDropCollect} from "/src/plugins/indexedDB/penguinData.js";
+import {getStageDropCollect} from "/src/utils/item/penguinData.js";
 import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
 
 

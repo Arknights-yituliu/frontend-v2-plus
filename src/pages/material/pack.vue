@@ -55,28 +55,15 @@ let packInfoVOListOnSale = ref([])
 
 //材料价值表
 let itemValueMap = new Map()
-let customItemValueMap = new Map()
 
 //获取材料价值表
 function loadingItemValue() {
   const stageConfig = getStageConfig()
   //获取本地计算的材料价值
-  itemCache.getItemValueCacheByConfig(stageConfig).then(response => {
-    for (const item of response) {
-      const {itemId, itemValue} = item
-      itemValueMap.set(itemId, itemValue)
-    }
-
-    //获取服务器上的自定义材料价值
-    itemAPI.listCustomItem().then(response => {
-      for (const item of response.data) {
-        const {itemId, itemValue} = item
-        itemValueMap.set(itemId, itemValue)
-        customItemValueMap.set(itemId,itemValue)
-      }
-      //开始计算礼包性价比
-      getPackInfoData()
-    })
+  itemCache.getItemInfoMapCacheByConfig(stageConfig).then(response => {
+    itemValueMap = response
+    console.log(itemValueMap)
+    getPackInfoData()
   })
 }
 
@@ -142,9 +129,7 @@ async function getPackInfoData() {
     if (packContentVOList.length > 0) {
       for (let i = 0; i < packContentVOList.length; i++) {
         const packContentVO = packContentVOList[i];
-        if(customItemValueMap.has(packContentVO.itemId)){
-          packContentVOList[i].custom = true
-        }
+
         // 判断是否有不存在物品表中的物品
         if (itemValueMap.get(packContentVO.itemId)) {
           const itemValue = itemValueMap.get(packContentVO.itemId);
@@ -220,10 +205,15 @@ function collectPackInfoVO() {
   // 获取礼包性价比条
   const getLineChartData = pack => {
     const lineChartData = [
-      {label: '大月卡', value: 1.57, color: 'rgb(65,147,220)',display:true},
-      {label: '648源石', value: 1.00, color: 'rgb(65,147,220)',display:true},
-      {label: '仅抽卡', value: pack.drawEfficiency, color: 'rgb(250, 83, 83)',display:!displayPackEfficiencyFlag.value},
-      {label: '全物品', value: pack.packEfficiency, color: 'rgb(250, 83, 83)',display:displayPackEfficiencyFlag.value}
+      {label: '大月卡', value: 1.57, color: 'rgb(65,147,220)', display: true},
+      {label: '648源石', value: 1.00, color: 'rgb(65,147,220)', display: true},
+      {
+        label: '仅抽卡',
+        value: pack.drawEfficiency,
+        color: 'rgb(250, 83, 83)',
+        display: !displayPackEfficiencyFlag.value
+      },
+      {label: '全物品', value: pack.packEfficiency, color: 'rgb(250, 83, 83)', display: displayPackEfficiencyFlag.value}
     ];
     return lineChartData.sort((a, b) => b.value - a.value);
   }
@@ -291,7 +281,7 @@ function collectPackInfoVO() {
 
 let isKernelValuable = ref(false)
 
-function displayPackEfficiency(){
+function displayPackEfficiency() {
   collectPackInfoVO()
 }
 
@@ -386,15 +376,15 @@ loadingItemValue()
         </div>
 
         <div class="flex flex-wrap">
-        <v-switch v-if="item.titleEn === 'New Packs'"
-                  color="primary" label="中坚寻访视为有价值" hide-details
-                  @change="changeKernelValue" v-model="isKernelValuable" class="m-0-8">
-        </v-switch>
+          <v-switch v-if="item.titleEn === 'New Packs'"
+                    color="primary" label="中坚寻访视为有价值" hide-details
+                    @change="changeKernelValue" v-model="isKernelValuable" class="m-0-8">
+          </v-switch>
 
-        <v-switch v-if="item.titleEn === 'New Packs'"
-                  color="primary" label="展示全物品的综合性价比" hide-details
-                  @change="displayPackEfficiency" v-model="displayPackEfficiencyFlag" class="m-0-8">
-        </v-switch>
+          <v-switch v-if="item.titleEn === 'New Packs'"
+                    color="primary" label="展示全物品的综合性价比" hide-details
+                    @change="displayPackEfficiency" v-model="displayPackEfficiencyFlag" class="m-0-8">
+          </v-switch>
         </div>
         <template v-for="(packInfo, packIndex) in item.list" :key="packIndex">
           <h2 style="margin: 12px;" v-if="packInfo.title">{{ packInfo.title }}</h2>
@@ -403,7 +393,7 @@ loadingItemValue()
                   color="red" class="m-4"></v-chip>
           <v-chip v-if="packInfo.title === '源石/首充源石'" text="每年周年庆会重置源石首充" color="red"
                   class="m-4"></v-chip>
-          <PackCardContainer v-model="packInfo.packs" />
+          <PackCardContainer v-model="packInfo.packs"/>
         </template>
       </template>
       <!-- 不会因为筛选改变的礼包 End -->

@@ -1,9 +1,12 @@
-import { getStageDropCollect } from "@/plugins/indexedDB/penguinData.js";
-import ITEM_INFO from "@/static/json/material/item_info.json";
+import { getStageDropCollect } from "@/utils/item/penguinData.js";
+import ITEM_INFO from "/src/static/json/material/item_info.json";
 import ITEM_SERIES_INFO from '/src/static/json/material/item_series_info.json';
 import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json';
+import CUSTOM_ITEM_INFO from '/src/static/json/material/custom_item_info.json'
 import { itemSeriesInfoByItemId } from "/src/utils/item/itemSeries.js";
-// import {updateItemInfoWeight} from "@/utils/item/updateItemInfoWeight.js";
+// import {updateItemInfoWeight} from "/src/utils/item/updateItemInfoWeight.js";
+
+
 
 /**
  * @typedef {Object} ItemInfo
@@ -35,30 +38,7 @@ function isEliteMaterial(item_id) {
 }
 
 
-/**
- * 物品信息列表，包含物品id、名称、价值、稀有度、权重等信息
- * @type {Array<ItemInfo>}
- */
-const itemInfoList = ITEM_INFO.filter(e => e.cardNum < 100);
 
-
-/**
- * 加工产出副产品时，各种物品作为副产品的概率
- * key 为物品稀有度，value 为副产品概率映射
- * @type {Map<number, Map<string, number>>}
- */
-const workshopByproductWeightMap = new Map([
-    [1, new Map()],
-    [2, new Map()],
-    [3, new Map()],
-    [4, new Map()],
-]);
-for (const item of itemInfoList) {
-    if (item.weight === 0) {
-        continue;  // 通过副产品排除非可加工物品
-    }
-    workshopByproductWeightMap.get(item.rarity).set(item.itemId, item.weight);
-}
 
 
 // 基础龙门币价值、基础 EXP 价值
@@ -107,7 +87,34 @@ const recruitTokenMap = {
  * @param tolerance
  * @return {Promise<Array<ItemInfo>>}
  */
-async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.000001) {
+async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000001) {
+
+
+    /**
+     * 物品信息列表，包含物品id、名称、价值、稀有度、权重等信息
+     * @type {Array<ItemInfo>}
+     */
+    const itemInfoList = ITEM_INFO.filter(e => e.groupId < 100);
+
+    /**
+     * 加工产出副产品时，各种物品作为副产品的概率
+     * key 为物品稀有度，value 为副产品概率映射
+     * @type {Map<number, Map<string, number>>}
+     */
+    const workshopByproductWeightMap = new Map([
+        [1, new Map()],
+        [2, new Map()],
+        [3, new Map()],
+        [4, new Map()],
+    ]);
+
+
+    for (const item of itemInfoList) {
+        if (item.weight === 0) {
+            continue;  // 通过副产品排除非可加工物品
+        }
+        workshopByproductWeightMap.get(item.rarity).set(item.itemId, item.weight);
+    }
 
     /**
      * 作战效率和主产物（仅包含定价作战集中的作战）
@@ -179,13 +186,14 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
      * @type {Map<string, number>}
      */
     const itemValueMap = new Map();
-    itemValueMap.set("causality", 0);
-    itemValueMap.set("AP_GAMEPLAY", 1);
-    itemValueMap.set("EXP", 0);
     for (const item of itemInfoList) {
         const { itemId, rarity } = item;
         itemValueMap.set(itemId,isEliteMaterial(itemId) ? 3 ** rarity : 0)
     }
+
+    itemValueMap.set("causality", 0);
+    itemValueMap.set("AP_GAMEPLAY", 1);
+    itemValueMap.set("EXP", 0);
 
     // const itemValueMap = new Map(itemInfoList.map(({ itemId, rarity }) => [itemId, isEliteMaterial(itemId) ? 3 ** rarity : 0]));
 
@@ -237,9 +245,14 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
 
     // 把物品信息列表中的物品价值更新为计算后的值
     for (const item of itemInfoList) {
-        console.log(item)
+
         item.itemValue = itemValueMap.get(item.itemId);
+        item.custom = false
     }
+
+    _calculateCustomItemValue()
+
+
 
     return itemInfoList;
 
@@ -512,6 +525,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         /** 赤金价值 = 无人机价值 ÷ 无人机生产赤金数量 */
         const itemValue3003 = itemValueBaseAp * 24;
 
+
         /** 合成玉价值 @type {number} */
         let itemValue4003;
         switch (stageConfig.orundumPricingStrategy) {
@@ -655,6 +669,7 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
         );
 
         // 更新物品价值
+        itemValueMap.set("EXP",itemValueEXP)
         itemValueMap.set("4003", itemValue4003);
         itemValueMap.set("4002", itemValue4002);
         itemValueMap.set("7003", itemValue7003);
@@ -758,9 +773,41 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
             const itemValue3302 = (30 * (1 - lmdValue * 12) - b1 * causalityValue / 2 + 4 * b2 * causalityValue / a2) / (a1 / 2 + 3 / 2 + 6 / a2);
             const itemValue3301 = (a1 * itemValue3302 + b1 * causalityValue) / 3;
             const itemValue3303 = (3 * itemValue3302 - 2 * b2 * causalityValue) / a2;
+
+
+
+
             return { itemValue3301, itemValue3302, itemValue3303 };
         }
     }
+
+
+    function _calculateCustomItemValue(){
+        for(const itemId in CUSTOM_ITEM_INFO){
+            const {itemName,description,list} = CUSTOM_ITEM_INFO[itemId]
+            let  itemValue = 0
+            for(const item of list){
+                if(itemValueMap.has(item.itemId)){
+                    itemValue+= itemValueMap.get(item.itemId)*item.count
+                }else {
+                    console.log(item.itemName,"没有这个材料")
+                }
+            }
+
+            console.log({itemId,itemName,description,itemValue})
+            itemInfoList.push({
+                itemId:itemId,
+                itemName:itemName,
+                itemValue:itemValue,
+                itemValueAp:itemValue,
+                rarity: 5,
+                weight: 0,
+                custom:true,
+                groupId: 100
+            })
+        }
+    }
+
 
 
     /**
@@ -778,4 +825,4 @@ async function getCustomItemList(stageConfig, maxIteration = 50, tolerance = 0.0
 }
 
 
-export { getCustomItemList };
+export { getItemInfoList };

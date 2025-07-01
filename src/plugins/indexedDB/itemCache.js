@@ -2,7 +2,7 @@ import myDatabase from "/src/plugins/indexedDB/indexedDB.js";
 import materialAPI from "/src/api/materialV5.js";
 import axios from "axios";
 import {createMessage} from "@/utils/message.js";
-import {getCustomItemList} from "/src/utils/item/itemValue.js";
+import {getItemInfoList} from "/src/utils/item/itemValue.js";
 
 
 async function putCache(data) {
@@ -13,7 +13,7 @@ let localItemValueCache = new Map()
 let localItemValueCacheKey = Date.now()
 
 async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
-    const cacheKey = 'itemValue'
+
     let itemValue = []
 
     if (!forceRefresh) {
@@ -27,7 +27,7 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
     }
 
 
-    await getCustomItemList(stageConfig).then(response => {
+    await getItemInfoList(stageConfig).then(response => {
         console.log(`材料价值计算完毕`)
         if (forceRefresh) {
             createMessage({text: "强制刷新材料价值成功", type: 'success', duration: 4000})
@@ -39,6 +39,44 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
 
     return itemValue
 }
+
+
+
+
+async function getItemInfoMapCacheByConfig(stageConfig, forceRefresh = false) {
+
+    let itemInfoMap = new Map()
+
+    if (!forceRefresh) {
+        if (localItemValueCache.has(localItemValueCacheKey)) {
+            console.log("返回了临时缓存材料价值——key:", localItemValueCacheKey)
+            return localItemValueCache.get(localItemValueCacheKey)
+        }
+    } else {
+        console.log("强制刷新了材料价值")
+        localItemValueCacheKey = Date.now()
+    }
+
+
+    await getItemInfoList(stageConfig).then(response => {
+        console.log(`材料价值计算完毕`)
+        if (forceRefresh) {
+            createMessage({text: "强制刷新材料价值成功", type: 'success', duration: 4000})
+        }
+
+        for (const item of response) {
+            const {itemId, itemValue} = item
+            itemInfoMap.set(itemId, itemValue)
+        }
+
+        localItemValueCache.set(localItemValueCacheKey, itemInfoMap)
+
+    })
+
+    return itemInfoMap
+}
+
+
 
 const penguinCacheKey = "penguin-cache-v2";
 
@@ -143,5 +181,5 @@ async function getStageInfoCache() {
 
 
 export default {
-    getItemValueCacheByConfig, getPenguinMatrixCache, getStageInfoCache, getLastSynchronizationTime
+    getItemValueCacheByConfig,getItemInfoMapCacheByConfig, getPenguinMatrixCache, getStageInfoCache, getLastSynchronizationTime
 }
