@@ -35,7 +35,7 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   进入不期而遇，触发事件
-                  <el-tooltip content="该事件在第4层末尾的【古堡馈赠】前可能遭遇" effect="light" placement="top"
+                  <el-tooltip content="第4层末尾的【古堡馈赠】前可能遭遇" effect="light" placement="top"
                   >
                     <el-link
                         href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%A7%A3%E8%84%B1%EF%BC%9F"
@@ -116,7 +116,7 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   进入不期而遇，触发事件
-                  <el-tooltip content="该事件在第3层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
+                  <el-tooltip content="第3层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
                     <el-link
                         href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%B5%B4%E5%AE%B4"
@@ -185,7 +185,7 @@
               <el-timeline-item :icon="Battle" color="#5EDFD6">
                 <div>
                   进入不期而遇，触发事件
-                  <el-tooltip content="该事件在通过第1层后，在第3层末尾的【险路恶敌】前可能遭遇" effect="light"
+                  <el-tooltip content="通过第1层后，在第3层末尾的【险路恶敌】前可能遭遇" effect="light"
                               placement="top"
                   >
                     <el-link
@@ -457,12 +457,15 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   进入不期而遇，触发事件
-                  <el-link
-                      href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%BC%80%E7%AB%AF"
-                      type="primary"
+                  <el-tooltip content="在第3层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
-                    “开端”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%BC%80%E7%AB%AF"
+                        type="primary"
+                    >
+                      <el-text tag="ins">“开端”</el-text>
+                    </el-link>
+                  </el-tooltip>
                   ，选择“‘深蓝’？！”，获得
                   <el-tooltip
                       content="灯火-100，获得时立即使随机一名干员产生排异反应"
@@ -685,7 +688,7 @@
               </el-timeline-item>
               <el-timeline-item :icon="Flag" type="warning">
                 <div>
-                  <el-tooltip content="命运所指节点前必为紧急作战" effect="light" placement="top"
+                  <el-tooltip content="命运所指节点前必定为无纵向通路的紧急作战" effect="light" placement="top"
                   >
                     <el-text tag="ins">在下一层的最下方通路处进入命运所指节点</el-text>
                   </el-tooltip>
