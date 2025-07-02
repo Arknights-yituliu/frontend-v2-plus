@@ -10,6 +10,7 @@
       <!-- 傀影与猩红孤钻 -->
       <!-- 事件：https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88 -->
       <!-- 收藏品：https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E9%95%BF%E7%94%9F%E8%80%85%E5%AE%9D%E7%9B%92 -->
+      <!-- 区域：https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB#%E5%8C%BA%E5%9F%9F -->
       <el-timeline v-if="selectedOption === '傀影与猩红孤钻'">
         <el-timeline-item placement="top" timestamp="第一结局">
           <el-card>
@@ -34,12 +35,15 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   进入不期而遇，触发事件
-                  <el-link
-                      href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%A7%A3%E8%84%B1%EF%BC%9F"
-                      type="primary"
+                  <el-tooltip content="该事件在第4层末尾的【古堡馈赠】前可能遭遇" effect="light" placement="top"
                   >
-                    “解脱？”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%A7%A3%E8%84%B1%EF%BC%9F"
+                        type="primary"
+                    >
+                      <el-text tag="ins">“解脱？”</el-text>
+                    </el-link>
+                  </el-tooltip>
                   ，选择
                   <el-tooltip content="消耗1希望">
                     <el-text tag="ins">“太可怜了，仔细观赏”</el-text>
@@ -112,12 +116,15 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   进入不期而遇，触发事件
-                  <el-link
-                      href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%B5%B4%E5%AE%B4"
-                      type="primary"
+                  <el-tooltip content="该事件在第3层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
-                    “赴宴”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%B5%B4%E5%AE%B4"
+                        type="primary"
+                    >
+                      <el-text tag="ins">“赴宴”</el-text>
+                    </el-link>
+                  </el-tooltip>
                   选“白得一套衣服”获得
                   <el-tooltip content="所有我方单位的部署费用+2" effect="light" placement="top"
                   >
@@ -139,7 +146,7 @@
               </el-timeline-item>
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
-                  持替补演员可触发不期而遇
+                  持替补演员可在第5层触发不期而遇
                   <el-link
                       href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%BF%BD%E9%9A%8F%E8%80%85%E9%9B%86%E4%BC%9A"
                       type="primary"
@@ -178,12 +185,16 @@
               <el-timeline-item :icon="Battle" color="#5EDFD6">
                 <div>
                   进入不期而遇，触发事件
-                  <el-link
-                      href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%88%AB%E6%89%93%E6%89%B0%E4%BB%96%E4%BB%AC"
-                      type="primary"
+                  <el-tooltip content="该事件在通过第1层后，在第3层末尾的【险路恶敌】前可能遭遇" effect="light"
+                              placement="top"
                   >
-                    “别打扰他们”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%88%AB%E6%89%93%E6%89%B0%E4%BB%96%E4%BB%AC"
+                        type="primary"
+                    >
+                      <el-text tag="ins">“别打扰他们”</el-text>
+                    </el-link>
+                  </el-tooltip>
                   ，选择“靠近听听他们在说什么”，进入特殊战斗
                   <el-link
                       href="https://prts.wiki/w/ISW-SP_%E8%87%AA%E7%BC%9A"
@@ -249,6 +260,7 @@
       <!-- 水月与深蓝之树 -->
       <!-- 事件：https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88 -->
       <!-- 收藏品：https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E7%94%9F%E7%89%A9%E5%88%B6%E5%93%81%E9%99%88%E8%AE%BE -->
+      <!-- 区域：https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91#%E5%8C%BA%E5%9F%9F -->
       <el-timeline v-else-if="selectedOption === '水月与深蓝之树'">
         <el-timeline-item placement="top" timestamp="第一结局">
           <el-card>
@@ -274,12 +286,15 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   进入不期而遇，触发事件
-                  <el-link
-                      href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%8B%82%E5%BE%92%E5%A6%84%E5%BF%B5"
-                      type="primary"
+                  <el-tooltip content="在第3层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
-                    “狂徒妄念”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%8B%82%E5%BE%92%E5%A6%84%E5%BF%B5"
+                        type="primary"
+                    >
+                      <el-text tag="ins">“狂徒妄念”</el-text>
+                    </el-link>
+                  </el-tooltip>
                   ，选择“愤怒”（-2希望）或“呼号”（投掷点数>1），获得
                   <el-tooltip
                       content="可同时部署人数+1；获得后【猎潮的骑士】出现在战场，直至被击败"
@@ -313,12 +328,15 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   <span class="optional">（可选）</span>在猎潮的骑士仍存活的情况下，可触发不期而遇
-                  <el-link
-                      href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E9%AA%91%E5%A3%AB%E4%BB%8D%E5%9C%A8"
-                      type="primary"
+                  <el-tooltip content="在持有【海潮的气息】时，在抵达第5层前可能遭遇" effect="light" placement="top"
                   >
-                    “骑士仍在”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E9%AA%91%E5%A3%AB%E4%BB%8D%E5%9C%A8"
+                        type="primary"
+                    >
+                      <el-text tag="ins">“骑士仍在”</el-text>
+                    </el-link>
+                  </el-tooltip>
                   ，并选择“反抗”获得
                   <el-tooltip content="源石锭+10，钥匙+1" effect="light" placement="top"
                   >
@@ -362,12 +380,15 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   进入不期而遇，触发事件
-                  <el-link
-                      href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%BC%80%E7%AB%AF"
-                      type="primary"
+                  <el-tooltip content="在第3层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
-                    “开端”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%BC%80%E7%AB%AF"
+                        type="primary"
+                    >
+                      <el-text tag="ins">“开端”</el-text>
+                    </el-link>
+                  </el-tooltip>
                   ，选择“决定潜入深海”，获得
                   <el-tooltip content="每次战斗结束后灯火额外-5" effect="light" placement="top"
                   >
@@ -378,12 +399,16 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   持有主教的研究可触发不期而遇
-                  <el-link
-                      href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%B7%B1%E8%93%9D%E4%B9%8B%E5%BF%83"
-                      type="primary"
+                  <el-tooltip content="灯火值不低于20时，在第5层末尾的【险路恶敌】前可能遭遇" effect="light"
+                              placement="top"
                   >
-                    “深蓝之心”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%B7%B1%E8%93%9D%E4%B9%8B%E5%BF%83"
+                        type="primary"
+                    >
+                      <el-text tag="ins">“深蓝之心”</el-text>
+                    </el-link>
+                  </el-tooltip>
                   ，选择“搜寻园林”，获得
                   <el-tooltip
                       content="灯火-50，获得时立即使随机一名干员产生排异反应，让探索走向不同的结局"
@@ -397,12 +422,15 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   <span class="optional">（可选）</span>持有深蓝之心，可触发不期而遇
-                  <el-link
-                      href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%B5%9E%E6%AD%8C"
-                      type="primary"
+                  <el-tooltip content="第5层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
-                    “赞歌”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%B5%9E%E6%AD%8C"
+                        type="primary"
+                    >
+                      <el-text tag="ins">“赞歌”</el-text>
+                    </el-link>
+                  </el-tooltip>
                   ，选择“亲吻猎人们的额头并取走遗物”，获得
                   <el-tooltip content="获得时随机获得2个启示" effect="light" placement="top"
                   >
@@ -448,12 +476,15 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   <span class="optional">（可选）</span>持有深蓝回忆，可触发不期而遇
-                  <el-link
-                      href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%B7%B1%E8%93%9D%E4%BB%AA%E5%BC%8F"
-                      type="primary"
+                  <el-tooltip content="在抵达第5层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
-                    “深蓝仪式”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%B7%B1%E8%93%9D%E4%BB%AA%E5%BC%8F"
+                        type="primary"
+                    >
+                      <el-text tag="ins">“深蓝仪式”</el-text>
+                    </el-link>
+                  </el-tooltip>
                   ，选择“关闭危险流程”，获得30灯火，或选择“不做任何改动”获得
                   <el-tooltip
                       content="所有敌人攻击速度+15；每次作战若未损失目标生命，战斗结束后灯火+15"
@@ -467,12 +498,15 @@
               <el-timeline-item :icon="MoreFilled" type="primary">
                 <div>
                   持有深蓝回忆，可触发不期而遇
-                  <el-link
-                      href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%8D%87%E5%8D%8E"
-                      type="primary"
+                  <el-tooltip content="在第4层开始至第5层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
-                    “升华”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%8D%87%E5%8D%8E"
+                        type="primary"
+                    >
+                      <el-text tag="ins">“升华”</el-text>
+                    </el-link>
+                  </el-tooltip>
                   ，选择
                   <el-tooltip content="灯火值不低于90时显示">
                     <el-text tag="ins">“‘我是水月，我会完成博士的请求’”</el-text>
@@ -525,6 +559,7 @@
       <!-- 探索者的银凇止境 -->
       <!-- 事件：https://prts.wiki/w/%E6%8E%A2%E7%B4%A2%E8%80%85%E7%9A%84%E9%93%B6%E5%87%87%E6%AD%A2%E5%A2%83/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88 -->
       <!-- 收藏品：https://prts.wiki/w/%E6%8E%A2%E7%B4%A2%E8%80%85%E7%9A%84%E9%93%B6%E5%87%87%E6%AD%A2%E5%A2%83/%E4%BB%AA%E5%BC%8F%E7%94%A8%E5%93%81%E7%B4%A2%E5%BC%95 -->
+      <!-- 区域：https://prts.wiki/w/%E6%8E%A2%E7%B4%A2%E8%80%85%E7%9A%84%E9%93%B6%E5%87%87%E6%AD%A2%E5%A2%83#%E5%8C%BA%E5%9F%9F -->
       <el-timeline v-else-if="selectedOption === '探索者的银凇止境'">
         <el-timeline-item placement="top" timestamp="第一结局">
           <el-card>
@@ -641,7 +676,8 @@
                     “探寻前路”
                   </el-link>
                   事件，选择“征求凛视的意见”，获得
-                  <el-tooltip content="战斗出现额外敌人，让探索开启不同的方向" effect="light" placement="top"
+                  <el-tooltip content="除第6层外的所有普通战斗和紧急战斗将出现额外的敌人，让探索开启不同的方向"
+                              effect="light" placement="top"
                   >
                     <el-text tag="ins">【路网】</el-text>
                   </el-tooltip>
@@ -649,7 +685,11 @@
               </el-timeline-item>
               <el-timeline-item :icon="Flag" type="warning">
                 <div>
-                  寻找并进入任意一个非第5层的，非险路恶敌前一个的命运所指节点，触发
+                  <el-tooltip content="命运所指节点前必为紧急作战" effect="light" placement="top"
+                  >
+                    <el-text tag="ins">在下一层的最下方通路处进入命运所指节点</el-text>
+                  </el-tooltip>
+                  ，触发
                   <el-link
                       href="https://prts.wiki/w/%E6%8E%A2%E7%B4%A2%E8%80%85%E7%9A%84%E9%93%B6%E5%87%87%E6%AD%A2%E5%A2%83/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%82%B2%E8%A7%82%E8%80%85%E5%9B%9A%E7%AC%BC"
                       type="primary"
@@ -661,6 +701,17 @@
                   >
                     <el-text tag="ins">【无垠赠礼】</el-text>
                   </el-tooltip>
+                </div>
+                <div>
+                  <span class="optional warning">（注意）</span>
+                  若路网对应的命运所指节点刷新在了第5层，则有可能会覆盖掉事件为
+                  <el-link
+                      href="https://prts.wiki/w/%E6%8E%A2%E7%B4%A2%E8%80%85%E7%9A%84%E9%93%B6%E5%87%87%E6%AD%A2%E5%A2%83/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%B5%B0%E8%BF%87%E8%90%A8%E7%B1%B3%E7%9A%84%E8%87%82%E8%86%80"
+                      type="primary"
+                  >
+                    “走过萨米的臂膀”
+                  </el-link>
+                  的命运所指节点
                 </div>
               </el-timeline-item>
               <el-timeline-item :icon="BOSS" color="#8A0993">
@@ -697,12 +748,17 @@
               <el-timeline-item :icon="Battle" color="#5EDFD6">
                 <div>
                   持有视界邀约可触发不期而遇
-                  <el-link
-                      href="https://prts.wiki/w/%E6%8E%A2%E7%B4%A2%E8%80%85%E7%9A%84%E9%93%B6%E5%87%87%E6%AD%A2%E5%A2%83/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%8F%98%E5%8C%96"
-                      type="primary"
+                  <el-tooltip
+                      content="进入【深埋迷境】外的不期而遇时大概率遭遇，不期而遇节点没有处于全面勘察状态时更有可能遭遇"
+                      effect="light" placement="top"
                   >
-                    “变化”
-                  </el-link>
+                    <el-link
+                        href="https://prts.wiki/w/%E6%8E%A2%E7%B4%A2%E8%80%85%E7%9A%84%E9%93%B6%E5%87%87%E6%AD%A2%E5%A2%83/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%8F%98%E5%8C%96"
+                        type="primary"
+                    >
+                      “变化”
+                    </el-link>
+                  </el-tooltip>
                   ，选择“出示视界邀约“，进入特殊战斗
                   <el-link
                       href="https://prts.wiki/w/ISW-SP_%E9%BB%84%E6%B2%99%E5%B9%BB%E5%A2%83"
@@ -742,7 +798,12 @@
               </el-timeline-item>
               <el-timeline-item :icon="Flag" type="warning">
                 <div>
-                  抵达第6层，在所遇到的第一个命运所指节点触发
+                  <el-tooltip content="若是在第6层获得的【维度流质】，则会在第7层遭遇第四结局对应的关卡" effect="light"
+                              placement="top"
+                  >
+                    <el-text tag="ins">抵达第6层</el-text>
+                  </el-tooltip>
+                  ，在所遇到的第一个命运所指节点触发
                   <el-link
                       href="https://prts.wiki/w/%E6%8E%A2%E7%B4%A2%E8%80%85%E7%9A%84%E9%93%B6%E5%87%87%E6%AD%A2%E5%A2%83/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E9%87%8D%E6%9E%84"
                       type="primary"
@@ -792,6 +853,7 @@
       <!-- 萨卡兹的无终奇语 -->
       <!-- 事件：https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88 -->
       <!-- 收藏品：https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E6%83%B3%E8%B1%A1%E5%AE%9E%E4%BD%93%E5%9B%BE%E9%89%B4 -->
+      <!-- 区域：https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD#%E5%8C%BA%E5%9F%9F -->
       <!-- 思绪：https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BD%9A%E6%95%A3%E6%80%9D%E7%BB%B4%E8%BE%91%E5%BD%95 -->
       <el-timeline v-else-if="selectedOption === '萨卡兹的无终奇语'">
         <el-timeline-item placement="top" timestamp="第一结局">
@@ -926,6 +988,25 @@
                     <el-text tag="ins">【滚动先祖】</el-text>
                   </el-tooltip>
                 </div>
+                <div>
+                  <span class="optional">（可选）</span>
+                  持有巴别塔誓言可触发不期而遇
+                  <el-link
+                      href="https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%A6%BB%E5%8E%BB%E8%80%85%E7%9A%84%E5%BA%AD%E9%99%A2"
+                      type="primary"
+                  >
+                    “离去者的庭院”
+                  </el-link>
+                  ，选择“阿斯卡纶”（获得3希望）或“触痕”（回复6目标生命）或“菲茨罗伊”（获得5源石锭）或“埃里克森”（获得1缕较为稀有的思绪）或“阿米娅”（获得
+                  <el-tooltip
+                      content="尊主的残影最大生命值下降50%"
+                      effect="light"
+                      placement="top"
+                  >
+                    <el-text tag="ins">【十戒】</el-text>
+                  </el-tooltip>
+                  ）
+                </div>
               </el-timeline-item>
               <el-timeline-item :icon="Flag" type="warning">
                 <div>
@@ -990,7 +1071,11 @@
               </el-timeline-item>
               <el-timeline-item :icon="Flag" type="warning">
                 <div>
-                  持有先知长角刷新节点直到出现命运所指，进入其中触发事件
+                  持有先知长角，
+                  <el-tooltip content="算上后续选项消耗，需至少准备3缕构想">
+                    <el-text tag="ins">使用1缕构想刷新出命运所指节点</el-text>
+                  </el-tooltip>
+                  ，进入其中触发事件
                   <el-link
                       href="https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%BE%85%E8%AF%89%E8%AF%B4%E7%9A%84%E7%9C%9F%E7%9B%B8"
                       type="primary"
@@ -1081,12 +1166,16 @@
                   </el-link>
                   ），获胜后获得
                   <el-tooltip
-                      content="领袖与精英敌人最大生命值+50%，使虚实疆界中的险路恶敌更加艰难，让探索开启不同的方向"
+                      content="领袖与精英敌人最大生命值+50%，第5层中的【险路恶敌】出现额外的【托生莲座】，让探索开启不同的方向"
                       effect="light"
                       placement="top"
                   >
                     <el-text tag="ins">【阿纳萨羯磨】</el-text>
                   </el-tooltip>
+                </div>
+                <div>
+                  <span class="optional tip">（提示）</span>
+                  若挑战失败，可以在后续的【狭路相逢】中消耗2构想重复进行挑战
                 </div>
               </el-timeline-item>
               <el-timeline-item :icon="BOSS" color="#8A0993">
@@ -1158,6 +1247,14 @@
                   >
                     <el-text tag="ins">“停止”</el-text>
                   </el-tooltip>
+                </div>
+                <div>
+                  <span class="optional tip">（提示）</span>
+                  可以尝试通过
+                  <el-tooltip content="立即获得上次探索遗留的最多5缕思绪" effect="light" placement="top">
+                    <el-text tag="ins">【无主的回忆】</el-text>
+                  </el-tooltip>
+                  获取上次探索所遗留的“绝望”/“拯救”/“停止”
                 </div>
               </el-timeline-item>
               <el-timeline-item :icon="MoreFilled" type="primary">
@@ -1267,6 +1364,10 @@ const selectedOption = ref(options[0])
 
   .optional.warning {
     color: #e6a23c;
+  }
+
+  .optional.tip {
+    color: #20ffa8;
   }
 
   :deep(li.el-timeline-item:last-child) {
