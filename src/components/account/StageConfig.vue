@@ -90,6 +90,8 @@ function loadingStageConfig() {
   // 合并本地配置
   stageConfig.value = getStageConfig(); // 合并配置
 
+  // console.log('stageConfig',stageConfig.value)
+
   stageConfig.value.useActivityStage = false
 
   let customItemMap = new Map()

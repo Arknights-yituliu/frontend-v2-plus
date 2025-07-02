@@ -1,5 +1,5 @@
-import { getUid } from "@/utils/user/userInfo.js";
-import { ref } from "vue";
+import {getUid} from "@/utils/user/userInfo.js";
+import {ref} from "vue";
 
 
 /**
@@ -7,6 +7,7 @@ import { ref } from "vue";
  */
 const defaultConfig = {
     source: 'penguin',
+    version:"v1.0",
 
     // 定价作战集
     useActivityStage: false,
@@ -162,9 +163,10 @@ let stageConfig = ref(parseConfig(stringifyConfig(defaultConfig)));
 /**
  * 获取关卡配置
  * @returns {Object} 用户配置
-*/
+ */
 function getStageConfig() {
     const cacheStageConfig = localStorage.getItem("StageConfig");
+
     if (cacheStageConfig) {
         // let config = parseConfig(cacheStageConfig);
         // if (!config.customItem) {
@@ -174,6 +176,11 @@ function getStageConfig() {
         // for (const key in config) {
         //     stageConfig.value[key] = config[key];
         // }
+        // console.log('userConfig',stageConfig.value)
+        const config = JSON.parse(cacheStageConfig);
+        if("v1.0"===config.version){
+            stageConfig.value = config
+        }
 
         return stageConfig.value;
     } else {
