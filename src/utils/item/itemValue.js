@@ -794,7 +794,7 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
                 }
             }
 
-            console.log({itemId,itemName,description,itemValue})
+            // console.log({itemId,itemName,description,itemValue})
             itemInfoList.push({
                 itemId:itemId,
                 itemName:itemName,

@@ -963,8 +963,8 @@
   },
   "mod_update_token_1": {
     "itemId": "mod_update_token_1",
-    "itemName": "数据增补仪",
-    "description": "数据增补条",
+    "itemName": "数据增补条",
+    "description": "模组升级材料",
     "list": [
       {
         "itemId": "AP_GAMEPLAY",

@@ -29,6 +29,11 @@
 }
 
 
+.table-striped tr:nth-child(even) {
+  background-color: rgb(var(--v-theme-primary),0.1); /* 浅灰色背景，可根据需求修改 */
+}
+
+
 @media screen and (max-width: 600px){
   .v-mobile-table{
     td{
