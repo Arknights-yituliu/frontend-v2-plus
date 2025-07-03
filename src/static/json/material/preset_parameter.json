@@ -7,68 +7,74 @@
       ],
       "paramDescription": [
         "龙门币按 CE-6 定价",
-        "EXP 按无人机定价（3 级站，无龙但裁缝）",
+        "EXP 按无人机定价",
         "精英材料主线定价"
       ],
-      "parameters": {
-        "orundumPricingStrategy": "ORUNDUM_PRICING_ORIGINITE_PRIME",
-        "originitePrimePricingStrategy": "ORIGINITE_PRIME_PRICING_ORUNDUM",
-        "kernelHeadhuntingPermitPricingStrategy": "KERNEL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE",
-        "lmdPricingStrategy": "LMD_PRICING_CE-6",
-        "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TRADING_POST",
-        "modUnlockTokenPricingStrategy": "MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE",
-        "recruitmentPermitPricingStrategy": "RECRUITMENT_PERMIT_PRICING_3_4",
-        "expeditedPlanPricingStrategy": "EXPEDITED_PLAN_PRICING_ZERO",
-        "furniturePartPricingStrategy": "FURNITURE_PART_PRICING_ZERO",
-        "useActivityAverageStage": false,
-        "workshopStrategy": {
-          "eliteMaterialT1toT2": {
-            "strategy": "WORKSHOP_STRATEGY_COMMON",
-            "byproductRateIncrease": 1
+      "parameters": [
+        {
+          "parameterName": "默认",
+          "buttonText": "应用",
+          "parameterSets": {
+            "orundumPricingStrategy": "ORUNDUM_PRICING_ORIGINITE_PRIME",
+            "originitePrimePricingStrategy": "ORIGINITE_PRIME_PRICING_ORUNDUM",
+            "kernelHeadhuntingPermitPricingStrategy": "KERNEL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE",
+            "lmdPricingStrategy": "LMD_PRICING_CE-6",
+            "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TRADING_POST",
+            "modUnlockTokenPricingStrategy": "MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE",
+            "recruitmentPermitPricingStrategy": "RECRUITMENT_PERMIT_PRICING_3_4",
+            "expeditedPlanPricingStrategy": "EXPEDITED_PLAN_PRICING_ZERO",
+            "furniturePartPricingStrategy": "FURNITURE_PART_PRICING_ZERO",
+            "useActivityAverageStage": false,
+            "workshopStrategy": {
+              "eliteMaterialT1toT2": {
+                "strategy": "WORKSHOP_STRATEGY_COMMON",
+                "byproductRateIncrease": 1
+              },
+              "eliteMaterialT2toT3": {
+                "strategy": "WORKSHOP_STRATEGY_COMMON",
+                "byproductRateIncrease": 1
+              },
+              "eliteMaterialT3toT4": {
+                "strategy": "WORKSHOP_STRATEGY_COMMON",
+                "byproductRateIncrease": 1
+              },
+              "eliteMaterialT4toT5": {
+                "strategy": "WORKSHOP_STRATEGY_COMMON",
+                "byproductRateIncrease": 1
+              },
+              "skillSummary1to2": {
+                "strategy": "WORKSHOP_STRATEGY_COMMON",
+                "byproductRateIncrease": 0.8
+              },
+              "skillSummary2to3": {
+                "strategy": "WORKSHOP_STRATEGY_COMMON",
+                "byproductRateIncrease": 0.8
+              },
+              "baseMaterial": {
+                "strategy": "WORKSHOP_STRATEGY_NCDEER_OBTAIN",
+                "byproductRateIncrease": null
+              },
+              "chip": {
+                "strategy": "WORKSHOP_STRATEGY_COMMON",
+                "byproductRateIncrease": 0.8
+              },
+              "chipPack": {
+                "strategy": "WORKSHOP_STRATEGY_COMMON",
+                "byproductRateIncrease": 0.8
+              }
+            },
+            "chipPreference": {
+              "TANK_MEDIC": "BALANCED",
+              "SNIPER_CASTER": "BALANCED",
+              "PIONEER_SUPPORT": "BALANCED",
+              "WARRIOR_SPECIAL": "BALANCED"
+            }
           },
-          "eliteMaterialT2toT3": {
-            "strategy": "WORKSHOP_STRATEGY_COMMON",
-            "byproductRateIncrease": 1
-          },
-          "eliteMaterialT3toT4": {
-            "strategy": "WORKSHOP_STRATEGY_COMMON",
-            "byproductRateIncrease": 1
-          },
-          "eliteMaterialT4toT5": {
-            "strategy": "WORKSHOP_STRATEGY_COMMON",
-            "byproductRateIncrease": 1
-          },
-          "skillSummary1to2": {
-            "strategy": "WORKSHOP_STRATEGY_COMMON",
-            "byproductRateIncrease": 0.8
-          },
-          "skillSummary2to3": {
-            "strategy": "WORKSHOP_STRATEGY_COMMON",
-            "byproductRateIncrease": 0.8
-          },
-          "baseMaterial": {
-            "strategy": "WORKSHOP_STRATEGY_NCDEER_OBTAIN",
-            "byproductRateIncrease": null
-          },
-          "chip": {
-            "strategy": "WORKSHOP_STRATEGY_COMMON",
-            "byproductRateIncrease": 0.8
-          },
-          "chipPack": {
-            "strategy": "WORKSHOP_STRATEGY_COMMON",
-            "byproductRateIncrease": 0.8
-          }
-        },
-        "chipPreference": {
-          "TANK_MEDIC": "BALANCED",
-          "SNIPER_CASTER": "BALANCED",
-          "PIONEER_SUPPORT": "BALANCED",
-          "WARRIOR_SPECIAL": "BALANCED"
+          "message": "已修改为默认配置",
+          "color": "primary",
+          "active": false
         }
-      },
-      "message": "已修改为默认配置",
-      "color": "primary",
-      "active": false
+      ]
     },
     {
       "name": "萌新",
@@ -82,15 +88,24 @@
         "EXP 按 LS-6 定价",
         "精英材料主线定价"
       ],
-      "parameters": {
-        "lmdPricingStrategy": "LMD_PRICING_CE-6",
-        "expPricingStrategy": "EXP_PRICING_LS-6",
-        "recruitmentPermitPricingStrategy": "RECRUITMENT_PERMIT_PRICING_3_4",
-        "useActivityAverageStage": false
-      },
-      "message": "已修改为萌新配置",
-      "color": "primary",
-      "active": false
+      "parameters": [
+        {
+          "parameterName": "默认",
+          "buttonText": "应用",
+          "parameterSets": {
+            "parameterName": "默认",
+            "parameterSets": {
+              "lmdPricingStrategy": "LMD_PRICING_CE-6",
+              "expPricingStrategy": "EXP_PRICING_LS-6",
+              "recruitmentPermitPricingStrategy": "RECRUITMENT_PERMIT_PRICING_3_4",
+              "useActivityAverageStage": false
+            }
+          },
+          "message": "已修改为萌新配置",
+          "color": "primary",
+          "active": false
+        }
+      ]
     },
     {
       "name": "成长中的博士",
@@ -101,17 +116,23 @@
       ],
       "paramDescription": [
         "龙门币按 CE-6 定价",
-        "EXP 按无人机定价（3 级站，无龙但裁缝）",
+        "EXP 按无人机定价",
         "精英材料主线定价"
       ],
-      "parameters": {
-        "lmdPricingStrategy": "LMD_PRICING_CE-6",
-        "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TRADING_POST",
-        "useActivityAverageStage": false
-      },
-      "message": "已修改为成长中的博士配置",
-      "color": "primary",
-      "active": false
+      "parameters": [
+        {
+          "parameterName": "默认",
+          "buttonText": "应用",
+          "parameterSets": {
+            "lmdPricingStrategy": "LMD_PRICING_CE-6",
+            "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TRADING_POST",
+            "useActivityAverageStage": false
+          },
+          "message": "已修改为成长中的博士配置",
+          "color": "primary",
+          "active": false
+        }
+      ]
     },
     {
       "name": "老登",
@@ -122,73 +143,297 @@
       ],
       "paramDescription": [
         "龙门币按 CE-6 定价",
-        "EXP 按无人机定价（3 级站，有龙但）",
+        "EXP 按基建定价",
         "精英材料活动定价"
       ],
-      "parameters": {
-        "lmdPricingStrategy": "LMD_PRICING_CE-6",
-        "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TRADING_POST_TEQUILA_2_PROVISO_2",
-        "expeditedPlanPricingStrategy": "EXPEDITED_PLAN_PRICING_ZERO",
-        "furniturePartPricingStrategy": "FURNITURE_PART_PRICING_ZERO",
-        "useActivityAverageStage": true
-      },
-      "message": "已修改为老登配置",
-      "color": "primary",
-      "active": false
+      "parameters": [
+        {
+          "parameterName": "默认",
+          "buttonText": "应用",
+          "parameterSets": {
+            "lmdPricingStrategy": "LMD_PRICING_CE-6",
+            "expPricingStrategy": "EXP_PRICING_BASE_LVL_3_TRADING_POST_TEQUILA_2_PROVISO_2",
+            "expeditedPlanPricingStrategy": "EXPEDITED_PLAN_PRICING_ZERO",
+            "furniturePartPricingStrategy": "FURNITURE_PART_PRICING_ZERO",
+            "useActivityAverageStage": true
+          },
+          "message": "已修改为老登配置",
+          "color": "primary",
+          "active": false
+        }
+      ]
     }
   ],
   [
     {
-      "name": "我会刷龙门币",
-      "description": [],
-      "paramDescription": [
-        "龙门币系数=1"
+      "name": "是否需要龙门币",
+      "description": [
+        "此处为最常用的快捷选项",
+        "若需定义龙门币的其它价值请移步下方"
       ],
-      "parameters": {
-        "lmdCoefficient": 1
-      },
-      "message": "龙门币系数已修改为1",
-      "color": "primary",
-      "active": false
+      "paramDescription": [
+        "需要：龙门币系数=1",
+        "不需要：龙门币系数=0"
+      ],
+      "parameters": [
+        {
+          "parameterName": "1",
+          "buttonText": "需要（默认）",
+          "parameterSets": {
+            "lmdCoefficient": 1
+          },
+          "message": "龙门币系数已修改为1",
+          "color": "primary",
+          "active": false
+        },
+        {
+          "parameterName": "0",
+          "buttonText": "不需要",
+          "parameterSets": {
+            "lmdCoefficient": 0
+          },
+          "message": "龙门币系数已修改为0",
+          "color": "primary",
+          "active": false
+        }
+      ]
     },
     {
-      "name": "我龙门币溢出",
-      "description": [],
-      "paramDescription": [
-        "龙门币系数=0"
+      "name": "是否需要经验书",
+      "description": [
+        "此处为最常用的快捷选项",
+        "若需定义经验书的其它价值请移步下方"
       ],
-      "parameters": {
-        "lmdCoefficient": 0
-      },
-      "message": "龙门币系数已修改为0",
-      "color": "primary",
-      "active": false
+      "paramDescription": [
+        "刷LS-6：经验书系数=1",
+        "基建够用：经验书系数=0.633",
+        "完全不需要：经验书系数=0"
+      ],
+      "parameters": [
+        {
+          "parameterName": "1",
+          "buttonText": "刷LS-6",
+          "parameterSets": {
+            "expCoefficient": 1
+          },
+          "message": "经验书系数已修改为1",
+          "color": "primary",
+          "active": false
+        },
+        {
+          "parameterName": "0.633",
+          "buttonText": "基建够用（默认）",
+          "parameterSets": {
+            "expCoefficient": 0.633
+          },
+          "message": "经验书系数已修改为默认",
+          "color": "primary",
+          "active": false
+        },
+        {
+          "parameterName": "0",
+          "buttonText": "完全不需要",
+          "parameterSets": {
+            "expCoefficient": 0
+          },
+          "message": "经验书系数已修改为0",
+          "color": "primary",
+          "active": false
+        }
+      ]
     },
     {
-      "name": "我会刷经验书",
-      "description": [],
-      "paramDescription": [
-        "经验书系数=0.9568"
+      "name": "精英材料主要获取来源",
+      "description": [
+        "一直以来，一图流以“随时都能取得的”常驻关卡作为计算基准",
+        "这里为在SideStory囤货的博士提供另一个计算方案",
+        "选择该方案可能会更贴近实际情况，但物品价值可能会有较大波动"
       ],
-      "parameters": {
-        "expCoefficient": 0.9568
-      },
-      "message": "经验书系数已修改为0.9568",
-      "color": "primary",
-      "active": false
+      "paramDescription": [
+        "常驻关卡：仅以主线等常驻关卡作为计算基准",
+        "SideStory：限时活动关卡也纳入计算基准"
+      ],
+      "parameters": [
+        {
+          "parameterName": "false",
+          "buttonText": "常驻关卡（曲谱）（默认）",
+          "parameterSets": {
+            "useActivityAverageStage": false
+          },
+          "message": "仅以主线等常驻关卡作为计算基准",
+          "color": "primary",
+          "active": false
+        },
+        {
+          "parameterName": "true",
+          "buttonText": "SideStory",
+          "parameterSets": {
+            "useActivityAverageStage": true
+          },
+          "message": "限时活动关卡也纳入计算基准",
+          "color": "primary",
+          "active": false
+        }
+      ]
     },
     {
-      "name": "我经验书溢出",
-      "description": [],
-      "paramDescription": [
-        "经验书系数=0"
+      "name": "是否有九色鹿（json没写完）",
+      "description": [
+        "真限定·加工站幻神",
+        "九色鹿精二与否不影响选择",
+        "鉴于九色鹿产能不足，合成紫、金材料视为使用年/芳汀/白铁/号角"
       ],
-      "parameters": {
-        "expCoefficient": 0
-      },
-      "message": "经验书系数已修改为0",
-      "color": "primary",
-      "active": false
+      "paramDescription": [
+        "有：合成绿、蓝材料均使用九色鹿垫心情",
+        "没有：合成绿、蓝材料均使用瑕光省龙门币"
+      ],
+      "parameters": [
+        {
+          "parameterName": "false",
+          "buttonText": "有",
+          "parameterSets": {
+            "useActivityAverageStage": false
+          },
+          "message": "仅以主线等常驻关卡作为计算基准",
+          "color": "primary",
+          "active": false
+        },
+        {
+          "parameterName": "true",
+          "buttonText": "没有",
+          "parameterSets": {
+            "useActivityAverageStage": true
+          },
+          "message": "限时活动关卡也纳入计算基准",
+          "color": "primary",
+          "active": false
+        }
+      ]
+    },
+    {
+      "name": "是否抽中坚寻访（json没写完）",
+      "description": [
+        "真限定·加工站幻神",
+        "九色鹿精二与否不影响选择",
+        "鉴于九色鹿产能不足，合成紫、金材料视为使用年/芳汀/白铁/号角"
+      ],
+      "paramDescription": [
+        "抽：38抽=216黄票，约1蓝抽=0.837黄抽",
+        "抽着玩：介于两者之间的取值，供参考之用，视为1蓝抽=0.5黄抽",
+        "完全不抽：中坚寻访价值视为0（或者1800蓝票=180黄票）"
+      ],
+      "parameters": [
+        {
+          "parameterName": "false",
+          "buttonText": "抽",
+          "parameterSets": {
+            "useActivityAverageStage": false
+          },
+          "message": "仅以主线等常驻关卡作为计算基准",
+          "color": "primary",
+          "active": false
+        },
+        {
+          "parameterName": "true",
+          "buttonText": "抽，但是抽着玩",
+          "parameterSets": {
+            "useActivityAverageStage": true
+          },
+          "message": "限时活动关卡也纳入计算基准",
+          "color": "primary",
+          "active": false
+        },
+        {
+          "parameterName": "true",
+          "buttonText": "完全不抽",
+          "parameterSets": {
+            "useActivityAverageStage": true
+          },
+          "message": "限时活动关卡也纳入计算基准",
+          "color": "primary",
+          "active": false
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "name": "模组数据块（json没写完）",
+      "paramDescription": [
+        "红票计价（默认）：视为120采购凭证的价值",
+        "黄票计价：视为20高级凭证的价值"
+      ],
+      "parameters": [
+        {
+          "buttonText": "红票计价（默认）",
+          "parameterSets": {
+            "lmdCoefficient": 1
+          },
+          "message": "龙门币系数已修改为1"
+        },
+        {
+          "buttonText": "黄票计价",
+          "parameterSets": {
+            "lmdCoefficient": 0
+          },
+          "message": "龙门币系数已修改为0"
+        }
+      ]
+    },
+    {
+      "name": "技巧概要（json没写完）",
+      "paramDescription": [
+        "CA-5计价（默认）：不够用，需要刷图，副产物出率视为18%",
+        "九色鹿计价：视为给九色鹿垫因果的价值",
+        "多到溢出：价值视为0"
+      ],
+      "parameters": [
+        {
+          "buttonText": "CA-5计价（默认）",
+          "parameterSets": {
+            "lmdCoefficient": 1
+          },
+          "message": "龙门币系数已修改为1"
+        },
+        {
+          "buttonText": "九色鹿计价",
+          "parameterSets": {
+            "lmdCoefficient": 0
+          },
+          "message": "龙门币系数已修改为0"
+        },
+        {
+          "buttonText": "多到溢出",
+          "parameterSets": {
+            "lmdCoefficient": 0
+          },
+          "message": "龙门币系数已修改为0"
+        }
+      ]
+    },
+    {
+      "name": "合成玉（json没写完）",
+      "paramDescription": [
+        "注意：合成玉的价值是一个很复杂的问题，这里进行了极大的简化",
+        "1玉=0.75理智（默认）：对于大部分博士，碎1石抽卡=少了135理智的材料",
+        "1玉=1.43理智（搓玉）：对于搓玉党来说，额外获得1合成玉=多了1.43理智的材料"
+      ],
+      "parameters": [
+        {
+          "buttonText": "1玉=0.75理智（默认）",
+          "parameterSets": {
+            "lmdCoefficient": 1
+          },
+          "message": "龙门币系数已修改为1"
+        },
+        {
+          "buttonText": "1玉=1.43理智（搓玉）",
+          "parameterSets": {
+            "lmdCoefficient": 0
+          },
+          "message": "龙门币系数已修改为0"
+        }
+      ]
     }
   ]
 ]

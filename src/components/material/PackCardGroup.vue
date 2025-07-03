@@ -1,5 +1,5 @@
 <script setup>
-import {ref, watch} from "vue"
+import { ref, watch } from "vue"
 import ItemImage from "@/components/sprite/ItemImage.vue";
 
 const id = generateRandomString(5)
@@ -64,8 +64,8 @@ watch(() => window.screen.width, (newVal) => {
         <div class="pack-card-part-left" @click="displayPackContent(packInfo.id)">
           <img :src="getPackImageLink(packInfo.imageLink)" alt="" class="pack-image">
           <span class="pack-display-name">
-              {{ packInfo.officialName }}
-            </span>
+            {{ packInfo.officialName }}
+          </span>
           <!-- 角标部分 -->
           <div class="pack-corner corner-orange"> ￥{{ packInfo.price }}</div>
         </div>
@@ -104,11 +104,31 @@ watch(() => window.screen.width, (newVal) => {
           <span>X{{ packInfo.tenGachaTicket }}</span>
         </div>
         <div class="pack-content-material">
-          <div class="pack-content-material-item" v-for="(item, index) in packInfo.packContent" :key="index">
-<!--            <ItemImage :item-id="item.itemId" :size="40" :mobile-size="30" v-show="!item.custom"></ItemImage>-->
-            <span class="pack-content-material-item-name" >{{ item.itemName }}</span>
-            <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span>
-          </div>
+          <!-- 新增详情表格取代之前的列表 -->
+          <!-- 此处有bug，列表缺少源石、合成玉、单抽、十连 -->
+          <v-table density="compact">
+            <thead>
+              <tr>
+                <th class="text-left">名称</th>
+                <th class="text-left">数量</th>
+                <th class="text-left">总价值</th>
+                <th class="text-left">价值占比</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in packInfo.packContent" :key="item.itemId">
+                <td>{{ item.itemName }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>114理智</td>
+                <td>51.4%</td>
+              </tr>
+            </tbody>
+          </v-table>
+          <!-- <div class="pack-content-material-item" v-for="(item, index) in packInfo.packContent" :key="index"> -->
+          <!--            <ItemImage :item-id="item.itemId" :size="40" :mobile-size="30" v-show="!item.custom"></ItemImage>-->
+          <!-- <span class="pack-content-material-item-name">{{ item.itemName }}</span> -->
+          <!-- <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span> -->
+          <!-- </div> -->
         </div>
       </div>
 
