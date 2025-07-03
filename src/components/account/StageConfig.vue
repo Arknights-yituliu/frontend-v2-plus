@@ -1052,7 +1052,7 @@ onMounted(() => {
                       精英材料 <span class="gray">白</span> → <span class="green">绿</span>
                     </div>
                   </template>
-                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
                   <v-text-field ref="eliteMaterialT1toT2Input"
@@ -1076,7 +1076,7 @@ onMounted(() => {
                       精英材料 <span class="green">绿</span> → <span class="blue">蓝</span>
                     </div>
                   </template>
-                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
                   <v-text-field ref="eliteMaterialT2toT3Input"
@@ -1153,7 +1153,7 @@ onMounted(() => {
                       <p><span class="gray">技巧概要·卷1</span> → <span class="green">技巧概要·卷2</span></p>
                     </div>
                   </template>
-                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
                   <v-text-field ref="skillSummary1to2Input"
                     v-model.number="stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncrease"
@@ -1176,7 +1176,7 @@ onMounted(() => {
                       <p><span class="green">技巧概要·卷2</span> → <span class="blue">技巧概要·卷3</span></p>
                     </div>
                   </template>
-                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
                   <v-text-field ref="skillSummary2to3Input"
                     v-model.number="stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncrease"
@@ -1199,7 +1199,7 @@ onMounted(() => {
                       <p>加工基建材料</p>
                     </div>
                   </template>
-                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用煌等通用干员" disabled></v-radio>
                   <v-text-field ref="baseMaterialInput"
                     v-model.number="stageConfig.workshopStrategy.baseMaterial.byproductRateIncrease"
@@ -1222,7 +1222,7 @@ onMounted(() => {
                       <p>加工芯片</p>
                     </div>
                   </template>
-                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
                   <v-text-field ref="chipInput"
@@ -1244,7 +1244,7 @@ onMounted(() => {
                       <p>加工芯片组</p>
                     </div>
                   </template>
-                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
                   <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
                   <v-text-field ref="chipPackInput"

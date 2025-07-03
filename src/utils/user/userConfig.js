@@ -84,7 +84,7 @@ const defaultConfig = {
             byproductRateIncrease: 0.8,
         },
         baseMaterial: {
-            strategy: "WORKSHOP_STRATEGY_NCDEER_OBTAIN",
+            strategy: "WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN",
             byproductRateIncrease: null,
         },
         chip: {
