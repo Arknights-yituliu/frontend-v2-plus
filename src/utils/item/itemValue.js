@@ -314,7 +314,7 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
              */
             let byproductRate;
             switch (strategy) {
-                case "WORKSHOP_STRATEGY_NCDEER_OBTAIN":
+                case "WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN":
                     byproductRate = 0.1; break;
                 case "WORKSHOP_STRATEGY_BLEMISHINE":
                     byproductRate = 0.14; break;
@@ -337,7 +337,7 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
              * 期望获取的因果数量
              * - 使用九色鹿获取因果时，期望获取的因果数量 = 0.9 * 加工消耗的心情
              */
-            const expectedCausalityObtained = (strategy === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9 * morale) : (0);
+            const expectedCausalityObtained = (strategy === "WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN") ? (0.9 * morale) : (0);
 
             /** 物品新价值 */
             let thisItemValue = 0.0;
@@ -601,7 +601,7 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
                 strongChipValue = (6 - byproductRate) / 5 * 18 * (1 - itemValue4001 * 12);
                 weakChipValue = (4 + byproductRate) / 5 * 18 * (1 - itemValue4001 * 12);
                 break;
-            case "WORKSHOP_STRATEGY_NCDEER_OBTAIN":
+            case "WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN":
                 strongChipValue = ((6 - 0.1) * 18 * (1 - itemValue4001 * 12) - causalityValue) / 5;
                 weakChipValue = ((4 + 0.1) * 18 * (1 - itemValue4001 * 12) + causalityValue) / 5;
                 break;
@@ -621,7 +621,7 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
                 strongChipPackValue = (6 - byproductRate) / 5 * 36 * (1 - itemValue4001 * 12);
                 weakChipPackValue = (4 + byproductRate) / 5 * 36 * (1 - itemValue4001 * 12);
                 break;
-            case "WORKSHOP_STRATEGY_NCDEER_OBTAIN":
+            case "WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN":
                 strongChipPackValue = ((6 - 0.1) * 36 * (1 - itemValue4001 * 12) - 2 * causalityValue) / 5;
                 weakChipPackValue = ((4 + 0.1) * 36 * (1 - itemValue4001 * 12) + 2 * causalityValue) / 5;
                 break;
@@ -766,15 +766,17 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
          * @returns {{itemValue3301: number, itemValue3302: number, itemValue3303: number}}
          */
         function _calculateSkillSummaryValue(strategy1to2, rateIncrease1to2, strategy2to3, rateIncrease2to3, lmdValue, causalityValue) {
-            const a1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncrease1to2));
-            const a2 = (strategy2to3 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncrease2to3));
-            const b1 = (strategy1to2 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9) : (0);
-            const b2 = (strategy2to3 === "WORKSHOP_STRATEGY_NCDEER_OBTAIN") ? (0.9) : (0);
+            const a1 = (strategy1to2 === "WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncrease1to2));
+            const a2 = (strategy2to3 === "WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN") ? (1.1) : (1 + 0.1 * (1 + rateIncrease2to3));
+            const b1 = (strategy1to2 === "WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN") ? (0.9) : (0);
+            const b2 = (strategy2to3 === "WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN") ? (0.9) : (0);
             const itemValue3302 = (30 * (1 - lmdValue * 12) - b1 * causalityValue / 2 + 4 * b2 * causalityValue / a2) / (a1 / 2 + 3 / 2 + 6 / a2);
             const itemValue3301 = (a1 * itemValue3302 + b1 * causalityValue) / 3;
             const itemValue3303 = (3 * itemValue3302 - 2 * b2 * causalityValue) / a2;
 
-
+            itemValue3301
+            itemValue3302
+            itemValue3303
 
 
             return { itemValue3301, itemValue3302, itemValue3303 };

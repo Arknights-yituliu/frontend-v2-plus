@@ -1074,63 +1074,63 @@ onMounted(() => {
       </v-expansion-panel>
 
 
-      <!-- 前面的区域以后再来探索吧 -->
-      <span v-if="false">
-        <!-- 折叠面板：自定义加工站策略 -->
-        <v-expansion-panel value="custom-workshop-strategy">
-          <v-expansion-panel-title>
-            自定义加工站策略
-          </v-expansion-panel-title>
-          <v-expansion-panel-text class="expansion-panel-text">
-            <span class="card-description">
-              自定义加工站策略的描述
-            </span>
-            <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => eliteMaterialT1toT2Input?.focus());
-              }
-            }">
-              <template v-slot:label>
-                <div>
-                  <ItemImage item-id="30012"></ItemImage>
-                  精英材料 <span class="gray">白</span> → <span class="green">绿</span>
-                </div>
-              </template>
-              <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
-              <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
-              <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
-              <v-text-field ref="eliteMaterialT1toT2Input"
-                v-model.number="stageConfig.workshopStrategy.eliteMaterialT1toT2.byproductRateIncrease"
-                :rules="numberGe0"
-                @focus="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
-                style="margin-left: 40px; width: 200px;">
-              </v-text-field>
-            </v-radio-group>
+          <!-- 前面的区域以后再来探索吧 -->
+          <span v-if="false">
+            <!-- 折叠面板：自定义加工站策略 -->
+            <v-expansion-panel value="custom-workshop-strategy">
+              <v-expansion-panel-title>
+                自定义加工站策略
+              </v-expansion-panel-title>
+              <v-expansion-panel-text class="expansion-panel-text">
+                <span class="card-description">
+                  自定义加工站策略的描述
+                </span>
+                <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => eliteMaterialT1toT2Input?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="30012"></ItemImage>
+                      精英材料 <span class="gray">白</span> → <span class="green">绿</span>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
+                  <v-text-field ref="eliteMaterialT1toT2Input"
+                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT1toT2.byproductRateIncrease"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-            <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => eliteMaterialT2toT3Input?.focus());
-              }
-            }">
-              <template v-slot:label>
-                <div>
-                  <ItemImage item-id="30013"></ItemImage>
-                  精英材料 <span class="green">绿</span> → <span class="blue">蓝</span>
-                </div>
-              </template>
-              <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
-              <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
-              <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
-              <v-text-field ref="eliteMaterialT2toT3Input"
-                v-model.number="stageConfig.workshopStrategy.eliteMaterialT2toT3.byproductRateIncrease"
-                :rules="numberGe0"
-                @focus="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
-                style="margin-left: 40px; width: 200px;">
-              </v-text-field>
-            </v-radio-group>
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => eliteMaterialT2toT3Input?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="30013"></ItemImage>
+                      精英材料 <span class="green">绿</span> → <span class="blue">蓝</span>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
+                  <v-text-field ref="eliteMaterialT2toT3Input"
+                    v-model.number="stageConfig.workshopStrategy.eliteMaterialT2toT3.byproductRateIncrease"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
             <v-divider></v-divider>
             <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy" @change="() => {
@@ -1185,115 +1185,119 @@ onMounted(() => {
               </v-text-field>
             </v-radio-group>
 
-            <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary1to2.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.skillSummary1to2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => skillSummary1to2Input?.focus());
-              }
-            }">
-              <template v-slot:label>
-                <div>
-                  <ItemImage item-id="3302"></ItemImage>
-                  <p><span class="gray">技巧概要·卷1</span> → <span class="green">技巧概要·卷2</span></p>
-                </div>
-              </template>
-              <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
-              <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
-              <v-text-field ref="skillSummary1to2Input"
-                v-model.number="stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncrease" :rules="numberGe0"
-                @focus="stageConfig.workshopStrategy.skillSummary1to2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
-                style="margin-left: 40px; width: 200px;">
-              </v-text-field>
-            </v-radio-group>
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary1to2.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.skillSummary1to2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => skillSummary1to2Input?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="3302"></ItemImage>
+                      <p><span class="gray">技巧概要·卷1</span> → <span class="green">技巧概要·卷2</span></p>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
+                  <v-text-field ref="skillSummary1to2Input"
+                    v-model.number="stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncrease"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.skillSummary1to2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-            <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary2to3.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.skillSummary2to3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => skillSummary2to3Input?.focus());
-              }
-            }">
-              <template v-slot:label>
-                <div>
-                  <ItemImage item-id="3303"></ItemImage>
-                  <p><span class="green">技巧概要·卷2</span> → <span class="blue">技巧概要·卷3</span></p>
-                </div>
-              </template>
-              <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
-              <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
-              <v-text-field ref="skillSummary2to3Input"
-                v-model.number="stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncrease" :rules="numberGe0"
-                @focus="stageConfig.workshopStrategy.skillSummary2to3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
-                style="margin-left: 40px; width: 200px;">
-              </v-text-field>
-            </v-radio-group>
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary2to3.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.skillSummary2to3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => skillSummary2to3Input?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="3303"></ItemImage>
+                      <p><span class="green">技巧概要·卷2</span> → <span class="blue">技巧概要·卷3</span></p>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
+                  <v-text-field ref="skillSummary2to3Input"
+                    v-model.number="stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncrease"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.skillSummary2to3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-            <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.baseMaterial.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.baseMaterial.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => baseMaterialInput?.focus());
-              }
-            }">
-              <template v-slot:label>
-                <div>
-                  <ItemImage item-id="3112"></ItemImage>
-                  <p>加工基建材料</p>
-                </div>
-              </template>
-              <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
-              <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用煌等通用干员" disabled></v-radio>
-              <v-text-field ref="baseMaterialInput"
-                v-model.number="stageConfig.workshopStrategy.baseMaterial.byproductRateIncrease" :rules="numberGe0"
-                @focus="stageConfig.workshopStrategy.baseMaterial.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                label="副产品出率提升量" hint="煌 0.8" variant="outlined" density="compact"
-                style="margin-left: 40px; width: 200px;" disabled>
-              </v-text-field>
-            </v-radio-group>
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.baseMaterial.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.baseMaterial.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => baseMaterialInput?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="3112"></ItemImage>
+                      <p>加工基建材料</p>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用煌等通用干员" disabled></v-radio>
+                  <v-text-field ref="baseMaterialInput"
+                    v-model.number="stageConfig.workshopStrategy.baseMaterial.byproductRateIncrease"
+                    :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.baseMaterial.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="煌 0.8" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;" disabled>
+                  </v-text-field>
+                </v-radio-group>
 
-            <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.chip.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.chip.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => chipInput?.focus());
-              }
-            }">
-              <template v-slot:label>
-                <div>
-                  <ItemImage item-id="3211"></ItemImage>
-                  <p>加工芯片</p>
-                </div>
-              </template>
-              <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
-              <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
-              <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
-              <v-text-field ref="chipInput" v-model.number="stageConfig.workshopStrategy.chip.byproductRateIncrease"
-                :rules="numberGe0" @focus="stageConfig.workshopStrategy.chip.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                label="副产品出率提升量" hint="风笛 0.8" variant="outlined" density="compact"
-                style="margin-left: 40px; width: 200px;">
-              </v-text-field>
-            </v-radio-group>
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.chip.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.chip.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => chipInput?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="3211"></ItemImage>
+                      <p>加工芯片</p>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
+                  <v-text-field ref="chipInput"
+                    v-model.number="stageConfig.workshopStrategy.chip.byproductRateIncrease" :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.chip.strategy = 'WORKSHOP_STRATEGY_COMMON'" label="副产品出率提升量"
+                    hint="风笛 0.8" variant="outlined" density="compact" style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
-            <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.chipPack.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.chipPack.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => chipPackInput?.focus());
-              }
-            }">
-              <template v-slot:label>
-                <div>
-                  <ItemImage item-id="3212"></ItemImage>
-                  <p>加工芯片组</p>
-                </div>
-              </template>
-              <v-radio value="WORKSHOP_STRATEGY_NCDEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
-              <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
-              <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
-              <v-text-field ref="chipPackInput"
-                v-model.number="stageConfig.workshopStrategy.chipPack.byproductRateIncrease" :rules="numberGe0"
-                @focus="stageConfig.workshopStrategy.chipPack.strategy = 'WORKSHOP_STRATEGY_COMMON'" label="副产品出率提升量"
-                hint="风笛 0.8" variant="outlined" density="compact" style="margin-left: 40px; width: 200px;">
-              </v-text-field>
-            </v-radio-group>
+                <v-divider></v-divider>
+                <v-radio-group v-model="stageConfig.workshopStrategy.chipPack.strategy" @change="() => {
+                  if (stageConfig.workshopStrategy.chipPack.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => chipPackInput?.focus());
+                  }
+                }">
+                  <template v-slot:label>
+                    <div>
+                      <ItemImage item-id="3212"></ItemImage>
+                      <p>加工芯片组</p>
+                    </div>
+                  </template>
+                  <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
+                  <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
+                  <v-text-field ref="chipPackInput"
+                    v-model.number="stageConfig.workshopStrategy.chipPack.byproductRateIncrease" :rules="numberGe0"
+                    @focus="stageConfig.workshopStrategy.chipPack.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                    label="副产品出率提升量" hint="风笛 0.8" variant="outlined" density="compact"
+                    style="margin-left: 40px; width: 200px;">
+                  </v-text-field>
+                </v-radio-group>
 
             <v-divider></v-divider>
             <v-radio-group v-model="stageConfig.chipPreference.TANK_MEDIC">
