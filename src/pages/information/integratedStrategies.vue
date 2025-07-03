@@ -38,10 +38,11 @@
                   <el-tooltip content="第4层末尾的【古堡馈赠】前可能遭遇" effect="light" placement="top"
                   >
                     <el-link
+                        :underline="false"
                         href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%A7%A3%E8%84%B1%EF%BC%9F"
                         type="primary"
                     >
-                      <el-text tag="ins">“解脱？”</el-text>
+                      <el-text tag="ins" type="primary">“解脱？”</el-text>
                     </el-link>
                   </el-tooltip>
                   ，选择
@@ -119,10 +120,11 @@
                   <el-tooltip content="第3层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
                     <el-link
+                        :underline="false"
                         href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%B5%B4%E5%AE%B4"
                         type="primary"
                     >
-                      <el-text tag="ins">“赴宴”</el-text>
+                      <el-text tag="ins" type="primary">“赴宴”</el-text>
                     </el-link>
                   </el-tooltip>
                   选“白得一套衣服”获得
@@ -189,10 +191,11 @@
                               placement="top"
                   >
                     <el-link
+                        :underline="false"
                         href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%88%AB%E6%89%93%E6%89%B0%E4%BB%96%E4%BB%AC"
                         type="primary"
                     >
-                      <el-text tag="ins">“别打扰他们”</el-text>
+                      <el-text tag="ins" type="primary">“别打扰他们”</el-text>
                     </el-link>
                   </el-tooltip>
                   ，选择“靠近听听他们在说什么”，进入特殊战斗
@@ -289,10 +292,11 @@
                   <el-tooltip content="在第3层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
                     <el-link
+                        :underline="false"
                         href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%8B%82%E5%BE%92%E5%A6%84%E5%BF%B5"
                         type="primary"
                     >
-                      <el-text tag="ins">“狂徒妄念”</el-text>
+                      <el-text tag="ins" type="primary">“狂徒妄念”</el-text>
                     </el-link>
                   </el-tooltip>
                   ，选择“愤怒”（-2希望）或“呼号”（投掷点数>1），获得
@@ -331,10 +335,11 @@
                   <el-tooltip content="在持有【海潮的气息】时，在抵达第5层前可能遭遇" effect="light" placement="top"
                   >
                     <el-link
+                        :underline="false"
                         href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E9%AA%91%E5%A3%AB%E4%BB%8D%E5%9C%A8"
                         type="primary"
                     >
-                      <el-text tag="ins">“骑士仍在”</el-text>
+                      <el-text tag="ins" type="primary">“骑士仍在”</el-text>
                     </el-link>
                   </el-tooltip>
                   ，并选择“反抗”获得
@@ -383,10 +388,11 @@
                   <el-tooltip content="在第3层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
                     <el-link
+                        :underline="false"
                         href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%BC%80%E7%AB%AF"
                         type="primary"
                     >
-                      <el-text tag="ins">“开端”</el-text>
+                      <el-text tag="ins" type="primary">“开端”</el-text>
                     </el-link>
                   </el-tooltip>
                   ，选择“决定潜入深海”，获得
@@ -403,10 +409,11 @@
                               placement="top"
                   >
                     <el-link
+                        :underline="false"
                         href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%B7%B1%E8%93%9D%E4%B9%8B%E5%BF%83"
                         type="primary"
                     >
-                      <el-text tag="ins">“深蓝之心”</el-text>
+                      <el-text tag="ins" type="primary">“深蓝之心”</el-text>
                     </el-link>
                   </el-tooltip>
                   ，选择“搜寻园林”，获得
@@ -425,10 +432,11 @@
                   <el-tooltip content="第5层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
                     <el-link
+                        :underline="false"
                         href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%B5%9E%E6%AD%8C"
                         type="primary"
                     >
-                      <el-text tag="ins">“赞歌”</el-text>
+                      <el-text tag="ins" type="primary">“赞歌”</el-text>
                     </el-link>
                   </el-tooltip>
                   ，选择“亲吻猎人们的额头并取走遗物”，获得
@@ -460,10 +468,11 @@
                   <el-tooltip content="在第3层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
                     <el-link
+                        :underline="false"
                         href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%BC%80%E7%AB%AF"
                         type="primary"
                     >
-                      <el-text tag="ins">“开端”</el-text>
+                      <el-text tag="ins" type="primary">“开端”</el-text>
                     </el-link>
                   </el-tooltip>
                   ，选择“‘深蓝’？！”，获得
@@ -482,10 +491,11 @@
                   <el-tooltip content="在抵达第5层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
                     <el-link
+                        :underline="false"
                         href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%B7%B1%E8%93%9D%E4%BB%AA%E5%BC%8F"
                         type="primary"
                     >
-                      <el-text tag="ins">“深蓝仪式”</el-text>
+                      <el-text tag="ins" type="primary">“深蓝仪式”</el-text>
                     </el-link>
                   </el-tooltip>
                   ，选择“关闭危险流程”，获得30灯火，或选择“不做任何改动”获得
@@ -504,10 +514,11 @@
                   <el-tooltip content="在第4层开始至第5层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                   >
                     <el-link
+                        :underline="false"
                         href="https://prts.wiki/w/%E6%B0%B4%E6%9C%88%E4%B8%8E%E6%B7%B1%E8%93%9D%E4%B9%8B%E6%A0%91/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%8D%87%E5%8D%8E"
                         type="primary"
                     >
-                      <el-text tag="ins">“升华”</el-text>
+                      <el-text tag="ins" type="primary">“升华”</el-text>
                     </el-link>
                   </el-tooltip>
                   ，选择
