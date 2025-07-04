@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from "vue"
 import ItemImage from "@/components/sprite/ItemImage.vue";
+import {formatNumber} from "../../utils/format.js";
 
 const id = generateRandomString(5)
 
@@ -116,11 +117,11 @@ watch(() => window.screen.width, (newVal) => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in packInfo.packContent" :key="item.itemId">
+              <tr v-for="item in packInfo.packContentVO" :key="item.itemId">
                 <td>{{ item.itemName }}</td>
                 <td>{{ item.quantity }}</td>
-                <td>114理智</td>
-                <td>51.4%</td>
+                <td>{{ formatNumber(item.apValue,1) }}</td>
+                <td>{{ formatNumber(item.itemRatio*100,1) }}%</td>
               </tr>
             </tbody>
           </v-table>

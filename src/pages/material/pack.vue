@@ -11,6 +11,7 @@ import '/src/assets/css/material/pack.scss';
 import '/src/assets/css/material/pack.phone.scss';
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import NoticeBoard from "@/components/layout/NoticeBoard.vue";
+import {calculatePackEfficiency} from "@/utils/item/packEfficiency.js";
 
 const date = new Date() // 当前日期
 const fixedPacks = ref({})
@@ -48,6 +49,7 @@ const filteredPackMap = ref(new Map())
 
 //缓存的礼包数据，用于切换中坚性价比的数据时，直接用这个数据去覆盖
 let packInfoVOListCache = []
+let packInfoResponseData = []
 //礼包性价比数据
 let packInfoVOList = []
 //当前在售的礼包性价比数据，用于礼包总表
@@ -62,7 +64,7 @@ function loadingItemValue() {
   //获取本地计算的材料价值
   itemCache.getItemInfoMapCacheByConfig(stageConfig).then(response => {
     itemValueMap = response
-    console.log(itemValueMap)
+
     getPackInfoData()
   })
 }
@@ -77,9 +79,10 @@ async function getPackInfoData() {
   packInfoVOList = []
   // 等待获取接口返回的全部礼包信息
   const data = await packInfoCache.listPackInfo()
+  packInfoResponseData = data
   //先计算礼包的性价比
   for (const item of data) {
-    const packInfoVO = _packPromotionRatioCalc(item)
+    const packInfoVO = calculatePackEfficiency(item,itemValueMap,displayPackEfficiencyFlag.value,isKernelValuable.value)
     packInfoVOList.push(packInfoVO)
     packInfoVOListCache.push(deepClone(packInfoVO))
   }
@@ -87,112 +90,61 @@ async function getPackInfoData() {
   //礼包分类
   collectPackInfoVO()
 
-
-  /**
-   * 根据传入的礼包算出性价比
-   * @param packInfoVO 礼包基本信息
-   * @returns {*}  礼包各种性价比
-   * @private
-   */
-  function _packPromotionRatioCalc(packInfoVO) {
-    // 源石性价比基准
-    const eachOriginalOriginiumPrice = 648 / 185.0;
-    // 抽卡性价比基准
-    const eachOriginalDrawPrice = 648.0 / 185 / 0.3;
-
-    let draws = 0.0; // 抽数
-    let drawPrice = 0.0; // 每一抽价格
-    let packedOriginiumPrice = 0.0; // 每源石（折算物资后）价格
-    let drawEfficiency = 0.0; // 仅抽卡性价比
-    let packEfficiency = 0.0; // 综合性价比
-    let packedOriginium = 0.0; // 礼包总价值折合成源石
-
-    let drawsKernel = 0.0; // 抽数（含蓝抽）
-    let drawPriceKernel = 0.0; // 每一抽价格（含蓝抽）
-    let packedOriginiumPriceKernel = 0.0; // 每源石（折算物资后）价格（含蓝抽）
-    let drawEfficiencyKernel = 0.0; // 仅抽卡性价比（含蓝抽）
-    let packEfficiencyKernel = 0.0; // 综合性价比（含蓝抽）
-    let packedOriginiumKernel = 0.0; // 礼包总价值折合成源石（含蓝抽）
-    let originiumUnitPrice = 0.0;
-
-    let apCount = 0.0; // 总价值（理智）
-    let apCountKernel = 0.0; // 总价值（理智，含蓝抽）
-
-    // 礼包内的物品的集合
-    const packContentVOList = packInfoVO.packContent || [];
-    // 直接计算抽数
-    draws = (packInfoVO.orundum || 0) / 600 + (packInfoVO.originium || 0) * 0.3 + (packInfoVO.gachaTicket || 0) + (packInfoVO.tenGachaTicket || 0) * 10;
-    apCount += draws * 450;
-    drawsKernel += draws;
-    apCountKernel += apCount;
-
-    if (packContentVOList.length > 0) {
-      for (let i = 0; i < packContentVOList.length; i++) {
-        const packContentVO = packContentVOList[i];
-
-        // 判断是否有不存在物品表中的物品
-        if (itemValueMap.get(packContentVO.itemId)) {
-          const itemValue = itemValueMap.get(packContentVO.itemId);
-          // 蓝抽单独计算
-          if (packContentVO.itemId === "classic_gacha") {
-            drawsKernel += packContentVO.quantity;
-          } else if (packContentVO.itemId === "classic_gacha_10") {
-            drawsKernel += packContentVO.quantity * 10;
-          } else {
-            apCount += itemValue * packContentVO.quantity;
-          }
-          apCountKernel += itemValue * packContentVO.quantity;
-        }
-      }
-    }
-
-    // 总价值计算
-    packedOriginium = apCount / 135; // 总源石
-    packedOriginiumKernel += apCountKernel / 135; // 总源石（含蓝抽）
-
-    if (packInfoVO.originium > 0) {
-      originiumUnitPrice = packInfoVO.price / packInfoVO.originium
-    }
-
-
-    // 每源石花费计算
-    packedOriginiumPrice = packedOriginium > 0 ? packInfoVO.price / packedOriginium : 0;
-    packedOriginiumPriceKernel = packedOriginiumKernel > 0 ? packInfoVO.price / packedOriginiumKernel : 0;
-
-    // 综合性价比计算
-    packEfficiency = packedOriginiumPrice > 0 ? eachOriginalOriginiumPrice / packedOriginiumPrice : 0;
-    packEfficiencyKernel = packedOriginiumPriceKernel > 0 ? eachOriginalOriginiumPrice / packedOriginiumPriceKernel : 0;
-
-    // 抽卡性价比计算
-    drawPrice = draws > 0 ? packInfoVO.price / draws : 0;
-    drawEfficiency = drawPrice > 0 ? eachOriginalDrawPrice / drawPrice : 0;
-
-    // 抽卡性价比计算(含蓝抽)
-    drawPriceKernel = drawsKernel > 0 ? packInfoVO.price / drawsKernel : 0;
-    drawEfficiencyKernel = drawPriceKernel > 0 ? eachOriginalDrawPrice / drawPriceKernel : 0;
-
-    // 设置返回值
-    packInfoVO.draws = draws;
-    packInfoVO.drawPrice = drawPrice;
-    packInfoVO.packedOriginiumPrice = packedOriginiumPrice;
-    packInfoVO.drawEfficiency = drawEfficiency;
-    packInfoVO.packedOriginium = packedOriginium;
-    packInfoVO.packEfficiency = packEfficiency;
-
-    packInfoVO.drawsKernel = drawsKernel;
-    packInfoVO.drawPriceKernel = drawPriceKernel;
-    packInfoVO.packedOriginiumPriceKernel = packedOriginiumPriceKernel;
-    packInfoVO.drawEfficiencyKernel = drawEfficiencyKernel;
-    packInfoVO.packedOriginiumKernel = packedOriginiumKernel;
-    packInfoVO.packEfficiencyKernel = packEfficiencyKernel;
-    packInfoVO.originiumUnitPrice = originiumUnitPrice;
-
-    return packInfoVO
-  }
 }
 
 
 let displayPackEfficiencyFlag = ref(false)
+
+
+let isKernelValuable = ref(false)
+
+function displayPackEfficiency() {
+  let list = []
+  for(const item of packInfoResponseData){
+    const packInfoVO = calculatePackEfficiency(item,itemValueMap,displayPackEfficiencyFlag.value,isKernelValuable.value)
+    list.push(packInfoVO)
+  }
+
+  packInfoVOList = list
+  collectPackInfoVO()
+}
+
+//如果是true就覆写数据，如果是false就用原始数据重置
+function changeKernelValue() {
+
+  let list = []
+  for(const item of packInfoResponseData){
+    const packInfoVO = calculatePackEfficiency(item,itemValueMap,displayPackEfficiencyFlag.value,isKernelValuable.value)
+    list.push(packInfoVO)
+  }
+
+  packInfoVOList = list
+
+  // if (isKernelValuable.value) {
+  //   for (const pack of packInfoVOList) {
+  //     pack.draws = pack.drawsKernel
+  //     pack.packEfficiency = pack.packEfficiencyKernel
+  //     pack.packedOriginium = pack.packedOriginiumKernel
+  //     pack.packedOriginiumPrice = pack.packedOriginiumPriceKernel
+  //     pack.drawEfficiency = pack.drawEfficiencyKernel
+  //     pack.drawPrice = pack.drawPriceKernel
+  //     pack.packContentVO = pack.packContentContainsKernelVO
+  //   }
+  // } else {
+  //   packInfoVOList = deepClone(packInfoVOListCache)
+  // }
+
+  collectPackInfoVO()
+}
+
+// 筛选按钮是否激活
+const buttonActive = (v) => {
+  if (selectedPackTag.value.includes(v) || selectedPackSaleDate.value.includes(v) || selectedPackSalePrice.value.includes(v)) {
+    return 'elevated'
+  }
+  return 'tonal'
+}
+
 
 /**
  * 分类礼包
@@ -279,39 +231,6 @@ function collectPackInfoVO() {
   filterPacks()
 }
 
-let isKernelValuable = ref(false)
-
-function displayPackEfficiency() {
-  collectPackInfoVO()
-}
-
-//如果是true就覆写数据，如果是false就用原始数据重置
-function changeKernelValue() {
-
-  if (isKernelValuable.value) {
-    for (const pack of packInfoVOList) {
-      pack.draws = pack.drawsKernel
-      pack.packEfficiency = pack.packEfficiencyKernel
-      pack.packedOriginium = pack.packedOriginiumKernel
-      pack.packedOriginiumPrice = pack.packedOriginiumPriceKernel
-      pack.drawEfficiency = pack.drawEfficiencyKernel
-      pack.drawPrice = pack.drawPriceKernel
-    }
-  } else {
-
-    packInfoVOList = deepClone(packInfoVOListCache)
-  }
-
-  collectPackInfoVO()
-}
-
-// 筛选按钮是否激活
-const buttonActive = (v) => {
-  if (selectedPackTag.value.includes(v) || selectedPackSaleDate.value.includes(v) || selectedPackSalePrice.value.includes(v)) {
-    return 'elevated'
-  }
-  return 'tonal'
-}
 
 // 筛选礼包: 当前筛选逻辑是按照之前的"满足其中任何一个条件的礼包都会展示", 而不是"同时满足所有筛选条件的礼包才展示"
 const filterPacks = () => {

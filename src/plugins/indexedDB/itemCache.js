@@ -70,7 +70,7 @@ async function getItemInfoMapCacheByConfig(stageConfig, forceRefresh = false) {
         }
 
         localItemValueCache.set(localItemValueCacheKey, itemInfoMap)
-
+        return itemInfoMap
     })
 
     return itemInfoMap
