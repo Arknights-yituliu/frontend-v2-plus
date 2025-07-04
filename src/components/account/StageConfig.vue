@@ -1461,9 +1461,11 @@ onMounted(() => {
     </v-expansion-panels>
   </v-card>
 
-  <v-card style="width: 400px;display:none;">        <code style="white-space: pre-wrap">
-          {{ debugText }}
-        </code></v-card>
+  <v-card style="width: 400px;display:none;">
+    <code style="white-space: pre-wrap">
+    {{ debugText }}
+  </code>
+  </v-card>
 
   <!-- 自定义材料弹窗 -->
   <v-dialog v-model="customItemDialog" max-width="800">
