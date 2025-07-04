@@ -37,6 +37,16 @@ const numberBetween0And1 = [
 const numberGe0 = [(value) => parseFloat(value) >= 0 || "值必须大于或等于 0"];
 
 
+// 开发者模式
+const clickCount = ref(0)
+const developerMode = ref(false)
+
+function handleClick() {
+  clickCount.value++
+  if (clickCount.value >= 8) {
+    developerMode.value = true
+  }
+}
 // Beasts
 
 const BeastsStage = ref({
@@ -593,7 +603,7 @@ onMounted(() => {
           自定义物品价值设置
         </v-expansion-panel-title>
         <v-expansion-panel-text class="expansion-panel-text">
-          <v-alert type="warning" variant="tonal" border><b>如不清楚自定义参数的含义，请保持默认设置！</b></v-alert>
+          <v-alert type="warning" variant="tonal" border @click="handleClick"><b>如不清楚自定义参数的含义，请保持默认设置！</b></v-alert>
           <div class="cover-v-card-subtitle">
             <p>自定义参数用于定制更适合自己的刷图方案和购买策略</p>
             <p>自定义参数保存于当前设备，后续将可通过一图流账号保存和同步</p>
@@ -669,7 +679,7 @@ onMounted(() => {
             <!-- </v-btn> -->
           </v-card>
           <!-- 前面的区域以后再来探索吧 -->
-          <span v-if="false">
+          <span v-if="developerMode">
             <!-- 合成玉定价策略 -->
             <v-radio-group v-model="stageConfig.orundumPricingStrategy">
               <template v-slot:label>
@@ -854,7 +864,7 @@ onMounted(() => {
             </v-radio-group>
           </span>
           <!-- 前面的区域以后再来探索吧 -->
-          <span v-if="false">
+          <span v-if="developerMode">
             <!-- 模组数据块定价策略 -->
             <v-divider></v-divider>
             <v-radio-group v-model="stageConfig.modUnlockTokenPricingStrategy">
@@ -1089,7 +1099,7 @@ onMounted(() => {
 
 
       <!-- 前面的区域以后再来探索吧 -->
-      <span v-if="false">
+      <span v-if="developerMode">
         <!-- 折叠面板：自定义加工站策略 -->
         <v-expansion-panel value="custom-workshop-strategy">
           <v-expansion-panel-title>
