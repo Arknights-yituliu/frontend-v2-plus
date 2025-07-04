@@ -44,9 +44,16 @@ const developerMode = ref(false)
 function handleClick() {
   clickCount.value++
   if (clickCount.value >= 8) {
-    developerMode.value = true
+    developerMode.value = true    
   }
 }
+
+function closeDevMode() {
+  developerMode.value = false
+  clickCount.value = 0
+}
+
+
 // Beasts
 
 const BeastsStage = ref({
@@ -604,6 +611,8 @@ onMounted(() => {
         </v-expansion-panel-title>
         <v-expansion-panel-text class="expansion-panel-text">
           <v-alert type="warning" variant="tonal" border @click="handleClick"><b>如不清楚自定义参数的含义，请保持默认设置！</b></v-alert>
+          <v-btn @click="closeDevMode" color="error" class="mt-2" v-if="developerMode">
+      已开启开发者模式，点我关闭</v-btn>
           <div class="cover-v-card-subtitle">
             <p>自定义参数用于定制更适合自己的刷图方案和购买策略</p>
             <p>自定义参数保存于当前设备，后续将可通过一图流账号保存和同步</p>
