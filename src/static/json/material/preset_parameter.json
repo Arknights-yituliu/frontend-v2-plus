@@ -180,6 +180,7 @@
           "parameterName": "1",
           "buttonText": "需要（默认）",
           "parameterSets": {
+            "lmdPricingStrategy":"LMD_PRICING_CE-6",
             "lmdCoefficient": 1
           },
           "message": "龙门币系数已修改为1",
@@ -190,6 +191,7 @@
           "parameterName": "0",
           "buttonText": "不需要",
           "parameterSets": {
+            "lmdPricingStrategy":"LMD_PRICING_ZERO",
             "lmdCoefficient": 0
           },
           "message": "龙门币系数已修改为0",
@@ -214,6 +216,7 @@
           "parameterName": "1",
           "buttonText": "刷LS-6",
           "parameterSets": {
+            "expPricingStrategy":"EXP_PRICING_LS-6",
             "expCoefficient": 1
           },
           "message": "经验书系数已修改为1",
@@ -224,6 +227,7 @@
           "parameterName": "0.633",
           "buttonText": "基建够用（默认）",
           "parameterSets": {
+            "expPricingStrategy":"EXP_PRICING_BASE_LVL_3_TRADING_POST",
             "expCoefficient": 0.633
           },
           "message": "经验书系数已修改为默认",
@@ -234,6 +238,7 @@
           "parameterName": "0",
           "buttonText": "完全不需要",
           "parameterSets": {
+            "expPricingStrategy":"EXP_PRICING_ZERO",
             "expCoefficient": 0
           },
           "message": "经验书系数已修改为0",
