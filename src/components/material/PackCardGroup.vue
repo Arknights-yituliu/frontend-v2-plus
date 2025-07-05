@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from "vue"
 import ItemImage from "@/components/sprite/ItemImage.vue";
-import { formatNumber } from "../../utils/format.js";
+import { formatNumber } from "/src/utils/format.js";
 
 const id = generateRandomString(5)
 
@@ -54,15 +54,20 @@ watch(() => window.screen.width, (newVal) => {
   screenWidth.value = newVal
 })
 
-function isOrange(name) {
-  return name === '合成玉' || name === '至纯源石' || name === '寻访凭证' || name === '十连寻访凭证'
+
+function itemAccentColor(name){
+  if(["合成玉","至纯源石","寻访凭证","十连寻访凭证"].includes(name)){
+    return "color:#FF8F00;font-weight:600;"
+  }
+  if(["中坚寻访凭证","十连中坚寻访凭证"].includes(name)){
+    return "color:#0052CC;font-weight:600;"
+  }
+  if(["模组数据块","数据增补仪","数据增补条"].includes(name)){
+    return "color:#6D4C41;font-weight:600;"
+  }
 }
-function isBlue(name) {
-  return name === '中坚寻访凭证' || name === '十连中坚寻访凭证'
-}
-function isBrown(name) {
-  return name === '模组数据块' || name === '数据增补仪' || name === '数据增补条'
-}
+
+
 
 // 狐狐做出重要指示：时间一定要是21天
 function getRemainingDays(endDate, maxDays = 21) {
@@ -143,7 +148,7 @@ function getRemainingDays(endDate, maxDays = 21) {
             </thead>
             <tbody>
               <tr v-for="item in packInfo.packContentVO.filter(i => i.quantity !== 0)" :key="item.itemId"
-                :style="[isOrange(item.itemName) ? 'color:#FF8F00;font-weight:600;' : '', isBlue(item.itemName) ? 'color:#0052CC;font-weight:600;' : '', isBrown(item.itemName) ? 'color:#6D4C41;font-weight:600;' : '']">
+                :style="itemAccentColor(item.itemName)">
                 <td>{{ item.itemName }}</td>
                 <td>{{ item.quantity }}</td>
                 <td>{{ formatNumber(item.apValue, 1) }}</td>
