@@ -55,14 +55,14 @@ watch(() => window.screen.width, (newVal) => {
 })
 
 
-function itemAccentColor(name){
-  if(["合成玉","至纯源石","寻访凭证","十连寻访凭证"].includes(name)){
+function itemAccentColor(name) {
+  if (["合成玉", "至纯源石", "寻访凭证", "十连寻访凭证"].includes(name)) {
     return "color:#FF8F00;font-weight:600;"
   }
-  if(["中坚寻访凭证","十连中坚寻访凭证"].includes(name)){
+  if (["中坚寻访凭证", "十连中坚寻访凭证"].includes(name)) {
     return "color:#0052CC;font-weight:600;"
   }
-  if(["模组数据块","数据增补仪","数据增补条"].includes(name)){
+  if (["模组数据块", "数据增补仪", "数据增补条"].includes(name)) {
     return "color:#6D4C41;font-weight:600;"
   }
 }
@@ -70,17 +70,17 @@ function itemAccentColor(name){
 
 
 // 狐狐做出重要指示：时间一定要是21天
-function getRemainingDays(endDate, maxDays = 21) {
+function getRemainingDays(endDate, startDate, maxDays = 21) {
   const endTime = new Date(endDate).getTime()
   const now = Date.now()
-
   const diffMs = endTime - now
-  if (diffMs <= 0) return null
-
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
-  if (diffDays > maxDays) return null
-
-  return `剩余 ${diffDays} 天`
+  const startTime = new Date(startDate)
+  const year = startTime.getFullYear()
+  const month = String(startTime.getMonth() + 1).padStart(2, '0')
+  if (diffDays <= 0) return `${year}-${month}`
+  if (diffDays <= maxDays) return `剩余 ${diffDays} 天`
+  return '  '
 }
 </script>
 
@@ -117,8 +117,8 @@ function getRemainingDays(endDate, maxDays = 21) {
             </div>
           </div>
           <!-- 剩余时间 -->
-          <div class="pack-info-countdown" v-if="getRemainingDays(packInfo.end)">
-             {{ getRemainingDays(packInfo.end) }} 
+          <div class="pack-info-countdown" v-if="getRemainingDays(packInfo.end, packInfo.start, packInfo)">
+            {{ getRemainingDays(packInfo.end, packInfo.start) }}
           </div>
         </div>
       </div>
@@ -166,6 +166,7 @@ function getRemainingDays(endDate, maxDays = 21) {
 
       <!-- 说明部分 -->
       <div class="pack-note">
+        {{ packInfo.start }}
         {{ packInfo.note }}
       </div>
     </div>
