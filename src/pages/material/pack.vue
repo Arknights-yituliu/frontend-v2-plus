@@ -1,7 +1,7 @@
 <script setup>
 import itemAPI from "/src/api/materialV5.js";
 import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
-import {ref} from 'vue';
+import {ref, watch, onMounted } from 'vue';
 import PackCardContainer from '/src/components/material/PackCardGroup.vue'
 import ModuleHeader from '/src/components/layout/ModuleHeader.vue';
 import {getStageConfig} from "/src/utils/user/userConfig.js";
@@ -95,8 +95,22 @@ async function getPackInfoData() {
 
 let displayPackEfficiencyFlag = ref(false)
 
-
 let isKernelValuable = ref(false)
+
+// 2️⃣ 页面加载时，从 localStorage 读取
+onMounted(() => {
+  displayPackEfficiencyFlag.value = localStorage.getItem('displayPackEfficiencyFlag') === 'true'
+  isKernelValuable.value = localStorage.getItem('isKernelValuable') === 'true'
+})
+
+// 3️⃣ 当值变化时，自动保存到 localStorage
+watch(displayPackEfficiencyFlag, (newVal) => {
+  localStorage.setItem('displayPackEfficiencyFlag', newVal)
+})
+
+watch(isKernelValuable, (newVal) => {
+  localStorage.setItem('isKernelValuable', newVal)
+})
 
 function displayPackEfficiency() {
   let list = []
