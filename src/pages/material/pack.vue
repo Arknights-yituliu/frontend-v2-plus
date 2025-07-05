@@ -82,7 +82,7 @@ async function getPackInfoData() {
   packInfoResponseData = data
   //先计算礼包的性价比
   for (const item of data) {
-    const packInfoVO = calculatePackEfficiency(item,itemValueMap,displayPackEfficiencyFlag.value,isKernelValuable.value)
+    const packInfoVO = calculatePackEfficiency(item,itemValueMap,isDrawOnly.value,isKernelValuable.value)
     packInfoVOList.push(packInfoVO)
     packInfoVOListCache.push(deepClone(packInfoVO))
   }
@@ -93,19 +93,19 @@ async function getPackInfoData() {
 }
 
 
-let displayPackEfficiencyFlag = ref(false)
+let isDrawOnly = ref(false)
 
 let isKernelValuable = ref(false)
 
 // 2️⃣ 页面加载时，从 localStorage 读取
 onMounted(() => {
-  displayPackEfficiencyFlag.value = localStorage.getItem('displayPackEfficiencyFlag') === 'true'
+  isDrawOnly.value = localStorage.getItem('isDrawOnly') === 'true'
   isKernelValuable.value = localStorage.getItem('isKernelValuable') === 'true'
 })
 
 // 3️⃣ 当值变化时，自动保存到 localStorage
-watch(displayPackEfficiencyFlag, (newVal) => {
-  localStorage.setItem('displayPackEfficiencyFlag', newVal)
+watch(isDrawOnly, (newVal) => {
+  localStorage.setItem('isDrawOnly', newVal)
 })
 
 watch(isKernelValuable, (newVal) => {
@@ -115,7 +115,7 @@ watch(isKernelValuable, (newVal) => {
 function displayPackEfficiency() {
   let list = []
   for(const item of packInfoResponseData){
-    const packInfoVO = calculatePackEfficiency(item,itemValueMap,displayPackEfficiencyFlag.value,isKernelValuable.value)
+    const packInfoVO = calculatePackEfficiency(item,itemValueMap,isDrawOnly.value,isKernelValuable.value)
     list.push(packInfoVO)
   }
 
@@ -128,7 +128,7 @@ function changeKernelValue() {
 
   let list = []
   for(const item of packInfoResponseData){
-    const packInfoVO = calculatePackEfficiency(item,itemValueMap,displayPackEfficiencyFlag.value,isKernelValuable.value)
+    const packInfoVO = calculatePackEfficiency(item,itemValueMap,isDrawOnly.value,isKernelValuable.value)
     list.push(packInfoVO)
   }
 
@@ -177,9 +177,9 @@ function collectPackInfoVO() {
         label: '仅抽卡',
         value: pack.drawEfficiency,
         color: 'rgb(250, 83, 83)',
-        display: !displayPackEfficiencyFlag.value
+        display: isDrawOnly.value
       },
-      {label: '全物品', value: pack.packEfficiency, color: 'rgb(250, 83, 83)', display: displayPackEfficiencyFlag.value}
+      {label: '全物品', value: pack.packEfficiency, color: 'rgb(250, 83, 83)', display: !isDrawOnly.value}
     ];
     return lineChartData.sort((a, b) => b.value - a.value);
   }
@@ -315,8 +315,8 @@ loadingItemValue()
           </v-switch>
 
           <v-switch v-if="item.titleEn === 'New Packs'"
-                    color="primary" label="展示所有物品的综合性价比" hide-details
-                    @change="displayPackEfficiency" v-model="displayPackEfficiencyFlag" class="m-0-8">
+                    color="primary" label="只看抽卡" hide-details
+                    @change="displayPackEfficiency" v-model="isDrawOnly" class="m-0-8">
           </v-switch>
         </div>
         <template v-for="(packInfo, packIndex) in item.list" :key="packIndex">
