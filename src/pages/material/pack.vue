@@ -176,7 +176,7 @@ function collectPackInfoVO() {
       {
         label: '仅抽卡',
         value: pack.drawEfficiency,
-        color: 'rgb(250, 83, 83)',
+        color: '#F88C20',
         display: isDrawOnly.value
       },
       {label: '全物品', value: pack.packEfficiency, color: 'rgb(250, 83, 83)', display: !isDrawOnly.value}
