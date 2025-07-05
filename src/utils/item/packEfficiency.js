@@ -120,35 +120,52 @@ function calculatePackEfficiency(packInfoVO, itemValueMap, displayPackEfficiency
     }
 
 
+    // 遍历 packContentVOList 列表
     for (let i = 0; i < packContentVOList.length; i++) {
         const item = packContentVOList[i];
+
+        // 如果该物品在 itemValueMap 中有对应的价值
         if (itemValueMap.has(item.itemId)) {
             const itemValue = itemValueMap.get(item.itemId);
-            let vo = _getPackContentItemVO(item, itemValue)
-            if (!displayPackEfficiency) {
-                vo.apValue = 0
-                vo.itemRatio = 0
-            }
-            //
-            if (["classic_gacha", "classic_gacha_10"].includes(item.itemId) ) {
+
+            // 根据原始 item 和 itemValue 生成一个 VO 对象
+            let vo = _getPackContentItemVO(item, itemValue);
+
+            // 如果不开启效率显示，则 AP 价值和效率比重都设为 0
+            // if (!displayPackEfficiency) {
+            //     vo.apValue = 0;
+            //     vo.itemRatio = 0;
+            // }
+
+            // 如果是寻访凭证（单抽或十连）
+            if (["classic_gacha", "classic_gacha_10"].includes(item.itemId)) {
+
                 if (displayKernel) {
-                    vo.apValue = itemValue * item.quantity
+                    // 如果开启内核模式，则计算寻访价值
+                    vo.apValue = itemValue * item.quantity;
+
+                    // 单抽凭证的效率比重
                     if ("classic_gacha" === item.itemId) {
-                        vo.itemRatio = drawEfficiencyBenchmark / (packInfoVO.price / item.quantity)
+                        // drawEfficiencyBenchmark 是抽卡效率基准
+                        // packInfoVO.price 是礼包总价，除以单抽数量
+                        vo.itemRatio = drawEfficiencyBenchmark / (packInfoVO.price / item.quantity);
                     }
+
+                    // 十连凭证的效率比重
                     if ("classic_gacha_10" === item.itemId) {
-                        vo.itemRatio = drawEfficiencyBenchmark / (packInfoVO.price / (item.quantity * 10))
+                        // 十连凭证本质是单抽数量乘 10
+                        vo.itemRatio = drawEfficiencyBenchmark / (packInfoVO.price / (item.quantity * 10));
                     }
 
                 } else {
-                    vo.apValue = 0
-                    vo.itemRatio = 0
+                    // 如果没开启内核模式，则把寻访相关的值清空
+                    vo.apValue = 0;
+                    vo.itemRatio = 0;
                 }
-
             }
 
-
-            packContentVO.push(vo)
+            // 把生成好的 VO 加到 packContentVO 结果列表里
+            packContentVO.push(vo);
         }
     }
 

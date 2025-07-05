@@ -289,8 +289,8 @@ loadingItemValue()
 
         <module-header :title="item.title" :title-en="item.titleEn" :tips="item.tips"/>
         <div v-if="item.titleEn === 'New Packs'">
-          <v-chip text="点击图片可查看礼包内容" color="deep-orange" class="m-4"></v-chip>
-          <v-chip text="折合成源石：135理智=1源石" color="deep-orange" class="m-4"></v-chip>
+          <v-chip text="点击图片查看礼包详情" color="deep-orange" class="m-4"></v-chip>
+          <v-chip text="材料按135理智=1源石折合成源石" color="deep-orange" class="m-4"></v-chip>
           <v-chip text="中坚寻访：1蓝抽也记为1抽，但价值视为0.837抽" color="deep-orange" class="m-4"></v-chip>
         </div>
 
@@ -301,7 +301,7 @@ loadingItemValue()
           </v-switch>
 
           <v-switch v-if="item.titleEn === 'New Packs'"
-                    color="primary" label="展示全物品的综合性价比" hide-details
+                    color="primary" label="展示所有物品的综合性价比" hide-details
                     @change="displayPackEfficiency" v-model="displayPackEfficiencyFlag" class="m-0-8">
           </v-switch>
         </div>

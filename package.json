@@ -14,6 +14,7 @@
     "axios": "1.7.4",
     "connect-history-api-fallback": "^2.0.0",
     "crypto-js": "4.2.0",
+    "dayjs": "^1.11.13",
     "dexie": "^4.0.10",
     "element-plus": "2.9.0",
     "express": "4.21.2",

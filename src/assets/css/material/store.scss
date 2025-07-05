@@ -1,4 +1,9 @@
 .store-page {
+  .text-orange {
+    color: rgb(255, 180, 110);
+    font-weight: 600;
+  }
+
   .permanent-store-checkbox {
     display: flex;
   }
@@ -20,11 +25,9 @@
     left: -2px;
   }
 
-  .act-banner-background{
+  .act-banner-background {}
 
-  }
-
-  .act-banner-img{
+  .act-banner-img {
     display: block;
     width: 60%;
     margin: auto;
@@ -97,9 +100,9 @@
     height: 60px;
   }
 
-  .act_store_block{
+  .act_store_block {
     margin: 0px;
-    background: linear-gradient(135deg, rgb(103,120,160), rgb(63,63,95));
+    background: linear-gradient(135deg, rgb(103, 120, 160), rgb(63, 63, 95));
     background: #00000000;
   }
 
@@ -194,8 +197,3 @@
   }
 
 }
-
-
-
-
-
