@@ -335,28 +335,27 @@ loadingItemValue()
       <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']"/>
 
       <div class="m-4">
-        售卖类型：
-        <v-btn color="primary" v-for="(tag, index) in packTags" :key="index" :variant="buttonActive(tag.value)"
-               @click="choosePackOption(selectedPackTag, tag.value)" class="m-4">
-          {{ tag.label }}
-        </v-btn>
-      </div>
-      <div class="m-4">
-        售卖年份：
+        年份：
         <v-btn color="primary" v-for="[year] in filteredPackMap.entries()" :key="year" :variant="buttonActive(year)"
                @click="choosePackOption(selectedPackSaleDate, year)" class="m-4">
           {{ year }}年
         </v-btn>
       </div>
       <div class="m-4">
-        售卖价格：
+        价格：
         <v-btn color="primary" v-for="item in packSalePriceList" :key="item.label"
                :variant="buttonActive(item.label)" @click="choosePackOption(selectedPackSalePrice, item.label)"
                class="m-4">
           {{ item.label }}
         </v-btn>
       </div>
-
+      <div class="m-4">
+        类型：
+        <v-btn color="primary" v-for="(tag, index) in packTags" :key="index" :variant="buttonActive(tag.value)"
+               @click="choosePackOption(selectedPackTag, tag.value)" class="m-4">
+          {{ tag.label }}
+        </v-btn>
+      </div>
 
       <!-- 按年份展示筛选礼包 -->
       <template v-for="[year, list] in filteredPackMap.entries()">
