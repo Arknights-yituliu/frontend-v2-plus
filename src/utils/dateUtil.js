@@ -1,6 +1,6 @@
 /**
  * 根据传入时间格式字符串格式化时间
- * @param input {Date} 时间类
+ * @param input {Date|number|string} 时间类
  * @param template {string} 时间格式字符串
  * @return {string} 传入时间类的格式化字符串
  * @example dateUtil(date, format = 'yyyy/MM/dd') 将返回 2024/01/01
