@@ -137,7 +137,7 @@ function getRemainingDays(endDate, startDate, maxDays = 21) {
         </div>
         <div class="pack-content-material">
           <!-- 新增详情表格取代之前的列表 -->
-          <v-table density="compact">
+          <v-table density="compact" style="width: 100%;">
             <thead>
               <tr>
                 <th class="text-left">名称</th>
@@ -166,7 +166,6 @@ function getRemainingDays(endDate, startDate, maxDays = 21) {
 
       <!-- 说明部分 -->
       <div class="pack-note">
-        {{ packInfo.start }}
         {{ packInfo.note }}
       </div>
     </div>
