@@ -89,6 +89,7 @@ async function loadingItemValue() {
   packInfoVOListCache = [] // 每次刷新时清空缓存
   const stageConfig = getStageConfig()
   itemValueMap = await itemCache.getItemInfoMapCacheByConfig(stageConfig)
+  console.log(itemValueMap)
   await getPackInfoData()
 }
 
@@ -201,9 +202,9 @@ watch(sortOption, () => {
 /**
  * 路由变化时，重新加载数据（防止从其它页面跳转不刷新）
  */
-watch(() => route.fullPath, () => {
-  loadingItemValue()
-})
+// watch(() => route.fullPath, () => {
+//   loadingItemValue()
+// })
 
 /**
  * 页面挂载时，读取开关状态、加载礼包、检测是否需要弹出加载中对话框
@@ -214,14 +215,14 @@ onMounted(() => {
 
   loadingItemValue()
 
-  // 若 1.5 秒内还没加载到礼包，弹出加载提示
-  setTimeout(() => {
-    if (!fixedPacks.value?.length) {
-      reloadPage()
-      isLoading.value = true
-      showLoadingTime.value = Date.now()
-    }
-  }, 1500)
+  // // 若 1.5 秒内还没加载到礼包，弹出加载提示
+  // setTimeout(() => {
+  //   if (!fixedPacks.value?.length) {
+  //     reloadPage()
+  //     isLoading.value = true
+  //     showLoadingTime.value = Date.now()
+  //   }
+  // }, 1500)
 })
 
 /**

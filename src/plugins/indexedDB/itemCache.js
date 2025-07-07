@@ -57,21 +57,20 @@ async function getItemInfoMapCacheByConfig(stageConfig, forceRefresh = false) {
         localItemValueCacheKey = Date.now()
     }
 
+    const itemList = await getItemInfoList(stageConfig)
+    console.log(`材料价值计算完毕`)
+    if (forceRefresh) {
+        createMessage({text: "强制刷新材料价值成功", type: 'success', duration: 4000})
+    }
 
-    await getItemInfoList(stageConfig).then(response => {
-        console.log(`材料价值计算完毕`)
-        if (forceRefresh) {
-            createMessage({text: "强制刷新材料价值成功", type: 'success', duration: 4000})
-        }
+    for (const item of itemList) {
+        const {itemId, itemValue} = item
+        itemInfoMap.set(itemId, itemValue)
+    }
 
-        for (const item of response) {
-            const {itemId, itemValue} = item
-            itemInfoMap.set(itemId, itemValue)
-        }
+    localItemValueCache.set(localItemValueCacheKey, itemInfoMap)
 
-        localItemValueCache.set(localItemValueCacheKey, itemInfoMap)
-        return itemInfoMap
-    })
+
 
     return itemInfoMap
 }
