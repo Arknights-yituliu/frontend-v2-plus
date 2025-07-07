@@ -88,8 +88,8 @@ function reloadPage() {
 async function loadingItemValue() {
   packInfoVOListCache = [] // 每次刷新时清空缓存
   const stageConfig = getStageConfig()
-  itemValueMap = await itemCache.getItemInfoMapCacheByConfig(stageConfig)
-  console.log(itemValueMap)
+  itemValueMap = await itemCache.getItemValueMapCacheByConfig(stageConfig)
+
   await getPackInfoData()
 }
 

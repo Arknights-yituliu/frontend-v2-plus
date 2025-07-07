@@ -27,7 +27,8 @@ async function getItemMap(stageConfig) {
 async function calculationStageEfficiency(stageConfig) {
     const start = new Date().getTime()
 
-    const itemMap = await getItemMap(stageConfig)
+    const itemMap =  await itemCache.getItemInfoMapCacheByConfig(stageConfig)
+
     const stageDropCollect = await getStageDropCollect(stageConfig)  // TODO: getStageDropCollect 有 2 个参数
     const loading = new Date().getTime()
     // console.log("加载数据", loading - start, 'ms')
@@ -73,6 +74,7 @@ async function calculationStageEfficiency(stageConfig) {
         for (const drop of list) {
             const {itemId, stageId, quantity, times} = drop
             const itemInfo = itemMap.get(itemId);
+
             //如果查不到材料信息则跳过
             if (!itemInfo) {
                 continue

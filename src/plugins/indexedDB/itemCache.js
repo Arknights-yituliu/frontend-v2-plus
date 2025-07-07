@@ -3,6 +3,7 @@ import materialAPI from "/src/api/materialV5.js";
 import axios from "axios";
 import {createMessage} from "@/utils/message.js";
 import {getItemInfoList} from "/src/utils/item/itemValue.js";
+import cacheKeyDict from "/src/plugins/indexedDB/cacheKeyDict.js";
 
 
 async function putCache(data) {
@@ -10,20 +11,22 @@ async function putCache(data) {
 }
 
 let localItemValueCache = new Map()
-let localItemValueCacheKey = Date.now()
+
 
 async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
+
+    let cacheKey = cacheKeyDict.LOCAL_ITEM_INFO_LIST
 
     let itemValue = []
 
     if (!forceRefresh) {
-        if (localItemValueCache.has(localItemValueCacheKey)) {
-            console.log("返回了临时缓存材料价值——key:", localItemValueCacheKey)
-            return localItemValueCache.get(localItemValueCacheKey)
+        if (localItemValueCache.has(cacheKey)) {
+            console.log("返回了临时缓存材料价值——key:", cacheKey)
+            return localItemValueCache.get(cacheKey)
         }
     } else {
         console.log("强制刷新了材料价值")
-        localItemValueCacheKey = Date.now()
+        cacheKey = Date.now()
     }
 
 
@@ -33,7 +36,7 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
             createMessage({text: "强制刷新材料价值成功", type: 'success', duration: 4000})
         }
 
-        localItemValueCache.set(localItemValueCacheKey, response)
+        localItemValueCache.set(cacheKey, response)
         itemValue = response
     })
 
@@ -42,37 +45,71 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
 
 
 
-
 async function getItemInfoMapCacheByConfig(stageConfig, forceRefresh = false) {
 
     let itemInfoMap = new Map()
 
+    let cacheKey = cacheKeyDict.LOCAL_ITEM_INFO_MAP
+
     if (!forceRefresh) {
-        if (localItemValueCache.has(localItemValueCacheKey)) {
-            console.log("返回了临时缓存材料价值——key:", localItemValueCacheKey)
-            return localItemValueCache.get(localItemValueCacheKey)
+        if (localItemValueCache.has(cacheKey)) {
+            console.log("返回了临时缓存材料价值——key:", cacheKey)
+            return localItemValueCache.get(cacheKey)
         }
     } else {
         console.log("强制刷新了材料价值")
-        localItemValueCacheKey = Date.now()
+        cacheKey = Date.now()
     }
 
     const itemList = await getItemInfoList(stageConfig)
+
     console.log(`材料价值计算完毕`)
+
+    if (forceRefresh) {
+        createMessage({text: "强制刷新材料价值成功", type: 'success', duration: 4000})
+    }
+
+    for (const item of itemList) {
+        itemInfoMap.set(item.itemId, item)
+    }
+
+    localItemValueCache.set(cacheKey, itemInfoMap)
+    return itemInfoMap
+}
+
+
+
+async function getItemValueMapCacheByConfig(stageConfig, forceRefresh = false) {
+
+    let itemValueMap = new Map()
+
+    let cacheKey = cacheKeyDict.LOCAL_ITEM_VAlUE_MAP
+
+    if (!forceRefresh) {
+        if (localItemValueCache.has(cacheKey)) {
+            console.log("返回了临时缓存材料价值——key:", cacheKey)
+            return localItemValueCache.get(cacheKey)
+        }
+    } else {
+        console.log("强制刷新了材料价值")
+        cacheKey = Date.now()
+    }
+
+    const itemList = await getItemInfoList(stageConfig)
+
+    console.log(`材料价值计算完毕`)
+
     if (forceRefresh) {
         createMessage({text: "强制刷新材料价值成功", type: 'success', duration: 4000})
     }
 
     for (const item of itemList) {
         const {itemId, itemValue} = item
-        itemInfoMap.set(itemId, itemValue)
+        itemValueMap.set(itemId, itemValue)
     }
 
-    localItemValueCache.set(localItemValueCacheKey, itemInfoMap)
-
-
-
-    return itemInfoMap
+    localItemValueCache.set(cacheKey, itemValueMap)
+    return itemValueMap
 }
 
 
@@ -180,5 +217,5 @@ async function getStageInfoCache() {
 
 
 export default {
-    getItemValueCacheByConfig,getItemInfoMapCacheByConfig, getPenguinMatrixCache, getStageInfoCache, getLastSynchronizationTime
+    getItemValueCacheByConfig,getItemValueMapCacheByConfig,getItemInfoMapCacheByConfig, getPenguinMatrixCache, getStageInfoCache, getLastSynchronizationTime
 }

@@ -24,14 +24,10 @@ const storeTypeList = [ // 常驻商店数据初始化格式
 
 const stageConfig = getStageConfig()
 let itemValueMap = new Map()
-itemValueMap.set("1873450981701000",21.518115440178397)
 
-async function loadingStoreData(){
-  const itemValueList = await itemCache.getItemValueCacheByConfig(stageConfig)
 
-  for (const item of itemValueList) {
-    itemValueMap.set(item.itemId, item.itemValue)
-  }
+async function loadingStoreData() {
+  itemValueMap = await itemCache.getItemValueMapCacheByConfig(stageConfig)
 
   permStoreComputed()
   activityStoreComputed()
@@ -50,7 +46,7 @@ function permStoreComputed() {
       item.apEfficiency = apEfficiency
 
     }
-    data.sort((a,b)=>b.apEfficiency-a.apEfficiency)
+    data.sort((a, b) => b.apEfficiency - a.apEfficiency)
     storeInfo.list = data
   }
 
@@ -59,34 +55,33 @@ function permStoreComputed() {
 }
 
 
-
 function activityStoreComputed() {
 
-  itemAPI.listActivityStore().then(response=>{
+  itemAPI.listActivityStore().then(response => {
     actStoreList.value = response.data
     // 遍历活动列表
-    for(let item of actStoreList.value){
+    for (let item of actStoreList.value) {
       item.actStoreFormat = _formatActStore(item.actStore)
     }
   })
 
 
-  function _formatActStore(data){
-    let actStoreFormat = [[],[],[],[],[]]
-    for(let item of data){
-      const {itemArea,itemId,itemPrice,itemQuantity,itemName} = item
+  function _formatActStore(data) {
+    let actStoreFormat = [[], [], [], [], []]
+    for (let item of data) {
+      const {itemArea, itemId, itemPrice, itemQuantity, itemName} = item
       const itemValue = itemValueMap.get(itemId)
-      const itemPPR = itemValue * itemQuantity/itemPrice
-      actStoreFormat[itemArea-1].push({
-        itemPrice:itemPrice,
-        itemId:itemId,
-        itemName:itemName,
-        itemPPR:itemPPR
+      const itemPPR = itemValue * itemQuantity / itemPrice
+      actStoreFormat[itemArea - 1].push({
+        itemPrice: itemPrice,
+        itemId: itemId,
+        itemName: itemName,
+        itemPPR: itemPPR
       })
     }
 
-    for (let list of actStoreFormat){
-      list = list.sort((a,b)=>b.itemPPR-a.itemPPR)
+    for (let list of actStoreFormat) {
+      list = list.sort((a, b) => b.itemPPR - a.itemPPR)
     }
 
     return actStoreFormat
