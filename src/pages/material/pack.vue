@@ -1,8 +1,10 @@
 <script setup>
+// 依赖引入
 import itemAPI from "/src/api/materialV5.js";
 import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
 import { ref, watch, onMounted } from 'vue';
-import PackCardContainer from '/src/components/material/PackCardGroup.vue'
+import { useRoute } from 'vue-router';
+import PackCardContainer from '/src/components/material/PackCardGroup.vue';
 import ModuleHeader from '/src/components/layout/ModuleHeader.vue';
 import { getStageConfig } from "/src/utils/user/userConfig.js";
 import PackTable from "/src/components/material/PackTable.vue";
@@ -13,10 +15,17 @@ import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import NoticeBoard from "@/components/layout/NoticeBoard.vue";
 import { calculatePackEfficiency } from "@/utils/item/packEfficiency.js";
 
-const date = new Date() // 当前日期
-const fixedPacks = ref({})
 
-//售卖类型
+
+// 当前日期
+const date = new Date()
+// 当前路由
+const route = useRoute()
+
+// 所有分类后的礼包
+const fixedPacks = ref([])
+
+// 包含的礼包标签
 const packTags = [
   { label: "新人", value: "newbie" },
   { label: "含有模组块", value: "mod" },
@@ -30,197 +39,114 @@ const packTags = [
   { label: "定向抽卡类礼包", value: "operator" },
 ]
 
-//价格区间
+// 售卖价格区间
 const packSalePriceList = [
   { label: '0-100RMB', min: 0, max: 100 },
   { label: '100-200RMB', min: 100, max: 200 },
   { label: '200-648RMB', min: 200, max: 648 },
 ]
 
-//选择的礼包tag
+// 筛选条件：标签 / 年份 / 价格
 const selectedPackTag = ref([])
-//选择的礼包售卖类型
 const selectedPackSaleDate = ref([])
-//选择的礼包售卖价格
 const selectedPackSalePrice = ref([])
 
-// 筛选后的礼包列表
+// 筛选后的礼包
 const filteredPackMap = ref(new Map())
 
-//缓存的礼包数据，用于切换中坚性价比的数据时，直接用这个数据去覆盖
+// 用于缓存
 let packInfoVOListCache = []
 let packInfoResponseData = []
-//礼包性价比数据
 let packInfoVOList = []
-//当前在售的礼包性价比数据，用于礼包总表
-let packInfoVOListOnSale = ref([])
-
-//材料价值表
 let itemValueMap = new Map()
 
-//获取材料价值表
-function loadingItemValue() {
-  const stageConfig = getStageConfig()
-  //获取本地计算的材料价值
-  itemCache.getItemInfoMapCacheByConfig(stageConfig).then(response => {
-    itemValueMap = response
+// 性价比开关
+const isDrawOnly = ref(false)
+const isKernelValuable = ref(false)
 
-    getPackInfoData()
-  })
+// 排序选项
+const sortOption = ref('time') // 默认按上架时间
+const options = [
+  { value: 'time', label: '上架时间' },
+  { value: 'price', label: '价格' },
+  { value: 'efficiency', label: '抽卡性价比' },
+  { value: 'overall', label: '综合性价比' },
+]
+
+// 弹窗相关
+const isLoading = ref(false)
+const showLoadingTime = ref(0)
+
+// 页面强制刷新（点击重试按钮）
+function reloadPage() {
+  location.reload()
 }
 
+/**
+ * 加载材料价值表，拿到后去算礼包性价比
+ */
+async function loadingItemValue() {
+  packInfoVOListCache = [] // 每次刷新时清空缓存
+  const stageConfig = getStageConfig()
+  itemValueMap = await itemCache.getItemInfoMapCacheByConfig(stageConfig)
+  await getPackInfoData()
+}
 
 /**
- * 计算礼包性价比
- * @returns {Promise<void>}
+ * 读取本地缓存礼包，然后算性价比
  */
 async function getPackInfoData() {
-  packInfoVOListOnSale.value = []
   packInfoVOList = []
-  // 等待获取接口返回的全部礼包信息
-  const data = await packInfoCache.listPackInfo()
-  packInfoResponseData = data
-  //先计算礼包的性价比
-  for (const item of data) {
+  packInfoResponseData = await packInfoCache.listPackInfo()
+
+  for (const item of packInfoResponseData) {
     const packInfoVO = calculatePackEfficiency(item, itemValueMap, isDrawOnly.value, isKernelValuable.value)
     packInfoVOList.push(packInfoVO)
     packInfoVOListCache.push(deepClone(packInfoVO))
   }
 
-  //礼包分类
-  collectPackInfoVO()
-
-}
-
-
-let isDrawOnly = ref(false)
-
-let isKernelValuable = ref(false)
-
-// 2️⃣ 页面加载时，从 localStorage 读取
-onMounted(() => {
-  isDrawOnly.value = localStorage.getItem('isDrawOnly') === 'true'
-  isKernelValuable.value = localStorage.getItem('isKernelValuable') === 'true'
-})
-
-// 3️⃣ 当值变化时，自动保存到 localStorage
-watch(isDrawOnly, (newVal) => {
-  localStorage.setItem('isDrawOnly', newVal)
-})
-
-watch(isKernelValuable, (newVal) => {
-  localStorage.setItem('isKernelValuable', newVal)
-})
-
-function displayPackEfficiency() {
-  let list = []
-  for (const item of packInfoResponseData) {
-    const packInfoVO = calculatePackEfficiency(item, itemValueMap, isDrawOnly.value, isKernelValuable.value)
-    list.push(packInfoVO)
-  }
-
-  packInfoVOList = list
   collectPackInfoVO()
 }
-
-//如果是true就覆写数据，如果是false就用原始数据重置
-function changeKernelValue() {
-
-  let list = []
-  for (const item of packInfoResponseData) {
-    const packInfoVO = calculatePackEfficiency(item, itemValueMap, isDrawOnly.value, isKernelValuable.value)
-    list.push(packInfoVO)
-  }
-
-  packInfoVOList = list
-
-  // if (isKernelValuable.value) {
-  //   for (const pack of packInfoVOList) {
-  //     pack.draws = pack.drawsKernel
-  //     pack.packEfficiency = pack.packEfficiencyKernel
-  //     pack.packedOriginium = pack.packedOriginiumKernel
-  //     pack.packedOriginiumPrice = pack.packedOriginiumPriceKernel
-  //     pack.drawEfficiency = pack.drawEfficiencyKernel
-  //     pack.drawPrice = pack.drawPriceKernel
-  //     pack.packContentVO = pack.packContentContainsKernelVO
-  //   }
-  // } else {
-  //   packInfoVOList = deepClone(packInfoVOListCache)
-  // }
-
-  collectPackInfoVO()
-}
-
-// 筛选按钮是否激活
-const buttonActive = (v) => {
-  if (selectedPackTag.value.includes(v) || selectedPackSaleDate.value.includes(v) || selectedPackSalePrice.value.includes(v)) {
-    return 'elevated'
-  }
-  return 'tonal'
-}
-
 
 /**
- * 分类礼包
+ * 分类礼包，把礼包分到不同分组里
  */
 function collectPackInfoVO() {
-
-  // const currentTimeStamp = date.getTime()-60*60*24*100*1000 // 获取时间戳
   const currentTimeStamp = date.getTime()
-
-  // 获取礼包性价比条
-  const getLineChartData = pack => {
-    const lineChartData = [
-      { label: '大月卡', value: 1.57, color: 'rgb(65,147,220)', display: true },
-      { label: '648源石', value: 1.00, color: 'rgb(65,147,220)', display: true },
-      {
-        label: '仅抽卡',
-        value: pack.drawEfficiency,
-        color: '#F88C20',
-        display: isDrawOnly.value
-      },
-      { label: '全物品', value: pack.packEfficiency, color: 'rgb(250, 83, 83)', display: !isDrawOnly.value }
-    ];
-    return lineChartData.sort((a, b) => b.value - a.value);
-  }
-
   const packs = {}
 
-  packInfoVOListOnSale.value = []
-
+  // 遍历礼包列表，组装到不同分组
   packInfoVOList.forEach(packInfoVO => {
-    packInfoVO.lineChartData = getLineChartData(packInfoVO);
-    packInfoVO.packRmbPerDraw = packInfoVO.packRmbPerDraw || 0;
+    packInfoVO.lineChartData = [
+      { label: '大月卡', value: 1.57, color: 'rgb(65,147,220)', display: true },
+      { label: '648源石', value: 1.00, color: 'rgb(65,147,220)', display: true },
+      { label: '仅抽卡', value: packInfoVO.drawEfficiency, color: '#F88C20', display: isDrawOnly.value },
+      { label: '全物品', value: packInfoVO.packEfficiency, color: 'rgb(250, 83, 83)', display: !isDrawOnly.value },
+    ].sort((a, b) => b.value - a.value)
 
-    const { saleType } = packInfoVO;
-    if (!packs[saleType]) {
-      packs[saleType] = []
-    }
-    // 龙门币模板礼包不放入总表所以单独放入
-    if (saleType === 'lmd') {
-      return packs.lmd.push(packInfoVO)
-    }
+    const { saleType } = packInfoVO
+    if (!packs[saleType]) packs[saleType] = []
 
-    // 除龙门币模板礼包外, 不放入过期礼包
-    if (packInfoVO.end < currentTimeStamp) {
-      return
-    }
+    // 龙门币单独处理
+    if (saleType === 'lmd') return packs.lmd.push(packInfoVO)
+    // 已过期的礼包丢弃
+    if (packInfoVO.end < currentTimeStamp) return
 
-    //计算每个礼包的源石单价
-
-    packInfoVOListOnSale.value.push(packInfoVO) // 放入总表
-    packs[saleType].push(packInfoVO) // 放入各个类型
+    packs[saleType].push(packInfoVO)
   })
 
+  // 默认对“活动礼包”分组进行排序
+  if (Array.isArray(packs.activity)) {
+    packs.activity.sort(sortFunction)
+  }
 
+  // 按分组输出给页面
   fixedPacks.value = [
     {
       title: '在售/即将开售的礼包',
       titleEn: 'New Packs',
       tips: ['*在售/即将开售的限时礼包，常驻、半常驻礼包和源石请往下翻'],
-      list: [
-        { title: '', packs: packs.activity },
-      ]
+      list: [{ title: '', packs: packs.activity }]
     },
     {
       title: '半常驻礼包',
@@ -242,75 +168,116 @@ function collectPackInfoVO() {
       ]
     },
   ]
-  filterPacks()
 
+  filterPacks() // 分类后立即执行筛选
 }
 
-// 礼包排序
-const sortOption = ref('time') // 默认选项
-
-const options = [
-  { value: 'time', label: '上架时间' },
-  { value: 'price', label: '价格' },
-  { value: 'efficiency', label: '抽卡性价比' },
-  { value: 'overall', label: '综合性价比' },
-]
-
-watch(
-  sortOption,
-  () => {
-    const target = fixedPacks.value.find(item => item.titleEn === 'New Packs')
-
-    if (
-      !target ||
-      !Array.isArray(target.list) ||
-      !target.list.length ||
-      !Array.isArray(target.list[0].packs)
-    ) {
-      console.log('target 或 packs 不存在')
-      return
-    }
-
-    target.list[0].packs.sort((a, b) => {
-      switch (sortOption.value) {
-        case 'time':
-          return new Date(a.start) - new Date(b.start)
-        case 'price':
-          return a.price - b.price
-        case 'efficiency':
-          return b.drawEfficiency - a.drawEfficiency
-        case 'overall':
-          return b.packEfficiency - a.packEfficiency
-        default:
-          return 0
-      }
-    })
+/**
+ * 排序函数
+ */
+function sortFunction(a, b) {
+  switch (sortOption.value) {
+    case 'time': return new Date(a.start) - new Date(b.start)
+    case 'price': return a.price - b.price
+    case 'efficiency': return b.drawEfficiency - a.drawEfficiency
+    case 'overall': return b.packEfficiency - a.packEfficiency
+    default: return 0
   }
-)
+}
 
+/**
+ * 切换排序选项时，重新排序
+ */
+watch(sortOption, () => {
+  const target = fixedPacks.value.find(item => item.titleEn === 'New Packs')
+  if (!target || !target.list?.length) return
 
+  const packs = target.list[0].packs
+  if (!packs) return
 
-// 筛选礼包: 当前筛选逻辑是按照之前的"满足其中任何一个条件的礼包都会展示", 而不是"同时满足所有筛选条件的礼包才展示"
+  packs.sort(sortFunction)
+})
+
+/**
+ * 路由变化时，重新加载数据（防止从其它页面跳转不刷新）
+ */
+watch(() => route.fullPath, () => {
+  loadingItemValue()
+})
+
+/**
+ * 页面挂载时，读取开关状态、加载礼包、检测是否需要弹出加载中对话框
+ */
+onMounted(() => {
+  isDrawOnly.value = localStorage.getItem('isDrawOnly') === 'true'
+  isKernelValuable.value = localStorage.getItem('isKernelValuable') === 'true'
+
+  loadingItemValue()
+
+  // 若 1.5 秒内还没加载到礼包，弹出加载提示
+  setTimeout(() => {
+    if (!fixedPacks.value?.length) {
+      reloadPage()
+      isLoading.value = true
+      showLoadingTime.value = Date.now()
+    }
+  }, 1500)
+})
+
+/**
+ * 若礼包加载完成，但弹窗显示未满 2 秒，则保证至少显示 2 秒
+ */
+watch(fixedPacks, (newVal) => {
+  if (Array.isArray(newVal) && newVal.length > 0 && isLoading.value) {
+    const elapsed = Date.now() - showLoadingTime.value
+    const minDuration = 2000
+    if (elapsed < minDuration) {
+      setTimeout(() => { isLoading.value = false }, minDuration - elapsed)
+    } else {
+      isLoading.value = false
+    }
+  }
+}, { immediate: true })
+
+/**
+ * 保存两个性价比开关的值到 localStorage
+ */
+watch(isDrawOnly, (v) => localStorage.setItem('isDrawOnly', v))
+watch(isKernelValuable, (v) => localStorage.setItem('isKernelValuable', v))
+
+/**
+ * 切换性价比模式
+ */
+function displayPackEfficiency() {
+  packInfoVOList = packInfoResponseData.map(item => calculatePackEfficiency(item, itemValueMap, isDrawOnly.value, isKernelValuable.value))
+  collectPackInfoVO()
+}
+
+function changeKernelValue() {
+  packInfoVOList = packInfoResponseData.map(item => calculatePackEfficiency(item, itemValueMap, isDrawOnly.value, isKernelValuable.value))
+  collectPackInfoVO()
+}
+
+// 按钮激活状态
+const buttonActive = (v) => {
+  return selectedPackTag.value.includes(v) || selectedPackSaleDate.value.includes(v) || selectedPackSalePrice.value.includes(v)
+    ? 'elevated' : 'tonal'
+}
+
+// 筛选逻辑
 const filterPacks = () => {
   for (let year = date.getFullYear(); year >= 2019; year--) {
     filteredPackMap.value.set(year, [])
   }
   const filterData = packInfoVOList.filter(item => {
-    // 根据标签筛选
     for (const tag of selectedPackTag.value) {
       if (item.tags.includes(tag)) return true
     }
-    // 根据年份筛选
     const itemYear = new Date(item.start).getFullYear()
-    if (selectedPackSaleDate.value.includes(itemYear)) {
-      return true
-    }
-    // 根据价格筛选
+    if (selectedPackSaleDate.value.includes(itemYear)) return true
     for (const priceName of selectedPackSalePrice.value) {
-      const priceItem = packSalePriceList.find(item => priceName === item.label)
-      if (item.price >= priceItem.min && item.price < priceItem.max) {
-        return true
-      }
+      const priceItem = packSalePriceList.find(p => priceName === p.label)
+      if (item.price >= priceItem.min && item.price < priceItem.max) return true
     }
     return false
   })
@@ -328,54 +295,16 @@ const resetPackFilterOption = () => {
   filterPacks()
 }
 
-// 选择筛选条件时向筛选列表添加或删除
+// 选择筛选条件
 function choosePackOption(list, value) {
-  const index = list.indexOf(value);
+  const index = list.indexOf(value)
   index > -1 ? list.splice(index, 1) : list.push(value)
   filterPacks()
 }
 
-loadingItemValue()
-const isLoading = ref(false) // 初始 false，先不弹
-const showLoadingTime = ref(0) // 记录开始显示的时间戳
-
-function reloadPage() {
-  location.reload()
-}
-
-onMounted(() => {
-  // 2 秒内若没数据，则显示对话框
-  setTimeout(() => {
-    if (Array.isArray(fixedPacks.value) && fixedPacks.value.length === 0) {
-      isLoading.value = true
-      showLoadingTime.value = Date.now()
-    }
-  }, 1500)
-})
-
-// 监听数据，一旦有值则关闭对话框（但要保证至少显示 2 秒）
-watch(
-  fixedPacks,
-  (newVal) => {
-    if (Array.isArray(newVal) && newVal.length > 0) {
-      if (isLoading.value) {
-        const elapsed = Date.now() - showLoadingTime.value
-        const minDuration = 2000
-        if (elapsed < minDuration) {
-          // 不足 2 秒，则延迟关闭
-          setTimeout(() => {
-            isLoading.value = false
-          }, minDuration - elapsed)
-        } else {
-          isLoading.value = false
-        }
-      }
-    }
-  },
-  { immediate: true }
-)
-
 </script>
+
+
 <template>
   <div>
     <div id="pack" class="pack-efficiency-page">
