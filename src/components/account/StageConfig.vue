@@ -44,7 +44,7 @@ const developerMode = ref(false)
 function handleClick() {
   clickCount.value++
   if (clickCount.value >= 8) {
-    developerMode.value = true    
+    developerMode.value = true
   }
 }
 
@@ -612,7 +612,7 @@ onMounted(() => {
         <v-expansion-panel-text class="expansion-panel-text">
           <v-alert type="warning" variant="tonal" border @click="handleClick"><b>如不清楚自定义参数的含义，请保持默认设置！</b></v-alert>
           <v-btn @click="closeDevMode" color="error" class="mt-2" v-if="developerMode">
-      已开启开发者模式，点我关闭</v-btn>
+            已开启开发者模式，点我关闭</v-btn>
           <div class="cover-v-card-subtitle">
             <p>自定义参数用于定制更适合自己的刷图方案和购买策略</p>
             <p>自定义参数保存于当前设备，后续将可通过一图流账号保存和同步</p>
@@ -1073,10 +1073,12 @@ onMounted(() => {
           <v-list>
             <v-list-item>
               <v-list-item-title>
-                自定义精英材料价值
+                自定义材料价值
               </v-list-item-title>
               <!-- 按钮：打开自定义材料弹窗 -->
-              <v-btn color="primary" variant="outlined" size="small" text="新增自定义材料" @click="customItemDialog = true"
+              <v-btn color="primary" variant="outlined" size="small" text="自定义精英材料" @click="customItemDialog = true"
+                class="m-12-0"></v-btn>
+              <v-btn color="primary" variant="outlined" size="small" text="自定义其它材料" @click="customItemDialog = true"
                 class="m-12-0"></v-btn>
               <!-- 自定义材料列表：显示已添加的自定义材料及其价值 -->
               <v-table>
