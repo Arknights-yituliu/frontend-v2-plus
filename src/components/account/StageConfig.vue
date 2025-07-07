@@ -1051,7 +1051,7 @@ onMounted(() => {
               </v-card>
             </v-list-item>
             <!-- 溢出材料屏蔽，选中的材料直接 -->
-            <v-list-item>
+            <v-list-item v-if="developerMode">
               <v-list-item-title>
                 溢出材料屏蔽
               </v-list-item-title>
