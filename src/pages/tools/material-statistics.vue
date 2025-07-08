@@ -580,12 +580,12 @@ onMounted(() => {
           <ItemImage :item-id="el.itemId" :size="60" v-for="(el,index) in itemInfoList" @click="selectItem(index)"
                      :class="itemOptionStatus(el.display)"></ItemImage>
         </div>
-
         <table class="item-table">
           <tbody>
           <tr>
             <th v-for="(item,index) in itemCostTableHeader">
               <ItemImage :item-id="item" :size="50" :mobile-size="50" class="m-a" v-show="index>0"></ItemImage>
+              {{ item }}
             </th>
           </tr>
           <tr v-for="list in itemCostTableData">
@@ -613,6 +613,7 @@ onMounted(() => {
             <th></th>
             <th v-for="item in r3ItemIdList">
               <ItemImage :item-id="item.itemId" :size="50" :mobile-size="50" class="m-a"></ItemImage>
+              {{ item.itemName }}
             </th>
           </tr>
           <tr v-for="r3List in r3ItemCostListByDate">
