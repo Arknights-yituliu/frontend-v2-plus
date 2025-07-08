@@ -1,11 +1,11 @@
 <script setup>
-import {ref} from "vue";
+import { ref } from "vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
-import {dateFormat} from "/src/utils/dateUtil.js";
-import {itemSeriesIdList} from "/src/utils/item/itemSeries.js";
+import { dateFormat } from "/src/utils/dateUtil.js";
+import { itemSeriesIdList } from "/src/utils/item/itemSeries.js";
 
 import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
-import {formatNumber} from "/src/utils/format.js";
+import { formatNumber } from "/src/utils/format.js";
 import ModuleHeader from "@/components/layout/ModuleHeader.vue";
 
 const props = defineProps(['modelValue'])
@@ -194,35 +194,34 @@ function getTableDividerClass(divider) {
   <v-card class="activity-table-pc-card" id="act-table-pc">
     <table class="activity-table-pc">
       <tbody>
-      <tr>
-        <td class="activity-name-pc">活动名称</td>
-        <td v-for="(item, index) in historyActivityTableHeaders" :key="index">
-          <div>
-            <ItemImage :item-id="item.itemId" class="m-a" ></ItemImage>
-          </div>
-        </td>
-      </tr>
-      <tr v-for="(act, rowIndex) in historyActivityTable" :key="rowIndex"
-          :class="getTableDividerClass(act.divider)">
-        <td class="activity-name-pc">
-          {{ act.activityName }} <br>
-          {{ act.startTime }}
-        </td>
-        <td v-for="(item, index) in historyActivityTableHeaders" :key="index"
+        <tr>
+          <td class="activity-name-pc">活动名称</td>
+          <td v-for="(item, index) in historyActivityTableHeaders" :key="index">
+            <div>
+              <ItemImage :item-id="item.itemId" class="m-a"></ItemImage>
+            </div>
+          </td>
+        </tr>
+        <tr v-for="(act, rowIndex) in historyActivityTable" :key="rowIndex" :class="getTableDividerClass(act.divider)">
+          <td class="activity-name-pc">
+            {{ act.activityName }} <br>
+            {{ act.startTime }}
+          </td>
+          <td v-for="(item, index) in historyActivityTableHeaders" :key="index"
             :style="getCellBgColor(rowIndex, item.lastUpInterval)">
-          <div v-show="act.itemList[item.itemId]">
-            <ItemImage :item-id="item.itemId" class="m-a"></ItemImage>
-          </div>
-          <div class="activity-stage-efficiency-pc" v-show="act.itemList[item.itemId]">
-            {{ getStageEfficiency(act.itemList[item.itemId]) }}%
-          </div>
-        </td>
-      </tr>
+            <div v-show="act.itemList[item.itemId]">
+              <ItemImage :item-id="item.itemId" class="m-a"></ItemImage>
+            </div>
+            <div class="activity-stage-efficiency-pc" v-show="act.itemList[item.itemId]">
+              {{ getStageEfficiency(act.itemList[item.itemId]) }}%
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
   </v-card>
   <!-- 移动端小列表 -->
-  <v-card class="activity-table-phone-card" id="act-table-phone">
+  <!-- <v-card class="activity-table-phone-card" id="act-table-phone">
     <table class="activity-table-phone">
       <tr v-for="(act, index) in historyActivityList" :key="index">
         <td class="activity-name-phone">{{ act.zoneName }}</td>
@@ -239,5 +238,54 @@ function getTableDividerClass(divider) {
         </td>
       </tr>
     </table>
-  </v-card>
+  </v-card> -->
+
+  <!-- 正常 container，不加 fluid -->
+
+  <v-container>
+  <v-row dense>
+    <v-col
+      v-for="(act, index) in historyActivityList"
+      :key="index"
+      cols="12"
+    >
+      <v-card max-width="570">
+        <v-card-text style="padding: 12px;">
+          <v-row class="d-flex align-center" no-gutters>
+            <!-- 左边活动名称，xs占满12列，sm及以上自动调整 -->
+            <v-col cols="12" sm="4">
+              <div class="text-h6 font-weight-bold">
+                {{ act.zoneName }}
+              </div>
+            </v-col>
+
+            <!-- 右边模块，xs占满12列，sm及以上占8列 -->
+            <v-col cols="12" sm="8">
+              <div class="d-flex flex-row flex-wrap ga-2 justify-end" style="max-width: 100%;">
+                <div
+                  v-for="(stage, stageIndex) in act.actStageList"
+                  :key="stageIndex"
+                  class="d-flex align-center"
+                  style="width: 108px;"
+                >
+                  <ItemImage :item-id="stage.itemId" size="36" />
+                  <div class="d-flex flex-column ms-2">
+                    <div>{{ stage.stageCode }}</div>
+                    <div class="text-caption">
+                      {{ formatNumber(stage.stageEfficiency * 100, 2) }}%
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
+</v-container>
+
+
+
+
 </template>
