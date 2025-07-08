@@ -133,7 +133,13 @@ function loadingStageConfig() {
 function choosePresetParameter(presetParameter) {
   const parameters = presetParameter.parameterSets
   for (const name in parameters) {
-    stageConfig.value[name] = parameters[name];
+    if (name === "workshopStrategy") {
+      for (const workshopStrategyName in parameters.workshopStrategy) {
+        stageConfig.value.workshopStrategy[workshopStrategyName] = parameters.workshopStrategy[workshopStrategyName];
+      }
+    } else {
+      stageConfig.value[name] = parameters[name];
+    }
   }
   updateStageActive()
   createMessage({
@@ -1044,7 +1050,7 @@ onMounted(() => {
                   <v-chip-group v-model="selection">
                     <v-chip v-for="parameter in itemCard.parameters" @click="choosePresetParameter(parameter)">{{
                       parameter.buttonText
-                    }}
+                      }}
                     </v-chip>
                   </v-chip-group>
                 </template>
