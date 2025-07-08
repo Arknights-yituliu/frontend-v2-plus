@@ -113,10 +113,16 @@ async function getItemValueMapCacheByConfig(stageConfig, forceRefresh = false) {
 }
 
 
-
+const penguinDataMap = new Map()
 const penguinCacheKey = "penguin-cache-v2";
 
 async function getPenguinMatrixCache() {
+
+    // const key = cacheKeyDict.LOCAL_PENGUIN_DATA
+    //
+    // if(penguinDataMap.has(key)){
+    //     return  penguinDataMap.get(key)
+    // }
 
     let penguinData = []
 
@@ -126,7 +132,7 @@ async function getPenguinMatrixCache() {
     let cacheData = await myDatabase.cache_data.get(penguinCacheKey)
     //有缓存判断缓存时间是否超过设定时间，未超过直接返回缓存
     if (cacheData) {
-        if (Date.now() - cacheData.createTime < 60 * 60 * 12 * 1000) {
+        if (Date.now() - cacheData.createTime < 60 * 60* 1000) {
             console.log(`${penguinCacheKey}.返回缓存的数据`)
 
             return cacheData.resource
@@ -148,6 +154,8 @@ async function getPenguinMatrixCache() {
             version: "automated",
             createTime: new Date().getTime()
         }
+
+        penguinDataMap.set()
         putCache(info)
         penguinData = matrix
     }).catch(e => {
@@ -192,7 +200,7 @@ async function getStageInfoCache() {
 
     let cacheData = await myDatabase.cache_data.get(cacheKey)
     if (cacheData) {
-        if (new Date().getTime() - cacheData.createTime < 60 * 60 * 12 * 1000) {
+        if (new Date().getTime() - cacheData.createTime < 60 * 60 * 1000) {
             console.log(`${cacheKey}.返回缓存的数据`)
             return cacheData.resource
         }
