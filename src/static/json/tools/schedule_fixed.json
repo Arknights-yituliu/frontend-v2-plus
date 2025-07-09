@@ -231,7 +231,7 @@
     "defaultStatus": true,
     "dailyRewards": true
   },
-  "夏日嘉年华.Part1": {
+  "夏活.Part1": {
     "originium": 13,
     "orundum": 0,
     "gachaTicket": 3,
@@ -243,7 +243,7 @@
     "probability": "",
     "defaultStatus": true
   },
-  "夏日嘉年华.Part2": {
+  "夏活.Part2": {
     "originium": 16,
     "orundum": 0,
     "gachaTicket": 0,
@@ -255,7 +255,7 @@
     "probability": "",
     "defaultStatus": true
   },
-  "夏日嘉年华.Part3": {
+  "夏活.Part3": {
     "originium": 9,
     "orundum": 0,
     "gachaTicket": 0,
@@ -267,7 +267,7 @@
     "probability": "",
     "defaultStatus": true
   },
-  "夏日嘉年华专属十连寻访凭证": {
+  "夏活专属十连寻访凭证": {
     "originium": 0,
     "orundum": 0,
     "gachaTicket": 0,
@@ -279,7 +279,7 @@
     "probability": "",
     "defaultStatus": true
   },
-  "夏日嘉年华每日赠送单抽": {
+  "夏活每日赠送单抽": {
     "originium": 0,
     "orundum": 0,
     "gachaTicket": 14,
