@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {nextTick, onMounted, ref} from "vue";
 import {createMessage} from '/src/utils/message'
 import {calculationStageEfficiency} from '/src/utils/item/stageEfficiencyCal.js'
 import {getStageConfig} from "/src/utils/user/userConfig.js";
@@ -21,9 +21,9 @@ function getStageDetail() {
       const {stageId} = item
       stageDropDetailMap.set(stageId, item)
 
-      if(stageId==="main_01-07"||stageId==="act15side_07"){
-        reviewStageDropDetail(item)
-      }
+      // if(stageId==="main_01-07"||stageId==="act15side_07"){
+      //   reviewStageDropDetail(item)
+      // }
     }
 
     // reviewStageDropDetail({stageId: "main_08-13"})
@@ -107,18 +107,24 @@ function getStageCollectByZone() {
         }
         const index = indexMap.get(zoneName);
         stageCollect.value.ActRep[index].list.push(stage);
+        continue;
       }
+
+
 
       if (!indexMap.has(zoneName)) {
         stageCollect.value.Act.push({
           zoneName, zoneId, selectAll: true, list: []
         })
+
         indexMap.set(zoneName, stageCollect.value.Act.length - 1)
       }
+
       const index = indexMap.get(zoneName);
+
       stageCollect.value.Act[index].list.push(stage);
     }
-    // console.log(stageCollect.value)
+
 
 
   });
@@ -127,7 +133,7 @@ function getStageCollectByZone() {
 let reviewStageDropDetailList = ref([])
 
 
-function reviewStageDropDetail(stage) {
+async function reviewStageDropDetail(stage) {
   const {stageId} = stage
   if (!stageDropDetailMap.has(stageId)) {
     createMessage({
@@ -136,13 +142,14 @@ function reviewStageDropDetail(stage) {
     })
   }
   reviewStageDropDetailList.value.push(stageDropDetailMap.get(stageId))
-
-
-  const intervalId = setInterval(() => {
-        if (createLineChart(stage)) {
-          clearInterval(intervalId);
-        }
-      }, 500)
+// 等待 DOM 更新后再尝试初始化图表
+  await nextTick();
+  createLineChart(stageDropDetailMap.get(stageId))
+  // const intervalId = setInterval(() => {
+  //       if (createLineChart(stage)) {
+  //         clearInterval(intervalId);
+  //       }
+  //     }, 500)
 
 }
 
@@ -155,6 +162,7 @@ function createLineChart(stage) {
   }
   let xData = []
   let yData = []
+  console.log(dropDetail)
   for (const item of dropDetail) {
     xData.push(item.itemName)
     yData.push(formatNumber(item.expectedOutput))
@@ -199,8 +207,6 @@ function createLineChart(stage) {
 
   myChart.setOption(option);
 
-
-  return true
 }
 
 onMounted(() => {
