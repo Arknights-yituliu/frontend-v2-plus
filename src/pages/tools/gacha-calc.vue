@@ -211,9 +211,9 @@ let activityType = ref('联动限定')
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 let scheduleOptions = [
   {
-    name: '夏活(0801-0815)',
-    start: new Date('2025/08/01 16:00:00'),
-    end: new Date('2025/08/15 04:01:00'),
+    name: '夏活(0802-0816)',
+    start: new Date('2025/08/02 16:00:00'),
+    end: new Date('2025/08/16 04:01:00'),
     activityType: '夏活限定',
     disabled: false,
     dailyGiftResources: true,
