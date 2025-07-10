@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import { ref} from "vue";
 import {formatNumber} from "/src/utils/format.js";
 
 const saleTypes = [
@@ -75,9 +75,9 @@ hiddenKernel()
       title="礼包性价比总表"
   >
 
-    <v-switch label="是否显示包含中坚寻访的性价比" color="primary" v-model="displayKernel" @click="hiddenKernel()" >
+<!--    <v-switch label="是否显示包含中坚寻访的性价比" color="primary" v-model="displayKernel" @click="hiddenKernel()" >-->
 
-    </v-switch>
+<!--    </v-switch>-->
 
     <template v-slot:text>
       <v-text-field
