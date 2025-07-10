@@ -25,7 +25,7 @@ const fixedPacks = ref([])
 
 
 // 用于缓存
-
+let packInfoVOListOnSale = ref([])
 let packInfoResponseData = []
 let packInfoVOList = []
 let itemValueMap = new Map()
@@ -69,10 +69,14 @@ async function loadingItemValue() {
 async function getPackInfoData() {
   packInfoVOList = []
   packInfoResponseData = await packInfoCache.listPackInfo()
-
+  const timeStamp = Date.now()
   for (const item of packInfoResponseData) {
     const packInfoVO = calculatePackEfficiency(item, itemValueMap, isDrawOnly.value, isKernelValuable.value)
     packInfoVOList.push(packInfoVO)
+    if(item.end<timeStamp){
+      packInfoVOListOnSale.value.push(packInfoVO)
+    }
+
 
   }
 
