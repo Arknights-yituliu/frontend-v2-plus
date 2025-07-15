@@ -312,7 +312,9 @@ const buttonActive = (v) => {
 
 }
 
-const packCollect = ref(new Map())
+const year2019 = new Date('2019/04/30 00:00:00');
+
+const packCollect = ref([])
 
 function filterPacksV2() {
 
@@ -322,7 +324,10 @@ function filterPacksV2() {
 
     const packYear = new Date(pack.start).getFullYear()
 
-    console.log(`${packYear}年`, packFilterConditions.value.date)
+    if(pack.start<year2019){
+      continue
+    }
+
     const dateFlag = packFilterConditions.value.date.size === 0 || packFilterConditions.value.date.has(`${packYear}年`)
     const tagFlag = packFilterConditions.value.tag.size === 0 || packFilterConditions.value.tag.has(tagMap.get(pack.tag))
     let priceFlag = packFilterConditions.value.price.size === 0
@@ -343,7 +348,17 @@ function filterPacksV2() {
     }
   }
 
-  packCollect.value = result
+  const list = []
+  for(const [k,v] of result){
+    list.push({
+      year:k,
+      list:v
+    })
+  }
+
+  list.sort((a, b) => b.year - a.year)
+
+  packCollect.value = list
 }
 
 
@@ -430,9 +445,9 @@ function filterPacksV2() {
       </div>
 
       <!-- 按年份展示筛选礼包 -->
-      <template v-for="[year, list] in packCollect">
-        <h2 style="margin: 12px;">{{ year }}年</h2>
-        <PackCardContainer :modelValue="list"/>
+      <template v-for="collect in packCollect">
+        <h2 style="margin: 12px;">{{ collect.year }}年</h2>
+        <PackCardContainer :modelValue="collect.list"/>
       </template>
 
       <!-- 礼包性价比总表 Start -->
