@@ -115,7 +115,7 @@ const routes = [
     {
         path: '/tools/sui',
         text: '岁兽残识记录器',
-        name: 'sui',
+        name: 'sui1',
         module: 'tools',
         icon: "mdi-application-edit",
         display: true,
@@ -124,7 +124,7 @@ const routes = [
     {
         path: '/sui',
         text: '岁兽残识记录器',
-        name: 'sui',
+        name: 'sui2',
         display: false,
         component: () => import('/src/pages/tools/sui.vue')
     },
