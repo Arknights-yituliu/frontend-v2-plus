@@ -346,12 +346,12 @@
     {
       "name": "技巧概要",
       "paramDescription": [
-        "使用风笛：使用风笛（+80%副产物出率）加工技巧概要",
+        "使用赫拉格：使用赫拉格（+80%副产物出率）加工技巧概要",
         "使用九色鹿：使用九色鹿加工技巧概要获取因果"
       ],
       "parameters": [
         {
-          "buttonText": "使用风笛",
+          "buttonText": "使用赫拉格",
           "parameterSets": {
             "workshopStrategy": {
               "skillSummary1to2": {
@@ -364,7 +364,7 @@
               }
             }
           },
-          "message": "龙门币系数已修改为1"
+          "message": "使用赫拉格（+80%副产物出率）加工技巧概要"
         },
         {
           "buttonText": "使用九色鹿",
@@ -380,7 +380,7 @@
               }
             }
           },
-          "message": "龙门币系数已修改为0"
+          "message": "使用九色鹿加工技巧概要获取因果"
         }
       ]
     },
