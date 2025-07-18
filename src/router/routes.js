@@ -113,6 +113,22 @@ const routes = [
         component: () => import('/src/pages/tools/schedule.v2.vue')
     },
     {
+        path: '/tools/sui',
+        text: '岁兽残识记录器',
+        name: 'sui',
+        module: 'tools',
+        icon: "mdi-application-edit",
+        display: true,
+        component: () => import('/src/pages/tools/sui.vue')
+    },
+    {
+        path: '/sui',
+        text: '岁兽残识记录器',
+        name: 'sui',
+        display: false,
+        component: () => import('/src/pages/tools/sui.vue')
+    },
+    {
         path: '/tools/schedule',
         text: '排班表生成器',
         name: 'Schedule',
