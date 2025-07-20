@@ -198,7 +198,7 @@ const routes = [
         display: true,
         module: 'information',
         icon: "mdi-routes",
-        component: () => import('/src/pages/information/integratedStrategies.vue')
+        component: () => import('/src/pages/information/integrated-strategies/integratedStrategies.vue')
     },
     {
         path: '/account/register',
