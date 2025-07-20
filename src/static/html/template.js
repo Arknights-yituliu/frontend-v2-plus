@@ -8,6 +8,13 @@
  * @param {number} [options.overlapThreshold=0.5] - 重叠抑制阈值(0-1)
  * @returns {Promise<Array<{x: number, y: number, width: number, height: number, confidence: number, templateKey: string}>>} - 匹配结果数组（包含模板键值）
  */
+
+// 识别逻辑：利用tempBase64.js中的模板图片，调用opencv.js进行模板匹配，寻找定界框，部分节点类别有多个模板，对重叠定界框仅保留置信度最高的
+
+// 网格逻辑：将识别到的起始点放在[3,4]位置，然后以上下左右最近的格子计算行/列间距，搜索各个格子对应的格点
+
+// TODO：识别连接线
+
 async function templateMatchingWithCellTemplates(inputBase64, options = {}) {
     // 设置默认选项
     const {
