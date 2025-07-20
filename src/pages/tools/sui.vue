@@ -1,3 +1,10 @@
 <template>
-  <iframe src="/html/sui_v1.2.html" style="width:100%; " frameborder="0"></iframe>
+  <iframe src="/html/sui_v1.2.html" class="sui-box"></iframe>
 </template>
+
+<style>
+.sui-box{
+  width:100%;
+  height: calc(100vh - 64px);
+}
+</style>
