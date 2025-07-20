@@ -1,3 +1,3 @@
 <template>
-  <iframe src="/src/static/html/sui.html" style="width:100%; height:100vh;" frameborder="0"></iframe>
+  <iframe src="/html/sui_v1.2.html" style="width:100%; " frameborder="0"></iframe>
 </template>

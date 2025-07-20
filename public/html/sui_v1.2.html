@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>岁兽残识地图记录器</title>
+    <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --bg-color2: #242424;
+            --grid-bg: #2d2d2d;
+            --grid-size: 56px;
+            --grid-gap: 24px;
+            --line-color: #ff6b9e;
+            --line-color-unknown: #6e6e6e;
+            --text-color: #e0e0e0;
+            --unknown-color: #3d3d3d;
+            --closed-color: #9f9f9f;
+            --huoluan-color: #cf48be;
+            --chuanshuo-color: #008a7f;
+            --zayi-color: #008a7f;
+            --gusi-color: #008a7f;
+            --changle-color: #008a7f;
+            --choumou-color: #008a7f;
+            --shiyi-color: #007b3e;
+            --yiyu-color: #007b3e;
+            --blank-color: #0e0e0e;
+        }
+
+        body {
+            font-family: "Arial", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        a {
+            color: #eee
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            font-size: small;
+        }
+
+        .grid-container {
+            position: relative;
+            margin-bottom: 20px;
+            z-index: 1;
+        }
+
+        .grid {
+            display: grid;
+            gap: var(--grid-gap);
+            position: relative;
+            z-index: 1;
+        }
+
+        .grid-cell {
+            width: var(--grid-size);
+            height: var(--grid-size);
+            background-color: var(--grid-bg);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s, background-color 0.2s;
+            z-index: 3;
+            user-select: none;
+        }
+
+        .grid-cell:hover {
+            transform: scale(1.1);
+        }
+
+        .grid-cell.unknown {
+            background-color: var(--unknown-color);
+        }
+
+        .grid-cell.huoluan {
+            background-color: var(--huoluan-color);
+        }
+
+        .grid-cell.chuanshuo {
+            background-color: var(--chuanshuo-color);
+        }
+
+        .grid-cell.zayi {
+            background-color: var(--zayi-color);
+        }
+
+        .grid-cell.gusi {
+            background-color: var(--gusi-color);
+        }
+
+        .grid-cell.changle {
+            background-color: var(--changle-color);
+        }
+
+        .grid-cell.choumou {
+            background-color: var(--choumou-color);
+        }
+
+        .grid-cell.shiyi {
+            background-color: var(--shiyi-color);
+        }
+
+        .grid-cell.yiyu {
+            background-color: var(--yiyu-color);
+        }
+
+        .grid-cell.closed {
+            background-color: var(--closed-color) !important;
+        }
+
+        .grid-cell.start {
+            background-color: --bg-color;
+            box-shadow: 0 0 0 3px #ffffff;
+        }
+
+        .grid-cell.blank {
+            background-color: var(--blank-color);
+        }
+
+        .grid-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2px;
+        }
+
+        .unknown .grid-icon {
+            opacity: 0.3;
+        }
+
+        .grid-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .grid-label {
+            font-size: 11px;
+            color: white;
+            text-align: center;
+            position: absolute;
+            bottom: 2px;
+            width: 100%;
+        }
+
+        .grid {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .grid-cell {
+            pointer-events: auto;
+        }
+
+        .connection {
+            position: absolute;
+            background-color: var(--line-color);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .connection.horizontal {
+            height: 8px;
+            transform: translateY(calc(var(--grid-size) / 2 - 4px));
+        }
+
+        .connection.vertical {
+            width: 8px;
+            transform: translateX(calc(var(--grid-size) / 2 - 4px));
+        }
+
+        .popup {
+            position: absolute;
+            background-color: var(--bg-color2);
+            border-radius: 8px;
+            padding: 16px;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(48, 48, 48, 0.3);
+            height: 100%;
+            width: 500px;
+            max-width: 75%;
+            right: 0;
+            top: 0;
+            transform: translateX(100%);
+            /* 初始状态：完全隐藏在右侧 */
+            transition: transform 0.3s ease-in-out;
+            /* 添加过渡效果 */
+        }
+
+        .popup.hidden {
+            transform: translateX(100%);
+            /* 隐藏状态：完全隐藏在右侧 */
+        }
+
+        .popup:not(.hidden) {
+            transform: translateX(0);
+            /* 显示状态：滑入到正常位置 */
+        }
+
+        .popup h3 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: var(--text-color);
+        }
+
+        .popup-section {
+            margin-bottom: 16px;
+        }
+
+        .popup label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .popup input[type="text"],
+        .popup input[type="number"],
+        .popup textarea,
+        .popup select {
+            width: 90%;
+            padding: 8px;
+            background-color: #333;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: var(--text-color);
+            margin-bottom: 6px;
+        }
+
+        .popup textarea {
+            min-height: 40px;
+            resize: vertical;
+        }
+
+        .type-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .type-button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: white;
+        }
+
+        .type-button.unknown {
+            background-color: var(--unknown-color);
+        }
+
+        .type-button.huoluan {
+            background-color: var(--huoluan-color);
+        }
+
+        .type-button.chuanshuo {
+            background-color: var(--chuanshuo-color);
+        }
+
+        .type-button.zayi {
+            background-color: var(--zayi-color);
+        }
+
+        .type-button.gusi {
+            background-color: var(--gusi-color);
+        }
+
+        .type-button.changle {
+            background-color: var(--changle-color);
+        }
+
+        .type-button.choumou {
+            background-color: var(--choumou-color);
+        }
+
+        .type-button.shiyi {
+            background-color: var(--shiyi-color);
+        }
+
+        .type-button.yiyu {
+            background-color: var(--yiyu-color);
+        }
+
+        .type-button.blank {
+            background-color: var(--blank-color);
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .toggle-switch label {
+            margin-left: 8px;
+            margin-bottom: 0;
+        }
+
+        .item-list {
+            margin-bottom: 12px;
+        }
+
+        .item-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .item-row input {
+            flex: 1;
+        }
+
+        .add-button {
+            background-color: #444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .reset-button {
+            background-color: #d32f2f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .reset-button:hover {
+            background-color: #b71c1c;
+        }
+
+        .recmap-button {
+            background-color: #2c7a0a;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .recmap-button:hover {
+            background-color: #419f19;
+        }
+
+        /* 添加Toggle开关样式 */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-right: 8px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--closed-color);
+            transition: 0.4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--current-color);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+        .image-upload {
+            margin-top: 10px;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            border: 1px dashed #666;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            display: block;
+        }
+
+        p {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .paste-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        #recmap-popup {
+            width: 300px;
+            height: auto;
+            padding: 20px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            right: auto;
+        }
+
+        #recmap-popup.hidden {
+            transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #recmap-popup:not(.hidden) {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .example_img {
+            width: 100%;
+            /* 或你想要的任何宽度 */
+            overflow: hidden;
+            /* 防止内容溢出 */
+        }
+
+        .example_img img {
+            width: 60%;
+            object-fit: contain;
+            /* 保持宽高比缩放，不会裁剪图片 */
+            opacity: 0.5;
+        }
+
+        /* 表单样式 */
+        .form-section {
+            margin-bottom: 16px;
+        }
+
+        .form-section.hidden {
+            display: none;
+        }
+
+        .form-section h4 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .option-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .option-button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            background-color: #444;
+            color: white;
+        }
+
+        .option-button.selected {
+            background-color: var(--current-color);
+        }
+
+        /* 添加在现有CSS中 */
+        .quick-menu {
+            position: absolute;
+            background-color: var(--bg-color2);
+            border-radius: 8px;
+            padding: 8px;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 120px;
+        }
+
+        .quick-menu-button {
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: white;
+            text-align: left;
+            background-color: #444;
+        }
+
+        .quick-menu-button:hover {
+            opacity: 0.8;
+        }
+
+        /* 添加在现有CSS中 */
+        .quick-menu-divider {
+            height: 1px;
+            background-color: #555;
+            margin: 4px 0;
+        }
+
+        /* 修改标记容器样式 */
+        .cell-badge-container {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 2px;
+            max-width: 40px;
+            /* 限制最大宽度，防止溢出 */
+            pointer-events: none;
+        }
+
+        .cell-badge {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .cell-badge svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        #preserve-data:checked+.slider {
+            background-color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>岁兽残识记图器_v1.2</h1>
+    <p>脑子总有记不住东西的时候……</p>
+    <p>
+        鼠标<b>拖拽</b>可以在节点之间绘制连接点，反向拖拽可以删除。
+        <br />鼠标<b>右键</b>可以切换节点开关状态。以及快捷关闭打开的菜单。<br />
+        鼠标<b>滚轮</b>可以切换节点类型。<br />
+        点击节点可以编辑节点类型或者记笔记。在笔记框内粘贴图片可以记录截图。<br />
+        <span style="color: green">v1.2：增加鼠标滚轮和右键操作。增加悬浮菜单与图标标记。现在增加“仅更新节点类型”选项，可以在识别后保留记录的数据</span>
+    </p>
+    <p style="color: orangered">
+        已知bug：截图过小时识别效果不佳，不建议在过小的窗口里截图。<br />识别图片功能运行开销较大，电脑风扇会狂转。
+    </p>
+
+    <div class="controls">
+        <details>
+            <summary>行列设置</summary>
+            <div>
+                <label for="rows">行数:</label>
+                <input type="number" id="rows" min="1" max="20" value="5" />
+            </div>
+            <div>
+                <label for="cols">列数:</label>
+                <input type="number" id="cols" min="1" max="20" value="7" />
+            </div>
+            <div>
+                <label for="start-row">起始行:</label>
+                <input type="number" id="start-row" min="1" max="5" value="3" />
+            </div>
+            <div>
+                <label for="start-col">起始列:</label>
+                <input type="number" id="start-col" min="1" max="7" value="4" />
+            </div>
+            <button id="generate-grid">生成</button>
+            <br />
+            <div class="toggle-switch">
+                <label for="cell-swithed-by-wheel">允许滚轮切换节点类型</label>
+                <label class="switch">
+                    <input type="checkbox" id="cell-swithed-by-wheel" checked="true" />
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </details>
+    </div>
+
+    <div class="grid-container" id="grid-container">
+        <div class="grid" id="grid"></div>
+    </div>
+    <div class="buttons">
+
+        <button class="recmap-button" id="recmap-button">
+            识别地图输入
+        </button>
+        <button class="reset-button" id="reset-button">重置所有数据</button>
+        <div class="toggle-switch">
+            <label for="preserve-data">识别时仅更新节点类型</label>
+            <label class="switch">
+                <input type="checkbox" id="preserve-data" checked="true" />
+                <span class="slider"></span>
+            </label>
+
+        </div>
+
+    </div>
+    <p>开启时，识别后不会再清空所有数据，仅会更新节点类型，适合推进到一半时更新<br>* 暂不能识别连接线，还需手动输入</p>
+
+    <div class="popup hidden" id="popup">
+        <h3 id="popup-title">编辑格点</h3>
+
+        <div class="type-buttons">
+            <button class="type-button unknown" data-type="unknown">
+                未知
+            </button>
+            <button class="type-button huoluan" data-type="huoluan">
+                祸乱
+            </button>
+            <button class="type-button chuanshuo" data-type="chuanshuo">
+                传说
+            </button>
+            <button class="type-button zayi" data-type="zayi">杂疑</button>
+            <button class="type-button gusi" data-type="gusi">故肆</button>
+            <button class="type-button changle" data-type="changle">
+                常乐
+            </button>
+            <button class="type-button choumou" data-type="choumou">
+                筹谋
+            </button>
+            <button class="type-button shiyi" data-type="shiyi">
+                拾遗
+            </button>
+            <button class="type-button yiyu" data-type="yiyu">易与</button>
+            <button class="type-button blank" data-type="blank">无</button>
+        </div>
+
+        <div class="toggle-switch">
+            <label for="cell-closed">是否开启</label>
+            <label class="switch">
+                <input type="checkbox" id="cell-closed" checked />
+                <span class="slider" id="cell-closed-silder"></span>
+            </label>
+        </div>
+
+        <div id="form-sections">
+            <!-- 常乐类型表单 -->
+            <div class="form-section changle">
+                <h4>事件（仅限一项）</h4>
+                <div class="option-buttons">
+                    <button class="option-button" data-option="nian">年 / 三缺一</button>
+                    <button class="option-button" data-option="shu">黍 / 种因得果</button>
+                    <button class="option-button" data-option="ling">令 / 掷地有声</button>
+                </div>
+            </div>
+
+            <!-- 杂疑类型表单 -->
+            <div class="form-section zayi">
+                <h4>更多奖励（仅限一项）</h4>
+                <div class="option-buttons" data-group="more">
+                    <button class="option-button" data-option="stone50">≥50源石锭 + </button>
+                    <button class="option-button" data-option="hp15">≥15生命上限 + </button>
+                    <button class="option-button" data-option="life1">=1生命值 + </button>
+                    <button class="option-button" data-option="yan4">≥4炎干员 + </button>
+                    <button class="option-button" data-option="hope12">≥12希望 + </button>
+                </div>
+
+                <h4>普通奖励（仅限一项）</h4>
+                <div class="option-buttons" data-group="normal">
+                    <button class="option-button" data-option="stone20">≥20源石锭</button>
+                    <button class="option-button" data-option="hp10">≥10生命上限</button>
+                    <button class="option-button" data-option="life3">≤3生命值</button>
+                    <button class="option-button" data-option="yan2">≥2炎干员</button>
+                    <button class="option-button" data-option="hope6">≥6希望</button>
+                    <button class="option-button" data-option="gamble">-5源石锭掷出通宝</button>
+                </div>
+
+                <h4>结局节点</h4>
+                <div class="option-buttons" data-group="end">
+                    <button class="option-button" data-option="end">结局节点</button>
+                </div>
+            </div>
+
+            <!-- 拾遗类型表单 -->
+            <div class="form-section shiyi">
+                <h4>奖励（仅限一项）</h4>
+                <div class="option-buttons">
+                    <button class="option-button" data-option="stone8">+8源石锭</button>
+                    <button class="option-button" data-option="hp3">+3生命上限</button>
+                    <button class="option-button" data-option="life5">+5生命值</button>
+                    <button class="option-button" data-option="shield4">+4护盾</button>
+                    <button class="option-button" data-option="ticket">招募券</button>
+                    <button class="option-button" data-option="coin">通宝</button>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="popup-section">
+            <label for="cell-notes">笔记:</label>
+            <textarea id="cell-notes" placeholder="添加笔记或截图..."></textarea>
+        </div>
+    </div>
+
+    <div class="popup hidden" id="recmap-popup">
+        <h3>识别地图输入</h3>
+        <p>
+            请粘贴游戏地图的截图，点击确认后可能需要等待几秒，电脑cpu会狂转一会儿，因为目前的识别算法没有经过任何优化。<br /><b>确保截图内容只包含完整的地图部分，否则会识别失败</b>
+        </p>
+        <div class="example_img"><img src="example.png" /></div>
+
+        <div class="image-upload">
+            <div class="image-preview" id="recmap-preview"></div>
+        </div>
+
+        <div class="paste-hint">
+            截图快捷键：Win+Shift+S，截图后按Ctrl+V粘贴<br /><span style="color: red">已填写数据会被覆盖</span>
+        </div>
+
+        <div class="buttons" style="margin-top: 20px">
+            <button class="recmap-button" id="confirm-recmap">
+                识别并应用
+            </button>
+            <button class="reset-button" id="cancel-recmap">取消</button>
+        </div>
+    </div>
+
+    <!-- 快捷菜单 -->
+    <div class="quick-menu" id="quick-menu"></div>
+
+    <p>
+        <br /><br /><br />made by <a href="https://www.skland.com/profile?id=6809692860879">森空岛@路余</a> / weibo@路过_某G<br /><br />
+        感谢deepseek老师的大力支持 <br />
+        图像识别依赖<a href="https://docs.opencv.org/4.x/df/d0a/tutorial_js_intro.html">OpenCV.js</a>实现<br />
+        图标及识别模板来自鹰角网络旗下游戏《明日方舟》，本工具不拥有任何相关权利。<br />
+        作者不对本工具内任何代码主张署名以外的权利，您可以随意使用或者改写，但请标注来源。我不对您的任何用途及后果承担责任。
+    </p>
+    <h3>为本项目提供了帮助的朋友</h3>
+    <p><b>明日方舟一图流</b>：为本工具提供了在线部署，您现在可以在<a
+        href="https://ark.yituliu.cn/tools/sui">https://ark.yituliu.cn/tools/sui</a>访问本工具。</p>
+    <p>
+        <b>森空岛@伊万德（NGA@ZHider）</b>：优化功能交互，重构了部分代码，实现了滚轮和右键快捷编辑格点功能
+        
+    </p>
+    <p><b>NGA@zyc06</b>：实现了右键快捷关闭功能。</p>
+
+    <h3>Changelog</h3>
+    <h4>v1.2</h4>
+    <p>- 交互功能优化，现在可以利用滚轮、右键快捷编辑，（感谢森空岛@伊万德）</p>
+    <p>- 参照NGA@Hoshino星夜的建议调整了滚轮菜单顺序，让更常见的节点靠前。</p>
+    <p>- 右键可以快捷关闭侧边栏。（感谢NGA@zyc06）</p>
+    <p>- 实现了对杂疑、常乐、拾遗的选项表单及悬浮窗口</p>
+    <p>- 实现了对以上三类功能的标记，以便直观观察节点内容。绘制了部分图标。</p>
+    <p>- 增加了“仅更新节点类型”功能，现在勾选后可以保留其他数据，便于道中使用。</p>
+    <p>- 优化了少量功能和视觉体验。</p>
+    <h4>v1.1</h4>
+    <p>- 实现了初步的地图识别功能</p>
+    <h4>v1.0 工具发布</h4>
+
+    <script src="opencv.js" type="text/javascript"></script>
+    <script src="tempBase64.js" type="text/javascript"></script>
+    <script src="template.js" type="text/javascript"></script>
+    <script src="main.js" type="text/javascript"></script>
+</body>
+
+</html>
