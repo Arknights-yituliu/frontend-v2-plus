@@ -104,7 +104,7 @@ function replaceId(str) {
 <template>
   <div :style="borderStyle">
     <div :style="wrapStyle">
-      <div :style="spriteStyle" :class="`sprite-skill bg-skill_icon_${icon} bg-skill_icon_${replaceId(icon)}`">
+      <div :style="spriteStyle" :class="`sprite-skill bg-skill_icon_${icon} `">
       </div>
     </div>
   </div>
