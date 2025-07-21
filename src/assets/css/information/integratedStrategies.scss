@@ -1,0 +1,33 @@
+h3 {
+  padding-bottom: 20px;
+}
+
+.optional {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.optional.warning {
+  color: #e6a23c;
+}
+
+.optional.tip {
+  color: #20ffa8;
+}
+
+:deep(li.el-timeline-item:last-child) {
+  padding-bottom: 0;
+}
+
+:deep(.el-timeline-item__content > div) {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+:deep(li.el-timeline-item > div) {
+  flex-grow: 1;
+}
+
+.el-timeline-item .el-card:not(:first-child) {
+  margin-top: 20px;
+}
