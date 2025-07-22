@@ -83,7 +83,7 @@ export const createOperatorData = (charId, charInfo) => {
   const filteredElite = elite.filter(obj => Object.keys(obj).length !== 0)
   // 精英化材料数据里面没有龙门币数据, 添加精英化时消耗的龙门币数量
   // 因为目前只有4,5,6星干员精二券(也只有4,5,6星干员能精二), 所以仅对4,5,6星干员添加龙门币数量
-  console.log(charId)
+
   if (rarity > 3) {
     const baseEliteMaterials = operatorRarityBaseMaterialMap.get(rarity).elite
     baseEliteMaterials.forEach((rankMaterials, index) => {
