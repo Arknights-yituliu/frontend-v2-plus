@@ -1,8 +1,8 @@
-function stringToArray(string, delimiter) {
+function stringToArray(string, delimiter=',') {
     if(!string){
         return []
     }
-    return string.split(',').map((item) => {
+    return string.split(delimiter).map((item) => {
         return item.trim();
     }).filter(item => item);
 }

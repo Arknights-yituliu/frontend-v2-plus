@@ -73,7 +73,7 @@ async function getPackInfoData() {
   for (const item of packInfoResponseData) {
     const packInfoVO = calculatePackEfficiency(item, itemValueMap, isDrawOnly.value, isKernelValuable.value)
     packInfoVOList.push(packInfoVO)
-    if(item.end<timeStamp){
+    if (item.end < timeStamp) {
       packInfoVOListOnSale.value.push(packInfoVO)
     }
 
@@ -240,9 +240,9 @@ const filteredPackMap = ref(new Map)
 
 // 售卖价格区间
 const packSalePriceList = [
-  {label: '0-100RMB', min: 0, max: 100},
-  {label: '100-200RMB', min: 100, max: 200},
-  {label: '200-648RMB', min: 200, max: 648},
+  {label: '0-100RMB',value:'0-100', min: 0, max: 100},
+  {label: '100-200RMB',value:'100-200', min: 100, max: 200},
+  {label: '200-648RMB',value:'200-648', min: 200, max: 648},
 ]
 
 // 包含的礼包标签
@@ -284,29 +284,28 @@ const packFilterConditions = ref({
 
 
 const packSaleDate = packSaleDateList[packSaleDateList.length - 1]
-packFilterConditions.value.date.set(packSaleDate.label, packSaleDate)
+packFilterConditions.value.date.set(packSaleDate.value, packSaleDate)
 
 
 // 选择筛选条件
 function choosePackOptionV2(type, obj) {
-  const label = obj.label
-  if (packFilterConditions.value[type].has(label)) {
-    packFilterConditions.value[type].delete(label)
+  const v = obj.value
+  if (packFilterConditions.value[type].has(v)) {
+    packFilterConditions.value[type].delete(v)
   } else {
-    packFilterConditions.value[type].set(label, obj)
+    packFilterConditions.value[type].set(v, obj)
   }
 
   filterPacksV2()
 }
 
 // 按钮激活状态
-const buttonActive = (v) => {
+const buttonActive = (type, v) => {
 
-  for (const type in packFilterConditions.value) {
-    if (packFilterConditions.value[type].has(v)) {
-      return 'elevated'
-    }
+  if (packFilterConditions.value[type].has(v)) {
+    return 'elevated'
   }
+
 
   return 'tonal'
 
@@ -319,17 +318,17 @@ const packCollect = ref([])
 function filterPacksV2() {
 
   const result = new Map()
+  console.log(packFilterConditions.value)
 
   for (const pack of packInfoVOList) {
-
     const packYear = new Date(pack.start).getFullYear()
-
-    if(pack.start<year2019){
+    if (pack.start < year2019) {
       continue
     }
 
-    const dateFlag = packFilterConditions.value.date.size === 0 || packFilterConditions.value.date.has(`${packYear}年`)
-    const tagFlag = packFilterConditions.value.tag.size === 0 || packFilterConditions.value.tag.has(tagMap.get(pack.tag))
+    const dateFlag = packFilterConditions.value.date.size === 0 || packFilterConditions.value.date.has(`${packYear}`)
+
+    const tagFlag = packFilterConditions.value.tag.size === 0 || packFilterConditions.value.tag.has(pack.saleType)
     let priceFlag = packFilterConditions.value.price.size === 0
     for (const [k, v] of packFilterConditions.value.price) {
       const {max, min} = v
@@ -338,7 +337,7 @@ function filterPacksV2() {
       }
     }
 
-    console.log(pack.officialName, 'dateFlag', dateFlag, 'tagFlag', tagFlag, 'priceFlag', priceFlag)
+    // console.log(pack.officialName, 'dateFlag', dateFlag, 'tagFlag', tagFlag, 'priceFlag', priceFlag)
 
     if (dateFlag && tagFlag && priceFlag) {
       if (!result.has(packYear)) {
@@ -349,16 +348,21 @@ function filterPacksV2() {
   }
 
   const list = []
-  for(const [k,v] of result){
+  for (const [k, v] of result) {
     list.push({
-      year:k,
-      list:v
+      year: k,
+      list: v
     })
   }
 
   list.sort((a, b) => b.year - a.year)
 
   packCollect.value = list
+
+
+  function _hasAnyKeyInMap(list, map) {
+    return list.some(item => map.has(item));
+  }
 }
 
 
@@ -424,21 +428,23 @@ function filterPacksV2() {
 
       <div class="m-4">
         年份：
-        <v-btn color="primary" v-for="year in packSaleDateList" :key="year.label" :variant="buttonActive(year.label)"
+        <v-btn color="primary" v-for="(year, index) in packSaleDateList" :key="index"
+               :variant="buttonActive('date',year.value)"
                @click="choosePackOptionV2('date',year)" class="m-4">
           {{ year.label }}
         </v-btn>
       </div>
       <div class="m-4">
         价格：
-        <v-btn color="primary" v-for="item in packSalePriceList" :key="item.label" :variant="buttonActive(item.label)"
+        <v-btn color="primary" v-for="(item, index) in packSalePriceList" :key="index"
+               :variant="buttonActive('price',item.value)"
                @click="choosePackOptionV2('price',item)" class="m-4">
           {{ item.label }}
         </v-btn>
       </div>
       <div class="m-4">
         类型：
-        <v-btn color="primary" v-for="(tag, index) in packTags" :key="index" :variant="buttonActive(tag.value)"
+        <v-btn color="primary" v-for="(tag, index) in packTags" :key="index" :variant="buttonActive('tag',tag.value)"
                @click="choosePackOptionV2('tag', tag)" class="m-4">
           {{ tag.label }}
         </v-btn>
