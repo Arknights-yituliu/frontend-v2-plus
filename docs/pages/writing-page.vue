@@ -10,10 +10,7 @@ import LinkButton from "@/components/dev/LinkButton.vue";
   <v-alert  border variant="tonal" type="info"  >
     <v-alert-title><span class="font-bold">注意事项</span></v-alert-title>
     编写页面需要对以下技术或语言有一定了解：<br>
-    <LinkButton text="Vue" link="https://cn.vuejs.org/guide/introduction"></LinkButton>  、
-    <LinkButton text="JavaScript" link="https://www.runoob.com/js/js-intro.html"></LinkButton>、
-    <LinkButton text="HTML" link="https://www.runoob.com/html/html-tutorial.html"></LinkButton>、
-    <LinkButton text="CSS" link="https://www.runoob.com/css/css-tutorial.html"></LinkButton>
+    <LinkButton text="Vue" link="https://cn.vuejs.org/guide/introduction"></LinkButton>、<LinkButton text="JavaScript" link="https://www.runoob.com/js/js-intro.html"></LinkButton>、<LinkButton text="HTML" link="https://www.runoob.com/html/html-tutorial.html"></LinkButton>、<LinkButton text="CSS" link="https://www.runoob.com/css/css-tutorial.html"></LinkButton>
   </v-alert>
 
   <h2 id="edit-page">编辑页面</h2>
