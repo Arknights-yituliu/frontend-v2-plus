@@ -1,0 +1,1802 @@
+[
+  {
+    "pulls": 1,
+    "limited": 0.7,
+    "runner": 0.7,
+    "both": 0.0
+  },
+  {
+    "pulls": 2,
+    "limited": 1.4,
+    "runner": 1.4,
+    "both": 0.02
+  },
+  {
+    "pulls": 3,
+    "limited": 2.09,
+    "runner": 2.09,
+    "both": 0.04
+  },
+  {
+    "pulls": 4,
+    "limited": 2.77,
+    "runner": 2.77,
+    "both": 0.08
+  },
+  {
+    "pulls": 5,
+    "limited": 3.45,
+    "runner": 3.45,
+    "both": 0.12
+  },
+  {
+    "pulls": 6,
+    "limited": 4.13,
+    "runner": 4.13,
+    "both": 0.17
+  },
+  {
+    "pulls": 7,
+    "limited": 4.8,
+    "runner": 4.8,
+    "both": 0.23
+  },
+  {
+    "pulls": 8,
+    "limited": 5.46,
+    "runner": 5.46,
+    "both": 0.3
+  },
+  {
+    "pulls": 9,
+    "limited": 6.13,
+    "runner": 6.13,
+    "both": 0.38
+  },
+  {
+    "pulls": 10,
+    "limited": 6.78,
+    "runner": 6.78,
+    "both": 0.46
+  },
+  {
+    "pulls": 11,
+    "limited": 7.44,
+    "runner": 7.44,
+    "both": 0.55
+  },
+  {
+    "pulls": 12,
+    "limited": 8.08,
+    "runner": 8.08,
+    "both": 0.65
+  },
+  {
+    "pulls": 13,
+    "limited": 8.73,
+    "runner": 8.73,
+    "both": 0.76
+  },
+  {
+    "pulls": 14,
+    "limited": 9.37,
+    "runner": 9.37,
+    "both": 0.88
+  },
+  {
+    "pulls": 15,
+    "limited": 10.0,
+    "runner": 10.0,
+    "both": 1.0
+  },
+  {
+    "pulls": 16,
+    "limited": 10.63,
+    "runner": 10.63,
+    "both": 1.13
+  },
+  {
+    "pulls": 17,
+    "limited": 11.26,
+    "runner": 11.26,
+    "both": 1.27
+  },
+  {
+    "pulls": 18,
+    "limited": 11.88,
+    "runner": 11.88,
+    "both": 1.41
+  },
+  {
+    "pulls": 19,
+    "limited": 12.49,
+    "runner": 12.49,
+    "both": 1.56
+  },
+  {
+    "pulls": 20,
+    "limited": 13.11,
+    "runner": 13.11,
+    "both": 1.72
+  },
+  {
+    "pulls": 21,
+    "limited": 13.72,
+    "runner": 13.72,
+    "both": 1.88
+  },
+  {
+    "pulls": 22,
+    "limited": 14.32,
+    "runner": 14.32,
+    "both": 2.05
+  },
+  {
+    "pulls": 23,
+    "limited": 14.92,
+    "runner": 14.92,
+    "both": 2.23
+  },
+  {
+    "pulls": 24,
+    "limited": 15.51,
+    "runner": 15.51,
+    "both": 2.41
+  },
+  {
+    "pulls": 25,
+    "limited": 16.11,
+    "runner": 16.11,
+    "both": 2.59
+  },
+  {
+    "pulls": 26,
+    "limited": 16.69,
+    "runner": 16.69,
+    "both": 2.79
+  },
+  {
+    "pulls": 27,
+    "limited": 17.28,
+    "runner": 17.28,
+    "both": 2.98
+  },
+  {
+    "pulls": 28,
+    "limited": 17.86,
+    "runner": 17.86,
+    "both": 3.19
+  },
+  {
+    "pulls": 29,
+    "limited": 18.43,
+    "runner": 18.43,
+    "both": 3.4
+  },
+  {
+    "pulls": 30,
+    "limited": 19.0,
+    "runner": 19.0,
+    "both": 3.61
+  },
+  {
+    "pulls": 31,
+    "limited": 19.57,
+    "runner": 19.57,
+    "both": 3.83
+  },
+  {
+    "pulls": 32,
+    "limited": 20.13,
+    "runner": 20.13,
+    "both": 4.05
+  },
+  {
+    "pulls": 33,
+    "limited": 20.69,
+    "runner": 20.69,
+    "both": 4.28
+  },
+  {
+    "pulls": 34,
+    "limited": 21.25,
+    "runner": 21.25,
+    "both": 4.51
+  },
+  {
+    "pulls": 35,
+    "limited": 21.8,
+    "runner": 21.8,
+    "both": 4.75
+  },
+  {
+    "pulls": 36,
+    "limited": 22.34,
+    "runner": 22.34,
+    "both": 4.99
+  },
+  {
+    "pulls": 37,
+    "limited": 22.89,
+    "runner": 22.89,
+    "both": 5.24
+  },
+  {
+    "pulls": 38,
+    "limited": 23.43,
+    "runner": 23.43,
+    "both": 5.49
+  },
+  {
+    "pulls": 39,
+    "limited": 23.96,
+    "runner": 23.96,
+    "both": 5.74
+  },
+  {
+    "pulls": 40,
+    "limited": 24.5,
+    "runner": 24.5,
+    "both": 6.0
+  },
+  {
+    "pulls": 41,
+    "limited": 25.02,
+    "runner": 25.02,
+    "both": 6.26
+  },
+  {
+    "pulls": 42,
+    "limited": 25.55,
+    "runner": 25.55,
+    "both": 6.53
+  },
+  {
+    "pulls": 43,
+    "limited": 26.07,
+    "runner": 26.07,
+    "both": 6.8
+  },
+  {
+    "pulls": 44,
+    "limited": 26.59,
+    "runner": 26.59,
+    "both": 7.07
+  },
+  {
+    "pulls": 45,
+    "limited": 27.1,
+    "runner": 27.1,
+    "both": 7.35
+  },
+  {
+    "pulls": 46,
+    "limited": 27.61,
+    "runner": 27.61,
+    "both": 7.62
+  },
+  {
+    "pulls": 47,
+    "limited": 28.12,
+    "runner": 28.12,
+    "both": 7.91
+  },
+  {
+    "pulls": 48,
+    "limited": 28.62,
+    "runner": 28.62,
+    "both": 8.19
+  },
+  {
+    "pulls": 49,
+    "limited": 29.12,
+    "runner": 29.12,
+    "both": 8.48
+  },
+  {
+    "pulls": 50,
+    "limited": 29.62,
+    "runner": 29.62,
+    "both": 8.77
+  },
+  {
+    "pulls": 51,
+    "limited": 30.6,
+    "runner": 30.6,
+    "both": 9.37
+  },
+  {
+    "pulls": 52,
+    "limited": 31.57,
+    "runner": 31.57,
+    "both": 9.97
+  },
+  {
+    "pulls": 53,
+    "limited": 32.53,
+    "runner": 32.53,
+    "both": 10.58
+  },
+  {
+    "pulls": 54,
+    "limited": 33.48,
+    "runner": 33.48,
+    "both": 11.21
+  },
+  {
+    "pulls": 55,
+    "limited": 34.41,
+    "runner": 34.41,
+    "both": 11.84
+  },
+  {
+    "pulls": 56,
+    "limited": 35.33,
+    "runner": 35.33,
+    "both": 12.48
+  },
+  {
+    "pulls": 57,
+    "limited": 36.23,
+    "runner": 36.23,
+    "both": 13.13
+  },
+  {
+    "pulls": 58,
+    "limited": 37.13,
+    "runner": 37.13,
+    "both": 13.78
+  },
+  {
+    "pulls": 59,
+    "limited": 38.01,
+    "runner": 38.01,
+    "both": 14.44
+  },
+  {
+    "pulls": 60,
+    "limited": 38.87,
+    "runner": 38.87,
+    "both": 15.11
+  },
+  {
+    "pulls": 61,
+    "limited": 39.73,
+    "runner": 39.73,
+    "both": 15.78
+  },
+  {
+    "pulls": 62,
+    "limited": 40.57,
+    "runner": 40.57,
+    "both": 16.46
+  },
+  {
+    "pulls": 63,
+    "limited": 41.4,
+    "runner": 41.4,
+    "both": 17.14
+  },
+  {
+    "pulls": 64,
+    "limited": 42.23,
+    "runner": 42.23,
+    "both": 17.83
+  },
+  {
+    "pulls": 65,
+    "limited": 43.03,
+    "runner": 43.03,
+    "both": 18.52
+  },
+  {
+    "pulls": 66,
+    "limited": 43.83,
+    "runner": 43.83,
+    "both": 19.21
+  },
+  {
+    "pulls": 67,
+    "limited": 44.62,
+    "runner": 44.62,
+    "both": 19.91
+  },
+  {
+    "pulls": 68,
+    "limited": 45.39,
+    "runner": 45.39,
+    "both": 20.61
+  },
+  {
+    "pulls": 69,
+    "limited": 46.16,
+    "runner": 46.16,
+    "both": 21.31
+  },
+  {
+    "pulls": 70,
+    "limited": 46.91,
+    "runner": 46.91,
+    "both": 22.01
+  },
+  {
+    "pulls": 71,
+    "limited": 47.65,
+    "runner": 47.65,
+    "both": 22.71
+  },
+  {
+    "pulls": 72,
+    "limited": 48.39,
+    "runner": 48.39,
+    "both": 23.41
+  },
+  {
+    "pulls": 73,
+    "limited": 49.11,
+    "runner": 49.11,
+    "both": 24.12
+  },
+  {
+    "pulls": 74,
+    "limited": 49.82,
+    "runner": 49.82,
+    "both": 24.82
+  },
+  {
+    "pulls": 75,
+    "limited": 50.53,
+    "runner": 50.53,
+    "both": 25.53
+  },
+  {
+    "pulls": 76,
+    "limited": 51.22,
+    "runner": 51.22,
+    "both": 26.23
+  },
+  {
+    "pulls": 77,
+    "limited": 51.9,
+    "runner": 51.9,
+    "both": 26.94
+  },
+  {
+    "pulls": 78,
+    "limited": 52.57,
+    "runner": 52.57,
+    "both": 27.64
+  },
+  {
+    "pulls": 79,
+    "limited": 53.24,
+    "runner": 53.24,
+    "both": 28.34
+  },
+  {
+    "pulls": 80,
+    "limited": 53.89,
+    "runner": 53.89,
+    "both": 29.04
+  },
+  {
+    "pulls": 81,
+    "limited": 54.54,
+    "runner": 54.54,
+    "both": 29.74
+  },
+  {
+    "pulls": 82,
+    "limited": 55.17,
+    "runner": 55.17,
+    "both": 30.44
+  },
+  {
+    "pulls": 83,
+    "limited": 55.8,
+    "runner": 55.8,
+    "both": 31.14
+  },
+  {
+    "pulls": 84,
+    "limited": 56.42,
+    "runner": 56.42,
+    "both": 31.83
+  },
+  {
+    "pulls": 85,
+    "limited": 57.03,
+    "runner": 57.03,
+    "both": 32.53
+  },
+  {
+    "pulls": 86,
+    "limited": 57.63,
+    "runner": 57.63,
+    "both": 33.22
+  },
+  {
+    "pulls": 87,
+    "limited": 58.23,
+    "runner": 58.23,
+    "both": 33.9
+  },
+  {
+    "pulls": 88,
+    "limited": 58.81,
+    "runner": 58.81,
+    "both": 34.59
+  },
+  {
+    "pulls": 89,
+    "limited": 59.39,
+    "runner": 59.39,
+    "both": 35.27
+  },
+  {
+    "pulls": 90,
+    "limited": 59.96,
+    "runner": 59.96,
+    "both": 35.95
+  },
+  {
+    "pulls": 91,
+    "limited": 60.52,
+    "runner": 60.52,
+    "both": 36.62
+  },
+  {
+    "pulls": 92,
+    "limited": 61.07,
+    "runner": 61.07,
+    "both": 37.29
+  },
+  {
+    "pulls": 93,
+    "limited": 61.61,
+    "runner": 61.61,
+    "both": 37.96
+  },
+  {
+    "pulls": 94,
+    "limited": 62.15,
+    "runner": 62.15,
+    "both": 38.63
+  },
+  {
+    "pulls": 95,
+    "limited": 62.68,
+    "runner": 62.68,
+    "both": 39.29
+  },
+  {
+    "pulls": 96,
+    "limited": 63.2,
+    "runner": 63.2,
+    "both": 39.95
+  },
+  {
+    "pulls": 97,
+    "limited": 63.72,
+    "runner": 63.72,
+    "both": 40.6
+  },
+  {
+    "pulls": 98,
+    "limited": 64.23,
+    "runner": 64.23,
+    "both": 41.25
+  },
+  {
+    "pulls": 99,
+    "limited": 64.73,
+    "runner": 64.73,
+    "both": 41.9
+  },
+  {
+    "pulls": 100,
+    "limited": 65.22,
+    "runner": 65.22,
+    "both": 42.54
+  },
+  {
+    "pulls": 101,
+    "limited": 65.95,
+    "runner": 65.95,
+    "both": 43.5
+  },
+  {
+    "pulls": 102,
+    "limited": 66.67,
+    "runner": 66.67,
+    "both": 44.44
+  },
+  {
+    "pulls": 103,
+    "limited": 67.37,
+    "runner": 67.37,
+    "both": 45.38
+  },
+  {
+    "pulls": 104,
+    "limited": 68.05,
+    "runner": 68.05,
+    "both": 46.31
+  },
+  {
+    "pulls": 105,
+    "limited": 68.72,
+    "runner": 68.72,
+    "both": 47.23
+  },
+  {
+    "pulls": 106,
+    "limited": 69.38,
+    "runner": 69.38,
+    "both": 48.14
+  },
+  {
+    "pulls": 107,
+    "limited": 70.02,
+    "runner": 70.02,
+    "both": 49.03
+  },
+  {
+    "pulls": 108,
+    "limited": 70.65,
+    "runner": 70.65,
+    "both": 49.92
+  },
+  {
+    "pulls": 109,
+    "limited": 71.27,
+    "runner": 71.27,
+    "both": 50.79
+  },
+  {
+    "pulls": 110,
+    "limited": 71.87,
+    "runner": 71.87,
+    "both": 51.66
+  },
+  {
+    "pulls": 111,
+    "limited": 72.46,
+    "runner": 72.46,
+    "both": 52.51
+  },
+  {
+    "pulls": 112,
+    "limited": 73.04,
+    "runner": 73.04,
+    "both": 53.35
+  },
+  {
+    "pulls": 113,
+    "limited": 73.61,
+    "runner": 73.61,
+    "both": 54.18
+  },
+  {
+    "pulls": 114,
+    "limited": 74.16,
+    "runner": 74.16,
+    "both": 55.0
+  },
+  {
+    "pulls": 115,
+    "limited": 74.7,
+    "runner": 74.7,
+    "both": 55.81
+  },
+  {
+    "pulls": 116,
+    "limited": 75.24,
+    "runner": 75.24,
+    "both": 56.6
+  },
+  {
+    "pulls": 117,
+    "limited": 75.76,
+    "runner": 75.76,
+    "both": 57.39
+  },
+  {
+    "pulls": 118,
+    "limited": 76.26,
+    "runner": 76.26,
+    "both": 58.16
+  },
+  {
+    "pulls": 119,
+    "limited": 76.76,
+    "runner": 76.76,
+    "both": 58.93
+  },
+  {
+    "pulls": 120,
+    "limited": 77.25,
+    "runner": 77.25,
+    "both": 59.68
+  },
+  {
+    "pulls": 121,
+    "limited": 77.73,
+    "runner": 77.73,
+    "both": 60.42
+  },
+  {
+    "pulls": 122,
+    "limited": 78.2,
+    "runner": 78.2,
+    "both": 61.15
+  },
+  {
+    "pulls": 123,
+    "limited": 78.65,
+    "runner": 78.65,
+    "both": 61.87
+  },
+  {
+    "pulls": 124,
+    "limited": 79.1,
+    "runner": 79.1,
+    "both": 62.57
+  },
+  {
+    "pulls": 125,
+    "limited": 79.54,
+    "runner": 79.54,
+    "both": 63.27
+  },
+  {
+    "pulls": 126,
+    "limited": 79.97,
+    "runner": 79.97,
+    "both": 63.95
+  },
+  {
+    "pulls": 127,
+    "limited": 80.39,
+    "runner": 80.39,
+    "both": 64.63
+  },
+  {
+    "pulls": 128,
+    "limited": 80.8,
+    "runner": 80.8,
+    "both": 65.29
+  },
+  {
+    "pulls": 129,
+    "limited": 81.21,
+    "runner": 81.21,
+    "both": 65.95
+  },
+  {
+    "pulls": 130,
+    "limited": 81.6,
+    "runner": 81.6,
+    "both": 66.59
+  },
+  {
+    "pulls": 131,
+    "limited": 81.99,
+    "runner": 81.99,
+    "both": 67.22
+  },
+  {
+    "pulls": 132,
+    "limited": 82.37,
+    "runner": 82.37,
+    "both": 67.84
+  },
+  {
+    "pulls": 133,
+    "limited": 82.74,
+    "runner": 82.74,
+    "both": 68.45
+  },
+  {
+    "pulls": 134,
+    "limited": 83.1,
+    "runner": 83.1,
+    "both": 69.05
+  },
+  {
+    "pulls": 135,
+    "limited": 83.45,
+    "runner": 83.45,
+    "both": 69.65
+  },
+  {
+    "pulls": 136,
+    "limited": 83.8,
+    "runner": 83.8,
+    "both": 70.23
+  },
+  {
+    "pulls": 137,
+    "limited": 84.14,
+    "runner": 84.14,
+    "both": 70.8
+  },
+  {
+    "pulls": 138,
+    "limited": 84.47,
+    "runner": 84.47,
+    "both": 71.36
+  },
+  {
+    "pulls": 139,
+    "limited": 84.8,
+    "runner": 84.8,
+    "both": 71.91
+  },
+  {
+    "pulls": 140,
+    "limited": 85.12,
+    "runner": 85.12,
+    "both": 72.45
+  },
+  {
+    "pulls": 141,
+    "limited": 85.43,
+    "runner": 85.43,
+    "both": 72.99
+  },
+  {
+    "pulls": 142,
+    "limited": 85.74,
+    "runner": 85.74,
+    "both": 73.51
+  },
+  {
+    "pulls": 143,
+    "limited": 86.04,
+    "runner": 86.04,
+    "both": 74.02
+  },
+  {
+    "pulls": 144,
+    "limited": 86.33,
+    "runner": 86.33,
+    "both": 74.53
+  },
+  {
+    "pulls": 145,
+    "limited": 86.62,
+    "runner": 86.62,
+    "both": 75.03
+  },
+  {
+    "pulls": 146,
+    "limited": 86.9,
+    "runner": 86.9,
+    "both": 75.51
+  },
+  {
+    "pulls": 147,
+    "limited": 87.17,
+    "runner": 87.17,
+    "both": 75.99
+  },
+  {
+    "pulls": 148,
+    "limited": 87.44,
+    "runner": 87.44,
+    "both": 76.46
+  },
+  {
+    "pulls": 149,
+    "limited": 87.71,
+    "runner": 87.71,
+    "both": 76.93
+  },
+  {
+    "pulls": 150,
+    "limited": 87.97,
+    "runner": 87.97,
+    "both": 77.38
+  },
+  {
+    "pulls": 151,
+    "limited": 88.3,
+    "runner": 88.3,
+    "both": 77.97
+  },
+  {
+    "pulls": 152,
+    "limited": 88.63,
+    "runner": 88.63,
+    "both": 78.55
+  },
+  {
+    "pulls": 153,
+    "limited": 88.95,
+    "runner": 88.95,
+    "both": 79.12
+  },
+  {
+    "pulls": 154,
+    "limited": 89.26,
+    "runner": 89.26,
+    "both": 79.67
+  },
+  {
+    "pulls": 155,
+    "limited": 89.56,
+    "runner": 89.56,
+    "both": 80.21
+  },
+  {
+    "pulls": 156,
+    "limited": 89.85,
+    "runner": 89.85,
+    "both": 80.73
+  },
+  {
+    "pulls": 157,
+    "limited": 90.13,
+    "runner": 90.13,
+    "both": 81.24
+  },
+  {
+    "pulls": 158,
+    "limited": 90.41,
+    "runner": 90.41,
+    "both": 81.74
+  },
+  {
+    "pulls": 159,
+    "limited": 90.68,
+    "runner": 90.68,
+    "both": 82.23
+  },
+  {
+    "pulls": 160,
+    "limited": 90.94,
+    "runner": 90.94,
+    "both": 82.7
+  },
+  {
+    "pulls": 161,
+    "limited": 91.19,
+    "runner": 91.19,
+    "both": 83.16
+  },
+  {
+    "pulls": 162,
+    "limited": 91.44,
+    "runner": 91.44,
+    "both": 83.61
+  },
+  {
+    "pulls": 163,
+    "limited": 91.68,
+    "runner": 91.68,
+    "both": 84.05
+  },
+  {
+    "pulls": 164,
+    "limited": 91.91,
+    "runner": 91.91,
+    "both": 84.48
+  },
+  {
+    "pulls": 165,
+    "limited": 92.14,
+    "runner": 92.14,
+    "both": 84.9
+  },
+  {
+    "pulls": 166,
+    "limited": 92.36,
+    "runner": 92.36,
+    "both": 85.3
+  },
+  {
+    "pulls": 167,
+    "limited": 92.57,
+    "runner": 92.57,
+    "both": 85.7
+  },
+  {
+    "pulls": 168,
+    "limited": 92.78,
+    "runner": 92.78,
+    "both": 86.08
+  },
+  {
+    "pulls": 169,
+    "limited": 92.98,
+    "runner": 92.98,
+    "both": 86.46
+  },
+  {
+    "pulls": 170,
+    "limited": 93.18,
+    "runner": 93.18,
+    "both": 86.83
+  },
+  {
+    "pulls": 171,
+    "limited": 93.37,
+    "runner": 93.37,
+    "both": 87.18
+  },
+  {
+    "pulls": 172,
+    "limited": 93.56,
+    "runner": 93.56,
+    "both": 87.53
+  },
+  {
+    "pulls": 173,
+    "limited": 93.74,
+    "runner": 93.74,
+    "both": 87.87
+  },
+  {
+    "pulls": 174,
+    "limited": 93.91,
+    "runner": 93.91,
+    "both": 88.2
+  },
+  {
+    "pulls": 175,
+    "limited": 94.08,
+    "runner": 94.08,
+    "both": 88.52
+  },
+  {
+    "pulls": 176,
+    "limited": 94.25,
+    "runner": 94.25,
+    "both": 88.83
+  },
+  {
+    "pulls": 177,
+    "limited": 94.41,
+    "runner": 94.41,
+    "both": 89.13
+  },
+  {
+    "pulls": 178,
+    "limited": 94.57,
+    "runner": 94.57,
+    "both": 89.43
+  },
+  {
+    "pulls": 179,
+    "limited": 94.72,
+    "runner": 94.72,
+    "both": 89.72
+  },
+  {
+    "pulls": 180,
+    "limited": 94.87,
+    "runner": 94.87,
+    "both": 90.0
+  },
+  {
+    "pulls": 181,
+    "limited": 95.01,
+    "runner": 95.01,
+    "both": 90.27
+  },
+  {
+    "pulls": 182,
+    "limited": 95.15,
+    "runner": 95.15,
+    "both": 90.53
+  },
+  {
+    "pulls": 183,
+    "limited": 95.29,
+    "runner": 95.29,
+    "both": 90.79
+  },
+  {
+    "pulls": 184,
+    "limited": 95.42,
+    "runner": 95.42,
+    "both": 91.05
+  },
+  {
+    "pulls": 185,
+    "limited": 95.55,
+    "runner": 95.55,
+    "both": 91.29
+  },
+  {
+    "pulls": 186,
+    "limited": 95.67,
+    "runner": 95.67,
+    "both": 91.53
+  },
+  {
+    "pulls": 187,
+    "limited": 95.79,
+    "runner": 95.79,
+    "both": 91.76
+  },
+  {
+    "pulls": 188,
+    "limited": 95.91,
+    "runner": 95.91,
+    "both": 91.99
+  },
+  {
+    "pulls": 189,
+    "limited": 96.02,
+    "runner": 96.02,
+    "both": 92.21
+  },
+  {
+    "pulls": 190,
+    "limited": 96.14,
+    "runner": 96.14,
+    "both": 92.42
+  },
+  {
+    "pulls": 191,
+    "limited": 96.24,
+    "runner": 96.24,
+    "both": 92.63
+  },
+  {
+    "pulls": 192,
+    "limited": 96.35,
+    "runner": 96.35,
+    "both": 92.83
+  },
+  {
+    "pulls": 193,
+    "limited": 96.45,
+    "runner": 96.45,
+    "both": 93.03
+  },
+  {
+    "pulls": 194,
+    "limited": 96.55,
+    "runner": 96.55,
+    "both": 93.22
+  },
+  {
+    "pulls": 195,
+    "limited": 96.65,
+    "runner": 96.65,
+    "both": 93.41
+  },
+  {
+    "pulls": 196,
+    "limited": 96.74,
+    "runner": 96.74,
+    "both": 93.59
+  },
+  {
+    "pulls": 197,
+    "limited": 96.83,
+    "runner": 96.83,
+    "both": 93.76
+  },
+  {
+    "pulls": 198,
+    "limited": 96.92,
+    "runner": 96.92,
+    "both": 93.94
+  },
+  {
+    "pulls": 199,
+    "limited": 97.01,
+    "runner": 97.01,
+    "both": 94.1
+  },
+  {
+    "pulls": 200,
+    "limited": 97.09,
+    "runner": 97.09,
+    "both": 94.27
+  },
+  {
+    "pulls": 201,
+    "limited": 97.19,
+    "runner": 97.19,
+    "both": 94.46
+  },
+  {
+    "pulls": 202,
+    "limited": 97.29,
+    "runner": 97.29,
+    "both": 94.66
+  },
+  {
+    "pulls": 203,
+    "limited": 97.39,
+    "runner": 97.39,
+    "both": 94.84
+  },
+  {
+    "pulls": 204,
+    "limited": 97.48,
+    "runner": 97.48,
+    "both": 95.02
+  },
+  {
+    "pulls": 205,
+    "limited": 97.57,
+    "runner": 97.57,
+    "both": 95.19
+  },
+  {
+    "pulls": 206,
+    "limited": 97.65,
+    "runner": 97.65,
+    "both": 95.36
+  },
+  {
+    "pulls": 207,
+    "limited": 97.73,
+    "runner": 97.73,
+    "both": 95.52
+  },
+  {
+    "pulls": 208,
+    "limited": 97.81,
+    "runner": 97.81,
+    "both": 95.67
+  },
+  {
+    "pulls": 209,
+    "limited": 97.89,
+    "runner": 97.89,
+    "both": 95.82
+  },
+  {
+    "pulls": 210,
+    "limited": 97.96,
+    "runner": 97.96,
+    "both": 95.97
+  },
+  {
+    "pulls": 211,
+    "limited": 98.03,
+    "runner": 98.03,
+    "both": 96.11
+  },
+  {
+    "pulls": 212,
+    "limited": 98.1,
+    "runner": 98.1,
+    "both": 96.24
+  },
+  {
+    "pulls": 213,
+    "limited": 98.17,
+    "runner": 98.17,
+    "both": 96.37
+  },
+  {
+    "pulls": 214,
+    "limited": 98.23,
+    "runner": 98.23,
+    "both": 96.5
+  },
+  {
+    "pulls": 215,
+    "limited": 98.3,
+    "runner": 98.3,
+    "both": 96.62
+  },
+  {
+    "pulls": 216,
+    "limited": 98.35,
+    "runner": 98.35,
+    "both": 96.74
+  },
+  {
+    "pulls": 217,
+    "limited": 98.41,
+    "runner": 98.41,
+    "both": 96.85
+  },
+  {
+    "pulls": 218,
+    "limited": 98.47,
+    "runner": 98.47,
+    "both": 96.96
+  },
+  {
+    "pulls": 219,
+    "limited": 98.52,
+    "runner": 98.52,
+    "both": 97.07
+  },
+  {
+    "pulls": 220,
+    "limited": 98.57,
+    "runner": 98.57,
+    "both": 97.17
+  },
+  {
+    "pulls": 221,
+    "limited": 98.62,
+    "runner": 98.62,
+    "both": 97.27
+  },
+  {
+    "pulls": 222,
+    "limited": 98.67,
+    "runner": 98.67,
+    "both": 97.36
+  },
+  {
+    "pulls": 223,
+    "limited": 98.72,
+    "runner": 98.72,
+    "both": 97.45
+  },
+  {
+    "pulls": 224,
+    "limited": 98.76,
+    "runner": 98.76,
+    "both": 97.54
+  },
+  {
+    "pulls": 225,
+    "limited": 98.81,
+    "runner": 98.81,
+    "both": 97.63
+  },
+  {
+    "pulls": 226,
+    "limited": 98.85,
+    "runner": 98.85,
+    "both": 97.71
+  },
+  {
+    "pulls": 227,
+    "limited": 98.89,
+    "runner": 98.89,
+    "both": 97.79
+  },
+  {
+    "pulls": 228,
+    "limited": 98.93,
+    "runner": 98.93,
+    "both": 97.87
+  },
+  {
+    "pulls": 229,
+    "limited": 98.96,
+    "runner": 98.96,
+    "both": 97.94
+  },
+  {
+    "pulls": 230,
+    "limited": 99.0,
+    "runner": 99.0,
+    "both": 98.01
+  },
+  {
+    "pulls": 231,
+    "limited": 99.04,
+    "runner": 99.04,
+    "both": 98.08
+  },
+  {
+    "pulls": 232,
+    "limited": 99.07,
+    "runner": 99.07,
+    "both": 98.15
+  },
+  {
+    "pulls": 233,
+    "limited": 99.1,
+    "runner": 99.1,
+    "both": 98.21
+  },
+  {
+    "pulls": 234,
+    "limited": 99.13,
+    "runner": 99.13,
+    "both": 98.27
+  },
+  {
+    "pulls": 235,
+    "limited": 99.16,
+    "runner": 99.16,
+    "both": 98.33
+  },
+  {
+    "pulls": 236,
+    "limited": 99.19,
+    "runner": 99.19,
+    "both": 98.39
+  },
+  {
+    "pulls": 237,
+    "limited": 99.22,
+    "runner": 99.22,
+    "both": 98.45
+  },
+  {
+    "pulls": 238,
+    "limited": 99.25,
+    "runner": 99.25,
+    "both": 98.5
+  },
+  {
+    "pulls": 239,
+    "limited": 99.28,
+    "runner": 99.28,
+    "both": 98.56
+  },
+  {
+    "pulls": 240,
+    "limited": 99.3,
+    "runner": 99.3,
+    "both": 98.61
+  },
+  {
+    "pulls": 241,
+    "limited": 99.32,
+    "runner": 99.32,
+    "both": 98.65
+  },
+  {
+    "pulls": 242,
+    "limited": 99.35,
+    "runner": 99.35,
+    "both": 98.7
+  },
+  {
+    "pulls": 243,
+    "limited": 99.37,
+    "runner": 99.37,
+    "both": 98.75
+  },
+  {
+    "pulls": 244,
+    "limited": 99.39,
+    "runner": 99.39,
+    "both": 98.79
+  },
+  {
+    "pulls": 245,
+    "limited": 99.41,
+    "runner": 99.41,
+    "both": 98.83
+  },
+  {
+    "pulls": 246,
+    "limited": 99.44,
+    "runner": 99.44,
+    "both": 98.87
+  },
+  {
+    "pulls": 247,
+    "limited": 99.45,
+    "runner": 99.45,
+    "both": 98.91
+  },
+  {
+    "pulls": 248,
+    "limited": 99.47,
+    "runner": 99.47,
+    "both": 98.95
+  },
+  {
+    "pulls": 249,
+    "limited": 99.49,
+    "runner": 99.49,
+    "both": 98.99
+  },
+  {
+    "pulls": 250,
+    "limited": 99.51,
+    "runner": 99.51,
+    "both": 99.02
+  },
+  {
+    "pulls": 251,
+    "limited": 99.53,
+    "runner": 99.53,
+    "both": 99.06
+  },
+  {
+    "pulls": 252,
+    "limited": 99.55,
+    "runner": 99.55,
+    "both": 99.1
+  },
+  {
+    "pulls": 253,
+    "limited": 99.57,
+    "runner": 99.57,
+    "both": 99.14
+  },
+  {
+    "pulls": 254,
+    "limited": 99.59,
+    "runner": 99.59,
+    "both": 99.18
+  },
+  {
+    "pulls": 255,
+    "limited": 99.6,
+    "runner": 99.6,
+    "both": 99.21
+  },
+  {
+    "pulls": 256,
+    "limited": 99.62,
+    "runner": 99.62,
+    "both": 99.24
+  },
+  {
+    "pulls": 257,
+    "limited": 99.64,
+    "runner": 99.64,
+    "both": 99.28
+  },
+  {
+    "pulls": 258,
+    "limited": 99.65,
+    "runner": 99.65,
+    "both": 99.31
+  },
+  {
+    "pulls": 259,
+    "limited": 99.67,
+    "runner": 99.67,
+    "both": 99.34
+  },
+  {
+    "pulls": 260,
+    "limited": 99.68,
+    "runner": 99.68,
+    "both": 99.36
+  },
+  {
+    "pulls": 261,
+    "limited": 99.69,
+    "runner": 99.69,
+    "both": 99.39
+  },
+  {
+    "pulls": 262,
+    "limited": 99.71,
+    "runner": 99.71,
+    "both": 99.42
+  },
+  {
+    "pulls": 263,
+    "limited": 99.72,
+    "runner": 99.72,
+    "both": 99.44
+  },
+  {
+    "pulls": 264,
+    "limited": 99.73,
+    "runner": 99.73,
+    "both": 99.46
+  },
+  {
+    "pulls": 265,
+    "limited": 99.74,
+    "runner": 99.74,
+    "both": 99.49
+  },
+  {
+    "pulls": 266,
+    "limited": 99.75,
+    "runner": 99.75,
+    "both": 99.51
+  },
+  {
+    "pulls": 267,
+    "limited": 99.76,
+    "runner": 99.76,
+    "both": 99.53
+  },
+  {
+    "pulls": 268,
+    "limited": 99.77,
+    "runner": 99.77,
+    "both": 99.55
+  },
+  {
+    "pulls": 269,
+    "limited": 99.78,
+    "runner": 99.78,
+    "both": 99.57
+  },
+  {
+    "pulls": 270,
+    "limited": 99.79,
+    "runner": 99.79,
+    "both": 99.59
+  },
+  {
+    "pulls": 271,
+    "limited": 99.8,
+    "runner": 99.8,
+    "both": 99.6
+  },
+  {
+    "pulls": 272,
+    "limited": 99.81,
+    "runner": 99.81,
+    "both": 99.62
+  },
+  {
+    "pulls": 273,
+    "limited": 99.82,
+    "runner": 99.82,
+    "both": 99.64
+  },
+  {
+    "pulls": 274,
+    "limited": 99.83,
+    "runner": 99.83,
+    "both": 99.65
+  },
+  {
+    "pulls": 275,
+    "limited": 99.83,
+    "runner": 99.83,
+    "both": 99.67
+  },
+  {
+    "pulls": 276,
+    "limited": 99.84,
+    "runner": 99.84,
+    "both": 99.68
+  },
+  {
+    "pulls": 277,
+    "limited": 99.85,
+    "runner": 99.85,
+    "both": 99.69
+  },
+  {
+    "pulls": 278,
+    "limited": 99.85,
+    "runner": 99.85,
+    "both": 99.71
+  },
+  {
+    "pulls": 279,
+    "limited": 99.86,
+    "runner": 99.86,
+    "both": 99.72
+  },
+  {
+    "pulls": 280,
+    "limited": 99.86,
+    "runner": 99.86,
+    "both": 99.73
+  },
+  {
+    "pulls": 281,
+    "limited": 99.87,
+    "runner": 99.87,
+    "both": 99.74
+  },
+  {
+    "pulls": 282,
+    "limited": 99.88,
+    "runner": 99.88,
+    "both": 99.75
+  },
+  {
+    "pulls": 283,
+    "limited": 99.88,
+    "runner": 99.88,
+    "both": 99.76
+  },
+  {
+    "pulls": 284,
+    "limited": 99.89,
+    "runner": 99.89,
+    "both": 99.77
+  },
+  {
+    "pulls": 285,
+    "limited": 99.89,
+    "runner": 99.89,
+    "both": 99.78
+  },
+  {
+    "pulls": 286,
+    "limited": 99.9,
+    "runner": 99.9,
+    "both": 99.79
+  },
+  {
+    "pulls": 287,
+    "limited": 99.9,
+    "runner": 99.9,
+    "both": 99.8
+  },
+  {
+    "pulls": 288,
+    "limited": 99.9,
+    "runner": 99.9,
+    "both": 99.81
+  },
+  {
+    "pulls": 289,
+    "limited": 99.91,
+    "runner": 99.91,
+    "both": 99.82
+  },
+  {
+    "pulls": 290,
+    "limited": 99.91,
+    "runner": 99.91,
+    "both": 99.82
+  },
+  {
+    "pulls": 291,
+    "limited": 99.92,
+    "runner": 99.92,
+    "both": 99.83
+  },
+  {
+    "pulls": 292,
+    "limited": 99.92,
+    "runner": 99.92,
+    "both": 99.84
+  },
+  {
+    "pulls": 293,
+    "limited": 99.92,
+    "runner": 99.92,
+    "both": 99.85
+  },
+  {
+    "pulls": 294,
+    "limited": 99.93,
+    "runner": 99.93,
+    "both": 99.85
+  },
+  {
+    "pulls": 295,
+    "limited": 99.93,
+    "runner": 99.93,
+    "both": 99.86
+  },
+  {
+    "pulls": 296,
+    "limited": 99.93,
+    "runner": 99.93,
+    "both": 99.86
+  },
+  {
+    "pulls": 297,
+    "limited": 99.93,
+    "runner": 99.93,
+    "both": 99.87
+  },
+  {
+    "pulls": 298,
+    "limited": 99.94,
+    "runner": 99.94,
+    "both": 99.88
+  },
+  {
+    "pulls": 299,
+    "limited": 99.94,
+    "runner": 99.94,
+    "both": 99.88
+  },
+  {
+    "pulls": 300,
+    "limited": 100,
+    "runner": 100,
+    "both": 100
+  }
+]
