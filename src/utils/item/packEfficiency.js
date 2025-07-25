@@ -1,3 +1,5 @@
+import {stringToArray} from "@/utils/stringUtils.js";
+
 /**
  * 根据传入的礼包算出性价比
  * @param packInfoVO 礼包基本信息
@@ -214,6 +216,7 @@ function calculatePackEfficiency(packInfoVO, itemValueMap, displayPackEfficiency
     packInfoVO.drawEfficiency = drawEfficiency;
     packInfoVO.packedOriginium = packedOriginium;
     packInfoVO.packEfficiency = packEfficiency;
+    packInfoVO.tags = stringToArray(packInfoVO.tags)
 
     packInfoVO.packContentVO = packContentVO
 
