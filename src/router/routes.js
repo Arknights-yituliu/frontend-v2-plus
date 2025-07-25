@@ -393,6 +393,12 @@ const routes = [
         display: false,
         component: () => import('/src/pages/tools/ziwugoods.vue')
     },
+        {
+        path: '/live',
+        text: '直播数据转换',
+        display: false,
+        component: () => import('/src/pages/sandbox/livedata.vue')
+    },
     {
         path: '/:catchAll(.*)',
         display: false,
