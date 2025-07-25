@@ -1471,10 +1471,33 @@ onMounted(() => {
 watch(() => calculationResult.value.totalDraw, updateProb)
 
 function updateProb() {
-  currentProb.value = probabilityTable.value.find(
-    item => item.pulls === calculationResult.value.totalDraw
-  ) || null
+  let draw = calculationResult.value.totalDraw
+
+  if (draw >= 300) {
+    currentProb.value = {
+      pulls: draw,
+      limited: 100,
+      runner: 100,
+      both: 100
+    }
+    return
+  }
+
+  const index = draw
+
+  if (
+    index >= 0
+  ) {
+    currentProb.value = {
+      pulls: draw,
+      limited: probabilityTable.value.limited[index] * 100,
+      both: probabilityTable.value.both[index] * 100
+    }
+  } else {
+    currentProb.value = null
+  }
 }
+
 </script>
 
 <template>
@@ -1592,11 +1615,10 @@ function updateProb() {
             </div>
           </div>
 
-          <div class="resources-result-bar" style="display: none;">
+          <div class="resources-result-bar">
             <div v-if="currentProb">
-              <p>限定概率：{{ currentProb.limited }}%</p>
-              <p>陪跑概率：{{ currentProb.runner }}%</p>
-              <p>限定+陪跑都拿到概率：{{ currentProb.both }}%</p>
+              <p>拿到限定的概率：{{ currentProb.limited.toFixed(2) }}%</p>
+              <p>拿到限定+陪跑的概率：{{ currentProb.both.toFixed(2) }}%</p>
             </div>
             <div v-else>
               <p>未找到对应抽数概率</p>
