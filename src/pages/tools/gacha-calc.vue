@@ -1461,7 +1461,10 @@ function handleResize() {
 
 //概率计算
 const probabilityTable = ref([])
-const currentProb = ref(null)
+const currentProb = ref({
+  limited: 0,
+  both: 0
+});
 
 onMounted(() => {
   probabilityTable.value = probabilityTableData
@@ -1477,7 +1480,6 @@ function updateProb() {
     currentProb.value = {
       pulls: draw,
       limited: 100,
-      runner: 100,
       both: 100
     }
     return
@@ -1485,18 +1487,40 @@ function updateProb() {
 
   const index = draw
 
-  if (
-    index >= 0
-  ) {
-    currentProb.value = {
-      pulls: draw,
-      limited: probabilityTable.value.limited[index] * 100,
-      both: probabilityTable.value.both[index] * 100
-    }
-  } else {
-    currentProb.value = null
+  currentProb.value = {
+    pulls: draw,
+    limited: probabilityTable.value.limited[index] * 100,
+    both: probabilityTable.value.both[index] * 100
   }
 }
+
+function getColor(p) {
+  if (p >= 90) return '#ff4949';    // 橙色
+  if (p >= 60) return '#7776FF';    // 紫色
+  if (p >= 30) return '#33b5e5';    // 蓝色
+  if (p >= 10) return '#00C851';    // 绿色
+  return '#bdbdbd';                 // 灰色
+}
+
+function getProbabilityBoxStyle(limited, both) {
+  const leftColor = getColor(limited);
+  const rightColor = getColor(both);
+
+  if (both >= 100) {
+    return {
+      background: 'linear-gradient(45deg, #FF6B6B, #FFA94D, #FFD43B, #69DB7C, #4DABF7, #A685E2)',
+      color: 'white'
+    };
+  }
+  return {
+    background: `linear-gradient(to right, ${leftColor} 50%, ${rightColor} 50%)`,
+    border: '1px solid #ccc',
+    borderRadius: '4px',
+    width: '20px',
+    height: '20px',
+  };
+}
+
 
 </script>
 
@@ -1511,7 +1535,8 @@ function updateProb() {
       <el-collapse v-model="resultCollapseActiveNames" class="" style="border: none">
         <el-collapse-item name="calculationResult" class="collapse-item">
           <template #title>
-            <div class="collapse-title-icon" style="background: #ec8338"></div>
+            <div class="collapse-title-icon" :style="getProbabilityBoxStyle(currentProb.limited, currentProb.both)">
+            </div>
             <span class="collapse-title-font">
               共计{{ calculationResult.totalDraw }}抽，
               氪金{{ keepTheDecimalPoint(calculationResult.totalAmountOfRecharge, 0) }}元
@@ -1614,11 +1639,15 @@ function updateProb() {
               <span class="resources-quantity-small">({{ singleResourceDraws.tenGachaTicket }})</span>
             </div>
           </div>
-
+          <!-- 抽卡概率总览 -->
           <div class="resources-result-bar">
-            <div v-if="currentProb">
-              <p>拿到限定的概率：{{ currentProb.limited.toFixed(2) }}%</p>
-              <p>拿到限定+陪跑的概率：{{ currentProb.both.toFixed(2) }}%</p>
+            <div v-if="currentProb" style="display: flex; gap: 16px;">
+              <div>
+                <p>拿到限定的概率：{{ currentProb.limited.toFixed(2) }}%</p>
+              </div>
+              <div>
+                <p>拿到限定+陪跑的概率：{{ currentProb.both.toFixed(2) }}%</p>
+              </div>
             </div>
             <div v-else>
               <p>未找到对应抽数概率</p>
