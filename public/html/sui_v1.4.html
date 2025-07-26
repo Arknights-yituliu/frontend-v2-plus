@@ -523,7 +523,7 @@
             width: 60%;
             object-fit: contain;
             /* 保持宽高比缩放，不会裁剪图片 */
-            opacity: 0.5;
+            opacity: 0.7;
         }
 
         /* 表单样式 */
@@ -1394,21 +1394,23 @@
             <p>
                 请粘贴游戏地图的截图，点击确认后可能需要等待几秒，电脑cpu会狂转一会儿，因为目前的识别算法没有经过任何优化。<br /><b>确保截图内容只包含完整的地图部分，否则会识别失败</b>
             </p>
-            <div class="example_img"><img src="example.png" /></div>
+            <div class="example_img"><img src="example_warning.jpg" /></div>
             <div class="paste-hint">
                 截图快捷键：Win+Shift+S，截图后按Ctrl+V粘贴<br />
                 <span style="color: red" id="no-preserve-hint">您未勾选“保留数据”，已填写数据会被覆盖</span>
                 <span style="color: green" id="preserve-hint">您已勾选“保留数据”，已填写数据会被保留，只有节点类型会改变</span>
             </div>
 
-            <div class="image-upload">
-                <div class="image-preview" id="recmap-preview"></div>
-            </div>
+            
             <div class="buttons">
                 <button class="recmap-button" id="confirm-recmap">
                     识别并应用
                 </button>
                 <button class="reset-button" id="cancel-recmap">取消</button>
+            </div>
+
+            <div class="image-upload">
+                <div class="image-preview" id="recmap-preview"></div>
             </div>
 
 
