@@ -142,7 +142,7 @@ main img:not(.v-card img) {
 pre {
   display: block;
   padding: 0.5em 0.8em;
-  background-color: #f0f2f4;
+  background-color: rgb(var(--v-theme-code));
   border: 1px solid #b8b8b8;
   border-radius: 5px;
   margin: 0.7em 0;
