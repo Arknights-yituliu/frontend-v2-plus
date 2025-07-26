@@ -1641,9 +1641,13 @@ function getProbabilityBoxStyle(limited, both) {
           </div>
           <!-- 抽卡概率总览 -->
           <div class="resources-result-bar">
-            <div v-if="currentProb">
-              <p>拿到限定的概率：{{ currentProb.limited.toFixed(2) }}%</p>
-              <p>拿到限定+陪跑的概率：{{ currentProb.both.toFixed(2) }}%</p>
+            <div v-if="currentProb" style="display: flex; gap: 16px;">
+              <div>
+                <p>拿到限定的概率：{{ currentProb.limited.toFixed(2) }}%</p>
+              </div>
+              <div>
+                <p>拿到限定+陪跑的概率：{{ currentProb.both.toFixed(2) }}%</p>
+              </div>
             </div>
             <div v-else>
               <p>未找到对应抽数概率</p>
