@@ -136,6 +136,18 @@ document.addEventListener("DOMContentLoaded", function () {
                             if (cellData.formData || cellData.type === 'huoluan') {
                                 updateCellBadge(cell, cellData);
                             }
+
+                            // 设置起始点
+                            if (row == startRow && col == startCol) {
+                                cell.classList.add("start");
+                                cell.classList.remove("unknown");
+                                cell.style.backgroundColor = "black";
+                                cell.style.cursor = "default";
+                                const label = cell.querySelector(".grid-label");
+                                if (label) {
+                                    label.textContent = "起始点";
+                                }
+                            }
                         }
                     });
                 }
