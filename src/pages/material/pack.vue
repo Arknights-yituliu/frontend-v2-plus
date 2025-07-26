@@ -218,18 +218,23 @@ watch(fixedPacks, (newVal) => {
 /**
  * 保存两个性价比开关的值到 localStorage
  */
-watch(isDrawOnly, (v) => localStorage.setItem('isDrawOnly', v.toString()))
+watch(()=>isDrawOnly.value, (v) => {
+
+  localStorage.setItem('isDrawOnly', v.toString())
+})
 watch(isKernelValuable, (v) => localStorage.setItem('isKernelValuable', v.toString()))
 
 /**
  * 切换性价比模式
  */
 function displayPackEfficiency() {
+  isDrawOnly.value = !isDrawOnly.value
   packInfoVOList = packInfoResponseData.map(item => calculatePackEfficiency(item, itemValueMap, isDrawOnly.value, isKernelValuable.value))
   collectPackInfoVO()
 }
 
 function changeKernelValue() {
+  isKernelValuable.value = !isKernelValuable.value
   packInfoVOList = packInfoResponseData.map(item => calculatePackEfficiency(item, itemValueMap, isDrawOnly.value, isKernelValuable.value))
   collectPackInfoVO()
 }
@@ -318,7 +323,7 @@ const packCollect = ref([])
 function filterPacksV2() {
 
   const result = new Map()
-  console.log(packFilterConditions.value)
+
 
   for (const pack of packInfoVOList) {
     const packYear = new Date(pack.start).getFullYear()
@@ -384,22 +389,20 @@ function filterPacksV2() {
 
         <div class="flex flex-wrap">
           <!-- 中坚寻访按钮 -->
-          <v-btn-toggle v-if="item.titleEn === 'New Packs'" v-model="isKernelValuable" class="m-0-8"
-                        style="height: 36px;margin: 6px 4px;">
-            <v-btn :value="true" :color="isKernelValuable ? 'primary' : 'grey'"
-                   :variant="isKernelValuable ? 'flat' : 'outlined'" @click="changeKernelValue()">
+
+            <v-btn  v-if="item.titleEn === 'New Packs'"  :color="isKernelValuable ? 'primary' : 'grey'"
+                   :variant="isKernelValuable ? 'flat' : 'outlined'" @click="changeKernelValue()" style="height: 36px;margin: 6px 4px;">
               需要中坚寻访
             </v-btn>
-          </v-btn-toggle>
+
 
           <!-- 只看抽卡按钮 -->
-          <v-btn-toggle v-if="item.titleEn === 'New Packs'" v-model="isDrawOnly" class="m-0-8"
-                        style="height: 36px;margin: 6px 4px;">
-            <v-btn :value="true" :color="isDrawOnly ? 'primary' : 'grey'" :variant="isDrawOnly ? 'flat' : 'outlined'"
-                   @click="displayPackEfficiency()">
+
+            <v-btn v-if="item.titleEn === 'New Packs'" :color="isDrawOnly ? 'primary' : 'grey'" :variant="isDrawOnly ? 'flat' : 'outlined'"
+                   @click="displayPackEfficiency()" style="height: 36px;margin: 6px 4px;">
               只看抽卡
             </v-btn>
-          </v-btn-toggle>
+
 
           <!-- 四选一排序按钮组 -->
           <v-btn-toggle v-if="item.titleEn === 'New Packs'" v-model="sortOption" mandatory class="m-0-8"
