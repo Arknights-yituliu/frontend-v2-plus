@@ -1,7 +1,9 @@
 function stringToArray(string, delimiter=',') {
-    if(!string){
+
+    if(!string||typeof string !== 'string'){
         return []
     }
+    console.log(string)
     return string.split(delimiter).map((item) => {
         return item.trim();
     }).filter(item => item);
