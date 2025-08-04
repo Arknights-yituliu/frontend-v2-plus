@@ -74,7 +74,7 @@ async function getPackInfoData() {
   for (const item of packInfoResponseData) {
     const packInfoVO = calculatePackEfficiency(item, itemValueMap, isDrawOnly.value, isKernelValuable.value)
     packInfoVOList.push(packInfoVO)
-    console.log(dateFormat(item.end) ,item.end < timeStamp)
+
     if (item.end > timeStamp) {
       packInfoVOListOnSale.value.push(packInfoVO)
     }
