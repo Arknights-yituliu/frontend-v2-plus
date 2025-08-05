@@ -10,11 +10,16 @@ const professions = ref([
 
 const activeProfession = ref("近卫");
 const activeTab = ref("general");
-const hasAscalon = ref(false); // 控制中枢入驻阿斯卡纶/烛煌
+const hasAscalon = ref(false); // 控制中枢入驻阿斯卡纶
+const customAscalonEfficiency = ref(parseFloat(localStorage.getItem('customAscalonEfficiency')) || 0.05);
+
+watch(customAscalonEfficiency, (newValue) => {
+  localStorage.setItem('customAscalonEfficiency', newValue.toString());
+});
 
 // 计算额外效率
 const extraEfficiency = computed(() => {
-  return 0.05 + (hasAscalon.value ? 0.05 : 0); // 基础5% + 阿斯卡纶5%
+  return 0.05 + (hasAscalon.value ? customAscalonEfficiency.value : 0); // 基础5% + 阿斯卡纶5%
 });
 
 // 每个职业的分支
@@ -144,7 +149,7 @@ function generateTimeTooltip(baseTime, efficiency) {
   const calculatedTime = baseTime / baseReduceFactor;
 
   return `基础时间: ${baseTime.toFixed(2)}小时 | ` +
-      `基础减免: ${(extraEfficiency.value * 100).toFixed(0)}% ${hasAscalon.value ? '(所有助手固有5% + 阿斯卡纶/烛煌5%)' : '(所有助手固有)'} | ` +
+      `基础减免: ${(extraEfficiency.value * 100).toFixed(0)}% ${hasAscalon.value ? '(所有助手固有5% + 控制中枢额外效率5%)' : '(所有助手固有)'} | ` +
       `助手效率: ${efficiencyDisplay} | ` +
       `助手总效率: ${((efficiency || 0) + extraEfficiency.value) * 100}% | ` +
       `计算公式: ${baseTime.toFixed(2)} / ${baseReduceFactor.toFixed(2)} | ` +
@@ -475,7 +480,20 @@ function calculateSavingsFromDefault(optimizedTime) {
             active-color="#13ce66"
             class="mr-2"
         />
-        <span class="ascalon-label">控制中枢入驻阿斯卡纶/烛煌 (+5%效率)</span>
+        <span class="ascalon-label">控制中枢入驻阿斯卡纶/烛煌/斩业星熊......</span>
+
+        <el-input-number
+            v-if="hasAscalon"
+            v-model="customAscalonEfficiency"
+            :max="1"
+            :min="0"
+            :precision="2"
+            :step="0.01"
+            controls-position="right"
+            style="margin-left: 15px; width: 100px"
+            @change="recalculatePaths"
+        />
+        <span v-if="hasAscalon" style="margin-left: 5px">当前: {{ (customAscalonEfficiency * 100).toFixed(0) }}%</span>
       </div>
 
       <!-- 通用/分支选择 -->
@@ -914,4 +932,4 @@ function calculateSavingsFromDefault(optimizedTime) {
 .mr-2 {
   margin-right: 8px;
 }
-</style> 
+</style>

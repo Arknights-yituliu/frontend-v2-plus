@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, reactive, ref} from "vue"
+import {computed, onMounted, reactive, ref, watch} from "vue"
 import {convertToSeconds, getSecondsSinceMidnight, secondsToTimeString,} from "/src/utils/dateHanding"
 import {Clock, QuestionFilled} from "@element-plus/icons-vue";
 
@@ -12,10 +12,16 @@ const halfOperatorParams = reactive({
   isFit: false, //是否享受职业专精效率加成
   halfOperatorAddition: 0.3, //减半干员专精效率加成
   hasAscalon: false, //控制中枢入驻阿斯卡纶
+  customAscalonEfficiency: parseFloat(localStorage.getItem('customAscalonEfficiency')) || 0.05, //自定义阿斯卡纶效率
   remainder: null, //当前显示的剩余时间
   leadTime: 5, //默认提前五分钟提醒
   textShowType: null //提醒文字展示类型
 })
+
+watch(() => halfOperatorParams.customAscalonEfficiency, (newValue) => {
+  localStorage.setItem('customAscalonEfficiency', newValue.toString());
+});
+
 let nowEfficiency = ref(0) //当前效率
 let extraEfficiency = 0 //额外效率
 let state = ref("info") /*倒计时提醒状态标签*/
@@ -34,7 +40,7 @@ onMounted(() => {
 
 function calculateTime() {
   //额外效率，已包含训练室基础效率、阿斯卡纶中枢效率
-  extraEfficiency = 0.05 + (halfOperatorParams.hasAscalon ? 0.05 : 0)
+  extraEfficiency = 0.05 + (halfOperatorParams.hasAscalon ? halfOperatorParams.customAscalonEfficiency : 0)
   //当前效率
   nowEfficiency.value = 1 + halfOperatorParams.efficiency + extraEfficiency
   //减半干员效率
@@ -154,12 +160,27 @@ const formattedRemainingTime = computed(() => {
             </el-form-item>
 
             <div class="switch-settings">
-              <el-form-item label="控制中枢入驻阿斯卡纶/烛煌">
+              <el-form-item label="控制中枢入驻阿斯卡纶/烛煌/斩业星熊......">
                 <el-switch
                     v-model="halfOperatorParams.hasAscalon"
                     active-color="#13ce66"
                     @change="calculateTime"
                 />
+              </el-form-item>
+
+              <el-form-item v-if="halfOperatorParams.hasAscalon" label="控制中枢额外效率加成">
+                <el-input-number
+                    v-model="halfOperatorParams.customAscalonEfficiency"
+                    :max="1"
+                    :min="0"
+                    :precision="2"
+                    :step="0.01"
+                    controls-position="right"
+                    @change="calculateTime"
+                />
+                <span style="margin-left: 10px">当前: {{
+                    (halfOperatorParams.customAscalonEfficiency * 100).toFixed(0)
+                  }}%</span>
               </el-form-item>
 
               <el-form-item label="减半干员有职业加成效果">
@@ -273,8 +294,8 @@ const formattedRemainingTime = computed(() => {
         <h2>算法代码</h2>
         <pre class="code-block">
 function calculateTime() {
-  //额外效率，已包含训练室基础效率、阿斯卡纶中枢效率
-  extraEfficiency = 0.05 + (halfOperatorParams.hasAscalon ? 0.05 : 0)
+  //额外效率，已包含训练室基础效率、控制中枢额外效率
+  extraEfficiency = 0.05 + (halfOperatorParams.hasAscalon ? halfOperatorParams.customAscalonEfficiency : 0)
   //当前效率
   nowEfficiency.value = 1 + halfOperatorParams.efficiency + extraEfficiency
   //减半干员效率
@@ -315,7 +336,7 @@ function calculateTime() {
         title="使用指南"
     >
       <div class="usage-guide">
-        <img src="/image/specialization/introduce.png" style="width: 100%;margin-bottom: 20px;" alt="使用指南"/>
+        <img alt="使用指南" src="/image/specialization/introduce.png" style="width: 100%;margin-bottom: 20px;"/>
         <el-timeline>
           <el-timeline-item type="primary">
             <h4>查看专精剩余时间</h4>
