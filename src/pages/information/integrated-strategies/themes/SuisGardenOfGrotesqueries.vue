@@ -20,7 +20,7 @@ import Battle from '@/components/information/Battle.vue'
               <div>
                 抵达第5层，在险路恶敌的前一个命运所指节点中触发事件
                 <el-link
-                    href="#"
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%A5%A0%E5%A0%82%E5%8F%A3"
                     target="_blank"
                     type="primary"
                 >
@@ -57,7 +57,7 @@ import Battle from '@/components/information/Battle.vue'
                   <el-text tag="ins">在传说节点触发事件</el-text>
                 </el-tooltip>
                 <el-link
-                    href="#"
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%A6%86%E8%9D%B6"
                     target="_blank"
                     type="primary"
                 >
@@ -101,7 +101,7 @@ import Battle from '@/components/information/Battle.vue'
               <div>
                 抵达第5层，在险路恶敌的前一个命运所指节点中触发事件
                 <el-link
-                    href="#"
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%A5%A0%E5%A0%82%E5%8F%A3"
                     target="_blank"
                     type="primary"
                 >
@@ -131,7 +131,7 @@ import Battle from '@/components/information/Battle.vue'
               <div>
                 进入岁兽残识，在杂疑节点触发事件
                 <el-link
-                    href="#"
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%89%A7%E6%A3%8B"
                     target="_blank"
                     type="primary"
                 >
@@ -151,7 +151,7 @@ import Battle from '@/components/information/Battle.vue'
               <div>
                 进入指点迷津，触发事件
                 <el-link
-                    href="#"
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%83%9B%E5%A0%82"
                     target="_blank"
                     type="primary"
                 >
