@@ -1,7 +1,7 @@
 <script setup>
 import ModuleHeader from '@/components/layout/ModuleHeader.vue';
-import {onMounted, ref} from 'vue'
-import {getStageConfig} from "/src/utils/user/userConfig.js";
+import { onMounted, ref } from 'vue'
+import { getStageConfig } from "/src/utils/user/userConfig.js";
 import '/src/assets/css/material/store.scss';
 import '/src/assets/css/material/store.phone.scss';
 import '/src/assets/css/sprite/sprite_plane_icon.css';
@@ -15,11 +15,11 @@ const storeListFormat = ref([]) // 常驻商店性价比集合
 const actStoreList = ref([]) // 活动列表
 
 const storeTypeList = [ // 常驻商店数据初始化格式
-  {typeName: 'green', iconId: '4005', dividing: 0.8, tier: 0.024, borderColor: 'rgb(0, 162, 162)'},
-  {typeName: 'yellow', iconId: '4004', dividing: 9.0, tier: 1.5, borderColor: 'rgb(251, 192, 45)'},
-  {typeName: 'orange', iconId: 'EPGS_COIN', dividing: 1.22, tier: 0.05, borderColor: 'rgb(232, 93, 6)'},
-  {typeName: 'purple', iconId: 'REP_COIN', dividing: 1.6, tier: 0.32, borderColor: 'rgb(163, 53, 238)'},
-  {typeName: 'grey', iconId: 'SOCIAL_PT', dividing: 6.5, tier: 1.6, borderColor: 'rgb(160, 160, 160)'},
+  { typeName: 'green', iconId: '4005', dividing: 0.8, tier: 0.024, borderColor: 'rgb(0, 162, 162)' },
+  { typeName: 'yellow', iconId: '4004', dividing: 9.0, tier: 1.5, borderColor: 'rgb(251, 192, 45)' },
+  { typeName: 'orange', iconId: 'EPGS_COIN', dividing: 1.22, tier: 0.05, borderColor: 'rgb(232, 93, 6)' },
+  { typeName: 'purple', iconId: 'REP_COIN', dividing: 1.6, tier: 0.32, borderColor: 'rgb(163, 53, 238)' },
+  { typeName: 'grey', iconId: 'SOCIAL_PT', dividing: 6.5, tier: 1.6, borderColor: 'rgb(160, 160, 160)' },
 ]
 
 const stageConfig = getStageConfig()
@@ -69,7 +69,7 @@ function activityStoreComputed() {
   function _formatActStore(data) {
     let actStoreFormat = [[], [], [], [], []]
     for (let item of data) {
-      const {itemArea, itemId, itemPrice, itemQuantity, itemName} = item
+      const { itemArea, itemId, itemPrice, itemQuantity, itemName } = item
       const itemValue = itemValueMap.get(itemId)
       const itemPPR = itemValue * itemQuantity / itemPrice
       actStoreFormat[itemArea - 1].push({
@@ -141,6 +141,12 @@ onMounted(() => {
     storeListFormat.value[i].hide = storeStatusList[i]
   }
 })
+function handleClick() {
+  document.querySelectorAll('.activity-store-good').forEach(element => {
+    element.style.background = 'white'; // 纯白背景，不透明
+  });
+}
+
 </script>
 
 <template>
@@ -148,21 +154,20 @@ onMounted(() => {
     <!-- 活动商店 -->
     <div id="actStore">
       <!-- 标题区域 -->
-      <ModuleHeader title="活动商店" title-en="Event Store"/>
+      <ModuleHeader title="活动商店" title-en="Event Store" />
       <!-- 标题区域end -->
       <!-- 内容区域 -->
       <div v-for="(singleAct, index) in actStoreList" :key="index" class="act_store_block">
         <!-- banner -->
-        <div class="act-banner-background" :style="getBackground(singleAct.imageLink)">
-          <img class="act-banner-img" :src="getActStoreBackgroundImage(singleAct.imageLink)" :alt="singleAct.actName"/>
+        <div class="act-banner-background"  @click="handleClick()" :style="getBackground(singleAct.imageLink)" >
+          <img class="act-banner-img" :src="getActStoreBackgroundImage(singleAct.imageLink)" :alt="singleAct.actName" />
         </div>
 
         <!-- tag -->
-
         <div class="tag-group">
           <span :class="`tag-rank-${singleTag.tagRank}`" v-for="(singleTag, index) in singleAct.actTagArea"
-                :key="index">
-           {{ singleTag.tagText }}
+            :key="index">
+            {{ singleTag.tagText }}
           </span>
         </div>
 
@@ -174,16 +179,15 @@ onMounted(() => {
 
         <!-- Area -->
         <div class="activity-store-content" v-for="(singleArea, index) in singleAct.actStoreFormat" :key="index">
-          <div class="activity-store-good"
-               :class="`activity-store-good-area-${index+1}`"
-               v-for="(singleItem, i) in singleArea" :key="i">
+          <div class="activity-store-good" :class="`activity-store-good-area-${index + 1}`"
+            v-for="(singleItem, i) in singleArea" :key="i">
             <div class="activity-store-good-sprite">
               <div :class="`bg-${singleItem.itemId}`"></div>
             </div>
             <div class="activity-store-good-info">
               <span class="activity-store-good-name">{{ singleItem.itemName }}</span>
               <span class="activity-store-good-efficiency"
-                    :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)">{{
+                :class="getColor(singleItem.itemPPR, singleAct.actPPRBase, singleAct.actPPRStair)">{{
                   getEfficiency(singleItem.itemPPR)
                 }}</span>
               <span class="activity-store-good-price">{{ singleItem.itemPrice }}代币</span>
@@ -201,25 +205,16 @@ onMounted(() => {
       <!-- 标题区域 -->
       <ModuleHeader title="采购中心" title-en="Store Ranking" :tips="['*点击图标切换']">
         <div class="flex">
-          <div
-              class="permanent-store-checkbox-button"
-              v-for="(item, index) in storeListFormat"
-              :key="index"
-              :style="item.hide ? '' : 'filter: none;'"
-              @click="switchStore(item)"
-          >
+          <div class="permanent-store-checkbox-button" v-for="(item, index) in storeListFormat" :key="index"
+            :style="item.hide ? '' : 'filter: none;'" @click="switchStore(item)">
             <div class="" :class="`bg-icon_${item.iconId}`"></div>
           </div>
         </div>
       </ModuleHeader>
       <!-- 标题区域end -->
       <!-- 内容区域 -->
-      <div
-          v-show="!item.hide"
-          class="permanent-store-content"
-          v-for="(item, index) in storeListFormat" :key="index"
-          :style="{ borderColor: item.borderColor }"
-      >
+      <div v-show="!item.hide" class="permanent-store-content" v-for="(item, index) in storeListFormat" :key="index"
+        :style="{ borderColor: item.borderColor }">
         <div class="permanent-store-icon">
           <div :class="`bg-icon_${item.iconId}`"></div>
         </div>
@@ -246,8 +241,6 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
-
-
 #store {
   .op_title {
     display: flex;

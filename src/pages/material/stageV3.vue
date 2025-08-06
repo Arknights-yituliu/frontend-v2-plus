@@ -243,6 +243,9 @@ function scrollToFrequentlyAskedQuestion() {
   document.getElementById('frequently-asked-question').scrollIntoView({ behavior: 'smooth' })
 }
 
+function getDetailTableItemSprite(id) {
+  return "bg-" + id + " table-item-sprite";
+}
 
 function getLegendSprite(id) {
   return "bg-" + id;
@@ -276,6 +279,8 @@ function handleClick() {
     el0.style.width = '1530px'
     const el1 = document.getElementById('retire-card')
     el1.style.display = 'flex'
+    const el2 = document.getElementById('detail-table')
+    el2.style.display = 'block'
   }
 }
 </script>
@@ -443,7 +448,59 @@ function handleClick() {
 
     <!-- 材料情报卡 -->
     <StageDetailTable v-model="recommendedStageDetailTable"></StageDetailTable>
-
+    <div id="detail-table" style="display: none;width: 850px;font-size: 18px !important;color: #000 !important;">
+      <el-table stripe :data="recommendedStageDetailTable.slice(0, 6)" max-height="495" max-width="892"
+        class="stage-detail-table">
+        <el-table-column fixed prop="stageCode" label="关卡名" width="120px">
+          <template #default="scope">
+            <div style="font-size: 18px;line-height: 18px;font-weight: 400;color: #000000;height: 44px;">
+              <span style="font-size: 12px;line-height: 8px;font-weight: 400;color: #000000;">{{ replaceZoneName(scope)
+                }}</span><br>
+              {{ scope.row.stageCode }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="itemId" label="主产物" width="78px">
+          <template #default="scope">
+            <div class="stage-detail-table-item-icon" style="margin-left: 6px;">
+              <div :class="getDetailTableItemSprite(scope.row.itemId)"></div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="secondaryItemId" label="副产物" width="78px">
+          <template #default="scope">
+            <div class="stage-detail-table-item-icon" style="margin-left: 6px;">
+              <div :class="getDetailTableItemSprite(scope.row.secondaryItemId)"></div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="knockRating" label="主产物掉率" width="120px">
+          <template #default="scope">
+            <div style="margin-left: 8px;">{{ formatNumber(scope.row.knockRating * 100, 1) }}%</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="apExpect" label="期望理智" width="96px">
+          <template #default="scope">
+            <div style="margin-left: 8px;">{{ formatNumber(scope.row.apExpect, 1) }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="stageEfficiency" label="综合收益率" width="120px">
+          <template #default="scope">
+            <div style="margin-left: 4px;">{{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="leT4Efficiency" label="T4材料效率" width="120px">
+          <template #default="scope">
+            <div style="margin-left: 16px;">{{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%</div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="leT3Efficiency" label="T3材料效率" width="120px">
+          <template #default="scope">
+            <div style="margin-left: 16px;">{{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%</div>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
 
     <!-- 搓玉推荐表 -->
     <div id="orundum-table"></div>
