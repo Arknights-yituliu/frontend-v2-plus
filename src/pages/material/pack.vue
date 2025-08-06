@@ -13,6 +13,7 @@ import '/src/assets/css/material/pack.phone.scss';
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import NoticeBoard from "@/components/layout/NoticeBoard.vue";
 import { calculatePackEfficiency } from "@/utils/item/packEfficiency.js";
+import {dateFormat} from "@/utils/dateUtil.js";
 
 
 // 当前日期
@@ -73,7 +74,8 @@ async function getPackInfoData() {
   for (const item of packInfoResponseData) {
     const packInfoVO = calculatePackEfficiency(item, itemValueMap, isDrawOnly.value, isKernelValuable.value)
     packInfoVOList.push(packInfoVO)
-    if (item.end < timeStamp) {
+
+    if (item.end > timeStamp) {
       packInfoVOListOnSale.value.push(packInfoVO)
     }
   }
