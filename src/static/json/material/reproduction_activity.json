@@ -1,7 +1,7 @@
 [
   {
     "activityName": "太阳甩在身后",
-    "startTime": "预计2025/08",
+    "startTime": "2025/08",
     "itemList": {}
   },
   {
@@ -37,6 +37,11 @@
   {
     "activityName": "红丝绒",
     "startTime": "预计2026/06",
+    "itemList": {}
+  },
+  {
+    "activityName": "墟",
+    "startTime": "预计2026/08",
     "itemList": {}
   }
 ]

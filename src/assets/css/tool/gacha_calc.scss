@@ -8,7 +8,7 @@
 }
 
 .gacha-act-selector {
-   width: 32%;
+   width: 25%;
 }
 
 #gachaCalculate {
@@ -83,11 +83,12 @@
 
     justify-content: center;
     .el-radio-group{
-      width: 500px;
+      // width: 500px;
     }
 
     .el-radio-button__inner{
       width: 166px;
+      width: 126px;
       padding:12px 8px;
     }
   }

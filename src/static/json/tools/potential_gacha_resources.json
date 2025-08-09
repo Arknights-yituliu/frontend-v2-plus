@@ -5,7 +5,8 @@
     "gachaOrundum": "200",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "train"
+    "packType": "train",
+    "startTime": 0
   },
   {
     "packName": "我方索敌",
@@ -13,7 +14,8 @@
     "gachaOrundum": "200",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "train"
+    "packType": "train",
+    "startTime": 0
   },
   {
     "packName": "攻击速度",
@@ -21,7 +23,8 @@
     "gachaOrundum": "200",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "train"
+    "packType": "train",
+    "startTime": 0
   },
   {
     "packName": "异常状态",
@@ -29,7 +32,8 @@
     "gachaOrundum": "200",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "train"
+    "packType": "train",
+    "startTime": 0
   },
   {
     "packName": "推力与拉力",
@@ -37,7 +41,8 @@
     "gachaOrundum": "200",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "train"
+    "packType": "train",
+    "startTime": 0
   },
   {
     "packName": "敌方元素损伤",
@@ -45,7 +50,8 @@
     "gachaOrundum": "200",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "train"
+    "packType": "train",
+    "startTime": 0
   },
   {
     "packName": "我方元素损伤",
@@ -53,263 +59,296 @@
     "gachaOrundum": "200",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "train"
+    "packType": "train",
+    "startTime": 0
   },
   {
-    "packName": "序章 黑暗时代·上",
+    "packName": "EP0 黑暗时代·上",
     "gachaOriginium": "19",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 0
   },
   {
-    "packName": "突袭",
+    "packName": "EP0 突袭",
     "gachaOriginium": "11",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "第一章 黑暗时代·下",
+    "packName": "EP1 黑暗时代·下",
     "gachaOriginium": "15",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "突袭",
+    "packName": "EP1 突袭",
     "gachaOriginium": "10",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "第二章 异卵同生",
+    "packName": "EP2 异卵同生",
     "gachaOriginium": "27",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "突袭",
+    "packName": "EP2 突袭",
     "gachaOriginium": "10",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "第三章 二次呼吸",
+    "packName": "EP3 二次呼吸",
     "gachaOriginium": "16",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "突袭",
+    "packName": "EP3 突袭",
     "gachaOriginium": "8",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "第四章 急性衰竭",
+    "packName": "EP4 急性衰竭",
     "gachaOriginium": "20",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "突袭",
+    "packName": "EP4 突袭",
     "gachaOriginium": "10",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "第五章 靶向药物",
+    "packName": "EP5 靶向药物",
     "gachaOriginium": "20",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "突袭",
+    "packName": "EP5 突袭",
     "gachaOriginium": "14",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "第六章 局部坏死",
+    "packName": "EP6 局部坏死",
     "gachaOriginium": "23",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "突袭",
+    "packName": "EP6 突袭",
     "gachaOriginium": "17",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "第七章 苦难摇篮",
+    "packName": "EP7 苦难摇篮",
     "gachaOriginium": "23",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "突袭",
+    "packName": "EP7 突袭",
     "gachaOriginium": "20",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 1
   },
   {
-    "packName": "第八章 怒号光明",
+    "packName": "EP8 怒号光明",
     "gachaOriginium": "29",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 2
   },
   {
-    "packName": "突袭",
+    "packName": "EP8 突袭",
     "gachaOriginium": "20",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 2
   },
   {
-    "packName": "第九章 风暴瞭望",
+    "packName": "EP9 风暴瞭望",
     "gachaOriginium": "25",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 3
   },
   {
-    "packName": "突袭",
+    "packName": "EP9 突袭",
     "gachaOriginium": "24",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 3
   },
   {
-    "packName": "第十章 破碎日冕",
+    "packName": "EP10 破碎日冕",
     "gachaOriginium": "20",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 3
   },
   {
-    "packName": "磨难/H关",
+    "packName": "EP10 磨难/H关",
     "gachaOriginium": "18",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 3
   },
   {
-    "packName": "第十一章 淬火尘霾",
+    "packName": "EP11 淬火尘霾",
     "gachaOriginium": "22",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 4
   },
   {
-    "packName": "磨难/H关",
+    "packName": "EP11 磨难/H关",
     "gachaOriginium": "20",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 4
   },
   {
-    "packName": "第十二章 惊霆无声",
+    "packName": "EP12 惊霆无声",
     "gachaOriginium": "23",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 4
   },
   {
-    "packName": "磨难/H关",
+    "packName": "EP12 磨难/H关",
     "gachaOriginium": "21",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 4
   },
   {
-    "packName": "第十三章 恶兆湍流",
+    "packName": "EP13 恶兆湍流",
     "gachaOriginium": "23",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 5
   },
   {
-    "packName": "磨难/H关",
+    "packName": "EP13 磨难/H关",
     "gachaOriginium": "23",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 5
   },
   {
-    "packName": "第十四章 慈悲灯塔",
+    "packName": "EP14 慈悲灯塔",
     "gachaOriginium": "24",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 5
   },
   {
-    "packName": "磨难/H关/隐藏",
+    "packName": "EP14 磨难/H关/隐藏",
     "gachaOriginium": "23",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 5
   },
   {
-    "packName": "第十五章 离解复合",
+    "packName": "EP15 离解复合",
     "gachaOriginium": "22",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 6
   },
   {
-    "packName": "磨难/H关/隐藏",
+    "packName": "EP15 磨难/H关/隐藏",
     "gachaOriginium": "23",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "main"
+    "packType": "main",
+    "startTime": 6
   },
   {
     "packName": "骑兵与猎人",
@@ -317,7 +356,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 1
   },
   {
     "packName": "火蓝之心",
@@ -325,7 +365,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 1
   },
   {
     "packName": "喧闹法则",
@@ -333,7 +374,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 1
   },
   {
     "packName": "生于黑夜",
@@ -341,7 +383,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity-main"
+    "packType": "activity-main",
+    "startTime": 1
   },
   {
     "packName": "沃伦姆德的薄暮",
@@ -349,7 +392,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 2
   },
   {
     "packName": "密林悍将归来",
@@ -357,7 +401,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 2
   },
   {
     "packName": "玛莉娅临光",
@@ -365,7 +410,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 2
   },
   {
     "packName": "孤岛风云",
@@ -373,7 +419,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 2
   },
   {
     "packName": "画中人",
@@ -381,7 +428,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 2
   },
   {
     "packName": "遗尘漫步",
@@ -389,7 +437,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity-main"
+    "packType": "activity-main",
+    "startTime": 2
   },
   {
     "packName": "覆潮之下",
@@ -397,7 +446,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity-main"
+    "packType": "activity-main",
+    "startTime": 2
   },
   {
     "packName": "多索雷斯假日",
@@ -405,7 +455,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 3
   },
   {
     "packName": "长夜临光",
@@ -413,15 +464,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
-  },
-  {
-    "packName": "愚人号",
-    "gachaOriginium": "36",
-    "gachaOrundum": "0",
-    "gachaPermit": "0",
-    "gachaPermit10": "0",
-    "packType": "activity-main"
+    "packType": "activity",
+    "startTime": 3
   },
   {
     "packName": "风雪过境",
@@ -429,7 +473,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 3
   },
   {
     "packName": "将进酒",
@@ -437,15 +482,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
-  },
-  {
-    "packName": "孤星",
-    "gachaOriginium": "40",
-    "gachaOrundum": "0",
-    "gachaPermit": "0",
-    "gachaPermit10": "0",
-    "packType": "activity-main"
+    "packType": "activity",
+    "startTime": 3
   },
   {
     "packName": "吾导先路",
@@ -453,7 +491,17 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 3
+  },
+  {
+    "packName": "愚人号",
+    "gachaOriginium": "36",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity-main",
+    "startTime": 3
   },
   {
     "packName": "尘影余音",
@@ -461,7 +509,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 4
   },
   {
     "packName": "绿野幻梦",
@@ -469,7 +518,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 4
   },
   {
     "packName": "理想城：长夏狂欢季",
@@ -477,7 +527,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 4
   },
   {
     "packName": "叙拉古人",
@@ -485,7 +536,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 4
   },
   {
     "packName": "照我以火",
@@ -493,7 +545,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 4
   },
   {
     "packName": "登临意",
@@ -501,7 +554,17 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 4
+  },
+  {
+    "packName": "孤星",
+    "gachaOriginium": "40",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity-main",
+    "startTime": 4
   },
   {
     "packName": "空想花庭",
@@ -509,7 +572,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 5
   },
   {
     "packName": "火山旅梦",
@@ -517,7 +581,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 5
   },
   {
     "packName": "不义之财",
@@ -525,7 +590,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 5
   },
   {
     "packName": "崔林特尔梅之金",
@@ -533,7 +599,8 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 5
   },
   {
     "packName": "银心湖列车",
@@ -541,15 +608,17 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity"
+    "packType": "activity",
+    "startTime": 5
   },
   {
     "packName": "怀黍离",
-    "gachaOriginium": "28",
+    "gachaOriginium": "39",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "test"
+    "packType": "activity",
+    "startTime": 5
   },
   {
     "packName": "巴别塔",
@@ -557,7 +626,26 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity-main"
+    "packType": "activity-main",
+    "startTime": 5
+  },
+  {
+    "packName": "生路",
+    "gachaOriginium": "29",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "activity",
+    "startTime": 6
+  },
+  {
+    "packName": "太阳甩在身后",
+    "gachaOriginium": "38",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "to-be-open",
+    "startTime": 6
   },
   {
     "packName": "追迹日落以西",
@@ -565,6 +653,52 @@
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
-    "packType": "activity-main"
+    "packType": "activity-main",
+    "startTime": 6
+  },
+  {
+    "packName": "揭幕者们",
+    "gachaOriginium": "41",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "to-be-open",
+    "startTime": 6
+  },
+  {
+    "packName": "出苍白海",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "to-be-open",
+    "startTime": 6
+  },
+  {
+    "packName": "相见欢",
+    "gachaOriginium": "38",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "to-be-open",
+    "startTime": 6
+  },
+  {
+    "packName": "挽歌燃烧殆尽",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "to-be-open",
+    "startTime": 6
+  },
+  {
+    "packName": "众生行记",
+    "gachaOriginium": "41",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "to-be-open",
+    "startTime": 6
   }
 ]

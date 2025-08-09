@@ -86,6 +86,26 @@ let selectedHistoryPackIndex = ref([])
 let tempActivityScheduleList = []
 
 //将预测活动排期分类
+for (const name in FIXED_TABLE) {
+  let activityData = FIXED_TABLE[name]
+  //将活动排期的日期统一转为时间戳
+  activityData.start = new Date(activityData.start).getTime()
+  activityData.end = new Date(activityData.end).getTime()
+  activityData.name = name
+  //分为其他和活动两组数据
+  if (activityData.rewardModule === 'otherResources') {
+    otherRewardBySchedules.value.push(activityData)
+  } else {
+    //先将活动排期写入临时集合
+    activityData.name = name
+    tempActivityScheduleList.push(activityData)
+    // activitySchedule.value[name] = activityData
+    if (activityData.defaultStatus) {
+      selectedActivityName.value.push(activityData.name)
+    }
+  }
+}
+
 for (const name in HONEY_CAKE_TABLE) {
   let activityData = HONEY_CAKE_TABLE[name]
   //将活动排期的日期统一转为时间戳
@@ -106,25 +126,6 @@ for (const name in HONEY_CAKE_TABLE) {
   }
 }
 
-for (const name in FIXED_TABLE) {
-  let activityData = FIXED_TABLE[name]
-  //将活动排期的日期统一转为时间戳
-  activityData.start = new Date(activityData.start).getTime()
-  activityData.end = new Date(activityData.end).getTime()
-  activityData.name = name
-  //分为其他和活动两组数据
-  if (activityData.rewardModule === 'otherResources') {
-    otherRewardBySchedules.value.push(activityData)
-  } else {
-    //先将活动排期写入临时集合
-    activityData.name = name
-    tempActivityScheduleList.push(activityData)
-    // activitySchedule.value[name] = activityData
-    if (activityData.defaultStatus) {
-      selectedActivityName.value.push(activityData.name)
-    }
-  }
-}
 
 //将活动排期先排序一下
 tempActivityScheduleList.sort((a, b) => a.start - b.start)
@@ -212,7 +213,8 @@ let activityType = ref('联动限定')
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 let scheduleOptions = [
   {
-    name: '夏活(0802-0816)',
+    name: '夏活',
+    dateString: '(0802-0816)',
     start: new Date('2025/08/02 16:00:00'),
     end: new Date('2025/08/16 04:01:00'),
     activityType: '夏活限定',
@@ -222,24 +224,37 @@ let scheduleOptions = [
     historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/08/15 23:59:59').getTime(),]
   },
   {
-    name: '感谢庆典(1101-1115)',
+    name: 'Ave Mujica联动 ',
+    dateString: '(大概率0904-0918)',
+    start: new Date('2025/09/04 16:00:00'),
+    end: new Date('2025/09/18 04:01:00'),
+    activityType: '联动限定',
+    disabled: false,
+    dailyGiftResources: true,
+    accuracyFlag: false,
+    historicalPackTimeRange: [new Date('2024/09/01 00:00:00').getTime(), new Date('2024/09/28 23:59:59').getTime(),]
+  },
+  {
+    name: '感谢庆典',
+    dateString: '(1101-1115)',
     start: new Date('2025/11/01 16:00:00'),
     end: new Date('2025/11/15 04:01:00'),
     activityType: '周年限定',
-    disabled: true,
+    disabled: false,
     dailyGiftResources: true,
     accuracyFlag: false,
-    historicalPackTimeRange: [new Date('2023/10/30 00:00:00').getTime(), new Date('2023/11/15 23:59:59').getTime(),]
+    historicalPackTimeRange: [new Date('2024/10/30 00:00:00').getTime(), new Date('2024/11/15 23:59:59').getTime(),]
   },
   {
-    name: 'Ave Mujica联动(待定)',
-    start: new Date('2025/09/15 16:00:00'),
-    end: new Date('2025/09/29 04:01:00'),
+    name: 'Ave Mujica联动',
+    dateString: '(小概率1202-1216)',
+    start: new Date('2025/12/02 16:00:00'),
+    end: new Date('2025/12/16 04:01:00'),
     activityType: '联动限定',
     disabled: true,
     dailyGiftResources: true,
     accuracyFlag: true,
-    historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/05/28 23:59:59').getTime(),]
+    historicalPackTimeRange: [new Date('2024/09/01 00:00:00').getTime(), new Date('2024/09/28 23:59:59').getTime(),]
   }
 ]
 
@@ -1051,29 +1066,35 @@ function gachaResourcesCalculation() {
 
         //加上额外购买的月卡数量,判断是否额外购买了超过3个月
         if (rechargeOption.value.additionalMonthlyCardPurchase > 3) {
-          createMessage({ type: 'error', text: '月卡一次性只能最大购买90天' })
+          createMessage({ type: 'error', text: '月卡只能提前购买90天' })
+          rechargeOption.value.additionalMonthlyCardPurchase -= 1
           return
         }
 
-        console.log(rechargeOption.value.additionalMonthlyCardPurchase)
-        if (rechargeOption.value.additionalMonthlyCardPurchase < 0) {
-          createMessage({ type: 'error', text: '不可填入负数' })
-          return
-        }
+        // console.log(rechargeOption.value.additionalMonthlyCardPurchase)
+        // if (rechargeOption.value.additionalMonthlyCardPurchase < purchaseQuantity) {
+        //   createMessage({ type: 'error', text: '已经降到0了，不能再低了！' })
+        //   return
+        // }
 
         //加上额外购买的月卡数量
         purchaseQuantity += rechargeOption.value.additionalMonthlyCardPurchase
         //计算通过月卡总计获得多少源石
         listDisplayPackInfo.value[i].originium = purchaseQuantity * 6
-
+        if (listDisplayPackInfo.value[i].originium < 0) {
+          createMessage({ type: 'error', text: '已经降到0了，不能再低了！' })
+          listDisplayPackInfo.value[i].originium = 0
+          rechargeOption.value.additionalMonthlyCardPurchase += 1
+          return
+        }
 
         //月卡的价格=购买月卡的数量*30
         listDisplayPackInfo.value[i].price = purchaseQuantity * 30
         //当月月卡已购买源石-6
-        if (rechargeOption.value.monthlyCardPurchasedThisMonth) {
-          listDisplayPackInfo.value[i].originium -= 6
-          totalAmountOfRecharge -= 30
-        }
+        // if (rechargeOption.value.monthlyCardPurchasedThisMonth) {
+        //   listDisplayPackInfo.value[i].originium -= 6
+        //   totalAmountOfRecharge -= 30
+        // }
       }
 
       orundum += pack.orundum
@@ -1424,7 +1445,7 @@ function readLastSettings() {
 onMounted(() => {
   readLastSettings()
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
-  updateScheduleOption(0)
+  updateScheduleOption(1)
   getAndSortPackData()
 
   // ElNotification({
@@ -1462,8 +1483,10 @@ function handleResize() {
 //概率计算
 const probabilityTable = ref([])
 const currentProb = ref({
-  limited: 0,
-  both: 0
+  limited300: 0,
+  all300: 0,
+  limited120: 0,
+  all120: 0
 });
 
 onMounted(() => {
@@ -1473,25 +1496,38 @@ onMounted(() => {
 
 watch(() => calculationResult.value.totalDraw, updateProb)
 
+
 function updateProb() {
   let draw = calculationResult.value.totalDraw
 
-  if (draw >= 300) {
-    currentProb.value = {
-      pulls: draw,
-      limited: 100,
-      both: 100
-    }
-    return
-  }
+  currentProb.value.pulls = draw
 
   const index = draw
 
   currentProb.value = {
     pulls: draw,
-    limited: probabilityTable.value.limited[index] * 100,
-    both: probabilityTable.value.both[index] * 100
+    limited300: probabilityTable.value.limited300[index] * 100,
+    all300: probabilityTable.value.all300[index] * 100,
+    limited120: probabilityTable.value.limited120[index] * 100,
+    all120: probabilityTable.value.all120[index] * 100
   }
+
+  if (draw >= 120) {
+    currentProb.value.limited120 = 100
+  }
+
+  if (draw >= 208) {
+    currentProb.value.all120 = 100
+  }
+
+  if (draw >= 300) {
+    currentProb.value = {
+      pulls: draw,
+      limited300: 100,
+      all300: 100
+    }
+  }
+
 }
 
 function getColor(p) {
@@ -1502,11 +1538,11 @@ function getColor(p) {
   return '#bdbdbd';                 // 灰色
 }
 
-function getProbabilityBoxStyle(limited, both) {
+function getProbabilityBoxStyle(limited, all) {
   const leftColor = getColor(limited);
-  const rightColor = getColor(both);
+  const rightColor = getColor(all);
 
-  if (both >= 100) {
+  if (all >= 100) {
     return {
       background: 'linear-gradient(45deg, #FF6B6B, #FFA94D, #FFD43B, #69DB7C, #4DABF7, #A685E2)',
       color: 'white'
@@ -1535,7 +1571,11 @@ function getProbabilityBoxStyle(limited, both) {
       <el-collapse v-model="resultCollapseActiveNames" class="" style="border: none">
         <el-collapse-item name="calculationResult" class="collapse-item">
           <template #title>
-            <div class="collapse-title-icon" :style="getProbabilityBoxStyle(currentProb.limited, currentProb.both)">
+            <div class="collapse-title-icon" v-if="activityType !== '联动限定'" 
+              :style="getProbabilityBoxStyle(currentProb.limited300, currentProb.all300)">
+            </div>
+            <div class="collapse-title-icon" v-if="activityType === '联动限定'" 
+              :style="getProbabilityBoxStyle(currentProb.limited120, currentProb.all120)">
             </div>
             <span class="collapse-title-font">
               共计{{ calculationResult.totalDraw }}抽，
@@ -1546,8 +1586,12 @@ function getProbabilityBoxStyle(limited, both) {
           <div class="radio-group-wrap" style="margin: 0 auto;">
             <el-radio-group v-model="currentScheduleName" size="large">
               <el-radio-button v-for="(activity, index) in scheduleOptions" :key="index" :value="activity.name"
-                :label="activity.name" :disabled="activity.disabled" @change="updateScheduleOption(index)"
-                class="gacha-act-selector m-4-a" />
+                :disabled="activity.disabled" class="gacha-act-selector m-4-a" @change="updateScheduleOption(index)">
+                <div style="display: flex; flex-direction: column; line-height: 1.2; text-align: center;">
+                  <span>{{ activity.name }}</span>
+                  <span>{{ activity.dateString }}</span>
+                </div>
+              </el-radio-button>
             </el-radio-group>
           </div>
 
@@ -1642,11 +1686,17 @@ function getProbabilityBoxStyle(limited, both) {
           <!-- 抽卡概率总览 -->
           <div class="resources-result-bar">
             <div v-if="currentProb" style="display: flex; gap: 16px;">
-              <div>
-                <p>拿到限定的概率：{{ currentProb.limited.toFixed(2) }}%</p>
+              <div v-if="activityType !== '联动限定'" >
+                <p>拿到限定的概率：{{ currentProb.limited300.toFixed(2) }}%</p>
               </div>
-              <div>
-                <p>拿到限定+陪跑的概率：{{ currentProb.both.toFixed(2) }}%</p>
+              <div v-if="activityType !== '联动限定'" >
+                <p>拿到限定+陪跑的概率：{{ currentProb.all300.toFixed(2) }}%</p>
+              </div>
+              <div v-if="activityType === '联动限定'" >
+                <p>拿到限定六星的概率：{{ currentProb.limited120.toFixed(2) }}%</p>
+              </div>
+              <div v-if="activityType === '联动限定'" >
+                <p>拿到所有联动的概率：{{ currentProb.all120.toFixed(2) }}%</p>
               </div>
             </div>
             <div v-else>
@@ -2040,6 +2090,27 @@ function getProbabilityBoxStyle(limited, both) {
               </div>
             </el-checkbox-button>
           </el-checkbox-group>
+
+
+          <div class="collapse-content-subheading">
+            <span></span> 未确定开放日期的活动
+          </div>
+          <el-checkbox-group v-model="selectedPermanentZoneName" style="margin: 4px"
+            @change="gachaResourcesCalculation">
+            <el-checkbox-button v-for="(potential, index) in POTENTIAL_TABLE" :border="true" :key="index" :value="index"
+              v-show="potential.packType === 'to-be-open'" class="el-checkbox-button">
+              <div class="checkbox-button">
+                <span class="checkbox-button-zone-label">{{ potential.packName }}</span>
+                <div class="checkbox-button-gacha-resources">
+                  <div class="image-sprite">
+                    <div class="bg-icon_4002"></div>
+                  </div>
+                  <span>{{ potential.gachaOriginium }}</span>
+                </div>
+              </div>
+            </el-checkbox-button>
+          </el-checkbox-group>
+          <span class="tip">这些活动的复刻/记录修复日期尚不明确，请根据实际情况选取</span>
         </el-collapse-item>
 
         <!--氪金资源-->
@@ -2059,17 +2130,18 @@ function getProbabilityBoxStyle(limited, both) {
             <span></span> 月常礼包
           </div>
           <!-- <div class="switch-wrap"> -->
-          <div class="resources-line">
+          <!-- <div class="resources-line">
             <el-switch v-model="rechargeOption.monthlyCardPurchasedThisMonth"
               @change="gachaResourcesCalculation"></el-switch>
             <span>本月月卡已购买(选中则扣除6源石)</span>
-          </div>
+          </div> -->
           <div class="resources-line">
             <span>额外购买</span>
             <el-input-number v-model="rechargeOption.additionalMonthlyCardPurchase" @input="gachaResourcesCalculation">
             </el-input-number>
-            <span>张月卡（每张月卡可预支6石）</span>
+            <span>张月卡(负数代表已提前购买)</span>
           </div>
+          <span class="tip">额外购买一张月卡可提前拿到6石，已提前购买则只能拿到每日200玉</span>
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in listMonthlyPackInfo" :key="index" :value="pack.parentIndex"
               class="el-checkbox-button" v-show="rewardIsExpired(pack)">
@@ -2082,7 +2154,7 @@ function getProbabilityBoxStyle(limited, both) {
           <div class="collapse-content-subheading">
             <span></span> 限时礼包
           </div>
-          <span class="tip">"指令重构"寻访包仅能用于4月M3池，不能用于任何限定池</span>
+          <!-- <span class="tip">"指令重构"寻访包仅能用于4月M3池，不能用于任何限定池</span> -->
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in listActivityPackInfo" :key="index" :value="pack.parentIndex"
               class="el-checkbox-button">
@@ -2186,7 +2258,7 @@ function getProbabilityBoxStyle(limited, both) {
             <span></span> 未来活动
           </div>
           <v-alert type="warning" density="compact" class="collapse-alert" v-show="!currentSchedule.accuracyFlag">
-            无准确排期，可自行勾选
+            无准确排期，默认给出可能性最大的排期，可自行增减
           </v-alert>
           <el-checkbox-group v-model="selectedActivityName" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(activity, name) in activityScheduleList" :key="name" :value="name"

@@ -231,7 +231,7 @@
     "defaultStatus": true,
     "dailyRewards": true
   },
-  "夏活.Part1": {
+  "8月.夏活.Part1": {
     "originium": 13,
     "orundum": 0,
     "gachaTicket": 3,
@@ -243,7 +243,7 @@
     "probability": "",
     "defaultStatus": true
   },
-  "夏活.Part2": {
+  "8月.夏活.Part2": {
     "originium": 16,
     "orundum": 0,
     "gachaTicket": 0,
@@ -255,7 +255,7 @@
     "probability": "",
     "defaultStatus": true
   },
-  "夏活.Part3": {
+  "8月.夏活.Part3": {
     "originium": 9,
     "orundum": 0,
     "gachaTicket": 0,
@@ -292,7 +292,7 @@
     "defaultStatus": true,
     "dailyRewards": true
   },
-  "许愿墙": {
+  "夏活许愿墙": {
     "originium": 0,
     "orundum": 8400,
     "gachaTicket": 0,
@@ -305,7 +305,7 @@
     "defaultStatus": true,
     "dailyRewards": true
   },
-  "感谢庆典.Part1": {
+  "11月.感谢庆典.Part1": {
     "originium": 15,
     "orundum": 0,
     "gachaTicket": 3,
@@ -317,7 +317,7 @@
     "probability": "",
     "defaultStatus": true
   },
-  "感谢庆典.Part2": {
+  "11月.感谢庆典.Part2": {
     "originium": 16,
     "orundum": 0,
     "gachaTicket": 0,
@@ -329,7 +329,7 @@
     "probability": "",
     "defaultStatus": true
   },
-  "感谢庆典.Part3": {
+  "11月.感谢庆典.Part3": {
     "originium": 10,
     "orundum": 0,
     "gachaTicket": 0,
@@ -366,7 +366,7 @@
     "probability": "",
     "defaultStatus": true
   },
-  "产业合作洽谈": {
+  "挖矿活动": {
     "originium": 0,
     "orundum": 8400,
     "gachaTicket": 0,
@@ -523,25 +523,25 @@
     "probability": "",
     "defaultStatus": true
   },
-  "剿灭4月更新": {
+  "剿灭10月更新": {
     "originium": 0,
     "orundum": 2300,
     "gachaTicket": 0,
     "tenGachaTicket": 0,
-    "start": "2025/04/28 04:00:00",
-    "end": "2025/04/29 16:00:00",
+    "start": "2025/10/27 04:00:00",
+    "end": "2025/10/28 16:00:00",
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
     "defaultStatus": true
   },
-  "剿灭6月更新": {
+  "剿灭1月更新": {
     "originium": 0,
     "orundum": 2300,
     "gachaTicket": 0,
     "tenGachaTicket": 0,
-    "start": "2025/06/30 04:00:00",
-    "end": "2025/07/01 16:00:00",
+    "start": "2026/01/25 04:00:00",
+    "end": "2026/01/26 16:00:00",
     "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
@@ -615,6 +615,54 @@
     "start": "2024/11/10 04:00:00",
     "end": "2024/11/10 16:00:00",
     "rewardType": "公共",
+    "rewardModule": "otherResources",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "9月.Ave Mujica联动.Part1": {
+    "originium": 12,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2025/09/04 16:00:00",
+    "end": "2025/09/05 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "9月.Ave Mujica联动.Part2": {
+    "originium": 16,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2025/09/11 16:00:00",
+    "end": "2025/09/12 04:00:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "Ave Mujica签到十连-day1": {
+    "originium": 0,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 1,
+    "start": "2025/09/04 16:00:00",
+    "end": "2025/09/05 04:00:00",
+    "rewardType": "联动限定",
+    "rewardModule": "otherResources",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "Ave Mujica签到十连-day7": {
+    "originium": 0,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 1,
+    "start": "2025/09/11 04:00:00",
+    "end": "2025/09/12 04:00:00",
+    "rewardType": "联动限定",
     "rewardModule": "otherResources",
     "probability": "",
     "defaultStatus": true
