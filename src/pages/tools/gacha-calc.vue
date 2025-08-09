@@ -214,7 +214,7 @@ let activityType = ref('联动限定')
 let scheduleOptions = [
   {
     name: '夏活',
-    dateString: '(0802-0816)',
+    dateString: '(0802-0815)',
     start: new Date('2025/08/02 16:00:00'),
     end: new Date('2025/08/16 04:01:00'),
     activityType: '夏活限定',
@@ -225,7 +225,7 @@ let scheduleOptions = [
   },
   {
     name: 'Ave Mujica联动 ',
-    dateString: '(大概率0904-0918)',
+    dateString: '(大概率0904-0917)',
     start: new Date('2025/09/04 16:00:00'),
     end: new Date('2025/09/18 04:01:00'),
     activityType: '联动限定',
@@ -236,7 +236,7 @@ let scheduleOptions = [
   },
   {
     name: '感谢庆典',
-    dateString: '(1101-1115)',
+    dateString: '(1101-1114)',
     start: new Date('2025/11/01 16:00:00'),
     end: new Date('2025/11/15 04:01:00'),
     activityType: '周年限定',
@@ -247,7 +247,7 @@ let scheduleOptions = [
   },
   {
     name: 'Ave Mujica联动',
-    dateString: '(小概率1202-1216)',
+    dateString: '(小概率1202-1215)',
     start: new Date('2025/12/02 16:00:00'),
     end: new Date('2025/12/16 04:01:00'),
     activityType: '联动限定',
