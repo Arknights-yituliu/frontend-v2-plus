@@ -1224,24 +1224,24 @@ function gachaResourcesCalculation() {
       if (currentSchedule.value.dailyGiftResources) {
 
         //奖励结束日期
-        let end = honeyCake.end
+        let rewardEnd = honeyCake.end
         //奖励开始日期
-        let start = honeyCake.start
+        let rewardStart = honeyCake.start
+
         //如果选中了计算卡池当天奖励，则将结束时间改为卡池当天
         if (!calPoolEnd.value) {
-          end = endDate.value.getTime()
+          rewardEnd = endDate.value.getTime()
         }
 
         //自动计算每日赠送单抽和每日合成玉的奖励
         if (honeyCake.dailyRewards) {
           if (honeyCake.name.indexOf("单抽") > -1) {
-            honeyCake.gachaTicket = getPoolRemainingDays(end, start)
+            honeyCake.gachaTicket = getRewardRemainingDays(rewardEnd, rewardStart)
           } else {
-            const remainingDays = getPoolRemainingDays(end, start)
+            const remainingDays = getRewardRemainingDays(rewardEnd, rewardStart)
             honeyCake.orundum = remainingDays * 600
           }
         }
-
       }
 
 
@@ -1333,19 +1333,21 @@ function gachaResourcesCalculation() {
  * @param startTime 结束时间
  * @return {number}  剩余天数
  */
-function getPoolRemainingDays(endTime, startTime) {
+function getRewardRemainingDays(endTime, startTime) {
+  let passedDays = Math.floor((Date.now() - startTime) / 86400000);
 
-  //计算从今天到卡池结束有几天
-  let remainingDays = Math.floor((endTime - new Date().getTime()) / 86400000)
-  //大于14天强制为14天
-  if (remainingDays > 14) {
-    remainingDays = 14
-  }
-  //小于1天强制为1天
-  if (endTime - startTime < 8640000) {
-    remainingDays = 1
+  // 总天数上限
+  let remainingDays = 14;
+
+  // 先减去已过天数
+  if (passedDays > 0) {
+    remainingDays -= passedDays;
   }
 
+  // 防止出现负数
+  if (remainingDays < 0) {
+    remainingDays = 0;
+  }
   // console.log("离限定池结束还有" + remainingDays + "天")
   return remainingDays
 }
@@ -1522,7 +1524,7 @@ function updateProb() {
 
   if (draw >= 300) {
     currentProb.value.limited300 = 100,
-    currentProb.value.all300 = 100   
+      currentProb.value.all300 = 100
   }
 }
 
@@ -1567,10 +1569,10 @@ function getProbabilityBoxStyle(limited, all) {
       <el-collapse v-model="resultCollapseActiveNames" class="" style="border: none">
         <el-collapse-item name="calculationResult" class="collapse-item">
           <template #title>
-            <div class="collapse-title-icon" v-if="activityType !== '联动限定'" 
+            <div class="collapse-title-icon" v-if="activityType !== '联动限定'"
               :style="getProbabilityBoxStyle(currentProb.limited300, currentProb.all300)">
             </div>
-            <div class="collapse-title-icon" v-if="activityType === '联动限定'" 
+            <div class="collapse-title-icon" v-if="activityType === '联动限定'"
               :style="getProbabilityBoxStyle(currentProb.limited120, currentProb.all120)">
             </div>
             <span class="collapse-title-font">
@@ -1682,16 +1684,16 @@ function getProbabilityBoxStyle(limited, all) {
           <!-- 抽卡概率总览 -->
           <div class="resources-result-bar">
             <div v-if="currentProb" style="display: flex; gap: 16px;">
-              <div v-if="activityType !== '联动限定'" >
+              <div v-if="activityType !== '联动限定'">
                 <p>拿到限定的概率：{{ currentProb.limited300.toFixed(2) }}%</p>
               </div>
-              <div v-if="activityType !== '联动限定'" >
+              <div v-if="activityType !== '联动限定'">
                 <p>拿到限定+陪跑的概率：{{ currentProb.all300.toFixed(2) }}%</p>
               </div>
-              <div v-if="activityType === '联动限定'" >
+              <div v-if="activityType === '联动限定'">
                 <p>拿到限定六星的概率：{{ currentProb.limited120.toFixed(2) }}%</p>
               </div>
-              <div v-if="activityType === '联动限定'" >
+              <div v-if="activityType === '联动限定'">
                 <p>拿到所有联动的概率：{{ currentProb.all120.toFixed(2) }}%</p>
               </div>
             </div>
