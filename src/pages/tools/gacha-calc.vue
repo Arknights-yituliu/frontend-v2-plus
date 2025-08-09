@@ -1521,13 +1521,9 @@ function updateProb() {
   }
 
   if (draw >= 300) {
-    currentProb.value = {
-      pulls: draw,
-      limited300: 100,
-      all300: 100
-    }
+    currentProb.value.limited300 = 100,
+    currentProb.value.all300 = 100   
   }
-
 }
 
 function getColor(p) {
