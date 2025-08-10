@@ -6,7 +6,7 @@ function stringToArray(string, delimiter=',') {
 
     return string.split(delimiter).map((item) => {
         return item.trim();
-    }).filter(item => item);
+    }).filter(item => item !== '');
 }
 
 function arrayToString(array) {
