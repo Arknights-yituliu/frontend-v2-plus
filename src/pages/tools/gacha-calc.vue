@@ -14,7 +14,7 @@ import { createMessage } from "/src/utils/message.js";
 import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
 import deepClone from "/src/utils/deepClone.js";
-import { dateDiff } from "/src/utils/dateUtil.js";
+import {dateDiff, dateFormat} from "/src/utils/dateUtil.js";
 import packInfoCache from "@/plugins/indexedDB/packInfoCache.js";
 
 
@@ -1230,7 +1230,9 @@ function gachaResourcesCalculation() {
 
         //如果选中了计算卡池当天奖励，则将结束时间改为卡池当天
         if (!calPoolEnd.value) {
-          rewardEnd = endDate.value.getTime()
+          if(endDate.value.getTime()<rewardEnd){
+            rewardEnd = endDate.value.getTime()
+          }
         }
 
         //自动计算每日赠送单抽和每日合成玉的奖励
@@ -1334,20 +1336,41 @@ function gachaResourcesCalculation() {
  * @return {number}  剩余天数
  */
 function getRewardRemainingDays(endTime, startTime) {
-  let passedDays = Math.floor((Date.now() - startTime) / 86400000);
+  console.log(dateFormat(endTime))
+  let remainingDays = Math.floor((endTime - new Date().getTime()) / 86400000)
+  console.log(remainingDays)
 
-  // 总天数上限
-  let remainingDays = 14;
+  // let passedDays = Math.floor((Date.now() - startTime) / 86400000);
+  //
+  // // 总天数上限
+  // let remainingDays = 14;
+  //
+  // // 先减去已过天数
+  // if (passedDays > 0) {
+  //   remainingDays -= passedDays;
+  // }
+  //
+  // // 防止出现负数
+  // if (remainingDays < 0) {
+  //   remainingDays = 0;
+  // }
 
-  // 先减去已过天数
-  if (passedDays > 0) {
-    remainingDays -= passedDays;
+  //大于14天强制为14天
+  if (remainingDays > 14) {
+    remainingDays = 14
   }
 
   // 防止出现负数
   if (remainingDays < 0) {
     remainingDays = 0;
   }
+
+  // //小于1天强制为1天
+  // if (endTime - startTime < 8640000) {
+  //   remainingDays = 1
+  // }
+
+
   // console.log("离限定池结束还有" + remainingDays + "天")
   return remainingDays
 }
