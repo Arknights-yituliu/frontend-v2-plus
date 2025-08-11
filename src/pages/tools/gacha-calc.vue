@@ -241,7 +241,7 @@ const scheduleOptions = [
     disabled: false,
     dailyGiftResources: true,
     accuracyFlag: false,
-    historicalPackTimeRange: [new Date('2024/09/01 00:00:00').getTime(), new Date('2024/09/28 23:59:59').getTime(),]
+    historicalPackTimeRange: [new Date('2024/09/01 00:00:00').getTime(), new Date('2024/09/15 23:59:59').getTime(),]
   },
   {
     name: '感谢庆典',
