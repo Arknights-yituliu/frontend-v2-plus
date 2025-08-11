@@ -1232,18 +1232,6 @@ function gachaResourcesCalculation() {
       //判断当前卡池是否有每日赠送奖励
       if (currentSchedule.value.dailyGiftResources) {
 
-        //奖励结束日期
-        let rewardEnd = honeyCake.end
-        //奖励开始日期
-        let rewardStart = honeyCake.start
-
-        // //如果选中了计算卡池当天奖励，则将结束时间改为卡池当天
-        // if (!calPoolEnd.value) {
-        //   if (endDate.value.getTime() < rewardEnd) {
-        //     rewardEnd = endDate.value.getTime()
-        //   }
-        // }
-
         //自动计算每日赠送单抽和每日合成玉的奖励
         if (honeyCake.dailyRewards) {
           const remainingDays = getRewardRemainingDays(honeyCake)
@@ -1345,29 +1333,32 @@ function gachaResourcesCalculation() {
  * @return {number}  剩余天数
  */
 function getRewardRemainingDays(honeyCake) {
+
+  //活动开启时间
   const rewardStart = honeyCake.start
-  const rewardEnd = honeyCake.end
-  const rewardType = honeyCake.rewardType
   const scheduleStart = currentSchedule.value.start.getTime()
 
-  // let passedDays = Math.ceil((Date.now() - startTime) / 86400000);
-  //
-  // // 总天数上限
-  // let remainingDays = 14;
-  //
-  // // 先减去已过天数
-  // if (passedDays > 0) {
-  //   remainingDays -= passedDays;
-  // }
-  //
-  // // 防止出现负数
-  // if (remainingDays < 0) {
-  //   remainingDays = 0;
-  // }
-
+  //活动结束时间
+  let rewardEnd = honeyCake.end
+  //实际时间
   const nowTimeStamp = new Date().getTime()
+  //如果选择的是计算到活动开启当日，将活动结束日期设为活动开启日的次日凌晨4点
+  if (!calPoolEnd.value&&scheduleStart<rewardEnd) {
+    rewardEnd = rewardStart + 60*60*12*1000
+  }
 
-  let remainingDays = Math.floor((rewardEnd - nowTimeStamp) / 86400000)
+  //活动剩余时间
+  let remainingDays;
+
+  //如果活动已经开始，用实际时间计算，否则用活动开启日期计算
+  if (rewardStart < nowTimeStamp) {
+    remainingDays = Math.round((rewardEnd - nowTimeStamp) / 86400000)
+    // console.log(honeyCake.name,'剩余天数:', remainingDays)
+  } else {
+    remainingDays = Math.round((rewardEnd - rewardStart) / 86400000)
+    // console.log(honeyCake.name,'剩余天数:', remainingDays)
+  }
+
 
   //大于14天强制为14天
   if (remainingDays > 14) {
@@ -1379,19 +1370,12 @@ function getRewardRemainingDays(honeyCake) {
     remainingDays = 0;
   }
 
-  console.log(rewardType, activityType.value, dateFormat(rewardEnd), dateFormat(rewardStart),dateFormat(scheduleStart), remainingDays)
-
-  if (!calPoolEnd.value) {
-    if (rewardStart >= scheduleStart) {
-      remainingDays = 1
-    }
-  }
+  // console.log(honeyCake.name, " 类型：", rewardType, activityType.value, dateFormat(rewardEnd), dateFormat(rewardStart), dateFormat(scheduleStart), remainingDays)
 
   // //小于1天强制为1天
   // if (endTime - startTime < 8640000) {
   //   remainingDays = 1
   // }
-
 
   console.log("离限定池结束还有" + remainingDays + "天")
   return remainingDays
@@ -1421,6 +1405,10 @@ function rewardIsExpired(reward) {
   }
 
   return true
+}
+
+function rewardIsEmpty(reward){
+  return (reward.orundum + reward.originium + reward.gachaTicket + reward.tenGachaTicket) >= 1;
 }
 
 let myChart = void 0;
@@ -2325,7 +2313,7 @@ function getProbabilityBoxStyle(limited, all) {
             </span>
           </template>
           <activity-gacha-resources v-for="(honeyCake, label) in otherRewardBySchedules" :key="label" :info="honeyCake"
-                                    v-show="rewardIsExpired(honeyCake)">
+                                    v-show="rewardIsExpired(honeyCake)&&rewardIsEmpty(honeyCake)">
           </activity-gacha-resources>
 
         </el-collapse-item>
