@@ -1342,7 +1342,7 @@ function getRewardRemainingDays(honeyCake) {
   let rewardEnd = honeyCake.end
   //实际时间
   const nowTimeStamp = new Date().getTime()
-  //如果选择的是计算到活动开启当日，将活动结束日期设为活动开启日的次日凌晨4点
+  //如果选择的是计算到活动开启当日,判断活动开启日期是否在奖励结束日之前，true则代表这是个新活动，将活动结束日期设为活动开启日的次日凌晨4点
   if (!calPoolEnd.value&&scheduleStart<rewardEnd) {
     rewardEnd = rewardStart + 60*60*12*1000
   }
