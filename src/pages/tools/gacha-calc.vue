@@ -222,17 +222,6 @@ let activityType = ref('联动限定')
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 const scheduleOptions = [
   {
-    name: '夏活',
-    dateString: '(0802-0815)',
-    start: new Date('2025/08/02 16:00:00'),
-    end: new Date('2025/08/16 04:01:00'),
-    activityType: '夏活限定',
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-    historicalPackTimeRange: [new Date('2024/04/15 00:00:00').getTime(), new Date('2024/08/15 23:59:59').getTime(),]
-  },
-  {
     name: 'Ave Mujica联动 ',
     dateString: '(大概率0904-0917)',
     start: new Date('2025/09/04 16:00:00'),
