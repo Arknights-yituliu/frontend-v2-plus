@@ -192,21 +192,22 @@ function batchGenerationServerMaintenanceRewards() {
 batchGenerationServerMaintenanceRewards()
 
 //用户选择的活动
-let currentScheduleName = ref('周年限定(5.15)')
+let currentScheduleName = ref('Ave Mujica联动')
 
 //用户选择的活动的结束时间
 let endDate = ref(new Date(1711008000000))
 
 //用户选择的活动
 let currentSchedule = ref({
-  name: '夏活',
-  dateString: '(0802-0815)',
-  start: new Date('2025/08/02 16:00:00'),
-  end: new Date('2025/08/16 04:01:00'),
-  activityType: '夏活限定',
+  name: 'Ave Mujica联动',
+  dateString: '(大概率0904-0917)',
+  start: new Date('2025/09/04 16:00:00'),
+  end: new Date('2025/09/18 04:01:00'),
+  activityType: '联动限定',
   disabled: false,
   dailyGiftResources: true,
-  accuracyFlag: true
+  accuracyFlag: true,
+  historicalPackTimeRange: [new Date('2024/09/01 00:00:00').getTime(), new Date('2024/09/15 23:59:59').getTime(),]
 })
 
 //用户选择的活动的类型
@@ -222,7 +223,7 @@ let activityType = ref('联动限定')
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 const scheduleOptions = [
   {
-    name: 'Ave Mujica联动 ',
+    name: 'Ave Mujica联动',
     dateString: '(大概率0904-0917)',
     start: new Date('2025/09/04 16:00:00'),
     end: new Date('2025/09/18 04:01:00'),
@@ -1469,7 +1470,7 @@ function readLastSettings() {
 onMounted(() => {
   readLastSettings()
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
-  updateScheduleOption(1)
+  updateScheduleOption(0)
   getAndSortPackData()
 
   // ElNotification({
@@ -1606,7 +1607,8 @@ function getProbabilityBoxStyle(limited, all) {
           <div class="radio-group-wrap" style="padding-top: 4px;">
             <el-radio-group v-model="currentScheduleName" size="large" class="custom-radio-group">
               <el-radio-button v-for="(activity, index) in scheduleOptions" :key="`schedule-${index}`"
-                :label="activity.name" :disabled="activity.disabled" style="min-width: 150px;">
+                :label="activity.name" :disabled="activity.disabled" style="min-width: 150px;"
+                @change="updateScheduleOption(index)">
                 <div class="radio-content">
                   <div class="radio-title">{{ activity.name }}</div>
                   <div class="radio-subtitle">{{ activity.dateString }}</div>
@@ -2289,6 +2291,7 @@ function getProbabilityBoxStyle(limited, all) {
           </el-checkbox-group>
         </el-collapse-item>
 
+        <!-- 其他资源 -->
         <el-collapse-item name="other" class="collapse-item">
           <template #title>
             <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
@@ -2299,7 +2302,15 @@ function getProbabilityBoxStyle(limited, all) {
           <activity-gacha-resources v-for="(honeyCake, label) in otherRewardBySchedules" :key="label" :info="honeyCake"
             v-show="rewardIsExpired(honeyCake) && rewardIsEmpty(honeyCake)">
           </activity-gacha-resources>
+        </el-collapse-item>
 
+        <el-collapse-item name="links" class="collapse-item" style="display: none;">
+          <template #title>
+            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
+            <span class="collapse-title-font">
+              相关链接
+            </span>
+          </template>
         </el-collapse-item>
       </el-collapse>
     </div>
