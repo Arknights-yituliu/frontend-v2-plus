@@ -245,8 +245,8 @@ const scheduleOptions = [
     historicalPackTimeRange: [new Date('2024/09/01 00:00:00').getTime(), new Date('2024/11/15 23:59:59').getTime(),]
   },
   {
-    name: 'Ave Mujica联动',
-    dateString: '(小概率1202-1215)',
+    name: '新年',
+    dateString: '敬请期待',
     start: new Date('2025/12/02 16:00:00'),
     end: new Date('2025/12/16 04:01:00'),
     activityType: '联动限定',
