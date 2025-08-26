@@ -1027,7 +1027,7 @@ function useLegacyUI() {
     </v-dialog>
 
     <div class="maa-schedule-wrap-v2">
-      <div class="maa-schedule-v2">
+
         <v-card title="排班设置" class="m-8">
           <v-card-text>
 
@@ -1215,9 +1215,17 @@ function useLegacyUI() {
 
               </v-switch>
               <!--补满空位功能提示-->
-              <i class="iconfont icon-question schedule-question">
-                <span class="schedule-tip">{{ translate('schedule', 'schedule.SkipRoomTip') }}</span>
-              </i>
+              <v-tooltip interactive>
+                <template v-slot:activator="{ props: activatorProps }">
+                  <v-icon icon="mdi-information-outline" v-bind="activatorProps"></v-icon>
+                </template>
+                <div>
+                <span >{{ translate('schedule', 'schedule.SkipRoomTip') }}</span>
+                </div>
+              </v-tooltip>
+<!--              <i class="iconfont icon-question schedule-question">-->
+<!--                <span class="schedule-tip">{{ translate('schedule', 'schedule.SkipRoomTip') }}</span>-->
+<!--              </i>-->
             </div>
             <div class="schedule-set-bar-short">
               <!--跳过房间-->
@@ -1479,7 +1487,7 @@ function useLegacyUI() {
           </div>
         </div>
       </div>
-    </div>
+
   </div>
 </template>
 
