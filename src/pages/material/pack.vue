@@ -173,7 +173,7 @@ function collectPackInfoVO() {
 function sortFunction(a, b) {
   switch (sortOption.value) {
     case 'time':
-      return new Date(a.start) - new Date(b.start)
+      return new Date(b.start) - new Date(a.start)
     case 'price':
       return a.price - b.price
     case 'efficiency':
