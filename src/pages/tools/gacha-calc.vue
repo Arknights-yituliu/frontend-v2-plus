@@ -200,7 +200,7 @@ let endDate = ref(new Date(1711008000000))
 //用户选择的活动
 let currentSchedule = ref({
   name: 'Ave Mujica联动',
-  dateString: '(大概率0904-0917)',
+  dateString: '(0904-0917)',
   start: new Date('2025/09/04 16:00:00'),
   end: new Date('2025/09/18 04:01:00'),
   activityType: '联动限定',
@@ -224,7 +224,7 @@ let activityType = ref('联动限定')
 const scheduleOptions = [
   {
     name: 'Ave Mujica联动',
-    dateString: '(大概率0904-0917)',
+    dateString: '(0904-0917)',
     start: new Date('2025/09/04 16:00:00'),
     end: new Date('2025/09/18 04:01:00'),
     activityType: '联动限定',
