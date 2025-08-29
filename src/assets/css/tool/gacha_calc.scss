@@ -17,7 +17,7 @@
 
 
   .el-collapse-item__content {
-    padding-bottom: 0px;
+    padding-bottom: 4px;
   }
 
   .el-collapse-item {
@@ -54,7 +54,7 @@
     top: 60px;
     max-width: 640px;
     min-width: 450px;
-    max-height: 500px;
+    max-height: 540px;
     z-index: 1004;
     flex:3;
     .el-collapse-item{

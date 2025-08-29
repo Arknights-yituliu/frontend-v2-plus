@@ -496,6 +496,8 @@ let existResources = ref({
   tenGachaTicket: 0,
   correctOrundum: 0, //用于修正的合成玉数量
   skinBudget: 0, //要购买多少皮肤
+  skinBudgetPlus: 0, // 要购买多少高级皮肤
+  skinBudgetPro: 0, // 要购买多少顶级皮肤
 })
 
 //日常资源
@@ -894,6 +896,10 @@ function gachaResourcesCalculation() {
     orundum += stringToNumber(existResources.value.correctOrundum.toString())
     //计算用户预留给皮肤的源石
     originium -= stringToNumber(existResources.value.skinBudget.toString()) * 18
+    //计算用户预留给高级皮肤的源石
+    originium -= stringToNumber(existResources.value.skinBudgetPlus.toString()) * 21
+    //计算用户预留给顶级皮肤的源石
+    originium -= stringToNumber(existResources.value.skinBudgetPlus.toString()) * 24
 
     if (!originiumIsUsed.value) {
       originium = 0
@@ -1577,7 +1583,31 @@ function getProbabilityBoxStyle(limited, all) {
     height: '20px',
   };
 }
+//分享
+function sharePage() {
+  const url = 'https://ark.yituliu.cn/tools/gachaCalc';
+  const title = '明日方舟攒抽计算器';
 
+  // 优先调用原生分享 API
+  if (navigator.share) {
+    navigator.share({ title, url })
+      .then(() => console.log('分享成功'))
+      .catch(() => fallbackCopy());
+  } else {
+    fallbackCopy();
+  }
+
+  // 回退逻辑：复制到剪贴板并提示
+  function fallbackCopy() {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(() => alert('链接已复制到剪贴板'))
+        .catch(() => prompt('请手动复制链接:', url));
+    } else {
+      prompt('请手动复制链接:', url);
+    }
+  }
+}
 
 </script>
 
@@ -1607,7 +1637,7 @@ function getProbabilityBoxStyle(limited, all) {
           <div class="radio-group-wrap" style="padding-top: 4px;">
             <el-radio-group v-model="currentScheduleName" size="large" class="custom-radio-group">
               <el-radio-button v-for="(activity, index) in scheduleOptions" :key="`schedule-${index}`"
-                :label="activity.name" :disabled="activity.disabled" style="min-width: 150px;"
+                :label="activity.name" :disabled="activity.disabled" style="min-width: 108px;"
                 @change="updateScheduleOption(index)">
                 <div class="radio-content">
                   <div class="radio-title">{{ activity.name }}</div>
@@ -1706,7 +1736,7 @@ function getProbabilityBoxStyle(limited, all) {
             </div>
           </div>
           <!-- 抽卡概率总览 -->
-          <div class="resources-result-bar">
+          <div class="resources-result-bar" style="border: none;padding-top: 0px;">
             <div v-if="currentProb" style="display: flex; gap: 16px;">
               <div v-if="activityType !== '联动限定'">
                 <p>拿到限定的概率：{{ currentProb.limited300.toFixed(2) }}%</p>
@@ -1725,6 +1755,52 @@ function getProbabilityBoxStyle(limited, all) {
               <p>未找到对应抽数概率</p>
             </div>
           </div>
+          <div class="resources-result-bar" style="display: flex; justify-content: space-between; align-items: center;
+            font-size: 15px; font-weight: 500; background-color: antiquewhite; border: none; padding: 8px 12px;border-radius: 4px;margin: 0px 4px;">
+
+            <span style="line-height: 20px;">明日方舟一图流 ark.yituliu.cn</span>
+            <div style="display: flex; gap: 12px;">
+
+              <!-- GitHub -->
+              <a href="https://github.com/Arknights-yituliu" target="_blank"
+                style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+                <svg width="40" height="40" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                  <!-- 白底 -->
+                  <circle cx="512" cy="512" r="512" fill="white" />
+                  <!-- GitHub黑LOGO -->
+                  <path
+                    d="M511.6 76.3C264.3 76.2 64 276.4 64 523.7c0 197.5 128 365.1 305.9 424.6 22.4 4.1 30.6-9.7 30.6-21.5 0-10.6-.4-45.6-.6-82.8-124.5 27-150.9-52.9-150.9-52.9-20.4-51.9-49.8-65.7-49.8-65.7-40.7-27.9 3.1-27.3 3.1-27.3 45 3.2 68.7 46.2 68.7 46.2 40 68.6 104.9 48.8 130.5 37.3 4-29 15.6-48.8 28.4-60-99.5-11.3-204-49.7-204-221.4 0-48.9 17.5-88.9 46.2-120.2-4.6-11.3-20-56.9 4.4-118.7 0 0 37.6-12 123.1 45.9 35.7-9.9 73.9-14.8 112-15 38.1.2 76.3 5.1 112 15 85.4-57.9 123-45.9 123-45.9 24.4 61.8 9 107.4 4.4 118.7 28.7 31.3 46.2 71.3 46.2 120.2 0 171.9-104.6 210-204.4 221.1 16 13.8 30.3 41 30.3 82.6 0 59.7-.6 107.7-.6 122.3 0 11.9 8 25.9 30.9 21.5C832 888.7 960 721.1 960 523.7c0-247.3-200.3-447.5-448.4-447.4z"
+                    fill="#181717" />
+                </svg>
+              </a>
+
+              <!-- Bilibili -->
+              <a href="https://space.bilibili.com/688411531" target="_blank"
+                style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+                <svg width="40" height="40" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <!-- 白底 -->
+                  <circle cx="12" cy="12" r="12" fill="white" />
+                  <!-- B站蓝色LOGO -->
+                  <path
+                    d="M18.223 3.086a1.25 1.25 0 0 1 0 1.768L17.08 5.996h1.17A3.75 3.75 0 0 1 22 9.747v7.5a3.75 3.75 0 0 1-3.75 3.75H5.75A3.75 3.75 0 0 1 2 17.247v-7.5a3.75 3.75 0 0 1 3.75-3.75h1.166L5.775 4.855a1.25 1.25 0 1 1 1.767-1.768l2.652 2.652c.079.079.145.165.198.257h3.213c.053-.092.12-.18.199-.258l2.651-2.652a1.25 1.25 0 0 1 1.768 0zm.027 5.42H5.75a1.25 1.25 0 0 0-1.247 1.157l-.003.094v7.5c0 .659.51 1.199 1.157 1.246l.093.004h12.5a1.25 1.25 0 0 0 1.247-1.157l.003-.093v-7.5c0-.69-.56-1.25-1.25-1.25zm-10 2.5c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25zm7.5 0c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25z"
+                    fill="#00aeec" />
+                </svg>
+              </a>
+
+              <!-- 分享 -->
+              <a href="javascript:void(0)" @click="sharePage()" style="display:flex;align-items:center;justify-content:center;
+            width:40px;height:40px;border-radius:50%;
+            background-color:#f39c12;color:white;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="24" height="24"
+                  fill="currentColor">
+                  <path
+                    d="m679.872 348.8-301.76 188.608a127.808 127.808 0 0 1 5.12 52.16l279.936 104.96a128 128 0 1 1-22.464 59.904l-279.872-104.96a128 128 0 1 1-16.64-166.272l301.696-188.608a128 128 0 1 1 33.92 54.272z">
+                  </path>
+                </svg>
+              </a>
+            </div>
+          </div>
+
         </el-collapse-item>
       </el-collapse>
       <!-- </div> -->
@@ -1775,7 +1851,33 @@ function getProbabilityBoxStyle(limited, all) {
           </div>
 
           <div class="collapse-content-subheading">
-            <span></span> 预留，自定义修正
+            <span></span> 时装预留源石
+          </div>
+          <div class="resources-line" style="overflow-x: scroll;">
+            <el-space>
+              <el-input-number v-model="existResources.skinBudget" :step="1" :min="0" :max="10"
+                @change="gachaResourcesCalculation()">
+                <template #prefix>
+                  <span>18石</span>
+                </template>
+              </el-input-number>
+              <el-input-number v-model="existResources.skinBudgetPlus" :step="1" :min="0" :max="10"
+                @change="gachaResourcesCalculation()">
+                <template #prefix>
+                  <span>21石</span>
+                </template>
+              </el-input-number>
+              <el-input-number v-model="existResources.skinBudgetPro" :step="1" :min="0" :max="10"
+                @change="gachaResourcesCalculation()">
+                <template #prefix>
+                  <span>24石</span>
+                </template>
+              </el-input-number>
+            </el-space>
+          </div>
+
+          <div class="collapse-content-subheading">
+            <span></span> 自定义修正
           </div>
           <div class="resources-line">
             <input v-model="existResources.correctOrundum" @input="gachaResourcesCalculation">
@@ -1785,11 +1887,7 @@ function getProbabilityBoxStyle(limited, all) {
             </div>
             <span>{{ existResources.correctOrundum }}</span>
           </div>
-          <span class="tip"> 例如给轮换池预留、其它来源等，可填负数</span>
-          <el-slider v-model="existResources.skinBudget" :step="1" :min="0" :max="10" show-stops show-input
-            @change="gachaResourcesCalculation()" style="width: 90%;margin: 0 5%">
-          </el-slider>
-          <span class="tip">预留皮肤（18石/件）</span>
+          <span class="tip"> 例如给轮换池预留、其它合成玉来源等，可填负数</span>
         </el-collapse-item>
 
         <!--日常积累-->
