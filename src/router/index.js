@@ -11,7 +11,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from,next) => {
 
-
+    document.title = `${to.meta.title}-明日方舟一图流`;
 
     if (to.path.indexOf("docs") > -1) {
         // 获取当前页面的 hash，并去除开头的 '#'（后面拼接时再添加）

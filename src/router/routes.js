@@ -30,7 +30,10 @@ const routes = [
         display: true,
         module: 'material',
         icon: "mdi-hexagon-multiple",
-        component: STAGE_RECOMMENDATION_REGISTER
+        component: STAGE_RECOMMENDATION_REGISTER,
+        meta: {
+            title: '关卡推荐'
+        }
     },
     // {
     //     path: '/material/ep14',
@@ -48,7 +51,10 @@ const routes = [
         display: true,
         module: 'material',
         icon: "mdi-circle-multiple",
-        component: STORE
+        component: STORE,
+        meta: {
+            title: '商店性价比'
+        }
     },
     {
         path: '/material/pack',
@@ -57,7 +63,10 @@ const routes = [
         display: true,
         module: 'material',
         icon: "mdi-cart",
-        component: PACK
+        component: PACK,
+        meta: {
+            title: '礼包性价比'
+        }
     },
     {
         path: '/material/value',
@@ -66,7 +75,10 @@ const routes = [
         display: true,
         module: 'material',
         icon: "mdi-gold",
-        component: ITEM_VALUE
+        component: ITEM_VALUE,
+        meta: {
+            title: '物品价值表'
+        }
     },
     {
         path: '/material/elite',
@@ -75,7 +87,10 @@ const routes = [
         display: true,
         module: 'material',
         icon: "mdi-account-details",
-        component: () => import('/src/pages/material/elite')
+        component: () => import('/src/pages/material/elite'),
+        meta: {
+            title: '精英化与专精性价比'
+        }
     },
     {
         path: '/material/drop',
@@ -84,7 +99,10 @@ const routes = [
         display: false,
         module: 'material',
         icon: "mdi-account-details",
-        component: () => import('/src/pages/material/drop.vue')
+        component: () => import('/src/pages/material/drop.vue'),
+        meta: {
+            title: '关卡掉落查询'
+        }
     },
     {
         path: '/tools/gachaCal',
@@ -92,7 +110,10 @@ const routes = [
         name: 'GachaCalculator1',
         display: false,
         icon: "mdi-wallet",
-        component: GACHA_CALCULATOR
+        component: GACHA_CALCULATOR,
+        meta: {
+            title: '攒抽计算器'
+        }
     },
     {
         path: '/tools/gachaCalc',
@@ -101,7 +122,10 @@ const routes = [
         display: true,
         module: 'tools',
         icon: "mdi-wallet",
-        component: GACHA_CALCULATOR
+        component: GACHA_CALCULATOR,
+        meta: {
+            title: '攒抽计算器'
+        }
     },
     {
         path: '/tools/scheduleV2',
@@ -110,7 +134,10 @@ const routes = [
         display: true,
         module: 'tools',
         icon: "mdi-calendar-clock",
-        component: () => import('/src/pages/tools/schedule.v2.vue')
+        component: () => import('/src/pages/tools/schedule.v2.vue'),
+        meta: {
+            title: '排班表生成器'
+        }
     },
     {
         path: '/tools/sui',
@@ -119,14 +146,20 @@ const routes = [
         module: 'tools',
         icon: "mdi-application-edit",
         display: true,
-        component: () => import('/src/pages/tools/sui.vue')
+        component: () => import('/src/pages/tools/sui.vue'),
+        meta: {
+            title: '岁兽残识记录器'
+        }
     },
     {
         path: '/sui',
         text: '岁兽残识记录器',
         name: 'sui2',
         display: false,
-        component: () => import('/src/pages/tools/sui.vue')
+        component: () => import('/src/pages/tools/sui.vue'),
+        meta: {
+            title: '岁兽残识记录器'
+        }
     },
     {
         path: '/tools/schedule',
@@ -135,7 +168,10 @@ const routes = [
         display: false,
         module: 'tools',
         icon: "mdi-calendar-clock",
-        component: () => import('/src/pages/tools/schedule.v2.vue')
+        component: () => import('/src/pages/tools/schedule.v2.vue'),
+        meta: {
+            title: '排班表生成器'
+        }
     },
     {
         path: '/tools/scheduleV1',
@@ -144,7 +180,10 @@ const routes = [
         display: false,
         module: 'tools',
         icon: "mdi-calendar-clock",
-        component: () => import('/src/pages/tools/schedule.v1.vue')
+        component: () => import('/src/pages/tools/schedule.v1.vue'),
+        meta: {
+            title: '排班表生成器'
+        }
     },
     {
         path: '/tools/dps/calculator',
@@ -153,7 +192,10 @@ const routes = [
         display: false,
         module: 'tools',
         icon: "mdi-calendar-clock",
-        component: () => import('/src/pages/tools/dps/calculator.vue')
+        component: () => import('/src/pages/tools/dps/calculator.vue'),
+        meta: {
+            title: 'DPS计算器'
+        }
     },
     {
         path: '/tools/specializationTimeCalculate',
@@ -162,7 +204,10 @@ const routes = [
         display: true,
         module: 'tools',
         icon: "mdi-dumbbell",
-        component: () => import('/src/pages/tools/specializationTimeCalculate.vue')
+        component: () => import('/src/pages/tools/specializationTimeCalculate.vue'),
+        meta: {
+            title: '专精时间减半计算器'
+        }
     },
     {
         path: '/tools/excels',
@@ -171,7 +216,10 @@ const routes = [
         display: false,
         module: 'tools',
         icon: "calculator",
-        component: () => import('/src/pages/tools/excels.page.vue')
+        component: () => import('/src/pages/tools/excels.page.vue'),
+        meta: {
+            title: '常用计算表'
+        }
     },
     {
         path: '/information/logistics',
@@ -180,7 +228,10 @@ const routes = [
         display: true,
         module: 'information',
         icon: "mdi-floor-plan",
-        component: () => import('/src/pages/information/logistics.vue')
+        component: () => import('/src/pages/information/logistics.vue'),
+        meta: {
+            title: '基建技能一览'
+        }
     },
     {
         path: '/information/sandboxFoods',
@@ -189,7 +240,10 @@ const routes = [
         display: true,
         module: 'information',
         icon: "mdi-food-drumstick",
-        component: () => import('/src/pages/information/sandboxFoods.vue')
+        component: () => import('/src/pages/information/sandboxFoods.vue'),
+        meta: {
+            title: '生息演算食材一览'
+        }
     },
     {
         path: '/information/integratedStrategies',
@@ -198,41 +252,59 @@ const routes = [
         display: true,
         module: 'information',
         icon: "mdi-routes",
-        component: () => import('/src/pages/information/integrated-strategies/integratedStrategies.vue')
+        component: () => import('/src/pages/information/integrated-strategies/integratedStrategies.vue'),
+        meta: {
+            title: '集成战略结局一览'
+        }
     },
     {
         path: '/account/register',
         text: '注册账号',
         name: 'REGISTER',
         display: true,
-        component: REGISTER
+        component: REGISTER,
+        meta: {
+            title: '注册账号'
+        }
     },
     {
         path: '/account/login',
         text: '登录账号',
         name: 'LOGIN',
         display: false,
-        component: LOGIN
+        component: LOGIN,
+        meta: {
+            title: '登录账号'
+        }
     },
     {
         path: '/account/retrieve',
         text: '找回账号',
         name: 'RETRIEVE',
         display: false,
-        component: RETRIEVE
+        component: RETRIEVE,
+        meta: {
+            title: '找回账号'
+        }
     },
     {
         path: '/account/home',
         text: '用户中心',
         name: 'AccountHome',
         display: false,
-        component: USER_HOME
+        component: USER_HOME,
+        meta: {
+            title: '用户中心'
+        }
     },
     {
         path: '/survey/account/importbyskland',
         text: '导入流程',
         name: 'IMPORT_BY_SKLAND',
-        component: IMPORT_BY_SKLAND
+        component: IMPORT_BY_SKLAND,
+        meta: {
+            title: '导入流程'
+        }
     },
     {
         path: '/survey/operators',
@@ -241,7 +313,10 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "mdi-chart-box",
-        component: SURVEY_OPERATOR
+        component: SURVEY_OPERATOR,
+        meta: {
+            title: '干员练度调查'
+        }
     },
     {
         path: '/survey/operator-progression-statistics',
@@ -250,7 +325,10 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "mdi-chart-bar-stacked",
-        component: () => import('/src/pages/survey/operator-progression-statistics.vue')
+        component: () => import('/src/pages/survey/operator-progression-statistics.vue'),
+        meta: {
+            title: '干员练度调查结果'
+        }
     },
     {
         path: '/survey/questionnaire',
@@ -259,7 +337,10 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "mdi-chart-bar",
-        component: () => import('/src/pages/survey/operator-carry.vue')
+        component: () => import('/src/pages/survey/operator-carry.vue'),
+        meta: {
+            title: '干员携带优先级问卷'
+        }
     },
     {
         path: '/survey/maarecruitdata',
@@ -268,7 +349,10 @@ const routes = [
         display: true,
         module: 'survey',
         icon: "mdi-chart-bar",
-        component: () => import('/src/pages/survey/maa-recruit-data.vue')
+        component: () => import('/src/pages/survey/maa-recruit-data.vue'),
+        meta: {
+            title: '公招tag调查'
+        }
         // component: Notice
     },
     {
@@ -278,7 +362,10 @@ const routes = [
         display: true,
         module: 'about',
         icon: "mdi-pencil",
-        component: () => import('/src/pages/account/home.vue')
+        component: () => import('/src/pages/account/home.vue'),
+        meta: {
+            title: '个人中心'
+        }
     },
     {
         path: '/about/donate',
@@ -287,7 +374,10 @@ const routes = [
         display: true,
         module: 'about',
         icon: "mdi-thumb-up",
-        component: () => import('/src/pages/about/donate.vue')
+        component: () => import('/src/pages/about/donate.vue'),
+        meta: {
+            title: '支持我们'
+        }
     },
     {
         path: '/about/links',
@@ -296,7 +386,10 @@ const routes = [
         display: true,
         module: 'about',
         icon: "mdi-link-variant",
-        component: () => import('/src/pages/about/links.vue')
+        component: () => import('/src/pages/about/links.vue'),
+        meta: {
+            title: '友情链接'
+        }
     },
     {
         path: '/docs',
@@ -305,7 +398,10 @@ const routes = [
         display: true,
         module: 'dev',
         icon: "mdi-code-braces",
-        component: () => import('/src/pages/about/donate.vue')
+        component: () => import('/src/pages/about/donate.vue'),
+        meta: {
+            title: '文档'
+        }
     },
     {
         path: '/statistics-material',
