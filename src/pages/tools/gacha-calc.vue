@@ -1512,48 +1512,21 @@ function handleResize() {
 }
 
 //概率计算
-const probabilityTable = ref([])
-const currentProb = ref({
-  limited300: 0,
-  all300: 0,
-  limited120: 0,
-  all120: 0
-});
-
-onMounted(() => {
-  probabilityTable.value = probabilityTableData
-  updateProb()
-})
+const currentProb = ref({});
+updateProb()
 
 watch(() => calculationResult.value.totalDraw, updateProb)
 
 
 function updateProb() {
-  let draw = calculationResult.value.totalDraw
+  const pulls = calculationResult.value.totalDraw || 0
 
-  currentProb.value.pulls = draw
-
-  const index = draw
-
-  currentProb.value = {
-    pulls: draw,
-    limited300: probabilityTable.value.limited300[index] * 100,
-    all300: probabilityTable.value.all300[index] * 100,
-    limited120: probabilityTable.value.limited120[index] * 100,
-    all120: probabilityTable.value.all120[index] * 100
-  }
-
-  if (draw >= 120) {
-    currentProb.value.limited120 = 100
-  }
-
-  if (draw >= 208) {
-    currentProb.value.all120 = 100
-  }
-
-  if (draw >= 300) {
-    currentProb.value.limited300 = 100,
-      currentProb.value.all300 = 100
+  for (const key of Object.keys(probabilityTableData)) {
+    if (probabilityTableData[key][pulls] !== undefined) {
+      currentProb.value[key] = probabilityTableData[key][pulls] * 100;
+    } else {
+      currentProb.value[key] = 100;
+    }
   }
 }
 
@@ -1749,6 +1722,9 @@ function sharePage() {
               </div>
               <div v-if="activityType === '联动限定'">
                 <p>拿到所有联动的概率：{{ currentProb.all120.toFixed(2) }}%</p>
+              </div>
+              <div v-if="activityType === '联动限定'">
+                <p>全满潜的概率：{{ currentProb.联动卡池全满潜.toFixed(2) }}%</p>
               </div>
             </div>
             <div v-else>
