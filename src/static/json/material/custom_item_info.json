@@ -891,13 +891,13 @@
   },
   "interface_theme": {
     "itemId": "interface_theme",
-    "itemName": "界面主题",
-    "description": "礼包内的界面主题",
+    "itemName": "主题场景+界面主题",
+    "description": "主题场景+界面主题",
     "list": [
       {
-        "itemId": "AP_GAMEPLAY",
-        "itemName": "理智",
-        "count": 0
+        "itemId": "4002",
+        "itemName": "至纯源石",
+        "count": 30
       }
     ]
   },
@@ -907,9 +907,9 @@
     "description": "礼包内的名片主题",
     "list": [
       {
-        "itemId": "AP_GAMEPLAY",
-        "itemName": "理智",
-        "count": 0
+        "itemId": "4002",
+        "itemName": "至纯源石",
+        "count": 18
       }
     ]
   },
