@@ -1,5 +1,40 @@
 [
   {
+    "name": "丰川祥子",
+    "equipName": "无言的约定",
+    "updateTime": "2025/8/2"
+  },
+  {
+    "name": "若叶睦",
+    "equipName": "睦的新朋友",
+    "updateTime": "2025/8/2"
+  },
+  {
+    "name": "八幡海铃",
+    "equipName": "额外训练",
+    "updateTime": "2025/8/2"
+  },
+  {
+    "name": "三角初华",
+    "equipName": "占卜的意义",
+    "updateTime": "2025/8/2"
+  },
+  {
+    "name": "祐天寺若麦",
+    "equipName": "年轻的麦子",
+    "updateTime": "2025/8/2"
+  },
+  {
+    "name": "煌",
+    "equipName": "“稍后回来”",
+    "updateTime": "2025/8/2"
+  },
+  {
+    "name": "素心",
+    "equipName": "音乐家的旅程",
+    "updateTime": "2025/8/2"
+  },
+  {
     "name": "遥",
     "equipName": "迟来的纪念",
     "updateTime": "2025/8/2"
@@ -71,7 +106,7 @@
   },
   {
     "name": "特克诺",
-    "equipName": "“烧烤店官方优惠章”",
+    "equipName": "烧烤店官方优惠章",
     "updateTime": "2025/6/5"
   },
   {
