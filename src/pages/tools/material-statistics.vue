@@ -72,7 +72,10 @@ let equipUpdateTimeMap = new Map()
 
 //将模组更新时间格式化到equipUpdateTimeMap
 for (const item of equipUpdateTime) {
-  const {equipName, updateTime} = item
+  let {equipName, updateTime} = item
+  if(!updateTime){
+    updateTime = '2019/05/01'
+  }
   equipUpdateTimeMap.set(equipName, updateTime)
 }
 
@@ -100,6 +103,7 @@ for (const charId in operatorTableSimple) {
     operatorUpdateTime = new Date(operatorUpdateTimeElement.updateTime)
     operatorUpdateTimeText = dateFormat(operatorUpdateTime)
   }
+  console.log(operatorUpdateTimeText)
   //根据干员更新时间的格式化字符串获取对应时间的材料消耗记录对象
   let collectByOperator = operatorAndEquipCollectByDate.get(operatorUpdateTimeText);
   //如果对象不存在，新建一个
@@ -155,6 +159,10 @@ for (const charId in operatorTableSimple) {
     }
   }
 
+  if(!operatorUpdateTimeText){
+   console.log('bug')
+  }
+
   operatorAndEquipCollectByDate.set(operatorUpdateTimeText, collectByOperator)
 
 
@@ -167,7 +175,7 @@ for (const charId in operatorTableSimple) {
         equipUpdateTimeText = formatDateString(equipUpdateTimeText)
         lastTime = equipUpdateTimeText
       } else {
-        console.log(uniEquipName)
+        // console.log(uniEquipName)
         equipUpdateTimeText = lastTime
       }
 
@@ -195,6 +203,10 @@ for (const charId in operatorTableSimple) {
             _updateItemCostStatisticsMap(itemId, cost)
           }
         }
+      }
+
+      if(!equipUpdateTimeText){
+        console.log(uniEquipName)
       }
       operatorAndEquipCollectByDate.set(equipUpdateTimeText, collectByEquip)
 
@@ -278,7 +290,7 @@ function selectItem(index) {
       }
       const {list} = listDisplayItem.value[i]
       if (i === 0) {
-        console.log(list[t].updateTime)
+        // console.log(list[t].updateTime)
         itemCostTableData.value[t].push(dateFormat(list[t].updateTime))
       }
       itemCostTableData.value[t].push(list[t].count)
@@ -324,6 +336,7 @@ let r3ItemCostList = splitItem(mapItemCostStatistics)
 let r3ItemCostListByDate = []
 
 for (const [key, value] of operatorAndEquipCollectByDate) {
+  console.log(key)
   const {updateTime, itemCost} = value
   const r3List = splitItem(itemCost)
   let count = 0
@@ -344,7 +357,7 @@ for (const [key, value] of operatorAndEquipCollectByDate) {
 }
 
 r3ItemCostListByDate.sort((a, b) => b.updateTime - a.updateTime)
-console.log(r3ItemCostListByDate)
+// console.log(r3ItemCostListByDate)
 
 
 function splitItem(map) {
@@ -533,7 +546,7 @@ function loadingLine() {
   const intervalId = setInterval(() => {
     timeRange.push(dateFormat(dateList[index]))
     if (dateList[index]) {
-      console.log(dateList[index])
+      // console.log(dateList[index])
       const params = {itemList: itemList, timeRange: timeRange, startTime: startTimeStamp, endTime: dateList[index]}
       createLineChart(params)
     } else {
@@ -618,7 +631,7 @@ onMounted(() => {
           </tr>
           <tr v-for="r3List in r3ItemCostListByDate">
             <td>{{ dateFormat(r3List.updateTime) }}</td>
-<!--            <td>{{ r3List.updateTime }}</td>-->
+<!--            <td>{{  r3List.updateTime }}</td>-->
             <td v-for="item in r3List.list">
               {{ item.count }}
               <!--          {{formatNumber(item.rate*100)}}%-->
