@@ -13,7 +13,7 @@ import '/src/assets/css/material/pack.phone.scss';
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import NoticeBoard from "@/components/layout/NoticeBoard.vue";
 import { calculatePackEfficiency } from "@/utils/item/packEfficiency.js";
-import {dateFormat} from "@/utils/dateUtil.js";
+import { dateFormat } from "@/utils/dateUtil.js";
 
 
 // 当前日期
@@ -99,7 +99,15 @@ function handleClick(divName) {
     document.querySelectorAll('.pack-content').forEach(el => {
       el.style.background = '#ffffff'; // 或使用 'white'
     });
-    console.log('隐藏模式触发，div3 和 div4 强制显示')
+    document.querySelectorAll('.pack-info').forEach(el => {
+      el.style.boxShadow = 'none';
+    });
+    document.querySelectorAll('.pack-info-countdown').forEach(el => {
+      el.style.display = 'none';
+    });
+    document.querySelectorAll('.pack-content').forEach(el => {
+      el.style.boxShadow = 'none';
+    });
   }
 }
 

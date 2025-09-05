@@ -141,12 +141,25 @@ onMounted(() => {
     storeListFormat.value[i].hide = storeStatusList[i]
   }
 })
-function handleClick() {
-  document.querySelectorAll('.activity-store-good').forEach(element => {
-    element.style.background = 'white'; // 纯白背景，不透明
-  });
-}
 
+const clickCount = ref(0)
+
+function handleClick() {
+  clickCount.value += 1
+  console.log(clickCount.value)
+
+  if (clickCount.value >= 5) {
+    document.querySelectorAll('.activity-store-good').forEach(element => {
+      element.style.background = 'white';      
+      element.style.boxShadow = 'none';
+    });
+
+    const el0 = document.getElementById('actStore')
+    if (el0) {
+      el0.style.width = '954px'
+    }
+  }
+}
 </script>
 
 <template>
@@ -159,7 +172,7 @@ function handleClick() {
       <!-- 内容区域 -->
       <div v-for="(singleAct, index) in actStoreList" :key="index" class="act_store_block">
         <!-- banner -->
-        <div class="act-banner-background"  @click="handleClick()" :style="getBackground(singleAct.imageLink)" >
+        <div class="act-banner-background" @click="handleClick()" :style="getBackground(singleAct.imageLink)">
           <img class="act-banner-img" :src="getActStoreBackgroundImage(singleAct.imageLink)" :alt="singleAct.actName" />
         </div>
 
@@ -237,7 +250,6 @@ function handleClick() {
 
     <!-- 算法说明end -->
   </div>
-
 </template>
 
 <style lang="scss">
