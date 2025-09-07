@@ -161,26 +161,27 @@ const OperatorCarryDataCache = ref({})
 
 let dateRange = ref([new Date(Date.now() - 60 * 60 * 24 * 14 * 1000).getTime(), Date.now()])
 
+const halfMonth = 60*60*24*24*1000
+
 function getOperatorCarryDataByModuleAndTime() {
   const cacheKey = selectedGameModuleCode.value + "-" + selectedTimeGranularity.value.code
-  const dataCache = OperatorCarryDataCache.value[cacheKey];
-  // if (dataCache) {
-  //   formatOperatorCarryData(dataCache)
-  //   return
-  // }
-
-  // const data = {
-  //   questionnaireType:selectedGameModuleCode.value,
-  //   startTime:dateRange.value[0],
-  //   endTime:
-  // }
 
   dateRange.value[1] = _adjustToLastSecond(dateRange.value[1])
+
+  if(dateRange.value[0]>dateRange.value[1]){
+    createMessage({type:'warn',text:'开始时间不能大于结束时间'})
+    return
+  }
+
+  if((dateRange.value[1]-dateRange.value[0])>halfMonth){
+    createMessage({type:'warn',text:'时间范围过大，不能大于24天'})
+    return
+  }
+
 
   questionnaireAPI.getQuestionnaireResultV2(selectedGameModuleCode.value, dateRange.value).then(response => {
     const data = response.data;
     OperatorCarryDataCache.value[cacheKey] = data
-
 
     formatOperatorCarryData(data)
   })
@@ -193,9 +194,15 @@ function getOperatorCarryDataByModuleAndTime() {
   }
 }
 
-watch([() => dateRange.value[0], () => dateRange.value[1]], ([newStartTime, newEndTime]) => {
+watch(() => dateRange.value[0], (newValue) => {
   getOperatorCarryDataByModuleAndTime()
 })
+
+watch(() => dateRange.value[1], (newValue) => {
+  getOperatorCarryDataByModuleAndTime()
+})
+
+
 
 
 function formatOperatorCarryData(data) {
