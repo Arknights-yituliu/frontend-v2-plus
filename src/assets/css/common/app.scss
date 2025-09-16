@@ -17,7 +17,28 @@ body {
   overscroll-behavior: none;
 }
 
+// Sticky footer styles
+.main-with-sticky-footer {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: calc(100vh - 64px - 36px) !important; // 减去app-bar和footer的固定高度
+}
 
+.main-content {
+  flex: 1 !important;
+}
+
+.sticky-footer {
+  margin-top: auto !important;
+  height: 36px !important; // 设置更小的高度
+  min-height: 36px !important;
+  max-height: 36px !important;
+  flex-shrink: 0 !important; // 防止备案条被压缩
+  display: flex !important;
+  align-items: center !important; // 垂直居中内容
+  justify-content: center !important; // 水平居中内容
+  padding: 0 !important; // 移除所有内边距
+}
 
 .navigation-drawer {
 

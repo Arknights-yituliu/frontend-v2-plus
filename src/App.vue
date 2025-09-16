@@ -163,7 +163,7 @@ onMounted(() => {
 
           </div>
         </v-app-bar>
-        <v-main>
+        <v-main class="main-with-sticky-footer">
           <v-dialog v-model="feedbackPopupVisible" max-width="500">
             <v-card>
               <div class="flex justify-end m-8" @click="feedbackPopupVisible=false">
@@ -190,12 +190,14 @@ onMounted(() => {
 
             </v-card>
           </v-dialog>
-          <v-container>
-            <router-view>
-            </router-view>
-            <ComponentsContainer></ComponentsContainer>
-          </v-container>
-          <v-footer class="flex justify-center" color="primary">
+          <div class="main-content">
+            <v-container>
+              <router-view>
+              </router-view>
+              <ComponentsContainer></ComponentsContainer>
+            </v-container>
+          </div>
+          <v-footer class="flex justify-center sticky-footer" color="primary">
             <img src="/image/website/备案图标.png" style="width: 20px; height: 20px;margin: 0 12px" alt=""/>
             <a href="https://beian.miit.gov.cn/" style="color: white">豫ICP备2024043594号-1</a>
           </v-footer>
