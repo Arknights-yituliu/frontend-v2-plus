@@ -125,8 +125,14 @@ onMounted(() => {
 
       <v-app class="app" :class="customTheme">
         <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
-          <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 12px 0 0">
-            明日方舟一图流
+          <div class="navigation-header" style="text-align: center;font-size: 24px;font-weight: bolder;padding: 20px 12px;color: white;text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 12px;">
+              <v-icon icon="mdi-gamepad-variant" size="32" style="color: white;"></v-icon>
+              <div>
+                <div style="font-size: 20px; line-height: 1.2;">明日方舟</div>
+                <div style="font-size: 14px; font-weight: 400; opacity: 0.9;">一图流</div>
+              </div>
+            </div>
           </div>
           <Navigation></Navigation>
         </v-navigation-drawer>

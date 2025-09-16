@@ -41,10 +41,58 @@ body {
 }
 
 .navigation-drawer {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1) !important;
+
+  // 顶部标题样式
+  .navigation-header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 0 0 20px 20px;
+    margin-bottom: 16px;
+  }
 
   .drawer-navigation {
     .v-list-item {
       --indent-padding: 32px;
+      margin: 4px 12px;
+      border-radius: 12px !important;
+      transition: all 0.3s ease !important;
+      backdrop-filter: blur(10px);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.15) !important;
+        transform: translateX(4px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      &.v-list-item--active {
+        background: rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .v-list-item__content {
+        color: white !important;
+        font-weight: 500;
+      }
+    }
+
+    .v-list-group__items {
+      .v-list-item {
+        margin: 2px 20px 2px 32px;
+        border-radius: 8px !important;
+        background: rgba(255, 255, 255, 0.05);
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.12) !important;
+          transform: translateX(2px);
+        }
+
+        &.v-list-item--active {
+          background: rgba(255, 255, 255, 0.18) !important;
+          border-left: 3px solid rgba(255, 255, 255, 0.8);
+        }
+      }
     }
 
     .navigation-item-content {
@@ -54,6 +102,11 @@ body {
       .navigation-item-content-spacer {
         width: 16px;
       }
+
+      .v-icon {
+        color: white !important;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+      }
     }
   }
 
@@ -62,6 +115,24 @@ body {
     color: inherit;
   }
 
+  // 滚动条样式
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+  }
 }
 
 .app-bar-content {
