@@ -711,11 +711,11 @@
       "rarity": 5
     },
     {
-      "itemId": "30064",
-      "itemName": "改量装置",
+      "itemId": "4001",
+      "itemName": "龙门币",
       "storeType": "purple",
-      "price": 85.0,
-      "quantity": 1,
+      "price": 15.0,
+      "quantity": 2000,
       "rarity": 4
     },
     {
@@ -727,16 +727,16 @@
       "rarity": 4
     },
     {
-      "itemId": "30054",
-      "itemName": "酮阵列",
+      "itemId": "30024",
+      "itemName": "糖聚块",
       "storeType": "purple",
-      "price": 65.0,
+      "price": 60.0,
       "quantity": 1,
       "rarity": 4
     },
     {
-      "itemId": "30024",
-      "itemName": "糖聚块",
+      "itemId": "30034",
+      "itemName": "聚酸酯块",
       "storeType": "purple",
       "price": 60.0,
       "quantity": 1,
@@ -751,8 +751,32 @@
       "rarity": 4
     },
     {
-      "itemId": "30034",
-      "itemName": "聚酸酯块",
+      "itemId": "30054",
+      "itemName": "酮阵列",
+      "storeType": "purple",
+      "price": 65.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
+      "itemId": "30064",
+      "itemName": "改量装置",
+      "storeType": "purple",
+      "price": 85.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
+      "itemId": "30074",
+      "itemName": "白马醇",
+      "storeType": "purple",
+      "price": 50.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
+      "itemId": "30084",
+      "itemName": "三水锰矿",
       "storeType": "purple",
       "price": 60.0,
       "quantity": 1,
@@ -767,18 +791,10 @@
       "rarity": 4
     },
     {
-      "itemId": "30084",
-      "itemName": "三水锰矿",
+      "itemId": "30104",
+      "itemName": "RMA70-24",
       "storeType": "purple",
-      "price": 60.0,
-      "quantity": 1,
-      "rarity": 4
-    },
-    {
-      "itemId": "31024",
-      "itemName": "炽合金块",
-      "storeType": "purple",
-      "price": 60.0,
+      "price": 65.0,
       "quantity": 1,
       "rarity": 4
     },
@@ -791,35 +807,19 @@
       "rarity": 4
     },
     {
+      "itemId": "31024",
+      "itemName": "炽合金块",
+      "storeType": "purple",
+      "price": 60.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
       "itemId": "31034",
       "itemName": "晶体电路",
       "storeType": "purple",
       "price": 70.0,
       "quantity": 1,
-      "rarity": 4
-    },
-    {
-      "itemId": "30104",
-      "itemName": "RMA70-24",
-      "storeType": "purple",
-      "price": 65.0,
-      "quantity": 1,
-      "rarity": 4
-    },
-    {
-      "itemId": "30074",
-      "itemName": "白马醇",
-      "storeType": "purple",
-      "price": 50.0,
-      "quantity": 1,
-      "rarity": 4
-    },
-    {
-      "itemId": "4001",
-      "itemName": "龙门币",
-      "storeType": "purple",
-      "price": 15.0,
-      "quantity": 2000,
       "rarity": 4
     },
     {
@@ -839,6 +839,38 @@
       "rarity": 4
     },
     {
+      "itemId": "31064",
+      "itemName": "转质盐聚块",
+      "storeType": "purple",
+      "price": 55.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
+      "itemId": "31074",
+      "itemName": "固化纤维板",
+      "storeType": "purple",
+      "price": 60.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
+      "itemId": "31084",
+      "itemName": "环烃预制体",
+      "storeType": "purple",
+      "price": 65.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
+      "itemId": "31094",
+      "itemName": "手性屈光体",
+      "storeType": "purple",
+      "price": 55.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
       "itemId": "2004",
       "itemName": "高级作战记录",
       "storeType": "purple",
@@ -851,14 +883,6 @@
       "itemName": "技巧概要·卷3",
       "storeType": "purple",
       "price": 20.0,
-      "quantity": 1,
-      "rarity": 4
-    },
-    {
-      "itemId": "31064",
-      "itemName": "转质盐聚块",
-      "storeType": "purple",
-      "price": 55.0,
       "quantity": 1,
       "rarity": 4
     }
