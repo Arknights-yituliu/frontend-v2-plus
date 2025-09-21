@@ -15,7 +15,7 @@ for (const module in LinkedTable) {
 
 </script>
 <template>
-  <v-list v-model:opened="open" open-strategy="multiple" density="compact">
+  <v-list v-model:opened="open" open-strategy="multiple" density="comfortable" nav>
     <v-list-group v-for="(parent, module) in LinkedTable" v-show="parent.display" :key="module"
                   :value="module" class="drawer-navigation">
       <template v-slot:activator="{ props }">
@@ -42,4 +42,3 @@ for (const module in LinkedTable) {
     </v-list-group>
   </v-list>
 </template>
-

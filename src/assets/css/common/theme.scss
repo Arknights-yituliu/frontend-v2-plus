@@ -9,6 +9,10 @@
   --c-card-background-color:#ffffff;
   --c-background-color:#FFFFFF;
 
+  /* 品牌渐变（Light，方案A：主色 → 深主色） */
+  --brand-gradient-start: #1867C0; /* primary */
+  --brand-gradient-end: #1F5592;   /* primary-darken */
+
   //vuetify的默认变量
   --c-theme-primary:var(--v-theme-primary);
   --c-theme-on-primary:var(--v-theme-on-primary);
@@ -26,13 +30,14 @@
   --c-card-background-color:#323232;
   --c-background-color:#222222;
 
+  /* 品牌渐变（Dark，方案A：主色 → 深主色） */
+  --brand-gradient-start: #1867C0; /* primary */
+  --brand-gradient-end: #1F5592;   /* primary-darken */
+
   //vuetify的默认变量
   --c-theme-primary:var(--v-theme-primary);
   --c-theme-on-primary:var(--v-theme-on-primary);
 
 
 }
-
-
-
 

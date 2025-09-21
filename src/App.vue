@@ -33,11 +33,10 @@ import {language} from '/src/utils/i18n.js'
 
 const themeOverrides = {
   common: {
-    primaryColor: '#1867C0FF',
-    borderColor: "rgba(93,162,248,0.3)",
-    primaryColorHover: "#60acff",
+    primaryColor: '#1867C0',
+    borderColor: '#d7d7d7',
+    primaryColorHover: '#60acff',
   },
-  // ...
 }
 
 
@@ -124,15 +123,14 @@ onMounted(() => {
     <v-responsive>
 
       <v-app class="app" :class="customTheme">
-        <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
-          <div class="navigation-header" style="text-align: center;font-size: 24px;font-weight: bolder;padding: 20px 12px;color: white;text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 12px;">
-              <v-icon icon="mdi-gamepad-variant" size="32" style="color: white;"></v-icon>
-              <div>
-                <div style="font-size: 20px; line-height: 1.2;">明日方舟</div>
-                <div style="font-size: 14px; font-weight: 400; opacity: 0.9;">一图流</div>
-              </div>
-            </div>
+        <v-navigation-drawer
+          v-model="drawer"
+          width="280"
+          class="navigation-drawer"
+          style="overflow: hidden !important; scrollbar-width: none !important;">
+          <div class="navigation-header brand-header">
+            <img class="brand-logo" src="/image/website/ico64.webp" alt="一图流 Logo" />
+            <div class="brand-title">明日方舟一图流</div>
           </div>
           <Navigation></Navigation>
         </v-navigation-drawer>
@@ -213,8 +211,3 @@ onMounted(() => {
     </v-responsive>
   </n-config-provider>
 </template>
-
-
-
-
-
