@@ -41,6 +41,8 @@ const InitialRanks = {
 }
 
 
+let lmdAndExpCost = []
+
 /**
  *
 
@@ -234,8 +236,15 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     // console.table(itemCostLog)
     // console.table(itemCost)
 
+    lmdAndExpCost.push({
+        name:name,
+        '升级和精二消耗':levelApCost["4001"],
+        '其他消耗':itemCost['4001'].count-levelApCost["4001"]
+    })
+
     return itemCost;
 }
+
 
 
 const operatorMaxLevelTable = {
@@ -489,6 +498,7 @@ async function statisticsOperatorInfo(operatorList) {
 
         }
 
+        lmdAndExpCost = []
 
         for (const operator of operatorList) {
             //干员信息

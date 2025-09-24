@@ -824,6 +824,66 @@
       }
     ]
   },
+  "skin_15": {
+    "itemId": "skin_15",
+    "itemName": "15源石时装",
+    "description": "售价15源石的时装",
+    "list": [
+      {
+        "itemId": "4002",
+        "itemName": "至纯源石",
+        "count": 15
+      }
+    ]
+  },
+  "skin_18": {
+    "itemId": "skin_18",
+    "itemName": "18源石时装",
+    "description": "售价18源石的时装",
+    "list": [
+      {
+        "itemId": "4002",
+        "itemName": "至纯源石",
+        "count": 18
+      }
+    ]
+  },
+  "skin_21": {
+    "itemId": "skin_21",
+    "itemName": "21源石时装",
+    "description": "售价21源石的时装",
+    "list": [
+      {
+        "itemId": "4002",
+        "itemName": "至纯源石",
+        "count": 21
+      }
+    ]
+  },
+  "skin_24": {
+    "itemId": "skin_24",
+    "itemName": "24源石时装",
+    "description": "售价24源石的时装",
+    "list": [
+      {
+        "itemId": "4002",
+        "itemName": "至纯源石",
+        "count": 24
+      }
+    ]
+  },
+  "skin_27": {
+    "itemId": "skin_27",
+    "itemName": "27源石时装",
+    "description": "售价27源石的时装",
+    "list": [
+      {
+        "itemId": "4002",
+        "itemName": "至纯源石",
+        "count": 27
+      }
+    ]
+  },
   "voucher_chipPackage": {
     "itemId": "voucher_chipPackage",
     "itemName": "自助芯片组印刻仪",
