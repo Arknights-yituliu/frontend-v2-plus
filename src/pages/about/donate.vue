@@ -18,9 +18,21 @@ function openNewPage() {
         感谢每一位捐助者的支持。
       </div>
     </div>
+    <div class="flex flex-wrap justify-center">
+      <div class="m-12">
+        <img class="donate-image" src="/image/website/zfb-1.png" alt=""/>
+        <div class="donate-image-label">支付宝</div>
+      </div>
+    </div>
 
 
-
+    <div class="flex justify-center">
+      <v-btn @click="openNewPage()" text=" 查看收支一览" color="primary">
+        <template v-slot:prepend>
+          <v-icon icon="mdi-link"></v-icon>
+        </template>
+      </v-btn>
+    </div>
 
 
     <div>
