@@ -3,7 +3,7 @@ import {ref, watch} from "vue";
 import OperatorBar from "/src/components/survey/OperatorBar.vue";
 import '/src/assets/css/survey/operator.scss'
 import '/src/assets/css/survey/operator.phone.scss'
-import {statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/operatorStatistical"
+import {statisticsOperatorInfo, splitMaterialByTier,debugExportOperatorInfo} from "/src/utils/survey/operatorStatistical"
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
@@ -144,6 +144,10 @@ watch(() => props.modelValue.length, (newVal, oldValue) => {
         </div>
       </v-card-text>
     </v-card>
+
+    <v-btn @click="debugExportOperatorInfo()" text="debug">
+
+    </v-btn>
 
   </div>
 

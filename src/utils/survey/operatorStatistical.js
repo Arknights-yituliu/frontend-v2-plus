@@ -5,6 +5,8 @@ import deepClone from "/src/utils/deepClone.js";
 import {getStageConfig} from "@/utils/user/userConfig.js";
 import itemCache from "@/plugins/indexedDB/itemCache.js";
 import compositeTableJson from '/src/static/json/material/composite_table.v2.json'
+import {saveAs} from 'file-saver';
+
 
 
 const stageConfig = getStageConfig()
@@ -41,7 +43,9 @@ const InitialRanks = {
 }
 
 
-let lmdAndExpCost = []
+let debugExportInfoList = []
+
+
 
 /**
  *
@@ -55,8 +59,16 @@ function getOperatorItemCost(current, target, itemInfoMap) {
 
     const charId = target.charId
     const rarity = target.rarity
+    const name = target.name
 
-    const itemCostLog = []
+
+    const debugExportInfo = {
+        charId:charId,
+        name:name,
+        elite:[],
+        equip:[],
+        skill:[]
+    }
 
     let itemCost = {}
     //解构当前练度属性
@@ -70,7 +82,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     const currentModY = current.modY
     const currentModD = current.modD
 
-    const name = target.name
+
 
     const targetElite = target.elite
     const targetLevel = target.level
@@ -82,7 +94,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     const targetModY = target.modY
     const targetModD = target.modD
 
-    debug("获取材料消耗时，传入的干员对象", target, target)
+
 
     let apCost = 0
 
@@ -99,13 +111,18 @@ function getOperatorItemCost(current, target, itemInfoMap) {
         targetElite: targetElite, targetLevel: targetLevel});
 
 
-    debug("干员原始消耗", target, operatorItemCost)
-
+    debugExportInfo.elite.push({
+        itemId:"4001",
+        quantity: levelApCost["4001"],
+    })
+    debugExportInfo.elite.push({
+        itemId:"2003",
+        quantity: levelApCost["2003"],
+    })
 
     // console.log(name,'狗粮：',levelApCost["2003"]*1000,'龙门币：',levelApCost["4001"])
 
-    itemCostLog.push({"itemName": "经验书", "itemId": "2003", "num": levelApCost["2003"] * 1000})
-    itemCostLog.push({"itemName": "龙门币", "itemId": "4001", "num": levelApCost["4001"]})
+
 
     // apCost+=itemInfoMap.get("4001").itemValue*levelApCost["4001"]
     // apCost+=itemInfoMap.get("2003").itemValue*levelApCost["2003"]
@@ -119,24 +136,26 @@ function getOperatorItemCost(current, target, itemInfoMap) {
 
     // 下面的是计算从当前练度到目标练度的消耗
     // 精英化消耗的材料
-    itemCostLog.push({"itemName": "精英化", "itemId": 0, "num": 0})
+
 
     for (let e = currentElite; e <= targetElite; e++) {
         const costList = operatorItemCost.elite[e]
-        debug(`精英消耗`, target, costList)
+
         for (let itemId in costList) {
 
             let count = operatorItemCost.elite[e][itemId];
+            debugExportInfo.elite.push({
+                itemId:itemId,
+                quantity: count,
+            })
             _addItemCost(itemId, count)
-            debug(`精英等级${e}`, target, itemId, count)
 
-            itemCostLog.push({"itemName": itemInfoMap.get(itemId).itemName, "itemId": itemId, "num": count})
+
             // apCost+=itemInfoMap.get(itemId).itemValue*count
         }
     }
 
 
-    itemCostLog.push({"itemName": "主技能", "itemId": 0, "num": 0})
 
     // 通用技能消耗的材料
     for (let mainSkillRank = currentMainSkill; mainSkillRank <= targetMainSkill; mainSkillRank++) {
@@ -146,10 +165,13 @@ function getOperatorItemCost(current, target, itemInfoMap) {
         const list = allSkill[mainSkillRank - 2]
         for (let itemId in list) {
             let count = list[itemId];
+            debugExportInfo.skill.push({
+                itemId:itemId,
+                quantity: count,
+            })
             _addItemCost(itemId, count)
-            debug(`主技能等级${mainSkillRank}`, target, itemId, count)
 
-            itemCostLog.push({"itemName": itemInfoMap.get(itemId).itemName, "itemId": itemId, "num": count})
+
         }
     }
 
@@ -157,7 +179,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     _statisticsSkills(1, currentSkill2, targetSkill2)
     _statisticsSkills(2, currentSkill3, targetSkill3)
 
-    // debug("11111", target, currentSkill2, targetSkill2)
+
 
     function _statisticsSkills(index, currentSkill, targetSkill) {
         const list = skills[index]
@@ -165,19 +187,17 @@ function getOperatorItemCost(current, target, itemInfoMap) {
             return
         }
 
-        itemCostLog.push({"itemName": `技能-${index + 1}专精`, "itemId": 0, "num": 0})
-
-        debug("干员专精的消耗", target, `技能${index + 1}`, list)
-
         for (let i = currentSkill; i < targetSkill; i++) {
 
             const itemCost = list[i]
             for (const id in itemCost) {
                 const count = itemCost[id]
-                debug("干员专精每级的消耗", target, id, count)
+                debugExportInfo.skill.push({
+                    itemId:id,
+                    quantity: count,
+                })
                 _addItemCost(id, count)
 
-                itemCostLog.push({"itemName": itemInfoMap.get(id).itemName, "itemId": id, "num": count})
             }
         }
 
@@ -193,21 +213,23 @@ function getOperatorItemCost(current, target, itemInfoMap) {
             return;
         }
 
-        itemCostLog.push({"itemName": `模组-${type}专精`, "itemId": 0, "num": 0})
 
         const list = operatorItemCost[`mod${type}`]
 
-        debug("干员模组消耗", target, `mod${type}`, list)
+
         for (let i = currentEquipRank; i < targetEquipRank; i++) {
             const itemCost = list[i]
             for (let id in itemCost) {
                 let count = itemCost[id];
-                debug("干员模组每级的消耗", target, id, count)
+
+                debugExportInfo.equip.push({
+                    itemId:id,
+                    quantity: count,
+                })
+
                 _addItemCost(id, count)
 
-
                 if (itemInfoMap.get(id)) {
-                    itemCostLog.push({"itemName": itemInfoMap.get(id).itemName, "itemId": id, "num": count})
                 }
             }
         }
@@ -236,11 +258,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     // console.table(itemCostLog)
     // console.table(itemCost)
 
-    lmdAndExpCost.push({
-        name:name,
-        '升级和精二消耗':levelApCost["4001"],
-        '其他消耗':itemCost['4001'].count-levelApCost["4001"]
-    })
+    debugExportInfoList.push(debugExportInfo)
 
     return itemCost;
 }
@@ -440,12 +458,19 @@ function getLevelUpCostByRarity(rarity, {current_elite, current_level}, {target_
 }
 
 
+export function debugExportOperatorInfo() {
+    const blob = new Blob([JSON.stringify(debugExportInfoList, null, 2)], {type: "application/json"});
+    saveAs(blob, `debug.json`)
+}
+
 async function statisticsOperatorInfo(operatorList) {
     const itemInfoMap = await getItemInfoMap()
     // console.log(itemInfoMap)
     // console.log(operatorList)
 
     // operatorList = operatorList.filter(item => item.charId === "char_4193_lemuen")
+
+    debugExportInfoList = []
 
     try {
 
@@ -498,7 +523,7 @@ async function statisticsOperatorInfo(operatorList) {
 
         }
 
-        lmdAndExpCost = []
+
 
         for (const operator of operatorList) {
             //干员信息
@@ -512,7 +537,7 @@ async function statisticsOperatorInfo(operatorList) {
 
 
             const itemCost = getOperatorItemCost(InitialRanks, operator, itemInfoMap)
-            debug("统计方法调用获取材料方法后返回的干员的材料消耗", operator, itemCost)
+
 
 
             const apCost = _calcApCost(itemCost);
@@ -694,12 +719,7 @@ function splitMaterialByTier(tier, itemCollect) {
 }
 
 
-function debug(breakpoint, operator, value1, value2, value3) {
-    const {name} = operator
-    // return
 
-    // console.log('debug',breakpoint, ' {} ', name, ' {} ', value1, ' {} ', value2, ' {} ', value3)
-}
 
 export {
     InitialRanks, splitMaterialByTier, statisticsOperatorInfo
