@@ -39,7 +39,7 @@ const InitialRanks = {
     skill3: 0,
     modX: 0,
     modY: 0,
-    modD: 0
+    modA: 0
 }
 
 
@@ -49,7 +49,6 @@ let debugExportInfoList = []
 
 /**
  *
-
  * @param current 当前干员练度
  * @param target 目标干员练度
  * @param itemInfoMap
@@ -60,6 +59,8 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     const charId = target.charId
     const rarity = target.rarity
     const name = target.name
+
+
 
 
     const debugExportInfo = {
@@ -81,6 +82,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     const currentModX = current.modX
     const currentModY = current.modY
     const currentModD = current.modD
+    const currentModA = current.modA
 
 
 
@@ -93,7 +95,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     const targetModX = target.modX
     const targetModY = target.modY
     const targetModD = target.modD
-
+    const targetModA = target.modA
 
 
     let apCost = 0
@@ -121,7 +123,10 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     })
 
     // console.log(name,'狗粮：',levelApCost["2003"]*1000,'龙门币：',levelApCost["4001"])
-
+    if("char_1001_amiya2"===charId||"char_1037_amiya3"===charId){
+        levelApCost["2003"]=0
+        levelApCost["4001"]=0
+    }
 
 
     // apCost+=itemInfoMap.get("4001").itemValue*levelApCost["4001"]
@@ -207,12 +212,15 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     _statisticsEquip('X', currentModX, targetModX)
     _statisticsEquip('Y', currentModY, targetModY)
     _statisticsEquip('D', currentModD, targetModD)
+    _statisticsEquip('A', currentModA, targetModA)
+
+
 
     function _statisticsEquip(type, currentEquipRank, targetEquipRank) {
         if (!operatorItemCost[`mod${type}`]) {
             return;
         }
-
+        console.log(charId)
 
         const list = operatorItemCost[`mod${type}`]
 
