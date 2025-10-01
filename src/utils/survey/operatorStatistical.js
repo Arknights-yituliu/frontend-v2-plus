@@ -39,6 +39,7 @@ const InitialRanks = {
     skill3: 0,
     modX: 0,
     modY: 0,
+    modD: 0,
     modA: 0
 }
 
@@ -112,6 +113,10 @@ function getOperatorItemCost(current, target, itemInfoMap) {
         currentElite: currentElite, currentLevel: currentLevel,
         targetElite: targetElite, targetLevel: targetLevel});
 
+    if("char_1001_amiya2"===charId||"char_1037_amiya3"===charId){
+        levelApCost["2003"]=0
+        levelApCost["4001"]=0
+    }
 
     debugExportInfo.elite.push({
         itemId:"4001",
@@ -123,10 +128,7 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     })
 
     // console.log(name,'狗粮：',levelApCost["2003"]*1000,'龙门币：',levelApCost["4001"])
-    if("char_1001_amiya2"===charId||"char_1037_amiya3"===charId){
-        levelApCost["2003"]=0
-        levelApCost["4001"]=0
-    }
+
 
 
     // apCost+=itemInfoMap.get("4001").itemValue*levelApCost["4001"]
