@@ -61,7 +61,10 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     const rarity = target.rarity
     const name = target.name
 
-
+    let itemCost = {}
+    if("char_4195_radian"===charId){
+        return {}
+    }
 
 
     const debugExportInfo = {
@@ -72,7 +75,10 @@ function getOperatorItemCost(current, target, itemInfoMap) {
         skill:[]
     }
 
-    let itemCost = {}
+
+
+
+
     //解构当前练度属性
     const currentElite = current.elite
     const currentLevel = current.level
