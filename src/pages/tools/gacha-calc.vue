@@ -888,7 +888,7 @@ function gachaResourcesCalculation() {
     //计算用户预留给高级皮肤的源石
     originium -= stringToNumber(existResources.value.skinBudgetPlus.toString()) * 21
     //计算用户预留给顶级皮肤的源石
-    originium -= stringToNumber(existResources.value.skinBudgetPlus.toString()) * 24
+    originium -= stringToNumber(existResources.value.skinBudgetPro.toString()) * 24
 
     if (!originiumIsUsed.value) {
       originium = 0
