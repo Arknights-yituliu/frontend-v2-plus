@@ -16,6 +16,7 @@ import ActivityGachaResources from "/src/components/tools/ActivityGachaResources
 import deepClone from "/src/utils/deepClone.js";
 import { dateDiff, dateFormat } from "/src/utils/dateUtil.js";
 import packInfoCache from "@/plugins/indexedDB/packInfoCache.js";
+import {stringToNumber} from "/src/utils/stringUtils.js";
 
 
 //源石充值
@@ -840,35 +841,7 @@ function gachaResourcesCalculation() {
 
   }
 
-  /**
-   * 将传入字符串转为数字类型
-   * @param value 数字的字符串
-   * @return {number} 转换后的数字
-   */
-  function stringToNumber(value) {
 
-    const regex = /^[-+]?\d*\.?\d+$/
-    //判断传入值是否是整数或浮点数
-    if (!regex.test(value)) {
-      return 0
-    }
-
-    //判断是空字符串，返回0，虽然0也是false，但是因为返回的是0，无视这个问题
-    if (!value) {
-      return 0
-    }
-
-
-    // 判断输入的字符串是否含有小数点
-    if (value.toString().indexOf('.') > -1) {
-
-      return parseFloat(value)
-    }
-
-    return Math.ceil(value)
-
-
-  }
 
 
   /**
