@@ -29,7 +29,7 @@ let itemValueMap = new Map()
 async function loadingStoreData() {
   itemValueMap = await itemCache.getItemValueMapCacheByConfig(stageConfig)
   itemValueMap.set("ap_supply_lt_010", 10);
-  itemValueMap.set("randomMaterial", 20.7);
+  itemValueMap.set("itempack_main", 20.7);
   permStoreComputed()
   activityStoreComputed()
 }
