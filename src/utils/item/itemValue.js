@@ -187,12 +187,14 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
      */
     const itemValueMap = new Map();
     for (const item of itemInfoList) {
-        const { itemId, rarity } = item;
+        const { itemId, rarity,itemValue } = item;
         itemValueMap.set(itemId,isEliteMaterial(itemId) ? 3 ** rarity : 0)
     }
 
     itemValueMap.set("causality", 0);
     itemValueMap.set("AP_GAMEPLAY", 1);
+    itemValueMap.set("ap_supply_lt_010", 10);
+    itemValueMap.set("randomMaterial", 11.2);
     itemValueMap.set("EXP", 0);
 
     // const itemValueMap = new Map(itemInfoList.map(({ itemId, rarity }) => [itemId, isEliteMaterial(itemId) ? 3 ** rarity : 0]));
@@ -773,11 +775,6 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
             const itemValue3302 = (30 * (1 - lmdValue * 12) - b1 * causalityValue / 2 + 4 * b2 * causalityValue / a2) / (a1 / 2 + 3 / 2 + 6 / a2);
             const itemValue3301 = (a1 * itemValue3302 + b1 * causalityValue) / 3;
             const itemValue3303 = (3 * itemValue3302 - 2 * b2 * causalityValue) / a2;
-
-            itemValue3301
-            itemValue3302
-            itemValue3303
-
 
             return { itemValue3301, itemValue3302, itemValue3303 };
         }

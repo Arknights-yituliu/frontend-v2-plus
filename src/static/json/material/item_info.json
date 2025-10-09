@@ -1096,18 +1096,18 @@
     "itemValueAp": 0,
     "rarity": 4,
     "weight": 0,
-    "cardNum": 100,
-    "groupId": 100
+    "cardNum": 12,
+    "groupId": 12
   },
   {
-    "itemId": "randomMaterial_8",
-    "itemName": "罗德岛物资补给Ⅳ",
-    "itemValue": 11.28,
-    "itemValueAp": 11.28,
+    "itemId": "randomMaterial",
+    "itemName": "罗德岛补给箱",
+    "itemValue": 11.2,
+    "itemValueAp": 11.2,
     "rarity": 2,
     "weight": 0,
-    "cardNum": 100,
-    "groupId": 100
+    "cardNum": 12,
+    "groupId": 12
   },
   {
     "itemId": "charm_coin_1",
