@@ -193,8 +193,7 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
 
     itemValueMap.set("causality", 0);
     itemValueMap.set("AP_GAMEPLAY", 1);
-    itemValueMap.set("ap_supply_lt_010", 10);
-    itemValueMap.set("randomMaterial", 20.7);
+
     itemValueMap.set("EXP", 0);
 
     // const itemValueMap = new Map(itemInfoList.map(({ itemId, rarity }) => [itemId, isEliteMaterial(itemId) ? 3 ** rarity : 0]));

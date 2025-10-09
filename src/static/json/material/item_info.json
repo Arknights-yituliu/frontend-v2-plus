@@ -1096,8 +1096,8 @@
     "itemValueAp": 0,
     "rarity": 4,
     "weight": 0,
-    "cardNum": 12,
-    "groupId": 12
+    "cardNum": 100,
+    "groupId": 100
   },
   {
     "itemId": "itempack_main",
@@ -1106,8 +1106,8 @@
     "itemValueAp":20.7,
     "rarity": 2,
     "weight": 0,
-    "cardNum": 12,
-    "groupId": 12
+    "cardNum": 100,
+    "groupId": 100
   },
   {
     "itemId": "charm_coin_1",
