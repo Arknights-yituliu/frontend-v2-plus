@@ -1100,10 +1100,10 @@
     "groupId": 12
   },
   {
-    "itemId": "randomMaterial",
+    "itemId": "itempack_main",
     "itemName": "罗德岛补给箱",
-    "itemValue": 11.2,
-    "itemValueAp": 11.2,
+    "itemValue": 20.7,
+    "itemValueAp":20.7,
     "rarity": 2,
     "weight": 0,
     "cardNum": 12,
