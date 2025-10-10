@@ -109,7 +109,7 @@ function getRemainingDays(endDate, startDate, maxDays = 21) {
           </div>
           <!-- 效率条部分 -->
           <div class="pack-chart-line">
-            <div class="pack-chart-line-item" v-for="(line, index) in packInfo.lineChartData" >
+            <div class="pack-chart-line-item" v-for="(line, index) in packInfo.lineChartData" v-show="line.display">
               <span class="pack-chart-line-label">{{ line.label }}</span>
               <div class="pack-line-bar" :style="getLineBarStyle(line)">
                 <span>{{ getFixed(line.value * 100, 0) }}%</span>
@@ -148,7 +148,7 @@ function getRemainingDays(endDate, startDate, maxDays = 21) {
             </thead>
             <tbody>
               <tr v-for="item in packInfo.packContentVO.filter(i => i.quantity !== 0)" :key="item.itemId"
-                :style="itemAccentColor(item.itemName)">
+                :style="itemAccentColor(item.itemName)" >
                 <td>{{ item.itemName }}</td>
                 <td>{{ item.quantity }}</td>
                 <td>{{ formatNumber(item.apValue, 1) }}</td>
