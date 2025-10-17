@@ -254,16 +254,8 @@ import Battle from '@/components/information/Battle.vue'
                 </el-link>
               </div>
               <div>
-                <span class="optional">（可选）</span>
-                在岁兽残识中，进入杂疑节点可触发事件
-                <el-link
-                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%8F%AA%E4%B8%BA%E6%98%8E%E6%97%A5"
-                    target="_blank"
-                    type="primary"
-                >
-                  “只为明日”
-                </el-link>
-                ，选择“展开侦察”，以获得额外的令干员入卷的机会
+                <span class="optional tip">（提示）</span>
+                只要仍持有无墨长卷，在之后的先行一步节点中就可以继续令干员入卷
               </div>
             </el-timeline-item>
             <el-timeline-item :icon="BOSS" color="#8A0993">
@@ -288,7 +280,15 @@ import Battle from '@/components/information/Battle.vue'
                 >
                   “古今交汇”
                 </el-link>
-                ，可选择“融入残识”（获得7点烛火）或“焚香点烛”（燃烛1名干员后获得6烛火），并进入岁兽残识
+                ，可选择“融入残识”（获得7点烛火）或“焚香点烛”（燃烛1名干员后获得6烛火），并进入一个全新的岁兽残识。<b>仅在这个全新的岁兽残识中</b>，进入杂疑节点可触发事件
+                <el-link
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%8F%AA%E4%B8%BA%E6%98%8E%E6%97%A5"
+                    target="_blank"
+                    type="primary"
+                >
+                  “只为明日”
+                </el-link>
+                ，选择“展开侦察”，以获得额外的令干员入卷的机会
               </div>
               <div>
                 <span class="optional warning">（注意）</span>
