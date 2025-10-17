@@ -280,7 +280,7 @@ import Battle from '@/components/information/Battle.vue'
                 >
                   “古今交汇”
                 </el-link>
-                ，可选择“融入残识”（获得7点烛火）或“焚香点烛”（燃烛1名干员后获得6烛火），并进入一个全新的岁兽残识。<b>仅在这个全新的岁兽残识中</b>，进入杂疑节点可触发事件
+                ，可选择“融入残识”（获得7点烛火）或“焚香点烛”（燃烛1名干员后获得6烛火），并进入一个全新的岁兽残识。<b>仅在这个全新的岁兽残识中，进入杂疑节点可触发事件</b>
                 <el-link
                     href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%8F%AA%E4%B8%BA%E6%98%8E%E6%97%A5"
                     target="_blank"
