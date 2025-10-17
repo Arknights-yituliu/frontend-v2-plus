@@ -12,6 +12,27 @@ const formatNumber = (num, acc = 2) => {
     return parseFloat(num?.toString()).toFixed(acc);
 }
 
+
+function numberFloor(number, decimalPlaces) {
+    // 参数验证
+    if (typeof number !== 'number' || isNaN(number)) {
+        throw new Error('第一个参数必须是有效的数字');
+    }
+
+    if (!Number.isInteger(decimalPlaces) || decimalPlaces < 0) {
+        throw new Error('第二个参数必须是非负整数');
+    }
+
+    // 处理特殊情况：小数位数为0时，直接使用Math.floor
+    if (decimalPlaces === 0) {
+        return Math.floor(number);
+    }
+
+    // 计算方法：乘以10的decimalPlaces次方，向下取整，再除以10的decimalPlaces次方
+    const factor = Math.pow(10, decimalPlaces);
+    return Math.floor(number * factor) / factor;
+}
+
 // 将 HTML 字符串转换成包含层级结构的 VNode
 const htmlStringToVNode = (htmlString) => {
     // 使用 DOMParser 将 HTML 字符串转换成 DOM
@@ -61,4 +82,4 @@ const convertNodeToVNode = (node) => {
 }
 
 
-export {formatNumber, htmlStringToVNode};
+export {formatNumber, htmlStringToVNode, numberFloor};
