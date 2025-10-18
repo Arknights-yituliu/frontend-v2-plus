@@ -112,6 +112,30 @@ function handleClick(divName) {
 }
 
 /**
+ * 仅作为调试礼包效率条用
+ */
+function debugPackEfficiencyLine(){
+
+  if(route.query.debug==="114"){
+    forceShow.value = true
+    document.querySelectorAll('.pack-content').forEach(el => {
+      el.style.background = '#ffffff'; // 或使用 'white'
+    });
+    document.querySelectorAll('.pack-info').forEach(el => {
+      el.style.boxShadow = 'none';
+    });
+    document.querySelectorAll('.pack-info-countdown').forEach(el => {
+      el.style.display = 'none';
+    });
+    document.querySelectorAll('.pack-content').forEach(el => {
+      el.style.boxShadow = 'none';
+    });
+  }
+
+
+}
+
+/**
  * 分类礼包，把礼包分到不同分组里
  */
 function collectPackInfoVO() {
@@ -213,17 +237,7 @@ watch(sortOption, () => {
 //   loadingItemValue()
 // })
 
-/**
- * 页面挂载时，读取开关状态、加载礼包、检测是否需要弹出加载中对话框
- */
-onMounted(() => {
-  isDrawOnly.value = localStorage.getItem('isDrawOnly') === 'true'
-  isKernelValuable.value = localStorage.getItem('isKernelValuable') === 'true'
 
-  loadingItemValue()
-
-
-})
 
 /**
  * 若礼包加载完成，但弹窗显示未满 2 秒，则保证至少显示 2 秒
@@ -397,6 +411,19 @@ function filterPacksV2() {
   }
 }
 
+
+
+/**
+ * 页面挂载时，读取开关状态、加载礼包、检测是否需要弹出加载中对话框
+ */
+onMounted(() => {
+  isDrawOnly.value = localStorage.getItem('isDrawOnly') === 'true'
+  isKernelValuable.value = localStorage.getItem('isKernelValuable') === 'true'
+
+  loadingItemValue()
+  debugPackEfficiencyLine()
+
+})
 
 </script>
 
