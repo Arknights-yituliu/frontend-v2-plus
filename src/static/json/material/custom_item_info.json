@@ -973,18 +973,6 @@
       }
     ]
   },
-  "interface_theme": {
-    "itemId": "interface_theme",
-    "itemName": "主题场景+界面主题",
-    "description": "主题场景+界面主题",
-    "list": [
-      {
-        "itemId": "4002",
-        "itemName": "至纯源石",
-        "count": 36
-      }
-    ]
-  },
   "business_card_theme": {
     "itemId": "business_card_theme",
     "itemName": "名片主题",
