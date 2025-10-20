@@ -1420,16 +1420,16 @@ function readLastSettings() {
   }
 
 
-  existResources.value.orundum = lastSettings.existOrundum ? lastSettings.existOrundum : 0
-  existResources.value.originium = lastSettings.existOriginium ? lastSettings.existOriginium : 0
-  existResources.value.gachaTicket = lastSettings.existGachaTicket ? lastSettings.existGachaTicket : 0
-  existResources.value.tenGachaTicket = lastSettings.existTenGachaTicket ? lastSettings.existTenGachaTicket : 0
+  existResources.value.orundum =   stringToNumber(lastSettings.existOrundum );
+  existResources.value.originium =  stringToNumber( lastSettings.existOriginium );
+  existResources.value.gachaTicket =  stringToNumber( lastSettings.existGachaTicket);
+  existResources.value.tenGachaTicket =  stringToNumber( lastSettings.existTenGachaTicket );
   originiumIsUsed.value = lastSettings.originiumIsUsed
   dailyReward.value.weeklyTaskCompleted = lastSettings.weeklyTaskCompleted
   dailyReward.value.certificateStoreCompleted = lastSettings.certificateStoreCompleted
   dailyReward.value.annihilationCompleted = lastSettings.annihilationCompleted
-  potentialResources.value.paradox = lastSettings.paradox ? lastSettings.paradox : 0
-  potentialResources.value.annihilation = lastSettings.annihilation ? lastSettings.annihilation : 0
+  potentialResources.value.paradox =  stringToNumber( lastSettings.paradox );
+  potentialResources.value.annihilation =  stringToNumber( lastSettings.annihilation );
 
 }
 
