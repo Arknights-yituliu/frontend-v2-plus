@@ -517,7 +517,7 @@ function handleClick() {
     </NoticeBoard>
 
     <!-- 隐藏按钮 -->
-    <div style="height: 114px;width: 514px;" @click="handleClick"></div>
+    <div style="height: 114px;" @click="handleClick"></div>
   </div>
 
 
