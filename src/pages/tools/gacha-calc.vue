@@ -1465,6 +1465,14 @@ function handleResize() {
 }
 
 //概率计算
+/**
+ * 达成各目标的概率（乘 100，例如 11.4514% 概率达成，则值为 11.45）
+ * @property {number} limited300
+ * @property {number} all300
+ * @property {number} limited120
+ * @property {number} all120
+ * @property {number} 联动卡池全满潜
+ */
 const currentProb = ref({});
 updateProb()
 
