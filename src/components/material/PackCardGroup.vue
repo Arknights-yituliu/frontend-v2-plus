@@ -143,13 +143,18 @@ function getRemainingDays(endDate, startDate, maxDays = 21) {
                 <th class="text-left">名称</th>
                 <th class="text-left">数量</th>
                 <th class="text-left">总价值</th>
-                <th class="text-left">价值占比</th>
+                <th class="text-left">占比</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in packInfo.packContentVO.filter(i => i.quantity !== 0)" :key="item.itemId"
                 :style="itemAccentColor(item.itemName)" >
-                <td>{{ item.itemName }}</td>
+                <td class="pack-content-item">
+                  <ItemImage :item-id="item.itemId" :size="40" :mobile-size="30" class="m-a"></ItemImage>
+                  <div class="pack-content-item-name">{{ item.itemName }}</div>
+                </td>
+
+<!--                <td>{{ item.itemName }}</td>-->
                 <td>{{ item.quantity }}</td>
                 <td>{{ formatNumber(item.apValue, 1) }}</td>
                 <td>{{ formatNumber(item.itemRatio * 100, 1) }}%</td>
