@@ -430,7 +430,7 @@ function handleClick() {
         </div>
         <img src="/image/website/QR/yituliuQR.png" style="height: 128px; display: inline-block;">
       </div>
-      <div id="retire-card" class="stage-card"
+      <div id="retire-card" class="stage-card" @click="router.push({ name: 'AccountHome' })"
         style="flex-direction: column; align-items: center; justify-content: center; flex-grow: 1;">
         <div class="flex justify-center">
           <ItemImage :item-id="'30073'" size="60" mobile-size="24"></ItemImage>
