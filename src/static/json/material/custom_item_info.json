@@ -1047,6 +1047,18 @@
   },
   "voucher_item_pick6": {
     "itemId": "voucher_item_pick6",
+    "itemName": "高级干员调用凭证(已废弃)",
+    "description": "可在一定范围内自选一位六星干员",
+    "list": [
+      {
+        "itemId": "AP_GAMEPLAY",
+        "itemName": "理智",
+        "count": 0
+      }
+    ]
+  },
+  "voucher_recruitR6_pick": {
+    "itemId": "voucher_item_pick6",
     "itemName": "高级干员调用凭证",
     "description": "可在一定范围内自选一位六星干员",
     "list": [

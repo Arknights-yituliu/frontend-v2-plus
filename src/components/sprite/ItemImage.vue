@@ -42,6 +42,8 @@ function calculatedSize() {
     wrapStyle.value += `;border-radius:60px;`
   }
 
+
+
   spriteStyle.value = `position: absolute;transform: scale(${size / 183});
   top: ${(size - 183) / 2}px;left: ${(size - 183) / 2}px;`
 
@@ -60,7 +62,7 @@ onMounted(() => {
 <template>
 
   <div :style="wrapStyle">
-    <div :style="spriteStyle" :class="`bg-${itemId}`">
+    <div :style="spriteStyle" :class="`bg-${itemId} bg-0`">
     </div>
   </div>
 
