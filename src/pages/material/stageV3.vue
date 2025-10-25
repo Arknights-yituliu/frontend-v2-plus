@@ -431,12 +431,13 @@ function handleClick() {
         <img src="/image/website/QR/yituliuQR.png" style="height: 128px; display: inline-block;">
       </div>
       <div id="retire-card" class="stage-card"
-        style="display: none; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1;">
-        <div style="display: flex; gap: 8px;">
-          <ItemImage :item-id="30073" size="60" mobile-size="24"></ItemImage>
-          <ItemImage :item-id="30083" size="60" mobile-size="24"></ItemImage>
+        style="flex-direction: column; align-items: center; justify-content: center; flex-grow: 1;">
+        <div class="flex justify-center">
+          <ItemImage :item-id="'30073'" size="60" mobile-size="24"></ItemImage>
+          <ItemImage :item-id="'30083'" size="60" mobile-size="24"></ItemImage>
         </div>
         <div style="width: 100%; text-align: center; margin-top: 8px;">建议通过活动商店获取</div>
+        <div style="width: 100%; text-align: center; margin-top: 8px;">点击修改材料退环境设置</div>
       </div>
       <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
       <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
