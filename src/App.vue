@@ -116,6 +116,7 @@ onMounted(() => {
   // console.log(OperatorTable)
 })
 
+const buildTime = import.meta.env.BUILD_TIME;
 
 </script>
 
@@ -200,6 +201,7 @@ onMounted(() => {
           <v-footer class="flex justify-center sticky-footer" color="primary">
             <img src="/image/website/备案图标.png" style="width: 20px; height: 20px;margin: 0 12px" alt=""/>
             <a href="https://beian.miit.gov.cn/" style="color: white">豫ICP备2024043594号-1</a>
+            <div style="padding: 0 4px">构建于 {{ buildTime }}</div>
           </v-footer>
         </v-main>
       </v-app>

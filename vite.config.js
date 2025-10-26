@@ -3,6 +3,23 @@ import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import { visualizer } from "rollup-plugin-visualizer";
 
+// 自定义插件，用于生成构建时间
+function buildTimePlugin() {
+    return {
+        name: 'build-time-plugin',
+        config: () => {
+            const now = new Date();
+            const formattedTime = now.toLocaleString(); // 或者使用 dayjs 库精细格式化
+            return {
+                define: {
+                    // 注入环境变量
+                    'import.meta.env.BUILD_TIME': JSON.stringify(formattedTime),
+                },
+            };
+        },
+    };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
     resolve: {
@@ -16,7 +33,8 @@ export default defineConfig({
         visualizer({
             open:false,
             gzipSize:true,
-        })
+        }),
+        buildTimePlugin()
     ],
     server: {
         host: '0.0.0.0'
