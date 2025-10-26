@@ -1009,6 +1009,18 @@
       }
     ]
   },
+  "rare_material_issue_voucher": {
+    "itemId": "rare_material_issue_voucher",
+    "itemName": "稀有材料提货券",
+    "description": "使用后可获得任意一个T5金色材料",
+    "list": [
+      {
+        "itemId": "30165",
+        "itemName": "重相位对映体",
+        "count": 1
+      }
+    ]
+  },
   "itempack_main": {
     "itemId": "itempack_main",
     "itemName": "罗德岛补给箱",
