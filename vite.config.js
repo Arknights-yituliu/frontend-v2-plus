@@ -9,7 +9,7 @@ function buildTimePlugin() {
         name: 'build-time-plugin',
         config: () => {
             const now = new Date();
-            const formattedTime = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}`;
+            const formattedTime = now.toLocaleString()
             return {
                 define: {
                     // 注入环境变量

@@ -1,107 +1,100 @@
-.p-4 {
-  padding: 4px;
-}
+/* 单值 - 所有边相同 */
+.p-0 { padding: 0; }
+.p-4 { padding: 4px; }
+.p-8 { padding: 8px; }
+.p-12 { padding: 12px; }
+.p-16 { padding: 16px; }
+.p-20 { padding: 20px; }
+.p-24 { padding: 24px; }
+.p-28 { padding: 28px; }
+.p-32 { padding: 32px; }
 
-.p-8 {
-  padding: 8px;
-}
+/* 双值 - 垂直 | 水平 */
+.p-0-4 { padding: 0 4px; }
+.p-0-8 { padding: 0 8px; }
+.p-0-12 { padding: 0 12px; }
+.p-0-16 { padding: 0 16px; }
+.p-0-20 { padding: 0 20px; }
+.p-0-24 { padding: 0 24px; }
+.p-0-28 { padding: 0 28px; }
+.p-0-32 { padding: 0 32px; }
 
-.p-12 {
-  padding: 12px;
-}
+.p-4-0 { padding: 4px 0; }
+.p-4-4 { padding: 4px 4px; }
+.p-4-8 { padding: 4px 8px; }
+.p-4-12 { padding: 4px 12px; }
+.p-4-16 { padding: 4px 16px; }
+.p-4-20 { padding: 4px 20px; }
+.p-4-24 { padding: 4px 24px; }
+.p-4-28 { padding: 4px 28px; }
+.p-4-32 { padding: 4px 32px; }
 
-.p-16 {
-  padding: 16px;
-}
+.p-8-0 { padding: 8px 0; }
+.p-8-4 { padding: 8px 4px; }
+.p-8-8 { padding: 8px 8px; }
+.p-8-12 { padding: 8px 12px; }
+.p-8-16 { padding: 8px 16px; }
+.p-8-20 { padding: 8px 20px; }
+.p-8-24 { padding: 8px 24px; }
+.p-8-28 { padding: 8px 28px; }
+.p-8-32 { padding: 8px 32px; }
 
-.p-20 {
-  padding: 20px;
-}
+.p-12-0 { padding: 12px 0; }
+.p-12-4 { padding: 12px 4px; }
+.p-12-8 { padding: 12px 8px; }
+.p-12-12 { padding: 12px 12px; }
+.p-12-16 { padding: 12px 16px; }
+.p-12-20 { padding: 12px 20px; }
+.p-12-24 { padding: 12px 24px; }
+.p-12-28 { padding: 12px 28px; }
+.p-12-32 { padding: 12px 32px; }
 
-.p-24 {
-  padding: 24px;
-}
+.p-16-0 { padding: 16px 0; }
+.p-16-4 { padding: 16px 4px; }
+.p-16-8 { padding: 16px 8px; }
+.p-16-12 { padding: 16px 12px; }
+.p-16-16 { padding: 16px 16px; }
+.p-16-20 { padding: 16px 20px; }
+.p-16-24 { padding: 16px 24px; }
+.p-16-28 { padding: 16px 28px; }
+.p-16-32 { padding: 16px 32px; }
 
-.p-28 {
-  padding: 28px;
-}
+.p-20-0 { padding: 20px 0; }
+.p-20-4 { padding: 20px 4px; }
+.p-20-8 { padding: 20px 8px; }
+.p-20-12 { padding: 20px 12px; }
+.p-20-16 { padding: 20px 16px; }
+.p-20-20 { padding: 20px 20px; }
+.p-20-24 { padding: 20px 24px; }
+.p-20-28 { padding: 20px 28px; }
+.p-20-32 { padding: 20px 32px; }
 
-.p-32 {
-  padding: 32px;
-}
+.p-24-0 { padding: 24px 0; }
+.p-24-4 { padding: 24px 4px; }
+.p-24-8 { padding: 24px 8px; }
+.p-24-12 { padding: 24px 12px; }
+.p-24-16 { padding: 24px 16px; }
+.p-24-20 { padding: 24px 20px; }
+.p-24-24 { padding: 24px 24px; }
+.p-24-28 { padding: 24px 28px; }
+.p-24-32 { padding: 24px 32px; }
 
-.p-36 {
-  padding: 36px;
-}
+.p-28-0 { padding: 28px 0; }
+.p-28-4 { padding: 28px 4px; }
+.p-28-8 { padding: 28px 8px; }
+.p-28-12 { padding: 28px 12px; }
+.p-28-16 { padding: 28px 16px; }
+.p-28-20 { padding: 28px 20px; }
+.p-28-24 { padding: 28px 24px; }
+.p-28-28 { padding: 28px 28px; }
+.p-28-32 { padding: 28px 32px; }
 
-.p-4-0 {
-  padding: 4px 0;
-}
-
-.p-8-0 {
-  padding: 8px 0;
-}
-
-.p-12-0 {
-  padding: 12px 0;
-}
-
-.p-16-0 {
-  padding: 16px 0;
-}
-
-.p-20-0 {
-  padding: 20px 0;
-}
-
-.p-24-0 {
-  padding: 24px 0;
-}
-
-.p-28-0 {
-  padding: 28px 0;
-}
-
-.p-32-0 {
-  padding: 32px 0;
-}
-
-.p-36-0 {
-  padding: 36px 0;
-}
-
-.p-0-4 {
-  padding: 0 4px;
-}
-
-.p-0-8 {
-  padding: 0 8px;
-}
-
-.p-0-12 {
-  padding: 0 12px;
-}
-
-.p-0-16 {
-  padding: 0 16px;
-}
-
-.p-0-20 {
-  padding: 0 20px;
-}
-
-.p-0-24 {
-  padding: 0 24px;
-}
-
-.p-0-28 {
-  padding: 0 28px;
-}
-
-.p-0-32 {
-  padding: 0 32px;
-}
-
-.p-0-36 {
-  padding: 0 36px;
-}
+.p-32-0 { padding: 32px 0; }
+.p-32-4 { padding: 32px 4px; }
+.p-32-8 { padding: 32px 8px; }
+.p-32-12 { padding: 32px 12px; }
+.p-32-16 { padding: 32px 16px; }
+.p-32-20 { padding: 32px 20px; }
+.p-32-24 { padding: 32px 24px; }
+.p-32-28 { padding: 32px 28px; }
+.p-32-32 { padding: 32px 32px; }
