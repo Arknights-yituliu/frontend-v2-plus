@@ -14,7 +14,6 @@ import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import NoticeBoard from "@/components/layout/NoticeBoard.vue";
 import { calculatePackEfficiency } from "@/utils/item/packEfficiency.js";
 import { dateFormat } from "@/utils/dateUtil.js";
-import html2canvas from 'html2canvas'
 
 
 // 当前日期
