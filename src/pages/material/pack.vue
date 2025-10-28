@@ -14,6 +14,7 @@ import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import NoticeBoard from "@/components/layout/NoticeBoard.vue";
 import { calculatePackEfficiency } from "@/utils/item/packEfficiency.js";
 import { dateFormat } from "@/utils/dateUtil.js";
+import html2canvas from 'html2canvas'
 
 
 // 当前日期
@@ -116,8 +117,11 @@ function handleClick(divName) {
  */
 function debugPackEfficiencyLine(){
 
-  if(route.query.debug==="114"){
+  if(route.query.video==="true"){
     forceShow.value = true
+    document.querySelectorAll('.pack-card-container').forEach(el => {
+      el.style.width = '1032px';
+    });
     document.querySelectorAll('.pack-content').forEach(el => {
       el.style.background = '#ffffff'; // 或使用 'white'
     });

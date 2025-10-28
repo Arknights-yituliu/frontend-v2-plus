@@ -125,16 +125,16 @@ function getRemainingDays(endDate, startDate, maxDays = 21) {
 
       <!-- 详情部分 -->
       <div class="pack-content" :id="`${packInfo.id}${id}`">
-        <div class="pack-content-gacha">
-          <ItemImage :item-id="'4002'" :size="40" :mobile-size="30"></ItemImage>
-          <span>X{{ packInfo.originium }}</span>
-          <ItemImage :item-id="'4003'" :size="40" :mobile-size="30"></ItemImage>
-          <span>X{{ packInfo.orundum }}</span>
-          <ItemImage :item-id="'7003'" :size="40" :mobile-size="30"></ItemImage>
-          <span>X{{ packInfo.gachaTicket }}</span>
-          <ItemImage :item-id="'7004'" :size="40" :mobile-size="30"></ItemImage>
-          <span>X{{ packInfo.tenGachaTicket }}</span>
-        </div>
+<!--        <div class="pack-content-gacha">-->
+<!--          <ItemImage :item-id="'4002'" :size="40" :mobile-size="30"></ItemImage>-->
+<!--          <span>X{{ packInfo.originium }}</span>-->
+<!--          <ItemImage :item-id="'4003'" :size="40" :mobile-size="30"></ItemImage>-->
+<!--          <span>X{{ packInfo.orundum }}</span>-->
+<!--          <ItemImage :item-id="'7003'" :size="40" :mobile-size="30"></ItemImage>-->
+<!--          <span>X{{ packInfo.gachaTicket }}</span>-->
+<!--          <ItemImage :item-id="'7004'" :size="40" :mobile-size="30"></ItemImage>-->
+<!--          <span>X{{ packInfo.tenGachaTicket }}</span>-->
+<!--        </div>-->
         <div class="pack-content-material">
           <!-- 新增详情表格取代之前的列表 -->
           <v-table density="compact" style="width: 100%;">
