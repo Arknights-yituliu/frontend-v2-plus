@@ -123,9 +123,8 @@ function debugPackEfficiencyLine() {
       if(element){
         forceShow.value = true
         collectPackInfoVO()
-        console.log(element)
+
         element.style.width = '1032px';
-        element.style.justifyContent = 'center';
 
 
         document.querySelectorAll('.pack-content').forEach(el => {
