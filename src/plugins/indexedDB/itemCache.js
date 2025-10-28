@@ -78,7 +78,12 @@ async function getItemInfoMapCacheByConfig(stageConfig, forceRefresh = false) {
 }
 
 
-
+/**
+ *
+ * @param stageConfig
+ * @param forceRefresh
+ * @returns {Promise<Map<any, any>|any>}
+ */
 async function getItemValueMapCacheByConfig(stageConfig, forceRefresh = false) {
 
     let itemValueMap = new Map()

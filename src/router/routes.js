@@ -472,6 +472,12 @@ const routes = [
         component: () => import('/src/pages/video/sysl3.vue')
     },
     {
+        path: '/video/skland',
+        text: '森空岛作图',
+        display: false,
+        component: () => import('/src/pages/video-material/skland.vue')
+    },
+    {
         path: '/action-table',
         text: '材料统计',
         display: false,
