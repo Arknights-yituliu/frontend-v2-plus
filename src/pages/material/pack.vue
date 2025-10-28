@@ -1,19 +1,19 @@
 <script setup>
 // 依赖引入
 import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
-import { ref, watch, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import {ref, watch, onMounted} from 'vue';
+import {useRoute} from 'vue-router';
 import PackCardContainer from '/src/components/material/PackCardGroup.vue';
 import ModuleHeader from '/src/components/layout/ModuleHeader.vue';
-import { getStageConfig } from "/src/utils/user/userConfig.js";
+import {getStageConfig} from "/src/utils/user/userConfig.js";
 import PackTable from "/src/components/material/PackTable.vue";
 import deepClone from "/src/utils/deepClone.js";
 import '/src/assets/css/material/pack.scss';
 import '/src/assets/css/material/pack.phone.scss';
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import NoticeBoard from "@/components/layout/NoticeBoard.vue";
-import { calculatePackEfficiency } from "@/utils/item/packEfficiency.js";
-import { dateFormat } from "@/utils/dateUtil.js";
+import {calculatePackEfficiency} from "@/utils/item/packEfficiency.js";
+import {dateFormat} from "@/utils/dateUtil.js";
 
 
 // 当前日期
@@ -38,10 +38,10 @@ const isKernelValuable = ref(false)
 // 排序选项
 const sortOption = ref('time') // 默认按上架时间
 const options = [
-  { value: 'time', label: '上架时间' },
-  { value: 'price', label: '价格' },
-  { value: 'efficiency', label: '抽卡性价比' },
-  { value: 'overall', label: '综合性价比' },
+  {value: 'time', label: '上架时间'},
+  {value: 'price', label: '价格'},
+  {value: 'efficiency', label: '抽卡性价比'},
+  {value: 'overall', label: '综合性价比'},
 ]
 
 // 弹窗相关
@@ -114,27 +114,38 @@ function handleClick(divName) {
 /**
  * 仅作为调试礼包效率条用
  */
-function debugPackEfficiencyLine(){
+function debugPackEfficiencyLine() {
 
-  if(route.query.video==="true"){
-    forceShow.value = true
-    document.querySelectorAll('.pack-card-container').forEach(el => {
-      el.style.width = '1032px';
-    });
-    document.querySelectorAll('.pack-content').forEach(el => {
-      el.style.background = '#ffffff'; // 或使用 'white'
-    });
-    document.querySelectorAll('.pack-info').forEach(el => {
-      el.style.boxShadow = 'none';
-    });
-    document.querySelectorAll('.pack-info-countdown').forEach(el => {
-      el.style.display = 'none';
-    });
-    document.querySelectorAll('.pack-content').forEach(el => {
-      el.style.boxShadow = 'none';
-    });
+  if (route.query.video === "true") {
+
+    const interval = setInterval(() => {
+     const element = document.getElementById('activity-pack')
+      if(element){
+        forceShow.value = true
+        collectPackInfoVO()
+        console.log(element)
+        element.style.width = '1032px';
+        element.style.justifyContent = 'center';
+
+
+        document.querySelectorAll('.pack-content').forEach(el => {
+          el.style.background = '#ffffff'; // 或使用 'white'
+        });
+        document.querySelectorAll('.pack-info').forEach(el => {
+          el.style.boxShadow = 'none';
+        });
+        document.querySelectorAll('.pack-info-countdown').forEach(el => {
+          el.style.display = 'none';
+        });
+        document.querySelectorAll('.pack-content').forEach(el => {
+          el.style.boxShadow = 'none';
+        });
+
+        clearInterval( interval)
+      }
+    }, 1000);
+
   }
-
 
 }
 
@@ -148,13 +159,23 @@ function collectPackInfoVO() {
   // 遍历礼包列表，组装到不同分组
   packInfoVOList.forEach(packInfoVO => {
     packInfoVO.lineChartData = [
-      { label: '大月卡', value: 1.57, color: 'rgb(65,147,220)', display: true },
-      { label: '648源石', value: 1.00, color: 'rgb(65,147,220)', display: true },
-      { label: '仅抽卡', value: packInfoVO.drawEfficiency, color: '#F88C20', display: forceShow.value || isDrawOnly.value },
-      { label: '全物品', value: packInfoVO.packEfficiency, color: 'rgb(250, 83, 83)', display: forceShow.value || !isDrawOnly.value },
+      {label: '大月卡', value: 1.57, color: 'rgb(65,147,220)', display: true},
+      {label: '648源石', value: 1.00, color: 'rgb(65,147,220)', display: true},
+      {
+        label: '仅抽卡',
+        value: packInfoVO.drawEfficiency,
+        color: '#F88C20',
+        display: forceShow.value || isDrawOnly.value
+      },
+      {
+        label: '全物品',
+        value: packInfoVO.packEfficiency,
+        color: 'rgb(250, 83, 83)',
+        display: forceShow.value || !isDrawOnly.value
+      },
     ].sort((a, b) => b.value - a.value)
 
-    const { saleType } = packInfoVO
+    const {saleType} = packInfoVO
     if (!packs[saleType]) packs[saleType] = []
 
     // 龙门币单独处理
@@ -176,15 +197,15 @@ function collectPackInfoVO() {
       title: '在售/即将开售的礼包',
       titleEn: 'New Packs',
       tips: ['*在售/即将开售的限时礼包，常驻、半常驻礼包和源石请往下翻'],
-      list: [{ title: '', packs: packs.activity }]
+      list: [{title: '', packs: packs.activity}]
     },
     {
       title: '半常驻礼包',
       titleEn: 'Chips Packs & LMD Packs',
       tips: ['*内容较为固定，规律较为明确的礼包'],
       list: [
-        { title: '职业芯片礼包', packs: packs.chip },
-        { title: '龙门币补给包', packs: packs.lmd },
+        {title: '职业芯片礼包', packs: packs.chip},
+        {title: '龙门币补给包', packs: packs.lmd},
       ]
     },
     {
@@ -192,9 +213,9 @@ function collectPackInfoVO() {
       titleEn: 'Monthly & Weekly & Orundum',
       tips: ['*每月/每周礼包、新人/回归礼包、源石'],
       list: [
-        { title: '每月/每周礼包', packs: [...packs.weekly, ...packs.monthly] },
-        { title: '新人/回归礼包', packs: packs.newbie },
-        { title: '源石/首充源石', packs: [...packs.originium, ...packs.originium2] },
+        {title: '每月/每周礼包', packs: [...packs.weekly, ...packs.monthly]},
+        {title: '新人/回归礼包', packs: packs.newbie},
+        {title: '源石/首充源石', packs: [...packs.originium, ...packs.originium2]},
       ]
     },
   ]
@@ -241,7 +262,6 @@ watch(sortOption, () => {
 // })
 
 
-
 /**
  * 若礼包加载完成，但弹窗显示未满 2 秒，则保证至少显示 2 秒
  */
@@ -257,7 +277,7 @@ watch(fixedPacks, (newVal) => {
       isLoading.value = false
     }
   }
-}, { immediate: true })
+}, {immediate: true})
 
 /**
  * 保存两个性价比开关的值到 localStorage
@@ -289,23 +309,23 @@ const filteredPackMap = ref(new Map)
 
 // 售卖价格区间
 const packSalePriceList = [
-  { label: '0-100RMB', value: '0-100', min: 0, max: 100 },
-  { label: '100-200RMB', value: '100-200', min: 100, max: 200 },
-  { label: '200-648RMB', value: '200-648', min: 200, max: 648 },
+  {label: '0-100RMB', value: '0-100', min: 0, max: 100},
+  {label: '100-200RMB', value: '100-200', min: 100, max: 200},
+  {label: '200-648RMB', value: '200-648', min: 200, max: 648},
 ]
 
 // 包含的礼包标签
 const packTags = [
-  { label: "新人", value: "newbie" },
-  { label: "含有模组块", value: "mod" },
-  { label: "芯片", value: "chip" },
-  { label: "活动礼包", value: "activity" },
-  { label: "周期性礼包", value: "periodically" },
-  { label: "绝版礼包", value: "event" },
-  { label: "含有无法计价之物品", value: "special" },
-  { label: "直升礼包", value: "elite" },
-  { label: "龙门币礼包", value: "lmd" },
-  { label: "定向抽卡类礼包", value: "operator" },
+  {label: "新人", value: "newbie"},
+  {label: "含有模组块", value: "mod"},
+  {label: "芯片", value: "chip"},
+  {label: "活动礼包", value: "activity"},
+  {label: "周期性礼包", value: "periodically"},
+  {label: "绝版礼包", value: "event"},
+  {label: "含有无法计价之物品", value: "special"},
+  {label: "直升礼包", value: "elite"},
+  {label: "龙门币礼包", value: "lmd"},
+  {label: "定向抽卡类礼包", value: "operator"},
 ]
 
 const tagMap = new Map()
@@ -315,13 +335,13 @@ for (const tag of packTags) {
 
 // 售卖价格区间
 const packSaleDateList = [
-  { label: "2019年", value: "2019" },
-  { label: "2020年", value: "2020" },
-  { label: "2021年", value: "2021" },
-  { label: "2022年", value: "2022" },
-  { label: "2023年", value: "2023" },
-  { label: "2024年", value: "2024" },
-  { label: "2025年", value: "2025" },
+  {label: "2019年", value: "2019"},
+  {label: "2020年", value: "2020"},
+  {label: "2021年", value: "2021"},
+  {label: "2022年", value: "2022"},
+  {label: "2023年", value: "2023"},
+  {label: "2024年", value: "2024"},
+  {label: "2025年", value: "2025"},
 ]
 
 
@@ -380,7 +400,7 @@ function filterPacksV2() {
     const tagFlag = packFilterConditions.value.tag.size === 0 || packFilterConditions.value.tag.has(pack.saleType)
     let priceFlag = packFilterConditions.value.price.size === 0
     for (const [k, v] of packFilterConditions.value.price) {
-      const { max, min } = v
+      const {max, min} = v
       if (pack.price >= min && pack.price <= max) {
         priceFlag = true
       }
@@ -415,7 +435,6 @@ function filterPacksV2() {
 }
 
 
-
 /**
  * 页面挂载时，读取开关状态、加载礼包、检测是否需要弹出加载中对话框
  */
@@ -425,6 +444,7 @@ onMounted(() => {
 
   loadingItemValue()
   debugPackEfficiencyLine()
+
 
 })
 
@@ -437,69 +457,72 @@ onMounted(() => {
       <!-- 不会因为筛选改变的礼包 Start -->
       <template v-for="item in fixedPacks" :key="item.titleEn">
 
-        <module-header :title="item.title" :title-en="item.titleEn" :tips="item.tips" />
+        <module-header :title="item.title" :title-en="item.titleEn" :tips="item.tips"/>
         <div v-if="item.titleEn === 'New Packs'">
           <v-chip text="点击图片查看礼包详情" color="deep-orange" class="m-4" @click="handleClick('div1')"></v-chip>
-          <v-chip text="材料按135理智=1源石折合成源石" color="deep-orange" class="m-4" @click="handleClick('div2')"></v-chip>
+          <v-chip text="材料按135理智=1源石折合成源石" color="deep-orange" class="m-4"
+                  @click="handleClick('div2')"></v-chip>
           <v-chip text="中坚寻访：1蓝抽也记为1抽，但价值视为0.837抽" color="deep-orange" class="m-4"></v-chip>
         </div>
 
         <div class="flex flex-wrap">
           <!-- 中坚寻访按钮 -->
           <v-btn v-if="item.titleEn === 'New Packs'" :color="isKernelValuable ? 'primary' : 'grey'"
-            :variant="isKernelValuable ? 'flat' : 'outlined'" @click="changeKernelValue()"
-            style="height: 36px;margin: 6px 4px;">
+                 :variant="isKernelValuable ? 'flat' : 'outlined'" @click="changeKernelValue()"
+                 style="height: 36px;margin: 6px 4px;">
             需要中坚寻访
           </v-btn>
 
           <!-- 只看抽卡按钮 -->
           <v-btn v-if="item.titleEn === 'New Packs'" :color="isDrawOnly ? 'primary' : 'grey'"
-            :variant="isDrawOnly ? 'flat' : 'outlined'" @click="displayPackEfficiency()"
-            style="height: 36px;margin: 6px 4px;">
+                 :variant="isDrawOnly ? 'flat' : 'outlined'" @click="displayPackEfficiency()"
+                 style="height: 36px;margin: 6px 4px;">
             只看抽卡
           </v-btn>
 
           <!-- 四选一排序按钮组 -->
           <v-btn-toggle v-if="item.titleEn === 'New Packs'" v-model="sortOption" mandatory class="m-0-8"
-            style="height: 36px;margin: 6px 4px;">
+                        style="height: 36px;margin: 6px 4px;">
             <v-btn v-for="option in options" :key="option.value" :value="option.value"
-              :color="sortOption === option.value ? 'primary' : 'grey'"
-              :variant="sortOption === option.value ? 'flat' : 'outlined'">
+                   :color="sortOption === option.value ? 'primary' : 'grey'"
+                   :variant="sortOption === option.value ? 'flat' : 'outlined'">
               {{ option.label }}
             </v-btn>
           </v-btn-toggle>
         </div>
         <template v-for="(packInfo, packIndex) in item.list" :key="packIndex">
           <h2 style="margin: 12px;" v-if="packInfo.title">{{ packInfo.title }}</h2>
-          <v-chip v-if="packInfo.title === '新人/回归礼包'" text="由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”"
-            color="red" class="m-4"></v-chip>
-          <v-chip v-if="packInfo.title === '源石/首充源石'" text="每年周年庆会重置源石首充" color="red" class="m-4"></v-chip>
-          <PackCardContainer v-model="packInfo.packs" />
+          <v-chip v-if="packInfo.title === '新人/回归礼包'"
+                  text="由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”"
+                  color="red" class="m-4"></v-chip>
+          <v-chip v-if="packInfo.title === '源石/首充源石'" text="每年周年庆会重置源石首充" color="red"
+                  class="m-4"></v-chip>
+          <PackCardContainer v-model="packInfo.packs" id="activity-pack"/>
         </template>
       </template>
       <!-- 不会因为筛选改变的礼包 End -->
 
       <!-- 历史礼包 Start -->
-      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']" />
+      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']"/>
 
       <div class="m-4">
         年份：
         <v-btn color="primary" v-for="(year, index) in packSaleDateList" :key="index"
-          :variant="buttonActive('date', year.value)" @click="choosePackOptionV2('date', year)" class="m-4">
+               :variant="buttonActive('date', year.value)" @click="choosePackOptionV2('date', year)" class="m-4">
           {{ year.label }}
         </v-btn>
       </div>
       <div class="m-4">
         价格：
         <v-btn color="primary" v-for="(item, index) in packSalePriceList" :key="index"
-          :variant="buttonActive('price', item.value)" @click="choosePackOptionV2('price', item)" class="m-4">
+               :variant="buttonActive('price', item.value)" @click="choosePackOptionV2('price', item)" class="m-4">
           {{ item.label }}
         </v-btn>
       </div>
       <div class="m-4">
         类型：
         <v-btn color="primary" v-for="(tag, index) in packTags" :key="index" :variant="buttonActive('tag', tag.value)"
-          @click="choosePackOptionV2('tag', tag)" class="m-4">
+               @click="choosePackOptionV2('tag', tag)" class="m-4">
           {{ tag.label }}
         </v-btn>
       </div>
@@ -507,13 +530,14 @@ onMounted(() => {
       <!-- 按年份展示筛选礼包 -->
       <template v-for="collect in packCollect">
         <h2 style="margin: 12px;">{{ collect.year }}年</h2>
-        <PackCardContainer :modelValue="collect.list" />
+        <PackCardContainer :modelValue="collect.list"/>
       </template>
 
       <!-- 礼包性价比总表 Start -->
-      <module-header title="礼包性价比总表" title-en="Packs Value" />
+      <module-header title="礼包性价比总表" title-en="Packs Value"/>
 
-      <v-chip text="由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。" color="red" class="m-4"></v-chip>
+      <v-chip text="由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。"
+              color="red" class="m-4"></v-chip>
       <v-chip text="性价比基准为648￥源石，移动端可左右滑动表格" color="red" class="m-4"></v-chip>
 
       <PackTable v-model="packInfoVOListOnSale">
