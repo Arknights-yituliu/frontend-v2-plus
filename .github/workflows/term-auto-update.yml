@@ -19,6 +19,9 @@ env:
 jobs:
   process-updates:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
     steps:
       - name: 检出本地仓库
         uses: actions/checkout@v4
@@ -58,7 +61,7 @@ jobs:
             echo "目标仓库没有更新。正在退出。"
           fi
 
-      - name: 从ArknightsGameData仓库下载特定文件
+      - name: 从ArknightsGameData仓库下载gamedata_const.json文件
         if: steps.check-update.outputs.needs_update == 'true'
         run: |
           # 从ArknightsGameData仓库的原始URL下载文件
