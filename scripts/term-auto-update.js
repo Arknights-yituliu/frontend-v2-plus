@@ -1,6 +1,6 @@
 // 自动更新术语解释文件脚本
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 // 获取命令行参数中的输入路径和输出路径
 // 输入路径：ArknightsGameData仓库的术语解释文件路径
