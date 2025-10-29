@@ -49,16 +49,22 @@ jobs:
       - name: 检查ArknightsGameData仓库是否有新更新
         id: check-update
         run: |
-          # 比较时间戳（转换为从纪元开始的秒数）
-          TARGET_EPOCH=$(date -d "${{ steps.target-date.outputs.target_date }}" +%s)
-          LAST_EPOCH=$(date -d "${{ steps.last-updated.outputs.last_updated }}" +%s)
-          
-          if [ $TARGET_EPOCH -gt $LAST_EPOCH ]; then
+          # 如果是手动触发，忽略日期限制，直接处理
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "needs_update=true" >> $GITHUB_OUTPUT
-            echo "目标仓库有更新。正在处理..."
+            echo "手动触发：忽略上次处理日期限制，强制处理..."
           else
-            echo "needs_update=false" >> $GITHUB_OUTPUT
-            echo "目标仓库没有更新。正在退出。"
+            # 比较时间戳（转换为从纪元开始的秒数）
+            TARGET_EPOCH=$(date -d "${{ steps.target-date.outputs.target_date }}" +%s)
+            LAST_EPOCH=$(date -d "${{ steps.last-updated.outputs.last_updated }}" +%s)
+            
+            if [ $TARGET_EPOCH -gt $LAST_EPOCH ]; then
+              echo "needs_update=true" >> $GITHUB_OUTPUT
+              echo "目标仓库有更新。正在处理..."
+            else
+              echo "needs_update=false" >> $GITHUB_OUTPUT
+              echo "目标仓库没有更新。正在退出。"
+            fi
           fi
 
       - name: 从ArknightsGameData仓库下载gamedata_const.json文件
