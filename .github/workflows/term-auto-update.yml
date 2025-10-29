@@ -105,6 +105,6 @@ jobs:
           # 暂存更改（处理后的文件 + 时间戳跟踪器）
           git add "${{ env.LOCAL_OUTPUT_PATH }}" "${{ env.LAST_PROCESSED_PATH }}"
           # 用描述性消息提交
-          git commit -m "自动更新术语解释文件 $FORMATTED_DATE"
+          git commit -m "auto-update(基建技能一览): 自动更新术语解释文件 $FORMATTED_DATE"
           # 推送到远程分支
           git push origin ${{ github.ref_name }}
