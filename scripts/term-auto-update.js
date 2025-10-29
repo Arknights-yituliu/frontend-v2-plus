@@ -137,8 +137,8 @@ if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
 
-// 将处理后的文件内容写入本地输出路径
-const processedData = JSON.stringify(termDescriptionMap, null, 2);
+// 将处理后的文件内容写入本地输出路径（不包含换行符）
+const processedData = JSON.stringify(termDescriptionMap);
 fs.writeFileSync(outputPath, processedData, 'utf8');
 
 console.log(`转换成功！已将 ${inputPath} 中的内容进行格式化并保存到 ${outputPath}`);
