@@ -2,6 +2,8 @@ stats.html
 
 # Logs
 logs
+!scripts/logs/
+!scripts/logs/term_last_processed
 *.log
 npm-debug.log*
 yarn-debug.log*
