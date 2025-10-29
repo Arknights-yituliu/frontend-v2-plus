@@ -1,0 +1,99 @@
+name: 自动更新基建技能术语表
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 每天午夜UTC时间运行
+  workflow_dispatch:  # 允许手动触发
+
+env:
+  TARGET_OWNER: "Kengxxiao"        # 目标仓库的所有者
+  TARGET_REPO: "ArknightsGameData"          # 目标仓库的名称
+  TARGET_BRANCH: "master"               # 要检查的目标仓库分支
+  TARGET_FILE_PATH: "zh_CN/gamedata/excel/gamedata_const.json"  # 要从目标仓库下载的文件路径
+  LOCAL_OUTPUT_PATH: "src/static/json/build/term_description.json"   # 在您的仓库中保存处理后文件的路径
+  JS_SCRIPT_PATH: "scripts/term-auto-update.js"         # 仓库中JS处理脚本的路径
+  LAST_PROCESSED_PATH: "scripts/logs/term_last_processed"  # 用于跟踪上次处理日期的文件路径
+  COMMIT_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"  # 提交用的邮箱
+  COMMIT_NAME: "基建术语更新小助手"                # 提交用的名称
+
+jobs:
+  process-updates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出本地仓库
+        uses: actions/checkout@v4
+
+      - name: 获取ArknightsGameData仓库的最新提交日期
+        id: target-date
+        run: |
+          # 通过GitHub API获取目标仓库的最新提交信息
+          RESPONSE=$(curl -s "https://api.github.com/repos/${{ env.TARGET_OWNER }}/${{ env.TARGET_REPO }}/commits/${{ env.TARGET_BRANCH }}")
+          # 提取提交者日期（ISO 8601格式）
+          TARGET_DATE=$(echo "$RESPONSE" | jq -r '.commit.committer.date')
+          echo "target_date=$TARGET_DATE" >> $GITHUB_OUTPUT
+
+      - name: 读取上次处理日期
+        id: last-updated
+        run: |
+          # 使用文件跟踪程序上次处理更新的时间
+          if [ -f "${{ env.LAST_PROCESSED_PATH }}" ]; then
+            LAST_UPDATED=$(cat "${{ env.LAST_PROCESSED_PATH }}")
+          else
+            LAST_UPDATED="1970-01-01T00:00:00Z"  # 如果没有历史记录，默认为纪元时间
+          fi
+          echo "last_updated=$LAST_UPDATED" >> $GITHUB_OUTPUT
+
+      - name: 检查ArknightsGameData仓库是否有新更新
+        id: check-update
+        run: |
+          # 比较时间戳（转换为从纪元开始的秒数）
+          TARGET_EPOCH=$(date -d "${{ steps.target-date.outputs.target_date }}" +%s)
+          LAST_EPOCH=$(date -d "${{ steps.last-updated.outputs.last_updated }}" +%s)
+          
+          if [ $TARGET_EPOCH -gt $LAST_EPOCH ]; then
+            echo "needs_update=true" >> $GITHUB_OUTPUT
+            echo "目标仓库有更新。正在处理..."
+          else
+            echo "needs_update=false" >> $GITHUB_OUTPUT
+            echo "目标仓库没有更新。正在退出。"
+          fi
+
+      - name: 从ArknightsGameData仓库下载特定文件
+        if: steps.check-update.outputs.needs_update == 'true'
+        run: |
+          # 从ArknightsGameData仓库的原始URL下载文件
+          RAW_URL="https://raw.githubusercontent.com/${{ env.TARGET_OWNER }}/${{ env.TARGET_REPO }}/${{ env.TARGET_BRANCH }}/${{ env.TARGET_FILE_PATH }}"
+          curl -sL "$RAW_URL" -o "temp-target-file.txt"  # 保存到临时文件
+
+      - name: 设置Node.js环境
+        if: steps.check-update.outputs.needs_update == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 运行term-auto-update.js处理文件
+        if: steps.check-update.outputs.needs_update == 'true'
+        run: |
+          # 执行脚本（输入：临时文件，输出：本地路径，本地路径一定存在）
+          node ${{ env.JS_SCRIPT_PATH }} "temp-target-file.txt" "${{ env.LOCAL_OUTPUT_PATH }}"
+
+      - name: 更新上次处理时间戳
+        if: steps.check-update.outputs.needs_update == 'true'
+        run: |
+          # 保存ArknightsGameData仓库的最新提交日期以跟踪未来更新
+          echo "${{ steps.target-date.outputs.target_date }}" > "${{ env.LAST_PROCESSED_PATH }}"
+
+      - name: 提交并推送更改
+        if: steps.check-update.outputs.needs_update == 'true'
+        run: |
+          # 配置Git的邮箱/名称
+          git config --global user.email "${{ env.COMMIT_EMAIL }}"
+          git config --global user.name "${{ env.COMMIT_NAME }}"
+          # 格式化时间戳为yyyy-MM-dd HH:mm:ss格式
+          FORMATTED_DATE=$(date -d "${{ steps.target-date.outputs.target_date }}" +"%Y-%m-%d %H:%M:%S")
+          # 暂存更改（处理后的文件 + 时间戳跟踪器）
+          git add "${{ env.LOCAL_OUTPUT_PATH }}" "${{ env.LAST_PROCESSED_PATH }}"
+          # 用描述性消息提交
+          git commit -m "自动更新术语解释文件 $FORMATTED_DATE"
+          # 推送到远程分支
+          git push origin ${{ github.ref_name }}
