@@ -83,6 +83,8 @@ jobs:
       - name: 更新上次处理时间戳
         if: steps.check-update.outputs.needs_update == 'true'
         run: |
+          # 确保目录存在
+          mkdir -p "$(dirname "${{ env.LAST_PROCESSED_PATH }}")"
           # 保存ArknightsGameData仓库的最新提交日期以跟踪未来更新
           echo "${{ steps.target-date.outputs.target_date }}" > "${{ env.LAST_PROCESSED_PATH }}"
 
