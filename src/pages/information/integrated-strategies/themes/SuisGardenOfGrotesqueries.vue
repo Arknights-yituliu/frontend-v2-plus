@@ -50,11 +50,11 @@ import Battle from '@/components/information/Battle.vue'
               <div>
                 进入岁兽残识，
                 <el-tooltip
-                    content="在距离探索中心更远的传说节点更可能遭遇此事件"
+                    content="在距离探索中心更远的位置更可能碰到此节点"
                     effect="light"
                     placement="top"
                 >
-                  <el-text tag="ins">在传说节点触发事件</el-text>
+                  <el-text tag="ins">在抉择节点触发事件</el-text>
                 </el-tooltip>
                 <el-link
                     href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%A6%86%E8%9D%B6"
