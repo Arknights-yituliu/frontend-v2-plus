@@ -5,7 +5,9 @@ import itemAPI from "/src/api/materialV5.js";
 import {onMounted, ref} from "vue";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";
-import {formatNumber} from "../../utils/format.js";
+import {formatNumber} from "/src/utils/format.js";
+import { getStageData } from '/src/utils/item/stageEfficiencyCal.js'
+
 
 const stageConfig = getStageConfig()
 
@@ -27,7 +29,7 @@ const actStoreData = ref([])
 
 function formatActivityStoreData(){
   itemAPI.listActivityStore().then(response => {
-
+     console.log(response)
     // 遍历活动列表
     actStoreData.value =   _format(response.data[0].actStore,1,0.3)
   })
@@ -65,6 +67,26 @@ function formatActivityStoreData(){
   }
 }
 
+const orundumRecommendedStageList = ref([])
+
+// 获取关卡推荐数据
+function getStageResult() {
+  const stageConfig = getStageConfig()
+  getStageData(stageConfig).then(response => {
+
+    const { recommendedStage, orundumRecommendedStageVO, historyActStage } = response
+
+    // console.log(JSON.stringify(response))
+    console.log(orundumRecommendedStageVO)
+
+    const list =  orundumRecommendedStageVO.filter(item => item.stageType==='ACT'||item.stageType==='ACT_REP')
+    list.push(orundumRecommendedStageVO[0],orundumRecommendedStageVO[1])
+    orundumRecommendedStageList.value = list
+    console.log(list)
+  })
+
+}
+
 function activityStoreComputed() {
   itemAPI.listActivityStore().then(response => {
     actStoreList.value = response.data
@@ -98,11 +120,14 @@ function activityStoreComputed() {
 
 onMounted(() => {
   getItemValueMap()
+  getStageResult()
 })
 
 </script>
 
 <template>
+
+
 
   <div class="skland-bg">
     <div class="skland-card-title">活动商店性价比</div>
@@ -117,11 +142,56 @@ onMounted(() => {
 
      <p class="skland-activity-store-tip"> 素材图片下方数字含义：物品价值/代币</p>
 
-  </div>
 
+
+
+  <table class="orundum-table">
+    <tr>
+      <td>
+        关卡
+      </td>
+      <td>
+        每理智可产出玉
+      </td>
+      <td>
+        每搓1抽消耗龙门币
+      </td>
+      <td>
+        搓玉效率
+      </td>
+      <td>
+        关卡效率
+      </td>
+    </tr>
+    <tr v-for="item in orundumRecommendedStageList">
+      <td>
+         {{item.stageCode}}
+      </td>
+      <td>
+        <div class="flex align-center">
+        <item-image :item-id="'4003'" size="40"></item-image> X {{formatNumber(item.orundumPerAp,2)}}
+        </div>
+      </td>
+      <td>
+        <div class="flex align-center">
+          <item-image :item-id="'4001'" size="40"></item-image> X {{formatNumber(item.lmdcost,2)}}万
+        </div>
+      </td>
+      <td>
+        {{formatNumber(item.orundumPerApEfficiency*100,1)}}%
+      </td>
+      <td>
+        {{formatNumber(item.stageEfficiency*100,1)}}%
+      </td>
+    </tr>
+  </table>
+  </div>
 </template>
 
 <style scoped>
+
+
+
 .skland-bg {
   --c-primary-color:#000fc4;
   --c-secondary-color: #f8f8f8;
@@ -144,7 +214,7 @@ onMounted(() => {
 
 .skland-card{
   margin:8px 0 0 20px;
-  border: 4px solid var(--c-primary-color);
+  width: 800px;
   border-radius: 12px;
 }
 
@@ -152,11 +222,22 @@ onMounted(() => {
 
 }
 .skland-activity-store-line{
+
   padding: 12px;
-  border-bottom:1px solid var(--c-primary-color);
+  border-bottom:2px solid var(--c-primary-color);
 
 }
 
+.orundum-table{
+  background-color: rgba(0,0,0,0);
+  border-collapse: collapse;
+  font-size: 18px;
+  font-weight: bolder;
+  td{
+    padding: 4px 12px;
+    border: 2px solid var(--c-primary-color);
+  }
+}
 
 .skland-activity-store-item{
   margin: 0 12px;
