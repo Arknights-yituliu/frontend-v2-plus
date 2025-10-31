@@ -20,6 +20,10 @@ const props = defineProps({
   mobileSize: {
     type: Number,
     default: 32
+  },
+  fallbackImage: {
+    type: Boolean,
+    default: false
   }
 
 });
@@ -62,7 +66,7 @@ onMounted(() => {
 <template>
 
   <div :style="wrapStyle">
-    <div :style="spriteStyle" :class="`bg-${itemId} bg-0`">
+    <div :style="spriteStyle" :class="`bg-${itemId} ${fallbackImage?'bg-0':''}`">
     </div>
   </div>
 
