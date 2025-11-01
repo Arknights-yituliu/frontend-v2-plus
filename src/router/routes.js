@@ -472,6 +472,12 @@ const routes = [
         component: () => import('/src/pages/video/sysl3.vue')
     },
     {
+        path: '/video/elite',
+        text: '动态-专精精二性价比',
+        display: false,
+        component: () => import('/src/pages/video-material/elite/elite.vue')
+    },
+    {
         path: '/video/skland',
         text: '森空岛作图',
         display: false,
