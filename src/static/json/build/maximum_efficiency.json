@@ -1,5 +1,17 @@
 [
   {
+    "name": "凛御银灰",
+    "profession": "先锋",
+    "max_efficiency": 0.8,
+    "conditions": {
+      "target_profession": "先锋",
+      "skill_name": "先驱者共识",
+      "mastery_level": 3
+    },
+    "skill_name": "进驻训练室协助位时，先锋干员的专精技能训练速度+30%，如果本次训练专精技能至3级，则训练速度额外+50%",
+    "charId": "char_1045_svash2"
+  },
+  {
     "name": "聆音",
     "profession": "近卫",
     "max_efficiency": 0.3,

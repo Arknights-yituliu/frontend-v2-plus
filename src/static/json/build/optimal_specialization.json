@@ -237,11 +237,11 @@
         },
         "specialization_3": {
           "best_assistant": {
-            "name": "嵯峨",
-            "efficiency": 0.6,
-            "skill_name": "入世",
-            "description": "进驻训练室协助位时，先锋干员的专精技能训练速度+60%",
-            "charId": "char_362_saga"
+            "name": "凛御银灰",
+            "efficiency": 0.8,
+            "skill_name": "先驱者共识",
+            "description": "进驻训练室协助位时，先锋干员的专精技能训练速度+30%，如果本次训练专精技能至3级，则训练速度额外+50%",
+            "charId": "char_1045_svash2"
           }
         }
       }
