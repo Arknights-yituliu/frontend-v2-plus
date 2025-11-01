@@ -22,9 +22,9 @@ console.log(charIdMap.value.get("溯光星源"))
         <!--        <OperatorAvatar :char-id="charIdMap.get(item.name)" size="160" ></OperatorAvatar>-->
       </div>
 
-      <table class="update-elite-table">
+      <table class="update-elite-table" :class="`tr-bg-${item.rarity}`">
         <tbody>
-        <tr class="tr-1">
+        <tr >
           <td style="width: 280px">
             {{ item.name }}
           </td>
@@ -41,7 +41,7 @@ console.log(charIdMap.value.get("溯光星源"))
             三技能专三
           </td>
         </tr>
-        <tr class="tr-2">
+        <tr >
           <td>
             理智消耗
           </td>
@@ -58,7 +58,7 @@ console.log(charIdMap.value.get("溯光星源"))
             {{ item.skill3.cost }}
           </td>
         </tr>
-        <tr class="tr-1">
+        <tr >
           <td>
             同星级消耗排名
           </td>
@@ -116,6 +116,18 @@ console.log(charIdMap.value.get("溯光星源"))
   display: flex;
   align-items: center;
   padding: 8px;
+
+  .tr-bg-6{
+    background: linear-gradient(to bottom, #ffa84c, #FFFFFF);
+  }
+
+  .tr-bg-5{
+    background: linear-gradient(to bottom, #ffe45c, #FFFFFF);
+  }
+
+  .tr-bg-4{
+    background: linear-gradient(to bottom, #cccccc, #FFFFFF);
+  }
 }
 
 .update-avatar {
@@ -133,6 +145,8 @@ console.log(charIdMap.value.get("溯光星源"))
     padding: 12px 4px;
     border: 1px solid #ffffff;
   }
+
+
 
   .tr-1 {
     background-color: #e7f2ff;
