@@ -55,6 +55,10 @@ const defaultConfig = {
             itemId: "30083",  // 轻锰矿
             itemValue: 2.16,
         },
+        {
+            itemId: "30093",  // 研磨石
+            itemValue: 2.52,
+        },
     ],
 
     // 加工站策略

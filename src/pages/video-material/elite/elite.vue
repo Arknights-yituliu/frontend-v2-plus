@@ -18,14 +18,14 @@ console.log(charIdMap.value.get("溯光星源"))
     <img alt="" src="/image/video/elite20251101-1.jpg" style="width: 1280px">
     <div class="update-elite-card" v-for="item in eliteData">
       <div class="update-avatar">
-        <img alt="" :src="`https://cos.yituliu.cn/image2/avatar/${charIdMap.get(item.name)}.png`" style="width: 170px">
+        <img alt="" :src="`https://cos.yituliu.cn/image2/avatar/${charIdMap.get(item.name)}.png`" style="width: 190px">
         <!--        <OperatorAvatar :char-id="charIdMap.get(item.name)" size="160" ></OperatorAvatar>-->
       </div>
 
       <table class="update-elite-table">
         <tbody>
         <tr class="tr-1">
-          <td>
+          <td style="width: 280px">
             {{ item.name }}
           </td>
           <td>
@@ -60,7 +60,7 @@ console.log(charIdMap.value.get("溯光星源"))
         </tr>
         <tr class="tr-1">
           <td>
-            消耗排名
+            同星级消耗排名
           </td>
           <td>
             {{ item.elite.rank }}
@@ -125,12 +125,12 @@ console.log(charIdMap.value.get("溯光星源"))
 
 .update-elite-table {
   border-collapse: collapse;
-  font-size: 32px;
+  font-size: 28px;
   text-align: center;
 
   td {
-    width: 250px;
-    padding: 4px;
+    width: 240px;
+    padding: 12px 4px;
     border: 1px solid #ffffff;
   }
 
