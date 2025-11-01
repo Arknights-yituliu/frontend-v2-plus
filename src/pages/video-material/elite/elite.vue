@@ -6,8 +6,8 @@ import {ref} from "vue";
 
 const charIdMap = ref(new Map())
 
-for(const charId in operatorTableV2){
-  charIdMap.value.set(operatorTableV2[charId].name,charId)
+for (const charId in operatorTableV2) {
+  charIdMap.value.set(operatorTableV2[charId].name, charId)
 }
 console.log(charIdMap.value.get("溯光星源"))
 </script>
@@ -15,14 +15,14 @@ console.log(charIdMap.value.get("溯光星源"))
 <template>
 
   <div class="update-bg">
-    <img alt="" src="/image/video/elite20251101.jpg" style="width: 1440px">
+    <img alt="" src="/image/video/elite20251101-1.jpg" style="width: 1280px">
     <div class="update-elite-card" v-for="item in eliteData">
       <div class="update-avatar">
         <img alt="" :src="`https://cos.yituliu.cn/image2/avatar/${charIdMap.get(item.name)}.png`" style="width: 170px">
-<!--        <OperatorAvatar :char-id="charIdMap.get(item.name)" size="160" ></OperatorAvatar>-->
+        <!--        <OperatorAvatar :char-id="charIdMap.get(item.name)" size="160" ></OperatorAvatar>-->
       </div>
 
-      <table class="update-elite-table" >
+      <table class="update-elite-table">
         <tbody>
         <tr class="tr-1">
           <td>
@@ -78,6 +78,28 @@ console.log(charIdMap.value.get("溯光星源"))
         </tbody>
       </table>
     </div>
+    <div class="update-footer">
+      <table class="update-footer-table">
+        <tbody>
+        <tr>
+          <td>数据源：</td>
+          <td>明日方舟一图流</td>
+          <td>https://ark.yituliu.cn</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>企鹅物流数据统计</td>
+          <td>https://penguin-stats.cn</td>
+        </tr>
+        <tr>
+          <td>数据整理：</td>
+          <td>逻辑元LogicalByte@Bilibili</td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+      <img src="/image/video/cq.png" alt="" style="width: 180px;margin: 0 0 0 60px">
+    </div>
 
   </div>
 
@@ -86,7 +108,7 @@ console.log(charIdMap.value.get("溯光星源"))
 <style>
 
 .update-bg {
-  width: 1440px;
+  width: 1280px;
   background-color: #f8fcff;
 }
 
@@ -96,26 +118,40 @@ console.log(charIdMap.value.get("溯光星源"))
   padding: 8px;
 }
 
-.update-avatar{
+.update-avatar {
   padding: 4px;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.54);
 }
 
-.update-elite-table{
+.update-elite-table {
   border-collapse: collapse;
   font-size: 32px;
   text-align: center;
-  td{
-    width:250px;
+
+  td {
+    width: 250px;
     padding: 4px;
     border: 1px solid #ffffff;
   }
-  .tr-1{
-        background-color: #e7f2ff;
+
+  .tr-1 {
+    background-color: #e7f2ff;
   }
-  .tr-2{
+
+  .tr-2 {
     background-color: #aaccfc;
   }
+}
+
+.update-footer {
+  display: flex;
+  align-items: center;
+  background-color: #DB895E;
+}
+
+.update-footer-table{
+  font-size: 36px;
+  color:white;
 }
 
 </style>
