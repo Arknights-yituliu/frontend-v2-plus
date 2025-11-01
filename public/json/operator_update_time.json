@@ -1,4 +1,38 @@
 {
+  "char_1045_svash2": {
+    "updateTime": "2025/11/01 12:00:00",
+    "obtainApproach": "限定干员",
+    "name": "凛御银灰"
+  },
+  "char_1046_sbell2": {
+    "updateTime": "2025/11/01 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "圣聆初雪"
+  },
+  "char_1047_halo2  ": {
+    "updateTime": "2025/11/01 12:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "溯光星源"
+  },
+  "char_4211_snhunt ": {
+    "updateTime": "2025/11/01 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "雪猎"
+  },
+  "char_394_hadiya": {
+    "updateTime": "2025/11/01 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "哈蒂娅"
+  },
+  "char_4051_akkord": {
+    "updateTime": "2025/11/01 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "协律"
+  },
+
+
+
+
   "char_4204_mantra": {
     "updateTime": "2025/10/09 12:00:00",
     "obtainApproach": "常驻干员",

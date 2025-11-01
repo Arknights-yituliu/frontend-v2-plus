@@ -31,7 +31,7 @@ function formatActivityStoreData(){
   itemAPI.listActivityStore().then(response => {
      console.log(response)
     // 遍历活动列表
-    actStoreData.value =   _format(response.data[0].actStore,1,0.3)
+    actStoreData.value =   _format(response.data[0].actStore,1,0.5)
   })
 
   function _format(data,base,tier){
@@ -81,6 +81,7 @@ function getStageResult() {
 
     const list =  orundumRecommendedStageVO.filter(item => item.stageType==='ACT'||item.stageType==='ACT_REP')
     list.push(orundumRecommendedStageVO[0],orundumRecommendedStageVO[1])
+
     orundumRecommendedStageList.value = list
     console.log(list)
   })
@@ -131,11 +132,25 @@ onMounted(() => {
 
   <div class="skland-bg">
     <div class="skland-card-title">活动商店性价比</div>
-    <div class="skland-card">
-      <div v-for="(list,index) in actStoreData" class="flex flex-wrap skland-activity-store-line">
-        <div v-for="item in list" class="skland-activity-store-item">
-          <ItemImage :item-id="item.itemId" size="80"></ItemImage>
-          <div class="skland-activity-store-item-ppr" :class="`skland-t${5-index}`">{{formatNumber(item.itemPPR,2) }}</div>
+    <div class="skland-store-card">
+      <div v-for="(list,index) in actStoreData" class="flex flex-wrap">
+        <div v-for="singleItem in list" class="skland-activity-store-good" :class="`skland-activity-store-good-area-${5-index}`">
+<!--          <ItemImage :item-id="item.itemId" size="80"></ItemImage>-->
+<!--          <div class="skland-activity-store-item-ppr" :class="`skland-t${5-index}`">{{formatNumber(item.itemPPR,2) }}</div>-->
+
+            <div class="skland-activity-store-good-sprite">
+              <div :class="`bg-${singleItem.itemId}`"></div>
+            </div>
+            <div class="skland-activity-store-good-info">
+              <span class="skland-activity-store-good-name">{{ singleItem.itemName }}</span>
+              <span class="skland-activity-store-good-efficiency"
+                    :class="`skland-t${5-index}`">
+                {{formatNumber(singleItem.itemPPR,2) }}
+              </span>
+              <span class="skland-activity-store-good-price">{{ singleItem.itemPrice }}代币</span>
+            </div>
+            <!-- </div> -->
+
         </div>
       </div>
     </div>
@@ -184,6 +199,27 @@ onMounted(() => {
         {{formatNumber(item.stageEfficiency*100,1)}}%
       </td>
     </tr>
+    <tr v-for="item in orundumRecommendedStageList">
+      <td>
+        OS-4
+      </td>
+      <td>
+        <div class="flex align-center">
+          <item-image :item-id="'4003'" size="40"></item-image> X {{formatNumber(item.orundumPerAp,2)}}
+        </div>
+      </td>
+      <td>
+        <div class="flex align-center">
+          <item-image :item-id="'4001'" size="40"></item-image> X {{formatNumber(item.lmdcost,2)}}万
+        </div>
+      </td>
+      <td>
+        {{formatNumber(item.orundumPerApEfficiency*100,1)}}%
+      </td>
+      <td>
+        {{formatNumber(item.stageEfficiency*100,1)}}%
+      </td>
+    </tr>
   </table>
   </div>
 </template>
@@ -199,7 +235,7 @@ onMounted(() => {
   width: 1080px;
   padding: 16px 0;
   box-sizing: border-box;
-  background-color: var(--c-secondary-color);
+  //background-color: var(--c-secondary-color);
 }
 
 .skland-card-title {
@@ -217,6 +253,99 @@ onMounted(() => {
   width: 800px;
   border-radius: 12px;
 }
+
+
+.skland-store-card{
+  padding: 20px;
+  width: 1000px;
+}
+
+.skland-activity-store-good{
+  border-radius: 8px;
+  border: 0px solid rgb(235, 238, 245);
+  background-color: rgba(255, 253, 253, 0.08);
+  overflow: hidden;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  margin: 3px;
+  width: 180px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  border-left-width: 4px;
+  border-left-style: solid;
+  box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.skland-activity-store-good-sprite {
+  width: 90px;
+  height: 90px;
+  position: relative;
+}
+
+.skland-activity-store-good-sprite div {
+  position: absolute;
+  transform: scale(calc(90 / 183));
+  top: calc((-183px + 90px) / 2);
+  left: calc((-183px + 90px) / 2);
+}
+
+.skland-activity-store-good-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  height: 100%;
+  width: 90px;
+  text-align: center;
+  box-sizing: border-box;
+
+}
+
+.skland-activity-store-good-name,
+.skland-activity-store-good-price {
+  color: gray;
+  font-size: 12px;
+  display: block;
+  width: 100%;
+}
+
+.skland-activity-store-good-efficiency {
+  font-size: 28px;
+  font-weight: bolder;
+  line-height: 28px;
+}
+
+.skland-activity-store-good-area-0 {
+  border-left-color: #ff0000;
+}
+
+.skland-activity-store-good-area-5 {
+  border-left-color: #e85d06;
+}
+
+.skland-activity-store-good-area-4 {
+  border-left-color: #a335ee;
+}
+
+.skland-activity-store-good-area-3 {
+  border-left-color: #0070dd;
+}
+
+.skland-activity-store-good-area-2 {
+  border-left-color: #00a2a2;
+}
+
+.skland-activity-store-good-area-1 {
+  border-left-color: #a0a0a0;
+}
+
+
+
+
+
+
 
 .skland-title-bottom {
 
