@@ -12,6 +12,17 @@
     "charId": "char_1045_svash2"
   },
   {
+    "name": "录武官",
+    "profession": "医疗",
+    "max_efficiency": 0.3,
+    "conditions": {
+      "target_profession": "医疗",
+      "skill_name": "医疗专精·α"
+    },
+    "skill_name": "进驻训练室协助位时，医疗干员的专精技能训练速度+30%",
+    "charId": "char_4196_reckpr"
+  },
+  {
     "name": "聆音",
     "profession": "近卫",
     "max_efficiency": 0.3,
