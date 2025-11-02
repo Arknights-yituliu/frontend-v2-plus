@@ -363,6 +363,10 @@ function handleClick() {
 
     <v-alert border="start" type="warning" title="数据加载失败解决方式" variant="tonal" density="compact" class="m-12">
       <p>如果遇到数据没有正常加载，请在<a href="/account/home">个人中心</a>点击自定义材料价值参数面板的重置为初始参数按钮</p>
+
+    </v-alert>
+    <v-alert border="start" type="info" title="中坚材料更新" variant="tonal" density="compact" class="m-12">
+      <p>因研磨石加入商店无限池，研磨石的默认价值将变更，如需调整请在<a href="/account/home">个人中心</a>进行修改</p>
     </v-alert>
 
     <!-- 卡片区域 -->
@@ -430,11 +434,12 @@ function handleClick() {
         </div>
         <img src="/image/website/QR/yituliuQR.png" style="height: 128px; display: inline-block;">
       </div>
-      <div id="retire-card" class="stage-card" @click="router.push({ name: 'AccountHome' })"
+      <div id="retire-card" class="stage-card stage-card-tip" @click="router.push({ name: 'AccountHome' })"
         style="flex-direction: column; align-items: center; justify-content: center; flex-grow: 1;">
         <div class="flex justify-center">
           <ItemImage :item-id="'30073'" size="60" mobile-size="24"></ItemImage>
           <ItemImage :item-id="'30083'" size="60" mobile-size="24"></ItemImage>
+          <ItemImage :item-id="'30093'" size="60" mobile-size="24"></ItemImage>
         </div>
         <div style="width: 100%; text-align: center; margin-top: 8px;">建议通过活动商店获取</div>
         <div style="width: 100%; text-align: center; margin-top: 8px;">点击修改材料退环境设置</div>

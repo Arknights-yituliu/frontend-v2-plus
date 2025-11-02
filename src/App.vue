@@ -104,6 +104,43 @@ watch(currentPath, (newPath, oldPath) => {
 });
 
 
+
+function forcedUpdateStageConfig(){
+  const ForcedUpdateTimeText = localStorage.getItem("ForcedUpdateTime");
+  const stageConfigText = localStorage.getItem("StageConfig");
+  if("20251101"===ForcedUpdateTimeText){
+    return
+  }
+  if(stageConfigText){
+    const stageConfig = JSON.parse(stageConfigText);
+    if (!stageConfig.customItem) {
+      stageConfig.customItem = [];
+    }
+    // 确保 list 变量指向 customItem 数组
+    const list = stageConfig.customItem;
+
+    // 检查是否已存在相同的 itemId，避免重复插入
+    const existingItemIndex = list.findIndex(item => item.itemId === "30093");
+
+    if (existingItemIndex !== -1) {
+      // 如果已存在，更新该元素
+      list[existingItemIndex].itemValue = 2.52;
+      console.log("不需要更新配置");
+    } else {
+      // 如果不存在，插入新元素
+      list.push({ itemId: "30093", itemValue: 2.52 });
+      console.log("需要更新配置");
+    }
+
+    // 保存回 localStorage
+    localStorage.setItem("StageConfig", JSON.stringify(stageConfig));
+    localStorage.setItem("ForcedUpdateTime", "20251101");
+    console.log("配置更新成功");
+
+  }
+}
+
+
 onMounted(() => {
   currentTheme.value = localStorage.getItem("Theme") === 'dark' ? 'dark' : 'light';
   setTheme(currentTheme.value)
@@ -111,7 +148,7 @@ onMounted(() => {
   // getDataByKey('OperatorTable').then(rep=>{
   //   console.log("indexedDB {} ",rep.resource)
   // })
-
+  forcedUpdateStageConfig()
   // console.log(OperatorTable)
 })
 
