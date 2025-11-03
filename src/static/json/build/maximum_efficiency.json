@@ -1,5 +1,17 @@
 [
   {
+    "name": "哈蒂娅",
+    "profession": "近卫",
+    "max_efficiency": 0.75,
+    "conditions": {
+      "target_profession": "近卫",
+      "skill_name": "勇气传承",
+      "mastery_level": 3
+    },
+    "skill_name": "进驻训练室协助位时，近卫干员的专精技能训练速度+30%，如果本次训练专精技能至3级，则训练速度额外+45%",
+    "charId": "char_394_hadiya"
+  },
+  {
     "name": "凛御银灰",
     "profession": "先锋",
     "max_efficiency": 0.8,
