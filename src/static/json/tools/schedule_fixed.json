@@ -68,7 +68,7 @@
     "tenGachaTicket": 0,
     "start": "2026/02/16 20:00:00",
     "end": "2026/02/18 23:59:59",
-    "rewardType": "春节限定",
+    "rewardType": "公共",
     "rewardModule": "otherResources",
     "probability": "",
     "defaultStatus": true

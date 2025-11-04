@@ -237,11 +237,22 @@ const scheduleOptions = [
   },
   {
     name: '新年',
-    dateString: '敬请期待',
+    dateString: '(0207-0228)',
     start: new Date('2026/02/07 16:00:00'),
     end: new Date('2026/02/28 04:01:00'),
-    activityType: '联动限定',
+    activityType: '春节限定',
     disabled: false,
+    dailyGiftResources: true,
+    accuracyFlag: true,
+    historicalPackTimeRange: [new Date('2025/02/01 00:00:00').getTime(), new Date('2025/02/28 23:59:59').getTime(),]
+  },
+  {
+    name: '周年庆典',
+    dateString: '敬请期待',
+    start: new Date('2026/05/01 16:00:00'),
+    end: new Date('2026/05/15 04:01:00'),
+    activityType: '周年限定',
+    disabled: true,
     dailyGiftResources: true,
     accuracyFlag: true,
     historicalPackTimeRange: [new Date('2025/02/01 00:00:00').getTime(), new Date('2025/02/28 23:59:59').getTime(),]
@@ -1436,7 +1447,7 @@ function readLastSettings() {
 onMounted(() => {
   readLastSettings()
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
-  updateScheduleOption(1)
+  updateScheduleOption(0)
   getAndSortPackData()
 
   // ElNotification({
@@ -1499,6 +1510,12 @@ function getColor(p) {
   return '#bdbdbd';                 // 灰色
 }
 
+/**
+ * 根据抽数显示不同的颜色
+ * @param limited
+ * @param all
+ * @return {{color: string, background: string}|{border: string, borderRadius: string, background: string, width: string, height: string}}
+ */
 function getProbabilityBoxStyle(limited, all) {
   const leftColor = getColor(limited);
   const rightColor = getColor(all);
@@ -2354,4 +2371,8 @@ function sharePage() {
 </template>
 
 
-<style scoped></style>
+<style scoped>
+.test{
+  background: linear-gradient(45deg, #FF6B6B, #FFA94D, #FFD43B, #69DB7C, #4DABF7, #A685E2);
+}
+</style>
