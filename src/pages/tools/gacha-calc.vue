@@ -238,13 +238,13 @@ const scheduleOptions = [
   {
     name: '新年',
     dateString: '敬请期待',
-    start: new Date('2025/12/02 16:00:00'),
-    end: new Date('2025/12/16 04:01:00'),
+    start: new Date('2026/02/07 16:00:00'),
+    end: new Date('2026/02/28 04:01:00'),
     activityType: '联动限定',
-    disabled: true,
+    disabled: false,
     dailyGiftResources: true,
     accuracyFlag: true,
-    historicalPackTimeRange: [new Date('2024/09/01 00:00:00').getTime(), new Date('2024/09/28 23:59:59').getTime(),]
+    historicalPackTimeRange: [new Date('2025/02/01 00:00:00').getTime(), new Date('2025/02/28 23:59:59').getTime(),]
   }
 ]
 
@@ -1436,7 +1436,7 @@ function readLastSettings() {
 onMounted(() => {
   readLastSettings()
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
-  updateScheduleOption(0)
+  updateScheduleOption(1)
   getAndSortPackData()
 
   // ElNotification({
