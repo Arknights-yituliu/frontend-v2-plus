@@ -237,14 +237,14 @@ const scheduleOptions = [
   },
   {
     name: '新年',
-    dateString: '(0207-0228)',
+    dateString: '(0207-0221)',
     start: new Date('2026/02/07 16:00:00'),
-    end: new Date('2026/02/28 04:01:00'),
+    end: new Date('2026/02/21 04:01:00'),
     activityType: '春节限定',
     disabled: false,
     dailyGiftResources: true,
     accuracyFlag: true,
-    historicalPackTimeRange: [new Date('2025/02/01 00:00:00').getTime(), new Date('2025/02/28 23:59:59').getTime(),]
+    historicalPackTimeRange: [new Date('2025/02/01 00:00:00').getTime(), new Date('2025/02/21 23:59:59').getTime(),]
   },
   {
     name: '周年庆典',
@@ -255,7 +255,7 @@ const scheduleOptions = [
     disabled: true,
     dailyGiftResources: true,
     accuracyFlag: true,
-    historicalPackTimeRange: [new Date('2025/02/01 00:00:00').getTime(), new Date('2025/02/28 23:59:59').getTime(),]
+    historicalPackTimeRange: [new Date('2025/05/01 00:00:00').getTime(), new Date('2025/05/14 23:59:59').getTime(),]
   }
 ]
 
