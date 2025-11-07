@@ -351,6 +351,24 @@
     "startTime": 6
   },
   {
+    "packName": "EP16 反常光谱",
+    "gachaOriginium": "24",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main",
+    "startTime": 6
+  },
+  {
+    "packName": "EP16 磨难/H关/隐藏/推演",
+    "gachaOriginium": "26",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "main",
+    "startTime": 6
+  },
+  {
     "packName": "骑兵与猎人",
     "gachaOriginium": "15",
     "gachaOrundum": "0",
@@ -695,6 +713,24 @@
   {
     "packName": "众生行记",
     "gachaOriginium": "41",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "to-be-open",
+    "startTime": 6
+  },
+  {
+    "packName": "红丝绒",
+    "gachaOriginium": "28",
+    "gachaOrundum": "0",
+    "gachaPermit": "0",
+    "gachaPermit10": "0",
+    "packType": "to-be-open",
+    "startTime": 6
+  },
+  {
+    "packName": "墟",
+    "gachaOriginium": "36",
     "gachaOrundum": "0",
     "gachaPermit": "0",
     "gachaPermit10": "0",
