@@ -300,6 +300,10 @@ async function getAndSortPackData() {
   const data = await packInfoCache.listPackInfo()
   //先计算礼包的性价比
   for (const item of data) {
+    const officialName =  item.officialName
+    if("每月寻访组合包" === officialName  ){
+      continue
+    }
     let packInfoVO = _packPromotionRatioCalc(item)
 
     listPackInfoCache.value.push(packInfoVO)
