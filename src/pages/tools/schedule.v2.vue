@@ -764,11 +764,30 @@ async function importScheduleByFile() {
   importSchedule(schedule)
 }
 
+function isMowerPlanPayload(data) {
+  return data && typeof data === 'object' && data.plan1 && data.conf
+}
+
+function redirectToMowerPlan(data) {
+  try {
+    localStorage.setItem('mowerPlanPayload', JSON.stringify(data))
+  } catch (error) {
+    console.error('Failed to store mower plan payload', error)
+  }
+  cMessage('检测到 Mower 排班，正在跳转...', 'info')
+  router.push('/tools/mower-plan?from=schedule')
+}
+
 /**
  * 导入排班内容
  * @param schedule 排班内容
  */
 function importSchedule(schedule) {
+
+  if (isMowerPlanPayload(schedule)) {
+    redirectToMowerPlan(schedule)
+    return
+  }
 
   scheduleInfo.value.author = schedule.author
   scheduleInfo.value.description = schedule.description;

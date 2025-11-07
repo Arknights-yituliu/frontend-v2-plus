@@ -263,6 +263,22 @@ async function importScheduleById() {
   }
 }
 
+function loadPlanFromScheduleBridge() {
+  const raw = localStorage.getItem('mowerPlanPayload')
+  if (!raw) return
+  try {
+    const payload = JSON.parse(raw)
+    hydratePlanData(payload)
+    sub_plan.value = 'main'
+    message.success('已载入排班生成器数据')
+  } catch (error) {
+    console.error('Failed to load bridged plan', error)
+    message.error('载入排班失败')
+  } finally {
+    localStorage.removeItem('mowerPlanPayload')
+  }
+}
+
 function handleResize() {
   mobile.value = window.innerWidth < 800
 }
@@ -272,6 +288,7 @@ onMounted(async () => {
   window.addEventListener('resize', handleResize)
   await load_operators()
   await load_plan()
+  loadPlanFromScheduleBridge()
 })
 
 onUnmounted(() => {
