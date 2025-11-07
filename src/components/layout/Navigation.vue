@@ -1,18 +1,29 @@
 <script setup>
-import {LinkedTable} from "/src/router/routes.js";
+import { LinkedTable } from '/src/router/routes.js'
+import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 
-import {ref, computed, watch} from "vue";
-
-
-let open = ref([])
+const open = ref([])
 
 for (const module in LinkedTable) {
-  // if(module === 'information'){
-  //   continue
-  // }
   open.value.push(module)
 }
 
+const route = useRoute()
+
+const activePath = computed(() => normalizePath(route.path))
+
+function normalizePath(path) {
+  if (!path) return '/'
+  if (path.length > 1 && path.endsWith('/')) {
+    return path.slice(0, -1)
+  }
+  return path
+}
+
+function isActive(path) {
+  return normalizePath(path) === activePath.value
+}
 </script>
 <template>
   <v-list v-model:opened="open" open-strategy="multiple" density="compact">
@@ -31,7 +42,12 @@ for (const module in LinkedTable) {
       </template>
       <router-link v-for="(child,index) in parent.child" :key="index"
                    :to="child.path" :href="child.path" class="router-link">
-        <v-list-item color="primary" rounded :value="child.text">
+        <v-list-item
+          color="primary"
+          rounded
+          :value="child.text"
+          :active="isActive(child.path)"
+        >
           <div class="navigation-item-content">
             <v-icon :icon="child.icon"></v-icon>
             <div class="navigation-item-content-spacer"></div>
@@ -42,4 +58,3 @@ for (const module in LinkedTable) {
     </v-list-group>
   </v-list>
 </template>
-

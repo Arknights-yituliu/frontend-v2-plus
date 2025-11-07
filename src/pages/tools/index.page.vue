@@ -10,7 +10,12 @@ const navi_data = [
   },
   { title: "雪雉小店计算器", desc: ["帮帮雪雉！", "努力让风情街恢复繁荣！"], icon: "/image/icon/snowsant.png", link: "/tools/snowsant" },
 
-  { title: "排班表生成器", desc: ["生成MAA排班表"], icon: "https://avatars.githubusercontent.com/u/97677443?s=200", link: "/tools/maa" },
+  {
+    title: "Mower 排班表",
+    desc: ["直接编辑/导出 Mower 排班 JSON"],
+    icon: "/image/icon/icon-4001.png",
+    link: "/tools/mower-plan",
+  },
 ];
 </script>
 

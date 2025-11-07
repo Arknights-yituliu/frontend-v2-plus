@@ -1,6 +1,7 @@
 import {createApp} from 'vue'
 
 import ElementPlus from 'element-plus'
+import naive from 'naive-ui'
 import App from './App.vue'
 import router from "/src/router/index.js";
 
@@ -23,6 +24,7 @@ const app = createApp(App)
 
 
 app.use(ElementPlus, {locale: zhCn,})
+app.use(naive)
 app.use(router)
 app.use(vuetify)
 app.mount('#app')
