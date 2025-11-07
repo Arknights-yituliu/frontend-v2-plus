@@ -1,6 +1,5 @@
 <script setup>
 import { computed, onMounted, onUnmounted, provide, ref, watchEffect } from 'vue'
-import axios from 'axios'
 import { createDiscreteApi } from 'naive-ui'
 import hljs from 'highlight.js/lib/core'
 import jsonLang from 'highlight.js/lib/languages/json'
@@ -14,7 +13,6 @@ import RenameDialog from './mower-plan/components/RenameDialog.vue'
 import OperatorMultiSelect from './mower-plan/components/OperatorMultiSelect.vue'
 import { mowerPlanStore } from './mower-plan/store/planStore.js'
 import { swap } from '@/utils/mower/common.js'
-import { MOWER_HTTP_URL } from '@/utils/mower/http.js'
 import { useTheme } from 'vuetify'
 
 const {
@@ -160,9 +158,6 @@ watchEffect(() => {
   }
 })
 
-const token = ref('')
-provide('token', token)
-
 function movePlanBackward() {
   if (sub_plan.value !== 'main' && sub_plan.value > 0) {
     const currentIndex = sub_plan.value
@@ -197,12 +192,6 @@ function export_json() {
     console.error('Export JSON failed', error)
     message.error('导出失败，请重试')
   }
-}
-
-async function savePlan() {
-  const payload = build_plan()
-  await axios.post(`${MOWER_HTTP_URL}/plan`, payload)
-  message.success('排班已保存')
 }
 
 function triggerLocalJsonImport() {
@@ -278,16 +267,7 @@ function handleResize() {
   mobile.value = window.innerWidth < 800
 }
 
-function setupToken() {
-  const params = new URLSearchParams(document.location.search)
-  token.value = params.get('token') ?? ''
-  if (token.value) {
-    axios.defaults.headers.common['token'] = token.value
-  }
-}
-
 onMounted(async () => {
-  setupToken()
   handleResize()
   window.addEventListener('resize', handleResize)
   await load_operators()

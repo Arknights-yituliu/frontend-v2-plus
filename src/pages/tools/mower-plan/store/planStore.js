@@ -1,6 +1,4 @@
 import { computed, ref } from 'vue'
-import axios from 'axios'
-import { MOWER_HTTP_URL } from '@/utils/mower/http'
 import { deepcopy } from '@/utils/mower/deepcopy'
 import { operatorTable } from '@/utils/gameData.js'
 
@@ -178,23 +176,13 @@ function hydratePlanData(payload) {
 }
 
 async function load_plan() {
-  const response = await axios.get(`${MOWER_HTTP_URL}/plan`)
-  hydratePlanData(response.data)
+  hydratePlanData({
+    plan1: {},
+    conf: {}
+  })
 }
 
 async function load_operators() {
-  try {
-    const response = await axios.get(`${MOWER_HTTP_URL}/operator`)
-    if (Array.isArray(response.data) && response.data.length) {
-      operators.value = response.data.map((name) => ({
-        value: name ?? '',
-        label: name ?? ''
-      }))
-      return
-    }
-  } catch (error) {
-    console.warn('load_operators fallback to local table:', error?.message ?? error)
-  }
   operators.value = Object.values(operatorTable).map((op) => ({
     value: op.name,
     label: op.name
