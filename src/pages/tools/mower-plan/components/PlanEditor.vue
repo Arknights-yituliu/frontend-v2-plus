@@ -39,7 +39,8 @@ function getAvatarUrl(name) {
   return `/avatar/${name}.webp`
 }
 
-const theme = inject('mowerTheme') ?? computed(() => (useTheme().global.current.value === 'dark' ? 'dark' : 'light'))
+// const theme = inject('mowerTheme') ?? computed(() => (useTheme().global.current.value === 'dark' ? 'dark' : 'light'))
+const theme = inject('mowerTheme') ?? ref('light')
 
 const outer = ref(null)
 
