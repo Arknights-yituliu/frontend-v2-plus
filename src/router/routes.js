@@ -140,6 +140,18 @@ const routes = [
     //     }
     // },
     {
+        path: '/tools/gachaCalcTest',
+        text: '攒抽计算器（测试）',
+        name: 'GachaCalculatorTest',
+        display: false,
+        module: 'tools',
+        icon: "mdi-wallet",
+        component: () => import('/src/pages/tools/gacha-calc-test.vue'),
+        meta: {
+            title: '攒抽计算器（测试）'
+        }
+    },
+    {
         path: '/tools/scheduleV2',
         text: '排班表生成器',
         name: 'ScheduleV2',

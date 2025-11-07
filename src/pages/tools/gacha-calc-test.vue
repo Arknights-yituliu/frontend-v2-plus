@@ -19,6 +19,7 @@ import packInfoCache from "@/plugins/indexedDB/packInfoCache.js";
 import {stringToNumber} from "/src/utils/stringUtils.js";
 import {numberFloor} from "/src/utils/format.js";
 
+// ECharts通过CDN全局引入 (window.echarts)
 
 //源石充值
 const OriginiumTable = ref([
@@ -66,11 +67,8 @@ let otherRewardBySchedules = ref([])
 // 罗德岛蜜饼工坊预测的活动排期
 let activityScheduleList = ref({})
 
-//当前时间戳（可自定义用于模拟未来时间）
-const currentTimestamp = ref(new Date().getTime());
-
-//当前日期（用于日期选择器绑定）
-const currentDate = ref(new Date());
+//当前时间戳
+const currentTimestamp = new Date().getTime();
 
 //选中的黄票兑换抽卡券
 let selectedCertificatePack = ref([])
@@ -297,26 +295,12 @@ async function getAndSortPackData() {
   //礼包唯一索引
   let index = 0;
 
-  // 清空之前的数据，避免重复
-  listPackInfoCache.value = [];
-  listNewBiePackInfo.value = [];
-  listOriginiumPack.value = [];
-  listLastYearOriginiumPack.value = [];
-  listMonthlyPackInfo.value = [];
-  listActivityPackInfo.value = [];
-  listDisplayPackInfo.value = [];
-
-  // 使用全局时间戳，支持用户自定义时间
-  // const currentTimeStamp = new Date().getTime()
+  const currentTimeStamp = new Date().getTime()
 
   // 等待获取接口返回的全部礼包信息
   const data = await packInfoCache.listPackInfo()
   //先计算礼包的性价比
   for (const item of data) {
-    const officialName =  item.officialName
-    if("每月寻访组合包" === officialName  ){
-      continue
-    }
     let packInfoVO = _packPromotionRatioCalc(item)
 
     listPackInfoCache.value.push(packInfoVO)
@@ -325,7 +309,7 @@ async function getAndSortPackData() {
       continue;
     }
 
-    if (packInfoVO.end < currentTimestamp.value) {
+    if (packInfoVO.end < currentTimeStamp) {
       continue
     }
 
@@ -1372,7 +1356,7 @@ function getRewardRemainingDays(honeyCake) {
  */
 function rewardIsExpired(reward) {
   //活动结束时间在当前时间之前，活动已结束
-  if (reward.end <= currentTimestamp.value) {
+  if (reward.end <= currentTimestamp) {
     // console.log(reward.name, '活动结束')
     return false
   }
@@ -1398,6 +1382,11 @@ function rewardIsEmpty(reward) {
 let myChart = void 0;
 
 function setPieChart(data) {
+  if (!myChart) {
+    console.warn('ECharts实例未初始化，跳过更新');
+    return;
+  }
+
   let option = {
     tooltip: {
       formatter: "{a} {b} : {c}抽,占 ({d}%)",
@@ -1463,7 +1452,17 @@ function readLastSettings() {
 
 onMounted(() => {
   readLastSettings()
-  myChart = echarts.init(document.getElementById("calculationResultPieChart"));
+
+  // 初始化ECharts图表
+  const chartDom = document.getElementById("calculationResultPieChart");
+  if (chartDom && typeof echarts !== 'undefined') {
+    myChart = echarts.init(chartDom);
+  } else if (chartDom && typeof window.echarts !== 'undefined') {
+    myChart = window.echarts.init(chartDom);
+  } else {
+    console.error('ECharts未加载或图表容器未找到');
+  }
+
   updateScheduleOption(0)
   getAndSortPackData()
 
@@ -1483,6 +1482,7 @@ window.addEventListener('resize', handleResize);
 
 // 定义尺寸变化处理函数
 function handleResize() {
+  if (!myChart) return;
 
   //判断是否是移动设备或PC端将窗口缩小，如果是就对chart画布进行尺寸重设
   if (window.innerWidth < 590) {
@@ -1551,17 +1551,6 @@ function getProbabilityBoxStyle(limited, all) {
     height: '20px',
   };
 }
-
-//处理时间选择器变化
-function handleDateChange(date) {
-  if (date) {
-    currentTimestamp.value = new Date(date).getTime();
-    // 重新加载礼包数据和计算攒抽资源
-    getAndSortPackData();
-    gachaResourcesCalculation();
-  }
-}
-
 //分享
 function sharePage() {
   const url = 'https://ark.yituliu.cn/tools/gachaCalc';
@@ -1588,51 +1577,49 @@ function sharePage() {
   }
 }
 
+//右栏tab激活状态
+const activeTab = ref('exist')
+
 </script>
 
 <template>
-
-  <!--  <img src="/public/顶部.jpg" alt="" style="width: 600px;position: absolute;top: 50px;left: 360px;z-index:3000;opacity: 0.3" >-->
-  <!-- <div style="background-color: #13ce66;width: 600px;height: 114px;">114</div> -->
-  <div class="gacha-calculation-page" id="gachaCalculate">
-    <!--计算结果-->
-    <div class="collapse-group1" id="result-box">
-      <!-- <div class="collapse-group-content"> -->
-      <el-collapse v-model="resultCollapseActiveNames" class="" style="border: none">
-        <el-collapse-item name="calculationResult" class="collapse-item">
-          <template #title>
-            <div class="collapse-title-icon" v-if="activityType !== '联动限定'"
-              :style="getProbabilityBoxStyle(currentProb.limited300, currentProb.all300)">
-            </div>
-            <div class="collapse-title-icon" v-if="activityType === '联动限定'"
-              :style="getProbabilityBoxStyle(currentProb.limited120, currentProb.all120)">
-            </div>
-            <span class="collapse-title-font">
-              共计{{ calculationResult.totalDraw }}抽，
-              氪金{{ numberFloor(calculationResult.totalAmountOfRecharge, 0) }}元
-            </span>
-          </template>
-          <!--选择攒到某个活动的单选框-->
-          <div class="radio-group-wrap" style="padding-top: 4px;">
-            <el-radio-group v-model="currentScheduleName" size="large" class="custom-radio-group">
-              <el-radio-button v-for="(activity, index) in scheduleOptions" :key="`schedule-${index}`"
-                :label="activity.name" :disabled="activity.disabled" style="min-width: 108px;"
-                @change="updateScheduleOption(index)">
-                <div class="radio-content">
-                  <div class="radio-title">{{ activity.name }}</div>
-                  <div class="radio-subtitle">{{ activity.dateString }}</div>
-                </div>
-              </el-radio-button>
-            </el-radio-group>
+  <div class="gacha-calc-test-container">
+    <!-- 左栏 40% (768px) - 计算结果 -->
+    <div class="left-panel">
+      <div id="result-box">
+        <div class="result-header">
+          <div class="collapse-title-icon" v-if="activityType !== '联动限定'"
+            :style="getProbabilityBoxStyle(currentProb.limited300, currentProb.all300)">
           </div>
-
-          <!-- <span class="tip" style="text-align: center">日期为卡池结束日期</span> -->
-          <div class="resources-line" style="padding-left: 20px;margin: 0;">
-            <el-switch v-model="calPoolEnd" @click="gachaResourcesCalculation"
-              style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" active-text="计算到卡池结束当天"
-              inactive-text="计算到卡池开放当天" />
+          <div class="collapse-title-icon" v-if="activityType === '联动限定'"
+            :style="getProbabilityBoxStyle(currentProb.limited120, currentProb.all120)">
           </div>
-          <!-- <div class="result-content"> -->
+          <span class="collapse-title-font">
+            共计{{ calculationResult.totalDraw }}抽，
+            氪金{{ numberFloor(calculationResult.totalAmountOfRecharge, 0) }}元
+          </span>
+        </div>
+
+        <!--选择攒到某个活动的单选框-->
+        <div class="radio-group-wrap" style="padding-top: 4px;">
+          <el-radio-group v-model="currentScheduleName" size="large" class="custom-radio-group">
+            <el-radio-button v-for="(activity, index) in scheduleOptions" :key="`schedule-${index}`"
+              :label="activity.name" :disabled="activity.disabled" style="min-width: 108px;"
+              @change="updateScheduleOption(index)">
+              <div class="radio-content">
+                <div class="radio-title">{{ activity.name }}</div>
+                <div class="radio-subtitle">{{ activity.dateString }}</div>
+              </div>
+            </el-radio-button>
+          </el-radio-group>
+        </div>
+
+        <div class="resources-line" style="padding-left: 20px;margin: 0;">
+          <el-switch v-model="calPoolEnd" @click="gachaResourcesCalculation"
+            style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949" active-text="计算到卡池结束当天"
+            inactive-text="计算到卡池开放当天" />
+        </div>
+
           <div class="resources-line" style="padding-top: 0;margin: 0;display: flex;">
             <!--饼状图-->
             <div class="gacha-resources-chart-pie" id="calculationResultPieChart">
@@ -1682,149 +1669,115 @@ function sharePage() {
               </tbody>
             </table>
           </div>
-          <!--抽卡资源总览-->
-          <div class="resources-result-bar">
-            <!-- <div class="resources-line"> -->
-            <div class="resources-result-single">
-              <div class="image-sprite">
-                <div class="bg-icon_4002"></div>
-              </div>
-              <span class="resources-quantity">{{ calculationResult.originium }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.originium }})</span>
+
+        <!--抽卡资源总览-->
+        <div class="resources-result-bar">
+          <div class="resources-result-single">
+            <div class="image-sprite">
+              <div class="bg-icon_4002"></div>
             </div>
-            <div class="resources-result-single">
-              <div class="image-sprite">
-                <div class="bg-icon_4003"></div>
-              </div>
-              <span class="resources-quantity">{{ calculationResult.orundum }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.orundum }})</span>
+            <span class="resources-quantity">{{ calculationResult.originium }}</span>
+            <span class="resources-quantity-small">({{ singleResourceDraws.originium }})</span>
+          </div>
+          <div class="resources-result-single">
+            <div class="image-sprite">
+              <div class="bg-icon_4003"></div>
             </div>
-            <div class="resources-result-single">
-              <div class="image-sprite">
-                <div class="bg-icon_7003"></div>
-              </div>
-              <span class="resources-quantity">{{ calculationResult.gachaTicket }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.gachaTicket }})</span>
+            <span class="resources-quantity">{{ calculationResult.orundum }}</span>
+            <span class="resources-quantity-small">({{ singleResourceDraws.orundum }})</span>
+          </div>
+          <div class="resources-result-single">
+            <div class="image-sprite">
+              <div class="bg-icon_7003"></div>
             </div>
-            <div class="resources-result-single">
-              <div class="image-sprite">
-                <div class="bg-icon_7004"></div>
-              </div>
-              <span class="resources-quantity">{{ calculationResult.tenGachaTicket }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.tenGachaTicket }})</span>
+            <span class="resources-quantity">{{ calculationResult.gachaTicket }}</span>
+            <span class="resources-quantity-small">({{ singleResourceDraws.gachaTicket }})</span>
+          </div>
+          <div class="resources-result-single">
+            <div class="image-sprite">
+              <div class="bg-icon_7004"></div>
+            </div>
+            <span class="resources-quantity">{{ calculationResult.tenGachaTicket }}</span>
+            <span class="resources-quantity-small">({{ singleResourceDraws.tenGachaTicket }})</span>
+          </div>
+        </div>
+
+        <!-- 抽卡概率总览 -->
+        <div class="resources-result-bar" style="border: none;padding-top: 0px;">
+          <div v-if="currentProb" style="display: flex; gap: 16px;">
+            <div v-if="activityType !== '联动限定'">
+              <p>拿到限定的概率：{{ currentProb.limited300.toFixed(2) }}%</p>
+            </div>
+            <div v-if="activityType !== '联动限定'">
+              <p>拿到限定+陪跑的概率：{{ currentProb.all300.toFixed(2) }}%</p>
+            </div>
+            <div v-if="activityType === '联动限定'">
+              <p>拿到限定六星的概率：{{ currentProb.limited120.toFixed(2) }}%</p>
+            </div>
+            <div v-if="activityType === '联动限定'">
+              <p>拿到所有联动的概率：{{ currentProb.all120.toFixed(2) }}%</p>
+            </div>
+            <div v-if="activityType === '联动限定'">
+              <p>全满潜的概率：{{ currentProb.联动卡池全满潜.toFixed(2) }}%</p>
             </div>
           </div>
-          <!-- 抽卡概率总览 -->
-          <div class="resources-result-bar" style="border: none;padding-top: 0px;">
-            <div v-if="currentProb" style="display: flex; gap: 16px;">
-              <div v-if="activityType !== '联动限定'">
-                <p>拿到限定的概率：{{ currentProb.limited300.toFixed(2) }}%</p>
-              </div>
-              <div v-if="activityType !== '联动限定'">
-                <p>拿到限定+陪跑的概率：{{ currentProb.all300.toFixed(2) }}%</p>
-              </div>
-              <div v-if="activityType === '联动限定'">
-                <p>拿到限定六星的概率：{{ currentProb.limited120.toFixed(2) }}%</p>
-              </div>
-              <div v-if="activityType === '联动限定'">
-                <p>拿到所有联动的概率：{{ currentProb.all120.toFixed(2) }}%</p>
-              </div>
-              <div v-if="activityType === '联动限定'">
-                <p>全满潜的概率：{{ currentProb.联动卡池全满潜.toFixed(2) }}%</p>
-              </div>
-            </div>
-            <div v-else>
-              <p>未找到对应抽数概率</p>
-            </div>
+          <div v-else>
+            <p>未找到对应抽数概率</p>
           </div>
-          <!-- 时间选择器 -->
-          <div class="resources-result-bar" style="border: none; padding: 12px; margin: 8px 4px; background-color: #f5f7fa; border-radius: 4px;display: none;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="font-weight: 500; color: #606266;">当前时间：</span>
-              <el-date-picker
-                v-model="currentDate"
-                type="datetime"
-                placeholder="选择日期时间"
-                format="YYYY-MM-DD HH:mm:ss"
-                value-format="YYYY-MM-DD HH:mm:ss"
-                @change="handleDateChange"
-                style="flex: 1;"
-              />
-              <el-button
-                size="small"
-                @click="currentDate = new Date(); handleDateChange(currentDate);"
-              >
-                重置为当前
-              </el-button>
-            </div>
+        </div>
+
+        <div class="resources-result-bar" style="display: flex; justify-content: space-between; align-items: center;
+          font-size: 15px; font-weight: 500; background-color: antiquewhite; border: none; padding: 8px 12px;border-radius: 4px;margin: 0px 4px;">
+          <span style="line-height: 20px;">明日方舟一图流 ark.yituliu.cn</span>
+          <div style="display: flex; gap: 12px;">
+            <!-- GitHub -->
+            <a href="https://github.com/Arknights-yituliu" target="_blank"
+              style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+              <svg width="40" height="40" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="512" cy="512" r="512" fill="white" />
+                <path
+                  d="M511.6 76.3C264.3 76.2 64 276.4 64 523.7c0 197.5 128 365.1 305.9 424.6 22.4 4.1 30.6-9.7 30.6-21.5 0-10.6-.4-45.6-.6-82.8-124.5 27-150.9-52.9-150.9-52.9-20.4-51.9-49.8-65.7-49.8-65.7-40.7-27.9 3.1-27.3 3.1-27.3 45 3.2 68.7 46.2 68.7 46.2 40 68.6 104.9 48.8 130.5 37.3 4-29 15.6-48.8 28.4-60-99.5-11.3-204-49.7-204-221.4 0-48.9 17.5-88.9 46.2-120.2-4.6-11.3-20-56.9 4.4-118.7 0 0 37.6-12 123.1 45.9 35.7-9.9 73.9-14.8 112-15 38.1.2 76.3 5.1 112 15 85.4-57.9 123-45.9 123-45.9 24.4 61.8 9 107.4 4.4 118.7 28.7 31.3 46.2 71.3 46.2 120.2 0 171.9-104.6 210-204.4 221.1 16 13.8 30.3 41 30.3 82.6 0 59.7-.6 107.7-.6 122.3 0 11.9 8 25.9 30.9 21.5C832 888.7 960 721.1 960 523.7c0-247.3-200.3-447.5-448.4-447.4z"
+                  fill="#181717" />
+              </svg>
+            </a>
+
+            <!-- Bilibili -->
+            <a href="https://space.bilibili.com/688411531" target="_blank"
+              style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+              <svg width="40" height="40" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="12" fill="white" />
+                <path
+                  d="M18.223 3.086a1.25 1.25 0 0 1 0 1.768L17.08 5.996h1.17A3.75 3.75 0 0 1 22 9.747v7.5a3.75 3.75 0 0 1-3.75 3.75H5.75A3.75 3.75 0 0 1 2 17.247v-7.5a3.75 3.75 0 0 1 3.75-3.75h1.166L5.775 4.855a1.25 1.25 0 1 1 1.767-1.768l2.652 2.652c.079.079.145.165.198.257h3.213c.053-.092.12-.18.199-.258l2.651-2.652a1.25 1.25 0 0 1 1.768 0zm.027 5.42H5.75a1.25 1.25 0 0 0-1.247 1.157l-.003.094v7.5c0 .659.51 1.199 1.157 1.246l.093.004h12.5a1.25 1.25 0 0 0 1.247-1.157l.003-.093v-7.5c0-.69-.56-1.25-1.25-1.25zm-10 2.5c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25zm7.5 0c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25z"
+                  fill="#00aeec" />
+              </svg>
+            </a>
+
+            <!-- 分享 -->
+            <a href="javascript:void(0)" @click="sharePage()" style="display:flex;align-items:center;justify-content:center;
+          width:40px;height:40px;border-radius:50%;
+          background-color:#f39c12;color:white;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="24" height="24"
+                fill="currentColor">
+                <path
+                  d="m679.872 348.8-301.76 188.608a127.808 127.808 0 0 1 5.12 52.16l279.936 104.96a128 128 0 1 1-22.464 59.904l-279.872-104.96a128 128 0 1 1-16.64-166.272l301.696-188.608a128 128 0 1 1 33.92 54.272z">
+                </path>
+              </svg>
+            </a>
           </div>
-          <div class="resources-result-bar" style="display: flex; justify-content: space-between; align-items: center;
-            font-size: 15px; font-weight: 500; background-color: antiquewhite; border: none; padding: 8px 12px;border-radius: 4px;margin: 0px 4px;">
-
-            <span style="line-height: 20px;">明日方舟一图流 ark.yituliu.cn</span>
-            <div style="display: flex; gap: 12px;">
-
-              <!-- GitHub -->
-              <a href="https://github.com/Arknights-yituliu" target="_blank"
-                style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
-                <svg width="40" height="40" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                  <!-- 白底 -->
-                  <circle cx="512" cy="512" r="512" fill="white" />
-                  <!-- GitHub黑LOGO -->
-                  <path
-                    d="M511.6 76.3C264.3 76.2 64 276.4 64 523.7c0 197.5 128 365.1 305.9 424.6 22.4 4.1 30.6-9.7 30.6-21.5 0-10.6-.4-45.6-.6-82.8-124.5 27-150.9-52.9-150.9-52.9-20.4-51.9-49.8-65.7-49.8-65.7-40.7-27.9 3.1-27.3 3.1-27.3 45 3.2 68.7 46.2 68.7 46.2 40 68.6 104.9 48.8 130.5 37.3 4-29 15.6-48.8 28.4-60-99.5-11.3-204-49.7-204-221.4 0-48.9 17.5-88.9 46.2-120.2-4.6-11.3-20-56.9 4.4-118.7 0 0 37.6-12 123.1 45.9 35.7-9.9 73.9-14.8 112-15 38.1.2 76.3 5.1 112 15 85.4-57.9 123-45.9 123-45.9 24.4 61.8 9 107.4 4.4 118.7 28.7 31.3 46.2 71.3 46.2 120.2 0 171.9-104.6 210-204.4 221.1 16 13.8 30.3 41 30.3 82.6 0 59.7-.6 107.7-.6 122.3 0 11.9 8 25.9 30.9 21.5C832 888.7 960 721.1 960 523.7c0-247.3-200.3-447.5-448.4-447.4z"
-                    fill="#181717" />
-                </svg>
-              </a>
-
-              <!-- Bilibili -->
-              <a href="https://space.bilibili.com/688411531" target="_blank"
-                style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
-                <svg width="40" height="40" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <!-- 白底 -->
-                  <circle cx="12" cy="12" r="12" fill="white" />
-                  <!-- B站蓝色LOGO -->
-                  <path
-                    d="M18.223 3.086a1.25 1.25 0 0 1 0 1.768L17.08 5.996h1.17A3.75 3.75 0 0 1 22 9.747v7.5a3.75 3.75 0 0 1-3.75 3.75H5.75A3.75 3.75 0 0 1 2 17.247v-7.5a3.75 3.75 0 0 1 3.75-3.75h1.166L5.775 4.855a1.25 1.25 0 1 1 1.767-1.768l2.652 2.652c.079.079.145.165.198.257h3.213c.053-.092.12-.18.199-.258l2.651-2.652a1.25 1.25 0 0 1 1.768 0zm.027 5.42H5.75a1.25 1.25 0 0 0-1.247 1.157l-.003.094v7.5c0 .659.51 1.199 1.157 1.246l.093.004h12.5a1.25 1.25 0 0 0 1.247-1.157l.003-.093v-7.5c0-.69-.56-1.25-1.25-1.25zm-10 2.5c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25zm7.5 0c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25z"
-                    fill="#00aeec" />
-                </svg>
-              </a>
-
-              <!-- 分享 -->
-              <a href="javascript:void(0)" @click="sharePage()" style="display:flex;align-items:center;justify-content:center;
-            width:40px;height:40px;border-radius:50%;
-            background-color:#f39c12;color:white;">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="24" height="24"
-                  fill="currentColor">
-                  <path
-                    d="m679.872 348.8-301.76 188.608a127.808 127.808 0 0 1 5.12 52.16l279.936 104.96a128 128 0 1 1-22.464 59.904l-279.872-104.96a128 128 0 1 1-16.64-166.272l301.696-188.608a128 128 0 1 1 33.92 54.272z">
-                  </path>
-                </svg>
-              </a>
-            </div>
-          </div>
-
-        </el-collapse-item>
-      </el-collapse>
-      <!-- </div> -->
+        </div>
+      </div>
     </div>
 
-    <div class="collapse-group2" id="resources-box">
-      <el-collapse v-model="optionsCollapseActiveNames" style="border: none">
-        <!--库存资源-->
-        <el-collapse-item name="exist" class="collapse-item">
-          <template #title>
-            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
-            <span class="collapse-title-font">
-              库存/预留&emsp;{{ numberFloor(calculationResult.existTotalDraw, 0) }}抽
-            </span>
-          </template>
+    <!-- 右栏 60% (1152px) - 选项卡 -->
+    <div class="right-panel">
+      <el-tabs v-model="activeTab" class="options-tabs">
+        <!-- 库存/预留 -->
+        <el-tab-pane label="库存/预留" name="exist">
           <div class="collapse-content-subheading">
             <span></span> 当前库存
           </div>
 
           <div class="resources-line" style="flex-wrap: wrap;">
-            <!-- <div class="exist-resources-input-wrap"> -->
             <div class="exist-resources-input">
               <div class="image-sprite">
                 <div class="bg-icon_4002"></div>
@@ -1848,7 +1801,6 @@ function sharePage() {
           </div>
 
           <div class="resources-line">
-            <!-- <div class="switch-wrap"> -->
             <span>是否使用源石抽卡</span>
             <el-switch v-model="originiumIsUsed" @click="gachaResourcesCalculation"></el-switch>
           </div>
@@ -1891,17 +1843,10 @@ function sharePage() {
             <span>{{ existResources.correctOrundum }}</span>
           </div>
           <span class="tip"> 例如给轮换池预留、其它合成玉来源等，可填负数</span>
-        </el-collapse-item>
+        </el-tab-pane>
 
-        <!--日常积累-->
-        <el-collapse-item name="daily" class="collapse-item">
-          <template #title>
-            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
-            <span class="collapse-title-font">
-              日常积累&emsp;{{ numberFloor(calculationResult.dailyTotalDraw, 0) }}抽
-            </span>
-          </template>
-
+        <!-- 日常积累 -->
+        <el-tab-pane label="日常积累" name="daily">
           <div class="resources-line">
             <span class="resources-line-label">
               日常{{ dailyReward.daily }}天
@@ -1913,15 +1858,6 @@ function sharePage() {
               <span>{{ dailyReward.dailyOrundumReward }}</span>
             </div>
           </div>
-          <!--          <div class="resources-line">-->
-          <!--            <span class="resources-line-label">官方月卡{{ officialMonthlyCardRemainingDays }}次</span>-->
-          <!--            <div class="resources-line-content">-->
-          <!--              <div class="image-sprite">-->
-          <!--                <div class="bg-icon_4003"></div>-->
-          <!--              </div>-->
-          <!--              <span>{{ officialMonthlyCardReward }}</span>-->
-          <!--            </div>-->
-          <!--          </div>-->
 
           <v-divider></v-divider>
           <div class="resources-line">
@@ -1989,16 +1925,10 @@ function sharePage() {
             </div>
           </div>
           <span class="tip"> 黄票换抽计算整合在下面</span>
-        </el-collapse-item>
+        </el-tab-pane>
 
-        <!--搓玉/黄票资源-->
-        <el-collapse-item name="custom" class="collapse-item">
-          <template #title>
-            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
-            <span class="collapse-title-font">
-              搓玉/绿票/黄票换抽&emsp;{{ numberFloor(calculationResult.produceOrundumTotalDraw, 0) }}抽
-            </span>
-          </template>
+        <!-- 搓玉/黄票 -->
+        <el-tab-pane label="搓玉/黄票" name="custom">
           <!-- 黄票换抽 -->
           <div class="collapse-content-subheading">
             <span></span>黄票换抽
@@ -2050,7 +1980,6 @@ function sharePage() {
             </div>
             <span>{{ produceOrundum.outputByAp }}</span>
           </div>
-
 
           <el-checkbox-group>
             <el-checkbox-button @click="updateApWithoutPass">
@@ -2104,16 +2033,10 @@ function sharePage() {
           </div>
           <span class="tip">现有绿票数 - 第一层共需1490绿票 - 第二层共需10100绿票 = 可用于换玉的绿票数</span>
           <span class="tip">鉴于第二层有不少性价比较低的物品，建议囤够2w以上绿票再考虑绿票换玉</span>
-        </el-collapse-item>
+        </el-tab-pane>
 
-        <!--潜在资源-->
-        <el-collapse-item name="potential" class="collapse-item">
-          <template #title>
-            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
-            <span class="collapse-title-font">
-              潜在资源&emsp;{{ numberFloor(calculationResult.potentialTotalDraw, 0) }}抽
-            </span>
-          </template>
+        <!-- 潜在资源 -->
+        <el-tab-pane label="潜在资源" name="potential">
           <div class="collapse-content-subheading">
             <span></span> 悖论模拟/剿灭作战模拟
           </div>
@@ -2214,7 +2137,6 @@ function sharePage() {
             </el-checkbox-button>
           </el-checkbox-group>
 
-
           <div class="collapse-content-subheading">
             <span></span> 未确定开放日期的活动
           </div>
@@ -2234,17 +2156,10 @@ function sharePage() {
             </el-checkbox-button>
           </el-checkbox-group>
           <span class="tip">这些活动的复刻/记录修复日期尚不明确，请根据实际情况选取</span>
-        </el-collapse-item>
+        </el-tab-pane>
 
-        <!--氪金资源-->
-        <el-collapse-item name="recharge" class="collapse-item">
-          <template #title>
-            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
-            <span class="collapse-title-font">
-              氪金资源&emsp;{{ numberFloor(calculationResult.rechargeTotalDraw, 0) }}抽
-            </span>
-          </template>
-
+        <!-- 氪金资源 -->
+        <el-tab-pane label="氪金资源" name="recharge">
           <span class="tip">标签内为每抽价格(元)，颜色用于区分性价比</span>
           <span class="tip">仅计入礼包内抽卡资源，紫色高于648，橙色高于大月卡</span>
           <span class="tip"><a href="/material/pack">点击跳转礼包完整性价比</a></span>
@@ -2252,12 +2167,6 @@ function sharePage() {
           <div class="collapse-content-subheading">
             <span></span> 月常礼包
           </div>
-          <!-- <div class="switch-wrap"> -->
-          <!-- <div class="resources-line">
-            <el-switch v-model="rechargeOption.monthlyCardPurchasedThisMonth"
-              @change="gachaResourcesCalculation"></el-switch>
-            <span>本月月卡已购买(选中则扣除6源石)</span>
-          </div> -->
           <div class="resources-line">
             <span>额外购买</span>
             <el-input-number v-model="rechargeOption.additionalMonthlyCardPurchase" @input="gachaResourcesCalculation">
@@ -2277,7 +2186,6 @@ function sharePage() {
           <div class="collapse-content-subheading">
             <span></span> 限时礼包
           </div>
-          <!-- <span class="tip">"指令重构"寻访包仅能用于4月M3池，不能用于任何限定池</span> -->
           <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in listActivityPackInfo" :key="index" :value="pack.parentIndex"
               class="el-checkbox-button">
@@ -2309,7 +2217,6 @@ function sharePage() {
               </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
-
 
           <!--首次充值源石-->
           <div class="collapse-content-subheading">
@@ -2352,18 +2259,10 @@ function sharePage() {
               </template>
             </el-input-number>
           </div>
+        </el-tab-pane>
 
-
-        </el-collapse-item>
-
-        <!--活动获得(估算)-->
-        <el-collapse-item name="activity" class="collapse-item">
-          <template #title>
-            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
-            <span class="collapse-title-font">
-              活动获得（估算）&emsp;{{ numberFloor(calculationResult.activityTotalDraw, 0) }}抽
-            </span>
-          </template>
+        <!-- 活动获得 -->
+        <el-tab-pane label="活动获得" name="activity">
           <!--复刻活动-->
           <div class="collapse-content-subheading">
             <span></span> 复刻活动
@@ -2390,37 +2289,99 @@ function sharePage() {
               </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
-        </el-collapse-item>
+        </el-tab-pane>
 
         <!-- 其他资源 -->
-        <el-collapse-item name="other" class="collapse-item">
-          <template #title>
-            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
-            <span class="collapse-title-font">
-              其他资源（估算）&emsp;{{ numberFloor(calculationResult.otherTotalDraw, 0) }}抽
-            </span>
-          </template>
+        <el-tab-pane label="其他资源" name="other">
           <activity-gacha-resources v-for="(honeyCake, label) in otherRewardBySchedules" :key="label" :info="honeyCake"
             v-show="rewardIsExpired(honeyCake) && rewardIsEmpty(honeyCake)">
           </activity-gacha-resources>
-        </el-collapse-item>
-
-        <el-collapse-item name="links" class="collapse-item" style="display: none;">
-          <template #title>
-            <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
-            <span class="collapse-title-font">
-              相关链接
-            </span>
-          </template>
-        </el-collapse-item>
-      </el-collapse>
+        </el-tab-pane>
+      </el-tabs>
     </div>
   </div>
-
 </template>
 
 
 <style scoped>
+/* 1920x1080 固定布局容器 */
+.gacha-calc-test-container {
+  width: 1920px;
+  height: 1080px;
+  display: flex;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+/* 左栏 40% (768px) */
+.left-panel {
+  width: 768px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 16px;
+  border-right: 1px solid #e0e0e0;
+}
+
+/* 右栏 60% (1152px) */
+.right-panel {
+  width: 1152px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+/* 结果区域标题样式 */
+.result-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+/* Tab样式优化 */
+.options-tabs {
+  height: calc(100% - 20px);
+}
+
+/* 饼图样式 */
+.gacha-resources-chart-pie {
+  width: 300px;
+  height: 240px;
+  min-width: 300px;
+  min-height: 240px;
+  flex-shrink: 0;
+}
+
+/* 图表和表格容器 */
+.resources-line {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+}
+
+/* 资源统计表格 */
+.gacha-resources-table {
+  flex: 1;
+  margin-left: 12px;
+}
+
+.gacha-resources-table td {
+  padding: 4px 8px;
+  text-align: center;
+}
+
+.gacha-resources-table-title {
+  font-weight: bold;
+}
+
+.gacha-resources-table-quantity {
+  color: #409eff;
+  font-weight: bold;
+  font-size: 16px;
+}
+
 .test{
   background: linear-gradient(45deg, #FF6B6B, #FFA94D, #FFD43B, #69DB7C, #4DABF7, #A685E2);
 }
