@@ -66,8 +66,11 @@ let otherRewardBySchedules = ref([])
 // 罗德岛蜜饼工坊预测的活动排期
 let activityScheduleList = ref({})
 
-//当前时间戳
-const currentTimestamp = new Date().getTime();
+//当前时间戳（可自定义用于模拟未来时间）
+const currentTimestamp = ref(new Date().getTime());
+
+//当前日期（用于日期选择器绑定）
+const currentDate = ref(new Date());
 
 //选中的黄票兑换抽卡券
 let selectedCertificatePack = ref([])
@@ -294,7 +297,17 @@ async function getAndSortPackData() {
   //礼包唯一索引
   let index = 0;
 
-  const currentTimeStamp = new Date().getTime()
+  // 清空之前的数据，避免重复
+  listPackInfoCache.value = [];
+  listNewBiePackInfo.value = [];
+  listOriginiumPack.value = [];
+  listLastYearOriginiumPack.value = [];
+  listMonthlyPackInfo.value = [];
+  listActivityPackInfo.value = [];
+  listDisplayPackInfo.value = [];
+
+  // 使用全局时间戳，支持用户自定义时间
+  // const currentTimeStamp = new Date().getTime()
 
   // 等待获取接口返回的全部礼包信息
   const data = await packInfoCache.listPackInfo()
@@ -312,7 +325,7 @@ async function getAndSortPackData() {
       continue;
     }
 
-    if (packInfoVO.end < currentTimeStamp) {
+    if (packInfoVO.end < currentTimestamp.value) {
       continue
     }
 
@@ -1359,7 +1372,7 @@ function getRewardRemainingDays(honeyCake) {
  */
 function rewardIsExpired(reward) {
   //活动结束时间在当前时间之前，活动已结束
-  if (reward.end <= currentTimestamp) {
+  if (reward.end <= currentTimestamp.value) {
     // console.log(reward.name, '活动结束')
     return false
   }
@@ -1538,6 +1551,17 @@ function getProbabilityBoxStyle(limited, all) {
     height: '20px',
   };
 }
+
+//处理时间选择器变化
+function handleDateChange(date) {
+  if (date) {
+    currentTimestamp.value = new Date(date).getTime();
+    // 重新加载礼包数据和计算攒抽资源
+    getAndSortPackData();
+    gachaResourcesCalculation();
+  }
+}
+
 //分享
 function sharePage() {
   const url = 'https://ark.yituliu.cn/tools/gachaCalc';
@@ -1711,6 +1735,27 @@ function sharePage() {
             </div>
             <div v-else>
               <p>未找到对应抽数概率</p>
+            </div>
+          </div>
+          <!-- 时间选择器 -->
+          <div class="resources-result-bar" style="border: none; padding: 12px; margin: 8px 4px; background-color: #f5f7fa; border-radius: 4px;display: none;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-weight: 500; color: #606266;">当前时间：</span>
+              <el-date-picker
+                v-model="currentDate"
+                type="datetime"
+                placeholder="选择日期时间"
+                format="YYYY-MM-DD HH:mm:ss"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                @change="handleDateChange"
+                style="flex: 1;"
+              />
+              <el-button
+                size="small"
+                @click="currentDate = new Date(); handleDateChange(currentDate);"
+              >
+                重置为当前
+              </el-button>
             </div>
           </div>
           <div class="resources-result-bar" style="display: flex; justify-content: space-between; align-items: center;
