@@ -127,18 +127,18 @@ const routes = [
             title: '攒抽计算器'
         }
     },
-    {
-        path: '/tools/mower-plan',
-        text: 'Mower排班表',
-        name: 'MowerPlan',
-        display: true,
-        module: 'tools',
-        icon: "mdi-mower",
-        component: () => import('/src/pages/tools/mower-plan.vue'),
-        meta: {
-            title: 'Mower排班表生成器'
-        }
-    },
+    // {
+    //     path: '/tools/mower-plan',
+    //     text: 'Mower排班表',
+    //     name: 'MowerPlan',
+    //     display: true,
+    //     module: 'tools',
+    //     icon: "mdi-mower",
+    //     component: () => import('/src/pages/tools/mower-plan.vue'),
+    //     meta: {
+    //         title: 'Mower排班表生成器'
+    //     }
+    // },
     {
         path: '/tools/scheduleV2',
         text: '排班表生成器',
