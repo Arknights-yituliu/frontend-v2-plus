@@ -2,7 +2,6 @@
 import { ref, computed, nextTick, watch, inject } from 'vue'
 import { mowerPlanStore } from '../store/planStore.js'
 import { swap } from '@/utils/mower/common.js'
-import { useTheme } from 'vuetify'
 import OperatorMultiSelect from './OperatorMultiSelect.vue'
 import HelpText from './HelpText.vue'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
@@ -39,7 +38,6 @@ function getAvatarUrl(name) {
   return `/avatar/${name}.webp`
 }
 
-// const theme = inject('mowerTheme') ?? computed(() => (useTheme().global.current.value === 'dark' ? 'dark' : 'light'))
 const theme = inject('mowerTheme') ?? ref('light')
 
 const outer = ref(null)
