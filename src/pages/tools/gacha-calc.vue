@@ -1738,7 +1738,7 @@ function sharePage() {
             </div>
           </div>
           <!-- 时间选择器 -->
-          <div class="resources-result-bar" style="border: none; padding: 12px; margin: 8px 4px; background-color: #f5f7fa; border-radius: 4px;display: none;">
+          <div class="resources-result-bar" id="timeSelector" style="border: none; padding: 12px; margin: 8px 4px; background-color: #f5f7fa; border-radius: 4px;display: none;">
             <div style="display: flex; align-items: center; gap: 12px;">
               <span style="font-weight: 500; color: #606266;">当前时间：</span>
               <el-date-picker
