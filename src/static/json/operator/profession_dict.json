@@ -22,6 +22,10 @@
       {
         "value": "bearer",
         "label": "执旗手"
+      },
+      {
+        "value": "lord",
+        "label": "策士"
       }
     ]
   },
@@ -76,6 +80,14 @@
       {
         "value": "hammer",
         "label": "撼地者"
+      },
+      {
+        "value": "mercenary",
+        "label": "佣兵"
+      },
+      {
+        "value": "primguard",
+        "label": "本源近卫"
       }
     ]
   },
@@ -194,6 +206,10 @@
       {
         "value": "primcaster",
         "label": "本源术师"
+      },
+      {
+        "value": "soulcaster",
+        "label": "塑灵术师"
       }
     ]
   },
@@ -300,6 +316,10 @@
       {
         "value": "alchemist",
         "label": "炼金师"
+      },
+      {
+        "value": "skywalker",
+        "label": "巡空者"
       }
     ]
   }
