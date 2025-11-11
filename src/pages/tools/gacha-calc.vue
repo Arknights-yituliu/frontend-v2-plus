@@ -87,7 +87,7 @@ let selectedPackIndex = ref([])
 //选择的历史礼包索引
 let selectedHistoryPackIndex = ref([])
 
-//活动排期临时集合，用于将俩个json文件内的排序合并排序
+//活动排期临时集合，用于将两个json文件内的排期合并排序
 let tempActivityScheduleList = []
 
 //将预测活动排期分类
@@ -216,8 +216,7 @@ let currentSchedule = ref({
   activityType: '联动限定',
   disabled: false,
   dailyGiftResources: true,
-  accuracyFlag: true,
-  historicalPackTimeRange: [new Date('2024/09/01 00:00:00').getTime(), new Date('2024/09/15 23:59:59').getTime(),]
+  accuracyFlag: true
 })
 
 //用户选择的活动的类型
@@ -228,9 +227,10 @@ let activityType = ref('联动限定')
 // start: Date 起始时间
 // end: Date 结束时间
 // disabled: boolean 是否禁用选项
-// accuracyFlag:true, 是否是准确排期
+// accuracyFlag: boolean 是否是准确排期
 // activityType: string 活动类型
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
+// 注：历史礼包时间范围已改为动态计算，不再需要 historicalPackTimeRange 配置
 const scheduleOptions = [
   {
     name: '感谢庆典',
@@ -240,8 +240,7 @@ const scheduleOptions = [
     activityType: '周年限定',
     disabled: false,
     dailyGiftResources: true,
-    accuracyFlag: false,
-    historicalPackTimeRange: [new Date('2024/09/01 00:00:00').getTime(), new Date('2024/11/15 23:59:59').getTime(),]
+    accuracyFlag: false
   },
   {
     name: '新年',
@@ -251,8 +250,7 @@ const scheduleOptions = [
     activityType: '春节限定',
     disabled: false,
     dailyGiftResources: true,
-    accuracyFlag: true,
-    historicalPackTimeRange: [new Date('2025/02/01 00:00:00').getTime(), new Date('2025/02/21 23:59:59').getTime(),]
+    accuracyFlag: true
   },
   {
     name: '周年庆典',
@@ -262,8 +260,7 @@ const scheduleOptions = [
     activityType: '周年限定',
     disabled: true,
     dailyGiftResources: true,
-    accuracyFlag: true,
-    historicalPackTimeRange: [new Date('2025/05/01 00:00:00').getTime(), new Date('2025/05/14 23:59:59').getTime(),]
+    accuracyFlag: true
   }
 ]
 
@@ -325,12 +322,14 @@ async function getAndSortPackData() {
     }
     let packInfoVO = _packPromotionRatioCalc(item)
 
+    // 所有礼包都加入缓存，包括过期的礼包（供 getHistoryPackInfo 筛选往年礼包使用）
     listPackInfoCache.value.push(packInfoVO)
 
     if (packInfoVO.drawPrice === 0) {
       continue;
     }
 
+    // 只有未过期的礼包才进入后续分类和显示逻辑
     if (packInfoVO.end < currentTimestamp.value) {
       continue
     }
@@ -407,26 +406,45 @@ async function getAndSortPackData() {
 
 function getHistoryPackInfo() {
 
-  const [historicalPackStart, historicalPackEnd] = currentSchedule.value.historicalPackTimeRange
   const scheduleStart = currentSchedule.value.start
   const scheduleEnd = currentSchedule.value.end
+
+  // 动态计算历史礼包时间范围：从当前时刻（或设定的时刻）到卡池结束日期，向前推一年
+  const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
+  const historicalPackStart = currentTimestamp.value - oneYearInMs;  // 当前时刻向前推一年
+  const historicalPackEnd = scheduleEnd.getTime() - oneYearInMs;     // 卡池结束日期向前推一年
+
   let list = []
+
+  console.log('=== 往年礼包筛选（动态时间范围）===')
+  console.log('当前活动:', currentSchedule.value.name)
+  console.log('当前时刻:', new Date(currentTimestamp.value))
+  console.log('卡池结束:', new Date(scheduleEnd))
+  console.log('历史礼包时间范围（去年同期）:', new Date(historicalPackStart), '到', new Date(historicalPackEnd))
+  console.log('缓存中的礼包总数:', listPackInfoCache.value.length)
+
   for (let pack of listPackInfoCache.value) {
     const {officialName, drawEfficiency, start, end, saleType} = pack
 
     if ('activity' !== saleType || drawEfficiency < 0.1) {
       continue
     }
-    // console.log(officialName, start, '>', historicalPackStart, '——', start > historicalPackStart, end, '<', historicalPackEnd, '——', end < historicalPackEnd)
-    if (start > historicalPackStart && start < historicalPackEnd) {
+
+    // 打印符合基本条件的礼包信息
+    console.log('检查礼包:', officialName, '售卖时间:', new Date(start), '到', new Date(end), 'saleType:', saleType, 'drawEfficiency:', drawEfficiency)
+
+    // 判断礼包售卖时间与历史时间范围是否有重叠
+    // 重叠条件：礼包开始时间 < 历史范围结束时间 AND 礼包结束时间 > 历史范围开始时间
+    if (start < historicalPackEnd && end > historicalPackStart) {
       let item = JSON.parse(JSON.stringify(pack))
       item.start = scheduleStart.getTime()
       item.end = scheduleEnd.getTime()
       list.push(item)
+      console.log('✅ 加入往年礼包:', officialName, '原售卖时间:', new Date(start), '到', new Date(end))
     }
   }
 
-
+  console.log('最终筛选出的往年礼包数量:', list.length)
   packListGroupByHistory.value = list
 }
 
