@@ -310,6 +310,7 @@ async function getAndSortPackData() {
   listMonthlyPackInfo.value = [];
   listActivityPackInfo.value = [];
   listDisplayPackInfo.value = [];
+  certificatePackList.value = [];  // 清空黄票兑换列表
 
   // 使用全局时间戳，支持用户自定义时间
   // const currentTimeStamp = new Date().getTime()
