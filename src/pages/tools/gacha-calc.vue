@@ -145,14 +145,19 @@ for (const item of tempActivityScheduleList) {
  * 批量生成服务器维护奖励列表，以5天为一个时间段生成，每个时间段有200合成玉
  */
 function batchGenerationServerMaintenanceRewards() {
-  const date = new Date();
+  // 使用全局时间戳，支持用户自定义时间
+  const date = new Date(currentTimestamp.value);
   let month = date.getMonth() + 1
   let year = date.getFullYear()
+
+  // 清空之前的维护奖励数据
+  otherRewardBySchedules.value = otherRewardBySchedules.value.filter(item => !item.name.includes('游戏维护'));
+
   for (let m = 0; m < 12; m++) {
 
     let currentDay = 1
     if (m === 0) {
-      currentDay = date.getDay()
+      currentDay = date.getDate()
     }
 
     for (let d = currentDay; d < 29; d += 5) {
@@ -429,8 +434,12 @@ function getHistoryPackInfo() {
  * @param index 礼包唯一索引
  */
 function batchGenerationMonthlyPack(index) {
-  //获取当前时间
-  const date = new Date();
+  // 清空之前的月常礼包数据
+  listMonthlyPackInfo.value = [];
+  certificatePackList.value = [];
+
+  // 使用全局时间戳，支持用户自定义时间
+  const date = new Date(currentTimestamp.value);
   //获取当前月份
   let month = date.getMonth() + 1
   //获取当前年份
@@ -746,8 +755,8 @@ function gachaResourcesCalculation() {
     let checkInTimes = 0
     //可以在绿票商店购买几个月的前两层抽卡道具
     let shoppingTimes = 0
-    //当前时间
-    let startDate = new Date()
+    //使用全局时间戳，支持用户自定义时间
+    let startDate = new Date(currentTimestamp.value)
 
     //如果今天不是周一，星期一总数加1，因为有可能不在周一打剿
     if (startDate.getDay() !== 1) {
@@ -1556,6 +1565,8 @@ function getProbabilityBoxStyle(limited, all) {
 function handleDateChange(date) {
   if (date) {
     currentTimestamp.value = new Date(date).getTime();
+    // 重新生成基于时间的数据
+    batchGenerationServerMaintenanceRewards();
     // 重新加载礼包数据和计算攒抽资源
     getAndSortPackData();
     gachaResourcesCalculation();
