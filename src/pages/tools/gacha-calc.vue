@@ -434,10 +434,6 @@ function getHistoryPackInfo() {
  * @param index 礼包唯一索引
  */
 function batchGenerationMonthlyPack(index) {
-  // 清空之前的月常礼包数据
-  listMonthlyPackInfo.value = [];
-  certificatePackList.value = [];
-
   // 使用全局时间戳，支持用户自定义时间
   const date = new Date(currentTimestamp.value);
   //获取当前月份
