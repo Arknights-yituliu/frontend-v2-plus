@@ -128,18 +128,6 @@ const routes = [
         }
     },
     {
-        path: '/tools/mower-plan',
-        text: 'Mower排班表',
-        name: 'MowerPlan',
-        display: true,
-        module: 'tools',
-        icon: "mdi-mower",
-        component: () => import('/src/pages/tools/mower-plan.vue'),
-        meta: {
-            title: 'Mower排班表生成器'
-        }
-    },
-    {
         path: '/tools/gachaCalcTest',
         text: '攒抽计算器（测试）',
         name: 'GachaCalculatorTest',
@@ -161,6 +149,18 @@ const routes = [
         component: () => import('/src/pages/tools/schedule.v2.vue'),
         meta: {
             title: '排班表生成器'
+        }
+    },
+    {
+        path: '/tools/mower-plan',
+        text: '排班表（Mower）',
+        name: 'MowerPlan',
+        display: true,
+        module: 'tools',
+        icon: "mdi-mower",
+        component: () => import('/src/pages/tools/mower-plan.vue'),
+        meta: {
+            title: 'Mower排班表生成器'
         }
     },
     {
@@ -525,7 +525,7 @@ const routes = [
         display: false,
         component: () => import('/src/pages/tools/ziwugoods.vue')
     },
-        {
+    {
         path: '/live',
         text: '直播数据转换',
         display: false,

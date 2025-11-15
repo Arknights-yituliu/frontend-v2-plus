@@ -1,7 +1,22 @@
 import operator_table_simple from '/src/static/json/operator/character_table_simple.json'
 import operator_update_time from '/public/json/operator_update_time.json'
-
 import operator_table_v2 from '/src/static/json/operator/character_table_simple.v2.json'
+import {dateFormat} from "/src/utils/dateUtil.js";
+
+function getEquipUpdateTime(){
+    let equipUpdateTimeMap = new Map()
+    for(const charId in operator_table_v2){
+        const operatorInfo = operator_table_v2[charId];
+        if(operatorInfo.equip){
+            for(const equipItem of operatorInfo.equip){
+                const {uniEquipName,uniEquipGetTime} = equipItem
+                console.log('时间戳',uniEquipGetTime,'名称',uniEquipName)
+                equipUpdateTimeMap.set(uniEquipName,dateFormat(uniEquipGetTime*1000))
+            }
+        }
+    }
+    return equipUpdateTimeMap
+}
 
 function getOperatorTable(){
     for(const charId in operator_table_simple){
@@ -45,4 +60,4 @@ const operatorTable = getOperatorTable()
 
 const operatorTableV2 = getOperatorTableV2()
 
-export { operatorTable,operatorTableV2}
+export { operatorTable,operatorTableV2,getEquipUpdateTime}

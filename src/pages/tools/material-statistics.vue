@@ -2,15 +2,17 @@
 import {onMounted, ref} from "vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import equipUpdateTime from '/public/json/equip_update_time.json'
-import {dateFormat, formatDateString} from "@/utils/dateUtil.js";
+import {dateFormat, formatDateString} from "/src/utils/dateUtil.js";
 import operatorTableSimple from '/src/static/json/operator/character_table_simple.json'
 import OperatorUpdateTime from '/public/json/operator_update_time.json'
 import operatorItemCostTable from '/src/static/json/operator/operator_item_cost_table.json'
 import compositeTableJson from '/src/static/json/material/composite_table.v2.json'
 import itemInfo from '/src/static/json/material/item_info.json'
-
+import {getEquipUpdateTime} from '/src/utils/gameData.js'
 
 let activeTab = ref('1')
+
+
 
 let compositeTable = {}
 for (const item of compositeTableJson) {
@@ -68,16 +70,9 @@ let listItemCostStatistics = []
 let operatorAndEquipCollectByDate = new Map()
 
 //模组更新时间表
-let equipUpdateTimeMap = new Map()
+let equipUpdateTimeMap = getEquipUpdateTime()
 
-//将模组更新时间格式化到equipUpdateTimeMap
-for (const item of equipUpdateTime) {
-  let {equipName, updateTime} = item
-  if(!updateTime){
-    updateTime = '2019/05/01'
-  }
-  equipUpdateTimeMap.set(equipName, updateTime)
-}
+
 
 
 //根据更新时间计算材料消耗数量
@@ -103,7 +98,7 @@ for (const charId in operatorTableSimple) {
     operatorUpdateTime = new Date(operatorUpdateTimeElement.updateTime)
     operatorUpdateTimeText = dateFormat(operatorUpdateTime)
   }
-  console.log(operatorUpdateTimeText)
+  // console.log(operatorUpdateTimeText)
   //根据干员更新时间的格式化字符串获取对应时间的材料消耗记录对象
   let collectByOperator = operatorAndEquipCollectByDate.get(operatorUpdateTimeText);
   //如果对象不存在，新建一个
@@ -336,7 +331,7 @@ let r3ItemCostList = splitItem(mapItemCostStatistics)
 let r3ItemCostListByDate = []
 
 for (const [key, value] of operatorAndEquipCollectByDate) {
-  console.log(key)
+  // console.log(key)
   const {updateTime, itemCost} = value
   const r3List = splitItem(itemCost)
   let count = 0
