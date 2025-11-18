@@ -10,6 +10,7 @@ import USER_HOME from '/src/pages/account/home.vue'
 import STORE from '/src/pages/material/store.vue'
 import PACK from '/src/pages/material/pack.vue'
 import ITEM_VALUE from '/src/pages/material/value.vue'
+import INDEX from '/src/pages/index.vue'
 
 // {
 //     path: '/',  访问路径
@@ -23,6 +24,18 @@ import ITEM_VALUE from '/src/pages/material/value.vue'
 // },
 
 const routes = [
+    {
+        path: '/i',
+        text: '关卡推荐',
+        name: 'Index',
+        display: true,
+        module: 'material',
+        icon: "mdi-hexagon-multiple",
+        component: INDEX,
+        meta: {
+            title: '关卡推荐'
+        }
+    },
     {
         path: '/',
         text: '关卡推荐',
