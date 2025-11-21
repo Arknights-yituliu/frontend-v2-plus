@@ -1,5 +1,5 @@
 <script setup>
-import { inject, ref, watch } from 'vue'
+import { inject, ref, watch, computed } from 'vue'
 import { mowerPlanStore } from '../store/planStore.js'
 import { renderOperatorLabel, renderOperatorTag } from '@/utils/mower/opSelect.js'
 import HelpText from './HelpText.vue'
@@ -8,6 +8,14 @@ const show = inject('show_task')
 const add_task = inject('add_task') ?? ref(false)
 
 const { sub_plan, backup_plans, operators } = mowerPlanStore
+
+const operators_with_free = computed(() => {
+  return [{ value: 'Free', label: 'Free' }].concat(operators.value)
+})
+
+const operators_with_free_current = computed(() => {
+  return [{ value: 'Current', label: 'Current' }].concat(operators_with_free.value)
+})
 
 const task_list = ref([])
 
@@ -70,7 +78,7 @@ function applyTasks() {
                 <n-select
                   v-model:value="value.operators"
                   filterable
-                  :options="operators"
+                  :options="operators_with_free_current"
                   :render-label="renderOperatorLabel"
                   :render-tag="renderOperatorTag"
                   :on-update:value="
