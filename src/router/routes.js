@@ -28,7 +28,7 @@ const routes = [
         path: '/i',
         text: '关卡推荐',
         name: 'Index',
-        display: true,
+        display: false,
         module: 'material',
         icon: "mdi-hexagon-multiple",
         component: INDEX,
