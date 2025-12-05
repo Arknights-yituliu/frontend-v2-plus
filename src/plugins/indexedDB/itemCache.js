@@ -199,7 +199,7 @@ function getLastSynchronizationTime() {
 }
 
 async function getStageInfoCache() {
-    const cacheKey = 'stageInfo-v2'
+    const cacheKey = 'stageInfo-v3'
     let stageInfo
 
 
