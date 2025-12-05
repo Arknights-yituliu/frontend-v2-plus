@@ -10,7 +10,7 @@ function getEquipUpdateTime(){
         if(operatorInfo.equip){
             for(const equipItem of operatorInfo.equip){
                 const {uniEquipName,uniEquipGetTime} = equipItem
-                console.log('时间戳',uniEquipGetTime,'名称',uniEquipName)
+                // console.log('时间戳',uniEquipGetTime,'名称',uniEquipName)
                 equipUpdateTimeMap.set(uniEquipName,dateFormat(uniEquipGetTime*1000))
             }
         }

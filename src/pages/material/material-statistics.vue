@@ -170,7 +170,7 @@ for (const charId in operatorTableSimple) {
         lastTime = equipUpdateTimeText
       } else {
         // console.log(uniEquipName)
-        equipUpdateTimeText = lastTime
+        equipUpdateTimeText = '1145/51/4'
       }
 
       const equipUpdateTime = new Date(equipUpdateTimeText + " 16:00:00")
@@ -205,8 +205,10 @@ for (const charId in operatorTableSimple) {
       operatorAndEquipCollectByDate.set(equipUpdateTimeText, collectByEquip)
 
     }
-  }
 
+
+  }
+  console.log(operatorAndEquipCollectByDate.get('2025/12/05'))
   /**
    * 更新全干员统计消耗
    * @param itemId 材料id
