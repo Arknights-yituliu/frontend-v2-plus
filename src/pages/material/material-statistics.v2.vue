@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
-import equipUpdateTime from '/public/json/equip_update_time.json'
 import {dateFormat, formatDateString} from "/src/utils/dateUtil.js";
 import operatorTableSimple from '/src/static/json/operator/character_table_simple.json'
 import OperatorUpdateTime from '/public/json/operator_update_time.json'
