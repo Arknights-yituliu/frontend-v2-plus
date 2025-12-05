@@ -1,4 +1,19 @@
 {
+  "char_4214_cairn": {
+    "updateTime": "2025/12/05 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "响石"
+  },
+  "char_4212_nasti": {
+    "updateTime": "2025/12/05 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "娜斯提"
+  },
+  "char_4213_skybx": {
+    "updateTime": "2025/12/05 12:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "天空盒"
+  },
   "char_1045_svash2": {
     "updateTime": "2025/11/01 12:00:00",
     "obtainApproach": "限定干员",
@@ -9,12 +24,12 @@
     "obtainApproach": "常驻干员",
     "name": "圣聆初雪"
   },
-  "char_1047_halo2  ": {
+  "char_1047_halo2": {
     "updateTime": "2025/11/01 12:00:00",
     "obtainApproach": "赠送干员",
     "name": "溯光星源"
   },
-  "char_4211_snhunt ": {
+  "char_4211_snhunt": {
     "updateTime": "2025/11/01 12:00:00",
     "obtainApproach": "常驻干员",
     "name": "雪猎"
@@ -29,10 +44,6 @@
     "obtainApproach": "常驻干员",
     "name": "协律"
   },
-
-
-
-
   "char_4204_mantra": {
     "updateTime": "2025/10/09 12:00:00",
     "obtainApproach": "常驻干员",
