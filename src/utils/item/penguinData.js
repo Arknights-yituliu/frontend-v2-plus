@@ -1,6 +1,6 @@
-import itemCache from "@/plugins/indexedDB/itemCache.js";
+import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import ytlStageInfo from '/src/static/json/material/ytl_stage_info.json'
-import deepClone from "@/utils/deepClone.js";
+import deepClone from "/src/utils/deepClone.js";
 
 
 /**
