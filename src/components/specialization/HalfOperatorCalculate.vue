@@ -10,7 +10,7 @@ let notificationDebounceTimer = null;
 
 // 请求通知权限
 function requestNotificationPermission() {
-  if ('Notification' in window && Notification.permission === "default") {
+  if ('Notification' in window) {
     Notification.requestPermission().then(permission => {
       notificationPermission = permission;
     });
@@ -316,13 +316,21 @@ const formattedRemainingTime = computed(() => {
             <!-- 通知提示 -->
             <div v-if="state === 'success'" class="notification-tip">
               <el-alert
+                  title="浏览器通知"
+                  :type="notificationPermission === 'granted' ? 'success' : 'warning'"
                   :closable="false"
                   show-icon
-                  title="浏览器通知"
-                  type="info"
               >
                 <template #default>
-                  若当前标签页未关闭，则会在时间点前{{ halfOperatorParams.leadTime }}分钟提示您换专精时间减半干员(ง ˙ω˙)ว
+                  <div>
+                    <p>若当前标签页未关闭，则会在时间点前5分钟提示您换专精时间减半干员！</p>
+                    <p style="margin-top: 8px;">
+                      当前通知权限状态： 
+                      <span :style="{ color: notificationPermission === 'granted' ? 'var(--el-color-success)' : 'var(--el-color-warning)' }">
+                        {{ notificationPermission === 'granted' ? '已允许' : notificationPermission === 'denied' ? '已拒绝' : '未设置' }}
+                      </span>
+                    </p>
+                  </div>
                 </template>
               </el-alert>
             </div>
