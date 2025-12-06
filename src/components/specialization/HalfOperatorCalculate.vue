@@ -72,7 +72,7 @@ function scheduleNotification(reminderTime) {
       minute: '2-digit'
     });
     sendNotification('定时提醒已设置', `将在${notificationDateTime}提醒您更换专精时间减半干员`);
-    console.log('定时提醒已设置')
+    // console.log('定时提醒已设置')
   }, 5000); // 5秒防抖
 }
 
