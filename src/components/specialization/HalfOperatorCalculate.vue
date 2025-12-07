@@ -3,6 +3,79 @@ import {computed, onMounted, reactive, ref, watch} from "vue"
 import {convertToSeconds, getSecondsSinceMidnight, secondsToTimeString,} from "/src/utils/dateHanding"
 import {Clock, QuestionFilled} from "@element-plus/icons-vue";
 
+// 浏览器通知功能
+let notificationPermission = 'default';
+let notificationTimer = null;
+let notificationDebounceTimer = null;
+
+// 请求通知权限
+function requestNotificationPermission() {
+  if ('Notification' in window) {
+    Notification.requestPermission().then(permission => {
+      notificationPermission = permission;
+    });
+  }
+}
+
+// 发送通知
+function sendNotification(title, body) {
+  if (notificationPermission === 'granted') {
+    new Notification(title, {
+      body: body,
+      icon: '/favicon.ico',
+      tag: 'specialization-reminder'
+    });
+  }
+}
+
+// 设置定时通知
+function scheduleNotification(reminderTime) {
+  // 清除之前的防抖定时器
+  if (notificationDebounceTimer) {
+    clearTimeout(notificationDebounceTimer);
+  }
+
+  // 针对短时间反复计算的防抖
+  notificationDebounceTimer = setTimeout(() => {
+    // 清除之前的定时器
+    if (notificationTimer) {
+      clearTimeout(notificationTimer);
+    }
+
+    // 计算通知时间（毫秒）
+    const now = new Date();
+    const [hours, minutes, seconds] = reminderTime.split(':').map(Number);
+    const reminderDate = new Date();
+    reminderDate.setHours(hours, minutes, seconds, 0);
+
+    // 提前提醒时长
+    reminderDate.setMinutes(reminderDate.getMinutes() - halfOperatorParams.leadTime);
+
+    // 如果提醒时间已经过去，则设置为明天
+    if (reminderDate <= now) {
+      reminderDate.setDate(reminderDate.getDate() + 1);
+    }
+
+    const timeUntilReminder = reminderDate.getTime() - now.getTime();
+
+    // 设置定时器
+    notificationTimer = setTimeout(() => {
+      sendNotification('专精时间减半提醒', '该换专精时间减半干员了！');
+    }, timeUntilReminder);
+
+    // 立即发送通知，告知用户将在什么时间点收到提醒
+    const notificationDateTime = reminderDate.toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    sendNotification('定时提醒已设置', `将在${notificationDateTime}提醒您更换专精时间减半干员`);
+    // console.log('定时提醒已设置')
+  }, 5000); // 5秒防抖
+}
+
 const algorithmVisible = ref(false) //算法标识
 const usageGuideVisible = ref(false) //使用指南
 
@@ -35,6 +108,7 @@ let remindTime //提醒时间字符串
 let remindText = ref('') //提醒文本
 
 onMounted(() => {
+  requestNotificationPermission(); // 请求通知权限
   calculateTime() //先触发一次
 })
 
@@ -59,7 +133,9 @@ function calculateTime() {
       remindTime = secondsToTimeString(getSecondsSinceMidnight() + ampleTime > 86400 ?
           Math.floor(getSecondsSinceMidnight() + ampleTime - 86400) :
           Math.floor(getSecondsSinceMidnight() + ampleTime))
-      remindText.value = `减半干员的专精减半效果将在${Math.floor(timeDifference / 60)}分钟后迎来临界触发点，可以制定${remindTime}时间点的闹钟(〃'▽'〃)`
+      remindText.value = `减半干员的专精减半效果将在${Math.floor(timeDifference / 60)}分钟后迎来临界触发点，可以制定${remindTime}及之前时间点的闹钟(〃'▽'〃)`
+      // 设置通知
+      scheduleNotification(remindTime);
     } else if (timeDifference > 0) {
       //已晚于余裕时间点，但早于极限触发时间点
       state.value = "warning" //余裕时差不足，需要立即换减半干员，临近极限触发点了
@@ -236,6 +312,28 @@ const formattedRemainingTime = computed(() => {
             <div :style="{ color: statusColors[state] }" class="result-message">
               <span>{{ remindText }}</span>
             </div>
+
+            <!-- 通知提示 -->
+            <div v-if="state === 'success'" class="notification-tip">
+              <el-alert
+                  title="浏览器通知"
+                  :type="notificationPermission === 'granted' ? 'success' : 'warning'"
+                  :closable="false"
+                  show-icon
+              >
+                <template #default>
+                  <div>
+                    <p>若当前标签页未关闭，则会在时间点前5分钟提示您换专精时间减半干员！</p>
+                    <p style="margin-top: 8px;">
+                      当前通知权限状态： 
+                      <span :style="{ color: notificationPermission === 'granted' ? 'var(--el-color-success)' : 'var(--el-color-warning)' }">
+                        {{ notificationPermission === 'granted' ? '已允许' : notificationPermission === 'denied' ? '已拒绝' : '未设置' }}
+                      </span>
+                    </p>
+                  </div>
+                </template>
+              </el-alert>
+            </div>
           </div>
         </div>
       </div>
@@ -362,7 +460,7 @@ function calculateTime() {
 
           <el-timeline-item type="primary">
             <h4>设置提醒时间</h4>
-            <p>提前提醒（分钟）默认为5分钟，对应结果文本"可以制定XX:XX:XX时间点的闹钟"</p>
+            <p>提前提醒（分钟）默认为5分钟，对应结果文本"可以制定XX:XX:XX及之前时间点的闹钟"</p>
           </el-timeline-item>
 
           <el-timeline-item type="success">
@@ -509,6 +607,10 @@ function calculateTime() {
   align-items: center;
   gap: 10px;
   font-size: 16px;
+}
+
+.notification-tip {
+  margin-top: 16px;
 }
 
 .calculator-footer {
