@@ -403,13 +403,17 @@ function updateStageActive() {
 
 }
 
+/**
+ * 将某个章节的关卡全部写入或移除黑名单
+ * @param collect
+ */
 function selectAllStage(collect) {
 
   for (const item of collect.list) {
     item.active = !collect.selectAll
   }
-
   collect.selectAll = !collect.selectAll
+  updateStageBacklist()
 }
 
 
@@ -420,13 +424,13 @@ function updateStageBlacklist(collect, stage) {
     selectAll = selectAll && item.active
   }
   collect.selectAll = selectAll
-  updateStageConfig()
+  updateStageBacklist()
 }
 
 function updateBeastsStageActive(stage) {
   stage.active = !stage.active
   stageCollect.value.Main[stage.zoneIndex].list[stage.stageIndex].active = stage.active
-  updateStageConfig()
+  updateStageBacklist()
 }
 
 function useActivityAverageStage() {
@@ -557,7 +561,7 @@ function checkStageConfig() {
  * 强制刷新物品价值
  */
 function forceRefreshItemValue() {
-  updateStageConfig()
+  updateStageBacklist()
   checkStageConfig(); // 校验配置
   localStorage.setItem("StageConfig", stringifyConfig(stageConfig.value)); // 保存配置
   itemCache.getItemValueCacheByConfig(stageConfig.value, true); // 强制刷新
@@ -567,7 +571,8 @@ function forceRefreshItemValue() {
 /**
  * 保存自定义一图流配置
  */
-function updateStageConfig() {
+function updateStageBacklist(deleteStageIdMap) {
+
   stageConfig.value.stageBlacklist = []
   for (const type in stageCollect.value) {
     const collect = stageCollect.value[type]
