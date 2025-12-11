@@ -40,7 +40,6 @@ function isEliteMaterial(item_id) {
 
 
 
-
 // 基础龙门币价值、基础 EXP 价值
 const baseLMDValue = 36 / 10000;
 const baseEXPValue = 36 / 10000;
