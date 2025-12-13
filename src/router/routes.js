@@ -509,6 +509,16 @@ const routes = [
         component: () => import('/src/pages/video/sysl3.vue')
     },
     {
+        path: '/video/logicalbyte',
+        text: 'LogicalByte',
+        name: 'LogicalByte',
+        display: false,
+        component: () => import('/src/pages/video/LogicalByte.vue'),
+        meta: {
+            title: 'LogicalByte'
+        }
+    },
+    {
         path: '/video/elite',
         text: '动态-专精精二性价比',
         display: false,
