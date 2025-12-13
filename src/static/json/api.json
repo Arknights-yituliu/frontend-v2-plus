@@ -434,7 +434,7 @@
             "type": "double"
           },
           {
-            "name": "lmdcost",
+            "name": "lmdCost",
             "description": "龙门币消耗",
             "type": "double"
           }

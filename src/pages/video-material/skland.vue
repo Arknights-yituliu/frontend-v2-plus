@@ -189,7 +189,7 @@ onMounted(() => {
       </td>
       <td>
         <div class="flex align-center">
-          <item-image :item-id="'4001'" size="40"></item-image> X {{formatNumber(item.lmdcost,2)}}万
+          <item-image :item-id="'4001'" size="40"></item-image> X {{formatNumber(item.lmdCost,2)}}万
         </div>
       </td>
       <td>
@@ -210,7 +210,7 @@ onMounted(() => {
       </td>
       <td>
         <div class="flex align-center">
-          <item-image :item-id="'4001'" size="40"></item-image> X {{formatNumber(item.lmdcost,2)}}万
+          <item-image :item-id="'4001'" size="40"></item-image> X {{formatNumber(item.lmdCost,2)}}万
         </div>
       </td>
       <td>

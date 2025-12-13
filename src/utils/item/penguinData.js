@@ -1,6 +1,6 @@
-import itemCache from "@/plugins/indexedDB/itemCache.js";
+import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import ytlStageInfo from '/src/static/json/material/ytl_stage_info.json'
-import deepClone from "@/utils/deepClone.js";
+import deepClone from "/src/utils/deepClone.js";
 
 
 /**
@@ -17,26 +17,30 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
 
     let penguinMatrix = []
 
-
+    //获取企鹅物流的源石数据
     penguinMatrix = await itemCache.getPenguinMatrixCache()
+
+    //获取关卡信息
     let stageInfoList = await itemCache.getStageInfoCache()
+
+    //将关卡信息转为一个<关卡id,关卡信息>的map
     let stageInfoMap = new Map()
     for (const stage of stageInfoList) {
-        const { stageId } = stage
+        const {stageId} = stage
         // console.log(stage)
         stageInfoMap.set(stageId, stage)
     }
 
+    //将磨难关卡分离出来，方便后面与标准关卡的掉率进行合并
     let toughStage = penguinMatrix.filter(e => e.stageId.indexOf("tough") > -1)
     let toughStageMap = new Map()
-
     for (const item of toughStage) {
         const key = `${item.stageId.replace('tough', 'main')}-${item.itemId}`
         toughStageMap.set(key, item)
     }
 
+    //关卡黑名单
     let stageBlacklistMap = new Map()
-
     if (stageConfig.stageBlacklist && useStageBlacklist) {
         for (const item of stageConfig.stageBlacklist) {
             stageBlacklistMap.set(item, 1)
@@ -48,11 +52,12 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
         sampleSize = stageConfig.sampleSize
     }
 
+
     let stageDropCollect = new Map()
 
     for (let item of penguinMatrix) {
 
-        const { stageId, itemId, quantity, times, start, end } = item
+        const {stageId, itemId, quantity, times, start, end} = item
 
         if (stageBlacklistMap.get(stageId)) {
             continue
@@ -95,7 +100,7 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
             }
         }
 
-        const { stageCode, apCost, spm, stageType, zoneName, zoneId } = stageInfo
+        const {stageCode, apCost, spm, stageType, zoneName, zoneId} = stageInfo
 
         if (stageType === 'ACT' && apCost === 21 && ytlStageInfo[itemId]) {
             ytlStageInfo[itemId].quantity += item.quantity
@@ -117,39 +122,26 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
             zoneId: zoneId
         }
 
-        let lmdDropTemplate = {
-            stageId: stageId,
-            itemId: "4001",
-            quantity: apCost * 12,
-            times: 1,
-            start: stageInfo.start,
-            end: stageInfo.end,
-            stageCode: stageCode,
-            apCost: apCost,
-            spm: spm,
-            stageType: stageType,
-            zoneName: zoneName,
-            zoneId: zoneId
-        }
 
-        const lmdDrop = deepClone(lmdDropTemplate)
-        const storeUnlimitedExchangeDrop =deepClone(lmdDropTemplate)
-        storeUnlimitedExchangeDrop.quantity = apCost * 20
-        // {
-        //     stageId: stageId,
+        const lmdDrop = createDropTemplate(stageInfo, {
+            itemId: "4001",
+            price: 1,
+            quantity: 12,
+        })
+
+        // const storeUnlimitedExchangeDrop = createDropTemplate(stageInfo, {
         //     itemId: "4001",
-        //     quantity: apCost * 20,
-        //     times: 1
-        // }
+        //     quantity: 20,
+        // })
 
 
         if (stageDropCollect.get(stageId)) {
             stageDropCollect.get(stageId).push(mergeItem)
         } else {
             stageDropCollect.set(stageId, [mergeItem, lmdDrop])
-            if ("ACT" === stageType || "ACT_REP" === stageType) {
-                stageDropCollect.get(stageId).push(storeUnlimitedExchangeDrop)
-            }
+            // if ("ACT" === stageType || "ACT_REP" === stageType) {
+            //     stageDropCollect.get(stageId).push(storeUnlimitedExchangeDrop)
+            // }
         }
     }
 
@@ -158,27 +150,17 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
         const dropInfo = ytlStageInfo[itemId]
         if (dropInfo.times > 0) {
 
-            let lmdDropTemplate = {
-                stageId: dropInfo.stageId,
+            const lmdDrop = createDropTemplate(dropInfo, {
                 itemId: "4001",
-                quantity: dropInfo.apCost * 12,
-                times: 1,
-                start: dropInfo.start,
-                end: dropInfo.end,
-                stageCode: dropInfo.stageCode,
-                apCost: dropInfo.apCost,
-                spm: dropInfo.spm,
-                stageType: dropInfo.stageType,
-                zoneName: dropInfo.zoneName,
-                zoneId: dropInfo.zoneId
-            }
+                price: 1,
+                quantity: 12,
+            })
 
-            const lmdDrop = deepClone(lmdDropTemplate)
-            const storeUnlimitedExchangeDrop =deepClone(lmdDropTemplate)
-            storeUnlimitedExchangeDrop.quantity = dropInfo.apCost * 20
-
-
-            stageDropCollect.set(dropInfo.stageId, [dropInfo, lmdDrop, storeUnlimitedExchangeDrop])
+            // const storeUnlimitedExchangeDrop = createDropTemplate(dropInfo, {
+            //     itemId: "4001",
+            //     quantity:  20,
+            // })
+            stageDropCollect.set(dropInfo.stageId, [dropInfo, lmdDrop])
         }
     }
 
@@ -186,4 +168,22 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
     return stageDropCollect
 }
 
-export { getStageDropCollect }
+
+function createDropTemplate(stageInfo, shopRedemptionItem) {
+    return {
+        stageId: stageInfo.stageId,
+        itemId: shopRedemptionItem.itemId,
+        quantity: stageInfo.apCost / shopRedemptionItem.price * shopRedemptionItem.quantity * 1000,
+        times: 1000,
+        start: stageInfo.start,
+        end: stageInfo.end,
+        stageCode: stageInfo.stageCode,
+        apCost: stageInfo.apCost,
+        spm: stageInfo.spm,
+        stageType: stageInfo.stageType,
+        zoneName: stageInfo.zoneName,
+        zoneId: stageInfo.zoneId
+    }
+}
+
+export {getStageDropCollect, createDropTemplate}

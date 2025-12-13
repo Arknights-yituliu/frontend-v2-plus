@@ -21,7 +21,7 @@
           "leT3Efficiency": 0.5497344308319925,
           "leT4Efficiency": 0.5497344308319925,
           "orundumPerAp": 0.03945929051414284,
-          "lmdcost": 7.9603960396039595,
+          "lmdCost": 7.9603960396039595,
           "end": 4070880000000
         },
         {
@@ -42,7 +42,7 @@
           "leT3Efficiency": 0.5403851687258753,
           "leT4Efficiency": 0.6492025463658522,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -63,7 +63,7 @@
           "leT3Efficiency": 0.5392976058297808,
           "leT4Efficiency": 0.5392976058297808,
           "orundumPerAp": 0.03898635477582846,
-          "lmdcost": 8.262162162162163,
+          "lmdCost": 8.262162162162163,
           "end": 4070894400000
         },
         {
@@ -84,7 +84,7 @@
           "leT3Efficiency": 0.543450549167567,
           "leT4Efficiency": 0.543450549167567,
           "orundumPerAp": 0.04175513092710545,
-          "lmdcost": 8.054237288135594,
+          "lmdCost": 8.054237288135594,
           "end": 4070880000000
         },
         {
@@ -105,7 +105,7 @@
           "leT3Efficiency": 0.4988024288091836,
           "leT4Efficiency": 0.6164931493672671,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -126,7 +126,7 @@
           "leT3Efficiency": 0.41386423921517446,
           "leT4Efficiency": 0.41386423921517446,
           "orundumPerAp": 0.11917419812156654,
-          "lmdcost": 7.967286245353159,
+          "lmdCost": 7.967286245353159,
           "end": 4070880000000
         },
         {
@@ -147,7 +147,7 @@
           "leT3Efficiency": 0.3547753511952396,
           "leT4Efficiency": 0.3547753511952396,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -168,7 +168,7 @@
           "leT3Efficiency": 0.5475795938453172,
           "leT4Efficiency": 0.5475795938453172,
           "orundumPerAp": 0.040493258235193716,
-          "lmdcost": 8.135721812434141,
+          "lmdCost": 8.135721812434141,
           "end": 4070880000000
         },
         {
@@ -189,7 +189,7 @@
           "leT3Efficiency": 0.5608441046611526,
           "leT4Efficiency": 0.677834419270031,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -210,7 +210,7 @@
           "leT3Efficiency": 0.5540180150464076,
           "leT4Efficiency": 0.6745134400454954,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -231,7 +231,7 @@
           "leT3Efficiency": 0.4914722924639605,
           "leT4Efficiency": 0.6288670176470977,
           "orundumPerAp": 0.1500343624208995,
-          "lmdcost": 7.993545508625818,
+          "lmdCost": 7.993545508625818,
           "end": 4070880000000
         },
         {
@@ -252,7 +252,7 @@
           "leT3Efficiency": 0.6510521879940606,
           "leT4Efficiency": 0.6510521879940606,
           "orundumPerAp": 0.388096598574671,
-          "lmdcost": 9.600000000000001,
+          "lmdCost": 9.600000000000001,
           "end": 4070880000000
         },
         {
@@ -273,7 +273,7 @@
           "leT3Efficiency": 0.3978684243207828,
           "leT4Efficiency": 0.3978684243207828,
           "orundumPerAp": 0.1228888888888889,
-          "lmdcost": 7.907414104882459,
+          "lmdCost": 7.907414104882459,
           "end": 4070880000000
         },
         {
@@ -294,7 +294,7 @@
           "leT3Efficiency": 0.5408604435599376,
           "leT4Efficiency": 0.5408604435599376,
           "orundumPerAp": 0.03737813024075495,
-          "lmdcost": 8.176425855513308,
+          "lmdCost": 8.176425855513308,
           "end": 4070880000000
         },
         {
@@ -315,7 +315,7 @@
           "leT3Efficiency": 0.49464000594895957,
           "leT4Efficiency": 0.6326146636732723,
           "orundumPerAp": 0.18498248742213733,
-          "lmdcost": 7.991428257042254,
+          "lmdCost": 7.991428257042254,
           "end": 4070880000000
         },
         {
@@ -336,7 +336,7 @@
           "leT3Efficiency": 0.40500404649519983,
           "leT4Efficiency": 0.40500404649519983,
           "orundumPerAp": 0.12055679840914742,
-          "lmdcost": 7.948453608247421,
+          "lmdCost": 7.948453608247421,
           "end": 4070894400000
         },
         {
@@ -357,7 +357,7 @@
           "leT3Efficiency": 0.6943012499304592,
           "leT4Efficiency": 0.6943012499304592,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -378,7 +378,7 @@
           "leT3Efficiency": 0.551662492490965,
           "leT4Efficiency": 0.6755757721810797,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -399,7 +399,7 @@
           "leT3Efficiency": 0.5737415870051048,
           "leT4Efficiency": 0.6936926321108599,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -420,7 +420,7 @@
           "leT3Efficiency": 0.4837195232908279,
           "leT4Efficiency": 0.6187421040057383,
           "orundumPerAp": 0.18741308205054427,
-          "lmdcost": 7.9839437070206305,
+          "lmdCost": 7.9839437070206305,
           "end": 4070880000000
         },
         {
@@ -441,7 +441,7 @@
           "leT3Efficiency": 0.35408115401137447,
           "leT4Efficiency": 0.35408115401137447,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -462,7 +462,7 @@
           "leT3Efficiency": 0.5532557734497181,
           "leT4Efficiency": 0.5532557734497181,
           "orundumPerAp": 0.07999343949424466,
-          "lmdcost": 8.237837837837837,
+          "lmdCost": 8.237837837837837,
           "end": 4070880000000
         },
         {
@@ -483,7 +483,7 @@
           "leT3Efficiency": 0.5470480689773128,
           "leT4Efficiency": 0.6580804697532496,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -504,7 +504,7 @@
           "leT3Efficiency": 0.6229524382327226,
           "leT4Efficiency": 0.6229524382327226,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -525,7 +525,7 @@
           "leT3Efficiency": 0.40031328322180976,
           "leT4Efficiency": 0.40031328322180976,
           "orundumPerAp": 0.12070756780402452,
-          "lmdcost": 8.050736126840317,
+          "lmdCost": 8.050736126840317,
           "end": 4070894400000
         },
         {
@@ -546,7 +546,7 @@
           "leT3Efficiency": 0.7377694108995216,
           "leT4Efficiency": 0.7377694108995216,
           "orundumPerAp": 0.12049027983872178,
-          "lmdcost": 8.005162494168868,
+          "lmdCost": 8.005162494168868,
           "end": 4070880000000
         },
         {
@@ -567,7 +567,7 @@
           "leT3Efficiency": 0.5427881853506445,
           "leT4Efficiency": 0.5427881853506445,
           "orundumPerAp": 0.039377200183667506,
-          "lmdcost": 8.253003533568906,
+          "lmdCost": 8.253003533568906,
           "end": 4070880000000
         },
         {
@@ -588,7 +588,7 @@
           "leT3Efficiency": 0.6006666746804142,
           "leT4Efficiency": 0.6006666746804142,
           "orundumPerAp": 0.17013069479590193,
-          "lmdcost": 7.9900172692329114,
+          "lmdCost": 7.9900172692329114,
           "end": 4070880000000
         },
         {
@@ -609,7 +609,7 @@
           "leT3Efficiency": 0.3561350495224717,
           "leT4Efficiency": 0.3561350495224717,
           "orundumPerAp": 0.013763048821411402,
-          "lmdcost": 7.99868204283361,
+          "lmdCost": 7.99868204283361,
           "end": 4070880000000
         },
         {
@@ -630,7 +630,7 @@
           "leT3Efficiency": 0.4054727187848834,
           "leT4Efficiency": 0.4054727187848834,
           "orundumPerAp": 0.11960868323336189,
-          "lmdcost": 8.011421155094094,
+          "lmdCost": 8.011421155094094,
           "end": 4070880000000
         },
         {
@@ -651,7 +651,7 @@
           "leT3Efficiency": 0.4458741996787478,
           "leT4Efficiency": 0.5521201463395057,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -672,7 +672,7 @@
           "leT3Efficiency": 0.40550324949706334,
           "leT4Efficiency": 0.40550324949706334,
           "orundumPerAp": 0.11926907723908071,
-          "lmdcost": 8.025670186839971,
+          "lmdCost": 8.025670186839971,
           "end": 4070880000000
         },
         {
@@ -693,7 +693,7 @@
           "leT3Efficiency": 0.37579293142563597,
           "leT4Efficiency": 0.37579293142563597,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -714,7 +714,7 @@
           "leT3Efficiency": 0.40759647093862084,
           "leT4Efficiency": 0.40759647093862084,
           "orundumPerAp": 0.12116062437059416,
-          "lmdcost": 7.938701298701299,
+          "lmdCost": 7.938701298701299,
           "end": 4070880000000
         },
         {
@@ -735,7 +735,7 @@
           "leT3Efficiency": 0.4005188432327534,
           "leT4Efficiency": 0.4005188432327534,
           "orundumPerAp": 0.1264931259860266,
-          "lmdcost": 7.980400890868597,
+          "lmdCost": 7.980400890868597,
           "end": 4070880000000
         },
         {
@@ -756,7 +756,7 @@
           "leT3Efficiency": 0.5490159065514273,
           "leT4Efficiency": 0.5490159065514273,
           "orundumPerAp": 0.0399639761341889,
-          "lmdcost": 8.139718309859155,
+          "lmdCost": 8.139718309859155,
           "end": 4070880000000
         },
         {
@@ -777,7 +777,7 @@
           "leT3Efficiency": 0.7674637048742085,
           "leT4Efficiency": 0.7674637048742085,
           "orundumPerAp": 0.16803333781422233,
-          "lmdcost": 7.99552,
+          "lmdCost": 7.99552,
           "end": 4070880000000
         },
         {
@@ -798,7 +798,7 @@
           "leT3Efficiency": 0.34985932253275304,
           "leT4Efficiency": 0.34985932253275304,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -819,7 +819,7 @@
           "leT3Efficiency": 0.4376833197950441,
           "leT4Efficiency": 0.5462829960276203,
           "orundumPerAp": 0.207110018662661,
-          "lmdcost": 7.956923076923078,
+          "lmdCost": 7.956923076923078,
           "end": 4070894400000
         }
       ]
@@ -845,7 +845,7 @@
           "leT3Efficiency": 0.3745117278433176,
           "leT4Efficiency": 0.3745117278433176,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -866,7 +866,7 @@
           "leT3Efficiency": 0.5138608879622246,
           "leT4Efficiency": 0.5138608879622246,
           "orundumPerAp": 0.03975352812562115,
-          "lmdcost": 8.34,
+          "lmdCost": 8.34,
           "end": 4070894400000
         },
         {
@@ -887,7 +887,7 @@
           "leT3Efficiency": 0.36219862941538905,
           "leT4Efficiency": 0.36219862941538905,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070894400000
         },
         {
@@ -908,7 +908,7 @@
           "leT3Efficiency": 0.35925190261001755,
           "leT4Efficiency": 0.35925190261001755,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -929,7 +929,7 @@
           "leT3Efficiency": 0.4958662505641651,
           "leT4Efficiency": 0.4958662505641651,
           "orundumPerAp": 0.043780193236714976,
-          "lmdcost": 8.193103448275862,
+          "lmdCost": 8.193103448275862,
           "end": 4070880000000
         },
         {
@@ -950,7 +950,7 @@
           "leT3Efficiency": 0.5448897709352377,
           "leT4Efficiency": 0.5448897709352377,
           "orundumPerAp": 0.032407407407407406,
-          "lmdcost": 8.354887218045114,
+          "lmdCost": 8.354887218045114,
           "end": 4070880000000
         },
         {
@@ -971,7 +971,7 @@
           "leT3Efficiency": 0.3475587899149237,
           "leT4Efficiency": 0.3475587899149237,
           "orundumPerAp": 0.12039961893301243,
-          "lmdcost": 8.024882873503383,
+          "lmdCost": 8.024882873503383,
           "end": 4070880000000
         },
         {
@@ -992,7 +992,7 @@
           "leT3Efficiency": 0.5210786302183401,
           "leT4Efficiency": 0.5210786302183401,
           "orundumPerAp": 0.16535526943252268,
-          "lmdcost": 8.11016582552271,
+          "lmdCost": 8.11016582552271,
           "end": 4070880000000
         },
         {
@@ -1013,7 +1013,7 @@
           "leT3Efficiency": 0.4426546045417663,
           "leT4Efficiency": 0.5488982767893344,
           "orundumPerAp": 0.20788610062427518,
-          "lmdcost": 8.063857566765579,
+          "lmdCost": 8.063857566765579,
           "end": 4070880000000
         },
         {
@@ -1034,7 +1034,7 @@
           "leT3Efficiency": 0.531488719986331,
           "leT4Efficiency": 0.6426877620830146,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1055,7 +1055,7 @@
           "leT3Efficiency": 0.5499944621014312,
           "leT4Efficiency": 0.6738150863881492,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1076,7 +1076,7 @@
           "leT3Efficiency": 0.5383066381046409,
           "leT4Efficiency": 0.5383066381046409,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1097,7 +1097,7 @@
           "leT3Efficiency": 0.5496509302785142,
           "leT4Efficiency": 0.6798586166682862,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1118,7 +1118,7 @@
           "leT3Efficiency": 0.6853740308811351,
           "leT4Efficiency": 0.6853740308811351,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1139,7 +1139,7 @@
           "leT3Efficiency": 0.559244741079151,
           "leT4Efficiency": 0.6950690220325546,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1160,7 +1160,7 @@
           "leT3Efficiency": 0.5573546157292061,
           "leT4Efficiency": 0.6849535199804385,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1181,7 +1181,7 @@
           "leT3Efficiency": 0.474159503359608,
           "leT4Efficiency": 0.600870230333078,
           "orundumPerAp": 0.18597435145174365,
-          "lmdcost": 7.978716577540107,
+          "lmdCost": 7.978716577540107,
           "end": 4070880000000
         },
         {
@@ -1202,7 +1202,7 @@
           "leT3Efficiency": 0.36921265149062044,
           "leT4Efficiency": 0.36921265149062044,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070894400000
         },
         {
@@ -1223,7 +1223,7 @@
           "leT3Efficiency": 0.5324837013787012,
           "leT4Efficiency": 0.5324837013787012,
           "orundumPerAp": 0.03367003367003367,
-          "lmdcost": 8.451063829787234,
+          "lmdCost": 8.451063829787234,
           "end": 4070894400000
         },
         {
@@ -1244,7 +1244,7 @@
           "leT3Efficiency": 0.4750948872896359,
           "leT4Efficiency": 0.6020236998271795,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1265,7 +1265,7 @@
           "leT3Efficiency": 0.5904142833805328,
           "leT4Efficiency": 0.5904142833805328,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1286,7 +1286,7 @@
           "leT3Efficiency": 0.4871405062657987,
           "leT4Efficiency": 0.6161273897979663,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1307,7 +1307,7 @@
           "leT3Efficiency": 0.45417295554223247,
           "leT4Efficiency": 0.5756319150362501,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1328,7 +1328,7 @@
           "leT3Efficiency": 0.45430803689913546,
           "leT4Efficiency": 0.45430803689913546,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1349,7 +1349,7 @@
           "leT3Efficiency": 0.5352593329789913,
           "leT4Efficiency": 0.5352593329789913,
           "orundumPerAp": 0.045841519318926,
-          "lmdcost": 7.885714285714285,
+          "lmdCost": 7.885714285714285,
           "end": 4070894400000
         },
         {
@@ -1370,7 +1370,7 @@
           "leT3Efficiency": 0.0914859124049328,
           "leT4Efficiency": 0.0914859124049328,
           "orundumPerAp": 0.20304678762608988,
-          "lmdcost": 8.029090909090911,
+          "lmdCost": 8.029090909090911,
           "end": 1747857600000,
           "orundumPerApEfficiency": 0.18629552829908458
         },
@@ -1392,7 +1392,7 @@
           "leT3Efficiency": 0.09059741250244059,
           "leT4Efficiency": 0.09059741250244059,
           "orundumPerAp": 0.20903367539514037,
-          "lmdcost": 8.023135249515075,
+          "lmdCost": 8.023135249515075,
           "end": 1747857600000,
           "orundumPerApEfficiency": 0.19178850079494333
         },
@@ -1414,7 +1414,7 @@
           "leT3Efficiency": 1.0224301725714442,
           "leT4Efficiency": 1.0224301725714442,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1747857600000
         },
         {
@@ -1435,7 +1435,7 @@
           "leT3Efficiency": 0.5184874599839958,
           "leT4Efficiency": 0.5184874599839958,
           "orundumPerAp": 0.347406193405475,
-          "lmdcost": 9.599999999999998,
+          "lmdCost": 9.599999999999998,
           "end": 1747857600000,
           "orundumPerApEfficiency": 0.31874535466194637
         },
@@ -1457,7 +1457,7 @@
           "leT3Efficiency": 0.3498642291986514,
           "leT4Efficiency": 0.3498642291986514,
           "orundumPerAp": 0.012985765134762269,
-          "lmdcost": 8.053451131971286,
+          "lmdCost": 8.053451131971286,
           "end": 4070880000000
         },
         {
@@ -1478,7 +1478,7 @@
           "leT3Efficiency": 0.7530343849302328,
           "leT4Efficiency": 0.7530343849302328,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1499,7 +1499,7 @@
           "leT3Efficiency": 0.5701399017133475,
           "leT4Efficiency": 0.5701399017133475,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1520,7 +1520,7 @@
           "leT3Efficiency": 0.5334042025126092,
           "leT4Efficiency": 0.5334042025126092,
           "orundumPerAp": 0.039152355069886124,
-          "lmdcost": 8.253794902856077,
+          "lmdCost": 8.253794902856077,
           "end": 4070880000000
         },
         {
@@ -1541,7 +1541,7 @@
           "leT3Efficiency": 0.3792808721515452,
           "leT4Efficiency": 0.3792808721515452,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1562,7 +1562,7 @@
           "leT3Efficiency": 0.5460552171462838,
           "leT4Efficiency": 0.5460552171462838,
           "orundumPerAp": 0.0460223537146614,
-          "lmdcost": 8.114285714285716,
+          "lmdCost": 8.114285714285716,
           "end": 4070880000000
         },
         {
@@ -1583,7 +1583,7 @@
           "leT3Efficiency": 0.5131437514562359,
           "leT4Efficiency": 0.5131437514562359,
           "orundumPerAp": 0.1671146953405018,
-          "lmdcost": 8.152278820375335,
+          "lmdCost": 8.152278820375335,
           "end": 4070880000000
         },
         {
@@ -1604,7 +1604,7 @@
           "leT3Efficiency": 0.7240777408274124,
           "leT4Efficiency": 0.7240777408274124,
           "orundumPerAp": 0.22002560794792234,
-          "lmdcost": 5.999999999999999,
+          "lmdCost": 5.999999999999999,
           "end": 4070880000000
         },
         {
@@ -1625,7 +1625,7 @@
           "leT3Efficiency": 0.5290441441976589,
           "leT4Efficiency": 0.5290441441976589,
           "orundumPerAp": 0.037718320327015976,
-          "lmdcost": 8.199014778325125,
+          "lmdCost": 8.199014778325125,
           "end": 4070880000000
         },
         {
@@ -1646,7 +1646,7 @@
           "leT3Efficiency": 0.47907462568477177,
           "leT4Efficiency": 0.6118557173239406,
           "orundumPerAp": 0.18317605182011962,
-          "lmdcost": 8.011495551475782,
+          "lmdCost": 8.011495551475782,
           "end": 4070880000000
         },
         {
@@ -1667,7 +1667,7 @@
           "leT3Efficiency": 0.5365878515183603,
           "leT4Efficiency": 0.5365878515183603,
           "orundumPerAp": 0.04116985733060979,
-          "lmdcost": 8.478461538461538,
+          "lmdCost": 8.478461538461538,
           "end": 4070880000000
         },
         {
@@ -1688,7 +1688,7 @@
           "leT3Efficiency": 0.5471327806672789,
           "leT4Efficiency": 0.6819724388460386,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1709,7 +1709,7 @@
           "leT3Efficiency": 0.38988863468488516,
           "leT4Efficiency": 0.38988863468488516,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         }
       ]
@@ -1735,7 +1735,7 @@
           "leT3Efficiency": 0.5447483371977165,
           "leT4Efficiency": 0.5447483371977165,
           "orundumPerAp": 0.60121062891146,
-          "lmdcost": 6.144368600682594,
+          "lmdCost": 6.144368600682594,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.5516110500518644
         },
@@ -1757,7 +1757,7 @@
           "leT3Efficiency": 0.532610461390523,
           "leT4Efficiency": 0.532610461390523,
           "orundumPerAp": 0.5933806146572104,
-          "lmdcost": 6.176892430278886,
+          "lmdCost": 6.176892430278886,
           "end": 4070894400000,
           "orundumPerApEfficiency": 0.5444270080921807
         },
@@ -1779,7 +1779,7 @@
           "leT3Efficiency": 0.4042447146986144,
           "leT4Efficiency": 0.4042447146986144,
           "orundumPerAp": 0.494579945799458,
-          "lmdcost": 6.493150684931505,
+          "lmdCost": 6.493150684931505,
           "end": 4070894400000
         },
         {
@@ -1800,7 +1800,7 @@
           "leT3Efficiency": 0.3510463594746538,
           "leT4Efficiency": 0.3510463594746538,
           "orundumPerAp": 0.37063492063492065,
-          "lmdcost": 5.999999999999999,
+          "lmdCost": 5.999999999999999,
           "end": 4070880000000
         },
         {
@@ -1821,7 +1821,7 @@
           "leT3Efficiency": 0.5311737933240327,
           "leT4Efficiency": 0.5311737933240327,
           "orundumPerAp": 0.5848628054364949,
-          "lmdcost": 6.13642342624491,
+          "lmdCost": 6.13642342624491,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.5366119139098184
         },
@@ -1843,7 +1843,7 @@
           "leT3Efficiency": 0.3499368395562627,
           "leT4Efficiency": 0.3499368395562627,
           "orundumPerAp": 0.36946348895418435,
-          "lmdcost": 5.999999999999999,
+          "lmdCost": 5.999999999999999,
           "end": 4070880000000
         },
         {
@@ -1864,7 +1864,7 @@
           "leT3Efficiency": 0.6031705645813705,
           "leT4Efficiency": 0.6031705645813705,
           "orundumPerAp": 0.7320299543946932,
-          "lmdcost": 6.457669775756181,
+          "lmdCost": 6.457669775756181,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.6716378460310652
         },
@@ -1886,7 +1886,7 @@
           "leT3Efficiency": 0.4916179084069528,
           "leT4Efficiency": 0.6289948183800176,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -1907,7 +1907,7 @@
           "leT3Efficiency": 0.3502420158751182,
           "leT4Efficiency": 0.3502420158751182,
           "orundumPerAp": 0.3710666930536315,
-          "lmdcost": 6,
+          "lmdCost": 6,
           "end": 4070880000000
         },
         {
@@ -1928,7 +1928,7 @@
           "leT3Efficiency": 0.7926667016760968,
           "leT4Efficiency": 0.7926667016760968,
           "orundumPerAp": 0.21727416038793282,
-          "lmdcost": 7.99527704594673,
+          "lmdCost": 7.99527704594673,
           "end": 4070880000000
         },
         {
@@ -1949,7 +1949,7 @@
           "leT3Efficiency": 0.5250136000685649,
           "leT4Efficiency": 0.5250136000685649,
           "orundumPerAp": 0.5562298398119294,
-          "lmdcost": 6,
+          "lmdCost": 6,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.510341153755657
         },
@@ -1971,7 +1971,7 @@
           "leT3Efficiency": 0.5358264403102333,
           "leT4Efficiency": 0.5358264403102333,
           "orundumPerAp": 0.5676855895196506,
-          "lmdcost": 6.000000000000001,
+          "lmdCost": 6.000000000000001,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.520851809791211
         },
@@ -1993,7 +1993,7 @@
           "leT3Efficiency": 0.4320201446707853,
           "leT4Efficiency": 0.4320201446707853,
           "orundumPerAp": 0.5662994217846538,
-          "lmdcost": 6.699137633666783,
+          "lmdCost": 6.699137633666783,
           "end": 4070894400000,
           "orundumPerApEfficiency": 0.5195800002072154
         },
@@ -2015,7 +2015,7 @@
           "leT3Efficiency": 0.6896671339491077,
           "leT4Efficiency": 0.6896671339491077,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2036,7 +2036,7 @@
           "leT3Efficiency": 0.5989875648914039,
           "leT4Efficiency": 0.7387260175336415,
           "orundumPerAp": 0.18570558879152863,
-          "lmdcost": 8.00746949151543,
+          "lmdCost": 8.00746949151543,
           "end": 4070880000000
         },
         {
@@ -2057,7 +2057,7 @@
           "leT3Efficiency": 0.7953899907381918,
           "leT4Efficiency": 0.7953899907381918,
           "orundumPerAp": 0.18592143782462084,
-          "lmdcost": 8.003275588319314,
+          "lmdCost": 8.003275588319314,
           "end": 4070880000000
         },
         {
@@ -2078,7 +2078,7 @@
           "leT3Efficiency": 0.5902498207159467,
           "leT4Efficiency": 0.7166120446583992,
           "orundumPerAp": 0.18609462509403998,
-          "lmdcost": 8.011903425042112,
+          "lmdCost": 8.011903425042112,
           "end": 4070880000000
         },
         {
@@ -2099,7 +2099,7 @@
           "leT3Efficiency": 0.690750597901533,
           "leT4Efficiency": 0.690750597901533,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2120,7 +2120,7 @@
           "leT3Efficiency": 0.5698805585191641,
           "leT4Efficiency": 0.5698805585191641,
           "orundumPerAp": 0.44015627496349113,
-          "lmdcost": 9.599999999999998,
+          "lmdCost": 9.599999999999998,
           "end": 4070880000000
         },
         {
@@ -2141,7 +2141,7 @@
           "leT3Efficiency": 0.5033310513198905,
           "leT4Efficiency": 0.5033310513198905,
           "orundumPerAp": 0.5332580908598747,
-          "lmdcost": 5.999999999999999,
+          "lmdCost": 5.999999999999999,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.4892645627048411
         },
@@ -2163,7 +2163,7 @@
           "leT3Efficiency": 0.4923856975949119,
           "leT4Efficiency": 0.6267013921522291,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2184,7 +2184,7 @@
           "leT3Efficiency": 0.5630749238772664,
           "leT4Efficiency": 0.6959185381222937,
           "orundumPerAp": 0.20603047040213535,
-          "lmdcost": 8.001933999359219,
+          "lmdCost": 8.001933999359219,
           "end": 4070894400000
         },
         {
@@ -2205,7 +2205,7 @@
           "leT3Efficiency": 0.09110095017856652,
           "leT4Efficiency": 0.09110095017856652,
           "orundumPerAp": 0.21468759253775538,
-          "lmdcost": 7.987126436781611,
+          "lmdCost": 7.987126436781611,
           "end": 1747857600000,
           "orundumPerApEfficiency": 0.19697597257599098
         },
@@ -2227,7 +2227,7 @@
           "leT3Efficiency": 0.530720912097935,
           "leT4Efficiency": 0.530720912097935,
           "orundumPerAp": 0.5622764969945978,
-          "lmdcost": 6.000000000000001,
+          "lmdCost": 6.000000000000001,
           "end": 1747857600000,
           "orundumPerApEfficiency": 0.5158889647181385
         },
@@ -2249,7 +2249,7 @@
           "leT3Efficiency": 0.595392875015107,
           "leT4Efficiency": 0.595392875015107,
           "orundumPerAp": 0.7253322063766082,
-          "lmdcost": 6.469541765147768,
+          "lmdCost": 6.469541765147768,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.6654926589043374
         },
@@ -2271,7 +2271,7 @@
           "leT3Efficiency": 0.5413552441809745,
           "leT4Efficiency": 0.5413552441809745,
           "orundumPerAp": 0.5979101202054966,
-          "lmdcost": 6.147023519870235,
+          "lmdCost": 6.147023519870235,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.5485828316780506
         },
@@ -2293,7 +2293,7 @@
           "leT3Efficiency": 0.356961487292577,
           "leT4Efficiency": 0.356961487292577,
           "orundumPerAp": 0.38408886825994887,
-          "lmdcost": 6.067566420172383,
+          "lmdCost": 6.067566420172383,
           "end": 4070880000000
         },
         {
@@ -2314,7 +2314,7 @@
           "leT3Efficiency": 0.7626420246283089,
           "leT4Efficiency": 0.7626420246283089,
           "orundumPerAp": 0.17032323296228732,
-          "lmdcost": 8.005070970892818,
+          "lmdCost": 8.005070970892818,
           "end": 4070880000000
         },
         {
@@ -2335,7 +2335,7 @@
           "leT3Efficiency": 0.40055063052159023,
           "leT4Efficiency": 0.40055063052159023,
           "orundumPerAp": 0.49066514620656226,
-          "lmdcost": 6.496982625536811,
+          "lmdCost": 6.496982625536811,
           "end": 4070880000000
         },
         {
@@ -2356,7 +2356,7 @@
           "leT3Efficiency": 0.7444943174977221,
           "leT4Efficiency": 0.7444943174977221,
           "orundumPerAp": 0.9069030641172401,
-          "lmdcost": 6.469299565978132,
+          "lmdCost": 6.469299565978132,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.8320840108876997
         },
@@ -2378,7 +2378,7 @@
           "leT3Efficiency": 0.5868121540050057,
           "leT4Efficiency": 0.5868121540050057,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2399,7 +2399,7 @@
           "leT3Efficiency": 0.4526471824658124,
           "leT4Efficiency": 0.5817875170448993,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         }
       ]
@@ -2425,7 +2425,7 @@
           "leT3Efficiency": 0.34637852108502615,
           "leT4Efficiency": 0.34637852108502615,
           "orundumPerAp": 0.11612494236975567,
-          "lmdcost": 7.938461538461538,
+          "lmdCost": 7.938461538461538,
           "end": 4070880000000
         },
         {
@@ -2446,7 +2446,7 @@
           "leT3Efficiency": 0.5624389523353513,
           "leT4Efficiency": 0.7021931103534922,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070894400000
         },
         {
@@ -2467,7 +2467,7 @@
           "leT3Efficiency": 0.5641831670119644,
           "leT4Efficiency": 0.6926580386746133,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2488,7 +2488,7 @@
           "leT3Efficiency": 0.5482669841798359,
           "leT4Efficiency": 0.5482669841798359,
           "orundumPerAp": 0.027777777777777776,
-          "lmdcost": 8.448,
+          "lmdCost": 8.448,
           "end": 4070880000000
         },
         {
@@ -2509,7 +2509,7 @@
           "leT3Efficiency": 0.4565911269345561,
           "leT4Efficiency": 0.5613460009849943,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2530,7 +2530,7 @@
           "leT3Efficiency": 0.5123526655521862,
           "leT4Efficiency": 0.5123526655521862,
           "orundumPerAp": 0.16396604938271603,
-          "lmdcost": 7.897411764705883,
+          "lmdCost": 7.897411764705883,
           "end": 4070880000000
         },
         {
@@ -2551,7 +2551,7 @@
           "leT3Efficiency": 0.5613587742945333,
           "leT4Efficiency": 0.5613587742945333,
           "orundumPerAp": 0.0639052150387163,
-          "lmdcost": 8.233576642335766,
+          "lmdCost": 8.233576642335766,
           "end": 4070880000000
         },
         {
@@ -2572,7 +2572,7 @@
           "leT3Efficiency": 0.7552960457353048,
           "leT4Efficiency": 0.7552960457353048,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2593,7 +2593,7 @@
           "leT3Efficiency": 0.5272448318745885,
           "leT4Efficiency": 0.5272448318745885,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2614,7 +2614,7 @@
           "leT3Efficiency": 0.3489410415742726,
           "leT4Efficiency": 0.3489410415742726,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2635,7 +2635,7 @@
           "leT3Efficiency": 0.5865486962633978,
           "leT4Efficiency": 0.7359624661919408,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2656,7 +2656,7 @@
           "leT3Efficiency": 0.5161656154497302,
           "leT4Efficiency": 0.5161656154497302,
           "orundumPerAp": 0.17589453860640303,
-          "lmdcost": 7.955460385438972,
+          "lmdCost": 7.955460385438972,
           "end": 4070880000000
         },
         {
@@ -2677,7 +2677,7 @@
           "leT3Efficiency": 0.4894766017917438,
           "leT4Efficiency": 0.6307237247389581,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2698,7 +2698,7 @@
           "leT3Efficiency": 0.5336833852116937,
           "leT4Efficiency": 0.5336833852116937,
           "orundumPerAp": 0.04332946955897776,
-          "lmdcost": 8.178343949044585,
+          "lmdCost": 8.178343949044585,
           "end": 4070894400000
         },
         {
@@ -2719,7 +2719,7 @@
           "leT3Efficiency": 0.5223589693530863,
           "leT4Efficiency": 0.5223589693530863,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2740,7 +2740,7 @@
           "leT3Efficiency": 0.49280340941976997,
           "leT4Efficiency": 0.6385063063308998,
           "orundumPerAp": 0.18590031059511353,
-          "lmdcost": 8.01456332365423,
+          "lmdCost": 8.01456332365423,
           "end": 4070880000000
         },
         {
@@ -2761,7 +2761,7 @@
           "leT3Efficiency": 0.452910234601376,
           "leT4Efficiency": 0.5923530034307551,
           "orundumPerAp": 0.22444550098002786,
-          "lmdcost": 7.9985715735010645,
+          "lmdCost": 7.9985715735010645,
           "end": 4070880000000
         },
         {
@@ -2782,7 +2782,7 @@
           "leT3Efficiency": 0.48711413298920014,
           "leT4Efficiency": 0.6231763615722758,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2803,7 +2803,7 @@
           "leT3Efficiency": 0.4641767187207831,
           "leT4Efficiency": 0.4641767187207831,
           "orundumPerAp": 0.21994019515265972,
-          "lmdcost": 7.998342905564449,
+          "lmdCost": 7.998342905564449,
           "end": 4070880000000
         },
         {
@@ -2824,7 +2824,7 @@
           "leT3Efficiency": 0.5717270261267489,
           "leT4Efficiency": 0.7055346336567565,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2845,7 +2845,7 @@
           "leT3Efficiency": 0.5540259385071739,
           "leT4Efficiency": 0.6743888552682311,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2866,7 +2866,7 @@
           "leT3Efficiency": 0.3525952984948131,
           "leT4Efficiency": 0.3525952984948131,
           "orundumPerAp": 0.12351280500100825,
-          "lmdcost": 7.8367346938775535,
+          "lmdCost": 7.8367346938775535,
           "end": 4070880000000
         },
         {
@@ -2887,7 +2887,7 @@
           "leT3Efficiency": 0.34602875321743976,
           "leT4Efficiency": 0.34602875321743976,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2908,7 +2908,7 @@
           "leT3Efficiency": 0.5526855397824583,
           "leT4Efficiency": 0.6944403896678921,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2929,7 +2929,7 @@
           "leT3Efficiency": 0.5273622420324034,
           "leT4Efficiency": 0.5273622420324034,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -2950,7 +2950,7 @@
           "leT3Efficiency": 0.5391211679589802,
           "leT4Efficiency": 0.5391211679589802,
           "orundumPerAp": 0.03769255981645362,
-          "lmdcost": 8.347826086956523,
+          "lmdCost": 8.347826086956523,
           "end": 4070894400000
         },
         {
@@ -2971,7 +2971,7 @@
           "leT3Efficiency": 0.5340038092959399,
           "leT4Efficiency": 0.5340038092959399,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1747857600000
         },
         {
@@ -2992,7 +2992,7 @@
           "leT3Efficiency": 0.37857058286628187,
           "leT4Efficiency": 0.37857058286628187,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3013,7 +3013,7 @@
           "leT3Efficiency": 0.7334994404792794,
           "leT4Efficiency": 0.7334994404792794,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3034,7 +3034,7 @@
           "leT3Efficiency": 0.5359697283627611,
           "leT4Efficiency": 0.5359697283627611,
           "orundumPerAp": 0.03893317240396624,
-          "lmdcost": 8.22734122712594,
+          "lmdCost": 8.22734122712594,
           "end": 4070880000000
         },
         {
@@ -3055,7 +3055,7 @@
           "leT3Efficiency": 0.3544367554223107,
           "leT4Efficiency": 0.3544367554223107,
           "orundumPerAp": 0.013117902719613493,
-          "lmdcost": 7.983396226415095,
+          "lmdCost": 7.983396226415095,
           "end": 4070880000000
         },
         {
@@ -3076,7 +3076,7 @@
           "leT3Efficiency": 0.5922859444964582,
           "leT4Efficiency": 0.5922859444964582,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3097,7 +3097,7 @@
           "leT3Efficiency": 0.5395983378275936,
           "leT4Efficiency": 0.5395983378275936,
           "orundumPerAp": 0.040664677315546204,
-          "lmdcost": 8.512230215827337,
+          "lmdCost": 8.512230215827337,
           "end": 4070880000000
         },
         {
@@ -3118,7 +3118,7 @@
           "leT3Efficiency": 0.3850079139440821,
           "leT4Efficiency": 0.3850079139440821,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3139,7 +3139,7 @@
           "leT3Efficiency": 0.7470370702770371,
           "leT4Efficiency": 0.7470370702770371,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3160,7 +3160,7 @@
           "leT3Efficiency": 0.6924291788521532,
           "leT4Efficiency": 0.6924291788521532,
           "orundumPerAp": 0.17089715858090906,
-          "lmdcost": 8.014189770966075,
+          "lmdCost": 8.014189770966075,
           "end": 4070880000000
         },
         {
@@ -3181,7 +3181,7 @@
           "leT3Efficiency": 0.5346850936519955,
           "leT4Efficiency": 0.6530031092751023,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070894400000
         },
         {
@@ -3202,7 +3202,7 @@
           "leT3Efficiency": 0.5159983057558963,
           "leT4Efficiency": 0.5159983057558963,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070894400000
         }
       ]
@@ -3228,7 +3228,7 @@
           "leT3Efficiency": 0.5435559594011024,
           "leT4Efficiency": 0.5435559594011024,
           "orundumPerAp": 0.04093567251461989,
-          "lmdcost": 8.127731092436974,
+          "lmdCost": 8.127731092436974,
           "end": 4070880000000
         },
         {
@@ -3249,7 +3249,7 @@
           "leT3Efficiency": 0.3405150642978894,
           "leT4Efficiency": 0.3405150642978894,
           "orundumPerAp": 0.11950904392764859,
-          "lmdcost": 7.876447876447876,
+          "lmdCost": 7.876447876447876,
           "end": 4070880000000
         },
         {
@@ -3270,7 +3270,7 @@
           "leT3Efficiency": 0.5207101202526354,
           "leT4Efficiency": 0.5207101202526354,
           "orundumPerAp": 0.046296296296296294,
-          "lmdcost": 7.931125827814569,
+          "lmdCost": 7.931125827814569,
           "end": 4070880000000
         },
         {
@@ -3291,7 +3291,7 @@
           "leT3Efficiency": 0.3469554228102529,
           "leT4Efficiency": 0.3469554228102529,
           "orundumPerAp": 0.12196227783822995,
-          "lmdcost": 7.869144981412639,
+          "lmdCost": 7.869144981412639,
           "end": 4070880000000
         },
         {
@@ -3312,7 +3312,7 @@
           "leT3Efficiency": 0.5385720363170917,
           "leT4Efficiency": 0.5385720363170917,
           "orundumPerAp": 0.07189955106621773,
-          "lmdcost": 8.037073170731707,
+          "lmdCost": 8.037073170731707,
           "end": 4070880000000
         },
         {
@@ -3333,7 +3333,7 @@
           "leT3Efficiency": 0.5318410268191593,
           "leT4Efficiency": 0.7020719260307916,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3354,7 +3354,7 @@
           "leT3Efficiency": 0.5254613337640148,
           "leT4Efficiency": 0.5254613337640148,
           "orundumPerAp": 0.08680555555555555,
-          "lmdcost": 8.12,
+          "lmdCost": 8.12,
           "end": 4070880000000
         },
         {
@@ -3375,7 +3375,7 @@
           "leT3Efficiency": 0.4414838856796296,
           "leT4Efficiency": 0.4414838856796296,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3396,7 +3396,7 @@
           "leT3Efficiency": 0.6720033259026797,
           "leT4Efficiency": 0.6720033259026797,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3417,7 +3417,7 @@
           "leT3Efficiency": 0.5110314332944037,
           "leT4Efficiency": 0.5110314332944037,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3438,7 +3438,7 @@
           "leT3Efficiency": 0.47395426319267414,
           "leT4Efficiency": 0.6416573594427942,
           "orundumPerAp": 0.18198720701507204,
-          "lmdcost": 8.013168360583297,
+          "lmdCost": 8.013168360583297,
           "end": 4070880000000
         },
         {
@@ -3459,7 +3459,7 @@
           "leT3Efficiency": 0.5324976339493401,
           "leT4Efficiency": 0.5324976339493401,
           "orundumPerAp": 0.03936215008879369,
-          "lmdcost": 8.260465116279068,
+          "lmdCost": 8.260465116279068,
           "end": 4070880000000
         },
         {
@@ -3480,7 +3480,7 @@
           "leT3Efficiency": 0.3639269245339536,
           "leT4Efficiency": 0.3639269245339536,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3501,7 +3501,7 @@
           "leT3Efficiency": 0.5324298616010068,
           "leT4Efficiency": 0.6925830586725279,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070894400000
         },
         {
@@ -3522,7 +3522,7 @@
           "leT3Efficiency": 0.5106060021194191,
           "leT4Efficiency": 0.5106060021194191,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3543,7 +3543,7 @@
           "leT3Efficiency": 0.341844659828811,
           "leT4Efficiency": 0.341844659828811,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3564,7 +3564,7 @@
           "leT3Efficiency": 0.44527311835152855,
           "leT4Efficiency": 0.6367029694593103,
           "orundumPerAp": 0.2192709843716854,
-          "lmdcost": 8.014365833750231,
+          "lmdCost": 8.014365833750231,
           "end": 4070880000000
         },
         {
@@ -3585,7 +3585,7 @@
           "leT3Efficiency": 0.44565894214278184,
           "leT4Efficiency": 0.6261392846666585,
           "orundumPerAp": 0.21745203724308676,
-          "lmdcost": 8.013334810056485,
+          "lmdCost": 8.013334810056485,
           "end": 4070880000000
         },
         {
@@ -3606,7 +3606,7 @@
           "leT3Efficiency": 0.47742329432702396,
           "leT4Efficiency": 0.658521711826678,
           "orundumPerAp": 0.18630588593064568,
-          "lmdcost": 8.005237877401647,
+          "lmdCost": 8.005237877401647,
           "end": 4070880000000
         },
         {
@@ -3627,7 +3627,7 @@
           "leT3Efficiency": 0.4808497471775678,
           "leT4Efficiency": 0.6633184138006811,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3648,7 +3648,7 @@
           "leT3Efficiency": 0.5404496471470779,
           "leT4Efficiency": 0.7337025981916435,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3669,7 +3669,7 @@
           "leT3Efficiency": 0.5682363449886695,
           "leT4Efficiency": 0.7669253773816826,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3690,7 +3690,7 @@
           "leT3Efficiency": 0.5581290355387375,
           "leT4Efficiency": 0.7495659570933831,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3711,7 +3711,7 @@
           "leT3Efficiency": 0.3426102962341458,
           "leT4Efficiency": 0.3426102962341458,
           "orundumPerAp": 0.11731391585760519,
-          "lmdcost": 8.193103448275862,
+          "lmdCost": 8.193103448275862,
           "end": 4070880000000
         },
         {
@@ -3732,7 +3732,7 @@
           "leT3Efficiency": 0.36410413886951387,
           "leT4Efficiency": 0.36410413886951387,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070894400000
         },
         {
@@ -3753,7 +3753,7 @@
           "leT3Efficiency": 0.36983406149174525,
           "leT4Efficiency": 0.36983406149174525,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3774,7 +3774,7 @@
           "leT3Efficiency": 0.5443781273070639,
           "leT4Efficiency": 0.5443781273070639,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3795,7 +3795,7 @@
           "leT3Efficiency": 0.5780319071436012,
           "leT4Efficiency": 0.5780319071436012,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3816,7 +3816,7 @@
           "leT3Efficiency": 0.3444674365950515,
           "leT4Efficiency": 0.3444674365950515,
           "orundumPerAp": 0.01218608099342044,
-          "lmdcost": 8.149049429657797,
+          "lmdCost": 8.149049429657797,
           "end": 4070880000000
         },
         {
@@ -3837,7 +3837,7 @@
           "leT3Efficiency": 0.5244809228576941,
           "leT4Efficiency": 0.5244809228576941,
           "orundumPerAp": 0.039256027337329885,
-          "lmdcost": 8.281755593803785,
+          "lmdCost": 8.281755593803785,
           "end": 4070880000000
         },
         {
@@ -3858,7 +3858,7 @@
           "leT3Efficiency": 0.3770413266430046,
           "leT4Efficiency": 0.3770413266430046,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3879,7 +3879,7 @@
           "leT3Efficiency": 0.5376938963527745,
           "leT4Efficiency": 0.5376938963527745,
           "orundumPerAp": 0.03926394749179559,
-          "lmdcost": 8.400000000000002,
+          "lmdCost": 8.400000000000002,
           "end": 4070880000000
         },
         {
@@ -3900,7 +3900,7 @@
           "leT3Efficiency": 0.3603165606449623,
           "leT4Efficiency": 0.3603165606449623,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3921,7 +3921,7 @@
           "leT3Efficiency": 0.5184817594966258,
           "leT4Efficiency": 0.5184817594966258,
           "orundumPerAp": 0.040562660766643284,
-          "lmdcost": 8.243015521064303,
+          "lmdCost": 8.243015521064303,
           "end": 4070880000000
         },
         {
@@ -3942,7 +3942,7 @@
           "leT3Efficiency": 0.5412724467577975,
           "leT4Efficiency": 0.71610836727175,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -3963,7 +3963,7 @@
           "leT3Efficiency": 0.342420083800049,
           "leT4Efficiency": 0.342420083800049,
           "orundumPerAp": 0.12149895923905885,
-          "lmdcost": 8.030794253185144,
+          "lmdCost": 8.030794253185144,
           "end": 4070880000000
         },
         {
@@ -3984,7 +3984,7 @@
           "leT3Efficiency": 0.5154166691322284,
           "leT4Efficiency": 0.5154166691322284,
           "orundumPerAp": 0.16254885538805136,
-          "lmdcost": 8.177930442249894,
+          "lmdCost": 8.177930442249894,
           "end": 4070894400000
         }
       ]
@@ -4010,7 +4010,7 @@
           "leT3Efficiency": 0.44922263369128984,
           "leT4Efficiency": 0.6252219399889789,
           "orundumPerAp": 0.2056069572948793,
-          "lmdcost": 7.974092664092666,
+          "lmdCost": 7.974092664092666,
           "end": 4070880000000
         },
         {
@@ -4031,7 +4031,7 @@
           "leT3Efficiency": 0.48214687184281724,
           "leT4Efficiency": 0.6693000131011988,
           "orundumPerAp": 0.18441800166620234,
-          "lmdcost": 8.012969134907985,
+          "lmdCost": 8.012969134907985,
           "end": 4070880000000
         },
         {
@@ -4052,7 +4052,7 @@
           "leT3Efficiency": 0.43634521775120083,
           "leT4Efficiency": 0.610968700731391,
           "orundumPerAp": 0.20497249663916328,
-          "lmdcost": 7.990553194689933,
+          "lmdCost": 7.990553194689933,
           "end": 4070880000000
         },
         {
@@ -4073,7 +4073,7 @@
           "leT3Efficiency": 0.5051888442865939,
           "leT4Efficiency": 0.7014224184897481,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4094,7 +4094,7 @@
           "leT3Efficiency": 0.4816793390197675,
           "leT4Efficiency": 0.6742240020708692,
           "orundumPerAp": 0.1863601898797975,
-          "lmdcost": 8.009231889990945,
+          "lmdCost": 8.009231889990945,
           "end": 4070880000000
         },
         {
@@ -4115,7 +4115,7 @@
           "leT3Efficiency": 0.481805638346363,
           "leT4Efficiency": 0.6708823200281633,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4136,7 +4136,7 @@
           "leT3Efficiency": 0.4831626342810405,
           "leT4Efficiency": 0.6782866191258656,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4157,7 +4157,7 @@
           "leT3Efficiency": 0.4951188422162906,
           "leT4Efficiency": 0.6660424780979893,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4178,7 +4178,7 @@
           "leT3Efficiency": 0.4489591881500187,
           "leT4Efficiency": 0.4489591881500187,
           "orundumPerAp": 0.22606633936392853,
-          "lmdcost": 8.008323080038004,
+          "lmdCost": 8.008323080038004,
           "end": 4070880000000
         },
         {
@@ -4199,7 +4199,7 @@
           "leT3Efficiency": 0.6760716240789095,
           "leT4Efficiency": 0.6760716240789095,
           "orundumPerAp": 0.18430842069665201,
-          "lmdcost": 8.016775884665792,
+          "lmdCost": 8.016775884665792,
           "end": 4070880000000
         },
         {
@@ -4220,7 +4220,7 @@
           "leT3Efficiency": 0.6832872575194445,
           "leT4Efficiency": 0.6832872575194445,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4241,7 +4241,7 @@
           "leT3Efficiency": 0.5287848119782722,
           "leT4Efficiency": 0.5287848119782722,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4262,7 +4262,7 @@
           "leT3Efficiency": 0.7049870151425992,
           "leT4Efficiency": 0.7049870151425992,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4283,7 +4283,7 @@
           "leT3Efficiency": 1.0182829201749357,
           "leT4Efficiency": 1.0182829201749357,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1747857600000
         },
         {
@@ -4304,7 +4304,7 @@
           "leT3Efficiency": 0.6767045209162819,
           "leT4Efficiency": 0.6767045209162819,
           "orundumPerAp": 0.16996948579686258,
-          "lmdcost": 8.007890779802977,
+          "lmdCost": 8.007890779802977,
           "end": 4070880000000
         },
         {
@@ -4325,7 +4325,7 @@
           "leT3Efficiency": 0.6725094276786445,
           "leT4Efficiency": 0.6725094276786445,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         }
       ]
@@ -4351,7 +4351,7 @@
           "leT3Efficiency": 0.6546997232070274,
           "leT4Efficiency": 0.6546997232070274,
           "orundumPerAp": 0.17042027753458608,
-          "lmdcost": 7.985208715937856,
+          "lmdCost": 7.985208715937856,
           "end": 4070880000000
         },
         {
@@ -4372,7 +4372,7 @@
           "leT3Efficiency": 0.4777231771708792,
           "leT4Efficiency": 0.6351306678366361,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4393,7 +4393,7 @@
           "leT3Efficiency": 0.6762777864610625,
           "leT4Efficiency": 0.6762777864610625,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4414,7 +4414,7 @@
           "leT3Efficiency": 0.46331718268153654,
           "leT4Efficiency": 0.654568900183161,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4435,7 +4435,7 @@
           "leT3Efficiency": 0.4737663705856806,
           "leT4Efficiency": 0.6568969366816023,
           "orundumPerAp": 0.1848782694048802,
-          "lmdcost": 8.009505927147195,
+          "lmdCost": 8.009505927147195,
           "end": 4070880000000
         },
         {
@@ -4456,7 +4456,7 @@
           "leT3Efficiency": 0.515214642361221,
           "leT4Efficiency": 0.7117458221500312,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4477,7 +4477,7 @@
           "leT3Efficiency": 0.4807019288709312,
           "leT4Efficiency": 0.6689424275154162,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4498,7 +4498,7 @@
           "leT3Efficiency": 0.44947782145137477,
           "leT4Efficiency": 0.6409627804018332,
           "orundumPerAp": 0.22353255069370329,
-          "lmdcost": 8.00798917800589,
+          "lmdCost": 8.00798917800589,
           "end": 4070880000000
         },
         {
@@ -4519,7 +4519,7 @@
           "leT3Efficiency": 0.47944617171925136,
           "leT4Efficiency": 0.6697002595824253,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4540,7 +4540,7 @@
           "leT3Efficiency": 0.44705650682719317,
           "leT4Efficiency": 0.6311709406898174,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4561,7 +4561,7 @@
           "leT3Efficiency": 0.4653967364870986,
           "leT4Efficiency": 0.6625435350889524,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4582,7 +4582,7 @@
           "leT3Efficiency": 0.5073691914030183,
           "leT4Efficiency": 0.7064677128623568,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4603,7 +4603,7 @@
           "leT3Efficiency": 0.653873320713621,
           "leT4Efficiency": 0.653873320713621,
           "orundumPerAp": 0.1711864406779661,
-          "lmdcost": 7.948514851485148,
+          "lmdCost": 7.948514851485148,
           "end": 4070880000000
         },
         {
@@ -4624,7 +4624,7 @@
           "leT3Efficiency": 0.5591032010053606,
           "leT4Efficiency": 0.5591032010053606,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4645,7 +4645,7 @@
           "leT3Efficiency": 0.48267592491082895,
           "leT4Efficiency": 0.6305026660312844,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4666,7 +4666,7 @@
           "leT3Efficiency": 0.6723633993414467,
           "leT4Efficiency": 0.6723633993414467,
           "orundumPerAp": 0.16966883527039123,
-          "lmdcost": 8.011480138190494,
+          "lmdCost": 8.011480138190494,
           "end": 4070880000000
         }
       ]
@@ -4692,7 +4692,7 @@
           "leT3Efficiency": 0.5144263258013787,
           "leT4Efficiency": 0.671345947308298,
           "orundumPerAp": 0.18599643371931532,
-          "lmdcost": 8.005954750491716,
+          "lmdCost": 8.005954750491716,
           "end": 4070894400000
         },
         {
@@ -4713,7 +4713,7 @@
           "leT3Efficiency": 0.45258539561327055,
           "leT4Efficiency": 0.6478717163420724,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4734,7 +4734,7 @@
           "leT3Efficiency": 0.48722022416486416,
           "leT4Efficiency": 0.6763585109412789,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4755,7 +4755,7 @@
           "leT3Efficiency": 0.5125976484689116,
           "leT4Efficiency": 0.5125976484689116,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4776,7 +4776,7 @@
           "leT3Efficiency": 0.7095374008017324,
           "leT4Efficiency": 0.7095374008017324,
           "orundumPerAp": 0.18675606222102065,
-          "lmdcost": 7.995934726066068,
+          "lmdCost": 7.995934726066068,
           "end": 4070880000000
         },
         {
@@ -4797,7 +4797,7 @@
           "leT3Efficiency": 0.511115755569477,
           "leT4Efficiency": 0.7034784034968543,
           "orundumPerAp": 0.1859011373671741,
-          "lmdcost": 8.01103543364888,
+          "lmdCost": 8.01103543364888,
           "end": 4070880000000
         },
         {
@@ -4818,7 +4818,7 @@
           "leT3Efficiency": 0.4546059075812095,
           "leT4Efficiency": 0.6491902724101286,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4839,7 +4839,7 @@
           "leT3Efficiency": 0.4669220034164226,
           "leT4Efficiency": 0.4669220034164226,
           "orundumPerAp": 0.22941052431024878,
-          "lmdcost": 7.9988000546773135,
+          "lmdCost": 7.9988000546773135,
           "end": 4070880000000
         },
         {
@@ -4860,7 +4860,7 @@
           "leT3Efficiency": 0.4877416907114816,
           "leT4Efficiency": 0.6839538450253322,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4881,7 +4881,7 @@
           "leT3Efficiency": 0.48692700546309,
           "leT4Efficiency": 0.6804718927423342,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4902,7 +4902,7 @@
           "leT3Efficiency": 0.44372038491720306,
           "leT4Efficiency": 0.6189950653141031,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         }
       ]
@@ -4928,7 +4928,7 @@
           "leT3Efficiency": 0.437137635068184,
           "leT4Efficiency": 0.5125100962830488,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4949,7 +4949,7 @@
           "leT3Efficiency": 0.5107513417747955,
           "leT4Efficiency": 0.6952179930356557,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -4970,7 +4970,7 @@
           "leT3Efficiency": 0.4706627312915944,
           "leT4Efficiency": 0.6718555746992854,
           "orundumPerAp": 0.21996405291072552,
-          "lmdcost": 8.032202913673396,
+          "lmdCost": 8.032202913673396,
           "end": 4070880000000
         },
         {
@@ -4991,7 +4991,7 @@
           "leT3Efficiency": 0.4894798224645469,
           "leT4Efficiency": 0.6768286155506363,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5012,7 +5012,7 @@
           "leT3Efficiency": 0.48334187010320956,
           "leT4Efficiency": 0.6681515596192876,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5033,7 +5033,7 @@
           "leT3Efficiency": 0.49704879780880323,
           "leT4Efficiency": 0.6632048307650902,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5054,7 +5054,7 @@
           "leT3Efficiency": 0.4877607298155217,
           "leT4Efficiency": 0.6691685111894088,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5075,7 +5075,7 @@
           "leT3Efficiency": 0.4836033220022043,
           "leT4Efficiency": 0.5513863802332934,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         }
       ]
@@ -5101,7 +5101,7 @@
           "leT3Efficiency": 0.5521444472437554,
           "leT4Efficiency": 0.5521444472437554,
           "orundumPerAp": 0.8586034323517409,
-          "lmdcost": 9.275068794716566,
+          "lmdCost": 9.275068794716566,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.7877690748002855
         },
@@ -5123,7 +5123,7 @@
           "leT3Efficiency": 0.48961775586116046,
           "leT4Efficiency": 0.48961775586116046,
           "orundumPerAp": 0.6928480204342274,
-          "lmdcost": 9.599999999999998,
+          "lmdCost": 9.599999999999998,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.6356884021994954
         },
@@ -5145,7 +5145,7 @@
           "leT3Efficiency": 0.52189234303222,
           "leT4Efficiency": 0.52189234303222,
           "orundumPerAp": 0.7660994327660995,
-          "lmdcost": 9.468292682926826,
+          "lmdCost": 9.468292682926826,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.7028966093253821
         },
@@ -5167,7 +5167,7 @@
           "leT3Efficiency": 0.40263193807164693,
           "leT4Efficiency": 0.40263193807164693,
           "orundumPerAp": 0.5697561779921267,
-          "lmdcost": 9.6,
+          "lmdCost": 9.6,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.5227515757411174
         },
@@ -5189,7 +5189,7 @@
           "leT3Efficiency": 0.40356519106971983,
           "leT4Efficiency": 0.5649973801341359,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5210,7 +5210,7 @@
           "leT3Efficiency": 0.40404559897258013,
           "leT4Efficiency": 0.5720594385615246,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5231,7 +5231,7 @@
           "leT3Efficiency": 0.5235167744880652,
           "leT4Efficiency": 0.6947530020803045,
           "orundumPerAp": 0.1848906015462574,
-          "lmdcost": 8.004894711244647,
+          "lmdCost": 8.004894711244647,
           "end": 4070880000000
         },
         {
@@ -5252,7 +5252,7 @@
           "leT3Efficiency": 0.4921041022292505,
           "leT4Efficiency": 0.6178267209025425,
           "orundumPerAp": 0.20072842926028522,
-          "lmdcost": 8.129823664707386,
+          "lmdCost": 8.129823664707386,
           "end": 4070894400000
         },
         {
@@ -5273,7 +5273,7 @@
           "leT3Efficiency": 0.520110490734702,
           "leT4Efficiency": 0.520110490734702,
           "orundumPerAp": 0.7599974324411066,
-          "lmdcost": 9.484459459459458,
+          "lmdCost": 9.484459459459458,
           "end": 4070894400000,
           "orundumPerApEfficiency": 0.6972980210023838
         },
@@ -5295,7 +5295,7 @@
           "leT3Efficiency": 0.5741353076892526,
           "leT4Efficiency": 0.5741353076892526,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5316,7 +5316,7 @@
           "leT3Efficiency": 0.7567291424210613,
           "leT4Efficiency": 0.7567291424210613,
           "orundumPerAp": 1.08991766726742,
-          "lmdcost": 9.535950573431972,
+          "lmdCost": 9.535950573431972,
           "end": 4070880000000,
           "orundumPerApEfficiency": 1
         },
@@ -5338,7 +5338,7 @@
           "leT3Efficiency": 0.5029061989255657,
           "leT4Efficiency": 0.5029061989255657,
           "orundumPerAp": 0.22390847772527162,
-          "lmdcost": 8.017368336286038,
+          "lmdCost": 8.017368336286038,
           "end": 4070880000000
         },
         {
@@ -5359,7 +5359,7 @@
           "leT3Efficiency": 0.695545956674043,
           "leT4Efficiency": 0.695545956674043,
           "orundumPerAp": 0.1856724098962713,
-          "lmdcost": 8.004181635262741,
+          "lmdCost": 8.004181635262741,
           "end": 4070880000000
         },
         {
@@ -5380,7 +5380,7 @@
           "leT3Efficiency": 0.4279574511789879,
           "leT4Efficiency": 0.5990194408097138,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5401,7 +5401,7 @@
           "leT3Efficiency": 0.5246937704283121,
           "leT4Efficiency": 0.6964470904741417,
           "orundumPerAp": 0.18552387162900913,
-          "lmdcost": 8.005872995849398,
+          "lmdCost": 8.005872995849398,
           "end": 4070880000000
         },
         {
@@ -5422,7 +5422,7 @@
           "leT3Efficiency": 0.5072077116182406,
           "leT4Efficiency": 0.6840642713218272,
           "orundumPerAp": 0.21574404282004184,
-          "lmdcost": 8.005963463178286,
+          "lmdCost": 8.005963463178286,
           "end": 4070880000000
         },
         {
@@ -5443,7 +5443,7 @@
           "leT3Efficiency": 0.5086472451135053,
           "leT4Efficiency": 0.6687209145009627,
           "orundumPerAp": 0.22132281373379745,
-          "lmdcost": 8.017512953962505,
+          "lmdCost": 8.017512953962505,
           "end": 4070880000000
         },
         {
@@ -5464,7 +5464,7 @@
           "leT3Efficiency": 0.4289201367247712,
           "leT4Efficiency": 0.6050626182176823,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5485,7 +5485,7 @@
           "leT3Efficiency": 0.5016067954249377,
           "leT4Efficiency": 0.6550235615581467,
           "orundumPerAp": 0.20134861916505586,
-          "lmdcost": 8.017655172413793,
+          "lmdCost": 8.017655172413793,
           "end": 4070880000000
         },
         {
@@ -5506,7 +5506,7 @@
           "leT3Efficiency": 0.5083210299995017,
           "leT4Efficiency": 0.5083210299995017,
           "orundumPerAp": 0.7336648875950185,
-          "lmdcost": 9.528575365114357,
+          "lmdCost": 9.528575365114357,
           "end": 4070894400000,
           "orundumPerApEfficiency": 0.673137898052815
         },
@@ -5528,7 +5528,7 @@
           "leT3Efficiency": 0.5226823387341153,
           "leT4Efficiency": 0.6837559440894584,
           "orundumPerAp": 0.18524339484829297,
-          "lmdcost": 7.997081728010492,
+          "lmdCost": 7.997081728010492,
           "end": 4070894400000
         },
         {
@@ -5549,7 +5549,7 @@
           "leT3Efficiency": 0.490835110016145,
           "leT4Efficiency": 0.490835110016145,
           "orundumPerAp": 0.694570673271776,
-          "lmdcost": 9.599999999999998,
+          "lmdCost": 9.599999999999998,
           "end": 1747857600000,
           "orundumPerApEfficiency": 0.6372689370318809
         },
@@ -5571,7 +5571,7 @@
           "leT3Efficiency": 0.3786475830269438,
           "leT4Efficiency": 0.3786475830269438,
           "orundumPerAp": 0.585422469823584,
-          "lmdcost": 9.265299648804804,
+          "lmdCost": 9.265299648804804,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.5371254062624035
         },
@@ -5593,7 +5593,7 @@
           "leT3Efficiency": 0.6541420905324073,
           "leT4Efficiency": 0.6541420905324073,
           "orundumPerAp": 0.11975104555216455,
-          "lmdcost": 8.012483039348712,
+          "lmdCost": 8.012483039348712,
           "end": 4070880000000
         },
         {
@@ -5614,7 +5614,7 @@
           "leT3Efficiency": 0.33537327036011416,
           "leT4Efficiency": 0.33537327036011416,
           "orundumPerAp": 0.4755197989705346,
-          "lmdcost": 9.559940336671641,
+          "lmdCost": 9.559940336671641,
           "end": 4070880000000
         },
         {
@@ -5635,7 +5635,7 @@
           "leT3Efficiency": 0.5567140682362983,
           "leT4Efficiency": 0.5567140682362983,
           "orundumPerAp": 0.8633628462477657,
-          "lmdcost": 9.28397518911521,
+          "lmdCost": 9.28397518911521,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.7921358394091732
         },
@@ -5657,7 +5657,7 @@
           "leT3Efficiency": 0.4998121222671665,
           "leT4Efficiency": 0.4998121222671665,
           "orundumPerAp": 0.7142258274120188,
-          "lmdcost": 9.564079236977255,
+          "lmdCost": 9.564079236977255,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.6553025506987931
         },
@@ -5679,7 +5679,7 @@
           "leT3Efficiency": 0.5045547791870365,
           "leT4Efficiency": 0.5045547791870365,
           "orundumPerAp": 0.7285342584562012,
-          "lmdcost": 9.526984126984127,
+          "lmdCost": 9.526984126984127,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.6684305432746505
         },
@@ -5701,7 +5701,7 @@
           "leT3Efficiency": 0.573824750852305,
           "leT4Efficiency": 0.573824750852305,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5722,7 +5722,7 @@
           "leT3Efficiency": 0.5096690187650669,
           "leT4Efficiency": 0.5096690187650669,
           "orundumPerAp": 0.7358420544793289,
-          "lmdcost": 9.527375428686705,
+          "lmdCost": 9.527375428686705,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.6751354497484113
         },
@@ -5744,7 +5744,7 @@
           "leT3Efficiency": 0.3449914080546371,
           "leT4Efficiency": 0.3449914080546371,
           "orundumPerAp": 0.5443047796399753,
-          "lmdcost": 9.199714896650034,
+          "lmdCost": 9.199714896650034,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.4993999051365278
         },
@@ -5766,7 +5766,7 @@
           "leT3Efficiency": 0.5521425613307203,
           "leT4Efficiency": 0.5521425613307203,
           "orundumPerAp": 0.856413953179241,
-          "lmdcost": 9.283423277138354,
+          "lmdCost": 9.283423277138354,
           "end": 4070880000000,
           "orundumPerApEfficiency": 0.785760226574172
         },
@@ -5788,7 +5788,7 @@
           "leT3Efficiency": 0.5970815455171162,
           "leT4Efficiency": 0.5970815455171162,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5809,7 +5809,7 @@
           "leT3Efficiency": 0.5921269453143886,
           "leT4Efficiency": 0.5921269453143886,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070894400000
         }
       ]
@@ -5835,7 +5835,7 @@
           "leT3Efficiency": 0.3514281309676242,
           "leT4Efficiency": 0.5049830577438951,
           "orundumPerAp": 0.20229885057471264,
-          "lmdcost": 8.163636363636364,
+          "lmdCost": 8.163636363636364,
           "end": 4070880000000
         },
         {
@@ -5856,7 +5856,7 @@
           "leT3Efficiency": 0.5389118560124629,
           "leT4Efficiency": 0.7029564975366478,
           "orundumPerAp": 0.18618746396606467,
-          "lmdcost": 8.007534228195688,
+          "lmdCost": 8.007534228195688,
           "end": 4070880000000
         },
         {
@@ -5877,7 +5877,7 @@
           "leT3Efficiency": 0.3567956757871591,
           "leT4Efficiency": 0.5247537816265359,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5898,7 +5898,7 @@
           "leT3Efficiency": 0.3887401959524451,
           "leT4Efficiency": 0.536135614621809,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5919,7 +5919,7 @@
           "leT3Efficiency": 0.3892868358652041,
           "leT4Efficiency": 0.5622246726010469,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5940,7 +5940,7 @@
           "leT3Efficiency": 0.3809828867321496,
           "leT4Efficiency": 0.5485272106783061,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -5961,7 +5961,7 @@
           "leT3Efficiency": 0.5381131007326325,
           "leT4Efficiency": 0.5381131007326325,
           "orundumPerAp": 0.185266450912226,
-          "lmdcost": 8.008207196354684,
+          "lmdCost": 8.008207196354684,
           "end": 4070880000000
         },
         {
@@ -5982,7 +5982,7 @@
           "leT3Efficiency": 0.3840094994669645,
           "leT4Efficiency": 0.5366769311123352,
           "orundumPerAp": 0.18623964461315795,
-          "lmdcost": 8.022482991644216,
+          "lmdCost": 8.022482991644216,
           "end": 4070880000000
         },
         {
@@ -6003,7 +6003,7 @@
           "leT3Efficiency": 0.38507520686191765,
           "leT4Efficiency": 0.522217896820054,
           "orundumPerAp": 0.15405161707412512,
-          "lmdcost": 7.943125345113197,
+          "lmdCost": 7.943125345113197,
           "end": 4070880000000
         },
         {
@@ -6024,7 +6024,7 @@
           "leT3Efficiency": 0.3454632077794415,
           "leT4Efficiency": 0.5070905571294649,
           "orundumPerAp": 0.207110205631499,
-          "lmdcost": 7.99182018510357,
+          "lmdCost": 7.99182018510357,
           "end": 4070880000000
         }
       ]
@@ -6050,7 +6050,7 @@
           "leT3Efficiency": 0.46724718015394107,
           "leT4Efficiency": 0.6483483844898077,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6071,7 +6071,7 @@
           "leT3Efficiency": 0.702795685914447,
           "leT4Efficiency": 0.702795685914447,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6092,7 +6092,7 @@
           "leT3Efficiency": 0.7048115465788104,
           "leT4Efficiency": 0.7048115465788104,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6113,7 +6113,7 @@
           "leT3Efficiency": 0.5145992606765746,
           "leT4Efficiency": 0.7097414506463223,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6134,7 +6134,7 @@
           "leT3Efficiency": 0.48865053486477067,
           "leT4Efficiency": 0.6762077355091907,
           "orundumPerAp": 0.1504398802618111,
-          "lmdcost": 7.999230991385918,
+          "lmdCost": 7.999230991385918,
           "end": 4070880000000
         },
         {
@@ -6155,7 +6155,7 @@
           "leT3Efficiency": 0.5131857081421555,
           "leT4Efficiency": 0.6926019818437618,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6176,7 +6176,7 @@
           "leT3Efficiency": 0.712971864830506,
           "leT4Efficiency": 0.712971864830506,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6197,7 +6197,7 @@
           "leT3Efficiency": 0.5141676745854784,
           "leT4Efficiency": 0.6932966995460924,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6218,7 +6218,7 @@
           "leT3Efficiency": 0.45454935714652145,
           "leT4Efficiency": 0.45454935714652145,
           "orundumPerAp": 0.23200070930772052,
-          "lmdcost": 7.97277700704133,
+          "lmdCost": 7.97277700704133,
           "end": 4070880000000
         },
         {
@@ -6239,7 +6239,7 @@
           "leT3Efficiency": 0.5142477392705066,
           "leT4Efficiency": 0.6985181181964204,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6260,7 +6260,7 @@
           "leT3Efficiency": 0.4865774499947337,
           "leT4Efficiency": 0.6597915036651947,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070894400000
         },
         {
@@ -6281,7 +6281,7 @@
           "leT3Efficiency": 0.6935587417898904,
           "leT4Efficiency": 0.6935587417898904,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6302,7 +6302,7 @@
           "leT3Efficiency": 0.688454140185424,
           "leT4Efficiency": 0.688454140185424,
           "orundumPerAp": 0.2053097558258901,
-          "lmdcost": 8.004369501466275,
+          "lmdCost": 8.004369501466275,
           "end": 4070880000000
         },
         {
@@ -6323,7 +6323,7 @@
           "leT3Efficiency": 0.7069657442594154,
           "leT4Efficiency": 0.7069657442594154,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070894400000
         }
       ]
@@ -6349,7 +6349,7 @@
           "leT3Efficiency": 0.37221100290188164,
           "leT4Efficiency": 0.538130325700819,
           "orundumPerAp": 0.15049025334919422,
-          "lmdcost": 8.013344900089693,
+          "lmdCost": 8.013344900089693,
           "end": 4070880000000
         },
         {
@@ -6370,7 +6370,7 @@
           "leT3Efficiency": 0.5264417865077599,
           "leT4Efficiency": 0.5264417865077599,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6391,7 +6391,7 @@
           "leT3Efficiency": 0.3910327596517661,
           "leT4Efficiency": 0.46634935496445007,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6412,7 +6412,7 @@
           "leT3Efficiency": 0.3619776782920537,
           "leT4Efficiency": 0.5397282435073243,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6433,7 +6433,7 @@
           "leT3Efficiency": 0.3855933358826088,
           "leT4Efficiency": 0.5655223174723468,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6454,7 +6454,7 @@
           "leT3Efficiency": 0.5292385873302164,
           "leT4Efficiency": 0.5292385873302164,
           "orundumPerAp": 0.14932163716394123,
-          "lmdcost": 8.0070683201238,
+          "lmdCost": 8.0070683201238,
           "end": 4070880000000
         },
         {
@@ -6475,7 +6475,7 @@
           "leT3Efficiency": 0.37539693943835384,
           "leT4Efficiency": 0.5365849311662563,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6496,7 +6496,7 @@
           "leT3Efficiency": 0.7957871624356492,
           "leT4Efficiency": 0.7957871624356492,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1747857600000
         },
         {
@@ -6517,7 +6517,7 @@
           "leT3Efficiency": 0.5323280619628783,
           "leT4Efficiency": 0.7078856581538553,
           "orundumPerAp": 0.18642173156062047,
-          "lmdcost": 8.003677947698051,
+          "lmdCost": 8.003677947698051,
           "end": 4070880000000
         }
       ]
@@ -6543,7 +6543,7 @@
           "leT3Efficiency": 0.5007569761693622,
           "leT4Efficiency": 0.7005807926520203,
           "orundumPerAp": 0.18638821594274532,
-          "lmdcost": 8.002254373348112,
+          "lmdCost": 8.002254373348112,
           "end": 4070880000000
         },
         {
@@ -6564,7 +6564,7 @@
           "leT3Efficiency": 0.4931250378245217,
           "leT4Efficiency": 0.7077606227483442,
           "orundumPerAp": 0.15074506913634433,
-          "lmdcost": 8.007435707178725,
+          "lmdCost": 8.007435707178725,
           "end": 4070880000000
         },
         {
@@ -6585,7 +6585,7 @@
           "leT3Efficiency": 0.5152376477507099,
           "leT4Efficiency": 0.7033581297928876,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         }
       ]
@@ -6611,7 +6611,7 @@
           "leT3Efficiency": 0.66802111733628,
           "leT4Efficiency": 0.66802111733628,
           "orundumPerAp": 0.1856301686664376,
-          "lmdcost": 8.005164770057409,
+          "lmdCost": 8.005164770057409,
           "end": 4070880000000
         },
         {
@@ -6632,7 +6632,7 @@
           "leT3Efficiency": 0.46674636322452634,
           "leT4Efficiency": 0.6812301651336428,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         },
         {
@@ -6653,7 +6653,7 @@
           "leT3Efficiency": 0.43076172832466414,
           "leT4Efficiency": 0.43076172832466414,
           "orundumPerAp": 0.20838116727337497,
-          "lmdcost": 8.0083906861047,
+          "lmdCost": 8.0083906861047,
           "end": 4070880000000
         },
         {
@@ -6674,7 +6674,7 @@
           "leT3Efficiency": 0.46680146663769756,
           "leT4Efficiency": 0.6762909877997207,
           "orundumPerAp": 0.14894183489507032,
-          "lmdcost": 8.001433128201823,
+          "lmdCost": 8.001433128201823,
           "end": 4070880000000
         },
         {
@@ -6695,7 +6695,7 @@
           "leT3Efficiency": 0.46228914623488404,
           "leT4Efficiency": 0.6591478583712203,
           "orundumPerAp": 0.18509044377681988,
-          "lmdcost": 8.023772339660862,
+          "lmdCost": 8.023772339660862,
           "end": 4070880000000
         },
         {
@@ -6716,7 +6716,7 @@
           "leT3Efficiency": 0.4948979766742173,
           "leT4Efficiency": 0.7027098439674901,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         }
       ]
@@ -6742,7 +6742,7 @@
           "leT3Efficiency": 0.5255193737709942,
           "leT4Efficiency": 0.7361441157184232,
           "orundumPerAp": 0.15108744885550987,
-          "lmdcost": 8.003151229797517,
+          "lmdCost": 8.003151229797517,
           "end": 4070880000000
         },
         {
@@ -6763,7 +6763,7 @@
           "leT3Efficiency": 0.49303849173956577,
           "leT4Efficiency": 0.680477741688179,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 4070880000000
         }
       ]
@@ -6789,7 +6789,7 @@
           "leT3Efficiency": 0.4937158031658227,
           "leT4Efficiency": 0.7080515898271235,
           "orundumPerAp": 0.18609283576974905,
-          "lmdcost": 8.007349244590177,
+          "lmdCost": 8.007349244590177,
           "end": 4070880000000
         }
       ]
@@ -6814,7 +6814,7 @@
       "leT3Efficiency": 0.7567291424210613,
       "leT4Efficiency": 0.7567291424210613,
       "orundumPerAp": 1.08991766726742,
-      "lmdcost": 9.535950573431972,
+      "lmdCost": 9.535950573431972,
       "end": 4070880000000,
       "orundumPerApEfficiency": 1
     },
@@ -6836,7 +6836,7 @@
       "leT3Efficiency": 0.7444943174977221,
       "leT4Efficiency": 0.7444943174977221,
       "orundumPerAp": 0.9069030641172401,
-      "lmdcost": 6.469299565978132,
+      "lmdCost": 6.469299565978132,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.8320840108876997
     },
@@ -6858,7 +6858,7 @@
       "leT3Efficiency": 0.5567140682362983,
       "leT4Efficiency": 0.5567140682362983,
       "orundumPerAp": 0.8633628462477657,
-      "lmdcost": 9.28397518911521,
+      "lmdCost": 9.28397518911521,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.7921358394091732
     },
@@ -6880,7 +6880,7 @@
       "leT3Efficiency": 0.5521444472437554,
       "leT4Efficiency": 0.5521444472437554,
       "orundumPerAp": 0.8586034323517409,
-      "lmdcost": 9.275068794716566,
+      "lmdCost": 9.275068794716566,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.7877690748002855
     },
@@ -6902,7 +6902,7 @@
       "leT3Efficiency": 0.5521425613307203,
       "leT4Efficiency": 0.5521425613307203,
       "orundumPerAp": 0.856413953179241,
-      "lmdcost": 9.283423277138354,
+      "lmdCost": 9.283423277138354,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.785760226574172
     },
@@ -6924,7 +6924,7 @@
       "leT3Efficiency": 0.52189234303222,
       "leT4Efficiency": 0.52189234303222,
       "orundumPerAp": 0.7660994327660995,
-      "lmdcost": 9.468292682926826,
+      "lmdCost": 9.468292682926826,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.7028966093253821
     },
@@ -6946,7 +6946,7 @@
       "leT3Efficiency": 0.520110490734702,
       "leT4Efficiency": 0.520110490734702,
       "orundumPerAp": 0.7599974324411066,
-      "lmdcost": 9.484459459459458,
+      "lmdCost": 9.484459459459458,
       "end": 4070894400000,
       "orundumPerApEfficiency": 0.6972980210023838
     },
@@ -6968,7 +6968,7 @@
       "leT3Efficiency": 0.5096690187650669,
       "leT4Efficiency": 0.5096690187650669,
       "orundumPerAp": 0.7358420544793289,
-      "lmdcost": 9.527375428686705,
+      "lmdCost": 9.527375428686705,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.6751354497484113
     },
@@ -6990,7 +6990,7 @@
       "leT3Efficiency": 0.5083210299995017,
       "leT4Efficiency": 0.5083210299995017,
       "orundumPerAp": 0.7336648875950185,
-      "lmdcost": 9.528575365114357,
+      "lmdCost": 9.528575365114357,
       "end": 4070894400000,
       "orundumPerApEfficiency": 0.673137898052815
     },
@@ -7012,7 +7012,7 @@
       "leT3Efficiency": 0.6031705645813705,
       "leT4Efficiency": 0.6031705645813705,
       "orundumPerAp": 0.7320299543946932,
-      "lmdcost": 6.457669775756181,
+      "lmdCost": 6.457669775756181,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.6716378460310652
     },
@@ -7034,7 +7034,7 @@
       "leT3Efficiency": 0.5045547791870365,
       "leT4Efficiency": 0.5045547791870365,
       "orundumPerAp": 0.7285342584562012,
-      "lmdcost": 9.526984126984127,
+      "lmdCost": 9.526984126984127,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.6684305432746505
     },
@@ -7056,7 +7056,7 @@
       "leT3Efficiency": 0.595392875015107,
       "leT4Efficiency": 0.595392875015107,
       "orundumPerAp": 0.7253322063766082,
-      "lmdcost": 6.469541765147768,
+      "lmdCost": 6.469541765147768,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.6654926589043374
     },
@@ -7078,7 +7078,7 @@
       "leT3Efficiency": 0.4998121222671665,
       "leT4Efficiency": 0.4998121222671665,
       "orundumPerAp": 0.7142258274120188,
-      "lmdcost": 9.564079236977255,
+      "lmdCost": 9.564079236977255,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.6553025506987931
     },
@@ -7100,7 +7100,7 @@
       "leT3Efficiency": 0.490835110016145,
       "leT4Efficiency": 0.490835110016145,
       "orundumPerAp": 0.694570673271776,
-      "lmdcost": 9.599999999999998,
+      "lmdCost": 9.599999999999998,
       "end": 1747857600000,
       "orundumPerApEfficiency": 0.6372689370318809
     },
@@ -7122,7 +7122,7 @@
       "leT3Efficiency": 0.48961775586116046,
       "leT4Efficiency": 0.48961775586116046,
       "orundumPerAp": 0.6928480204342274,
-      "lmdcost": 9.599999999999998,
+      "lmdCost": 9.599999999999998,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.6356884021994954
     },
@@ -7144,7 +7144,7 @@
       "leT3Efficiency": 0.5447483371977165,
       "leT4Efficiency": 0.5447483371977165,
       "orundumPerAp": 0.60121062891146,
-      "lmdcost": 6.144368600682594,
+      "lmdCost": 6.144368600682594,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.5516110500518644
     },
@@ -7166,7 +7166,7 @@
       "leT3Efficiency": 0.5413552441809745,
       "leT4Efficiency": 0.5413552441809745,
       "orundumPerAp": 0.5979101202054966,
-      "lmdcost": 6.147023519870235,
+      "lmdCost": 6.147023519870235,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.5485828316780506
     },
@@ -7188,7 +7188,7 @@
       "leT3Efficiency": 0.532610461390523,
       "leT4Efficiency": 0.532610461390523,
       "orundumPerAp": 0.5933806146572104,
-      "lmdcost": 6.176892430278886,
+      "lmdCost": 6.176892430278886,
       "end": 4070894400000,
       "orundumPerApEfficiency": 0.5444270080921807
     },
@@ -7210,7 +7210,7 @@
       "leT3Efficiency": 0.3786475830269438,
       "leT4Efficiency": 0.3786475830269438,
       "orundumPerAp": 0.585422469823584,
-      "lmdcost": 9.265299648804804,
+      "lmdCost": 9.265299648804804,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.5371254062624035
     },
@@ -7232,7 +7232,7 @@
       "leT3Efficiency": 0.5311737933240327,
       "leT4Efficiency": 0.5311737933240327,
       "orundumPerAp": 0.5848628054364949,
-      "lmdcost": 6.13642342624491,
+      "lmdCost": 6.13642342624491,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.5366119139098184
     },
@@ -7254,7 +7254,7 @@
       "leT3Efficiency": 0.40263193807164693,
       "leT4Efficiency": 0.40263193807164693,
       "orundumPerAp": 0.5697561779921267,
-      "lmdcost": 9.6,
+      "lmdCost": 9.6,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.5227515757411174
     },
@@ -7276,7 +7276,7 @@
       "leT3Efficiency": 0.5358264403102333,
       "leT4Efficiency": 0.5358264403102333,
       "orundumPerAp": 0.5676855895196506,
-      "lmdcost": 6.000000000000001,
+      "lmdCost": 6.000000000000001,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.520851809791211
     },
@@ -7298,7 +7298,7 @@
       "leT3Efficiency": 0.4320201446707853,
       "leT4Efficiency": 0.4320201446707853,
       "orundumPerAp": 0.5662994217846538,
-      "lmdcost": 6.699137633666783,
+      "lmdCost": 6.699137633666783,
       "end": 4070894400000,
       "orundumPerApEfficiency": 0.5195800002072154
     },
@@ -7320,7 +7320,7 @@
       "leT3Efficiency": 0.530720912097935,
       "leT4Efficiency": 0.530720912097935,
       "orundumPerAp": 0.5622764969945978,
-      "lmdcost": 6.000000000000001,
+      "lmdCost": 6.000000000000001,
       "end": 1747857600000,
       "orundumPerApEfficiency": 0.5158889647181385
     },
@@ -7342,7 +7342,7 @@
       "leT3Efficiency": 0.5250136000685649,
       "leT4Efficiency": 0.5250136000685649,
       "orundumPerAp": 0.5562298398119294,
-      "lmdcost": 6,
+      "lmdCost": 6,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.510341153755657
     },
@@ -7364,7 +7364,7 @@
       "leT3Efficiency": 0.3449914080546371,
       "leT4Efficiency": 0.3449914080546371,
       "orundumPerAp": 0.5443047796399753,
-      "lmdcost": 9.199714896650034,
+      "lmdCost": 9.199714896650034,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.4993999051365278
     },
@@ -7386,7 +7386,7 @@
       "leT3Efficiency": 0.5033310513198905,
       "leT4Efficiency": 0.5033310513198905,
       "orundumPerAp": 0.5332580908598747,
-      "lmdcost": 5.999999999999999,
+      "lmdCost": 5.999999999999999,
       "end": 4070880000000,
       "orundumPerApEfficiency": 0.4892645627048411
     },
@@ -7408,7 +7408,7 @@
       "leT3Efficiency": 0.5184874599839958,
       "leT4Efficiency": 0.5184874599839958,
       "orundumPerAp": 0.347406193405475,
-      "lmdcost": 9.599999999999998,
+      "lmdCost": 9.599999999999998,
       "end": 1747857600000,
       "orundumPerApEfficiency": 0.31874535466194637
     },
@@ -7430,7 +7430,7 @@
       "leT3Efficiency": 0.09110095017856652,
       "leT4Efficiency": 0.09110095017856652,
       "orundumPerAp": 0.21468759253775538,
-      "lmdcost": 7.987126436781611,
+      "lmdCost": 7.987126436781611,
       "end": 1747857600000,
       "orundumPerApEfficiency": 0.19697597257599098
     },
@@ -7452,7 +7452,7 @@
       "leT3Efficiency": 0.09059741250244059,
       "leT4Efficiency": 0.09059741250244059,
       "orundumPerAp": 0.20903367539514037,
-      "lmdcost": 8.023135249515075,
+      "lmdCost": 8.023135249515075,
       "end": 1747857600000,
       "orundumPerApEfficiency": 0.19178850079494333
     },
@@ -7474,7 +7474,7 @@
       "leT3Efficiency": 0.0914859124049328,
       "leT4Efficiency": 0.0914859124049328,
       "orundumPerAp": 0.20304678762608988,
-      "lmdcost": 8.029090909090911,
+      "lmdCost": 8.029090909090911,
       "end": 1747857600000,
       "orundumPerApEfficiency": 0.18629552829908458
     }
@@ -7502,7 +7502,7 @@
           "leT3Efficiency": 1.0182829201749357,
           "leT4Efficiency": 1.0182829201749357,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1747857600000
         },
         {
@@ -7523,7 +7523,7 @@
           "leT3Efficiency": 0.7957871624356492,
           "leT4Efficiency": 0.7957871624356492,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1747857600000
         },
         {
@@ -7544,7 +7544,7 @@
           "leT3Efficiency": 1.0224301725714442,
           "leT4Efficiency": 1.0224301725714442,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1747857600000
         }
       ],
@@ -7572,7 +7572,7 @@
           "leT3Efficiency": 1.0072083749952285,
           "leT4Efficiency": 1.0072083749952285,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1746043200000
         },
         {
@@ -7593,7 +7593,7 @@
           "leT3Efficiency": 0.8967360493800581,
           "leT4Efficiency": 0.8967360493800581,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1746043200000
         },
         {
@@ -7614,7 +7614,7 @@
           "leT3Efficiency": 1.0279618682278584,
           "leT4Efficiency": 1.0279618682278584,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1746043200000
         }
       ],
@@ -7642,7 +7642,7 @@
           "leT3Efficiency": 1.0518234801987847,
           "leT4Efficiency": 1.0518234801987847,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1742500800000
         },
         {
@@ -7663,7 +7663,7 @@
           "leT3Efficiency": 1.0196482081654474,
           "leT4Efficiency": 1.0196482081654474,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1742500800000
         },
         {
@@ -7684,7 +7684,7 @@
           "leT3Efficiency": 1.0403706631386835,
           "leT4Efficiency": 1.0403706631386835,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1742500800000
         }
       ],
@@ -7712,7 +7712,7 @@
           "leT3Efficiency": 0.8968499300078434,
           "leT4Efficiency": 0.8968499300078434,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1741204800000
         },
         {
@@ -7733,7 +7733,7 @@
           "leT3Efficiency": 1.0385468228882213,
           "leT4Efficiency": 1.0385468228882213,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1741204800000
         },
         {
@@ -7754,7 +7754,7 @@
           "leT3Efficiency": 0.07891682563469338,
           "leT4Efficiency": 0.07891682563469338,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1741204800000
         }
       ],
@@ -7782,7 +7782,7 @@
           "leT3Efficiency": 0.9814065782705174,
           "leT4Efficiency": 0.9814065782705174,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1739304000000
         },
         {
@@ -7803,7 +7803,7 @@
           "leT3Efficiency": 1.0121053552491688,
           "leT4Efficiency": 1.0121053552491688,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1739304000000
         },
         {
@@ -7824,7 +7824,7 @@
           "leT3Efficiency": 1.035701801229175,
           "leT4Efficiency": 1.035701801229175,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1739304000000
         }
       ],
@@ -7852,7 +7852,7 @@
           "leT3Efficiency": 0.8095416495673573,
           "leT4Efficiency": 0.8095416495673573,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1735416000000
         },
         {
@@ -7873,7 +7873,7 @@
           "leT3Efficiency": 1.0356258146033785,
           "leT4Efficiency": 1.0356258146033785,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1735416000000
         },
         {
@@ -7894,7 +7894,7 @@
           "leT3Efficiency": 0.08002637071435693,
           "leT4Efficiency": 0.08002637071435693,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1735416000000
         }
       ],
@@ -7922,7 +7922,7 @@
           "leT3Efficiency": 1.023925004751943,
           "leT4Efficiency": 1.023925004751943,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1734552000000
         },
         {
@@ -7943,7 +7943,7 @@
           "leT3Efficiency": 1.0198665025078317,
           "leT4Efficiency": 1.0198665025078317,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1734552000000
         },
         {
@@ -7964,7 +7964,7 @@
           "leT3Efficiency": 1.0256739922432618,
           "leT4Efficiency": 1.0256739922432618,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1734552000000
         }
       ],
@@ -7992,7 +7992,7 @@
           "leT3Efficiency": 1.0060941929559597,
           "leT4Efficiency": 1.0060941929559597,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1733342400000
         },
         {
@@ -8013,7 +8013,7 @@
           "leT3Efficiency": 0.0788477475939214,
           "leT4Efficiency": 0.0788477475939214,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1733342400000
         },
         {
@@ -8034,7 +8034,7 @@
           "leT3Efficiency": 1.0351650072104572,
           "leT4Efficiency": 1.0351650072104572,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1733342400000
         }
       ],
@@ -8062,7 +8062,7 @@
           "leT3Efficiency": 0.08005037267494004,
           "leT4Efficiency": 0.08005037267494004,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1732219200000
         },
         {
@@ -8083,7 +8083,7 @@
           "leT3Efficiency": 0.7957031227671384,
           "leT4Efficiency": 0.7957031227671384,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1732219200000
         },
         {
@@ -8104,7 +8104,7 @@
           "leT3Efficiency": 1.0378213089308101,
           "leT4Efficiency": 1.0378213089308101,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1732219200000
         }
       ],
@@ -8132,7 +8132,7 @@
           "leT3Efficiency": 1.0271439510586937,
           "leT4Efficiency": 1.0271439510586937,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1729627200000
         },
         {
@@ -8153,7 +8153,7 @@
           "leT3Efficiency": 0.8966297827314688,
           "leT4Efficiency": 0.8966297827314688,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1729627200000
         },
         {
@@ -8174,7 +8174,7 @@
           "leT3Efficiency": 1.0414926051815154,
           "leT4Efficiency": 1.0414926051815154,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1729627200000
         }
       ],
@@ -8202,7 +8202,7 @@
           "leT3Efficiency": 1.020612795261305,
           "leT4Efficiency": 1.020612795261305,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1727553600000
         },
         {
@@ -8223,7 +8223,7 @@
           "leT3Efficiency": 1.0260373853752969,
           "leT4Efficiency": 1.0260373853752969,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1727553600000
         },
         {
@@ -8244,7 +8244,7 @@
           "leT3Efficiency": 0.9810767159236756,
           "leT4Efficiency": 0.9810767159236756,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1727553600000
         }
       ],
@@ -8272,7 +8272,7 @@
           "leT3Efficiency": 1.0360013345181083,
           "leT4Efficiency": 1.0360013345181083,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1726430400000
         },
         {
@@ -8293,7 +8293,7 @@
           "leT3Efficiency": 1.052225532501345,
           "leT4Efficiency": 1.052225532501345,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1726430400000
         },
         {
@@ -8314,7 +8314,7 @@
           "leT3Efficiency": 1.0122594549603081,
           "leT4Efficiency": 1.0122594549603081,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1726430400000
         }
       ],
@@ -8342,7 +8342,7 @@
           "leT3Efficiency": 0.809890659324581,
           "leT4Efficiency": 0.809890659324581,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1725134400000
         },
         {
@@ -8363,7 +8363,7 @@
           "leT3Efficiency": 1.0242499747881844,
           "leT4Efficiency": 1.0242499747881844,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1725134400000
         },
         {
@@ -8384,7 +8384,7 @@
           "leT3Efficiency": 0.0799563454829349,
           "leT4Efficiency": 0.0799563454829349,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1725134400000
         }
       ],
@@ -8412,7 +8412,7 @@
           "leT3Efficiency": 1.0196922789281007,
           "leT4Efficiency": 1.0196922789281007,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1724270400000
         },
         {
@@ -8433,7 +8433,7 @@
           "leT3Efficiency": 1.0068427432825868,
           "leT4Efficiency": 1.0068427432825868,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1724270400000
         },
         {
@@ -8454,7 +8454,7 @@
           "leT3Efficiency": 1.0626496303332087,
           "leT4Efficiency": 1.0626496303332087,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1724270400000
         }
       ],
@@ -8482,7 +8482,7 @@
           "leT3Efficiency": 1.0283183171232613,
           "leT4Efficiency": 1.0283183171232613,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1720123200000
         },
         {
@@ -8503,7 +8503,7 @@
           "leT3Efficiency": 0.8965603242809879,
           "leT4Efficiency": 0.8965603242809879,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1720123200000
         },
         {
@@ -8524,7 +8524,7 @@
           "leT3Efficiency": 1.0383659504822564,
           "leT4Efficiency": 1.0383659504822564,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1720123200000
         }
       ],
@@ -8552,7 +8552,7 @@
           "leT3Efficiency": 0.8098747713285817,
           "leT4Efficiency": 0.8098747713285817,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1718740800000
         },
         {
@@ -8573,7 +8573,7 @@
           "leT3Efficiency": 0.07893651526496914,
           "leT4Efficiency": 0.07893651526496914,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1718740800000
         },
         {
@@ -8594,7 +8594,7 @@
           "leT3Efficiency": 1.0256069171469493,
           "leT4Efficiency": 1.0256069171469493,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1718740800000
         }
       ],
@@ -8622,7 +8622,7 @@
           "leT3Efficiency": 1.0115328331073739,
           "leT4Efficiency": 1.0115328331073739,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1717401600000
         },
         {
@@ -8643,7 +8643,7 @@
           "leT3Efficiency": 1.0234498553284366,
           "leT4Efficiency": 1.0234498553284366,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1717401600000
         },
         {
@@ -8664,7 +8664,7 @@
           "leT3Efficiency": 1.039088157033515,
           "leT4Efficiency": 1.039088157033515,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1717401600000
         }
       ],
@@ -8692,7 +8692,7 @@
           "leT3Efficiency": 1.0066121990825316,
           "leT4Efficiency": 1.0066121990825316,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1714680000000
         },
         {
@@ -8713,7 +8713,7 @@
           "leT3Efficiency": 1.027596112388976,
           "leT4Efficiency": 1.027596112388976,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1714680000000
         },
         {
@@ -8734,7 +8734,7 @@
           "leT3Efficiency": 0.8970168209197356,
           "leT4Efficiency": 0.8970168209197356,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1714680000000
         }
       ],
@@ -8762,7 +8762,7 @@
           "leT3Efficiency": 1.015024443721974,
           "leT4Efficiency": 1.015024443721974,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1711828800000
         },
         {
@@ -8783,7 +8783,7 @@
           "leT3Efficiency": 0.08053048749746217,
           "leT4Efficiency": 0.08053048749746217,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1711828800000
         }
       ],
@@ -8811,7 +8811,7 @@
           "leT3Efficiency": 1.035004714744409,
           "leT4Efficiency": 1.035004714744409,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1710964800000
         },
         {
@@ -8832,7 +8832,7 @@
           "leT3Efficiency": 1.0117840957120163,
           "leT4Efficiency": 1.0117840957120163,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1710964800000
         },
         {
@@ -8853,7 +8853,7 @@
           "leT3Efficiency": 1.0357084666608602,
           "leT4Efficiency": 1.0357084666608602,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1710964800000
         }
       ],
@@ -8881,7 +8881,7 @@
           "leT3Efficiency": 0.8966231112209274,
           "leT4Efficiency": 0.8966231112209274,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1708545600000
         },
         {
@@ -8902,7 +8902,7 @@
           "leT3Efficiency": 0.0789420879472623,
           "leT4Efficiency": 0.0789420879472623,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1708545600000
         },
         {
@@ -8923,7 +8923,7 @@
           "leT3Efficiency": 1.0375453478484358,
           "leT4Efficiency": 1.0375453478484358,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1708545600000
         }
       ],
@@ -8951,7 +8951,7 @@
           "leT3Efficiency": 0.8089354903410165,
           "leT4Efficiency": 0.8089354903410165,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1706385600000
         },
         {
@@ -8972,7 +8972,7 @@
           "leT3Efficiency": 0.08005698261505281,
           "leT4Efficiency": 0.08005698261505281,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1706385600000
         },
         {
@@ -8993,7 +8993,7 @@
           "leT3Efficiency": 1.0240455523054537,
           "leT4Efficiency": 1.0240455523054537,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1706385600000
         }
       ],
@@ -9021,7 +9021,7 @@
           "leT3Efficiency": 1.0364077459011622,
           "leT4Efficiency": 1.0364077459011622,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1704052800000
         },
         {
@@ -9042,7 +9042,7 @@
           "leT3Efficiency": 1.0068457736569643,
           "leT4Efficiency": 1.0068457736569643,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1704052800000
         },
         {
@@ -9063,7 +9063,7 @@
           "leT3Efficiency": 1.0258253097636048,
           "leT4Efficiency": 1.0258253097636048,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1704052800000
         }
       ],
@@ -9091,7 +9091,7 @@
           "leT3Efficiency": 0.0800423283917971,
           "leT4Efficiency": 0.0800423283917971,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1702929600000
         },
         {
@@ -9112,7 +9112,7 @@
           "leT3Efficiency": 0.8104449279480002,
           "leT4Efficiency": 0.8104449279480002,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1702929600000
         },
         {
@@ -9133,7 +9133,7 @@
           "leT3Efficiency": 1.0361019966472875,
           "leT4Efficiency": 1.0361019966472875,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1702929600000
         }
       ],
@@ -9161,7 +9161,7 @@
           "leT3Efficiency": 0.9999825306894484,
           "leT4Efficiency": 0.9999825306894484,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1700596800000
         },
         {
@@ -9182,7 +9182,7 @@
           "leT3Efficiency": 1.0286985351358136,
           "leT4Efficiency": 1.0286985351358136,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1700596800000
         },
         {
@@ -9203,7 +9203,7 @@
           "leT3Efficiency": 0.07828229081472964,
           "leT4Efficiency": 0.07828229081472964,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1700596800000
         }
       ],
@@ -9231,7 +9231,7 @@
           "leT3Efficiency": 0.8965677686347598,
           "leT4Efficiency": 0.8965677686347598,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1698782400000
         },
         {
@@ -9252,7 +9252,7 @@
           "leT3Efficiency": 1.0113222033471534,
           "leT4Efficiency": 1.0113222033471534,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1698782400000
         },
         {
@@ -9273,7 +9273,7 @@
           "leT3Efficiency": 0.7939251659588092,
           "leT4Efficiency": 0.7939251659588092,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1698782400000
         }
       ],
@@ -9301,7 +9301,7 @@
           "leT3Efficiency": 1.0197969399067088,
           "leT4Efficiency": 1.0197969399067088,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1695067200000
         },
         {
@@ -9322,7 +9322,7 @@
           "leT3Efficiency": 0.9817722859652757,
           "leT4Efficiency": 0.9817722859652757,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1695067200000
         },
         {
@@ -9343,7 +9343,7 @@
           "leT3Efficiency": 1.0255003995299075,
           "leT4Efficiency": 1.0255003995299075,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1695067200000
         }
       ],
@@ -9371,7 +9371,7 @@
           "leT3Efficiency": 1.0379086632703225,
           "leT4Efficiency": 1.0379086632703225,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1694289600000
         },
         {
@@ -9392,7 +9392,7 @@
           "leT3Efficiency": 1.0238728063281646,
           "leT4Efficiency": 1.0238728063281646,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1694289600000
         },
         {
@@ -9413,7 +9413,7 @@
           "leT3Efficiency": 1.0277679376438278,
           "leT4Efficiency": 1.0277679376438278,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1694289600000
         }
       ],
@@ -9441,7 +9441,7 @@
           "leT3Efficiency": 0.08006027045962687,
           "leT4Efficiency": 0.08006027045962687,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1692648000000
         },
         {
@@ -9462,7 +9462,7 @@
           "leT3Efficiency": 1.0237889204336579,
           "leT4Efficiency": 1.0237889204336579,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1692648000000
         },
         {
@@ -9483,7 +9483,7 @@
           "leT3Efficiency": 0.8095163957056783,
           "leT4Efficiency": 0.8095163957056783,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1692648000000
         }
       ],
@@ -9511,7 +9511,7 @@
           "leT3Efficiency": 1.0362468676951466,
           "leT4Efficiency": 1.0362468676951466,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1690401600000
         },
         {
@@ -9532,7 +9532,7 @@
           "leT3Efficiency": 0.07891933602470143,
           "leT4Efficiency": 0.07891933602470143,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1690401600000
         },
         {
@@ -9553,7 +9553,7 @@
           "leT3Efficiency": 1.0117043859963974,
           "leT4Efficiency": 1.0117043859963974,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1690401600000
         }
       ],
@@ -9581,7 +9581,7 @@
           "leT3Efficiency": 1.0352055910711764,
           "leT4Efficiency": 1.0352055910711764,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1688068800000
         },
         {
@@ -9602,7 +9602,7 @@
           "leT3Efficiency": 1.0197594437941346,
           "leT4Efficiency": 1.0197594437941346,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1688068800000
         },
         {
@@ -9623,7 +9623,7 @@
           "leT3Efficiency": 1.025306554405708,
           "leT4Efficiency": 1.025306554405708,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1688068800000
         }
       ],
@@ -9651,7 +9651,7 @@
           "leT3Efficiency": 0.896947917920983,
           "leT4Efficiency": 0.896947917920983,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1687377600000
         },
         {
@@ -9672,7 +9672,7 @@
           "leT3Efficiency": 1.0371230292438545,
           "leT4Efficiency": 1.0371230292438545,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1687377600000
         },
         {
@@ -9693,7 +9693,7 @@
           "leT3Efficiency": 1.0274982200805751,
           "leT4Efficiency": 1.0274982200805751,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1687377600000
         }
       ],
@@ -9721,7 +9721,7 @@
           "leT3Efficiency": 1.011715540802491,
           "leT4Efficiency": 1.011715540802491,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1684094400000
         },
         {
@@ -9742,7 +9742,7 @@
           "leT3Efficiency": 1.023743106067873,
           "leT4Efficiency": 1.023743106067873,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1684094400000
         },
         {
@@ -9763,7 +9763,7 @@
           "leT3Efficiency": 1.0370196897380641,
           "leT4Efficiency": 1.0370196897380641,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1684094400000
         }
       ],
@@ -9791,7 +9791,7 @@
           "leT3Efficiency": 1.0061815120427489,
           "leT4Efficiency": 1.0061815120427489,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1682798400000
         },
         {
@@ -9812,7 +9812,7 @@
           "leT3Efficiency": 0.7939769115684918,
           "leT4Efficiency": 0.7939769115684918,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1682798400000
         },
         {
@@ -9833,7 +9833,7 @@
           "leT3Efficiency": 0.08001670050334626,
           "leT4Efficiency": 0.08001670050334626,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1682798400000
         }
       ],
@@ -9861,7 +9861,7 @@
           "leT3Efficiency": 1.025505072770095,
           "leT4Efficiency": 1.025505072770095,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1677787200000
         },
         {
@@ -9882,7 +9882,7 @@
           "leT3Efficiency": 0.07886949300970623,
           "leT4Efficiency": 0.07886949300970623,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1677787200000
         },
         {
@@ -9903,7 +9903,7 @@
           "leT3Efficiency": 1.027943050220795,
           "leT4Efficiency": 1.027943050220795,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1677787200000
         }
       ],
@@ -9931,7 +9931,7 @@
           "leT3Efficiency": 0.8090941130912289,
           "leT4Efficiency": 0.8090941130912289,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1675108800000
         },
         {
@@ -9952,7 +9952,7 @@
           "leT3Efficiency": 0.08003483577673473,
           "leT4Efficiency": 0.08003483577673473,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1675108800000
         },
         {
@@ -9973,7 +9973,7 @@
           "leT3Efficiency": 1.0227545369465172,
           "leT4Efficiency": 1.0227545369465172,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1675108800000
         }
       ],
@@ -10001,7 +10001,7 @@
           "leT3Efficiency": 1.0376311412157844,
           "leT4Efficiency": 1.0376311412157844,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1673380800000
         },
         {
@@ -10022,7 +10022,7 @@
           "leT3Efficiency": 0.8970834141087278,
           "leT4Efficiency": 0.8970834141087278,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1673380800000
         },
         {
@@ -10043,7 +10043,7 @@
           "leT3Efficiency": 1.0375355521760212,
           "leT4Efficiency": 1.0375355521760212,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1673380800000
         }
       ],
@@ -10071,7 +10071,7 @@
           "leT3Efficiency": 1.0368557941906544,
           "leT4Efficiency": 1.0368557941906544,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1672257600000
         },
         {
@@ -10092,7 +10092,7 @@
           "leT3Efficiency": 1.006342461873424,
           "leT4Efficiency": 1.006342461873424,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1672257600000
         },
         {
@@ -10113,7 +10113,7 @@
           "leT3Efficiency": 1.0253344685784727,
           "leT4Efficiency": 1.0253344685784727,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1672257600000
         }
       ],
@@ -10141,7 +10141,7 @@
           "leT3Efficiency": 1.0328019947111136,
           "leT4Efficiency": 1.0328019947111136,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1670702400000
         },
         {
@@ -10162,7 +10162,7 @@
           "leT3Efficiency": 1.0151355842329577,
           "leT4Efficiency": 1.0151355842329577,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1670702400000
         },
         {
@@ -10183,7 +10183,7 @@
           "leT3Efficiency": 1.01000222114203,
           "leT4Efficiency": 1.01000222114203,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1670702400000
         }
       ],
@@ -10211,7 +10211,7 @@
           "leT3Efficiency": 0.8968488623998768,
           "leT4Efficiency": 0.8968488623998768,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1668456000000
         },
         {
@@ -10232,7 +10232,7 @@
           "leT3Efficiency": 0.7932738595544306,
           "leT4Efficiency": 0.7932738595544306,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1668456000000
         },
         {
@@ -10253,7 +10253,7 @@
           "leT3Efficiency": 1.010895001030398,
           "leT4Efficiency": 1.010895001030398,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1668456000000
         }
       ],
@@ -10281,7 +10281,7 @@
           "leT3Efficiency": 0.07887807052613331,
           "leT4Efficiency": 0.07887807052613331,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1664654400000
         },
         {
@@ -10302,7 +10302,7 @@
           "leT3Efficiency": 1.0245649039979683,
           "leT4Efficiency": 1.0245649039979683,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1664654400000
         },
         {
@@ -10323,7 +10323,7 @@
           "leT3Efficiency": 0.8078968650142303,
           "leT4Efficiency": 0.8078968650142303,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1664654400000
         }
       ],
@@ -10351,7 +10351,7 @@
           "leT3Efficiency": 1.0197782974046787,
           "leT4Efficiency": 1.0197782974046787,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1661371200000
         },
         {
@@ -10372,7 +10372,7 @@
           "leT3Efficiency": 1.0314266105600771,
           "leT4Efficiency": 1.0314266105600771,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1661371200000
         },
         {
@@ -10393,7 +10393,7 @@
           "leT3Efficiency": 1.0219648189057944,
           "leT4Efficiency": 1.0219648189057944,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1661371200000
         }
       ],
@@ -10421,7 +10421,7 @@
           "leT3Efficiency": 1.0113990344305133,
           "leT4Efficiency": 1.0113990344305133,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1658174400000
         },
         {
@@ -10442,7 +10442,7 @@
           "leT3Efficiency": 1.0345346762225685,
           "leT4Efficiency": 1.0345346762225685,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1658174400000
         },
         {
@@ -10463,7 +10463,7 @@
           "leT3Efficiency": 0.07885941767347128,
           "leT4Efficiency": 0.07885941767347128,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1658174400000
         }
       ],
@@ -10491,7 +10491,7 @@
           "leT3Efficiency": 1.0257337155496737,
           "leT4Efficiency": 1.0257337155496737,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1655928000000
         },
         {
@@ -10512,7 +10512,7 @@
           "leT3Efficiency": 1.0351013743124764,
           "leT4Efficiency": 1.0351013743124764,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1655928000000
         },
         {
@@ -10533,7 +10533,7 @@
           "leT3Efficiency": 1.0190665781626038,
           "leT4Efficiency": 1.0190665781626038,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1655928000000
         }
       ],
@@ -10561,7 +10561,7 @@
           "leT3Efficiency": 0.8961836512486937,
           "leT4Efficiency": 0.8961836512486937,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1654718400000
         },
         {
@@ -10582,7 +10582,7 @@
           "leT3Efficiency": 0.8114430235453627,
           "leT4Efficiency": 0.8114430235453627,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1654718400000
         },
         {
@@ -10603,7 +10603,7 @@
           "leT3Efficiency": 1.0353700261695062,
           "leT4Efficiency": 1.0353700261695062,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1654718400000
         }
       ],
@@ -10631,7 +10631,7 @@
           "leT3Efficiency": 0.7942426038762608,
           "leT4Efficiency": 0.7942426038762608,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1652558400000
         },
         {
@@ -10652,7 +10652,7 @@
           "leT3Efficiency": 1.0057330067509307,
           "leT4Efficiency": 1.0057330067509307,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1652558400000
         },
         {
@@ -10673,7 +10673,7 @@
           "leT3Efficiency": 0.07999189859036279,
           "leT4Efficiency": 0.07999189859036279,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1652558400000
         }
       ],
@@ -10701,7 +10701,7 @@
           "leT3Efficiency": 1.0378161058334339,
           "leT4Efficiency": 1.0378161058334339,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1649361600000
         },
         {
@@ -10722,7 +10722,7 @@
           "leT3Efficiency": 1.0270766380797423,
           "leT4Efficiency": 1.0270766380797423,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1649361600000
         },
         {
@@ -10743,7 +10743,7 @@
           "leT3Efficiency": 1.0388870601178246,
           "leT4Efficiency": 1.0388870601178246,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1649361600000
         }
       ],
@@ -10771,7 +10771,7 @@
           "leT3Efficiency": 0.07894119205216422,
           "leT4Efficiency": 0.07894119205216422,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1648497600000
         },
         {
@@ -10792,7 +10792,7 @@
           "leT3Efficiency": 1.0203700854526798,
           "leT4Efficiency": 1.0203700854526798,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1648497600000
         },
         {
@@ -10813,7 +10813,7 @@
           "leT3Efficiency": 1.0280305745937077,
           "leT4Efficiency": 1.0280305745937077,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1648497600000
         }
       ],
@@ -10841,7 +10841,7 @@
           "leT3Efficiency": 1.0352590788682903,
           "leT4Efficiency": 1.0352590788682903,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1644264000000
         },
         {
@@ -10862,7 +10862,7 @@
           "leT3Efficiency": 0.8993417505799027,
           "leT4Efficiency": 0.8993417505799027,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1644264000000
         },
         {
@@ -10883,7 +10883,7 @@
           "leT3Efficiency": 1.032695649605867,
           "leT4Efficiency": 1.032695649605867,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1644264000000
         }
       ],
@@ -10911,7 +10911,7 @@
           "leT3Efficiency": 0.8963599095800018,
           "leT4Efficiency": 0.8963599095800018,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1642622400000
         },
         {
@@ -10932,7 +10932,7 @@
           "leT3Efficiency": 1.0340541240294137,
           "leT4Efficiency": 1.0340541240294137,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1642622400000
         },
         {
@@ -10953,7 +10953,7 @@
           "leT3Efficiency": 1.0044922461271164,
           "leT4Efficiency": 1.0044922461271164,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1642622400000
         }
       ],
@@ -10981,7 +10981,7 @@
           "leT3Efficiency": 1.044895462882401,
           "leT4Efficiency": 1.044895462882401,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1641240000000
         },
         {
@@ -11002,7 +11002,7 @@
           "leT3Efficiency": 0.999591832095965,
           "leT4Efficiency": 0.999591832095965,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1641240000000
         },
         {
@@ -11023,7 +11023,7 @@
           "leT3Efficiency": 1.0152194706999815,
           "leT4Efficiency": 1.0152194706999815,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1641240000000
         }
       ],
@@ -11051,7 +11051,7 @@
           "leT3Efficiency": 0.9837723706420021,
           "leT4Efficiency": 0.9837723706420021,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1639684800000
         },
         {
@@ -11072,7 +11072,7 @@
           "leT3Efficiency": 1.0167343165632095,
           "leT4Efficiency": 1.0167343165632095,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1639684800000
         },
         {
@@ -11093,7 +11093,7 @@
           "leT3Efficiency": 1.023222547375345,
           "leT4Efficiency": 1.023222547375345,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1639684800000
         }
       ],
@@ -11121,7 +11121,7 @@
           "leT3Efficiency": 1.0002462824100204,
           "leT4Efficiency": 1.0002462824100204,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1636920000000
         },
         {
@@ -11142,7 +11142,7 @@
           "leT3Efficiency": 0.7911483373203917,
           "leT4Efficiency": 0.7911483373203917,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1636920000000
         },
         {
@@ -11163,7 +11163,7 @@
           "leT3Efficiency": 0.0771494754053686,
           "leT4Efficiency": 0.0771494754053686,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1636920000000
         }
       ],
@@ -11191,7 +11191,7 @@
           "leT3Efficiency": 1.035293787457258,
           "leT4Efficiency": 1.035293787457258,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1633896000000
         },
         {
@@ -11212,7 +11212,7 @@
           "leT3Efficiency": 1.0370770663463362,
           "leT4Efficiency": 1.0370770663463362,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1633896000000
         },
         {
@@ -11233,7 +11233,7 @@
           "leT3Efficiency": 0.08043835616438356,
           "leT4Efficiency": 0.08043835616438356,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1633896000000
         }
       ],
@@ -11261,7 +11261,7 @@
           "leT3Efficiency": 0.906309330361665,
           "leT4Efficiency": 0.906309330361665,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1627588800000
         },
         {
@@ -11282,7 +11282,7 @@
           "leT3Efficiency": 1.0170811916339104,
           "leT4Efficiency": 1.0170811916339104,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1627588800000
         },
         {
@@ -11303,7 +11303,7 @@
           "leT3Efficiency": 1.0527749293163589,
           "leT4Efficiency": 1.0527749293163589,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1627588800000
         }
       ],
@@ -11331,7 +11331,7 @@
           "leT3Efficiency": 1.020788128868494,
           "leT4Efficiency": 1.020788128868494,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1624737600000
         },
         {
@@ -11352,7 +11352,7 @@
           "leT3Efficiency": 1.0284304600293845,
           "leT4Efficiency": 1.0284304600293845,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1624737600000
         },
         {
@@ -11373,7 +11373,7 @@
           "leT3Efficiency": 1.0141248431484047,
           "leT4Efficiency": 1.0141248431484047,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1624737600000
         }
       ],
@@ -11401,7 +11401,7 @@
           "leT3Efficiency": 1.038309231869886,
           "leT4Efficiency": 1.038309231869886,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1621022400000
         },
         {
@@ -11422,7 +11422,7 @@
           "leT3Efficiency": 0.9073627140506183,
           "leT4Efficiency": 0.9073627140506183,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1621022400000
         },
         {
@@ -11443,7 +11443,7 @@
           "leT3Efficiency": 0.8120677213252399,
           "leT4Efficiency": 0.8120677213252399,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1621022400000
         }
       ],
@@ -11471,7 +11471,7 @@
           "leT3Efficiency": 1.031282743231542,
           "leT4Efficiency": 1.031282743231542,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1619640000000
         },
         {
@@ -11492,7 +11492,7 @@
           "leT3Efficiency": 1.0412754929551717,
           "leT4Efficiency": 1.0412754929551717,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1619640000000
         },
         {
@@ -11513,7 +11513,7 @@
           "leT3Efficiency": 1.0332457593484898,
           "leT4Efficiency": 1.0332457593484898,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1619640000000
         }
       ],
@@ -11541,7 +11541,7 @@
           "leT3Efficiency": 1.0185502713672063,
           "leT4Efficiency": 1.0185502713672063,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1617912000000
         },
         {
@@ -11562,7 +11562,7 @@
           "leT3Efficiency": 1.0591978973676999,
           "leT4Efficiency": 1.0591978973676999,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1617912000000
         },
         {
@@ -11583,7 +11583,7 @@
           "leT3Efficiency": 0.0792971389952692,
           "leT4Efficiency": 0.0792971389952692,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1617912000000
         }
       ],
@@ -11611,7 +11611,7 @@
           "leT3Efficiency": 1.0233710175128612,
           "leT4Efficiency": 1.0233710175128612,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1616443200000
         },
         {
@@ -11632,7 +11632,7 @@
           "leT3Efficiency": 0.07995340710541643,
           "leT4Efficiency": 0.07995340710541643,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1616443200000
         }
       ],
@@ -11660,7 +11660,7 @@
           "leT3Efficiency": 0.8979178785531793,
           "leT4Efficiency": 0.8979178785531793,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1613678400000
         },
         {
@@ -11681,7 +11681,7 @@
           "leT3Efficiency": 1.0227870900605691,
           "leT4Efficiency": 1.0227870900605691,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1613678400000
         },
         {
@@ -11702,7 +11702,7 @@
           "leT3Efficiency": 1.020552381360451,
           "leT4Efficiency": 1.020552381360451,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1613678400000
         }
       ],
@@ -11730,7 +11730,7 @@
           "leT3Efficiency": 1.0277541150099945,
           "leT4Efficiency": 1.0277541150099945,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1609358400000
         },
         {
@@ -11751,7 +11751,7 @@
           "leT3Efficiency": 1.0120294663475253,
           "leT4Efficiency": 1.0120294663475253,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1609358400000
         },
         {
@@ -11772,7 +11772,7 @@
           "leT3Efficiency": 1.0164327513483458,
           "leT4Efficiency": 1.0164327513483458,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1609358400000
         }
       ],
@@ -11800,7 +11800,7 @@
           "leT3Efficiency": 0.07840490797546013,
           "leT4Efficiency": 0.07840490797546013,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1603915200000
         }
       ],
@@ -11828,7 +11828,7 @@
           "leT3Efficiency": 0.07756424581005587,
           "leT4Efficiency": 0.07756424581005587,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1602360000000
         },
         {
@@ -11849,7 +11849,7 @@
           "leT3Efficiency": 1.0403156666333122,
           "leT4Efficiency": 1.0403156666333122,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1602360000000
         }
       ],
@@ -11877,7 +11877,7 @@
           "leT3Efficiency": 1.0154049999845758,
           "leT4Efficiency": 1.0154049999845758,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1588622400000
         },
         {
@@ -11898,7 +11898,7 @@
           "leT3Efficiency": 0.07945544554455447,
           "leT4Efficiency": 0.07945544554455447,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1588622400000
         }
       ],
@@ -11926,7 +11926,7 @@
           "leT3Efficiency": 1.031580255073968,
           "leT4Efficiency": 1.031580255073968,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1560348000000
         },
         {
@@ -11947,7 +11947,7 @@
           "leT3Efficiency": 0.07933136676499508,
           "leT4Efficiency": 0.07933136676499508,
           "orundumPerAp": 0,
-          "lmdcost": null,
+          "lmdCost": null,
           "end": 1560348000000
         }
       ],

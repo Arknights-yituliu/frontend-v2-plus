@@ -445,7 +445,7 @@ const routes = [
         text: '材料统计',
         name: '材料统计',
         display: false,
-        component: () => import('/src/pages/tools/material-statistics.vue')
+        component: () => import('/src/pages/material/material-statistics.vue')
     },
     {
         path: '/material/detail',

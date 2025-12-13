@@ -1,5 +1,5 @@
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
-import {getStageDropCollect} from "/src/utils/item/penguinData.js";
+import {createDropTemplate, getStageDropCollect} from "/src/utils/item/penguinData.js";
 import {itemSeriesInfoByItemId} from "/src/utils/item/itemSeries.js";
 
 
@@ -29,12 +29,39 @@ async function calculationStageEfficiency(stageConfig) {
 
     const itemMap =  await itemCache.getItemInfoMapCacheByConfig(stageConfig)
 
-    const stageDropCollect = await getStageDropCollect(stageConfig)  // TODO: getStageDropCollect 有 2 个参数
+    const stageDropCollect = await getStageDropCollect(stageConfig,false)
     const loading = new Date().getTime()
     // console.log("加载数据", loading - start, 'ms')
 
     let stageResultList = []
 
+
+
+    let shopRedemptionItem = {
+        itemId:"4001",
+        apEfficiency:0.072,
+        quantity: 20,
+        price: 1
+    }
+
+    for(const unlimitedItemId in unlimitedItemsInStore){
+        const unlimitedItem = unlimitedItemsInStore[unlimitedItemId];
+        const itemInfo =  itemMap.get(unlimitedItem.itemId)
+        if(itemInfo){
+               const apEfficiency = 1/unlimitedItem.price*unlimitedItem.quantity * itemInfo.itemValue
+               if(apEfficiency>shopRedemptionItem.apEfficiency){
+                   shopRedemptionItem = {
+                       itemId:unlimitedItem.itemId,
+                       apEfficiency:apEfficiency,
+                       quantity: unlimitedItem.quantity,
+                       price: unlimitedItem.price
+                   }
+               }
+        }
+    }
+    
+
+    console.log(shopRedemptionItem)
 
     for (const [stageId, list] of stageDropCollect) {
 
@@ -50,21 +77,20 @@ async function calculationStageEfficiency(stageConfig) {
         let stageEfficiency = 0.0;
         let stageExpectedOutput = 0.0
 
-        // list.push({
-        //     stageId: stageId,
-        //     itemId: "4001",
-        //     quantity: apCost * 12,
-        //     times: 1
-        // })
-        //
-        // if ("ACT" === stageType || "ACT_REP" === stageType) {
-        //     list.push({
-        //         stageId: stageId,
-        //         itemId: "4001",
-        //         quantity: apCost * 20,
-        //         times: 1
-        //     })
-        // }
+
+        if ("ACT" === stageType || "ACT_REP" === stageType) {
+
+            console.log(createDropTemplate(list[0],{
+                itemId:shopRedemptionItem.itemId,
+                price: shopRedemptionItem.price,
+                quantity:shopRedemptionItem.quantity
+            }))
+           list.push(createDropTemplate(list[0],{
+               itemId:shopRedemptionItem.itemId,
+               price: shopRedemptionItem.price,
+               quantity:shopRedemptionItem.quantity
+           }))
+        }
 
 
         let stageDropDetailList = []
@@ -223,7 +249,7 @@ async function calculationStageEfficiency(stageConfig) {
             leT3Efficiency: leT3Efficiency,
             leT4Efficiency: leT4Efficiency,
             orundumPerAp: orundumPerAp,
-            lmdcost: LMDCostPerAp * 600 / apCost / orundumPerAp / 10000,
+            lmdCost: LMDCostPerAp * 600 / apCost / orundumPerAp / 10000,
             end: endTimeStamp,
             spm: spm,
             apCost,
@@ -337,6 +363,34 @@ function getHistoryActStage(stageResultList) {
     return historyActStageList
 }
 
+
+//这个对象是用于在计算活动效率时，判断无限兑换材料价值是否大于龙门币价值，大于则将默认计算的龙门币效率转为价值最高的无限兑换材料
+const unlimitedItemsInStore = {
+    "4001": {
+        itemId: "4001",
+        quantity: 20,
+        minValue: 0.0036,
+        price: 1
+    },
+    "30073": {
+        itemId: "30073",
+        quantity: 1,
+        minValue: 1.8,
+        price: 25
+    },
+    "30083": {
+        itemId: "30083",
+        quantity: 1,
+        minValue: 2.16,
+        price: 30
+    },
+    "30093": {
+        itemId: "30093",
+        quantity: 1,
+        minValue: 2.52,
+        price: 35
+    }
+}
 
 export {
     getStageData,calculationStageEfficiency

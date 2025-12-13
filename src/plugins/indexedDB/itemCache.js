@@ -119,7 +119,7 @@ async function getItemValueMapCacheByConfig(stageConfig, forceRefresh = false) {
 
 
 const penguinDataMap = new Map()
-const penguinCacheKey = "penguin-cache-v2";
+const penguinCacheKey = "penguin-cache-v3";
 
 async function getPenguinMatrixCache() {
 
@@ -137,7 +137,7 @@ async function getPenguinMatrixCache() {
     let cacheData = await myDatabase.cache_data.get(penguinCacheKey)
     //有缓存判断缓存时间是否超过设定时间，未超过直接返回缓存
     if (cacheData) {
-        if (Date.now() - cacheData.createTime < 60 * 60* 1000) {
+        if (Date.now() - cacheData.createTime < 60 * 60 * 1000) {
             console.log(`${penguinCacheKey}.返回缓存的数据`)
 
             return cacheData.resource
@@ -199,7 +199,7 @@ function getLastSynchronizationTime() {
 }
 
 async function getStageInfoCache() {
-    const cacheKey = 'stageInfo-v2'
+    const cacheKey = 'stageInfo-v3'
     let stageInfo
 
 

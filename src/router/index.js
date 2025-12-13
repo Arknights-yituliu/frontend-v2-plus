@@ -22,10 +22,10 @@ router.beforeEach(async (to, from,next) => {
         const targetUrl = `/docs.html?path=${to.path}${currentHash ? `#${currentHash}` : ''}`;
 
         // 使用 window.location 跳转，而不是 open，避免浏览器拦截
-        window.location.href = targetUrl;
+        // window.location.href = targetUrl;
 
         // 或者使用 assign：
-        // window.location.assign(targetUrl);
+        window.open(targetUrl);
 
         return; // 终止后续流程
     }

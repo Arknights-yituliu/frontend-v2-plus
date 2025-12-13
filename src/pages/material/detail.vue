@@ -4,9 +4,9 @@ import {createMessage} from '/src/utils/message'
 import {calculationStageEfficiency} from '/src/utils/item/stageEfficiencyCal.js'
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
-import ActionButton from "@/components/account/ActionButton.vue";
+import ActionButton from "/src/components/account/ActionButton.vue";
 import {formatNumber} from "/src/utils/format.js";
-import ItemImage from "@/components/sprite/ItemImage.vue";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
 
 const stageTypeTabActive = ref("ACT")
 
@@ -230,7 +230,7 @@ onMounted(() => {
       <div class="v-card-tabs-window">
         <v-tabs-window v-model="stageTypeTabActive">
           <v-tabs-window-item value="ACT">
-            <div v-for="(collect, index) in stageCollect.Main" :key="index">
+            <div v-for="(collect, index) in stageCollect.Act" :key="index">
               <v-btn :text="collect.zoneName" variant="text"></v-btn>
               <v-divider color="primary" class="opacity-50"></v-divider>
               <ActionButton v-for="(stage, index) in collect.list" :btn-text="stage.stageCode"
