@@ -118,7 +118,7 @@ let item_table_data_by_item_id = ref([
         "leT3Efficiency": 1.0338491932020923,
         "leT4Efficiency": 1.0338491932020923,
         "orundumPerAp": 0,
-        "lmdcost": null,
+        "lmdCost": null,
         "end": 1750276800000,
         "spm": 7,
         "apCost": 21,
@@ -142,7 +142,7 @@ let item_table_data_by_item_id = ref([
         "leT3Efficiency": 0.6866974886525701,
         "leT4Efficiency": 0.6866974886525701,
         "orundumPerAp": 0,
-        "lmdcost": null,
+        "lmdCost": null,
         "end": 4070880000000,
         "spm": 5.29,
         "apCost": 18,
@@ -166,7 +166,7 @@ let item_table_data_by_item_id = ref([
         "leT3Efficiency": 0.6855249080996555,
         "leT4Efficiency": 0.6855249080996555,
         "orundumPerAp": 0,
-        "lmdcost": null,
+        "lmdCost": null,
         "end": 4070880000000,
         "spm": 5.4,
         "apCost": 18,
@@ -190,7 +190,7 @@ let item_table_data_by_item_id = ref([
         "leT3Efficiency": 0.7907300398218644,
         "leT4Efficiency": 0.7907300398218644,
         "orundumPerAp": 0.18591021364663823,
-        "lmdcost": 8.00327707559904,
+        "lmdCost": 8.00327707559904,
         "end": 4070880000000,
         "spm": 6.27,
         "apCost": 21,
@@ -214,7 +214,7 @@ let item_table_data_by_item_id = ref([
         "leT3Efficiency": 0.7880621706876805,
         "leT4Efficiency": 0.7880621706876805,
         "orundumPerAp": 0.21727252793863386,
-        "lmdcost": 7.995202249979318,
+        "lmdCost": 7.995202249979318,
         "end": 4070880000000,
         "spm": 4.2,
         "apCost": 18,
@@ -239,7 +239,7 @@ let item_table_data_by_item_id = ref([
         "leT3Efficiency": 0.7401688412923226,
         "leT4Efficiency": 0.7401688412923226,
         "orundumPerAp": 0.9069172526274675,
-        "lmdcost": 6.4692768839865575,
+        "lmdCost": 6.4692768839865575,
         "end": 4070880000000,
         "spm": 3.71,
         "apCost": 12,
@@ -535,7 +535,7 @@ function getOrundumRecommendedStage() {
       orundumRecommendedStage.value.push({
         stageCode: stage.stageCode,
         orundumPerAp: stage.orundumPerAp.toFixed(2),
-        lmdcost: stage.lmdcost.toFixed(2) + 'w',
+        lmdCost: stage.lmdCost.toFixed(2) + 'w',
         orundumPerApEfficiency: (stage.orundumPerApEfficiency * 100).toFixed(2) + '%',
         stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
         stageType: stage.stageType ? stage.stageType : ''
@@ -829,7 +829,7 @@ onMounted(() => {
         <el-table-column label="每搓1抽消耗">
           <template #default="scope">
             <div style="display: flex; align-items: center">
-              <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>
+              <span style="margin-left: 10px">{{ scope.row.lmdCost }}</span>
               <div class="orundum-table-icon">
                 <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>
               </div>

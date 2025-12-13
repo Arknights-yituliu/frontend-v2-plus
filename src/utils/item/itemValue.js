@@ -1,4 +1,4 @@
-import { getStageDropCollect } from "@/utils/item/penguinData.js";
+import { getStageDropCollect } from "/src/utils/item/penguinData.js";
 import ITEM_INFO from "/src/static/json/material/item_info.json";
 import ITEM_SERIES_INFO from '/src/static/json/material/item_series_info.json';
 import COMPOSITE_TABLE from '/src/static/json/material/composite_table.v2.json';

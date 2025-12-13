@@ -125,23 +125,23 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
 
         const lmdDrop = createDropTemplate(stageInfo, {
             itemId: "4001",
-            times: 1,
-            quantity: stageInfo.apCost * 12,
+            price: 1,
+            quantity: 12,
         })
-        const storeUnlimitedExchangeDrop = createDropTemplate(stageInfo, {
-            itemId: "4001",
-            times: 1,
-            quantity: stageInfo.apCost * 20,
-        })
+
+        // const storeUnlimitedExchangeDrop = createDropTemplate(stageInfo, {
+        //     itemId: "4001",
+        //     quantity: 20,
+        // })
 
 
         if (stageDropCollect.get(stageId)) {
             stageDropCollect.get(stageId).push(mergeItem)
         } else {
             stageDropCollect.set(stageId, [mergeItem, lmdDrop])
-            if ("ACT" === stageType || "ACT_REP" === stageType) {
-                stageDropCollect.get(stageId).push(storeUnlimitedExchangeDrop)
-            }
+            // if ("ACT" === stageType || "ACT_REP" === stageType) {
+            //     stageDropCollect.get(stageId).push(storeUnlimitedExchangeDrop)
+            // }
         }
     }
 
@@ -152,33 +152,15 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
 
             const lmdDrop = createDropTemplate(dropInfo, {
                 itemId: "4001",
-                times: 1,
-                quantity: dropInfo.apCost * 12,
+                price: 1,
+                quantity: 12,
             })
-            const storeUnlimitedExchangeDrop = createDropTemplate(dropInfo, {
-                itemId: "4001",
-                times: 1,
-                quantity: dropInfo.apCost * 20,
-            })
-            stageDropCollect.set(dropInfo.stageId, [dropInfo, lmdDrop, storeUnlimitedExchangeDrop])
-        }
-    }
 
-
-    function createDropTemplate(stageInfo, shopRedemptionItems) {
-        return {
-            stageId: stageInfo.stageId,
-            itemId: shopRedemptionItems.itemId,
-            quantity: shopRedemptionItems.quantity,
-            times: shopRedemptionItems.times,
-            start: stageInfo.start,
-            end: stageInfo.end,
-            stageCode: stageInfo.stageCode,
-            apCost: stageInfo.apCost,
-            spm: stageInfo.spm,
-            stageType: stageInfo.stageType,
-            zoneName: stageInfo.zoneName,
-            zoneId: stageInfo.zoneId
+            // const storeUnlimitedExchangeDrop = createDropTemplate(dropInfo, {
+            //     itemId: "4001",
+            //     quantity:  20,
+            // })
+            stageDropCollect.set(dropInfo.stageId, [dropInfo, lmdDrop])
         }
     }
 
@@ -187,32 +169,21 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
 }
 
 
-//这个对象是用于在计算活动效率时，判断无限兑换材料价值是否大于龙门币价值，大于则将默认计算的龙门币效率转为价值最高的无限兑换材料
-const unlimitedMaterialsInStore = {
-    "4001": {
-        itemId: "4001",
-        quantity: 20,
-        minValue: 0.0036,
-        price: 1``
-    },
-    "30073": {
-        itemId: "30073",
-        quantity: 1,
-        minValue: 1.8,
-        price: 25
-    },
-    "30083": {
-        itemId: "30083",
-        quantity: 1,
-        minValue: 2.16,
-        price: 30
-    },
-    "30093": {
-        itemId: "30093",
-        quantity: 1,
-        minValue: 2.52,
-        price: 35
+function createDropTemplate(stageInfo, shopRedemptionItem) {
+    return {
+        stageId: stageInfo.stageId,
+        itemId: shopRedemptionItem.itemId,
+        quantity: stageInfo.apCost / shopRedemptionItem.price * shopRedemptionItem.quantity * 1000,
+        times: 1000,
+        start: stageInfo.start,
+        end: stageInfo.end,
+        stageCode: stageInfo.stageCode,
+        apCost: stageInfo.apCost,
+        spm: stageInfo.spm,
+        stageType: stageInfo.stageType,
+        zoneName: stageInfo.zoneName,
+        zoneId: stageInfo.zoneId
     }
 }
 
-export {getStageDropCollect}
+export {getStageDropCollect, createDropTemplate}

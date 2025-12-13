@@ -466,7 +466,7 @@ function getOrundumRecommendedStage() {
       orundumRecommendedStage.value.push({
         stageCode: stage.stageCode,
         orundumPerAp: stage.orundumPerAp.toFixed(2),
-        lmdcost: stage.lmdcost.toFixed(2) + 'w',
+        lmdCost: stage.lmdCost.toFixed(2) + 'w',
         orundumPerApEfficiency: (stage.orundumPerApEfficiency * 100).toFixed(2) + '%',
         stageEfficiency: (stage.stageEfficiency * 100).toFixed(2) + '%',
         stageType: stage.stageType ? stage.stageType : ''
@@ -1009,7 +1009,7 @@ onMounted(() => {
         <el-table-column label="每搓1抽消耗">
           <template #default="scope">
             <div style="display: flex; align-items: center">
-              <span style="margin-left: 10px">{{ scope.row.lmdcost }}</span>
+              <span style="margin-left: 10px">{{ scope.row.lmdCost }}</span>
               <div class="orundum-table-icon">
                 <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>
               </div>

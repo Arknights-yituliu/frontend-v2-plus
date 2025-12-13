@@ -38,7 +38,7 @@ function formatOrundumRecommendedStage() {
     orundumRecommendedStage.value.push({
       stageCode: stage.stageCode,
       orundumPerAp: formatNumber(stage.orundumPerAp,2),
-      lmdcost: formatNumber(stage.lmdcost,2) + 'w',
+      lmdCost: formatNumber(stage.lmdCost,2) + 'w',
       orundumPerApEfficiency: formatNumber((stage.orundumPerApEfficiency * 100),2) + '%',
       stageEfficiency: formatNumber((stage.stageEfficiency * 100),2) + '%',
       stageType: stage.stageType ? stage.stageType : ''
@@ -54,7 +54,7 @@ watch(()=>props.modelValue,(newVal)=>{
 const headers = [
   {title: '关卡名', key: 'stageCode'},
   {title: '每理智可搓玉', key: 'orundumPerAp'},
-  {title: '每搓1抽消耗龙门币', key: 'lmdcost'},
+  {title: '每搓1抽消耗龙门币', key: 'lmdCost'},
   {title: '搓玉效率', key: 'orundumPerApEfficiency'},
   {title: '关卡效率', key: 'stageEfficiency'},
 ]
@@ -86,9 +86,9 @@ const headers = [
           </div>
         </div>
       </template>
-      <template v-slot:item.lmdcost="{ item }">
+      <template v-slot:item.lmdCost="{ item }">
         <div style="display: flex;align-items: center">
-          {{ item.lmdcost }}
+          {{ item.lmdCost }}
           <div class="orundum-table-icon">
             <div class="bg-4001_icon sprite-icon" style="top:-8px"></div>
           </div>

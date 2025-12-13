@@ -156,7 +156,7 @@ backend.yituliu.cn/stage/orundum
       //关卡类型
       "stageType": "MAIN",
       //每搓一抽合成玉需要的龙门币消耗
-      "lmdcost": 9.535844273102738
+      "lmdCost": 9.535844273102738
     }
   ]
 }
