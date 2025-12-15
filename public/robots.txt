@@ -1,0 +1,5 @@
+# robots.txt for 明日方舟一图流
+# https://ark.yituliu.cn/robots.txt
+
+User-agent: *
+Allow: /
