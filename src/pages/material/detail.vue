@@ -131,17 +131,27 @@ function getStageCollectByZone() {
 }
 
 let reviewStageDropDetailList = ref([])
-
+let reviewStageIdList = []
 
 async function reviewStageDropDetail(stage) {
   const {stageId} = stage
+
   if (!stageDropDetailMap.has(stageId)) {
     createMessage({
       type: 'error',
       text: '该关卡无数据'
     })
   }
-  reviewStageDropDetailList.value.push(stageDropDetailMap.get(stageId))
+
+  stage.active = !stage.active
+  _updateStageIdList(reviewStageIdList,stageId)
+  reviewStageDropDetailList.value = []
+  for(const stageId of reviewStageIdList){
+    reviewStageDropDetailList.value.push(stageDropDetailMap.get(stageId))
+  }
+
+  console.log(reviewStageIdList)
+  console.log(reviewStageDropDetailList.value)
 // 等待 DOM 更新后再尝试初始化图表
   await nextTick();
   createLineChart(stageDropDetailMap.get(stageId))
@@ -150,6 +160,19 @@ async function reviewStageDropDetail(stage) {
   //         clearInterval(intervalId);
   //       }
   //     }, 500)
+
+  function _updateStageIdList(collection,element){
+    // 查找元素索引
+    const index = collection.indexOf(element);
+    if (index > -1) {
+      // 存在则删除
+      collection.splice(index, 1);
+    } else {
+      // 不存在则插入
+      collection.push(element);
+    }
+
+  }
 
 }
 
@@ -162,7 +185,7 @@ function createLineChart(stage) {
   }
   let xData = []
   let yData = []
-  console.log(dropDetail)
+  // console.log(dropDetail)
   for (const item of dropDetail) {
     xData.push(item.itemName)
     yData.push(formatNumber(item.expectedOutput))
