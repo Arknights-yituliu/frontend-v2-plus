@@ -80,11 +80,11 @@ async function calculationStageEfficiency(stageConfig) {
 
         if ("ACT" === stageType || "ACT_REP" === stageType) {
 
-            console.log(createDropTemplate(list[0],{
-                itemId:shopRedemptionItem.itemId,
-                price: shopRedemptionItem.price,
-                quantity:shopRedemptionItem.quantity
-            }))
+            // console.log(createDropTemplate(list[0],{
+            //     itemId:shopRedemptionItem.itemId,
+            //     price: shopRedemptionItem.price,
+            //     quantity:shopRedemptionItem.quantity
+            // }))
            list.push(createDropTemplate(list[0],{
                itemId:shopRedemptionItem.itemId,
                price: shopRedemptionItem.price,
@@ -352,6 +352,7 @@ function getHistoryActStage(stageResultList) {
     let historyActStageList = []
 
     for (const [zoneName, list] of historyActStageCollect) {
+        list.sort((a, b) => b.stageEfficiency - a.stageEfficiency)
         historyActStageList.push({
             zoneName: zoneName,
             stageType: list[0].stageType,
@@ -360,6 +361,7 @@ function getHistoryActStage(stageResultList) {
         })
     }
     historyActStageList.sort((a, b) => b.endTime - a.endTime)
+
     return historyActStageList
 }
 

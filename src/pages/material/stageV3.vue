@@ -79,6 +79,8 @@ function getStageResult() {
     orundumRecommendedStage.value = orundumRecommendedStageVO
 
     historyActivityList.value = historyActStage
+
+
     dataSource.value = 'Web'
     getItemCardData()
     getItemTableData(0, false)

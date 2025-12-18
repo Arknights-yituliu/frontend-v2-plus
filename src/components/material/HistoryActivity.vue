@@ -106,13 +106,27 @@ function formatPcHistoryTableData() {
       itemList: {} //材料up情况
     }
 
+    const itemList = {}
     for (const stage of act.actStageList) {
-      rowData.itemList[stage.itemId] = {
-        itemId: stage.itemId,
-        stageEfficiency: stage.stageEfficiency * 100,
-        stageCode: stage.stageCode
+      if(itemList[stage.itemId]){
+        if(itemList[stage.itemId].stageEfficiency<stage.stageEfficiency * 100){
+          itemList[stage.itemId] = {
+            itemId: stage.itemId,
+            stageEfficiency: stage.stageEfficiency * 100,
+            stageCode: stage.stageCode
+          }
+        }
+      }else {
+        itemList[stage.itemId] = {
+          itemId: stage.itemId,
+          stageEfficiency: stage.stageEfficiency * 100,
+          stageCode: stage.stageCode
+        }
       }
+
     }
+    rowData.itemList = itemList
+
 
     for (const header of historyActivityTableHeaders.value) {
 
@@ -178,7 +192,7 @@ function getTableDividerClass(divider) {
   }
 }
 
-onMounted(()=>{
+onMounted(() => {
   chooseHistoryActDevice('pc')
 })
 
