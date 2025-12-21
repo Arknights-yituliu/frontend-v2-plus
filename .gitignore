@@ -42,3 +42,6 @@ coverage
 /docs/sklandTest.vue
 
 IFLOW.md
+
+# Plugins files
+.VSCodeCounter
