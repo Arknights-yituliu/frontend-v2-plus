@@ -663,7 +663,6 @@ let scheduleInfo = ref({
   "description": "文件描述",
   "id": 1702203342688921,
   "title": "文件标题",
-  "buildingType": selectedScheduleType.value.label,
   "planTimes": `${scheduleTypeV2.value.planTimes}班`,
   "plans": [],
   "scheduleType": {},
@@ -700,6 +699,7 @@ function createSchedule() {
     plans.push(plan)
   }
 
+  // scheduleInfo.value.buildingType = selectedScheduleType.value.label
   scheduleInfo.value.plans = plans
   scheduleInfo.value.scheduleType = scheduleTypeV2.value
 
@@ -794,12 +794,12 @@ function importSchedule(schedule) {
   scheduleInfo.value.title = schedule.title
 
   // 判断基建类型
-  const buildingType = schedule.buildingType
-  for (const menu of SCHEDULE_MENU) {
-    if (menu.label === buildingType) {
-      chooseScheduleType(menu)
-    }
-  }
+  // const buildingType = schedule.buildingType
+  // for (const menu of SCHEDULE_MENU) {
+  //   if (menu.label === buildingType) {
+  //     chooseScheduleType(menu)
+  //   }
+  // }
 
   //排班生成器V2的新字段，记录了基建的类型
   if (schedule.scheduleType) {

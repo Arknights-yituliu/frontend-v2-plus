@@ -65,98 +65,104 @@ const startTime = Date.now()
 
 const intervalId = setInterval(formatPcHistoryTableData, 500);
 
+/**
+ * 格式化PC端历史活动表格数据
+ * 处理活动数据，计算材料UP间隔，生成表格数据
+ */
 function formatPcHistoryTableData() {
-
+  // 检查是否超过执行时间限制
   if (Date.now() - startTime > 30 * 1000) {
     console.log('取消更新任务')
     clearInterval(intervalId)
-  }
-
-  if (dataLength.value >= props.modelValue.length) {
-    // console.log('数据未更新')
     return
   }
 
+  // 检查数据是否更新
+  if (dataLength.value >= props.modelValue.length) {
+    return
+  }
 
+  // 初始化表格表头
   historyActivityTableHeaders.value = initTableHeader()
 
+  // 更新数据长度和列表
   dataLength.value = props.modelValue.length
   console.log('数据更新')
   historyActivityList.value = props.modelValue
-
   historyActivityTable.value = []
+
   // 每种材料距离上次up间隔
-  let lastUpInterval = 0;
+  let lastUpInterval = 0
+  // 存储活动名称到材料列表的映射，用于快速查找复刻活动材料
+  const activityItemMap = new Map()
 
-
-  // 循环历史活动数据
+  // 循环处理历史活动数据
   for (const act of historyActivityList.value) {
+    // 跳过特定活动
     if (act.zoneName === '落叶逐火') {
       continue
     }
+
     lastUpInterval++
-    //复刻不计入
-    // if(act.zoneName.indexOf('复刻')>-1) {
-    //   continue;
-    // }
-    //每行数据
-    let rowData = {
-      activityName: act.zoneName, //活动名
-      startTime: dateFormat(new Date(act.endTime), 'yyyy/MM'),
-      itemList: {} //材料up情况
+
+    // 创建活动行数据
+    const rowData = {
+      activityName: act.zoneName, // 活动名
+      startTime: dateFormat(new Date(act.endTime), 'yyyy/MM'), // 格式化结束时间
+      itemList: {} // 材料up情况
     }
 
+    // 处理活动关卡数据，筛选每个材料的最高效率关卡
+    const itemList = {}
     for (const stage of act.actStageList) {
-      rowData.itemList[stage.itemId] = {
-        itemId: stage.itemId,
-        stageEfficiency: stage.stageEfficiency * 100,
-        stageCode: stage.stageCode
+      const itemId = stage.itemId
+      const efficiency = stage.stageEfficiency * 100
+      
+      // 只保留效率最高的关卡
+      if (!itemList[itemId] || itemList[itemId].stageEfficiency < efficiency) {
+        itemList[itemId] = {
+          itemId,
+          stageEfficiency: efficiency,
+          stageCode: stage.stageCode
+        }
       }
     }
+    
+    rowData.itemList = itemList
+    // 存储活动材料映射
+    activityItemMap.set(rowData.activityName, itemList)
 
+    // 更新材料的上次UP状态和间隔
     for (const header of historyActivityTableHeaders.value) {
-
-      //材料up标记
-      let isUpFlag = false;
-
-      //如果当前材料up了,将标记记为true
-      if (rowData.itemList[header.itemId]) {
-        isUpFlag = true
-      }
-
-      //如果这个材料已经up了，则将这个材料的上次up标记为true
-      if (isUpFlag) {
-        header.lastUp = true;
-      }
-
-      //如果这个材料这个活动没up,更新up间隔次数,表格根据这个间隔进行背景色的渲染
-      if (!header.lastUp) {
-        header.lastUpInterval = lastUpInterval;
-      }
-    }
-
-    //循环复刻活动的数据
-    for (const reprintActivity of REPRODUCTION_ACTIVITY) {
-      //通过判断同名的活动和复刻活动，将up材料赋予给复刻活动
-      if (reprintActivity.activityName === rowData.activityName) {
-        //将up材料赋予给复刻活动
-        reprintActivity.itemList = rowData.itemList
+      const isUp = !!rowData.itemList[header.itemId]
+      
+      if (isUp) {
+        header.lastUp = true
+      } else if (!header.lastUp) {
+        // 如果材料尚未UP，更新间隔
+        header.lastUpInterval = lastUpInterval
       }
     }
 
     historyActivityTable.value.push(rowData)
   }
 
-  historyActivityTable.value[0].divider = true
-
-  //将复刻活动按首位插入进活动表格的集合中
-  for (const reprintActivity of REPRODUCTION_ACTIVITY) {
-    historyActivityTable.value.unshift(reprintActivity)
+  // 标记第一个活动为分隔符（添加防御性检查）
+  if (historyActivityTable.value.length > 0) {
+    historyActivityTable.value[0].divider = true
   }
 
+  // 处理复刻活动，快速查找对应材料
+  const reprintActivities = REPRODUCTION_ACTIVITY.map(activity => {
+    const itemList = activityItemMap.get(activity.activityName) || {}
+    return { ...activity, itemList }
+  })
 
+  // 将复刻活动插入到表格开头
+  historyActivityTable.value.unshift(...reprintActivities)
+
+  // 按上次UP间隔对表头进行排序
   historyActivityTableHeaders.value.sort((a, b) => a.lastUpInterval - b.lastUpInterval)
-
 }
 
 
@@ -178,7 +184,7 @@ function getTableDividerClass(divider) {
   }
 }
 
-onMounted(()=>{
+onMounted(() => {
   chooseHistoryActDevice('pc')
 })
 
