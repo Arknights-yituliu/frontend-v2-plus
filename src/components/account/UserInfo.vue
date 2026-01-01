@@ -156,6 +156,9 @@ const intervalId =  setInterval(()=>{
   if(max>9){
     clearInterval(intervalId)
   }
+  if(userInfo.value.status>0){
+    clearInterval(intervalId)
+  }
   displayOrUpdateInfo.value = userInfo.value.status>0?'online':''
   max++
 },500)
@@ -170,7 +173,7 @@ onMounted(() => {
 <template>
 
   <v-card class="user-card" title="用户信息" >
-
+    <v-card-text>
 <!--    {{`状态：${displayOrUpdateInfo}`}}-->
 
     <v-alert v-show="userInfo.status<1"
@@ -225,7 +228,9 @@ onMounted(() => {
       <v-btn variant="text" color="primary" text="返回" @click="displayOrUpdateInfo = 'online'"></v-btn>
     </div>
 
-    <div v-show="displayOrUpdateInfo==='avatar'">
+    <v-card v-show="displayOrUpdateInfo==='avatar'">
+      <v-card-text>
+
 
       <div class="flex align-center justify-center">
         <OperatorAvatar :char-id="selectedAvatar" rounded :size="80" :mobile-size="80"></OperatorAvatar>
@@ -239,11 +244,12 @@ onMounted(() => {
       <div class="flex justify-center">
         <v-btn variant="text" color="primary" text="确认修改" @click="updateAvatar"></v-btn>
       </div>
-    </div>
+      </v-card-text>
+    </v-card>
 
-    <div v-show="displayOrUpdateInfo==='userName'">
-
-      <div class="m-0-4 opacity-70">输入您的新用户名（账号）</div>
+    <v-card v-show="displayOrUpdateInfo==='userName'">
+      <v-card-text>
+      <div class="m-0-4 opacity-70">输入您的新用户名（账号）,修改后，您仅可通过新用户名作为账号登录</div>
       <v-text-field
           :rules="accountRules"
           density="compact"
@@ -254,9 +260,10 @@ onMounted(() => {
           class="m-4"
       ></v-text-field>
       <div class="flex justify-center">
-        <v-btn variant="text" color="primary" text="确认修改" @click="updateUserName"></v-btn>
+        <v-btn variant="text" color="primary" text="确认修改" @click="updateUserName" style="width: 100px"></v-btn>
       </div>
-    </div>
+      </v-card-text>
+    </v-card>
 
     <div v-show="displayOrUpdateInfo==='checkEmail'">
 
@@ -266,7 +273,10 @@ onMounted(() => {
 
       </v-otp-input>
 
-      <v-btn text="获取验证码"  density="compact" variant="text" color="primary" @click="sendUpdateEmailVerificationCode()"></v-btn>
+      <div class="flex justify-end">
+        <v-btn text="获取验证码"  density="compact" variant="text" color="primary" @click="sendUpdateEmailVerificationCode()"></v-btn>
+      </div>
+
 
       <div class="flex justify-center m-20-0">
         <v-btn text="下一步操作" color="primary" @click="checkVerificationCode()"></v-btn>
@@ -289,8 +299,11 @@ onMounted(() => {
         </template>
       </v-text-field>
       <v-otp-input class="m-4" v-model="formData.verificationCode" length="4"></v-otp-input>
-      <v-btn text="更新邮箱" @click="bindEmail()"></v-btn>
-    </div>
+      <div class="flex justify-center m-20-0">
+        <v-btn text="更新邮箱" color="primary" @click="bindEmail()"></v-btn>
+      </div>
 
+    </div>
+ </v-card-text>
   </v-card>
 </template>

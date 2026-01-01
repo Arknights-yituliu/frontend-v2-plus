@@ -1,6 +1,6 @@
 <script setup>
-import UserInfo from "@/components/account/UserInfo.vue";
-import StageConfig from "@/components/account/StageConfig.vue";
+import UserInfo from "/src/components/account/UserInfo.vue";
+import StageConfig from "/src/components/account/StageConfig.vue";
 
 </script>
 <template>
