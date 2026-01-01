@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/account/login.v2.scss'
 import {createMessage} from "/src/utils/message.js";
@@ -22,14 +22,14 @@ const passwordRules = [
 const confirmPasswordRules = [
   value => !!value || '不能为空',
   value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成',
-  value => value===inputContent.value.password || '两次密码输入不一致'
+  value => value === inputContent.value.password || '两次密码输入不一致'
 ]
 
 function openLinkOnNewPage(url) {
   window.open(url)
 }
 
-let currentStepper = ref(0)
+let currentStepper = ref("sendEmail")
 
 function optionLineClass(type) {
   if (type === inputContent.value.accountType) {
@@ -71,7 +71,7 @@ function sendVerificationCode() {
     email: inputContent.value.email
   }
   userAPI.sendVerificationCodeV2(data).then(response => {
-    createMessage({type:'success',text:'验证码发送成功'})
+    createMessage({type: 'success', text: '验证码发送成功'})
   })
 }
 
@@ -100,7 +100,7 @@ function toRetrieveAuthentication(step) {
     nextStep(step)
     inputContent.value.token = response.data.tmpToken
     inputContent.value.userName = response.data.userName
-    createMessage({type:'success',text:'请在10分钟内修改您的密码'})
+    createMessage({type: 'success', text: '请在10分钟内修改您的密码'})
   })
 }
 
@@ -109,6 +109,7 @@ function toRetrieveAuthentication(step) {
  * @param step 当前步骤
  */
 function toResetPassword(step) {
+  console.log(step)
   userAPI.resetPassword(inputContent.value).then(response => {
     nextStep(step)
     localStorage.setItem("USER_TOKEN", response.data.token.toString());
@@ -119,8 +120,11 @@ function toResetPassword(step) {
 }
 
 
+watch(() => currentStepper.value, (newValue, oldValue) => {
+  console.log(newValue)
+})
 
-const nextStep = (step)=>{
+const nextStep = (step) => {
   currentStepper.value = step;
 }
 
@@ -146,25 +150,37 @@ onMounted(() => {
               <v-stepper-header>
                 <v-stepper-item
                     title="邮箱验证"
-                    value="1"
-                ></v-stepper-item>
+                    value="sendEmail"
+                >
+                  <template v-slot:icon>
+                    1
+                  </template>
+                </v-stepper-item>
 
                 <v-divider></v-divider>
 
                 <v-stepper-item
                     title="设置新密码"
-                    value="2"
-                ></v-stepper-item>
+                    value="resetPassword"
+                >
+                  <template v-slot:icon>
+                    2
+                  </template>
+                </v-stepper-item>
 
                 <v-divider></v-divider>
 
                 <v-stepper-item
                     title="设置成功"
-                    value="3"
-                ></v-stepper-item>
+                    value="resetSuccessful"
+                >
+                  <template v-slot:icon>
+                    3
+                  </template>
+                </v-stepper-item>
               </v-stepper-header>
 
-              <v-stepper-window v-show="currentStepper===0">
+              <v-stepper-window v-show="currentStepper==='sendEmail'">
                 <div>邮箱</div>
                 <div class="flex">
                   <v-text-field
@@ -180,11 +196,12 @@ onMounted(() => {
                 <div>验证码</div>
                 <v-otp-input class="m-4" v-model="inputContent.verificationCode" length="4"></v-otp-input>
                 <div class="flex justify-center">
-                  <v-btn color="primary" variant="outlined" text="下一步" @click="toRetrieveAuthentication(1)"> </v-btn>
+                  <v-btn color="primary" variant="outlined" text="下一步"
+                         @click="toRetrieveAuthentication('resetPassword')"></v-btn>
                 </div>
               </v-stepper-window>
 
-              <v-stepper-window v-show="currentStepper===1">
+              <v-stepper-window v-show="currentStepper==='resetPassword'">
                 <div class="m-0-4">登录密码</div>
                 <v-text-field
                     density="compact"
@@ -210,11 +227,12 @@ onMounted(() => {
                     class="m-4"
                 ></v-text-field>
                 <div class="flex justify-center">
-                  <v-btn color="primary" variant="outlined" text="下一步" @click="toResetPassword(2)"> </v-btn>
+                  <v-btn color="primary" variant="outlined" text="下一步"
+                         @click="toResetPassword('resetSuccessful')"></v-btn>
                 </div>
               </v-stepper-window>
 
-              <v-stepper-window v-show="currentStepper===2">
+              <v-stepper-window v-show="currentStepper==='resetSuccessful'">
                 <v-alert
                     text="即将转跳到首页"
                     title="修改成功"
