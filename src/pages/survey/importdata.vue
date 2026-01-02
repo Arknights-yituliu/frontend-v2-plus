@@ -223,12 +223,18 @@ onMounted(() => {
       </v-card>
       <v-card class="import-step-card" title="第四步">
         <v-card-text>
-          <div class="flex flex-col justify-center">
+          <div >
             <p>上一步完成后可获取绑定的uid，选择想导入的uid进行导入，获取过程可能有网络延迟，请耐心等待</p>
             <v-btn  v-for="(binding,index) in playBindingList" :key="index"
-                    color="primary"  size="small"
-                    :text="`昵称：${ binding.nickName } 区服：${ binding.channelName } uid：${ binding.uid }`"
-                    @click="getPlayerInfoByPlayerBinding(binding)">
+                    color="primary"  
+                    style="width: 100%; max-width: none;height: 48px;text-align: start;margin: 4px 0;"
+                    @click="getPlayerInfoByPlayerBinding(binding)" block>
+                    <div style="width: 100%;">
+              昵称：{{ binding.nickName }}<br>
+              {{ `区服：${binding.channelName}  uid: ${binding.uid}` }}
+           
+                    </div>
+              
             </v-btn>
           </div>
         </v-card-text>

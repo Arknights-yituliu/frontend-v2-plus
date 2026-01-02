@@ -6,10 +6,10 @@ import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorProgressionStatisticsDataCache from "/src/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/operatorFilter.js";
 
-import {formatNumber} from "@/utils/format.js";
-import EquipIcon from "@/components/sprite/EquipIcon.vue";
-import SkillIcon from "@/components/sprite/SkillIcon.vue";
-import {dateFormat} from "@/utils/dateUtil.js";
+import {formatNumber} from "/src/utils/format.js";
+import EquipIcon from "/src/components/sprite/EquipIcon.vue";
+import SkillIcon from "/src/components/sprite/SkillIcon.vue";
+import {dateFormat} from "/src/utils/dateUtil.js";
 
 
 let operatorsStatisticsList = ref([]);
@@ -45,6 +45,7 @@ let headers2 = [
   {title: 'Y模组', sortable: true, key: 'modYRank3'},
   {title: 'D模组', sortable: true, key: 'modDRank3'},
   {title: 'A模组', sortable: true, key: 'modARank3'},
+  {title: 'B模组', sortable: true, key: 'modBRank3'},
 ]
 
 
@@ -225,6 +226,7 @@ onMounted(() => {
             <td>{{ item.modYRank3 }}%</td>
             <td>{{ item.modDRank3 }}%</td>
             <td>{{ item.modARank3 }}%</td>
+            <td>{{ item.modBRank3 }}%</td>
           </tr>
         </template>
 
