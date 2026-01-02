@@ -1,7 +1,7 @@
 import myDatabase from "/src/plugins/indexedDB/indexedDB.js";
 import operatorDataAPI from "/src/api/operatorData.js";
 import {operatorTable} from "/src/utils/gameData.js";
-import {formatNumber} from "@/utils/format.js";
+import {formatNumber} from "/src/utils/format.js";
 
 function putCache(data) {
     myDatabase.cache_data.put(data)
@@ -36,7 +36,7 @@ async function getData() {
             let charInfo = operatorTable[item.charId]
             // console.log(item)
             if (charInfo) {
-                const {own,sampleSize, elite, skill1, skill2, skill3, modX, modY, modD, modA} = item
+                const {own,sampleSize, elite, skill1, skill2, skill3, modX, modY, modD, modA,modB} = item
 
                 let vo = {
                     charId:item.charId,
@@ -57,10 +57,11 @@ async function getData() {
                     modXRank3: _resultFormat(modX[3], own),
                     modYRank3: _resultFormat(modY[3], own),
                     modDRank3: _resultFormat(modD[3], own),
-                    modARank3: _resultFormat(modA[3], own)
+                    modARank3: _resultFormat(modA[3], own),
+                    modBRank3: _resultFormat(modB[3], own)
                 }
 
-                const obj = {elite, skill1, skill2, skill3, modX, modY, modD, modA}
+                const obj = {elite, skill1, skill2, skill3, modX, modY, modD, modA,modB}
 
                 for (const name in obj) {
                     const ranks = obj[name]
