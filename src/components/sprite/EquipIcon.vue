@@ -32,7 +32,7 @@ function calculatedSize() {
   const innerWidth = window.innerWidth;
 
   if(props.icon){
-    iconUrl.value = `https://cos.yituliu.cn/icon/equip/${props.icon}.png`;
+    iconUrl.value = `https://cos.yituliu.cn/arknights/equip-icon/${props.icon}.png`;
   }
 
 
