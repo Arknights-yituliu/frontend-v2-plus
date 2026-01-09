@@ -61,7 +61,7 @@ async function calculationStageEfficiency(stageConfig) {
     }
     
 
-    console.log(shopRedemptionItem)
+
 
     for (const [stageId, list] of stageDropCollect) {
 
