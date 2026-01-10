@@ -244,11 +244,11 @@ const scheduleOptions = [
   },
   {
     name: '周年庆典',
-    dateString: '敬请期待',
+    dateString: '(0501-0515)',
     start: new Date('2026/05/01 16:00:00'),
     end: new Date('2026/05/15 04:01:00'),
     activityType: '周年限定',
-    disabled: true,
+    disabled: false,
     dailyGiftResources: true,
     accuracyFlag: true
   },
