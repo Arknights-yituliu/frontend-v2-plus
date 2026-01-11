@@ -6,7 +6,7 @@ import {itemSeriesIdList} from "/src/utils/item/itemSeries.js";
 
 import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
 import {formatNumber} from "/src/utils/format.js";
-import ModuleHeader from "@/components/layout/ModuleHeader.vue";
+import ModuleHeader from "/src/components/layout/ModuleHeader.vue";
 
 const props = defineProps(['modelValue'])
 
@@ -158,8 +158,12 @@ function formatPcHistoryTableData() {
     return { ...activity, itemList }
   })
 
-  // 将复刻活动插入到表格开头
-  historyActivityTable.value.unshift(...reprintActivities)
+  for(const reprintAct of reprintActivities){
+    // 将复刻活动插入到表格开头
+    historyActivityTable.value.unshift(reprintAct)
+  }
+
+
 
   // 按上次UP间隔对表头进行排序
   historyActivityTableHeaders.value.sort((a, b) => a.lastUpInterval - b.lastUpInterval)

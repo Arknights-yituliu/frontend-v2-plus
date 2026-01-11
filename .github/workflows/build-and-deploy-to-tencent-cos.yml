@@ -101,6 +101,11 @@ jobs:
         run: |
           ./coscli --version
           ./coscli sync ./dist cos://$TARGET_BUCKET/ \
+            --part-size=1 \
+            --routines=5 \
+            --retry-num=10 \
+            --err-retry-num=10 \
+            --err-retry-interval=7 \
             --recursive \
             --delete \
             --force \
