@@ -431,7 +431,7 @@ function getHistoryPackInfo() {
     }
 
     // 打印符合基本条件的礼包信息
-    console.log('检查礼包:', officialName, '售卖时间:', new Date(start), '到', new Date(end), 'saleType:', saleType, 'drawEfficiency:', drawEfficiency)
+    // console.log('检查礼包:', officialName, '售卖时间:', new Date(start), '到', new Date(end), 'saleType:', saleType, 'drawEfficiency:', drawEfficiency)
 
     // 判断礼包售卖时间与历史时间范围是否有重叠
     // 重叠条件：礼包开始时间 < 历史范围结束时间 AND 礼包结束时间 > 历史范围开始时间
@@ -440,11 +440,11 @@ function getHistoryPackInfo() {
       item.start = scheduleStart.getTime()
       item.end = scheduleEnd.getTime()
       list.push(item)
-      console.log('✅ 加入往年礼包:', officialName, '原售卖时间:', new Date(start), '到', new Date(end))
+      // console.log('✅ 加入往年礼包:', officialName, '原售卖时间:', new Date(start), '到', new Date(end))
     }
   }
 
-  console.log('最终筛选出的往年礼包数量:', list.length)
+  // console.log('最终筛选出的往年礼包数量:', list.length)
   packListGroupByHistory.value = list
 }
 
