@@ -235,8 +235,8 @@ const scheduleOptions = [
   {
     name: '新年',
     dateString: '(0207-0221)',
-    start: new Date('2026/02/07 16:00:00'),
-    end: new Date('2026/02/21 04:01:00'),
+    start: new Date('2026/02/10 12:00:00'),
+    end: new Date('2026/02/24 04:01:00'),
     activityType: '春节限定',
     disabled: false,
     dailyGiftResources: true,
@@ -245,7 +245,7 @@ const scheduleOptions = [
   {
     name: '周年庆典',
     dateString: '(0501-0515)',
-    start: new Date('2026/05/01 16:00:00'),
+    start: new Date('2026/05/01 12:00:00'),
     end: new Date('2026/05/15 04:01:00'),
     activityType: '周年限定',
     disabled: false,
@@ -255,8 +255,8 @@ const scheduleOptions = [
   {
     name: '夏活',
     dateString: '敬请期待',
-    start: new Date('2026/05/01 16:00:00'),
-    end: new Date('2026/05/15 04:01:00'),
+    start: new Date('2026/08/01 12:00:00'),
+    end: new Date('2026/08/15 04:01:00'),
     activityType: '周年限定',
     disabled: true,
     dailyGiftResources: true,
