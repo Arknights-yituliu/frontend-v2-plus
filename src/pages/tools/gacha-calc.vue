@@ -1584,6 +1584,40 @@ function handleDateChange(date) {
   }
 }
 
+//截图模式
+function handleBackground() {
+    // 1. 所有 .collapse-item 阴影设为 0
+    const items = document.querySelectorAll('.collapse-item');
+    items.forEach(el => {
+      el.style.boxShadow = 'none';
+    });
+
+    // 2. gachaCalculate 背景色设为绿色
+    const gacha = document.getElementById('gachaCalculate');
+    if (gacha) {
+      gacha.style.backgroundColor = 'lime';
+    }
+  }
+
+
+let clickCount = 0;
+
+function triggerDEVmode() {
+  clickCount++;
+  
+  if (clickCount >= 8) {
+    const timeSelector = document.getElementById('timeSelector');
+    if (timeSelector) {
+      timeSelector.style.display = 'flex';
+    }
+    clickCount = 0;
+  }
+  
+  clearTimeout(clickCount.timeout);
+  clickCount.timeout = setTimeout(() => {
+    clickCount = 0;
+  }, 10000); 
+}
 //分享
 function sharePage() {
   const url = 'https://ark.yituliu.cn/tools/gachaCalc';
@@ -1782,6 +1816,9 @@ function sharePage() {
               >
                 重置为当前
               </el-button>
+              <el-button size="small" @click="handleBackground();">
+                截图模式
+              </el-button>
             </div>
           </div>
           <div class="resources-result-bar" style="display: flex; justify-content: space-between; align-items: center;
@@ -1933,7 +1970,7 @@ function sharePage() {
           </template>
 
           <div class="resources-line">
-            <span class="resources-line-label">
+            <span class="resources-line-label" @click="triggerDEVmode">
               日常{{ dailyReward.daily }}天
             </span>
             <div class="resources-line-content">
