@@ -1,5 +1,3 @@
-
-
 .gacha-calculation-page {
   display: flex;
   flex-direction: row;
@@ -7,14 +5,12 @@
   flex-wrap: wrap;
 }
 
-.gacha-act-selector {
-   width: 25%;
+.gacha-calculation-page[data-video='developer'] {
+  display: block;
 }
 
+
 #gachaCalculate {
-
-
-
 
   .el-collapse-item__content {
     padding-bottom: 4px;
@@ -54,10 +50,11 @@
     top: 60px;
     max-width: 640px;
     min-width: 450px;
-    max-height: 540px;
+    max-height: 800px;
     z-index: 1004;
-    flex:3;
-    .el-collapse-item{
+    flex: 3;
+
+    .el-collapse-item {
       background-color: var(--c-card-background-color);
     }
   }
@@ -65,12 +62,20 @@
   .collapse-group2 {
     max-width: 640px;
     min-width: 540px;
-    flex:4;
-    .el-collapse-item{
+    flex: 4;
+
+    .el-collapse-item {
       background-color: var(--c-card-background-color);
     }
   }
 
+
+  .collapse-group2[data-video='developer'] {
+    max-width: 1280px;
+  }
+  .collapse-group1[data-video='developer'] {
+    position: static;
+  }
 
   .collapse-group-content {
     position: relative;
@@ -82,11 +87,12 @@
     display: flex;
 
     justify-content: center;
-    .el-radio-group{
+
+    .el-radio-group {
       // width: 500px;
     }
 
-    .el-radio-button__inner{
+    .el-radio-button__inner {
       width: 100%;
       // width: 126px;
       // padding:12px 8px;
@@ -216,7 +222,7 @@
     position: relative;
   }
 
-  .collapse-alert{
+  .collapse-alert {
     width: 500px;
     margin: 12px;
   }

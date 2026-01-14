@@ -15,10 +15,13 @@ import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
 import deepClone from "/src/utils/deepClone.js";
 import {dateDiff, dateFormat} from "/src/utils/dateUtil.js";
-import packInfoCache from "@/plugins/indexedDB/packInfoCache.js";
+import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
 import {stringToNumber} from "/src/utils/stringUtils.js";
 import {numberFloor} from "/src/utils/format.js";
+import {useRoute} from 'vue-router';
 
+// 当前路由
+const route = useRoute()
 
 //源石充值
 const OriginiumTable = ref([
@@ -527,7 +530,7 @@ function updateScheduleOption(index) {
 
 //折叠面板绑定的集合，如果集合中有折叠面板的name，面板会默认展开，当点击展开面板时，面板组件也会将面板组件的name赋值给这个集合
 // 值有 'exist', 'custom', 'daily', 'potential','recharge', 'activity', 'other'
-let resultCollapseActiveNames = ref(['calculationResult'])
+let resultCollapseActiveNames = ref(['calculationResult','developer'])
 let optionsCollapseActiveNames = ref(['exist', 'daily',
   'activity', 'other'])
 
@@ -1483,19 +1486,6 @@ function readLastSettings() {
 
 }
 
-onMounted(() => {
-  readLastSettings()
-  myChart = echarts.init(document.getElementById("calculationResultPieChart"));
-  updateScheduleOption(0)
-  getAndSortPackData()
-
-  // ElNotification({
-  //   title: '2024.08.16',
-  //   dangerouslyUseHTMLString: true,
-  //   message: '<strong>1.更新了春节卡池排期（非准确排期）<br>2.修复了部分奖励计算错误的问题</strong>',
-  // })
-})
-
 
 // 创建一个窗口尺寸变化的监听器
 window.addEventListener('resize', handleResize);
@@ -1572,6 +1562,23 @@ function getProbabilityBoxStyle(limited, all) {
   };
 }
 
+const developerMode = ref('')
+
+onMounted(() => {
+  readLastSettings()
+  myChart = echarts.init(document.getElementById("calculationResultPieChart"));
+  updateScheduleOption(0)
+  getAndSortPackData()
+  developerMode.value = route.query.mode
+
+  // ElNotification({
+  //   title: '2024.08.16',
+  //   dangerouslyUseHTMLString: true,
+  //   message: '<strong>1.更新了春节卡池排期（非准确排期）<br>2.修复了部分奖励计算错误的问题</strong>',
+  // })
+})
+
+
 //处理时间选择器变化
 function handleDateChange(date) {
   if (date) {
@@ -1586,25 +1593,29 @@ function handleDateChange(date) {
 
 //截图模式
 function handleBackground() {
-    // 1. 所有 .collapse-item 阴影设为 0
-    const items = document.querySelectorAll('.collapse-item');
-    items.forEach(el => {
-      el.style.boxShadow = 'none';
-    });
+  // 1. 所有 .collapse-item 阴影设为 0
+  const items = document.querySelectorAll('.collapse-item');
+  items.forEach(el => {
+    el.style.boxShadow = 'none';
+  });
 
-    // 2. gachaCalculate 背景色设为绿色
-    const gacha = document.getElementById('gachaCalculate');
-    if (gacha) {
-      gacha.style.backgroundColor = 'lime';
-    }
+  // 2. gachaCalculate 背景色设为绿色
+  const gacha = document.getElementById('gachaCalculate');
+  if (gacha) {
+    gacha.style.backgroundColor = 'lime';
   }
+
+  document.getElementById('gachaCalculate').setAttribute('data-video', 'developer');
+  document.getElementById('resources-box').setAttribute('data-video', 'developer');
+  document.getElementById('result-box').setAttribute('data-video', 'developer');
+}
 
 
 let clickCount = 0;
 
 function triggerDEVmode() {
   clickCount++;
-  
+
   if (clickCount >= 8) {
     const timeSelector = document.getElementById('timeSelector');
     if (timeSelector) {
@@ -1612,12 +1623,14 @@ function triggerDEVmode() {
     }
     clickCount = 0;
   }
-  
+
   clearTimeout(clickCount.timeout);
   clickCount.timeout = setTimeout(() => {
     clickCount = 0;
-  }, 10000); 
+  }, 10000);
 }
+
+
 //分享
 function sharePage() {
   const url = 'https://ark.yituliu.cn/tools/gachaCalc';
@@ -1650,9 +1663,9 @@ function sharePage() {
 
   <!--  <img src="/public/顶部.jpg" alt="" style="width: 600px;position: absolute;top: 50px;left: 360px;z-index:3000;opacity: 0.3" >-->
   <!-- <div style="background-color: #13ce66;width: 600px;height: 114px;">114</div> -->
-  <div class="gacha-calculation-page" id="gachaCalculate">
+  <div class="gacha-calculation-page" id="gachaCalculate" data-video="pro">
     <!--计算结果-->
-    <div class="collapse-group1" id="result-box">
+    <div class="collapse-group1" id="result-box" data-video='pro'>
       <!-- <div class="collapse-group-content"> -->
       <el-collapse v-model="resultCollapseActiveNames" class="" style="border: none">
         <el-collapse-item name="calculationResult" class="collapse-item">
@@ -1796,31 +1809,7 @@ function sharePage() {
               <p>未找到对应抽数概率</p>
             </div>
           </div>
-          <!-- 时间选择器 -->
-          <div class="resources-result-bar" id="timeSelector"
-               style="border: none; padding: 12px; margin: 8px 4px; background-color: #f5f7fa; border-radius: 4px;display: none;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="font-weight: 500; color: #606266;">当前时间：</span>
-              <el-date-picker
-                  v-model="currentDate"
-                  type="datetime"
-                  placeholder="选择日期时间"
-                  format="YYYY-MM-DD HH:mm:ss"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                  @change="handleDateChange"
-                  style="flex: 1;"
-              />
-              <el-button
-                  size="small"
-                  @click="currentDate = new Date(); handleDateChange(currentDate);"
-              >
-                重置为当前
-              </el-button>
-              <el-button size="small" @click="handleBackground();">
-                截图模式
-              </el-button>
-            </div>
-          </div>
+
           <div class="resources-result-bar" style="display: flex; justify-content: space-between; align-items: center;
             font-size: 15px; font-weight: 500; background-color: antiquewhite; border: none; padding: 8px 12px;border-radius: 4px;margin: 0px 4px;">
 
@@ -1868,11 +1857,47 @@ function sharePage() {
           </div>
 
         </el-collapse-item>
+
+        <el-collapse-item name="developer" class="collapse-item" v-show="developerMode==='developer'">
+          <template #title>
+            <div class="flex align-center">
+              <div class="collapse-title-icon" style="background: rgba(119,118,255,0.8)"></div>
+              <span class="collapse-title-font">
+            开发者模式
+            </span>
+            </div>
+          </template>
+          <!-- 时间选择器 -->
+          <div class="resources-result-bar" id="timeSelector"
+               style="border: none; padding: 12px; margin: 8px 4px; background-color: #f5f7fa; border-radius: 4px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-weight: 500; color: #606266;">当前时间：</span>
+              <el-date-picker
+                  v-model="currentDate"
+                  type="datetime"
+                  placeholder="选择日期时间"
+                  format="YYYY-MM-DD HH:mm:ss"
+                  value-format="YYYY-MM-DD HH:mm:ss"
+                  @change="handleDateChange"
+                  style="flex: 1;"
+              />
+              <el-button
+                  size="small"
+                  @click="currentDate = new Date(); handleDateChange(currentDate);"
+              >
+                重置为当前
+              </el-button>
+              <el-button size="small" @click="handleBackground();">
+                截图模式
+              </el-button>
+            </div>
+          </div>
+        </el-collapse-item>
       </el-collapse>
       <!-- </div> -->
     </div>
 
-    <div class="collapse-group2" id="resources-box">
+    <div class="collapse-group2" id="resources-box" data-video='pro'>
       <el-collapse v-model="optionsCollapseActiveNames" style="border: none">
         <!--库存资源-->
         <el-collapse-item name="exist" class="collapse-item">
