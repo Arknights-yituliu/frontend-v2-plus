@@ -237,7 +237,7 @@ let activityType = ref('联动限定')
 const scheduleOptions = [
   {
     name: '新年',
-    dateString: '(0207-0221)',
+    dateString: '(0210-0224)',
     start: new Date('2026/02/10 12:00:00'),
     end: new Date('2026/02/24 04:01:00'),
     activityType: '春节限定',
