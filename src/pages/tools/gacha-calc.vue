@@ -1605,11 +1605,24 @@ function handleBackground() {
     gacha.style.backgroundColor = 'lime';
   }
 
-  document.getElementById('gachaCalculate').setAttribute('data-video', 'developer');
-  document.getElementById('resources-box').setAttribute('data-video', 'developer');
-  document.getElementById('result-box').setAttribute('data-video', 'developer');
+
 }
 
+const wideScreenStatus = ref("pro")
+function wideScreenMode(){
+  if("pro" === wideScreenStatus.value){
+    document.getElementById('gachaCalculate').setAttribute('data-video', 'developer');
+    document.getElementById('resources-box').setAttribute('data-video', 'developer');
+    document.getElementById('result-box').setAttribute('data-video', 'developer');
+    wideScreenStatus.value = "developer"
+  }else {
+    document.getElementById('gachaCalculate').setAttribute('data-video', 'pro');
+    document.getElementById('resources-box').setAttribute('data-video', 'pro');
+    document.getElementById('result-box').setAttribute('data-video', 'pro');
+    wideScreenStatus.value = "pro"
+  }
+
+}
 
 let clickCount = 0;
 
@@ -1881,16 +1894,22 @@ function sharePage() {
                   @change="handleDateChange"
                   style="flex: 1;"
               />
-              <el-button
-                  size="small"
-                  @click="currentDate = new Date(); handleDateChange(currentDate);"
-              >
-                重置为当前
-              </el-button>
-              <el-button size="small" @click="handleBackground();">
-                截图模式
-              </el-button>
+
             </div>
+
+            <el-button
+
+              @click="currentDate = new Date(); handleDateChange(currentDate);"
+            >
+              重置为当前
+            </el-button>
+            <el-button @click="handleBackground();">
+              截图模式
+            </el-button>
+            <el-button @click="wideScreenMode();">
+              宽屏模式
+            </el-button>
+
           </div>
         </el-collapse-item>
       </el-collapse>
