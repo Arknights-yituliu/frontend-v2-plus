@@ -120,8 +120,12 @@ function openOperatorsStatisticsDetail(operator) {
 
   for (let index = 0; index < 3; index++) {
     const info = skill[index]
+    if(!info){
+      continue
+    }
     const num = index + 1
     const ranks = operator[`skill${num}`]
+
 
     const item = {
       label: info.name,
