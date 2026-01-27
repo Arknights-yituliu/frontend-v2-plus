@@ -31,3 +31,12 @@ h3 {
 .el-timeline-item .el-card:not(:first-child) {
   margin-top: 20px;
 }
+
+ol {
+  margin-left: 1rem;
+
+  .li-link {
+    position: relative;
+    transform: translateY(-6%);
+  }
+}

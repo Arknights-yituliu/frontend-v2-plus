@@ -48,7 +48,7 @@ import Battle from '@/components/information/Battle.vue'
           <el-timeline>
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
-                进入岁兽残识，
+                进入岁兽残识（是非境），
                 <el-tooltip
                     content="在距离探索中心更远的位置更可能碰到此节点"
                     effect="light"
@@ -129,7 +129,7 @@ import Battle from '@/components/information/Battle.vue'
           <el-timeline>
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
-                进入岁兽残识，在杂疑节点触发事件
+                进入岁兽残识（是非境），在杂疑节点触发事件
                 <el-link
                     href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%89%A7%E6%A3%8B"
                     target="_blank"
@@ -194,7 +194,7 @@ import Battle from '@/components/information/Battle.vue'
           <el-timeline>
             <el-timeline-item :icon="Coin" type="success">
               <div>
-                进入岁兽残识，在
+                进入岁兽残识（是非境），在
                 <el-tooltip
                     content="每个易与节点大概率出售此藏品"
                 >
@@ -280,7 +280,7 @@ import Battle from '@/components/information/Battle.vue'
                 >
                   “古今交汇”
                 </el-link>
-                ，可选择“融入残识”（获得7点烛火）或“焚香点烛”（燃烛1名干员后获得6烛火），并进入一个全新的岁兽残识。<b>仅在这个全新的岁兽残识中，进入杂疑节点可触发事件</b>
+                ，可选择“融入残识”（获得7点烛火）或“焚香点烛”（燃烛1名干员后获得6烛火），并进入一个全新的岁兽残识（今昔境）。<b>仅在这个全新的岁兽残识中，进入杂疑节点可触发事件</b>
                 <el-link
                     href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%8F%AA%E4%B8%BA%E6%98%8E%E6%97%A5"
                     target="_blank"
@@ -306,7 +306,172 @@ import Battle from '@/components/information/Battle.vue'
           </el-timeline>
         </el-card>
       </el-timeline-item>
-      <el-timeline-item placement="top" timestamp="未完待续"/>
+      <el-timeline-item placement="top" timestamp="第五结局">
+        <el-card>
+          <h3>岁影归处</h3>
+          <el-timeline>
+            <el-timeline-item :icon="MoreFilled" type="primary">
+              <div>
+                进入岁兽残识（是非境），在故肆节点触发事件
+                <el-link
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%82%B9%E7%9D%9B"
+                    target="_blank"
+                    type="primary"
+                >
+                  “点睛”
+                </el-link>
+                ，选择
+                <el-tooltip content="消耗5目标生命上限（不会使目标生命上限低于1）">
+                  <el-text tag="ins">“点墨生器”</el-text>
+                </el-tooltip>
+                ，获得
+                <el-tooltip
+                    content="获得该收藏品将失去全部源石锭和剩余希望，且此后的战斗中获得的指挥经验和源石锭-50%"
+                    effect="light"
+                    placement="top"
+                >
+                  <el-text tag="ins">【追忆仪】</el-text>
+                </el-tooltip>
+              </div>
+            </el-timeline-item>
+            <el-timeline-item :icon="Battle" color="#5EDFD6">
+              <div>
+                进入误入奇境节点，触发
+                <el-link
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%9C%B0%E9%95%87"
+                    target="_blank"
+                    type="primary"
+                >
+                  “地镇”
+                </el-link>
+                选择"凝视仪器"，进入特殊战斗
+                <el-link
+                    href="https://prts.wiki/w/ISW-DF_%E5%BD%95%E5%BF%86"
+                    target="_blank"
+                    type="primary"
+                >
+                  【ISW-DF 录忆】
+                </el-link>
+                ，获胜后获得
+                <el-tooltip
+                    content="持有该收藏品时，费用自然回复速度-50%；在这场战斗中，您将遭遇【朔壳】"
+                    effect="light"
+                    placement="top"
+                >
+                  <el-text tag="ins">【"小磨唧"】</el-text>
+                </el-tooltip>
+              </div>
+            </el-timeline-item>
+            <el-timeline-item :icon="MoreFilled" type="primary">
+              <div>
+                <span class="optional">（可选）</span>
+                在指点迷津节点，触发事件
+                <el-link
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%83%9B%E5%A0%82"
+                    target="_blank"
+                    type="primary"
+                >
+                  “烛堂”
+                </el-link>
+                ，选择“拆解岁护”，获得
+                <el-tooltip
+                    content="持有该收藏品时，所有敌人的攻击力+30%，且【伺烛客】将在界园中随拿取后的层数提升失去攻击力与最大生命值，直至进入最后一层后失去大部分战斗能力"
+                    effect="light"
+                    placement="top"
+                >
+                  <el-text tag="ins">【不息】</el-text>
+                </el-tooltip>
+                与9票券
+              </div>
+            </el-timeline-item>
+            <el-timeline-item :icon="MoreFilled" type="primary">
+              <div>
+                <span class="optional">（可选）</span>
+                进入岁兽残识（是非境），在故肆节点再次触发“点睛”事件，选择“拆解岁护”，获得
+                <el-tooltip
+                    content="持有该收藏品时，所有敌人的生命值和防御力+50%，并使最后一层的作战中出现被召唤的敌人"
+                    effect="light"
+                    placement="top"
+                >
+                  <el-text tag="ins">【不赦】</el-text>
+                </el-tooltip>
+              </div>
+            </el-timeline-item>
+            <el-timeline-item :icon="BOSS" color="#8A0993">
+              <div>
+                抵达第6层，通过
+                <el-link href="https://prts.wiki/w/ISW-DF_%E5%AE%9A%E4%B9%BE%E5%9D%A4" target="_blank" type="primary">
+                  【ISW-DF 定乾坤】
+                </el-link>
+                或
+                <el-link href="https://prts.wiki/w/ISW-DF_%E6%AD%A2%E5%8F%98" target="_blank" type="primary">
+                  【ISW-DF 止变】
+                </el-link>
+                达成结局
+              </div>
+              <div>
+                <span class="optional tip">（提示）</span>
+                若在此之前触发过事件
+                <el-link
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%94%B6%E7%AC%94"
+                    target="_blank"
+                    type="primary"
+                >
+                  “收笔”
+                </el-link>
+                或
+                <el-link
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%A4%A7%E7%8B%A9%E7%BB%B4%E5%A4%A9"
+                    target="_blank"
+                    type="primary"
+                >
+                  “大狩维天”
+                </el-link>
+                ，则先前被禁用的干员将在进入本层时回归
+              </div>
+              <div>
+                <span class="optional warning">（注意）</span>本层仅有2个节点，需提前规划好资源备战方案
+              </div>
+              <div>
+                <span class="optional warning">（注意）</span>
+                在本层的命运所指节点中会触发事件
+                <el-link
+                    href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%B0%8B%E5%AE%9A"
+                    target="_blank"
+                    type="primary"
+                >
+                  “谋定”
+                </el-link>
+                ，可以选择“朔的身影逐渐清晰”：进入普通难度的战斗，可以选择"望向阴影"，根据当前持有的其它结局/不利收藏品，选择并进入不同的，更加艰难的战斗分支：
+              </div>
+              <div>
+                <ol>
+                  <li>
+                    溯承形（需持有【墨化残碑】）：“岁”将出现在战场中，妄躯在一段时间后才会出现，
+                    <el-link class="li-link" href="https://prts.wiki/w/%E8%BA%AB%E5%BD%A2" target="_blank" type="primary">
+                      【身形】
+                    </el-link>
+                    将反弹部分受到的伤害
+                  </li>
+                  <li>
+                    改对弈（需持有【云与漆】）：“望”将出现在战场中，身形将反弹部分受到的伤害
+                  </li>
+                  <li>
+                    塑旧历（需持有【无墨长卷】）：雕伥将出现在战场中，身形将反弹部分受到的伤害
+                  </li>
+                  <li>
+                    定本源（需持有【不赦】与【不息】）：朔壳和妄躯同时出现在战场中，身形将反弹更多受到的伤害
+                  </li>
+                  <li>
+                    役群兽（需持有【不赦】与【不息】）：易、“岁”、“望”、朔壳和妄躯将全部出现在战场中，身形将反弹更多受到的伤害
+                  </li>
+                </ol>
+              </div>
+            </el-timeline-item>
+          </el-timeline>
+        </el-card>
+      </el-timeline-item>
+      <el-timeline-item placement="top" timestamp="完结"/>
     </el-timeline>
   </div>
 </template>
