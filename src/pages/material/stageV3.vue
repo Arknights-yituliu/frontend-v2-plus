@@ -349,7 +349,7 @@ function handleClick() {
     </div>
 
     <!-- 说明区域 -->
-    <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>
+    <StageLegend @click="scrollToFrequentlyAskedQuestion" v-show="legendDisplay"></StageLegend>
 
     <!--    <v-alert-->
     <!--        border="start"-->
@@ -455,8 +455,8 @@ function handleClick() {
 
 
     <!-- 材料情报卡 -->
-    <StageDetailTable v-model="recommendedStageDetailTable"></StageDetailTable>
-    <div id="detail-table" style="display: none;width: 850px;font-size: 18px !important;color: #000 !important;">
+    <StageDetailTable v-model="recommendedStageDetailTable" id="detail-table"></StageDetailTable>
+    <div  style="display: none;width: 850px;font-size: 18px !important;color: #000 !important;">
       <el-table stripe :data="recommendedStageDetailTable.slice(0, 6)" max-height="495" max-width="892"
         class="stage-detail-table">
         <el-table-column fixed prop="stageCode" label="关卡名" width="120px">

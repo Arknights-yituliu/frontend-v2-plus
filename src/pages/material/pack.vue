@@ -11,9 +11,9 @@ import deepClone from "/src/utils/deepClone.js";
 import '/src/assets/css/material/pack.scss';
 import '/src/assets/css/material/pack.phone.scss';
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
-import NoticeBoard from "@/components/layout/NoticeBoard.vue";
-import {calculatePackEfficiency} from "@/utils/item/packEfficiency.js";
-import {dateFormat} from "@/utils/dateUtil.js";
+import NoticeBoard from "/src/components/layout/NoticeBoard.vue";
+import {calculatePackEfficiency} from "/src/utils/item/packEfficiency.js";
+import {dateFormat} from "/src/utils/dateUtil.js";
 
 
 // 当前日期
@@ -364,6 +364,8 @@ function choosePackOptionV2(type, obj) {
     packFilterConditions.value[type].set(v, obj)
   }
 
+  console.log(packFilterConditions.value.tag)
+
   filterPacksV2()
 }
 
@@ -389,14 +391,26 @@ function filterPacksV2() {
 
 
   for (const pack of packInfoVOList) {
+
     const packYear = new Date(pack.start).getFullYear()
     if (pack.start < year2019) {
       continue
     }
 
-    const dateFlag = packFilterConditions.value.date.size === 0 || packFilterConditions.value.date.has(`${packYear}`)
 
-    const tagFlag = packFilterConditions.value.tag.size === 0 || packFilterConditions.value.tag.has(pack.saleType)
+    const dateFlag = packFilterConditions.value.date.size === 0 || packFilterConditions.value.date.has(`${packYear}`)
+    
+    let tagFlag = packFilterConditions.value.tag.size === 0 || packFilterConditions.value.tag.has(pack.saleType)
+     
+
+    for(const tag of pack.tags){
+    
+      if(packFilterConditions.value.tag.has(tag)){
+        tagFlag = true
+        break
+      }
+    }
+
     let priceFlag = packFilterConditions.value.price.size === 0
     for (const [k, v] of packFilterConditions.value.price) {
       const {max, min} = v
@@ -413,6 +427,22 @@ function filterPacksV2() {
       }
       result.get(packYear).push(pack)
     }
+
+
+    if('先锋芯片礼包'===pack.officialName){
+      console.log('----------开始------------')
+      console.log(pack.officialName)
+      console.log(pack.saleType)
+      console.log(pack.tags)
+      console.log(packFilterConditions.value.tag)
+      console.log(packFilterConditions.value.tag.get(pack.saleType))
+      console.log(packFilterConditions.value.tag.has(pack.saleType),pack.saleType)
+      console.log('dateFlag',dateFlag)
+      console.log('priceFlag',priceFlag)
+      console.log('-----------结束----------')
+    }
+
+
   }
 
   const list = []
@@ -453,8 +483,55 @@ onMounted(() => {
 <template>
   <div>
     <div id="pack" class="pack-efficiency-page">
-      <!-- 不会因为筛选改变的礼包 Start -->
-      <template v-for="item in fixedPacks" :key="item.titleEn">
+
+
+      <!-- 历史礼包 Start -->
+      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']"/>
+
+      <div class="m-4">
+        年份：
+        <v-btn color="primary" v-for="(year, index) in packSaleDateList" :key="index"
+               :variant="buttonActive('date', year.value)" @click="choosePackOptionV2('date', year)" class="m-4">
+          {{ year.label }}
+        </v-btn>
+      </div>
+      <div class="m-4">
+        价格：
+        <v-btn color="primary" v-for="(item, index) in packSalePriceList" :key="index"
+               :variant="buttonActive('price', item.value)" @click="choosePackOptionV2('price', item)" class="m-4">
+          {{ item.label }}
+        </v-btn>
+      </div>
+      <div class="m-4">
+        类型：
+        <v-btn color="primary" v-for="(tag, index) in packTags" :key="index" :variant="buttonActive('tag', tag.value)"
+               @click="choosePackOptionV2('tag', tag)" class="m-4">
+          {{ tag.label }}
+        </v-btn>
+      </div>
+
+      <!-- 按年份展示筛选礼包 -->
+      <template v-for="collect in packCollect">
+        <h2 style="margin: 12px;">{{ collect.year }}年</h2>
+        <PackCardContainer :modelValue="collect.list"/>
+      </template>
+
+      <!-- 礼包性价比总表 Start -->
+      <module-header title="礼包性价比总表" title-en="Packs Value"/>
+
+      <v-chip text="由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。"
+              color="red" class="m-4"></v-chip>
+      <v-chip text="性价比基准为648￥源石，移动端可左右滑动表格" color="red" class="m-4"></v-chip>
+
+      <PackTable v-model="packInfoVOListOnSale">
+
+      </PackTable>
+
+    </div>
+
+
+          <!-- 不会因为筛选改变的礼包 Start -->
+      <template v-for="item in fixedPacks" :key="item.titleEn" >
 
         <module-header :title="item.title" :title-en="item.titleEn" :tips="item.tips"/>
         <div v-if="item.titleEn === 'New Packs'">
@@ -500,50 +577,6 @@ onMounted(() => {
         </template>
       </template>
       <!-- 不会因为筛选改变的礼包 End -->
-
-      <!-- 历史礼包 Start -->
-      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']"/>
-
-      <div class="m-4">
-        年份：
-        <v-btn color="primary" v-for="(year, index) in packSaleDateList" :key="index"
-               :variant="buttonActive('date', year.value)" @click="choosePackOptionV2('date', year)" class="m-4">
-          {{ year.label }}
-        </v-btn>
-      </div>
-      <div class="m-4">
-        价格：
-        <v-btn color="primary" v-for="(item, index) in packSalePriceList" :key="index"
-               :variant="buttonActive('price', item.value)" @click="choosePackOptionV2('price', item)" class="m-4">
-          {{ item.label }}
-        </v-btn>
-      </div>
-      <div class="m-4">
-        类型：
-        <v-btn color="primary" v-for="(tag, index) in packTags" :key="index" :variant="buttonActive('tag', tag.value)"
-               @click="choosePackOptionV2('tag', tag)" class="m-4">
-          {{ tag.label }}
-        </v-btn>
-      </div>
-
-      <!-- 按年份展示筛选礼包 -->
-      <template v-for="collect in packCollect">
-        <h2 style="margin: 12px;">{{ collect.year }}年</h2>
-        <PackCardContainer :modelValue="collect.list"/>
-      </template>
-
-      <!-- 礼包性价比总表 Start -->
-      <module-header title="礼包性价比总表" title-en="Packs Value"/>
-
-      <v-chip text="由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。"
-              color="red" class="m-4"></v-chip>
-      <v-chip text="性价比基准为648￥源石，移动端可左右滑动表格" color="red" class="m-4"></v-chip>
-
-      <PackTable v-model="packInfoVOListOnSale">
-
-      </PackTable>
-
-    </div>
 
     <NoticeBoard module="pack">
 
