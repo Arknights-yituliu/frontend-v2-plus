@@ -47,7 +47,10 @@ const localCollabOperatorIds = computed(() => {
 
 // 排序选项
 const sortMode = ref('default') // default: 默认(联动-限定-等级), level: 等级, profession: 职业
-const showOnlyLimited = ref(false)
+// 显示非六星干员（默认只显示六星+限定/联动）
+const showNonSixStar = ref(false)
+// 显示非六星未获得干员
+const showNonSixStarNotOwned = ref(false)
 
 // 职业排序顺序
 const PROFESSION_ORDER = ['PIONEER', 'WARRIOR', 'TANK', 'SNIPER', 'CASTER', 'MEDIC', 'SUPPORT', 'SPECIAL']
@@ -72,9 +75,16 @@ const rarityTotals = computed(() => {
 const filteredOperators = computed(() => {
   let list = [...props.operators]
   
-  // 只显示限定
-  if (showOnlyLimited.value) {
-    list = list.filter(op => props.limitedOperatorIds.has(op.charId) || localCollabOperatorIds.value.has(op.charId))
+  // 默认只显示六星 + 限定/联动干员
+  // 勾选后显示全部干员
+  if (!showNonSixStar.value) {
+    list = list.filter(op => {
+      // 六星干员始终显示
+      if (op.rarity === 6) return true
+      // 限定或联动干员显示
+      if (props.limitedOperatorIds.has(op.charId) || localCollabOperatorIds.value.has(op.charId)) return true
+      return false
+    })
   }
   
   return list
@@ -133,8 +143,8 @@ const ownedCharIds = computed(() => {
   return ids
 })
 
-// 未获得干员列表
-const notOwnedOperators = computed(() => {
+// 未获得干员列表（全部）
+const allNotOwnedOperators = computed(() => {
   if (!props.showNotOwned) return []
   
   const notOwned = []
@@ -166,6 +176,25 @@ const notOwnedOperators = computed(() => {
   })
   
   return notOwned
+})
+
+// 筛选后的未获得干员列表
+const notOwnedOperators = computed(() => {
+  let list = allNotOwnedOperators.value
+  
+  // 默认只显示六星 + 限定/联动干员
+  // 勾选后显示全部干员
+  if (!showNonSixStarNotOwned.value) {
+    list = list.filter(op => {
+      // 六星干员始终显示
+      if (op.rarity === 6) return true
+      // 限定或联动干员显示
+      if (op.isLimited || op.isCollab) return true
+      return false
+    })
+  }
+  
+  return list
 })
 
 // 按稀有度分组（并应用排序）
@@ -247,8 +276,8 @@ function isCollabOperator(charId) {
           <option value="profession">按职业排序</option>
         </select>
         <label class="filter-checkbox">
-          <input type="checkbox" v-model="showOnlyLimited" />
-          只显示限定/联动
+          <input type="checkbox" v-model="showNonSixStar" />
+          显示非六星干员
         </label>
       </div>
     </div>
@@ -278,11 +307,15 @@ function isCollabOperator(charId) {
     </template>
     
     <!-- 未获得干员（在一星干员后显示） -->
-    <div v-if="showNotOwned && notOwnedCount > 0" class="rarity-group not-owned-section">
-      <div class="rarity-header">
+    <div v-if="showNotOwned && allNotOwnedOperators.length > 0" class="rarity-group not-owned-section">
+      <div class="rarity-header not-owned-header">
         <span class="rarity-label rarity-not-owned">
-          未获得干员 ({{ notOwnedCount }})
+          未获得干员 ({{ notOwnedCount }}/{{ allNotOwnedOperators.length }})
         </span>
+        <label class="filter-checkbox not-owned-filter">
+          <input type="checkbox" v-model="showNonSixStarNotOwned" />
+          显示非六星干员
+        </label>
       </div>
       <!-- 按稀有度分组显示未获得干员 -->
       <template v-for="rarity in [6, 5, 4, 3, 2, 1]" :key="`not-owned-${rarity}`">
@@ -422,6 +455,18 @@ function isCollabOperator(charId) {
   margin-top: 24px;
   padding-top: 16px;
   border-top: 2px dashed rgba(255, 255, 255, 0.3);
+}
+
+.not-owned-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.not-owned-filter {
+  font-size: 12px !important;
 }
 
 .not-owned-rarity-group {
