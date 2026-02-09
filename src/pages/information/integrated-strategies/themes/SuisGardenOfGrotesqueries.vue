@@ -308,7 +308,7 @@ import Battle from '@/components/information/Battle.vue'
       </el-timeline-item>
       <el-timeline-item placement="top" timestamp="第五结局">
         <el-card>
-          <h3>岁影归处</h3>
+          <h3>落子无悔</h3>
           <el-timeline>
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
