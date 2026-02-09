@@ -336,7 +336,7 @@ import Battle from '@/components/information/Battle.vue'
             </el-timeline-item>
             <el-timeline-item :icon="Battle" color="#5EDFD6">
               <div>
-                进入误入奇境节点，触发
+                进入误入奇境节点，触发事件
                 <el-link
                     href="https://prts.wiki/w/%E5%B2%81%E7%9A%84%E7%95%8C%E5%9B%AD%E5%BF%97%E5%BC%82/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%9C%B0%E9%95%87"
                     target="_blank"
