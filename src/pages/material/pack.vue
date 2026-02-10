@@ -485,53 +485,7 @@ onMounted(() => {
   <div>
     <div id="pack" class="pack-efficiency-page">
 
-
-      <!-- 历史礼包 Start -->
-      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']"/>
-
-      <div class="m-4">
-        年份：
-        <v-btn color="primary" v-for="(year, index) in packSaleDateList" :key="index"
-               :variant="buttonActive('date', year.value)" @click="choosePackOptionV2('date', year)" class="m-4">
-          {{ year.label }}
-        </v-btn>
-      </div>
-      <div class="m-4">
-        价格：
-        <v-btn color="primary" v-for="(item, index) in packSalePriceList" :key="index"
-               :variant="buttonActive('price', item.value)" @click="choosePackOptionV2('price', item)" class="m-4">
-          {{ item.label }}
-        </v-btn>
-      </div>
-      <div class="m-4">
-        类型：
-        <v-btn color="primary" v-for="(tag, index) in packTags" :key="index" :variant="buttonActive('tag', tag.value)"
-               @click="choosePackOptionV2('tag', tag)" class="m-4">
-          {{ tag.label }}
-        </v-btn>
-      </div>
-
-      <!-- 按年份展示筛选礼包 -->
-      <template v-for="collect in packCollect">
-        <h2 style="margin: 12px;">{{ collect.year }}年</h2>
-        <PackCardContainer :modelValue="collect.list"/>
-      </template>
-
-      <!-- 礼包性价比总表 Start -->
-      <module-header title="礼包性价比总表" title-en="Packs Value"/>
-
-      <v-chip text="由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。"
-              color="red" class="m-4"></v-chip>
-      <v-chip text="性价比基准为648￥源石，移动端可左右滑动表格" color="red" class="m-4"></v-chip>
-
-      <PackTable v-model="packInfoVOListOnSale">
-
-      </PackTable>
-
-    </div>
-
-
-          <!-- 不会因为筛选改变的礼包 Start -->
+      <!-- 不会因为筛选改变的礼包 Start -->
       <template v-for="item in fixedPacks" :key="item.titleEn" >
 
         <module-header :title="item.title" :title-en="item.titleEn" :tips="item.tips"/>
@@ -578,6 +532,53 @@ onMounted(() => {
         </template>
       </template>
       <!-- 不会因为筛选改变的礼包 End -->
+
+      <!-- 历史礼包 Start -->
+      <module-header title="历史礼包" title-en="Packs History" :tips="['*历史礼包存档']"/>
+
+      <div class="m-4">
+        年份：
+        <v-btn color="primary" v-for="(year, index) in packSaleDateList" :key="index"
+               :variant="buttonActive('date', year.value)" @click="choosePackOptionV2('date', year)" class="m-4">
+          {{ year.label }}
+        </v-btn>
+      </div>
+      <div class="m-4">
+        价格：
+        <v-btn color="primary" v-for="(item, index) in packSalePriceList" :key="index"
+               :variant="buttonActive('price', item.value)" @click="choosePackOptionV2('price', item)" class="m-4">
+          {{ item.label }}
+        </v-btn>
+      </div>
+      <div class="m-4">
+        类型：
+        <v-btn color="primary" v-for="(tag, index) in packTags" :key="index" :variant="buttonActive('tag', tag.value)"
+               @click="choosePackOptionV2('tag', tag)" class="m-4">
+          {{ tag.label }}
+        </v-btn>
+      </div>
+
+      <!-- 按年份展示筛选礼包 -->
+      <template v-for="collect in packCollect">
+        <h2 style="margin: 12px;">{{ collect.year }}年</h2>
+        <PackCardContainer :modelValue="collect.list"/>
+      </template>
+
+      <!-- 礼包性价比总表 Start -->
+      <module-header title="礼包性价比总表" title-en="Packs Value"/>
+
+      <v-chip text="由于新人进阶组合包的特殊性（内置了一张月卡），月卡党如仅考虑抽卡请参考“新人进阶组合包不计月卡”。"
+              color="red" class="m-4"></v-chip>
+      <v-chip text="性价比基准为648￥源石，移动端可左右滑动表格" color="red" class="m-4"></v-chip>
+
+      <PackTable v-model="packInfoVOListOnSale">
+
+      </PackTable>
+
+    </div>
+
+
+
 
     <NoticeBoard module="pack">
 
