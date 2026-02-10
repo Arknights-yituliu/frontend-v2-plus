@@ -1,16 +1,17 @@
 <script setup >
-import StageLegend from "@/components/material/StageLegend.vue";
-import ModuleHeader from "@/components/layout/ModuleHeader.vue";
+import StageLegend from "/src/components/material/StageLegend.vue";
+import ModuleHeader from "/src/components/layout/ModuleHeader.vue";
+import {ref} from "vue";
 
 const props = defineProps(["modelValue","module"]);
-
+const panels = ref(['stage'])
 </script>
 
 <template>
   <module-header title="常见问题" title-en="FAQ" />
   <v-card>
     <v-card-text>
-      <v-expansion-panels>
+      <v-expansion-panels v-model="panels" multiple>
 
         <!--      <v-expansion-panel>-->
         <!--        <template v-slot:title>-->
@@ -48,7 +49,7 @@ const props = defineProps(["modelValue","module"]);
   <!--        </v-expansion-panel-text>-->
   <!--      </v-expansion-panel>-->
 
-        <v-expansion-panel v-show="props.module==='item'">
+        <v-expansion-panel v-show="props.module==='item'" value="algorithm">
           <template v-slot:title>
             <v-icon icon="mdi-calculator-variant-outline"></v-icon>
             <span class="m-0-4">计算细节</span>
@@ -72,7 +73,7 @@ const props = defineProps(["modelValue","module"]);
           </v-expansion-panel-text>
         </v-expansion-panel>
 
-        <v-expansion-panel v-show="props.module==='pack'">
+        <v-expansion-panel v-show="props.module==='pack'" value=pack>
           <template v-slot:title>
             <v-icon icon="mdi-calculator-variant-outline"></v-icon>
             <span class="m-0-4">计算方式</span>
@@ -90,7 +91,7 @@ const props = defineProps(["modelValue","module"]);
           </v-expansion-panel-text>
         </v-expansion-panel>
 
-        <v-expansion-panel v-show="props.module==='store'">
+        <v-expansion-panel v-show="props.module==='store'" value=store>
           <template v-slot:title>
             <v-icon icon="mdi-calculator-variant-outline"></v-icon>
             <span class="m-0-4">计算方式</span>
@@ -105,7 +106,7 @@ const props = defineProps(["modelValue","module"]);
           </v-expansion-panel-text>
         </v-expansion-panel>
 
-        <v-expansion-panel v-show="props.module==='stage'">
+        <v-expansion-panel v-show="props.module==='stage'" value=stage>
           <template v-slot:title>
             <v-icon icon="mdi-map-legend"></v-icon>
             <span class="m-0-4">算法简述与图例</span>
@@ -123,7 +124,7 @@ const props = defineProps(["modelValue","module"]);
             <hr/>
             <StageLegend ></StageLegend>
           </v-expansion-panel-text>
-        </v-expansion-panel>
+        </v-expansion-panel >
 
 <!--        <v-expansion-panel>-->
 <!--        <template v-slot:title>-->

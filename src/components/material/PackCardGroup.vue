@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from "vue"
-import ItemImage from "@/components/sprite/ItemImage.vue";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
 import { formatNumber } from "/src/utils/format.js";
 
 const id = generateRandomString(5)
