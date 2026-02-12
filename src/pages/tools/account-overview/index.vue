@@ -1,27 +1,33 @@
 <script setup>
-import { ref, computed, onMounted } from "vue"
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { copyTextToClipboard } from "/src/utils/copyText.js"
 import SklandAPI from '/src/utils/survey/skland.js'
-import { userInfo } from "/src/utils/user/userInfo.js"
 import { createMessage } from "/src/utils/message.js"
-import operatorDataAPI from '/src/api/operatorData.js'
-import { useRouter } from "vue-router"
 import { operatorTableV2 } from "/src/utils/gameData.js"
 import operatorUpdateTime from '/public/json/operator_update_time.json'
+import operatorDataAPI from '/src/api/operatorData.js'
+import { userInfo } from "/src/utils/user/userInfo.js"
 
 // 子组件
-import OperatorCard from '/src/components/survey/account-overview/OperatorCard.vue'
+import AccountStats from '/src/components/survey/account-overview/AccountStats.vue'
+import OperatorGrid from '/src/components/survey/account-overview/OperatorGrid.vue'
+import MaterialGrid from '/src/components/survey/account-overview/MaterialGrid.vue'
 
 const router = useRouter()
 
+// 森空岛链接和命令
 const SKLAND_LINK = 'https://www.skland.com/index'
 const CONSOLE_CODE = "copy(localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage.getItem('SK_TOKEN_CACHE_KEY'))"
 
-// 联动干员ID列表
-const COLLAB_OPERATOR_IDS = new Set([
-  'char_197_poca', 'char_198_blackd', 'char_199_blitz', 'char_200_frost', 'char_201_moeshd',
-  'char_276_blitz', 'char_277_tachak', 'char_278_ahorn',
-  'char_4182_oblvns', 'char_4183_mortis', 'char_4186_tmoris', 'char_4184_dolris', 'char_4185_amoris'
+// 联动干员名称列表
+const COLLAB_OPERATOR_NAMES = new Set([
+  '丰川祥子','若叶睦','八幡海铃','三角初华','祐天寺若麦',//母鸡卡联动
+  '玛露西尔','莱欧斯','森西','齐尔查克',//迷宫饭联动
+  '艾拉','双月','医生','导火索',//彩六联动2期
+  '泰拉大陆调查团','麒麟R夜刀','火龙S黑角',//怪猎联动
+  '灰烬','闪击','霜华','战车',//彩六联动1期
+  '罗小黑'//罗小黑联动
 ])
 
 // 状态管理
@@ -32,11 +38,10 @@ const playBindingList = ref([])
 const sklandCred = ref('')
 const sklandToken = ref('')
 const accountData = ref(null)
-const rawWarehouseData = ref(null)
+const rawWarehouseData = ref(null) // 保存原始仓库数据用于上传
 const showPreview = ref(false)
 const exportContainerRef = ref(null)
-const currentBinding = ref(null)
-const selectedTab = ref('overview')
+const currentBinding = ref(null) // 保存当前选择的账号信息
 
 // 获取限定干员列表
 const limitedOperatorIds = computed(() => {
@@ -49,44 +54,56 @@ const limitedOperatorIds = computed(() => {
   return ids
 })
 
+// 根据名称获取联动干员charId集合
+const collabOperatorIds = computed(() => {
+  const ids = new Set()
+  for (const charId in operatorTableV2) {
+    const operator = operatorTableV2[charId]
+    if (operator && COLLAB_OPERATOR_NAMES.has(operator.name)) {
+      ids.add(charId)
+    }
+  }
+  return ids
+})
+
+// 联动干员总数
+const totalCollabOperators = computed(() => {
+  return COLLAB_OPERATOR_NAMES.size
+})
+
+// 获取限定六星总数（使用operator_update_time.json统计）
+const totalLimitedSixStar = computed(() => {
+  let count = 0
+  for (const charId in operatorUpdateTime) {
+    const updateInfo = operatorUpdateTime[charId]
+    // 检查是否为限定干员
+    if (updateInfo.obtainApproach === '限定干员') {
+      // 从operatorTableV2获取rarity（0-5，其中5=六星）
+      const operator = operatorTableV2[charId]
+      if (operator && operator.rarity === 5) {
+        count++
+      }
+    }
+  }
+  return count
+})
+
 // 检查用户是否登录
 const isUserLoggedIn = computed(() => {
   return !!userInfo.value.token
 })
 
-// 按稀有度分组的干员
-const groupedOperators = computed(() => {
-  if (!accountData.value?.operatorDataList) return {}
-  
-  const groups = { 6: [], 5: [], 4: [], 3: [], 2: [], 1: [] }
-  
-  for (const op of accountData.value.operatorDataList) {
-    const rarity = op.rarity || 1
-    if (groups[rarity]) {
-      groups[rarity].push(op)
-    }
-  }
-  
-  return groups
-})
-
-const rarityLabels = {
-  6: '六星干员',
-  5: '五星干员',
-  4: '四星干员',
-  3: '三星干员',
-  2: '二星干员',
-  1: '一星干员'
-}
-
+// 打开新页面
 function openLinkOnNewPage(url) {
   window.open(url)
 }
 
+// 复制文本
 function copyText(text) {
   copyTextToClipboard(text)
 }
 
+// 解析凭证
 function getCredAndSecret(text) {
   text = text.replace(/\s+/g, '').replace(/["']/g, '')
   const textArr = text.split(',')
@@ -95,6 +112,7 @@ function getCredAndSecret(text) {
   return { cred, token }
 }
 
+// 获取森空岛账号绑定列表
 async function getPlayerBindingBySkland() {
   if (!inputText.value) {
     createMessage({ type: 'error', text: '请输入森空岛凭证' })
@@ -107,7 +125,7 @@ async function getPlayerBindingBySkland() {
     sklandCred.value = cred
     sklandToken.value = token
     
-    const playBinding = await SklandAPI.getPlayBindingV2('', '', cred, token)
+    const playBinding = await SklandAPI.getPlayBindingV2('0', '', cred, token)
     playBindingList.value = playBinding.bindingList
     
     if (playBinding.bindingList.length === 0) {
@@ -121,6 +139,7 @@ async function getPlayerBindingBySkland() {
   }
 }
 
+// 获取玩家数据
 async function getPlayerData(binding) {
   const { uid, nickName, channelName, channelMasterId } = binding
   
@@ -128,9 +147,9 @@ async function getPlayerData(binding) {
   createMessage({ type: 'info', text: '正在获取账号数据，请稍候...' })
   
   try {
+    // 保存当前选择的账号信息
     currentBinding.value = binding
     
-    // 获取账号概览数据
     const data = await SklandAPI.getAccountOverviewData(
       uid,
       nickName,
@@ -139,7 +158,7 @@ async function getPlayerData(binding) {
       sklandToken.value
     )
     
-    // 同时获取原始仓库数据用于上传
+    // 同时获取原始仓库数据用于干员练度调查上传
     const warehouseData = await SklandAPI.getWarehouseInfo(uid, sklandCred.value, sklandToken.value)
     warehouseData.channelName = channelName
     warehouseData.channelMasterId = channelMasterId
@@ -154,12 +173,15 @@ async function getPlayerData(binding) {
         operator.profession = charInfo.profession
         operator.skills = charInfo.skills || []
         operator.equip = charInfo.equip || []
+        
+        // 检查是否为限定干员
         operator.isLimited = limitedOperatorIds.value.has(operator.charId)
-        operator.isCollab = COLLAB_OPERATOR_IDS.has(operator.charId)
+        // 检查是否为联动干员
+        operator.isCollab = collabOperatorIds.value.has(operator.charId)
       }
     }
     
-    // 排序干员
+    // 排序干员：先按稀有度降序，再按精英化降序，再按等级降序
     data.operatorDataList.sort((a, b) => {
       if (b.rarity !== a.rarity) return b.rarity - a.rarity
       if (b.elite !== a.elite) return b.elite - a.elite
@@ -178,49 +200,7 @@ async function getPlayerData(binding) {
   }
 }
 
-async function uploadToOperatorSurvey() {
-  if (!rawWarehouseData.value) {
-    createMessage({ type: 'error', text: '没有可上传的数据' })
-    return
-  }
-  
-  if (!isUserLoggedIn.value) {
-    createMessage({ type: 'error', text: '请先登录一图流账号，才能上传干员数据' })
-    return
-  }
-  
-  uploading.value = true
-  
-  try {
-    await operatorDataAPI.importSkLandOperatorDataV3(rawWarehouseData.value)
-    createMessage({ type: 'success', text: '干员数据已同步到练度调查！' })
-    
-    // 保存完整账号信息到sessionStorage，供一图流Tab使用
-    if (accountData.value) {
-      sessionStorage.setItem('skland_account_data', JSON.stringify({
-        uid: currentBinding.value?.uid || '',
-        nickName: accountData.value.nickName,
-        channelName: currentBinding.value?.channelName || '',
-        status: accountData.value.status,
-        operatorDataList: accountData.value.operatorDataList || [],
-        itemList: accountData.value.itemList || []
-      }))
-      // 标记需要切换到账号一图流Tab
-      sessionStorage.setItem('skland_switch_to_overview', 'true')
-    }
-    
-    // 等待后跳转
-    setTimeout(() => {
-      router.push({ name: 'OperatorSurvey' })
-    }, 1500)
-  } catch (error) {
-    console.error(error)
-    createMessage({ type: 'error', text: '数据上传失败' })
-  } finally {
-    uploading.value = false
-  }
-}
-
+// 导出图片
 async function exportImage() {
   if (!exportContainerRef.value) return
   
@@ -305,6 +285,7 @@ async function exportImage() {
       item.el.style.cssText = item.style
     }
     
+    // 转换为图片并下载
     const link = document.createElement('a')
     link.download = `明日方舟账号一图流_${accountData.value?.nickName || 'unknown'}_${Date.now()}.png`
     link.href = canvas.toDataURL('image/png')
@@ -317,83 +298,117 @@ async function exportImage() {
   }
 }
 
-function goBack() {
-  showPreview.value = false
+// 上传到干员练度调查
+async function uploadToOperatorSurvey() {
+  if (!rawWarehouseData.value) {
+    createMessage({ type: 'error', text: '没有可上传的数据' })
+    return
+  }
+  
+  if (!isUserLoggedIn.value) {
+    createMessage({ type: 'error', text: '请先登录一图流账号，才能上传干员数据' })
+    return
+  }
+  
+  uploading.value = true
+  
+  try {
+    await operatorDataAPI.importSkLandOperatorDataV3(rawWarehouseData.value)
+    createMessage({ type: 'success', text: '干员数据已同步到练度调查！' })
+  } catch (error) {
+    console.error(error)
+    createMessage({ type: 'error', text: '数据上传失败' })
+  } finally {
+    uploading.value = false
+  }
 }
 
-function isCollabOperator(charId) {
-  return COLLAB_OPERATOR_IDS.has(charId)
+// 跳转到干员练度调查页面
+function goToOperatorSurvey() {
+  router.push({ name: 'OperatorSurvey' })
+}
+
+// 返回数据输入页面
+function goBack() {
+  showPreview.value = false
 }
 </script>
 
 <template>
-  <div class="import-page">
+  <div class="account-overview-page">
     <!-- 数据获取步骤 -->
     <div v-if="!showPreview" class="data-input-section">
-      <h1 class="page-title">森空岛数据导入</h1>
-      <p class="page-desc">从森空岛获取您的明日方舟账号数据，可同步到干员练度调查，也可生成账号信息一图流</p>
+      <h1 class="page-title">账号信息一图流</h1>
+      <p class="page-desc">从森空岛获取您的明日方舟账号数据，生成精美的账号信息一图流，同时可同步到干员练度调查</p>
       
-      <div class="flex flex-wrap">
-        <v-card class="import-step-card" title="第一步：登录森空岛">
+      <div class="steps-container">
+        <!-- 第一步 -->
+        <v-card class="step-card" title="第一步：登录森空岛">
           <v-card-text>
-            <div class="flex flex-col flex-wrap justify-center">
-              <p class="m-12 text-center">登录森空岛</p>
-              <v-btn color="primary" text="森空岛官网链接" class="m-12-a"
-                     @click="openLinkOnNewPage(SKLAND_LINK)">
+            <p>请先登录森空岛官网</p>
+            <v-btn color="primary" @click="openLinkOnNewPage(SKLAND_LINK)" class="mt-2">
+              打开森空岛
+            </v-btn>
+          </v-card-text>
+        </v-card>
+        
+        <!-- 第二步 -->
+        <v-card class="step-card" title="第二步：获取凭证">
+          <v-card-text>
+            <p>登录后按 F12 打开开发者工具，在控制台(Console)中输入以下命令：</p>
+            <v-alert :icon="false" color="primary" variant="tonal" class="my-2 code-alert">
+              <code>{{ CONSOLE_CODE }}</code>
+            </v-alert>
+            <p class="hint-text">执行后凭证会自动复制到剪贴板</p>
+            <v-btn color="primary" @click="copyText(CONSOLE_CODE)" size="small">
+              复制命令
+            </v-btn>
+          </v-card-text>
+        </v-card>
+        
+        <!-- 第三步 -->
+        <v-card class="step-card" title="第三步：输入凭证">
+          <v-card-text>
+            <p>将获取到的字符串粘贴到下方：</p>
+            <v-text-field
+              v-model="inputText"
+              label="输入森空岛凭证"
+              variant="outlined"
+              density="compact"
+              hide-details
+              class="my-2"
+            />
+            <v-btn 
+              color="primary" 
+              @click="getPlayerBindingBySkland" 
+              :loading="loading"
+              class="mt-2"
+            >
+              获取账号列表
+            </v-btn>
+          </v-card-text>
+        </v-card>
+        
+        <!-- 第四步 -->
+        <v-card class="step-card" title="第四步：选择账号">
+          <v-card-text>
+            <p v-if="playBindingList.length === 0">请先完成前面的步骤获取账号列表</p>
+            <div v-else>
+              <p>选择要生成一图流的账号：</p>
+              <v-btn
+                v-for="binding in playBindingList"
+                :key="binding.uid"
+                color="primary"
+                variant="outlined"
+                class="binding-btn"
+                @click="getPlayerData(binding)"
+                :loading="loading"
+              >
+                <div class="binding-info">
+                  <span class="nickname">{{ binding.nickName }}</span>
+                  <span class="channel">{{ binding.channelName }} - {{ binding.uid }}</span>
+                </div>
               </v-btn>
-              <v-alert :icon="false" color="primary" variant="tonal">此导入方式仅适合电脑，windows系统建议使用microsoft
-                edge浏览器，iOS系统建议使用safari浏览器）
-              </v-alert>
-            </div>
-          </v-card-text>
-        </v-card>
-        
-        <v-card class="import-step-card" title="第二步：获取凭证">
-          <v-card-text>
-            <img src="/image/skland/step1.jpg" alt="" class="import-step-image">
-            <div class="flex flex-col justify-center">
-              <p>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
-              <v-alert :icon="false" color="primary" variant="tonal" class="code-alert">
-                <code>{{ CONSOLE_CODE }}</code>
-              </v-alert>
-              <p class="hint-text">执行后凭证会自动复制到剪贴板</p>
-              <div class="flex flex-col justify-center m-8-a">
-                <v-btn color="primary" text="点击复制" @click="copyText(CONSOLE_CODE)">
-                </v-btn>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-        
-        <v-card class="import-step-card" title="第三步：输入凭证">
-          <v-card-text>
-            <div class="flex flex-col justify-center">
-              <p>将获取的字符串<b>（*不要带引号）</b>，粘贴到下面的输入框中</p>
-              <v-text-field label="输入神秘字符后点击获取按钮" v-model="inputText"
-                            density="compact" hide-details variant="outlined"
-                            class="m-8">
-              </v-text-field>
-              <v-btn color="primary" text="获取森空岛信息" class="m-8-a" @click="getPlayerBindingBySkland" :loading="loading"></v-btn>
-            </div>
-          </v-card-text>
-        </v-card>
-        
-        <v-card class="import-step-card" title="第四步：选择账号">
-          <v-card-text>
-            <div>
-              <p v-if="playBindingList.length === 0">请先完成前面的步骤获取账号列表</p>
-              <div v-else>
-                <p>选择要获取数据的账号：</p>
-                <v-btn v-for="(binding, index) in playBindingList" :key="index"
-                       color="primary"
-                       style="width: 100%; max-width: none;height: auto;text-align: start;margin: 4px 0;padding: 12px;"
-                       @click="getPlayerData(binding)" :loading="loading">
-                  <div style="width: 100%;">
-                    <span class="nickname">{{ binding.nickName }}</span><br>
-                    <span class="channel">{{ `区服：${binding.channelName}  uid: ${binding.uid}` }}</span>
-                  </div>
-                </v-btn>
-              </div>
             </div>
           </v-card-text>
         </v-card>
@@ -420,9 +435,13 @@ function isCollabOperator(charId) {
             <v-icon>mdi-upload</v-icon>
             同步到练度调查
           </v-btn>
+          <v-btn color="info" @click="goToOperatorSurvey" variant="outlined" class="mr-2">
+            <v-icon>mdi-chart-box</v-icon>
+            查看练度调查
+          </v-btn>
           <v-btn color="primary" @click="exportImage">
             <v-icon>mdi-download</v-icon>
-            下载一图流图片
+            下载图片
           </v-btn>
         </div>
       </div>
@@ -440,40 +459,29 @@ function isCollabOperator(charId) {
       
       <!-- 导出容器 -->
       <div ref="exportContainerRef" class="export-container">
-        <!-- 账号基本信息 -->
-        <div v-if="accountData" class="account-header">
-          <h2 class="account-name">{{ accountData.nickName }}</h2>
-          <div class="account-stats">
-            <span>UID: {{ currentBinding?.uid }}</span>
-            <span>干员数量: {{ accountData.operatorDataList?.length || 0 }}</span>
-          </div>
-        </div>
+        <!-- 账号统计信息 -->
+        <AccountStats 
+          v-if="accountData"
+          :account-data="accountData"
+          :limited-operator-ids="limitedOperatorIds"
+          :total-limited-six-star="totalLimitedSixStar"
+          :collab-operator-ids="collabOperatorIds"
+          :total-collab-operators="totalCollabOperators"
+        />
         
         <!-- 干员展示 -->
-        <div class="operator-grid-section">
-          <template v-for="rarity in [6, 5, 4, 3, 2, 1]" :key="rarity">
-            <div 
-              v-if="groupedOperators[rarity] && groupedOperators[rarity].length > 0" 
-              class="rarity-group"
-            >
-              <div class="rarity-header">
-                <span class="rarity-label" :class="`rarity-${rarity}`">
-                  {{ rarityLabels[rarity] }} ({{ groupedOperators[rarity].length }})
-                </span>
-              </div>
-              <div class="operators-grid">
-                <OperatorCard
-                  v-for="operator in groupedOperators[rarity]"
-                  :key="operator.charId"
-                  :operator="operator"
-                  :is-limited="limitedOperatorIds.has(operator.charId)"
-                  :is-collab="isCollabOperator(operator.charId)"
-                  :size="90"
-                />
-              </div>
-            </div>
-          </template>
-        </div>
+        <OperatorGrid 
+          v-if="accountData"
+          :operators="accountData.operatorDataList"
+          :limited-operator-ids="limitedOperatorIds"
+          :collab-operator-ids="collabOperatorIds"
+        />
+        
+        <!-- 材料展示 -->
+        <MaterialGrid 
+          v-if="accountData"
+          :items="accountData.itemList"
+        />
         
         <!-- 水印 -->
         <div class="watermark">
@@ -485,9 +493,9 @@ function isCollabOperator(charId) {
 </template>
 
 <style scoped>
-.import-page {
-  padding: 16px;
-  min-height: 95vh;
+.account-overview-page {
+  min-height: 100vh;
+  padding: 20px;
 }
 
 .page-title {
@@ -500,38 +508,55 @@ function isCollabOperator(charId) {
 .page-desc {
   text-align: center;
   color: var(--c-text-secondary);
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
-.import-step-card {
-  width: 340px;
-  margin: 4px;
-}
-
-.import-step-image {
-  width: 95%;
+.steps-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.step-card {
+  width: 280px;
+  min-height: 200px;
 }
 
 .code-alert {
   font-size: 12px;
   word-break: break-all;
-  margin: 8px 0;
 }
 
 .hint-text {
   font-size: 12px;
   color: var(--c-text-secondary);
   margin: 4px 0;
-  text-align: center;
 }
 
-.nickname {
+.binding-btn {
+  width: 100%;
+  height: auto !important;
+  padding: 12px !important;
+  margin-top: 8px;
+  text-transform: none !important;
+}
+
+.binding-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.binding-info .nickname {
   font-weight: bold;
   font-size: 16px;
 }
 
-.channel {
+.binding-info .channel {
   font-size: 12px;
   opacity: 0.8;
 }
@@ -568,83 +593,6 @@ function isCollabOperator(charId) {
   color: #fff;
 }
 
-.account-header {
-  text-align: center;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.account-name {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.account-stats {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.operator-grid-section {
-  margin-top: 16px;
-}
-
-.rarity-group {
-  margin-bottom: 16px;
-}
-
-.rarity-header {
-  margin-bottom: 10px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.rarity-label {
-  font-size: 15px;
-  font-weight: bold;
-  padding: 3px 10px;
-  border-radius: 4px;
-}
-
-.rarity-6 {
-  background: linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
-  color: #fff;
-}
-
-.rarity-5 {
-  background: linear-gradient(135deg, #FFD700 0%, #FFC107 100%);
-  color: #333;
-}
-
-.rarity-4 {
-  background: linear-gradient(135deg, #9C27B0 0%, #BA68C8 100%);
-  color: #fff;
-}
-
-.rarity-3 {
-  background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%);
-  color: #fff;
-}
-
-.rarity-2 {
-  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-  color: #fff;
-}
-
-.rarity-1 {
-  background: linear-gradient(135deg, #9E9E9E 0%, #E0E0E0 100%);
-  color: #333;
-}
-
-.operators-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
 .watermark {
   text-align: center;
   padding-top: 20px;
@@ -653,7 +601,7 @@ function isCollabOperator(charId) {
 }
 
 @media screen and (max-width: 600px) {
-  .import-step-card {
+  .step-card {
     width: 100%;
   }
   
@@ -668,9 +616,9 @@ function isCollabOperator(charId) {
     justify-content: center;
   }
   
-  .operators-grid {
-    gap: 4px;
-    justify-content: center;
+  .toolbar-right .v-btn {
+    flex: 1;
+    min-width: 0;
   }
 }
 </style>

@@ -189,6 +189,18 @@ const routes = [
         }
     },
     {
+        path: '/tools/account-overview',
+        text: '账号信息一图流',
+        name: 'AccountOverview',
+        module: 'tools',
+        icon: "mdi-card-account-details",
+        display: false,  // 已整合到干员练度调查页面
+        component: () => import('/src/pages/tools/account-overview/index.vue'),
+        meta: {
+            title: '账号信息一图流'
+        }
+    },
+    {
         path: '/sui',
         text: '岁兽残识记录器',
         name: 'sui2',
