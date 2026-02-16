@@ -191,7 +191,7 @@
         </div>
       </a>
       <a class="ep12_support" href="https://space.bilibili.com/688411531">
-        <img class="ep12_support_img" src="/image/temp/beta_logo_yw.png"/>
+        <img class="ep12_support_img" src="https://cos.yituliu.cn/endfield/home/bytelogo.png"/>
         <div class="ep12_support_text">
           <div class="ep12_support_org">逻辑元LogicalByte</div>
           <div class="ep12_support_role">信息发布</div>
