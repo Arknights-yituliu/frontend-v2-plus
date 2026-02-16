@@ -18,8 +18,8 @@ import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import NoticeBoard from "/src/components/layout/NoticeBoard.vue";
 import { dateFormat } from "/src/utils/dateUtil.js";
 import { getStageConfig } from "/src/utils/user/userConfig.js";
-import ItemImage from "@/components/sprite/ItemImage.vue";
-import ModuleHeader from "@/components/layout/ModuleHeader.vue";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
+import ModuleHeader from "/src/components/layout/ModuleHeader.vue";
 
 const router = useRouter();
 const { mobile } = useDisplay()
@@ -454,9 +454,10 @@ function handleClick() {
     </div>
 
 
+    <div id="detail-table-1"></div>
     <!-- 材料情报卡 -->
-    <StageDetailTable v-model="recommendedStageDetailTable" id="detail-table"></StageDetailTable>
-    <div  style="display: none;width: 850px;font-size: 18px !important;color: #000 !important;">
+    <StageDetailTable v-model="recommendedStageDetailTable" ></StageDetailTable>
+    <div id="detail-table" style="display: none;width: 850px;font-size: 18px !important;color: #000 !important;">
       <el-table stripe :data="recommendedStageDetailTable.slice(0, 6)" max-height="495" max-width="892"
         class="stage-detail-table">
         <el-table-column fixed prop="stageCode" label="关卡名" width="120px">
