@@ -16,7 +16,7 @@
     "crypto-js": "4.2.0",
     "dexie": "^4.0.10",
     "element-plus": "^2.11.7",
-    "express": "4.21.2",
+    "express": "^4.22.1",
     "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "js-cookie": "3.0.5",
@@ -31,6 +31,6 @@
     "@vitejs/plugin-vue": "^5.2.4",
     "rollup-plugin-visualizer": "^5.12.0",
     "sass": "1.64.1",
-    "vite": "^5.4.21"
+    "vite": "^7.3.1"
   }
 }
