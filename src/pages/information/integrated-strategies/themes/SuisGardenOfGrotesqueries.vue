@@ -354,7 +354,7 @@ import Battle from '@/components/information/Battle.vue'
                 </el-link>
                 ，获胜后获得
                 <el-tooltip
-                    content="持有该收藏品时，费用自然回复速度-50%；在这场战斗中，您将遭遇【朔壳】"
+                    content="费用自然回复速度降低50%，让探索开启不同的方向，在故肆有特殊用处（可以故肆节点再次触发“点睛”事件）"
                     effect="light"
                     placement="top"
                 >
