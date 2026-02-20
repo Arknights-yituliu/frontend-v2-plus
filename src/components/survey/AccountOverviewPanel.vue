@@ -319,143 +319,143 @@ async function exportImage() {
     // 修复 sprite 头像渲染问题
     // html2canvas 对 CSS sprite + transform: scale() 支持不好
     // 解决方案：用 <img> 元素替换 sprite div
-    const avatarContainers = container.querySelectorAll('.avatar-container')
-    const originalData = []
-    
-    console.log(`[exportImage] 找到 ${avatarContainers.length} 个头像容器`)
-    
-    // 收集所有需要加载的图片 URL 并预加载
-    const imagePromises = []
-    const charIdDataMap = new Map()
-    
-    for (const avatarContainer of avatarContainers) {
-      const wrapper = avatarContainer.querySelector('.sprite-avatar')
-      if (!wrapper) {
-        console.warn('[exportImage] 未找到 .sprite-avatar')
-        continue
-      }
-      
-      const classList = Array.from(wrapper.classList)
-      // 匹配所有 bg- 开头的类名，并且包含 char_ 或其他角色ID格式
-      const charIdClass = classList.find(c => c.startsWith('bg-') && c !== 'bg-')
-      if (charIdClass) {
-        const charId = charIdClass.replace('bg-', '')
-        const imageUrl = `https://cos.yituliu.cn/image2/avatar/${charId}.png`
-        // 备用 URL 使用 webp 格式
-        const fallbackUrl = `https://cos.yituliu.cn/arknights/avatar/${charId}.webp`
-        charIdDataMap.set(avatarContainer, { charId, wrapper, imageUrl })
-        imagePromises.push(preloadImage(imageUrl, fallbackUrl).then(result => ({ ...result, avatarContainer })))
-      } else {
-        console.warn('[exportImage] 未找到 charId 类名，classList:', classList)
-      }
-    }
-    
-    console.log(`[exportImage] 正在预加载 ${imagePromises.length} 个图片...`)
-    
-    // 预加载 sprite 图片（用于失败时的回退）
-    console.log('[exportImage] 正在加载 sprite 图片...')
-    const spriteImg = await loadSpriteImage()
-    console.log(`[exportImage] sprite 图片加载${spriteImg ? '成功' : '失败'}`)
-    
-    // 预加载所有图片
-    const loadResults = await Promise.all(imagePromises)
-    
-    const successCount = loadResults.filter(r => r.success).length
-    console.log(`[exportImage] 图片加载完成，成功: ${successCount}/${loadResults.length}`)
-    
-    // 替换为 img 元素
-    for (const result of loadResults) {
-      const { avatarContainer, success, img, url } = result
-      const data = charIdDataMap.get(avatarContainer)
-      if (!data) continue
-      
-      const { wrapper, charId } = data
-      const size = avatarContainer.offsetWidth || 90
-      
-      // 保存原始状态
-      originalData.push({
-        avatarContainer,
-        containerStyle: avatarContainer.style.cssText,
-        wrapper,
-        wrapperStyle: wrapper.style.cssText,
-        wrapperDisplay: wrapper.style.display,
-        addedImg: null,
-        charId
-      })
-      
-      // 保持容器原有的 grayscale filter
-      const containerClasses = avatarContainer.className
-      const hasGrayscale = containerClasses.includes('grayscale')
-      
-      // 修改容器样式
-      avatarContainer.style.cssText = `
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-top: -${size / 2}px;
-        margin-left: -${size / 2}px;
-        width: ${size}px;
-        height: ${size}px;
-        z-index: 1;
-        overflow: hidden;
-        transform: none;
-        ${hasGrayscale ? 'filter: grayscale(100%) brightness(0.6);' : ''}
-      `
-      
-      if (success && img) {
-        // 隐藏原始 sprite div
-        wrapper.style.display = 'none'
-        
-        // 创建并添加 img 元素
-        const imgEl = document.createElement('img')
-        imgEl.src = url
-        imgEl.crossOrigin = 'anonymous'
-        imgEl.style.cssText = `
-          width: ${size}px;
-          height: ${size}px;
-          object-fit: cover;
-          object-position: center 20%;
-          position: absolute;
-          top: 0;
-          left: 0;
-        `
-        avatarContainer.appendChild(imgEl)
-        originalData[originalData.length - 1].addedImg = imgEl
-      } else {
-        // 图片加载失败，使用 sprite 裁剪方案
-        console.warn(`[exportImage] 使用 sprite 裁剪回退: ${charId}`)
-        
-        // 获取 sprite 图片的 background-position
-        const bgPos = getBackgroundPosition(wrapper, charId)
-        
-        // 从 sprite 中裁剪头像
-        const croppedDataUrl = cropAvatarFromSprite(spriteImg, bgPos.x, bgPos.y, size)
-        
-        if (croppedDataUrl) {
-          // 隐藏原始 sprite div
-          wrapper.style.display = 'none'
-          
-          // 创建并添加裁剪后的 img 元素
-          const imgEl = document.createElement('img')
-          imgEl.src = croppedDataUrl
-          imgEl.style.cssText = `
-            width: ${size}px;
-            height: ${size}px;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-          `
-          avatarContainer.appendChild(imgEl)
-          originalData[originalData.length - 1].addedImg = imgEl
-        } else {
-          console.error(`[exportImage] sprite 裁剪失败: ${charId}`)
-        }
-      }
-    }
-    
-    // 等待渲染完成
-    await new Promise(resolve => setTimeout(resolve, 800))
+    // const avatarContainers = container.querySelectorAll('.avatar-container')
+    // const originalData = []
+    //
+    // console.log(`[exportImage] 找到 ${avatarContainers.length} 个头像容器`)
+    //
+    // // 收集所有需要加载的图片 URL 并预加载
+    // const imagePromises = []
+    // const charIdDataMap = new Map()
+    //
+    // for (const avatarContainer of avatarContainers) {
+    //   const wrapper = avatarContainer.querySelector('.sprite-avatar')
+    //   if (!wrapper) {
+    //     console.warn('[exportImage] 未找到 .sprite-avatar')
+    //     continue
+    //   }
+    //
+    //   const classList = Array.from(wrapper.classList)
+    //   // 匹配所有 bg- 开头的类名，并且包含 char_ 或其他角色ID格式
+    //   const charIdClass = classList.find(c => c.startsWith('bg-') && c !== 'bg-')
+    //   if (charIdClass) {
+    //     const charId = charIdClass.replace('bg-', '')
+    //     const imageUrl = `https://cos.yituliu.cn/image2/avatar/${charId}.png`
+    //     // 备用 URL 使用 webp 格式
+    //     const fallbackUrl = `https://cos.yituliu.cn/arknights/avatar/${charId}.webp`
+    //     charIdDataMap.set(avatarContainer, { charId, wrapper, imageUrl })
+    //     imagePromises.push(preloadImage(imageUrl, fallbackUrl).then(result => ({ ...result, avatarContainer })))
+    //   } else {
+    //     console.warn('[exportImage] 未找到 charId 类名，classList:', classList)
+    //   }
+    // }
+    //
+    // console.log(`[exportImage] 正在预加载 ${imagePromises.length} 个图片...`)
+    //
+    // // 预加载 sprite 图片（用于失败时的回退）
+    // console.log('[exportImage] 正在加载 sprite 图片...')
+    // const spriteImg = await loadSpriteImage()
+    // console.log(`[exportImage] sprite 图片加载${spriteImg ? '成功' : '失败'}`)
+    //
+    // // 预加载所有图片
+    // const loadResults = await Promise.all(imagePromises)
+    //
+    // const successCount = loadResults.filter(r => r.success).length
+    // console.log(`[exportImage] 图片加载完成，成功: ${successCount}/${loadResults.length}`)
+    //
+    // // 替换为 img 元素
+    // for (const result of loadResults) {
+    //   const { avatarContainer, success, img, url } = result
+    //   const data = charIdDataMap.get(avatarContainer)
+    //   if (!data) continue
+    //
+    //   const { wrapper, charId } = data
+    //   const size = avatarContainer.offsetWidth || 90
+    //
+    //   // 保存原始状态
+    //   originalData.push({
+    //     avatarContainer,
+    //     containerStyle: avatarContainer.style.cssText,
+    //     wrapper,
+    //     wrapperStyle: wrapper.style.cssText,
+    //     wrapperDisplay: wrapper.style.display,
+    //     addedImg: null,
+    //     charId
+    //   })
+    //
+    //   // 保持容器原有的 grayscale filter
+    //   const containerClasses = avatarContainer.className
+    //   const hasGrayscale = containerClasses.includes('grayscale')
+    //
+    //   // 修改容器样式
+    //   avatarContainer.style.cssText = `
+    //     position: absolute;
+    //     top: 50%;
+    //     left: 50%;
+    //     margin-top: -${size / 2}px;
+    //     margin-left: -${size / 2}px;
+    //     width: ${size}px;
+    //     height: ${size}px;
+    //     z-index: 1;
+    //     overflow: hidden;
+    //     transform: none;
+    //     ${hasGrayscale ? 'filter: grayscale(100%) brightness(0.6);' : ''}
+    //   `
+    //
+    //   if (success && img) {
+    //     // 隐藏原始 sprite div
+    //     wrapper.style.display = 'none'
+    //
+    //     // 创建并添加 img 元素
+    //     const imgEl = document.createElement('img')
+    //     imgEl.src = url
+    //     imgEl.crossOrigin = 'anonymous'
+    //     imgEl.style.cssText = `
+    //       width: ${size}px;
+    //       height: ${size}px;
+    //       object-fit: cover;
+    //       object-position: center 20%;
+    //       position: absolute;
+    //       top: 0;
+    //       left: 0;
+    //     `
+    //     avatarContainer.appendChild(imgEl)
+    //     originalData[originalData.length - 1].addedImg = imgEl
+    //   } else {
+    //     // 图片加载失败，使用 sprite 裁剪方案
+    //     console.warn(`[exportImage] 使用 sprite 裁剪回退: ${charId}`)
+    //
+    //     // 获取 sprite 图片的 background-position
+    //     const bgPos = getBackgroundPosition(wrapper, charId)
+    //
+    //     // 从 sprite 中裁剪头像
+    //     const croppedDataUrl = cropAvatarFromSprite(spriteImg, bgPos.x, bgPos.y, size)
+    //
+    //     if (croppedDataUrl) {
+    //       // 隐藏原始 sprite div
+    //       wrapper.style.display = 'none'
+    //
+    //       // 创建并添加裁剪后的 img 元素
+    //       const imgEl = document.createElement('img')
+    //       imgEl.src = croppedDataUrl
+    //       imgEl.style.cssText = `
+    //         width: ${size}px;
+    //         height: ${size}px;
+    //         object-fit: cover;
+    //         position: absolute;
+    //         top: 0;
+    //         left: 0;
+    //       `
+    //       avatarContainer.appendChild(imgEl)
+    //       originalData[originalData.length - 1].addedImg = imgEl
+    //     } else {
+    //       console.error(`[exportImage] sprite 裁剪失败: ${charId}`)
+    //     }
+    //   }
+    // }
+    //
+    // // 等待渲染完成
+    // await new Promise(resolve => setTimeout(resolve, 800))
     
     const canvas = await html2canvas(container, {
       backgroundColor: '#1a1a2e',
@@ -465,17 +465,17 @@ async function exportImage() {
       logging: false
     })
     
-    // 恢复原始样式并移除添加的 img 元素
-    for (const item of originalData) {
-      item.avatarContainer.style.cssText = item.containerStyle
-      item.wrapper.style.cssText = item.wrapperStyle
-      if (item.wrapperDisplay !== undefined) {
-        item.wrapper.style.display = item.wrapperDisplay || ''
-      }
-      if (item.addedImg) {
-        item.addedImg.remove()
-      }
-    }
+    // // 恢复原始样式并移除添加的 img 元素
+    // for (const item of originalData) {
+    //   item.avatarContainer.style.cssText = item.containerStyle
+    //   item.wrapper.style.cssText = item.wrapperStyle
+    //   if (item.wrapperDisplay !== undefined) {
+    //     item.wrapper.style.display = item.wrapperDisplay || ''
+    //   }
+    //   if (item.addedImg) {
+    //     item.addedImg.remove()
+    //   }
+    // }
     
     // 转换为图片并下载
     const link = document.createElement('a')

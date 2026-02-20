@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue'
+import {computed} from 'vue'
 
 const props = defineProps({
   operator: {
@@ -27,13 +27,13 @@ const props = defineProps({
 
 // 稀有度对应的背景颜色（参考游戏截图的颜色）
 const rarityColors = {
-  6: { primary: '#FF6B35', secondary: '#FF9800' },  // 橙红色
-  5: { primary: '#E5C100', secondary: '#FFD700' },  // 金黄色
-  4: { primary: '#A855F7', secondary: '#C084FC' },  // 紫色
-  3: { primary: '#3B82F6', secondary: '#60A5FA' },  // 蓝色
-  2: { primary: '#6EE7B7', secondary: '#A7F3D0' },  // 浅绿色
-  1: { primary: '#9CA3AF', secondary: '#D1D5DB' },  // 灰白色
-  0: { primary: '#4B5563', secondary: '#6B7280' }   // 未获得灰色
+  6: {primary: '#FF6B35', secondary: '#FF9800'},  // 橙红色
+  5: {primary: '#E5C100', secondary: '#FFD700'},  // 金黄色
+  4: {primary: '#A855F7', secondary: '#C084FC'},  // 紫色
+  3: {primary: '#3B82F6', secondary: '#60A5FA'},  // 蓝色
+  2: {primary: '#6EE7B7', secondary: '#A7F3D0'},  // 浅绿色
+  1: {primary: '#9CA3AF', secondary: '#D1D5DB'},  // 灰白色
+  0: {primary: '#4B5563', secondary: '#6B7280'}   // 未获得灰色
 }
 
 // 职业英文名映射
@@ -83,7 +83,7 @@ const mainSkillLevel = computed(() => props.operator.mainSkill || 1)
 const allSkillsDisplay = computed(() => {
   const skills = []
   const skillCount = props.operator.skills?.length || 0
-  
+
   for (let i = 1; i <= Math.max(skillCount, 3); i++) {
     const mastery = props.operator[`skill${i}`] || 0
     if (props.operator.skills?.[i - 1] || mastery > 0) {
@@ -94,7 +94,7 @@ const allSkillsDisplay = computed(() => {
       })
     }
   }
-  
+
   return skills
 })
 
@@ -112,18 +112,18 @@ const moduleDisplay = computed(() => {
   const op = props.operator
   const modules = []
   const types = ['X', 'Y', 'D', 'A', 'B']
-  
+
   for (const type of types) {
     const level = op[`mod${type}`]
     if (level && level > 0) {
-      modules.push({ 
-        type, 
+      modules.push({
+        type,
         level,
         displayType: moduleTypeMap[type] || type
       })
     }
   }
-  
+
   return modules
 })
 
@@ -139,10 +139,10 @@ const avatarClass = computed(() => {
 </script>
 
 <template>
-  <div 
-    class="operator-card" 
-    :class="{ 'not-owned': isNotOwned }"
-    :style="{ 
+  <div
+      class="account-operator-card"
+      :class="{ 'not-owned': isNotOwned }"
+      :style="{
       '--card-primary': cardColors.primary,
       '--card-secondary': cardColors.secondary
     }"
@@ -150,12 +150,12 @@ const avatarClass = computed(() => {
     <!-- 背景层（带斜线纹理） -->
     <div class="card-background"></div>
     <div class="card-stripe-overlay"></div>
-    
+
     <!-- 星级（绝对定位居中，不受其他元素影响） -->
     <div v-if="!isNotOwned" class="star-badge">
       <img :src="`/image/survey/bg/rarity-${stars}.png`" class="rarity-icon" :alt="`${stars}星`">
     </div>
-    
+
     <!-- 顶部一行：职业图标 + 限定/联动标记（顶端对齐） -->
     <div class="top-row">
       <!-- 左侧：职业图标 -->
@@ -163,7 +163,7 @@ const avatarClass = computed(() => {
         <img :src="`/image/survey/bg/${professionName}.png`" class="profession-icon" :alt="professionName">
       </div>
       <div v-else class="profession-placeholder"></div>
-      
+
       <!-- 右侧：限定/联动标记 -->
       <div class="top-right-badges">
         <div v-if="showLimited" class="limited-badge" title="限定">
@@ -174,22 +174,27 @@ const avatarClass = computed(() => {
         </div>
       </div>
     </div>
-    
+
+
+    <img alt="" :src='`https://cos.yituliu.cn/arknights/avatar/${operator.charId}.webp`'
+         style="width: 90px;height: 90px;display: block;position: absolute;">
     <!-- 中间：头像（未获得时显示灰色） -->
-    <div class="avatar-container" :class="{ 'grayscale': isNotOwned }">
-      <div class="sprite-avatar" :class="avatarClass"></div>
-    </div>
-    
+    <!--    <div class="avatar-container" :class="{ 'grayscale': isNotOwned }">-->
+    <!--      <div class="sprite-avatar" :class="avatarClass"></div>-->
+    <!--    </div>-->
+
+
     <!-- 以下内容仅在已获得时显示 -->
     <template v-if="!isNotOwned">
       <!-- 底部渐变遮罩（透明到黑色） -->
       <div class="bottom-gradient-overlay"></div>
-      
+
       <!-- 左下角：潜能 + 精英化 + 等级 -->
       <div class="left-bottom-area">
         <!-- 潜能图标（带黑色圆角正方形背景） -->
         <div class="potential-wrapper">
-          <img :src="`/image/survey/rank/potential${potentialLevel}.png`" class="potential-icon" :alt="`潜能${potentialLevel}`">
+          <img :src="`/image/survey/rank/potential${potentialLevel}.png`" class="potential-icon"
+               :alt="`潜能${potentialLevel}`">
         </div>
         <!-- 精英化图标 -->
         <img :src="`/image/survey/rank/elite${eliteLevel}.png`" class="elite-icon" :alt="`精英${eliteLevel}`">
@@ -199,23 +204,25 @@ const avatarClass = computed(() => {
           <span class="level-text">{{ level }}</span>
         </div>
       </div>
-      
+
       <!-- 右下角区域：模组在上，技能在下 -->
       <div class="right-bottom-area">
         <!-- 模组（等级图标上叠加类型标记） -->
         <div v-if="moduleDisplay.length > 0" class="module-area">
           <div v-for="mod in moduleDisplay" :key="mod.type" class="module-item-compact">
-            <img :src="`/image/survey/mod-rank-${mod.level}-v1.jpg`" class="module-level-icon-compact" :alt="`模组${mod.level}级`">
+            <img :src="`/image/survey/mod-rank-${mod.level}-v1.jpg`" class="module-level-icon-compact"
+                 :alt="`模组${mod.level}级`">
             <span class="module-type-overlay">{{ mod.displayType }}</span>
           </div>
         </div>
-        
+
         <!-- 技能等级（使用黑色正方形背景） -->
         <div class="skill-area">
           <template v-if="allSkillsDisplay.length > 0">
             <div v-for="skill in allSkillsDisplay" :key="skill.index" class="skill-item">
               <div class="skill-box">
-                <img v-if="skill.mastery > 0" :src="`/image/survey/rank/skill-rank-${skill.mastery}.png`" class="mastery-icon" :alt="`专精${skill.mastery}`">
+                <img v-if="skill.mastery > 0" :src="`/image/survey/rank/skill-rank-${skill.mastery}.png`"
+                     class="mastery-icon" :alt="`专精${skill.mastery}`">
                 <span v-else class="skill-level-text">{{ skill.mainSkill }}</span>
               </div>
             </div>
@@ -230,7 +237,7 @@ const avatarClass = computed(() => {
 </template>
 
 <style scoped>
-.operator-card {
+.account-operator-card {
   position: relative;
   width: v-bind('size + "px"');
   height: v-bind('size + "px"');
@@ -259,11 +266,11 @@ const avatarClass = computed(() => {
   right: 0;
   bottom: 0;
   background: repeating-linear-gradient(
-    135deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 255, 255, 0.08) 2px,
-    rgba(255, 255, 255, 0.08) 4px
+      135deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.08) 2px,
+      rgba(255, 255, 255, 0.08) 4px
   );
   z-index: 0;
 }
@@ -275,11 +282,11 @@ const avatarClass = computed(() => {
 
 .operator-card.not-owned .card-stripe-overlay {
   background: repeating-linear-gradient(
-    135deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.15) 2px,
-    rgba(0, 0, 0, 0.15) 4px
+      135deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.15) 2px,
+      rgba(0, 0, 0, 0.15) 4px
   );
 }
 

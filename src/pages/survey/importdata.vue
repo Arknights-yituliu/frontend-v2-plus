@@ -26,17 +26,13 @@ const COLLAB_OPERATOR_IDS = new Set([
 
 // 状态管理
 const loading = ref(false)
-const uploading = ref(false)
 const inputText = ref('')
 const playBindingList = ref([])
 const sklandCred = ref('')
 const sklandToken = ref('')
 const accountData = ref(null)
 const rawWarehouseData = ref(null)
-const showPreview = ref(false)
-const exportContainerRef = ref(null)
 const currentBinding = ref(null)
-const selectedTab = ref('overview')
 
 // 获取限定干员列表
 const limitedOperatorIds = computed(() => {
@@ -49,35 +45,6 @@ const limitedOperatorIds = computed(() => {
   return ids
 })
 
-// 检查用户是否登录
-const isUserLoggedIn = computed(() => {
-  return !!userInfo.value.token
-})
-
-// 按稀有度分组的干员
-const groupedOperators = computed(() => {
-  if (!accountData.value?.operatorDataList) return {}
-  
-  const groups = { 6: [], 5: [], 4: [], 3: [], 2: [], 1: [] }
-  
-  for (const op of accountData.value.operatorDataList) {
-    const rarity = op.rarity || 1
-    if (groups[rarity]) {
-      groups[rarity].push(op)
-    }
-  }
-  
-  return groups
-})
-
-const rarityLabels = {
-  6: '六星干员',
-  5: '五星干员',
-  4: '四星干员',
-  3: '三星干员',
-  2: '二星干员',
-  1: '一星干员'
-}
 
 function openLinkOnNewPage(url) {
   window.open(url)
@@ -167,7 +134,6 @@ async function getPlayerData(binding) {
     })
     
     accountData.value = data
-    showPreview.value = true
     
     createMessage({ type: 'success', text: '账号数据获取成功！' })
   } catch (error) {
@@ -178,158 +144,12 @@ async function getPlayerData(binding) {
   }
 }
 
-async function uploadToOperatorSurvey() {
-  if (!rawWarehouseData.value) {
-    createMessage({ type: 'error', text: '没有可上传的数据' })
-    return
-  }
-  
-  if (!isUserLoggedIn.value) {
-    createMessage({ type: 'error', text: '请先登录一图流账号，才能上传干员数据' })
-    return
-  }
-  
-  uploading.value = true
-  
-  try {
-    await operatorDataAPI.importSkLandOperatorDataV3(rawWarehouseData.value)
-    createMessage({ type: 'success', text: '干员数据已同步到练度调查！' })
-    
-    // 保存完整账号信息到sessionStorage，供一图流Tab使用
-    if (accountData.value) {
-      sessionStorage.setItem('skland_account_data', JSON.stringify({
-        uid: currentBinding.value?.uid || '',
-        nickName: accountData.value.nickName,
-        channelName: currentBinding.value?.channelName || '',
-        status: accountData.value.status,
-        operatorDataList: accountData.value.operatorDataList || [],
-        itemList: accountData.value.itemList || []
-      }))
-      // 标记需要切换到账号一图流Tab
-      sessionStorage.setItem('skland_switch_to_overview', 'true')
-    }
-    
-    // 等待后跳转
-    setTimeout(() => {
-      router.push({ name: 'OperatorSurvey' })
-    }, 1500)
-  } catch (error) {
-    console.error(error)
-    createMessage({ type: 'error', text: '数据上传失败' })
-  } finally {
-    uploading.value = false
-  }
-}
-
-async function exportImage() {
-  if (!exportContainerRef.value) return
-  
-  createMessage({ type: 'info', text: '正在生成图片，请稍候...' })
-  
-  try {
-    const html2canvas = (await import('html2canvas')).default
-    
-    const container = exportContainerRef.value
-    
-    // 修复 sprite 头像渲染问题
-    const avatarContainers = container.querySelectorAll('.avatar-container')
-    const originalContainerData = []
-    const originalAvatarData = []
-    
-    for (const avatarContainer of avatarContainers) {
-      const wrapper = avatarContainer.querySelector('.sprite-avatar')
-      if (!wrapper) continue
-      
-      const classList = Array.from(wrapper.classList)
-      const charIdClass = classList.find(c => c.startsWith('bg-char_'))
-      if (charIdClass) {
-        const charId = charIdClass.replace('bg-', '')
-        const size = avatarContainer.offsetWidth || 90
-        
-        // 保存原始状态
-        originalContainerData.push({
-          el: avatarContainer,
-          style: avatarContainer.style.cssText
-        })
-        originalAvatarData.push({
-          el: wrapper,
-          style: wrapper.style.cssText
-        })
-        
-        // 修改 avatar-container 样式
-        avatarContainer.style.cssText = `
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          margin-top: -${size / 2}px;
-          margin-left: -${size / 2}px;
-          width: ${size}px;
-          height: ${size}px;
-          z-index: 1;
-          overflow: hidden;
-          transform: none;
-        `
-        
-        // 使用项目 CDN 头像图片替代 sprite
-        wrapper.style.cssText = `
-          background-image: url(https://cos.yituliu.cn/image2/avatar/${charId}.png);
-          background-size: cover;
-          background-position: center 20%;
-          width: ${size}px;
-          height: ${size}px;
-          position: absolute;
-          top: 0;
-          left: 0;
-          margin: 0;
-          transform: none;
-        `
-      }
-    }
-    
-    // 等待图片加载
-    await new Promise(resolve => setTimeout(resolve, 800))
-    
-    const canvas = await html2canvas(container, {
-      backgroundColor: '#1a1a2e',
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      logging: false
-    })
-    
-    // 恢复原始样式
-    for (const item of originalContainerData) {
-      item.el.style.cssText = item.style
-    }
-    for (const item of originalAvatarData) {
-      item.el.style.cssText = item.style
-    }
-    
-    const link = document.createElement('a')
-    link.download = `明日方舟账号一图流_${accountData.value?.nickName || 'unknown'}_${Date.now()}.png`
-    link.href = canvas.toDataURL('image/png')
-    link.click()
-    
-    createMessage({ type: 'success', text: '图片已保存！' })
-  } catch (error) {
-    console.error(error)
-    createMessage({ type: 'error', text: '图片生成失败' })
-  }
-}
-
-function goBack() {
-  showPreview.value = false
-}
-
-function isCollabOperator(charId) {
-  return COLLAB_OPERATOR_IDS.has(charId)
-}
 </script>
 
 <template>
   <div class="import-page">
     <!-- 数据获取步骤 -->
-    <div v-if="!showPreview" class="data-input-section">
+    <div  class="data-input-section">
       <h1 class="page-title">森空岛数据导入</h1>
       <p class="page-desc">从森空岛获取您的明日方舟账号数据，可同步到干员练度调查，也可生成账号信息一图流</p>
       
@@ -400,87 +220,7 @@ function isCollabOperator(charId) {
       </div>
     </div>
     
-    <!-- 预览和导出 -->
-    <div v-else class="preview-section">
-      <div class="preview-toolbar">
-        <div class="toolbar-left">
-          <v-btn color="secondary" @click="goBack" variant="outlined">
-            <v-icon>mdi-arrow-left</v-icon>
-            返回
-          </v-btn>
-        </div>
-        <div class="toolbar-right">
-          <v-btn 
-            color="success" 
-            @click="uploadToOperatorSurvey"
-            :loading="uploading"
-            :disabled="!isUserLoggedIn"
-            class="mr-2"
-          >
-            <v-icon>mdi-upload</v-icon>
-            同步到练度调查
-          </v-btn>
-          <v-btn color="primary" @click="exportImage">
-            <v-icon>mdi-download</v-icon>
-            下载一图流图片
-          </v-btn>
-        </div>
-      </div>
-      
-      <!-- 用户未登录提示 -->
-      <v-alert 
-        v-if="!isUserLoggedIn" 
-        type="info" 
-        variant="tonal" 
-        class="mb-4"
-        closable
-      >
-        登录一图流账号后，可以将干员数据同步到练度调查功能
-      </v-alert>
-      
-      <!-- 导出容器 -->
-      <div ref="exportContainerRef" class="export-container">
-        <!-- 账号基本信息 -->
-        <div v-if="accountData" class="account-header">
-          <h2 class="account-name">{{ accountData.nickName }}</h2>
-          <div class="account-stats">
-            <span>UID: {{ currentBinding?.uid }}</span>
-            <span>干员数量: {{ accountData.operatorDataList?.length || 0 }}</span>
-          </div>
-        </div>
-        
-        <!-- 干员展示 -->
-        <div class="operator-grid-section">
-          <template v-for="rarity in [6, 5, 4, 3, 2, 1]" :key="rarity">
-            <div 
-              v-if="groupedOperators[rarity] && groupedOperators[rarity].length > 0" 
-              class="rarity-group"
-            >
-              <div class="rarity-header">
-                <span class="rarity-label" :class="`rarity-${rarity}`">
-                  {{ rarityLabels[rarity] }} ({{ groupedOperators[rarity].length }})
-                </span>
-              </div>
-              <div class="operators-grid">
-                <OperatorCard
-                  v-for="operator in groupedOperators[rarity]"
-                  :key="operator.charId"
-                  :operator="operator"
-                  :is-limited="limitedOperatorIds.has(operator.charId)"
-                  :is-collab="isCollabOperator(operator.charId)"
-                  :size="90"
-                />
-              </div>
-            </div>
-          </template>
-        </div>
-        
-        <!-- 水印 -->
-        <div class="watermark">
-          明日方舟一图流 ark.yituliu.cn
-        </div>
-      </div>
-    </div>
+
   </div>
 </template>
 
