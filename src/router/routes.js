@@ -189,6 +189,18 @@ const routes = [
         }
     },
     {
+        path: '/tools/jie-garden',
+        text: '界园树洞模拟',
+        name: 'JieGarden',
+        module: 'tools',
+        icon: "mdi-flower-tulip",
+        display: true,
+        component: () => import('/src/pages/tools/jie-garden.vue'),
+        meta: {
+            title: '界园树洞模拟'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',

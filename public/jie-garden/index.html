@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>界园树洞模拟</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="controls">
+        <div class="control-group">
+            <span class="group-label">树洞类型</span>
+            <button id="btn-shifei" class="mode-btn active">
+                <img src="EUI/icon_zone_sky_1.png" alt="icon">
+                是非境
+            </button>
+            <button id="btn-jinxi" class="mode-btn">
+                <img src="EUI/icon_zone_sky_1.png" alt="icon">
+                今昔境
+            </button>
+        </div>
+        <div class="control-group">
+            <span class="group-label">操作</span>
+            <button id="btn-regenerate" class="action-btn">重新生成</button>
+            <button id="btn-random-reveal" class="action-btn">随机点亮</button>
+            <button id="btn-reveal" class="action-btn special-btn">全部点亮</button>
+            <button id="btn-undo" class="action-btn" disabled>撤销</button>
+            <button id="btn-redo" class="action-btn" disabled>重做</button>
+        </div>
+        <div class="control-group">
+            <span class="group-label">收藏品</span>
+            <button id="btn-ziwujian" class="action-btn">子武剑</button>
+            <button id="btn-wushangshuo" class="action-btn">午商梭</button>
+            <button id="btn-shenzhulin" class="action-btn">申铸轮</button>
+            <button id="btn-yinshihu" class="action-btn">寅诗壶</button>
+        </div>
+    </div>
+    <div class="canvas-container">
+        <canvas id="mapCanvas"></canvas>
+    </div>
+    <script src="map_generator.js"></script>
+</body>
+
+</html>
