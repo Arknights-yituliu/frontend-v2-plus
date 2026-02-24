@@ -11,15 +11,11 @@
 <body>
     <div class="controls">
         <div class="control-group">
-            <span class="group-label">树洞类型</span>
-            <button id="btn-shifei" class="mode-btn active">
-                <img src="EUI/icon_zone_sky_1.png" alt="icon">
-                是非境
-            </button>
-            <button id="btn-jinxi" class="mode-btn">
-                <img src="EUI/icon_zone_sky_1.png" alt="icon">
-                今昔境
-            </button>
+            <span class="group-label">模式选择</span>
+            <button id="btn-shifei" class="mode-btn active">是非境</button>
+            <button id="btn-jinxi" class="mode-btn">今昔境</button>
+            <button id="btn-wugusi" class="mode-btn">无故肆</button>
+            <button id="btn-demo" class="mode-btn">演示</button>
         </div>
         <div class="control-group">
             <span class="group-label">操作</span>
@@ -36,7 +32,41 @@
             <button id="btn-shenzhulin" class="action-btn">申铸轮</button>
             <button id="btn-yinshihu" class="action-btn">寅诗壶</button>
         </div>
+        <div class="control-group">
+            <span class="group-label">背　　景</span>
+            <button id="bg-btn-default" class="mode-btn active">默认</button>
+            <label class="mode-btn" id="bg-btn-color" title="自定义纯色"
+                style="display: inline-flex; align-items: center; justify-content: center; padding: 4px 6px; cursor: pointer;">
+                <input type="color" id="bg-color-picker" value="#3a1c58">
+            </label>
+            <button id="bg-btn-upload" class="mode-btn"
+                style="padding: 1px 12px; font-size: 18px; line-height: 1;">+</button>
+            <input type="file" id="bg-file-input" accept="image/*" style="display: none;">
+        </div>
+        <div id="demo-panel" class="demo-panel">
+            <div class="demo-panel-header" id="demo-panel-header">
+                <button class="demo-toggle-btn" id="demo-toggle-btn" title="收起/展开面板">▶</button>
+                <div style="flex: 1"></div>
+            </div>
+            <div class="demo-panel-content" id="demo-panel-content">
+                <div class="demo-mode-label">树洞类型</div>
+                <div class="demo-mode-row">
+                    <button class="demo-base-btn active" id="demo-base-shifei">是非境</button>
+                    <button class="demo-base-btn" id="demo-base-jinxi">今昔境</button>
+                </div>
+                <div class="demo-panel-title">节点类型</div>
+                <div class="demo-panel-row" id="demo-type-row"></div>
+                <div class="demo-mode-label">工具</div>
+                <div class="demo-mode-row">
+                    <button class="demo-action-btn active" id="demo-tool-add">添加节点</button>
+                    <button class="demo-action-btn" id="demo-tool-delete-node">删除节点</button>
+                    <button class="demo-action-btn" id="demo-tool-connect">添加连线</button>
+                    <button class="demo-action-btn" id="demo-tool-delete">删除连线</button>
+                </div>
+            </div>
+        </div>
     </div>
+
     <div class="canvas-container">
         <canvas id="mapCanvas"></canvas>
     </div>
