@@ -270,6 +270,25 @@ body {
     border-color: rgba(255, 255, 255, 0.1);
 }
 
+.seed-input {
+    background: rgba(30, 40, 60, 0.75);
+    color: #a0c4c4;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    padding: 0 8px;
+    height: 34px;
+    width: 140px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.seed-input:focus {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
 .action-btn:hover:not(:disabled) {
     background: rgba(60, 60, 75, 0.85);
     border-color: rgba(255, 255, 255, 0.25);

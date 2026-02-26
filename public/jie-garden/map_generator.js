@@ -83,12 +83,65 @@ const SHIFEI_NODE_DEFS = {
 
 const REPEATABLE_TYPES = new Set(['encounter', 'joy', 'plan', 'story']);
 
+
+const SEED_CHARSET = "1234567890AOIEUaoieu";
+
+function cyrb128(str) {
+    let h1 = 1779033703, h2 = 3144134277, h3 = 1013904242, h4 = 2773480762;
+    for (let i = 0, k; i < str.length; i++) {
+        k = str.charCodeAt(i);
+        h1 = h2 ^ Math.imul(h1 ^ k, 597399067); h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
+        h3 = h4 ^ Math.imul(h3 ^ k, 951274213); h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+    }
+    h1 = Math.imul(h3 ^ (h1 >>> 18), 597399067); h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
+    h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213); h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
+    return [(h1 ^ h2 ^ h3 ^ h4) >>> 0, (h2 ^ h1) >>> 0, (h3 ^ h1) >>> 0, (h4 ^ h1) >>> 0];
+}
+
+let currentSeedString = "";
+function mulberry32(a) {
+    return function () {
+        var t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+}
+// fallback to Math.random but won't be used since we call initSeed
+let seedRand = Math.random;
+
+function generateRandomSeedString() {
+    let s = "";
+    for (let i = 0; i < 18; i++) {
+        s += SEED_CHARSET[Math.floor(Math.random() * 20)];
+    }
+    return s;
+}
+
+function initSeed(seedStr) {
+    if (!seedStr) {
+        seedStr = generateRandomSeedString();
+    } else {
+        // filter invalid
+        seedStr = seedStr.replace(/[^1234567890AOIEUaoieuC]/g, '');
+        if (!seedStr.startsWith('C')) {
+            seedStr = seedStr.padEnd(18, 'A').substring(0, 18);
+        }
+    }
+    currentSeedString = seedStr;
+    const seedInput = document.getElementById('seed-input');
+    if (seedInput) seedInput.value = seedStr;
+
+    let hash = cyrb128(seedStr)[0];
+    seedRand = mulberry32(hash);
+}
+
 function getNodeDef(typeId) {
     const d = SHIFEI_NODE_DEFS[typeId];
     return d ? { id: typeId, ...d } : { id: typeId, name: typeId, color: '#888', bgColor: '#222' };
 }
 
-function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function rand(min, max) { return Math.floor(seedRand() * (max - min + 1)) + min; }
 function pick(arr) { return arr[rand(0, arr.length - 1)]; }
 function shuffle(arr) {
     const a = [...arr];
@@ -336,7 +389,7 @@ function drawCrosshair(ctx, x, y) {
 }
 
 function generateInnerEdges(startKey, startDirs, startR, startC, innerRows, innerCols) {
-    const targetConns = Math.random() < 0.03 ? 28 : 27;
+    const targetConns = seedRand() < 0.03 ? 28 : 27;
     const edgeSet = new Set();
     const finalEdges = [];
 
@@ -458,8 +511,8 @@ function generateShifeiMap() {
 
     const outerPositions = [];
     for (let r = 0; r < innerRows; r++) {
-        if (Math.random() < 0.6) outerPositions.push({ r, c: -1 });
-        if (Math.random() < 0.6) outerPositions.push({ r, c: innerCols });
+        if (seedRand() < 0.6) outerPositions.push({ r, c: -1 });
+        if (seedRand() < 0.6) outerPositions.push({ r, c: innerCols });
     }
 
     const totalCols = innerCols + 2;
@@ -526,7 +579,7 @@ function generateShifeiMap() {
     for (let i = 0; i < selOuter.length; i++) {
         for (let j = i + 1; j < selOuter.length; j++) {
             const a = selOuter[i], b = selOuter[j];
-            if (a.c === b.c && Math.abs(a.r - b.r) === 1 && Math.random() < 0.5)
+            if (a.c === b.c && Math.abs(a.r - b.r) === 1 && seedRand() < 0.5)
                 addOuterEdge(`${a.r},${a.c}`, `${b.r},${b.c}`);
         }
     }
@@ -539,32 +592,7 @@ function generateShifeiMap() {
         adjacency[conn.key2].push(conn.key1);
     }
 
-    const firstLevelKeys = new Set();
-    for (const sn of startNodes) {
-        if (adjacency[sn.key]) {
-            for (const adjKey of adjacency[sn.key]) {
-                if (adjKey !== centerKey && !startNodes.find(n => n.key === adjKey)) {
-                    firstLevelKeys.add(adjKey);
-                }
-            }
-        }
-    }
 
-    const choiceKey = Object.keys(grid).find(k => grid[k].type && grid[k].type.id === 'choice');
-    if (choiceKey && firstLevelKeys.has(choiceKey)) {
-        const candidates = Object.keys(grid).filter(k =>
-            grid[k].c >= 0 && grid[k].c < innerCols &&
-            k !== centerKey &&
-            !startNodes.find(n => n.key === k) &&
-            !firstLevelKeys.has(k)
-        );
-        if (candidates.length > 0) {
-            const swapKey = pick(candidates);
-            const tempType = grid[choiceKey].type;
-            grid[choiceKey].type = grid[swapKey].type;
-            grid[swapKey].type = tempType;
-        }
-    }
 
     return { grid, allConnections, adjacency, startNodes, centerKey, nodeSize, zayiRevealedCount: 0 };
 }
@@ -602,9 +630,9 @@ function checkNewZayiReveals(centerNode, newActiveKeys) {
         const count = currentMapState.zayiRevealedCount;
 
         let isThreeEnding = false;
-        if (count === 1 && Math.random() < 0.99) {
+        if (count === 1 && seedRand() < 0.99) {
             isThreeEnding = true;
-        } else if (count === 2 && Math.random() < 0.01) {
+        } else if (count === 2 && seedRand() < 0.01) {
             isThreeEnding = true;
         }
 
@@ -636,7 +664,7 @@ function generateJinxiMap() {
     const startDirs = [[-1, 0], [1, 0], [0, 1]];
     const startNodes = [];
     let startTypes;
-    if (Math.random() < 0.1098) {
+    if (seedRand() < 0.1098) {
         startTypes = ['misc', 'misc', 'misc'];
     } else {
         startTypes = shuffle(['story', 'misc', 'misc']);
@@ -675,15 +703,15 @@ function generateJinxiMap() {
         }
     }
 
-    let remainingFirstLevel = Array.from({ length: firstLevelKeys.size }, () => Math.random() < 0.5 ? 'chaos' : 'misc');
+    let remainingFirstLevel = Array.from({ length: firstLevelKeys.size }, () => seedRand() < 0.5 ? 'chaos' : 'misc');
     let chaosUsed = remainingFirstLevel.filter(t => t === 'chaos').length;
     let miscUsed = remainingFirstLevel.filter(t => t === 'misc').length;
 
     const remaining = [];
-    for (let i = 0; i < 7 - chaosUsed; i++) remaining.push('chaos');
+    for (let i = 0; i < Math.max(0, 7 - chaosUsed); i++) remaining.push('chaos');
     for (let i = 0; i < 2; i++) remaining.push('legend');
-    for (let i = 0; i < 12 - usedMisc - miscUsed; i++) remaining.push('misc');
-    for (let i = 0; i < 1 - usedStory; i++) remaining.push('story');
+    for (let i = 0; i < Math.max(0, 10 - usedMisc - miscUsed); i++) remaining.push('misc');
+    for (let i = 0; i < Math.max(0, 1 - usedStory); i++) remaining.push('story');
     remaining.push('encounter');
     remaining.push('plan');
     const shuffledRemaining = shuffle(remaining);
@@ -761,15 +789,15 @@ function generateWugusiMap() {
         }
     }
 
-    let remainingFirstLevel = Array.from({ length: firstLevelKeys.size }, () => Math.random() < 0.5 ? 'chaos' : 'misc');
+    let remainingFirstLevel = Array.from({ length: firstLevelKeys.size }, () => seedRand() < 0.5 ? 'chaos' : 'misc');
     let chaosUsed = remainingFirstLevel.filter(t => t === 'chaos').length;
     let miscUsed = remainingFirstLevel.filter(t => t === 'misc').length;
 
     // 无故肆：开局3个不包含 story，但其他地方仍然有1个故肆
     const remaining = [];
-    for (let i = 0; i < 7 - chaosUsed; i++) remaining.push('chaos');
+    for (let i = 0; i < Math.max(0, 7 - chaosUsed); i++) remaining.push('chaos');
     for (let i = 0; i < 2; i++) remaining.push('legend');
-    for (let i = 0; i < 11 - miscUsed; i++) remaining.push('misc'); // 原本是12，开局占了3个，但现在加回1个故肆，所以misc少一个
+    for (let i = 0; i < Math.max(0, 9 - miscUsed); i++) remaining.push('misc'); // 9
     remaining.push('encounter');
     remaining.push('plan');
     remaining.push('story');
@@ -804,7 +832,8 @@ function generateDemoMap() {
     demoNodeCounter = 0;
     demoConnectStart = null;
     const nodeSize = 56, gapX = 115, gapY = 105;
-    const innerRows = 5, innerCols = 5;
+    const innerRows = 5;
+    const innerCols = 5; // standard width
     const grid = {};
     const offsetX = (CANVAS_W - (innerCols - 1) * gapX) / 2;
     const offsetY = 30;
@@ -816,8 +845,11 @@ function generateDemoMap() {
 
     const centerKey = `${startR},${startC}`;
 
+    const cMin = demoBaseMode === 'shifei' ? -1 : 0;
+    const cMax = demoBaseMode === 'shifei' ? 5 : 4;
+
     for (let r = 0; r < innerRows; r++) {
-        for (let c = 0; c < innerCols; c++) {
+        for (let c = cMin; c <= cMax; c++) {
             const key = `${r},${c}`;
             const cx = offsetX + c * gapX;
             const cy = offsetY + (r + 0.5) * gapY;
@@ -1153,7 +1185,21 @@ function drawCandle(ctx) {
     ctx.restore();
 }
 
-function generateNewMap() {
+function generateNewMap(forceSeed = null) {
+    if (forceSeed && forceSeed.startsWith('C')) {
+        initSeed(forceSeed);
+        stepCount = 0;
+        historyStack = [];
+        historyIndex = -1;
+        currentMode = 'demo';
+        demoBaseMode = 'shifei'; // default format
+        currentMapState = decodeCustomMap(forceSeed);
+        saveHistory();
+        return;
+    }
+
+    initSeed(forceSeed);
+
     stepCount = 0;
     historyStack = [];
     historyIndex = -1;
@@ -1184,7 +1230,7 @@ function redraw() {
     renderMap(ctx);
 }
 
-function render() { generateNewMap(); redraw(); }
+function render(forceSeed = null) { generateNewMap(forceSeed); redraw(); }
 
 function setMode(mode) {
     currentMode = mode;
@@ -1208,7 +1254,19 @@ document.getElementById('btn-shifei').addEventListener('click', () => setMode('s
 document.getElementById('btn-jinxi').addEventListener('click', () => setMode('jinxi'));
 document.getElementById('btn-wugusi').addEventListener('click', () => setMode('wugusi'));
 document.getElementById('btn-demo').addEventListener('click', () => setMode('demo'));
-document.getElementById('btn-regenerate').addEventListener('click', render);
+document.getElementById('btn-regenerate').addEventListener('click', () => render(null));
+const applySeedBtn = document.getElementById('btn-apply-seed');
+if (applySeedBtn) {
+    applySeedBtn.addEventListener('click', () => {
+        const seedInput = document.getElementById('seed-input');
+        if (seedInput) {
+            let raw = seedInput.value.trim();
+            let match = raw.match(/【(.*?)】/);
+            if (match) raw = match[1];
+            if (raw) render(raw);
+        }
+    });
+}
 
 document.getElementById('demo-base-shifei').addEventListener('click', (e) => {
     document.querySelectorAll('.demo-base-btn').forEach(btn => btn.classList.remove('active'));
@@ -1228,7 +1286,7 @@ document.getElementById('btn-random-reveal').addEventListener('click', () => {
     const { grid } = currentMapState;
     const locked = Object.keys(grid).filter(k => grid[k].state === 'locked');
     if (locked.length === 0) return;
-    const key = locked[Math.floor(Math.random() * locked.length)];
+    const key = locked[Math.floor(seedRand() * locked.length)];
     grid[key].state = 'active';
 
     // 随机事件因为没有中心节点，我们以它自己为中心，只传它自己
@@ -1411,10 +1469,151 @@ function initBackgroundPanel() {
     });
 }
 
+const NODE_TYPES_ENCODE = ['chaos', 'legend', 'misc', 'story', 'pickup_in', 'pickup_out', 'encounter', 'joy', 'plan', 'choice', 'start'];
+const NODE_TYPE_MAP = Object.fromEntries(NODE_TYPES_ENCODE.map((t, i) => [t, i]));
+
+function getPosIndex(r, c) { return r * 7 + (c + 1); }
+function getRCFromIndex(i) { return { r: Math.floor(i / 7), c: (i % 7) - 1 }; }
+
+function encodeCustomMap(mapState) {
+    const { grid, allConnections } = mapState;
+    let nodesStr = "";
+    for (let i = 0; i < 35; i++) {
+        const rc = getRCFromIndex(i);
+        const key = `${rc.r},${rc.c}`;
+        if (grid[key]) {
+            const tid = grid[key].type.id;
+            let encodedIdx = NODE_TYPE_MAP[tid];
+            if (encodedIdx === undefined) encodedIdx = 2; // fallback
+            nodesStr += SEED_CHARSET[encodedIdx];
+        } else {
+            nodesStr += SEED_CHARSET[11]; // empty
+        }
+    }
+
+    let edgesBig = 0n;
+    for (const conn of allConnections) {
+        let p1 = conn.key1.split(',').map(Number);
+        let p2 = conn.key2.split(',').map(Number);
+        if (p1[0] > p2[0] || (p1[0] === p2[0] && p1[1] > p2[1])) {
+            let tmp = p1; p1 = p2; p2 = tmp;
+        }
+        let edgeIndex = -1;
+        if (p1[0] === p2[0]) {
+            let c_map = p1[1] + 1;
+            if (c_map >= 0 && c_map < 6) edgeIndex = p1[0] * 6 + c_map;
+        } else if (p1[1] === p2[1]) {
+            let c_map = p1[1] + 1;
+            if (p1[0] >= 0 && p1[0] < 4) edgeIndex = 30 + (p1[0] * 7 + c_map);
+        }
+        if (edgeIndex >= 0) edgesBig |= (1n << BigInt(edgeIndex));
+    }
+
+    let edgesStr = "";
+    for (let i = 0; i < 14; i++) {
+        edgesStr += SEED_CHARSET[Number(edgesBig % 20n)];
+        edgesBig /= 20n;
+    }
+    return "C" + nodesStr + edgesStr;
+}
+
+function decodeCustomMap(seedStr) {
+    if (seedStr.startsWith('C')) seedStr = seedStr.substring(1);
+
+    const nodeSize = 56, gapX = 115, gapY = 105;
+    const offsetX = (CANVAS_W - 6 * gapX) / 2;
+    const offsetY = 30;
+    function gridToPixel(r, c) {
+        return { x: offsetX + (c + 1) * gapX, y: offsetY + (r + 0.5) * gapY };
+    }
+
+    const grid = {};
+    const startNodes = [];
+    let centerKey = null;
+
+    let nodesStr = seedStr.substring(0, 35).padEnd(35, SEED_CHARSET[11]);
+    for (let i = 0; i < 35; i++) {
+        let charVal = SEED_CHARSET.indexOf(nodesStr[i]);
+        if (charVal === -1 || charVal === 11) continue;
+
+        let typeId = NODE_TYPES_ENCODE[charVal] || 'misc';
+        const rc = getRCFromIndex(i);
+        const key = `${rc.r},${rc.c}`;
+        const pos = gridToPixel(rc.r, rc.c);
+
+        let state = 'locked';
+        if (typeId === 'start') { state = 'start'; centerKey = key; }
+
+        grid[key] = { key, r: rc.r, c: rc.c, ...pos, type: getNodeDef(typeId), state: state };
+        if (state === 'start') startNodes.push(grid[key]);
+    }
+
+    let edgesStr = seedStr.substring(35, 49).padEnd(14, SEED_CHARSET[0]);
+    let edgesBig = 0n;
+    let power = 1n;
+    for (let i = 0; i < 14; i++) {
+        let val = BigInt(SEED_CHARSET.indexOf(edgesStr[i]));
+        if (val < 0n) val = 0n;
+        edgesBig += val * power;
+        power *= 20n;
+    }
+
+    const allConnections = [];
+    const adjacency = {};
+    function addEdge(k1, k2) {
+        if (!grid[k1] || !grid[k2]) return;
+        const e1 = { key1: k1, key2: k2 };
+        allConnections.push(e1);
+        if (!adjacency[k1]) adjacency[k1] = [];
+        if (!adjacency[k2]) adjacency[k2] = [];
+        adjacency[k1].push(k2);
+        adjacency[k2].push(k1);
+    }
+
+    for (let i = 0; i < 58; i++) {
+        if ((edgesBig & (1n << BigInt(i))) !== 0n) {
+            if (i < 30) {
+                let r = Math.floor(i / 6), c = (i % 6) - 1;
+                addEdge(`${r},${c}`, `${r},${c + 1}`);
+            } else {
+                let v = i - 30;
+                let r = Math.floor(v / 7), c = (v % 7) - 1;
+                addEdge(`${r},${c}`, `${r + 1},${c}`);
+            }
+        }
+    }
+
+    for (const sn of startNodes) {
+        for (const adj of (adjacency[sn.key] || [])) {
+            if (grid[adj] && grid[adj].state === 'locked') grid[adj].state = 'active';
+        }
+    }
+    return { grid, allConnections, adjacency, startNodes, centerKey, nodeSize };
+}
+
 window.addEventListener('load', () => {
     preloadAssets();
     initDemoPanel();
     initBackgroundPanel();
+    const copyBtn = document.getElementById('btn-copy-seed');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            const seedInput = document.getElementById('seed-input');
+            if (seedInput) {
+                let seed = seedInput.value;
+                if (currentMode === 'demo' && currentMapState) {
+                    seed = encodeCustomMap(currentMapState);
+                    seedInput.value = seed;
+                }
+                const text = `【${seed}】##复制本消息至ark.yituliu.cn，立即体验相似树洞`;
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = '已复制!';
+                    setTimeout(() => copyBtn.textContent = originalText, 1500);
+                });
+            }
+        });
+    }
     setTimeout(() => { render(); firstRenderDone = true; }, 200);
 });
 

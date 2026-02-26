@@ -16,7 +16,7 @@
 <style scoped>
 .jie-garden-container {
   width: 100%;
-  height: 1024px;
+  height: 1080px;
   overflow: hidden;
 }
 
