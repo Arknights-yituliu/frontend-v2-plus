@@ -218,6 +218,14 @@ let legendStyle = ref('')
 // }
 
 /**
+ * 切换图例显示状态
+ */
+function toggleLegendDisplay() {
+  legendDisplay.value = !legendDisplay.value
+  localStorage.setItem('itemLegendDisplay', legendDisplay.value)
+}
+
+/**
  * 滚动到图例说明
  */
 function scrollToLegendDescription() {
@@ -266,6 +274,11 @@ function openNewPage() {
 }
 
 onMounted(() => {
+  // 读取之前保存的图例显示状态
+  const savedLegendDisplay = localStorage.getItem('itemLegendDisplay')
+  if (savedLegendDisplay !== null) {
+    legendDisplay.value = savedLegendDisplay === 'true'
+  }
   legendStyle.value = localStorage.getItem('itemLegend') ? localStorage.getItem('itemLegend') : ''
   getStageResult()
 })
@@ -323,7 +336,7 @@ function handleClick() {
         </v-btn>
         <v-btn color="primary" :size="getButtonSize()" @click="scrollToFrequentlyAskedQuestion()">常见问题
         </v-btn>
-        <v-btn color="secondary" :size="getButtonSize()" @click="legendDisplay = !legendDisplay">显示图例
+        <v-btn color="secondary" :size="getButtonSize()" @click="toggleLegendDisplay">显示图例
         </v-btn>
       </v-btn-group>
       <v-btn color="primary" style="display:none" class="m-0-8" :size="getButtonSize()"
