@@ -236,21 +236,42 @@ function scrollToLegendDescription() {
  * 滚动到搓玉关卡表
  */
 function scrollToOrundumTable() {
-  document.getElementById('orundum-table').scrollIntoView({ behavior: 'smooth' })
+  const element = document.getElementById('orundum-table')
+  const offset = 56 // 考虑固定导航栏、按钮区域和空div的距离
+  const y = element.getBoundingClientRect().top + window.pageYOffset - offset
+  
+  window.scrollTo({
+    top: y,
+    behavior: 'smooth'
+  })
 }
 
 /**
  * 滚动到历史活动关卡表
  */
 function scrollToHistoryStageTable() {
-  document.getElementById('history-stage-table').scrollIntoView({ behavior: 'smooth' })
+  const element = document.getElementById('history-stage-table')
+  const offset = 56 // 考虑固定导航栏、按钮区域和空div的距离
+  const y = element.getBoundingClientRect().top + window.pageYOffset - offset
+  
+  window.scrollTo({
+    top: y,
+    behavior: 'smooth'
+  })
 }
 
 /**
  * 滚动到常见问题
  */
 function scrollToFrequentlyAskedQuestion() {
-  document.getElementById('frequently-asked-question').scrollIntoView({ behavior: 'smooth' })
+  const element = document.getElementById('frequently-asked-question')
+  const offset = 56 // 考虑固定导航栏、按钮区域和空div的距离
+  const y = element.getBoundingClientRect().top + window.pageYOffset - offset
+  
+  window.scrollTo({
+    top: y,
+    behavior: 'smooth'
+  })
 }
 
 function getDetailTableItemSprite(id) {
