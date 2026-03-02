@@ -794,14 +794,30 @@ function generateWugusiMap() {
     let miscUsed = remainingFirstLevel.filter(t => t === 'misc').length;
 
     // 无故肆：开局3个不包含 story，但其他地方仍然有1个故肆
+    // 故肆优先放在度=3的T字路口（匹配实际游戏行为）
     const remaining = [];
     for (let i = 0; i < Math.max(0, 7 - chaosUsed); i++) remaining.push('chaos');
     for (let i = 0; i < 2; i++) remaining.push('legend');
     for (let i = 0; i < Math.max(0, 9 - miscUsed); i++) remaining.push('misc'); // 9
     remaining.push('encounter');
     remaining.push('plan');
-    remaining.push('story');
+    // story 不放入 remaining 池，单独处理
     const shuffledRemaining = shuffle(remaining);
+
+    // 收集深层候选节点（非起点、非起点邻居、非第一层）
+    const deepCandidates = [];
+    const startNodeKeys = new Set(startNodes.map(n => n.key));
+    for (let r = 0; r < innerRows; r++) {
+        for (let c = 0; c < innerCols; c++) {
+            const key = `${r},${c}`;
+            if (key === startKey || startNodeKeys.has(key) || firstLevelKeys.has(key)) continue;
+            deepCandidates.push(key);
+        }
+    }
+
+    // 从深层候选中筛选度=3的节点，优先放置故肆
+    const deg3Candidates = deepCandidates.filter(k => (adjacency[k] || []).length === 3);
+    const storyKey = deg3Candidates.length > 0 ? pick(deg3Candidates) : pick(deepCandidates);
 
     for (let r = 0; r < innerRows; r++) {
         for (let c = 0; c < innerCols; c++) {
@@ -809,7 +825,9 @@ function generateWugusiMap() {
             if (grid[key]) continue;
             const pos = gridToPixel(r, c);
             let tid;
-            if (firstLevelKeys.has(key)) {
+            if (key === storyKey) {
+                tid = 'story';
+            } else if (firstLevelKeys.has(key)) {
                 tid = remainingFirstLevel.pop();
             } else {
                 tid = shuffledRemaining.length > 0 ? shuffledRemaining.pop() : 'misc';
