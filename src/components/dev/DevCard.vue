@@ -25,7 +25,7 @@ function openNewPage(url) {
     <v-card-item>
       <div class="card-content">
         <v-avatar size="64" class="developer-avatar">
-          <img :src="props.data.avatar" alt="" style="object-fit: cover; width: 100%; height: 100%;"/>
+          <img :src="props.data.avatar" alt="" style="object-fit: cover; height: 100%;"/>
         </v-avatar>
         <div class="card-info">
           <v-card-title class="card-title">{{ props.data.title }}</v-card-title>
