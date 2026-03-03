@@ -711,10 +711,31 @@ function generateJinxiMap() {
     for (let i = 0; i < Math.max(0, 7 - chaosUsed); i++) remaining.push('chaos');
     for (let i = 0; i < 2; i++) remaining.push('legend');
     for (let i = 0; i < Math.max(0, 10 - usedMisc - miscUsed); i++) remaining.push('misc');
-    for (let i = 0; i < Math.max(0, 1 - usedStory); i++) remaining.push('story');
+    // 无故肆开局时，story 单独处理，优先放度=3
+    if (usedStory > 0) {
+        // 有故肆开局：story 已在起点邻居，不需要额外放
+    } else {
+        // story 不放入 remaining，后面单独分配
+    }
     remaining.push('encounter');
     remaining.push('plan');
     const shuffledRemaining = shuffle(remaining);
+
+    // 无故肆开局时，把 story 优先放在度=3 的深层节点
+    const startNodeKeys = new Set(startNodes.map(n => n.key));
+    let storyKey = null;
+    if (usedStory === 0) {
+        const deepCandidates = [];
+        for (let r = 0; r < innerRows; r++) {
+            for (let c = 0; c < innerCols; c++) {
+                const key = `${r},${c}`;
+                if (key === startKey || startNodeKeys.has(key) || firstLevelKeys.has(key)) continue;
+                deepCandidates.push(key);
+            }
+        }
+        const deg3Candidates = deepCandidates.filter(k => (adjacency[k] || []).length === 3);
+        storyKey = deg3Candidates.length > 0 ? pick(deg3Candidates) : pick(deepCandidates);
+    }
 
     for (let r = 0; r < innerRows; r++) {
         for (let c = 0; c < innerCols; c++) {
@@ -722,7 +743,9 @@ function generateJinxiMap() {
             if (grid[key]) continue;
             const pos = gridToPixel(r, c);
             let tid;
-            if (firstLevelKeys.has(key)) {
+            if (storyKey && key === storyKey) {
+                tid = 'story';
+            } else if (firstLevelKeys.has(key)) {
                 tid = remainingFirstLevel.pop();
             } else {
                 tid = shuffledRemaining.length > 0 ? shuffledRemaining.pop() : 'misc';

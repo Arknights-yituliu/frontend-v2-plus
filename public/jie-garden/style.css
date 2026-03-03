@@ -35,6 +35,17 @@ body {
     position: relative;
 }
 
+.version-tag {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    color: #999999;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+    user-select: none;
+}
+
 .control-group {
     display: flex;
     align-items: center;
