@@ -3,6 +3,7 @@ import developmentChat from "@/static/json/about/developmentChat.json";
 import informationRelease from "@/static/json/about/informationRelease.json";
 import developmentTeam from "@/static/json/about/developmentTeam.json";
 import developResources from "@/static/json/about/developResources.json";
+import projectRepositories from "@/static/json/about/projectRepositories.json";
 import DevCard from "@/components/dev/DevCard.vue";
 import LinkButton from "@/components/dev/LinkButton.vue";
 // import {getMenuList} from '/docs/utils/menu.js'
@@ -17,6 +18,9 @@ import LinkButton from "@/components/dev/LinkButton.vue";
   <v-divider></v-divider>
   <p>
     明日方舟一图流是一个能给各位博士提供各种游戏内资源性价比攻略的网站，包括但不限于刷图推荐、商店性价比、抽卡规划以及很多小工具。</p>
+  <div class="flex flex-wrap">
+    <DevCard v-for="(data,index) in projectRepositories" :key="index" :data="data"></DevCard>
+  </div>
 
   <h1 id="site features">网站功能</h1>
   <v-divider></v-divider>
