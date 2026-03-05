@@ -71,10 +71,22 @@ const rarityTotals = computed(() => {
   return totals
 })
 
+// 用户实际拥有的各稀有度干员数量（不受筛选影响）
+const ownedRarityCounts = computed(() => {
+  const counts = { 6: 0, 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
+  for (const op of props.operators) {
+    const rarity = op.rarity || 1
+    if (counts[rarity] !== undefined) {
+      counts[rarity]++
+    }
+  }
+  return counts
+})
+
 // 筛选后的干员列表
 const filteredOperators = computed(() => {
   let list = [...props.operators]
-  
+
   // 默认只显示六星 + 限定/联动干员
   // 勾选后显示全部干员
   if (!showNonSixStar.value) {
@@ -86,7 +98,7 @@ const filteredOperators = computed(() => {
       return false
     })
   }
-  
+
   return list
 })
 
@@ -290,7 +302,7 @@ function isCollabOperator(charId) {
       >
         <div class="rarity-header">
           <span class="rarity-label" :class="`rarity-${rarity}`">
-            {{ rarityLabels[rarity] }} ({{ groupedOperators[rarity].length }}/{{ rarityTotals[rarity] }})
+            {{ rarityLabels[rarity] }} ({{ ownedRarityCounts[rarity] }}/{{ rarityTotals[rarity] }})
           </span>
         </div>
         <div class="operators-grid">
