@@ -155,11 +155,11 @@
         },
         "specialization_3": {
           "best_assistant": {
-            "name": "阿",
-            "efficiency": 0.6,
-            "skill_name": "精准手术",
-            "description": "进驻训练室协助位时，医疗干员的专精技能训练速度+60%",
-            "charId": "char_225_haak"
+            "name": "望",
+            "efficiency": 0.7,
+            "skill_name": "苦心孤诣",
+            "description": "进驻训练室协助位时，如果本次训练专精技能至3级，专精训练速度+70%",
+            "charId": "char_2027_wang"
           }
         }
       },
@@ -268,11 +268,11 @@
         },
         "specialization_3": {
           "best_assistant": {
-            "name": "星熊",
-            "efficiency": 0.6,
-            "skill_name": "般若",
-            "description": "进驻训练室协助位时，重装干员的专精技能训练速度+60%",
-            "charId": "char_136_hsguma"
+            "name": "望",
+            "efficiency": 0.7,
+            "skill_name": "苦心孤诣",
+            "description": "进驻训练室协助位时，如果本次训练专精技能至3级，专精训练速度+70%",
+            "charId": "char_2027_wang"
           }
         }
       },

@@ -6,9 +6,7 @@ import ModuleHeader from "@/components/layout/ModuleHeader.vue";
 
 const props = defineProps(['modelValue'])
 
-let sortBy = ref([
-  {key: 'stageEfficiency', order: 'desc'},
-])
+let sortBy = ref([])
 
 
 
@@ -30,6 +28,15 @@ function replaceZoneName(str) {
   return str.replace("(标准)", '')
 }
 
+function handleHeaderClick(header) {
+  if (!header.sortable) return
+  
+  const currentSort = sortBy.value.find(s => s.key === header.key)
+  if (!currentSort) {
+    sortBy.value = [{key: header.key, order: 'desc'}]
+  }
+}
+
 </script>
 
 <template>
@@ -46,6 +53,7 @@ function replaceZoneName(str) {
         :headers="headers"
         :items="props.modelValue"
         density="compact"
+        @header:click="handleHeaderClick"
         class="freeze-table-first-column">
       <template v-slot:item.stageCode="{ item }">
         {{ replaceZoneName(item.stageCode) }}

@@ -189,6 +189,30 @@ const routes = [
         }
     },
     {
+        path: '/tools/jie-garden',
+        text: '界园树洞模拟',
+        name: 'JieGarden',
+        module: 'tools',
+        icon: "mdi-flower-tulip",
+        display: true,
+        component: () => import('/src/pages/tools/jie-garden.vue'),
+        meta: {
+            title: '界园树洞模拟'
+        }
+    },
+    {
+        path: '/tools/account-overview',
+        text: '账号信息一图流',
+        name: 'AccountOverview',
+        module: 'tools',
+        icon: "mdi-card-account-details",
+        display: false,  // 已整合到干员练度调查页面
+        component: () => import('/src/pages/tools/account-overview/index.vue'),
+        meta: {
+            title: '账号信息一图流'
+        }
+    },
+    {
         path: '/sui',
         text: '岁兽残识记录器',
         name: 'sui2',

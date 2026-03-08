@@ -1,8 +1,8 @@
 <script setup>
 
 import {ref, watch} from "vue";
-import {formatNumber} from "@/utils/format.js";
-import ModuleHeader from "@/components/layout/ModuleHeader.vue";
+import {formatNumber} from "/src/utils/format.js";
+import ModuleHeader from "/src/components/layout/ModuleHeader.vue";
 
 const props = defineProps(['modelValue'])
 
@@ -22,7 +22,7 @@ function filterOrundumStage() {
     for (const stage of orundumRecommendedStage.value) {
       const { stageCode, stageType } = stage
 
-      if (stageCode === '1-7' || stageCode === 'CW-6' || stageType === 'ACT' || stageType === 'ACT_REP') {
+      if (stageCode === '1-7'  || stageType === 'ACT' || stageType === 'ACT_REP') {
         displayOrundumRecommendedStage.value.push(stage)
       }
     }
@@ -68,7 +68,7 @@ const headers = [
   <div class="flex-wrap flex align-center">
     <ModuleHeader title="搓玉数据表" title-en="Orundum"></ModuleHeader>
     <v-btn color="primary" variant="tonal"  @click="filterOrundumStage()">
-      仅显示1-7、CW-6和活动关
+      仅显示1-7和活动关
     </v-btn>
   </div>
 

@@ -37,15 +37,8 @@ function openNewPage(url) {
 </template>
 
 <style>
-.developer-avatar {
-  width: 40px;
-  border-radius: 1000px;
-}
 
-.developer-card {
-  width: 200px;
-  margin: 4px;
-}
+
 
 
 </style>

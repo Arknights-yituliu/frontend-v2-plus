@@ -18,8 +18,8 @@ import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import NoticeBoard from "/src/components/layout/NoticeBoard.vue";
 import { dateFormat } from "/src/utils/dateUtil.js";
 import { getStageConfig } from "/src/utils/user/userConfig.js";
-import ItemImage from "@/components/sprite/ItemImage.vue";
-import ModuleHeader from "@/components/layout/ModuleHeader.vue";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
+import ModuleHeader from "/src/components/layout/ModuleHeader.vue";
 
 const router = useRouter();
 const { mobile } = useDisplay()
@@ -218,6 +218,14 @@ let legendStyle = ref('')
 // }
 
 /**
+ * 切换图例显示状态
+ */
+function toggleLegendDisplay() {
+  legendDisplay.value = !legendDisplay.value
+  localStorage.setItem('itemLegendDisplay', legendDisplay.value)
+}
+
+/**
  * 滚动到图例说明
  */
 function scrollToLegendDescription() {
@@ -228,21 +236,42 @@ function scrollToLegendDescription() {
  * 滚动到搓玉关卡表
  */
 function scrollToOrundumTable() {
-  document.getElementById('orundum-table').scrollIntoView({ behavior: 'smooth' })
+  const element = document.getElementById('orundum-table')
+  const offset = 56 // 考虑固定导航栏、按钮区域和空div的距离
+  const y = element.getBoundingClientRect().top + window.pageYOffset - offset
+  
+  window.scrollTo({
+    top: y,
+    behavior: 'smooth'
+  })
 }
 
 /**
  * 滚动到历史活动关卡表
  */
 function scrollToHistoryStageTable() {
-  document.getElementById('history-stage-table').scrollIntoView({ behavior: 'smooth' })
+  const element = document.getElementById('history-stage-table')
+  const offset = 56 // 考虑固定导航栏、按钮区域和空div的距离
+  const y = element.getBoundingClientRect().top + window.pageYOffset - offset
+  
+  window.scrollTo({
+    top: y,
+    behavior: 'smooth'
+  })
 }
 
 /**
  * 滚动到常见问题
  */
 function scrollToFrequentlyAskedQuestion() {
-  document.getElementById('frequently-asked-question').scrollIntoView({ behavior: 'smooth' })
+  const element = document.getElementById('frequently-asked-question')
+  const offset = 56 // 考虑固定导航栏、按钮区域和空div的距离
+  const y = element.getBoundingClientRect().top + window.pageYOffset - offset
+  
+  window.scrollTo({
+    top: y,
+    behavior: 'smooth'
+  })
 }
 
 function getDetailTableItemSprite(id) {
@@ -266,6 +295,11 @@ function openNewPage() {
 }
 
 onMounted(() => {
+  // 读取之前保存的图例显示状态
+  const savedLegendDisplay = localStorage.getItem('itemLegendDisplay')
+  if (savedLegendDisplay !== null) {
+    legendDisplay.value = savedLegendDisplay === 'true'
+  }
   legendStyle.value = localStorage.getItem('itemLegend') ? localStorage.getItem('itemLegend') : ''
   getStageResult()
 })
@@ -323,7 +357,7 @@ function handleClick() {
         </v-btn>
         <v-btn color="primary" :size="getButtonSize()" @click="scrollToFrequentlyAskedQuestion()">常见问题
         </v-btn>
-        <v-btn color="secondary" :size="getButtonSize()" @click="legendDisplay = !legendDisplay">显示图例
+        <v-btn color="secondary" :size="getButtonSize()" @click="toggleLegendDisplay">显示图例
         </v-btn>
       </v-btn-group>
       <v-btn color="primary" style="display:none" class="m-0-8" :size="getButtonSize()"
@@ -349,7 +383,7 @@ function handleClick() {
     </div>
 
     <!-- 说明区域 -->
-    <StageLegend @click="scrollToLegendDescription" v-show="legendDisplay"></StageLegend>
+    <StageLegend @click="scrollToFrequentlyAskedQuestion" v-show="legendDisplay"></StageLegend>
 
     <!--    <v-alert-->
     <!--        border="start"-->
@@ -454,8 +488,9 @@ function handleClick() {
     </div>
 
 
+    <div id="detail-table-1"></div>
     <!-- 材料情报卡 -->
-    <StageDetailTable v-model="recommendedStageDetailTable"></StageDetailTable>
+    <StageDetailTable v-model="recommendedStageDetailTable" ></StageDetailTable>
     <div id="detail-table" style="display: none;width: 850px;font-size: 18px !important;color: #000 !important;">
       <el-table stripe :data="recommendedStageDetailTable.slice(0, 6)" max-height="495" max-width="892"
         class="stage-detail-table">

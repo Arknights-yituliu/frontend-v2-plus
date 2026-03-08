@@ -1,5 +1,17 @@
 [
   {
+    "name": "望",
+    "profession": "通用",
+    "max_efficiency": 0.7,
+    "conditions": {
+      "skill_name": "苦心孤诣",
+      "mastery_level": 3,
+      "efficiency_base": 0.7
+    },
+    "skill_name": "进驻训练室协助位时，如果本次训练专精技能至3级，专精训练速度+70%",
+    "charId": "char_2027_wang"
+  },
+  {
     "name": "哈蒂娅",
     "profession": "近卫",
     "max_efficiency": 0.75,

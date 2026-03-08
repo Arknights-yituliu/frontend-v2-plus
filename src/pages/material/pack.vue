@@ -11,9 +11,9 @@ import deepClone from "/src/utils/deepClone.js";
 import '/src/assets/css/material/pack.scss';
 import '/src/assets/css/material/pack.phone.scss';
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
-import NoticeBoard from "@/components/layout/NoticeBoard.vue";
-import {calculatePackEfficiency} from "@/utils/item/packEfficiency.js";
-import {dateFormat} from "@/utils/dateUtil.js";
+import NoticeBoard from "/src/components/layout/NoticeBoard.vue";
+import {calculatePackEfficiency} from "/src/utils/item/packEfficiency.js";
+import {dateFormat} from "/src/utils/dateUtil.js";
 
 
 // 当前日期
@@ -213,7 +213,7 @@ function collectPackInfoVO() {
       tips: ['*每月/每周礼包、新人/回归礼包、源石'],
       list: [
         {title: '每月/每周礼包', packs: [...packs.weekly, ...packs.monthly]},
-        {title: '新人/回归礼包', packs: packs.newbie},
+        {title: '新人/回归礼包', packs: [...packs.newbie,...packs.return]},
         {title: '源石/首充源石', packs: [...packs.originium, ...packs.originium2]},
       ]
     },
@@ -341,6 +341,7 @@ const packSaleDateList = [
   {label: "2023年", value: "2023"},
   {label: "2024年", value: "2024"},
   {label: "2025年", value: "2025"},
+  {label: "2026年", value: "2026"},
 ]
 
 
@@ -363,6 +364,8 @@ function choosePackOptionV2(type, obj) {
   } else {
     packFilterConditions.value[type].set(v, obj)
   }
+
+  console.log(packFilterConditions.value.tag)
 
   filterPacksV2()
 }
@@ -389,14 +392,26 @@ function filterPacksV2() {
 
 
   for (const pack of packInfoVOList) {
+
     const packYear = new Date(pack.start).getFullYear()
     if (pack.start < year2019) {
       continue
     }
 
-    const dateFlag = packFilterConditions.value.date.size === 0 || packFilterConditions.value.date.has(`${packYear}`)
 
-    const tagFlag = packFilterConditions.value.tag.size === 0 || packFilterConditions.value.tag.has(pack.saleType)
+    const dateFlag = packFilterConditions.value.date.size === 0 || packFilterConditions.value.date.has(`${packYear}`)
+    
+    let tagFlag = packFilterConditions.value.tag.size === 0 || packFilterConditions.value.tag.has(pack.saleType)
+     
+
+    for(const tag of pack.tags){
+    
+      if(packFilterConditions.value.tag.has(tag)){
+        tagFlag = true
+        break
+      }
+    }
+
     let priceFlag = packFilterConditions.value.price.size === 0
     for (const [k, v] of packFilterConditions.value.price) {
       const {max, min} = v
@@ -413,6 +428,22 @@ function filterPacksV2() {
       }
       result.get(packYear).push(pack)
     }
+
+
+    if('先锋芯片礼包'===pack.officialName){
+      console.log('----------开始------------')
+      console.log(pack.officialName)
+      console.log(pack.saleType)
+      console.log(pack.tags)
+      console.log(packFilterConditions.value.tag)
+      console.log(packFilterConditions.value.tag.get(pack.saleType))
+      console.log(packFilterConditions.value.tag.has(pack.saleType),pack.saleType)
+      console.log('dateFlag',dateFlag)
+      console.log('priceFlag',priceFlag)
+      console.log('-----------结束----------')
+    }
+
+
   }
 
   const list = []
@@ -453,8 +484,9 @@ onMounted(() => {
 <template>
   <div>
     <div id="pack" class="pack-efficiency-page">
+
       <!-- 不会因为筛选改变的礼包 Start -->
-      <template v-for="item in fixedPacks" :key="item.titleEn">
+      <template v-for="item in fixedPacks" :key="item.titleEn" >
 
         <module-header :title="item.title" :title-en="item.titleEn" :tips="item.tips"/>
         <div v-if="item.titleEn === 'New Packs'">
@@ -544,6 +576,9 @@ onMounted(() => {
       </PackTable>
 
     </div>
+
+
+
 
     <NoticeBoard module="pack">
 

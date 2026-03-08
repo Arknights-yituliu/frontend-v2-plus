@@ -583,7 +583,7 @@ async function statisticsOperatorInfo(operatorList) {
         statisticalData.apCostRanking = operatorList.slice(0, 10)
 
         function _statistics(operator, index) {
-            const {charId, rarity, own, elite, skill1, skill2, skill3, modX, modY, modD} = operator;
+            const {charId, rarity, own, elite, skill1, skill2, skill3, modX, modY, modD,modA,modB} = operator;
 
             if (!statisticalData.info[index]) {
 
@@ -613,6 +613,7 @@ async function statisticsOperatorInfo(operatorList) {
             statisticalData.info[index].equip[`rank${modX}`]++
             statisticalData.info[index].equip[`rank${modY}`]++
             statisticalData.info[index].equip[`rank${modD}`]++
+            statisticalData.info[index].equip[`rank${modA}`]++
         }
 
         function _checkRarity(rarity) {

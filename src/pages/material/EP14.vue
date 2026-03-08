@@ -8,6 +8,7 @@
       <div class="page-title">明日方舟一图流 EP14专题页面</div>
     </div>
     <!-- 简单说明 -->
+     
     <div
         style="padding: 8px 16px; font-style: italic; line-height: 32px; background-color: #ffffff0f; backdrop-filter: blur(8px); margin: 12px">
       <!--      上半页集中展示新章节<b>掉落数据</b><br />-->
@@ -191,7 +192,7 @@
         </div>
       </a>
       <a class="ep12_support" href="https://space.bilibili.com/688411531">
-        <img class="ep12_support_img" src="/image/temp/beta_logo_yw.png"/>
+        <img class="ep12_support_img" src="https://cos.yituliu.cn/endfield/home/bytelogo.png"/>
         <div class="ep12_support_text">
           <div class="ep12_support_org">逻辑元LogicalByte</div>
           <div class="ep12_support_role">信息发布</div>

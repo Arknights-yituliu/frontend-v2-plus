@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>界园树洞模拟</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="controls">
+        <div class="version-tag">Ver 7.0</div>
+        <div class="control-group">
+            <span class="group-label">模式选择</span>
+            <button id="btn-shifei" class="mode-btn active">是非境</button>
+            <button id="btn-jinxi" class="mode-btn">今昔境</button>
+            <button id="btn-wugusi" class="mode-btn">无故肆</button>
+            <button id="btn-demo" class="mode-btn">演示</button>
+        </div>
+        <div class="control-group">
+            <span class="group-label">操作</span>
+            <button id="btn-regenerate" class="action-btn">重新生成</button>
+            <button id="btn-random-reveal" class="action-btn">随机点亮</button>
+            <button id="btn-reveal" class="action-btn special-btn">全部点亮</button>
+            <button id="btn-undo" class="action-btn" disabled>撤销</button>
+            <button id="btn-redo" class="action-btn" disabled>重做</button>
+        </div>
+        <div class="control-group">
+            <span class="group-label">预设参树</span>
+            <input type="text" id="seed-input" placeholder="输入预设参树应用" class="seed-input">
+            <button id="btn-apply-seed" class="action-btn" title="使用该种子生成地图">应用</button>
+            <button id="btn-copy-seed" class="action-btn" title="获取当前地图的种子">复制当前</button>
+        </div>
+        <div class="control-group">
+            <span class="group-label">收藏品</span>
+            <button id="btn-ziwujian" class="action-btn">子武剑</button>
+            <button id="btn-wushangshuo" class="action-btn">午商梭</button>
+            <button id="btn-shenzhulin" class="action-btn">申铸轮</button>
+            <button id="btn-yinshihu" class="action-btn">寅诗壶</button>
+        </div>
+        <div class="control-group">
+            <span class="group-label">背　　景</span>
+            <button id="bg-btn-default" class="mode-btn active">默认</button>
+            <label class="mode-btn" id="bg-btn-color" title="自定义纯色"
+                style="display: inline-flex; align-items: center; justify-content: center; padding: 4px 6px; cursor: pointer;">
+                <input type="color" id="bg-color-picker" value="#3a1c58">
+            </label>
+            <button id="bg-btn-upload" class="mode-btn"
+                style="padding: 1px 12px; font-size: 18px; line-height: 1;">+</button>
+            <input type="file" id="bg-file-input" accept="image/*" style="display: none;">
+        </div>
+        <div id="demo-panel" class="demo-panel">
+            <div class="demo-panel-header" id="demo-panel-header">
+                <button class="demo-toggle-btn" id="demo-toggle-btn" title="收起/展开面板">▶</button>
+                <div style="flex: 1"></div>
+            </div>
+            <div class="demo-panel-content" id="demo-panel-content">
+                <div class="demo-mode-label">树洞类型</div>
+                <div class="demo-mode-row">
+                    <button class="demo-base-btn active" id="demo-base-shifei">是非境</button>
+                    <button class="demo-base-btn" id="demo-base-jinxi">今昔境</button>
+                </div>
+                <div class="demo-panel-title">节点类型</div>
+                <div class="demo-panel-row" id="demo-type-row"></div>
+                <div class="demo-mode-label">工具</div>
+                <div class="demo-mode-row">
+                    <button class="demo-action-btn active" id="demo-tool-add">添加节点</button>
+                    <button class="demo-action-btn" id="demo-tool-delete-node">删除节点</button>
+                    <button class="demo-action-btn" id="demo-tool-connect">添加连线</button>
+                    <button class="demo-action-btn" id="demo-tool-delete">删除连线</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="canvas-container">
+        <canvas id="mapCanvas"></canvas>
+    </div>
+    <script src="map_generator.js"></script>
+</body>
+
+</html>

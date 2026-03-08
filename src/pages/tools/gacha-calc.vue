@@ -254,6 +254,16 @@ const scheduleOptions = [
     disabled: true,
     dailyGiftResources: true,
     accuracyFlag: true
+  },
+  {
+    name: '感谢庆典',
+    dateString: '敬请期待',
+    start: new Date('2026/08/01 12:00:00'),
+    end: new Date('2026/08/15 04:01:00'),
+    activityType: '周年限定',
+    disabled: true,
+    dailyGiftResources: true,
+    accuracyFlag: true
   }
 ]
 

@@ -1,9 +1,9 @@
 <script setup>
 import {createMessage} from "/src/utils/message.js";
 import operatorDataAPI from "/src/api/operatorData.js"
-import {onMounted, ref} from "vue";
+import {onMounted, ref, computed} from "vue";
 import {operatorRecommend} from "/src/utils/survey/operatorRecommend";
-import {operatorTable} from "/src/utils/gameData.js";
+import {operatorTable, operatorTableV2} from "/src/utils/gameData.js";
 import {exportExcel} from '/src/utils/exportExcel.js'
 
 import "/src/assets/css/survey/operator.scss";
@@ -21,11 +21,197 @@ import {formatNumber} from "/src/utils/format.js";
 import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import {dateFormat} from "@/utils/dateUtil.js";
+import AccountOverviewPanel from "/src/components/survey/AccountOverviewPanel.vue";
+import SklandAPI from '/src/utils/survey/skland.js';
+import { copyTextToClipboard } from "/src/utils/copyText.js";
+import { userInfo } from "/src/utils/user/userInfo.js";
+import operatorUpdateTime from '/public/json/operator_update_time.json';
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 
 
 let displayTabHeader = ref('数据导入导出')
+
+// 账号一图流相关数据
+let sklandAccountData = ref(null)  // 完整的森空岛账号数据
+const accountOverviewPanelRef = ref(null)
+
+// 森空岛导入相关
+const SKLAND_LINK = 'https://www.skland.com/index'
+const CONSOLE_CODE = "copy(localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage.getItem('SK_TOKEN_CACHE_KEY'))"
+
+// 联动干员ID列表
+const COLLAB_OPERATOR_IDS = new Set([
+  'char_197_poca', 'char_198_blackd', 'char_199_blitz', 'char_200_frost', 'char_201_moeshd',
+  'char_276_blitz', 'char_277_tachak', 'char_278_ahorn',
+  'char_4182_oblvns', 'char_4183_mortis', 'char_4186_tmoris', 'char_4184_dolris', 'char_4185_amoris'
+])
+
+const sklandImportDialog = ref(false)
+const sklandInputText = ref('')
+const sklandLoading = ref(false)
+const sklandImportStep = ref(1) // 当前导入步骤
+const sklandCred = ref('')
+const sklandToken = ref('')
+const playBindingList = ref([])
+const currentBinding = ref(null)
+const rawWarehouseData = ref(null)
+const sklandUploading = ref(false)
+
+// 获取限定干员列表
+const limitedOperatorIds = computed(() => {
+  const ids = new Set()
+  for (const charId in operatorUpdateTime) {
+    if (operatorUpdateTime[charId].obtainApproach === '限定干员') {
+      ids.add(charId)
+    }
+  }
+  return ids
+})
+
+// 检查用户是否登录
+const isUserLoggedIn = computed(() => {
+  return !!userInfo.value.token
+})
+
+function openLinkOnNewPage(url) {
+  window.open(url)
+}
+
+function copyText(text) {
+  copyTextToClipboard(text)
+}
+
+function getCredAndSecret(text) {
+  text = text.replace(/\s+/g, '').replace(/["']/g, '')
+  const textArr = text.split(',')
+  const cred = textArr[0]
+  const token = textArr[1]
+  return { cred, token }
+}
+
+function openSklandImportDialog() {
+  sklandImportDialog.value = true
+  playBindingList.value = []
+  sklandInputText.value = ''
+  sklandImportStep.value = 1 // 重置步骤
+}
+
+async function getPlayerBindingBySkland() {
+  if (!sklandInputText.value) {
+    createMessage({ type: 'error', text: '请输入森空岛凭证' })
+    return
+  }
+  
+  sklandLoading.value = true
+  try {
+    const { cred, token } = getCredAndSecret(sklandInputText.value)
+    sklandCred.value = cred
+    sklandToken.value = token
+    
+    const playBinding = await SklandAPI.getPlayBindingV2('', '', cred, token)
+    playBindingList.value = playBinding.bindingList
+    
+    if (playBinding.bindingList.length === 0) {
+      createMessage({ type: 'warning', text: '未找到绑定的明日方舟账号' })
+    }
+  } catch (error) {
+    console.error(error)
+    createMessage({ type: 'error', text: '获取账号信息失败' })
+  } finally {
+    sklandLoading.value = false
+  }
+}
+
+async function getPlayerDataAndSync(binding) {
+  const { uid, nickName, channelName, channelMasterId } = binding
+  
+  sklandLoading.value = true
+  createMessage({ type: 'info', text: '正在获取账号数据，请稍候...' })
+  
+  try {
+    currentBinding.value = binding
+    
+    // 获取账号概览数据
+    const data = await SklandAPI.getAccountOverviewData(
+      uid,
+      nickName,
+      channelName,
+      sklandCred.value,
+      sklandToken.value
+    )
+    
+    // 同时获取原始仓库数据用于上传
+    const warehouseData = await SklandAPI.getWarehouseInfo(uid, sklandCred.value, sklandToken.value)
+    warehouseData.channelName = channelName
+    warehouseData.channelMasterId = channelMasterId
+    warehouseData.nickName = nickName
+    rawWarehouseData.value = warehouseData
+    
+    // 添加干员详细信息
+    for (const operator of data.operatorDataList) {
+      const charInfo = operatorTableV2[operator.charId]
+      if (charInfo) {
+        operator.name = charInfo.name
+        operator.profession = charInfo.profession
+        operator.skills = charInfo.skills || []
+        operator.equip = charInfo.equip || []
+        operator.isLimited = limitedOperatorIds.value.has(operator.charId)
+        operator.isCollab = COLLAB_OPERATOR_IDS.has(operator.charId)
+      }
+    }
+    
+    // 排序干员
+    data.operatorDataList.sort((a, b) => {
+      if (b.rarity !== a.rarity) return b.rarity - a.rarity
+      if (b.elite !== a.elite) return b.elite - a.elite
+      return b.level - a.level
+    })
+    
+    // 保存账号数据用于一图流显示
+    sklandAccountData.value = {
+      uid: uid,
+      nickName: data.nickName,
+      channelName: channelName,
+      status: data.status,
+      operatorDataList: data.operatorDataList,
+      itemList: data.itemList || [],
+      skins: data.skins || [],  // 时装数据
+      charInfoMap: data.charInfoMap || {}  // 干员详情映射（包含skinId）
+    }
+    
+    // 保存到sessionStorage
+    sessionStorage.setItem('skland_account_data', JSON.stringify(sklandAccountData.value))
+    
+    createMessage({ type: 'success', text: '账号数据获取成功！' })
+    
+    // 如果用户已登录，自动同步到练度调查
+    if (isUserLoggedIn.value) {
+      sklandUploading.value = true
+      try {
+        await operatorDataAPI.importSkLandOperatorDataV3(rawWarehouseData.value)
+        createMessage({ type: 'success', text: '干员数据已同步到练度调查！' })
+        // 刷新干员数据
+        getOperatorData()
+      } catch (error) {
+        console.error(error)
+        createMessage({ type: 'error', text: '同步到练度调查失败' })
+      } finally {
+        sklandUploading.value = false
+      }
+    }
+    
+    // 关闭对话框并切换到账号一图流Tab
+    sklandImportDialog.value = false
+    displayTabHeader.value = '账号一图流'
+    
+  } catch (error) {
+    console.error(error)
+    createMessage({ type: 'error', text: '获取账号数据失败' })
+  } finally {
+    sklandLoading.value = false
+  }
+}
 
 
 
@@ -276,10 +462,6 @@ let selectedCharId = ref({});
 
 const router = useRouter()
 
-function importDataBySkland() {
-  router.push({name: 'IMPORT_BY_SKLAND'})
-}
-
 /**
  * 手动上传
  */
@@ -413,8 +595,24 @@ const headers = [
 ]
 
 onMounted(() => {
-
   getOperatorData()
+  
+  // 读取sessionStorage中的完整账号数据（从森空岛导入时保存的）
+  try {
+    const savedAccountData = sessionStorage.getItem('skland_account_data')
+    if (savedAccountData) {
+      sklandAccountData.value = JSON.parse(savedAccountData)
+    }
+    
+    // 检查是否需要切换到账号一图流Tab
+    const switchToOverview = sessionStorage.getItem('skland_switch_to_overview')
+    if (switchToOverview === 'true') {
+      displayTabHeader.value = '账号一图流'
+      sessionStorage.removeItem('skland_switch_to_overview')
+    }
+  } catch (e) {
+    console.error('读取账号信息失败', e)
+  }
 });
 </script>
 
@@ -430,6 +628,9 @@ onMounted(() => {
 
         <v-tab value="个人干员数据统计">
           个人干员数据统计
+        </v-tab>
+        <v-tab value="账号一图流">
+          账号一图流
         </v-tab>
         <v-tab value="干员练度推荐"
                @click="getOperatorRecommend()">
@@ -462,19 +663,41 @@ onMounted(() => {
           </v-tabs-window-item>
 
           <v-tabs-window-item value="数据导入导出" >
-            <v-chip color="red" text="导入之前请先登录"></v-chip>
-            <v-btn color="primary" class="m-4" @click="importDataBySkland()">
-              从森空岛导入
-            </v-btn>
-            <v-btn color="primary" class="m-4" @click="exportOperatorExcel()">
-              导出为Excel
-            </v-btn>
+            <div class="import-export-section">
+              <v-chip color="red" text="导入之前请先登录" class="mb-4"></v-chip>
+              <div class="flex flex-wrap gap-2">
+                <v-btn color="primary" @click="openSklandImportDialog()">
+                  <v-icon>mdi-cloud-download</v-icon>
+                  从森空岛导入
+                </v-btn>
+                <v-btn color="primary" variant="outlined" @click="exportOperatorExcel()">
+                  <v-icon>mdi-file-excel</v-icon>
+                  导出为Excel
+                </v-btn>
+              </div>
+              
+              <v-alert v-if="sklandAccountData" type="success" variant="tonal" class="mt-4">
+                <div class="flex justify-between items-center">
+                  <span>已导入账号：{{ sklandAccountData.nickName }} (UID: {{ sklandAccountData.uid }})</span>
+                  <v-btn size="small" color="primary" @click="displayTabHeader = '账号一图流'">
+                    查看一图流
+                  </v-btn>
+                </div>
+              </v-alert>
+            </div>
           </v-tabs-window-item>
 
           <v-tabs-window-item value="个人干员数据统计" v-loading>
             <OperatorStatisticalTable v-model="operatorList"></OperatorStatisticalTable>
           </v-tabs-window-item>
 
+          <v-tabs-window-item value="账号一图流">
+            <AccountOverviewPanel 
+              ref="accountOverviewPanelRef"
+              :operator-list="operatorList"
+              :skland-account-data="sklandAccountData"
+            />
+          </v-tabs-window-item>
 
           <v-tabs-window-item value="干员练度推荐" v-loading>
             <v-data-table :headers="headers" :items="operatorRecommendList" hide-default-footer
@@ -549,6 +772,98 @@ onMounted(() => {
               </tr>
             </template>
           </v-data-table>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
+    <!-- 森空岛导入对话框 -->
+    <v-dialog v-model="sklandImportDialog" max-width="800" persistent>
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <span>从森空岛导入数据</span>
+          <v-btn icon variant="text" @click="sklandImportDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-card-text>
+          <v-stepper v-model="sklandImportStep" :items="['登录森空岛', '获取凭证', '选择账号']" alt-labels editable>
+            <template v-slot:item.1>
+              <v-card flat>
+                <v-card-text class="text-center">
+                  <p class="mb-4">首先登录森空岛网站</p>
+                  <v-btn color="primary" @click="openLinkOnNewPage(SKLAND_LINK)">
+                    <v-icon>mdi-open-in-new</v-icon>
+                    打开森空岛官网
+                  </v-btn>
+                  <v-alert :icon="false" color="primary" variant="tonal" class="mt-4">
+                    此导入方式仅适合电脑，Windows系统建议使用Microsoft Edge浏览器，iOS系统建议使用Safari浏览器
+                  </v-alert>
+                </v-card-text>
+              </v-card>
+            </template>
+            
+            <template v-slot:item.2>
+              <v-card flat>
+                <v-card-text>
+                  <p>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
+                  <v-alert :icon="false" color="primary" variant="tonal" class="my-4">
+                    <code style="word-break: break-all;">{{ CONSOLE_CODE }}</code>
+                  </v-alert>
+                  <div class="text-center">
+                    <v-btn color="primary" @click="copyText(CONSOLE_CODE)">
+                      <v-icon>mdi-content-copy</v-icon>
+                      点击复制命令
+                    </v-btn>
+                  </div>
+                  <p class="text-center mt-2 text-caption">执行后凭证会自动复制到剪贴板</p>
+                </v-card-text>
+              </v-card>
+            </template>
+            
+            <template v-slot:item.3>
+              <v-card flat>
+                <v-card-text>
+                  <p class="mb-4">将获取的字符串粘贴到下面的输入框中</p>
+                  <v-text-field 
+                    v-model="sklandInputText"
+                    label="粘贴凭证字符串"
+                    variant="outlined"
+                    density="compact"
+                    hide-details
+                    class="mb-4"
+                  ></v-text-field>
+                  <v-btn 
+                    color="primary" 
+                    @click="getPlayerBindingBySkland" 
+                    :loading="sklandLoading"
+                    block
+                  >
+                    获取账号列表
+                  </v-btn>
+                  
+                  <div v-if="playBindingList.length > 0" class="mt-4">
+                    <p class="mb-2">选择要导入的账号：</p>
+                    <v-btn 
+                      v-for="(binding, index) in playBindingList" 
+                      :key="index"
+                      color="success"
+                      variant="tonal"
+                      block
+                      class="mb-2 text-left"
+                      style="height: auto; padding: 12px;"
+                      @click="getPlayerDataAndSync(binding)"
+                      :loading="sklandLoading"
+                    >
+                      <div style="width: 100%;">
+                        <div class="font-weight-bold">{{ binding.nickName }}</div>
+                        <div class="text-caption">区服：{{ binding.channelName }} | UID: {{ binding.uid }}</div>
+                      </div>
+                    </v-btn>
+                  </div>
+                </v-card-text>
+              </v-card>
+            </template>
+          </v-stepper>
         </v-card-text>
       </v-card>
     </v-dialog>

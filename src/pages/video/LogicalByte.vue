@@ -91,7 +91,7 @@
                 </div>
               </div>
               <div class="footer-image">
-                <img src="/image/website/QR/LogicalByteQR.png" alt="LogicalByte QR Code" />
+                <img src="https://yituliu-dev-1307648010.cos.ap-beijing.myqcloud.com/image/website/QR/LogicalByteQR.png?q-sign-algorithm=sha1&q-ak=AKIDoebHIbCKuW4c9WMo6baXx650C15BBJKBVDLcXVtvN6J_7ZeBk4Jwl8dyxxAc-Sdv&q-sign-time=1770711991;1770715591&q-key-time=1770711991;1770715591&q-header-list=host&q-url-param-list=&q-signature=8471db57ea94fd456833c01b09ce1c77673af790&x-cos-security-token=eh795c9nJteGI19KCdp53QnIPxMrDs7afa3c1cc53f5b34c216ae6b0b81dce8dcSCDAojAxuxqibHRgiIIKky3WI9fVLyt7hQMIhCeNNio_jBKlb3ad35IuJNgPzfAwWaLu0M7aN43EI3gtEFy6jZNdfvMw_t6fox9o9We7bWJrmF5NH4cRI1VhzJXhbr-bYaXVRFN_6bHGbi6gyDIqWoLU60yhHyKqO60HaScFt3ZWvHp6OhOV_B_Q0ktLmpvavIQGeIPXIq5E2qf_fC2tH60Fo4lf1d6Ic1i3q2_h8d8KOkE5l2QZhGyV9pvZ_uJNKzZ_ZMDypjqeGiARkQHKCw" alt="LogicalByte QR Code" />
               </div>
             </div>
           </div>

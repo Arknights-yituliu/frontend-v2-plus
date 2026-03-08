@@ -1,0 +1,1665 @@
+
+const CANVAS_W = 1400;
+const CANVAS_H = 680;
+
+const ASSET_BASE = 'UI/';
+const BG_BASE = 'BG/';
+const EUI_BASE = 'EUI/';
+
+const NODE_SPRITES = {
+    chaos: 'spnode_battle.png',
+    legend: 'spnode_inv_boss_only.png',
+    misc: 'spnode_gate.png',
+    story: 'spnode_market.png',
+    pickup_in: 'spnode_treasure.png',
+    pickup_out: 'spnode_treasure.png',
+    encounter: 'spnode_shop.png',
+    joy: 'spnode_enter.png',
+    plan: 'spnode_sac.png',
+    choice: 'spnode_inc.png',
+    start: 'spnode_origin.png',
+};
+
+const NODE_SPRITES_INVALID = {
+    chaos: 'spnode_battle_invalid.png',
+    misc: 'spnode_gate_invalid.png',
+    pickup_in: 'spnode_treasure_invalid.png',
+    pickup_out: 'spnode_treasure_invalid.png',
+    legend: 'spnode_inv_invalid.png',
+    choice: 'spnode_inc_invalid.png',
+};
+
+const ASSETS = {
+    bgShifei: BG_BASE + 'rogue_5_map_0.png',
+    bgJinxi: BG_BASE + 'rogue_5_map_sky_2.png',
+    lineDark: ASSET_BASE + 'tl_node_line_dark.png',
+    lineLight: ASSET_BASE + 'tl_node_line_light.png',
+    lineH: EUI_BASE + '横着的.png',
+    lineV: EUI_BASE + '竖着的.png',
+    nodeCloud: ASSET_BASE + 'node_fx_cloud.png',
+    cursor: ASSET_BASE + 'spnode_origin.png',
+    nodeGlow: ASSET_BASE + 'bg_node_small_active.png',
+    locked: ASSET_BASE + 'locked.png',
+    candle0: EUI_BASE + 'candle0.png',
+    candle1: EUI_BASE + 'candle1.png',
+    candle2: EUI_BASE + 'candle2.png',
+    candle3: EUI_BASE + 'candle3.png',
+    candle4: EUI_BASE + 'candle4.png',
+};
+
+const loadedImages = {};
+let totalToLoad = 0, totalLoaded = 0, firstRenderDone = false;
+
+function loadImage(src) {
+    if (loadedImages[src]) return loadedImages[src];
+    const img = new Image();
+    img.src = src;
+    totalToLoad++;
+    img.onload = () => { totalLoaded++; if (totalLoaded >= totalToLoad && firstRenderDone) redraw(); };
+    img.onerror = () => { totalLoaded++; };
+    loadedImages[src] = img;
+    return img;
+}
+function isReady(img) { return img && img.complete && img.naturalWidth > 0; }
+
+function preloadAssets() {
+    for (const k of Object.keys(NODE_SPRITES)) loadImage(ASSET_BASE + NODE_SPRITES[k]);
+    for (const k of Object.keys(NODE_SPRITES_INVALID)) loadImage(ASSET_BASE + NODE_SPRITES_INVALID[k]);
+    for (const k of Object.keys(ASSETS)) loadImage(ASSETS[k]);
+}
+
+const SHIFEI_NODE_DEFS = {
+    chaos: { name: '祸乱', color: '#9040a0', bgColor: '#2a1838' },
+    legend: { name: '传说', color: '#1ab8b8', bgColor: '#0a2838' },
+    misc: { name: '杂疑', color: '#1ab8b8', bgColor: '#1a3838' },
+    story: { name: '故肆', color: '#1ab8b8', bgColor: '#1a3838' },
+    pickup_in: { name: '拾遗', color: '#1a9868', bgColor: '#0a2828' },
+    pickup_out: { name: '拾遗', color: '#1a9868', bgColor: '#0a2828' },
+    encounter: { name: '易与', color: '#1a9848', bgColor: '#0a2818' },
+    joy: { name: '常乐', color: '#1ab8b8', bgColor: '#182818' },
+    plan: { name: '筹谋', color: '#40c8c8', bgColor: '#1a3848' },
+    choice: { name: '抉择', color: '#1ab8b8', bgColor: '#282010' },
+};
+
+const REPEATABLE_TYPES = new Set(['encounter', 'joy', 'plan', 'story']);
+
+
+const SEED_CHARSET = "1234567890AOIEUaoieu";
+
+function cyrb128(str) {
+    let h1 = 1779033703, h2 = 3144134277, h3 = 1013904242, h4 = 2773480762;
+    for (let i = 0, k; i < str.length; i++) {
+        k = str.charCodeAt(i);
+        h1 = h2 ^ Math.imul(h1 ^ k, 597399067); h2 = h3 ^ Math.imul(h2 ^ k, 2869860233);
+        h3 = h4 ^ Math.imul(h3 ^ k, 951274213); h4 = h1 ^ Math.imul(h4 ^ k, 2716044179);
+    }
+    h1 = Math.imul(h3 ^ (h1 >>> 18), 597399067); h2 = Math.imul(h4 ^ (h2 >>> 22), 2869860233);
+    h3 = Math.imul(h1 ^ (h3 >>> 17), 951274213); h4 = Math.imul(h2 ^ (h4 >>> 19), 2716044179);
+    return [(h1 ^ h2 ^ h3 ^ h4) >>> 0, (h2 ^ h1) >>> 0, (h3 ^ h1) >>> 0, (h4 ^ h1) >>> 0];
+}
+
+let currentSeedString = "";
+function mulberry32(a) {
+    return function () {
+        var t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+}
+// fallback to Math.random but won't be used since we call initSeed
+let seedRand = Math.random;
+
+function generateRandomSeedString() {
+    let s = "";
+    for (let i = 0; i < 18; i++) {
+        s += SEED_CHARSET[Math.floor(Math.random() * 20)];
+    }
+    return s;
+}
+
+function initSeed(seedStr) {
+    if (!seedStr) {
+        seedStr = generateRandomSeedString();
+    } else {
+        // filter invalid
+        seedStr = seedStr.replace(/[^1234567890AOIEUaoieuC]/g, '');
+        if (!seedStr.startsWith('C')) {
+            seedStr = seedStr.padEnd(18, 'A').substring(0, 18);
+        }
+    }
+    currentSeedString = seedStr;
+    const seedInput = document.getElementById('seed-input');
+    if (seedInput) seedInput.value = seedStr;
+
+    let hash = cyrb128(seedStr)[0];
+    seedRand = mulberry32(hash);
+}
+
+function getNodeDef(typeId) {
+    const d = SHIFEI_NODE_DEFS[typeId];
+    return d ? { id: typeId, ...d } : { id: typeId, name: typeId, color: '#888', bgColor: '#222' };
+}
+
+function rand(min, max) { return Math.floor(seedRand() * (max - min + 1)) + min; }
+function pick(arr) { return arr[rand(0, arr.length - 1)]; }
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) { const j = rand(0, i);[a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+}
+
+let currentMapState = null;
+let currentMode = 'shifei';
+let customBackground = { type: 'default', value: '#3a1c58', img: null };
+let stepCount = 0;
+
+let historyStack = [];
+let historyIndex = -1;
+
+function saveHistory() {
+    if (historyIndex < historyStack.length - 1) {
+        historyStack = historyStack.slice(0, historyIndex + 1);
+    }
+
+    const stateCopy = JSON.parse(JSON.stringify({
+        grid: currentMapState.grid,
+        stepCount: stepCount,
+        zayiRevealedCount: currentMapState.zayiRevealedCount || 0
+    }));
+
+    historyStack.push(stateCopy);
+    historyIndex++;
+    updateButtonStates();
+}
+
+function restoreHistory(index) {
+    if (index >= 0 && index < historyStack.length) {
+        const state = historyStack[index];
+        for (const key in state.grid) {
+            if (currentMapState.grid[key]) {
+                currentMapState.grid[key].state = state.grid[key].state;
+                currentMapState.grid[key].type = JSON.parse(JSON.stringify(state.grid[key].type));
+            }
+        }
+        stepCount = state.stepCount;
+        currentMapState.zayiRevealedCount = state.zayiRevealedCount || 0;
+        historyIndex = index;
+        updateButtonStates();
+        redraw();
+    }
+}
+
+function undo() {
+    if (historyIndex > 0) restoreHistory(historyIndex - 1);
+}
+
+function redo() {
+    if (historyIndex < historyStack.length - 1) restoreHistory(historyIndex + 1);
+}
+
+function updateButtonStates() {
+    const btnUndo = document.getElementById('btn-undo');
+    const btnRedo = document.getElementById('btn-redo');
+    if (btnUndo) btnUndo.disabled = historyIndex <= 0;
+    if (btnRedo) btnRedo.disabled = historyIndex >= historyStack.length - 1;
+}
+
+function drawBackground(ctx, w, h) {
+    if (customBackground.type === 'color') {
+        ctx.fillStyle = customBackground.value;
+        ctx.fillRect(0, 0, w, h);
+        return;
+    }
+
+    let bgKey = ASSETS.bgShifei;
+    let bgImg = null;
+
+    if (customBackground.type === 'image' && customBackground.img) {
+        bgImg = customBackground.img;
+    } else {
+        if (currentMode === 'demo') {
+            if (demoBaseMode === 'jinxi') {
+                bgKey = ASSETS.bgJinxi;
+            }
+        } else if (currentMode === 'jinxi' || currentMode === 'wugusi') {
+            bgKey = ASSETS.bgJinxi;
+        }
+        bgImg = loadedImages[bgKey];
+    }
+
+    if ((customBackground.type === 'image' && bgImg) || isReady(bgImg)) {
+        if (customBackground.type === 'image') {
+            // "Cover" behavior for custom loaded image without top-cropping
+            const srcW = bgImg.width || bgImg.naturalWidth;
+            const srcH = bgImg.height || bgImg.naturalHeight;
+            const scale = Math.max(w / srcW, h / srcH);
+            const dw = srcW * scale;
+            const dh = srcH * scale;
+            ctx.drawImage(bgImg, (w - dw) / 2, (h - dh) / 2, dw, dh);
+        } else {
+            // Standard cropped rendering for default Arknights BGs
+            const cropTop = bgImg.naturalHeight * 0.15;
+            const srcH = bgImg.naturalHeight - cropTop;
+            const srcW = bgImg.naturalWidth;
+            const scale = w / srcW;
+            const dh = srcH * scale;
+            if (dh < h) {
+                const scale2 = h / srcH;
+                const dw2 = srcW * scale2;
+                ctx.drawImage(bgImg, 0, cropTop, srcW, srcH, (w - dw2) / 2, 0, dw2, h);
+            } else {
+                ctx.drawImage(bgImg, 0, cropTop, srcW, srcH, 0, 0, w, dh);
+            }
+        }
+    } else {
+        const g = ctx.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, '#1a0828'); g.addColorStop(0.4, '#301838');
+        g.addColorStop(0.7, '#201020'); g.addColorStop(1, '#0e0a14');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    }
+}
+
+function drawNode(ctx, x, y, size, nodeType, state) {
+    const hs = size / 2;
+    ctx.save();
+
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.07)';
+    ctx.shadowBlur = 18.7;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 4;
+
+    const typeId = nodeType.id || 'misc';
+
+    if (state === 'locked') {
+        const lockedImg = loadedImages[ASSETS.locked];
+        if (isReady(lockedImg)) {
+            ctx.globalAlpha = 0.6;
+            ctx.drawImage(lockedImg, x - hs, y - hs, size, size);
+        }
+        ctx.restore();
+        const lw = 64, lh = 14;
+        ctx.fillStyle = 'rgba(150, 140, 155, 0.45)';
+        ctx.fillRect(x - lw / 2, (y + hs + 11) - lh / 2, lw, lh);
+        return;
+    }
+
+    if (state === 'visited') {
+        const sf = NODE_SPRITES_INVALID[typeId] || NODE_SPRITES[typeId];
+        if (sf) {
+            const img = loadedImages[ASSET_BASE + sf];
+            if (isReady(img)) {
+                if (!NODE_SPRITES_INVALID[typeId]) {
+                    ctx.filter = 'grayscale(100%) brightness(50%) opacity(80%)';
+                }
+                ctx.drawImage(img, x - hs, y - hs, size, size);
+                ctx.filter = 'none';
+            }
+        }
+        ctx.restore();
+        drawNodeLabel(ctx, x, y + hs + 11, nodeType.name, '#666');
+        return;
+    }
+
+    const sf = NODE_SPRITES[typeId];
+    if (sf) {
+        const img = loadedImages[ASSET_BASE + sf];
+        if (isReady(img)) {
+            ctx.drawImage(img, x - hs, y - hs, size, size);
+        } else {
+            drawFallbackNode(ctx, x, y, size, nodeType, state);
+        }
+    } else {
+        drawFallbackNode(ctx, x, y, size, nodeType, state);
+    }
+
+    ctx.restore();
+    drawNodeLabel(ctx, x, y + hs + 11, nodeType.name, nodeType.color || '#1ab8b8');
+}
+
+function drawFallbackNode(ctx, x, y, size, nodeType, state) {
+    const hs = size / 2;
+    const bg = nodeType.bgColor || '#0a2828';
+    const bc = nodeType.color || '#1ab8b8';
+    roundRect(ctx, x - hs, y - hs, size, size, 4);
+    ctx.fillStyle = bg; ctx.fill(); ctx.strokeStyle = bc; ctx.lineWidth = 2; ctx.stroke();
+    ctx.font = `bold ${size * 0.35}px "PingFang SC", sans-serif`;
+    ctx.fillStyle = '#e0f0f0';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(nodeType.name || '?', x, y);
+    ctx.textBaseline = 'alphabetic';
+}
+
+function drawNodeLabel(ctx, x, y, text, color) {
+    ctx.font = 'bold 12px "PingFang SC", sans-serif';
+    const textW = ctx.measureText(text).width;
+    const padX = 8;
+    const lw = Math.max(textW + padX * 2, 64);
+    const lh = 14;
+    ctx.fillStyle = color;
+    ctx.fillRect(x - lw / 2, y - lh / 2, lw, lh);
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(text, x, y); ctx.textBaseline = 'alphabetic';
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h); ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r); ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+}
+
+function drawConnection(ctx, x1, y1, x2, y2, isH, color) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    const capLen = 3;
+    if (isH) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1 - capLen); ctx.lineTo(x1, y1 + capLen);
+        ctx.moveTo(x2, y2 - capLen); ctx.lineTo(x2, y2 + capLen);
+        ctx.stroke();
+    } else {
+        ctx.beginPath();
+        ctx.moveTo(x1 - capLen, y1); ctx.lineTo(x1 + capLen, y1);
+        ctx.moveTo(x2 - capLen, y2); ctx.lineTo(x2 + capLen, y2);
+        ctx.stroke();
+    }
+
+    ctx.restore();
+}
+
+function drawCrosshair(ctx, x, y) {
+    const img = loadedImages[ASSETS.cursor];
+    if (isReady(img)) {
+        ctx.drawImage(img, x - 20, y - 20, 40, 40);
+    } else {
+        ctx.strokeStyle = 'rgba(220,80,120,0.9)'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(x, y, 14, 0, Math.PI * 2); ctx.stroke();
+    }
+}
+
+function generateInnerEdges(startKey, startDirs, startR, startC, innerRows, innerCols) {
+    const targetConns = seedRand() < 0.03 ? 28 : 27;
+    const edgeSet = new Set();
+    const finalEdges = [];
+
+    function ek(a, b) { return [a, b].sort().join('|'); }
+    function addEdge(a, b) {
+        const k = ek(a, b);
+        if (edgeSet.has(k)) return false;
+        edgeSet.add(k);
+        const isH = a.split(',')[0] === b.split(',')[0];
+        finalEdges.push({ key1: a, key2: b, isH });
+        return true;
+    }
+
+    const allH = [], allV = [];
+    for (let r = 0; r < innerRows; r++) {
+        for (let c = 0; c < innerCols; c++) {
+            if (c < innerCols - 1) allH.push([`${r},${c}`, `${r},${c + 1}`]);
+            if (r < innerRows - 1) allV.push([`${r},${c}`, `${r + 1},${c}`]);
+        }
+    }
+
+    const inTree = new Set([startKey]);
+    for (const dir of startDirs) {
+        const nk = `${startR + dir[0]},${startC + dir[1]}`;
+        addEdge(startKey, nk);
+        inTree.add(nk);
+    }
+    while (inTree.size < innerRows * innerCols) {
+        const hCandidates = [];
+        const vCandidates = [];
+        for (const e of allH) {
+            if (edgeSet.has(ek(e[0], e[1]))) continue;
+            const aIn = inTree.has(e[0]), bIn = inTree.has(e[1]);
+            if (aIn !== bIn) hCandidates.push(e);
+        }
+        for (const e of allV) {
+            if (edgeSet.has(ek(e[0], e[1]))) continue;
+            const aIn = inTree.has(e[0]), bIn = inTree.has(e[1]);
+            if (aIn !== bIn) vCandidates.push(e);
+        }
+        if (hCandidates.length === 0 && vCandidates.length === 0) break;
+        const curH = finalEdges.filter(e => e.isH).length;
+        const curV = finalEdges.length - curH;
+        let chosen;
+        if (hCandidates.length > 0 && (curH < curV || vCandidates.length === 0)) {
+            chosen = pick(hCandidates);
+        } else if (vCandidates.length > 0) {
+            chosen = pick(vCandidates);
+        } else {
+            chosen = pick(hCandidates);
+        }
+        addEdge(chosen[0], chosen[1]);
+        inTree.add(chosen[0]);
+        inTree.add(chosen[1]);
+    }
+
+    let hCount = finalEdges.filter(e => e.isH).length;
+    let vCount = finalEdges.filter(e => !e.isH).length;
+
+    const unusedH = shuffle(allH.filter(e => !edgeSet.has(ek(e[0], e[1]))));
+    const unusedV = shuffle(allV.filter(e => !edgeSet.has(ek(e[0], e[1]))));
+
+    let hi = 0;
+    while (hCount < 10 && finalEdges.length < targetConns && hi < unusedH.length) {
+        if (addEdge(unusedH[hi][0], unusedH[hi][1])) hCount++;
+        hi++;
+    }
+    let vi = 0;
+    while (vCount < 10 && finalEdges.length < targetConns && vi < unusedV.length) {
+        if (addEdge(unusedV[vi][0], unusedV[vi][1])) vCount++;
+        vi++;
+    }
+
+    const remaining = shuffle([
+        ...unusedH.slice(hi), ...unusedV.slice(vi),
+    ].filter(e => !edgeSet.has(ek(e[0], e[1]))));
+    for (const e of remaining) {
+        if (finalEdges.length >= targetConns) break;
+        addEdge(e[0], e[1]);
+    }
+
+    return finalEdges;
+}
+
+function generateShifeiNodeTypes() {
+    const counts = {
+        chaos: rand(5, 9), legend: rand(4, 6), misc: rand(3, 6),
+        pickup_in: rand(1, 4), encounter: rand(2, 4), joy: rand(1, 3),
+        plan: 1, story: 1, choice: 1,
+    };
+    let pool = [];
+    for (const [type, count] of Object.entries(counts))
+        for (let i = 0; i < count; i++) pool.push(type);
+
+    while (pool.length > 24) {
+        const cur = {};
+        for (const t of pool) cur[t] = (cur[t] || 0) + 1;
+        const mins = { chaos: 5, legend: 4, misc: 3, pickup_in: 1, encounter: 2, joy: 1, plan: 1, story: 1, choice: 1 };
+        const shrinkable = Object.entries(cur).filter(([t, n]) => n > mins[t]);
+        if (shrinkable.length === 0) break;
+        shrinkable.sort((a, b) => b[1] - a[1]);
+        pool.splice(pool.lastIndexOf(shrinkable[0][0]), 1);
+    }
+    while (pool.length < 24) pool.push(pick(['chaos', 'legend', 'misc', 'encounter']));
+
+    pool = shuffle(pool);
+    const startOk = pool.filter(t => t === 'legend' || t === 'pickup_in' || t === 'encounter');
+    const startNo = pool.filter(t => t !== 'legend' && t !== 'pickup_in' && t !== 'encounter');
+    const startAssigned = [];
+    for (let i = 0; i < 4; i++)
+        startAssigned.push(i < startOk.length ? startOk[i] : pick(['legend', 'pickup_in', 'encounter']));
+    return { startAssigned, innerAssigned: shuffle([...startOk.slice(4), ...startNo]).slice(0, 20) };
+}
+
+function generateShifeiMap() {
+    const nodeSize = 56, gapX = 115, gapY = 105;
+    const innerRows = 5, innerCols = 5;
+    const centerR = 2, centerC = 2;
+
+    const outerPositions = [];
+    for (let r = 0; r < innerRows; r++) {
+        if (seedRand() < 0.6) outerPositions.push({ r, c: -1 });
+        if (seedRand() < 0.6) outerPositions.push({ r, c: innerCols });
+    }
+
+    const totalCols = innerCols + 2;
+    const offsetX = (CANVAS_W - (totalCols - 1) * gapX) / 2;
+    const offsetY = 30;
+    function gridToPixel(r, c) {
+        return { x: offsetX + (c + 1) * gapX, y: offsetY + (r + 0.5) * gapY };
+    }
+
+    const { startAssigned, innerAssigned } = generateShifeiNodeTypes();
+    const grid = {};
+    const startDirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+    const startNodes = [];
+
+    startDirs.forEach((dir, i) => {
+        const nr = centerR + dir[0], nc = centerC + dir[1];
+        const key = `${nr},${nc}`;
+        const pos = gridToPixel(nr, nc);
+        grid[key] = { key, r: nr, c: nc, ...pos, type: getNodeDef(startAssigned[i]), state: 'active' };
+        startNodes.push(grid[key]);
+    });
+
+    const centerKey = `${centerR},${centerC}`;
+    const cp = gridToPixel(centerR, centerC);
+    grid[centerKey] = {
+        key: centerKey, r: centerR, c: centerC, ...cp,
+        type: { id: 'start', name: '起点', color: '#ff6888', bgColor: '#200818' }, state: 'start'
+    };
+
+    let idx = 0;
+    for (let r = 0; r < innerRows; r++) {
+        for (let c = 0; c < innerCols; c++) {
+            const key = `${r},${c}`;
+            if (grid[key]) continue;
+            const pos = gridToPixel(r, c);
+            const tid = idx < innerAssigned.length ? innerAssigned[idx] : pick(['chaos', 'legend', 'misc']);
+            idx++;
+            grid[key] = { key, r, c, ...pos, type: getNodeDef(tid), state: 'locked' };
+        }
+    }
+
+    const pickupOutCount = rand(2, 6);
+    const selOuter = shuffle(outerPositions).slice(0, pickupOutCount);
+    for (const op of selOuter) {
+        const key = `${op.r},${op.c}`;
+        const pos = gridToPixel(op.r, op.c);
+        grid[key] = { key, r: op.r, c: op.c, ...pos, type: getNodeDef('pickup_out'), state: 'locked' };
+    }
+
+    const innerEdges = generateInnerEdges(centerKey, startDirs, centerR, centerC, innerRows, innerCols);
+    const allConnections = innerEdges.map(e => ({ key1: e.key1, key2: e.key2 }));
+    const edgeSet = new Set(allConnections.map(e => [e.key1, e.key2].sort().join('|')));
+    function addOuterEdge(k1, k2) {
+        const ek = [k1, k2].sort().join('|');
+        if (edgeSet.has(ek)) return;
+        edgeSet.add(ek);
+        allConnections.push({ key1: k1, key2: k2 });
+    }
+    for (const op of selOuter) {
+        const ok = `${op.r},${op.c}`;
+        const adjC = op.c === -1 ? 0 : innerCols - 1;
+        addOuterEdge(ok, `${op.r},${adjC}`);
+    }
+    for (let i = 0; i < selOuter.length; i++) {
+        for (let j = i + 1; j < selOuter.length; j++) {
+            const a = selOuter[i], b = selOuter[j];
+            if (a.c === b.c && Math.abs(a.r - b.r) === 1 && seedRand() < 0.5)
+                addOuterEdge(`${a.r},${a.c}`, `${b.r},${b.c}`);
+        }
+    }
+
+    const adjacency = {};
+    for (const conn of allConnections) {
+        if (!adjacency[conn.key1]) adjacency[conn.key1] = [];
+        if (!adjacency[conn.key2]) adjacency[conn.key2] = [];
+        adjacency[conn.key1].push(conn.key2);
+        adjacency[conn.key2].push(conn.key1);
+    }
+
+
+
+    return { grid, allConnections, adjacency, startNodes, centerKey, nodeSize, zayiRevealedCount: 0 };
+}
+
+// 当玩家点击 centerNodeKey 使得周围节点点亮时触发
+function checkNewZayiReveals(centerNode, newActiveKeys) {
+    if (currentMode !== 'shifei') return;
+
+    // 从 newActiveKeys 筛选出杂疑节点
+    const newMiscKeys = newActiveKeys.filter(k =>
+        currentMapState.grid[k] &&
+        currentMapState.grid[k].type &&
+        currentMapState.grid[k].type.id === 'misc'
+    );
+    if (newMiscKeys.length === 0) return;
+
+    // 根据相对于 centerNode 的方向，按照下、右、左、上来排序
+    const priority = {
+        '1,0': 1,   // 下
+        '0,1': 2,   // 右
+        '0,-1': 3,  // 左
+        '-1,0': 4   // 上
+    };
+
+    newMiscKeys.sort((k1, k2) => {
+        const n1 = currentMapState.grid[k1];
+        const n2 = currentMapState.grid[k2];
+        const d1 = `${n1.r - centerNode.r},${n1.c - centerNode.c}`;
+        const d2 = `${n2.r - centerNode.r},${n2.c - centerNode.c}`;
+        return (priority[d1] || 99) - (priority[d2] || 99);
+    });
+
+    for (const mk of newMiscKeys) {
+        currentMapState.zayiRevealedCount = (currentMapState.zayiRevealedCount || 0) + 1;
+        const count = currentMapState.zayiRevealedCount;
+
+        let isThreeEnding = false;
+        if (count === 1 && seedRand() < 0.99) {
+            isThreeEnding = true;
+        } else if (count === 2 && seedRand() < 0.01) {
+            isThreeEnding = true;
+        }
+
+        if (isThreeEnding) {
+            currentMapState.grid[mk].type = { ...currentMapState.grid[mk].type, name: '杂疑（执棋）', isThreeEnding: true };
+        }
+    }
+}
+
+function generateJinxiMap() {
+    const nodeSize = 56, gapX = 115, gapY = 105;
+    const innerRows = 5, innerCols = 5;
+    const startR = 2, startC = 0;
+
+    const offsetX = (CANVAS_W - (innerCols - 1) * gapX) / 2;
+    const offsetY = 30;
+    function gridToPixel(r, c) {
+        return { x: offsetX + c * gapX, y: offsetY + (r + 0.5) * gapY };
+    }
+
+    const grid = {};
+    const startKey = `${startR},${startC}`;
+    const sp = gridToPixel(startR, startC);
+    grid[startKey] = {
+        key: startKey, r: startR, c: startC, ...sp,
+        type: { id: 'start', name: '起点', color: '#ff6888', bgColor: '#200818' }, state: 'start'
+    };
+
+    const startDirs = [[-1, 0], [1, 0], [0, 1]];
+    const startNodes = [];
+    let startTypes;
+    if (seedRand() < 0.1098) {
+        startTypes = ['misc', 'misc', 'misc'];
+    } else {
+        startTypes = shuffle(['story', 'misc', 'misc']);
+    }
+
+    startDirs.forEach((dir, i) => {
+        const nr = startR + dir[0], nc = startC + dir[1];
+        const key = `${nr},${nc}`;
+        const pos = gridToPixel(nr, nc);
+        grid[key] = { key, r: nr, c: nc, ...pos, type: getNodeDef(startTypes[i]), state: 'active' };
+        startNodes.push(grid[key]);
+    });
+
+    const usedMisc = startTypes.filter(t => t === 'misc').length;
+    const usedStory = startTypes.filter(t => t === 'story').length;
+
+    const innerEdges = generateInnerEdges(startKey, startDirs, startR, startC, innerRows, innerCols);
+    const allConnections = innerEdges.map(e => ({ key1: e.key1, key2: e.key2 }));
+
+    const adjacency = {};
+    for (const conn of allConnections) {
+        if (!adjacency[conn.key1]) adjacency[conn.key1] = [];
+        if (!adjacency[conn.key2]) adjacency[conn.key2] = [];
+        adjacency[conn.key1].push(conn.key2);
+        adjacency[conn.key2].push(conn.key1);
+    }
+
+    const firstLevelKeys = new Set();
+    for (const sn of startNodes) {
+        if (adjacency[sn.key]) {
+            for (const adjKey of adjacency[sn.key]) {
+                if (adjKey !== startKey && !startNodes.find(n => n.key === adjKey)) {
+                    firstLevelKeys.add(adjKey);
+                }
+            }
+        }
+    }
+
+    let remainingFirstLevel = Array.from({ length: firstLevelKeys.size }, () => seedRand() < 0.5 ? 'chaos' : 'misc');
+    let chaosUsed = remainingFirstLevel.filter(t => t === 'chaos').length;
+    let miscUsed = remainingFirstLevel.filter(t => t === 'misc').length;
+
+    const remaining = [];
+    for (let i = 0; i < Math.max(0, 7 - chaosUsed); i++) remaining.push('chaos');
+    for (let i = 0; i < 2; i++) remaining.push('legend');
+    for (let i = 0; i < Math.max(0, 10 - usedMisc - miscUsed); i++) remaining.push('misc');
+    // 无故肆开局时，story 单独处理，优先放度=3
+    if (usedStory > 0) {
+        // 有故肆开局：story 已在起点邻居，不需要额外放
+    } else {
+        // story 不放入 remaining，后面单独分配
+    }
+    remaining.push('encounter');
+    remaining.push('plan');
+    const shuffledRemaining = shuffle(remaining);
+
+    // 无故肆开局时，把 story 优先放在度=3 的深层节点
+    const startNodeKeys = new Set(startNodes.map(n => n.key));
+    let storyKey = null;
+    if (usedStory === 0) {
+        const deepCandidates = [];
+        for (let r = 0; r < innerRows; r++) {
+            for (let c = 0; c < innerCols; c++) {
+                const key = `${r},${c}`;
+                if (key === startKey || startNodeKeys.has(key) || firstLevelKeys.has(key)) continue;
+                deepCandidates.push(key);
+            }
+        }
+        const deg3Candidates = deepCandidates.filter(k => (adjacency[k] || []).length === 3);
+        storyKey = deg3Candidates.length > 0 ? pick(deg3Candidates) : pick(deepCandidates);
+    }
+
+    for (let r = 0; r < innerRows; r++) {
+        for (let c = 0; c < innerCols; c++) {
+            const key = `${r},${c}`;
+            if (grid[key]) continue;
+            const pos = gridToPixel(r, c);
+            let tid;
+            if (storyKey && key === storyKey) {
+                tid = 'story';
+            } else if (firstLevelKeys.has(key)) {
+                tid = remainingFirstLevel.pop();
+            } else {
+                tid = shuffledRemaining.length > 0 ? shuffledRemaining.pop() : 'misc';
+            }
+            grid[key] = { key, r, c, ...pos, type: getNodeDef(tid), state: 'locked' };
+        }
+    }
+
+    return { grid, allConnections, adjacency, startNodes, centerKey: startKey, nodeSize };
+}
+
+// === 无故肆模式：基于今昔境，100% 没有故肆 ===
+function generateWugusiMap() {
+    const nodeSize = 56, gapX = 115, gapY = 105;
+    const innerRows = 5, innerCols = 5;
+    const startR = 2, startC = 0;
+
+    const offsetX = (CANVAS_W - (innerCols - 1) * gapX) / 2;
+    const offsetY = 30;
+    function gridToPixel(r, c) {
+        return { x: offsetX + c * gapX, y: offsetY + (r + 0.5) * gapY };
+    }
+
+    const grid = {};
+    const startKey = `${startR},${startC}`;
+    const sp = gridToPixel(startR, startC);
+    grid[startKey] = {
+        key: startKey, r: startR, c: startC, ...sp,
+        type: { id: 'start', name: '起点', color: '#ff6888', bgColor: '#200818' }, state: 'start'
+    };
+
+    // 开局3个节点100%为杂疑
+    const startDirs = [[-1, 0], [1, 0], [0, 1]];
+    const startNodes = [];
+    const startTypes = ['misc', 'misc', 'misc'];
+
+    startDirs.forEach((dir, i) => {
+        const nr = startR + dir[0], nc = startC + dir[1];
+        const key = `${nr},${nc}`;
+        const pos = gridToPixel(nr, nc);
+        grid[key] = { key, r: nr, c: nc, ...pos, type: getNodeDef(startTypes[i]), state: 'active' };
+        startNodes.push(grid[key]);
+    });
+
+    const innerEdges = generateInnerEdges(startKey, startDirs, startR, startC, innerRows, innerCols);
+    const allConnections = innerEdges.map(e => ({ key1: e.key1, key2: e.key2 }));
+
+    const adjacency = {};
+    for (const conn of allConnections) {
+        if (!adjacency[conn.key1]) adjacency[conn.key1] = [];
+        if (!adjacency[conn.key2]) adjacency[conn.key2] = [];
+        adjacency[conn.key1].push(conn.key2);
+        adjacency[conn.key2].push(conn.key1);
+    }
+
+    const firstLevelKeys = new Set();
+    for (const sn of startNodes) {
+        if (adjacency[sn.key]) {
+            for (const adjKey of adjacency[sn.key]) {
+                if (adjKey !== startKey && !startNodes.find(n => n.key === adjKey)) {
+                    firstLevelKeys.add(adjKey);
+                }
+            }
+        }
+    }
+
+    let remainingFirstLevel = Array.from({ length: firstLevelKeys.size }, () => seedRand() < 0.5 ? 'chaos' : 'misc');
+    let chaosUsed = remainingFirstLevel.filter(t => t === 'chaos').length;
+    let miscUsed = remainingFirstLevel.filter(t => t === 'misc').length;
+
+    // 无故肆：开局3个不包含 story，但其他地方仍然有1个故肆
+    // 故肆优先放在度=3的T字路口（匹配实际游戏行为）
+    const remaining = [];
+    for (let i = 0; i < Math.max(0, 7 - chaosUsed); i++) remaining.push('chaos');
+    for (let i = 0; i < 2; i++) remaining.push('legend');
+    for (let i = 0; i < Math.max(0, 9 - miscUsed); i++) remaining.push('misc'); // 9
+    remaining.push('encounter');
+    remaining.push('plan');
+    // story 不放入 remaining 池，单独处理
+    const shuffledRemaining = shuffle(remaining);
+
+    // 收集深层候选节点（非起点、非起点邻居、非第一层）
+    const deepCandidates = [];
+    const startNodeKeys = new Set(startNodes.map(n => n.key));
+    for (let r = 0; r < innerRows; r++) {
+        for (let c = 0; c < innerCols; c++) {
+            const key = `${r},${c}`;
+            if (key === startKey || startNodeKeys.has(key) || firstLevelKeys.has(key)) continue;
+            deepCandidates.push(key);
+        }
+    }
+
+    // 从深层候选中筛选度=3的节点，优先放置故肆
+    const deg3Candidates = deepCandidates.filter(k => (adjacency[k] || []).length === 3);
+    const storyKey = deg3Candidates.length > 0 ? pick(deg3Candidates) : pick(deepCandidates);
+
+    for (let r = 0; r < innerRows; r++) {
+        for (let c = 0; c < innerCols; c++) {
+            const key = `${r},${c}`;
+            if (grid[key]) continue;
+            const pos = gridToPixel(r, c);
+            let tid;
+            if (key === storyKey) {
+                tid = 'story';
+            } else if (firstLevelKeys.has(key)) {
+                tid = remainingFirstLevel.pop();
+            } else {
+                tid = shuffledRemaining.length > 0 ? shuffledRemaining.pop() : 'misc';
+            }
+            grid[key] = { key, r, c, ...pos, type: getNodeDef(tid), state: 'locked' };
+        }
+    }
+
+    return { grid, allConnections, adjacency, startNodes, centerKey: startKey, nodeSize };
+}
+
+// === 演示模式 ===
+let demoTool = 'add'; // 'add' | 'connect' | 'delete'
+let demoSelectedType = 'misc';
+let demoConnectStart = null;
+let demoNodeCounter = 0;
+let demoBaseMode = 'shifei'; // 'shifei' | 'jinxi'
+
+function generateDemoMap() {
+    demoNodeCounter = 0;
+    demoConnectStart = null;
+    const nodeSize = 56, gapX = 115, gapY = 105;
+    const innerRows = 5;
+    const innerCols = 5; // standard width
+    const grid = {};
+    const offsetX = (CANVAS_W - (innerCols - 1) * gapX) / 2;
+    const offsetY = 30;
+
+    let startR = 2, startC = 2; // shifei center
+    if (demoBaseMode === 'jinxi') {
+        startC = 0; // jinxi left mid
+    }
+
+    const centerKey = `${startR},${startC}`;
+
+    const cMin = demoBaseMode === 'shifei' ? -1 : 0;
+    const cMax = demoBaseMode === 'shifei' ? 5 : 4;
+
+    for (let r = 0; r < innerRows; r++) {
+        for (let c = cMin; c <= cMax; c++) {
+            const key = `${r},${c}`;
+            const cx = offsetX + c * gapX;
+            const cy = offsetY + (r + 0.5) * gapY;
+
+            if (r === startR && c === startC) {
+                grid[key] = {
+                    key: centerKey, r: startR, c: startC, x: cx, y: cy,
+                    type: { id: 'start', name: '起点', color: '#ff6888', bgColor: '#200818' }, state: 'start'
+                };
+            } else {
+                grid[key] = {
+                    key, r, c, x: cx, y: cy,
+                    type: getNodeDef('misc'), state: 'locked'
+                };
+            }
+        }
+    }
+
+    return { grid, allConnections: [], adjacency: { [centerKey]: [] }, startNodes: [grid[centerKey]], centerKey, nodeSize, zayiRevealedCount: 0 };
+}
+
+function handleDemoCanvasClick(e) {
+    if (!currentMapState) return;
+    const canvas = document.getElementById('mapCanvas');
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = CANVAS_W / rect.width;
+    const scaleY = CANVAS_H / rect.height;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * scaleY;
+    const { grid, allConnections, adjacency, nodeSize } = currentMapState;
+    const hitR = nodeSize / 2 + 5;
+
+    if (demoTool === 'add') {
+        // Find clicked node
+        for (const key of Object.keys(grid)) {
+            const node = grid[key];
+            const dx = mx - node.x, dy = my - node.y;
+            if (dx * dx + dy * dy < hitR * hitR) {
+                if (demoSelectedType === 'clear') {
+                    // Backwards compatibility if 'clear' type is still active
+                    node.type = getNodeDef('misc');
+                    node.state = 'locked';
+                } else {
+                    node.type = getNodeDef(demoSelectedType);
+                    node.state = 'active';
+                }
+                saveHistory();
+                redraw();
+                break;
+            }
+        }
+    } else if (demoTool === 'delete-node') {
+        // Restore clicked node back to default locked grey state
+        for (const key of Object.keys(grid)) {
+            const node = grid[key];
+            if (node.key === currentMapState.centerKey) continue; // Start node cannot be deleted/unlit
+            const dx = mx - node.x, dy = my - node.y;
+            if (dx * dx + dy * dy < hitR * hitR) {
+                node.type = getNodeDef('misc');
+                node.state = 'locked';
+                // Remove any lines connected to it since it's inactive
+                for (let i = allConnections.length - 1; i >= 0; i--) {
+                    if (allConnections[i].key1 === key || allConnections[i].key2 === key) {
+                        allConnections.splice(i, 1);
+                    }
+                }
+                if (adjacency[key]) {
+                    for (const neighbor of adjacency[key]) {
+                        if (adjacency[neighbor]) {
+                            adjacency[neighbor] = adjacency[neighbor].filter(k => k !== key);
+                        }
+                    }
+                    delete adjacency[key];
+                }
+
+                saveHistory();
+                redraw();
+                break;
+            }
+        }
+    } else if (demoTool === 'connect') {
+        // Find clicked node
+        for (const key of Object.keys(grid)) {
+            const node = grid[key];
+            const dx = mx - node.x, dy = my - node.y;
+            if (dx * dx + dy * dy < hitR * hitR) {
+                if (!demoConnectStart) {
+                    demoConnectStart = key;
+                    redraw();
+                    // Highlight selected node
+                    const ctx = document.getElementById('mapCanvas').getContext('2d');
+                    const dpr = window.devicePixelRatio || 1;
+                    ctx.save();
+                    ctx.scale(dpr, dpr);
+                    ctx.strokeStyle = 'rgba(255, 200, 50, 0.8)';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, nodeSize / 2 + 4, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.restore();
+                } else if (demoConnectStart !== key) {
+                    const startNode = grid[demoConnectStart];
+                    const dr = Math.abs(startNode.r - node.r);
+                    const dc = Math.abs(startNode.c - node.c);
+                    // Allow 8-way adjacent connections
+                    if (dr <= 1 && dc <= 1 && (dr !== 0 || dc !== 0)) {
+                        // Create connection
+                        const ek = [demoConnectStart, key].sort().join('|');
+                        const exists = allConnections.some(c => [c.key1, c.key2].sort().join('|') === ek);
+                        if (!exists) {
+                            allConnections.push({ key1: demoConnectStart, key2: key });
+                            if (!adjacency[demoConnectStart]) adjacency[demoConnectStart] = [];
+                            if (!adjacency[key]) adjacency[key] = [];
+                            adjacency[demoConnectStart].push(key);
+                            adjacency[key].push(demoConnectStart);
+                        }
+                        demoConnectStart = null;
+                        saveHistory();
+                        redraw();
+                    } else {
+                        // Not adjacent: select the new node instead for better UX
+                        demoConnectStart = key;
+                        redraw();
+                        const ctx = document.getElementById('mapCanvas').getContext('2d');
+                        const dpr = window.devicePixelRatio || 1;
+                        ctx.save();
+                        ctx.scale(dpr, dpr);
+                        ctx.strokeStyle = 'rgba(255, 200, 50, 0.8)';
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, nodeSize / 2 + 4, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                } else {
+                    demoConnectStart = null;
+                    redraw();
+                }
+                return;
+            }
+        }
+        demoConnectStart = null;
+        redraw();
+    } else if (demoTool === 'delete') {
+        // Delete connection by selecting two adjacent nodes
+        for (const key of Object.keys(grid)) {
+            const node = grid[key];
+            const dx = mx - node.x, dy = my - node.y;
+            if (dx * dx + dy * dy < hitR * hitR) {
+                if (!demoConnectStart) {
+                    demoConnectStart = key;
+                    redraw();
+                    const ctx = document.getElementById('mapCanvas').getContext('2d');
+                    const dpr = window.devicePixelRatio || 1;
+                    ctx.save();
+                    ctx.scale(dpr, dpr);
+                    ctx.strokeStyle = 'rgba(255, 50, 50, 0.8)';
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, nodeSize / 2 + 4, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.restore();
+                } else if (demoConnectStart !== key) {
+                    const k1 = demoConnectStart;
+                    const k2 = key;
+                    const ek = [k1, k2].sort().join('|');
+
+                    // Look for existing connection
+                    const connIndex = allConnections.findIndex(c => [c.key1, c.key2].sort().join('|') === ek);
+                    if (connIndex !== -1) {
+                        allConnections.splice(connIndex, 1);
+                        if (adjacency[k1]) adjacency[k1] = adjacency[k1].filter(k => k !== k2);
+                        if (adjacency[k2]) adjacency[k2] = adjacency[k2].filter(k => k !== k1);
+                        demoConnectStart = null;
+                        saveHistory();
+                        redraw();
+                    } else {
+                        // Change selection to the newly clicked node
+                        demoConnectStart = key;
+                        redraw();
+                        const ctx = document.getElementById('mapCanvas').getContext('2d');
+                        const dpr = window.devicePixelRatio || 1;
+                        ctx.save();
+                        ctx.scale(dpr, dpr);
+                        ctx.strokeStyle = 'rgba(255, 50, 50, 0.8)';
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, nodeSize / 2 + 4, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.restore();
+                    }
+                } else {
+                    demoConnectStart = null;
+                    redraw();
+                }
+                return;
+            }
+        }
+        demoConnectStart = null;
+        redraw();
+    }
+}
+
+function renderMap(ctx) {
+    const state = currentMapState;
+    if (!state) return;
+    const { grid, allConnections, centerKey, nodeSize } = state;
+    const center = grid[centerKey];
+
+    for (const conn of allConnections) {
+        const n1 = grid[conn.key1], n2 = grid[conn.key2];
+        if (!n1 || !n2) continue;
+        const dx = n2.x - n1.x, dy = n2.y - n1.y;
+        const len = Math.sqrt(dx * dx + dy * dy);
+        if (len === 0) continue;
+        const isH = n1.r === n2.r;
+        if (isH) {
+            const off = nodeSize / 2 + 2;
+            const ux = dx / len, uy = dy / len;
+            const lit1 = n1.state === 'start' || n1.state === 'active' || n1.state === 'visited';
+            const lit2 = n2.state === 'start' || n2.state === 'active' || n2.state === 'visited';
+            const lineColor = (lit1 && lit2) ? 'rgba(230, 80, 130, 0.8)' : 'rgba(200, 200, 200, 0.60)';
+            drawConnection(ctx, n1.x + ux * off, n1.y, n2.x - ux * off, n2.y, isH, lineColor);
+        } else {
+            const upperN = n1.y < n2.y ? n1 : n2;
+            const lowerN = n1.y < n2.y ? n2 : n1;
+            const isUpperStart = upperN.state === 'start';
+            const fromY = isUpperStart
+                ? upperN.y + nodeSize / 2 + 4
+                : upperN.y + nodeSize / 2 + 11 + 7 + 4;
+            const toY = lowerN.y - nodeSize / 2 - 4;
+            const cx = (n1.x + n2.x) / 2;
+            const lit1 = upperN.state === 'start' || upperN.state === 'active' || upperN.state === 'visited';
+            const lit2 = lowerN.state === 'start' || lowerN.state === 'active' || lowerN.state === 'visited';
+            const lineColor = (lit1 && lit2) ? 'rgba(230, 80, 130, 0.8)' : 'rgba(150, 140, 155, 0.45)';
+            drawConnection(ctx, cx, fromY, cx, toY, isH, lineColor);
+        }
+    }
+
+    for (const key of Object.keys(grid)) {
+        const node = grid[key];
+        if (node.state === 'start') continue;
+        drawNode(ctx, node.x, node.y, nodeSize, node.type, node.state);
+    }
+
+    drawCrosshair(ctx, center.x, center.y);
+
+    drawCandle(ctx);
+}
+
+function handleCanvasClick(e) {
+    if (!currentMapState) return;
+    const canvas = document.getElementById('mapCanvas');
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = CANVAS_W / rect.width;
+    const scaleY = CANVAS_H / rect.height;
+    const mx = (e.clientX - rect.left) * scaleX;
+    const my = (e.clientY - rect.top) * scaleY;
+    const { grid, adjacency, nodeSize } = currentMapState;
+    const hitR = nodeSize / 2 + 5;
+
+    for (const key of Object.keys(grid)) {
+        const node = grid[key];
+        if (node.state !== 'active') continue;
+        const dx = mx - node.x, dy = my - node.y;
+        if (dx * dx + dy * dy < hitR * hitR) {
+            if (!REPEATABLE_TYPES.has(node.type.id)) {
+                node.state = 'visited';
+            }
+
+            // 收集本次点击新变亮的节点
+            const newActiveKeys = [];
+            for (const nk of (adjacency[key] || [])) {
+                if (grid[nk] && grid[nk].state === 'locked') {
+                    grid[nk].state = 'active';
+                    newActiveKeys.push(nk);
+                }
+            }
+
+            stepCount++;
+
+            // 动态判断杂疑逻辑
+            if (newActiveKeys.length > 0) {
+                checkNewZayiReveals(node, newActiveKeys);
+            }
+
+            saveHistory();
+            redraw();
+            break;
+        }
+    }
+}
+
+function drawCandle(ctx) {
+    let candleKey;
+    if (stepCount === 0) candleKey = ASSETS.candle0;
+    else if (stepCount === 1) candleKey = ASSETS.candle1;
+    else if (stepCount === 2) candleKey = ASSETS.candle2;
+    else if (stepCount === 3) candleKey = ASSETS.candle3;
+    else candleKey = ASSETS.candle4;
+
+    const candleImg = loadedImages[candleKey];
+    const size = 130;
+
+    const canvas = document.getElementById('mapCanvas');
+    const rect = canvas.getBoundingClientRect();
+
+    // Calculate the right-most visible pixel of the canvas (max 1400)
+    // If window is smaller than 1400, rect.left is negative, so innerWidth - rect.left gives the visible X coordinate
+    const visibleRightX = Math.min(CANVAS_W, window.innerWidth - rect.left);
+
+    // Anchor to the top-right corner of the *visible* map canvas
+    const cx = visibleRightX - 80;
+    const cy = 110;
+
+    if (isReady(candleImg)) {
+        ctx.drawImage(candleImg, cx - size / 2, cy - size / 2, size, size);
+    }
+
+    ctx.save();
+    ctx.font = 'bold 32px "Novecento Normal", sans-serif';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(0,0,0,0.6)';
+    ctx.shadowBlur = 4;
+    ctx.fillText(stepCount.toString(), cx, cy - 12);
+
+    ctx.font = '12px "PingFang SC", sans-serif';
+    ctx.fillStyle = '#dcdcdc';
+    ctx.shadowColor = 'transparent';
+    ctx.fillText("已用烛火", cx, cy + 18);
+    ctx.restore();
+}
+
+function generateNewMap(forceSeed = null) {
+    if (forceSeed && forceSeed.startsWith('C')) {
+        initSeed(forceSeed);
+        stepCount = 0;
+        historyStack = [];
+        historyIndex = -1;
+        currentMode = 'demo';
+        demoBaseMode = 'shifei'; // default format
+        currentMapState = decodeCustomMap(forceSeed);
+        saveHistory();
+        return;
+    }
+
+    initSeed(forceSeed);
+
+    stepCount = 0;
+    historyStack = [];
+    historyIndex = -1;
+    if (currentMode === 'shifei') {
+        currentMapState = generateShifeiMap();
+        const initialActiveKeys = Object.keys(currentMapState.grid).filter(k => currentMapState.grid[k].state === 'active');
+        if (initialActiveKeys.length > 0) {
+            checkNewZayiReveals(currentMapState.grid[currentMapState.centerKey], initialActiveKeys);
+        }
+    } else if (currentMode === 'jinxi') {
+        currentMapState = generateJinxiMap();
+    } else if (currentMode === 'wugusi') {
+        currentMapState = generateWugusiMap();
+    } else if (currentMode === 'demo') {
+        currentMapState = generateDemoMap();
+    }
+    saveHistory();
+}
+
+function redraw() {
+    const canvas = document.getElementById('mapCanvas');
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = CANVAS_W * dpr; canvas.height = CANVAS_H * dpr;
+    canvas.style.width = `${CANVAS_W}px`; canvas.style.height = `${CANVAS_H}px`;
+    ctx.scale(dpr, dpr); ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+    drawBackground(ctx, CANVAS_W, CANVAS_H);
+    renderMap(ctx);
+}
+
+function render(forceSeed = null) { generateNewMap(forceSeed); redraw(); }
+
+function setMode(mode) {
+    currentMode = mode;
+    const modeIds = ['btn-shifei', 'btn-jinxi', 'btn-wugusi', 'btn-demo'];
+    for (const id of modeIds) {
+        document.getElementById(id).classList.remove('active');
+    }
+    document.getElementById('btn-' + mode).classList.add('active');
+    // Show/hide demo panel
+    const demoPanel = document.getElementById('demo-panel');
+    if (mode === 'demo') {
+        demoPanel.classList.add('visible');
+    } else {
+        demoPanel.classList.remove('visible');
+        demoConnectStart = null;
+    }
+    render();
+}
+
+document.getElementById('btn-shifei').addEventListener('click', () => setMode('shifei'));
+document.getElementById('btn-jinxi').addEventListener('click', () => setMode('jinxi'));
+document.getElementById('btn-wugusi').addEventListener('click', () => setMode('wugusi'));
+document.getElementById('btn-demo').addEventListener('click', () => setMode('demo'));
+document.getElementById('btn-regenerate').addEventListener('click', () => render(null));
+const applySeedBtn = document.getElementById('btn-apply-seed');
+if (applySeedBtn) {
+    applySeedBtn.addEventListener('click', () => {
+        const seedInput = document.getElementById('seed-input');
+        if (seedInput) {
+            let raw = seedInput.value.trim();
+            let match = raw.match(/【(.*?)】/);
+            if (match) raw = match[1];
+            if (raw) render(raw);
+        }
+    });
+}
+
+document.getElementById('demo-base-shifei').addEventListener('click', (e) => {
+    document.querySelectorAll('.demo-base-btn').forEach(btn => btn.classList.remove('active'));
+    e.target.classList.add('active');
+    demoBaseMode = 'shifei';
+    render();
+});
+document.getElementById('demo-base-jinxi').addEventListener('click', (e) => {
+    document.querySelectorAll('.demo-base-btn').forEach(btn => btn.classList.remove('active'));
+    e.target.classList.add('active');
+    demoBaseMode = 'jinxi';
+    render();
+});
+
+document.getElementById('btn-random-reveal').addEventListener('click', () => {
+    if (!currentMapState) return;
+    const { grid } = currentMapState;
+    const locked = Object.keys(grid).filter(k => grid[k].state === 'locked');
+    if (locked.length === 0) return;
+    const key = locked[Math.floor(seedRand() * locked.length)];
+    grid[key].state = 'active';
+
+    // 随机事件因为没有中心节点，我们以它自己为中心，只传它自己
+    checkNewZayiReveals(grid[key], [key]);
+
+    saveHistory();
+    redraw();
+});
+
+document.getElementById('btn-undo').addEventListener('click', undo);
+document.getElementById('btn-redo').addEventListener('click', redo);
+
+// Demo panel specific tools
+document.getElementById('demo-toggle-btn').addEventListener('click', () => {
+    const demoPanel = document.getElementById('demo-panel');
+    const toggleBtn = document.getElementById('demo-toggle-btn');
+    demoPanel.classList.toggle('collapsed');
+    if (demoPanel.classList.contains('collapsed')) {
+        toggleBtn.textContent = '◀';
+        toggleBtn.title = '展开面板';
+    } else {
+        toggleBtn.textContent = '▶';
+        toggleBtn.title = '收起面板';
+    }
+});
+
+const tools = ['add', 'delete-node', 'connect', 'delete'];
+tools.forEach(tool => {
+    document.getElementById('demo-tool-' + tool)?.addEventListener('click', (e) => {
+        document.querySelectorAll('.demo-action-btn').forEach(btn => btn.classList.remove('active'));
+        e.target.classList.add('active');
+        demoTool = tool;
+        demoConnectStart = null;
+        redraw();
+    });
+});
+
+function revealByTypes(typeIds) {
+    if (!currentMapState) return;
+    const { grid } = currentMapState;
+    let revealed = 0;
+    const revealedNodes = [];
+    for (const key of Object.keys(grid)) {
+        const node = grid[key];
+        if (node.state === 'locked' && typeIds.includes(node.type.id)) {
+            node.state = 'active';
+            revealedNodes.push(key);
+            revealed++;
+        }
+    }
+    if (revealed > 0) {
+        // 收藏品事件也是批量揭示没有严格单一中心，按自己为中心传递
+        for (const key of revealedNodes) {
+            checkNewZayiReveals(grid[key], [key]);
+        }
+
+        saveHistory();
+        redraw();
+    }
+}
+
+document.getElementById('btn-ziwujian').addEventListener('click', () => revealByTypes(['chaos']));
+document.getElementById('btn-wushangshuo').addEventListener('click', () => revealByTypes(['encounter']));
+document.getElementById('btn-shenzhulin').addEventListener('click', () => revealByTypes(['joy']));
+document.getElementById('btn-yinshihu').addEventListener('click', () => revealByTypes(['legend', 'choice']));
+
+document.getElementById('btn-reveal').addEventListener('click', () => {
+    if (!currentMapState) return;
+    const { grid } = currentMapState;
+    for (const key of Object.keys(grid)) {
+        if (grid[key].state === 'locked') grid[key].state = 'active';
+    }
+
+    // 即使是全部点亮，我们也不再在初始生成里加执棋了，
+    // 而是只有通过点击触发逻辑，包括全部点亮按钮也算点击
+    // 用户要求"全部点亮的时候就不出现杂疑（执棋）吧" 
+    // 那我们就把这行注掉或者不要把全部点亮作为判定触发
+
+    saveHistory();
+    redraw();
+});
+
+document.getElementById('mapCanvas').addEventListener('click', (e) => {
+    if (currentMode === 'demo') {
+        handleDemoCanvasClick(e);
+    } else {
+        handleCanvasClick(e);
+    }
+});
+
+// Demo panel: setup node type buttons
+function initDemoPanel() {
+    const typeRow = document.getElementById('demo-type-row');
+    const types = ['misc', 'chaos', 'legend', 'story', 'pickup_in', 'encounter', 'joy', 'plan', 'choice'];
+    const names = { misc: '杂疑', chaos: '祸乱', legend: '传说', story: '故肆', pickup_in: '拾遗', encounter: '易与', joy: '常乐', plan: '筹谋', choice: '抉择' };
+    for (const t of types) {
+        const btn = document.createElement('button');
+        btn.className = 'demo-type-btn' + (t === demoSelectedType ? ' active' : '');
+        btn.textContent = names[t];
+        btn.addEventListener('click', () => {
+            demoSelectedType = t;
+            typeRow.querySelectorAll('.demo-type-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+        typeRow.appendChild(btn);
+    }
+
+    // Tool buttons
+    const toolBtns = {
+        'demo-tool-add': 'add',
+        'demo-tool-connect': 'connect',
+        'demo-tool-delete': 'delete'
+    };
+    for (const [id, tool] of Object.entries(toolBtns)) {
+        document.getElementById(id).addEventListener('click', () => {
+            demoTool = tool;
+            demoConnectStart = null;
+            for (const tid of Object.keys(toolBtns)) {
+                document.getElementById(tid).classList.remove('active');
+            }
+            document.getElementById(id).classList.add('active');
+            redraw();
+        });
+    }
+}
+
+function initBackgroundPanel() {
+    const defaultBtn = document.getElementById('bg-btn-default');
+    const colorBtn = document.getElementById('bg-btn-color');
+    const colorPicker = document.getElementById('bg-color-picker');
+    const uploadBtn = document.getElementById('bg-btn-upload');
+    const fileInput = document.getElementById('bg-file-input');
+
+    const bgBtns = [defaultBtn, colorBtn, uploadBtn];
+    function setBgActive(activeBtn) {
+        bgBtns.forEach(b => b.classList.remove('active'));
+        activeBtn.classList.add('active');
+    }
+
+    defaultBtn.addEventListener('click', () => {
+        setBgActive(defaultBtn);
+        customBackground = { type: 'default', value: customBackground.value, img: customBackground.img };
+        redraw();
+    });
+
+    colorBtn.addEventListener('click', (e) => {
+        // Only trigger redraw / UI update if button text container clicked OR picker changed.
+        // Label wrapping input means clicking input registers click.
+        setBgActive(colorBtn);
+        customBackground = { type: 'color', value: colorPicker.value, img: customBackground.img };
+        redraw();
+    });
+
+    colorPicker.addEventListener('input', (e) => {
+        setBgActive(colorBtn);
+        customBackground = { type: 'color', value: e.target.value, img: customBackground.img };
+        redraw();
+    });
+
+    uploadBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const img = new Image();
+                img.onload = function () {
+                    setBgActive(uploadBtn);
+                    customBackground = { type: 'image', value: customBackground.value, img: img };
+                    redraw();
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        e.target.value = ''; // allow same re-upload
+    });
+}
+
+const NODE_TYPES_ENCODE = ['chaos', 'legend', 'misc', 'story', 'pickup_in', 'pickup_out', 'encounter', 'joy', 'plan', 'choice', 'start'];
+const NODE_TYPE_MAP = Object.fromEntries(NODE_TYPES_ENCODE.map((t, i) => [t, i]));
+
+function getPosIndex(r, c) { return r * 7 + (c + 1); }
+function getRCFromIndex(i) { return { r: Math.floor(i / 7), c: (i % 7) - 1 }; }
+
+function encodeCustomMap(mapState) {
+    const { grid, allConnections } = mapState;
+    let nodesStr = "";
+    for (let i = 0; i < 35; i++) {
+        const rc = getRCFromIndex(i);
+        const key = `${rc.r},${rc.c}`;
+        if (grid[key]) {
+            const tid = grid[key].type.id;
+            let encodedIdx = NODE_TYPE_MAP[tid];
+            if (encodedIdx === undefined) encodedIdx = 2; // fallback
+            nodesStr += SEED_CHARSET[encodedIdx];
+        } else {
+            nodesStr += SEED_CHARSET[11]; // empty
+        }
+    }
+
+    let edgesBig = 0n;
+    for (const conn of allConnections) {
+        let p1 = conn.key1.split(',').map(Number);
+        let p2 = conn.key2.split(',').map(Number);
+        if (p1[0] > p2[0] || (p1[0] === p2[0] && p1[1] > p2[1])) {
+            let tmp = p1; p1 = p2; p2 = tmp;
+        }
+        let edgeIndex = -1;
+        if (p1[0] === p2[0]) {
+            let c_map = p1[1] + 1;
+            if (c_map >= 0 && c_map < 6) edgeIndex = p1[0] * 6 + c_map;
+        } else if (p1[1] === p2[1]) {
+            let c_map = p1[1] + 1;
+            if (p1[0] >= 0 && p1[0] < 4) edgeIndex = 30 + (p1[0] * 7 + c_map);
+        }
+        if (edgeIndex >= 0) edgesBig |= (1n << BigInt(edgeIndex));
+    }
+
+    let edgesStr = "";
+    for (let i = 0; i < 14; i++) {
+        edgesStr += SEED_CHARSET[Number(edgesBig % 20n)];
+        edgesBig /= 20n;
+    }
+    return "C" + nodesStr + edgesStr;
+}
+
+function decodeCustomMap(seedStr) {
+    if (seedStr.startsWith('C')) seedStr = seedStr.substring(1);
+
+    const nodeSize = 56, gapX = 115, gapY = 105;
+    const offsetX = (CANVAS_W - 6 * gapX) / 2;
+    const offsetY = 30;
+    function gridToPixel(r, c) {
+        return { x: offsetX + (c + 1) * gapX, y: offsetY + (r + 0.5) * gapY };
+    }
+
+    const grid = {};
+    const startNodes = [];
+    let centerKey = null;
+
+    let nodesStr = seedStr.substring(0, 35).padEnd(35, SEED_CHARSET[11]);
+    for (let i = 0; i < 35; i++) {
+        let charVal = SEED_CHARSET.indexOf(nodesStr[i]);
+        if (charVal === -1 || charVal === 11) continue;
+
+        let typeId = NODE_TYPES_ENCODE[charVal] || 'misc';
+        const rc = getRCFromIndex(i);
+        const key = `${rc.r},${rc.c}`;
+        const pos = gridToPixel(rc.r, rc.c);
+
+        let state = 'locked';
+        if (typeId === 'start') { state = 'start'; centerKey = key; }
+
+        grid[key] = { key, r: rc.r, c: rc.c, ...pos, type: getNodeDef(typeId), state: state };
+        if (state === 'start') startNodes.push(grid[key]);
+    }
+
+    let edgesStr = seedStr.substring(35, 49).padEnd(14, SEED_CHARSET[0]);
+    let edgesBig = 0n;
+    let power = 1n;
+    for (let i = 0; i < 14; i++) {
+        let val = BigInt(SEED_CHARSET.indexOf(edgesStr[i]));
+        if (val < 0n) val = 0n;
+        edgesBig += val * power;
+        power *= 20n;
+    }
+
+    const allConnections = [];
+    const adjacency = {};
+    function addEdge(k1, k2) {
+        if (!grid[k1] || !grid[k2]) return;
+        const e1 = { key1: k1, key2: k2 };
+        allConnections.push(e1);
+        if (!adjacency[k1]) adjacency[k1] = [];
+        if (!adjacency[k2]) adjacency[k2] = [];
+        adjacency[k1].push(k2);
+        adjacency[k2].push(k1);
+    }
+
+    for (let i = 0; i < 58; i++) {
+        if ((edgesBig & (1n << BigInt(i))) !== 0n) {
+            if (i < 30) {
+                let r = Math.floor(i / 6), c = (i % 6) - 1;
+                addEdge(`${r},${c}`, `${r},${c + 1}`);
+            } else {
+                let v = i - 30;
+                let r = Math.floor(v / 7), c = (v % 7) - 1;
+                addEdge(`${r},${c}`, `${r + 1},${c}`);
+            }
+        }
+    }
+
+    for (const sn of startNodes) {
+        for (const adj of (adjacency[sn.key] || [])) {
+            if (grid[adj] && grid[adj].state === 'locked') grid[adj].state = 'active';
+        }
+    }
+    return { grid, allConnections, adjacency, startNodes, centerKey, nodeSize };
+}
+
+window.addEventListener('load', () => {
+    preloadAssets();
+    initDemoPanel();
+    initBackgroundPanel();
+    const copyBtn = document.getElementById('btn-copy-seed');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', () => {
+            const seedInput = document.getElementById('seed-input');
+            if (seedInput) {
+                let seed = seedInput.value;
+                if (currentMode === 'demo' && currentMapState) {
+                    seed = encodeCustomMap(currentMapState);
+                    seedInput.value = seed;
+                }
+                const text = `【${seed}】##复制本消息至ark.yituliu.cn，立即体验相似树洞`;
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = '已复制!';
+                    setTimeout(() => copyBtn.textContent = originalText, 1500);
+                });
+            }
+        });
+    }
+    setTimeout(() => { render(); firstRenderDone = true; }, 200);
+});
+
+window.addEventListener('resize', () => {
+    if (firstRenderDone) {
+        redraw();
+    }
+});
