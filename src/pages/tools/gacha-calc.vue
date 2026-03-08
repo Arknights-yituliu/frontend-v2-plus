@@ -236,16 +236,6 @@ let activityType = ref('联动限定')
 // 注：历史礼包时间范围已改为动态计算，不再需要 historicalPackTimeRange 配置
 const scheduleOptions = [
   {
-    name: '新年',
-    dateString: '(0210-0224)',
-    start: new Date('2026/02/10 12:00:00'),
-    end: new Date('2026/02/24 04:01:00'),
-    activityType: '春节限定',
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: true
-  },
-  {
     name: '周年庆典',
     dateString: '(0501-0515)',
     start: new Date('2026/05/01 12:00:00'),
