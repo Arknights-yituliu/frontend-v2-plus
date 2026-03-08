@@ -296,7 +296,7 @@ const statsCards = computed(() => {
           <span class="gacha-draws">({{ Math.floor(gachaInventory.originium * 180 / 600) }})</span>
         </div>
         <div v-if="gachaInventory.orundum > 0" class="gacha-item">
-          <img src="/image/icon/icon-4002.png" class="gacha-icon" alt="合成玉">
+          <img src="/image/icon/icon-4003.png" class="gacha-icon" alt="合成玉">
           <span class="gacha-count">{{ gachaInventory.orundum }}</span>
           <span class="gacha-draws">({{ Math.floor(gachaInventory.orundum / 600) }})</span>
         </div>
