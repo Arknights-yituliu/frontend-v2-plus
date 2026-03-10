@@ -1,4 +1,14 @@
 {
+  "char_4031_liesel": {
+    "updateTime": "2026/03/10 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "复奏"
+  },
+  "char_4037_demetr": {
+    "updateTime": "2026/03/10 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "贝洛内"
+  },
   "char_2027_wang": {
     "updateTime": "2026/02/10 12:00:00",
     "obtainApproach": "限定干员",
@@ -2035,4 +2045,3 @@
     "name": "巡林者"
   }
 }
-
