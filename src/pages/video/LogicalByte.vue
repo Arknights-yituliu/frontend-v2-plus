@@ -91,7 +91,7 @@
                 </div>
               </div>
               <div class="footer-image">
-                <img src="https://yituliu-dev-1307648010.cos.ap-beijing.myqcloud.com/image/website/QR/LogicalByteQR.png?q-sign-algorithm=sha1&q-ak=AKIDoebHIbCKuW4c9WMo6baXx650C15BBJKBVDLcXVtvN6J_7ZeBk4Jwl8dyxxAc-Sdv&q-sign-time=1770711991;1770715591&q-key-time=1770711991;1770715591&q-header-list=host&q-url-param-list=&q-signature=8471db57ea94fd456833c01b09ce1c77673af790&x-cos-security-token=eh795c9nJteGI19KCdp53QnIPxMrDs7afa3c1cc53f5b34c216ae6b0b81dce8dcSCDAojAxuxqibHRgiIIKky3WI9fVLyt7hQMIhCeNNio_jBKlb3ad35IuJNgPzfAwWaLu0M7aN43EI3gtEFy6jZNdfvMw_t6fox9o9We7bWJrmF5NH4cRI1VhzJXhbr-bYaXVRFN_6bHGbi6gyDIqWoLU60yhHyKqO60HaScFt3ZWvHp6OhOV_B_Q0ktLmpvavIQGeIPXIq5E2qf_fC2tH60Fo4lf1d6Ic1i3q2_h8d8KOkE5l2QZhGyV9pvZ_uJNKzZ_ZMDypjqeGiARkQHKCw" alt="LogicalByte QR Code" />
+                <img src="https://yituliu-dev-1307648010.cos.ap-beijing.myqcloud.com/image/website/QR/LogicalByteQR.png?q-sign-algorithm=sha1&q-ak=AKIDEpcgVogk4rlAG0uUqNmIbxGkHB2c-fZSPrhKJae_QsWKBmsS7zIM9HNMtc2mxSmU&q-sign-time=1773116074;1773119674&q-key-time=1773116074;1773119674&q-header-list=host&q-url-param-list=&q-signature=b9e546bf82f826a060854fcdc0a5a3063756d2fc&x-cos-security-token=XZiLyE60RcoeRbhoLkKT9Hkv7knzYMza8373400ba16a5183c4ec4f9b2dea3071TuKK-c_U9FCJX0kem7AsMITAqllPJwzA0HXlmHp6TKVKIE1cc5m83jQKrPLKM9yvzhyRz_PMaurjHeWcNZHDLhE2RSM-MX-ZwyvNmFPiFVVO7VC7-rH87SSB7s5xFjBWBT3BfGpjNoMZabi7foiFDeIC-bToPIWWg6MIQoBcfiZmnGeeQd9mpI1kXyOP2T_DvU_iZpME5KGrBe6oY3m8-5iBPEIz-MAqw9POKajK-DRk0WwoWk19A7GuyRaqO1bq0AVohPMiO6E4MGUblwqoLQ" alt="LogicalByte QR Code" />
               </div>
             </div>
           </div>
