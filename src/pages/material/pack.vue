@@ -213,7 +213,7 @@ function collectPackInfoVO() {
       tips: ['*每月/每周礼包、新人/回归礼包、源石'],
       list: [
         {title: '每月/每周礼包', packs: [...packs.weekly, ...packs.monthly]},
-        {title: '新人/回归礼包', packs: packs.newbie},
+        {title: '新人/回归礼包', packs: [...packs.newbie,...packs.return]},
         {title: '源石/首充源石', packs: [...packs.originium, ...packs.originium2]},
       ]
     },
