@@ -39,7 +39,7 @@ const deleteOperator = () => {
 }
 
 function getEquipIcon(typeIcon){
-  return typeIcon ? `https://cos.yituliu.cn/equip-icon/${typeIcon}.png` : noModIcon
+  return typeIcon ? `https://cos.yituliu.cn/arknights/equip-icon/${typeIcon}.png` : noModIcon
 }
 
 </script>
