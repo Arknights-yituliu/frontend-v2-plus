@@ -175,7 +175,7 @@ async function getPenguinMatrixCache() {
 
         // penguinData = loadingPenguinImageData(penguinCacheKey)
         await axios.get('https://cos.yituliu.cn/stage-drop/matrix.json').then(response => {
-            console.log(`${penguinCacheKey}.返回来自企鹅物流的镜像数据`)
+            console.log(`${penguinCacheKey}.返回一图流镜像数据`)
             const matrix = response.data.matrix
             const info = {
                 id: penguinCacheKey,
