@@ -379,7 +379,7 @@ function handleClick() {
         </template>
       </v-switch>
 
-      <span class="module-tip">上次同步企鹅物流时间：{{ updateTime }}</span>
+      <span class="module-tip">上次同步数据时间：{{ updateTime }}</span>
     </div>
 
     <!-- 说明区域 -->
