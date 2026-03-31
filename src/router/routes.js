@@ -201,6 +201,18 @@ const routes = [
         }
     },
     {
+        path: '/lb',
+        text: 'LogicalByte制图控制台',
+        name: 'LBConsole',
+        module: 'tools',
+        icon: "mdi-console",
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/LogicalBytePostMaker.vue'),
+        meta: {
+            title: 'LogicalByte制图控制台'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',
@@ -533,20 +545,24 @@ const routes = [
         component: () => import('/src/pages/video/sysl3.vue')
     },
     {
-        path: '/video/logicalbyte',
-        text: 'LogicalByte',
-        name: 'LogicalByte',
+        path: '/lb/elite',
+        text: 'elite',
+        name: 'elite',
         display: false,
-        component: () => import('/src/pages/video/LogicalByte.vue'),
+        component: () => import('/src/pages/LogicalBytePostMaker/elite.vue'),
         meta: {
             title: 'LogicalByte'
         }
     },
     {
-        path: '/video/elite',
-        text: '动态-专精精二性价比',
+        path: '/lb/return',
+        text: 'LogicalByte',
+        name: 'LogicalByte',
         display: false,
-        component: () => import('/src/pages/video-material/elite/elite.vue')
+        component: () => import('/src/pages/LogicalBytePostMaker/ReturnBrief.vue'),
+        meta: {
+            title: 'LogicalByte'
+        }
     },
     {
         path: '/video/skland',
