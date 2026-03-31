@@ -44,7 +44,6 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
 }
 
 
-
 async function getItemInfoMapCacheByConfig(stageConfig, forceRefresh = false) {
 
     let itemInfoMap = new Map()
@@ -173,25 +172,24 @@ async function getPenguinMatrixCache() {
 
     //企鹅物流请求超时，加载一图流的企鹅物流数据镜像
 
-        // penguinData = loadingPenguinImageData(penguinCacheKey)
-        await axios.get('https://cos.yituliu.cn/stage-drop/matrix.json').then(response => {
-            console.log(`${penguinCacheKey}.返回一图流镜像数据`)
-            const matrix = response.data.matrix
-            const info = {
-                id: penguinCacheKey,
-                resource: matrix,
-                version: "automated",
-                createTime: new Date().getTime()
-            }
-            putCache(info)
-            penguinData = matrix
-        })
-
+    // penguinData = loadingPenguinImageData(penguinCacheKey)
+    const time = new Date().getTime().toString();
+    await axios.get(`https://cos.yituliu.cn/stage-drop/matrix.json?time=${time}`).then(response => {
+        console.log(`${penguinCacheKey}.返回一图流镜像数据`)
+        const matrix = response.data.matrix
+        const info = {
+            id: penguinCacheKey,
+            resource: matrix,
+            version: "automated",
+            createTime: new Date().getTime()
+        }
+        putCache(info)
+        penguinData = matrix
+    })
 
 
     return penguinData
 }
-
 
 
 function getLastSynchronizationTime() {
@@ -230,5 +228,10 @@ async function getStageInfoCache() {
 
 
 export default {
-    getItemValueCacheByConfig,getItemValueMapCacheByConfig,getItemInfoMapCacheByConfig, getPenguinMatrixCache, getStageInfoCache, getLastSynchronizationTime
+    getItemValueCacheByConfig,
+    getItemValueMapCacheByConfig,
+    getItemInfoMapCacheByConfig,
+    getPenguinMatrixCache,
+    getStageInfoCache,
+    getLastSynchronizationTime
 }
