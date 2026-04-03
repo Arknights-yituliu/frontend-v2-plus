@@ -44,7 +44,6 @@ async function getItemValueCacheByConfig(stageConfig, forceRefresh = false) {
 }
 
 
-
 async function getItemInfoMapCacheByConfig(stageConfig, forceRefresh = false) {
 
     let itemInfoMap = new Map()
@@ -145,13 +144,38 @@ async function getPenguinMatrixCache() {
     }
 
 
-    //如果超过设定缓存时间，从企鹅物流获取新的数据，如果10s企鹅物流未响应，则去加载一图流的企鹅物流数据镜像
-    // penguinData = await loadingPenguinData(penguinCacheKey)
-    // console.log(penguinData)
-    await axios.get('https://penguin-stats.io/PenguinStats/api/v2/_private/result/matrix/CN/global/automated', {
-        timeout: 10000 // 设置超时时间为10秒
-    }).then(response => {
-        console.log(`${penguinCacheKey}.返回来自企鹅物流的数据`)
+    // //如果超过设定缓存时间，从企鹅物流获取新的数据，如果10s企鹅物流未响应，则去加载一图流的企鹅物流数据镜像
+    // // penguinData = await loadingPenguinData(penguinCacheKey)
+    // // console.log(penguinData)
+    // await axios.get('https://penguin-stats.io/PenguinStats/api/v2/_private/result/matrix/CN/global/automated', {
+    //     timeout: 10000 // 设置超时时间为10秒
+    // }).then(response => {
+    //     console.log(`${penguinCacheKey}.返回来自企鹅物流的数据`)
+    //     const matrix = response.data.matrix
+    //     const info = {
+    //         id: penguinCacheKey,
+    //         resource: matrix,
+    //         version: "automated",
+    //         createTime: new Date().getTime()
+    //     }
+    //
+    //     penguinDataMap.set()
+    //     putCache(info)
+    //     penguinData = matrix
+    // }).catch(e => {
+    //     if (e.message === "请求超时") {
+    //         console.log("企鹅物流请求超时")
+    //     } else {
+    //         createMessage(e);
+    //     }
+    // })
+
+    //企鹅物流请求超时，加载一图流的企鹅物流数据镜像
+
+    // penguinData = loadingPenguinImageData(penguinCacheKey)
+    const time = new Date().getTime().toString();
+    await axios.get(`https://cos.yituliu.cn/stage-drop/matrix.json?time=${time}`).then(response => {
+        console.log(`${penguinCacheKey}.返回一图流镜像数据`)
         const matrix = response.data.matrix
         const info = {
             id: penguinCacheKey,
@@ -159,39 +183,13 @@ async function getPenguinMatrixCache() {
             version: "automated",
             createTime: new Date().getTime()
         }
-
-        penguinDataMap.set()
         putCache(info)
         penguinData = matrix
-    }).catch(e => {
-        if (e.message === "请求超时") {
-            console.log("企鹅物流请求超时")
-        } else {
-            createMessage(e);
-        }
     })
-
-    //企鹅物流请求超时，加载一图流的企鹅物流数据镜像
-    if (penguinData.length < 100) {
-        // penguinData = loadingPenguinImageData(penguinCacheKey)
-        await axios.get('https://cos.yituliu.cn/stage-drop/matrix.json').then(response => {
-            console.log(`${penguinCacheKey}.返回来自企鹅物流的镜像数据`)
-            const matrix = response.data.matrix
-            const info = {
-                id: penguinCacheKey,
-                resource: matrix,
-                version: "automated",
-                createTime: new Date().getTime()
-            }
-            putCache(info)
-            penguinData = matrix
-        })
-    }
 
 
     return penguinData
 }
-
 
 
 function getLastSynchronizationTime() {
@@ -230,5 +228,10 @@ async function getStageInfoCache() {
 
 
 export default {
-    getItemValueCacheByConfig,getItemValueMapCacheByConfig,getItemInfoMapCacheByConfig, getPenguinMatrixCache, getStageInfoCache, getLastSynchronizationTime
+    getItemValueCacheByConfig,
+    getItemValueMapCacheByConfig,
+    getItemInfoMapCacheByConfig,
+    getPenguinMatrixCache,
+    getStageInfoCache,
+    getLastSynchronizationTime
 }

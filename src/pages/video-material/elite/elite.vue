@@ -2,7 +2,10 @@
 import eliteData from '/src/pages/video-material/elite/elite.json'
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import {operatorTableV2} from "/src/utils/gameData.js";
-import {ref} from "vue";
+import {ref, onMounted, onUnmounted, watch} from "vue";
+
+// 独立的存储键名 - elite页面专用（与returnbrief页面完全分离）
+const ELITE_STORAGE_KEY = 'elite_page_data'
 
 const charIdMap = ref(new Map())
 
@@ -10,6 +13,46 @@ for (const charId in operatorTableV2) {
   charIdMap.value.set(operatorTableV2[charId].name, charId)
 }
 console.log(charIdMap.value.get("溯光星源"))
+
+// 从 localStorage 加载数据
+const loadFromStorage = () => {
+  try {
+    const saved = localStorage.getItem(ELITE_STORAGE_KEY)
+    if (saved) {
+      const data = JSON.parse(saved)
+      console.log('Elite 页面数据已从本地存储恢复:', ELITE_STORAGE_KEY)
+    }
+  } catch (error) {
+    console.error('恢复 Elite 页面数据失败:', error)
+  }
+}
+
+// 保存到 localStorage
+const saveToStorage = (data) => {
+  try {
+    localStorage.setItem(ELITE_STORAGE_KEY, JSON.stringify(data))
+    console.log('Elite 页面数据已保存:', ELITE_STORAGE_KEY)
+  } catch (error) {
+    console.error('保存 Elite 页面数据失败:', error)
+  }
+}
+
+// 监听数据变化并自动保存
+const stopWatch = watch([charIdMap], () => {
+  const data = {
+    lastVisited: new Date().toISOString()
+  }
+  saveToStorage(data)
+}, { deep: true })
+
+onMounted(() => {
+  console.log('Elite 页面已加载，使用独立存储:', ELITE_STORAGE_KEY)
+  loadFromStorage()
+})
+
+onUnmounted(() => {
+  stopWatch()
+})
 </script>
 
 <template>
