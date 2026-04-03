@@ -432,7 +432,7 @@ const routes = [
         path: '/about/donate',
         text: '支持我们',
         name: 'Donate',
-        display: true,
+        display: false,
         module: 'about',
         icon: "mdi-thumb-up",
         component: () => import('/src/pages/about/donate.vue'),
