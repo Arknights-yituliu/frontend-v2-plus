@@ -91,7 +91,8 @@
                 </div>
               </div>
               <div class="footer-image">
-                <img src="https://yituliu-dev-1307648010.cos.ap-beijing.myqcloud.com/image/website/QR/LogicalByteQR.png?q-sign-algorithm=sha1&q-ak=AKIDEpcgVogk4rlAG0uUqNmIbxGkHB2c-fZSPrhKJae_QsWKBmsS7zIM9HNMtc2mxSmU&q-sign-time=1773116074;1773119674&q-key-time=1773116074;1773119674&q-header-list=host&q-url-param-list=&q-signature=b9e546bf82f826a060854fcdc0a5a3063756d2fc&x-cos-security-token=XZiLyE60RcoeRbhoLkKT9Hkv7knzYMza8373400ba16a5183c4ec4f9b2dea3071TuKK-c_U9FCJX0kem7AsMITAqllPJwzA0HXlmHp6TKVKIE1cc5m83jQKrPLKM9yvzhyRz_PMaurjHeWcNZHDLhE2RSM-MX-ZwyvNmFPiFVVO7VC7-rH87SSB7s5xFjBWBT3BfGpjNoMZabi7foiFDeIC-bToPIWWg6MIQoBcfiZmnGeeQd9mpI1kXyOP2T_DvU_iZpME5KGrBe6oY3m8-5iBPEIz-MAqw9POKajK-DRk0WwoWk19A7GuyRaqO1bq0AVohPMiO6E4MGUblwqoLQ" alt="LogicalByte QR Code" />
+                <!-- <img src="https://yituliu-dev-1307648010.cos.ap-beijing.myqcloud.com/image/website/QR/LogicalByteQR.png?q-sign-algorithm=sha1&q-ak=AKIDEpcgVogk4rlAG0uUqNmIbxGkHB2c-fZSPrhKJae_QsWKBmsS7zIM9HNMtc2mxSmU&q-sign-time=1773116074;1773119674&q-key-time=1773116074;1773119674&q-header-list=host&q-url-param-list=&q-signature=b9e546bf82f826a060854fcdc0a5a3063756d2fc&x-cos-security-token=XZiLyE60RcoeRbhoLkKT9Hkv7knzYMza8373400ba16a5183c4ec4f9b2dea3071TuKK-c_U9FCJX0kem7AsMITAqllPJwzA0HXlmHp6TKVKIE1cc5m83jQKrPLKM9yvzhyRz_PMaurjHeWcNZHDLhE2RSM-MX-ZwyvNmFPiFVVO7VC7-rH87SSB7s5xFjBWBT3BfGpjNoMZabi7foiFDeIC-bToPIWWg6MIQoBcfiZmnGeeQd9mpI1kXyOP2T_DvU_iZpME5KGrBe6oY3m8-5iBPEIz-MAqw9POKajK-DRk0WwoWk19A7GuyRaqO1bq0AVohPMiO6E4MGUblwqoLQ" alt="LogicalByte QR Code" /> -->
+                <img src="/image/website/QR/LogicalByteQR.png" alt="LogicalByte QR Code" />
               </div>
             </div>
           </div>
@@ -114,7 +115,8 @@
           <span class="link-text">明日方舟官网新闻</span>
           <span class="external-icon">↗</span>
         </a>
-        <a href="https://torappu.prts.wiki/gamedata/latest/excel/character_table.json" target="_blank" class="news-link">
+        <a href="https://torappu.prts.wiki/gamedata/latest/excel/character_table.json" target="_blank"
+          class="news-link">
           <span class="link-icon">📄</span>
           <span class="link-text">角色数据JSON下载</span>
           <span class="external-icon">↗</span>
@@ -129,7 +131,8 @@
               <span v-if="jsonLoading">处理中...</span>
               <span v-else>📁 上传JSON文件</span>
             </button>
-            <input ref="jsonFileInput" type="file" accept="application/json" @change="handleJsonFileSelect" style="display: none" />
+            <input ref="jsonFileInput" type="file" accept="application/json" @change="handleJsonFileSelect"
+              style="display: none" />
           </div>
           <div class="json-status">
             <div v-if="characterData && Object.keys(characterData).length > 0" class="json-success">
@@ -191,14 +194,10 @@
                   <!-- 标题和星级 -->
                   <div class="slot-basic-info">
                     <div class="slot-title-wrapper">
-                      <input
-                        v-model="slot.title"
-                        type="text"
-                        class="input-field slot-title-input"
-                        placeholder="输入角色名搜索"
-                        @input="searchTitleCharacter(index, slot.title)"
-                      />
-                      <div class="title-search-result" v-if="slot.titleSearchResult && slot.titleSearchResult !== '未找到'">
+                      <input v-model="slot.title" type="text" class="input-field slot-title-input" placeholder="输入角色名搜索"
+                        @input="searchTitleCharacter(index, slot.title)" />
+                      <div class="title-search-result"
+                        v-if="slot.titleSearchResult && slot.titleSearchResult !== '未找到'">
                         {{ slot.titleSearchResult }}
                       </div>
                       <div class="title-search-result error" v-else-if="slot.titleSearchResult === '未找到'">
@@ -236,27 +235,17 @@
                       <div class="data-row">
                         <span class="row-label">理智消耗</span>
                         <div class="row-cells">
-                          <input
-                            v-for="(cell, cellIndex) in slot.data[0]"
-                            :key="'san-' + index + '-' + cellIndex"
-                            v-model="slot.data[0][cellIndex]"
-                            type="text"
-                            class="input-field cell-field"
-                            placeholder=""
-                          />
+                          <input v-for="(cell, cellIndex) in slot.data[0]" :key="'san-' + index + '-' + cellIndex"
+                            v-model="slot.data[0][cellIndex]" type="text" class="input-field cell-field"
+                            placeholder="" />
                         </div>
                       </div>
                       <div class="data-row">
                         <span class="row-label">同星级排名</span>
                         <div class="row-cells">
-                          <input
-                            v-for="(cell, cellIndex) in slot.data[1]"
-                            :key="'rank-' + index + '-' + cellIndex"
-                            v-model="slot.data[1][cellIndex]"
-                            type="text"
-                            class="input-field cell-field"
-                            placeholder=""
-                          />
+                          <input v-for="(cell, cellIndex) in slot.data[1]" :key="'rank-' + index + '-' + cellIndex"
+                            v-model="slot.data[1][cellIndex]" type="text" class="input-field cell-field"
+                            placeholder="" />
                         </div>
                       </div>
                     </div>
