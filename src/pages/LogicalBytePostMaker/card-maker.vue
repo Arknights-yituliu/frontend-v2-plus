@@ -9,23 +9,30 @@
     <div class="card-maker-content">
       <!-- 左侧：样式调整区域 -->
       <aside class="card-maker-controls">
-        <!-- 配色方案 -->
+        <!-- 预设样式 -->
         <div class="control-section">
-          <h3>配色方案</h3>
-          <div class="color-schemes">
+          <h3>预设样式</h3>
+          <div class="preset-styles">
             <div
-              v-for="scheme in colorSchemes"
-              :key="scheme.name"
-              class="scheme-item"
-              :class="{ active: activeScheme === scheme.name }"
-              @click="applyColorScheme(scheme)"
+              v-for="preset in presets"
+              :key="preset.name"
+              class="preset-item"
+              @click="applyPreset(preset)"
             >
-              <div class="scheme-preview">
-                <div class="scheme-color" :style="{ backgroundColor: scheme.bgColor }"></div>
-                <div class="scheme-color" :style="{ backgroundColor: scheme.borderColor }"></div>
-                <div class="scheme-color" :style="{ backgroundColor: scheme.textColor }"></div>
+              <div class="preset-preview">
+                <div
+                  class="preset-card"
+                  :style="{
+                    background: preset.useGradient ? `linear-gradient(${preset.gradientDirection}, ${preset.bgColor}, ${preset.bgColor2})` : preset.bgColor,
+                    borderColor: preset.borderColor,
+                    color: preset.textColor,
+                    opacity: preset.bgOpacity
+                  }"
+                >
+                  <span>{{ preset.name.slice(0, 2) }}</span>
+                </div>
               </div>
-              <span class="scheme-name">{{ scheme.name }}</span>
+              <span class="preset-name">{{ preset.name }}</span>
             </div>
           </div>
         </div>
@@ -42,17 +49,80 @@
 
         <div class="control-section">
           <h3>分组样式</h3>
-          <div class="control-group">
-            <label>背景色</label>
-            <el-color-picker v-model="groupBgColor" />
+          <div class="control-row">
+            <div class="control-group inline">
+              <label>背景色</label>
+              <el-color-picker v-model="groupBgColor" size="small" />
+            </div>
+            <div class="control-group inline">
+              <label>边框色</label>
+              <el-color-picker v-model="groupBorderColor" size="small" />
+            </div>
+            <div class="control-group inline">
+              <label>文字色</label>
+              <el-color-picker v-model="groupTextColor" size="small" />
+            </div>
           </div>
-          <div class="control-group">
-            <label>边框颜色</label>
-            <el-color-picker v-model="groupBorderColor" />
+          <div class="control-row">
+            <div class="control-group inline">
+              <label>边框宽</label>
+              <el-input-number v-model="groupBorderWidth" :min="0" :max="10" size="small" />
+            </div>
+            <div class="control-group inline">
+              <label>圆角</label>
+              <el-input-number v-model="groupBorderRadius" :min="0" :max="50" size="small" />
+            </div>
           </div>
-          <div class="control-group">
-            <label>文本颜色</label>
-            <el-color-picker v-model="groupTextColor" />
+          <div class="control-row">
+            <div class="control-group inline">
+              <label>背景α</label>
+              <el-input-number v-model="groupBgOpacity" :min="0" :max="1" :step="0.1" size="small" />
+            </div>
+            <div class="control-group inline">
+              <label>文字α</label>
+              <el-input-number v-model="groupTextOpacity" :min="0" :max="1" :step="0.1" size="small" />
+            </div>
+            <div class="control-group inline">
+              <label>边框α</label>
+              <el-input-number v-model="groupBorderOpacity" :min="0" :max="1" :step="0.1" size="small" />
+            </div>
+          </div>
+          <div class="control-row">
+            <div class="control-group inline">
+              <label>渐变</label>
+              <el-switch v-model="useGradient" size="small" />
+            </div>
+            <template v-if="useGradient">
+              <div class="control-group inline">
+                <label>渐变色2</label>
+                <el-color-picker v-model="groupBgColor2" size="small" />
+              </div>
+              <div class="control-group inline">
+                <label>方向</label>
+                <el-select v-model="gradientDirection" size="small">
+                  <el-option label="→" value="to right" />
+                  <el-option label="←" value="to left" />
+                  <el-option label="↓" value="to bottom" />
+                  <el-option label="↘" value="to bottom right" />
+                </el-select>
+              </div>
+            </template>
+          </div>
+          <div class="control-row">
+            <div class="control-group inline">
+              <label>左侧边框</label>
+              <el-switch v-model="separateLeftBorder" size="small" />
+            </div>
+            <template v-if="separateLeftBorder">
+              <div class="control-group inline">
+                <label>左侧色</label>
+                <el-color-picker v-model="groupBorderColorLeft" size="small" />
+              </div>
+              <div class="control-group inline">
+                <label>左侧宽</label>
+                <el-input-number v-model="groupBorderWidthLeft" :min="0" :max="10" size="small" />
+              </div>
+            </template>
           </div>
         </div>
 
@@ -77,6 +147,7 @@
               <el-option label="正常" value="normal" />
               <el-option label="中等" value="500" />
               <el-option label="粗体" value="bold" />
+              <el-option label="更粗" value="800" />
             </el-select>
           </div>
           <div class="control-group">
@@ -180,7 +251,7 @@
                 >
                   <div v-if="card.showIcon" class="card-icon">
                     <img v-if="card.iconType === 'image'" :src="card.iconImage" alt="icon" />
-                    <span v-else-if="card.iconType === 'emoji'">{{ card.iconEmoji }}</span>
+                    <span v-else-if="card.iconType === 'emoji'" class="emoji-icon">{{ card.iconEmoji }}</span>
                     <span v-else-if="card.iconType === 'text'" class="text-icon">{{ card.iconText }}</span>
                   </div>
                   <div v-if="card.text" class="card-text" :style="getTextStyle(card)">
@@ -205,16 +276,119 @@
 import { ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const gap = ref(8)
+// 预设样式
+const presets = [
+  {
+    name: '霓虹赛博',
+    bgColor: '#0a0a0f',
+    bgColor2: '#1a1a2e',
+    bgOpacity: 1,
+    borderColor: '#00ff88',
+    borderWidth: 2,
+    borderRadius: 4,
+    textColor: '#00ff88',
+    useGradient: true,
+    gradientDirection: 'to bottom right',
+    separateLeftBorder: true,
+    borderColorLeft: '#00ff88',
+    borderWidthLeft: 4
+  },
+  {
+    name: '奶油蛋糕',
+    bgColor: '#fff5e6',
+    bgColor2: '#ffe4c4',
+    bgOpacity: 1,
+    borderColor: '#d4a574',
+    borderWidth: 1,
+    borderRadius: 12,
+    textColor: '#8b4513',
+    useGradient: true,
+    gradientDirection: 'to bottom',
+    separateLeftBorder: false,
+    borderColorLeft: '#d4a574',
+    borderWidthLeft: 1
+  },
+  {
+    name: '蒸汽朋克',
+    bgColor: '#2c1810',
+    bgColor2: '#4a3728',
+    bgOpacity: 1,
+    borderColor: '#cd7f32',
+    borderWidth: 3,
+    borderRadius: 2,
+    textColor: '#ffd700',
+    useGradient: true,
+    gradientDirection: 'to right',
+    separateLeftBorder: true,
+    borderColorLeft: '#cd7f32',
+    borderWidthLeft: 6
+  },
+  {
+    name: '极光幻影',
+    bgColor: '#0f2027',
+    bgColor2: '#2c5364',
+    bgOpacity: 0.95,
+    borderColor: '#4facfe',
+    borderWidth: 1,
+    borderRadius: 8,
+    textColor: '#ffffff',
+    useGradient: true,
+    gradientDirection: 'to bottom',
+    separateLeftBorder: false,
+    borderColorLeft: '#4facfe',
+    borderWidthLeft: 1
+  },
+  {
+    name: '糖果梦幻',
+    bgColor: '#ffeef8',
+    bgColor2: '#fff0f5',
+    bgOpacity: 0.9,
+    borderColor: '#ff69b4',
+    borderWidth: 2,
+    borderRadius: 20,
+    textColor: '#c71585',
+    useGradient: true,
+    gradientDirection: 'to right',
+    separateLeftBorder: false,
+    borderColorLeft: '#ff69b4',
+    borderWidthLeft: 2
+  },
+  {
+    name: '钢铁战士',
+    bgColor: '#434343',
+    bgColor2: '#1c1c1c',
+    bgOpacity: 1,
+    borderColor: '#717171',
+    borderWidth: 2,
+    borderRadius: 0,
+    textColor: '#e0e0e0',
+    useGradient: true,
+    gradientDirection: 'to bottom',
+    separateLeftBorder: true,
+    borderColorLeft: '#e0e0e0',
+    borderWidthLeft: 3
+  }
+]
 
-// 分组默认值
+// 响应式变量
+const useGradient = ref(false)
+const groupBgColor2 = ref('#ffffff')
+const gradientDirection = ref('to right')
+const groupBorderWidth = ref(2)
+const groupBorderRadius = ref(8)
+const groupBgOpacity = ref(1)
+const groupTextOpacity = ref(1)
+const groupBorderOpacity = ref(1)
+const separateLeftBorder = ref(false)
+const groupBorderColorLeft = ref('#4f67c6')
+const groupBorderWidthLeft = ref(4)
+
 const groupWidth = ref(300)
 const groupHeight = ref(40)
 const groupBgColor = ref('#f0f4ff')
 const groupBorderColor = ref('#4f67c6')
 const groupTextColor = ref('#182033')
 
-// 卡片默认值
 const cardText = ref('新卡片')
 const cardTextColor = ref('#182033')
 const cardFontSize = ref(14)
@@ -228,26 +402,21 @@ const cardIconText = ref('')
 const cardIconSize = ref(24)
 const cardIconPosition = ref('left')
 
-// 配色方案
-const colorSchemes = [
-  { name: '科技蓝', bgColor: '#f0f4ff', borderColor: '#4f67c6', textColor: '#182033' },
-  { name: '深空灰', bgColor: '#2d3748', borderColor: '#4a5568', textColor: '#ffffff' },
-  { name: '极简白', bgColor: '#ffffff', borderColor: '#e2e8f0', textColor: '#1a202c' },
-  { name: '活力橙', bgColor: '#fff7ed', borderColor: '#f97316', textColor: '#7c2d12' },
-  { name: '清新绿', bgColor: '#f0fdf4', borderColor: '#22c55e', textColor: '#14532d' },
-  { name: '优雅紫', bgColor: '#faf5ff', borderColor: '#a855f7', textColor: '#3b0764' },
-  { name: '少女粉', bgColor: '#fdf2f8', borderColor: '#ec4899', textColor: '#831843' },
-  { name: '商务金', bgColor: '#fefce8', borderColor: '#ca8a04', textColor: '#422006' }
-]
-
-const activeScheme = ref(null)
-
-const applyColorScheme = (scheme) => {
-  activeScheme.value = scheme.name
-  groupBgColor.value = scheme.bgColor
-  groupBorderColor.value = scheme.borderColor
-  groupTextColor.value = scheme.textColor
-  ElMessage.success(`已应用「${scheme.name}」配色`)
+// 应用预设样式
+const applyPreset = (preset) => {
+  groupBgColor.value = preset.bgColor
+  groupBgColor2.value = preset.bgColor2 || preset.bgColor
+  groupBgOpacity.value = preset.bgOpacity
+  groupBorderColor.value = preset.borderColor
+  groupBorderWidth.value = preset.borderWidth
+  groupBorderRadius.value = preset.borderRadius
+  groupTextColor.value = preset.textColor
+  useGradient.value = preset.useGradient
+  gradientDirection.value = preset.gradientDirection
+  separateLeftBorder.value = preset.separateLeftBorder
+  groupBorderColorLeft.value = preset.borderColorLeft
+  groupBorderWidthLeft.value = preset.borderWidthLeft
+  ElMessage.success(`已应用「${preset.name}」预设`)
 }
 
 const createCard = () => ({
@@ -265,21 +434,47 @@ const createCard = () => ({
   iconPosition: 'left'
 })
 
-const createGroup = (name = '分组') => ({
-  name,
-  width: 300,
-  height: 40,
-  backgroundColor: '#f0f4ff',
-  borderColor: '#4f67c6',
-  textColor: '#182033',
-  cards: [createCard()]
-})
+const createGroup = (name = '分组', preset = null) => {
+  const config = preset || {
+    bgColor: '#f0f4ff',
+    bgColor2: '#f0f4ff',
+    bgOpacity: 1,
+    borderColor: '#4f67c6',
+    borderWidth: 2,
+    borderRadius: 8,
+    textColor: '#182033',
+    useGradient: false,
+    gradientDirection: 'to right',
+    separateLeftBorder: false,
+    borderColorLeft: '#4f67c6',
+    borderWidthLeft: 4
+  }
+  return {
+    name,
+    width: 300,
+    height: 40,
+    backgroundColor: config.bgColor,
+    backgroundColor2: config.bgColor2 || config.bgColor,
+    bgOpacity: config.bgOpacity,
+    useGradient: config.useGradient,
+    gradientDirection: config.gradientDirection,
+    borderColor: config.borderColor,
+    borderWidth: config.borderWidth,
+    borderRadius: config.borderRadius,
+    textColor: config.textColor,
+    separateLeftBorder: config.separateLeftBorder,
+    borderColorLeft: config.borderColorLeft,
+    borderWidthLeft: config.borderWidthLeft,
+    cards: [createCard()]
+  }
+}
 
-const groups = ref([createGroup('分组 1')])
+const defaultPresets = presets.map((p, i) => createGroup(`预设 ${i + 1}`, p))
+
+const groups = ref(defaultPresets)
 const selectedGroupIndex = ref(0)
 const selectedCardIndex = ref(0)
 
-// 同步分组设置到所有卡片
 const syncGroupStyleToCards = () => {
   const gIdx = selectedGroupIndex.value
   if (gIdx < 0 || gIdx >= groups.value.length) return
@@ -287,17 +482,38 @@ const syncGroupStyleToCards = () => {
   group.width = groupWidth.value
   group.height = groupHeight.value
   group.backgroundColor = groupBgColor.value
+  group.backgroundColor2 = groupBgColor2.value
+  group.bgOpacity = groupBgOpacity.value
+  group.textOpacity = groupTextOpacity.value
+  group.borderOpacity = groupBorderOpacity.value
+  group.useGradient = useGradient.value
+  group.gradientDirection = gradientDirection.value
   group.borderColor = groupBorderColor.value
+  group.borderWidth = groupBorderWidth.value
+  group.borderRadius = groupBorderRadius.value
   group.textColor = groupTextColor.value
-  // 同时更新组内所有卡片
+  group.separateLeftBorder = separateLeftBorder.value
+  group.borderColorLeft = groupBorderColorLeft.value
+  group.borderWidthLeft = groupBorderWidthLeft.value
+  
   group.cards.forEach(card => {
     card.backgroundColor = groupBgColor.value
+    card.backgroundColor2 = groupBgColor2.value
+    card.bgOpacity = groupBgOpacity.value
+    card.textOpacity = groupTextOpacity.value
+    card.borderOpacity = groupBorderOpacity.value
+    card.useGradient = useGradient.value
+    card.gradientDirection = gradientDirection.value
     card.borderColor = groupBorderColor.value
+    card.borderWidth = groupBorderWidth.value
+    card.borderRadius = groupBorderRadius.value
     card.textColor = groupTextColor.value
+    card.separateLeftBorder = separateLeftBorder.value
+    card.borderColorLeft = groupBorderColorLeft.value
+    card.borderWidthLeft = groupBorderWidthLeft.value
   })
 }
 
-// 同步卡片设置
 const syncCardStyle = () => {
   const gIdx = selectedGroupIndex.value
   const cIdx = selectedCardIndex.value
@@ -319,8 +535,7 @@ const syncCardStyle = () => {
   card.iconPosition = cardIconPosition.value
 }
 
-// 监听设置变化
-watch([groupWidth, groupHeight, groupBgColor, groupBorderColor, groupTextColor], syncGroupStyleToCards)
+watch([groupWidth, groupHeight, groupBgColor, groupBgColor2, groupBgOpacity, useGradient, gradientDirection, groupBorderColor, groupBorderWidth, groupBorderRadius, groupTextColor, separateLeftBorder, groupBorderColorLeft, groupBorderWidthLeft], syncGroupStyleToCards)
 watch([cardText, cardTextColor, cardFontSize, cardFontWeight, cardTextAlign, cardShowIcon, cardIconType, cardIconImage, cardIconEmoji, cardIconText, cardIconSize, cardIconPosition], syncCardStyle)
 
 const selectCard = (gIndex, cIndex) => {
@@ -351,32 +566,56 @@ const addCardToGroup = (gIndex) => {
   const group = groups.value[gIndex]
   const newCard = createCard()
   newCard.backgroundColor = group.backgroundColor
+  newCard.backgroundColor2 = group.backgroundColor2
+  newCard.bgOpacity = group.bgOpacity
+  newCard.textOpacity = group.textOpacity
+  newCard.borderOpacity = group.borderOpacity
+  newCard.useGradient = group.useGradient
+  newCard.gradientDirection = group.gradientDirection
   newCard.borderColor = group.borderColor
+  newCard.borderWidth = group.borderWidth
+  newCard.borderRadius = group.borderRadius
   newCard.textColor = group.textColor
+  newCard.separateLeftBorder = group.separateLeftBorder
+  newCard.borderColorLeft = group.borderColorLeft
+  newCard.borderWidthLeft = group.borderWidthLeft
   group.cards.push(newCard)
   selectedGroupIndex.value = gIndex
   selectedCardIndex.value = group.cards.length - 1
 }
 
-const getCardStyle = (card, group) => ({
-  width: group.width + 'px',
-  height: group.height + 'px',
-  backgroundColor: card.backgroundColor,
-  borderColor: card.borderColor,
-  borderWidth: '2px',
-  borderRadius: '8px',
-  padding: '0 16px',
-  display: 'flex',
-  flexDirection: card.iconPosition === 'left' || card.iconPosition === 'right' ? 'row' : 'column',
-  alignItems: 'center',
-  justifyContent: card.textAlign === 'left' ? 'flex-start' : card.textAlign === 'right' ? 'flex-end' : 'center',
-  gap: '8px',
-  boxSizing: 'border-box',
-  position: 'relative'
-})
+const getCardStyle = (card, group) => {
+  const bgStyle = card.useGradient
+    ? `linear-gradient(${card.gradientDirection}, ${card.backgroundColor}, ${card.backgroundColor2})`
+    : card.backgroundColor
+
+  const baseStyle = {
+    width: group.width + 'px',
+    height: group.height + 'px',
+    background: bgStyle,
+    opacity: card.bgOpacity,
+    border: `${card.borderWidth}px solid ${card.borderColor}`,
+    borderRadius: card.borderRadius + 'px',
+    padding: '0 16px',
+    display: 'flex',
+    flexDirection: card.iconPosition === 'left' || card.iconPosition === 'right' ? 'row' : 'column',
+    alignItems: 'center',
+    justifyContent: card.textAlign === 'left' ? 'flex-start' : card.textAlign === 'right' ? 'flex-end' : 'center',
+    gap: '8px',
+    boxSizing: 'border-box',
+    position: 'relative'
+  }
+
+  if (card.separateLeftBorder) {
+    baseStyle.borderLeft = `${card.borderWidthLeft}px solid ${card.borderColorLeft}`
+  }
+
+  return baseStyle
+}
 
 const getTextStyle = (card) => ({
   color: card.textColor,
+  opacity: card.textOpacity,
   fontSize: card.fontSize + 'px',
   fontWeight: card.fontWeight,
   textAlign: card.textAlign,
@@ -384,10 +623,7 @@ const getTextStyle = (card) => ({
 })
 
 const exportConfig = () => {
-  const config = {
-    gap: gap.value,
-    groups: groups.value
-  }
+  const config = { groups: groups.value }
   const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' })
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)
@@ -435,22 +671,29 @@ const exportSingleCardPng = async () => {
 }
 
 const resetAll = () => {
-  groups.value = [createGroup('分组 1')]
+  groups.value = defaultPresets.map((p, i) => createGroup(`预设 ${i + 1}`, p))
   selectedGroupIndex.value = 0
   selectedCardIndex.value = 0
-  gap.value = 8
   groupWidth.value = 300
   groupHeight.value = 40
   groupBgColor.value = '#f0f4ff'
+  groupBgColor2.value = '#ffffff'
+  groupBgOpacity.value = 1
+  useGradient.value = false
+  gradientDirection.value = 'to right'
   groupBorderColor.value = '#4f67c6'
+  groupBorderWidth.value = 2
+  groupBorderRadius.value = 8
   groupTextColor.value = '#182033'
+  separateLeftBorder.value = false
+  groupBorderColorLeft.value = '#4f67c6'
+  groupBorderWidthLeft.value = 4
   cardText.value = '新卡片'
   cardTextColor.value = '#182033'
   cardFontSize.value = 14
   cardFontWeight.value = 'normal'
   cardTextAlign.value = 'center'
   cardShowIcon.value = false
-  activeScheme.value = null
   ElMessage.success('已重置')
 }
 </script>
@@ -488,17 +731,17 @@ const resetAll = () => {
 }
 
 .card-maker-content {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 400px 1fr;
   gap: 24px;
 }
 
 .card-maker-controls {
   background: rgba(255, 255, 255, 0.92);
   border-radius: 16px;
-  padding: 20px;
+  padding: 16px;
   box-shadow: 0 18px 40px rgba(24, 32, 51, 0.08);
   max-height: calc(100vh - 120px);
   overflow-y: auto;
@@ -523,11 +766,31 @@ const resetAll = () => {
   margin-bottom: 12px;
 }
 
+.control-group.inline {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 12px;
+  margin-bottom: 8px;
+}
+
+.control-group.inline label {
+  margin-bottom: 2px;
+  font-size: 0.7rem;
+}
+
 .control-group label {
   display: block;
   margin-bottom: 6px;
   font-size: 0.85rem;
   color: #55607a;
+}
+
+.control-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .size-inputs {
@@ -536,49 +799,48 @@ const resetAll = () => {
   gap: 8px;
 }
 
-/* 配色方案 */
-.color-schemes {
+.preset-styles {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
 
-.scheme-item {
-  padding: 8px;
+.preset-item {
+  padding: 6px;
   border-radius: 8px;
   cursor: pointer;
   border: 2px solid transparent;
   transition: all 0.18s ease;
 }
 
-.scheme-item:hover {
+.preset-item:hover {
   border-color: #4f67c6;
+  transform: scale(1.05);
 }
 
-.scheme-item.active {
-  border-color: #4f67c6;
-  background: #e0e7ff;
-}
-
-.scheme-preview {
-  display: flex;
-  gap: 4px;
+.preset-preview {
   margin-bottom: 4px;
 }
 
-.scheme-color {
-  width: 20px;
-  height: 20px;
+.preset-card {
+  width: 100%;
+  height: 32px;
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
 }
 
-.scheme-name {
-  font-size: 0.7rem;
+.preset-name {
+  font-size: 0.65rem;
   color: #55607a;
+  display: block;
+  text-align: center;
 }
 
-/* 绘图区域 */
 .card-maker-preview {
   background: rgba(255, 255, 255, 0.92);
   border-radius: 16px;
@@ -590,6 +852,7 @@ const resetAll = () => {
   display: flex;
   gap: 12px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
 .preview-canvas {
@@ -660,7 +923,7 @@ const resetAll = () => {
 }
 
 .preview-card:hover {
-  opacity: 0.9;
+  filter: brightness(1.1);
 }
 
 .card-icon {
@@ -675,19 +938,13 @@ const resetAll = () => {
   max-height: 100%;
 }
 
+.emoji-icon, .text-icon {
+  font-size: inherit;
+}
+
 .card-text {
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.selected-indicator {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: #4f67c6;
-  border-radius: 0 0 6px 6px;
 }
 
 .add-group-btn {
@@ -710,7 +967,6 @@ const resetAll = () => {
   .card-maker-content {
     grid-template-columns: 1fr;
   }
-
   .card-maker-controls {
     max-height: none;
   }
@@ -719,6 +975,9 @@ const resetAll = () => {
 @media (max-width: 768px) {
   .card-maker-page {
     padding: 16px;
+  }
+  .preset-styles {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 </style>
