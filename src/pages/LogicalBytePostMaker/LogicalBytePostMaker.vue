@@ -33,6 +33,11 @@ const pages = [
     title: '简报制图',
     description: '进入简报条目制图页面',
     to: '/lb/return'
+  },
+  {
+    title: '卡片生成器',
+    description: '创建由多个可配置卡片组成的组件',
+    to: '/lb/card-maker'
   }
 ]
 </script>

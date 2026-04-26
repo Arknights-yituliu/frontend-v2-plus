@@ -213,6 +213,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/card-maker',
+        text: '卡片生成器',
+        name: 'CardMaker',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/card-maker.vue'),
+        meta: {
+            title: '卡片生成器'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',
