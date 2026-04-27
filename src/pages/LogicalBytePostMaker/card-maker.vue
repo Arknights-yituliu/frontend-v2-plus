@@ -45,6 +45,14 @@
             <span>×</span>
             <el-input-number v-model="groupHeight" :min="20" :max="200" size="small" />
           </div>
+          <div class="size-presets">
+            <button class="size-preset-btn" @click="applySizePreset(320, 60)">视频标题 320×60</button>
+            <button class="size-preset-btn" @click="applySizePreset(400, 80)">介绍卡片 400×80</button>
+            <button class="size-preset-btn" @click="applySizePreset(500, 100)">详情卡片 500×100</button>
+            <button class="size-preset-btn" @click="applySizePreset(600, 120)">大号卡片 600×120</button>
+            <button class="size-preset-btn" @click="applySizePreset(280, 50)">紧凑型 280×50</button>
+            <button class="size-preset-btn" @click="applySizePreset(350, 70)">中型 350×70</button>
+          </div>
         </div>
 
         <div class="control-section">
@@ -291,7 +299,9 @@ const presets = [
     gradientDirection: 'to bottom right',
     separateLeftBorder: true,
     borderColorLeft: '#00ff88',
-    borderWidthLeft: 4
+    borderWidthLeft: 4,
+    glowColor: '#00ff88',
+    hasGlow: true
   },
   {
     name: '奶油蛋糕',
@@ -306,7 +316,9 @@ const presets = [
     gradientDirection: 'to bottom',
     separateLeftBorder: false,
     borderColorLeft: '#d4a574',
-    borderWidthLeft: 1
+    borderWidthLeft: 1,
+    glowColor: 'transparent',
+    hasGlow: false
   },
   {
     name: '蒸汽朋克',
@@ -321,7 +333,9 @@ const presets = [
     gradientDirection: 'to right',
     separateLeftBorder: true,
     borderColorLeft: '#cd7f32',
-    borderWidthLeft: 6
+    borderWidthLeft: 6,
+    glowColor: 'transparent',
+    hasGlow: false
   },
   {
     name: '极光幻影',
@@ -336,7 +350,9 @@ const presets = [
     gradientDirection: 'to bottom',
     separateLeftBorder: false,
     borderColorLeft: '#4facfe',
-    borderWidthLeft: 1
+    borderWidthLeft: 1,
+    glowColor: 'transparent',
+    hasGlow: false
   },
   {
     name: '糖果梦幻',
@@ -351,7 +367,9 @@ const presets = [
     gradientDirection: 'to right',
     separateLeftBorder: false,
     borderColorLeft: '#ff69b4',
-    borderWidthLeft: 2
+    borderWidthLeft: 2,
+    glowColor: 'transparent',
+    hasGlow: false
   },
   {
     name: '钢铁战士',
@@ -366,7 +384,255 @@ const presets = [
     gradientDirection: 'to bottom',
     separateLeftBorder: true,
     borderColorLeft: '#e0e0e0',
-    borderWidthLeft: 3
+    borderWidthLeft: 3,
+    glowColor: 'transparent',
+    hasGlow: false
+  },
+  {
+    name: '故障艺术',
+    bgColor: '#0d0221',
+    bgColor2: '#1a0533',
+    bgOpacity: 1,
+    borderColor: '#ff00ff',
+    borderWidth: 1,
+    borderRadius: 0,
+    textColor: '#00ffff',
+    useGradient: true,
+    gradientDirection: 'to right',
+    separateLeftBorder: true,
+    borderColorLeft: '#ff00ff',
+    borderWidthLeft: 3,
+    glowColor: '#ff00ff',
+    hasGlow: true,
+    glitchEffect: true
+  },
+  {
+    name: '光晕玻璃',
+    bgColor: 'rgba(255, 255, 255, 0.15)',
+    bgColor2: 'rgba(255, 255, 255, 0.05)',
+    bgOpacity: 0.8,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderWidth: 1,
+    borderRadius: 16,
+    textColor: '#ffffff',
+    useGradient: false,
+    gradientDirection: 'to bottom',
+    separateLeftBorder: false,
+    borderColorLeft: 'rgba(255, 255, 255, 0.3)',
+    borderWidthLeft: 1,
+    glowColor: 'rgba(255, 255, 255, 0.5)',
+    hasGlow: true,
+    glassEffect: true
+  },
+  {
+    name: '日落余晖',
+    bgColor: '#2d1b69',
+    bgColor2: '#ff6b35',
+    bgOpacity: 1,
+    borderColor: '#ffd700',
+    borderWidth: 2,
+    borderRadius: 12,
+    textColor: '#ffffff',
+    useGradient: true,
+    gradientDirection: '135deg',
+    separateLeftBorder: true,
+    borderColorLeft: '#ff6b35',
+    borderWidthLeft: 4,
+    glowColor: 'transparent',
+    hasGlow: false
+  },
+  {
+    name: '科技蓝光',
+    bgColor: '#0a1628',
+    bgColor2: '#1e3a5f',
+    bgOpacity: 1,
+    borderColor: '#00d4ff',
+    borderWidth: 2,
+    borderRadius: 6,
+    textColor: '#e0f7ff',
+    useGradient: true,
+    gradientDirection: 'to bottom right',
+    separateLeftBorder: true,
+    borderColorLeft: '#00d4ff',
+    borderWidthLeft: 3,
+    glowColor: '#00d4ff',
+    hasGlow: true,
+    circuitPattern: true
+  },
+  {
+    name: '极光流动',
+    bgColor: '#0f0c29',
+    bgColor2: '#302b63',
+    bgOpacity: 1,
+    borderColor: '#00ff88',
+    borderWidth: 1,
+    borderRadius: 20,
+    textColor: '#ffffff',
+    useGradient: true,
+    gradientDirection: '45deg',
+    separateLeftBorder: true,
+    borderColorLeft: '#00ff88',
+    borderWidthLeft: 3,
+    glowColor: '#00ff88',
+    hasGlow: true,
+    auroraEffect: true
+  },
+  {
+    name: '暗夜极光',
+    bgColor: '#0f0c29',
+    bgColor2: '#24243e',
+    bgOpacity: 1,
+    borderColor: '#8b5cf6',
+    borderWidth: 2,
+    borderRadius: 12,
+    textColor: '#f0f0ff',
+    useGradient: true,
+    gradientDirection: 'to bottom',
+    separateLeftBorder: true,
+    borderColorLeft: '#a855f7',
+    borderWidthLeft: 4,
+    glowColor: '#8b5cf6',
+    hasGlow: true
+  },
+  {
+    name: '金属质感',
+    bgColor: '#2c3e50',
+    bgColor2: '#4a6572',
+    bgOpacity: 1,
+    borderColor: '#95a5a6',
+    borderWidth: 2,
+    borderRadius: 4,
+    textColor: '#ecf0f1',
+    useGradient: true,
+    gradientDirection: 'to bottom',
+    separateLeftBorder: true,
+    borderColorLeft: '#bdc3c7',
+    borderWidthLeft: 4,
+    glowColor: 'transparent',
+    hasGlow: false,
+    metallicEffect: true
+  },
+  {
+    name: '可爱粉嫩',
+    bgColor: '#ffecd2',
+    bgColor2: '#fcb69f',
+    bgOpacity: 1,
+    borderColor: '#ff9a9e',
+    borderWidth: 2,
+    borderRadius: 25,
+    textColor: '#c44569',
+    useGradient: true,
+    gradientDirection: 'to right',
+    separateLeftBorder: false,
+    borderColorLeft: '#ff9a9e',
+    borderWidthLeft: 2,
+    glowColor: 'transparent',
+    hasGlow: false
+  },
+  {
+    name: '像素复古',
+    bgColor: '#1a1a2e',
+    bgColor2: '#16213e',
+    bgOpacity: 1,
+    borderColor: '#e94560',
+    borderWidth: 4,
+    borderRadius: 0,
+    textColor: '#e94560',
+    useGradient: true,
+    gradientDirection: 'to bottom',
+    separateLeftBorder: true,
+    borderColorLeft: '#0f3460',
+    borderWidthLeft: 8,
+    glowColor: 'transparent',
+    hasGlow: false,
+    pixelEffect: true
+  },
+  {
+    name: '浮雕质感',
+    bgColor: '#f5f5f5',
+    bgColor2: '#e0e0e0',
+    bgOpacity: 1,
+    borderColor: '#999999',
+    borderWidth: 1,
+    borderRadius: 8,
+    textColor: '#333333',
+    useGradient: true,
+    gradientDirection: 'to bottom right',
+    separateLeftBorder: false,
+    borderColorLeft: '#999999',
+    borderWidthLeft: 1,
+    glowColor: 'transparent',
+    hasGlow: false,
+    embossEffect: true
+  },
+  {
+    name: '热血火焰',
+    bgColor: '#1a0000',
+    bgColor2: '#4a0000',
+    bgOpacity: 1,
+    borderColor: '#ff4500',
+    borderWidth: 2,
+    borderRadius: 8,
+    textColor: '#ffdd00',
+    useGradient: true,
+    gradientDirection: 'to top',
+    separateLeftBorder: true,
+    borderColorLeft: '#ff6600',
+    borderWidthLeft: 5,
+    glowColor: '#ff4500',
+    hasGlow: true
+  },
+  {
+    name: '清新薄荷',
+    bgColor: '#a8edea',
+    bgColor2: '#fed6e3',
+    bgOpacity: 0.9,
+    borderColor: '#00b894',
+    borderWidth: 2,
+    borderRadius: 18,
+    textColor: '#2d3436',
+    useGradient: true,
+    gradientDirection: '135deg',
+    separateLeftBorder: true,
+    borderColorLeft: '#00cec9',
+    borderWidthLeft: 4,
+    glowColor: 'transparent',
+    hasGlow: false
+  },
+  {
+    name: '全息幻彩',
+    bgColor: '#1a1a2e',
+    bgColor2: '#16213e',
+    bgOpacity: 1,
+    borderColor: '#a855f7',
+    borderWidth: 2,
+    borderRadius: 12,
+    textColor: '#ffffff',
+    useGradient: true,
+    gradientDirection: '45deg',
+    separateLeftBorder: true,
+    borderColorLeft: '#ec4899',
+    borderWidthLeft: 4,
+    glowColor: '#a855f7',
+    hasGlow: true,
+    holographicEffect: true
+  },
+  {
+    name: '暗黑优雅',
+    bgColor: '#0d0d0d',
+    bgColor2: '#1a1a1a',
+    bgOpacity: 1,
+    borderColor: '#404040',
+    borderWidth: 1,
+    borderRadius: 4,
+    textColor: '#cccccc',
+    useGradient: true,
+    gradientDirection: 'to bottom',
+    separateLeftBorder: true,
+    borderColorLeft: '#666666',
+    borderWidthLeft: 2,
+    glowColor: 'transparent',
+    hasGlow: false
   }
 ]
 
@@ -391,8 +657,8 @@ const groupTextColor = ref('#182033')
 
 const cardText = ref('新卡片')
 const cardTextColor = ref('#182033')
-const cardFontSize = ref(14)
-const cardFontWeight = ref('normal')
+const cardFontSize = ref(21)
+const cardFontWeight = ref('bold')
 const cardTextAlign = ref('center')
 const cardShowIcon = ref(false)
 const cardIconType = ref('none')
@@ -419,11 +685,18 @@ const applyPreset = (preset) => {
   ElMessage.success(`已应用「${preset.name}」预设`)
 }
 
+// 应用尺寸预设
+const applySizePreset = (width, height) => {
+  groupWidth.value = width
+  groupHeight.value = height
+  ElMessage.success(`已调整为 ${width}×${height}`)
+}
+
 const createCard = () => ({
   text: '新卡片',
   textColor: '#182033',
-  fontSize: 14,
-  fontWeight: 'normal',
+  fontSize: 21,
+  fontWeight: 'bold',
   textAlign: 'center',
   showIcon: false,
   iconType: 'none',
@@ -801,7 +1074,7 @@ const resetAll = () => {
 
 .preset-styles {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
 }
 
@@ -977,7 +1250,281 @@ const resetAll = () => {
     padding: 16px;
   }
   .preset-styles {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
+}
+
+/* 预设卡片效果样式 */
+.preset-card.neon-glow {
+  box-shadow: 0 0 10px var(--glow-color, #00ff88), 0 0 20px var(--glow-color, #00ff88);
+}
+
+.preset-card.glass-effect {
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.preset-card.metallic-effect {
+  background: linear-gradient(135deg, #2c3e50 0%, #4a6572 50%, #2c3e50 100%);
+  background-size: 200% 200%;
+}
+
+.preset-card.pixel-effect {
+  image-rendering: pixelated;
+  border-width: 4px;
+  box-shadow: 
+    inset -2px -2px 0 rgba(0,0,0,0.3),
+    inset 2px 2px 0 rgba(255,255,255,0.1);
+}
+
+.preset-card.emboss-effect {
+  box-shadow: 
+    inset 2px 2px 4px rgba(255,255,255,0.8),
+    inset -2px -2px 4px rgba(0,0,0,0.2);
+  border: 1px solid #cccccc;
+}
+
+.preset-card.aurora-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.preset-card.aurora-effect::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 40%,
+    rgba(0, 255, 136, 0.1) 50%,
+    transparent 60%
+  );
+  animation: aurora-shine 3s ease-in-out infinite;
+}
+
+.preset-card.holographic-effect {
+  background: linear-gradient(
+    135deg,
+    #1a1a2e 0%,
+    #16213e 25%,
+    #0f3460 50%,
+    #16213e 75%,
+    #1a1a2e 100%
+  );
+  background-size: 400% 400%;
+  animation: holo-shift 4s ease infinite;
+}
+
+.preset-card.circuit-pattern {
+  background-image: 
+    linear-gradient(90deg, rgba(0, 212, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(0, 212, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.preset-card.glitch-effect {
+  position: relative;
+  animation: glitch-skew 1s infinite linear alternate-reverse;
+}
+
+.preset-card.glitch-effect::before,
+.preset-card.glitch-effect::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preset-card.glitch-effect::before {
+  color: #ff00ff;
+  animation: glitch-1 0.3s infinite linear alternate-reverse;
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+}
+
+.preset-card.glitch-effect::after {
+  color: #00ffff;
+  animation: glitch-2 0.3s infinite linear alternate-reverse;
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+}
+
+/* 关键帧动画 */
+@keyframes aurora-shine {
+  0% { transform: translateX(-30%) translateY(-30%) rotate(0deg); }
+  100% { transform: translateX(30%) translateY(30%) rotate(360deg); }
+}
+
+@keyframes holo-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes glitch-1 {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-1px); }
+  80% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes glitch-2 {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(3px); }
+  40% { transform: translateX(-3px); }
+  60% { transform: translateX(1px); }
+  80% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes glitch-skew {
+  0% { transform: skew(0deg); }
+  10% { transform: skew(1deg); }
+  20% { transform: skew(-1deg); }
+  30% { transform: skew(0.5deg); }
+  40% { transform: skew(-0.5deg); }
+  50% { transform: skew(0deg); }
+  100% { transform: skew(0deg); }
+}
+
+/* 预览卡片动画效果 */
+.preview-card.neon-glow {
+  box-shadow: 0 0 15px var(--glow-color, #00ff88), 0 0 30px var(--glow-color, #00ff88);
+}
+
+.preview-card.glass-effect {
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.preview-card.metallic-effect {
+  background: linear-gradient(135deg, #2c3e50 0%, #4a6572 50%, #2c3e50 100%) !important;
+  background-size: 200% 200% !important;
+  animation: metallic-shine 3s ease infinite;
+}
+
+.preview-card.pixel-effect {
+  image-rendering: pixelated !important;
+  border-width: 4px !important;
+  box-shadow: 
+    inset -3px -3px 0 rgba(0,0,0,0.4),
+    inset 3px 3px 0 rgba(255,255,255,0.15) !important;
+}
+
+.preview-card.emboss-effect {
+  box-shadow: 
+    inset 3px 3px 6px rgba(255,255,255,0.9),
+    inset -3px -3px 6px rgba(0,0,0,0.25) !important;
+  border: 1px solid #bbbbbb !important;
+}
+
+.preview-card.aurora-effect::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 40%,
+    rgba(0, 255, 136, 0.15) 50%,
+    transparent 60%
+  );
+  animation: aurora-shine 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.preview-card.holographic-effect {
+  background: linear-gradient(
+    135deg,
+    #1a1a2e 0%,
+    #16213e 25%,
+    #0f3460 50%,
+    #16213e 75%,
+    #1a1a2e 100%
+  ) !important;
+  background-size: 400% 400% !important;
+  animation: holo-shift 4s ease infinite !important;
+}
+
+.preview-card.circuit-pattern {
+  background-image: 
+    linear-gradient(90deg, rgba(0, 212, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(0, 212, 255, 0.08) 1px, transparent 1px) !important;
+  background-size: 20px 20px !important;
+}
+
+.preview-card.glitch-effect {
+  animation: glitch-skew 1s infinite linear alternate-reverse !important;
+}
+
+.preview-card.fire-glow {
+  box-shadow: 
+    0 0 10px rgba(255, 69, 0, 0.5),
+    0 0 20px rgba(255, 69, 0, 0.3),
+    0 0 30px rgba(255, 102, 0, 0.2);
+}
+
+@keyframes metallic-shine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 卡片尺寸调整按钮 */
+.size-presets {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.size-preset-btn {
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  border: 1px solid #d0d7de;
+  border-radius: 12px;
+  background: #f6f8fa;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.size-preset-btn:hover {
+  background: #e8ecf0;
+  border-color: #4f67c6;
+}
+
+/* 导出设置面板 */
+.export-options {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.export-options label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #55607a;
+  cursor: pointer;
+}
+
+.export-options input[type="number"] {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
 }
 </style>
