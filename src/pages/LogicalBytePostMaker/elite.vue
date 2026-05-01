@@ -176,6 +176,25 @@
           </div>
         </div>
 
+        <!-- 数据文本解析 -->
+        <div class="input-group">
+          <label class="input-label">数据文本解析</label>
+          <textarea v-model="dataText" type="text" class="input-field image-url-input"
+            placeholder="输入数据文本，解析后显示在下方表格中" >
+          </textarea>
+        
+           <button @click="saveData" class="json-upload-btn" >
+           
+              <span >保存数据</span>
+            </button>
+
+          <div>
+            <div v-for="(item, index) in excelData" :key="index">
+              {{ item }}
+            </div>
+          </div>
+        </div>
+
         <!-- 槽位配置 -->
         <div class="input-group">
           <label class="input-label">数据表格（5个固定槽位）</label>
@@ -264,6 +283,8 @@
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 
 const STORAGE_KEY = 'logicalByte_data'
+
+
 
 // 组件挂载状态
 const isMounted = ref(false)
@@ -573,7 +594,7 @@ onUnmounted(() => {
 })
 
 // 处理图片加载错误
-const handleImageError = (section) => {
+const handleImageError = (section) => {   
   imageErrors.value[section] = true
 }
 
@@ -788,6 +809,118 @@ const clearAllData = () => {
   }
 }
 
+
+let excelData = ref([])
+let dataText = ref('')
+
+watch(dataText, (newVal) => {
+  excelData.value = parseEliteText(newVal)
+})
+
+
+let slotIndex = ref(0)
+
+function saveData(){
+    let map = new Map()
+    
+    for(const item of excelData.value){
+      if(!map.has(item.name)){
+        map.set(item.name, {
+          name: item.name,
+          elite:{
+            cost:0,
+            rank:''
+          },
+          skill1:{
+            cost:0,
+            rank:''
+          },
+          skill2:{
+            cost:0,
+            rank:''
+          },
+          skill3:{
+            cost:0,
+            rank:''
+          }
+        })
+      }
+       if(item.key === '精二'){
+        map.get(item.name).elite = {
+          cost: item.cost,
+          rank: item.rank
+        }
+       }
+       if(item.key === '1技能专精'){
+        map.get(item.name).skill1 = {
+          cost: item.cost,
+          rank: item.rank
+        }
+       }  
+       if(item.key === '2技能专精'){
+        map.get(item.name).skill2 = {
+          cost: item.cost,
+          rank: item.rank
+        }
+       }
+       if(item.key === '3技能专精'){
+        map.get(item.name).skill3 = {
+          cost: item.cost,
+          rank: item.rank
+        } 
+       }
+    }
+
+    for(const [name, data] of map){
+         slots.value[slotIndex.value].title = name
+         slots.value[slotIndex.value].show = true
+         slots.value[slotIndex.value].data = [
+          [data.elite.cost, data.skill1.cost, data.skill2.cost, data.skill3.cost],
+          [data.elite.rank, data.skill1.rank, data.skill2.rank, data.skill3.rank]
+         ]
+        slotIndex.value++
+    }
+}
+
+/**
+ * 解析精英化查询文本，提取干员名称、查询内容、理智消耗和排名
+ * @param {string} text - 包含干员查询结果的文本
+ * @returns {Array<{name: string, key: string, cost: number, rank: string}>} 解析后的结构化数据
+ */
+function parseEliteText(text) {
+  const results = []
+  const lines = text.split('\n')
+
+  let currentName = ''
+  let currentKey = ''
+
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (!trimmed) continue
+
+    // 匹配表头行：干员名    xxx    查询内容    xxx
+    const headerMatch = trimmed.match(/干员名\s+(.+?)\s+查询内容\s+(.+)$/)
+    if (headerMatch) {
+      currentName = headerMatch[1].trim()
+      currentKey = headerMatch[2].trim()
+      continue
+    }
+
+    // 匹配数据行：理智消耗为xxx，在同稀有度的排名为xx/xx
+    const dataMatch = trimmed.match(/理智消耗为([\d.]+)，在同稀有度的排名为(\d+\/\d+)/)
+    if (dataMatch && currentName && currentKey) {
+      results.push({
+        name: currentName,
+        key: currentKey,
+        cost: parseFloat(dataMatch[1]),
+        rank: dataMatch[2]
+      })
+    }
+  }
+
+  return results
+}
+
 onMounted(() => {
   isMounted.value = true
   console.log('LogicalByte 页面已加载')
@@ -797,6 +930,11 @@ onMounted(() => {
     console.log('本地未找到JSON数据，请手动刷新加载')
   }
 })
+
+
+
+
+
 </script>
 
 <style scoped>
