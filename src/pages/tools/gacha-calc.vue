@@ -248,7 +248,7 @@ const scheduleOptions = [
     start: new Date("2026/08/01 12:00:00"),
     end: new Date("2026/08/15 04:01:00"),
     activityType: "夏活限定",
-    disabled: false,
+    disabled: true,
     dailyGiftResources: true,
     accuracyFlag: true,
   },
