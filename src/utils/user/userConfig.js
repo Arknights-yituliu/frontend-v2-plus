@@ -59,6 +59,10 @@ const defaultConfig = {
             itemId: "30093",  // 研磨石
             itemValue: 2.52,
         },
+         {
+            itemId: "30103",  // RMA70-12
+            itemValue: 2.88,
+        },
     ],
 
     // 加工站策略

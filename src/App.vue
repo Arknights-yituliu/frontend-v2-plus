@@ -108,9 +108,10 @@ watch(currentPath, (newPath, oldPath) => {
 function forcedUpdateStageConfig(){
   const ForcedUpdateTimeText = localStorage.getItem("ForcedUpdateTime");
   const stageConfigText = localStorage.getItem("StageConfig");
-  if("20251101"===ForcedUpdateTimeText){
+  if("2026050123"===ForcedUpdateTimeText){
     return
   }
+  console.log("需要更新配置")
   if(stageConfigText){
     const stageConfig = JSON.parse(stageConfigText);
     if (!stageConfig.customItem) {
@@ -120,21 +121,21 @@ function forcedUpdateStageConfig(){
     const list = stageConfig.customItem;
 
     // 检查是否已存在相同的 itemId，避免重复插入
-    const existingItemIndex = list.findIndex(item => item.itemId === "30093");
+    const existingItemIndex = list.findIndex(item => item.itemId === "30103");
 
     if (existingItemIndex !== -1) {
       // 如果已存在，更新该元素
-      list[existingItemIndex].itemValue = 2.52;
-      console.log("不需要更新配置");
+      list[existingItemIndex].itemValue = 2.88;
+      console.log("需要更新物品价值");
     } else {
       // 如果不存在，插入新元素
-      list.push({ itemId: "30093", itemValue: 2.52 });
-      console.log("需要更新配置");
+      list.push({ itemId: "30103", itemValue: 2.88 });
+      console.log("需要写入物品价值");
     }
 
     // 保存回 localStorage
     localStorage.setItem("StageConfig", JSON.stringify(stageConfig));
-    localStorage.setItem("ForcedUpdateTime", "20251101");
+    localStorage.setItem("ForcedUpdateTime", "2026050123");
     console.log("配置更新成功");
 
   }

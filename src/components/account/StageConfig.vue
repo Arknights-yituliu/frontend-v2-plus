@@ -1,9 +1,9 @@
 <script setup>
-import {nextTick, onMounted, ref, watch} from "vue";
-import {formatNumber} from "/src/utils/format.js";
+import { nextTick, onMounted, ref, watch } from "vue";
+import { formatNumber } from "/src/utils/format.js";
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
-import {getStageConfig, defaultConfig, parseConfig, stringifyConfig} from "/src/utils/user/userConfig.js";
+import { getStageConfig, defaultConfig, parseConfig, stringifyConfig } from "/src/utils/user/userConfig.js";
 import {
   orundumValueMap,
   originitePrimeCoefficientMap,
@@ -13,15 +13,15 @@ import {
   modUnlockTokenValueMap,
   recruitmentPermitValueMap,
   expeditedPlanValueMap,
-  furniturePartValueMap
+  furniturePartValueMap,
 } from "/src/utils/user/configParametersMap.js";
 import ActionButton from "/src/components/account/ActionButton.vue";
-import ActStoreUnlimitedExchangeItem from '/src/static/json/material/act_store_unlimited_exchange_item.json';
+import ActStoreUnlimitedExchangeItem from "/src/static/json/material/act_store_unlimited_exchange_item.json";
 import PresetParameter from "/src/static/json/material/preset_parameter.json";
-import {createMessage} from "/src/utils/message.js";
-import {stringToNumber} from '/src/utils/stringUtils.js';
+import { createMessage } from "/src/utils/message.js";
+import { stringToNumber } from "/src/utils/stringUtils.js";
 
-const presetParameter = ref(PresetParameter)
+const presetParameter = ref(PresetParameter);
 
 // 数据源映射与正则校验
 
@@ -30,29 +30,27 @@ const numberRegex = /^(0|[1-9]\d*)(\.\d+)?$/;
 
 // 输入规则：校验数字格式和范围
 const numberBetween0And1 = [
-  value => numberRegex.test(value) || '仅可输入0.0-1.0间的小数，小数点后位数不限',
-  value => (value === 0 || (value != null && value !== '')) || '不能为空',
-  value => (value >= 0 && value <= 1) || '仅可输入0.0-1.0间的小数，小数点后位数不限',
+  (value) => numberRegex.test(value) || "仅可输入0.0-1.0间的小数，小数点后位数不限",
+  (value) => value === 0 || (value != null && value !== "") || "不能为空",
+  (value) => (value >= 0 && value <= 1) || "仅可输入0.0-1.0间的小数，小数点后位数不限",
 ];
 const numberGe0 = [(value) => parseFloat(value) >= 0 || "值必须大于或等于 0"];
 
-
 // 开发者模式
-const clickCount = ref(0)
-const developerMode = ref(false)
+const clickCount = ref(0);
+const developerMode = ref(false);
 
 function handleClick() {
-  clickCount.value++
+  clickCount.value++;
   if (clickCount.value >= 8) {
-    developerMode.value = true
+    developerMode.value = true;
   }
 }
 
 function closeDevMode() {
-  developerMode.value = false
-  clickCount.value = 0
+  developerMode.value = false;
+  clickCount.value = 0;
 }
-
 
 // Beasts
 
@@ -60,19 +58,19 @@ const BeastsStage = ref({
   "1-7": {
     zoneIndex: 0,
     stageIndex: 0,
-    active: true
+    active: true,
   },
   "12-17": {
     zoneIndex: 0,
     stageIndex: 0,
-    active: true
+    active: true,
   },
   "R8-11": {
     zoneIndex: 0,
     stageIndex: 0,
-    active: true
+    active: true,
   },
-})
+});
 
 /**
  * 物品定价策略
@@ -81,7 +79,7 @@ const stageConfig = ref({});
 /**
  * 已打开的物品定价策略设置面板
  */
-const stageConfigPanel = ref(['control-panel', 'preset-parameter']);
+const stageConfigPanel = ref(["control-panel", "preset-parameter"]);
 /**
  * 物品列表
  */
@@ -89,7 +87,7 @@ const itemList = ref([]);
 /**
  * 显示在 debug 区的文本
  */
-const debugText = ref('');
+const debugText = ref("");
 
 /**
  * 重置为默认参数
@@ -97,10 +95,9 @@ const debugText = ref('');
 function resetConfig() {
   console.log("重置配置");
   console.log(defaultConfig);
-  stageConfig.value = parseConfig(stringifyConfig(defaultConfig));  // 重置为默认配置，用 JSON 深拷贝
+  stageConfig.value = parseConfig(stringifyConfig(defaultConfig)); // 重置为默认配置，用 JSON 深拷贝
   forceRefreshItemValue();
 }
-
 
 function loadingStageConfig() {
   // 合并本地配置
@@ -108,34 +105,31 @@ function loadingStageConfig() {
 
   // console.log('stageConfig',stageConfig.value)
 
-  stageConfig.value.useActivityStage = false
+  stageConfig.value.useActivityStage = false;
 
-  let customItemMap = new Map()
+  let customItemMap = new Map();
 
   for (const item of stageConfig.value.customItem) {
-    customItemMap.set(item.itemId, item.itemValue)
+    customItemMap.set(item.itemId, item.itemValue);
   }
-
 
   for (const item of actStoreUnlimitedExchangeItem.value) {
     if (customItemMap.has(item.itemId)) {
       if (customItemMap.get(item.itemId) < 3) {
-        item.active = true
+        item.active = true;
       }
     }
   }
 
   for (const item of stageConfig.value.stageBlacklist) {
-
   }
 
   // stageConfig.value =stageConfigDebug
   getStageCollectByZone(); // 获取关卡信息
 }
 
-
 function choosePresetParameter(presetParameter) {
-  const parameters = presetParameter.parameterSets
+  const parameters = presetParameter.parameterSets;
   for (const name in parameters) {
     if (name === "workshopStrategy") {
       for (const workshopStrategyName in parameters.workshopStrategy) {
@@ -145,14 +139,13 @@ function choosePresetParameter(presetParameter) {
       stageConfig.value[name] = parameters[name];
     }
   }
-  updateStageActive()
+  updateStageActive();
   createMessage({
-    type: 'info',
+    type: "info",
     text: presetParameter.message,
-    duration: 4000
-  })
+    duration: 4000,
+  });
 }
-
 
 // 输入框 ref
 const orundumValueInput = ref(null);
@@ -175,185 +168,189 @@ const baseMaterialInput = ref(null);
 const chipInput = ref(null);
 const chipPackInput = ref(null);
 
-
 // 监听 orundumPricingStrategy 变化
 watch(
-    () => stageConfig.value.orundumPricingStrategy,
-    (orundumPricingStrategy) => {
-      const orundumValue = orundumValueMap[orundumPricingStrategy];
-      if (orundumValue !== undefined) {  // 如果选中预设项
-        stageConfig.value.orundumValue = orundumValue;
-      } else {
-        nextTick(() => orundumValueInput.value?.focus()); // 如果选中自定义，聚焦到输入框
-      }
-    },
-    {immediate: true},
+  () => stageConfig.value.orundumPricingStrategy,
+  (orundumPricingStrategy) => {
+    const orundumValue = orundumValueMap[orundumPricingStrategy];
+    if (orundumValue !== undefined) {
+      // 如果选中预设项
+      stageConfig.value.orundumValue = orundumValue;
+    } else {
+      nextTick(() => orundumValueInput.value?.focus()); // 如果选中自定义，聚焦到输入框
+    }
+  },
+  { immediate: true }
 );
 
 // 监听 originitePrimePricingStrategy 变化
 watch(
-    () => stageConfig.value.originitePrimePricingStrategy,
-    (originitePrimePricingStrategy) => {
-      const originitePrimeCoefficient = originitePrimeCoefficientMap[originitePrimePricingStrategy];
-      if (originitePrimeCoefficient !== undefined) {  // 如果选中预设项
-        stageConfig.value.originitePrimeCoefficient = originitePrimeCoefficient;
-      } else {
-        nextTick(() => originitePrimeCoefficientInput.value?.focus()); // 如果选中自定义，聚焦到输入框
-      }
-    },
-    {immediate: true},
+  () => stageConfig.value.originitePrimePricingStrategy,
+  (originitePrimePricingStrategy) => {
+    const originitePrimeCoefficient = originitePrimeCoefficientMap[originitePrimePricingStrategy];
+    if (originitePrimeCoefficient !== undefined) {
+      // 如果选中预设项
+      stageConfig.value.originitePrimeCoefficient = originitePrimeCoefficient;
+    } else {
+      nextTick(() => originitePrimeCoefficientInput.value?.focus()); // 如果选中自定义，聚焦到输入框
+    }
+  },
+  { immediate: true }
 );
 
 // 监听 kernelHeadhuntingPermitPricingStrategy 变化
 watch(
-    () => stageConfig.value.kernelHeadhuntingPermitPricingStrategy,
-    (kernelHeadhuntingPermitPricingStrategy) => {
-      const kernelHeadhuntingPermitCoefficient = kernelHeadhuntingPermitCoefficientMap[kernelHeadhuntingPermitPricingStrategy];
-      if (kernelHeadhuntingPermitCoefficient !== undefined) {  // 如果选中预设项
-        stageConfig.value.kernelHeadhuntingPermitCoefficient = kernelHeadhuntingPermitCoefficient;
-      } else {
-        nextTick(() => kernelHeadhuntingPermitCoefficientInput.value?.focus()); // 如果选中自定义，聚焦到输入框
-      }
-    },
-    {immediate: true},
+  () => stageConfig.value.kernelHeadhuntingPermitPricingStrategy,
+  (kernelHeadhuntingPermitPricingStrategy) => {
+    const kernelHeadhuntingPermitCoefficient = kernelHeadhuntingPermitCoefficientMap[kernelHeadhuntingPermitPricingStrategy];
+    if (kernelHeadhuntingPermitCoefficient !== undefined) {
+      // 如果选中预设项
+      stageConfig.value.kernelHeadhuntingPermitCoefficient = kernelHeadhuntingPermitCoefficient;
+    } else {
+      nextTick(() => kernelHeadhuntingPermitCoefficientInput.value?.focus()); // 如果选中自定义，聚焦到输入框
+    }
+  },
+  { immediate: true }
 );
 
 // 监听 lmdPricingStrategy 变化
 watch(
-    () => stageConfig.value.lmdPricingStrategy,
-    (lmdPricingStrategy) => {
-      const lmdCoefficient = lmdCoefficientMap[lmdPricingStrategy];
-      if (lmdCoefficient !== undefined) {  // 如果选中预设项
-        stageConfig.value.lmdCoefficient = lmdCoefficient;
-      } else {
-        nextTick(() => lmdCoefficientInput.value?.focus()); // 如果选中自定义，聚焦到输入框
-      }
-    },
-    {immediate: true},
+  () => stageConfig.value.lmdPricingStrategy,
+  (lmdPricingStrategy) => {
+    const lmdCoefficient = lmdCoefficientMap[lmdPricingStrategy];
+    if (lmdCoefficient !== undefined) {
+      // 如果选中预设项
+      stageConfig.value.lmdCoefficient = lmdCoefficient;
+    } else {
+      nextTick(() => lmdCoefficientInput.value?.focus()); // 如果选中自定义，聚焦到输入框
+    }
+  },
+  { immediate: true }
 );
 
 // 监听 expPricingStrategy 变化
 watch(
-    () => stageConfig.value.expPricingStrategy,
-    (expPricingStrategy) => {
-      const expCoefficient = expCoefficientMap[expPricingStrategy];
-      if (expCoefficient !== undefined) {  // 如果选中预设项
-        stageConfig.value.expCoefficient = expCoefficient;
-      } else {
-        nextTick(() => expCoefficientInput.value?.focus()); // 如果选中自定义，聚焦到输入框
-      }
-    },
-    {immediate: true},
+  () => stageConfig.value.expPricingStrategy,
+  (expPricingStrategy) => {
+    const expCoefficient = expCoefficientMap[expPricingStrategy];
+    if (expCoefficient !== undefined) {
+      // 如果选中预设项
+      stageConfig.value.expCoefficient = expCoefficient;
+    } else {
+      nextTick(() => expCoefficientInput.value?.focus()); // 如果选中自定义，聚焦到输入框
+    }
+  },
+  { immediate: true }
 );
 
 // 监听 modUnlockTokenPricingStrategy 变化
 watch(
-    () => stageConfig.value.modUnlockTokenPricingStrategy,
-    (modUnlockTokenPricingStrategy) => {
-      const modUnlockTokenValue = modUnlockTokenValueMap[modUnlockTokenPricingStrategy];
-      if (modUnlockTokenValue !== undefined) {  // 如果选中预设项
-        stageConfig.value.modUnlockTokenValue = modUnlockTokenValue;
-      } else {
-        nextTick(() => modUnlockTokenValueInput.value?.focus()); // 如果选中自定义，聚焦到输入框
-      }
-    },
-    {immediate: true},
+  () => stageConfig.value.modUnlockTokenPricingStrategy,
+  (modUnlockTokenPricingStrategy) => {
+    const modUnlockTokenValue = modUnlockTokenValueMap[modUnlockTokenPricingStrategy];
+    if (modUnlockTokenValue !== undefined) {
+      // 如果选中预设项
+      stageConfig.value.modUnlockTokenValue = modUnlockTokenValue;
+    } else {
+      nextTick(() => modUnlockTokenValueInput.value?.focus()); // 如果选中自定义，聚焦到输入框
+    }
+  },
+  { immediate: true }
 );
 
 // 监听 recruitmentPermitPricingStrategy 变化
 watch(
-    () => stageConfig.value.recruitmentPermitPricingStrategy,
-    (recruitmentPermitPricingStrategy) => {
-      const recruitmentPermitValue = recruitmentPermitValueMap[recruitmentPermitPricingStrategy];
-      if (recruitmentPermitValue !== undefined) {  // 如果选中预设项
-        stageConfig.value.recruitmentPermitValue = recruitmentPermitValue;
-      } else {
-        nextTick(() => recruitmentPermitValueInput.value?.focus()); // 如果选中自定义，聚焦到输入框
-      }
-    },
-    {immediate: true},
+  () => stageConfig.value.recruitmentPermitPricingStrategy,
+  (recruitmentPermitPricingStrategy) => {
+    const recruitmentPermitValue = recruitmentPermitValueMap[recruitmentPermitPricingStrategy];
+    if (recruitmentPermitValue !== undefined) {
+      // 如果选中预设项
+      stageConfig.value.recruitmentPermitValue = recruitmentPermitValue;
+    } else {
+      nextTick(() => recruitmentPermitValueInput.value?.focus()); // 如果选中自定义，聚焦到输入框
+    }
+  },
+  { immediate: true }
 );
 
 // 监听 expeditedPlanPricingStrategy 变化
 watch(
-    () => stageConfig.value.expeditedPlanPricingStrategy,
-    (expeditedPlanPricingStrategy) => {
-      const expeditedPlanValue = expeditedPlanValueMap[expeditedPlanPricingStrategy];
-      if (expeditedPlanValue !== undefined) {  // 如果选中预设项
-        stageConfig.value.expeditedPlanValue = expeditedPlanValue;
-      } else {
-        nextTick(() => expeditedPlanValueInput.value?.focus()); // 如果选中自定义，聚焦到输入框
-      }
-    },
-    {immediate: true},
+  () => stageConfig.value.expeditedPlanPricingStrategy,
+  (expeditedPlanPricingStrategy) => {
+    const expeditedPlanValue = expeditedPlanValueMap[expeditedPlanPricingStrategy];
+    if (expeditedPlanValue !== undefined) {
+      // 如果选中预设项
+      stageConfig.value.expeditedPlanValue = expeditedPlanValue;
+    } else {
+      nextTick(() => expeditedPlanValueInput.value?.focus()); // 如果选中自定义，聚焦到输入框
+    }
+  },
+  { immediate: true }
 );
 
 // 监听 furniturePartPricingStrategy 变化
 watch(
-    () => stageConfig.value.furniturePartPricingStrategy,
-    (furniturePartPricingStrategy) => {
-      const furniturePartValue = furniturePartValueMap[furniturePartPricingStrategy];
-      if (furniturePartValue !== undefined) {  // 如果选中预设项
-        stageConfig.value.furniturePartValue = furniturePartValue;
-      } else {
-        nextTick(() => furniturePartValueInput.value?.focus()); // 如果选中自定义，聚焦到输入框
-      }
-    },
-    {immediate: true},
+  () => stageConfig.value.furniturePartPricingStrategy,
+  (furniturePartPricingStrategy) => {
+    const furniturePartValue = furniturePartValueMap[furniturePartPricingStrategy];
+    if (furniturePartValue !== undefined) {
+      // 如果选中预设项
+      stageConfig.value.furniturePartValue = furniturePartValue;
+    } else {
+      nextTick(() => furniturePartValueInput.value?.focus()); // 如果选中自定义，聚焦到输入框
+    }
+  },
+  { immediate: true }
 );
-
 
 // ------------------从这里开始是关卡相关的代码------------------
 
-
 const stageCollect = ref({
-  "Open": [],
-  "Main": [],
-  "Act": [],
-  "ActPerm": []
+  Open: [],
+  Main: [],
+  Act: [],
+  ActPerm: [],
 });
 
 const stageTypeMap = {
   ACT: "SideStory",
   ACT_REP: "SideStory",
   MAIN: "主线",
-  ACT_PERM: "插曲别传"
+  ACT_PERM: "插曲别传",
 };
-
 
 // 获取分区信息并构建阶段数据
 function getStageCollectByZone() {
+  const stageBlacklist = stageConfig.value.stageBlacklist;
 
-
-  const stageBlacklist = stageConfig.value.stageBlacklist
-
-
-  itemCache.getStageInfoCache().then(response => {
-    response = response.sort((a, b) => b.end - a.end)
+  itemCache.getStageInfoCache().then((response) => {
+    response = response.sort((a, b) => b.end - a.end);
     const zoneIndexMap = new Map();
 
     for (const stage of response) {
-      const {zoneName, zoneId, stageCode, stageId, stageType, start, end} = stage;
+      const { zoneName, zoneId, stageCode, stageId, stageType, start, end } = stage;
 
       // 过滤掉不需要的阶段类型
       if (!stageTypeMap[stageType]) {
         continue;
       }
 
-      if (zoneId.indexOf('tough') > -1) {
-        continue
+      if (zoneId.indexOf("tough") > -1) {
+        continue;
       }
 
       stage.active = stageBlacklist.indexOf(stageId) <= -1;
 
-
       if (stageType === "MAIN") {
         if (!zoneIndexMap.has(zoneName)) {
           stageCollect.value.Main.push({
-            zoneName, zoneId, selectAll: true, list: []
-          })
+            zoneName,
+            zoneId,
+            selectAll: true,
+            list: [],
+          });
 
-          zoneIndexMap.set(zoneName, stageCollect.value.Main.length - 1)
+          zoneIndexMap.set(zoneName, stageCollect.value.Main.length - 1);
         }
 
         const index = zoneIndexMap.get(zoneName);
@@ -361,11 +358,11 @@ function getStageCollectByZone() {
           BeastsStage.value[stageCode] = {
             zoneIndex: index,
             stageIndex: stageCollect.value.Main[index].list.length,
-            active: stage.active
-          }
+            active: stage.active,
+          };
         }
-        const collectByZone = stageCollect.value.Main[index]
-        collectByZone.selectAll = collectByZone.selectAll&&stage.active
+        const collectByZone = stageCollect.value.Main[index];
+        collectByZone.selectAll = collectByZone.selectAll && stage.active;
         collectByZone.list.push(stage);
         continue;
       }
@@ -373,14 +370,17 @@ function getStageCollectByZone() {
       if (stageType === "ACT_PERM") {
         if (!zoneIndexMap.has(zoneName)) {
           stageCollect.value.ActPerm.push({
-            zoneName, zoneId, selectAll: true, list: []
-          })
-          zoneIndexMap.set(zoneName, stageCollect.value.ActPerm.length - 1)
+            zoneName,
+            zoneId,
+            selectAll: true,
+            list: [],
+          });
+          zoneIndexMap.set(zoneName, stageCollect.value.ActPerm.length - 1);
         }
         const index = zoneIndexMap.get(zoneName);
 
-        const collectByZone = stageCollect.value.ActPerm[index]
-        collectByZone.selectAll = collectByZone.selectAll&&stage.active
+        const collectByZone = stageCollect.value.ActPerm[index];
+        collectByZone.selectAll = collectByZone.selectAll && stage.active;
         collectByZone.list.push(stage);
 
         continue;
@@ -389,86 +389,85 @@ function getStageCollectByZone() {
       if (end > Date.now()) {
         if (!zoneIndexMap.has(zoneName)) {
           stageCollect.value.Open.push({
-            zoneName, zoneId, selectAll: true, list: []
-          })
-          zoneIndexMap.set(zoneName, stageCollect.value.Open.length - 1)
+            zoneName,
+            zoneId,
+            selectAll: true,
+            list: [],
+          });
+          zoneIndexMap.set(zoneName, stageCollect.value.Open.length - 1);
         }
         const index = zoneIndexMap.get(zoneName);
 
-        const collectByZone = stageCollect.value.Open[index]
-        collectByZone.selectAll = collectByZone.selectAll&&stage.active
+        const collectByZone = stageCollect.value.Open[index];
+        collectByZone.selectAll = collectByZone.selectAll && stage.active;
         collectByZone.list.push(stage);
 
         continue;
       }
 
-
       if (!zoneIndexMap.has(zoneName)) {
         stageCollect.value.Act.push({
-          zoneName, zoneId, selectAll: true, list: []
-        })
-        zoneIndexMap.set(zoneName, stageCollect.value.Act.length - 1)
+          zoneName,
+          zoneId,
+          selectAll: true,
+          list: [],
+        });
+        zoneIndexMap.set(zoneName, stageCollect.value.Act.length - 1);
       }
       const index = zoneIndexMap.get(zoneName);
 
-      const collectByZone = stageCollect.value.Act[index]
-      collectByZone.selectAll = collectByZone.selectAll&&stage.active
-      collectByZone.list.push(stage);
-
-
+      const collectByZone = stageCollect.value.Act[index];
+      if (!!collectByZone) {
+        collectByZone.selectAll = collectByZone.selectAll && stage.active;
+        collectByZone.list.push(stage);
+      }
     }
-
 
     // console.log(stageCollect.value)
   });
 }
 
-function updateStageActive() {
-
-}
-
+function updateStageActive() {}
 
 /**
  * 将某个章节的关卡全部写入或移除黑名单
  * @param collect
  */
 function selectAllStage(collect) {
-  const active = !collect.selectAll
+  const active = !collect.selectAll;
   for (const item of collect.list) {
-    item.active = active
+    item.active = active;
   }
-  collect.selectAll =active
+  collect.selectAll = active;
 
-  updateStageBlacklistConfig()
+  updateStageBlacklistConfig();
 }
 
-
 function updateStageBlacklist(collect, stage) {
-  stage.active = !stage.active
-  let selectAll = true
+  stage.active = !stage.active;
+  let selectAll = true;
   for (const item of collect.list) {
-    selectAll = selectAll && item.active
+    selectAll = selectAll && item.active;
   }
-  collect.selectAll = selectAll
-  updateStageBlacklistConfig()
+  collect.selectAll = selectAll;
+  updateStageBlacklistConfig();
 }
 
 function updateBeastsStageActive(stage) {
-  stage.active = !stage.active
-  stageCollect.value.Main[stage.zoneIndex].list[stage.stageIndex].active = stage.active
-  updateStageBlacklistConfig()
+  stage.active = !stage.active;
+  stageCollect.value.Main[stage.zoneIndex].list[stage.stageIndex].active = stage.active;
+  updateStageBlacklistConfig();
 }
 
 function useActivityAverageStage() {
-  stageConfig.value.useActivityAverageStage = !stageConfig.value.useActivityAverageStage
+  stageConfig.value.useActivityAverageStage = !stageConfig.value.useActivityAverageStage;
 }
-
 
 //------------------从这里开始是自定义材料价值相关的代码------------------
 
 const customItemDialog = ref(false);
-const customItem = ref({itemId: '30073', itemName: "扭转醇", itemValue: 1.8});
-const actStoreUnlimitedExchangeItem = ref(ActStoreUnlimitedExchangeItem.slice(6, 12))
+const customItem = ref({ itemId: "30073", itemName: "扭转醇", itemValue: 1.8 });
+const actStoreUnlimitedExchangeItem = ref(ActStoreUnlimitedExchangeItem.slice(6, 12));
 
 /**
  * 判断物品是否为精英材料
@@ -485,7 +484,7 @@ function isEliteMaterial(item_id) {
  */
 function getItemList() {
   checkStageConfig(); // 校验配置
-  itemCache.getItemValueCacheByConfig(stageConfig.value).then(response => {
+  itemCache.getItemValueCacheByConfig(stageConfig.value).then((response) => {
     itemList.value = response; // 更新物品列表
   });
 }
@@ -496,20 +495,19 @@ function getItemList() {
  */
 function chooseActStoreUnlimitedExchangeItem(item) {
   if (item.active) {
-    console.log("删除")
-    deleteCustomItem(item.itemId)
+    console.log("删除");
+    deleteCustomItem(item.itemId);
   } else {
-    const existing = stageConfig.value.customItem.find(e => e.itemId === item.itemId);
+    const existing = stageConfig.value.customItem.find((e) => e.itemId === item.itemId);
     if (existing) {
-      console.log("更新")
+      console.log("更新");
       existing.itemValue = item.itemValue; // 更新现有物品
     } else {
-      console.log("新增")
+      console.log("新增");
       stageConfig.value.customItem.push(item); // 新增物品
     }
-    item.active = true
+    item.active = true;
   }
-
 }
 
 /**
@@ -519,7 +517,7 @@ function chooseActStoreUnlimitedExchangeItem(item) {
  */
 function actStoreUnlimitedExchangeItemActiveClass(active) {
   if (!active) {
-    return "out-item-unselected"
+    return "out-item-unselected";
   }
 }
 
@@ -528,18 +526,17 @@ function actStoreUnlimitedExchangeItemActiveClass(active) {
  * @param {{itemId:string,itemName:string,itemValue:number}} item 自定义材料
  */
 function chooseCustomItem(item) {
-  customItem.value = {itemId: item.itemId, itemName: item.itemName, itemValue: item.itemValue};
+  customItem.value = { itemId: item.itemId, itemName: item.itemName, itemValue: item.itemValue };
 }
-
 
 /**
  * 添加自定义材料
  */
 // 添加或更新自定义物品
 function addCustomItem() {
-  const existing = stageConfig.value.customItem.find(item => item.itemId === customItem.value.itemId);
-  let {itemId, itemValue, itemName} = customItem.value
-  itemValue = stringToNumber(itemValue)
+  const existing = stageConfig.value.customItem.find((item) => item.itemId === customItem.value.itemId);
+  let { itemId, itemValue, itemName } = customItem.value;
+  itemValue = stringToNumber(itemValue);
   for (const item of actStoreUnlimitedExchangeItem.value) {
     if (item.itemId === itemId) {
       if (itemValue < 5) {
@@ -550,11 +547,10 @@ function addCustomItem() {
   if (existing) {
     existing.itemValue = itemValue; // 更新现有物品
   } else {
-    stageConfig.value.customItem.push({itemId, itemValue, itemName}); // 新增物品
+    stageConfig.value.customItem.push({ itemId, itemValue, itemName }); // 新增物品
   }
   customItemDialog.value = false; // 关闭对话框
 }
-
 
 /**
  * 根据材料id删除自定义一图流配置中的自定义材料
@@ -566,28 +562,25 @@ function deleteCustomItem(itemId) {
       item.active = false;
     }
   }
-  stageConfig.value.customItem = stageConfig.value.customItem.filter(e => e.itemId !== itemId);
+  stageConfig.value.customItem = stageConfig.value.customItem.filter((e) => e.itemId !== itemId);
 }
-
 
 /**
  * 校验自定义一图流配置是否正确
  */
 function checkStageConfig() {
   function _check(value) {
-    return numberRegex.test(value) && (value === 0 || (value != null && value !== '')) && (value >= 0 && value <= 1);
+    return numberRegex.test(value) && (value === 0 || (value != null && value !== "")) && value >= 0 && value <= 1;
   }
 
   if (!_check(stageConfig.value.expCoefficient)) stageConfig.value.expCoefficient = 0; // 设置默认值
   if (!_check(stageConfig.value.lmdCoefficient)) stageConfig.value.lmdCoefficient = 0; // 设置默认值
 }
 
-
 /**
  * 强制刷新物品价值
  */
 function forceRefreshItemValue() {
-
   checkStageConfig(); // 校验配置
   localStorage.setItem("StageConfig", stringifyConfig(stageConfig.value)); // 保存配置
   itemCache.getItemValueCacheByConfig(stageConfig.value, true); // 强制刷新
@@ -598,15 +591,14 @@ function forceRefreshItemValue() {
  * 保存自定义一图流配置
  */
 function updateStageBlacklistConfig(deleteStageIdMap) {
-
-  stageConfig.value.stageBlacklist = []
+  stageConfig.value.stageBlacklist = [];
   for (const type in stageCollect.value) {
-    const collect = stageCollect.value[type]
+    const collect = stageCollect.value[type];
     for (const element of collect) {
       for (const stage of element.list) {
         // console.log(stage.stageCode,stage.active)
         if (!stage.active) {
-          stageConfig.value.stageBlacklist.push(stage.stageId)
+          stageConfig.value.stageBlacklist.push(stage.stageId);
         }
       }
     }
@@ -614,51 +606,42 @@ function updateStageBlacklistConfig(deleteStageIdMap) {
   debugText.value = stringifyConfig(stageConfig.value);
 }
 
-
 // 定时更新自定义一图流配置
 // setInterval(updateStageConfig, 2000)
 
 // 监听 stageConfig 的变化，保存配置到 localStorage
 watch(
-    stageConfig,
-    (newConfig) => {
-      debugText.value = stringifyConfig(newConfig);
-      localStorage.setItem("StageConfig", stringifyConfig(newConfig));
-    },
-    {deep: true},
+  stageConfig,
+  (newConfig) => {
+    debugText.value = stringifyConfig(newConfig);
+    localStorage.setItem("StageConfig", stringifyConfig(newConfig));
+  },
+  { deep: true }
 );
 
 // 初始化数据
 onMounted(() => {
-  loadingStageConfig()
+  loadingStageConfig();
   getItemList(); // 获取物品列表
-})
+});
 </script>
-
 
 <template>
   <!-- 材料价值自定义参数主卡片 -->
   <v-card class="stage-config-card">
-
     <v-expansion-panels multiple v-model="stageConfigPanel" variant="accordion">
       <!-- 折叠面板：自定义物品价值设置 -->
       <v-expansion-panel class="cover-v-expansion-panel" value="control-panel">
-        <v-expansion-panel-title>
-          自定义物品价值设置
-        </v-expansion-panel-title>
+        <v-expansion-panel-title> 自定义物品价值设置 </v-expansion-panel-title>
         <v-expansion-panel-text class="expansion-panel-text">
-          <v-alert type="warning" variant="tonal" border @click="handleClick">
-            <b>如不清楚自定义参数的含义，请保持默认设置！</b></v-alert>
-          <v-btn @click="closeDevMode" color="error" class="mt-2" v-if="developerMode">
-            已开启开发者模式，点我关闭
-          </v-btn>
+          <v-alert type="warning" variant="tonal" border @click="handleClick"> <b>如不清楚自定义参数的含义，请保持默认设置！</b></v-alert>
+          <v-btn @click="closeDevMode" color="error" class="mt-2" v-if="developerMode"> 已开启开发者模式，点我关闭 </v-btn>
           <div class="cover-v-card-subtitle">
             <p>自定义参数用于定制更适合自己的刷图方案和购买策略</p>
             <p>自定义参数保存于当前设备，后续将可通过一图流账号保存和同步</p>
           </div>
           <div class="flex justify-center m-8">
-            <v-btn text="修改参数后点我应用新的参数" color="primary" @click="forceRefreshItemValue()"
-                   class="m-4"></v-btn>
+            <v-btn text="修改参数后点我应用新的参数" color="primary" @click="forceRefreshItemValue()" class="m-4"></v-btn>
             <v-btn text="全部重置为初始参数" color="red" @click="resetConfig()" class="m-4"></v-btn>
           </div>
         </v-expansion-panel-text>
@@ -666,11 +649,8 @@ onMounted(() => {
 
       <!-- 折叠面板：快速设置 -->
       <v-expansion-panel class="cover-v-expansion-panel" value="preset-parameter">
-        <v-expansion-panel-title>
-          最常用的快速设置
-        </v-expansion-panel-title>
+        <v-expansion-panel-title> 最常用的快速设置 </v-expansion-panel-title>
         <v-expansion-panel-text class="expansion-panel-text">
-
           <v-card v-for="itemCard in presetParameter[0]" class="preset-parameter-card" variant="outlined">
             <v-card-title>{{ itemCard.name }}</v-card-title>
             <div class="player-description" v-for="d in itemCard.description">
@@ -682,8 +662,13 @@ onMounted(() => {
 
             <!-- <div style="height: 50px"></div> -->
             <template v-slot:actions>
-              <v-btn v-for="parameter in itemCard.parameters" @click="choosePresetParameter(parameter)" variant="tonal"
-                     color="primary" :text="parameter.buttonText"></v-btn>
+              <v-btn
+                v-for="parameter in itemCard.parameters"
+                @click="choosePresetParameter(parameter)"
+                variant="tonal"
+                color="primary"
+                :text="parameter.buttonText"
+              ></v-btn>
 
               <!-- <v-btn text="应用" @click="choosePresetParameter(item)" :color="item.color"></v-btn> -->
             </template>
@@ -691,16 +676,12 @@ onMounted(() => {
             <!-- 应用 -->
             <!-- </v-btn> -->
           </v-card>
-
         </v-expansion-panel-text>
       </v-expansion-panel>
 
-
       <!-- 折叠面板：参数和策略 -->
       <v-expansion-panel class="cover-v-expansion-panel" value="base-item-parameter">
-        <v-expansion-panel-title>
-          参数和策略
-        </v-expansion-panel-title>
+        <v-expansion-panel-title> 参数和策略 </v-expansion-panel-title>
         <v-expansion-panel-text class="expansion-panel-text" value="parameter-strategy">
           <v-card v-for="itemCard in presetParameter[1]" class="preset-parameter-card" variant="outlined">
             <v-card-title>{{ itemCard.name }}</v-card-title>
@@ -713,8 +694,13 @@ onMounted(() => {
 
             <!-- <div style="height: 50px"></div> -->
             <template v-slot:actions>
-              <v-btn v-for="parameter in itemCard.parameters" @click="choosePresetParameter(parameter)" variant="tonal"
-                     color="primary" :text="parameter.buttonText"></v-btn>
+              <v-btn
+                v-for="parameter in itemCard.parameters"
+                @click="choosePresetParameter(parameter)"
+                variant="tonal"
+                color="primary"
+                :text="parameter.buttonText"
+              ></v-btn>
               <!--              <v-chip-group v-model="selection">-->
               <!--                <v-chip v-for="parameter in itemCard.parameters" @click="choosePresetParameter(parameter)">{{-->
               <!--                    parameter.buttonText-->
@@ -735,39 +721,39 @@ onMounted(() => {
                 <div>
                   <ItemImage item-id="4003"></ItemImage>
                   合成玉定价策略
-                  <span class="card-description"
-                        v-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORIGINITE_PRIME'">
+                  <span class="card-description" v-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORIGINITE_PRIME'">
                     180 合成玉 = 135 理智，1 合成玉 = 0.75 理智
                   </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE'">
+                  <span class="card-description" v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE'">
                     10 合成玉 = 2 固源岩 + 1600 龙门币 + 40 无人机
                   </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORININUM_FARMING_DEVICE'">
+                  <span class="card-description" v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_ORININUM_FARMING_DEVICE'">
                     10 合成玉 = 1 装置 + 1000 龙门币 + 40 无人机
                   </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_INFINITY'">
+                  <span class="card-description" v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_INFINITY'">
                     仅计算抽卡资源的价值，认为养成资源无价值（1 合成玉 = ∞ 理智）
                   </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_CUSTOM'">
+                  <span class="card-description" v-else-if="stageConfig.orundumPricingStrategy === 'ORUNDUM_PRICING_CUSTOM'">
                     1 合成玉 = {{ typeof stageConfig.orundumValue === "number" ? stageConfig.orundumValue : "?" }} 理智
                   </span>
                 </div>
               </template>
               <v-radio value="ORUNDUM_PRICING_ORIGINITE_PRIME" label="碎石途径定价（默认）"></v-radio>
-              <v-radio value="ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE"
-                       label="搓玉途径定价（用固源岩搓玉）"></v-radio>
+              <v-radio value="ORUNDUM_PRICING_ORININUM_FARMING_ORIROCK_CUBE" label="搓玉途径定价（用固源岩搓玉）"></v-radio>
               <v-radio value="ORUNDUM_PRICING_ORININUM_FARMING_DEVICE" label="搓玉途径定价（用装置搓玉）"></v-radio>
               <v-radio value="ORUNDUM_PRICING_INFINITY" label="仅抽卡"></v-radio>
               <v-radio value="ORUNDUM_PRICING_CUSTOM" label="自定义"></v-radio>
-              <v-text-field ref="orundumValueInput" v-model.number='stageConfig.orundumValue' :rules="numberGe0"
-                            label="1 合成玉 = ? 理智"
-                            @focus="stageConfig.orundumPricingStrategy = 'ORUNDUM_PRICING_CUSTOM'"
-                            placeholder="1 合成玉 = ? 理智" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="orundumValueInput"
+                v-model.number="stageConfig.orundumValue"
+                :rules="numberGe0"
+                label="1 合成玉 = ? 理智"
+                @focus="stageConfig.orundumPricingStrategy = 'ORUNDUM_PRICING_CUSTOM'"
+                placeholder="1 合成玉 = ? 理智"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
@@ -778,20 +764,24 @@ onMounted(() => {
                 <div>
                   <ItemImage item-id="4002"></ItemImage>
                   至纯源石价值系数 — {{ formatNumber(stageConfig.originitePrimeCoefficient, 4) }}
-                  <span class="card-description">
-                    用于计算礼包性价比，至纯源石价值 = 合成玉价值 × 至纯源石价值系数
-                  </span>
+                  <span class="card-description"> 用于计算礼包性价比，至纯源石价值 = 合成玉价值 × 至纯源石价值系数 </span>
                 </div>
               </template>
               <v-radio value="ORIGINITE_PRIME_PRICING_ORUNDUM" label="1 至纯源石 = 180 合成玉（默认）"></v-radio>
               <v-radio value="ORIGINITE_PRIME_PRICING_INFINITY" label="1 至纯源石 = ∞ 合成玉（源石仅买装扮）"></v-radio>
               <v-radio value="ORIGINITE_PRIME_PRICING_CUSTOM" label="自定义"></v-radio>
-              <v-text-field ref="originitePrimeCoefficientInput" v-model.number='stageConfig.originitePrimeCoefficient'
-                            :rules="numberGe0" label="至纯源石价值系数"
-                            @click="stageConfig.originitePrimePricingStrategy = 'ORIGINITE_PRIME_PRICING_CUSTOM'"
-                            @focus="stageConfig.originitePrimePricingStrategy = 'ORIGINITE_PRIME_PRICING_CUSTOM'"
-                            placeholder="1 至纯源石 = ? 合成玉" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="originitePrimeCoefficientInput"
+                v-model.number="stageConfig.originitePrimeCoefficient"
+                :rules="numberGe0"
+                label="至纯源石价值系数"
+                @click="stageConfig.originitePrimePricingStrategy = 'ORIGINITE_PRIME_PRICING_CUSTOM'"
+                @focus="stageConfig.originitePrimePricingStrategy = 'ORIGINITE_PRIME_PRICING_CUSTOM'"
+                placeholder="1 至纯源石 = ? 合成玉"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
@@ -803,26 +793,27 @@ onMounted(() => {
                   <ItemImage item-id="classic_gacha"></ItemImage>
                   中坚寻访系数
                   <span class="card-description">
-                    1 中坚寻访凭证 = {{
-                      typeof stageConfig.kernelHeadhuntingPermitCoefficient === "number" ?
-                          stageConfig.kernelHeadhuntingPermitCoefficient : "?"
-                    }} 寻访凭证
+                    1 中坚寻访凭证 =
+                    {{ typeof stageConfig.kernelHeadhuntingPermitCoefficient === "number" ? stageConfig.kernelHeadhuntingPermitCoefficient : "?" }} 寻访凭证
                   </span>
                 </div>
               </template>
-              <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE"
-                       label="38 中坚寻访凭证 = 216 高级凭证（默认）"></v-radio>
+              <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_DISTINCTION_CERTIFICATE" label="38 中坚寻访凭证 = 216 高级凭证（默认）"></v-radio>
               <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_ZERO" label="中坚寻访凭证价值为 0"></v-radio>
               <v-radio value="KERNEL_HEADHUNTING_PERMIT_PRICING_CUSTOM" label="自定义"></v-radio>
-              <v-text-field ref="kernelHeadhuntingPermitCoefficientInput"
-                            v-model.number='stageConfig.kernelHeadhuntingPermitCoefficient' :rules="numberGe0"
-                            @focus="stageConfig.kernelHeadhuntingPermitPricingStrategy = 'KERNEL_HEADHUNTING_PERMIT_PRICING_CUSTOM'"
-                            label="1 中坚寻访凭证 = ? 寻访凭证" placeholder="1 中坚寻访凭证 = ? 寻访凭证"
-                            variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="kernelHeadhuntingPermitCoefficientInput"
+                v-model.number="stageConfig.kernelHeadhuntingPermitCoefficient"
+                :rules="numberGe0"
+                @focus="stageConfig.kernelHeadhuntingPermitPricingStrategy = 'KERNEL_HEADHUNTING_PERMIT_PRICING_CUSTOM'"
+                label="1 中坚寻访凭证 = ? 寻访凭证"
+                placeholder="1 中坚寻访凭证 = ? 寻访凭证"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
-
 
             <!-- 龙门币定价策略 -->
             <v-divider></v-divider>
@@ -831,19 +822,23 @@ onMounted(() => {
                 <div>
                   <ItemImage item-id="4001"></ItemImage>
                   龙门币价值系数 — {{ formatNumber(stageConfig.lmdCoefficient, 4) }}
-                  <span class="card-description">
-                    用于调整龙门币的价值，龙门币价值 = 0.0036 × 龙门币价值系数
-                  </span>
+                  <span class="card-description"> 用于调整龙门币的价值，龙门币价值 = 0.0036 × 龙门币价值系数 </span>
                 </div>
               </template>
               <v-radio value="LMD_PRICING_CE-6" label="按 CE-6 定价（默认）"></v-radio>
               <v-radio value="LMD_PRICING_ZERO" label="龙门币价值为 0"></v-radio>
               <v-radio value="LMD_PRICING_CUSTOM" label="自定义"></v-radio>
-              <v-text-field ref="lmdCoefficientInput" v-model.number='stageConfig.lmdCoefficient'
-                            :rules="numberBetween0And1" label="龙门币价值系数"
-                            @focus="stageConfig.lmdPricingStrategy = 'LMD_PRICING_CUSTOM'"
-                            placeholder="0 ~ 1 之间的数字"
-                            variant="outlined" density="compact" style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="lmdCoefficientInput"
+                v-model.number="stageConfig.lmdCoefficient"
+                :rules="numberBetween0And1"
+                label="龙门币价值系数"
+                @focus="stageConfig.lmdPricingStrategy = 'LMD_PRICING_CUSTOM'"
+                placeholder="0 ~ 1 之间的数字"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
@@ -854,9 +849,7 @@ onMounted(() => {
                 <div>
                   <ItemImage item-id="2004"></ItemImage>
                   EXP 价值系数 — {{ formatNumber(stageConfig.expCoefficient, 4) }}
-                  <span class="card-description">
-                    用于调整 EXP 的价值，EXP 价值 = 0.0036 × EXP 价值系数
-                  </span>
+                  <span class="card-description"> 用于调整 EXP 的价值，EXP 价值 = 0.0036 × EXP 价值系数 </span>
                 </div>
               </template>
               <!-- 按 LS-6 定价 -->
@@ -868,9 +861,7 @@ onMounted(() => {
                 <template v-slot:label>
                   <div>
                     按无人机定价（默认）
-                    <span class="card-description">
-                      3 级贸易站，不使用龙舌兰、但书、裁缝类技能
-                    </span>
+                    <span class="card-description"> 3 级贸易站，不使用龙舌兰、但书、裁缝类技能 </span>
                   </div>
                 </template>
               </v-radio>
@@ -879,9 +870,7 @@ onMounted(() => {
                 <template v-slot:label>
                   <div>
                     按无人机定价
-                    <span class="card-description">
-                      3 级贸易站，使用精 2 龙舌兰、精 2 但书，不使用裁缝类技能
-                    </span>
+                    <span class="card-description"> 3 级贸易站，使用精 2 龙舌兰、精 2 但书，不使用裁缝类技能 </span>
                   </div>
                 </template>
               </v-radio>
@@ -890,9 +879,7 @@ onMounted(() => {
                 <template v-slot:label>
                   <div>
                     按无人机定价
-                    <span class="card-description">
-                      2 级贸易站，使用精 2 但书，不使用龙舌兰、裁缝类技能
-                    </span>
+                    <span class="card-description"> 2 级贸易站，使用精 2 但书，不使用龙舌兰、裁缝类技能 </span>
                   </div>
                 </template>
               </v-radio>
@@ -901,19 +888,23 @@ onMounted(() => {
                 <template v-slot:label>
                   <div>
                     按无人机定价
-                    <span class="card-description">
-                      1 级贸易站，使用精 2 但书，不使用龙舌兰、裁缝类技能
-                    </span>
+                    <span class="card-description"> 1 级贸易站，使用精 2 但书，不使用龙舌兰、裁缝类技能 </span>
                   </div>
                 </template>
               </v-radio>
               <!-- 自定义 -->
               <v-radio value="EXP_PRICING_CUSTOM" label="自定义"></v-radio>
-              <v-text-field ref="expCoefficientInput" v-model.number='stageConfig.expCoefficient'
-                            :rules="numberBetween0And1" label="EXP 价值系数"
-                            @focus="stageConfig.expPricingStrategy = 'EXP_PRICING_CUSTOM'"
-                            placeholder="0 ~ 1 之间的数字"
-                            variant="outlined" density="compact" style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="expCoefficientInput"
+                v-model.number="stageConfig.expCoefficient"
+                :rules="numberBetween0And1"
+                label="EXP 价值系数"
+                @focus="stageConfig.expPricingStrategy = 'EXP_PRICING_CUSTOM'"
+                placeholder="0 ~ 1 之间的数字"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
           </span>
@@ -926,32 +917,31 @@ onMounted(() => {
                 <div>
                   <ItemImage item-id="mod_unlock_token"></ItemImage>
                   模组数据块定价策略
-                  <span class="card-description"
-                        v-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE'">
+                  <span class="card-description" v-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE'">
                     1 模组数据块 = 120 采购凭证
                   </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_DISTINCTION_CERTIFICATE'">
+                  <span class="card-description" v-else-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_DISTINCTION_CERTIFICATE'">
                     1 模组数据块 = 20 高级凭证
                   </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_CUSTOM'">
-                    1 模组数据块 = {{
-                      typeof stageConfig.modUnlockTokenValue === "number" ?
-                          stageConfig.modUnlockTokenValue
-                          : "?"
-                    }} 理智
+                  <span class="card-description" v-else-if="stageConfig.modUnlockTokenPricingStrategy === 'MOD_UNLOCK_TOKEN_PRICING_CUSTOM'">
+                    1 模组数据块 = {{ typeof stageConfig.modUnlockTokenValue === "number" ? stageConfig.modUnlockTokenValue : "?" }} 理智
                   </span>
                 </div>
               </template>
               <v-radio value="MOD_UNLOCK_TOKEN_PRICING_PURCHASE_CERTIFICATE" label="采购凭证区定价（默认）"></v-radio>
               <v-radio value="MOD_UNLOCK_TOKEN_PRICING_DISTINCTION_CERTIFICATE" label="高级凭证区定价"></v-radio>
               <v-radio value="MOD_UNLOCK_TOKEN_PRICING_CUSTOM" label="自定义"></v-radio>
-              <v-text-field ref="modUnlockTokenValueInput" v-model.number='stageConfig.modUnlockTokenValue'
-                            :rules="numberGe0" label="1 模组数据块 = ? 理智"
-                            @focus="stageConfig.modUnlockTokenPricingStrategy = 'MOD_UNLOCK_TOKEN_PRICING_CUSTOM'"
-                            placeholder="1 模组数据块 = ? 理智" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="modUnlockTokenValueInput"
+                v-model.number="stageConfig.modUnlockTokenValue"
+                :rules="numberGe0"
+                label="1 模组数据块 = ? 理智"
+                @focus="stageConfig.modUnlockTokenPricingStrategy = 'MOD_UNLOCK_TOKEN_PRICING_CUSTOM'"
+                placeholder="1 模组数据块 = ? 理智"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
@@ -962,24 +952,17 @@ onMounted(() => {
                 <div>
                   <ItemImage item-id="7001"></ItemImage>
                   招聘许可定价策略
-                  <span class="card-description"
-                        v-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4'">
+                  <span class="card-description" v-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4'">
                     认为公开招募范围内的 3★、4★ 干员潜能均已满，5★、6★ 干员均已获得但潜能未满
                   </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4_5'">
+                  <span class="card-description" v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4_5'">
                     认为公开招募范围内的 3★、4★、5★ 干员潜能均已满，6★ 干员均已获得但潜能未满
                   </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4_5_6'">
+                  <span class="card-description" v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_3_4_5_6'">
                     认为公开招募范围内的干员潜能均已满
                   </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_CUSTOM'">
-                    1 招聘许可 = {{
-                      typeof stageConfig.recruitmentPermitValue === "number" ?
-                          stageConfig.recruitmentPermitValue : "?"
-                    }} 理智
+                  <span class="card-description" v-else-if="stageConfig.recruitmentPermitPricingStrategy === 'RECRUITMENT_PERMIT_PRICING_CUSTOM'">
+                    1 招聘许可 = {{ typeof stageConfig.recruitmentPermitValue === "number" ? stageConfig.recruitmentPermitValue : "?" }} 理智
                   </span>
                 </div>
               </template>
@@ -987,11 +970,17 @@ onMounted(() => {
               <v-radio value="RECRUITMENT_PERMIT_PRICING_3_4_5" label="5★ 全满潜，6★ 未满潜"></v-radio>
               <v-radio value="RECRUITMENT_PERMIT_PRICING_3_4_5_6" label="全满潜"></v-radio>
               <v-radio value="RECRUITMENT_PERMIT_PRICING_CUSTOM" label="自定义"></v-radio>
-              <v-text-field ref="recruitmentPermitValueInput" v-model.number='stageConfig.recruitmentPermitValue'
-                            :rules="numberGe0" label="1 招聘许可 = ? 理智"
-                            @focus="stageConfig.recruitmentPermitPricingStrategy = 'RECRUITMENT_PERMIT_PRICING_CUSTOM'"
-                            placeholder="1 招聘许可 = ? 理智" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="recruitmentPermitValueInput"
+                v-model.number="stageConfig.recruitmentPermitValue"
+                :rules="numberGe0"
+                label="1 招聘许可 = ? 理智"
+                @focus="stageConfig.recruitmentPermitPricingStrategy = 'RECRUITMENT_PERMIT_PRICING_CUSTOM'"
+                placeholder="1 招聘许可 = ? 理智"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
@@ -1002,32 +991,29 @@ onMounted(() => {
                 <div>
                   <ItemImage item-id="7002"></ItemImage>
                   加急许可定价策略
-                  <span class="card-description"
-                        v-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_ZERO'">
-                    1 加急许可 = 0 理智
-                  </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_RECRUITMENT_PERMIT'">
+                  <span class="card-description" v-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_ZERO'"> 1 加急许可 = 0 理智 </span>
+                  <span class="card-description" v-else-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_RECRUITMENT_PERMIT'">
                     1 加急许可 = 1 招聘许可
                   </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_CUSTOM'">
-                    1 加急许可 = {{
-                      typeof stageConfig.expeditedPlanValue === "number" ? stageConfig.expeditedPlanValue
-                          :
-                          "?"
-                    }} 理智
+                  <span class="card-description" v-else-if="stageConfig.expeditedPlanPricingStrategy === 'EXPEDITED_PLAN_PRICING_CUSTOM'">
+                    1 加急许可 = {{ typeof stageConfig.expeditedPlanValue === "number" ? stageConfig.expeditedPlanValue : "?" }} 理智
                   </span>
                 </div>
               </template>
               <v-radio value="EXPEDITED_PLAN_PRICING_ZERO" label="加急许可价值为 0（默认）"></v-radio>
               <v-radio value="EXPEDITED_PLAN_PRICING_RECRUITMENT_PERMIT" label="等于招聘许可的价值"></v-radio>
               <v-radio value="EXPEDITED_PLAN_PRICING_CUSTOM" label="自定义"></v-radio>
-              <v-text-field ref="expeditedPlanValueInput" v-model.number='stageConfig.expeditedPlanValue'
-                            :rules="numberGe0" label="1 加急许可 = ? 理智"
-                            @focus="stageConfig.expeditedPlanPricingStrategy = 'EXPEDITED_PLAN_PRICING_CUSTOM'"
-                            placeholder="1 加急许可 = ? 理智" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="expeditedPlanValueInput"
+                v-model.number="stageConfig.expeditedPlanValue"
+                :rules="numberGe0"
+                label="1 加急许可 = ? 理智"
+                @focus="stageConfig.expeditedPlanPricingStrategy = 'EXPEDITED_PLAN_PRICING_CUSTOM'"
+                placeholder="1 加急许可 = ? 理智"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
@@ -1038,50 +1024,43 @@ onMounted(() => {
                 <div>
                   <ItemImage item-id="3401"></ItemImage>
                   家具零件定价策略
-                  <span class="card-description"
-                        v-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_ZERO'">
-                    1 家具零件 = 0 理智
-                  </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_SK-5'">
+                  <span class="card-description" v-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_ZERO'"> 1 家具零件 = 0 理智 </span>
+                  <span class="card-description" v-else-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_SK-5'">
                     刷 SK-5 获取家具零件
                   </span>
-                  <span class="card-description"
-                        v-else-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_CUSTOM'">
-                    1 家具零件 = {{
-                      typeof stageConfig.furniturePartValue === "number" ? stageConfig.furniturePartValue
-                          :
-                          "?"
-                    }} 理智
+                  <span class="card-description" v-else-if="stageConfig.furniturePartPricingStrategy === 'FURNITURE_PART_PRICING_CUSTOM'">
+                    1 家具零件 = {{ typeof stageConfig.furniturePartValue === "number" ? stageConfig.furniturePartValue : "?" }} 理智
                   </span>
                 </div>
               </template>
               <v-radio value="FURNITURE_PART_PRICING_ZERO" label="家具零件价值为 0（默认）"></v-radio>
               <v-radio value="FURNITURE_PART_PRICING_SK-5" label="按 SK-5 定价" disabled></v-radio>
               <v-radio value="FURNITURE_PART_PRICING_CUSTOM" label="自定义"></v-radio>
-              <v-text-field ref="furniturePartValueInput" v-model.number='stageConfig.furniturePartValue'
-                            :rules="numberGe0"
-                            @focus="stageConfig.furniturePartPricingStrategy = 'FURNITURE_PART_PRICING_CUSTOM'"
-                            label="1 家具零件 = ? 理智" placeholder="1 家具零件 = ? 理智" variant="outlined"
-                            density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="furniturePartValueInput"
+                v-model.number="stageConfig.furniturePartValue"
+                :rules="numberGe0"
+                @focus="stageConfig.furniturePartPricingStrategy = 'FURNITURE_PART_PRICING_CUSTOM'"
+                label="1 家具零件 = ? 理智"
+                placeholder="1 家具零件 = ? 理智"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
           </span>
         </v-expansion-panel-text>
       </v-expansion-panel>
 
-
       <!-- 折叠面板：材料价值自定义设置 -->
       <v-expansion-panel title="材料价值自定义" value="custom-item-value">
         <v-expansion-panel-text class="expansion-panel-text">
-          为了方便大家的同时避免用户昏厥，上半部分仅提供较为常用的选项<br>
+          为了方便大家的同时避免用户昏厥，上半部分仅提供较为常用的选项<br />
           如果仍需要自定义其它材料的价值，可使用下方更复杂的自定义功能
           <v-list>
             <v-list-item>
-              <v-list-item-title>
-                快速取值
-              </v-list-item-title>
+              <v-list-item-title> 快速取值 </v-list-item-title>
               <v-card v-for="itemCard in presetParameter[2]" class="preset-parameter-card" variant="outlined">
                 <v-card-title>{{ itemCard.name }}</v-card-title>
                 <div class="parameter-description" v-for="pd in itemCard.paramDescription">
@@ -1089,29 +1068,27 @@ onMounted(() => {
                 </div>
                 <template v-slot:actions>
                   <v-chip-group v-model="selection">
-                    <v-chip v-for="parameter in itemCard.parameters" @click="choosePresetParameter(parameter)">{{
-                        parameter.buttonText
-                      }}
-                    </v-chip>
+                    <v-chip v-for="parameter in itemCard.parameters" @click="choosePresetParameter(parameter)">{{ parameter.buttonText }} </v-chip>
                   </v-chip-group>
                 </template>
               </v-card>
             </v-list-item>
             <!-- 溢出材料屏蔽，选中的材料直接 -->
             <v-list-item v-if="developerMode">
-              <v-list-item-title>
-                溢出材料屏蔽
-              </v-list-item-title>
+              <v-list-item-title> 溢出材料屏蔽 </v-list-item-title>
               这里列出所有紫、蓝材料就行，和下面类似，默认都是点亮的，点一下切换价值归零
             </v-list-item>
             <v-list-item>
-              <v-list-item-title>
-                材料退环境预测
-              </v-list-item-title>
+              <v-list-item-title> 材料退环境预测 </v-list-item-title>
               <div class="flex flex-wrap">
-                <ItemImage v-for="item in actStoreUnlimitedExchangeItem" :item-id="item.itemId" :size="50"
-                           :mobile-size="40" :class="actStoreUnlimitedExchangeItemActiveClass(item.active)"
-                           @click="chooseActStoreUnlimitedExchangeItem(item)"></ItemImage>
+                <ItemImage
+                  v-for="item in actStoreUnlimitedExchangeItem"
+                  :item-id="item.itemId"
+                  :size="50"
+                  :mobile-size="40"
+                  :class="actStoreUnlimitedExchangeItemActiveClass(item.active)"
+                  @click="chooseActStoreUnlimitedExchangeItem(item)"
+                ></ItemImage>
               </div>
               <!--                  {{actStoreUnlimitedExchangeItem}}-->
             </v-list-item>
@@ -1119,37 +1096,31 @@ onMounted(() => {
           <v-divider></v-divider>
           <v-list>
             <v-list-item>
-              <v-list-item-title>
-                自定义材料价值
-              </v-list-item-title>
+              <v-list-item-title> 自定义材料价值 </v-list-item-title>
               <!-- 按钮：打开自定义材料弹窗 -->
-              <v-btn color="primary" variant="outlined" size="small" text="自定义精英材料"
-                     @click="customItemDialog = true"
-                     class="m-12-0"></v-btn>
-              <v-btn color="primary" variant="outlined" size="small" text="自定义其它材料"
-                     @click="customItemDialog = true"
-                     class="m-12-0"></v-btn>
+              <v-btn color="primary" variant="outlined" size="small" text="自定义精英材料" @click="customItemDialog = true" class="m-12-0"></v-btn>
+              <v-btn color="primary" variant="outlined" size="small" text="自定义其它材料" @click="customItemDialog = true" class="m-12-0"></v-btn>
               <!-- 自定义材料列表：显示已添加的自定义材料及其价值 -->
               <v-table>
                 <thead>
-                <tr>
-                  <th>材料</th>
-                  <th>自定义价值</th>
-                  <th>操作</th>
-                </tr>
+                  <tr>
+                    <th>材料</th>
+                    <th>自定义价值</th>
+                    <th>操作</th>
+                  </tr>
                 </thead>
                 <tbody>
-                <tr v-for="item in stageConfig.customItem">
-                  <td>
-                    <!-- 显示材料的图标 -->
-                    <ItemImage :size="60" :mobile-size="40" :item-id="item.itemId"></ItemImage>
-                  </td>
-                  <td>{{ item.itemValue }}</td>
-                  <td>
-                    <!-- 删除按钮：用于移除自定义材料 -->
-                    <v-btn color="red" text="删除" @click="deleteCustomItem(item.itemId)"></v-btn>
-                  </td>
-                </tr>
+                  <tr v-for="item in stageConfig.customItem">
+                    <td>
+                      <!-- 显示材料的图标 -->
+                      <ItemImage :size="60" :mobile-size="40" :item-id="item.itemId"></ItemImage>
+                    </td>
+                    <td>{{ item.itemValue }}</td>
+                    <td>
+                      <!-- 删除按钮：用于移除自定义材料 -->
+                      <v-btn color="red" text="删除" @click="deleteCustomItem(item.itemId)"></v-btn>
+                    </td>
+                  </tr>
                 </tbody>
               </v-table>
             </v-list-item>
@@ -1157,23 +1128,23 @@ onMounted(() => {
         </v-expansion-panel-text>
       </v-expansion-panel>
 
-
       <!-- 前面的区域以后再来探索吧 -->
       <span v-if="developerMode">
         <!-- 折叠面板：自定义加工站策略 -->
         <v-expansion-panel value="custom-workshop-strategy">
-          <v-expansion-panel-title>
-            自定义加工站策略
-          </v-expansion-panel-title>
+          <v-expansion-panel-title> 自定义加工站策略 </v-expansion-panel-title>
           <v-expansion-panel-text class="expansion-panel-text">
-            <span class="card-description">
-              自定义加工站策略的描述
-            </span>
-            <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => eliteMaterialT1toT2Input?.focus());
-              }
-            }">
+            <span class="card-description"> 自定义加工站策略的描述 </span>
+            <v-radio-group
+              v-model="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy"
+              @change="
+                () => {
+                  if (stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => eliteMaterialT1toT2Input?.focus());
+                  }
+                }
+              "
+            >
               <template v-slot:label>
                 <div>
                   <ItemImage item-id="30012"></ItemImage>
@@ -1183,21 +1154,31 @@ onMounted(() => {
               <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
-              <v-text-field ref="eliteMaterialT1toT2Input"
-                            v-model.number="stageConfig.workshopStrategy.eliteMaterialT1toT2.byproductRateIncrease"
-                            :rules="numberGe0"
-                            @focus="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                            label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="eliteMaterialT1toT2Input"
+                v-model.number="stageConfig.workshopStrategy.eliteMaterialT1toT2.byproductRateIncrease"
+                :rules="numberGe0"
+                @focus="stageConfig.workshopStrategy.eliteMaterialT1toT2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                label="副产品出率提升量"
+                hint="年 1.0，止颂 0.8"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
             <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => eliteMaterialT2toT3Input?.focus());
-              }
-            }">
+            <v-radio-group
+              v-model="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy"
+              @change="
+                () => {
+                  if (stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => eliteMaterialT2toT3Input?.focus());
+                  }
+                }
+              "
+            >
               <template v-slot:label>
                 <div>
                   <ItemImage item-id="30013"></ItemImage>
@@ -1207,21 +1188,31 @@ onMounted(() => {
               <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
-              <v-text-field ref="eliteMaterialT2toT3Input"
-                            v-model.number="stageConfig.workshopStrategy.eliteMaterialT2toT3.byproductRateIncrease"
-                            :rules="numberGe0"
-                            @focus="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                            label="副产品出率提升量" hint="年 1.0，止颂 0.8" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="eliteMaterialT2toT3Input"
+                v-model.number="stageConfig.workshopStrategy.eliteMaterialT2toT3.byproductRateIncrease"
+                :rules="numberGe0"
+                @focus="stageConfig.workshopStrategy.eliteMaterialT2toT3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                label="副产品出率提升量"
+                hint="年 1.0，止颂 0.8"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
             <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => eliteMaterialT3toT4Input?.focus());
-              }
-            }">
+            <v-radio-group
+              v-model="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy"
+              @change="
+                () => {
+                  if (stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => eliteMaterialT3toT4Input?.focus());
+                  }
+                }
+              "
+            >
               <template v-slot:label>
                 <div>
                   <ItemImage item-id="30014"></ItemImage>
@@ -1234,22 +1225,31 @@ onMounted(() => {
               </template>
               <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
-              <v-text-field ref="eliteMaterialT3toT4Input"
-                            v-model.number="stageConfig.workshopStrategy.eliteMaterialT3toT4.byproductRateIncrease"
-                            :rules="numberGe0"
-                            @focus="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                            label="副产品出率提升量" hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9" variant="outlined"
-                            density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="eliteMaterialT3toT4Input"
+                v-model.number="stageConfig.workshopStrategy.eliteMaterialT3toT4.byproductRateIncrease"
+                :rules="numberGe0"
+                @focus="stageConfig.workshopStrategy.eliteMaterialT3toT4.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                label="副产品出率提升量"
+                hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
             <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => eliteMaterialT4toT5Input?.focus());
-              }
-            }">
+            <v-radio-group
+              v-model="stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy"
+              @change="
+                () => {
+                  if (stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => eliteMaterialT4toT5Input?.focus());
+                  }
+                }
+              "
+            >
               <template v-slot:label>
                 <div>
                   <ItemImage item-id="30115"></ItemImage>
@@ -1261,22 +1261,31 @@ onMounted(() => {
               </template>
               <v-radio value="WORKSHOP_STRATEGY_BLEMISHINE" label="使用瑕光"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用年、芳汀、白铁等通用干员"></v-radio>
-              <v-text-field ref="eliteMaterialT4toT5Input"
-                            v-model.number="stageConfig.workshopStrategy.eliteMaterialT4toT5.byproductRateIncrease"
-                            :rules="numberGe0"
-                            @focus="stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                            label="副产品出率提升量" hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9" variant="outlined"
-                            density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="eliteMaterialT4toT5Input"
+                v-model.number="stageConfig.workshopStrategy.eliteMaterialT4toT5.byproductRateIncrease"
+                :rules="numberGe0"
+                @focus="stageConfig.workshopStrategy.eliteMaterialT4toT5.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                label="副产品出率提升量"
+                hint="年 1.0，止颂 0.8，九色鹿不垫刀等效 0.9"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
             <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary1to2.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.skillSummary1to2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => skillSummary1to2Input?.focus());
-              }
-            }">
+            <v-radio-group
+              v-model="stageConfig.workshopStrategy.skillSummary1to2.strategy"
+              @change="
+                () => {
+                  if (stageConfig.workshopStrategy.skillSummary1to2.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => skillSummary1to2Input?.focus());
+                  }
+                }
+              "
+            >
               <template v-slot:label>
                 <div>
                   <ItemImage item-id="3302"></ItemImage>
@@ -1285,21 +1294,31 @@ onMounted(() => {
               </template>
               <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
-              <v-text-field ref="skillSummary1to2Input"
-                            v-model.number="stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncrease"
-                            :rules="numberGe0"
-                            @focus="stageConfig.workshopStrategy.skillSummary1to2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                            label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="skillSummary1to2Input"
+                v-model.number="stageConfig.workshopStrategy.skillSummary1to2.byproductRateIncrease"
+                :rules="numberGe0"
+                @focus="stageConfig.workshopStrategy.skillSummary1to2.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                label="副产品出率提升量"
+                hint="赫拉格 0.8，羽毛笔 0.75"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
             <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.skillSummary2to3.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.skillSummary2to3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => skillSummary2to3Input?.focus());
-              }
-            }">
+            <v-radio-group
+              v-model="stageConfig.workshopStrategy.skillSummary2to3.strategy"
+              @change="
+                () => {
+                  if (stageConfig.workshopStrategy.skillSummary2to3.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => skillSummary2to3Input?.focus());
+                  }
+                }
+              "
+            >
               <template v-slot:label>
                 <div>
                   <ItemImage item-id="3303"></ItemImage>
@@ -1308,21 +1327,31 @@ onMounted(() => {
               </template>
               <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用赫拉格、弑君者、羽毛笔等通用干员"></v-radio>
-              <v-text-field ref="skillSummary2to3Input"
-                            v-model.number="stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncrease"
-                            :rules="numberGe0"
-                            @focus="stageConfig.workshopStrategy.skillSummary2to3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                            label="副产品出率提升量" hint="赫拉格 0.8，羽毛笔 0.75" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="skillSummary2to3Input"
+                v-model.number="stageConfig.workshopStrategy.skillSummary2to3.byproductRateIncrease"
+                :rules="numberGe0"
+                @focus="stageConfig.workshopStrategy.skillSummary2to3.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                label="副产品出率提升量"
+                hint="赫拉格 0.8，羽毛笔 0.75"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
             <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.baseMaterial.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.baseMaterial.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => baseMaterialInput?.focus());
-              }
-            }">
+            <v-radio-group
+              v-model="stageConfig.workshopStrategy.baseMaterial.strategy"
+              @change="
+                () => {
+                  if (stageConfig.workshopStrategy.baseMaterial.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => baseMaterialInput?.focus());
+                  }
+                }
+              "
+            >
               <template v-slot:label>
                 <div>
                   <ItemImage item-id="3112"></ItemImage>
@@ -1331,21 +1360,32 @@ onMounted(() => {
               </template>
               <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用煌等通用干员" disabled></v-radio>
-              <v-text-field ref="baseMaterialInput"
-                            v-model.number="stageConfig.workshopStrategy.baseMaterial.byproductRateIncrease"
-                            :rules="numberGe0"
-                            @focus="stageConfig.workshopStrategy.baseMaterial.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                            label="副产品出率提升量" hint="煌 0.8" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;" disabled>
+              <v-text-field
+                ref="baseMaterialInput"
+                v-model.number="stageConfig.workshopStrategy.baseMaterial.byproductRateIncrease"
+                :rules="numberGe0"
+                @focus="stageConfig.workshopStrategy.baseMaterial.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                label="副产品出率提升量"
+                hint="煌 0.8"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+                disabled
+              >
               </v-text-field>
             </v-radio-group>
 
             <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.chip.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.chip.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => chipInput?.focus());
-              }
-            }">
+            <v-radio-group
+              v-model="stageConfig.workshopStrategy.chip.strategy"
+              @change="
+                () => {
+                  if (stageConfig.workshopStrategy.chip.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => chipInput?.focus());
+                  }
+                }
+              "
+            >
               <template v-slot:label>
                 <div>
                   <ItemImage item-id="3211"></ItemImage>
@@ -1355,20 +1395,31 @@ onMounted(() => {
               <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
-              <v-text-field ref="chipInput" v-model.number="stageConfig.workshopStrategy.chip.byproductRateIncrease"
-                            :rules="numberGe0"
-                            @focus="stageConfig.workshopStrategy.chip.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                            label="副产品出率提升量" hint="风笛 0.8" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="chipInput"
+                v-model.number="stageConfig.workshopStrategy.chip.byproductRateIncrease"
+                :rules="numberGe0"
+                @focus="stageConfig.workshopStrategy.chip.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                label="副产品出率提升量"
+                hint="风笛 0.8"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
             <v-divider></v-divider>
-            <v-radio-group v-model="stageConfig.workshopStrategy.chipPack.strategy" @change="() => {
-              if (stageConfig.workshopStrategy.chipPack.strategy === 'WORKSHOP_STRATEGY_COMMON') {
-                nextTick(() => chipPackInput?.focus());
-              }
-            }">
+            <v-radio-group
+              v-model="stageConfig.workshopStrategy.chipPack.strategy"
+              @change="
+                () => {
+                  if (stageConfig.workshopStrategy.chipPack.strategy === 'WORKSHOP_STRATEGY_COMMON') {
+                    nextTick(() => chipPackInput?.focus());
+                  }
+                }
+              "
+            >
               <template v-slot:label>
                 <div>
                   <ItemImage item-id="3212"></ItemImage>
@@ -1378,13 +1429,17 @@ onMounted(() => {
               <v-radio value="WORKSHOP_STRATEGY_NINE_COLORED_DEER_OBTAIN" label="使用九色鹿获取因果（不推荐）"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_NCDEER_CONSUME" label="使用九色鹿消耗因果"></v-radio>
               <v-radio value="WORKSHOP_STRATEGY_COMMON" label="使用风笛等通用干员"></v-radio>
-              <v-text-field ref="chipPackInput"
-                            v-model.number="stageConfig.workshopStrategy.chipPack.byproductRateIncrease"
-                            :rules="numberGe0"
-                            @focus="stageConfig.workshopStrategy.chipPack.strategy = 'WORKSHOP_STRATEGY_COMMON'"
-                            label="副产品出率提升量"
-                            hint="风笛 0.8" variant="outlined" density="compact"
-                            style="margin-left: 40px; width: 200px;">
+              <v-text-field
+                ref="chipPackInput"
+                v-model.number="stageConfig.workshopStrategy.chipPack.byproductRateIncrease"
+                :rules="numberGe0"
+                @focus="stageConfig.workshopStrategy.chipPack.strategy = 'WORKSHOP_STRATEGY_COMMON'"
+                label="副产品出率提升量"
+                hint="风笛 0.8"
+                variant="outlined"
+                density="compact"
+                style="margin-left: 40px; width: 200px"
+              >
               </v-text-field>
             </v-radio-group>
 
@@ -1397,9 +1452,7 @@ onMounted(() => {
                     <ItemImage item-id="3261"></ItemImage>
                   </div>
                   <p>重装 − 医疗芯片加工策略</p>
-                  <span class="card-description">
-                    一般从 需求量小的芯片 往 需求量大的芯片 加工
-                  </span>
+                  <span class="card-description"> 一般从 需求量小的芯片 往 需求量大的芯片 加工 </span>
                 </div>
               </template>
               <v-radio value="MEDIC" label="重装芯片 → 医疗芯片"></v-radio>
@@ -1416,9 +1469,7 @@ onMounted(() => {
                     <ItemImage item-id="3251"></ItemImage>
                   </div>
                   <p>狙击 − 术师芯片加工策略</p>
-                  <span class="card-description">
-                    一般从 需求量小的芯片 往 需求量大的芯片 加工
-                  </span>
+                  <span class="card-description"> 一般从 需求量小的芯片 往 需求量大的芯片 加工 </span>
                 </div>
               </template>
               <v-radio value="CASTER" label="狙击芯片 → 术师芯片"></v-radio>
@@ -1435,9 +1486,7 @@ onMounted(() => {
                     <ItemImage item-id="3271"></ItemImage>
                   </div>
                   <p>先锋 − 辅助芯片加工策略</p>
-                  <span class="card-description">
-                    一般从 需求量小的芯片 往 需求量大的芯片 加工
-                  </span>
+                  <span class="card-description"> 一般从 需求量小的芯片 往 需求量大的芯片 加工 </span>
                 </div>
               </template>
               <v-radio value="SUPPORT" label="先锋芯片 → 辅助芯片"></v-radio>
@@ -1454,9 +1503,7 @@ onMounted(() => {
                     <ItemImage item-id="3281"></ItemImage>
                   </div>
                   <p>近卫 − 特种芯片加工策略</p>
-                  <span class="card-description">
-                    一般从 需求量小的芯片 往 需求量大的芯片 加工
-                  </span>
+                  <span class="card-description"> 一般从 需求量小的芯片 往 需求量大的芯片 加工 </span>
                 </div>
               </template>
               <v-radio value="SPECIAL" label="近卫芯片 → 特种芯片"></v-radio>
@@ -1467,40 +1514,34 @@ onMounted(() => {
         </v-expansion-panel>
       </span>
 
-
       <!-- 折叠面板：定价作战集 -->
       <v-expansion-panel title="定价作战集" value="stage-range-parameter">
         <v-expansion-panel-text class="expansion-panel-text">
-          <span class="card-description">
-            这里用于选择材料价值计算的基准关卡
-          </span>
-
+          <span class="card-description"> 这里用于选择材料价值计算的基准关卡 </span>
 
           <div class="stage-checkbox">
-
             <div class="m-8-0 font-bold color-primary">快捷选择</div>
-            <ActionButton v-for="(stage, stageCode) in BeastsStage" :btn-text="stageCode" :active="stage.active"
-                          @click="updateBeastsStageActive(stage)">
+            <ActionButton v-for="(stage, stageCode) in BeastsStage" :btn-text="stageCode" :active="stage.active" @click="updateBeastsStageActive(stage)">
             </ActionButton>
 
             <div class="m-8-0 font-bold color-primary">活动关</div>
-            <ActionButton :btn-text="'SideStory定价测试集'" :active="stageConfig.useActivityAverageStage"
-                          @click="useActivityAverageStage()">
-            </ActionButton>
+            <ActionButton :btn-text="'SideStory定价测试集'" :active="stageConfig.useActivityAverageStage" @click="useActivityAverageStage()"> </ActionButton>
 
             <div class="m-8-0 font-bold color-primary">主题曲</div>
             <v-divider color="primary" class="opacity-50"></v-divider>
             <div v-for="(collect, index) in stageCollect.Main" :key="index">
-
               <!--              <div class="m-4">  {{ collect.zoneName}} </div>-->
-              <v-checkbox density="compact" hide-details color="primary" v-model="collect.selectAll"
-                          @click="selectAllStage(collect)">
+              <v-checkbox density="compact" hide-details color="primary" v-model="collect.selectAll" @click="selectAllStage(collect)">
                 <template v-slot:prepend>
                   {{ collect.zoneName }}
                 </template>
               </v-checkbox>
-              <ActionButton v-for="(stage, index) in collect.list" :btn-text="stage.stageCode" :active="stage.active"
-                            @click="updateStageBlacklist(collect, stage)">
+              <ActionButton
+                v-for="(stage, index) in collect.list"
+                :btn-text="stage.stageCode"
+                :active="stage.active"
+                @click="updateStageBlacklist(collect, stage)"
+              >
               </ActionButton>
               <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
             </div>
@@ -1508,21 +1549,23 @@ onMounted(() => {
             <div class="m-8-0 font-bold color-primary">别传/插曲</div>
             <v-divider color="primary" class="opacity-50"></v-divider>
             <div v-for="(collect, index) in stageCollect.ActPerm" :key="index">
-              <v-checkbox density="compact" hide-details color="primary" v-model="collect.selectAll"
-                          @click="selectAllStage(collect)">
+              <v-checkbox density="compact" hide-details color="primary" v-model="collect.selectAll" @click="selectAllStage(collect)">
                 <template v-slot:prepend>
                   {{ collect.zoneName }}
                 </template>
               </v-checkbox>
-              <ActionButton v-for="(stage, index) in collect.list" :btn-text="stage.stageCode" :active="stage.active"
-                            @click="updateStageBlacklist(collect, stage)">
+              <ActionButton
+                v-for="(stage, index) in collect.list"
+                :btn-text="stage.stageCode"
+                :active="stage.active"
+                @click="updateStageBlacklist(collect, stage)"
+              >
               </ActionButton>
               <!--              <v-divider class="opacity-70 m-4-0"></v-divider>-->
             </div>
           </div>
         </v-expansion-panel-text>
       </v-expansion-panel>
-
 
       <!-- 调试文本区域 -->
       <v-expansion-panel title="debug 区" value="debug-panel">
@@ -1540,7 +1583,7 @@ onMounted(() => {
     </v-expansion-panels>
   </v-card>
 
-  <v-card style="width: 400px;display:none;">
+  <v-card style="width: 400px; display: none">
     <code style="white-space: pre-wrap">
       {{ debugText }}
     </code>
@@ -1571,8 +1614,13 @@ onMounted(() => {
           <p>不建议自定义<span class="green">绿</span>、<span class="gray">白</span>材料的价值，这可能导致不自洽的结果</p>
           <div class="flex flex-wrap justify-center">
             <!-- 显示所有可选的材料图标，点击后选择该材料 -->
-            <ItemImage v-for="item in itemList.filter((item) => isEliteMaterial(item.itemId))" :item-id="item.itemId"
-                       :size="60" :mobile-size="40" @click="chooseCustomItem(item)">
+            <ItemImage
+              v-for="item in itemList.filter((item) => isEliteMaterial(item.itemId))"
+              :item-id="item.itemId"
+              :size="60"
+              :mobile-size="40"
+              @click="chooseCustomItem(item)"
+            >
             </ItemImage>
           </div>
         </v-list-item>
