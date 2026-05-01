@@ -402,7 +402,7 @@ function handleClick() {
 
     </v-alert>
     <v-alert border="start" type="info" title="中坚材料更新" variant="tonal" density="compact" class="m-12">
-      <p>因研磨石加入商店无限池，研磨石的默认价值将变更，如需调整请在<a href="/account/home">个人中心</a>进行修改</p>
+      <p>因RMA70-12加入商店无限池，RMA70-12的默认价值将变更，如需调整请在<a href="/account/home">个人中心</a>进行修改</p>
     </v-alert>
 
     <!-- 卡片区域 -->
