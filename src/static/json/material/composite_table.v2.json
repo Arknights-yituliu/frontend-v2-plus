@@ -583,6 +583,52 @@
     ]
   },
   {
+    "itemId": "31114",
+    "itemName": "聚能动力单元",
+    "rarity": 4,
+    "resolve": false,
+    "pathway": [
+      {
+        "itemId": "30063",
+        "itemName": "全新装置",
+        "count": 1
+      },
+      {
+        "itemId": "31103",
+        "itemName": "液化高能气体",
+        "count": 1
+      },
+      {
+        "itemId": "31113",
+        "itemName": "电极单元",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "itemId": "31104",
+    "itemName": "液化醚吸聚体",
+    "rarity": 4,
+    "resolve": false,
+    "pathway": [
+      {
+        "itemId": "30053",
+        "itemName": "酮凝集组",
+        "count": 1
+      },
+      {
+        "itemId": "31093",
+        "itemName": "类凝结核",
+        "count": 1
+      },
+      {
+        "itemId": "31103",
+        "itemName": "液化高能气体",
+        "count": 1
+      }
+    ]
+  },
+  {
     "itemId": "30145",
     "itemName": "晶体电子单元",
     "rarity": 5,

@@ -137,6 +137,38 @@
       "rarity": 4
     },
     {
+      "itemId": "31074",
+      "itemName": "固化纤维板",
+      "storeType": "orange",
+      "price": 75.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
+      "itemId": "31084",
+      "itemName": "环烃预制体",
+      "storeType": "orange",
+      "price": 80.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
+      "itemId": "31104",
+      "itemName": "液化醚吸聚体",
+      "storeType": "orange",
+      "price": 75.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
+      "itemId": "31114",
+      "itemName": "聚能动力单元",
+      "storeType": "orange",
+      "price": 75.0,
+      "quantity": 1,
+      "rarity": 4
+    },
+    {
       "itemId": "30083",
       "itemName": "轻锰矿",
       "storeType": "orange",
@@ -273,6 +305,37 @@
       "rarity": 3
     },
     {
+      "itemId": "31073",
+      "itemName": "褐素纤维",
+      "storeType": "orange",
+      "price": 55.0,
+      "quantity": 2,
+      "rarity": 3
+    },
+    {
+      "itemId": "31083",
+      "itemName": "环烃聚质",
+      "storeType": "orange",
+      "price": 60.0,
+      "quantity": 2,
+      "rarity": 3
+    },
+    {
+      "itemId": "31103",
+      "itemName": "液化高能气体",
+      "storeType": "orange",
+      "price": 55.0,
+      "quantity": 2,
+      "rarity": 3
+    },{
+      "itemId": "31113",
+      "itemName": "电极单元",
+      "storeType": "orange",
+      "price": 50.0,
+      "quantity": 2,
+      "rarity": 3
+    },
+    {
       "itemId": "30062",
       "itemName": "装置",
       "storeType": "orange",
@@ -367,38 +430,6 @@
       "price": 15.0,
       "quantity": 8,
       "rarity": 1
-    },
-    {
-      "itemId": "31073",
-      "itemName": "褐素纤维",
-      "storeType": "orange",
-      "price": 55.0,
-      "quantity": 2,
-      "rarity": 3
-    },
-    {
-      "itemId": "31083",
-      "itemName": "环烃聚质",
-      "storeType": "orange",
-      "price": 60.0,
-      "quantity": 2,
-      "rarity": 3
-    },
-    {
-      "itemId": "31074",
-      "itemName": "固化纤维板",
-      "storeType": "orange",
-      "price": 75.0,
-      "quantity": 1,
-      "rarity": 4
-    },
-    {
-      "itemId": "31084",
-      "itemName": "环烃预制体",
-      "storeType": "orange",
-      "price": 80.0,
-      "quantity": 1,
-      "rarity": 4
     }
   ],
   "green": [
@@ -568,6 +599,30 @@
       "storeType": "green",
       "price": 450.0,
       "quantity": 1,
+      "rarity": 5
+    },
+    {
+      "itemId": "4001",
+      "itemName": "龙门币",
+      "storeType": "green",
+      "price": 25,
+      "quantity": 4000,
+      "rarity": 5
+    },
+    {
+      "itemId": "2004",
+      "itemName": "高级作战记录",
+      "storeType": "green",
+      "price": 25,
+      "quantity": 2,
+      "rarity": 5
+    },
+    {
+      "itemId": "3302",
+      "itemName": "技巧概要·卷2",
+      "storeType": "green",
+      "price": 20,
+      "quantity": 3,
       "rarity": 5
     }
   ],

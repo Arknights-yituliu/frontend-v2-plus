@@ -72,7 +72,7 @@ function updateItemInfoWeight() {
     }
 
     list.sort((a, b) => a.rarity - b.rarity)
-    console.log(JSON.stringify(list))
+    // console.log(JSON.stringify(list))
     console.log(JSON.stringify(itemInfo))
 }
 
@@ -159,7 +159,7 @@ function getItemMinValue() {
     console.log(JSON.stringify(actStoreUnlimitedExchange))
 }
 
-getNewItemInfo()
+// getNewItemInfo()
 // updateItemInfoWeight()
 // getYTLStageList()
 // customItemList()

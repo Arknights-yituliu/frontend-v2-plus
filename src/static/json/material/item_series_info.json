@@ -362,5 +362,37 @@
         "rarity": 3
       }
     ]
+  },
+  {
+    "seriesId": "31103",
+    "seriesName": "液化高能气体",
+    "itemSeries": [
+      {
+        "itemId": "31104",
+        "itemName": "液化醚吸聚体",
+        "rarity": 4
+      },
+      {
+        "itemId": "31103",
+        "itemName": "液化高能气体",
+        "rarity": 3
+      }
+    ]
+  },
+  {
+    "seriesId": "31113",
+    "seriesName": "电极单元",
+    "itemSeries": [
+      {
+        "itemId": "31114",
+        "itemName": "聚能动力单元",
+        "rarity": 4
+      },
+      {
+        "itemId": "31113",
+        "itemName": "电极单元",
+        "rarity": 3
+      }
+    ]
   }
 ]
