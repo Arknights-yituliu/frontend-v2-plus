@@ -244,11 +244,11 @@ const scheduleOptions = [
   },
   {
     name: "夏活",
-    dateString: "敬请期待",
+    dateString: "待定",
     start: new Date("2026/08/01 12:00:00"),
     end: new Date("2026/08/15 04:01:00"),
-    activityType: "周年限定",
-    disabled: true,
+    activityType: "夏活限定",
+    disabled: false,
     dailyGiftResources: true,
     accuracyFlag: true,
   },
@@ -1852,7 +1852,7 @@ function sharePage() {
           </div>
         </el-collapse-item>
 
-        <el-collapse-item name="developer" class="collapse-item" v-show="developerMode === 'developer'">
+        <el-collapse-item name="developer" class="collapse-item" v-show="developerMode === 'dev'">
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
