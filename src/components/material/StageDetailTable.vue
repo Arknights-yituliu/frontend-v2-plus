@@ -21,6 +21,7 @@ const headers = [
   {title: 'T4效率', key: 'leT4Efficiency'},
   {title: 'T3效率', key: 'leT3Efficiency'},
   {title: 'T2效率', key: 'leT2Efficiency'},
+  {title: '样本量', key: 'sampleSize'}
 ]
 
 function replaceZoneName(str) {
@@ -84,6 +85,9 @@ function handleHeaderClick(header) {
       </template>
       <template v-slot:item.leT2Efficiency="{ item }">
         {{ formatNumber(item.leT2Efficiency * 100, 1) }}%
+      </template>
+      <template v-slot:item.sampleSize="{ item }">
+        {{ item.sampleSize }}
       </template>
     </v-data-table>
 

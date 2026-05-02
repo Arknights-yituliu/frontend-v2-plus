@@ -543,6 +543,9 @@ function handleClick() {
             <div style="margin-left: 16px;">{{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%</div>
           </template>
         </el-table-column>
+
+      
+
       </el-table>
     </div>
 

@@ -463,6 +463,10 @@ function useActivityAverageStage() {
   stageConfig.value.useActivityAverageStage = !stageConfig.value.useActivityAverageStage;
 }
 
+function useActivityAverageStageAndUnlimitedItem() {
+  stageConfig.value.useActivityAverageStageAndUnlimitedItem = !stageConfig.value.useActivityAverageStageAndUnlimitedItem;
+}
+
 //------------------从这里开始是自定义材料价值相关的代码------------------
 
 const customItemDialog = ref(false);
@@ -1526,6 +1530,7 @@ onMounted(() => {
 
             <div class="m-8-0 font-bold color-primary">活动关</div>
             <ActionButton :btn-text="'SideStory定价测试集'" :active="stageConfig.useActivityAverageStage" @click="useActivityAverageStage()"> </ActionButton>
+            <ActionButton :btn-text="'SideStory定价测试集（包含无限龙门币）'" :active="stageConfig.useActivityAverageStageAndUnlimitedItem" @click="useActivityAverageStageAndUnlimitedItem()"> </ActionButton>
 
             <div class="m-8-0 font-bold color-primary">主题曲</div>
             <v-divider color="primary" class="opacity-50"></v-divider>

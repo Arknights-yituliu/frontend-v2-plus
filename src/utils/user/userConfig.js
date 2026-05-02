@@ -12,6 +12,7 @@ const defaultConfig = {
     // 定价作战集
     useActivityStage: false,
     useActivityAverageStage: false,
+    useActivityAverageStageAndUnlimitedItem: false,
     sampleSize: 300,
     stageBlacklist: [],
     stageWhitelist: [],  // 作战白名单，该配置暂未实现

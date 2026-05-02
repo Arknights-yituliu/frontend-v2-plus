@@ -1,4 +1,4 @@
-import { getStageDropCollect } from "/src/utils/item/penguinData.js";
+import { getStageDropCollect, createDropTemplate } from "/src/utils/item/penguinData.js";
 import ITEM_INFO from "/src/static/json/material/item_info.json";
 import ITEM_SERIES_INFO from "/src/static/json/material/item_series_info.json";
 import COMPOSITE_TABLE from "/src/static/json/material/composite_table.v2.json";
@@ -140,16 +140,40 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
   const stageDropCollectForPricing = new Map();
   for (const [stageId, dropList] of stageDropCollect) {
     // 提取关卡消耗理智、关卡代号、关卡类型
-    const { apCost, stageType } = dropList[0];
+    const { apCost, stageId, stageCode, stageType } = dropList[0];
     if (["MAIN", "ACT_PERM"].includes(stageType)) {
       // 主线和常驻活动关卡总是包含在定价作战集中
     }
+
     if (["ACT", "ACT_REP"].includes(stageType) && !stageConfig.useActivityStage) {
       continue; // 如果不使用活动作战定价则跳过
     }
+
+    if ("YTL_VIRTUAL" === stageType && stageConfig.useActivityAverageStageAndUnlimitedItem) {
+      const drop = {
+        stageId,
+        itemId: "4001",
+        quantity: apCost * 1000 * 20,
+        times: 1000,
+        start: 0,
+        end: 0,
+        stageCode,
+        apCost,
+        stageType,
+        zoneName: "SS平均掉率",
+        zoneId: "ytl_virtual",
+      };
+
+      //这里是一个测试功能
+      dropList.push(drop);
+    }
+
     if ("YTL_VIRTUAL" === stageType && !stageConfig.useActivityAverageStage) {
       continue; // 如果不使用活动平均作战定价则跳过
     }
+
+
+
     stageDropCollectForPricing.set(stageId, dropList);
   }
 

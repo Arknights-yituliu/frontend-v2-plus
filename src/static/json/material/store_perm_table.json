@@ -585,6 +585,22 @@
       "quantity": 1,
       "rarity": 3
     },
+     {
+      "itemId": "31103",
+      "itemName": "液化高能气体",
+      "storeType": "green",
+      "price": 45.0,
+      "quantity": 1,
+      "rarity": 3
+    },
+     {
+      "itemId": "31113",
+      "itemName": "电极单元",
+      "storeType": "green",
+      "price": 40.0,
+      "quantity": 1,
+      "rarity": 3
+    },
     {
       "itemId": "7001",
       "itemName": "招聘许可",
