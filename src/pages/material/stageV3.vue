@@ -402,7 +402,7 @@ function handleClick() {
 
     </v-alert>
     <v-alert border="start" type="info" title="中坚材料更新" variant="tonal" density="compact" class="m-12">
-      <p>因研磨石加入商店无限池，研磨石的默认价值将变更，如需调整请在<a href="/account/home">个人中心</a>进行修改</p>
+      <p>因RMA70-12加入商店无限池，RMA70-12的默认价值将变更，如需调整请在<a href="/account/home">个人中心</a>进行修改</p>
     </v-alert>
 
     <!-- 卡片区域 -->
@@ -476,6 +476,7 @@ function handleClick() {
           <ItemImage :item-id="'30073'" size="60" mobile-size="24"></ItemImage>
           <ItemImage :item-id="'30083'" size="60" mobile-size="24"></ItemImage>
           <ItemImage :item-id="'30093'" size="60" mobile-size="24"></ItemImage>
+          <ItemImage :item-id="'30103'" size="60" mobile-size="24"></ItemImage>
         </div>
         <div style="width: 100%; text-align: center; margin-top: 8px;">建议通过活动商店获取</div>
         <div style="width: 100%; text-align: center; margin-top: 8px;">点击修改材料退环境设置</div>
