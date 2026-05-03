@@ -187,6 +187,9 @@ function getStageConfig() {
         // }
         // console.log('userConfig',stageConfig.value)
         const config = JSON.parse(cacheStageConfig);
+        if(!config.useActivityAverageStageAndUnlimitedItem){
+            config.useActivityAverageStageAndUnlimitedItem = false
+        }
         if("v1.0"===config.version){
             stageConfig.value = config
         }
