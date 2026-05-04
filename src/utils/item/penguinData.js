@@ -180,6 +180,7 @@ function createDropTemplate(stageInfo, shopRedemptionItem) {
         stageCode: stageInfo.stageCode,
         apCost: stageInfo.apCost,
         spm: stageInfo.spm,
+        isUnlimited: true,
         stageType: stageInfo.stageType,
         zoneName: stageInfo.zoneName,
         zoneId: stageInfo.zoneId

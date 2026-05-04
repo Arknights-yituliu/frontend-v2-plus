@@ -46,7 +46,7 @@ async function calculationStageEfficiency(stageConfig) {
     const unlimitedItem = unlimitedItemsInStore[unlimitedItemId];
     const itemInfo = itemMap.get(unlimitedItem.itemId);
     if (itemInfo) {
-        //计算商店兑换物的效率，35代币的物品计算公式  （1/物品价格）*物品数量*物品价值
+      //计算商店兑换物的效率，35代币的物品计算公式  （1/物品价格）*物品数量*物品价值
       const apEfficiency = (1 / unlimitedItem.price) * unlimitedItem.quantity * itemInfo.itemValue;
       //如果效率大于当前商店兑换物的效率，则更新商店兑换物
       if (apEfficiency > shopRedemptionItem.apEfficiency) {
@@ -73,11 +73,19 @@ async function calculationStageEfficiency(stageConfig) {
     let stageExpectedOutput = 0.0;
 
     if ("ACT" === stageType || "ACT_REP" === stageType || "YTL_VIRTUAL" === stageType) {
-      // console.log(createDropTemplate(list[0],{
-      //     itemId:shopRedemptionItem.itemId,
-      //     price: shopRedemptionItem.price,
-      //     quantity:shopRedemptionItem.quantity
-      // }))
+      list.push(
+        createDropTemplate(list[0], {
+          itemId: shopRedemptionItem.itemId,
+          price: shopRedemptionItem.price,
+          quantity: shopRedemptionItem.quantity,
+        })
+      );
+    }
+
+    //主线活动期间
+    const now = new Date();
+    const may21 = new Date(now.getFullYear(), 4, 21);
+    if ("MAIN" === stageType && now < may21) {
       list.push(
         createDropTemplate(list[0], {
           itemId: shopRedemptionItem.itemId,
@@ -92,7 +100,7 @@ async function calculationStageEfficiency(stageConfig) {
     let endTimeStamp = 4073691312000;
 
     for (const drop of list) {
-      const { itemId, stageId, quantity, times } = drop;
+      const { itemId, stageId, isUnlimited, quantity, times } = drop;
       const itemInfo = itemMap.get(itemId);
 
       //如果查不到材料信息则跳过
@@ -111,6 +119,7 @@ async function calculationStageEfficiency(stageConfig) {
         itemValue: itemValue,
         expectedOutput: expectedOutput,
         knockRating: knockRating,
+        isUnlimited: !!isUnlimited,
         rarity: parseInt(rarity),
         quantity: quantity,
         times: times,
@@ -144,12 +153,25 @@ async function calculationStageEfficiency(stageConfig) {
     let mainItemId = "0";
     let mainItemName = "0";
 
+    if (stageCode === "1-7") {
+      console.log(stageDropDetailList);
+    }
+
+    if (stageDropDetailList.length >= 2 && stageDropDetailList[0].isUnlimited) {
+      const tmp = stageDropDetailList[0];
+      console.log(tmp);
+      console.log(stageDropDetailList[1]);
+      stageDropDetailList[0] = stageDropDetailList[1];
+      stageDropDetailList[1] = tmp;
+    }
+
     for (let i = 0; i < stageDropDetailList.length; i++) {
       const element = stageDropDetailList[i];
       const { itemId, itemName, rarity, knockRating, sampleSize, expectedOutput, end } = element;
 
       if (i === 0) {
         mainSeriesInfo = itemSeriesInfoByItemId.get(itemId);
+
         if (end) {
           endTimeStamp = end;
         }
@@ -178,6 +200,7 @@ async function calculationStageEfficiency(stageConfig) {
         orundumPerAp += (knockRating * 10) / 3;
         LMDCostPerAp += (knockRating * 1000) / 3;
       }
+
       if ("30062" === itemId) {
         orundumPerAp += knockRating * 10;
         LMDCostPerAp += knockRating * 1000;
@@ -337,31 +360,39 @@ function getHistoryActStage(stageResultList) {
   return historyActStageList;
 }
 
+const priceCoefficient = 2;
+
 //这个对象是用于在计算活动效率时，判断无限兑换材料价值是否大于龙门币价值，大于则将默认计算的龙门币效率转为价值最高的无限兑换材料
 const unlimitedItemsInStore = {
   4001: {
     itemId: "4001",
     quantity: 20,
     minValue: 0.0036,
-    price: 1,
+    price: 1 * priceCoefficient,
   },
   30073: {
     itemId: "30073",
     quantity: 1,
     minValue: 1.8,
-    price: 25,
+    price: 25 * priceCoefficient,
   },
   30083: {
     itemId: "30083",
     quantity: 1,
     minValue: 2.16,
-    price: 30,
+    price: 30 * priceCoefficient,
   },
   30093: {
     itemId: "30093",
     quantity: 1,
     minValue: 2.52,
-    price: 35,
+    price: 35 * priceCoefficient,
+  },
+  30103: {
+    itemId: "30103",
+    quantity: 1,
+    minValue: 2.88,
+    price: 40 * priceCoefficient,
   },
 };
 
