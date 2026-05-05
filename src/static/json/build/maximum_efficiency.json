@@ -1,5 +1,16 @@
 [
   {
+    "name": "维伊",
+    "profession": "术师/近卫",
+    "max_efficiency": 0.45,
+    "conditions": {
+      "target_profession": ["术师", "近卫"],
+      "skill_name": "触类旁通"
+    },
+    "skill_name": "进驻训练室协助位时，术师与近卫干员的专精技能训练速度+45%",
+    "charId": "char_4226_veen"
+  },
+  {
     "name": "望",
     "profession": "通用",
     "max_efficiency": 0.7,
