@@ -223,6 +223,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/image-tagger',
+        text: '图片标记器',
+        name: 'ImageTagger',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/image-tagger.vue'),
+        meta: {
+            title: '图片标记器'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',
