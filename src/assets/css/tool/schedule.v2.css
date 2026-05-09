@@ -1,7 +1,7 @@
 .schedule-page {
     padding: 8px;
     box-sizing: border-box;
-
+}
 
     .maa-schedule-wrap-v2 {
 
@@ -635,6 +635,7 @@
     .operator-check-box-option-v2 {
         width: 80px;
         height: 80px;
+
         overflow: hidden;
     }
 
@@ -759,4 +760,3 @@
         padding-right: 4px;
         font-weight: 600;
     }
-}
