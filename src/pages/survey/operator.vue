@@ -21,7 +21,7 @@ import {formatNumber} from "/src/utils/format.js";
 import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import {dateFormat} from "@/utils/dateUtil.js";
-import AccountOverviewPanel from "/src/components/survey/AccountOverviewPanel.vue";
+// import AccountOverviewPanel from "/src/components/survey/AccountOverviewPanel.vue";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
 import { userInfo } from "/src/utils/user/userInfo.js";
@@ -34,7 +34,7 @@ let displayTabHeader = ref('数据导入导出')
 
 // 账号一图流相关数据
 let sklandAccountData = ref(null)  // 完整的森空岛账号数据
-const accountOverviewPanelRef = ref(null)
+// const accountOverviewPanelRef = ref(null)
 
 // 森空岛导入相关
 const SKLAND_LINK = 'https://www.skland.com/index'
@@ -691,6 +691,7 @@ onMounted(() => {
             <OperatorStatisticalTable v-model="operatorList"></OperatorStatisticalTable>
           </v-tabs-window-item>
 
+          <!-- 
           <v-tabs-window-item value="账号一图流">
             <AccountOverviewPanel 
               ref="accountOverviewPanelRef"
@@ -698,6 +699,7 @@ onMounted(() => {
               :skland-account-data="sklandAccountData"
             />
           </v-tabs-window-item>
+          -->
 
           <v-tabs-window-item value="干员练度推荐" v-loading>
             <v-data-table :headers="headers" :items="operatorRecommendList" hide-default-footer
