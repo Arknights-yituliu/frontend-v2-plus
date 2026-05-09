@@ -84,3 +84,14 @@ body {
     padding: 0 !important;
   }
 }
+
+// 覆盖 @media (min-width: 960px) 下的 .v-container max-width
+@media (min-width: 960px) {
+  .v-container {
+    max-width: none !important; // 取消最大宽度限制，让容器充满可用空间
+    // 或者设置你想要的自定义值，例如：
+    // max-width: 1200px !important;
+  }
+}
+
+
