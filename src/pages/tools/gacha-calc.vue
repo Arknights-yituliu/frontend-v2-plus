@@ -1514,14 +1514,20 @@ function getProbabilityBoxStyle(limited, all) {
   };
 }
 
-const developerMode = ref("");
+const developerMode = ref(route.query.mode === "dev" ? "dev" : "");
+
+watch(
+  () => route.query.mode,
+  (mode) => {
+    developerMode.value = mode === "dev" ? "dev" : "";
+  }
+);
 
 onMounted(() => {
   readLastSettings();
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
   updateScheduleOption(0);
   getAndSortPackData();
-  developerMode.value = route.query.mode;
 
   // ElNotification({
   //   title: '2024.08.16',
@@ -1542,51 +1548,47 @@ function handleDateChange(date) {
   }
 }
 
+const screenshotModeEnabled = ref(false);
+const wideScreenModeEnabled = ref(false);
+
 //截图模式
-function handleBackground() {
+function handleBackground(enabled = screenshotModeEnabled.value) {
+  screenshotModeEnabled.value = enabled;
+
   // 1. 所有 .collapse-item 阴影设为 0
   const items = document.querySelectorAll(".collapse-item");
   items.forEach((el) => {
-    el.style.boxShadow = "none";
+    el.style.boxShadow = enabled ? "none" : "";
   });
 
   // 2. gachaCalculate 背景色设为绿色
   const gacha = document.getElementById("gachaCalculate");
   if (gacha) {
-    gacha.style.backgroundColor = "lime";
+    gacha.style.backgroundColor = enabled ? "lime" : "";
   }
 }
 
-const wideScreenStatus = ref("pro");
-function wideScreenMode() {
-  if ("pro" === wideScreenStatus.value) {
-    document.getElementById("gachaCalculate").setAttribute("data-video", "developer");
-    document.getElementById("resources-box").setAttribute("data-video", "developer");
-    document.getElementById("result-box").setAttribute("data-video", "developer");
-    wideScreenStatus.value = "developer";
-  } else {
-    document.getElementById("gachaCalculate").setAttribute("data-video", "pro");
-    document.getElementById("resources-box").setAttribute("data-video", "pro");
-    document.getElementById("result-box").setAttribute("data-video", "pro");
-    wideScreenStatus.value = "pro";
-  }
+function wideScreenMode(enabled = wideScreenModeEnabled.value) {
+  wideScreenModeEnabled.value = enabled;
+  const videoMode = enabled ? "developer" : "pro";
+  document.getElementById("gachaCalculate")?.setAttribute("data-video", videoMode);
+  document.getElementById("resources-box")?.setAttribute("data-video", videoMode);
+  document.getElementById("result-box")?.setAttribute("data-video", videoMode);
 }
 
 let clickCount = 0;
+let clickCountTimer = null;
 
 function triggerDEVmode() {
   clickCount++;
 
   if (clickCount >= 8) {
-    const timeSelector = document.getElementById("timeSelector");
-    if (timeSelector) {
-      timeSelector.style.display = "flex";
-    }
+    developerMode.value = "dev";
     clickCount = 0;
   }
 
-  clearTimeout(clickCount.timeout);
-  clickCount.timeout = setTimeout(() => {
+  clearTimeout(clickCountTimer);
+  clickCountTimer = setTimeout(() => {
     clickCount = 0;
   }, 10000);
 }
@@ -1886,8 +1888,16 @@ function sharePage() {
             >
               重置为当前
             </el-button>
-            <el-button @click="handleBackground()"> 截图模式 </el-button>
-            <el-button @click="wideScreenMode()"> 宽屏模式 </el-button>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px">
+              <div style="display: flex; align-items: center; gap: 12px">
+                <span style="font-weight: 500; color: #606266">截图模式：</span>
+                <el-switch v-model="screenshotModeEnabled" @change="handleBackground"></el-switch>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px">
+                <span style="font-weight: 500; color: #606266">宽屏模式：</span>
+                <el-switch v-model="wideScreenModeEnabled" @change="wideScreenMode"></el-switch>
+              </div>
+            </div>
           </div>
         </el-collapse-item>
       </el-collapse>
