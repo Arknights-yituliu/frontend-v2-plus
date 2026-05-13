@@ -1,6 +1,11 @@
 @media screen and (max-width: 600px) {
 
   .pack-efficiency-page {
+    .pack-display-control-card {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
     .pack-card-container {
       justify-content: flex-end;
     }
