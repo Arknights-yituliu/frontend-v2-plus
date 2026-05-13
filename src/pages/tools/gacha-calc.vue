@@ -684,6 +684,8 @@ let calculationResult = ref({
   totalDraw: 0,
   //充值总额
   totalAmountOfRecharge: 0,
+  //月均氪金
+  monthlyAverageRecharge: 0,
   //库存总抽数
   existTotalDraw: 0,
   //日常总抽数
@@ -1264,6 +1266,10 @@ function gachaResourcesCalculation() {
 
   logs.push({ key: "计算源石后", value: calculationResult.value.totalDraw });
 
+  const calculationDays = dailyReward.value.daily;
+  calculationResult.value.monthlyAverageRecharge =
+    calculationDays > 0 ? (calculationResult.value.totalAmountOfRecharge / calculationDays) * 30 : 0;
+
   // console.table(logs)
 
   const lastSettings = {
@@ -1644,7 +1650,11 @@ function sharePage() {
                 :style="getProbabilityBoxStyle(currentProb.limited120, currentProb.all120)"
               ></div>
               <span class="collapse-title-font">
-                共计{{ calculationResult.totalDraw }}抽， 氪金{{ numberFloor(calculationResult.totalAmountOfRecharge, 0) }}元
+                共计{{ calculationResult.totalDraw }}抽<span v-if="calculationResult.totalAmountOfRecharge > 0"
+                  >， 氪金{{ numberFloor(calculationResult.totalAmountOfRecharge, 0) }}元，月均约{{
+                    calculationResult.monthlyAverageRecharge.toFixed(1)
+                  }}元</span
+                >
               </span>
             </div>
           </template>
