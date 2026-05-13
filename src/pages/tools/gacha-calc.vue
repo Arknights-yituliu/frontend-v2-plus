@@ -686,6 +686,10 @@ let calculationResult = ref({
   totalAmountOfRecharge: 0,
   //月均氪金
   monthlyAverageRecharge: 0,
+  //月卡氪金总额
+  monthlyCardAmountOfRecharge: 0,
+  //是否选中月卡
+  monthlyCardSelected: false,
   //库存总抽数
   existTotalDraw: 0,
   //日常总抽数
@@ -1028,6 +1032,8 @@ function gachaResourcesCalculation() {
     let gachaTicket = 0;
     let tenGachaTicket = 0;
     let totalAmountOfRecharge = 0;
+    let monthlyCardAmountOfRecharge = 0;
+    let monthlyCardSelected = false;
 
     for (const index of selectedHistoryPackIndex.value) {
       const pack = packListGroupByHistory.value[index];
@@ -1060,6 +1066,7 @@ function gachaResourcesCalculation() {
 
       //月卡单独处理
       if (pack.officialName === "月卡") {
+        monthlyCardSelected = true;
         //计算卡池结束前月卡可以拿到多少合成玉
         listDisplayPackInfo.value[i].orundum = dailyReward.value.daily * 200;
         //卡池结束前可以购买月卡的数量
@@ -1091,6 +1098,7 @@ function gachaResourcesCalculation() {
 
         //月卡的价格=购买月卡的数量*30
         listDisplayPackInfo.value[i].price = purchaseQuantity * 30;
+        monthlyCardAmountOfRecharge += listDisplayPackInfo.value[i].price;
         //当月月卡已购买源石-6
         // if (rechargeOption.value.monthlyCardPurchasedThisMonth) {
         //   listDisplayPackInfo.value[i].originium -= 6
@@ -1121,6 +1129,8 @@ function gachaResourcesCalculation() {
     calculationResult.value.gachaTicket += gachaTicket;
     calculationResult.value.tenGachaTicket += tenGachaTicket;
     calculationResult.value.totalAmountOfRecharge = totalAmountOfRecharge;
+    calculationResult.value.monthlyCardAmountOfRecharge = monthlyCardAmountOfRecharge;
+    calculationResult.value.monthlyCardSelected = monthlyCardSelected;
     calculationResult.value.rechargeTotalDraw = orundum / 600 + originium * 0.3 + gachaTicket + tenGachaTicket * 10;
 
     logs.push({ key: "氪金-合成玉", value: orundum });
@@ -1267,8 +1277,12 @@ function gachaResourcesCalculation() {
   logs.push({ key: "计算源石后", value: calculationResult.value.totalDraw });
 
   const calculationDays = dailyReward.value.daily;
+  const monthlyAverageBaseRecharge = calculationResult.value.totalAmountOfRecharge - calculationResult.value.monthlyCardAmountOfRecharge;
   calculationResult.value.monthlyAverageRecharge =
-    calculationDays > 0 ? (calculationResult.value.totalAmountOfRecharge / calculationDays) * 30 : 0;
+    calculationDays > 0 ? (monthlyAverageBaseRecharge / calculationDays) * 30 : 0;
+  if (calculationResult.value.monthlyCardSelected) {
+    calculationResult.value.monthlyAverageRecharge += 30;
+  }
 
   // console.table(logs)
 
@@ -1651,9 +1665,9 @@ function sharePage() {
               ></div>
               <span class="collapse-title-font">
                 共计{{ calculationResult.totalDraw }}抽<span v-if="calculationResult.totalAmountOfRecharge > 0"
-                  >， 氪金{{ numberFloor(calculationResult.totalAmountOfRecharge, 0) }}元，月均约{{
-                    calculationResult.monthlyAverageRecharge.toFixed(1)
-                  }}元</span
+                  >， 氪金{{ numberFloor(calculationResult.totalAmountOfRecharge, 0) }}元<span v-if="dailyReward.daily >= 15"
+                    >，月均氪金约{{ calculationResult.monthlyAverageRecharge.toFixed(1) }}元</span
+                  ></span
                 >
               </span>
             </div>
