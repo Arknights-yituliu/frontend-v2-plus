@@ -1,4 +1,50 @@
 .pack-efficiency-page {
+  &.pack-green-background {
+    background-color: lime;
+  }
+
+  &.pack-content-white-background {
+    .pack-content {
+      background: #ffffff;
+    }
+  }
+
+  &.pack-no-shadow {
+    .pack-info,
+    .pack-content,
+    .pack-corner,
+    .pack-image,
+    .pack_corner,
+    .pack_img,
+    .pack_contents {
+      box-shadow: none;
+    }
+  }
+
+  &.pack-hide-countdown {
+    .pack-info-countdown {
+      display: none;
+    }
+  }
+
+  .pack-display-control-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 36px;
+    margin: 6px 4px;
+    padding: 4px 10px;
+    border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+    border-radius: 6px;
+    background-color: var(--c-card-background-color);
+  }
+
+  .pack-display-control-title {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
   .pack-card-container {
     display: flex;
     flex-wrap: wrap;
