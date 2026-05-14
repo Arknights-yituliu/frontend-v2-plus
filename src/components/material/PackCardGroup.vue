@@ -80,12 +80,11 @@ function getPackCountdown(endDate, startDate) {
   const month = String(startTime.getMonth() + 1).padStart(2, '0')
   if (diffDays <= 0) return {type: 'history', label: `${year}-${month}`}
   if (diffDays <= 7) return {type: 'soon', label: `${diffDays}天`}
-  if (diffDays <= 14) return {type: 'normal', label: `剩余 ${diffDays} 天`}
   return null
 }
 
 function displayInfoCountdown(countdown) {
-  return countdown?.type === 'history' || countdown?.type === 'normal'
+  return countdown?.type === 'history'
 }
 </script>
 

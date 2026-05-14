@@ -543,6 +543,7 @@ onMounted(() => {
           <div v-if="item.titleEn === 'New Packs' && displayControlVisible" class="pack-display-control-card">
             <span class="pack-display-control-title">显示控制</span>
             <v-switch v-model="removePackShadow" label="去除阴影" color="primary" density="compact" hide-details></v-switch>
+            <v-switch v-model="hidePackCountdown" label="隐藏倒计时" color="primary" density="compact" hide-details></v-switch>
             <v-switch v-model="packGreenBackground" label="背景变绿" color="success" density="compact" hide-details></v-switch>
           </div>
         </div>

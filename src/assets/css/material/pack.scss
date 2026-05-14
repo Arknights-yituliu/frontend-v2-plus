@@ -22,7 +22,8 @@
   }
 
   &.pack-hide-countdown {
-    .pack-info-countdown {
+    .pack-info-countdown,
+    .pack-image-countdown {
       display: none;
     }
   }

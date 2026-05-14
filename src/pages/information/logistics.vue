@@ -4,7 +4,6 @@ import '/src/assets/css/information/logistics.phone.scss'
 
 import {operatorFilterConditionTable} from "/src/utils/buildingSkillFilter";
 import building_table from '/src/static/json/build/building_table.json'
-import logistics_efficiency_score from '/src/static/json/build/logistics_efficiency_score.json'
 import {onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce";
 import {translate} from "/src/utils/i18n";
@@ -20,7 +19,11 @@ for (const operator of building_table) {
 }
 
 const DEFAULT_UNMATCHED_EFFICIENCY_SCORE = 100
-const efficiencyScoreTable = logistics_efficiency_score
+const efficiencyScoreFiles = import.meta.glob('/src/static/json/build/logistics_efficiency_scores/*.json', {
+  eager: true,
+  import: 'default',
+})
+const efficiencyScoreTable = mergeEfficiencyScoreFiles(Object.values(efficiencyScoreFiles))
 
 const COLOR = {BLUE: 'blue', ORANGE: 'orange'}
 
@@ -191,6 +194,32 @@ function getSkillEfficiencyScore(skill) {
 
 function getSkillEfficiencyKey(skill) {
   return [skill.charId, skill.roomType, skill.buffName, skill.phase, skill.level].join('|')
+}
+
+function mergeEfficiencyScoreFiles(scoreFiles) {
+  const scoreMap = {}
+
+  for (const file of scoreFiles) {
+    for (const key in file) {
+      const score = Number(file[key])
+      if (!Number.isFinite(score)) {
+        continue
+      }
+
+      if (!scoreMap[key]) {
+        scoreMap[key] = {sum: 0, count: 0}
+      }
+      scoreMap[key].sum += score
+      scoreMap[key].count++
+    }
+  }
+
+  const mergedScores = {}
+  for (const key in scoreMap) {
+    mergedScores[key] = scoreMap[key].sum / scoreMap[key].count
+  }
+
+  return mergedScores
 }
 
 function mergeRow(id, index) {
