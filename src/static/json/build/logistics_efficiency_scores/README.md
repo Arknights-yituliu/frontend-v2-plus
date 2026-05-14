@@ -13,15 +13,15 @@
 技能匹配键格式：
 
 ```text
-charId|roomType|buffName|phase|level
+name|roomType|buffName|phase|level
 ```
 
 示例：
 
 ```json
 {
-  "char_4225_tanya|manufacture|“连轴转”|2|1": 35,
-  "char_1052_kalts2|workshop|理论革新|2|1": 80
+  "裂响|manufacture|“连轴转”|2|1": 35,
+  "凯尔希·思衡托|workshop|理论革新|2|1": 80
 }
 ```
 
@@ -40,7 +40,7 @@ charId|roomType|buffName|phase|level
 
 如果需要重新生成 `auto.json`，可用同样思路遍历 `building_table.json`：
 
-1. 为每条技能生成 key：`charId|roomType|buffName|phase|level`。
+1. 为每条技能生成 key：`name|roomType|buffName|phase|level`。
 2. 清理 `description` 中的 HTML 标签。
 3. 按上面的规则提取分数。
 4. 输出为 key 到分数的 JSON 对象。
@@ -51,7 +51,7 @@ charId|roomType|buffName|phase|level
 
 ```json
 {
-  "char_4225_tanya|manufacture|“连轴转”|2|1": 45
+  "裂响|manufacture|“连轴转”|2|1": 45
 }
 ```
 

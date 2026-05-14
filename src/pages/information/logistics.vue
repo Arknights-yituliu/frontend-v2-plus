@@ -193,7 +193,7 @@ function getSkillEfficiencyScore(skill) {
 }
 
 function getSkillEfficiencyKey(skill) {
-  return [skill.charId, skill.roomType, skill.buffName, skill.phase, skill.level].join('|')
+  return [skill.name, skill.roomType, skill.buffName, skill.phase, skill.level].join('|')
 }
 
 function mergeEfficiencyScoreFiles(scoreFiles) {
