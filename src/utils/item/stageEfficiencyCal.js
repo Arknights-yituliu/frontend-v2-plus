@@ -83,20 +83,20 @@ async function calculationStageEfficiency(stageConfig) {
     }
 
     // 主线活动期间
-    const now = new Date();
-    const may21 = new Date(now.getFullYear(), 4, 21);
-    if ("MAIN" === stageType && now < may21) {
-      const drop = createDropTemplate(list[0], {
-        itemId: shopRedemptionItem.itemId,
-        price: shopRedemptionItem.price,
-        quantity: shopRedemptionItem.quantity,
-      });
-      // if (stageId === "main_01-07") {
-      //   console.log(shopRedemptionItem);
-      //   console.log(drop);
-      // }
-      list.push(drop);
-    }
+    // const now = new Date();
+    // const may21 = new Date(now.getFullYear(), 4, 21);
+    // if ("MAIN" === stageType && now < may21) {
+    //   const drop = createDropTemplate(list[0], {
+    //     itemId: shopRedemptionItem.itemId,
+    //     price: shopRedemptionItem.price,
+    //     quantity: shopRedemptionItem.quantity,
+    //   });
+    //   // if (stageId === "main_01-07") {
+    //   //   console.log(shopRedemptionItem);
+    //   //   console.log(drop);
+    //   // }
+    //   list.push(drop);
+    // }
 
     let stageDropDetailList = [];
 
