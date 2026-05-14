@@ -42,6 +42,30 @@
         overflow-x: scroll;
     }
 
+    .logistics-search-toolbar {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .logistics-search-input {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .logistics-sort-row {
+        display: flex;
+        margin-top: 8px;
+    }
+
+    .logistics-sort-toggle {
+        flex: 0 0 auto;
+        height: 40px;
+        border: 1px solid var(--c-border-color);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
     .logistics-table {
         text-align: center;
         border-collapse: collapse;
