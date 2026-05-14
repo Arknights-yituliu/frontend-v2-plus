@@ -244,7 +244,7 @@ const scheduleOptions = [
   },
   {
     name: "夏活",
-    dateString: "待定",
+    dateString: "(0801-0815)",
     start: new Date("2026/08/01 12:00:00"),
     end: new Date("2026/08/15 04:01:00"),
     activityType: "夏活限定",
