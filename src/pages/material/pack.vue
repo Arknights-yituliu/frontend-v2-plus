@@ -48,32 +48,6 @@ const options = [
   {value: 'efficiency', label: '抽卡性价比'},
   {value: 'overall', label: '综合性价比'},
 ]
-const countdownDemoOptions = [
-  {
-    value: 'current',
-    title: '现状',
-    label: '剩余 12 天',
-    note: '仍在信息块内，容易贴近效率条',
-  },
-  {
-    value: 'topBadge',
-    title: '右上徽标',
-    label: '剩余 12 天',
-    note: '保留在信息块，但给图表让位',
-  },
-  {
-    value: 'imageBadge',
-    title: '图片区',
-    label: '12天',
-    note: '不占用效率条空间',
-  },
-  {
-    value: 'footerLine',
-    title: '底部独立行',
-    label: '剩余 12 天结束',
-    note: '最稳，卡片高度略增加',
-  },
-]
 
 // 弹窗相关
 const isLoading = ref(false)
@@ -545,58 +519,6 @@ onMounted(() => {
             <v-switch v-model="removePackShadow" label="去除阴影" color="primary" density="compact" hide-details></v-switch>
             <v-switch v-model="hidePackCountdown" label="隐藏倒计时" color="primary" density="compact" hide-details></v-switch>
             <v-switch v-model="packGreenBackground" label="背景变绿" color="success" density="compact" hide-details></v-switch>
-          </div>
-        </div>
-
-        <div v-if="item.titleEn === 'New Packs' && displayControlVisible" class="pack-countdown-demo-panel">
-          <div class="pack-countdown-demo-title">剩余时间标记示例</div>
-          <div class="pack-countdown-demo-list">
-            <div
-              v-for="demo in countdownDemoOptions"
-              :key="demo.value"
-              :class="['pack-countdown-demo-card', `pack-countdown-demo-${demo.value}`]"
-            >
-              <div class="pack-countdown-demo-image">
-                <span class="pack-countdown-demo-price">￥198</span>
-                <span class="pack-countdown-demo-name">示例礼包</span>
-                <span v-if="demo.value === 'imageBadge'" class="pack-countdown-demo-countdown">{{ demo.label }}</span>
-              </div>
-              <div class="pack-countdown-demo-info">
-                <div class="pack-countdown-demo-info-text">
-                  <span>折合76.4石</span>
-                  <span>￥2.6/石</span>
-                  <span>共36.0抽</span>
-                  <span>￥5.5/抽</span>
-                </div>
-                <div class="pack-countdown-demo-chart">
-                  <div class="pack-countdown-demo-line">
-                    <span>仅抽卡</span>
-                    <i style="width: 78px;">132%</i>
-                  </div>
-                  <div class="pack-countdown-demo-line">
-                    <span>全物品</span>
-                    <i style="width: 96px;">168%</i>
-                  </div>
-                  <div class="pack-countdown-demo-line">
-                    <span>648源石</span>
-                    <i style="width: 58px;">100%</i>
-                  </div>
-                </div>
-                <span
-                  v-if="demo.value === 'current' || demo.value === 'topBadge'"
-                  class="pack-countdown-demo-countdown"
-                >
-                  {{ demo.label }}
-                </span>
-              </div>
-              <div v-if="demo.value === 'footerLine'" class="pack-countdown-demo-footer">
-                {{ demo.label }}
-              </div>
-              <div class="pack-countdown-demo-caption">
-                <b>{{ demo.title }}</b>
-                <span>{{ demo.note }}</span>
-              </div>
-            </div>
           </div>
         </div>
 
