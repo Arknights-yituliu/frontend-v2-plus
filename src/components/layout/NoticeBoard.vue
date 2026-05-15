@@ -82,9 +82,9 @@ const panels = ref(['stage'])
             <ul style="padding-left: 2em">
               <li>仅计抽卡：仅计算礼包内的抽卡资源</li>
               <li>材料折合源石：将所有材料折算成源石再计算性价比</li>
-              <li>性价比的基准为可无限购买的648源石，材料价值取自<a href="/material/value">物品价值表</a></li>
+              <li>性价比的基准为可无限购买的648源石，材料价值取自<a href="/material/value">物品价值表</a>，详细口径见<a href="/docs/pack-efficiency-algorithm">礼包性价比算法</a></li>
               <li>每月芯片自选包和每月材料自选包都用价值最高的材料进行计价</li>
-              <li>精二券暂以平均价值计价，详情可查阅<a href="/material/elite">精英化与专精性价比</a></li>
+              <li>精二券暂以平均价值计价，详情可查阅<a href="/docs/elite-specialization-ranking-algorithm">精英化/专精排名算法</a></li>
               <li>模组块暂以120红票计价，模组条无法计价，请自行权衡</li>
               <li>标准寻访是258黄票38抽，中坚寻访是216黄票38抽，因此价值暂定为216/258=0.837抽</li>
             </ul>
@@ -99,6 +99,7 @@ const panels = ref(['stage'])
           <v-expansion-panel-text>
             <ul style="padding-left: 2em">
               <li>性价比 = 理智价值 / 商店售价</li>
+              <li>商店性价比算法：<a href="/docs/store-efficiency-algorithm">文档</a></li>
               <li>物品理智价值算法：<a href="/docs/item-value-algorithm">文档</a></li>
               <li>各商店之间货币不同，故<b>不可跨店对比数值</b>。</li>
               <li>信用交易所的性价比按照<b>原价</b>计算，货币单位为 100 信用。</li>
