@@ -9,11 +9,8 @@ const router = createRouter({
 })
 
 
-router.beforeEach(async (to, from,next) => {
-
-    document.title = `${to.meta.title}-明日方舟一图流`;
-
-    if (to.path.indexOf("docs") > -1) {
+router.beforeEach((to) => {
+    if (to.path === '/docs' || to.path.startsWith('/docs/')) {
         // 获取当前页面的 hash，并去除开头的 '#'（后面拼接时再添加）
         let currentHash = window.location.hash.replace(/^#/, '');
         currentHash = decodeURIComponent(currentHash);
@@ -27,10 +24,12 @@ router.beforeEach(async (to, from,next) => {
         // 或者使用 assign：
         window.open(targetUrl);
 
-        return; // 终止后续流程
+        return false; // 终止后续流程
     }
+})
 
-    next(); // 如果不满足上面条件，继续导航
+router.afterEach((to) => {
+    document.title = `${to.meta.title}-明日方舟一图流`;
 })
 
 

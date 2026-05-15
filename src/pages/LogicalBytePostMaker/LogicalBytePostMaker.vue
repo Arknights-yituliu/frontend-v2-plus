@@ -43,6 +43,11 @@ const pages = [
     title: '图片标记器',
     description: '上传底图后，用彩色 tag 和说明条快速做图',
     to: '/lb/image-tagger'
+  },
+  {
+    title: '腾讯文档智能表测试',
+    description: '测试从腾讯文档智能表读取字段和记录并在页面展示',
+    to: '/lb/tencent-docs-smartsheet-test'
   }
 ]
 </script>

@@ -233,6 +233,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/tencent-docs-smartsheet-test',
+        text: '腾讯文档智能表测试',
+        name: 'TencentDocsSmartsheetTest',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/tencent-docs-smartsheet-test.vue'),
+        meta: {
+            title: '腾讯文档智能表测试'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',

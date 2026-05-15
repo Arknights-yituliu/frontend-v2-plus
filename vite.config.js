@@ -37,7 +37,14 @@ export default defineConfig({
         buildTimePlugin()
     ],
     server: {
-        host: '0.0.0.0'
+        host: '0.0.0.0',
+        proxy: {
+            '/api/tencent-docs': {
+                target: 'https://docs.qq.com',
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api\/tencent-docs/, '')
+            }
+        }
     },
     build: {
         target: "es2015",
@@ -56,4 +63,3 @@ export default defineConfig({
         },
     },
 })
-
