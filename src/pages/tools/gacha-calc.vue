@@ -1,6 +1,6 @@
 <!--修改活动日期按钮请在变量"scheduleOptions"中修改，修改活动排期请在变量"HONEY_CAKE_TABLE"所引入的json文件中修改-->
 <script setup>
-import { watch, onMounted, ref } from "vue";
+import { watch, onMounted, ref, computed } from "vue";
 import "/src/assets/css/tool/gacha_calc.scss";
 import "/src/assets/css/sprite/sprite_plane_icon.css";
 import "/src/assets/css/tool/gacha_calc.phone.scss";
@@ -76,7 +76,7 @@ const currentTimestamp = ref(new Date().getTime());
 const currentDate = ref(new Date());
 
 //选中的黄票兑换抽卡券
-let selectedCertificatePack = ref([]);
+let selectedCertificatePackList = ref([]);
 
 //选中的潜在章节
 let selectedPermanentZoneName = ref([]);
@@ -85,7 +85,7 @@ let selectedPermanentZoneName = ref([]);
 let selectedActivityName = ref([]);
 
 //选择的礼包索引
-let selectedPackIndex = ref([]);
+let selectedPackCollect = ref([]);
 
 //选择的历史礼包索引
 let selectedHistoryPackIndex = ref([]);
@@ -233,16 +233,6 @@ let activityType = ref("联动限定");
 // 注：历史礼包时间范围已改为动态计算，不再需要 historicalPackTimeRange 配置
 const scheduleOptions = [
   {
-    name: "周年庆典",
-    dateString: "(0501-0515)",
-    start: new Date("2026/05/01 12:00:00"),
-    end: new Date("2026/05/15 04:01:00"),
-    activityType: "周年限定",
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-  },
-  {
     name: "夏活",
     dateString: "(0801-0815)",
     start: new Date("2026/08/01 12:00:00"),
@@ -255,8 +245,18 @@ const scheduleOptions = [
   {
     name: "感谢庆典",
     dateString: "敬请期待",
-    start: new Date("2026/08/01 12:00:00"),
-    end: new Date("2026/08/15 04:01:00"),
+    start: new Date("2026/11/01 12:00:00"),
+    end: new Date("2026/11/15 04:01:00"),
+    activityType: "周年限定",
+    disabled: true,
+    dailyGiftResources: true,
+    accuracyFlag: true,
+  },
+  {
+    name: "春节",
+    dateString: "敬请期待",
+    start: new Date("2026/02/01 12:00:00"),
+    end: new Date("2026/02/15 04:01:00"),
     activityType: "周年限定",
     disabled: true,
     dailyGiftResources: true,
@@ -264,50 +264,62 @@ const scheduleOptions = [
   },
 ];
 
+const packDataLoadingStatus = ref(false);
+
 //新人礼包集合
 let listNewBiePackInfo = ref([]);
 
 //每年重置的首充源石
-let listOriginiumPack = ref([]);
+let originiumPackList = ref([]);
 
 //上一年年重置的首充源石
 let listLastYearOriginiumPack = ref([]);
 
 //每月重置的礼包集合
-let listMonthlyPackInfo = ref([]);
+let monthlyPackList = ref([]);
 
 //限时礼包集合
-let listActivityPackInfo = ref([]);
+let activityPackInfoList = ref([]);
 
 //历史礼包集合
 let packListGroupByHistory = ref([]);
 
 //全部礼包集合
-let listDisplayPackInfo = ref([]);
+let displayPackList = ref([]);
 
 //每月黄票兑换抽卡券(视为礼包)集合
 let certificatePackList = ref([]);
 
 //礼包缓存数据
-let listPackInfoCache = ref([]);
+let packCacheList = ref([]);
+
+/**
+ * 生成一个较短的随机 ID，含时间戳防碰撞
+ * @returns {string}
+ */
+function createId() {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let id = "";
+  for (let i = 0; i < 6; i++) {
+    id += chars[(Math.random() * chars.length) | 0];
+  }
+  return id + Date.now().toString(36);
+}
+// 输出示例: "k7m3x9lkd4n5ab"（约18位）
 
 /**
  * 获取和分类礼包数据
  */
 async function getAndSortPackData() {
-  //礼包唯一索引
-  let index = 0;
-
   // 清空之前的数据，避免重复
-  listPackInfoCache.value = [];
+  packCacheList.value = [];
   listNewBiePackInfo.value = [];
-  listOriginiumPack.value = [];
+  originiumPackList.value = [];
   listLastYearOriginiumPack.value = [];
-  listMonthlyPackInfo.value = [];
-  listActivityPackInfo.value = [];
-  listDisplayPackInfo.value = [];
-  certificatePackList.value = []; // 清空黄票兑换列表
 
+  activityPackInfoList.value = [];
+
+  packDataLoadingStatus.value = true;
   // 使用全局时间戳，支持用户自定义时间
   // const currentTimeStamp = new Date().getTime()
 
@@ -319,10 +331,15 @@ async function getAndSortPackData() {
     if ("每月寻访组合包" === officialName) {
       continue;
     }
+
+    if ("月卡" === officialName) {
+      continue;
+    }
+
     let packInfoVO = _packPromotionRatioCalc(item);
 
     // 所有礼包都加入缓存，包括过期的礼包（供 getHistoryPackInfo 筛选往年礼包使用）
-    listPackInfoCache.value.push(packInfoVO);
+    packCacheList.value.push(packInfoVO);
 
     if (packInfoVO.drawPrice === 0) {
       continue;
@@ -334,11 +351,10 @@ async function getAndSortPackData() {
     }
 
     //给每个礼包都绑定一个索引
-    packInfoVO.parentIndex = index;
+    packInfoVO.id = createId();
     //将礼包写入全部礼包集合
-    listDisplayPackInfo.value.push(packInfoVO);
+    displayPackList.value.push(packInfoVO);
     //礼包索引递增
-    index++;
 
     //根据礼包类型进行分类
     if (packInfoVO.saleType === "newbie") {
@@ -346,23 +362,28 @@ async function getAndSortPackData() {
     }
 
     if (packInfoVO.saleType === "originium2") {
-      listOriginiumPack.value.push(packInfoVO);
+      originiumPackList.value.push(packInfoVO);
       let packClone = deepClone(packInfoVO);
-      packClone.parentIndex = index;
+      packClone.id = createId();
       //将礼包写入全部礼包集合
-      listDisplayPackInfo.value.push(packInfoVO);
+      displayPackList.value.push(packClone);
       //礼包索引递增
-      index++;
 
       listLastYearOriginiumPack.value.push(packClone);
     }
 
-    if (packInfoVO.saleType === "monthly") {
-      listMonthlyPackInfo.value.push(packInfoVO);
-    }
+    // if (packInfoVO.saleType === "monthly") {
+    //    console.log(packInfoVO);
+
+    //   monthlyPackList.value.push(packInfoVO);
+    //   console.log("读取是否买月卡配置", userConfigV2.value.monthlyCardSelected);
+    //   if (userConfigV2.value.monthlyCardSelected) {
+    //     [selectedPackCollect.value.push(packInfoVO.id)];
+    //   }
+    // }
 
     if (packInfoVO.saleType === "activity") {
-      listActivityPackInfo.value.push(packInfoVO);
+      activityPackInfoList.value.push(packInfoVO);
     }
   }
 
@@ -394,7 +415,6 @@ async function getAndSortPackData() {
   }
 
   getHistoryPackInfo();
-  batchGenerationMonthlyPack(index);
 }
 
 function getHistoryPackInfo() {
@@ -408,14 +428,14 @@ function getHistoryPackInfo() {
 
   let list = [];
 
-  console.log("=== 往年礼包筛选（动态时间范围）===");
-  console.log("当前活动:", currentSchedule.value.name);
-  console.log("当前时刻:", new Date(currentTimestamp.value));
-  console.log("卡池结束:", new Date(scheduleEnd));
-  console.log("历史礼包时间范围（去年同期）:", new Date(historicalPackStart), "到", new Date(historicalPackEnd));
-  console.log("缓存中的礼包总数:", listPackInfoCache.value.length);
+  // console.log("=== 往年礼包筛选（动态时间范围）===");
+  // console.log("当前活动:", currentSchedule.value.name);
+  // console.log("当前时刻:", new Date(currentTimestamp.value));
+  // console.log("卡池结束:", new Date(scheduleEnd));
+  // console.log("历史礼包时间范围（去年同期）:", new Date(historicalPackStart), "到", new Date(historicalPackEnd));
+  // console.log("缓存中的礼包总数:", packCacheList.value.length);
 
-  for (let pack of listPackInfoCache.value) {
+  for (let pack of packCacheList.value) {
     const { officialName, drawEfficiency, start, end, saleType } = pack;
 
     if ("activity" !== saleType || drawEfficiency < 0.1) {
@@ -441,29 +461,46 @@ function getHistoryPackInfo() {
 }
 
 /**
- * 批量生成月常礼包
- * @param index 礼包唯一索引
+ * 批量生成每月寻访组合包
  */
-function batchGenerationMonthlyPack(index) {
-  // 使用全局时间戳，支持用户自定义时间
+function batchGenerationMonthlyPack() {
+  monthlyPackList.value = [];
+  certificatePackList.value = []; // 清空黄票兑换列表
+  displayPackList.value = [];
   const date = new Date(currentTimestamp.value);
-  //获取当前月份
   let month = date.getMonth() + 1;
-  //获取当前年份
   let year = date.getFullYear();
 
-  // 预生成8个月的每月寻访组合包和每月黄票兑换单抽
+  const monthlyCardPack = {
+    id: createId(),
+    officialName: "月卡",
+    originium: 6,
+    orundum: 6000,
+    gachaTicket: 0,
+    tenGachaTicket: 0,
+    price: 30,
+    drawEfficiency: 4.5924324324324335,
+    drawPrice: 2.542372881355932,
+    start: new Date().getTime(),
+    end: new Date("2099/12/31 00:01:00").getTime(),
+  };
+
+  monthlyPackList.value.push(monthlyCardPack);
+  displayPackList.value.push(monthlyCardPack);
+  if(userConfigV2.value.monthlyCardSelected){
+    selectedPackCollect.value.push(monthlyCardPack.id);
+  }
+
   for (let i = 0; i < 8; i++) {
-    //获取每月的最后一天，用于写入礼包的起始日期（每月1号）和结束日期（每月最后一天）
     const lastDay = new Date(year, month, 0).getDate().toString().padStart(2, "");
-    const pack = {
+    const monthlyPack = {
+      id: createId(),
       officialName: `${month}月寻访组合包`,
       gachaTicket: 0,
       tenGachaTicket: 1,
       originium: 42,
       orundum: 0,
       price: 168,
-      parentIndex: index,
       drawPrice: 7.43362831858407,
       drawEfficiency: 1.570656370656371,
       start: new Date(`${year}/${month.toString().padStart(2, "0")}/01 00:00:00`),
@@ -471,6 +508,7 @@ function batchGenerationMonthlyPack(index) {
     };
 
     const certificatePack = {
+      id: `${year}-${month}月黄票兑换单抽`,
       officialName: `${month}月黄票兑换单抽`,
       gachaTicket: 8,
       tenGachaTicket: 3,
@@ -479,25 +517,17 @@ function batchGenerationMonthlyPack(index) {
       start: new Date(`${year}/${month.toString().padStart(2, "0")}/01 00:00:00`),
       end: new Date(`${year}/${month.toString().padStart(2, "0")}/${lastDay} 23:59:59`),
     };
-
-    //写入预生成的每月黄票兑换单抽
     certificatePackList.value.push(certificatePack);
 
-    //写入每月寻访组合包
-    listMonthlyPackInfo.value.push(pack);
+    monthlyPackList.value.push(monthlyPack);
+    displayPackList.value.push(monthlyPack);
 
-    //写入全部礼包
-    listDisplayPackInfo.value.push(pack);
-
-    //月份大于12，年数加1
     if (month >= 12) {
       month = 1;
       year++;
     } else {
       month++;
     }
-    //礼包索引递增
-    index++;
   }
 }
 
@@ -520,18 +550,6 @@ function updateScheduleOption(index) {
 let resultCollapseActiveNames = ref(["calculationResult", "developer"]);
 let optionsCollapseActiveNames = ref(["exist", "daily", "activity", "other"]);
 
-//库存资源
-let existResources = ref({
-  originium: 0,
-  orundum: 0,
-  gachaTicket: 0,
-  tenGachaTicket: 0,
-  correctOrundum: 0, //用于修正的合成玉数量
-  skinBudget: 0, //要购买多少皮肤
-  skinBudgetPlus: 0, // 要购买多少高级皮肤
-  skinBudgetPro: 0, // 要购买多少顶级皮肤
-});
-
 //日常资源
 let dailyReward = ref({
   //距离卡池结束有多少天
@@ -540,36 +558,25 @@ let dailyReward = ref({
   dailyOrundumReward: 0,
   //距离卡池结束有多少周
   weekly: 2,
-  //周常任务是否完成
-  weeklyTaskCompleted: true,
+
   //周常奖励
   weeklyOrundumReward: 0,
   //可以在绿票商店购买几个月的前两层抽卡道具
   certificateShoppingTimes: 2,
-  //本月绿票商店是否兑换完毕
-  certificateStoreCompleted: true,
+
   //绿票商店购买的合成玉数量
   purchasedOrundumQuantity: 0,
   //绿票商店购买的单抽数量
   purchasedGachaTicketQuantity: 0,
   //剿灭次数
   annihilation: 3,
-  //本周剿灭是否完成
-  annihilationCompleted: true,
+
   //剿灭合成玉奖励
   annihilationOrundumReward: 0,
   //签到次数
   checkIn: 3,
   //签到次数
   checkInGachaTicket: 0,
-});
-
-//潜在资源
-let potentialResources = ref({
-  //悖论模拟数量
-  paradox: 0,
-  //剿灭模拟数量
-  annihilation: 0,
 });
 
 //搓玉
@@ -672,11 +679,7 @@ let pieChartData = ref([
   { value: 44, name: "其它" },
 ]);
 
-//氪金选项
-let rechargeOption = ref({
-  monthlyCardPurchasedThisMonth: false,
-  additionalMonthlyCardPurchase: 0,
-});
+
 
 //攒抽计算结果
 let calculationResult = ref({
@@ -730,6 +733,34 @@ let officialMonthlyCardReward = ref(0);
 const officialMonthlyCardEndDate = new Date("2025/05/27 03:58:00");
 let officialMonthlyCardRemainingDays = ref(0);
 
+const userConfigV2 = ref({
+  existOrundum: 0,
+  existOriginium: 0,
+  existGachaTicket: 0,
+  existTenGachaTicket: 0,
+  correctOrundum: 0, //用于修正的合成玉数量
+  skinBudget: 0, //要购买多少皮肤
+  skinBudgetPlus: 0, // 要购买多少高级皮肤
+  skinBudgetPro: 0, // 要购买多少顶级皮肤
+  //是否使用源石抽卡
+  originiumIsUsed: true,
+  //周常是否完成
+  weeklyTaskCompleted: true,
+  //绿票商店是否换过
+  certificateStoreCompleted: true,
+  //剿灭是否完成
+  annihilationCompleted: true,
+  // 悖论模拟、剿灭模拟战
+  paradox: 0,
+  annihilation: 0,
+  //黄票换抽
+  selectedCertificatePackList: selectedCertificatePackList.value,
+  //是否购买月卡
+  monthlyCardSelected: true,
+  //额外购买月卡数量
+  monthlyCardExtraCount: 0,
+});
+
 /**
  * 计算抽卡资源
  */
@@ -740,8 +771,8 @@ function gachaResourcesCalculation() {
     endDate.value = currentSchedule.value.end;
   } else {
     const startTimeStamp = currentSchedule.value.start.getTime();
-    
-    endDate.value = new Date(startTimeStamp+12*60*60*1000);
+
+    endDate.value = new Date(startTimeStamp + 12 * 60 * 60 * 1000);
   }
 
   //饼图数据暂存区
@@ -818,17 +849,17 @@ function gachaResourcesCalculation() {
     let annihilationTimes = mondayCount;
 
     //如果本周周常已经做完则周数减1
-    if (dailyReward.value.weeklyTaskCompleted) {
+    if (userConfigV2.value.weeklyTaskCompleted) {
       weeks = mondayCount > 0 ? mondayCount - 1 : mondayCount;
     }
 
     //如果本周已经打剿了则打剿次数减1
-    if (dailyReward.value.annihilationCompleted) {
+    if (userConfigV2.value.annihilationCompleted) {
       annihilationTimes = mondayCount > 0 ? mondayCount - 1 : mondayCount;
     }
 
     //如果本月已清空绿票商店则购买商店次数减1
-    if (dailyReward.value.certificateStoreCompleted) {
+    if (userConfigV2.value.certificateStoreCompleted) {
       shoppingTimes = shoppingTimes > 0 ? shoppingTimes - 1 : shoppingTimes;
     }
 
@@ -850,16 +881,6 @@ function gachaResourcesCalculation() {
     let gachaTicket = checkInTimes + shoppingTimes * 4;
     let tenGachaTicket = 0;
 
-    //计算用户选择兑换几次黄票商店的38抽
-    // for (const i of selectedCertificatePack.value) {
-    //   const item = certificatePackList.value[i]
-    //   if (!rewardIsExpired(item)) {
-    //     continue
-    //   }
-    //   gachaTicket += item.gachaTicket
-    //   tenGachaTicket += item.tenGachaTicket
-    // }
-
     // 计算官方月卡
     if (endDate.value < officialMonthlyCardEndDate) {
       officialMonthlyCardRemainingDays.value = dateDiff(new Date(), endDate.value);
@@ -871,7 +892,7 @@ function gachaResourcesCalculation() {
     orundum += officialMonthlyCardReward.value;
 
     //判断源石是否用于抽卡
-    if (!originiumIsUsed.value) {
+    if (!userConfigV2.value.originiumIsUsed) {
       originium = 0;
     }
 
@@ -898,21 +919,21 @@ function gachaResourcesCalculation() {
    * 计算用户库存抽卡次数
    */
   function existCalculate() {
-    let orundum = stringToNumber(existResources.value.orundum);
-    let originium = stringToNumber(existResources.value.originium);
-    const gachaTicket = stringToNumber(existResources.value.gachaTicket);
-    const tenGachaTicket = stringToNumber(existResources.value.tenGachaTicket);
+    let orundum = stringToNumber(userConfigV2.value.existOrundum);
+    let originium = stringToNumber(userConfigV2.value.existOriginium);
+    const gachaTicket = stringToNumber(userConfigV2.value.existGachaTicket);
+    const tenGachaTicket = stringToNumber(userConfigV2.value.existTenGachaTicket);
 
     //计算用户自定义修正的合成玉
-    orundum += stringToNumber(existResources.value.correctOrundum.toString());
+    orundum += stringToNumber(userConfigV2.value.correctOrundum.toString());
     //计算用户预留给皮肤的源石
-    originium -= stringToNumber(existResources.value.skinBudget.toString()) * 18;
+    originium -= stringToNumber(userConfigV2.value.skinBudget.toString()) * 18;
     //计算用户预留给高级皮肤的源石
-    originium -= stringToNumber(existResources.value.skinBudgetPlus.toString()) * 21;
+    originium -= stringToNumber(userConfigV2.value.skinBudgetPlus.toString()) * 21;
     //计算用户预留给顶级皮肤的源石
-    originium -= stringToNumber(existResources.value.skinBudgetPro.toString()) * 24;
+    originium -= stringToNumber(userConfigV2.value.skinBudgetPro.toString()) * 24;
 
-    if (!originiumIsUsed.value) {
+    if (!userConfigV2.value.originiumIsUsed) {
       originium = 0;
     }
 
@@ -942,8 +963,10 @@ function gachaResourcesCalculation() {
     }
 
     //计算用户选择兑换几次黄票商店的38抽
-    for (const i of selectedCertificatePack.value) {
-      const item = certificatePackList.value[i];
+    for (const item of certificatePackList.value) {
+      if (!selectedCertificatePackList.value.includes(item.id)) {
+        continue;
+      }
       if (!rewardIsExpired(item)) {
         continue;
       }
@@ -992,9 +1015,9 @@ function gachaResourcesCalculation() {
     let orundum = 0;
     let originium = 0;
     //计算悖论模拟的合成玉
-    orundum += potentialResources.value.paradox * 200;
+    orundum += userConfigV2.value.paradox * 200;
     //计算剿灭模拟的合成玉
-    orundum += potentialResources.value.annihilation * 1500;
+    orundum += userConfigV2.value.annihilation * 1500;
 
     //计算选中的常驻章节或活动的资源
     if (selectedPermanentZoneName.value) {
@@ -1006,7 +1029,7 @@ function gachaResourcesCalculation() {
       }
     }
 
-    if (!originiumIsUsed.value) {
+    if (!userConfigV2.value.originiumIsUsed) {
       originium = 0;
     }
 
@@ -1033,10 +1056,11 @@ function gachaResourcesCalculation() {
     let tenGachaTicket = 0;
     let totalAmountOfRecharge = 0;
     let monthlyCardAmountOfRecharge = 0;
-    let monthlyCardSelected = false;
 
-    for (const index of selectedHistoryPackIndex.value) {
-      const pack = packListGroupByHistory.value[index];
+    for (const pack of packListGroupByHistory.value) {
+      if (!selectedHistoryPackIndex.value.includes(pack.id)) {
+        continue;
+      }
 
       if (!pack) {
         continue;
@@ -1054,8 +1078,15 @@ function gachaResourcesCalculation() {
     }
 
     //循环选中的礼包索引，获得对应的礼包
-    for (const i of selectedPackIndex.value) {
-      const pack = listDisplayPackInfo.value[i];
+    if (packDataLoadingStatus.value) {
+      userConfigV2.value.monthlyCardSelected = false;
+    
+    }
+
+    for (const pack of displayPackList.value) {
+      if (!selectedPackCollect.value.includes(pack.id)) {
+        continue;
+      }
       if (!pack) {
         continue;
       }
@@ -1066,16 +1097,16 @@ function gachaResourcesCalculation() {
 
       //月卡单独处理
       if (pack.officialName === "月卡") {
-        monthlyCardSelected = true;
+        userConfigV2.value.monthlyCardSelected = true;
         //计算卡池结束前月卡可以拿到多少合成玉
-        listDisplayPackInfo.value[i].orundum = dailyReward.value.daily * 200;
+        pack.orundum = dailyReward.value.daily * 200;
         //卡池结束前可以购买月卡的数量
         let purchaseQuantity = Math.ceil(dailyReward.value.daily / 30);
-
+      
         //加上额外购买的月卡数量,判断是否额外购买了超过3个月
-        if (rechargeOption.value.additionalMonthlyCardPurchase > 3) {
+        if (userConfigV2.value.monthlyCardExtraCount > 3) {
           createMessage({ type: "error", text: "月卡只能提前购买90天" });
-          rechargeOption.value.additionalMonthlyCardPurchase -= 1;
+          userConfigV2.value.monthlyCardExtraCount -= 1;
           return;
         }
 
@@ -1086,22 +1117,22 @@ function gachaResourcesCalculation() {
         // }
 
         //加上额外购买的月卡数量
-        purchaseQuantity += rechargeOption.value.additionalMonthlyCardPurchase;
+        purchaseQuantity += userConfigV2.value.monthlyCardExtraCount;
         //计算通过月卡总计获得多少源石
-        listDisplayPackInfo.value[i].originium = purchaseQuantity * 6;
-        if (listDisplayPackInfo.value[i].originium < 0) {
+        pack.originium = purchaseQuantity * 6;
+        if (pack.originium < 0) {
           createMessage({ type: "error", text: "已经降到0了，不能再低了！" });
-          listDisplayPackInfo.value[i].originium = 0;
-          rechargeOption.value.additionalMonthlyCardPurchase += 1;
+          pack.originium = 0;
+          userConfigV2.value.monthlyCardExtraCount += 1;
           return;
         }
 
         //月卡的价格=购买月卡的数量*30
-        listDisplayPackInfo.value[i].price = purchaseQuantity * 30;
-        monthlyCardAmountOfRecharge += listDisplayPackInfo.value[i].price;
+        pack.price = purchaseQuantity * 30;
+        monthlyCardAmountOfRecharge += pack.price;
         //当月月卡已购买源石-6
         // if (rechargeOption.value.monthlyCardPurchasedThisMonth) {
-        //   listDisplayPackInfo.value[i].originium -= 6
+        //   pack.originium -= 6
         //   totalAmountOfRecharge -= 30
         // }
       }
@@ -1120,7 +1151,7 @@ function gachaResourcesCalculation() {
       }
     }
 
-    if (!originiumIsUsed.value) {
+    if (!userConfigV2.value.originiumIsUsed) {
       originium = 0;
     }
 
@@ -1130,7 +1161,7 @@ function gachaResourcesCalculation() {
     calculationResult.value.tenGachaTicket += tenGachaTicket;
     calculationResult.value.totalAmountOfRecharge = totalAmountOfRecharge;
     calculationResult.value.monthlyCardAmountOfRecharge = monthlyCardAmountOfRecharge;
-    calculationResult.value.monthlyCardSelected = monthlyCardSelected;
+
     calculationResult.value.rechargeTotalDraw = orundum / 600 + originium * 0.3 + gachaTicket + tenGachaTicket * 10;
 
     logs.push({ key: "氪金-合成玉", value: orundum });
@@ -1179,7 +1210,7 @@ function gachaResourcesCalculation() {
       tenGachaTicket += activity.tenGachaTicket;
     }
 
-    if (!originiumIsUsed.value) {
+    if (!userConfigV2.value.originiumIsUsed) {
       originium = 0;
     }
 
@@ -1235,7 +1266,7 @@ function gachaResourcesCalculation() {
       tenGachaTicket += honeyCake.tenGachaTicket;
     }
 
-    if (!originiumIsUsed.value) {
+    if (!userConfigV2.value.originiumIsUsed) {
       originium = 0;
     }
 
@@ -1269,7 +1300,7 @@ function gachaResourcesCalculation() {
 
   logs.push({ key: "计算源石前", value: calculationResult.value.totalDraw });
 
-  if (originiumIsUsed.value) {
+  if (userConfigV2.value.originiumIsUsed) {
     calculationResult.value.totalDraw = calculationResult.value.totalDraw + Math.floor(calculationResult.value.originium * 0.3);
     singleResourceDraws.value.originium = Math.floor(calculationResult.value.originium * 0.3);
   }
@@ -1278,35 +1309,17 @@ function gachaResourcesCalculation() {
 
   const calculationDays = dailyReward.value.daily;
   const monthlyAverageBaseRecharge = calculationResult.value.totalAmountOfRecharge - calculationResult.value.monthlyCardAmountOfRecharge;
-  calculationResult.value.monthlyAverageRecharge =
-    calculationDays > 0 ? (monthlyAverageBaseRecharge / calculationDays) * 30 : 0;
-  if (calculationResult.value.monthlyCardSelected) {
+  calculationResult.value.monthlyAverageRecharge = calculationDays > 0 ? (monthlyAverageBaseRecharge / calculationDays) * 30 : 0;
+
+  if (userConfigV2.value.monthlyCardSelected) {
     calculationResult.value.monthlyAverageRecharge += 30;
   }
 
   // console.table(logs)
 
-  const lastSettings = {
-    //存储到本地的数据
-    //现有资源
-    existOrundum: existResources.value.orundum,
-    existOriginium: existResources.value.originium,
-    existGachaTicket: existResources.value.gachaTicket,
-    existTenGachaTicket: existResources.value.tenGachaTicket,
-    //是否使用源石抽卡
-    originiumIsUsed: originiumIsUsed.value,
-    //周常是否完成
-    weeklyTaskCompleted: dailyReward.value.weeklyTaskCompleted,
-    //绿票商店是否换过
-    certificateStoreCompleted: dailyReward.value.certificateStoreCompleted,
-    //剿灭是否完成
-    annihilationCompleted: dailyReward.value.annihilationCompleted,
-    // 悖论模拟、剿灭模拟战
-    paradox: potentialResources.value.paradox,
-    annihilation: potentialResources.value.annihilation,
-  };
-
-  localStorage.setItem("LastSettings", JSON.stringify(lastSettings));
+  userConfigV2.value.selectedCertificatePackList = selectedCertificatePackList.value;
+ 
+  localStorage.setItem("LastSettings", JSON.stringify(userConfigV2.value));
 
   setPieChart(pieChartData.value);
 
@@ -1332,8 +1345,6 @@ function getRewardRemainingDays(honeyCake) {
   if (!calPoolEnd.value && scheduleStart < rewardEnd) {
     rewardEnd = rewardStart + 60 * 60 * 12 * 1000;
   }
-
-  console.log(rewardStart, rewardEnd);
 
   //活动剩余时间
   let remainingDays;
@@ -1450,16 +1461,29 @@ function readLastSettings() {
     return;
   }
 
-  existResources.value.orundum = stringToNumber(lastSettings.existOrundum);
-  existResources.value.originium = stringToNumber(lastSettings.existOriginium);
-  existResources.value.gachaTicket = stringToNumber(lastSettings.existGachaTicket);
-  existResources.value.tenGachaTicket = stringToNumber(lastSettings.existTenGachaTicket);
-  originiumIsUsed.value = lastSettings.originiumIsUsed;
-  dailyReward.value.weeklyTaskCompleted = lastSettings.weeklyTaskCompleted;
-  dailyReward.value.certificateStoreCompleted = lastSettings.certificateStoreCompleted;
-  dailyReward.value.annihilationCompleted = lastSettings.annihilationCompleted;
-  potentialResources.value.paradox = stringToNumber(lastSettings.paradox);
-  potentialResources.value.annihilation = stringToNumber(lastSettings.annihilation);
+  userConfigV2.value.existOrundum = stringToNumber(lastSettings.existOrundum);
+  userConfigV2.value.existOriginium = stringToNumber(lastSettings.existOriginium);
+  userConfigV2.value.existGachaTicket = stringToNumber(lastSettings.existGachaTicket);
+  userConfigV2.value.existTenGachaTicket = stringToNumber(lastSettings.existTenGachaTicket);
+  userConfigV2.value.correctOrundum = stringToNumber(lastSettings.correctOrundum);
+  userConfigV2.value.skinBudget = stringToNumber(lastSettings.skinBudget);
+  userConfigV2.value.skinBudgetPlus = stringToNumber(lastSettings.skinBudgetPlus);
+  userConfigV2.value.skinBudgetPro = stringToNumber(lastSettings.skinBudgetPro);
+
+  userConfigV2.value.originiumIsUsed = lastSettings.originiumIsUsed;
+  userConfigV2.value.weeklyTaskCompleted = lastSettings.weeklyTaskCompleted;
+  userConfigV2.value.certificateStoreCompleted = lastSettings.certificateStoreCompleted;
+  userConfigV2.value.annihilationCompleted = lastSettings.annihilationCompleted;
+
+  userConfigV2.value.paradox = stringToNumber(lastSettings.paradox);
+  userConfigV2.value.annihilation = stringToNumber(lastSettings.annihilation);
+
+  if (lastSettings.selectedCertificatePackList) {
+    selectedCertificatePackList.value = lastSettings.selectedCertificatePackList;
+  } 
+  userConfigV2.value.monthlyCardSelected = lastSettings.monthlyCardSelected === "true" || lastSettings.monthlyCardSelected === true;
+  // userConfigV2.value.monthlyCardExtraCount = stringToNumber(lastSettings.monthlyCardExtraCount);
+
 }
 
 // 创建一个窗口尺寸变化的监听器
@@ -1546,6 +1570,7 @@ watch(
 onMounted(() => {
   readLastSettings();
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
+  batchGenerationMonthlyPack();
   updateScheduleOption(0);
   getAndSortPackData();
 
@@ -1563,6 +1588,7 @@ function handleDateChange(date) {
     // 重新生成基于时间的数据
     batchGenerationServerMaintenanceRewards();
     // 重新加载礼包数据和计算攒抽资源
+    batchGenerationMonthlyPack();
     getAndSortPackData();
     gachaResourcesCalculation();
   }
@@ -1886,6 +1912,11 @@ function sharePage() {
             </div>
           </template>
           <!-- 时间选择器 -->
+          <div>{{ selectedCertificatePackList }}</div>
+
+          <div>{{ selectedPackCollect }}</div>
+
+          <div>{{ userConfigV2 }}</div>
           <div
             class="resources-result-bar"
             id="timeSelector"
@@ -1946,44 +1977,44 @@ function sharePage() {
               <div class="image-sprite">
                 <div class="bg-icon_4002"></div>
               </div>
-              <input @change="gachaResourcesCalculation" v-model="existResources.originium" />
+              <input @change="gachaResourcesCalculation" v-model="userConfigV2.existOriginium" />
               <div class="image-sprite">
                 <div class="bg-icon_4003"></div>
               </div>
-              <input @change="gachaResourcesCalculation" v-model="existResources.orundum" />
+              <input @change="gachaResourcesCalculation" v-model="userConfigV2.existOrundum" />
             </div>
             <div class="exist-resources-input">
               <div class="image-sprite">
                 <div class="bg-icon_7003"></div>
               </div>
-              <input @change="gachaResourcesCalculation" v-model="existResources.gachaTicket" />
+              <input @change="gachaResourcesCalculation" v-model="userConfigV2.existGachaTicket" />
               <div class="image-sprite">
                 <div class="bg-icon_7004"></div>
               </div>
-              <input @change="gachaResourcesCalculation" v-model="existResources.tenGachaTicket" />
+              <input @change="gachaResourcesCalculation" v-model="userConfigV2.existTenGachaTicket" />
             </div>
           </div>
 
           <div class="resources-line">
             <!-- <div class="switch-wrap"> -->
             <span>是否使用源石抽卡</span>
-            <el-switch v-model="originiumIsUsed" @click="gachaResourcesCalculation"></el-switch>
+            <el-switch v-model="userConfigV2.originiumIsUsed" @click="gachaResourcesCalculation"></el-switch>
           </div>
 
           <div class="collapse-content-subheading"><span></span> 时装预留源石</div>
           <div class="resources-line" style="overflow-x: scroll">
             <el-space>
-              <el-input-number v-model="existResources.skinBudget" :step="1" :min="0" :max="10" @change="gachaResourcesCalculation()">
+              <el-input-number v-model="userConfigV2.skinBudget" :step="1" :min="0" :max="10" @change="gachaResourcesCalculation()">
                 <template #prefix>
                   <span>18石</span>
                 </template>
               </el-input-number>
-              <el-input-number v-model="existResources.skinBudgetPlus" :step="1" :min="0" :max="10" @change="gachaResourcesCalculation()">
+              <el-input-number v-model="userConfigV2.skinBudgetPlus" :step="1" :min="0" :max="10" @change="gachaResourcesCalculation()">
                 <template #prefix>
                   <span>21石</span>
                 </template>
               </el-input-number>
-              <el-input-number v-model="existResources.skinBudgetPro" :step="1" :min="0" :max="10" @change="gachaResourcesCalculation()">
+              <el-input-number v-model="userConfigV2.skinBudgetPro" :step="1" :min="0" :max="10" @change="gachaResourcesCalculation()">
                 <template #prefix>
                   <span>24石</span>
                 </template>
@@ -1993,12 +2024,12 @@ function sharePage() {
 
           <div class="collapse-content-subheading"><span></span> 自定义修正</div>
           <div class="resources-line">
-            <input v-model="existResources.correctOrundum" @input="gachaResourcesCalculation" />
+            <input v-model="userConfigV2.correctOrundum" @input="gachaResourcesCalculation" />
             <span>合成玉自定义修正</span>
             <div class="image-sprite">
               <div class="bg-icon_4003"></div>
             </div>
-            <span>{{ existResources.correctOrundum }}</span>
+            <span>{{ userConfigV2.correctOrundum }}</span>
           </div>
           <span class="tip"> 例如给轮换池预留、其它合成玉来源等，可填负数</span>
         </el-collapse-item>
@@ -2041,7 +2072,7 @@ function sharePage() {
               <span>{{ dailyReward.weeklyOrundumReward }}</span>
             </div>
             <div class="gc-resources-bar-btn">
-              <el-switch v-model="dailyReward.weeklyTaskCompleted" @change="gachaResourcesCalculation"></el-switch>
+              <el-switch v-model="userConfigV2.weeklyTaskCompleted" @change="gachaResourcesCalculation"></el-switch>
               本周已完成
             </div>
           </div>
@@ -2055,7 +2086,7 @@ function sharePage() {
               <span>{{ dailyReward.annihilationOrundumReward }}</span>
             </div>
             <div class="gc-resources-bar-btn">
-              <el-switch v-model="dailyReward.annihilationCompleted" @change="gachaResourcesCalculation"></el-switch>
+              <el-switch v-model="userConfigV2.annihilationCompleted" @change="gachaResourcesCalculation"></el-switch>
               本周已完成
             </div>
           </div>
@@ -2073,7 +2104,7 @@ function sharePage() {
               <span>{{ dailyReward.purchasedGachaTicketQuantity }}</span>
             </div>
             <div class="gc-resources-bar-btn">
-              <el-switch v-model="dailyReward.certificateStoreCompleted" @change="gachaResourcesCalculation"></el-switch>
+              <el-switch v-model="userConfigV2.certificateStoreCompleted" @change="gachaResourcesCalculation"></el-switch>
               本月已兑换
             </div>
           </div>
@@ -2101,12 +2132,12 @@ function sharePage() {
           <!-- 黄票换抽 -->
           <div class="collapse-content-subheading"><span></span>黄票换抽</div>
           <el-checkbox-button
-            v-for="(pack, name) in certificatePackList"
-            :key="name"
-            :value="name"
+            v-for="(pack, index) in certificatePackList"
+            :key="index"
+            :value="pack.id"
             size="small"
             v-show="rewardIsExpired(pack)"
-            v-model="selectedCertificatePack"
+            v-model="selectedCertificatePackList"
             @change="gachaResourcesCalculation"
           >
             <div class="checkbox-button">
@@ -2205,20 +2236,20 @@ function sharePage() {
           </template>
           <div class="collapse-content-subheading"><span></span> 悖论模拟/剿灭作战模拟</div>
           <div class="resources-line">
-            <input v-model="potentialResources.paradox" @input="gachaResourcesCalculation" />
+            <input v-model="userConfigV2.paradox" @input="gachaResourcesCalculation" />
             <span>个悖论模拟</span>
             <div class="image-sprite">
               <div class="bg-icon_4003"></div>
             </div>
-            <span>{{ potentialResources.paradox * 200 }}</span>
+            <span>{{ userConfigV2.paradox * 200 }}</span>
           </div>
           <div class="resources-line">
-            <input v-model="potentialResources.annihilation" @input="gachaResourcesCalculation" />
+            <input v-model="userConfigV2.annihilation" @input="gachaResourcesCalculation" />
             <span>个剿灭作战模拟</span>
             <div class="image-sprite">
               <div class="bg-icon_4003"></div>
             </div>
-            <span>{{ potentialResources.annihilation * 1500 }}</span>
+            <span>{{ userConfigV2.annihilation * 1500 }}</span>
           </div>
 
           <div class="collapse-content-subheading"><span></span> 训练场</div>
@@ -2358,15 +2389,15 @@ function sharePage() {
           </div> -->
           <div class="resources-line">
             <span>额外购买</span>
-            <el-input-number v-model="rechargeOption.additionalMonthlyCardPurchase" @input="gachaResourcesCalculation"> </el-input-number>
+            <el-input-number v-model="userConfigV2.monthlyCardExtraCount" @input="gachaResourcesCalculation"> </el-input-number>
             <span>张月卡(负数代表已提前购买)</span>
           </div>
           <span class="tip">额外购买一张月卡可提前拿到6石，已提前购买则只能拿到每日200玉</span>
-          <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
+          <el-checkbox-group v-model="selectedPackCollect" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button
-              v-for="(pack, index) in listMonthlyPackInfo"
+              v-for="(pack, index) in monthlyPackList"
               :key="index"
-              :value="pack.parentIndex"
+              :value="pack.id"
               class="el-checkbox-button"
               v-show="rewardIsExpired(pack)"
             >
@@ -2377,39 +2408,39 @@ function sharePage() {
           <!--限时礼包-->
           <div class="collapse-content-subheading"><span></span> 限时礼包</div>
           <!-- <span class="tip">"指令重构"寻访包仅能用于4月M3池，不能用于任何限定池</span> -->
-          <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in listActivityPackInfo" :key="index" :value="pack.parentIndex" class="el-checkbox-button">
+          <el-checkbox-group v-model="selectedPackCollect" style="margin: 4px" @change="gachaResourcesCalculation">
+            <el-checkbox-button v-for="(pack, index) in activityPackInfoList" :key="index" :value="pack.id" class="el-checkbox-button">
               <PackButtonContent :data="pack"> </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
 
           <!--新人礼包-->
           <div class="collapse-content-subheading"><span></span> 新人礼包</div>
-          <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in listNewBiePackInfo" :key="index" :value="pack.parentIndex" class="el-checkbox-button">
+          <el-checkbox-group v-model="selectedPackCollect" style="margin: 4px" @change="gachaResourcesCalculation">
+            <el-checkbox-button v-for="(pack, index) in listNewBiePackInfo" :key="index" :value="pack.id" class="el-checkbox-button">
               <PackButtonContent :data="pack"> </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
 
           <!--首次充值源石-->
           <div class="collapse-content-subheading"><span></span> 首次充值源石（周年刷新前）</div>
-          <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in listLastYearOriginiumPack" :key="index" :value="pack.parentIndex" class="el-checkbox-button">
+          <el-checkbox-group v-model="selectedPackCollect" style="margin: 4px" @change="gachaResourcesCalculation">
+            <el-checkbox-button v-for="(pack, index) in listLastYearOriginiumPack" :key="index" :value="pack.id" class="el-checkbox-button">
               <PackButtonContent :data="pack"> </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
 
           <!--首次充值源石-->
           <div class="collapse-content-subheading"><span></span> 首次充值源石（周年刷新后）</div>
-          <el-checkbox-group v-model="selectedPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in listOriginiumPack" :key="index" :value="pack.parentIndex" class="el-checkbox-button">
+          <el-checkbox-group v-model="selectedPackCollect" style="margin: 4px" @change="gachaResourcesCalculation">
+            <el-checkbox-button v-for="(pack, index) in originiumPackList" :key="index" :value="pack.id" class="el-checkbox-button">
               <PackButtonContent :data="pack"> </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
 
           <div class="collapse-content-subheading"><span></span> 往年礼包（用于估算氪金）</div>
           <el-checkbox-group v-model="selectedHistoryPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in packListGroupByHistory" :key="index" :value="index" class="el-checkbox-button">
+            <el-checkbox-button v-for="(pack, index) in packListGroupByHistory" :key="index" :value="pack.id" class="el-checkbox-button">
               <PackButtonContent :data="pack"> </PackButtonContent>
             </el-checkbox-button>
           </el-checkbox-group>
