@@ -59,7 +59,7 @@ const routes = [
       text: '商店性价比',//页面的标题
       name: 'MaterialStore',  //页面的名称，推荐为路径的的首字母大写，中间无连接符-
       display: true, //是否展示在侧边导航上
-      module: 'material', //导航分组，目前仅有DevelopmentDocumentation组
+      module: 'material', //导航分组，对应src/router/routes.js中的模块配置
       icon: "mdi-circle-multiple", //导航图标
       component: STORE //组件
   },

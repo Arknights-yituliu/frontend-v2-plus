@@ -45,7 +45,7 @@ const routes = [
     text: '项目简介',
     name: 'ProjectOverview',
     display: true,
-    module: 'DevelopmentDocumentation',
+    module: 'TechnicalDocumentation',
     icon: 'mdi-application-outline',
     component: ProjectOverview
   },
@@ -54,7 +54,7 @@ const routes = [
     text: '编写文档',  //页面的标题
     name: 'WritingDocumentation', //页面的名称，必须为路径的的首字母大写，中间无连接符-，例如路径为/docs/writing-documentation，则name为WritingDocumentation
     display: true, //是否展示在侧边导航上
-    module: 'DevelopmentDocumentation', //导航分组，目前仅有DevelopmentDocumentation组
+    module: 'TechnicalDocumentation', //导航分组，可填写TechnicalDocumentation或AlgorithmDocumentation
     icon: 'mdi-code-braces', //导航图标
     component: WritingDocumentation //组件
   }

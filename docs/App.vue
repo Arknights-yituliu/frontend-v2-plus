@@ -110,6 +110,14 @@ onMounted(() => {
         <span class="font-bold"> 明日方舟一图流</span>
         </div>
       </v-app-bar-title>
+      <template v-slot:append>
+        <v-btn class="home-link-btn" href="/" variant="text" color="primary">
+          <template v-slot:prepend>
+            <v-icon icon="mdi-home"></v-icon>
+          </template>
+          <span class="home-link-text">返回主站</span>
+        </v-btn>
+      </template>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" width="240">
       <v-list color="primary" :opened="open" open-strategy="multiple" class="navigation-drawer" nav density="compact">
@@ -206,4 +214,3 @@ onMounted(() => {
   <!--  </v-app>-->
 
 </template>
-
