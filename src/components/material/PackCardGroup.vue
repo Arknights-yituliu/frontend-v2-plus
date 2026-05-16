@@ -69,7 +69,7 @@ function itemAccentColor(name) {
 
 
 
-// 历史礼包沿用月份标记；临期礼包移到图片上，避免挤压效率条。
+// 历史礼包沿用月份标记；365 天内礼包移到图片上，避免挤压效率条。
 function getPackCountdown(endDate, startDate) {
   const endTime = new Date(endDate).getTime()
   const now = Date.now()
@@ -79,7 +79,7 @@ function getPackCountdown(endDate, startDate) {
   const year = startTime.getFullYear()
   const month = String(startTime.getMonth() + 1).padStart(2, '0')
   if (diffDays <= 0) return {type: 'history', label: `${year}-${month}`}
-  if (diffDays <= 7) return {type: 'soon', label: `${diffDays}天`}
+  if (diffDays <= 365) return {type: 'soon', label: `${diffDays}天`}
   return null
 }
 
@@ -98,7 +98,7 @@ function displayInfoCountdown(countdown) {
           <span class="pack-display-name">
             {{ packInfo.officialName }}
           </span>
-          <!-- 7天内临期标记，放在图片上避免挤压效率条 -->
+          <!-- 365天内倒计时标记，放在图片上避免挤压效率条 -->
           <div class="pack-image-countdown" v-if="getPackCountdown(packInfo.end, packInfo.start)?.type === 'soon'">
             {{ getPackCountdown(packInfo.end, packInfo.start).label }}
           </div>

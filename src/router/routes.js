@@ -233,6 +233,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/mapping-table',
+        text: '对应关系表',
+        name: 'LBMappingTable',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/MappingTable.vue'),
+        meta: {
+            title: '对应关系表'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',
