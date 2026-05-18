@@ -1742,7 +1742,7 @@ function sharePage() {
               ></div>
               <span class="collapse-title-font">
                 共计{{ calculationResult.totalDraw }}抽<span v-if="calculationResult.totalAmountOfRecharge > 0"
-                  >， 氪金{{ numberFloor(calculationResult.totalAmountOfRecharge, 0) }}元<span v-if="dailyReward.daily >= 15"
+                  >， 氪金{{ numberFloor(calculationResult.totalAmountOfRecharge, 0) }}元<span v-if="dailyReward.daily >= 45"
                     >，月均氪金约{{ calculationResult.monthlyAverageRecharge.toFixed(1) }}元</span
                   ></span
                 >
