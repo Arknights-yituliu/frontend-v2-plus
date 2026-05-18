@@ -273,23 +273,23 @@ const scheduleOptions = [
     start: new Date("2026/06/01 12:00:00"),
     end: new Date("2026/06/15 04:01:00"),
     activityType: "联动限定",
-    disabled: true,
+    disabled: false,
     dailyGiftResources: true,
     accuracyFlag: true,
     historyStartTime: new Date("2023/03/01 12:00:00"),
-    historyEndTime: new Date("2023/03/28 04:01:00"),
+    historyEndTime: new Date("2023/03/28 04:00:00"),
   },
   {
     name: "怪猎联动复刻",
     dateString: "(0615-0625)",
     start: new Date("2026/06/15 12:00:00"),
-    end: new Date("2026/06/25 04:01:00"),
-    activityType: "联动限定",
-    disabled: true,
+    end: new Date("2026/06/25 04:00:00"),
+    activityType: "联动限定复刻",
+    disabled: false,
     dailyGiftResources: true,
     accuracyFlag: true,
     historyStartTime: new Date("2023/03/01 12:00:00"),
-    historyEndTime: new Date("2023/03/28 04:01:00"),
+    historyEndTime: new Date("2023/03/28 04:00:00"),
   },
   {
     name: "夏活",
@@ -1608,7 +1608,7 @@ onMounted(() => {
   readLastSettings();
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
   batchGenerationMonthlyPack();
-  updateScheduleOption(0);
+  updateScheduleOption(2);
   getAndSortPackData();
 
   // ElNotification({
