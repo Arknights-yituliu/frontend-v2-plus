@@ -22,6 +22,38 @@ import { useRoute } from "vue-router";
 
 // 当前路由
 const route = useRoute();
+const eachOriginalDrawPrice = 648.0 / 185 / 0.3;
+
+function getDrawEfficiencyStyle(drawEfficiency) {
+  if (drawEfficiency > 1.57) {
+    return `background-color:${"#ff6400"};color:white`;
+  }
+
+  if (drawEfficiency > 1) {
+    return `background-color:${"#a16fff"};color:white`;
+  }
+
+  return `background-color:${"#4380ff"};color:white`;
+}
+
+function formatDrawPrice(num) {
+  if (typeof num !== "number") {
+    return "非数字";
+  }
+
+  return num.toFixed(2);
+}
+
+function withOriginiumDrawInfo(pack) {
+  const draws = (pack.originium || 0) * 0.3;
+  const drawPrice = draws > 0 ? pack.price / draws : 0;
+  return {
+    ...pack,
+    draws,
+    drawPrice,
+    drawEfficiency: drawPrice > 0 ? eachOriginalDrawPrice / drawPrice : 0,
+  };
+}
 
 //源石充值
 const OriginiumTable = ref([
@@ -61,7 +93,7 @@ const OriginiumTable = ref([
     originium: 185,
     quantity: 0,
   },
-]);
+].map(withOriginiumDrawInfo));
 
 // 罗德岛蜜饼工坊预测的其他奖励排期
 let otherRewardBySchedules = ref([]);
@@ -459,7 +491,6 @@ async function getAndSortPackData() {
    */
   function _packPromotionRatioCalc(packInfoVO) {
     // 抽卡性价比基准
-    const eachOriginalDrawPrice = 648.0 / 185 / 0.3;
     let draws = 0.0; // 抽数
     let drawPrice = 0.0; // 每一抽价格
     let drawEfficiency = 0.0; // 仅抽卡性价比
@@ -2575,6 +2606,9 @@ function sharePage() {
           <div class="collapse-content-subheading"><span></span> 额外购买非首充源石</div>
 
           <div class="resources-line" v-for="item in OriginiumTable">
+            <span class="draw-efficiency" :style="getDrawEfficiencyStyle(item.drawEfficiency)">
+              {{ formatDrawPrice(item.drawPrice) }}
+            </span>
             <span class="resources-line-label">{{ item.packName }}</span>
             <div class="resources-line-content">
               <div class="image-sprite">
