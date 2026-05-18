@@ -18,10 +18,24 @@ for (const operator of building_table) {
   buildingTable[operator.charId].push(operator)
 }
 
+const DEFAULT_UNMATCHED_EFFICIENCY_SCORE = 100
+const efficiencyScoreFiles = import.meta.glob('/src/static/json/build/logistics_efficiency_scores/*.json', {
+  eager: true,
+  import: 'default',
+})
+const efficiencyScoreTable = mergeEfficiencyScoreFiles(Object.values(efficiencyScoreFiles))
+
 const COLOR = {BLUE: 'blue', ORANGE: 'orange'}
 
 let selectBtnKey = ref('')
 let filterOperatorList = ref([])
+let sortMode = ref('implementation')
+
+const sortModeOptions = [
+  {label: '实装时间顺序', value: 'implementation'},
+  {label: '名称排序', value: 'name'},
+  {label: '效率排序（未必准确）', value: 'efficiency-desc'},
+]
 
 
 function filterBtnStatus(key, label) {
@@ -86,20 +100,22 @@ function hideIrrelevantSkills() {
   searchOperatorDebounce()
 }
 
+function changeSortMode(value) {
+  sortMode.value = value
+  commonFilterOperator()
+}
+
 /**
  * 通用的筛选干员逻辑
  */
 function commonFilterOperator() {
 
-  let list = []
+  const operatorGroups = []
 
   for (const charId in buildingTable) {
     const skills = buildingTable[charId]
-    let rowCount = 0;
-    let rowIndex = list.length
-    if (!skillRowCount.value[charId]) {
-      skillRowCount.value[charId] = {}
-    }
+    const matchedSkills = []
+
     for (const skill of skills) {
 
 
@@ -114,22 +130,96 @@ function commonFilterOperator() {
         continue;
       }
 
-      if (!hideIrrelevantSkillsFlag.value) {
-        for (const operator1 of skills) {
-          list.push(operator1)
-          rowCount++
-        }
-        break;
-      }
-
-      list.push(skill)
-      rowCount++
+      matchedSkills.push(skill)
     }
 
-    skillRowCount.value[charId] = {index: rowIndex, rowCount: rowCount}
+    if (matchedSkills.length === 0) {
+      continue
+    }
+
+    const displaySkills = hideIrrelevantSkillsFlag.value ? matchedSkills : skills
+    operatorGroups.push({
+      charId,
+      name: skills[0].name,
+      displaySkills: sortSkillsByEfficiency(displaySkills),
+      score: getGroupEfficiencyScore(matchedSkills),
+      index: operatorGroups.length,
+    })
   }
 
+  sortOperatorGroups(operatorGroups)
+
+  let list = []
+  const rowCountMap = {}
+  for (const group of operatorGroups) {
+    const rowIndex = list.length
+    for (const skill of group.displaySkills) {
+      list.push(skill)
+    }
+    rowCountMap[group.charId] = {index: rowIndex, rowCount: group.displaySkills.length}
+  }
+
+  skillRowCount.value = rowCountMap
   filterOperatorList.value = list
+}
+
+function sortOperatorGroups(groups) {
+  if (sortMode.value === 'name') {
+    groups.sort((a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN') || a.index - b.index)
+    return
+  }
+
+  if (sortMode.value !== 'efficiency-desc') {
+    return
+  }
+
+  groups.sort((a, b) => b.score - a.score || a.index - b.index)
+}
+
+function sortSkillsByEfficiency(skills) {
+  if (sortMode.value !== 'efficiency-desc') {
+    return skills
+  }
+
+  return [...skills].sort((a, b) => getSkillEfficiencyScore(b) - getSkillEfficiencyScore(a))
+}
+
+function getGroupEfficiencyScore(skills) {
+  return Math.max(...skills.map(skill => getSkillEfficiencyScore(skill)))
+}
+
+function getSkillEfficiencyScore(skill) {
+  return efficiencyScoreTable[getSkillEfficiencyKey(skill)] ?? DEFAULT_UNMATCHED_EFFICIENCY_SCORE
+}
+
+function getSkillEfficiencyKey(skill) {
+  return [skill.name, skill.roomType, skill.buffName, skill.phase, skill.level].join('|')
+}
+
+function mergeEfficiencyScoreFiles(scoreFiles) {
+  const scoreMap = {}
+
+  for (const file of scoreFiles) {
+    for (const key in file) {
+      const score = Number(file[key])
+      if (!Number.isFinite(score)) {
+        continue
+      }
+
+      if (!scoreMap[key]) {
+        scoreMap[key] = {sum: 0, count: 0}
+      }
+      scoreMap[key].sum += score
+      scoreMap[key].count++
+    }
+  }
+
+  const mergedScores = {}
+  for (const key in scoreMap) {
+    mergedScores[key] = scoreMap[key].sum / scoreMap[key].count
+  }
+
+  return mergedScores
 }
 
 function mergeRow(id, index) {
@@ -214,16 +304,39 @@ onMounted(() => {
     </div>
 
     <div class="m-0-8">
-      <v-text-field density="compact"
-                    variant="outlined"
-                    @input="searchOperatorDebounce()"
-                    v-model="searchInputText">
-        <template v-slot:append>
-          <v-btn color="primary" :variant="hideIrrelevantSkillsFlag?void 0:'tonal'"
-                 class="m-4" @click="hideIrrelevantSkills">隐藏无关技能
+      <div class="logistics-search-toolbar">
+        <v-text-field density="compact"
+                      variant="outlined"
+                      hide-details
+                      class="logistics-search-input"
+                      @input="searchOperatorDebounce()"
+                      v-model="searchInputText">
+          <template v-slot:append>
+            <v-btn color="primary" :variant="hideIrrelevantSkillsFlag?void 0:'tonal'"
+                   class="m-4" @click="hideIrrelevantSkills">隐藏无关技能
+            </v-btn>
+          </template>
+        </v-text-field>
+      </div>
+      <div class="logistics-sort-row">
+        <v-btn-toggle
+            :model-value="sortMode"
+            color="primary"
+            density="compact"
+            mandatory
+            divided
+            class="logistics-sort-toggle"
+            @update:modelValue="changeSortMode"
+        >
+          <v-btn
+              v-for="option in sortModeOptions"
+              :key="option.value"
+              :value="option.value"
+          >
+            {{ option.label }}
           </v-btn>
-        </template>
-      </v-text-field>
+        </v-btn-toggle>
+      </div>
       <span
           class="logistics-search-tip">输入干员名、技能名称、技能描述搜索&emsp;&emsp;*开发精力加水平有限，如有遗漏，请反馈或直接GitHub提交修改</span>
     </div>

@@ -37,7 +37,13 @@ export default defineConfig({
         buildTimePlugin()
     ],
     server: {
-        host: '0.0.0.0'
+        host: '0.0.0.0',
+        port: 4000,
+        allowedHosts: [
+            'zrw.ddns.net',
+            'zrw.asia',
+            'zrw.yituliu.cn'
+        ]
     },
     build: {
         target: "es2015",

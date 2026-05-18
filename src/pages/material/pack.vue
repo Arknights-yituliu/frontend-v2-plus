@@ -34,6 +34,11 @@ let itemValueMap = new Map()
 // 性价比开关
 const isDrawOnly = ref(false)
 const isKernelValuable = ref(false)
+const removePackShadow = ref(false)
+const packGreenBackground = ref(false)
+const packContentWhiteBackground = ref(false)
+const hidePackCountdown = ref(false)
+const displayControlVisible = ref(false)
 
 // 排序选项
 const sortOption = ref('time') // 默认按上架时间
@@ -87,27 +92,19 @@ const forceShow = ref(false)
 const clickSequence = ref([])
 
 function handleClick(divName) {
-  // 更新点击顺序队列
   clickSequence.value.push(divName)
   if (clickSequence.value.length > 4) {
-    clickSequence.value.shift() // 保持最近4个点击
+    clickSequence.value.shift()
   }
 
-  // 判断是否满足触发顺序
   if (clickSequence.value.join(',') === 'div1,div2,div1,div2') {
     forceShow.value = true
-    document.querySelectorAll('.pack-content').forEach(el => {
-      el.style.background = '#ffffff'; // 或使用 'white'
-    });
-    document.querySelectorAll('.pack-info').forEach(el => {
-      el.style.boxShadow = 'none';
-    });
-    document.querySelectorAll('.pack-info-countdown').forEach(el => {
-      el.style.display = 'none';
-    });
-    document.querySelectorAll('.pack-content').forEach(el => {
-      el.style.boxShadow = 'none';
-    });
+    displayControlVisible.value = true
+    removePackShadow.value = true
+    packContentWhiteBackground.value = true
+    hidePackCountdown.value = true
+    collectPackInfoVO()
+    clickSequence.value = []
   }
 }
 
@@ -122,23 +119,13 @@ function debugPackEfficiencyLine() {
      const element = document.getElementById('activity-pack')
       if(element){
         forceShow.value = true
+        displayControlVisible.value = true
+        removePackShadow.value = true
+        packContentWhiteBackground.value = true
+        hidePackCountdown.value = true
         collectPackInfoVO()
 
         element.style.width = '1032px';
-
-
-        document.querySelectorAll('.pack-content').forEach(el => {
-          el.style.background = '#ffffff'; // 或使用 'white'
-        });
-        document.querySelectorAll('.pack-info').forEach(el => {
-          el.style.boxShadow = 'none';
-        });
-        document.querySelectorAll('.pack-info-countdown').forEach(el => {
-          el.style.display = 'none';
-        });
-        document.querySelectorAll('.pack-content').forEach(el => {
-          el.style.boxShadow = 'none';
-        });
 
         clearInterval( interval)
       }
@@ -483,7 +470,12 @@ onMounted(() => {
 
 <template>
   <div>
-    <div id="pack" class="pack-efficiency-page">
+    <div id="pack" class="pack-efficiency-page" :class="{
+      'pack-no-shadow': removePackShadow,
+      'pack-green-background': packGreenBackground,
+      'pack-content-white-background': packContentWhiteBackground,
+      'pack-hide-countdown': hidePackCountdown
+    }">
 
       <!-- 不会因为筛选改变的礼包 Start -->
       <template v-for="item in fixedPacks" :key="item.titleEn" >
@@ -492,7 +484,8 @@ onMounted(() => {
         <div v-if="item.titleEn === 'New Packs'">
           <v-chip text="点击图片查看礼包详情" color="deep-orange" class="m-4" @click="handleClick('div1')"></v-chip>
           <v-chip text="材料按135理智=1源石折合成源石" color="deep-orange" class="m-4"
-                  @click="handleClick('div2')"></v-chip>
+                  @click="handleClick('div2')"
+          ></v-chip>
           <v-chip text="中坚寻访：1蓝抽也记为1抽，但价值视为0.837抽" color="deep-orange" class="m-4"></v-chip>
         </div>
 
@@ -520,7 +513,15 @@ onMounted(() => {
               {{ option.label }}
             </v-btn>
           </v-btn-toggle>
+
+          <div v-if="item.titleEn === 'New Packs' && displayControlVisible" class="pack-display-control-card">
+            <span class="pack-display-control-title">显示控制</span>
+            <v-switch v-model="removePackShadow" label="去除阴影" color="primary" density="compact" hide-details></v-switch>
+            <v-switch v-model="hidePackCountdown" label="隐藏倒计时" color="primary" density="compact" hide-details></v-switch>
+            <v-switch v-model="packGreenBackground" label="背景变绿" color="success" density="compact" hide-details></v-switch>
+          </div>
         </div>
+
         <template v-for="(packInfo, packIndex) in item.list" :key="packIndex">
           <h2 style="margin: 12px;" v-if="packInfo.title">{{ packInfo.title }}</h2>
           <v-chip v-if="packInfo.title === '新人/回归礼包'"

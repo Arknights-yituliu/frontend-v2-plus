@@ -1278,20 +1278,20 @@ function useNewUI() {
 
           <!--筛选条件-->
           <span class="room-set-label">{{ translate('schedule', 'schedule.FilterCondition') }}</span>
-          <v-select :items="operatorFilterConditionList"
-                    v-model="filterCondition"
-                    variant="outlined"
-                    color="primary">
-            <template v-slot:selection="{ item, index }">
-              <!--              {{item}}-->
-              <span>{{ `${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}` }}</span>
-            </template>
-            <template v-slot:item="{ props, item }">
-              <v-list-item v-bind="props"
-                           :title="`${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}`">
-              </v-list-item>
-            </template>
-          </v-select>
+
+
+          <div class="filter-condition-box">
+            <div class="condition-bar" v-for="(conditionType, key) in operatorFilterConditionTable"
+                 v-show="conditionType.display" :key="key">
+              <span :style="`color:${conditionType.color}`">{{ translate('schedule', conditionType.name) }}</span>
+              <v-btn v-for="(condition, index) in conditionType.conditions" :key="index" size="small" class="m-2"
+                     color="primary" :variant="filterBtnStatus(key, condition.label)"
+                     @click="filterOperatorByTag(condition, key)">
+                {{ translate('schedule', condition.label) }}
+              </v-btn>
+            </div>
+            <span class="condition-tip">{{ translate('schedule', 'schedule.DeveloperTip') }}</span>
+          </div>
 
           <!--待选干员-->
           <span class="room-set-label">{{ translate('schedule', 'schedule.AvailableCharacter') }}</span>

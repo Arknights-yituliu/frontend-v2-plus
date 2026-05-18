@@ -124,7 +124,7 @@ const operatorFilterConditionTable = {
             {
                 label: "buildSkillFilter.OrderAcquisitionEfficiency",
                 func: (operator) => {
-                    return operator.roomType === 'trading' && operator.description.indexOf('订单') > -1 &&
+                    return operator.roomType === 'trading'  &&
                         operator.description.indexOf('效率') > -1
                 }
             },

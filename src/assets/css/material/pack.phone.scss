@@ -1,12 +1,19 @@
 @media screen and (max-width: 600px) {
 
   .pack-efficiency-page {
+    .pack-display-control-card {
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
     .pack-card-container {
-      justify-content: flex-end;
+      justify-content: center;
     }
 
     .pack-card {
-      width: 350px;
+      width: calc(100% - 8px);
+      margin: 8px 4px;
+      max-width: 500px;
     }
 
     .pack-card-part-left {
@@ -34,7 +41,7 @@
     .pack-info {
       z-index: 10;
       height: 84px;
-      width: 220px;
+      width: calc(100% - 116px);
       margin-top: 3px;
       margin-left: -4px;
     }
@@ -50,7 +57,8 @@
     }
 
     .pack-chart-line {
-      width: 150px;
+      flex: 1;
+      min-width: 0;
     }
 
     .pack-chart-line-item {
@@ -71,10 +79,11 @@
       height: 16px;
       font-size: 10px;
       line-height: 16px;
+      max-width: calc(100% - 54px);
     }
 
     .pack-content {
-      width: 326px;
+      width: calc(100% - 8px);
       margin-left: 4px;
       margin-top: -20px;
       padding-top: 20px;

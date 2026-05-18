@@ -69,8 +69,8 @@ function itemAccentColor(name) {
 
 
 
-// 狐狐做出重要指示：时间一定要是21天
-function getRemainingDays(endDate, startDate, maxDays = 21) {
+// 历史礼包沿用月份标记；365 天内礼包移到图片上，避免挤压效率条。
+function getPackCountdown(endDate, startDate) {
   const endTime = new Date(endDate).getTime()
   const now = Date.now()
   const diffMs = endTime - now
@@ -78,9 +78,13 @@ function getRemainingDays(endDate, startDate, maxDays = 21) {
   const startTime = new Date(startDate)
   const year = startTime.getFullYear()
   const month = String(startTime.getMonth() + 1).padStart(2, '0')
-  if (diffDays <= 0) return `${year}-${month}`
-  if (diffDays <= maxDays) return `剩余 ${diffDays} 天`
-  return '  '
+  if (diffDays <= 0) return {type: 'history', label: `${year}-${month}`}
+  if (diffDays <= 365) return {type: 'soon', label: `${diffDays}天`}
+  return null
+}
+
+function displayInfoCountdown(countdown) {
+  return countdown?.type === 'history'
 }
 </script>
 
@@ -94,6 +98,10 @@ function getRemainingDays(endDate, startDate, maxDays = 21) {
           <span class="pack-display-name">
             {{ packInfo.officialName }}
           </span>
+          <!-- 365天内倒计时标记，放在图片上避免挤压效率条 -->
+          <div class="pack-image-countdown" v-if="getPackCountdown(packInfo.end, packInfo.start)?.type === 'soon'">
+            {{ getPackCountdown(packInfo.end, packInfo.start).label }}
+          </div>
           <!-- 角标部分 -->
           <div class="pack-corner corner-orange"> ￥{{ packInfo.price }}</div>
         </div>
@@ -117,8 +125,8 @@ function getRemainingDays(endDate, startDate, maxDays = 21) {
             </div>
           </div>
           <!-- 剩余时间 -->
-          <div class="pack-info-countdown" v-if="getRemainingDays(packInfo.end, packInfo.start, packInfo)">
-            {{ getRemainingDays(packInfo.end, packInfo.start) }}
+          <div class="pack-info-countdown" v-if="displayInfoCountdown(getPackCountdown(packInfo.end, packInfo.start))">
+            {{ getPackCountdown(packInfo.end, packInfo.start).label }}
           </div>
         </div>
       </div>

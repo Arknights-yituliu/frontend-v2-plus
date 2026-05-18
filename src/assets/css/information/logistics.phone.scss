@@ -18,6 +18,28 @@
        font-size: 10px;
     }
 
+    .logistics-search-toolbar {
+      display: block;
+    }
+
+    .logistics-sort-row {
+      margin-top: 8px;
+    }
+
+    .logistics-search-input {
+      width: 100%;
+      flex: none;
+    }
+
+    .logistics-sort-toggle {
+      width: 100%;
+    }
+
+    .logistics-sort-toggle .v-btn {
+      flex: 1;
+      min-width: 0;
+    }
+
     .logistics-table-title td{
       height: 24px;
       line-height: 24px;

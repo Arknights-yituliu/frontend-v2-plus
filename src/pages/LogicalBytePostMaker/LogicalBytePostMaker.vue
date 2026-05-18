@@ -43,6 +43,11 @@ const pages = [
     title: '图片标记器',
     description: '上传底图后，用彩色 tag 和说明条快速做图',
     to: '/lb/image-tagger'
+  },
+  {
+    title: '对应关系表',
+    description: '查看材料、干员、职业、材料系列和模组的 ID 与名称对应关系',
+    to: '/lb/mapping-table'
   }
 ]
 </script>

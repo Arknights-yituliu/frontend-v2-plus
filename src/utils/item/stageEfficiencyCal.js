@@ -37,7 +37,7 @@ async function calculationStageEfficiency(stageConfig) {
   //商店兑换物-龙门币
   let shopRedemptionItem = {
     itemId: "4001",
-    apEfficiency: 0.072,
+    apEfficiency: 0,
     quantity: 20,
     price: 1,
   };
@@ -82,18 +82,21 @@ async function calculationStageEfficiency(stageConfig) {
       );
     }
 
-    //主线活动期间
-    const now = new Date();
-    const may21 = new Date(now.getFullYear(), 4, 21);
-    if ("MAIN" === stageType && now < may21) {
-      list.push(
-        createDropTemplate(list[0], {
-          itemId: shopRedemptionItem.itemId,
-          price: shopRedemptionItem.price,
-          quantity: shopRedemptionItem.quantity,
-        })
-      );
-    }
+    // 主线活动期间
+    // const now = new Date();
+    // const may21 = new Date(now.getFullYear(), 4, 21);
+    // if ("MAIN" === stageType && now < may21) {
+    //   const drop = createDropTemplate(list[0], {
+    //     itemId: shopRedemptionItem.itemId,
+    //     price: shopRedemptionItem.price,
+    //     quantity: shopRedemptionItem.quantity,
+    //   });
+    //   // if (stageId === "main_01-07") {
+    //   //   console.log(shopRedemptionItem);
+    //   //   console.log(drop);
+    //   // }
+    //   list.push(drop);
+    // }
 
     let stageDropDetailList = [];
 
@@ -107,6 +110,10 @@ async function calculationStageEfficiency(stageConfig) {
       if (!itemInfo) {
         continue;
       }
+
+      // if (stageId === "main_01-07") {
+      //   console.log(itemInfo.itemName, quantity, drop.isUnlimited);
+      // }
 
       const { itemName, itemValue, rarity } = itemInfo;
       const knockRating = quantity / times;
@@ -153,14 +160,14 @@ async function calculationStageEfficiency(stageConfig) {
     let mainItemId = "0";
     let mainItemName = "0";
 
-    if (stageCode === "1-7") {
-      console.log(stageDropDetailList);
-    }
+    // if (stageCode === "1-7") {
+    //   console.log(stageDropDetailList);
+    // }
 
     if (stageDropDetailList.length >= 2 && stageDropDetailList[0].isUnlimited) {
       const tmp = stageDropDetailList[0];
-      console.log(tmp);
-      console.log(stageDropDetailList[1]);
+      // console.log(tmp);
+      // console.log(stageDropDetailList[1]);
       stageDropDetailList[0] = stageDropDetailList[1];
       stageDropDetailList[1] = tmp;
     }
