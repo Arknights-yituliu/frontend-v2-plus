@@ -280,7 +280,7 @@ const scheduleOptions = [
     historyEndTime: new Date("2023/03/28 04:00:00"),
   },
   {
-    name: "怪猎联动复刻",
+    name: "怪猎一期复刻",
     dateString: "(0615-0629)",
     start: new Date("2026/06/15 12:00:00"),
     end: new Date("2026/06/29 04:00:00"),
@@ -292,7 +292,7 @@ const scheduleOptions = [
     historyEndTime: new Date("2023/03/28 04:00:00"),
   },
    {
-    name: "怪猎联动二期+复刻",
+    name: "二期+复刻",
     dateString: "(0615-0629)",
     start: new Date("2026/06/01 12:00:00"),
     end: new Date("2026/06/29 04:00:00"),
