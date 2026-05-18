@@ -171,9 +171,6 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
     if ("YTL_VIRTUAL" === stageType && !stageConfig.useActivityAverageStage) {
       continue; // 如果不使用活动平均作战定价则跳过
     }
-
-
-
     stageDropCollectForPricing.set(stageId, dropList);
   }
 
@@ -203,9 +200,6 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
 
   itemValueMap.set("causality", 0);
   itemValueMap.set("AP_GAMEPLAY", 1);
-
-  itemValueMap.set("AP_GAMEPLAY", 1);
-
   itemValueMap.set("EXP", 0);
 
   // const itemValueMap = new Map(itemInfoList.map(({ itemId, rarity }) => [itemId, isEliteMaterial(itemId) ? 3 ** rarity : 0]));
