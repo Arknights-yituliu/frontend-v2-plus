@@ -288,6 +288,9 @@ let currentSchedule = ref({
 
 //用户选择的活动的类型
 let activityType = ref("联动限定");
+const isLinkedLimitedActivity = computed(() => ["联动限定", "联动限定复刻"].includes(activityType.value));
+const isDoubleLinkedLimitedActivity = computed(() => activityType.value === "双联动限定");
+const isNormalLimitedActivity = computed(() => !isLinkedLimitedActivity.value && !isDoubleLinkedLimitedActivity.value);
 
 //可活动列表，包含活动的名称，开启和结束时间
 // name: string 活动名称
@@ -329,7 +332,7 @@ const scheduleOptions = [
     dateString: "(0601-0629)",
     start: new Date("2026/06/01 12:00:00"),
     end: new Date("2026/06/29 04:00:00"),
-    activityType: "联动限定",
+    activityType: "双联动限定",
     disabled: false,
     dailyGiftResources: true,
     accuracyFlag: true,
@@ -1651,6 +1654,9 @@ function handleResize() {
  * @property {number} limited120
  * @property {number} all120
  * @property {number} 联动卡池全满潜
+ * @property {number} 两个联动寻访都获得UP6星干员
+ * @property {number} 两个联动寻访都获得全部干员
+ * @property {number} 两个联动寻访都全满潜
  */
 const currentProb = ref({});
 updateProb();
@@ -1825,13 +1831,18 @@ function sharePage() {
             <div class="flex align-center">
               <div
                 class="collapse-title-icon"
-                v-if="activityType !== '联动限定'"
+                v-if="isNormalLimitedActivity"
                 :style="getProbabilityBoxStyle(currentProb.limited300, currentProb.all300)"
               ></div>
               <div
                 class="collapse-title-icon"
-                v-if="activityType === '联动限定'"
+                v-if="isLinkedLimitedActivity"
                 :style="getProbabilityBoxStyle(currentProb.limited120, currentProb.all120)"
+              ></div>
+              <div
+                class="collapse-title-icon"
+                v-if="isDoubleLinkedLimitedActivity"
+                :style="getProbabilityBoxStyle(currentProb.两个联动寻访都获得UP6星干员, currentProb.两个联动寻访都获得全部干员)"
               ></div>
               <span class="collapse-title-font">
                 共计{{ calculationResult.totalDraw }}抽<span v-if="calculationResult.totalAmountOfRecharge > 0"
@@ -1951,20 +1962,29 @@ function sharePage() {
           <!-- 抽卡概率总览 -->
           <div class="resources-result-bar" style="border: none; padding-top: 0px">
             <div v-if="currentProb" style="display: flex; gap: 16px">
-              <div v-if="activityType !== '联动限定'">
+              <div v-if="isNormalLimitedActivity">
                 <p>拿到限定的概率：{{ currentProb.limited300.toFixed(2) }}%</p>
               </div>
-              <div v-if="activityType !== '联动限定'">
+              <div v-if="isNormalLimitedActivity">
                 <p>拿到限定+陪跑的概率：{{ currentProb.all300.toFixed(2) }}%</p>
               </div>
-              <div v-if="activityType === '联动限定'">
+              <div v-if="isLinkedLimitedActivity">
                 <p>拿到限定六星的概率：{{ currentProb.limited120.toFixed(2) }}%</p>
               </div>
-              <div v-if="activityType === '联动限定'">
+              <div v-if="isLinkedLimitedActivity">
                 <p>拿到所有联动的概率：{{ currentProb.all120.toFixed(2) }}%</p>
               </div>
-              <div v-if="activityType === '联动限定'">
+              <div v-if="isLinkedLimitedActivity">
                 <p>全满潜的概率：{{ currentProb.联动卡池全满潜.toFixed(2) }}%</p>
+              </div>
+              <div v-if="isDoubleLinkedLimitedActivity">
+                <p>拿到限定六星的概率：{{ currentProb.两个联动寻访都获得UP6星干员.toFixed(2) }}%</p>
+              </div>
+              <div v-if="isDoubleLinkedLimitedActivity">
+                <p>拿到所有联动的概率：{{ currentProb.两个联动寻访都获得全部干员.toFixed(2) }}%</p>
+              </div>
+              <div v-if="isDoubleLinkedLimitedActivity">
+                <p>全满潜的概率：{{ currentProb.两个联动寻访都全满潜.toFixed(2) }}%</p>
               </div>
             </div>
             <div v-else>
