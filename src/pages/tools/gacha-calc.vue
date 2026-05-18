@@ -281,6 +281,7 @@ const scheduleOptions = [
   },
   {
     name: "怪猎一期复刻",
+    name: "怪猎一期复刻",
     dateString: "(0615-0629)",
     start: new Date("2026/06/15 12:00:00"),
     end: new Date("2026/06/29 04:00:00"),
