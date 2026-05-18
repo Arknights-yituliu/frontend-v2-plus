@@ -713,9 +713,75 @@ let certificateStoreF3 = ref({
   certificates: 0,
   //剩余绿票凭证
   remainingCertificates: 0,
+  //可用于兑换的绿票凭证
+  disposableCertificate: 0,
   //可兑换合成玉
   orundum: 0,
 });
+
+const certificateStoreF3Options = [
+  {
+    id: 0,
+    text: "还未兑换",
+    cost: 0,
+  },
+  {
+    id: 1,
+    text: "已换一层",
+    cost: 1490,
+  },
+  {
+    id: 2,
+    text: "已换二层单抽公招",
+    cost: 1200,
+  },
+  {
+    id: 3,
+    text: "已换二层",
+    cost: 9300,
+  },
+];
+
+let selectedCertificateStoreF3Group = ref([0]);
+let previousSelectedCertificateStoreF3Group = [0];
+
+function handleCertificateStoreF3GroupChange(selectedOptions) {
+  const clickedOption = certificateStoreF3Options.find((option) => {
+    const isSelected = selectedOptions.includes(option.id);
+    const wasSelected = previousSelectedCertificateStoreF3Group.includes(option.id);
+    return isSelected !== wasSelected;
+  });
+
+  if (!clickedOption) {
+    gachaResourcesCalculation();
+    return;
+  }
+
+  if (clickedOption.id > 0) {
+    selectedCertificateStoreF3Group.value = certificateStoreF3Options.filter((option) => option.id > 0 && option.id <= clickedOption.id).map((option) => option.id);
+    previousSelectedCertificateStoreF3Group = selectedCertificateStoreF3Group.value;
+    gachaResourcesCalculation();
+    return;
+  }
+
+  const hasClearOption = selectedOptions.includes(0);
+  const wasClearOptionSelected = previousSelectedCertificateStoreF3Group.includes(0);
+
+  if (hasClearOption && !wasClearOptionSelected) {
+    selectedCertificateStoreF3Group.value = [0];
+    previousSelectedCertificateStoreF3Group = selectedCertificateStoreF3Group.value;
+    gachaResourcesCalculation();
+    return;
+  }
+
+  const maxSelectedOption = Math.max(0, ...selectedOptions.filter((option) => option > 0));
+  selectedCertificateStoreF3Group.value = certificateStoreF3Options.filter((option) => option.id > 0 && option.id <= maxSelectedOption).map((option) => option.id);
+  if (selectedCertificateStoreF3Group.value.length === 0) {
+    selectedCertificateStoreF3Group.value = [0];
+  }
+  previousSelectedCertificateStoreF3Group = selectedCertificateStoreF3Group.value;
+  gachaResourcesCalculation();
+}
 
 //是否改用卡池开放当天的数据进行计算
 let calPoolEnd = ref(true);
@@ -1037,16 +1103,12 @@ function gachaResourcesCalculation() {
     produceOrundum.value.itemId4001 = stringToNumber(produceOrundum.value.itemId30012) * 800 + stringToNumber(produceOrundum.value.itemId30062) * 1000;
     //可用于兑换商店第三层的凭证数量
     let certificates = stringToNumber(certificateStoreF3.value.certificates);
-    //如果凭证数量大于11590(搬空前两层的凭证消耗量),曾可以兑换合成玉
-    if (certificates > 11590) {
-      //扣除11590凭证之后剩余的凭证数量
-      certificateStoreF3.value.remainingCertificates = certificates - 11590;
-      //可兑换多少合成玉
-      certificateStoreF3.value.orundum = Math.floor((certificateStoreF3.value.remainingCertificates / 50) * 30);
-    } else {
-      certificateStoreF3.value.remainingCertificates = 0;
-      certificateStoreF3.value.orundum = 0;
-    }
+    const remainingCost = certificateStoreF3Options
+      .filter((option) => !selectedCertificateStoreF3Group.value.includes(option.id))
+      .reduce((total, option) => total + option.cost, 0);
+    certificateStoreF3.value.remainingCertificates = Math.max(0, certificates - remainingCost);
+    certificateStoreF3.value.disposableCertificate = certificateStoreF3.value.remainingCertificates;
+    certificateStoreF3.value.orundum = Math.floor((certificateStoreF3.value.disposableCertificate / 50) * 30);
     //计算两种方式可以产出多少合成玉
     const orundum = produceOrundum.value.outputByAp + produceOrundum.value.outputByItem + certificateStoreF3.value.orundum;
 
@@ -2273,7 +2335,21 @@ function sharePage() {
             </div>
             <span>{{ certificateStoreF3.orundum }}</span>
           </div>
-          <span class="tip">现有绿票数 - 第一层共需1490绿票 - 第二层共需10100绿票 = 可用于换玉的绿票数</span>
+
+          <el-checkbox-group
+            class="certificate-store-f3-group"
+            v-model="selectedCertificateStoreF3Group"
+            size="small"
+            @change="handleCertificateStoreF3GroupChange"
+          >
+            <el-checkbox-button v-for="option in certificateStoreF3Options" :key="option.id" :value="option.id">
+              <div class="certificate-store-f3-button">
+                <span>{{ option.text }}</span>
+              </div>
+            </el-checkbox-button>
+          </el-checkbox-group>
+
+          <span class="tip">未换完的项目会从现有绿票中扣除：第一层1490，二层单抽和公招1200，二层其余9300</span>
           <span class="tip">鉴于第二层有不少性价比较低的物品，建议囤够2w以上绿票再考虑绿票换玉</span>
         </el-collapse-item>
 
