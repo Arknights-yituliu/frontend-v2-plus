@@ -769,7 +769,8 @@ let singleResourceDraws = ref({
 let logs = [];
 
 let officialMonthlyCardReward = ref(0);
-const officialMonthlyCardEndDate = new Date("2025/05/27 03:58:00");
+//官方月卡结束时间
+const officialMonthlyCardEndDate = new Date("2026/05/25 04:00:00");
 let officialMonthlyCardRemainingDays = ref(0);
 
 const userConfigV2 = ref({
@@ -2089,15 +2090,15 @@ function sharePage() {
               <span>{{ dailyReward.dailyOrundumReward }}</span>
             </div>
           </div>
-          <!--          <div class="resources-line">-->
-          <!--            <span class="resources-line-label">官方月卡{{ officialMonthlyCardRemainingDays }}次</span>-->
-          <!--            <div class="resources-line-content">-->
-          <!--              <div class="image-sprite">-->
-          <!--                <div class="bg-icon_4003"></div>-->
-          <!--              </div>-->
-          <!--              <span>{{ officialMonthlyCardReward }}</span>-->
-          <!--            </div>-->
-          <!--          </div>-->
+          <div class="resources-line">
+            <span class="resources-line-label">官方月卡{{ officialMonthlyCardRemainingDays }}次</span>
+            <div class="resources-line-content">
+              <div class="image-sprite">
+                <div class="bg-icon_4003"></div>
+              </div>
+              <span>{{ officialMonthlyCardReward }}</span>
+            </div>
+          </div>
 
           <v-divider></v-divider>
           <div class="resources-line">
