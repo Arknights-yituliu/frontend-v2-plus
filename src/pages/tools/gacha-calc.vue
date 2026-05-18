@@ -146,66 +146,101 @@ for (const item of tempActivityScheduleList) {
  * 批量生成服务器维护奖励列表，以5天为一个时间段生成，每个时间段有200合成玉
  */
 function batchGenerationServerMaintenanceRewards() {
-  // 使用全局时间戳，支持用户自定义时间
-  const date = new Date(currentTimestamp.value);
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-
+  const oneDayTimeStamp = 60 * 60 * 24 * 1000;
   // 清空之前的维护奖励数据
   otherRewardBySchedules.value = otherRewardBySchedules.value.filter((item) => !item.name.includes("游戏维护"));
-
-  for (let m = 0; m < 12; m++) {
-    let currentDay = 1;
-    if (m === 0) {
-      currentDay = date.getDate();
-    }
-
-    for (let d = currentDay; d < 29; d += 5) {
-      let reward = {
-        name: `游戏维护(${month}月)`,
-        originium: 0,
-        orundum: 200,
-        gachaTicket: 0,
-        tenGachaTicket: 0,
-        start: new Date(`${year}/${_padZero(month, 2)}/${_padZero(d, 2)} 00:00:00`).getTime(),
-        end: new Date(`${year}/${_padZero(month, 2)}/${_padZero(d, 2)} 23:00:00`).getTime(),
-        rewardType: "公共",
-        rewardModule: "otherResources",
-        probability: "",
-      };
-      otherRewardBySchedules.value.push(reward);
-    }
-
-    month++;
-    if (month > 12) {
-      month = 1;
-      year++;
+ 
+  for (const activity in activityScheduleList.value) {
+    let activityData = activityScheduleList.value[activity];
+    
+     
+    if (activityData.defaultStatus) {
+      console.log(activityData.name);
+      selectedActivityName.value.push(activityData.name);
+      otherRewardBySchedules.value.push(_createServerMaintenanceRewards(activityData.start));
+     
     }
   }
 
-  /**
-   * 传入一个数字和长度进行补零
-   * @param num 数字
-   * @param size 长度
-   * @returns {string} 返回补零后的字符
-   * @private
-   */
-  function _padZero(num, size) {
-    let s = num.toString();
-    while (s.length < size) {
-      s = "0" + s;
-    }
-    return s;
+  function _createServerMaintenanceRewards(timeStamp) {
+    let month = new Date(timeStamp).getMonth() + 1;
+
+    let reward = {
+      name: `游戏维护(${month}月)`,
+      originium: 0,
+      orundum: 200,
+      gachaTicket: 0,
+      tenGachaTicket: 0,
+      start: timeStamp + oneDayTimeStamp,
+      end: timeStamp + oneDayTimeStamp * 2,
+      rewardType: "公共",
+      rewardModule: "otherResources",
+      probability: "",
+    };
+
+    return reward;
   }
+
+  // // 使用全局时间戳，支持用户自定义时间
+  // const date = new Date(currentTimestamp.value);
+  // let month = date.getMonth() + 1;
+  // let year = date.getFullYear();
+
+  // // 清空之前的维护奖励数据
+  // otherRewardBySchedules.value = otherRewardBySchedules.value.filter((item) => !item.name.includes("游戏维护"));
+
+  // for (let m = 0; m < 12; m++) {
+  //   let currentDay = 1;
+  //   if (m === 0) {
+  //     currentDay = date.getDate();
+  //   }
+
+  //   for (let d = currentDay; d < 29; d += 8) {
+  //     let reward = {
+  //       name: `游戏维护(${month}月)`,
+  //       originium: 0,
+  //       orundum: 200,
+  //       gachaTicket: 0,
+  //       tenGachaTicket: 0,
+  //       start: new Date(`${year}/${_padZero(month, 2)}/${_padZero(d, 2)} 00:00:00`).getTime(),
+  //       end: new Date(`${year}/${_padZero(month, 2)}/${_padZero(d, 2)} 23:00:00`).getTime(),
+  //       rewardType: "公共",
+  //       rewardModule: "otherResources",
+  //       probability: "",
+  //     };
+  //     otherRewardBySchedules.value.push(reward);
+  //   }
+
+  //   month++;
+  //   if (month > 12) {
+  //     month = 1;
+  //     year++;
+  //   }
+  // }
+
+  // /**
+  //  * 传入一个数字和长度进行补零
+  //  * @param num 数字
+  //  * @param size 长度
+  //  * @returns {string} 返回补零后的字符
+  //  * @private
+  //  */
+  // function _padZero(num, size) {
+  //   let s = num.toString();
+  //   while (s.length < size) {
+  //     s = "0" + s;
+  //   }
+  //   return s;
+  // }
 }
-
-batchGenerationServerMaintenanceRewards();
 
 //用户选择的活动
 let currentScheduleName = ref("Ave Mujica联动");
 
 //用户选择的活动的结束时间
 let endDate = ref(new Date(1711008000000));
+
+batchGenerationServerMaintenanceRewards();
 
 //用户选择的活动
 let currentSchedule = ref({
@@ -233,6 +268,18 @@ let activityType = ref("联动限定");
 // 注：历史礼包时间范围已改为动态计算，不再需要 historicalPackTimeRange 配置
 const scheduleOptions = [
   {
+    name: "怪猎联动二期",
+    dateString: "(0601-0615)",
+    start: new Date("2026/06/01 12:00:00"),
+    end: new Date("2026/06/15 04:01:00"),
+    activityType: "联动限定",
+    disabled: false,
+    dailyGiftResources: true,
+    accuracyFlag: true,
+    historyStartTime: new Date("2023/03/01 12:00:00"),
+    historyEndTime: new Date("2023/03/28 04:01:00"),
+  },
+  {
     name: "夏活",
     dateString: "(0801-0815)",
     start: new Date("2026/08/01 12:00:00"),
@@ -241,22 +288,14 @@ const scheduleOptions = [
     disabled: false,
     dailyGiftResources: true,
     accuracyFlag: true,
+    historyStartTime: new Date("2025/08/01 12:00:00"),
+    historyEndTime: new Date("2025/08/15 04:01:00"),
   },
   {
     name: "感谢庆典",
     dateString: "敬请期待",
     start: new Date("2026/11/01 12:00:00"),
     end: new Date("2026/11/15 04:01:00"),
-    activityType: "周年限定",
-    disabled: true,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-  },
-  {
-    name: "春节",
-    dateString: "敬请期待",
-    start: new Date("2026/02/01 12:00:00"),
-    end: new Date("2026/02/15 04:01:00"),
     activityType: "周年限定",
     disabled: true,
     dailyGiftResources: true,
@@ -420,20 +459,10 @@ async function getAndSortPackData() {
 function getHistoryPackInfo() {
   const scheduleStart = currentSchedule.value.start;
   const scheduleEnd = currentSchedule.value.end;
-
-  // 动态计算历史礼包时间范围：从当前时刻（或设定的时刻）到卡池结束日期，向前推一年
-  const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
-  const historicalPackStart = currentTimestamp.value - oneYearInMs; // 当前时刻向前推一年
-  const historicalPackEnd = scheduleEnd.getTime() - oneYearInMs; // 卡池结束日期向前推一年
+  const historicalPackStart = currentSchedule.value.historyStartTime;
+  const historicalPackEnd = currentSchedule.value.historyEndTime;
 
   let list = [];
-
-  // console.log("=== 往年礼包筛选（动态时间范围）===");
-  // console.log("当前活动:", currentSchedule.value.name);
-  // console.log("当前时刻:", new Date(currentTimestamp.value));
-  // console.log("卡池结束:", new Date(scheduleEnd));
-  // console.log("历史礼包时间范围（去年同期）:", new Date(historicalPackStart), "到", new Date(historicalPackEnd));
-  // console.log("缓存中的礼包总数:", packCacheList.value.length);
 
   for (let pack of packCacheList.value) {
     const { officialName, drawEfficiency, start, end, saleType } = pack;
@@ -487,7 +516,7 @@ function batchGenerationMonthlyPack() {
 
   monthlyPackList.value.push(monthlyCardPack);
   displayPackList.value.push(monthlyCardPack);
-  if(userConfigV2.value.monthlyCardSelected){
+  if (userConfigV2.value.monthlyCardSelected) {
     selectedPackCollect.value.push(monthlyCardPack.id);
   }
 
@@ -678,8 +707,6 @@ let pieChartData = ref([
   { value: 33, name: "活动" },
   { value: 44, name: "其它" },
 ]);
-
-
 
 //攒抽计算结果
 let calculationResult = ref({
@@ -1080,7 +1107,6 @@ function gachaResourcesCalculation() {
     //循环选中的礼包索引，获得对应的礼包
     if (packDataLoadingStatus.value) {
       userConfigV2.value.monthlyCardSelected = false;
-    
     }
 
     for (const pack of displayPackList.value) {
@@ -1102,7 +1128,7 @@ function gachaResourcesCalculation() {
         pack.orundum = dailyReward.value.daily * 200;
         //卡池结束前可以购买月卡的数量
         let purchaseQuantity = Math.ceil(dailyReward.value.daily / 30);
-      
+
         //加上额外购买的月卡数量,判断是否额外购买了超过3个月
         if (userConfigV2.value.monthlyCardExtraCount > 3) {
           createMessage({ type: "error", text: "月卡只能提前购买90天" });
@@ -1318,7 +1344,7 @@ function gachaResourcesCalculation() {
   // console.table(logs)
 
   userConfigV2.value.selectedCertificatePackList = selectedCertificatePackList.value;
- 
+
   localStorage.setItem("LastSettings", JSON.stringify(userConfigV2.value));
 
   setPieChart(pieChartData.value);
@@ -1480,10 +1506,9 @@ function readLastSettings() {
 
   if (lastSettings.selectedCertificatePackList) {
     selectedCertificatePackList.value = lastSettings.selectedCertificatePackList;
-  } 
+  }
   userConfigV2.value.monthlyCardSelected = lastSettings.monthlyCardSelected === "true" || lastSettings.monthlyCardSelected === true;
   // userConfigV2.value.monthlyCardExtraCount = stringToNumber(lastSettings.monthlyCardExtraCount);
-
 }
 
 // 创建一个窗口尺寸变化的监听器
