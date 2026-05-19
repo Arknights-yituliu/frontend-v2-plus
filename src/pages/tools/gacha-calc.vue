@@ -292,6 +292,14 @@ const isLinkedLimitedActivity = computed(() => ["联动限定", "联动限定复
 const isDoubleLinkedLimitedActivity = computed(() => activityType.value === "双联动限定");
 const isNormalLimitedActivity = computed(() => !isLinkedLimitedActivity.value && !isDoubleLinkedLimitedActivity.value);
 
+function rewardTypeMatchesCurrentActivity(rewardType) {
+  if (rewardType === "公共" || rewardType === activityType.value) {
+    return true;
+  }
+
+  return rewardType === "联动限定" && (isLinkedLimitedActivity.value || isDoubleLinkedLimitedActivity.value);
+}
+
 //可活动列表，包含活动的名称，开启和结束时间
 // name: string 活动名称
 // start: Date 起始时间
@@ -1547,7 +1555,7 @@ function rewardIsExpired(reward) {
 
   //判断是否当前奖励的类型是否可以被计入，公共类型都可以计入，特殊类型需要符合当前活动类型，例如联动的专属十连不能被计入新春的攒抽结果中
   if (reward.rewardType) {
-    return reward.rewardType === "公共" || reward.rewardType === activityType.value;
+    return rewardTypeMatchesCurrentActivity(reward.rewardType);
   }
 
   return true;
