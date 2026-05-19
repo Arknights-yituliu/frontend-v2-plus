@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --port 4000",
     "build": "vite build",
+    "build:logistics-skill-groups": "node scripts/generate-logistics-skill-groups.js",
     "preview": "vite preview",
     "server": "node .\\server.js"
   },

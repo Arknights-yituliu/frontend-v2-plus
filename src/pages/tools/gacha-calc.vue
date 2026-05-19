@@ -291,13 +291,14 @@ let activityType = ref("联动限定");
 const isLinkedLimitedActivity = computed(() => ["联动限定", "联动限定复刻"].includes(activityType.value));
 const isDoubleLinkedLimitedActivity = computed(() => activityType.value === "双联动限定");
 const isNormalLimitedActivity = computed(() => !isLinkedLimitedActivity.value && !isDoubleLinkedLimitedActivity.value);
+const canUseLinkedLimitedRewards = computed(() => activityType.value === "联动限定" || isDoubleLinkedLimitedActivity.value);
 
 function rewardTypeMatchesCurrentActivity(rewardType) {
   if (rewardType === "公共" || rewardType === activityType.value) {
     return true;
   }
 
-  return rewardType === "联动限定" && (isLinkedLimitedActivity.value || isDoubleLinkedLimitedActivity.value);
+  return rewardType === "联动限定" && canUseLinkedLimitedRewards.value;
 }
 
 //可活动列表，包含活动的名称，开启和结束时间

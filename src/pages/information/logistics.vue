@@ -4,7 +4,7 @@ import '/src/assets/css/information/logistics.phone.scss'
 
 import {operatorFilterConditionTable} from "/src/utils/buildingSkillFilter";
 import building_table from '/src/static/json/build/building_table.json'
-import logistics_skill_replace_operators from '/src/static/json/build/logistics_skill_replace_operators.json'
+import logistics_skill_replace_groups from '/src/static/json/build/logistics_skill_replace_groups.json'
 import operator_item_cost_table from '/src/static/json/operator/operator_item_cost_table.json'
 import operator_table from '/src/static/json/operator/character_table_simple.json'
 import item_info from '/src/static/json/material/item_info.json'
@@ -305,39 +305,19 @@ function getStackedLowerSkills(skill) {
     return []
   }
 
-  const replacedLowerSkill = lowerSkills.find(lowerSkill => isReplacedSkillForHigherSkill(skill, lowerSkill))
-  if (replacedLowerSkill) {
-    return [replacedLowerSkill]
+  const replacedLowerSkills = lowerSkills
+      .filter(lowerSkill => isReplacedSkillForHigherSkill(skill, lowerSkill))
+      .sort((a, b) => getSkillUnlockRank(b) - getSkillUnlockRank(a))
+  if (replacedLowerSkills.length > 0) {
+    return [replacedLowerSkills[0]]
   }
 
   return [[...lowerSkills].sort((a, b) => getSkillUnlockRank(b) - getSkillUnlockRank(a))[0]]
 }
 
-function isReplacedSkill(skill) {
-  return (logistics_skill_replace_operators[skill.name] || []).includes(skill.buffName)
-}
-
 function isReplacedSkillForHigherSkill(skill, lowerSkill) {
-  if (!isReplacedSkill(lowerSkill)) {
-    return false
-  }
-
-  return isLikelyReplacementSkill(skill, lowerSkill)
-}
-
-function isLikelyReplacementSkill(skill, lowerSkill) {
-  const skillSeriesName = getReplaceSkillSeriesName(skill.buffName)
-  const lowerSkillSeriesName = getReplaceSkillSeriesName(lowerSkill.buffName)
-
-  if (skillSeriesName || lowerSkillSeriesName) {
-    return skillSeriesName === lowerSkillSeriesName
-  }
-
-  return true
-}
-
-function getReplaceSkillSeriesName(skillName) {
-  return skillName.match(/^(.*?)[·・][αβγ](?:型)?$/u)?.[1]
+  const skillGroup = logistics_skill_replace_groups[getSkillRelationCacheKey(skill)]
+  return Boolean(skillGroup && skillGroup === logistics_skill_replace_groups[getSkillRelationCacheKey(lowerSkill)])
 }
 
 function getSkillTagStyle(skill) {
