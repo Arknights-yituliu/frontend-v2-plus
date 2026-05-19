@@ -24,6 +24,9 @@
 
     .logistics-sort-row {
       margin-top: 8px;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .logistics-search-input {
@@ -38,6 +41,10 @@
     .logistics-sort-toggle .v-btn {
       flex: 1;
       min-width: 0;
+    }
+
+    .logistics-detail-switch {
+      margin-left: 0;
     }
 
     .logistics-table-title td{

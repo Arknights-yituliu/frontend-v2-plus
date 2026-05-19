@@ -55,6 +55,8 @@
 
     .logistics-sort-row {
         display: flex;
+        align-items: center;
+        gap: 12px;
         margin-top: 8px;
     }
 
@@ -66,6 +68,10 @@
         overflow: hidden;
     }
 
+    .logistics-detail-switch {
+        flex: 0 0 auto;
+    }
+
     .logistics-table {
         text-align: center;
         border-collapse: collapse;
@@ -75,6 +81,10 @@
         border-radius: 4px;
         font-size: 14px;
         line-height: 24px;
+    }
+
+    .logistics-table--detail {
+        min-width: 1160px;
     }
 
     .logistics-table-title td{
@@ -96,12 +106,29 @@
     .logistics-table-title-4{
         width: 100px;
     }
+    .logistics-table--detail .logistics-table-title-4{
+        width: 180px;
+    }
+    .logistics-table-title-5,
+    .logistics-table-title-6{
+        width: 130px;
+        white-space: nowrap;
+    }
+    .logistics-table-title-7{
+        min-width: 320px;
+    }
 
     .logistics-table td {
         border-bottom: 1px solid var(--c-border-color);
         box-sizing: border-box;
         padding: 4px 0;
 
+    }
+
+    .logistics-cost-cell {
+        color: var(--c-secondary-text-color);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
     }
 
     .operator-avatar-sprite{
@@ -131,10 +158,29 @@
 
     .logistics-skill-name {
         padding: 4px;
+        border: 1px solid transparent;
         border-radius: 2px;
         font-size: 12px;
         line-height: 2;
         white-space: nowrap;
+    }
+
+    .logistics-skill-name-list {
+        display: inline-flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        gap: 4px;
+        white-space: nowrap;
+    }
+
+    .logistics-skill-name--outline {
+        background: transparent;
+    }
+
+    .logistics-skill-name--muted {
+        background: var(--c-border-color);
+        border-color: var(--c-border-color);
+        color: var(--c-secondary-text-color);
     }
 
 
