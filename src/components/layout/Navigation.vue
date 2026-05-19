@@ -51,7 +51,15 @@ function isActive(path) {
           <div class="navigation-item-content">
             <v-icon :icon="child.icon"></v-icon>
             <div class="navigation-item-content-spacer"></div>
-            {{ child.text }}
+            <span>{{ child.text }}</span>
+            <v-icon
+              v-if="child.external"
+              class="navigation-external-icon"
+              icon="mdi-open-in-new"
+              size="14"
+              title="外部链接"
+              aria-label="外部链接"
+            ></v-icon>
           </div>
         </v-list-item>
       </router-link>

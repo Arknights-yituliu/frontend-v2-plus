@@ -501,6 +501,7 @@ const routes = [
         display: true,
         module: 'dev',
         icon: "mdi-code-braces",
+        external: true,
         component: () => import('/src/pages/about/donate.vue'),
         meta: {
             title: '文档'
