@@ -11,7 +11,7 @@
           <!-- 表头 -->
           <div class="image-section header-section">
             <div v-if="headerImageUrl" class="image-container">
-              <img :src="headerImageUrl" alt="表头图片" @error="handleImageError('header')" />
+              <img :src="headerImageUrl" alt="表头图片" referrerpolicy="no-referrer" @error="handleImageError('header')" />
             </div>
             <div v-else class="empty-placeholder">
               表头图片（请在右侧输入图片链接）
@@ -141,9 +141,23 @@
             >
               引用最新活动
             </button>
+            <button
+              @click="quoteLatestOfficialRerunNews"
+              class="reference-btn official-news-btn"
+              :disabled="isLoadingOfficialNews || isLoadingHistory"
+            >
+              {{ isLoadingOfficialNews ? '读取官网中...' : '实验：官网复刻' }}
+            </button>
           </div>
           <div class="reference-info" :class="{ 'reference-info-error': referenceError }">
             {{ referenceInfo }}
+          </div>
+          <div
+            v-if="officialNewsInfo"
+            class="reference-info official-news-info"
+            :class="{ 'reference-info-error': officialNewsError }"
+          >
+            {{ officialNewsInfo }}
           </div>
           <div v-if="recentReferenceActivities.length > 0" class="reference-activity-list">
             <button
@@ -259,6 +273,9 @@ import ItemImage from '/src/components/sprite/ItemImage.vue'
 
 const STORAGE_KEY = 'logicalByte_data'
 const TABLE2_ICON_SCHEMA_VERSION = 2
+const OFFICIAL_NEWS_PROXY_PREFIX = '/official-news-proxy'
+const OFFICIAL_NEWS_ORIGIN = 'https://ak.hypergryph.com'
+const OFFICIAL_RERUN_KEYWORD = '复刻即将开启'
 
 // 组件挂载状态
 const isMounted = ref(false)
@@ -353,6 +370,9 @@ const historyLoadError = ref('')
 const referenceInfo = ref('加载往期活动数据后，可一键引用近 15 个月非复刻活动到上方表格。')
 const referenceError = ref(false)
 const selectedReferenceActivityName = ref('')
+const isLoadingOfficialNews = ref(false)
+const officialNewsInfo = ref('')
+const officialNewsError = ref(false)
 
 const recentReferenceActivities = computed(() => getRecentNonReprintHistoryActivities())
 
@@ -627,6 +647,172 @@ const quoteLatestReferenceActivity = () => {
   quoteActivityData(recentReferenceActivities.value[0])
 }
 
+const getOfficialNewsProxyPath = (path) => {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`
+  return `${OFFICIAL_NEWS_PROXY_PREFIX}${normalizedPath}`
+}
+
+const fetchOfficialNewsHtml = async (path) => {
+  const response = await fetch(getOfficialNewsProxyPath(path))
+  if (!response.ok) {
+    throw new Error(`官网请求失败：${response.status}`)
+  }
+  return response.text()
+}
+
+const normalizeOfficialNewsHtml = (html) => String(html || '')
+  .replace(/\\"/g, '"')
+  .replace(/\\u003c/g, '<')
+  .replace(/\\u003e/g, '>')
+  .replace(/\\u0026/g, '&')
+  .replace(/\\\//g, '/')
+
+const decodeHtmlText = (text) => {
+  const textarea = document.createElement('textarea')
+  textarea.innerHTML = String(text || '')
+  return textarea.value
+}
+
+const getOfficialNewsPath = (url) => {
+  const parsedUrl = new URL(url, OFFICIAL_NEWS_ORIGIN)
+  if (parsedUrl.origin !== OFFICIAL_NEWS_ORIGIN) {
+    throw new Error('官网链接来源异常')
+  }
+  return `${parsedUrl.pathname}${parsedUrl.search}`
+}
+
+const findLatestOfficialRerunNews = (html) => {
+  const normalizedHtml = normalizeOfficialNewsHtml(html)
+  const candidates = []
+  const itemPattern = /\{[^{}]*"cid":"([^"]+)"[^{}]*"title":"([^"]*复刻即将开启[^"]*)"[^{}]*(?:"displayTime"|"ts"):(\d+)[^{}]*(?:"link":"([^"]+)")?[^{}]*\}/g
+
+  let match = itemPattern.exec(normalizedHtml)
+  while (match) {
+    candidates.push({
+      cid: match[1],
+      title: decodeHtmlText(match[2]),
+      time: Number(match[3]) || 0,
+      link: decodeHtmlText(match[4] || `${OFFICIAL_NEWS_ORIGIN}/news/${match[1]}`)
+    })
+    match = itemPattern.exec(normalizedHtml)
+  }
+
+  const uniqueCandidates = Array.from(
+    new Map(candidates.map(candidate => [candidate.cid, candidate])).values()
+  ).filter(candidate => candidate.title.includes(OFFICIAL_RERUN_KEYWORD))
+
+  return uniqueCandidates.sort((a, b) => b.time - a.time)[0] || null
+}
+
+const getImageUrlFromElement = (imageElement) => {
+  const src = imageElement?.getAttribute('src') || ''
+  return src ? new URL(src, OFFICIAL_NEWS_ORIGIN).toString() : ''
+}
+
+const extractFirstLargeOfficialImage = (html) => {
+  const normalizedHtml = normalizeOfficialNewsHtml(html)
+  const parser = new DOMParser()
+  const documentFromHtml = parser.parseFromString(normalizedHtml, 'text/html')
+  const imageElements = Array.from(documentFromHtml.querySelectorAll('img'))
+  const largeImageElement = imageElements.find(imageElement => {
+    const width = Number(imageElement.getAttribute('data-width') || imageElement.getAttribute('width') || 0)
+    const height = Number(imageElement.getAttribute('data-height') || imageElement.getAttribute('height') || 0)
+    const src = imageElement.getAttribute('src') || ''
+    return src.includes('/upload/image/') && (width >= 1000 || height >= 300)
+  }) || imageElements.find(imageElement => (imageElement.getAttribute('src') || '').includes('/upload/image/'))
+
+  return getImageUrlFromElement(largeImageElement)
+}
+
+const extractActivityNameFromOfficialTitle = (title) => {
+  const normalizedTitle = decodeHtmlText(title)
+  const patterns = [
+    /「([^」]+)」/,
+    /【([^】]+)】/,
+    /《([^》]+)》/,
+    /\{([^}]+)\}/,
+    /{([^}]+)}/
+  ]
+  for (const pattern of patterns) {
+    const match = normalizedTitle.match(pattern)
+    if (match?.[1]) {
+      return match[1].trim()
+    }
+  }
+  return ''
+}
+
+const normalizeActivityKeyword = (text) => String(text || '')
+  .replace(/[\s"'“”‘’「」【】《》{}]/g, '')
+  .replace(/SideStory|故事集|限时活动|限时复刻|复刻|即将开启|活动预告/gi, '')
+  .toLowerCase()
+
+const findActivityByOfficialName = (activityKeyword) => {
+  const normalizedKeyword = normalizeActivityKeyword(activityKeyword)
+  if (!normalizedKeyword) {
+    return null
+  }
+
+  const activities = [...sourceHistoryActivityList.value]
+    .sort((a, b) => {
+      const reprintDiff = Number(isReprintActivity(a)) - Number(isReprintActivity(b))
+      return reprintDiff || Number(b.endTime || 0) - Number(a.endTime || 0)
+    })
+
+  return activities.find(activity => {
+    const normalizedZoneName = normalizeActivityKeyword(activity.zoneName)
+    return normalizedZoneName === normalizedKeyword ||
+      normalizedZoneName.includes(normalizedKeyword) ||
+      normalizedKeyword.includes(normalizedZoneName)
+  }) || null
+}
+
+const quoteLatestOfficialRerunNews = async () => {
+  try {
+    isLoadingOfficialNews.value = true
+    officialNewsError.value = false
+    officialNewsInfo.value = '正在读取官网复刻公告...'
+
+    const newsHtml = await fetchOfficialNewsHtml('/news')
+    const officialNews = findLatestOfficialRerunNews(newsHtml)
+    if (!officialNews) {
+      throw new Error('未找到包含“复刻即将开启”的官网新闻')
+    }
+
+    const detailHtml = await fetchOfficialNewsHtml(getOfficialNewsPath(officialNews.link))
+    const imageUrl = extractFirstLargeOfficialImage(detailHtml)
+    if (!imageUrl) {
+      throw new Error('已找到公告，但未找到正文大图')
+    }
+
+    headerImageUrl.value = imageUrl
+    imageErrors.value.header = false
+
+    const activityKeyword = extractActivityNameFromOfficialTitle(officialNews.title)
+    if (!activityKeyword) {
+      throw new Error(`已设置头图，但无法从标题中解析活动名：${officialNews.title}`)
+    }
+
+    const matchedActivity = findActivityByOfficialName(activityKeyword)
+    activityName.value = activityKeyword
+
+    if (!matchedActivity) {
+      matchedActivities.value = sourceHistoryActivityList.value.filter(activity =>
+        normalizeActivityKeyword(activity.zoneName).includes(normalizeActivityKeyword(activityKeyword))
+      )
+      throw new Error(`已设置头图，但未匹配到活动：${activityKeyword}`)
+    }
+
+    quoteActivityData(matchedActivity)
+    officialNewsInfo.value = `已读取 ${officialNews.title}，并引用 ${matchedActivity.zoneName}。`
+  } catch (error) {
+    officialNewsError.value = true
+    officialNewsInfo.value = error?.message || '官网复刻公告读取失败'
+  } finally {
+    isLoadingOfficialNews.value = false
+  }
+}
+
 const formatActivityEndTime = (time) => {
   const date = new Date(Number(time))
   if (Number.isNaN(date.getTime())) {
@@ -840,6 +1026,8 @@ const clearAllData = () => {
     activityName.value = ''
     matchedActivities.value = []
     selectedReferenceActivityName.value = ''
+    officialNewsInfo.value = ''
+    officialNewsError.value = false
     updateReferenceInfo(getLoadedReferenceInfo())
     localStorage.removeItem(STORAGE_KEY)
     console.log('所有数据已清除')

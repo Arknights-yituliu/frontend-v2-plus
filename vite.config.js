@@ -39,6 +39,13 @@ export default defineConfig({
     server: {
         host: '0.0.0.0',
         port: 4000,
+        proxy: {
+            '/official-news-proxy': {
+                target: 'https://ak.hypergryph.com',
+                changeOrigin: true,
+                rewrite: path => path.replace(/^\/official-news-proxy/, '')
+            }
+        },
         allowedHosts: [
             'zrw.ddns.net',
             'zrw.asia',
