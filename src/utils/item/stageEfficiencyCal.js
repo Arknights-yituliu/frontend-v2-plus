@@ -289,12 +289,14 @@ async function getStageData(stageConfig) {
   const recommendedStage = getRecommendedStage(openStageResult);
   const orundumRecommendedStage = getOrundumRecommendedStage(openStageResult);
   const historyActStage = getHistoryActStage(stageResultList);
+  const historyActOrundumStage = getHistoryActOrundumStage(stageResultList);
   // console.log("返回结果", new Date().getTime() - getData, 'ms')
 
   return {
     recommendedStage: recommendedStage,
     orundumRecommendedStageVO: orundumRecommendedStage,
     historyActStage: historyActStage,
+    historyActOrundumStage: historyActOrundumStage,
   };
 }
 
@@ -338,6 +340,38 @@ function getOrundumRecommendedStage(stageResultList) {
     item.orundumPerApEfficiency = item.orundumPerAp / maxOrundumPerAp;
   }
   return list;
+}
+
+function getHistoryActOrundumStage(stageResultList) {
+  const historyActOrundumStageCollect = new Map();
+  const orundumStageResultList = getOrundumRecommendedStage(
+    stageResultList
+      .filter((e) => e.stageType === "ACT" || e.stageType === "ACT_REP")
+      .map((e) => ({ ...e }))
+  );
+
+  for (const item of orundumStageResultList) {
+    const key = `${item.zoneName}_${item.end}`;
+    if (historyActOrundumStageCollect.get(key)) {
+      historyActOrundumStageCollect.get(key).push(item);
+    } else {
+      historyActOrundumStageCollect.set(key, [item]);
+    }
+  }
+
+  const historyActOrundumStageList = [];
+  for (const [, list] of historyActOrundumStageCollect) {
+    list.sort((a, b) => b.orundumPerAp - a.orundumPerAp);
+    historyActOrundumStageList.push({
+      zoneName: list[0].zoneName,
+      stageType: list[0].stageType,
+      actStageList: list,
+      endTime: list[0].end,
+    });
+  }
+
+  historyActOrundumStageList.sort((a, b) => b.endTime - a.endTime);
+  return historyActOrundumStageList;
 }
 
 function getHistoryActStage(stageResultList) {

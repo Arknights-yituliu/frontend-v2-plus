@@ -46,50 +46,38 @@
                 </table>
               </div>
             </div>
-            <div v-else class="empty-placeholder">
-              表格1数据（请在右侧配置）
-            </div>
 
-            <!-- 表格2：五行三列 -->
+            <!-- 表格2：搓玉数据，四行四列 -->
             <div v-if="table2.some(row => row.some(cell => cell))" class="table-section">
               <div class="data-grid table2-grid">
                 <table>
                   <tbody>
                     <tr v-for="(row, rowIndex) in table2" :key="'t2-r' + rowIndex">
                       <td v-for="(cell, colIndex) in row" :key="'t2-r' + rowIndex + '-c' + colIndex" class="data-cell">
-                        {{ cell }}
+                        <div v-if="rowIndex === 0 && getTable2CellIconIds(colIndex).length > 0" class="orundum-stage-cell">
+                          <span>{{ cell }}</span>
+                          <span class="orundum-material-icons">
+                            <ItemImage
+                              v-for="itemId in getTable2CellIconIds(colIndex)"
+                              :key="'orundum-icon-' + colIndex + '-' + itemId"
+                              :item-id="itemId"
+                              size="24"
+                            />
+                          </span>
+                        </div>
+                        <template v-else>
+                          {{ cell }}
+                        </template>
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
-            <div v-else class="empty-placeholder">
-              表格2数据（请在右侧配置）
+            <div v-if="!table1.some(row => row.some(cell => cell)) && !table2.some(row => row.some(cell => cell))" class="empty-placeholder">
+              表格数据（请在右侧配置）
             </div>
 
-            <!-- 历史活动JSON数据 -->
-            <div v-if="historyActivityList.length > 0" class="json-section">
-              <div class="json-header">
-                <h3>历史活动数据</h3>
-                <span class="json-count">{{ historyActivityList.length }} 个活动</span>
-              </div>
-              <div class="json-content">
-                <pre class="json-display">{{ JSON.stringify(historyActivityList, null, 2) }}</pre>
-              </div>
-            </div>
-            <div v-else-if="isLoadingHistory" class="empty-placeholder loading-placeholder">
-              正在加载历史活动数据...
-            </div>
-            <div v-else-if="historyLoadError" class="empty-placeholder error-placeholder">
-              <div class="error-content">
-                <div class="error-icon">⚠️</div>
-                <div class="error-text">{{ historyLoadError }}</div>
-              </div>
-            </div>
-            <div v-else class="empty-placeholder no-data-placeholder">
-              暂无历史活动数据
-            </div>
           </div>
 
           <!-- 页脚 -->
@@ -142,6 +130,40 @@
           </div>
         </div>
 
+        <!-- 往期活动数据引用 -->
+        <div class="input-group">
+          <label class="input-label">引用往期活动</label>
+          <div class="reference-actions">
+            <button
+              @click="quoteLatestReferenceActivity"
+              class="reference-btn"
+              :disabled="isLoadingHistory || recentReferenceActivities.length === 0"
+            >
+              引用最新活动
+            </button>
+          </div>
+          <div class="reference-info" :class="{ 'reference-info-error': referenceError }">
+            {{ referenceInfo }}
+          </div>
+          <div v-if="recentReferenceActivities.length > 0" class="reference-activity-list">
+            <button
+              v-for="activity in recentReferenceActivities"
+              :key="activity.zoneName"
+              class="reference-activity-item"
+              :class="{ 'reference-activity-item-active': selectedReferenceActivityName === activity.zoneName }"
+              @click="quoteActivityData(activity)"
+            >
+              <span class="reference-activity-name">{{ activity.zoneName }}</span>
+              <span class="reference-activity-meta">
+                {{ formatActivityEndTime(activity.endTime) }} / {{ getActivityStagesForChart(activity).map(stage => stage.stageCode).join('、') }}
+              </span>
+            </button>
+          </div>
+          <div v-else-if="!isLoadingHistory" class="reference-empty">
+            暂无近 15 个月非复刻活动
+          </div>
+        </div>
+
         <!-- 活动名称输入 -->
         <div class="input-group">
           <label class="input-label">活动名称（自动匹配历史活动）</label>
@@ -180,7 +202,7 @@
         <!-- 表格1：六行四列（第一列固定为标签） -->
         <div class="input-group">
           <label class="input-label">表格1（6行 × 4列）</label>
-          <div class="table-input-container">
+          <div class="table-input-container table1-input-container">
             <!-- 关卡行：和其他行一样，3个独立输入框 -->
             <div v-for="(row, rowIndex) in table1" :key="'t1-input-r' + rowIndex" class="table-row stage-input-row">
               <span class="row-number label-preview">{{ table1Labels[rowIndex] }}</span>
@@ -198,12 +220,12 @@
           </div>
         </div>
 
-        <!-- 表格2：五行三列 -->
+        <!-- 表格2：搓玉数据，左两列固定基准，右两列自动引用活动关 -->
         <div class="input-group">
-          <label class="input-label">表格2（5行 × 3列）</label>
-          <div class="table-input-container">
+          <label class="input-label">表格2（搓玉数据，4行 × 4列）</label>
+          <div class="table-input-container table2-input-container">
             <div v-for="(row, rowIndex) in table2" :key="'t2-input-r' + rowIndex" class="table-row">
-              <span class="row-number">第{{ rowIndex + 1 }}行</span>
+              <span class="row-number">{{ table2Labels[rowIndex] }}</span>
               <div class="row-cells">
                 <input
                   v-for="(cell, colIndex) in row"
@@ -211,6 +233,8 @@
                   v-model="table2[rowIndex][colIndex]"
                   type="text"
                   class="input-field cell-field"
+                  :class="{ 'fixed-cell-field': colIndex < TABLE2_AUTO_START_COLUMN }"
+                  :readonly="colIndex < TABLE2_AUTO_START_COLUMN"
                   placeholder=""
                 />
               </div>
@@ -223,12 +247,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import { getStageData } from '/src/utils/item/stageEfficiencyCal.js'
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
+import {
+  formatMaterialDemandCount,
+  getRecentR3MaterialDemand
+} from '/src/utils/material/materialDemandStatistics.js'
+import { getStageConfig } from '/src/utils/user/userConfig.js'
 import ItemImage from '/src/components/sprite/ItemImage.vue'
 
 const STORAGE_KEY = 'logicalByte_data'
+const TABLE2_ICON_SCHEMA_VERSION = 2
 
 // 组件挂载状态
 const isMounted = ref(false)
@@ -257,7 +287,7 @@ const table1 = ref([
 ])
 
 // 表格1的固定标签
-const table1Labels = ['关卡', '材料', '掉率', '史均效率', '总需求量', '下次复刻']
+const table1Labels = ['关卡', '材料', '掉率', '收益率(相对主线)', '近两年消耗量', '预计下次up']
 
 // 关卡前缀和编号
 const stagePrefix = ref('')
@@ -286,19 +316,45 @@ const getStageNames = () => {
   ]
 }
 
-// 表格2：5行3列
-const table2 = ref([
-  ['', '', ''],
-  ['', '', ''],
-  ['', '', ''],
-  ['', '', ''],
-  ['', '', '']
+// 表格2：搓玉数据，4行4列，左两列固定为1-7基准，右两列自动引用活动关
+const TABLE2_FIXED_ROWS = [
+  ['关卡', '1-7'],
+  ['每1理智可搓玉', '1.09'],
+  ['每抽消耗龙门币', '9.54w'],
+  ['搓玉效率(相对)', '100%']
+]
+const table2Labels = TABLE2_FIXED_ROWS.map(row => row[0])
+const TABLE2_COLUMN_COUNT = 4
+const TABLE2_AUTO_START_COLUMN = 2
+const TABLE2_ORUNDUM_BASELINE = 1.0898
+const TABLE2_FIXED_ICON_IDS = [[], ['30012'], [], []]
+const ORUNDUM_MATERIAL_ICON_ORDER = ['30011', '30012', '30061', '30062']
+const ORUNDUM_MATERIAL_ICON_BY_ITEM_ID = {
+  30011: '30011',
+  30012: '30012',
+  30061: '30061',
+  30062: '30062'
+}
+
+const createEmptyTable2 = () => TABLE2_FIXED_ROWS.map(row => [
+  ...row,
+  ...Array(TABLE2_COLUMN_COUNT - row.length).fill('')
 ])
+const createEmptyTable2IconIds = () => TABLE2_FIXED_ICON_IDS.map(ids => [...ids])
+
+const table2 = ref(createEmptyTable2())
+const table2IconIds = ref(createEmptyTable2IconIds())
 
 // 历史活动数据
-const historyActivityList = ref([])
+const sourceHistoryActivityList = ref([])
+const historyActivityOrundumList = ref([])
 const isLoadingHistory = ref(false)
 const historyLoadError = ref('')
+const referenceInfo = ref('加载往期活动数据后，可一键引用近 15 个月非复刻活动到上方表格。')
+const referenceError = ref(false)
+const selectedReferenceActivityName = ref('')
+
+const recentReferenceActivities = computed(() => getRecentNonReprintHistoryActivities())
 
 // 活动名称输入
 const activityName = ref('')
@@ -314,7 +370,7 @@ watch(activityName, (newValue) => {
   }
   
   // 在历史活动列表中搜索匹配的活动
-  matchedActivities.value = historyActivityList.value.filter(activity => {
+  matchedActivities.value = sourceHistoryActivityList.value.filter(activity => {
     return activity.zoneName && activity.zoneName.toLowerCase().includes(newValue.toLowerCase())
   })
   
@@ -328,43 +384,270 @@ const selectActivity = (index) => {
     activityName.value = activity.zoneName
     matchedActivities.value = []
     selectedActivityIndex.value = index
-    fillActivityData(activity)
+    quoteActivityData(activity)
   }
 }
 
-// 将活动数据填充到表格
-const fillActivityData = (activity) => {
-  if (!activity || !activity.actStageList || activity.actStageList.length === 0) {
+const getFifteenMonthsAgo = () => {
+  const date = new Date()
+  date.setMonth(date.getMonth() - 15)
+  date.setHours(0, 0, 0, 0)
+  return date
+}
+
+const isReprintActivity = (activity) => {
+  const zoneName = String(activity?.zoneName || '')
+  return zoneName.includes('复刻') || activity?.stageType === 'ACT_REP'
+}
+
+const getRecentNonReprintHistoryActivities = () => {
+  const cutoffTime = getFifteenMonthsAgo().getTime()
+  return sourceHistoryActivityList.value
+    .filter(activity => {
+      const endTime = Number(activity?.endTime || 0)
+      return endTime >= cutoffTime && !isReprintActivity(activity)
+    })
+    .sort((a, b) => Number(b.endTime || 0) - Number(a.endTime || 0))
+}
+
+const getActivityStagesForChart = (activity) => {
+  return [...(activity?.actStageList || [])]
+    .sort((a, b) => getStageSortValue(a.stageCode) - getStageSortValue(b.stageCode))
+    .slice(0, 3)
+}
+
+const mapStagesToTableRow = (stageData, mapper) => {
+  return Array.from({ length: 3 }, (_, index) => {
+    const stage = stageData[index]
+    return stage ? mapper(stage) : ''
+  })
+}
+
+const normalizeTable2Row = (row, rowIndex) => {
+  const source = Array.isArray(row) ? row : []
+  const nextRow = [...createEmptyTable2()[rowIndex]]
+
+  if (source.length >= TABLE2_COLUMN_COUNT) {
+    for (let index = TABLE2_AUTO_START_COLUMN; index < TABLE2_COLUMN_COUNT; index += 1) {
+      nextRow[index] = source[index]
+    }
+  }
+  return nextRow
+}
+
+const normalizeTable2 = (data) => {
+  const source = Array.isArray(data) ? data : []
+  return createEmptyTable2().map((row, rowIndex) => normalizeTable2Row(source[rowIndex], rowIndex))
+}
+
+const normalizeTable2IconIds = (data) => {
+  const source = Array.isArray(data) ? data : []
+  return createEmptyTable2IconIds().map((defaultIds, colIndex) => {
+    if (colIndex < TABLE2_AUTO_START_COLUMN) {
+      return defaultIds
+    }
+    const ids = Array.isArray(source[colIndex]) ? source[colIndex] : []
+    const validIds = ids
+      .map(itemId => String(itemId))
+      .filter(itemId => ORUNDUM_MATERIAL_ICON_ORDER.includes(itemId))
+    return [...new Set(validIds)]
+  })
+}
+
+const getTable2CellIconIds = (colIndex) => {
+  return table2IconIds.value[colIndex] || []
+}
+
+const getStageSortValue = (stageCode = '') => {
+  const match = String(stageCode).match(/(\d+)(?!.*\d)/)
+  return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER
+}
+
+const formatPercent = (value, digit = 1) => {
+  return Number.isFinite(value) ? `${(value * 100).toFixed(digit)}%` : ''
+}
+
+const formatFixed = (value, digit = 2) => {
+  return Number.isFinite(Number(value)) ? Number(value).toFixed(digit) : ''
+}
+
+const formatRecentTwoYearDemand = (itemId) => {
+  return formatMaterialDemandCount(getRecentR3MaterialDemand(itemId))
+}
+
+const activityHasItem = (activity, itemId) => {
+  return (activity?.actStageList || []).some(stage => stage.itemId === itemId)
+}
+
+const formatExpectedNextUpTime = (time) => {
+  const date = new Date(Number(time))
+  if (Number.isNaN(date.getTime())) {
+    return ''
+  }
+  date.setFullYear(date.getFullYear() + 1)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  return `${year}/${month}`
+}
+
+const getNextUpText = (activity, itemId) => {
+  const currentEndTime = Number(activity?.endTime || 0)
+  if (!itemId || !Number.isFinite(currentEndTime) || currentEndTime <= 0) {
+    return '遥遥无期'
+  }
+
+  const nextActivity = sourceHistoryActivityList.value
+    .filter(candidate =>
+      !isReprintActivity(candidate) &&
+      Number(candidate?.endTime || 0) > currentEndTime &&
+      activityHasItem(candidate, itemId)
+    )
+    .sort((a, b) => Number(a.endTime || 0) - Number(b.endTime || 0))[0]
+
+  const expectedTime = formatExpectedNextUpTime(nextActivity?.endTime)
+  return nextActivity && expectedTime
+    ? `${nextActivity.zoneName}\n预计${expectedTime}`
+    : '遥遥无期'
+}
+
+const getActivityByStage = (stage) => {
+  return sourceHistoryActivityList.value.find(activity =>
+    activity.zoneName === stage.zoneName &&
+    Number(activity.endTime || 0) === Number(stage.endTime || 0)
+  ) || sourceHistoryActivityList.value.find(activity =>
+    activity.zoneName === stage.zoneName
+  )
+}
+
+const getActivityOrundumStages = (activity) => {
+  const matchedActivity = historyActivityOrundumList.value.find(candidate =>
+    candidate.zoneName === activity?.zoneName &&
+    Number(candidate.endTime || 0) === Number(activity?.endTime || 0)
+  ) || historyActivityOrundumList.value.find(candidate =>
+    candidate.zoneName === activity?.zoneName
+  )
+
+  if (!matchedActivity?.actStageList?.length) {
+    return []
+  }
+
+  return [...matchedActivity.actStageList]
+    .sort((a, b) => {
+      const efficiencyDiff = Number(b.orundumPerAp || 0) - Number(a.orundumPerAp || 0)
+      return efficiencyDiff || getStageSortValue(a.stageCode) - getStageSortValue(b.stageCode)
+    })
+    .slice(0, 2)
+}
+
+const getOrundumMaterialIconIds = (stage) => {
+  if (!stage) {
+    return []
+  }
+
+  const sourceItemIds = [
+    stage.itemId,
+    stage.secondaryItemId,
+    ...(Array.isArray(stage.dropDetail) ? stage.dropDetail.map(item => item.itemId) : [])
+  ]
+  const iconIds = new Set()
+  for (const itemId of sourceItemIds) {
+    const iconId = ORUNDUM_MATERIAL_ICON_BY_ITEM_ID[String(itemId)]
+    if (iconId) {
+      iconIds.add(iconId)
+    }
+  }
+  return ORUNDUM_MATERIAL_ICON_ORDER.filter(itemId => iconIds.has(itemId))
+}
+
+const formatOrundumTableCell = (stage, rowIndex) => {
+  if (!stage) {
+    return ''
+  }
+
+  switch (rowIndex) {
+    case 0:
+      return stage.stageCode || ''
+    case 1:
+      return formatFixed(stage.orundumPerAp, 2)
+    case 2:
+      return `${formatFixed(stage.lmdCost, 2)}w`
+    case 3:
+      return formatPercent(Number(stage.orundumPerAp) / TABLE2_ORUNDUM_BASELINE, 2)
+    default:
+      return ''
+  }
+}
+
+const quoteActivityOrundumData = (activity) => {
+  const orundumStages = getActivityOrundumStages(activity)
+  const nextTable2IconIds = createEmptyTable2IconIds()
+  table2.value = normalizeTable2(table2.value).map((row, rowIndex) => {
+    const nextRow = [...row]
+    for (let index = 0; index < 2; index += 1) {
+      const columnIndex = TABLE2_AUTO_START_COLUMN + index
+      nextRow[columnIndex] = formatOrundumTableCell(orundumStages[index], rowIndex)
+      nextTable2IconIds[columnIndex] = getOrundumMaterialIconIds(orundumStages[index])
+    }
+    return nextRow
+  })
+  table2IconIds.value = nextTable2IconIds
+  return orundumStages
+}
+
+const quoteActivityData = (activity) => {
+  const stageData = getActivityStagesForChart(activity)
+  if (stageData.length === 0) {
+    updateReferenceInfo('该活动没有可引用的关卡数据。', true)
     return
   }
-  
-  // 获取活动关卡数据
-  const stageData = activity.actStageList
-  
-  // 填充表格1
-  // 第一行：关卡名称
-  table1.value[0] = stageData.slice(0, 3).map(stage => stage.stageCode || '')
-  
-  // 第二行：材料名称
-  table1.value[1] = stageData.slice(0, 3).map(stage => stage.itemId || '')
-  
-  // 第三行：掉率
-  table1.value[2] = stageData.slice(0, 3).map(stage => 
-    stage.knockRating ? `${(stage.knockRating * 100).toFixed(1)}%` : ''
-  )
-  
-  // 第四行：史均效率
-  table1.value[3] = stageData.slice(0, 3).map(stage =>
-    stage.stageEfficiency ? `${(stage.stageEfficiency * 100).toFixed(2)}%` : ''
-  )
-  
-  // 第五行：总需求量（暂不填充）
-  table1.value[4] = ['', '', '']
-  
-  // 第六行：下次复刻（暂不填充）
-  table1.value[5] = ['', '', '']
-  
-  console.log('活动数据已填充到表格:', activity.zoneName)
+
+  table1.value[0] = mapStagesToTableRow(stageData, stage => stage.stageCode || '')
+  table1.value[1] = mapStagesToTableRow(stageData, stage => stage.itemId || '')
+  table1.value[2] = mapStagesToTableRow(stageData, stage => formatPercent(stage.knockRating, 1))
+  table1.value[3] = mapStagesToTableRow(stageData, stage => formatPercent(stage.stageEfficiency, 1))
+  table1.value[4] = mapStagesToTableRow(stageData, stage => formatRecentTwoYearDemand(stage.itemId))
+  table1.value[5] = mapStagesToTableRow(stageData, stage => getNextUpText(activity, stage.itemId))
+  const orundumStages = quoteActivityOrundumData(activity)
+
+  activityName.value = activity.zoneName || ''
+  matchedActivities.value = []
+  selectedReferenceActivityName.value = activity.zoneName || ''
+  const orundumText = orundumStages.length > 0
+    ? `；搓玉数据：${orundumStages.map(stage => stage.stageCode).join('、')}。`
+    : '；未匹配到活动关搓玉数据。'
+  updateReferenceInfo(`已引用 ${activity.zoneName}：${stageData.map(stage => stage.stageCode).join('、')}${orundumText}`)
+}
+
+const quoteLatestReferenceActivity = () => {
+  if (recentReferenceActivities.value.length === 0) {
+    updateReferenceInfo('暂无近 15 个月非复刻活动可引用。', true)
+    return
+  }
+
+  quoteActivityData(recentReferenceActivities.value[0])
+}
+
+const formatActivityEndTime = (time) => {
+  const date = new Date(Number(time))
+  if (Number.isNaN(date.getTime())) {
+    return ''
+  }
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  return `${year}/${month}`
+}
+
+const updateReferenceInfo = (message, isError = false) => {
+  referenceInfo.value = message
+  referenceError.value = isError
+}
+
+const getLoadedReferenceInfo = () => {
+  const cutoffDate = getFifteenMonthsAgo()
+  const year = cutoffDate.getFullYear()
+  const month = String(cutoffDate.getMonth() + 1).padStart(2, '0')
+  const day = String(cutoffDate.getDate()).padStart(2, '0')
+  return `已加载 ${sourceHistoryActivityList.value.length} 个往期活动，可引用 ${recentReferenceActivities.value.length} 个 ${year}/${month}/${day} 之后的非复刻活动。`
 }
 
 // 清除活动匹配
@@ -394,10 +677,17 @@ const loadFromStorage = () => {
           Array.isArray(row) && row.length === 3 ? [...row] : ['', '', '']
         )
       }
-      if (data.table2 && Array.isArray(data.table2) && data.table2.length === 5) {
-        table2.value = data.table2.map(row =>
-          Array.isArray(row) && row.length === 3 ? [...row] : ['', '', '']
-        )
+      if (data.table2 && Array.isArray(data.table2)) {
+        table2.value = normalizeTable2(data.table2)
+      }
+      if (
+        data.table2IconSchemaVersion === TABLE2_ICON_SCHEMA_VERSION &&
+        data.table2IconIds &&
+        Array.isArray(data.table2IconIds)
+      ) {
+        table2IconIds.value = normalizeTable2IconIds(data.table2IconIds)
+      } else {
+        table2IconIds.value = createEmptyTable2IconIds()
       }
       console.log('数据已从本地存储恢复')
     }
@@ -415,6 +705,8 @@ const saveToStorage = () => {
       stageNumber: stageNumber.value || '',
       table1: table1.value || [],
       table2: table2.value || [],
+      table2IconIds: table2IconIds.value || [],
+      table2IconSchemaVersion: TABLE2_ICON_SCHEMA_VERSION,
       lastSaved: new Date().toISOString()
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
@@ -425,7 +717,7 @@ const saveToStorage = () => {
 }
 
 // 监听数据变化并自动保存
-const stopWatch = watch([headerImageUrl, stagePrefix, stageNumber, table1, table2], () => {
+const stopWatch = watch([headerImageUrl, stagePrefix, stageNumber, table1, table2, table2IconIds], () => {
   // 只在组件挂载时才保存
   if (isMounted.value) {
     try {
@@ -543,13 +835,12 @@ const clearAllData = () => {
       ['', '', ''],
       ['', '', '']
     ]
-    table2.value = [
-      ['', '', ''],
-      ['', '', ''],
-      ['', '', ''],
-      ['', '', ''],
-      ['', '', '']
-    ]
+    table2.value = createEmptyTable2()
+    table2IconIds.value = createEmptyTable2IconIds()
+    activityName.value = ''
+    matchedActivities.value = []
+    selectedReferenceActivityName.value = ''
+    updateReferenceInfo(getLoadedReferenceInfo())
     localStorage.removeItem(STORAGE_KEY)
     console.log('所有数据已清除')
   }
@@ -562,35 +853,46 @@ const loadHistoryActivityData = async () => {
     historyLoadError.value = ''
     console.log('开始加载历史活动数据...')
     
-    // 先从本地JSON文件加载
+    // 先用本地JSON兜底，随后始终刷新关卡推荐的实时数据。
     if (TMP_STAGE_RESULT && TMP_STAGE_RESULT.historyActStage) {
-      historyActivityList.value = TMP_STAGE_RESULT.historyActStage
-      console.log('从本地JSON加载历史活动数据成功:', historyActivityList.value.length, '个活动')
-      // 收集所有关卡
+      sourceHistoryActivityList.value = TMP_STAGE_RESULT.historyActStage
+      historyActivityOrundumList.value = TMP_STAGE_RESULT.historyActOrundumStage || []
+      updateReferenceInfo(`${getLoadedReferenceInfo()} 正在刷新最新数据...`)
+      console.log('从本地JSON加载历史活动数据成功:', sourceHistoryActivityList.value.length, '个活动')
       collectAllStages()
-    } else {
-      console.warn('本地JSON中没有历史活动数据')
-      // 尝试从API加载
-      try {
-        const response = await getStageData({})
-        if (response && response.historyActStage) {
-          historyActivityList.value = response.historyActStage
-          console.log('从API加载历史活动数据成功:', historyActivityList.value.length, '个活动')
-          // 收集所有关卡
-          collectAllStages()
-        } else {
-          console.warn('API返回的数据格式不正确:', response)
+    }
+
+    try {
+      const response = await getStageData(getStageConfig())
+      if (response && response.historyActStage) {
+        sourceHistoryActivityList.value = response.historyActStage
+        historyActivityOrundumList.value = response.historyActOrundumStage || []
+        updateReferenceInfo(getLoadedReferenceInfo())
+        console.log('刷新历史活动数据成功:', sourceHistoryActivityList.value.length, '个活动')
+        collectAllStages()
+      } else {
+        console.warn('实时关卡数据格式不正确:', response)
+        if (!sourceHistoryActivityList.value.length) {
           historyLoadError.value = '数据格式错误，请联系管理员'
+          updateReferenceInfo(historyLoadError.value, true)
+        } else {
+          updateReferenceInfo(`${getLoadedReferenceInfo()} 最新数据刷新失败，当前显示本地兜底数据。`, true)
         }
-      } catch (apiError) {
-        console.error('从API加载历史活动数据失败:', apiError)
+      }
+    } catch (apiError) {
+      console.error('刷新历史活动数据失败:', apiError)
+      if (!sourceHistoryActivityList.value.length) {
         historyLoadError.value = `加载失败: ${apiError.message || '请检查网络连接'}`
+        updateReferenceInfo(historyLoadError.value, true)
+      } else {
+        updateReferenceInfo(`${getLoadedReferenceInfo()} 最新数据刷新失败，当前显示本地兜底数据。`, true)
       }
     }
   } catch (error) {
     console.error('加载历史活动数据失败:', error)
     console.error('错误详情:', error.message, error.stack)
     historyLoadError.value = `加载失败: ${error.message || '请检查网络连接'}`
+    updateReferenceInfo(historyLoadError.value, true)
   } finally {
     isLoadingHistory.value = false
   }
@@ -599,7 +901,7 @@ const loadHistoryActivityData = async () => {
 // 收集所有历史活动关卡
 const collectAllStages = () => {
   allStages.value = []
-  for (const activity of historyActivityList.value) {
+  for (const activity of sourceHistoryActivityList.value) {
     if (activity.actStageList) {
       for (const stage of activity.actStageList) {
         allStages.value.push({
@@ -607,7 +909,8 @@ const collectAllStages = () => {
           zoneName: activity.zoneName,
           itemId: stage.itemId,
           knockRating: stage.knockRating,
-          stageEfficiency: stage.stageEfficiency
+          stageEfficiency: stage.stageEfficiency,
+          endTime: activity.endTime
         })
       }
     }
@@ -647,6 +950,13 @@ const selectStage = (index) => {
     
     // 第四行：史均效率
     table1.value[3][0] = stage.stageEfficiency ? `${(stage.stageEfficiency * 100).toFixed(2)}%` : ''
+
+    // 第五行：近两年消耗量
+    table1.value[4][0] = formatRecentTwoYearDemand(stage.itemId)
+
+    // 第六行：预计下次 up
+    const activity = getActivityByStage(stage)
+    table1.value[5][0] = activity ? getNextUpText(activity, stage.itemId) : '遥遥无期'
     
     console.log('关卡数据已填充到表格:', stage.stageCode)
   }
@@ -741,12 +1051,18 @@ onMounted(() => {
   width: 1080px;
   background-color: #fff;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 /* 图片区块 */
 .image-section {
   position: relative;
-  border-bottom: 2px solid #e0e0e0;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border-bottom: none;
 }
 
 .image-section:last-child {
@@ -756,17 +1072,20 @@ onMounted(() => {
 /* 图片容器 */
 .image-container {
   width: 100%;
-  min-height: 120px;
+  min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fafafa;
+  background-color: #fff;
+  line-height: 0;
 }
 
 .image-container img {
-  max-width: 100%;
+  width: 100%;
+  max-width: none;
   height: auto;
   display: block;
+  vertical-align: top;
 }
 
 /* 空白占位符 */
@@ -775,30 +1094,34 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fafafa;
-  color: #999;
+  background-color: #fff5ea;
+  color: #bf6a2d;
   font-size: 0.95rem;
-  border: 2px dashed #ddd;
+  border: 1px dashed #f2b27f;
   margin: 0;
 }
 
 /* 表头区域 */
 .header-section {
-  background-color: #f0f7ff;
+  background-color: #fff;
 }
 
 .header-section .empty-placeholder {
-  background-color: #f0f7ff;
+  background-color: #fff5ea;
+  color: #bf6a2d;
+  border-color: #f2b27f;
 }
 
 /* 内容区域 */
 .content-section {
-  padding: 20px 0;
+  padding: 0;
+  background-color: #f6c491;
 }
 
 /* 表格区块 */
 .table-section {
-  margin-bottom: 20px;
+  margin-bottom: 0;
+  line-height: 0;
 }
 
 .table-section:last-child {
@@ -810,35 +1133,54 @@ onMounted(() => {
   width: 100%;
   overflow: hidden;
   display: block;
+  line-height: normal;
 }
 
 .table1-grid table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 1.2rem;
   display: table;
   table-layout: fixed;
+  border: 0;
+  box-shadow: none;
 }
 
 .table2-grid table {
-  width: 75%;
-  border-collapse: collapse;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 1.2rem;
   display: table;
   table-layout: fixed;
   margin: 0 auto;
+  border: 0;
+  box-shadow: none;
 }
 
 .data-cell {
-  padding: 12px 8px;
-  border: 2px solid #333;
-  color: #333;
+  padding: 14px 10px;
+  border: 0;
+  border-right: 1px solid #efc185;
+  border-bottom: 1px solid #efc185;
+  color: #3f2b1d;
   text-align: center;
-  height: 50px;
+  white-space: pre-line;
+  height: 58px;
+  line-height: 1.18;
   vertical-align: middle;
   font-weight: 600;
   display: table-cell;
-  background-color: white;
+  background-color: #fff7ea;
+}
+
+.data-cell:last-child {
+  border-right: 0;
+}
+
+tr:last-child .data-cell {
+  border-bottom: 0;
 }
 
 .table1-grid .data-cell {
@@ -846,13 +1188,56 @@ onMounted(() => {
 }
 
 .table1-grid .data-cell.label-cell {
-  background-color: #e3f2fd;
+  background-color: #f3b260;
   font-weight: 700;
-  color: #1565c0;
+  color: #573018;
+  letter-spacing: 0;
+}
+
+.table1-grid tr:first-child .data-cell {
+  background-color: #f8cd8a;
+  color: #573018;
+  font-weight: 800;
+}
+
+.table1-grid tr:first-child .data-cell.label-cell {
+  background-color: #f0a85a;
+  color: #573018;
+}
+
+.table1-grid tr:nth-child(2) .data-cell:not(.label-cell) {
+  background-color: #fff0da;
+}
+
+.table1-grid tr:nth-child(5) .data-cell:not(.label-cell),
+.table1-grid tr:nth-child(6) .data-cell:not(.label-cell) {
+  color: #cf6525;
+  font-weight: 800;
 }
 
 .table2-grid .data-cell {
-  width: 33.33%;
+  background-color: #fff0da;
+  width: 25%;
+}
+
+.orundum-stage-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 100%;
+}
+
+.orundum-material-icons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.orundum-material-icons :deep(img) {
+  display: block;
 }
 
 /* 材料图标容器 */
@@ -878,7 +1263,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #ff8a3d 0%, #ff6b35 100%);
+  background: linear-gradient(135deg, #f5a14b 0%, #ed7f33 100%);
   color: #fff;
   padding: 0 0 0 40px;
   gap: 32px;
@@ -1023,6 +1408,96 @@ onMounted(() => {
   color: #f56c6c;
 }
 
+/* 往期活动引用 */
+.reference-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.reference-btn {
+  padding: 8px 14px;
+  border: 1px solid #409eff;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: #409eff;
+  color: #fff;
+}
+
+.reference-btn:hover:not(:disabled) {
+  background-color: #1f88ff;
+  border-color: #1f88ff;
+}
+
+.reference-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.reference-info {
+  margin-top: 8px;
+  color: #666;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.reference-info-error {
+  color: #f56c6c;
+}
+
+.reference-activity-list {
+  margin-top: 10px;
+  max-height: 210px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.reference-activity-item {
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  text-align: left;
+  transition: background-color 0.2s;
+}
+
+.reference-activity-item:last-child {
+  border-bottom: 0;
+}
+
+.reference-activity-item:hover,
+.reference-activity-item-active {
+  background-color: #f0f7ff;
+}
+
+.reference-activity-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.reference-activity-meta {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.reference-empty {
+  margin-top: 8px;
+  color: #999;
+  font-size: 0.85rem;
+}
+
 /* 表格输入容器 */
 .table-input-container {
   display: flex;
@@ -1053,23 +1528,33 @@ onMounted(() => {
   display: grid;
 }
 
-.table1-grid + .table-input-container .row-cells {
+.table1-input-container .row-cells,
+.table2-input-container .row-cells {
+  gap: 6px;
+}
+
+.table1-input-container .row-cells {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.table2-input-container .row-cells {
   grid-template-columns: repeat(4, 1fr);
 }
 
-.table2-grid + .table-input-container .row-cells {
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-}
-
-.table1-grid + .table-input-container .row-cells {
-  gap: 6px;
+.table2-input-container .row-number {
+  width: 120px;
 }
 
 .cell-field {
   padding: 8px;
   font-size: 0.85rem;
   width: 100%;
+}
+
+.fixed-cell-field {
+  background-color: #f5f7fa;
+  color: #606266;
+  cursor: default;
 }
 
 /* 关卡输入行 */
@@ -1428,15 +1913,15 @@ onMounted(() => {
   }
 
   .image-preview {
-    background-color: #2d2d2d;
+    background-color: #fff;
   }
 
   .image-section {
-    border-bottom-color: #444;
+    border-bottom-color: transparent;
   }
 
   .image-container {
-    background-color: #1e1e1e;
+    background-color: #fff;
   }
 
   .empty-placeholder {
@@ -1445,12 +1930,20 @@ onMounted(() => {
     color: #888;
   }
 
+  .image-preview .empty-placeholder {
+    background-color: #fff5ea;
+    border-color: #f2b27f;
+    color: #bf6a2d;
+  }
+
   .header-section {
-    background-color: #1a2332;
+    background-color: #fff;
   }
 
   .header-section .empty-placeholder {
-    background-color: #1a2332;
+    background-color: #fff5ea;
+    color: #bf6a2d;
+    border-color: #f2b27f;
   }
 
   .input-label {
@@ -1504,10 +1997,64 @@ onMounted(() => {
     color: #f56c6c;
   }
 
-  .data-cell {
-    border-color: #666;
+  .reference-info {
+    color: #aaa;
+  }
+
+  .reference-info-error {
+    color: #f56c6c;
+  }
+
+  .reference-activity-list {
+    background-color: #1e1e1e;
+    border-color: #555;
+  }
+
+  .reference-activity-item {
+    background-color: #1e1e1e;
+    border-bottom-color: #444;
     color: #e0e0e0;
-    background-color: #2d2d2d;
+  }
+
+  .reference-activity-item:hover,
+  .reference-activity-item-active {
+    background-color: #1a3a52;
+  }
+
+  .reference-activity-meta,
+  .reference-empty {
+    color: #aaa;
+  }
+
+  .data-cell {
+    border-color: #efc185;
+    color: #3f2b1d;
+    background-color: #fff7ea;
+  }
+
+  .table1-grid .data-cell.label-cell {
+    background-color: #f3b260;
+    color: #573018;
+  }
+
+  .table1-grid tr:first-child .data-cell {
+    background-color: #f8cd8a;
+    color: #573018;
+  }
+
+  .table1-grid tr:first-child .data-cell.label-cell {
+    background-color: #f0a85a;
+    color: #573018;
+  }
+
+  .table1-grid tr:nth-child(2) .data-cell:not(.label-cell),
+  .table2-grid .data-cell {
+    background-color: #fff0da;
+  }
+
+  .table1-grid tr:nth-child(5) .data-cell:not(.label-cell),
+  .table1-grid tr:nth-child(6) .data-cell:not(.label-cell) {
+    color: #cf6525;
   }
 
   .table-input-container {
