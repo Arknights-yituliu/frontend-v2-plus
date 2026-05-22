@@ -145,13 +145,13 @@ async function calculationStageEfficiency(stageConfig) {
     //     console.table(stageDropDetailList)
     // }
 
-    if(stageId==='main_12-15'){
-        console.table(stageDropDetailList)
-    }
+    // if(stageId==='main_12-15'){
+    //     console.table(stageDropDetailList)
+    // }
 
-    if(stageId==='act42side_10'){
-        console.table(stageDropDetailList)
-    }
+    // if(stageId==='act42side_10'){
+    //     console.table(stageDropDetailList)
+    // }
 
     stageDropDetailList.sort((a, b) => b.expectedOutput - a.expectedOutput);
 
@@ -255,13 +255,13 @@ async function calculationStageEfficiency(stageConfig) {
 
     stageEfficiency = stageExpectedOutput / apCost;
 
-      if(stageId==='main_12-15'){
-        console.log(stageExpectedOutput,'/',apCost,stageEfficiency)
-    }
+    // if(stageId==='main_12-15'){
+    //     console.log(stageExpectedOutput,'/',apCost,stageEfficiency)
+    // }
 
-    if(stageId==='act42side_10'){
-        console.log(stageExpectedOutput,'/',apCost,stageEfficiency)
-    }
+    // if(stageId==='act42side_10'){
+    //     console.log(stageExpectedOutput,'/',apCost,stageEfficiency)
+    // }
 
     const leT4Efficiency = (leT2Value + leT3Value + leT4Value) / apCost;
     const leT3Efficiency = (leT2Value + leT3Value) / apCost;
