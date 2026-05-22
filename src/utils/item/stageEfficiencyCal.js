@@ -50,14 +50,14 @@ async function calculationStageEfficiency(stageConfig) {
       const apEfficiency = (1 / unlimitedItem.price) * unlimitedItem.quantity * itemInfo.itemValue;
       //如果效率大于当前商店兑换物的效率，则更新商店兑换物
       
-      // if (apEfficiency > shopRedemptionItem.apEfficiency) {
-      //   shopRedemptionItem = {
-      //     itemId: unlimitedItem.itemId,
-      //     apEfficiency: apEfficiency,
-      //     quantity: unlimitedItem.quantity,
-      //     price: unlimitedItem.price,
-      //   };
-      // }
+      if (apEfficiency > shopRedemptionItem.apEfficiency) {
+        shopRedemptionItem = {
+          itemId: unlimitedItem.itemId,
+          apEfficiency: apEfficiency,
+          quantity: unlimitedItem.quantity,
+          price: unlimitedItem.price,
+        };
+      }
     }
   }
 
