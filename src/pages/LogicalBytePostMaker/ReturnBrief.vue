@@ -7,7 +7,12 @@
       </div>
       <div class="canvas-area">
         <!-- 图片预览区域 -->
-        <div class="image-preview">
+        <div
+          ref="imagePreviewRef"
+          class="image-preview"
+          :style="selectedPreviewThemeStyle"
+          data-export-target="return-brief-preview"
+        >
           <!-- 表头 -->
           <div class="image-section header-section">
             <div v-if="headerImageUrl" class="image-container">
@@ -24,36 +29,90 @@
             <div v-if="table1.some(row => row.some(cell => cell))" class="table-section">
               <div class="data-grid table1-grid">
                 <table>
+                  <colgroup>
+                    <col class="brief-table-label-column" />
+                    <col class="brief-table-data-column" />
+                    <col class="brief-table-data-column" />
+                    <col class="brief-table-data-column" />
+                  </colgroup>
                   <tbody>
-                    <tr v-for="(row, rowIndex) in table1" :key="'t1-r' + rowIndex">
-                      <td class="data-cell label-cell">{{ table1Labels[rowIndex] }}</td>
-                      <!-- 材料行：显示图标 -->
-                      <template v-if="rowIndex === 1">
-                        <td v-for="(cell, colIndex) in row" :key="'t1-r' + rowIndex + '-c' + colIndex" class="data-cell">
-                          <div v-if="cell" class="item-icon-container">
-                            <ItemImage :item-id="cell" size="36" />
-                          </div>
-                        </td>
-                      </template>
-                      <!-- 其他行：显示文本 -->
-                      <template v-else>
-                        <td v-for="(cell, colIndex) in row" :key="'t1-r' + rowIndex + '-c' + colIndex" class="data-cell">
-                          {{ cell }}
-                        </td>
-                      </template>
-                    </tr>
+                    <template v-for="(row, rowIndex) in table1" :key="'t1-r' + rowIndex">
+                      <tr
+                        v-if="rowIndex !== 1"
+                        :class="{
+                          'table1-accent-row': rowIndex === 4 || rowIndex === 5,
+                          'table1-next-up-row': rowIndex === 5
+                        }"
+                      >
+                        <td class="data-cell label-cell">{{ table1Labels[rowIndex] }}</td>
+                        <template v-if="rowIndex === 0">
+                          <td v-for="(cell, colIndex) in row" :key="'t1-r' + rowIndex + '-c' + colIndex" class="data-cell">
+                            <div class="stage-material-cell">
+                              <span>{{ cell }}</span>
+                              <ItemImage
+                                v-if="table1[1]?.[colIndex]"
+                                :item-id="table1[1][colIndex]"
+                                :size="previewMaterialIconSize"
+                              />
+                            </div>
+                          </td>
+                        </template>
+                        <template v-else-if="rowIndex === 5">
+                          <td v-for="(cell, colIndex) in row" :key="'t1-r' + rowIndex + '-c' + colIndex" class="data-cell">
+                            <div class="next-up-cell">
+                              <template v-if="getNextUpActivityNameFromText(cell)">
+                                <div class="next-up-activity-name">{{ getNextUpActivityNameFromText(cell) }}</div>
+                                <div v-if="getTable1NextUpIconIds(colIndex).length > 0" class="next-up-material-icons">
+                                  <ItemImage
+                                    v-for="itemId in getTable1NextUpIconIds(colIndex)"
+                                    :key="'next-up-icon-' + colIndex + '-' + itemId"
+                                    :item-id="itemId"
+                                    :size="previewNextUpIconSize"
+                                  />
+                                </div>
+                                <div class="next-up-expected-time">{{ getNextUpExpectedTimeFromText(cell) }}</div>
+                              </template>
+                              <div v-else class="next-up-text">{{ cell }}</div>
+                            </div>
+                          </td>
+                        </template>
+                        <template v-else>
+                          <td v-for="(cell, colIndex) in row" :key="'t1-r' + rowIndex + '-c' + colIndex" class="data-cell">
+                            {{ cell }}
+                          </td>
+                        </template>
+                      </tr>
+                    </template>
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            <div
+              v-if="table1.some(row => row.some(cell => cell)) && table2.some(row => row.some(cell => cell))"
+              class="table-divider-band"
+            >
+              <span v-for="index in 3" :key="'divider-watermark-' + index">逻辑元LogicalByte</span>
             </div>
 
             <!-- 表格2：搓玉数据，四行四列 -->
             <div v-if="table2.some(row => row.some(cell => cell))" class="table-section">
               <div class="data-grid table2-grid">
                 <table>
+                  <colgroup>
+                    <col class="brief-table-label-column" />
+                    <col class="brief-table-data-column" />
+                    <col class="brief-table-data-column" />
+                    <col class="brief-table-data-column" />
+                  </colgroup>
                   <tbody>
                     <tr v-for="(row, rowIndex) in table2" :key="'t2-r' + rowIndex">
-                      <td v-for="(cell, colIndex) in row" :key="'t2-r' + rowIndex + '-c' + colIndex" class="data-cell">
+                      <td
+                        v-for="(cell, colIndex) in row"
+                        :key="'t2-r' + rowIndex + '-c' + colIndex"
+                        class="data-cell"
+                        :class="{ 'label-cell': colIndex === 0 }"
+                      >
                         <div v-if="rowIndex === 0 && getTable2CellIconIds(colIndex).length > 0" class="orundum-stage-cell">
                           <span>{{ cell }}</span>
                           <span class="orundum-material-icons">
@@ -61,9 +120,16 @@
                               v-for="itemId in getTable2CellIconIds(colIndex)"
                               :key="'orundum-icon-' + colIndex + '-' + itemId"
                               :item-id="itemId"
-                              size="24"
+                              :size="previewOrundumIconSize"
                             />
                           </span>
+                        </div>
+                        <div v-else-if="rowIndex === 1 && colIndex > 0" class="orundum-yield-cell">
+                          <div class="orundum-yield-line">{{ getOrundumYieldPerApText(cell) }}</div>
+                          <div v-if="getOrundumYieldTotalText(cell)" class="orundum-yield-line orundum-yield-total">
+                            <span>{{ getOrundumYieldTotalText(cell) }}</span>
+                            <span class="orundum-result-icon bg-4003_icon" aria-label="合成玉"></span>
+                          </div>
                         </div>
                         <template v-else>
                           {{ cell }}
@@ -110,9 +176,19 @@
     <div class="right-panel">
       <div class="panel-header">
         <h2>输入区</h2>
-        <button @click="clearAllData" class="clear-all-btn" title="清除所有数据">
-          🗑️ 清空
-        </button>
+        <div class="panel-actions">
+          <button
+            @click="downloadPreviewPng"
+            class="download-preview-btn"
+            :disabled="isExportingPreview"
+            title="下载绘图区PNG图片"
+          >
+            {{ isExportingPreview ? '生成中...' : '下载PNG' }}
+          </button>
+          <button @click="clearAllData" class="clear-all-btn" title="清除所有数据">
+            🗑️ 清空
+          </button>
+        </div>
       </div>
 
       <div class="input-area">
@@ -127,6 +203,31 @@
           </div>
           <div v-if="imageErrors.header" class="error-message">
             图片加载失败，请重试
+          </div>
+        </div>
+
+        <!-- 配色主题 -->
+        <div class="input-group">
+          <label class="input-label">配色主题</label>
+          <div class="theme-selector">
+            <button
+              v-for="theme in previewThemeOptions"
+              :key="theme.key"
+              type="button"
+              class="theme-option"
+              :class="{ 'theme-option-active': selectedPreviewThemeKey === theme.key }"
+              @click="selectPreviewTheme(theme.key)"
+            >
+              <span class="theme-swatch-row">
+                <span
+                  v-for="color in theme.swatches"
+                  :key="theme.key + color"
+                  class="theme-swatch"
+                  :style="{ backgroundColor: color }"
+                ></span>
+              </span>
+              <span class="theme-name">{{ theme.name }}</span>
+            </button>
           </div>
         </div>
 
@@ -261,7 +362,8 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
+import { computed, ref, nextTick, onMounted, onUnmounted, watch } from 'vue'
+import { ElMessage } from 'element-plus'
 import { getStageData } from '/src/utils/item/stageEfficiencyCal.js'
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import {
@@ -276,15 +378,165 @@ const TABLE2_ICON_SCHEMA_VERSION = 2
 const OFFICIAL_NEWS_PROXY_PREFIX = '/official-news-proxy'
 const OFFICIAL_NEWS_ORIGIN = 'https://ak.hypergryph.com'
 const OFFICIAL_RERUN_KEYWORD = '复刻即将开启'
+const DEFAULT_PREVIEW_THEME_KEY = 'default'
+const previewThemeOptions = [
+  {
+    key: 'default',
+    name: '默认橙金',
+    swatches: ['#f6c491', '#f3b260', '#fff7ea', '#ed7f33'],
+    variables: {
+      '--lb-preview-font-family': '"Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "思源黑体", "Microsoft YaHei", "PingFang SC", Arial, sans-serif',
+      '--lb-preview-table-font-size': '36px',
+      '--lb-preview-table-line-height': '44px',
+      '--lb-preview-cell-padding': '22px 10px',
+      '--lb-preview-cell-height': '110px',
+      '--lb-preview-page-bg': '#fff',
+      '--lb-preview-section-bg': '#f6c491',
+      '--lb-preview-cell-bg': '#fff7ea',
+      '--lb-preview-secondary-cell-bg': '#fff0da',
+      '--lb-preview-label-bg': '#f3b260',
+      '--lb-preview-head-bg': '#f8cd8a',
+      '--lb-preview-head-label-bg': '#f0a85a',
+      '--lb-preview-border': '#efc185',
+      '--lb-preview-text': '#3f2b1d',
+      '--lb-preview-strong-text': '#573018',
+      '--lb-preview-accent-text': '#cf6525',
+      '--lb-preview-footer-start': '#f5a14b',
+      '--lb-preview-footer-end': '#ed7f33',
+      '--lb-preview-footer-text': '#fff'
+    }
+  },
+  {
+    key: 'fresh',
+    name: '清新薄荷',
+    swatches: ['#cfe8de', '#86b9a8', '#f5fbf7', '#3f8f7a'],
+    variables: {
+      '--lb-preview-font-family': '"Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "思源黑体", "Microsoft YaHei", "PingFang SC", Arial, sans-serif',
+      '--lb-preview-table-font-size': '36px',
+      '--lb-preview-table-line-height': '44px',
+      '--lb-preview-cell-padding': '22px 10px',
+      '--lb-preview-cell-height': '110px',
+      '--lb-preview-page-bg': '#fff',
+      '--lb-preview-section-bg': '#cfe8de',
+      '--lb-preview-cell-bg': '#f5fbf7',
+      '--lb-preview-secondary-cell-bg': '#e8f5ee',
+      '--lb-preview-label-bg': '#86b9a8',
+      '--lb-preview-head-bg': '#b7ddce',
+      '--lb-preview-head-label-bg': '#6da894',
+      '--lb-preview-border': '#a6d0bf',
+      '--lb-preview-text': '#263d36',
+      '--lb-preview-strong-text': '#21463c',
+      '--lb-preview-accent-text': '#2c806c',
+      '--lb-preview-footer-start': '#68aa96',
+      '--lb-preview-footer-end': '#3f8f7a',
+      '--lb-preview-footer-text': '#fff'
+    }
+  },
+  {
+    key: 'sky',
+    name: '晴空蓝',
+    swatches: ['#cfe4f6', '#83add6', '#f4f9fe', '#477fb7'],
+    variables: {
+      '--lb-preview-font-family': '"Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "思源黑体", "Microsoft YaHei", "PingFang SC", Arial, sans-serif',
+      '--lb-preview-table-font-size': '36px',
+      '--lb-preview-table-line-height': '44px',
+      '--lb-preview-cell-padding': '22px 10px',
+      '--lb-preview-cell-height': '110px',
+      '--lb-preview-page-bg': '#fff',
+      '--lb-preview-section-bg': '#cfe4f6',
+      '--lb-preview-cell-bg': '#f4f9fe',
+      '--lb-preview-secondary-cell-bg': '#e6f1fb',
+      '--lb-preview-label-bg': '#83add6',
+      '--lb-preview-head-bg': '#b7d4ee',
+      '--lb-preview-head-label-bg': '#6c9ccc',
+      '--lb-preview-border': '#a5c5e3',
+      '--lb-preview-text': '#263848',
+      '--lb-preview-strong-text': '#21445f',
+      '--lb-preview-accent-text': '#2f72aa',
+      '--lb-preview-footer-start': '#6f9dcc',
+      '--lb-preview-footer-end': '#477fb7',
+      '--lb-preview-footer-text': '#fff'
+    }
+  },
+  {
+    key: 'rose',
+    name: '暖粉珊瑚',
+    swatches: ['#f3d3d0', '#d99a92', '#fff7f5', '#bf6f67'],
+    variables: {
+      '--lb-preview-font-family': '"Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "思源黑体", "Microsoft YaHei", "PingFang SC", Arial, sans-serif',
+      '--lb-preview-table-font-size': '36px',
+      '--lb-preview-table-line-height': '44px',
+      '--lb-preview-cell-padding': '22px 10px',
+      '--lb-preview-cell-height': '110px',
+      '--lb-preview-page-bg': '#fff',
+      '--lb-preview-section-bg': '#f3d3d0',
+      '--lb-preview-cell-bg': '#fff7f5',
+      '--lb-preview-secondary-cell-bg': '#fdecea',
+      '--lb-preview-label-bg': '#d99a92',
+      '--lb-preview-head-bg': '#edbcb7',
+      '--lb-preview-head-label-bg': '#ca8178',
+      '--lb-preview-border': '#e0b1aa',
+      '--lb-preview-text': '#4a2d2a',
+      '--lb-preview-strong-text': '#63352f',
+      '--lb-preview-accent-text': '#ad5b52',
+      '--lb-preview-footer-start': '#d7867f',
+      '--lb-preview-footer-end': '#bf6f67',
+      '--lb-preview-footer-text': '#fff'
+    }
+  },
+  {
+    key: 'mono',
+    name: '灰白报表',
+    swatches: ['#d9dee3', '#a7b1bc', '#fbfcfd', '#687684'],
+    variables: {
+      '--lb-preview-font-family': '"Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "思源黑体", "Microsoft YaHei", "PingFang SC", Arial, sans-serif',
+      '--lb-preview-table-font-size': '36px',
+      '--lb-preview-table-line-height': '44px',
+      '--lb-preview-cell-padding': '22px 10px',
+      '--lb-preview-cell-height': '110px',
+      '--lb-preview-page-bg': '#fff',
+      '--lb-preview-section-bg': '#d9dee3',
+      '--lb-preview-cell-bg': '#fbfcfd',
+      '--lb-preview-secondary-cell-bg': '#f0f3f5',
+      '--lb-preview-label-bg': '#a7b1bc',
+      '--lb-preview-head-bg': '#c6ced6',
+      '--lb-preview-head-label-bg': '#8f9aa5',
+      '--lb-preview-border': '#c2c9d0',
+      '--lb-preview-text': '#2f3942',
+      '--lb-preview-strong-text': '#25303a',
+      '--lb-preview-accent-text': '#5e6e7b',
+      '--lb-preview-footer-start': '#8f9aa5',
+      '--lb-preview-footer-end': '#687684',
+      '--lb-preview-footer-text': '#fff'
+    }
+  }
+]
 
 // 组件挂载状态
 const isMounted = ref(false)
+
+const selectedPreviewThemeKey = ref(DEFAULT_PREVIEW_THEME_KEY)
+const selectedPreviewTheme = computed(() =>
+  previewThemeOptions.find(theme => theme.key === selectedPreviewThemeKey.value) || previewThemeOptions[0]
+)
+const selectedPreviewThemeStyle = computed(() => selectedPreviewTheme.value.variables)
+const previewMaterialIconSize = computed(() => 64)
+const previewOrundumIconSize = computed(() => 64)
+const previewNextUpIconSize = computed(() => 40)
+
+const selectPreviewTheme = (themeKey) => {
+  if (previewThemeOptions.some(theme => theme.key === themeKey)) {
+    selectedPreviewThemeKey.value = themeKey
+  }
+}
 
 // 图片链接（使用 base64 或 blob URL）
 const headerImageUrl = ref('')
 
 // 文件输入引用
 const fileInput = ref(null)
+const imagePreviewRef = ref(null)
+const isExportingPreview = ref(false)
 
 // 图片加载错误状态
 const imageErrors = ref({
@@ -302,9 +554,11 @@ const table1 = ref([
   ['', '', ''],  // 总需求量行
   ['', '', '']   // 下次复刻行
 ])
+const createEmptyTable1NextUpIconIds = () => Array.from({ length: 3 }, () => [])
+const table1NextUpIconIds = ref(createEmptyTable1NextUpIconIds())
 
 // 表格1的固定标签
-const table1Labels = ['关卡', '材料', '掉率', '收益率(相对主线)', '近两年消耗量', '预计下次up']
+const table1Labels = ['关卡', '材料', '掉率', '收益率\n(相对主线)', '近两年消耗量', '预计下次up']
 
 // 关卡前缀和编号
 const stagePrefix = ref('')
@@ -336,7 +590,7 @@ const getStageNames = () => {
 // 表格2：搓玉数据，4行4列，左两列固定为1-7基准，右两列自动引用活动关
 const TABLE2_FIXED_ROWS = [
   ['关卡', '1-7'],
-  ['每1理智可搓玉', '1.09'],
+  ['每1理智可搓玉\n2400理智可搓', '1.09\n2616'],
   ['每抽消耗龙门币', '9.54w'],
   ['搓玉效率(相对)', '100%']
 ]
@@ -370,6 +624,7 @@ const historyLoadError = ref('')
 const referenceInfo = ref('加载往期活动数据后，可一键引用近 15 个月非复刻活动到上方表格。')
 const referenceError = ref(false)
 const selectedReferenceActivityName = ref('')
+const matchedExportActivityName = ref('')
 const isLoadingOfficialNews = ref(false)
 const officialNewsInfo = ref('')
 const officialNewsError = ref(false)
@@ -443,13 +698,55 @@ const mapStagesToTableRow = (stageData, mapper) => {
   })
 }
 
+const normalizeTable1NextUpIconIds = (data) => {
+  const source = Array.isArray(data) ? data : []
+  return createEmptyTable1NextUpIconIds().map((_, index) => {
+    const ids = Array.isArray(source[index]) ? source[index] : []
+    return [...new Set(ids.map(itemId => String(itemId)).filter(Boolean))].slice(0, 3)
+  })
+}
+
+const getNextUpActivityNameFromText = (text) => {
+  const rawText = String(text || '').trim()
+  if (!rawText || rawText === '遥遥无期') {
+    return ''
+  }
+
+  return rawText
+    .split(/\r?\n/)[0]
+    .replace(/\s*预计\d{4}\/\d{1,2}.*/, '')
+    .trim()
+}
+
+const getNextUpExpectedTimeFromText = (text) => {
+  const match = String(text || '').match(/预计\d{4}\/\d{1,2}/)
+  return match ? match[0] : ''
+}
+
+const getTable1NextUpIconIds = (colIndex) => {
+  const storedIds = table1NextUpIconIds.value[colIndex] || []
+  if (storedIds.length > 0) {
+    return storedIds
+  }
+
+  const nextUpActivityName = getNextUpActivityNameFromText(table1.value[5]?.[colIndex])
+  if (!nextUpActivityName) {
+    return []
+  }
+
+  const nextUpActivity = sourceHistoryActivityList.value.find(activity => activity?.zoneName === nextUpActivityName)
+  return getNextUpMaterialIconIds(nextUpActivity)
+}
+
 const normalizeTable2Row = (row, rowIndex) => {
   const source = Array.isArray(row) ? row : []
   const nextRow = [...createEmptyTable2()[rowIndex]]
 
   if (source.length >= TABLE2_COLUMN_COUNT) {
     for (let index = TABLE2_AUTO_START_COLUMN; index < TABLE2_COLUMN_COUNT; index += 1) {
-      nextRow[index] = source[index]
+      nextRow[index] = rowIndex === 1
+        ? normalizeOrundumYieldText(source[index])
+        : source[index]
     }
   }
   return nextRow
@@ -491,6 +788,28 @@ const formatFixed = (value, digit = 2) => {
   return Number.isFinite(Number(value)) ? Number(value).toFixed(digit) : ''
 }
 
+const formatOrundumYieldText = (value) => {
+  const numberValue = Number(value)
+  if (!Number.isFinite(numberValue)) {
+    return ''
+  }
+  return `${formatFixed(numberValue, 2)}\n${formatFixed(numberValue * 2400, 0)}`
+}
+
+const normalizeOrundumYieldText = (value) => {
+  const text = String(value || '')
+  if (!text || text.includes('\n')) {
+    return text
+  }
+  return formatOrundumYieldText(text) || text
+}
+
+const getOrundumYieldLines = (value) => String(value || '').split('\n')
+
+const getOrundumYieldPerApText = (value) => getOrundumYieldLines(value)[0] || ''
+
+const getOrundumYieldTotalText = (value) => getOrundumYieldLines(value)[1] || ''
+
 const formatRecentTwoYearDemand = (itemId) => {
   return formatMaterialDemandCount(getRecentR3MaterialDemand(itemId))
 }
@@ -510,24 +829,40 @@ const formatExpectedNextUpTime = (time) => {
   return `${year}/${month}`
 }
 
-const getNextUpText = (activity, itemId) => {
+const getNextUpActivity = (activity, itemId) => {
   const currentEndTime = Number(activity?.endTime || 0)
   if (!itemId || !Number.isFinite(currentEndTime) || currentEndTime <= 0) {
-    return '遥遥无期'
+    return null
   }
 
-  const nextActivity = sourceHistoryActivityList.value
+  return sourceHistoryActivityList.value
     .filter(candidate =>
       !isReprintActivity(candidate) &&
       Number(candidate?.endTime || 0) > currentEndTime &&
       activityHasItem(candidate, itemId)
     )
-    .sort((a, b) => Number(a.endTime || 0) - Number(b.endTime || 0))[0]
+    .sort((a, b) => Number(a.endTime || 0) - Number(b.endTime || 0))[0] || null
+}
 
+const formatNextUpText = (nextActivity) => {
   const expectedTime = formatExpectedNextUpTime(nextActivity?.endTime)
   return nextActivity && expectedTime
     ? `${nextActivity.zoneName}\n预计${expectedTime}`
     : '遥遥无期'
+}
+
+const getNextUpText = (activity, itemId) => {
+  return formatNextUpText(getNextUpActivity(activity, itemId))
+}
+
+const getNextUpMaterialIconIds = (activity) => {
+  if (!activity) {
+    return []
+  }
+
+  return getActivityStagesForChart(activity)
+    .map(stage => String(stage.itemId || ''))
+    .filter(Boolean)
 }
 
 const getActivityByStage = (stage) => {
@@ -588,7 +923,7 @@ const formatOrundumTableCell = (stage, rowIndex) => {
     case 0:
       return stage.stageCode || ''
     case 1:
-      return formatFixed(stage.orundumPerAp, 2)
+      return formatOrundumYieldText(stage.orundumPerAp)
     case 2:
       return `${formatFixed(stage.lmdCost, 2)}w`
     case 3:
@@ -626,12 +961,15 @@ const quoteActivityData = (activity) => {
   table1.value[2] = mapStagesToTableRow(stageData, stage => formatPercent(stage.knockRating, 1))
   table1.value[3] = mapStagesToTableRow(stageData, stage => formatPercent(stage.stageEfficiency, 1))
   table1.value[4] = mapStagesToTableRow(stageData, stage => formatRecentTwoYearDemand(stage.itemId))
-  table1.value[5] = mapStagesToTableRow(stageData, stage => getNextUpText(activity, stage.itemId))
+  const nextUpActivities = mapStagesToTableRow(stageData, stage => getNextUpActivity(activity, stage.itemId))
+  table1.value[5] = nextUpActivities.map(nextActivity => formatNextUpText(nextActivity))
+  table1NextUpIconIds.value = normalizeTable1NextUpIconIds(nextUpActivities.map(nextActivity => getNextUpMaterialIconIds(nextActivity)))
   const orundumStages = quoteActivityOrundumData(activity)
 
   activityName.value = activity.zoneName || ''
   matchedActivities.value = []
   selectedReferenceActivityName.value = activity.zoneName || ''
+  matchedExportActivityName.value = activity.zoneName || ''
   const orundumText = orundumStages.length > 0
     ? `；搓玉数据：${orundumStages.map(stage => stage.stageCode).join('、')}。`
     : '；未匹配到活动关搓玉数据。'
@@ -836,11 +1174,116 @@ const getLoadedReferenceInfo = () => {
   return `已加载 ${sourceHistoryActivityList.value.length} 个往期活动，可引用 ${recentReferenceActivities.value.length} 个 ${year}/${month}/${day} 之后的非复刻活动。`
 }
 
+const waitForImages = async (container) => {
+  const images = Array.from(container?.querySelectorAll('img') || [])
+  await Promise.all(images.map(image => {
+    if (image.complete && image.naturalWidth > 0) {
+      return Promise.resolve()
+    }
+
+    return new Promise((resolve, reject) => {
+      const handleLoad = () => resolve()
+      const handleError = () => reject(new Error('导出前图片未加载成功'))
+
+      image.addEventListener('load', handleLoad, { once: true })
+      image.addEventListener('error', handleError, { once: true })
+    })
+  }))
+}
+
+const formatExportDate = () => {
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}${month}${day}`
+}
+
+const sanitizeFileNamePart = (text, fallback = '活动') => {
+  const sanitizedText = String(text || '')
+    .replace(/复刻简报|复刻/g, '')
+    .replace(/[\\/:*?"<>|\r\n]/g, '')
+    .replace(/\s+/g, '')
+    .trim()
+  return sanitizedText || fallback
+}
+
+const getExportActivityName = () => sanitizeFileNamePart(
+  matchedExportActivityName.value || selectedReferenceActivityName.value || activityName.value,
+  '活动'
+)
+
+const getPreviewExportFileName = () => {
+  return `${formatExportDate()}${getExportActivityName()}复刻简报.png`
+}
+
+const getExportImageSrc = (src) => {
+  if (!src || src.startsWith('data:') || src.startsWith('blob:')) {
+    return src
+  }
+
+  try {
+    const parsedUrl = new URL(src, window.location.href)
+    return parsedUrl.origin === OFFICIAL_NEWS_ORIGIN
+      ? getOfficialNewsProxyPath(`${parsedUrl.pathname}${parsedUrl.search}`)
+      : src
+  } catch (error) {
+    return src
+  }
+}
+
+const prepareExportClone = (clonedDocument) => {
+  const clonedPreview = clonedDocument.querySelector('[data-export-target="return-brief-preview"]')
+  const images = Array.from(clonedPreview?.querySelectorAll('img') || [])
+  for (const image of images) {
+    const exportSrc = getExportImageSrc(image.getAttribute('src') || '')
+    if (exportSrc) {
+      image.setAttribute('src', exportSrc)
+      image.setAttribute('referrerpolicy', 'no-referrer')
+    }
+  }
+}
+
+const downloadPreviewPng = async () => {
+  if (!imagePreviewRef.value || isExportingPreview.value) {
+    return
+  }
+
+  try {
+    isExportingPreview.value = true
+    await nextTick()
+    await waitForImages(imagePreviewRef.value)
+
+    const { default: html2canvas } = await import('html2canvas')
+    const canvas = await html2canvas(imagePreviewRef.value, {
+      backgroundColor: null,
+      scale: 1,
+      useCORS: true,
+      allowTaint: false,
+      logging: false,
+      onclone: prepareExportClone
+    })
+
+    const link = document.createElement('a')
+    link.download = getPreviewExportFileName()
+    link.href = canvas.toDataURL('image/png')
+    link.click()
+    ElMessage.success('PNG 已下载')
+  } catch (error) {
+    console.error('下载绘图区PNG失败:', error)
+    ElMessage.error(error?.message || '下载失败，可能是远程图片不支持跨域')
+  } finally {
+    isExportingPreview.value = false
+  }
+}
+
 // 清除活动匹配
 const clearActivityMatch = () => {
   activityName.value = ''
   matchedActivities.value = []
   selectedActivityIndex.value = -1
+  selectedReferenceActivityName.value = ''
+  matchedExportActivityName.value = ''
 }
 
 // 从 localStorage 加载数据
@@ -858,10 +1301,27 @@ const loadFromStorage = () => {
       if (data.stageNumber !== undefined) {
         stageNumber.value = data.stageNumber
       }
+      if (data.previewThemeKey !== undefined) {
+        selectPreviewTheme(data.previewThemeKey)
+      }
+      if (data.activityName !== undefined) {
+        activityName.value = data.activityName
+      }
+      if (data.selectedReferenceActivityName !== undefined) {
+        selectedReferenceActivityName.value = data.selectedReferenceActivityName
+      }
+      if (data.matchedExportActivityName !== undefined) {
+        matchedExportActivityName.value = data.matchedExportActivityName
+      }
       if (data.table1 && Array.isArray(data.table1) && data.table1.length === 6) {
         table1.value = data.table1.map(row =>
           Array.isArray(row) && row.length === 3 ? [...row] : ['', '', '']
         )
+      }
+      if (data.table1NextUpIconIds && Array.isArray(data.table1NextUpIconIds)) {
+        table1NextUpIconIds.value = normalizeTable1NextUpIconIds(data.table1NextUpIconIds)
+      } else {
+        table1NextUpIconIds.value = createEmptyTable1NextUpIconIds()
       }
       if (data.table2 && Array.isArray(data.table2)) {
         table2.value = normalizeTable2(data.table2)
@@ -889,7 +1349,12 @@ const saveToStorage = () => {
       headerImageUrl: headerImageUrl.value || '',
       stagePrefix: stagePrefix.value || '',
       stageNumber: stageNumber.value || '',
+      previewThemeKey: selectedPreviewThemeKey.value || DEFAULT_PREVIEW_THEME_KEY,
+      activityName: activityName.value || '',
+      selectedReferenceActivityName: selectedReferenceActivityName.value || '',
+      matchedExportActivityName: matchedExportActivityName.value || '',
       table1: table1.value || [],
+      table1NextUpIconIds: table1NextUpIconIds.value || [],
       table2: table2.value || [],
       table2IconIds: table2IconIds.value || [],
       table2IconSchemaVersion: TABLE2_ICON_SCHEMA_VERSION,
@@ -903,7 +1368,7 @@ const saveToStorage = () => {
 }
 
 // 监听数据变化并自动保存
-const stopWatch = watch([headerImageUrl, stagePrefix, stageNumber, table1, table2, table2IconIds], () => {
+const stopWatch = watch([headerImageUrl, stagePrefix, stageNumber, selectedPreviewThemeKey, activityName, selectedReferenceActivityName, matchedExportActivityName, table1, table1NextUpIconIds, table2, table2IconIds], () => {
   // 只在组件挂载时才保存
   if (isMounted.value) {
     try {
@@ -1013,6 +1478,7 @@ const clearAllData = () => {
     headerImageUrl.value = ''
     stagePrefix.value = ''
     stageNumber.value = ''
+    selectedPreviewThemeKey.value = DEFAULT_PREVIEW_THEME_KEY
     table1.value = [
       ['', '', ''],
       ['', '', ''],
@@ -1022,10 +1488,12 @@ const clearAllData = () => {
       ['', '', '']
     ]
     table2.value = createEmptyTable2()
+    table1NextUpIconIds.value = createEmptyTable1NextUpIconIds()
     table2IconIds.value = createEmptyTable2IconIds()
     activityName.value = ''
     matchedActivities.value = []
     selectedReferenceActivityName.value = ''
+    matchedExportActivityName.value = ''
     officialNewsInfo.value = ''
     officialNewsError.value = false
     updateReferenceInfo(getLoadedReferenceInfo())
@@ -1144,7 +1612,9 @@ const selectStage = (index) => {
 
     // 第六行：预计下次 up
     const activity = getActivityByStage(stage)
-    table1.value[5][0] = activity ? getNextUpText(activity, stage.itemId) : '遥遥无期'
+    const nextUpActivity = activity ? getNextUpActivity(activity, stage.itemId) : null
+    table1.value[5][0] = formatNextUpText(nextUpActivity)
+    table1NextUpIconIds.value[0] = getNextUpMaterialIconIds(nextUpActivity)
     
     console.log('关卡数据已填充到表格:', stage.stageCode)
   }
@@ -1200,8 +1670,35 @@ onMounted(() => {
 
 .panel-header h2 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 600;
+}
+
+.panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.download-preview-btn {
+  padding: 6px 12px;
+  background-color: #409eff;
+  border: 1px solid #409eff;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.download-preview-btn:hover:not(:disabled) {
+  background-color: #1f88ff;
+  border-color: #1f88ff;
+}
+
+.download-preview-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
 .clear-all-btn {
@@ -1210,7 +1707,7 @@ onMounted(() => {
   border: 1px solid #ddd;
   border-radius: 4px;
   color: #666;
-  font-size: 0.85rem;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
@@ -1237,7 +1734,8 @@ onMounted(() => {
 /* 图片预览容器 */
 .image-preview {
   width: 1080px;
-  background-color: #fff;
+  background-color: var(--lb-preview-page-bg, #fff);
+  font-family: var(--lb-preview-font-family, "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "思源黑体", "Microsoft YaHei", "PingFang SC", Arial, sans-serif);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1264,7 +1762,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
+  background-color: var(--lb-preview-page-bg, #fff);
   line-height: 0;
 }
 
@@ -1282,28 +1780,30 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff5ea;
-  color: #bf6a2d;
-  font-size: 0.95rem;
-  border: 1px dashed #f2b27f;
+  background-color: var(--lb-preview-secondary-cell-bg, #fff5ea);
+  color: var(--lb-preview-accent-text, #bf6a2d);
+  font-size: 15px;
+  border: 1px dashed var(--lb-preview-border, #f2b27f);
   margin: 0;
 }
 
 /* 表头区域 */
 .header-section {
-  background-color: #fff;
+  background-color: var(--lb-preview-page-bg, #fff);
+  z-index: 1;
+  box-shadow: 0 6px 16px rgba(92, 52, 22, 0.14);
 }
 
 .header-section .empty-placeholder {
-  background-color: #fff5ea;
-  color: #bf6a2d;
-  border-color: #f2b27f;
+  background-color: var(--lb-preview-secondary-cell-bg, #fff5ea);
+  color: var(--lb-preview-accent-text, #bf6a2d);
+  border-color: var(--lb-preview-border, #f2b27f);
 }
 
 /* 内容区域 */
 .content-section {
   padding: 0;
-  background-color: #f6c491;
+  background-color: var(--lb-preview-section-bg, #f6c491);
 }
 
 /* 表格区块 */
@@ -1314,6 +1814,26 @@ onMounted(() => {
 
 .table-section:last-child {
   margin-bottom: 0;
+}
+
+.table-divider-band {
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: var(--lb-preview-secondary-cell-bg, #fff0da);
+  color: var(--lb-preview-accent-text, #cf6525);
+  font-family: "Noto Sans SC", "Source Han Sans SC", "思源黑体", "Microsoft YaHei", sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: 0;
+  overflow: hidden;
+}
+
+.table-divider-band span {
+  opacity: 0.36;
+  white-space: nowrap;
 }
 
 /* 数据表格 */
@@ -1328,7 +1848,7 @@ onMounted(() => {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 1.2rem;
+  font-size: var(--lb-preview-table-font-size, 36px);
   display: table;
   table-layout: fixed;
   border: 0;
@@ -1339,7 +1859,7 @@ onMounted(() => {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 1.2rem;
+  font-size: var(--lb-preview-table-font-size, 36px);
   display: table;
   table-layout: fixed;
   margin: 0 auto;
@@ -1348,19 +1868,19 @@ onMounted(() => {
 }
 
 .data-cell {
-  padding: 14px 10px;
+  padding: var(--lb-preview-cell-padding, 14px 10px);
   border: 0;
-  border-right: 1px solid #efc185;
-  border-bottom: 1px solid #efc185;
-  color: #3f2b1d;
+  border-right: 1px solid var(--lb-preview-border, #efc185);
+  border-bottom: 1px solid var(--lb-preview-border, #efc185);
+  color: var(--lb-preview-text, #3f2b1d);
   text-align: center;
   white-space: pre-line;
-  height: 58px;
-  line-height: 1.18;
+  height: var(--lb-preview-cell-height, 58px);
+  line-height: var(--lb-preview-table-line-height, 1.18);
   vertical-align: middle;
   font-weight: 600;
   display: table-cell;
-  background-color: #fff7ea;
+  background-color: var(--lb-preview-cell-bg, #fff7ea);
 }
 
 .data-cell:last-child {
@@ -1371,61 +1891,135 @@ tr:last-child .data-cell {
   border-bottom: 0;
 }
 
-.table1-grid .data-cell {
-  width: 25%;
+.brief-table-label-column {
+  width: 28%;
 }
 
-.table1-grid .data-cell.label-cell {
-  background-color: #f3b260;
+.brief-table-data-column {
+  width: 24%;
+}
+
+.table1-grid .data-cell.label-cell,
+.table2-grid .data-cell.label-cell {
+  background-color: var(--lb-preview-label-bg, #f3b260);
   font-weight: 700;
-  color: #573018;
+  color: var(--lb-preview-strong-text, #573018);
   letter-spacing: 0;
 }
 
-.table1-grid tr:first-child .data-cell {
-  background-color: #f8cd8a;
-  color: #573018;
+.table1-grid tr:first-child .data-cell,
+.table2-grid tr:first-child .data-cell {
+  background-color: var(--lb-preview-head-bg, #f8cd8a);
+  color: var(--lb-preview-strong-text, #573018);
   font-weight: 800;
 }
 
-.table1-grid tr:first-child .data-cell.label-cell {
-  background-color: #f0a85a;
-  color: #573018;
+.table1-grid tr:first-child .data-cell.label-cell,
+.table2-grid tr:first-child .data-cell.label-cell {
+  background-color: var(--lb-preview-head-label-bg, #f0a85a);
+  color: var(--lb-preview-strong-text, #573018);
 }
 
-.table1-grid tr:nth-child(2) .data-cell:not(.label-cell) {
-  background-color: #fff0da;
-}
-
-.table1-grid tr:nth-child(5) .data-cell:not(.label-cell),
-.table1-grid tr:nth-child(6) .data-cell:not(.label-cell) {
-  color: #cf6525;
+.table1-grid .table1-accent-row .data-cell:not(.label-cell) {
   font-weight: 800;
 }
 
-.table2-grid .data-cell {
-  background-color: #fff0da;
-  width: 25%;
+.table1-grid .table1-next-up-row .data-cell:not(.label-cell) {
+  font-size: 30px;
+  line-height: 1.25;
+}
+
+.next-up-cell {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.next-up-text {
+  white-space: pre-line;
+}
+
+.next-up-activity-name,
+.next-up-expected-time {
+  display: block;
+  line-height: 1.12;
+}
+
+.next-up-material-icons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  line-height: 0;
+}
+
+.next-up-material-icons :deep(div) {
+  display: block;
+  flex-shrink: 0;
 }
 
 .orundum-stage-cell {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   min-height: 100%;
+}
+
+.stage-material-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 100%;
+}
+
+.stage-material-cell :deep(img) {
+  display: block;
+  flex-shrink: 0;
 }
 
 .orundum-material-icons {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 4px;
   flex-shrink: 0;
 }
 
 .orundum-material-icons :deep(img) {
   display: block;
+}
+
+.orundum-yield-cell {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  line-height: 1.1;
+}
+
+.orundum-yield-line,
+.orundum-yield-total {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orundum-yield-total {
+  gap: 6px;
+}
+
+.orundum-result-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  transform: scale(0.9);
+  transform-origin: center;
 }
 
 /* 材料图标容器 */
@@ -1451,10 +2045,13 @@ tr:last-child .data-cell {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #f5a14b 0%, #ed7f33 100%);
-  color: #fff;
+  background: linear-gradient(135deg, var(--lb-preview-footer-start, #f5a14b) 0%, var(--lb-preview-footer-end, #ed7f33) 100%);
+  color: var(--lb-preview-footer-text, #fff);
   padding: 0 0 0 40px;
   gap: 32px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 -6px 16px rgba(92, 52, 22, 0.14);
 }
 
 .footer-text {
@@ -1467,18 +2064,18 @@ tr:last-child .data-cell {
 .footer-row {
   display: flex;
   align-items: baseline;
-  font-size: 1.75rem;
+  font-size: 28px;
   font-weight: bold;
 }
 
 .footer-label {
   min-width: 140px;
   flex-shrink: 0;
-  color: #fff;
+  color: var(--lb-preview-footer-text, #fff);
 }
 
 .footer-value {
-  color: #fff;
+  color: var(--lb-preview-footer-text, #fff);
   flex: 1;
 }
 
@@ -1514,7 +2111,7 @@ tr:last-child .data-cell {
 .input-label {
   display: block;
   margin-bottom: 8px;
-  font-size: 0.9rem;
+  font-size: 14px;
   font-weight: 500;
   color: #333;
 }
@@ -1524,7 +2121,7 @@ tr:last-child .data-cell {
   padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 14px;
   transition: border-color 0.2s;
   box-sizing: border-box;
 }
@@ -1543,7 +2140,7 @@ tr:last-child .data-cell {
 .error-message {
   margin-top: 6px;
   color: #f56c6c;
-  font-size: 0.85rem;
+  font-size: 14px;
 }
 
 /* 图片链接输入框 */
@@ -1575,7 +2172,7 @@ tr:last-child .data-cell {
 
 .info-text {
   color: #0c7cd5;
-  font-size: 0.85rem;
+  font-size: 14px;
   font-weight: 500;
 }
 
@@ -1585,7 +2182,7 @@ tr:last-child .data-cell {
   border: 1px solid #ddd;
   border-radius: 4px;
   color: #666;
-  font-size: 0.85rem;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -1594,6 +2191,55 @@ tr:last-child .data-cell {
   background-color: #fee;
   border-color: #f56c6c;
   color: #f56c6c;
+}
+
+/* 配色主题 */
+.theme-selector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.theme-option {
+  min-height: 74px;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.theme-option:hover,
+.theme-option-active {
+  border-color: #409eff;
+  background-color: #f7fbff;
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.12);
+}
+
+.theme-swatch-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+}
+
+.theme-swatch {
+  min-width: 0;
+}
+
+.theme-name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 /* 往期活动引用 */
@@ -1607,7 +2253,7 @@ tr:last-child .data-cell {
   padding: 8px 14px;
   border: 1px solid #409eff;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
@@ -1628,7 +2274,7 @@ tr:last-child .data-cell {
 .reference-info {
   margin-top: 8px;
   color: #666;
-  font-size: 0.85rem;
+  font-size: 14px;
   line-height: 1.5;
 }
 
@@ -1671,19 +2317,19 @@ tr:last-child .data-cell {
 }
 
 .reference-activity-name {
-  font-size: 0.9rem;
+  font-size: 14px;
   font-weight: 600;
 }
 
 .reference-activity-meta {
   color: #666;
-  font-size: 0.8rem;
+  font-size: 13px;
 }
 
 .reference-empty {
   margin-top: 8px;
   color: #999;
-  font-size: 0.85rem;
+  font-size: 14px;
 }
 
 /* 表格输入容器 */
@@ -1704,7 +2350,7 @@ tr:last-child .data-cell {
 }
 
 .row-number {
-  font-size: 0.85rem;
+  font-size: 14px;
   font-weight: 600;
   color: #666;
   width: 50px;
@@ -1735,7 +2381,7 @@ tr:last-child .data-cell {
 
 .cell-field {
   padding: 8px;
-  font-size: 0.85rem;
+  font-size: 14px;
   width: 100%;
 }
 
@@ -1838,12 +2484,12 @@ tr:last-child .data-cell {
 .stage-match-code {
   font-weight: 600;
   color: #1565c0;
-  font-size: 0.95rem;
+  font-size: 15px;
   flex-shrink: 0;
 }
 
 .stage-match-zone {
-  font-size: 0.8rem;
+  font-size: 13px;
   color: #666;
   flex: 1;
   white-space: nowrap;
@@ -1888,13 +2534,13 @@ tr:last-child .data-cell {
 
 .json-header h3 {
   margin: 0;
-  font-size: 1rem;
+  font-size: 16px;
   font-weight: 600;
   color: #333;
 }
 
 .json-count {
-  font-size: 0.85rem;
+  font-size: 14px;
   color: #666;
   background-color: #fff;
   padding: 4px 12px;
@@ -1912,7 +2558,7 @@ tr:last-child .data-cell {
   margin: 0;
   padding: 16px;
   font-family: 'Courier New', Courier, monospace;
-  font-size: 0.85rem;
+  font-size: 14px;
   line-height: 1.6;
   color: #333;
   white-space: pre-wrap;
@@ -1934,11 +2580,11 @@ tr:last-child .data-cell {
 }
 
 .error-icon {
-  font-size: 2rem;
+  font-size: 32px;
 }
 
 .error-text {
-  font-size: 0.95rem;
+  font-size: 15px;
   font-weight: 500;
   text-align: center;
   color: #f56c6c;
@@ -2052,7 +2698,7 @@ tr:last-child .data-cell {
 }
 
 .activity-match-info {
-  font-size: 0.85rem;
+  font-size: 14px;
   color: #909399;
   padding: 4px 8px;
   background-color: #f5f5f5;
@@ -2066,7 +2712,7 @@ tr:last-child .data-cell {
   border: 1px solid #f56c6c;
   border-radius: 6px;
   color: #f56c6c;
-  font-size: 0.9rem;
+  font-size: 14px;
   text-align: center;
   margin-top: 4px;
 }
@@ -2119,19 +2765,19 @@ tr:last-child .data-cell {
   }
 
   .image-preview .empty-placeholder {
-    background-color: #fff5ea;
-    border-color: #f2b27f;
-    color: #bf6a2d;
+    background-color: var(--lb-preview-secondary-cell-bg, #fff5ea);
+    border-color: var(--lb-preview-border, #f2b27f);
+    color: var(--lb-preview-accent-text, #bf6a2d);
   }
 
   .header-section {
-    background-color: #fff;
+    background-color: var(--lb-preview-page-bg, #fff);
   }
 
   .header-section .empty-placeholder {
-    background-color: #fff5ea;
-    color: #bf6a2d;
-    border-color: #f2b27f;
+    background-color: var(--lb-preview-secondary-cell-bg, #fff5ea);
+    color: var(--lb-preview-accent-text, #bf6a2d);
+    border-color: var(--lb-preview-border, #f2b27f);
   }
 
   .input-label {
@@ -2214,35 +2860,44 @@ tr:last-child .data-cell {
     color: #aaa;
   }
 
+  .theme-option {
+    background-color: #1e1e1e;
+    border-color: #555;
+    color: #e0e0e0;
+  }
+
+  .theme-option:hover,
+  .theme-option-active {
+    background-color: #1a3a52;
+    border-color: #409eff;
+  }
+
+  .theme-swatch-row {
+    border-color: rgba(255, 255, 255, 0.14);
+  }
+
   .data-cell {
-    border-color: #efc185;
-    color: #3f2b1d;
-    background-color: #fff7ea;
+    border-color: var(--lb-preview-border, #efc185);
+    color: var(--lb-preview-text, #3f2b1d);
+    background-color: var(--lb-preview-cell-bg, #fff7ea);
   }
 
-  .table1-grid .data-cell.label-cell {
-    background-color: #f3b260;
-    color: #573018;
+  .table1-grid .data-cell.label-cell,
+  .table2-grid .data-cell.label-cell {
+    background-color: var(--lb-preview-label-bg, #f3b260);
+    color: var(--lb-preview-strong-text, #573018);
   }
 
-  .table1-grid tr:first-child .data-cell {
-    background-color: #f8cd8a;
-    color: #573018;
+  .table1-grid tr:first-child .data-cell,
+  .table2-grid tr:first-child .data-cell {
+    background-color: var(--lb-preview-head-bg, #f8cd8a);
+    color: var(--lb-preview-strong-text, #573018);
   }
 
-  .table1-grid tr:first-child .data-cell.label-cell {
-    background-color: #f0a85a;
-    color: #573018;
-  }
-
-  .table1-grid tr:nth-child(2) .data-cell:not(.label-cell),
-  .table2-grid .data-cell {
-    background-color: #fff0da;
-  }
-
-  .table1-grid tr:nth-child(5) .data-cell:not(.label-cell),
-  .table1-grid tr:nth-child(6) .data-cell:not(.label-cell) {
-    color: #cf6525;
+  .table1-grid tr:first-child .data-cell.label-cell,
+  .table2-grid tr:first-child .data-cell.label-cell {
+    background-color: var(--lb-preview-head-label-bg, #f0a85a);
+    color: var(--lb-preview-strong-text, #573018);
   }
 
   .table-input-container {
