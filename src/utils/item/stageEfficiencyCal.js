@@ -49,14 +49,15 @@ async function calculationStageEfficiency(stageConfig) {
       //计算商店兑换物的效率，35代币的物品计算公式  （1/物品价格）*物品数量*物品价值
       const apEfficiency = (1 / unlimitedItem.price) * unlimitedItem.quantity * itemInfo.itemValue;
       //如果效率大于当前商店兑换物的效率，则更新商店兑换物
-      if (apEfficiency > shopRedemptionItem.apEfficiency) {
-        shopRedemptionItem = {
-          itemId: unlimitedItem.itemId,
-          apEfficiency: apEfficiency,
-          quantity: unlimitedItem.quantity,
-          price: unlimitedItem.price,
-        };
-      }
+      
+      // if (apEfficiency > shopRedemptionItem.apEfficiency) {
+      //   shopRedemptionItem = {
+      //     itemId: unlimitedItem.itemId,
+      //     apEfficiency: apEfficiency,
+      //     quantity: unlimitedItem.quantity,
+      //     price: unlimitedItem.price,
+      //   };
+      // }
     }
   }
 
@@ -141,8 +142,16 @@ async function calculationStageEfficiency(stageConfig) {
     }
 
     // if(stageId==='main_01-07'){
-    //     console.table(stageDropValue)
+    //     console.table(stageDropDetailList)
     // }
+
+    if(stageId==='main_12-15'){
+        console.table(stageDropDetailList)
+    }
+
+    if(stageId==='act42side_10'){
+        console.table(stageDropDetailList)
+    }
 
     stageDropDetailList.sort((a, b) => b.expectedOutput - a.expectedOutput);
 
@@ -242,7 +251,18 @@ async function calculationStageEfficiency(stageConfig) {
 
     orundumPerAp = orundumPerAp / apCost;
 
+  
+
     stageEfficiency = stageExpectedOutput / apCost;
+
+      if(stageId==='main_12-15'){
+        console.log(stageExpectedOutput,'/',apCost,stageEfficiency)
+    }
+
+    if(stageId==='act42side_10'){
+        console.log(stageExpectedOutput,'/',apCost,stageEfficiency)
+    }
+
     const leT4Efficiency = (leT2Value + leT3Value + leT4Value) / apCost;
     const leT3Efficiency = (leT2Value + leT3Value) / apCost;
     const leT2Efficiency = leT2Value / apCost;
@@ -401,7 +421,7 @@ function getHistoryActStage(stageResultList) {
   return historyActStageList;
 }
 
-const priceCoefficient = 2;
+const priceCoefficient = 1;
 
 //这个对象是用于在计算活动效率时，判断无限兑换材料价值是否大于龙门币价值，大于则将默认计算的龙门币效率转为价值最高的无限兑换材料
 const unlimitedItemsInStore = {
