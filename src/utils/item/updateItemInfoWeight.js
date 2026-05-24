@@ -44,18 +44,22 @@ function updateItemInfoWeight() {
     let list = []
 
     let t4WeightCount = 0
-    let t5WeightCount = 0
+   
     let weightMap = new Map()
+
     for (const item of extraOutComeGroup.T4) {
         t4WeightCount += item.weight
     }
 
-    for (const item of extraOutComeGroup.T5) {
-        t5WeightCount += item.weight
+     for (const item of extraOutComeGroup.T4) {
+        console.log(item.itemId,item.weight/t4WeightCount)
+        weightMap.set(item.itemId, item.weight / t4WeightCount)
     }
 
-    for (const item of extraOutComeGroup.T4) {
-        weightMap.set(item.itemId, item.weight / t4WeightCount)
+
+     let t5WeightCount = 0
+    for (const item of extraOutComeGroup.T5) {
+        t5WeightCount += item.weight
     }
 
     for (const item of extraOutComeGroup.T5) {

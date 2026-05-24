@@ -389,6 +389,7 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
       for (const [itemId, weight] of group) {
         expectValue += itemValueMap.get(itemId) * weight;
       }
+     
       // 更新加工站各级物品副产品期望产出
       workshopByproductExpectedValue.set(rarity, expectValue);
     }
@@ -484,7 +485,7 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
 
       // 该系列材料的最高作战效率
       const currentMaxStageEfficiency = maxStageEfficiencyMap.get(seriesId).stageEfficiency;
-
+    
       if (stageEfficiency > currentMaxStageEfficiency) {
         // 如果当前作战效率大于该系列材料的最高效率，则更新最高效率
         maxStageEfficiencyMap.set(seriesId, { stageId, stageEfficiency });
@@ -504,9 +505,11 @@ async function getItemInfoList(stageConfig, maxIteration = 50, tolerance = 0.000
 
       // 获取该系列蓝材料之前的价值
       const itemValueT3 = itemValueMap.get(itemIdT3);
-
+      const itemName = itemSeriesInfoByItemId.get(itemIdT3).itemName
+      console.log(itemName,'修正前价值', itemValueT3, '修正效率',stageEfficiency)
       // 更新蓝材料的价值
       itemValueMap.set(itemIdT3, itemValueT3 / stageEfficiency);
+      console.log(itemName,'修正后价值', itemValueMap.get(itemIdT3))
     }
 
     // 将自定义精英材料价值写入物品价值映射
