@@ -239,7 +239,7 @@ function scrollToOrundumTable() {
   const element = document.getElementById('orundum-table')
   const offset = 56 // 考虑固定导航栏、按钮区域和空div的距离
   const y = element.getBoundingClientRect().top + window.pageYOffset - offset
-  
+
   window.scrollTo({
     top: y,
     behavior: 'smooth'
@@ -253,7 +253,7 @@ function scrollToHistoryStageTable() {
   const element = document.getElementById('history-stage-table')
   const offset = 56 // 考虑固定导航栏、按钮区域和空div的距离
   const y = element.getBoundingClientRect().top + window.pageYOffset - offset
-  
+
   window.scrollTo({
     top: y,
     behavior: 'smooth'
@@ -267,7 +267,7 @@ function scrollToFrequentlyAskedQuestion() {
   const element = document.getElementById('frequently-asked-question')
   const offset = 56 // 考虑固定导航栏、按钮区域和空div的距离
   const y = element.getBoundingClientRect().top + window.pageYOffset - offset
-  
+
   window.scrollTo({
     top: y,
     behavior: 'smooth'
@@ -412,7 +412,7 @@ function handleClick() {
         <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.T3)"></div>
         <div class="stage-card-bar-container">
           <div class="stage-card-bar">
-            <ItemImage :item-id="'AP_GAMEPLAY'" size="30" mobile-size="24"></ItemImage>
+            <ItemImage :item-id="'AP_GAMEPLAY'" :size="30" :mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.maxEfficiencyStage.stageCode }}
             </div>
@@ -424,7 +424,7 @@ function handleClick() {
             </div>
           </div>
           <div class="stage-card-bar">
-            <ItemImage :item-id="stage.series.T4" size="30" mobile-size="24"></ItemImage>
+            <ItemImage :item-id="stage.series.T4" :size="30" :mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT4MaxEfficiencyStage.stageCode }}
             </div>
@@ -436,7 +436,7 @@ function handleClick() {
             </div>
           </div>
           <div class="stage-card-bar">
-            <ItemImage :item-id="stage.series.T3" size="30" mobile-size="24"></ItemImage>
+            <ItemImage :item-id="stage.series.T3" :size="30" :mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT3MaxEfficiencyStage.stageCode }}
             </div>
@@ -448,7 +448,7 @@ function handleClick() {
             </div>
           </div>
           <div class="stage-card-bar" v-show="stage.series.T2">
-            <ItemImage :item-id="stage.series.T2" size="30" mobile-size="24"></ItemImage>
+            <ItemImage :item-id="stage.series.T2" :size="30" :mobile-size="24"></ItemImage>
             <div class="stage-card-bar-stage-code">
               {{ stage.leT2MaxEfficiencyStage.stageCode }}
             </div>
@@ -473,10 +473,10 @@ function handleClick() {
       <div id="retire-card" class="stage-card stage-card-tip" @click="router.push({ name: 'AccountHome' })"
         style="flex-direction: column; align-items: center; justify-content: center; flex-grow: 1;">
         <div class="flex justify-center">
-          <ItemImage :item-id="'30073'" size="60" mobile-size="24"></ItemImage>
-          <ItemImage :item-id="'30083'" size="60" mobile-size="24"></ItemImage>
-          <ItemImage :item-id="'30093'" size="60" mobile-size="24"></ItemImage>
-          <ItemImage :item-id="'30103'" size="60" mobile-size="24"></ItemImage>
+          <ItemImage :item-id="'30073'" :size="60" :mobile-size="24"></ItemImage>
+          <ItemImage :item-id="'30083'" :size="60" :mobile-size="24"></ItemImage>
+          <ItemImage :item-id="'30093'" :size="60" :mobile-size="24"></ItemImage>
+          <ItemImage :item-id="'30103'" :size="60" :mobile-size="24"></ItemImage>
         </div>
         <div style="width: 100%; text-align: center; margin-top: 8px;">建议通过活动商店获取</div>
         <div style="width: 100%; text-align: center; margin-top: 8px;">点击修改材料退环境设置</div>
@@ -544,7 +544,7 @@ function handleClick() {
           </template>
         </el-table-column>
 
-      
+
 
       </el-table>
     </div>
