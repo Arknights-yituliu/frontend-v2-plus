@@ -117,7 +117,7 @@ function formatPcHistoryTableData() {
     for (const stage of act.actStageList) {
       const itemId = stage.itemId
       const efficiency = stage.stageEfficiency * 100
-      
+
       // 只保留效率最高的关卡
       if (!itemList[itemId] || itemList[itemId].stageEfficiency < efficiency) {
         itemList[itemId] = {
@@ -127,7 +127,7 @@ function formatPcHistoryTableData() {
         }
       }
     }
-    
+
     rowData.itemList = itemList
     // 存储活动材料映射
     activityItemMap.set(rowData.activityName, itemList)
@@ -135,7 +135,7 @@ function formatPcHistoryTableData() {
     // 更新材料的上次UP状态和间隔
     for (const header of historyActivityTableHeaders.value) {
       const isUp = !!rowData.itemList[header.itemId]
-      
+
       if (isUp) {
         header.lastUp = true
       } else if (!header.lastUp) {
@@ -281,7 +281,7 @@ onMounted(() => {
                       class="d-flex align-center"
                       style="width: 108px;"
                   >
-                    <ItemImage :item-id="stage.itemId" size="36"/>
+                    <ItemImage :item-id="stage.itemId" :size="36"/>
                     <div class="d-flex flex-column ms-2">
                       <div>{{ stage.stageCode }}</div>
                       <div class="text-caption">
