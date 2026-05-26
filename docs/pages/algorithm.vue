@@ -7,6 +7,12 @@ const algorithmDocs = [
     icon: "mdi-function"
   },
   {
+    title: "关卡效率算法",
+    description: "说明综合效率、T2/T3/T4 效率、活动无限池和搓玉效率的计算口径。",
+    path: "/docs/stage-efficiency-algorithm",
+    icon: "mdi-map-marker-path"
+  },
+  {
     title: "商店性价比算法",
     description: "说明活动商店、采购中心和信用交易所的理智价值/商店货币换算口径。",
     path: "/docs/store-efficiency-algorithm",
@@ -33,6 +39,22 @@ const algorithmDocs = [
   <p>
     这里集中整理一图流中会影响页面结果和推荐结论的算法说明。算法文档主要用于解释计算口径、输入数据、迭代过程和与代码实现的对应关系。
   </p>
+
+  <h2 id="前置条件">前置条件</h2>
+  <v-divider></v-divider>
+  <p>
+    阅读算法文档时，默认采用以下约定。各页面会继续说明自己的特殊输入、公式和排序口径。
+  </p>
+  <ul>
+    <li>文档使用自然语言介绍算法细节，具体实现请参考代码。若发现代码与文档中的内容不一致，欢迎提出反馈。</li>
+    <li>文中示例数值只用于说明计算过程，可能不等于当前线上结果。</li>
+    <li>物品价值指物品折算成理智后的长期相对价值，主要用于作战效率、商店性价比、礼包性价比等计算，不代表账号短期缺口、玩家个人偏好或现实货币价格。</li>
+    <li>精英材料的稀有度从低到高依次称为<span class="gray">白</span>、<span class="green">绿</span>、<span class="blue">蓝</span>、<span class="purple">紫</span>、<span class="yellow">金</span>，或者 <span class="gray">T1</span>、<span class="green">T2</span>、<span class="blue">T3</span>、<span class="purple">T4</span>、<span class="yellow">T5</span>。</li>
+    <li>物品价值、关卡效率和性价比结果会受到用户配置影响，例如定价作战集、自定义物品价值、加工策略和掉落样本数。</li>
+  </ul>
+  <v-alert border variant="tonal" type="info">
+    <p>如果想了解物品定价思路的历史脉络，可以参考 <a href="/docs/algorithm-history">算法发展简史</a>。</p>
+  </v-alert>
 
   <h2 id="algorithm-documents">算法文档</h2>
   <v-divider></v-divider>

@@ -7,64 +7,39 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <h1 id="物品价值算法">物品价值算法</h1>
     <v-divider></v-divider>
 
-    <p>文档使用自然语言介绍算法细节，具体实现请参考代码。若发现代码与文档中的内容不一致，欢迎提出反馈。</p>
-
-    <h2 id="相关工作">相关工作</h2>
-    <v-divider></v-divider>
-
-    <p>物品价值至少有以下 3 种算法，按时间顺序列出。</p>
-    <ul>
-      <li><a href="https://penguin-stats.io/planner" target="_blank" rel="noopener noreferrer">ArkPlanner</a></li>
-      <li><a href="/">明日方舟一图流</a></li>
-      <li><a href="https://github.com/Bidgecfah/Rhodes-Island-Bureau-of-Price" target="_blank" rel="noopener noreferrer">罗德岛物价局</a></li>
-    </ul>
-
-    <h3 id="ArkPlanner">ArkPlanner</h3>
-    <v-divider></v-divider>
-
-    <v-alert border>
-      明日方舟最优刷图策略规划工具，基于开源的掉落统计数据、素材合成规则以及线性规划实现。由于混合掉落、额外掉落副本的存在且各种材料掉落概率不同，在材料需求较复杂时，要刷哪些副本并不直观，大多情况下需要通过比较复杂的计算得到最优解。同时，了解刷所需材料预计消耗多少体力也会帮助你更好的规划体力。原理：将素材合成也看作一种掉落在约束中加以考虑（目标材料掉落 1，消耗的材料掉落为 -1），其 cost 为 0 或合成所需代币的等价体力消耗。
-    </v-alert>
-    <p>简单来说，ArkPlanner 通过求解如下的线性规划问题来计算精英材料的价值（假设精英材料以外的物品的价值已知）。</p>
-    <v-alert border>
-      <p><b>【决策变量】</b></p>
-      <p>每种精英材料的价值</p>
-      <p><b>【目标函数】</b></p>
-      <p>最大化全干员满练需求物品的总价值</p>
-      <p><b>【约束条件】</b></p>
-      <ol>
-        <li>作战期望掉落物品的总价值 ≤ 作战的理智消耗（对任意的作战）；</li>
-        <li>加工期望得到的物品的总价值 ≤ 加工消耗的物品的总价值（对任意的加工配方）。</li>
-      </ol>
-    </v-alert>
-    <p>（仅为框架，省去了很多细节）</p>
-    <p>ArkPlanner 算法是<b>需求敏感的</b>。新的精英材料刚加入时，需求量非常少，ArkPlanner 会认为“通过加工其他精英材料获得的副产品足够满足新材料的需求”，而误将新材料的价值估计得比较低。</p>
-
-    <h3 id="明日方舟一图流">明日方舟一图流</h3>
-    <v-divider></v-divider>
-
-    <p>明日方舟一图流在计算精英材料的价值时不以需求作为变量，从而是需求不敏感的。在 ArkPlanner 算法的 2 类约束条件中，明日方舟一图流算法完全保留约束条件 1，即<b>所有作战的作战效率 ≤ 1</b>；对于约束条件 2，在明日方舟一图流算法中，直接要求<b>精英材料配方的不等号取等</b>，即要求<b>所有精英材料配方的<span class="red">消耗总价值</span>等于<span class="red">产出总价值</span>。</b></p>
-    <p>由于精英材料的加工配方都变成了等式，在知道了<span class="blue">蓝</span>材料的价值后就能知道全部精英材料的价值。因此，明日方舟一图流算法<b>以<span class="blue">蓝</span>材料价值为核心</b>，<b>额外要求每一系列材料</b>（源岩、固源岩、固源岩组、提纯源岩算一系列材料，其他类似）<b>都至少存在 1 个以该系列材料为主产物且效率等于 1 的作战。</b></p>
-    <p>算法细节将在后文中详述。</p>
-
-    <h3 id="罗德岛物价局">罗德岛物价局</h3>
-    <v-divider></v-divider>
-
-    <p>罗德岛物价局的思路与明日方舟一图流类似。</p>
-    <v-alert border>
-      <p>上千关卡的约束条件对应几十种材料价值作为未知数，其中大多关卡带来的条件会成为松约束，那么如何筛选参与定价的关卡就是问题本质所在了。</p>
-      <p>本项目迭代选择与待定价材料相等数量的定价关卡，解一次方程组就得到了材料的定价，判断筛选范围内的关卡是否服从定价：不服从的关卡替代现有定价关卡成为新的定价关卡并重新进行方程组求解；而所有关卡都服从定价时就确定了最终的材料定价。 再通过定价结果计算各商店的兑换货币性价比，从而指导“在什么商店买什么”的问题。</p>
+    <p>本文介绍一图流如何计算物品理智价值。前端实现主要可参考 <v-code>/src/utils/item/itemValue.js</v-code>。</p>
+    <v-alert border variant="tonal" type="info">
+      <p>本文前半部分介绍精英材料价值的迭代算法，后半部分介绍龙门币、寻访资源、芯片、碳、技巧概要等辅助物品的估值方式。通用阅读约定见 <a href="/docs/algorithm#前置条件">算法总览：前置条件</a>。</p>
     </v-alert>
 
-    <h2 id="名词解释">名词解释</h2>
+    <h2 id="算法目标">算法目标</h2>
     <v-divider></v-divider>
 
-    <p>精英材料的稀有度从低到高依次称为<span class="gray">白</span>、<span class="green">绿</span>、<span class="blue">蓝</span>、<span class="purple">紫</span>、<span class="yellow">金</span>，或者 <span class="gray">T1</span>、<span class="green">T2</span>、<span class="blue">T3</span>、<span class="purple">T4</span>、<span class="yellow">T5</span>。</p>
+    <ol>
+      <li>为精英材料、龙门币、EXP、寻访资源、芯片、技巧概要等物品提供统一价值。</li>
+      <li>保证定价作战集内的作战效率不超过 100%。</li>
+      <li>让每个材料系列至少存在 1 个主产作战作为价值锚点。</li>
+      <li>让精英材料加工配方的消耗总价值与产出总价值保持平衡。</li>
+    </ol>
+
+    <h2 id="核心思路">核心思路</h2>
+    <v-divider></v-divider>
+
+    <p>精英材料价值以<span class="blue">蓝</span>材料为核心变量。算法先给<span class="blue">蓝</span>材料和加工副产品价值设定初始值，再根据加工配方推出其他稀有度精英材料的价值，随后计算定价作战集中的作战效率，并据此修正<span class="blue">蓝</span>材料价值。</p>
+    <p>这一过程会重复迭代，直到材料价值和作战效率收敛。下面会逐步展开定价作战集、自定义价值、加工配方、副产品价值和迭代修正的具体计算方式。</p>
 
     <h2 id="精英材料价值">精英材料价值</h2>
     <v-divider></v-divider>
 
     <p>明日方舟一图流算法按照以下步骤计算精英材料的价值。在计算精英材料的价值时，会用到龙门币、EXP、赤金等其他物品的价值，这些物品的价值需要提前算出。</p>
+    <p>概括来说，计算流程如下：</p>
+    <ol>
+      <li>确定定价作战集与自定义物品价值。</li>
+      <li>设定<span class="blue">蓝</span>材料价值和副产品价值初始值。</li>
+      <li>通过加工配方推出全部精英材料价值。</li>
+      <li>计算副产品价值期望与作战效率。</li>
+      <li>修正<span class="blue">蓝</span>材料价值，并重复迭代直到收敛。</li>
+    </ol>
 
     <h3 id="确定定价作战集和自定义物品价值">1. 确定定价作战集和自定义物品价值</h3>
     <v-divider></v-divider>
@@ -380,6 +355,7 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 
     <h2 id="其他物品价值">其他物品价值</h2>
     <v-divider></v-divider>
+    <p>本节列出的物品价值主要作为计算作战掉落总价值、礼包性价比和商店性价比时的基础输入；其中部分物品也会在精英材料价值计算过程中作为已知量使用。</p>
 
     <h3 id="寻访资源">寻访资源</h3>
     <v-divider></v-divider>
@@ -665,10 +641,9 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
     <v-divider></v-divider>
     <ol>
       <li>ArkPlanner，<a href="https://github.com/penguin-statistics/ArkPlanner" target="_blank" rel="noopener noreferrer">https://github.com/penguin-statistics/ArkPlanner</a></li>
-      <li>教捐，罗德岛物价局，<a href="https://github.com/Bidgecfah/Rhodes-Island-Bureau-of-Price" target="_blank" rel="noopener noreferrer">https://github.com/Bidgecfah/Rhodes-Island-Bureau-of-Price</a></li>
       <li>企鹅物流数据统计，<a href="https://penguin-stats.io/" target="_blank" rel="noopener noreferrer">https://penguin-stats.io/</a></li>
       <li>PRTS Wiki，<a href="https://prts.wiki/" target="_blank" rel="noopener noreferrer">https://prts.wiki/</a></li>
-      <li>BioHazard，SideStory 作战历史掉率，<a href="https://www.bilibili.com/read/cv39716633/" taret="_blank" rel="noopener noreferrer">https://www.bilibili.com/read/cv39716633/</a></li>
+      <li>BioHazard，SideStory 作战历史掉率，<a href="https://www.bilibili.com/read/cv39716633/" target="_blank" rel="noopener noreferrer">https://www.bilibili.com/read/cv39716633/</a></li>
       <li>BioHazard，各情形下贸易站数据，<a href="https://www.bilibili.com/read/cv28230294/" target="_blank" rel="noopener noreferrer">https://www.bilibili.com/read/cv28230294/</a></li>
     </ol>
   </div>

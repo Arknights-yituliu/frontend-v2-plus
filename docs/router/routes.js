@@ -1,9 +1,12 @@
 import ProjectOverview from "/docs/pages/project-overview.vue";
 import Algorithm from "/docs/pages/algorithm.vue";
 import ItemValueAlgorithm from "/docs/pages/item-value-algorithm.vue";
+import DeprecatedItemValueAlgorithm from "/docs/pages/deprecated-item-value-algorithm.vue";
+import StageEfficiencyAlgorithm from "/docs/pages/stage-efficiency-algorithm.vue";
 import StoreEfficiencyAlgorithm from "/docs/pages/store-efficiency-algorithm.vue";
 import PackEfficiencyAlgorithm from "/docs/pages/pack-efficiency-algorithm.vue";
 import EliteSpecializationRankingAlgorithm from "/docs/pages/elite-specialization-ranking-algorithm.vue";
+import AlgorithmHistory from "/docs/pages/algorithm-history.vue";
 import JoinDevelopmentQuickly from "/docs/pages/join-development-quickly.vue";
 import JoinDevelopment from "/docs/pages/join-development.vue";
 import WritingDocumentation from "/docs/pages/writing-documentation.vue";
@@ -66,6 +69,24 @@ const routes = [
         component: ItemValueAlgorithm
     },
     {
+        path: '/docs/deprecated-item-value-algorithm',
+        text: '弃用内容：物品价值算法',
+        name: 'DeprecatedItemValueAlgorithm',
+        display: false,
+        module: 'AlgorithmDocumentation',
+        icon: 'mdi-archive-outline',
+        component: DeprecatedItemValueAlgorithm
+    },
+    {
+        path: '/docs/stage-efficiency-algorithm',
+        text: '关卡效率算法',
+        name: 'StageEfficiencyAlgorithm',
+        display: true,
+        module: 'AlgorithmDocumentation',
+        icon: 'mdi-map-marker-path',
+        component: StageEfficiencyAlgorithm
+    },
+    {
         path: '/docs/store-efficiency-algorithm',
         text: '商店性价比算法',
         name: 'StoreEfficiencyAlgorithm',
@@ -109,6 +130,15 @@ const routes = [
         module: 'TechnicalDocumentation',
         icon: 'mdi-file-sign',
         component: WritingPage
+    },
+    {
+        path: '/docs/algorithm-history',
+        text: '算法发展简史',
+        name: 'AlgorithmHistory',
+        display: true,
+        module: 'ReferenceAndExtension',
+        icon: 'mdi-timeline-text-outline',
+        component: AlgorithmHistory
     }
 
 
@@ -135,6 +165,13 @@ const LinkedTable = {
         text: "算法文档",
         display: true,
         icon: 'mdi-chart-line',
+        child: []
+    },
+    ReferenceAndExtension: {
+        path: '/docs/algorithm-history',
+        text: "参考与延伸",
+        display: true,
+        icon: 'mdi-bookshelf',
         child: []
     },
 }
