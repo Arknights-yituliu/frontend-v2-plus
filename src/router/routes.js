@@ -243,6 +243,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/json-compare',
+        text: 'JSON数据对比',
+        name: 'LBJsonCompare',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/JsonCompare.vue'),
+        meta: {
+            title: 'JSON数据对比'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',

@@ -48,6 +48,11 @@ const pages = [
     title: '对应关系表',
     description: '查看材料、干员、职业、材料系列和模组的 ID 与名称对应关系',
     to: '/lb/mapping-table'
+  },
+  {
+    title: 'JSON 数据对比',
+    description: '上传两个格式不同但语义一致的 JSON 文件，按规则对比差异',
+    to: '/lb/json-compare'
   }
 ]
 </script>
