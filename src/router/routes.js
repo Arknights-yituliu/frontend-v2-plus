@@ -253,6 +253,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/alchemy-pool',
+        text: '炼金池收益计算',
+        name: 'LBAlchemyPool',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/AlchemyPool.vue'),
+        meta: {
+            title: '炼金池收益计算'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',

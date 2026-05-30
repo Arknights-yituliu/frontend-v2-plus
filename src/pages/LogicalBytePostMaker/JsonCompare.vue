@@ -103,13 +103,13 @@
         </label>
 
         <label class="json-compare-filter-field">
-          <span class="json-compare-filter-label">最小样本量</span>
+          <span class="json-compare-filter-label">双方样本均大于</span>
           <el-input-number
             v-model="filters.minSample"
             :min="0"
             :step="100"
             controls-position="right"
-            placeholder="0"
+            placeholder="500"
             class="json-compare-number-input"
           />
         </label>
@@ -151,6 +151,7 @@
         <span>双方都有 <strong>{{ compareStats.both }}</strong></span>
         <span>仅 stage_drop <strong>{{ compareStats.stageOnly }}</strong></span>
         <span>仅 penguin <strong>{{ compareStats.penguinOnly }}</strong></span>
+        <span>{{ stageMappingStatus }}</span>
       </div>
 
       <el-table
@@ -192,7 +193,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ArrowLeft, Delete, DocumentCopy, Download, RefreshRight, Search, UploadFilled } from '@element-plus/icons-vue'
@@ -203,6 +204,9 @@ import itemSeriesInfo from '/src/static/json/material/item_series_info.json'
 import tmpStageResult from '/src/static/json/material/tmp_stage_result.json'
 import materialResponse from '/src/static/json/material/response.json'
 import ytlStageInfo from '/src/static/json/material/ytl_stage_info.json'
+
+const PENGUIN_STAGE_API_URL = 'https://penguin-stats.io/PenguinStats/api/v2/stages'
+const PENGUIN_ZONE_API_URL = 'https://penguin-stats.io/PenguinStats/api/v2/zones'
 
 const sides = [
   { key: 'left', title: '数据 A' },
@@ -220,14 +224,16 @@ const resultSummary = ref('等待对比')
 const filters = reactive({
   keyword: '',
   status: 'all',
-  minSample: 0,
-  minDiffPercent: 0,
+  minSample: 500,
+  minDiffPercent: 1,
   maxDiffPercent: undefined,
   onlyDifferent: true
 })
 
 const itemNameMap = createItemNameMap()
-const stageInfoMap = createStageInfoMap()
+const localStageInfoMap = createStageInfoMap()
+const stageInfoMap = ref(localStageInfoMap)
+const stageMappingStatus = ref(`关卡映射：本地兜底 ${localStageInfoMap.size} 条，正在加载企鹅物流`)
 
 const canCompare = computed(() => Boolean(datasetState.left.data && datasetState.right.data))
 const hasContent = computed(() => Boolean(datasetState.left.data || datasetState.right.data || resultRows.value.length > 0))
@@ -254,7 +260,7 @@ const filteredRows = computed(() => {
   return resultRows.value.filter((row) => {
     if (keyword && !row.searchText.includes(keyword)) return false
     if (filters.status !== 'all' && row.status !== filters.status) return false
-    if (row.filterSample < minSample) return false
+    if (!hasEnoughSample(row, minSample)) return false
     if (filters.onlyDifferent && row.absDiffRate === 0 && row.status === 'both') return false
     if (row.status === 'both' && row.absDiffRate < minDiff) return false
     if (row.status === 'both' && maxDiff !== undefined && row.absDiffRate > maxDiff) return false
@@ -276,6 +282,10 @@ const compareStats = computed(() => {
   }
 
   return stats
+})
+
+onMounted(() => {
+  loadPenguinStageInfo()
 })
 
 function createDatasetState() {
@@ -339,6 +349,69 @@ function createPreview(value) {
   const text = JSON.stringify(value, null, 2)
   if (text.length <= 5000) return text
   return `${text.slice(0, 5000)}\n...`
+}
+
+async function loadPenguinStageInfo() {
+  try {
+    const [stages, zones] = await Promise.all([
+      fetchJsonArray(PENGUIN_STAGE_API_URL, '关卡表'),
+      fetchJsonArray(PENGUIN_ZONE_API_URL, '区域表')
+    ])
+    const zoneNameMap = createPenguinZoneNameMap(zones)
+    const nextStageInfoMap = new Map(localStageInfoMap)
+
+    for (const stage of stages) {
+      if (!stage || stage.stageId === undefined) continue
+
+      const stageId = String(stage.stageId)
+      const localStageInfo = nextStageInfoMap.get(stageId)
+      const stageName = stage.code_i18n?.zh || stage.code || stage.stageCode || localStageInfo?.stageName || stageId
+      const zoneName = zoneNameMap.get(stage.zoneId) || stage.zoneId || localStageInfo?.zoneName || ''
+
+      nextStageInfoMap.set(stageId, {
+        stageName: String(stageName),
+        zoneName: String(zoneName)
+      })
+    }
+
+    stageInfoMap.value = nextStageInfoMap
+    stageMappingStatus.value = `关卡映射：企鹅物流 ${stages.length} 条 / 区域 ${zoneNameMap.size} 条`
+
+    if (canCompare.value && resultSummary.value !== '等待对比') {
+      compareDatasets()
+    }
+  } catch (error) {
+    stageMappingStatus.value = `关卡映射：企鹅物流加载失败，使用本地兜底 ${localStageInfoMap.size} 条`
+    ElMessage.warning(error instanceof Error ? error.message : String(error))
+  }
+}
+
+async function fetchJsonArray(url, label) {
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`${label}加载失败：HTTP ${response.status}`)
+  }
+
+  const value = await response.json()
+  if (!Array.isArray(value)) {
+    throw new Error(`${label}加载失败：返回数据不是数组`)
+  }
+
+  return value
+}
+
+function createPenguinZoneNameMap(zones) {
+  const map = new Map()
+
+  for (const zone of zones) {
+    if (!zone || zone.zoneId === undefined) continue
+
+    const zoneId = String(zone.zoneId)
+    const zoneName = zone.zoneName_i18n?.zh || zone.zoneName || zoneId
+    map.set(zoneId, String(zoneName))
+  }
+
+  return map
 }
 
 function compareDatasets() {
@@ -440,7 +513,7 @@ function createDropMap(rows) {
 
 function createCompareRow(rowKey, stageRow, penguinRow) {
   const [stageId, itemId] = rowKey.split('@@')
-  const stageInfo = stageInfoMap.get(stageId)
+  const stageInfo = stageInfoMap.value.get(stageId)
   const stageName = stageInfo?.stageName || ''
   const zoneName = stageInfo?.zoneName || ''
   const itemName = itemNameMap.get(itemId) || ''
@@ -480,6 +553,17 @@ function createDropKey(stageId, itemId) {
 function getRate(row) {
   if (!row || !row.times) return undefined
   return row.quantity / row.times
+}
+
+function hasEnoughSample(row, minSample) {
+  if (minSample <= 0) return true
+
+  return (
+    isFiniteNumber(row.stageTimes) &&
+    isFiniteNumber(row.penguinTimes) &&
+    row.stageTimes > minSample &&
+    row.penguinTimes > minSample
+  )
 }
 
 function getStatusText(status) {
@@ -637,7 +721,7 @@ function getExportHeaders() {
     { key: 'absDiffRate', label: '绝对差异' },
     { key: 'absDiffRatePercent', label: '绝对差异百分点' },
     { key: 'sampleDiff', label: '样本差' },
-    { key: 'filterSample', label: '筛选样本量' }
+    { key: 'filterSample', label: '双方较小样本量' }
   ]
 }
 

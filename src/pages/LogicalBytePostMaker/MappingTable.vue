@@ -45,19 +45,31 @@
             <h2>{{ activeConfig.label }}</h2>
             <p>{{ activeConfig.source }}</p>
           </div>
-          <el-button :disabled="filteredRows.length === 0" @click="copyAllFiltered">
-            <el-icon><DocumentCopy /></el-icon>
-            <span>复制结果</span>
-          </el-button>
+          <div class="mapping-panel-actions">
+            <el-button
+              v-if="activeConfig.reload"
+              :loading="activeConfig.loading"
+              @click="activeConfig.reload"
+            >
+              <el-icon><Refresh /></el-icon>
+              <span>刷新关卡</span>
+            </el-button>
+            <el-button :disabled="filteredRows.length === 0" @click="copyAllFiltered">
+              <el-icon><DocumentCopy /></el-icon>
+              <span>复制结果</span>
+            </el-button>
+          </div>
         </div>
 
         <el-table
           :data="filteredRows"
+          v-loading="activeConfig.loading"
+          :element-loading-text="activeConfig.loadingText"
           border
           stripe
           height="620"
           row-key="rowKey"
-          empty-text="没有匹配结果"
+          :empty-text="activeConfig.error || '没有匹配结果'"
           class="mapping-table"
         >
           <el-table-column prop="id" label="ID / 代号" min-width="210" show-overflow-tooltip />
@@ -78,10 +90,10 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ArrowLeft, DocumentCopy, Search } from '@element-plus/icons-vue'
+import { ArrowLeft, DocumentCopy, Refresh, Search } from '@element-plus/icons-vue'
 
 import materialItemInfo from '/src/static/json/material/item_info.json'
 import customItemInfo from '/src/static/json/material/custom_item_info.json'
@@ -91,8 +103,22 @@ import professionDict from '/src/static/json/operator/profession_dict.json'
 
 const keyword = ref('')
 const activeKey = ref('material')
+const stageRows = ref([])
+const stageLoading = ref(false)
+const stageError = ref('')
+
+const PENGUIN_STAGE_API_URL = 'https://penguin-stats.io/PenguinStats/api/v2/stages'
 
 const professionNameMap = new Map()
+const itemNameMap = new Map()
+
+for (const item of materialItemInfo) {
+  itemNameMap.set(item.itemId, item.itemName)
+}
+
+for (const item of Object.values(customItemInfo)) {
+  itemNameMap.set(item.itemId, item.itemName)
+}
 
 for (const profession of professionDict) {
   professionNameMap.set(profession.value, profession.label)
@@ -180,7 +206,7 @@ const itemSeriesRows = sortRows(
 
 const equipRows = sortRows(createEquipRows())
 
-const tableConfigs = [
+const tableConfigs = computed(() => [
   {
     key: 'material',
     label: '材料 / 物品',
@@ -216,16 +242,30 @@ const tableConfigs = [
     label: '模组',
     source: '模组 ID -> 模组名称',
     rows: equipRows
+  },
+  {
+    key: 'stage',
+    label: '关卡',
+    source: '关卡 stageId -> 关卡代号 / 属性（Penguin Stats）',
+    rows: stageRows.value,
+    loading: stageLoading.value,
+    loadingText: '正在加载企鹅物流关卡表',
+    error: stageError.value,
+    reload: () => loadStageRows(false)
   }
-]
+])
 
-const activeConfig = computed(() => tableConfigs.find((config) => config.key === activeKey.value) || tableConfigs[0])
+const activeConfig = computed(() => tableConfigs.value.find((config) => config.key === activeKey.value) || tableConfigs.value[0])
 const activeRows = computed(() => activeConfig.value.rows)
 
 const filteredRows = computed(() => {
   const text = normalizeText(keyword.value)
   if (!text) return activeRows.value
   return activeRows.value.filter((row) => row.searchText.includes(text))
+})
+
+onMounted(() => {
+  loadStageRows(true)
 })
 
 function createEquipRows() {
@@ -250,6 +290,103 @@ function createEquipRows() {
   }
 
   return [...equipMap.values()]
+}
+
+async function loadStageRows(silent = false) {
+  if (stageLoading.value) return
+
+  stageLoading.value = true
+  stageError.value = ''
+
+  try {
+    const response = await fetch(PENGUIN_STAGE_API_URL)
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+
+    const stages = await response.json()
+    if (!Array.isArray(stages)) {
+      throw new Error('返回数据不是关卡数组')
+    }
+
+    stageRows.value = sortRows(stages.map(createStageRow))
+
+    if (!silent) {
+      ElMessage.success('关卡表已刷新')
+    }
+  } catch (error) {
+    stageError.value = `关卡表加载失败：${error instanceof Error ? error.message : String(error)}`
+    if (!silent) {
+      ElMessage.error(stageError.value)
+    }
+  } finally {
+    stageLoading.value = false
+  }
+}
+
+function createStageRow(stage) {
+  const code = stage.code_i18n?.zh || stage.code || stage.stageCode || ''
+  const normalDropItems = getDropItems(stage.dropInfos, 'NORMAL_DROP')
+  const extraDropItems = getDropItems(stage.dropInfos, 'EXTRA_DROP')
+  const regions = getExistingRegions(stage.existence)
+
+  return createRow({
+    id: stage.stageId,
+    name: code,
+    category: stage.stageType,
+    extra: [
+      stage.zoneId ? `zoneId: ${stage.zoneId}` : '',
+      Number.isFinite(Number(stage.apCost)) ? `理智: ${stage.apCost}` : '',
+      Number.isFinite(Number(stage.minClearTime)) ? `最短: ${formatMilliseconds(stage.minClearTime)}` : '',
+      regions ? `区服: ${regions}` : '',
+      normalDropItems.length ? `主掉落: ${normalDropItems.join('、')}` : '',
+      extraDropItems.length ? `额外: ${extraDropItems.join('、')}` : ''
+    ]
+      .filter(Boolean)
+      .join(' / '),
+    source: PENGUIN_STAGE_API_URL,
+    aliases: [
+      stage.code,
+      stage.code_i18n?.en,
+      stage.code_i18n?.ja,
+      stage.code_i18n?.ko,
+      stage.code_i18n?.zh,
+      stage.zoneId,
+      stage.stageType,
+      regions,
+      ...normalDropItems,
+      ...extraDropItems
+    ]
+  })
+}
+
+function getDropItems(dropInfos, dropType) {
+  return [
+    ...new Set(
+      (dropInfos || [])
+        .filter((drop) => drop.dropType === dropType && drop.itemId)
+        .map((drop) => getItemLabel(drop.itemId))
+    )
+  ]
+}
+
+function getItemLabel(itemId) {
+  const itemName = itemNameMap.get(itemId)
+  return itemName ? `${itemName}(${itemId})` : itemId
+}
+
+function getExistingRegions(existence) {
+  return Object.entries(existence || {})
+    .filter(([, info]) => info?.exist)
+    .map(([region]) => region)
+    .join('/')
+}
+
+function formatMilliseconds(value) {
+  const totalSeconds = Math.round(Number(value) / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+  return `${minutes}:${String(seconds).padStart(2, '0')}`
 }
 
 function createRow({ id, name, category, extra, source, aliases = [] }) {
@@ -475,6 +612,13 @@ async function writeClipboard(content, message) {
   font-size: 0.88rem;
 }
 
+.mapping-panel-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .mapping-table {
   width: 100%;
 }
@@ -508,6 +652,10 @@ async function writeClipboard(content, message) {
   .mapping-panel-head {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .mapping-panel-actions {
+    justify-content: flex-start;
   }
 }
 

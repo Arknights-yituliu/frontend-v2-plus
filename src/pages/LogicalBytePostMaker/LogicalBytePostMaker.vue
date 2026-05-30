@@ -53,6 +53,11 @@ const pages = [
     title: 'JSON 数据对比',
     description: '上传两个格式不同但语义一致的 JSON 文件，按规则对比差异',
     to: '/lb/json-compare'
+  },
+  {
+    title: '炼金池收益计算',
+    description: '按关卡掉率、炼金产物和抽取产物计算等效理智收益',
+    to: '/lb/alchemy-pool'
   }
 ]
 </script>
