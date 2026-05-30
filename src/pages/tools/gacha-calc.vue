@@ -181,16 +181,16 @@ function batchGenerationServerMaintenanceRewards() {
   const oneDayTimeStamp = 60 * 60 * 24 * 1000;
   // 清空之前的维护奖励数据
   otherRewardBySchedules.value = otherRewardBySchedules.value.filter((item) => !item.name.includes("游戏维护"));
- 
+
   for (const activity in activityScheduleList.value) {
     let activityData = activityScheduleList.value[activity];
-    
-     
+
+
     if (activityData.defaultStatus) {
       console.log(activityData.name);
       selectedActivityName.value.push(activityData.name);
       otherRewardBySchedules.value.push(_createServerMaintenanceRewards(activityData.start));
-     
+
     }
   }
 
@@ -292,6 +292,26 @@ const isLinkedLimitedActivity = computed(() => ["联动限定", "联动限定复
 const isDoubleLinkedLimitedActivity = computed(() => activityType.value === "双联动限定");
 const isNormalLimitedActivity = computed(() => !isLinkedLimitedActivity.value && !isDoubleLinkedLimitedActivity.value);
 const canUseLinkedLimitedRewards = computed(() => activityType.value === "联动限定" || isDoubleLinkedLimitedActivity.value);
+
+/**
+ * 联动限定活动对应的概率键名
+ * 根据当前选中的活动名称返回正确的概率表键名
+ */
+const linkedProbKeys = computed(() => {
+  if (currentScheduleName.value === "怪猎联动二期") {
+    return {
+      limited6: "怪猎二期获得UP6星干员",
+      all: "怪猎二期获得UP6星干员和UP5星干员",
+      fullPotential: "怪猎二期全满潜",
+    };
+  }
+  // 默认：怪猎一期复刻或其他联动限定活动
+  return {
+    limited6: "怪猎一期获得UP6星干员",
+    all: "怪猎一期获得UP6星干员和全部2名UP5星干员",
+    fullPotential: "怪猎一期全满潜",
+  };
+});
 
 function rewardTypeMatchesCurrentActivity(rewardType) {
   if (rewardType === "公共" || rewardType === activityType.value) {
@@ -1660,12 +1680,16 @@ function handleResize() {
  * 达成各目标的概率（乘 100，例如 11.4514% 概率达成，则值为 11.45）
  * @property {number} limited300
  * @property {number} all300
- * @property {number} limited120
- * @property {number} all120
- * @property {number} 联动卡池全满潜
- * @property {number} 两个联动寻访都获得UP6星干员
- * @property {number} 两个联动寻访都获得全部干员
- * @property {number} 两个联动寻访都全满潜
+ * @property {number} 怪猎一期获得UP6星干员
+ * @property {number} 怪猎一期获得UP6星干员和全部2名UP5星干员
+ * @property {number} 怪猎一期全满潜
+ * @property {number} 怪猎二期获得UP6星干员
+ * @property {number} 怪猎二期获得UP5星干员
+ * @property {number} 怪猎二期获得UP6星干员和UP5星干员
+ * @property {number} 怪猎二期全满潜
+ * @property {number} 怪猎一期和二期都获得UP6星干员
+ * @property {number} 怪猎一期和二期都获得全部干员
+ * @property {number} 怪猎一期和二期都全满潜
  */
 const currentProb = ref({});
 updateProb();
@@ -1846,12 +1870,12 @@ function sharePage() {
               <div
                 class="collapse-title-icon"
                 v-if="isLinkedLimitedActivity"
-                :style="getProbabilityBoxStyle(currentProb.limited120, currentProb.all120)"
+                :style="getProbabilityBoxStyle(currentProb[linkedProbKeys.limited6], currentProb[linkedProbKeys.all])"
               ></div>
               <div
                 class="collapse-title-icon"
                 v-if="isDoubleLinkedLimitedActivity"
-                :style="getProbabilityBoxStyle(currentProb.两个联动寻访都获得UP6星干员, currentProb.两个联动寻访都获得全部干员)"
+                :style="getProbabilityBoxStyle(currentProb.怪猎一期和二期都获得UP6星干员, currentProb.怪猎一期和二期都获得全部干员)"
               ></div>
               <span class="collapse-title-font">
                 共计{{ calculationResult.totalDraw }}抽<span v-if="calculationResult.totalAmountOfRecharge > 0"
@@ -1978,22 +2002,22 @@ function sharePage() {
                 <p>拿到限定+陪跑的概率：{{ currentProb.all300.toFixed(2) }}%</p>
               </div>
               <div v-if="isLinkedLimitedActivity">
-                <p>拿到限定六星的概率：{{ currentProb.limited120.toFixed(2) }}%</p>
+                <p>拿到限定六星的概率：{{ currentProb[linkedProbKeys.limited6].toFixed(2) }}%</p>
               </div>
               <div v-if="isLinkedLimitedActivity">
-                <p>拿到所有联动的概率：{{ currentProb.all120.toFixed(2) }}%</p>
+                <p>拿到所有联动的概率：{{ currentProb[linkedProbKeys.all].toFixed(2) }}%</p>
               </div>
               <div v-if="isLinkedLimitedActivity">
-                <p>全满潜的概率：{{ currentProb.联动卡池全满潜.toFixed(2) }}%</p>
+                <p>全满潜的概率：{{ currentProb[linkedProbKeys.fullPotential].toFixed(2) }}%</p>
               </div>
               <div v-if="isDoubleLinkedLimitedActivity">
-                <p>拿到限定六星的概率：{{ currentProb.两个联动寻访都获得UP6星干员.toFixed(2) }}%</p>
+                <p>拿到限定六星的概率：{{ currentProb.怪猎一期和二期都获得UP6星干员.toFixed(2) }}%</p>
               </div>
               <div v-if="isDoubleLinkedLimitedActivity">
-                <p>拿到所有联动的概率：{{ currentProb.两个联动寻访都获得全部干员.toFixed(2) }}%</p>
+                <p>拿到所有联动的概率：{{ currentProb.怪猎一期和二期都获得全部干员.toFixed(2) }}%</p>
               </div>
               <div v-if="isDoubleLinkedLimitedActivity">
-                <p>全满潜的概率：{{ currentProb.两个联动寻访都全满潜.toFixed(2) }}%</p>
+                <p>全满潜的概率：{{ currentProb.怪猎一期和二期都全满潜.toFixed(2) }}%</p>
               </div>
             </div>
             <div v-else>

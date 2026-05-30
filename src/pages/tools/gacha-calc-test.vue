@@ -1517,9 +1517,9 @@ function handleResize() {
  * 达成各目标的概率（乘 100，例如 11.4514% 概率达成，则值为 11.45）
  * @property {number} limited300
  * @property {number} all300
- * @property {number} limited120
- * @property {number} all120
- * @property {number} 联动卡池全满潜
+ * @property {number} 怪猎一期获得UP6星干员
+ * @property {number} 怪猎一期获得UP6星干员和全部2名UP5星干员
+ * @property {number} 怪猎一期全满潜
  */
 const currentProb = ref({});
 updateProb()
@@ -1628,7 +1628,7 @@ function sharePage() {
                    :style="getProbabilityBoxStyle(currentProb.limited300, currentProb.all300)">
               </div>
               <div class="collapse-title-icon" v-if="activityType === '联动限定'"
-                   :style="getProbabilityBoxStyle(currentProb.limited120, currentProb.all120)">
+                   :style="getProbabilityBoxStyle(currentProb.怪猎一期获得UP6星干员, currentProb.怪猎一期获得UP6星干员和全部2名UP5星干员)">
               </div>
               <span class="collapse-title-font">
               共计{{ calculationResult.totalDraw }}抽，
@@ -1749,13 +1749,13 @@ function sharePage() {
                 <p>拿到限定+陪跑的概率：{{ currentProb.all300.toFixed(2) }}%</p>
               </div>
               <div v-if="activityType === '联动限定'">
-                <p>拿到限定六星的概率：{{ currentProb.limited120.toFixed(2) }}%</p>
+                <p>拿到限定六星的概率：{{ currentProb.怪猎一期获得UP6星干员.toFixed(2) }}%</p>
               </div>
               <div v-if="activityType === '联动限定'">
-                <p>拿到所有联动的概率：{{ currentProb.all120.toFixed(2) }}%</p>
+                <p>拿到所有联动的概率：{{ currentProb.怪猎一期获得UP6星干员和全部2名UP5星干员.toFixed(2) }}%</p>
               </div>
               <div v-if="activityType === '联动限定'">
-                <p>全满潜的概率：{{ currentProb.联动卡池全满潜.toFixed(2) }}%</p>
+                <p>全满潜的概率：{{ currentProb.怪猎一期全满潜.toFixed(2) }}%</p>
               </div>
             </div>
             <div v-else>
