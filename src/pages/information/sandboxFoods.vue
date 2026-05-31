@@ -2,23 +2,30 @@
 import sandbox_foods_v2 from '/src/static/json/build/sandbox_foods_v2.json'
 import {computed, ref} from "vue";
 
-const foodMatNodeV2 = sandbox_foods_v2['foodMatData'];
-const foodNodeV2 = sandbox_foods_v2['foodData'];
+// 主题切换：sandbox_1 = 沙洲遗闻，sandbox_2 = 重启锚点
+const selectedTopic = ref('sandbox_2')
+
+const currentData = computed(() => sandbox_foods_v2[selectedTopic.value])
+
+const foodMatNodeV2 = computed(() => currentData.value['foodMatData'])
+const foodNodeV2 = computed(() => currentData.value['foodData'])
+const currentRecipeNote = computed(() => currentData.value.recipeNote)
 
 //食物/食材切换标识
 const showWhat = ref("food")
 
 //食材列表
-const foodMatList = ref([])
-for (let e in foodMatNodeV2) {
-  foodMatList.value.push(
-      {
-        name: foodMatNodeV2[e].name,
-        buffDesc: foodMatNodeV2[e].buffDesc,
-        obtainApproach: foodMatNodeV2[e].obtainApproach
-      }
-  )
-}
+const foodMatList = computed(() => {
+  const list = []
+  for (let e in foodMatNodeV2.value) {
+    list.push({
+      name: foodMatNodeV2.value[e].name,
+      buffDesc: foodMatNodeV2.value[e].buffDesc,
+      obtainApproach: foodMatNodeV2.value[e].obtainApproach
+    })
+  }
+  return list
+})
 
 // 属性映射关系
 const attributesMap = {
@@ -45,13 +52,36 @@ const toggleRequirement = (attribute) => {
 
 // 筛选后的数据
 const filteredFoodNodeV2 = computed(() => {
-  return foodNodeV2.filter(item =>
+  return foodNodeV2.value.filter(item =>
       requirements.value.every(req => item.attributes.includes(req))
   )
 })
+
+const hasVariants = (food) => food.variants && food.variants.length > 0
+const hasRecipes = (food) => food.recipes && food.recipes.length > 0
+
+// 主题标签
+const topicOptions = {
+  sandbox_1: '沙洲遗闻',
+  sandbox_2: '重启锚点',
+}
 </script>
 
 <template>
+  <!--主题切换-->
+  <div class="screen-bar">
+    <div>主题切换</div>
+    <ul class="select-bar">
+      <li
+          v-for="(label, key) in topicOptions"
+          :key="key"
+          :class="{'active': selectedTopic === key}"
+          @click="selectedTopic = key; requirements = []"
+      >{{ label }}
+      </li>
+    </ul>
+  </div>
+
   <!--食物/食材切换-->
   <div class="screen-bar">
     <div>信息切换</div>
@@ -88,18 +118,18 @@ const filteredFoodNodeV2 = computed(() => {
       v-if="showWhat==='food'"
       :data="filteredFoodNodeV2"
       table-layout="auto"
-      :default-sort="{ prop: 'duration', order: 'ascending' }"
+      :default-sort="{ prop: 'id', order: 'ascending' }"
   >
     <el-table-column type="expand">
       <template #default="props">
         <div class="props-container">
-          <div>
+          <div v-if="hasVariants(props.row)">
             <el-table :data="props.row.variants" table-layout="auto">
               <el-table-column label="变体" prop="name"/>
               <el-table-column label="作用差分" prop="usage"/>
             </el-table>
           </div>
-          <div v-if="props.row.recipes.length>0">
+          <div v-if="hasRecipes(props.row)">
             <el-table :data="props.row.recipes">
               <el-table-column label="合成方式">
                 <template #default="scope">
@@ -122,13 +152,21 @@ const filteredFoodNodeV2 = computed(() => {
               </el-table-column>
             </el-table>
           </div>
+          <div v-if="props.row.unlock">
+            <span class="detail-label">解锁条件：</span>{{ props.row.unlock }}
+          </div>
         </div>
       </template>
     </el-table-column>
-    <el-table-column label="名称（β）" prop="name"/>
-    <el-table-column label="用途（使用调味料增强后的效果）" prop="usage" sortable/>
-    <el-table-column label="使用调味料后的持续时长（天）" prop="duration" sortable/>
+    <el-table-column label="名称" prop="name" sortable/>
+    <el-table-column label="用途" prop="usage" sortable/>
+    <el-table-column label="持续时间" prop="duration" sortable/>
+    <el-table-column label="解锁条件" prop="unlock" sortable/>
   </el-table>
+
+  <div v-if="showWhat==='food' && currentRecipeNote" class="recipe-note">
+    {{ currentRecipeNote }}
+  </div>
 
   <el-table
       v-if="showWhat==='foodMat'"
@@ -192,8 +230,20 @@ const filteredFoodNodeV2 = computed(() => {
   padding: 1em;
   background-color: #f3f3f3;
 
-  > div:nth-of-type(2) {
+  > div + div {
     margin-top: 1em;
   }
 }
-</style>,
+
+.detail-label {
+  font-weight: bold;
+}
+
+.recipe-note {
+  margin: 1em;
+  padding: 0.75em 1em;
+  border-left: 4px solid #999;
+  background-color: #f7f7f7;
+  color: #555;
+}
+</style>
