@@ -1,111 +1,116 @@
 .schedule-v1-page {
 
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 }
-    .schedule-box-container {
-        width: 98% !important;
-        overflow: auto;
-        margin: auto;
-    }
-
-    .schedule-box {
-        width: fit-content;
-        margin: auto;
-    }
-
-    .schedule-item-card {
-        width: 330px;
-        margin: 8px;
-
-        .v-list-item__content {
-            overflow: initial;
-        }
-    }
 
 
-    .building-factory-template {
-        padding: 4px 0;
-        justify-content: center;
-        margin: 4px auto;
-        border-radius: 3px;
-        font-weight: 600;
-        width: 310px;
-        height: 100px;
-        user-select: none;
-    }
+.schedule-set-card-v1 {
+  width: 600px;
+  margin: auto;
+}
 
-    .building-factory-group{
-        padding-inline:0 !important;
-        padding: 0;
-    }
+.schedule-box-container {
+  width: 98% !important;
+  overflow: auto;
+  margin: auto;
+}
 
-    .building-factory-name{
-        font-size: 20px;
-    }
+.schedule-box {
+  width: fit-content;
+  margin: auto;
+}
 
-    .room-template {
-        padding: 4px;
-        justify-content: center;
-        margin: 4px auto;
-        border-radius: 3px;
-        font-weight: 600;
-        width: 280px;
-        height: 80px;
-        user-select: none;
-    }
+.schedule-item-card {
+  width: 330px;
+  margin: 8px;
 
-    .room-title {
-        width: 100%;
-        justify-content: center;
-        display: flex;
-    }
+  .v-list-item__content {
+    overflow: initial;
+  }
+}
 
 
-    /* 设施样式 */
+.building-factory-template {
+  padding: 4px 0;
+  justify-content: center;
+  margin: 4px auto;
+  border-radius: 3px;
+  font-weight: 600;
+  width: 310px;
+  height: 100px;
+  user-select: none;
+}
 
-    .trading {
-        background-color: #0288d130;
-        color: #0288d1;
-    }
+.building-factory-group {
+  padding-inline: 0 !important;
+  padding: 0;
+}
 
-    .manufacture {
-        background-color: #ffb50030;
-        color: #ffb500;
-    }
+.building-factory-name {
+  font-size: 20px;
+}
 
-    .power {
-        background-color: #43a04730;
-        color: #43a047;
-    }
+.room-template {
+  padding: 4px;
+  justify-content: center;
+  margin: 4px auto;
+  border-radius: 3px;
+  font-weight: 600;
+  width: 280px;
+  height: 80px;
+  user-select: none;
+}
 
-    .control {
-        background-color: #43a04730;
-        color: #43a047;
-    }
-
-    .dormitory {
-        background-color: #009fb430;
-        color: #009fb4;
-    }
-
-    .meeting {
-        background-color: #7e7e7e30;
-        color: #7e7e7e;
-    }
-
-    .processing {
-        background-color: #7e7e7e30;
-        color: #7e7e7e;
-
-    }
-
-    .hire {
-        background-color: #7e7e7e30;
-        color: #7e7e7e;
-
-    }
+.room-title {
+  width: 100%;
+  justify-content: center;
+  display: flex;
+}
 
 
+/* 设施样式 */
+
+.trading {
+  background-color: #0288d130;
+  color: #0288d1;
+}
+
+.manufacture {
+  background-color: #ffb50030;
+  color: #ffb500;
+}
+
+.power {
+  background-color: #43a04730;
+  color: #43a047;
+}
+
+.control {
+  background-color: #43a04730;
+  color: #43a047;
+}
+
+.dormitory {
+  background-color: #009fb430;
+  color: #009fb4;
+}
+
+.meeting {
+  background-color: #7e7e7e30;
+  color: #7e7e7e;
+}
+
+.processing {
+  background-color: #7e7e7e30;
+  color: #7e7e7e;
+
+}
+
+.hire {
+  background-color: #7e7e7e30;
+  color: #7e7e7e;
+
+}
 
 
 .schedule-dialog {

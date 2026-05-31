@@ -933,6 +933,7 @@ function useLegacyUI() {
              @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
         {{ translate('schedule', 'schedule.InfrastructureLayout') }}
       </v-btn>
+
       <v-btn color="orange" class="m-2"
              @click="useLegacyUI()" text="切换到竖版UI">
       </v-btn>
@@ -1003,7 +1004,6 @@ function useLegacyUI() {
               <span>{{ translate('schedule', 'schedule.ScheduleTitle') }}</span>
               <v-text-field hide-details density="compact" variant="outlined" v-model="scheduleInfo.title">
               </v-text-field>
-
             </div>
             <!--换班表描述-->
             <div class="schedule-set-bar">
