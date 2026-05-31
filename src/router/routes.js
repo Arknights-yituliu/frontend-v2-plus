@@ -253,6 +253,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/json-cache-compare',
+        text: '缓存掉率数据对比',
+        name: 'LBJsonCacheCompare',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/JsonCacheCompare.vue'),
+        meta: {
+            title: '缓存掉率数据对比'
+        }
+    },
+    {
         path: '/lb/alchemy-pool',
         text: '炼金池收益计算',
         name: 'LBAlchemyPool',
