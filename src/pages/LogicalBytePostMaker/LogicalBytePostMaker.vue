@@ -55,6 +55,11 @@ const pages = [
     to: '/lb/json-compare'
   },
   {
+    title: '缓存掉率数据对比',
+    description: '上传一份掉率 JSON，自动与本地 Penguin 缓存矩阵对比',
+    to: '/lb/json-cache-compare'
+  },
+  {
     title: '炼金池收益计算',
     description: '按关卡掉率、炼金产物和抽取产物计算等效理智收益',
     to: '/lb/alchemy-pool'
