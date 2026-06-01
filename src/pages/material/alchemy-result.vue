@@ -36,7 +36,7 @@ const mhDropMaterialFields = [
 const mhDropUploadFields = [
     {
         key: "times",
-        label: "次数",
+        label: "刷图次数",
         payloadKey: "times",
         type: "buttonGroup",
         defaultValue: 1,
@@ -70,11 +70,11 @@ const uploadCards = reactive([
         upload: uploadMHDropResult,
         payloadGetter: (form) => createPayloadFromFields(mhDropUploadFields, form),
         timesGetter: (form) => form.times,
-        formulaTextGetter: (form) => `材料炼金值合计 = ${formatNumber(calculateMHDropAlchemyValue(form), 4)}；平均每理智转化炼金值 = ${formatNumber(calculateMHDropAverageAlchemyValue(form), 4)}`,
+        formulaTextGetter: (form) => `总炼金值 = ${formatNumber(calculateMHDropAlchemyValue(form), 4)}；平均每理智转化炼金值 = ${formatNumber(calculateMHDropAverageAlchemyValue(form), 4)}`,
         extraPreviewItemsGetter: (form) => [
             {
                 key: "alchemyValue",
-                label: "炼金值",
+                label: "总炼金值",
                 value: calculateMHDropAlchemyValue(form),
                 badge: "V",
             },
@@ -246,13 +246,21 @@ function createUploadCardState({
         payloadPreview,
         recordPreview,
         debugPreviewText: computed(() => JSON.stringify(recordPreview.value, null, 2)),
-        previewItems: computed(() => [
-            ...fields.map((field) => ({
-                ...field,
-                value: form[field.key],
-            })),
-            ...extraPreviewItemsGetter(form),
-        ]),
+        previewItems: computed(() => {
+            const items = [
+                ...fields.map((field) => ({
+                    ...field,
+                    value: form[field.key],
+                })),
+                ...extraPreviewItemsGetter(form),
+            ];
+            if (key !== "mhDrop") return items;
+            const materialKeys = new Set(mhDropMaterialFields.map((field) => field.key));
+            return [
+                ...items.filter((field) => materialKeys.has(field.key)),
+                ...items.filter((field) => !materialKeys.has(field.key)),
+            ];
+        }),
         hasInvalidInput: computed(() => fields.some((field) => {
             if (field.type === "buttonGroup") return !field.options.includes(form[field.key]);
             return !Number.isFinite(form[field.key]) || form[field.key] < 0;
@@ -492,7 +500,7 @@ function formatValue(value, digits = 2) {
           </div>
           <div v-else class="times-icon">{{ field.badge || field.label.slice(0, 1) }}</div>
           <div>
-            <span class="resources-label">{{ field.payloadKey || field.label }}</span>
+            <span class="resources-label">{{ field.label || field.payloadKey }}</span>
             <span class="resources-quantity">{{ field.type === "buttonGroup" ? field.value : formatNumber(field.value, 4) }}</span>
           </div>
         </div>
