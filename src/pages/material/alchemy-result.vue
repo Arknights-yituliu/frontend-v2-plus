@@ -34,7 +34,16 @@ const mhDropMaterialFields = [
 ];
 
 const mhDropUploadFields = [
-    { key: "times", label: "次数", payloadKey: "times", step: 1, defaultValue: 1, badge: "T" },
+    {
+        key: "times",
+        label: "次数",
+        payloadKey: "times",
+        type: "buttonGroup",
+        defaultValue: 1,
+        badge: "T",
+        options: [1, 2, 3, 4, 5, 6],
+        groupWidth: "240px",
+    },
     {
         key: "stage",
         label: "关卡",
@@ -43,6 +52,7 @@ const mhDropUploadFields = [
         defaultValue: "TD-8",
         badge: "S",
         options: ["TD-6", "TD-7", "TD-8"],
+        groupWidth: "200px",
     },
     ...mhDropMaterialFields,
 ];
@@ -439,6 +449,7 @@ function formatValue(value, digits = 2) {
             v-if="field.type === 'buttonGroup'"
             v-model="card.form[field.key]"
             class="alchemy-stage-group"
+            :style="{ width: field.groupWidth || '200px' }"
           >
             <el-radio-button
               v-for="option in field.options"
@@ -762,16 +773,19 @@ function formatValue(value, digits = 2) {
 
 .alchemy-number-input,
 .alchemy-stage-group {
-  width: 200px;
+  display: inline-flex;
+  flex-wrap: nowrap;
   justify-self: end;
 }
 
 .alchemy-stage-group :deep(.el-radio-button) {
   flex: 1 1 0;
+  min-width: 0;
 }
 
 .alchemy-stage-group :deep(.el-radio-button__inner) {
   width: 100%;
+  padding: 8px 0;
 }
 
 .resources-result-bar {
