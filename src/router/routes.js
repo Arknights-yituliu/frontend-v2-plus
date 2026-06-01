@@ -165,6 +165,18 @@ const routes = [
         }
     },
     {
+        path: '/tools/schedule-images',
+        text: '一图流排班表',
+        name: 'ScheduleImages',
+        display: true,
+        module: 'tools',
+        icon: "mdi-image-multiple",
+        component: () => import('/src/pages/tools/schedule-images.vue'),
+        meta: {
+            title: '一图流排班表'
+        }
+    },
+    {
         path: '/tools/scheduleV2',
         text: '排班表生成器',
         name: 'ScheduleV2',
