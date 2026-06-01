@@ -525,6 +525,7 @@ function formatValue(value, digits = 2) {
         <span></span>
         收益参数
       </div>
+      <p class="material-value-tip times-formula">当前参数为估算预设值，需要等统计出足够多的数据，才可以计算精确值，统计数据我们会定时更新</p>
 
       <div class="reward-config sanity-rate-config">
         <label class="draw-cost-field">
@@ -567,7 +568,7 @@ function formatValue(value, digits = 2) {
         <span></span>
         材料价值
       </div>
-      <p class="material-value-tip">如果有自己不需要的材料，可以调低该材料的价值</p>
+      <p class="material-value-tip times-formula">如果有自己不需要的材料，可以调低该材料的价值</p>
 
       <div class="reward-config">
         <div class="reward-row-list">
@@ -1005,9 +1006,6 @@ function formatValue(value, digits = 2) {
 .material-value-tip {
   margin: 0;
   padding: 8px 14px 0;
-  color: #7b8794;
-  font-size: 13px;
-  font-weight: 700;
 }
 
 .draw-cost-field {
