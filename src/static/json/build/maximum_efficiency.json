@@ -1,10 +1,27 @@
 [
   {
+    "name": "雷狼龙S空爆",
+    "profession": "近卫/狙击",
+    "max_efficiency": 0.5,
+    "conditions": {
+      "target_profession": [
+        "近卫",
+        "狙击"
+      ],
+      "skill_name": "兴之所至·β"
+    },
+    "skill_name": "进驻训练室协助位时，近卫与狙击干员的专精技能训练速度+50%，心情每小时消耗+1",
+    "charId": "char_1049_catap2"
+  },
+  {
     "name": "维伊",
     "profession": "术师/近卫",
     "max_efficiency": 0.45,
     "conditions": {
-      "target_profession": ["术师", "近卫"],
+      "target_profession": [
+        "术师",
+        "近卫"
+      ],
       "skill_name": "触类旁通"
     },
     "skill_name": "进驻训练室协助位时，术师与近卫干员的专精技能训练速度+45%",
