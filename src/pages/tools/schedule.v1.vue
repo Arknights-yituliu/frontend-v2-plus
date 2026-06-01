@@ -12,11 +12,11 @@ import {operatorFilterConditionTable} from '/src/utils/buildingSkillFilter.js'
 import {translate} from '/src/utils/i18n.js'
 import {readFileToString} from '/src/utils/fileUtils.js'
 import {debounce} from "/src/utils/debounce.js";
-import { createMessage} from '/src/utils/message.js'
+import {createMessage} from '/src/utils/message.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {useDisplay} from 'vuetify'
 import {useRouter} from 'vue-router';
-import { saveAs } from 'file-saver';
+import {saveAs} from 'file-saver';
 
 const router = useRouter();
 
@@ -31,9 +31,9 @@ for (const label in operatorFilterConditionTable) {
     condition.type = name
     operatorFilterConditionList.push(condition)
   }
-
-
 }
+
+
 
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import BuildingFactory from "/src/components/tools/BuildingFactory.vue";
@@ -56,6 +56,8 @@ async function getOperatorDataByAccount() {
   })
 
 }
+
+const scheduleSetPanel = ref(['set'])
 
 let plansTemplate = ref(SCHEDULE_TEMPLATE)
 
@@ -145,12 +147,15 @@ function getRoomOperators(scheduleIndex, room, index) {
     return []
   }
   if (!plansTemplate.value[scheduleIndex].rooms[room]) {
-    createMessage({type:'error',text:'Facility#' + room + '-' + translate('schedule', 'schedule.FacilityNotExist')})
+    createMessage({type: 'error', text: 'Facility#' + room + '-' + translate('schedule', 'schedule.FacilityNotExist')})
     return []
   }
 
   if (!plansTemplate.value[scheduleIndex].rooms[room][index]) {
-    createMessage({type:'error',text:'Operator#' + index + '-' + translate('schedule', 'schedule.OperatorIndexOutOfBounds')})
+    createMessage({
+      type: 'error',
+      text: 'Operator#' + index + '-' + translate('schedule', 'schedule.OperatorIndexOutOfBounds')
+    })
     return []
   }
 
@@ -424,7 +429,7 @@ const roomPopupStyle = "width:550px;"
 const filterOperatorByOwn = debounce(() => {
   filterNotOwnOperator.value = !filterNotOwnOperator.value
   if (operatorOwnMap.size < 10) {
-    createMessage({type:'error',text:'未登录或未导入'})
+    createMessage({type: 'error', text: '未登录或未导入'})
     return
   }
 
@@ -485,7 +490,7 @@ function checkRoomDuplicateOperator(charName) {
   if (plansTemplate.value[selectedScheduleIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.includes(charName)) {
-    createMessage({type:'error',text:translate('schedule', 'schedule.OperatorAlreadyStationed')})
+    createMessage({type: 'error', text: translate('schedule', 'schedule.OperatorAlreadyStationed')})
     return false;
   }
 
@@ -501,7 +506,7 @@ function checkRoomMaximum() {
   if (plansTemplate.value[selectedScheduleIndex.value]
       .rooms[selectedRoomType.value][selectedRoomIndex.value]
       .operators.length >= roomSettlementOperatorMaxQuantity[selectedRoomType.value]) {
-    createMessage({type:'error',text:translate('schedule', 'schedule.FacilityFull')})
+    createMessage({type: 'error', text: translate('schedule', 'schedule.FacilityFull')})
     return false;
   }
 
@@ -540,7 +545,7 @@ function checkPlanDuplicateOperator(index, charName, status) {
   //如果是入驻干员并且检查表里干员状态是已经入驻，弹出警告
   if (duplicateOperatorTable.value[index][charName] && status) {
 
-    createMessage({type:'error',text:translate('schedule', 'schedule.OperatorStationedDifferent')})
+    createMessage({type: 'error', text: translate('schedule', 'schedule.OperatorStationedDifferent')})
     return false;
   }
   // 更新检查表里干员状态
@@ -625,7 +630,7 @@ function getRoomProduct(scheduleIndex, roomType, index) {
 function fillOperatorConflict(index) {
   if (plansTemplate.value[selectedScheduleIndex.value].rooms['dormitory'][index].autofill) {
     if (plansTemplate.value[selectedScheduleIndex.value].rooms['dormitory'][index].operators) {
-      createMessage({type:'error',text:translate('schedule', 'schedule.AutofillDormTip')})
+      createMessage({type: 'error', text: translate('schedule', 'schedule.AutofillDormTip')})
     }
   }
 }
@@ -655,7 +660,7 @@ function setFiammetta(scheduleIndex, property, value) {
   FiammettaDialogVisible.value = false
 }
 
-function openFiammettaDialog(scheduleIndex){
+function openFiammettaDialog(scheduleIndex) {
   selectedScheduleIndex.value = scheduleIndex
   FiammettaDialogVisible.value = true
 }
@@ -666,7 +671,7 @@ watch(() => plansTemplate.value[selectedScheduleIndex.value].rooms[selectedRoomT
       if (newVal && selectedRoomType.value === 'dormitory') {
         if (plansTemplate.value[selectedScheduleIndex.value].rooms
             [selectedRoomType.value][selectedRoomIndex.value].operators.length > 0) {
-          createMessage({type:'warn',text:translate('schedule', 'schedule.AutofillDormTip')})
+          createMessage({type: 'warn', text: translate('schedule', 'schedule.AutofillDormTip')})
         }
       }
     }
@@ -748,7 +753,7 @@ function saveAndDownloadScheduleFile() {
     const blob = new Blob([JSON.stringify(scheduleInfo.value, null, 2)], {type: "application/json"});
     saveAs(blob, `${scheduleId.value}.json`)
 
-    createMessage({type:'success',text:translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value})
+    createMessage({type: 'success', text: translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value})
   })
 }
 
@@ -794,7 +799,7 @@ async function importScheduleByFile() {
   try {
     schedule = JSON.parse(fileContent)
   } catch (e) {
-    createMessage({type:'error',text:e.toString()})
+    createMessage({type: 'error', text: e.toString()})
     return
   }
   importSchedule(schedule)
@@ -898,7 +903,7 @@ function importSchedule(schedule) {
 
   function getHourAndMinute(str) {
     if (str.indexOf(":") < 0) {
-      createMessage({type:'error',text:translate('schedule', 'schedule.ShiftTimesError')})
+      createMessage({type: 'error', text: translate('schedule', 'schedule.ShiftTimesError')})
     }
     const strSplit = str.split(":")
     return {
@@ -931,10 +936,7 @@ function useNewUI() {
 
     <div>
       <!--选择基建布局和换班次数-->
-      <v-btn color="red" class="m-2"
-             @click="scheduleTypePopupVisible = !scheduleTypePopupVisible">
-        {{ translate('schedule', 'schedule.InfrastructureLayout') }}
-      </v-btn>
+
       <v-btn color="orange" class="m-2"
              @click="useNewUI()" text="切换到新版UI">
       </v-btn>
@@ -1046,6 +1048,74 @@ function useNewUI() {
     </v-dialog>
 
     <div class="schedule-box-container">
+      <v-expansion-panels  class="schedule-set-card-v1" v-model="scheduleSetPanel">
+        <v-expansion-panel title="排班表基础设置" value="set">
+          <v-expansion-panel-text>
+          <v-card>
+            <v-card-text>
+              <div class="schedule-set-wrap">
+                <!--换班表名称-->
+                <div class="schedule-set-bar">
+                  <span>{{ translate('schedule', 'schedule.ScheduleTitle') }}</span>
+                  <v-text-field density="compact" hide-details variant="outlined" v-model="scheduleInfo.title">
+                  </v-text-field>
+                </div>
+                <!--换班表描述-->
+                <div class="schedule-set-bar">
+                  <span>{{ translate('schedule', 'schedule.ScheduleDescription') }}</span>
+                  <v-text-field density="compact" hide-details variant="outlined" v-model="scheduleInfo.description">
+                  </v-text-field>
+                </div>
+                <!--文件作者-->
+                <div class="schedule-set-bar">
+                  <span>{{ translate('schedule', 'schedule.Author') }}</span>
+                  <v-text-field density="compact" hide-details variant="outlined" v-model="scheduleInfo.author">
+                  </v-text-field>
+                </div>
+
+                <!--基建布局-->
+                <div class="schedule-set-bar">
+                  <span>{{ translate('schedule', 'schedule.BaseLayout') }}</span>
+                  <div>
+                    <v-btn color="primary" class="m-2"
+                           :variant="menu.label === selectedScheduleType.label?void 0:`tonal`"
+                           @click="chooseScheduleType(menu)" v-for="(menu, index) in SCHEDULE_MENU" :key="index">
+                      {{ menu.label }}
+                    </v-btn>
+                  </div>
+                </div>
+
+                <!--换班次数-->
+                <div class="schedule-set-bar">
+                  <span>{{ translate('schedule', 'schedule.ShiftNumber') }}</span>
+                  <div>
+                    <v-btn color="primary" class="m-2" :variant="num === scheduleTypeV2.planTimes?void 0:`tonal`"
+                           v-for="(num, index) in 6" :key="index" @click="choosePlanTimes(num)">
+                      {{ num }}
+                    </v-btn>
+                  </div>
+                </div>
+
+                <div class="schedule-set-bar">
+                  <!--定时换班-->
+                  <span class="room-set-description">{{ translate('schedule', 'schedule.TimedShiftChange') }}</span>
+                  <v-switch color="success" density="compact" hide-details
+                            v-model="isPeriod"></v-switch>
+                  <!--不选择则按班次顺序执行-->
+                  <div class="schedule-set-tip">&emsp;{{ translate('schedule', 'schedule.TimedShiftChangeTip') }}</div>
+                </div>
+
+
+              </div>
+            </v-card-text>
+          </v-card>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
+      <div>
+
+
+      </div>
       <div class="flex schedule-box">
         <v-card class="schedule-item-card" v-for="(index,scheduleIndex) in scheduleTypeV2.planTimes">
           {{ `#${scheduleIndex}` }}
@@ -1315,34 +1385,34 @@ function useNewUI() {
     <v-dialog v-model="FiammettaDialogVisible" max-width="800">
       <v-card class="m-a">
         <v-card-text>
-        <!--筛选条件-->
-        <span class="room-set-label">{{ translate('schedule', 'schedule.FilterCondition') }}</span>
-        <v-select :items="operatorFilterConditionList"
-                  v-model="filterCondition"
-                  variant="outlined"
-                  color="primary">
-          <template v-slot:selection="{ item, index }">
-            <!--              {{item}}-->
-            <span>{{ `${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}` }}</span>
-          </template>
-          <template v-slot:item="{ props, item }">
-            <v-list-item v-bind="props"
-                         :title="`${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}`">
-            </v-list-item>
-          </template>
-        </v-select>
-
-        <!--待选干员-->
-        <span class="room-set-label">{{ translate('schedule', 'schedule.AvailableCharacter') }}</span>
-        <div class="flex flex-wrap">
-          <v-btn v-for="(operator, charId) in displayOperatorList" :key="charId"
-                 @click="setFiammetta(selectedScheduleIndex,'target', operator.name)"
-                 :text="operator.name" variant="tonal" color="primary" class="m-2">
-            <template v-slot:prepend>
-              <OperatorAvatar :size="28" :mobile-size="30" rounded :char-id="operator.charId"></OperatorAvatar>
+          <!--筛选条件-->
+          <span class="room-set-label">{{ translate('schedule', 'schedule.FilterCondition') }}</span>
+          <v-select :items="operatorFilterConditionList"
+                    v-model="filterCondition"
+                    variant="outlined"
+                    color="primary">
+            <template v-slot:selection="{ item, index }">
+              <!--              {{item}}-->
+              <span>{{ `${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}` }}</span>
             </template>
-          </v-btn>
-        </div>
+            <template v-slot:item="{ props, item }">
+              <v-list-item v-bind="props"
+                           :title="`${translate('schedule', item.raw.type)}—${translate('schedule', item.raw.label)}`">
+              </v-list-item>
+            </template>
+          </v-select>
+
+          <!--待选干员-->
+          <span class="room-set-label">{{ translate('schedule', 'schedule.AvailableCharacter') }}</span>
+          <div class="flex flex-wrap">
+            <v-btn v-for="(operator, charId) in displayOperatorList" :key="charId"
+                   @click="setFiammetta(selectedScheduleIndex,'target', operator.name)"
+                   :text="operator.name" variant="tonal" color="primary" class="m-2">
+              <template v-slot:prepend>
+                <OperatorAvatar :size="28" :mobile-size="30" rounded :char-id="operator.charId"></OperatorAvatar>
+              </template>
+            </v-btn>
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>

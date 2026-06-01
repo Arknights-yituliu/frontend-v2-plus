@@ -402,6 +402,7 @@ let originiumPackList = ref([]);
 
 //上一年年重置的首充源石
 let listLastYearOriginiumPack = ref([]);
+const shouldShowLastYearOriginiumPack = computed(() => dateRangeIncludesMayFirst(currentTimestamp.value, currentSchedule.value.end));
 
 //每月重置的礼包集合
 let monthlyPackList = ref([]);
@@ -411,6 +412,40 @@ let activityPackInfoList = ref([]);
 
 //历史礼包集合
 let packListGroupByHistory = ref([]);
+
+function dateRangeIncludesMayFirst(startTimestamp, endDate) {
+  const start = new Date(startTimestamp);
+  const end = new Date(endDate);
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    return false;
+  }
+
+  const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
+  const endDay = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 23, 59, 59, 999).getTime();
+
+  if (startDay > endDay) {
+    return false;
+  }
+
+  for (let year = start.getFullYear(); year <= end.getFullYear(); year++) {
+    const mayFirst = new Date(year, 4, 1).getTime();
+    if (mayFirst >= startDay && mayFirst <= endDay) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function clearLastYearOriginiumPackSelection() {
+  if (shouldShowLastYearOriginiumPack.value || listLastYearOriginiumPack.value.length === 0) {
+    return;
+  }
+
+  const hiddenPackIds = new Set(listLastYearOriginiumPack.value.map((pack) => pack.id));
+  selectedPackCollect.value = selectedPackCollect.value.filter((packId) => !hiddenPackIds.has(packId));
+}
 
 //全部礼包集合
 let displayPackList = ref([]);
@@ -965,6 +1000,7 @@ function gachaResourcesCalculation() {
   calculationResult.value.gachaTicket = 0;
   calculationResult.value.tenGachaTicket = 0;
 
+  clearLastYearOriginiumPackSelection();
   dailyRewardCalculate();
   existCalculate();
   produceOrundumCalculate();
@@ -2633,13 +2669,15 @@ function sharePage() {
             </el-checkbox-button>
           </el-checkbox-group>
 
-          <!--首次充值源石-->
-          <div class="collapse-content-subheading"><span></span> 首次充值源石（周年刷新前）</div>
-          <el-checkbox-group v-model="selectedPackCollect" style="margin: 4px" @change="gachaResourcesCalculation">
-            <el-checkbox-button v-for="(pack, index) in listLastYearOriginiumPack" :key="index" :value="pack.id" class="el-checkbox-button">
-              <PackButtonContent :data="pack"> </PackButtonContent>
-            </el-checkbox-button>
-          </el-checkbox-group>
+          <template v-if="shouldShowLastYearOriginiumPack">
+            <!--首次充值源石-->
+            <div class="collapse-content-subheading"><span></span> 首次充值源石（周年刷新前）</div>
+            <el-checkbox-group v-model="selectedPackCollect" style="margin: 4px" @change="gachaResourcesCalculation">
+              <el-checkbox-button v-for="(pack, index) in listLastYearOriginiumPack" :key="index" :value="pack.id" class="el-checkbox-button">
+                <PackButtonContent :data="pack"> </PackButtonContent>
+              </el-checkbox-button>
+            </el-checkbox-group>
+          </template>
 
           <!--首次充值源石-->
           <div class="collapse-content-subheading"><span></span> 首次充值源石（周年刷新后）</div>

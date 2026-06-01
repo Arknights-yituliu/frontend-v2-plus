@@ -37,6 +37,18 @@ const routes = [
         }
     },
     {
+        path: '/material/alchemy',
+        text: '怪猎炼金池数据统计',
+        name: 'AlchemyResult',
+        display: true,
+        module: 'material',
+        icon: "mdi-flask-outline",
+        component: () => import('/src/pages/material/alchemy-result.vue'),
+        meta: {
+            title: '怪猎炼金池数据统计'
+        }
+    },
+    {
         path: '/',
         text: '关卡推荐',
         name: 'StageRecommendation',
@@ -150,6 +162,18 @@ const routes = [
         component: () => import('/src/pages/tools/gacha-calc-test.vue'),
         meta: {
             title: '攒抽计算器（测试）'
+        }
+    },
+    {
+        path: '/tools/schedule-images',
+        text: '一图流排班表',
+        name: 'ScheduleImages',
+        display: true,
+        module: 'tools',
+        icon: "mdi-image-multiple",
+        component: () => import('/src/pages/tools/schedule-images.vue'),
+        meta: {
+            title: '一图流排班表'
         }
     },
     {
