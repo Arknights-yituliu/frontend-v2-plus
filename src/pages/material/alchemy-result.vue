@@ -525,7 +525,7 @@ function formatValue(value, digits = 2) {
       <header class="alchemy-card-header">
         <div class="alchemy-card-title">
           <div class="collapse-title-icon profit-title-icon"></div>
-          <span class="collapse-title-font">炼金收益计算器</span>
+          <span class="collapse-title-font">无限池收益计算器</span>
         </div>
         <div class="alchemy-card-meta">
           <span>{{ defaultDrawCost }} 炼金材料 / 抽</span>
