@@ -170,9 +170,12 @@ const totalRewardValue = computed(() => {
     }, 0);
 });
 
-const yieldRate = computed(() => {
+const alchemyYieldRate = computed(() => {
     return totalRewardValue.value * toNumber(sanityToAlchemyRate.value) / defaultDrawCost;
 });
+
+const lmdYieldRate = 12 * 0.0036;
+const totalYieldRate = computed(() => alchemyYieldRate.value + lmdYieldRate);
 
 function formatNumber(value, maximumFractionDigits = 4) {
     if (!Number.isFinite(value)) return "0";
@@ -606,10 +609,20 @@ function formatValue(value, digits = 2) {
       </div>
 
       <footer class="alchemy-card-footer">
-        <div class="profit-result-grid">
+        <div class="profit-result-grid yield-formula-grid">
           <div class="profit-final-result">
-            <span>收益率</span>
-            <strong>{{ formatValue(yieldRate * 100) }}%</strong>
+            <span>炼金收益率</span>
+            <strong>{{ formatValue(alchemyYieldRate * 100) }}%</strong>
+          </div>
+          <span class="yield-operator">+</span>
+          <div class="profit-final-result">
+            <span>刷图龙门币收益</span>
+            <strong>{{ formatValue(lmdYieldRate * 100) }}%</strong>
+          </div>
+          <span class="yield-operator">=</span>
+          <div class="profit-final-result">
+            <span>总收益率</span>
+            <strong>{{ formatValue(totalYieldRate * 100) }}%</strong>
           </div>
         </div>
         <div class="action-row">
@@ -1089,6 +1102,11 @@ function formatValue(value, digits = 2) {
   gap: 8px;
 }
 
+.yield-formula-grid {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+}
+
 .profit-result-grid > div {
   display: grid;
   gap: 4px;
@@ -1101,6 +1119,12 @@ function formatValue(value, digits = 2) {
   color: #7b8794;
   font-size: 12px;
   font-weight: 700;
+}
+
+.profit-result-grid .yield-operator {
+  color: #599dff;
+  font-size: 20px;
+  font-weight: 900;
 }
 
 .profit-result-grid strong {
@@ -1136,8 +1160,8 @@ function formatValue(value, digits = 2) {
     justify-self: start;
   }
 
-  .profit-result-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .yield-formula-grid {
+    grid-template-columns: 1fr;
   }
 }
 
