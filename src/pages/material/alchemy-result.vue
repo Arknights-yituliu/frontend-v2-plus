@@ -25,12 +25,12 @@ const alchemyUploadFields = [
 ];
 
 const mhDropMaterialFields = [
-    { key: "brokenBone", label: "破碎的骨片", payloadKey: "破碎的骨片", step: 1, badge: "2", alchemyValue: 2 },
-    { key: "bamboo", label: "烈竹", payloadKey: "烈竹", step: 1, badge: "3", alchemyValue: 3 },
-    { key: "firefly", label: "萤虫", payloadKey: "萤虫", step: 1, badge: "5", alchemyValue: 5 },
-    { key: "charcoal", label: "火竹炭", payloadKey: "火竹炭", step: 1, badge: "10", alchemyValue: 10 },
-    { key: "iceCrystal", label: "熔火冰晶", payloadKey: "熔火冰晶", step: 1, badge: "20", alchemyValue: 20 },
-    { key: "zinogreJasper", label: "雷狼龙的碧玉", payloadKey: "雷狼龙的碧玉", step: 1, badge: "200", alchemyValue: 200 },
+    { key: "brokenBone", label: "破碎的骨片", payloadKey: "破碎的骨片", step: 1, icon: "/image/mh/破碎的骨片.png", alchemyValue: 2 },
+    { key: "bamboo", label: "烈竹", payloadKey: "烈竹", step: 1, icon: "/image/mh/烈竹.png", alchemyValue: 3 },
+    { key: "firefly", label: "萤虫", payloadKey: "萤虫", step: 1, icon: "/image/mh/萤虫.png", alchemyValue: 5 },
+    { key: "charcoal", label: "火竹炭", payloadKey: "火竹炭", step: 1, icon: "/image/mh/火竹炭.png", alchemyValue: 10 },
+    { key: "iceCrystal", label: "熔火冰晶", payloadKey: "熔火冰晶", step: 1, icon: "/image/mh/熔火冰晶.png", alchemyValue: 20 },
+    { key: "zinogreJasper", label: "雷狼龙的碧玉", payloadKey: "雷狼龙的碧玉", step: 1, icon: "/image/mh/雷狼龙的碧玉.png", alchemyValue: 200 },
 ];
 
 const mhDropUploadFields = [
