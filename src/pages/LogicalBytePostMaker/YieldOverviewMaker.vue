@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import ItemImage from '/src/components/sprite/ItemImage.vue'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
@@ -24,6 +24,8 @@ const selectedOperatorId = ref('')
 const itemInfoMap = ref(createItemInfoMap(fallbackItemInfo))
 const itemValueLoading = ref(false)
 const showSkillT4Materials = ref(false)
+const tableCaptureRef = ref(null)
+const isExportingTable = ref(false)
 
 const operatorCandidates = computed(() => {
   const keyword = operatorName.value.trim()
@@ -324,6 +326,44 @@ function selectCandidate(charId) {
   selectedOperatorId.value = charId
 }
 
+function getExportFileName() {
+  const name = matchedOperator.value?.name || '收益速览'
+  const safeName = name.replace(/[\\/:*?"<>|]/g, '_')
+  return `收益速览制图-${safeName}-${Date.now()}.png`
+}
+
+async function downloadTablePng() {
+  if (!tableCaptureRef.value || isExportingTable.value) {
+    return
+  }
+
+  try {
+    isExportingTable.value = true
+    await nextTick()
+    await document.fonts?.ready
+
+    const { default: html2canvas } = await import('html2canvas')
+    const canvas = await html2canvas(tableCaptureRef.value, {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true,
+      allowTaint: false,
+      logging: false,
+    })
+
+    const link = document.createElement('a')
+    link.download = getExportFileName()
+    link.href = canvas.toDataURL('image/png')
+    link.click()
+    ElMessage.success('表格截图已下载')
+  } catch (error) {
+    console.error('下载收益速览表格截图失败:', error)
+    ElMessage.error(error?.message || '表格截图失败')
+  } finally {
+    isExportingTable.value = false
+  }
+}
+
 async function refreshItemValues() {
   itemValueLoading.value = true
   try {
@@ -368,52 +408,54 @@ onMounted(() => {
             <div class="brand-mark">明日方舟一图流</div>
           </header>
 
-          <table class="overview-table">
-            <colgroup>
-              <col class="row-title-column">
-              <col class="material-column">
-              <col class="cost-column">
-              <col class="rank-column">
-            </colgroup>
-            <thead>
-              <tr>
-                <th></th>
-                <th>主要材料</th>
-                <th>理智消耗</th>
-                <th>排名/总数</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in tableRows" :key="row.key">
-                <td class="row-title-cell">
-                  <div class="row-title">{{ row.title }}</div>
-                  <div v-if="row.subtitle" class="row-subtitle">{{ row.subtitle }}</div>
-                </td>
-                <td class="material-cell">
-                  <div v-if="row.materials.length > 0" class="material-list">
-                    <div
-                      v-for="material in row.materials"
-                      :key="row.key + '-' + material.itemId"
-                      class="material-row"
-                    >
+          <div ref="tableCaptureRef" class="table-capture-area">
+            <table class="overview-table">
+              <colgroup>
+                <col class="row-title-column">
+                <col class="material-column">
+                <col class="cost-column">
+                <col class="rank-column">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>主要材料</th>
+                  <th>理智消耗</th>
+                  <th>排名/总数</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in tableRows" :key="row.key">
+                  <td class="row-title-cell">
+                    <div class="row-title">{{ row.title }}</div>
+                    <div v-if="row.subtitle" class="row-subtitle">{{ row.subtitle }}</div>
+                  </td>
+                  <td class="material-cell">
+                    <div v-if="row.materials.length > 0" class="material-list">
                       <div
-                        v-for="index in material.count"
-                        :key="row.key + '-' + material.itemId + '-' + index"
-                        class="material-entry"
-                        :title="material.itemName"
+                        v-for="material in row.materials"
+                        :key="row.key + '-' + material.itemId"
+                        class="material-row"
                       >
-                        <ItemImage :item-id="material.itemId" :size="44" />
+                        <div
+                          v-for="index in material.count"
+                          :key="row.key + '-' + material.itemId + '-' + index"
+                          class="material-entry"
+                          :title="material.itemName"
+                        >
+                          <ItemImage :item-id="material.itemId" :size="44" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div v-else class="no-t5-text">无 T5 精英材料</div>
-                  <div v-if="row.otherSummary" class="other-materials">{{ row.otherSummary }}</div>
-                </td>
-                <td class="number-cell">{{ formatCost(row.totalCost) }}</td>
-                <td class="number-cell">{{ row.rank }}</td>
-              </tr>
-            </tbody>
-          </table>
+                    <div v-else class="no-t5-text">无 T5 精英材料</div>
+                    <div v-if="row.otherSummary" class="other-materials">{{ row.otherSummary }}</div>
+                  </td>
+                  <td class="number-cell">{{ formatCost(row.totalCost) }}</td>
+                  <td class="number-cell">{{ row.rank }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <div v-else class="empty-preview">
@@ -466,6 +508,15 @@ onMounted(() => {
         <div class="control-note">
           专精行默认只展开 T5 精英材料；打开开关后追加显示 id 为 xxxx4 的紫色精英材料。理智消耗和排名始终按该行全部材料计算。
         </div>
+
+        <button
+          type="button"
+          class="screenshot-button"
+          :disabled="isExportingTable || !matchedOperator || tableRows.length === 0"
+          @click="downloadTablePng"
+        >
+          {{ isExportingTable ? '截图中...' : '截图表格' }}
+        </button>
 
         <button
           type="button"
@@ -576,6 +627,12 @@ onMounted(() => {
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
+}
+
+.table-capture-area {
+  background:
+    radial-gradient(circle at 80% 8%, rgba(157, 178, 191, 0.16), transparent 34%),
+    linear-gradient(145deg, #3d4247, #2c3035);
 }
 
 .overview-table th {
@@ -739,7 +796,8 @@ onMounted(() => {
 }
 
 .candidate-button,
-.refresh-button {
+.refresh-button,
+.screenshot-button {
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 6px;
   background: #313946;
@@ -810,12 +868,23 @@ onMounted(() => {
   line-height: 1.5;
 }
 
-.refresh-button {
+.refresh-button,
+.screenshot-button {
   height: 38px;
   font-weight: 700;
 }
 
-.refresh-button:disabled {
+.screenshot-button {
+  border-color: rgba(127, 183, 255, 0.34);
+  background: #1f5f99;
+}
+
+.screenshot-button:hover:not(:disabled) {
+  background: #256da9;
+}
+
+.refresh-button:disabled,
+.screenshot-button:disabled {
   cursor: not-allowed;
   opacity: 0.66;
 }
