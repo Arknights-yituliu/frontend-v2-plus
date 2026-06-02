@@ -38,6 +38,7 @@ const removePackShadow = ref(false)
 const packGreenBackground = ref(false)
 const packContentWhiteBackground = ref(false)
 const hidePackCountdown = ref(false)
+const screenshotModeEnabled = ref(false)
 const displayControlVisible = ref(false)
 
 // 排序选项
@@ -103,6 +104,7 @@ function handleClick(divName) {
     removePackShadow.value = true
     packContentWhiteBackground.value = true
     hidePackCountdown.value = true
+    screenshotModeEnabled.value = false
     collectPackInfoVO()
     clickSequence.value = []
   }
@@ -123,6 +125,7 @@ function debugPackEfficiencyLine() {
         removePackShadow.value = true
         packContentWhiteBackground.value = true
         hidePackCountdown.value = true
+        screenshotModeEnabled.value = false
         collectPackInfoVO()
 
         element.style.width = '1032px';
@@ -518,6 +521,7 @@ onMounted(() => {
             <span class="pack-display-control-title">显示控制</span>
             <v-switch v-model="removePackShadow" label="去除阴影" color="primary" density="compact" hide-details></v-switch>
             <v-switch v-model="hidePackCountdown" label="隐藏倒计时" color="primary" density="compact" hide-details></v-switch>
+            <v-switch v-model="screenshotModeEnabled" label="截图模式" color="primary" density="compact" hide-details></v-switch>
             <v-switch v-model="packGreenBackground" label="背景变绿" color="success" density="compact" hide-details></v-switch>
           </div>
         </div>
@@ -529,7 +533,7 @@ onMounted(() => {
                   color="red" class="m-4"></v-chip>
           <v-chip v-if="packInfo.title === '源石/首充源石'" text="每年周年庆会重置源石首充" color="red"
                   class="m-4"></v-chip>
-          <PackCardContainer v-model="packInfo.packs" id="activity-pack"/>
+          <PackCardContainer v-model="packInfo.packs" :screenshot-mode="screenshotModeEnabled" id="activity-pack"/>
         </template>
       </template>
       <!-- 不会因为筛选改变的礼包 End -->
@@ -562,7 +566,7 @@ onMounted(() => {
       <!-- 按年份展示筛选礼包 -->
       <template v-for="collect in packCollect">
         <h2 style="margin: 12px;">{{ collect.year }}年</h2>
-        <PackCardContainer :modelValue="collect.list"/>
+        <PackCardContainer :modelValue="collect.list" :screenshot-mode="screenshotModeEnabled"/>
       </template>
 
       <!-- 礼包性价比总表 Start -->

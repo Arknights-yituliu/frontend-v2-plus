@@ -4,6 +4,8 @@ import ItemImage from "/src/components/sprite/ItemImage.vue";
 import { formatNumber } from "/src/utils/format.js";
 
 const id = generateRandomString(5)
+const screenshotTargetMap = ref(new Map())
+const screenshotLoadingMap = ref(new Map())
 
 function generateRandomString(length) {
   let result = '';
@@ -15,7 +17,7 @@ function generateRandomString(length) {
   return result;
 }
 
-const props = defineProps(["modelValue", "displayPackEfficiency"]);
+const props = defineProps(["modelValue", "displayPackEfficiency", "screenshotMode"]);
 
 function getPackImageLink(link) {
   return `https://cos.yituliu.cn/${link}`
@@ -86,100 +88,164 @@ function getPackCountdown(endDate, startDate) {
 function displayInfoCountdown(countdown) {
   return countdown?.type === 'history'
 }
+
+function setScreenshotTarget(packId, element) {
+  if (element) {
+    screenshotTargetMap.value.set(packId, element)
+  } else {
+    screenshotTargetMap.value.delete(packId)
+  }
+}
+
+function getScreenshotLoading(packId) {
+  return screenshotLoadingMap.value.get(packId) === true
+}
+
+function getScreenshotFileName(packInfo) {
+  const name = packInfo.officialName || packInfo.name || `pack-${packInfo.id}`
+  return name.replace(/[\\/:*?"<>|]/g, '_')
+}
+
+function downloadCanvas(canvas, packInfo) {
+  const link = document.createElement('a')
+  link.download = `${getScreenshotFileName(packInfo)}.png`
+  link.href = canvas.toDataURL('image/png')
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+}
+
+async function capturePackImage(packInfo) {
+  if (getScreenshotLoading(packInfo.id)) return
+
+  const target = screenshotTargetMap.value.get(packInfo.id)
+  if (!target) return
+
+  screenshotLoadingMap.value.set(packInfo.id, true)
+  try {
+    await document.fonts?.ready
+    const html2canvas = (await import('html2canvas')).default
+    const canvas = await html2canvas(target, {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      logging: false
+    })
+    downloadCanvas(canvas, packInfo)
+  } catch (error) {
+    console.error('礼包截图失败', error)
+  } finally {
+    screenshotLoadingMap.value.set(packInfo.id, false)
+  }
+}
 </script>
 
 <template>
   <div class="pack-card-container">
     <div v-for="(packInfo, index) in props.modelValue" :key="index" class="pack-card">
-      <!-- 图片部分 -->
-      <div class="flex">
-        <div class="pack-card-part-left" @click="displayPackContent(packInfo.id)">
-          <img :src="getPackImageLink(packInfo.imageLink)" alt="" class="pack-image">
-          <span class="pack-display-name">
-            {{ packInfo.officialName }}
-          </span>
-          <!-- 365天内倒计时标记，放在图片上避免挤压效率条 -->
-          <div class="pack-image-countdown" v-if="getPackCountdown(packInfo.end, packInfo.start)?.type === 'soon'">
-            {{ getPackCountdown(packInfo.end, packInfo.start).label }}
+      <div :ref="element => setScreenshotTarget(packInfo.id, element)">
+        <!-- 图片部分 -->
+        <div class="flex">
+          <div class="pack-card-part-left" @click="displayPackContent(packInfo.id)">
+            <img :src="getPackImageLink(packInfo.imageLink)" alt="" class="pack-image">
+            <span class="pack-display-name">
+              {{ packInfo.officialName }}
+            </span>
+            <!-- 365天内倒计时标记，放在图片上避免挤压效率条 -->
+            <div class="pack-image-countdown" v-if="getPackCountdown(packInfo.end, packInfo.start)?.type === 'soon'">
+              {{ getPackCountdown(packInfo.end, packInfo.start).label }}
+            </div>
+            <!-- 角标部分 -->
+            <div class="pack-corner corner-orange"> ￥{{ packInfo.price }}</div>
           </div>
-          <!-- 角标部分 -->
-          <div class="pack-corner corner-orange"> ￥{{ packInfo.price }}</div>
-        </div>
 
-        <!-- 总结部分 -->
-        <div class="pack-info" @click="displayPackContent(packInfo.id)">
-          <div class="pack-info-text">
-            <span style="color: #ffb46e">折合{{ getFixed(packInfo.packedOriginium, 1) }}石</span>
-            <span style="color: #ffb46e">￥{{ getFixed(packInfo.packedOriginiumPrice, 1) }}/石</span>
-            <span style="height: 8px"></span>
-            <span style="color: #ff6d6d;">共{{ getFixed(packInfo.draws, 1) }}抽</span>
-            <span style="color: #ff6d6d;">￥{{ getFixed(packInfo.drawPrice, 1) }}/抽</span>
-          </div>
-          <!-- 效率条部分 -->
-          <div class="pack-chart-line">
-            <div class="pack-chart-line-item" v-for="(line, index) in packInfo.lineChartData" v-show="line.display">
-              <span class="pack-chart-line-label">{{ line.label }}</span>
-              <div class="pack-line-bar" :style="getLineBarStyle(line)">
-                <span>{{ getFixed(line.value * 100, 0) }}%</span>
+          <!-- 总结部分 -->
+          <div class="pack-info" @click="displayPackContent(packInfo.id)">
+            <div class="pack-info-text">
+              <span style="color: #ffb46e">折合{{ getFixed(packInfo.packedOriginium, 1) }}石</span>
+              <span style="color: #ffb46e">￥{{ getFixed(packInfo.packedOriginiumPrice, 1) }}/石</span>
+              <span style="height: 8px"></span>
+              <span style="color: #ff6d6d;">共{{ getFixed(packInfo.draws, 1) }}抽</span>
+              <span style="color: #ff6d6d;">￥{{ getFixed(packInfo.drawPrice, 1) }}/抽</span>
+            </div>
+            <!-- 效率条部分 -->
+            <div class="pack-chart-line">
+              <div class="pack-chart-line-item" v-for="(line, index) in packInfo.lineChartData" v-show="line.display">
+                <span class="pack-chart-line-label">{{ line.label }}</span>
+                <div class="pack-line-bar" :style="getLineBarStyle(line)">
+                  <span>{{ getFixed(line.value * 100, 0) }}%</span>
+                </div>
               </div>
             </div>
-          </div>
-          <!-- 剩余时间 -->
-          <div class="pack-info-countdown" v-if="displayInfoCountdown(getPackCountdown(packInfo.end, packInfo.start))">
-            {{ getPackCountdown(packInfo.end, packInfo.start).label }}
+            <!-- 剩余时间 -->
+            <div class="pack-info-countdown" v-if="displayInfoCountdown(getPackCountdown(packInfo.end, packInfo.start))">
+              {{ getPackCountdown(packInfo.end, packInfo.start).label }}
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- 详情部分 -->
-      <div class="pack-content" :id="`${packInfo.id}${id}`">
-<!--        <div class="pack-content-gacha">-->
-<!--          <ItemImage :item-id="'4002'" :size="40" :mobile-size="30"></ItemImage>-->
-<!--          <span>X{{ packInfo.originium }}</span>-->
-<!--          <ItemImage :item-id="'4003'" :size="40" :mobile-size="30"></ItemImage>-->
-<!--          <span>X{{ packInfo.orundum }}</span>-->
-<!--          <ItemImage :item-id="'7003'" :size="40" :mobile-size="30"></ItemImage>-->
-<!--          <span>X{{ packInfo.gachaTicket }}</span>-->
-<!--          <ItemImage :item-id="'7004'" :size="40" :mobile-size="30"></ItemImage>-->
-<!--          <span>X{{ packInfo.tenGachaTicket }}</span>-->
-<!--        </div>-->
-        <div class="pack-content-material">
-          <!-- 新增详情表格取代之前的列表 -->
-          <v-table density="compact" style="width: 100%;">
-            <thead>
-              <tr>
-                <th class="text-left">名称</th>
-                <th class="text-left">数量</th>
-                <th class="text-left">总价值</th>
-                <th class="text-left">占比</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in packInfo.packContentVO.filter(i => i.quantity !== 0)" :key="item.itemId"
-                :style="itemAccentColor(item.itemName)" >
-                <td class="pack-content-item">
-                  <ItemImage :item-id="item.itemId" :size="40" :mobile-size="30" class="m-a"></ItemImage>
-                  <div class="pack-content-item-name">{{ item.itemName }}</div>
-                </td>
+        <!-- 详情部分 -->
+        <div class="pack-content" :id="`${packInfo.id}${id}`">
+  <!--        <div class="pack-content-gacha">-->
+  <!--          <ItemImage :item-id="'4002'" :size="40" :mobile-size="30"></ItemImage>-->
+  <!--          <span>X{{ packInfo.originium }}</span>-->
+  <!--          <ItemImage :item-id="'4003'" :size="40" :mobile-size="30"></ItemImage>-->
+  <!--          <span>X{{ packInfo.orundum }}</span>-->
+  <!--          <ItemImage :item-id="'7003'" :size="40" :mobile-size="30"></ItemImage>-->
+  <!--          <span>X{{ packInfo.gachaTicket }}</span>-->
+  <!--          <ItemImage :item-id="'7004'" :size="40" :mobile-size="30"></ItemImage>-->
+  <!--          <span>X{{ packInfo.tenGachaTicket }}</span>-->
+  <!--        </div>-->
+          <div class="pack-content-material">
+            <!-- 新增详情表格取代之前的列表 -->
+            <v-table density="compact" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th class="text-left">名称</th>
+                  <th class="text-left">数量</th>
+                  <th class="text-left">总价值</th>
+                  <th class="text-left">占比</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in packInfo.packContentVO.filter(i => i.quantity !== 0)" :key="item.itemId"
+                  :style="itemAccentColor(item.itemName)" >
+                  <td class="pack-content-item">
+                    <ItemImage :item-id="item.itemId" :size="40" :mobile-size="30" class="m-a"></ItemImage>
+                    <div class="pack-content-item-name">{{ item.itemName }}</div>
+                  </td>
 
-<!--                <td>{{ item.itemName }}</td>-->
-                <td>{{ item.quantity }}</td>
-                <td>{{ formatNumber(item.apValue, 1) }}</td>
-                <td>{{ formatNumber(item.itemRatio * 100, 1) }}%</td>
-              </tr>
-            </tbody>
-          </v-table>
-          <!-- <div class="pack-content-material-item" v-for="(item, index) in packInfo.packContent" :key="index"> -->
-          <!--            <ItemImage :item-id="item.itemId" :size="40" :mobile-size="30" v-show="!item.custom"></ItemImage>-->
-          <!-- <span class="pack-content-material-item-name">{{ item.itemName }}</span> -->
-          <!-- <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span> -->
-          <!-- </div> -->
+  <!--                <td>{{ item.itemName }}</td>-->
+                  <td>{{ item.quantity }}</td>
+                  <td>{{ formatNumber(item.apValue, 1) }}</td>
+                  <td>{{ formatNumber(item.itemRatio * 100, 1) }}%</td>
+                </tr>
+              </tbody>
+            </v-table>
+            <!-- <div class="pack-content-material-item" v-for="(item, index) in packInfo.packContent" :key="index"> -->
+            <!--            <ItemImage :item-id="item.itemId" :size="40" :mobile-size="30" v-show="!item.custom"></ItemImage>-->
+            <!-- <span class="pack-content-material-item-name">{{ item.itemName }}</span> -->
+            <!-- <span class="pack-content-material-item-quantity">X{{ item.quantity }}</span> -->
+            <!-- </div> -->
+          </div>
+        </div>
+
+        <!-- 说明部分 -->
+        <div class="pack-note">
+          {{ packInfo.note }}
         </div>
       </div>
-
-      <!-- 说明部分 -->
-      <div class="pack-note">
-        {{ packInfo.note }}
+      <div v-if="props.screenshotMode" class="pack-screenshot-actions">
+        <v-btn
+          size="small"
+          color="primary"
+          variant="tonal"
+          :loading="getScreenshotLoading(packInfo.id)"
+          @click="capturePackImage(packInfo)"
+        >
+          截取这个礼包
+        </v-btn>
       </div>
     </div>
   </div>
