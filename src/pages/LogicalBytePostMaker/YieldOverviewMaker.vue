@@ -3,6 +3,7 @@ import { computed, nextTick, onMounted, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import ItemImage from '/src/components/sprite/ItemImage.vue'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
+import SkillIcon from '/src/components/sprite/SkillIcon.vue'
 import operatorItemCostTable from '/src/static/json/operator/operator_item_cost_table.json'
 import operatorTable from '/src/static/json/operator/character_table_simple.json'
 import operatorTableV2 from '/src/static/json/operator/character_table_simple.v2.json'
@@ -18,6 +19,14 @@ const ELITE_LMD_COST_BY_RARITY = {
   5: [20000, 120000],
   6: [30000, 180000],
 }
+const ELITE_LEVELING_COST_BY_RARITY = {
+  4: { lmd: 146241, exp: 150200 },
+  5: { lmd: 251947, exp: 239400 },
+  6: { lmd: 409841, exp: 361400 },
+}
+const LMD_ITEM_ID = '4001'
+const BASIC_BATTLE_RECORD_ITEM_ID = '2001'
+const BASIC_BATTLE_RECORD_EXP = 200
 
 const operatorName = ref('斯卡蒂')
 const selectedOperatorId = ref('')
@@ -111,13 +120,18 @@ const matchStatusText = computed(() => {
   return `当前干员：${matchedOperator.value.name}（${matchedOperator.value.rarity}星）`
 })
 
+function getItemValue(item) {
+  const value = Number(item?.itemValue ?? item?.itemValueAp ?? 0)
+  return Number.isFinite(value) ? value : 0
+}
+
 function createItemInfoMap(list) {
   const map = new Map()
 
   for (const item of list) {
     map.set(item.itemId, {
       ...item,
-      itemValueAp: Number(item.itemValueAp ?? item.itemValue ?? 0),
+      itemValue: getItemValue(item),
     })
   }
 
@@ -162,18 +176,36 @@ function toCostEntries(costObject = {}) {
 
 function getMaterialCost(costObject = {}, map = itemInfoMap.value) {
   return Object.entries(costObject).reduce((total, [itemId, count]) => {
-    const itemValue = Number(map.get(itemId)?.itemValueAp ?? map.get(itemId)?.itemValue ?? 0)
+    const itemValue = getItemValue(map.get(itemId))
     return total + itemValue * Number(count || 0)
   }, 0)
 }
 
-function getElite2RankingCost(operatorCost, rarity, map) {
+function addCostItem(costObject, itemId, count) {
+  const numericCount = Number(count || 0)
+  if (numericCount > 0) {
+    costObject[itemId] = (costObject[itemId] || 0) + numericCount
+  }
+}
+
+function getElite2MergedCost(operatorCost, rarity) {
   const mergedCost = mergeCostObjects([operatorCost.elite?.[1] || {}, operatorCost.elite?.[2] || {}])
   const lmdCost = ELITE_LMD_COST_BY_RARITY[rarity] || []
   if (lmdCost.length > 0) {
-    mergedCost['4001'] = (mergedCost['4001'] || 0) + lmdCost.reduce((total, count) => total + count, 0)
+    addCostItem(mergedCost, LMD_ITEM_ID, lmdCost.reduce((total, count) => total + count, 0))
   }
 
+  const levelingCost = ELITE_LEVELING_COST_BY_RARITY[rarity]
+  if (levelingCost) {
+    addCostItem(mergedCost, LMD_ITEM_ID, levelingCost.lmd)
+    addCostItem(mergedCost, BASIC_BATTLE_RECORD_ITEM_ID, Math.ceil(levelingCost.exp / BASIC_BATTLE_RECORD_EXP))
+  }
+
+  return mergedCost
+}
+
+function getElite2RankingCost(operatorCost, rarity, map) {
+  const mergedCost = getElite2MergedCost(operatorCost, rarity)
   return getMaterialCost(mergedCost, map)
 }
 
@@ -289,7 +321,8 @@ function buildOperatorRows(operator, context, map) {
     const totalCost = getElite2RankingCost(operatorCost, operator.rarity, map)
     rows.push({
       key: 'elite2',
-      title: '精英化二',
+      title: '精二',
+      skillIcon: '',
       materials: getNonChipMaterialEntries(elite2Cost),
       otherSummary: '',
       totalCost,
@@ -309,6 +342,7 @@ function buildOperatorRows(operator, context, map) {
       key: `skill${index + 1}`,
       title: `${index + 1}技能专精`,
       subtitle: skillNameList[index]?.skillName || '',
+      skillIcon: skillNameList[index]?.skillIcon || skillNameList[index]?.skillId || '',
       materials: getSkillVisibleMaterialEntries(mergedCost),
       otherSummary: getSkillOtherMaterialSummary(mergedCost),
       totalCost,
@@ -412,6 +446,7 @@ onMounted(() => {
           <div ref="tableCaptureRef" class="table-capture-area">
             <table class="overview-table">
               <colgroup>
+                <col class="skill-icon-column">
                 <col class="row-title-column">
                 <col class="material-column">
                 <col class="cost-column">
@@ -420,6 +455,7 @@ onMounted(() => {
               <thead>
                 <tr>
                   <th></th>
+                  <th></th>
                   <th>主要材料</th>
                   <th>理智消耗</th>
                   <th>排名/总数</th>
@@ -427,6 +463,15 @@ onMounted(() => {
               </thead>
               <tbody>
                 <tr v-for="row in tableRows" :key="row.key">
+                  <td class="skill-icon-cell">
+                    <SkillIcon
+                      v-if="row.skillIcon"
+                      :icon="row.skillIcon"
+                      :size="58"
+                      border
+                    />
+                    <div v-else class="skill-icon-placeholder"></div>
+                  </td>
                   <td class="row-title-cell">
                     <div class="row-title">{{ row.title }}</div>
                     <div v-if="row.subtitle" class="row-subtitle">{{ row.subtitle }}</div>
@@ -534,6 +579,12 @@ onMounted(() => {
 
 <style scoped>
 .yield-overview-maker {
+  --overview-table-width: 815px;
+  --overview-skill-icon-width: 70px;
+  --overview-row-title-width: 150px;
+  --overview-material-width: 315px;
+  --overview-cost-width: 140px;
+  --overview-rank-width: 140px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 16px;
@@ -580,7 +631,7 @@ onMounted(() => {
 }
 
 .preview-card {
-  width: 100%;
+  width: var(--overview-table-width);
   background:
     radial-gradient(circle at 80% 8%, rgba(157, 178, 191, 0.2), transparent 34%),
     linear-gradient(145deg, #3d4247, #2c3035);
@@ -625,7 +676,7 @@ onMounted(() => {
 }
 
 .overview-table {
-  width: 100%;
+  width: var(--overview-table-width);
   table-layout: fixed;
   border-collapse: collapse;
 }
@@ -643,7 +694,7 @@ onMounted(() => {
   font-size: 24px;
   line-height: 1.1;
   font-weight: 900;
-  text-align: left;
+  text-align: center;
   background: rgba(0, 0, 0, 0.16);
 }
 
@@ -651,23 +702,43 @@ onMounted(() => {
   min-height: 96px;
   padding: 16px 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
   vertical-align: middle;
 }
 
+.skill-icon-column {
+  width: var(--overview-skill-icon-width);
+}
+
 .row-title-column {
-  width: 150px;
+  width: var(--overview-row-title-width);
 }
 
 .material-column {
-  width: auto;
+  width: var(--overview-material-width);
 }
 
 .cost-column {
-  width: 140px;
+  width: var(--overview-cost-width);
 }
 
 .rank-column {
-  width: 140px;
+  width: var(--overview-rank-width);
+}
+
+.skill-icon-cell {
+  padding-right: 6px;
+  padding-left: 6px;
+  text-align: center;
+}
+
+.skill-icon-cell > div {
+  margin: 0 auto;
+}
+
+.skill-icon-placeholder {
+  width: 58px;
+  height: 58px;
 }
 
 .row-title-cell {
@@ -675,7 +746,7 @@ onMounted(() => {
 }
 
 .row-title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 800;
   line-height: 1.15;
 }
@@ -683,13 +754,21 @@ onMounted(() => {
 .row-subtitle {
   margin-top: 8px;
   color: rgba(255, 255, 255, 0.66);
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.3;
+}
+
+.material-cell {
+  padding-right: 0;
+  padding-left: 0;
+  overflow: visible;
 }
 
 .material-list {
   display: grid;
   gap: 8px;
+  justify-items: center;
+  overflow: visible;
 }
 
 .material-row {
@@ -697,12 +776,16 @@ onMounted(() => {
   grid-template-columns: repeat(6, 44px);
   gap: 0 10px;
   align-items: center;
+  justify-self: center;
+  width: max-content;
 }
 
 .material-entry {
   display: flex;
   width: 44px;
+  min-width: 44px;
   height: 44px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
 }

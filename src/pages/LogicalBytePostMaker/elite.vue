@@ -198,6 +198,10 @@
         <!-- 槽位配置 -->
         <div class="input-group">
           <label class="input-label">数据表格（5个固定槽位）</label>
+          <label class="calculation-toggle">
+            <input v-model="showCalculationDetails" type="checkbox" />
+            <span>显示计算过程</span>
+          </label>
 
           <!-- 5个槽位配置 -->
           <div class="slots-container">
@@ -222,13 +226,25 @@
                   <div class="slot-basic-info">
                     <div class="slot-title-wrapper">
                       <input v-model="slot.title" type="text" class="input-field slot-title-input" placeholder="输入角色名搜索"
-                        @input="searchTitleCharacter(index, slot.title)" />
+                        @input="handleSlotTitleInput(index)" />
                       <div class="title-search-result"
-                        v-if="slot.titleSearchResult && slot.titleSearchResult !== '未找到'">
-                        {{ slot.titleSearchResult }}
+                        v-if="getSlotMatchedOperator(slot)">
+                        当前干员：{{ getSlotMatchedOperator(slot).name }}（{{ getSlotMatchedOperator(slot).rarity }}星）
                       </div>
-                      <div class="title-search-result error" v-else-if="slot.titleSearchResult === '未找到'">
+                      <div class="title-search-result error" v-else-if="slot.title?.trim()">
                         未找到
+                      </div>
+                      <div v-if="hasAmbiguousSlotMatches(slot)" class="slot-candidate-list">
+                        <button
+                          v-for="candidate in getSlotOperatorCandidates(slot).slice(0, 8)"
+                          :key="candidate.charId"
+                          type="button"
+                          class="slot-candidate-button"
+                          :class="{ active: candidate.charId === getSlotMatchedOperatorId(slot) }"
+                          @click="selectSlotCandidate(index, candidate.charId)"
+                        >
+                          {{ candidate.name }} · {{ candidate.rarity }}星
+                        </button>
                       </div>
                     </div>
                     <select v-model="slot.star" class="slot-star-select">
@@ -277,6 +293,39 @@
                       </div>
                     </div>
                   </div>
+
+                  <!-- 计算过程 -->
+                  <div v-if="showCalculationDetails" class="form-section">
+                    <label class="form-label">计算过程</label>
+                    <div v-if="getSlotCalculationDetails(slot).length > 0" class="calculation-table-wrapper">
+                      <table class="calculation-table">
+                        <thead>
+                          <tr>
+                            <th>项目</th>
+                            <th>材料</th>
+                            <th>单价</th>
+                            <th>数量</th>
+                            <th>小计</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            v-for="detail in getSlotCalculationDetails(slot)"
+                            :key="`${detail.category}-${detail.itemId}`"
+                          >
+                            <td>{{ detail.category }}</td>
+                            <td>{{ detail.itemName }}</td>
+                            <td>{{ detail.unitValueText }}</td>
+                            <td>{{ detail.count }}</td>
+                            <td>{{ detail.totalValueText }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div v-else class="calculation-empty">
+                      输入干员名并匹配数据后显示材料明细
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -305,6 +354,14 @@ const ELITE_LMD_COST_BY_RARITY = {
   5: [20000, 120000],
   6: [30000, 180000],
 }
+const ELITE_LEVELING_COST_BY_RARITY = {
+  4: { lmd: 135241, exp: 150200 },
+  5: { lmd: 231947, exp: 239400 },
+  6: { lmd: 379841, exp: 361400 },
+}
+const LMD_ITEM_ID = '4001'
+const BASIC_BATTLE_RECORD_ITEM_ID = '2001'
+const BASIC_BATTLE_RECORD_EXP = 200
 
 
 
@@ -330,6 +387,7 @@ const characterData = ref({})
 // 材料价值数据
 const itemInfoMap = ref(createItemInfoMap(fallbackItemInfo))
 const itemValueLoading = ref(false)
+const showCalculationDetails = ref(false)
 
 // JSON加载状态
 const jsonLoading = ref(false)
@@ -853,13 +911,18 @@ const QUERY_TYPE_TO_FIELD = {
   '3技能专精': 'skill3'
 }
 
+function getItemValue(item) {
+  const value = Number(item?.itemValue ?? item?.itemValueAp ?? 0)
+  return Number.isFinite(value) ? value : 0
+}
+
 function createItemInfoMap(list) {
   const map = new Map()
 
   for (const item of list) {
     map.set(item.itemId, {
       ...item,
-      itemValueAp: Number(item.itemValueAp ?? item.itemValue ?? 0),
+      itemValue: getItemValue(item),
     })
   }
 
@@ -888,14 +951,14 @@ function getDisplayRarity(charId) {
   return Number.isFinite(zeroBasedRarity) ? zeroBasedRarity + 1 : 0
 }
 
-function findOperatorByName(name) {
-  const keyword = name.trim()
+function getOperatorCandidatesByName(name) {
+  const keyword = String(name || '').trim()
   const normalizedKeyword = normalizeOperatorName(keyword)
   if (!normalizedKeyword) {
-    return null
+    return []
   }
 
-  const candidates = Object.entries(operatorTableV2)
+  return Object.entries(operatorTableV2)
     .filter(([charId]) => operatorItemCostTable[charId])
     .map(([charId, operator]) => ({
       charId,
@@ -911,24 +974,107 @@ function findOperatorByName(name) {
       const bExact = b.name === keyword || b.charId === keyword ? 0 : 1
       return aExact - bExact || a.name.length - b.name.length
     })
+}
 
-  return candidates[0] || null
+function findOperatorByName(name) {
+  return getOperatorCandidatesByName(name)[0] || null
+}
+
+function getSlotOperatorCandidates(slot) {
+  return getOperatorCandidatesByName(slot?.title)
+}
+
+function getSlotMatchedOperatorId(slot) {
+  if (!slot) {
+    return ''
+  }
+
+  if (slot.titleSearchResult && operatorItemCostTable[slot.titleSearchResult]) {
+    return slot.titleSearchResult
+  }
+
+  const keyword = String(slot.title || '').trim()
+  if (!keyword) {
+    return ''
+  }
+
+  const candidates = getSlotOperatorCandidates(slot)
+  const exactMatch = candidates.find(item => item.name === keyword || item.charId === keyword)
+  return exactMatch?.charId || candidates[0]?.charId || ''
+}
+
+function getSlotMatchedOperator(slot) {
+  const charId = getSlotMatchedOperatorId(slot)
+  if (!charId) {
+    return null
+  }
+
+  return {
+    charId,
+    name: operatorTableV2[charId]?.name || operatorTable[charId]?.name || charId,
+    rarity: getDisplayRarity(charId),
+  }
+}
+
+function hasAmbiguousSlotMatches(slot) {
+  return Boolean(slot?.title?.trim()) && getSlotOperatorCandidates(slot).length > 1
+}
+
+function handleSlotTitleInput(index) {
+  const slot = slots.value[index]
+  if (!slot) {
+    return
+  }
+
+  slot.titleSearchResult = ''
+}
+
+function selectSlotCandidate(index, charId) {
+  const slot = slots.value[index]
+  if (!slot || !operatorItemCostTable[charId]) {
+    return
+  }
+
+  const operator = getSlotMatchedOperator({ titleSearchResult: charId })
+  slot.titleSearchResult = charId
+  slot.title = operator?.name || slot.title
+  if (operator?.rarity) {
+    slot.star = operator.rarity
+  }
 }
 
 function getMaterialCost(costObject = {}, map = itemInfoMap.value) {
   return Object.entries(costObject).reduce((total, [itemId, count]) => {
-    const itemValue = Number(map.get(itemId)?.itemValueAp ?? map.get(itemId)?.itemValue ?? 0)
+    const itemValue = getItemValue(map.get(itemId))
     return total + itemValue * Number(count || 0)
   }, 0)
 }
 
-function getElite2RankingCost(operatorCost, rarity, map) {
+function addCostItem(costObject, itemId, count) {
+  const numericCount = Number(count || 0)
+  if (numericCount > 0) {
+    costObject[itemId] = (costObject[itemId] || 0) + numericCount
+  }
+}
+
+function getElite2MergedCost(operatorCost, rarity) {
   const mergedCost = mergeCostObjects([operatorCost.elite?.[1] || {}, operatorCost.elite?.[2] || {}])
   const lmdCost = ELITE_LMD_COST_BY_RARITY[rarity] || []
   if (lmdCost.length > 0) {
-    mergedCost['4001'] = (mergedCost['4001'] || 0) + lmdCost.reduce((total, count) => total + count, 0)
+    addCostItem(mergedCost, LMD_ITEM_ID, lmdCost.reduce((total, count) => total + count, 0))
   }
 
+  const levelingCost = ELITE_LEVELING_COST_BY_RARITY[rarity]
+  if (levelingCost) {
+    addCostItem(mergedCost, LMD_ITEM_ID, levelingCost.lmd)
+    addCostItem(mergedCost, BASIC_BATTLE_RECORD_ITEM_ID, Math.ceil(levelingCost.exp / BASIC_BATTLE_RECORD_EXP))
+  }
+
+  return mergedCost
+}
+
+function getElite2RankingCost(operatorCost, rarity, map) {
+  const mergedCost = getElite2MergedCost(operatorCost, rarity)
   return getMaterialCost(mergedCost, map)
 }
 
@@ -1020,6 +1166,75 @@ function createEmptyMatchedData(name = '', charId = '', rarity = '') {
 
 function formatSlotCost(value) {
   return Number.isFinite(value) ? value.toFixed(1) : ''
+}
+
+function formatDetailValue(value) {
+  if (!Number.isFinite(value)) {
+    return ''
+  }
+
+  if (value === 0) {
+    return '0'
+  }
+
+  const fixed = Math.abs(value) >= 1 ? value.toFixed(2) : value.toFixed(4)
+  return fixed.replace(/\.?0+$/, '')
+}
+
+function getOperatorForSlot(slot) {
+  return getSlotMatchedOperator(slot)
+}
+
+function buildCalculationRowsForCost(category, costObject = {}, map = itemInfoMap.value) {
+  return Object.entries(costObject)
+    .filter(([_, count]) => Number(count) > 0)
+    .map(([itemId, count]) => {
+      const item = map.get(itemId)
+      const unitValue = getItemValue(item)
+      const numericCount = Number(count || 0)
+
+      return {
+        category,
+        itemId,
+        itemName: item?.itemName || itemId,
+        unitValue,
+        unitValueText: formatDetailValue(unitValue),
+        count: numericCount,
+        totalValue: unitValue * numericCount,
+        totalValueText: formatSlotCost(unitValue * numericCount),
+        rarity: Number(item?.rarity || 0),
+      }
+    })
+    .sort((a, b) => b.rarity - a.rarity || Number(b.itemId) - Number(a.itemId))
+}
+
+function getSlotCalculationDetails(slot) {
+  const operator = getOperatorForSlot(slot)
+  if (!operator) {
+    return []
+  }
+
+  const operatorCost = operatorItemCostTable[operator.charId]
+  if (!operatorCost) {
+    return []
+  }
+
+  const rows = []
+  const elite2Cost = operatorCost.elite?.[2] || {}
+  if (Object.keys(elite2Cost).length > 0) {
+    rows.push(...buildCalculationRowsForCost('精二', getElite2MergedCost(operatorCost, operator.rarity)))
+  }
+
+  ;(operatorCost.skills || []).slice(0, 3).forEach((skillCostList, index) => {
+    const mergedCost = mergeCostObjects(skillCostList)
+    if (Object.keys(mergedCost).length === 0) {
+      return
+    }
+
+    rows.push(...buildCalculationRowsForCost(`${index + 1}技能专三`, mergedCost))
+  })
+
+  return rows
 }
 
 function buildMatchedDataFromOperator(operator, context, map) {
@@ -1131,7 +1346,7 @@ function matchSlotData(index) {
     return
   }
 
-  const operator = findOperatorByName(operatorName)
+  const operator = getSlotMatchedOperator(slot)
   if (!operator) {
     ElMessage.warning(`未找到干员「${operatorName}」`)
     return
@@ -1629,6 +1844,28 @@ onMounted(() => {
   color: #333;
 }
 
+.calculation-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #555;
+  font-size: 0.85rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.calculation-toggle input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  cursor: pointer;
+}
+
 /* 粘贴区域 */
 .paste-area {
   width: 100%;
@@ -1979,6 +2216,50 @@ onMounted(() => {
   gap: 10px;
 }
 
+.calculation-table-wrapper {
+  max-height: 260px;
+  overflow: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.calculation-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.calculation-table th,
+.calculation-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.calculation-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: #f6f7f9;
+  color: #555;
+  font-weight: 600;
+}
+
+.calculation-table tr:last-child td {
+  border-bottom: none;
+}
+
+.calculation-empty {
+  padding: 10px 12px;
+  border: 1px dashed #dcdfe6;
+  border-radius: 4px;
+  background-color: #fafafa;
+  color: #999;
+  font-size: 0.82rem;
+}
+
 .data-row {
   display: flex;
   gap: 8px;
@@ -2107,6 +2388,35 @@ onMounted(() => {
   background-color: #fee;
   border-color: #f56c6c;
   color: #f56c6c;
+}
+
+.slot-candidate-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.slot-candidate-button {
+  max-width: 100%;
+  padding: 5px 8px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #555;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.slot-candidate-button:hover {
+  border-color: #409eff;
+  color: #409eff;
+}
+
+.slot-candidate-button.active {
+  border-color: #409eff;
+  background-color: #e8f3ff;
+  color: #1677d2;
 }
 
 .slot-star-select {
@@ -2468,6 +2778,19 @@ onMounted(() => {
     background-color: #3d1f1f;
     border-color: #f56c6c;
     color: #ff6b6b;
+  }
+
+  .slot-candidate-button {
+    border-color: #555;
+    background-color: #2d2d2d;
+    color: #ddd;
+  }
+
+  .slot-candidate-button:hover,
+  .slot-candidate-button.active {
+    border-color: #409eff;
+    background-color: #1f3d5a;
+    color: #9fd0ff;
   }
 }
 </style>
