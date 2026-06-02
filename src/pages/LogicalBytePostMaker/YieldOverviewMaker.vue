@@ -243,11 +243,12 @@ function buildRankingContext(map) {
     }
 
     for (const skillCostList of operatorCost.skills || []) {
-      if (Array.isArray(skillCostList) && skillCostList.length > 0) {
+      const mergedCost = mergeCostObjects(skillCostList)
+      if (Object.keys(mergedCost).length > 0) {
         if (!skillCostsByRarity.has(rarity)) {
           skillCostsByRarity.set(rarity, [])
         }
-        skillCostsByRarity.get(rarity).push(getMaterialCost(mergeCostObjects(skillCostList), map))
+        skillCostsByRarity.get(rarity).push(getMaterialCost(mergedCost, map))
       }
     }
   }
@@ -298,11 +299,11 @@ function buildOperatorRows(operator, context, map) {
 
   const skillNameList = operatorTableV2[operator.charId]?.skills || []
   ;(operatorCost.skills || []).forEach((skillCostList, index) => {
-    if (!Array.isArray(skillCostList) || skillCostList.length === 0) {
+    const mergedCost = mergeCostObjects(skillCostList)
+    if (Object.keys(mergedCost).length === 0) {
       return
     }
 
-    const mergedCost = mergeCostObjects(skillCostList)
     const totalCost = getMaterialCost(mergedCost, map)
     rows.push({
       key: `skill${index + 1}`,

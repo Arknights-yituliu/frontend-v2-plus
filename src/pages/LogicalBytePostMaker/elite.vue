@@ -207,6 +207,14 @@
                   <span class="slot-number">槽位 {{ index + 1 }}</span>
                   <input v-model="slot.show" type="checkbox" class="slot-show-checkbox" />
                   <span class="slot-show-label">显示</span>
+                  <button
+                    type="button"
+                    class="match-data-btn slot-match-data-btn"
+                    :disabled="!canMatchSlotData(slot, index)"
+                    @click="matchSlotData(index)"
+                  >
+                    匹配数据
+                  </button>
                 </div>
 
                 <div v-if="slot.show" class="slot-content">
@@ -281,8 +289,22 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ElMessage } from 'element-plus'
+import operatorItemCostTable from '/src/static/json/operator/operator_item_cost_table.json'
+import operatorTable from '/src/static/json/operator/character_table_simple.json'
+import operatorTableV2 from '/src/static/json/operator/character_table_simple.v2.json'
+import fallbackItemInfo from '/src/static/json/material/item_info.json'
+import itemCache from '/src/plugins/indexedDB/itemCache.js'
+import { getStageConfig } from '/src/utils/user/userConfig.js'
 
 const STORAGE_KEY = 'logicalByte_data'
+
+const ELITE_LMD_COST_BY_RARITY = {
+  3: [10000],
+  4: [15000, 60000],
+  5: [20000, 120000],
+  6: [30000, 180000],
+}
 
 
 
@@ -305,10 +327,16 @@ const imageErrors = ref({
 // 角色数据映射
 const characterData = ref({})
 
+// 材料价值数据
+const itemInfoMap = ref(createItemInfoMap(fallbackItemInfo))
+const itemValueLoading = ref(false)
+
 // JSON加载状态
 const jsonLoading = ref(false)
 const jsonLoadError = ref('')
 const lastJsonLoadTime = ref('')
+
+const rankingContext = computed(() => buildRankingContext(itemInfoMap.value))
 
 // 保存JSON数据到本地
 const saveJsonToStorage = (data) => {
@@ -818,68 +846,317 @@ watch(dataText, (newVal) => {
 })
 
 
-let slotIndex = ref(0)
+const QUERY_TYPE_TO_FIELD = {
+  '精二': 'elite',
+  '1技能专精': 'skill1',
+  '2技能专精': 'skill2',
+  '3技能专精': 'skill3'
+}
 
-function saveData(){
-    let map = new Map()
-    
-    for(const item of excelData.value){
-      if(!map.has(item.name)){
-        map.set(item.name, {
-          name: item.name,
-          elite:{
-            cost:0,
-            rank:''
-          },
-          skill1:{
-            cost:0,
-            rank:''
-          },
-          skill2:{
-            cost:0,
-            rank:''
-          },
-          skill3:{
-            cost:0,
-            rank:''
-          }
-        })
+function createItemInfoMap(list) {
+  const map = new Map()
+
+  for (const item of list) {
+    map.set(item.itemId, {
+      ...item,
+      itemValueAp: Number(item.itemValueAp ?? item.itemValue ?? 0),
+    })
+  }
+
+  return map
+}
+
+function normalizeOperatorName(name) {
+  return String(name || '').trim().replace(/\s+/g, '')
+}
+
+function isDefaultSlotTitle(title, index) {
+  return normalizeOperatorName(title) === `槽位${index + 1}`
+}
+
+function canMatchSlotData(slot, index) {
+  return Boolean(slot?.title?.trim()) && !isDefaultSlotTitle(slot.title, index)
+}
+
+function getDisplayRarity(charId) {
+  const rarity = operatorTable[charId]?.rarity
+  if (Number.isFinite(rarity)) {
+    return rarity
+  }
+
+  const zeroBasedRarity = operatorTableV2[charId]?.rarity
+  return Number.isFinite(zeroBasedRarity) ? zeroBasedRarity + 1 : 0
+}
+
+function findOperatorByName(name) {
+  const keyword = name.trim()
+  const normalizedKeyword = normalizeOperatorName(keyword)
+  if (!normalizedKeyword) {
+    return null
+  }
+
+  const candidates = Object.entries(operatorTableV2)
+    .filter(([charId]) => operatorItemCostTable[charId])
+    .map(([charId, operator]) => ({
+      charId,
+      name: operator.name || operatorTable[charId]?.name || charId,
+      rarity: getDisplayRarity(charId),
+    }))
+    .filter(operator => {
+      const normalizedName = normalizeOperatorName(operator.name)
+      return normalizedName.includes(normalizedKeyword) || operator.charId.includes(keyword)
+    })
+    .sort((a, b) => {
+      const aExact = a.name === keyword || a.charId === keyword ? 0 : 1
+      const bExact = b.name === keyword || b.charId === keyword ? 0 : 1
+      return aExact - bExact || a.name.length - b.name.length
+    })
+
+  return candidates[0] || null
+}
+
+function getMaterialCost(costObject = {}, map = itemInfoMap.value) {
+  return Object.entries(costObject).reduce((total, [itemId, count]) => {
+    const itemValue = Number(map.get(itemId)?.itemValueAp ?? map.get(itemId)?.itemValue ?? 0)
+    return total + itemValue * Number(count || 0)
+  }, 0)
+}
+
+function getElite2RankingCost(operatorCost, rarity, map) {
+  const mergedCost = mergeCostObjects([operatorCost.elite?.[1] || {}, operatorCost.elite?.[2] || {}])
+  const lmdCost = ELITE_LMD_COST_BY_RARITY[rarity] || []
+  if (lmdCost.length > 0) {
+    mergedCost['4001'] = (mergedCost['4001'] || 0) + lmdCost.reduce((total, count) => total + count, 0)
+  }
+
+  return getMaterialCost(mergedCost, map)
+}
+
+function getRank(list, cost) {
+  const index = list.findIndex(item => item === cost)
+  if (index === -1) {
+    return '-'
+  }
+
+  return `${index + 1}/${list.length}`
+}
+
+function buildRankingContext(map) {
+  const eliteCostsByRarity = new Map()
+  const skillCostsByRarity = new Map()
+
+  for (const [charId, operatorCost] of Object.entries(operatorItemCostTable)) {
+    const rarity = getDisplayRarity(charId)
+    if (!rarity) {
+      continue
+    }
+
+    const elite2Cost = operatorCost.elite?.[2]
+    if (elite2Cost && Object.keys(elite2Cost).length > 0) {
+      if (!eliteCostsByRarity.has(rarity)) {
+        eliteCostsByRarity.set(rarity, [])
       }
-       if(item.key === '精二'){
-        map.get(item.name).elite = {
-          cost: item.cost,
-          rank: item.rank
-        }
-       }
-       if(item.key === '1技能专精'){
-        map.get(item.name).skill1 = {
-          cost: item.cost,
-          rank: item.rank
-        }
-       }  
-       if(item.key === '2技能专精'){
-        map.get(item.name).skill2 = {
-          cost: item.cost,
-          rank: item.rank
-        }
-       }
-       if(item.key === '3技能专精'){
-        map.get(item.name).skill3 = {
-          cost: item.cost,
-          rank: item.rank
-        } 
-       }
+      eliteCostsByRarity.get(rarity).push(getElite2RankingCost(operatorCost, rarity, map))
     }
 
-    for(const [name, data] of map){
-         slots.value[slotIndex.value].title = name
-         slots.value[slotIndex.value].show = true
-         slots.value[slotIndex.value].data = [
-          [data.elite.cost, data.skill1.cost, data.skill2.cost, data.skill3.cost],
-          [data.elite.rank, data.skill1.rank, data.skill2.rank, data.skill3.rank]
-         ]
-        slotIndex.value++
+    for (const skillCostList of operatorCost.skills || []) {
+      const mergedCost = mergeCostObjects(skillCostList)
+      if (Object.keys(mergedCost).length > 0) {
+        if (!skillCostsByRarity.has(rarity)) {
+          skillCostsByRarity.set(rarity, [])
+        }
+        skillCostsByRarity.get(rarity).push(getMaterialCost(mergedCost, map))
+      }
     }
+  }
+
+  sortCostMap(eliteCostsByRarity)
+  sortCostMap(skillCostsByRarity)
+
+  return {
+    eliteCostsByRarity,
+    skillCostsByRarity,
+  }
+}
+
+function sortCostMap(map) {
+  for (const costs of map.values()) {
+    costs.sort((a, b) => b - a)
+  }
+}
+
+function mergeCostObjects(list = []) {
+  return list.reduce((merged, item) => {
+    for (const [itemId, count] of Object.entries(item || {})) {
+      merged[itemId] = (merged[itemId] || 0) + Number(count || 0)
+    }
+    return merged
+  }, {})
+}
+
+function createEmptyMatchedData(name = '', charId = '', rarity = '') {
+  return {
+    name,
+    charId,
+    rarity,
+    elite: {
+      cost: '',
+      rank: ''
+    },
+    skill1: {
+      cost: '',
+      rank: ''
+    },
+    skill2: {
+      cost: '',
+      rank: ''
+    },
+    skill3: {
+      cost: '',
+      rank: ''
+    }
+  }
+}
+
+function formatSlotCost(value) {
+  return Number.isFinite(value) ? value.toFixed(1) : ''
+}
+
+function buildMatchedDataFromOperator(operator, context, map) {
+  const operatorCost = operatorItemCostTable[operator.charId]
+  if (!operatorCost) {
+    return null
+  }
+
+  const matchedData = createEmptyMatchedData(operator.name, operator.charId, operator.rarity)
+  const elite2Cost = operatorCost.elite?.[2] || {}
+  if (Object.keys(elite2Cost).length > 0) {
+    const totalCost = getElite2RankingCost(operatorCost, operator.rarity, map)
+    matchedData.elite = {
+      cost: formatSlotCost(totalCost),
+      rank: getRank(context.eliteCostsByRarity.get(operator.rarity) || [], totalCost),
+    }
+  }
+
+  ;(operatorCost.skills || []).slice(0, 3).forEach((skillCostList, index) => {
+    const mergedCost = mergeCostObjects(skillCostList)
+    if (Object.keys(mergedCost).length === 0) {
+      return
+    }
+
+    const field = `skill${index + 1}`
+    const totalCost = getMaterialCost(mergedCost, map)
+    matchedData[field] = {
+      cost: formatSlotCost(totalCost),
+      rank: getRank(context.skillCostsByRarity.get(operator.rarity) || [], totalCost),
+    }
+  })
+
+  return matchedData
+}
+
+function getParsedEliteDataMap() {
+  const parsedData = parseEliteText(dataText.value)
+  excelData.value = parsedData
+
+  const map = new Map()
+  for (const item of parsedData) {
+    const name = item.name?.trim()
+    const normalizedName = normalizeOperatorName(name)
+    const field = QUERY_TYPE_TO_FIELD[item.key]
+    if (!normalizedName || !field) {
+      continue
+    }
+
+    if (!map.has(normalizedName)) {
+      map.set(normalizedName, createEmptyMatchedData(name))
+    }
+
+    map.get(normalizedName)[field] = {
+      cost: item.cost ?? '',
+      rank: item.rank || ''
+    }
+  }
+
+  return map
+}
+
+function getCostValue(data, field) {
+  return data?.[field]?.cost ?? ''
+}
+
+function getRankValue(data, field) {
+  return data?.[field]?.rank || ''
+}
+
+function applyMatchedDataToSlot(index, data) {
+  const slot = slots.value[index]
+  if (!slot || !data) {
+    return
+  }
+
+  slot.show = true
+  slot.title = data.name || slot.title
+  if (data.rarity) {
+    slot.star = data.rarity
+  }
+  slot.data = [
+    [
+      getCostValue(data, 'elite'),
+      getCostValue(data, 'skill1'),
+      getCostValue(data, 'skill2'),
+      getCostValue(data, 'skill3')
+    ],
+    [
+      getRankValue(data, 'elite'),
+      getRankValue(data, 'skill1'),
+      getRankValue(data, 'skill2'),
+      getRankValue(data, 'skill3')
+    ]
+  ]
+
+  if (data.charId) {
+    slot.titleSearchResult = data.charId
+    slot.avatar = `https://torappu.prts.wiki/assets/char_avatar/${data.charId}.png`
+  } else if (Object.keys(characterData.value || {}).length > 0) {
+    searchTitleCharacter(index, slot.title)
+  }
+}
+
+function matchSlotData(index) {
+  const slot = slots.value[index]
+  const operatorName = slot?.title?.trim()
+  if (!operatorName) {
+    alert('请先输入干员名称')
+    return
+  }
+
+  const operator = findOperatorByName(operatorName)
+  if (!operator) {
+    ElMessage.warning(`未找到干员「${operatorName}」`)
+    return
+  }
+
+  const matchedData = buildMatchedDataFromOperator(operator, rankingContext.value, itemInfoMap.value)
+  if (!matchedData) {
+    ElMessage.warning(`未找到「${operatorName}」的养成数据`)
+    return
+  }
+
+  applyMatchedDataToSlot(index, matchedData)
+  ElMessage.success(`已匹配 ${matchedData.name}`)
+}
+
+function saveData() {
+  let slotIndex = 0
+  for (const data of getParsedEliteDataMap().values()) {
+    if (slotIndex >= slots.value.length) {
+      break
+    }
+
+    applyMatchedDataToSlot(slotIndex, data)
+    slotIndex++
+  }
 }
 
 /**
@@ -921,10 +1198,25 @@ function parseEliteText(text) {
   return results
 }
 
+async function refreshItemValues() {
+  itemValueLoading.value = true
+  try {
+    const itemList = await itemCache.getItemValueCacheByConfig(getStageConfig())
+    itemInfoMap.value = createItemInfoMap(itemList)
+  } catch (error) {
+    console.error(error)
+    ElMessage.warning('材料价值读取失败，已使用本地静态数据')
+    itemInfoMap.value = createItemInfoMap(fallbackItemInfo)
+  } finally {
+    itemValueLoading.value = false
+  }
+}
+
 onMounted(() => {
   isMounted.value = true
   console.log('LogicalByte 页面已加载')
   loadFromStorage()
+  refreshItemValues()
   // 尝试从本地恢复JSON数据，如果存在则不加载
   if (!loadJsonFromStorage()) {
     console.log('本地未找到JSON数据，请手动刷新加载')
@@ -1791,6 +2083,7 @@ onMounted(() => {
 
 .slot-title-wrapper {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -1831,6 +2124,36 @@ onMounted(() => {
   outline: none;
   border-color: #409eff;
   box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
+}
+
+.match-data-btn {
+  flex: 0 0 auto;
+  min-width: 78px;
+  height: 42px;
+  padding: 0 12px;
+  background-color: #2e7d32;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.match-data-btn:hover:not(:disabled) {
+  background-color: #388e3c;
+}
+
+.match-data-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.slot-match-data-btn {
+  height: 32px;
+  min-width: 74px;
+  padding: 0 10px;
 }
 
 /* 暗色主题适配 */
