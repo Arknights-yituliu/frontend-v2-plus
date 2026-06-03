@@ -1,46 +1,59 @@
 <script setup>
-const baseUrl = "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/";
-
-const imageFiles = [
-  "1.webp",
-  "2.webp",
-  "3.webp",
-  "4.webp",
-  "5.webp",
-  "6.webp",
-  "7.webp",
-  "8.webp",
-  "9.webp",
-  "10.webp",
-  "11.webp",
-  "幻灯片22.webp",
-  "幻灯片23.webp",
-  "幻灯片24.webp",
-  "幻灯片25.webp",
-  "幻灯片26.webp",
-  "幻灯片27.webp",
-  "幻灯片28.webp",
-  "幻灯片29.webp",
-  "幻灯片30.webp",
-  "幻灯片31.webp",
-  "幻灯片32.webp",
-  "幻灯片33.webp",
-  "幻灯片34.webp",
-  "幻灯片35.webp",
-  "幻灯片36.webp",
-  "幻灯片37.webp",
-  "幻灯片38.webp",
-  "幻灯片39.webp",
-  "幻灯片40.webp",
-  "幻灯片41.webp",
-  "幻灯片42.webp",
-];
+const data = {
+  title: "2026-06「泡影苍霆」版本基建一图流排班表",
+  videoUrl: "https://www.bilibili.com/video/BV19jVZ69Evp/",
+  content: [
+    { name: "目录", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片22.webp" },
+    { name: "243 一天三换", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/1.webp" },
+    { name: "243 一天两换", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/2.webp" },
+    { name: "243 简化 一天两换", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/3.webp" },
+    { name: "243 一天一换", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/4.webp" },
+    { name: "153 一天三换", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/5.webp" },
+    { name: "153 一天两换", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/6.webp" },
+    { name: "满血 252（2 赤金）一天三换", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/7.webp" },
+    { name: "右满 252（2 赤金）一天两换", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/8.webp" },
+    { name: "右满 252（3 赤金）一天两换", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/9.webp" },
+    { name: "右满 342 搓玉 一天两换", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/10.webp" },
+    { name: "243 搓玉 一天两换", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/11.webp" },
+    { name: "153 动态换班 跑单", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片26.webp" },
+    { name: "右满 252（3 赤金）动态换班 跑单", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片27.webp" },
+    { name: "右满 342 搓玉 动态换班 跑单", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片28.webp" },
+    { name: "限定干员降井时间一览", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片29.webp" },
+    { name: "贸易站散件替换一图流", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片30.webp" },
+    { name: "贸易站散件替换一图流", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片31.webp" },
+    { name: "制造站散件替换一图流", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片32.webp" },
+    { name: "制造站散件替换一图流", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片33.webp" },
+    { name: "发电站干员一图流", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片34.webp" },
+    { name: "会客室干员一图流", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片35.webp" },
+    { name: "加工站干员一图流", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片36.webp" },
+    { name: "办公室干员一图流", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片37.webp" },
+    { name: "红云组、泡泡组干员生产力简表", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片38.webp" },
+    { name: "贸易站产出速查表", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片39.webp" },
+    { name: "感知信息体系一图流", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片40.webp" },
+    { name: "人间烟火体系一图流", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片41.webp" },
+    { name: "萌新推荐精一的低星干员一图流", imageUrl: "https://cos.yituliu.cn/arknights/schedule-images/2026-06-01/幻灯片42.webp" },
+  ],
+  lastUpdateTimestamp: 1748822400000,
+};
 </script>
 
 <template>
   <div>
-    <div v-for="(file, index) in imageFiles" :key="index" class="mx-auto">
-        <v-img :src="baseUrl + file" class="mb-4" max-width="100%" contain />
+    <h1 class="mt-6 mb-4">{{ data.title }}</h1>
+
+    <div class="mx-auto mb-8">
+      <v-responsive :aspect-ratio="2 / 1">
+        <iframe
+          :src="'https://player.bilibili.com/player.html?bvid=' + data.videoUrl.split('/').filter((s) => s.startsWith('BV'))[0]"
+          allowfullscreen
+          style="border: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0"
+        ></iframe>
+      </v-responsive>
+    </div>
+
+    <div v-for="(item, index) in data.content" :key="index" class="mx-auto">
+      <h2 class="mt-6 mb-2">{{ item.name }}</h2>
+      <v-img :src="item.imageUrl" max-width="100%" contain />
     </div>
   </div>
 </template>

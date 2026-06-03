@@ -297,6 +297,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/yield-overview',
+        text: '收益速览制图',
+        name: 'YieldOverviewMaker',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/YieldOverviewMaker.vue'),
+        meta: {
+            title: '收益速览制图'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',

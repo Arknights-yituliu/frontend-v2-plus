@@ -123,9 +123,9 @@ const calculatorRewardItems = [
 const sanityToAlchemyRate = ref(defaultSanityToAlchemyRate);
 const rewardRows = ref(createDefaultRewardRows());
 const materialProbabilities = reactive({
-    solvent: 25,
-    hydrocarbon: 25,
-    coagulatingGel: 25,
+    solvent: 31,
+    hydrocarbon: 31,
+    coagulatingGel: 31,
 });
 
 const probabilityRows = computed(() => [
@@ -294,9 +294,9 @@ function resetUploadForm(card) {
 
 function resetCalculator() {
     sanityToAlchemyRate.value = defaultSanityToAlchemyRate;
-    materialProbabilities.solvent = 25;
-    materialProbabilities.hydrocarbon = 25;
-    materialProbabilities.coagulatingGel = 25;
+    materialProbabilities.solvent = 31;
+    materialProbabilities.hydrocarbon = 31;
+    materialProbabilities.coagulatingGel = 31;
     rewardRows.value = createDefaultRewardRows();
 }
 

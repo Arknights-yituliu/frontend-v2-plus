@@ -35,6 +35,11 @@ const pages = [
     to: '/lb/return'
   },
   {
+    title: '收益速览制图',
+    description: '输入干员名称生成精二与专精材料收益速览表',
+    to: '/lb/yield-overview'
+  },
+  {
     title: '卡片生成器',
     description: '创建由多个可配置卡片组成的组件',
     to: '/lb/card-maker'
