@@ -1,4 +1,6 @@
 <script setup>
+import { computed } from "vue";
+
 const data = {
   title: "2026-06「泡影苍霆」版本基建一图流排班表",
   videoUrl: "https://www.bilibili.com/video/BV19jVZ69Evp/",
@@ -35,17 +37,29 @@ const data = {
   ],
   lastUpdateTimestamp: 1748822400000,
 };
+
+const bilibiliPlayerUrl = computed(() => {
+  const bvid = data.videoUrl
+    ?.split("/")
+    .find((s) => s.startsWith("BV"))
+    ?.split("?")[0];
+
+  if (!bvid) return "";
+
+  return `https://player.bilibili.com/player.html?bvid=${bvid}&autoplay=1&muted=1&danmaku=0`;
+});
 </script>
 
 <template>
   <div>
     <h1 class="mt-6 mb-4">{{ data.title }}</h1>
 
-    <div class="mx-auto mb-8">
+    <div class="mx-auto mb-8 video-container">
       <v-responsive :aspect-ratio="2 / 1">
         <iframe
-          :src="'https://player.bilibili.com/player.html?bvid=' + data.videoUrl.split('/').filter((s) => s.startsWith('BV'))[0]"
+          :src="bilibiliPlayerUrl"
           allowfullscreen
+          allow="autoplay; encrypted-media"
           style="border: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0"
         ></iframe>
       </v-responsive>
@@ -58,4 +72,24 @@ const data = {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.video-container {
+  border-radius: 12px;
+  overflow: hidden;
+  animation: video-breathing-border 1.8s ease-in-out infinite;
+}
+
+@keyframes video-breathing-border {
+  0% {
+    box-shadow: 0 0 0 2px rgba(66, 165, 245, 0.25);
+  }
+
+  50% {
+    box-shadow: 0 0 0 4px rgba(66, 165, 245, 0.65);
+  }
+
+  100% {
+    box-shadow: 0 0 0 2px rgba(66, 165, 245, 0.25);
+  }
+}
+</style>
