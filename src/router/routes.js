@@ -38,14 +38,14 @@ const routes = [
     },
     {
         path: '/material/alchemy',
-        text: '怪猎炼金池数据统计',
+        text: '怪猎联动收益计算器',
         name: 'AlchemyResult',
         display: true,
         module: 'material',
         icon: "mdi-flask-outline",
         component: () => import('/src/pages/material/alchemy-result.vue'),
         meta: {
-            title: '怪猎炼金池数据统计'
+            title: '怪猎联动收益计算器'
         }
     },
     {
