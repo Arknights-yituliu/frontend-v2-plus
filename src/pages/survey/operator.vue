@@ -865,6 +865,13 @@ onMounted(() => {
                       </div>
                     </v-btn>
                   </div>
+
+                  <v-alert :icon="false" color="warning" variant="tonal" class="mt-4" density="compact">
+                    <p class="text-caption mb-1"><b>如果出现报错：请勿修改设备本地时间</b>可能是系统时间不准确导致。Windows 同步方法：</p>
+                    <p class="text-caption mb-1">① 右键任务栏时间 → 调整日期/时间</p>
+                    <p class="text-caption mb-1">② 点击"立即同步"</p>
+                    <p class="text-caption">或 Win+R 输入 <code>timedate.cpl</code> →  Internet 时间 → 更改设置 → 立即更新</p>
+                  </v-alert>
                 </v-card-text>
               </v-card>
             </template>
