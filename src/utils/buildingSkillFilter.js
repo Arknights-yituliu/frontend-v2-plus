@@ -9,42 +9,49 @@ const operatorFilterConditionTable = {
         conditions: [
             {
                 label: "buildSkillFilter.Trading",
+                roomType: 'trading',
                 func: (operator) => {
                     return operator.roomType === 'trading'
                 }
             },
             {
                 label: "buildSkillFilter.Factory",
+                roomType: 'manufacture',    
                 func: (operator) => {
                     return operator.roomType === 'manufacture'
                 }
             },
             {
                 label: "buildSkillFilter.Office",
+                roomType: 'hire',    
                 func: (operator) => {
                     return operator.roomType === 'hire'
                 }
             },
             {
                 label: "buildSkillFilter.Workshop",
+                roomType: 'workshop',    
                 func: (operator) => {
                     return operator.roomType === 'workshop'
                 }
             },
             {
                 label: "buildSkillFilter.Dormitory",
+                roomType: 'dormitory',    
                 func: (operator) => {
                     return operator.roomType === 'dormitory'
                 }
             },
             {
                 label: "buildSkillFilter.Control",
+                roomType: 'control',    
                 func: (operator) => {
                     return operator.roomType === 'control'
                 }
             },
             {
                 label: "buildSkillFilter.Power",
+                roomType: 'power',    
                 func: (operator) => {
                     return operator.roomType === 'power'
                 }
@@ -54,9 +61,10 @@ const operatorFilterConditionTable = {
                 func: (operator) => {
                     return operator.roomType === 'meeting'
                 }
-            },
+            },  
             {
                 label: "buildSkillFilter.Training",
+                roomType: 'training',    
                 func: (operator) => {
                     return operator.roomType === 'training'
                 }
