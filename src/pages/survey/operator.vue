@@ -38,7 +38,7 @@ let sklandAccountData = ref(null)  // 完整的森空岛账号数据
 
 // 森空岛导入相关
 const SKLAND_LINK = 'https://www.skland.com/index'
-const CONSOLE_CODE = "copy(localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage.getItem('SK_TOKEN_CACHE_KEY'))"
+const CONSOLE_CODE = "copy(localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage.getItem('SK_TOKEN_CACHE_KEY')),console.log('已复制到粘贴板')"
 
 // 联动干员ID列表
 const COLLAB_OPERATOR_IDS = new Set([
@@ -807,7 +807,9 @@ onMounted(() => {
             <template v-slot:item.2>
               <v-card flat>
                 <v-card-text>
-                  <p>登录后按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
+
+                  <img src="/image/skland/step1.jpg" alt="步骤1" style="max-width: 100%; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); margin-bottom: 12px;" />
+                  <p>登录森空岛后，在森空岛首页按键盘F12调出开发者工具，在下方选择控制台(console)，输入以下命令：</p>
                   <v-alert :icon="false" color="primary" variant="tonal" class="my-4">
                     <code style="word-break: break-all;">{{ CONSOLE_CODE }}</code>
                   </v-alert>
@@ -817,7 +819,8 @@ onMounted(() => {
                       点击复制命令
                     </v-btn>
                   </div>
-                  <p class="text-center mt-2 text-caption">执行后凭证会自动复制到剪贴板</p>
+                    <p>输入后按Enter键执行，会自动复制凭证字符串到剪贴板</p>
+                
                 </v-card-text>
               </v-card>
             </template>
@@ -862,6 +865,13 @@ onMounted(() => {
                       </div>
                     </v-btn>
                   </div>
+
+                  <v-alert :icon="false" color="warning" variant="tonal" class="mt-4" density="compact">
+                    <p class="text-caption mb-1"><b>如果出现报错：请勿修改设备本地时间</b>可能是系统时间不准确导致。Windows 同步方法：</p>
+                    <p class="text-caption mb-1">① 右键任务栏时间 → 调整日期/时间</p>
+                    <p class="text-caption mb-1">② 点击"立即同步"</p>
+                    <p class="text-caption">或 Win+R 输入 <code>timedate.cpl</code> →  Internet 时间 → 更改设置 → 立即更新</p>
+                  </v-alert>
                 </v-card-text>
               </v-card>
             </template>

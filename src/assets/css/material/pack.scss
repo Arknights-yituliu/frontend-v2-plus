@@ -458,6 +458,13 @@
     font-style: italic
   }
 
+  .pack-screenshot-actions {
+    display: flex;
+    width: 100%;
+    margin: 4px 0 2px;
+    justify-content: center;
+  }
+
   .bg_red {
     background-color: rgb(250, 83, 83);
   }

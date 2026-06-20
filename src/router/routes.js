@@ -38,14 +38,14 @@ const routes = [
     },
     {
         path: '/material/alchemy',
-        text: '怪猎炼金池数据统计',
+        text: '怪猎联动收益计算器',
         name: 'AlchemyResult',
         display: true,
         module: 'material',
         icon: "mdi-flask-outline",
         component: () => import('/src/pages/material/alchemy-result.vue'),
         meta: {
-            title: '怪猎炼金池数据统计'
+            title: '怪猎联动收益计算器'
         }
     },
     {
@@ -294,6 +294,16 @@ const routes = [
         component: () => import('/src/pages/LogicalBytePostMaker/AlchemyPool.vue'),
         meta: {
             title: '炼金池收益计算'
+        }
+    },
+    {
+        path: '/lb/yield-overview',
+        text: '收益速览制图',
+        name: 'YieldOverviewMaker',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/YieldOverviewMaker.vue'),
+        meta: {
+            title: '收益速览制图'
         }
     },
     {

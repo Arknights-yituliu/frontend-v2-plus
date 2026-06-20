@@ -106,76 +106,49 @@ const uploadCards = reactive([
     }),
 ]);
 
-const defaultDrawCost = 60;
+const hiddenUploadCardKeys = new Set(["mhDrop", "alchemy"]);
+const visibleUploadCards = computed(() => uploadCards.filter((card) => !hiddenUploadCardKeys.has(card.key)));
+const showCalculatorParameters = false;
+
 const defaultSanityToAlchemyRate = 2;
+const defaultLmdSanityValue = getItemReferenceValue(LMD_ID);
+const linkedLmdSanityValue = ref(defaultLmdSanityValue);
+const lmdYieldRate = computed(() => 12 * linkedLmdSanityValue.value);
 
-const calculatorRewardItems = [
-    { key: "lmdBundle", itemName: "龙门币", baseQuantity: 10000 },
-    { key: "solvent", itemName: "半自然溶剂", baseQuantity: 1 },
-    { key: "hydrocarbon", itemName: "环烃聚质", baseQuantity: 1 },
-    { key: "coagulatingGel", itemName: "类凝结核", baseQuantity: 1 },
-].map((material) => ({
-    ...material,
-    itemId: getItemIdByName(material.itemName),
-    label: material.baseQuantity > 1 ? `${material.itemName}x${material.baseQuantity}` : material.itemName,
-}));
-
-const sanityToAlchemyRate = ref(defaultSanityToAlchemyRate);
-const rewardRows = ref(createDefaultRewardRows());
-const materialProbabilities = reactive({
-    solvent: 25,
-    hydrocarbon: 25,
-    coagulatingGel: 25,
-});
-
-const probabilityRows = computed(() => [
-    {
-        key: "solvent",
-        label: "半自然溶剂",
-        itemId: getItemIdByName("半自然溶剂"),
-        value: materialProbabilities.solvent,
-    },
-    {
-        key: "hydrocarbon",
-        label: "环烃聚质",
-        itemId: getItemIdByName("环烃聚质"),
-        value: materialProbabilities.hydrocarbon,
-    },
-    {
-        key: "coagulatingGel",
-        label: "类凝结核",
-        itemId: getItemIdByName("类凝结核"),
-        value: materialProbabilities.coagulatingGel,
-    },
-    {
-        key: "lmdBundle",
-        label: "龙门币x10000",
-        itemId: LMD_ID,
-        value: lmdProbability.value,
-        readonly: true,
-    },
+const calculatorCards = reactive([
+    createCalculatorCardState({
+        key: "phantomThunder",
+        title: "泡影苍霆收益计算",
+        drawCost: 60,
+        rewardItems: [
+            { key: "lmdBundle", itemName: "龙门币", baseQuantity: 10000, isLmd: true },
+            { key: "solvent", itemName: "半自然溶剂", baseQuantity: 1 },
+            { key: "hydrocarbon", itemName: "环烃聚质", baseQuantity: 1 },
+            { key: "coagulatingGel", itemName: "类凝结核", baseQuantity: 1 },
+        ],
+        defaultProbabilities: {
+            solvent: 31,
+            hydrocarbon: 31,
+            coagulatingGel: 31,
+        },
+    }),
+    createCalculatorCardState({
+        key: "fallingLeavesFire",
+        title: "落叶逐火收益计算",
+        drawCost: 40,
+        rewardItems: [
+            { key: "device", itemName: "全新装置", baseQuantity: 1 },
+            { key: "polyesterPack", itemName: "聚酸酯组", baseQuantity: 1 },
+            { key: "saltPack", itemName: "转质盐组", baseQuantity: 1 },
+            { key: "lmdBundle", itemName: "龙门币", baseQuantity: 2000, isLmd: true },
+        ],
+        defaultProbabilities: {
+            device: 20.2,
+            polyesterPack: 18.2,
+            saltPack: 22.1,
+        },
+    }),
 ]);
-
-const materialProbabilitySum = computed(() => {
-    return toNumber(materialProbabilities.solvent)
-        + toNumber(materialProbabilities.hydrocarbon)
-        + toNumber(materialProbabilities.coagulatingGel);
-});
-
-const lmdProbability = computed(() => 100 - materialProbabilitySum.value);
-
-const totalRewardValue = computed(() => {
-    return rewardRows.value.reduce((sum, row) => {
-        return sum + toNumber(row.value) * getRewardProbability(row) / 100;
-    }, 0);
-});
-
-const alchemyYieldRate = computed(() => {
-    return totalRewardValue.value * toNumber(sanityToAlchemyRate.value) / defaultDrawCost;
-});
-
-const lmdYieldRate = 12 * 0.0036;
-const totalYieldRate = computed(() => alchemyYieldRate.value + lmdYieldRate);
 
 function formatNumber(value, maximumFractionDigits = 4) {
     if (!Number.isFinite(value)) return "0";
@@ -292,12 +265,13 @@ function resetUploadForm(card) {
     }
 }
 
-function resetCalculator() {
-    sanityToAlchemyRate.value = defaultSanityToAlchemyRate;
-    materialProbabilities.solvent = 25;
-    materialProbabilities.hydrocarbon = 25;
-    materialProbabilities.coagulatingGel = 25;
-    rewardRows.value = createDefaultRewardRows();
+function resetCalculator(card) {
+    card.sanityToAlchemyRate = defaultSanityToAlchemyRate;
+    linkedLmdSanityValue.value = defaultLmdSanityValue;
+    for (const key of Object.keys(card.defaultProbabilities)) {
+        card.materialProbabilities[key] = card.defaultProbabilities[key];
+    }
+    card.rewardRows.splice(0, card.rewardRows.length, ...createDefaultRewardRows(card.rewardItems));
 }
 
 function setUploadFeedback(card, type, text) {
@@ -383,10 +357,66 @@ async function submitUploadCard(card) {
     }
 }
 
-function createDefaultRewardRows() {
-    return calculatorRewardItems.map((item, index) => {
+function createCalculatorCardState({
+    key,
+    title,
+    drawCost,
+    rewardItems,
+    defaultProbabilities,
+}) {
+    const normalizedRewardItems = rewardItems.map((material) => ({
+        ...material,
+        itemId: getItemIdByName(material.itemName),
+        label: material.baseQuantity > 1 ? `${material.itemName}x${material.baseQuantity}` : material.itemName,
+    }));
+    const lmdRewardItem = normalizedRewardItems.find((item) => item.isLmd);
+    const card = reactive({
+        key,
+        title,
+        drawCost,
+        rewardItems: normalizedRewardItems,
+        defaultProbabilities,
+        sanityToAlchemyRate: defaultSanityToAlchemyRate,
+        materialProbabilities: { ...defaultProbabilities },
+        rewardRows: createDefaultRewardRows(normalizedRewardItems),
+    });
+    card.materialProbabilitySum = computed(() => {
+        return Object.values(card.materialProbabilities).reduce((sum, value) => sum + toNumber(value), 0);
+    });
+    card.lmdProbability = computed(() => 100 - card.materialProbabilitySum);
+    card.probabilityRows = computed(() => [
+        ...card.rewardItems
+            .filter((item) => !item.isLmd)
+            .map((item) => ({
+                key: item.key,
+                label: item.label,
+                itemId: item.itemId,
+                value: card.materialProbabilities[item.key] ?? 0,
+            })),
+        ...(lmdRewardItem ? [{
+            key: lmdRewardItem.key,
+            label: lmdRewardItem.label,
+            itemId: lmdRewardItem.itemId,
+            value: card.lmdProbability,
+            readonly: true,
+        }] : []),
+    ]);
+    card.totalRewardValue = computed(() => {
+        return card.rewardRows.reduce((sum, row) => {
+            return sum + toNumber(row.value) * getRewardProbability(card, row) / 100;
+        }, 0);
+    });
+    card.alchemyYieldRate = computed(() => {
+        return card.totalRewardValue * toNumber(card.sanityToAlchemyRate) / card.drawCost;
+    });
+    card.totalYieldRate = computed(() => card.alchemyYieldRate + lmdYieldRate.value);
+    return card;
+}
+
+function createDefaultRewardRows(rewardItems) {
+    return rewardItems.map((item, index) => {
         const referenceValue = getItemReferenceValue(item.itemId) * item.baseQuantity;
-        return {
+        const row = {
             id: index + 1,
             key: item.key,
             itemId: item.itemId,
@@ -394,12 +424,27 @@ function createDefaultRewardRows() {
             referenceValue,
             value: referenceValue,
         };
+        if (item.isLmd) {
+            Object.defineProperty(row, "value", {
+                enumerable: true,
+                get() {
+                    return linkedLmdSanityValue.value * item.baseQuantity;
+                },
+                set(value) {
+                    linkedLmdSanityValue.value = item.baseQuantity > 0
+                        ? toNumber(value) / item.baseQuantity
+                        : defaultLmdSanityValue;
+                },
+            });
+        }
+        return row;
     });
 }
 
-function getRewardProbability(row) {
-    if (row.key === "lmdBundle") return lmdProbability.value;
-    return materialProbabilities[row.key] ?? 0;
+function getRewardProbability(card, row) {
+    const rewardItem = card.rewardItems.find((item) => item.key === row.key);
+    if (rewardItem?.isLmd) return card.lmdProbability;
+    return card.materialProbabilities[row.key] ?? 0;
 }
 
 function getItemReferenceValue(itemId) {
@@ -426,7 +471,7 @@ function formatValue(value, digits = 2) {
 
 <template>
   <main class="alchemy-result-page">
-    <section v-for="card in uploadCards" :key="card.key" class="alchemy-card">
+    <section v-for="card in visibleUploadCards" :key="card.key" class="alchemy-card">
       <header class="alchemy-card-header">
         <div class="alchemy-card-title">
           <div class="collapse-title-icon"></div>
@@ -532,59 +577,60 @@ function formatValue(value, digits = 2) {
       </footer>
     </section>
 
-    <section class="alchemy-card">
+    <section v-for="calculatorCard in calculatorCards" :key="calculatorCard.key" class="alchemy-card">
       <header class="alchemy-card-header">
         <div class="alchemy-card-title">
           <div class="collapse-title-icon profit-title-icon"></div>
-          <span class="collapse-title-font">无限池收益计算器</span>
+          <span class="collapse-title-font">{{ calculatorCard.title }}</span>
         </div>
         <div class="alchemy-card-meta">
-          <span>{{ defaultDrawCost }} 炼金材料 / 抽</span>
+          <span>{{ calculatorCard.drawCost }} 炼金值 / 抽</span>
         </div>
       </header>
 
-      <div class="collapse-content-subheading">
-        <span></span>
-        收益参数
-      </div>
-      <p class="material-value-tip times-formula">当前参数为估算预设值，需要等统计出足够多的数据，才可以计算精确值，统计数据我们会定时更新</p>
-
-      <div class="reward-config sanity-rate-config">
-        <label class="draw-cost-field">
-          <span>每理智兑换炼金材料</span>
-          <el-input-number
-            v-model="sanityToAlchemyRate"
-            :min="0"
-            :precision="2"
-            :step="0.1"
-            class="profit-number-input"
-          />
-        </label>
-      </div>
-
-      <div class="probability-list">
-        <div
-          v-for="row in probabilityRows"
-          :key="row.key"
-          class="probability-row"
-        >
-          <div class="profit-material-name">
-            <ItemImage :item-id="row.itemId" :size="32" :mobile-size="28" fallback-image />
-            <strong>{{ row.label }}</strong>
-          </div>
-          <div v-if="row.readonly" class="readonly-probability">
-            {{ formatValue(row.value) }}%
-          </div>
-          <el-input-number
-            v-else
-            v-model="materialProbabilities[row.key]"
-            :min="0"
-            :precision="2"
-            :step="1"
-            class="profit-number-input"
-          />
+      <template v-if="showCalculatorParameters">
+        <div class="collapse-content-subheading">
+          <span></span>
+          收益参数
         </div>
-      </div>
+        <p class="material-value-tip times-formula">当前参数为估算预设值，需要等统计出足够多的数据，才可以计算精确值，统计数据我们会定时更新</p>
+
+        <div class="reward-config sanity-rate-config">
+          <label class="draw-cost-field">
+            <span>每理智兑换炼金材料</span>
+            <el-input-number
+              v-model="calculatorCard.sanityToAlchemyRate"
+              :min="0"
+              :precision="2"
+              :step="0.1"
+              class="profit-number-input"
+            />
+          </label>
+        </div>
+
+        <div class="probability-list">
+          <div
+            v-for="row in calculatorCard.probabilityRows"
+            :key="row.key"
+            class="probability-row"
+          >
+            <div class="profit-material-name">
+              <ItemImage :item-id="row.itemId" :size="32" :mobile-size="28" fallback-image />
+              <strong>{{ row.label }}</strong>
+            </div>
+            <div v-if="row.readonly" class="readonly-probability">
+              {{ formatValue(row.value) }}%
+            </div>
+            <el-input-number
+              v-else
+              v-model="calculatorCard.materialProbabilities[row.key]"
+              :min="0"
+              :step="0.1"
+              class="profit-number-input"
+            />
+          </div>
+        </div>
+      </template>
 
       <div class="collapse-content-subheading">
         <span></span>
@@ -594,7 +640,7 @@ function formatValue(value, digits = 2) {
 
       <div class="reward-config">
         <div class="reward-row-list">
-          <div v-for="row in rewardRows" :key="row.id" class="reward-row">
+          <div v-for="row in calculatorCard.rewardRows" :key="row.id" class="reward-row">
             <div class="profit-material-name">
               <ItemImage :item-id="row.itemId" :size="36" :mobile-size="32" fallback-image />
               <div>
@@ -620,7 +666,7 @@ function formatValue(value, digits = 2) {
         <div class="profit-result-grid yield-formula-grid">
           <div class="profit-final-result">
             <span>炼金收益率</span>
-            <strong>{{ formatValue(alchemyYieldRate * 100) }}%</strong>
+            <strong>{{ formatValue(calculatorCard.alchemyYieldRate * 100) }}%</strong>
           </div>
           <span class="yield-operator">+</span>
           <div class="profit-final-result">
@@ -630,11 +676,11 @@ function formatValue(value, digits = 2) {
           <span class="yield-operator">=</span>
           <div class="profit-final-result">
             <span>总收益率</span>
-            <strong>{{ formatValue(totalYieldRate * 100) }}%</strong>
+            <strong>{{ formatValue(calculatorCard.totalYieldRate * 100) }}%</strong>
           </div>
         </div>
         <div class="action-row">
-          <el-button :icon="RefreshLeft" @click="resetCalculator">重置收益计算</el-button>
+          <el-button :icon="RefreshLeft" @click="resetCalculator(calculatorCard)">重置收益计算</el-button>
         </div>
       </footer>
     </section>
