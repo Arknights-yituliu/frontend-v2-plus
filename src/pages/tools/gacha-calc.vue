@@ -213,57 +213,7 @@ function batchGenerationServerMaintenanceRewards() {
     return reward;
   }
 
-  // // 使用全局时间戳，支持用户自定义时间
-  // const date = new Date(currentTimestamp.value);
-  // let month = date.getMonth() + 1;
-  // let year = date.getFullYear();
-
-  // // 清空之前的维护奖励数据
-  // otherRewardBySchedules.value = otherRewardBySchedules.value.filter((item) => !item.name.includes("游戏维护"));
-
-  // for (let m = 0; m < 12; m++) {
-  //   let currentDay = 1;
-  //   if (m === 0) {
-  //     currentDay = date.getDate();
-  //   }
-
-  //   for (let d = currentDay; d < 29; d += 8) {
-  //     let reward = {
-  //       name: `游戏维护(${month}月)`,
-  //       originium: 0,
-  //       orundum: 200,
-  //       gachaTicket: 0,
-  //       tenGachaTicket: 0,
-  //       start: new Date(`${year}/${_padZero(month, 2)}/${_padZero(d, 2)} 00:00:00`).getTime(),
-  //       end: new Date(`${year}/${_padZero(month, 2)}/${_padZero(d, 2)} 23:00:00`).getTime(),
-  //       rewardType: "公共",
-  //       rewardModule: "otherResources",
-  //       probability: "",
-  //     };
-  //     otherRewardBySchedules.value.push(reward);
-  //   }
-
-  //   month++;
-  //   if (month > 12) {
-  //     month = 1;
-  //     year++;
-  //   }
-  // }
-
-  // /**
-  //  * 传入一个数字和长度进行补零
-  //  * @param num 数字
-  //  * @param size 长度
-  //  * @returns {string} 返回补零后的字符
-  //  * @private
-  //  */
-  // function _padZero(num, size) {
-  //   let s = num.toString();
-  //   while (s.length < size) {
-  //     s = "0" + s;
-  //   }
-  //   return s;
-  // }
+  
 }
 
 //用户选择的活动
@@ -331,18 +281,7 @@ function rewardTypeMatchesCurrentActivity(rewardType) {
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 // 注：历史礼包时间范围已改为动态计算，不再需要 historicalPackTimeRange 配置
 const scheduleOptions = [
-  {
-    name: "怪猎联动二期",
-    dateString: "(0601-0615)",
-    start: new Date("2026/06/01 12:00:00"),
-    end: new Date("2026/06/15 04:01:00"),
-    activityType: "联动限定",
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-    historyStartTime: new Date("2023/03/01 12:00:00"),
-    historyEndTime: new Date("2023/03/28 04:00:00"),
-  },
+ 
   {
     name: "怪猎一期复刻",
     name: "怪猎一期复刻",
@@ -356,18 +295,7 @@ const scheduleOptions = [
     historyStartTime: new Date("2023/03/01 12:00:00"),
     historyEndTime: new Date("2023/03/28 04:00:00"),
   },
-   {
-    name: "二期+复刻",
-    dateString: "(0601-0629)",
-    start: new Date("2026/06/01 12:00:00"),
-    end: new Date("2026/06/29 04:00:00"),
-    activityType: "双联动限定",
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-    historyStartTime: new Date("2023/03/01 12:00:00"),
-    historyEndTime: new Date("2023/03/28 04:00:00"),
-  },
+  
   {
     name: "夏活",
     dateString: "(0801-0815)",
@@ -380,16 +308,16 @@ const scheduleOptions = [
     historyStartTime: new Date("2025/08/01 12:00:00"),
     historyEndTime: new Date("2025/08/15 04:01:00"),
   },
-  // {
-  //   name: "感谢庆典",
-  //   dateString: "敬请期待",
-  //   start: new Date("2026/11/01 12:00:00"),
-  //   end: new Date("2026/11/15 04:01:00"),
-  //   activityType: "周年限定",
-  //   disabled: true,
-  //   dailyGiftResources: true,
-  //   accuracyFlag: true,
-  // },
+   {
+     name: "感谢庆典",
+     dateString: "敬请期待",
+     start: new Date("2026/11/01 12:00:00"),
+     end: new Date("2026/11/15 04:01:00"),
+     activityType: "周年限定",
+     disabled: true,
+     dailyGiftResources: true,
+     accuracyFlag: true,
+   },
 ];
 
 const packDataLoadingStatus = ref(false);
@@ -1790,7 +1718,7 @@ onMounted(() => {
   readLastSettings();
   myChart = echarts.init(document.getElementById("calculationResultPieChart"));
   batchGenerationMonthlyPack();
-  updateScheduleOption(2);
+  updateScheduleOption(0);
   getAndSortPackData();
 
   // ElNotification({
