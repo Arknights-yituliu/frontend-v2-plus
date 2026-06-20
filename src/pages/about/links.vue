@@ -63,6 +63,18 @@ function extraLinks(){
     slogan:'',
     tags:["动态换班", "支持跑单操作", "支持调用MAA"]
   })
+
+  toolLinks.value.unshift({
+    name:'终末地一图流',
+    description:'终末地性价比计算、基质规划器、攒抽计算器、抽卡分析等其它小工具',
+    links:[{name:'基质规划器',url:'https://ef.yituliu.cn/tools/essence-calculator'},
+      {name:'攒抽计算器',url:'https://ef.yituliu.cn/tools/gacha-calculator'},
+      {name:'抽卡分析',url:'https://ef.yituliu.cn/tools/gacha-analysis'}
+    ],
+    iconUrl:'https://ef.yituliu.cn/android-chrome-512x512.png',
+    slogan:'',
+    tags:["性价比计算", "基质规划器", "攒抽计算器", "抽卡分析"]
+  })
 }
 
 
