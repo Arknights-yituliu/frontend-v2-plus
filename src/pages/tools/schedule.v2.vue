@@ -268,8 +268,12 @@ function chooseRoom(roomType, index) {
   }
  
   if(roomTypeFilterMap.has(roomType)){
-    console.log(roomTypeFilterMap.get(roomType))
-    filterOperatorByTag(roomTypeFilterMap.get(roomType), "room")
+    const condition = roomTypeFilterMap.get(roomType);
+    const btnKey = `room-${condition.label}`;
+     //暂存筛选函数和按钮key
+    selectBtnKey.value = btnKey;
+    filterCondition.value = condition;
+    commonFilterOperator();
   }
 }
 
