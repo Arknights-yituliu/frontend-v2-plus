@@ -3,11 +3,9 @@ import {ref, watch} from "vue";
 import OperatorBar from "/src/components/survey/OperatorBar.vue";
 import '/src/assets/css/survey/operator.scss'
 import '/src/assets/css/survey/operator.phone.scss'
-import {statisticsOperatorInfo, splitMaterialByTier,debugExportOperatorInfo} from "/src/utils/survey/operatorStatistical"
+import {statisticsOperatorInfo, splitMaterialByTier} from "/src/utils/survey/operatorStatistical"
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
-import {getStageConfig} from "/src/utils/user/userConfig.js";
-import itemCache from "/src/plugins/indexedDB/itemCache.js";
 
 
 const props = defineProps(["modelValue"]);
@@ -18,6 +16,7 @@ let itemCostCollectOriginal = ref([])
 let itemCostCollectData = ref([])
 let apCostRankingData = ref([])
 let notOwnData = ref([])
+let activeStatisticsView = ref('operator')
 
 async function updateData(list) {
 
@@ -103,51 +102,56 @@ watch(() => props.modelValue.length, (newVal, oldValue) => {
 
 <template>
 
-  <div class="operator-statistical-page flex justify-center flex-wrap m-a">
-    <v-card class="operator-statistical-card m-4" :title="group.title"
-            v-for="(group,index) in operatorInfo" :key="index">
-      <v-card-text>
-        <div class="operator-statistical-item" v-for="(data,index) in group.data" :key="index">
-          <span class="info-label">{{ data.label }}</span>
-          <span class="info-value">{{ data.value }}</span>
+  <div class="operator-statistical-page">
+    <div class="operator-statistics-toggle-wrap">
+      <v-btn-toggle v-model="activeStatisticsView" mandatory color="primary" class="operator-statistics-toggle">
+        <v-btn class="operator-statistics-toggle-btn" value="operator">干员统计</v-btn>
+        <v-btn class="operator-statistics-toggle-btn" value="material">材料消耗情况</v-btn>
+        <v-btn class="operator-statistics-toggle-btn" value="apCostRanking">干员消耗理智排行</v-btn>
+      </v-btn-toggle>
+    </div>
+
+    <div v-show="activeStatisticsView === 'operator'" class="operator-statistics-view operator-statistics-card-grid">
+      <v-card class="operator-statistical-card" :title="group.title"
+              v-for="(group,index) in operatorInfo" :key="index">
+        <v-card-text>
+          <div class="operator-statistical-item" v-for="(data,index) in group.data" :key="index">
+            <span class="info-label">{{ data.label }}</span>
+            <span class="info-value">{{ data.value }}</span>
+          </div>
+        </v-card-text>
+      </v-card>
+
+      <v-card class="operator-statistical-card operator-not-own-card" title="未招募干员">
+        <div class="operator-not-own-list">
+          <OperatorAvatar :char-id="operator.charId"
+                          v-for="(operator) in notOwnData" :key="operator.charId"></OperatorAvatar>
         </div>
-      </v-card-text>
-    </v-card>
+      </v-card>
+    </div>
 
-    <v-card class="operator-statistical-card m-4" title="未招募干员">
-      <div class="flex flex-wrap m-4">
-        <OperatorAvatar :char-id="operator.charId"
-                        v-for="(operator) in notOwnData"></OperatorAvatar>
-      </div>
-    </v-card>
-
-    <v-card class="operator-ap-cost-rank-card m-4" title="干员消耗理智排行">
-      <OperatorBar v-for="(item,index) in apCostRankingData" :key="index" :operator-info="item"></OperatorBar>
-    </v-card>
-
-    <v-card class="m-4" title="材料消耗情况">
-      <v-card-text>
-        <div class="item-cost-data">
-          <p style="">总计消耗{{ apCost.toFixed(0) }} 理智</p>
-          <!--          材料统计-->
-          <v-btn color="orange" class="m-4" @click="splitMaterialByRarity(5)">不拆分</v-btn>
-          <v-btn color="purple" class="m-4" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</v-btn>
-          <v-btn color="blue" class="m-4" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</v-btn>
-          <div class="item-cost-group" v-for="(list,tier) in itemCostCollectData" :key="tier">
-            <div class="item-cost-item" v-for="(item,index) in list" :key="index">
-              <ItemImage :item-id="item.id" style="margin: auto"></ItemImage>
-              <span class="item-cost-num">
-                  {{ strShowLength(item.count) }}
-            </span>
-            </div>
+    <div v-show="activeStatisticsView === 'material'" class="operator-statistics-view operator-material-cost-view">
+      <div class="item-cost-data">
+        <p class="operator-material-cost-summary">总计消耗{{ apCost.toFixed(0) }} 理智</p>
+        <div class="operator-material-split-actions">
+          <v-btn color="orange" @click="splitMaterialByRarity(5)">不拆分</v-btn>
+          <v-btn color="purple" @click="splitMaterialByRarity(4)">拆分材料到紫色品质</v-btn>
+          <v-btn color="blue" @click="splitMaterialByRarity(3)">拆分材料到蓝色品质</v-btn>
+        </div>
+        <div class="item-cost-group" v-for="(list,tier) in itemCostCollectData" :key="tier">
+          <div class="item-cost-item" v-for="(item,index) in list" :key="index">
+            <ItemImage :item-id="item.id" style="margin: auto"></ItemImage>
+            <span class="item-cost-num">
+                {{ strShowLength(item.count) }}
+          </span>
           </div>
         </div>
-      </v-card-text>
-    </v-card>
+      </div>
+    </div>
 
-    <v-btn @click="debugExportOperatorInfo()" text="debug">
-
-    </v-btn>
+    <div v-show="activeStatisticsView === 'apCostRanking'" class="operator-statistics-view operator-ap-cost-rank-list">
+      <OperatorBar v-for="(item,index) in apCostRankingData" :key="index" :operator-info="item"></OperatorBar>
+    </div>
 
   </div>
 

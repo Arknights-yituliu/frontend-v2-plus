@@ -259,7 +259,8 @@
   }
 
   .pack-content-item {
-       width: 100px;
+    width: 100px;
+    text-align: center;
   }
 
 
@@ -277,6 +278,12 @@
     justify-content: space-between;
     box-sizing: border-box;
 
+  }
+
+  .pack-content-material th,
+  .pack-content-material td {
+    text-align: center !important;
+    vertical-align: middle;
   }
 
   .pack-content-material-item {

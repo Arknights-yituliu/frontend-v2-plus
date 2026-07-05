@@ -498,10 +498,22 @@ const routes = [
         }
     },
     {
+        path: '/survey/operator-recommend',
+        text: '干员练度推荐',
+        name: 'OperatorRecommend',
+        display: false,
+        module: 'survey',
+        icon: "mdi-chart-box-plus-outline",
+        component: () => import('/src/pages/survey/operator-recommend.vue'),
+        meta: {
+            title: '干员练度推荐'
+        }
+    },
+    {
         path: '/survey/questionnaire',
         text: '干员携带优先级问卷',
         name: 'Questionnaire',
-        display: true,
+        display: false,
         module: 'survey',
         icon: "mdi-chart-bar",
         component: () => import('/src/pages/survey/operator-carry.vue'),

@@ -1,15 +1,19 @@
 .operator-info-card {
-  width: 500px;
+  width: min(500px, 100%);
   margin: 8px;
+  border-radius: 12px;
 
   .operator-info-bar {
     display: flex;
     align-items: center;
     justify-content: start;
+    min-height: 64px;
+    padding: 8px 12px;
+    box-sizing: border-box;
   }
 
   .operator-info {
-    width: 80px;
+    width: 86px;
     height: 44px;
     position: relative;
     //border: 1px solid red;
@@ -17,6 +21,12 @@
 
   .operator-name {
     font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    max-width: 78px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     position: absolute;
     top: 0;
     left: 4px;
