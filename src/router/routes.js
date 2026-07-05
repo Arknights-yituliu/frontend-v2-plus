@@ -320,6 +320,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/pack-proofread',
+        text: '礼包校队',
+        name: 'LBPackProofread',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/PackProofread.vue'),
+        meta: {
+            title: '礼包校队'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',
