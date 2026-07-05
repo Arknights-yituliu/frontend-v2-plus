@@ -40,7 +40,7 @@ const routes = [
         path: '/material/alchemy',
         text: '怪猎联动收益计算器',
         name: 'AlchemyResult',
-        display: true,
+        display: false,
         module: 'material',
         icon: "mdi-flask-outline",
         component: () => import('/src/pages/material/alchemy-result.vue'),

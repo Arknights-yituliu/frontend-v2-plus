@@ -281,21 +281,6 @@ function rewardTypeMatchesCurrentActivity(rewardType) {
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 // 注：历史礼包时间范围已改为动态计算，不再需要 historicalPackTimeRange 配置
 const scheduleOptions = [
- 
-  {
-    name: "怪猎一期复刻",
-    name: "怪猎一期复刻",
-    dateString: "(0615-0629)",
-    start: new Date("2026/06/15 12:00:00"),
-    end: new Date("2026/06/29 04:00:00"),
-    activityType: "联动限定复刻",
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-    historyStartTime: new Date("2023/03/01 12:00:00"),
-    historyEndTime: new Date("2023/03/28 04:00:00"),
-  },
-  
   {
     name: "夏活",
     dateString: "(0801-0815)",
