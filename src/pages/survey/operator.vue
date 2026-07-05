@@ -174,6 +174,7 @@ async function getPlayerDataAndSync(binding) {
       nickName: data.nickName,
       channelName: channelName,
       status: data.status,
+      importedAt: new Date().toISOString(),
       operatorDataList: data.operatorDataList,
       itemList: data.itemList || [],
       skins: data.skins || [],  // 时装数据
