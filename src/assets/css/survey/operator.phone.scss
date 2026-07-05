@@ -7,6 +7,11 @@
       margin: 4px;
     }
 
+    .operator-form {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 8px;
+    }
+
 
     .survey-guide-content-container {
       padding: 8px;
@@ -139,7 +144,7 @@
       width: 520px;
     }
 
-    .operator-ap-cost-rank-card {
+    .operator-ap-cost-rank-list {
       width: 520px;
     }
   }
@@ -152,7 +157,7 @@
       width: 100%;
     }
 
-    .operator-ap-cost-rank-card {
+    .operator-ap-cost-rank-list {
       width: 100%;
     }
   }

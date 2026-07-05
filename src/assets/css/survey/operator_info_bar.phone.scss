@@ -3,22 +3,34 @@
     width:100%;
     margin: 4px 0;
 
+    .operator-info-bar {
+      min-height: 50px;
+      padding: 6px 8px;
+    }
+
     .operator-info {
-      width: 50px;
-      height: 32px;
+      width: clamp(68px, 20vw, 78px);
+      flex: 0 0 clamp(68px, 20vw, 78px);
+      height: 36px;
       position: relative;
       //border: 1px solid red;
     }
 
     .operator-name {
-      font-size: 8px;
+      font-size: 11px;
+      line-height: 14px;
+      font-weight: 600;
+      max-width: calc(100% - 4px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       position: absolute;
       left: 0;
     }
 
     .operator-elite-image {
       width: 18px;
-      top: 14px;
+      top: 18px;
       left: 0;
     }
 
@@ -28,7 +40,7 @@
       background-size: 16px;
       font-size: 8px;
       padding-top: 6px;
-      top: 14px;
+      top: 18px;
       left: 28px;
     }
 

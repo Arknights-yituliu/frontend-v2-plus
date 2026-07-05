@@ -40,6 +40,11 @@ const pages = [
     to: '/lb/yield-overview'
   },
   {
+    title: '礼包校队',
+    description: '读取公告礼包文本，与礼包性价比收录数据核对名称、时间和内容',
+    to: '/lb/pack-proofread'
+  },
+  {
     title: '卡片生成器',
     description: '创建由多个可配置卡片组成的组件',
     to: '/lb/card-maker'

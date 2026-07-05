@@ -40,7 +40,7 @@ const routes = [
         path: '/material/alchemy',
         text: '怪猎联动收益计算器',
         name: 'AlchemyResult',
-        display: true,
+        display: false,
         module: 'material',
         icon: "mdi-flask-outline",
         component: () => import('/src/pages/material/alchemy-result.vue'),
@@ -177,6 +177,19 @@ const routes = [
         }
     },
     {
+        path: '/tools/operator-zoot-matcher',
+        pageTitle: '干员-作业匹配器',
+        text: '我能抄什么作业？',
+        name: 'OperatorZootMatcher',
+        display: true,
+        module: 'tools',
+        icon: "mdi-text-box-search-outline",
+        component: () => import('/src/pages/tools/operator-zoot-matcher.vue'),
+        meta: {
+            title: '干员-作业匹配器'
+        }
+    },
+    {
         path: '/tools/scheduleV2',
         text: '排班表生成器',
         name: 'ScheduleV2',
@@ -304,6 +317,16 @@ const routes = [
         component: () => import('/src/pages/LogicalBytePostMaker/YieldOverviewMaker.vue'),
         meta: {
             title: '收益速览制图'
+        }
+    },
+    {
+        path: '/lb/pack-proofread',
+        text: '礼包校队',
+        name: 'LBPackProofread',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/PackProofread.vue'),
+        meta: {
+            title: '礼包校队'
         }
     },
     {
@@ -475,33 +498,45 @@ const routes = [
     },
     {
         path: '/survey/operators',
-        text: '干员练度调查',
+        text: '我的干员',
         name: 'OperatorSurvey',
         display: true,
         module: 'survey',
         icon: "mdi-chart-box",
         component: SURVEY_OPERATOR,
         meta: {
-            title: '干员练度调查'
+            title: '我的干员'
         }
     },
     {
         path: '/survey/operator-progression-statistics',
-        text: '干员练度调查结果',
+        text: '干员大数据',
         name: 'OperatorRank',
         display: true,
         module: 'survey',
         icon: "mdi-chart-bar-stacked",
         component: () => import('/src/pages/survey/operator-progression-statistics.vue'),
         meta: {
-            title: '干员练度调查结果'
+            title: '干员大数据'
+        }
+    },
+    {
+        path: '/survey/operator-recommend',
+        text: '干员练度推荐',
+        name: 'OperatorRecommend',
+        display: false,
+        module: 'survey',
+        icon: "mdi-chart-box-plus-outline",
+        component: () => import('/src/pages/survey/operator-recommend.vue'),
+        meta: {
+            title: '干员练度推荐'
         }
     },
     {
         path: '/survey/questionnaire',
         text: '干员携带优先级问卷',
         name: 'Questionnaire',
-        display: true,
+        display: false,
         module: 'survey',
         icon: "mdi-chart-bar",
         component: () => import('/src/pages/survey/operator-carry.vue'),
@@ -750,7 +785,18 @@ let routeMap = new Map()
 
 for (const route of routes) {
 
-    routeMap.set(route.path, route.text)
+    const routeTitle = route.pageTitle || route.text
+    routeMap.set(route.path, routeTitle)
+
+    const routeAliases = Array.isArray(route.alias)
+        ? route.alias
+        : route.alias
+            ? [route.alias]
+            : []
+
+    for (const routeAlias of routeAliases) {
+        routeMap.set(routeAlias, routeTitle)
+    }
 
     if (!route.module || !route.display) {
         continue

@@ -2,10 +2,135 @@
   width: 98%;
   margin: auto;
 
-  .operator-form {
+  .operator-page-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .operator-section-card {
+    width: 100%;
+  }
+
+  .operator-section-card,
+  .operator-section-card.v-expansion-panel--active,
+  .operator-section-card.v-expansion-panel--active + .operator-section-card {
+    margin-top: 0 !important;
+  }
+
+  .operator-section-card::after {
+    display: none;
+  }
+
+  .v-expansion-panel-title,
+  .v-expansion-panel--active > .v-expansion-panel-title:not(.v-expansion-panel-title--static) {
+    height: 48px;
+    min-height: 48px !important;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .v-expansion-panel-title {
+    transition-property: background-color, color;
+  }
+
+  .operator-section-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+  }
+
+  .operator-section-title-icon {
+    color: rgb(var(--v-theme-primary));
+    font-size: 20px;
+    opacity: 0.9;
+  }
+
+  .operator-import-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .operator-import-action {
+    min-height: 72px;
+    height: auto;
+    padding: 12px 16px;
+    justify-content: flex-start;
+    letter-spacing: normal;
+    text-transform: none;
+
+    .v-btn__content {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+    }
+  }
+
+  .operator-import-action-icon {
+    font-size: 28px;
+  }
+
+  .operator-import-action-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.4;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .operator-import-action-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .operator-import-action-desc {
+    font-size: 12px;
+    opacity: 0.78;
+  }
+
+  .operator-filter-group {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .operator-filter-label {
+    min-width: 96px;
+    justify-content: flex-start;
+  }
+
+  .operator-statistics-section {
+    .operator-statistical-page {
+      margin-top: 0;
+    }
+  }
+
+  .operator-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 500px));
+    gap: 12px;
     justify-content: center;
+    align-items: stretch;
+    margin: 8px 0 20px;
+
+    .operator-info-card {
+      width: 100%;
+      margin: 0;
+      border-radius: 12px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .operator-info-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(var(--v-theme-on-surface), 0.12);
+    }
   }
 
   .highlight {
@@ -69,17 +194,192 @@
 
 }
 
+.operator-detail-dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 0;
+  padding: 12px 16px 6px;
+  letter-spacing: normal;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+.operator-detail-dialog-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.operator-detail-dialog-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.operator-detail-dialog-desc {
+  white-space: normal;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.35;
+  opacity: 0.72;
+}
+
+.operator-detail-dialog-content {
+  padding-top: 4px;
+}
+
+.operator-detail-table {
+  .v-table__wrapper > table {
+    table-layout: fixed;
+  }
+
+  th,
+  td {
+    text-align: center !important;
+    vertical-align: middle;
+  }
+
+  th {
+    height: 34px !important;
+    padding: 0 6px !important;
+    font-size: 12px;
+  }
+
+  td {
+    height: 58px !important;
+    padding: 4px 6px !important;
+  }
+
+  th:first-child,
+  td:first-child {
+    width: 112px;
+  }
+}
+
+.operator-detail-item-cell {
+  white-space: normal;
+}
+
+.operator-detail-item {
+  display: inline-flex;
+  max-width: 104px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  line-height: 1.2;
+}
+
+.operator-detail-item-icon {
+  display: flex;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+}
+
+.operator-detail-item-label {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  opacity: 0.86;
+}
+
+.operator-detail-rank-cell {
+  font-variant-numeric: tabular-nums;
+}
+
+.operator-detail-rank-value {
+  display: inline-flex;
+  min-width: 42px;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
 
 /*干员统计容器样式*/
 .operator-statistical-page {
+  width: 100%;
 
+  .operator-statistics-toggle-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  .operator-statistics-toggle {
+    width: min(100%, 620px);
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    padding: 6px;
+    border: 1px solid var(--c-border-color);
+    border-radius: 14px;
+    background-color: var(--c-background-color);
+    box-shadow: inset 0 0 0 1px rgba(var(--v-theme-on-surface), 0.04);
+  }
+
+  .operator-statistics-toggle-btn {
+    min-width: 0;
+    height: 38px;
+    border-radius: 10px !important;
+    letter-spacing: normal;
+    font-weight: 600;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .operator-statistics-toggle-btn.v-btn--active {
+    box-shadow: 0 4px 12px rgba(var(--v-theme-primary), 0.22);
+  }
+
+  @media (max-width: 520px) {
+    .operator-statistics-toggle {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .operator-statistics-view {
+    width: 100%;
+  }
+
+  .operator-statistics-card-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
 
   .operator-statistical-card {
     width: 240px;
   }
 
-  .operator-ap-cost-rank-card {
-    width: 520px;
+  .operator-not-own-card {
+    width: min(520px, 100%);
+  }
+
+  .operator-not-own-list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 16px;
+  }
+
+  .operator-ap-cost-rank-list {
+    width: min(720px, 100%);
+    margin: auto;
+  }
+
+  .operator-material-cost-view {
+    width: 100%;
   }
 
   .operator-statistical-item {
@@ -107,6 +407,18 @@
 
   .item-cost-data {
     background-color: var(--c-card-background-color);
+  }
+
+  .operator-material-cost-summary {
+    margin: 0 0 12px;
+    font-weight: 700;
+  }
+
+  .operator-material-split-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
   }
 
   .operator-info-table {
