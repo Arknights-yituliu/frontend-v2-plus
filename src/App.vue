@@ -69,7 +69,11 @@ function changeTheme() {
 const route = useRoute();
 const currentPath = computed(() => route.path);
 
-let pageTitle = ref(routeMap.get(normalizePath(route.path)));
+function resolvePageTitle(path, fallbackTitle = '') {
+  return routeMap.get(normalizePath(path)) || fallbackTitle || '未定义路径'
+}
+
+let pageTitle = ref(resolvePageTitle(route.path, route.meta?.title));
 
 
 function normalizePath(path) {
@@ -94,8 +98,7 @@ function openNewPage(url) {
   window.open(url)
 }
 
-watch(currentPath, (newPath, oldPath) => {
-  pageTitle.value = routeMap.get(normalizePath(newPath)) || '未定义路径'
+watch(currentPath, (newPath, oldPath) => {  pageTitle.value = resolvePageTitle(newPath, route.meta?.title)
 
   if (route.name === '材料统计') {
     drawer.value = false

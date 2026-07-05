@@ -31,6 +31,7 @@ const sectionPanels = ref([])
 // 森空岛导入相关
 const SKLAND_LINK = 'https://www.skland.com/index'
 const CONSOLE_CODE = "copy(localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage.getItem('SK_TOKEN_CACHE_KEY')),console.log('已复制到粘贴板')"
+const SKLAND_ACCOUNT_SESSION_STORAGE_KEY = 'skland_account_data'
 
 const sklandImportDialog = ref(false)
 const sklandInputText = ref('')
@@ -110,6 +111,13 @@ async function getPlayerDataAndSync(binding) {
     warehouseData.channelName = channelName
     warehouseData.channelMasterId = channelMasterId
     warehouseData.nickName = nickName
+    sessionStorage.setItem(SKLAND_ACCOUNT_SESSION_STORAGE_KEY, JSON.stringify({
+      ...warehouseData,
+      nickName,
+      channelName,
+      channelMasterId,
+      importedAt: new Date().toISOString(),
+    }))
 
     await operatorDataAPI.importSkLandOperatorDataV3(warehouseData)
     createMessage({ type: 'success', text: '干员数据已同步到我的干员！' })

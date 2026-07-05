@@ -177,6 +177,19 @@ const routes = [
         }
     },
     {
+        path: '/tools/operator-zoot-matcher',
+        pageTitle: '干员-作业匹配器',
+        text: '我能抄什么作业？',
+        name: 'OperatorZootMatcher',
+        display: true,
+        module: 'tools',
+        icon: "mdi-text-box-search-outline",
+        component: () => import('/src/pages/tools/operator-zoot-matcher.vue'),
+        meta: {
+            title: '干员-作业匹配器'
+        }
+    },
+    {
         path: '/tools/scheduleV2',
         text: '排班表生成器',
         name: 'ScheduleV2',
@@ -762,7 +775,18 @@ let routeMap = new Map()
 
 for (const route of routes) {
 
-    routeMap.set(route.path, route.text)
+    const routeTitle = route.pageTitle || route.text
+    routeMap.set(route.path, routeTitle)
+
+    const routeAliases = Array.isArray(route.alias)
+        ? route.alias
+        : route.alias
+            ? [route.alias]
+            : []
+
+    for (const routeAlias of routeAliases) {
+        routeMap.set(routeAlias, routeTitle)
+    }
 
     if (!route.module || !route.display) {
         continue
