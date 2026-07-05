@@ -3,7 +3,8 @@ import {onMounted, ref} from "vue";
 import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/account/login.v2.scss'
 import { createMessage} from "/src/utils/message.js";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
+import {getUserInfo} from "/src/utils/user/userInfo.js";
 
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
 const englishNumberRegex = /^[A-Za-z0-9]+$/;
@@ -37,10 +38,17 @@ function toRegister(){
 function toLogin() {
 
 
-  userAPI.loginV3(inputContent.value).then(response => {
+  userAPI.loginV3(inputContent.value).then(async response => {
     const {token,uid} = response.data
     localStorage.setItem("USER_TOKEN", token);
     localStorage.setItem("UID",uid);
+
+    if (route.name === 'AccountHome' || route.path === '/account/home') {
+      createMessage({type:'success',text:'登录成功'})
+      await getUserInfo("AccountHome")
+      return
+    }
+
     createMessage({type:'success',text:'登录成功，即将转跳到首页'})
     setTimeout(() => {
       // router.push({name: 'IMPORT_BY_SKLAND'})
@@ -55,6 +63,7 @@ function toRetrieve() {
 }
 
 const router = useRouter()
+const route = useRoute()
 
 function sendVerificationCode() {
   const data = {
