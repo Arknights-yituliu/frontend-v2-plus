@@ -2,8 +2,7 @@
 import {createMessage} from "/src/utils/message.js";
 import operatorDataAPI from "/src/api/operatorData.js"
 import {onMounted, ref, computed} from "vue";
-import {operatorRecommend} from "/src/utils/survey/operatorRecommend";
-import {operatorTable, operatorTableV2} from "/src/utils/gameData.js";
+import {operatorTable} from "/src/utils/gameData.js";
 import {exportExcel} from '/src/utils/exportExcel.js'
 
 import "/src/assets/css/survey/operator.scss";
@@ -16,36 +15,23 @@ import OperatorStatisticalTable from "/src/components/survey/OperatorStatistical
 import deepClone from "/src/utils/deepClone.js";
 import EquipIcon from "/src/components/sprite/EquipIcon.vue";
 import OperatorBar from "/src/components/survey/OperatorBar.vue";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {formatNumber} from "/src/utils/format.js";
 import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import {dateFormat} from "@/utils/dateUtil.js";
-// import AccountOverviewPanel from "/src/components/survey/AccountOverviewPanel.vue";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
 import { userInfo } from "/src/utils/user/userInfo.js";
-import operatorUpdateTime from '/public/json/operator_update_time.json';
 
 let RANK_TABLE = ref([0, 1, 2, 3, 4, 5, 6]);  //等级
 
-
-let displayTabHeader = ref('数据导入导出')
-
-// 账号一图流相关数据
-let sklandAccountData = ref(null)  // 完整的森空岛账号数据
-// const accountOverviewPanelRef = ref(null)
+const sectionPanels = ref([])
 
 // 森空岛导入相关
 const SKLAND_LINK = 'https://www.skland.com/index'
 const CONSOLE_CODE = "copy(localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage.getItem('SK_TOKEN_CACHE_KEY')),console.log('已复制到粘贴板')"
-
-// 联动干员ID列表
-const COLLAB_OPERATOR_IDS = new Set([
-  'char_197_poca', 'char_198_blackd', 'char_199_blitz', 'char_200_frost', 'char_201_moeshd',
-  'char_276_blitz', 'char_277_tachak', 'char_278_ahorn',
-  'char_4182_oblvns', 'char_4183_mortis', 'char_4186_tmoris', 'char_4184_dolris', 'char_4185_amoris'
-])
+const SKLAND_ACCOUNT_SESSION_STORAGE_KEY = 'skland_account_data'
 
 const sklandImportDialog = ref(false)
 const sklandInputText = ref('')
@@ -54,20 +40,6 @@ const sklandImportStep = ref(1) // 当前导入步骤
 const sklandCred = ref('')
 const sklandToken = ref('')
 const playBindingList = ref([])
-const currentBinding = ref(null)
-const rawWarehouseData = ref(null)
-const sklandUploading = ref(false)
-
-// 获取限定干员列表
-const limitedOperatorIds = computed(() => {
-  const ids = new Set()
-  for (const charId in operatorUpdateTime) {
-    if (operatorUpdateTime[charId].obtainApproach === '限定干员') {
-      ids.add(charId)
-    }
-  }
-  return ids
-})
 
 // 检查用户是否登录
 const isUserLoggedIn = computed(() => {
@@ -125,90 +97,36 @@ async function getPlayerBindingBySkland() {
 
 async function getPlayerDataAndSync(binding) {
   const { uid, nickName, channelName, channelMasterId } = binding
+
+  if (!isUserLoggedIn.value) {
+    createMessage({ type: 'error', text: '请先登录一图流账号，才能同步干员数据' })
+    return
+  }
   
   sklandLoading.value = true
-  createMessage({ type: 'info', text: '正在获取账号数据，请稍候...' })
+  createMessage({ type: 'info', text: '正在同步干员数据，请稍候...' })
   
   try {
-    currentBinding.value = binding
-    
-    // 获取账号概览数据
-    const data = await SklandAPI.getAccountOverviewData(
-      uid,
-      nickName,
-      channelName,
-      sklandCred.value,
-      sklandToken.value
-    )
-    
-    // 同时获取原始仓库数据用于上传
     const warehouseData = await SklandAPI.getWarehouseInfo(uid, sklandCred.value, sklandToken.value)
     warehouseData.channelName = channelName
     warehouseData.channelMasterId = channelMasterId
     warehouseData.nickName = nickName
-    rawWarehouseData.value = warehouseData
-    
-    // 添加干员详细信息
-    for (const operator of data.operatorDataList) {
-      const charInfo = operatorTableV2[operator.charId]
-      if (charInfo) {
-        operator.name = charInfo.name
-        operator.profession = charInfo.profession
-        operator.skills = charInfo.skills || []
-        operator.equip = charInfo.equip || []
-        operator.isLimited = limitedOperatorIds.value.has(operator.charId)
-        operator.isCollab = COLLAB_OPERATOR_IDS.has(operator.charId)
-      }
-    }
-    
-    // 排序干员
-    data.operatorDataList.sort((a, b) => {
-      if (b.rarity !== a.rarity) return b.rarity - a.rarity
-      if (b.elite !== a.elite) return b.elite - a.elite
-      return b.level - a.level
-    })
-    
-    // 保存账号数据用于一图流显示
-    sklandAccountData.value = {
-      uid: uid,
-      nickName: data.nickName,
-      channelName: channelName,
-      status: data.status,
+    sessionStorage.setItem(SKLAND_ACCOUNT_SESSION_STORAGE_KEY, JSON.stringify({
+      ...warehouseData,
+      nickName,
+      channelName,
+      channelMasterId,
       importedAt: new Date().toISOString(),
-      operatorDataList: data.operatorDataList,
-      itemList: data.itemList || [],
-      skins: data.skins || [],  // 时装数据
-      charInfoMap: data.charInfoMap || {}  // 干员详情映射（包含skinId）
-    }
-    
-    // 保存到sessionStorage
-    sessionStorage.setItem('skland_account_data', JSON.stringify(sklandAccountData.value))
-    
-    createMessage({ type: 'success', text: '账号数据获取成功！' })
-    
-    // 如果用户已登录，自动同步到练度调查
-    if (isUserLoggedIn.value) {
-      sklandUploading.value = true
-      try {
-        await operatorDataAPI.importSkLandOperatorDataV3(rawWarehouseData.value)
-        createMessage({ type: 'success', text: '干员数据已同步到练度调查！' })
-        // 刷新干员数据
-        getOperatorData()
-      } catch (error) {
-        console.error(error)
-        createMessage({ type: 'error', text: '同步到练度调查失败' })
-      } finally {
-        sklandUploading.value = false
-      }
-    }
-    
-    // 关闭对话框并切换到账号一图流Tab
+    }))
+
+    await operatorDataAPI.importSkLandOperatorDataV3(warehouseData)
+    createMessage({ type: 'success', text: '干员数据已同步到我的干员！' })
+    getOperatorData()
     sklandImportDialog.value = false
-    displayTabHeader.value = '账号一图流'
     
   } catch (error) {
     console.error(error)
-    createMessage({ type: 'error', text: '获取账号数据失败' })
+    createMessage({ type: 'error', text: '同步干员数据失败' })
   } finally {
     sklandLoading.value = false
   }
@@ -251,12 +169,13 @@ let operatorsStatisticsDetail = ref({})
 
 let operatorsStatisticsDetailDialog = ref(false)
 
+let operatorsStatisticsDetailOperator = ref({})
+
 const detailHeader = [
-  {title: '查看项目', sortable: false},
-  {title: '图标', sortable: false},
-  {title: '等级一', sortable: false},
-  {title: '等级二', sortable: false},
-  {title: '等级三', sortable: false}
+  {title: '', sortable: false, align: 'center'},
+  {title: '等级一', sortable: false, align: 'center'},
+  {title: '等级二', sortable: false, align: 'center'},
+  {title: '等级三', sortable: false, align: 'center'}
 ]
 
 
@@ -268,6 +187,8 @@ function openOperatorsStatisticsDetail(operator) {
   if(!operatorProgressionStatisticsMap.get(charId)){
     return
   }
+
+  operatorsStatisticsDetailOperator.value = operator
 
   const result = operatorProgressionStatisticsMap.get(charId)
   const {skill,equip} = result
@@ -348,7 +269,8 @@ function getOperatorData() {
 
   //根据一图流的token查询用户填写的干员数据
   operatorDataAPI.getOperatorData().then((response) => {
-    let list = response.data; //后端返回的数据
+    let list = response.data || []; //后端返回的数据
+    sectionPanels.value = list.length > 0 ? [] : ['importExport']
     //转为前端的数据格式
 
     const operatorMap = {}
@@ -398,6 +320,8 @@ function getOperatorData() {
     displayOperatorList.value = filterOperatorList(operatorList.value)
     createMessage({type:'success',text:"导入了 " + list.length + " 条数据"});
 
+  }).catch(() => {
+    sectionPanels.value = ['importExport']
   });
 }
 
@@ -421,10 +345,6 @@ function btnAction(action) {
     return "tonal"
   }
 }
-
-
-let operatorRecommendList = ref([]) //干员练度推荐列表
-
 
 let introPopupVisible = ref(false) //网站教程弹窗显示状态
 
@@ -572,181 +492,85 @@ function sortOperatorList(property) {
 }
 
 
-/**
- * 控制干员练度推荐折叠栏的显示状态
- */
-async function getOperatorRecommend() {
-  operatorRecommendList.value = await operatorRecommend(operatorList.value,operatorProgressionStatistics.value)
-}
-
-
-function getAvatar(id) {
-  return "bg-" + id;
-}
-
-function getSkillSprite(id) {
-  return "bg-skill_icon_" + id;
-}
-
-
-const headers = [
-  {title: '干员',key:"charId"},
-  {title: '图标'},
-  {title: '模组/技能名称'},
-  {title: '当前等级'},
-  {title: '一级占比'},
-  {title: '二级占比'},
-  {title: '三级占比'},
-]
-
 onMounted(() => {
   getOperatorData()
-  
-  // 读取sessionStorage中的完整账号数据（从森空岛导入时保存的）
-  try {
-    const savedAccountData = sessionStorage.getItem('skland_account_data')
-    if (savedAccountData) {
-      sklandAccountData.value = JSON.parse(savedAccountData)
-    }
-    
-    // 检查是否需要切换到账号一图流Tab
-    const switchToOverview = sessionStorage.getItem('skland_switch_to_overview')
-    if (switchToOverview === 'true') {
-      displayTabHeader.value = '账号一图流'
-      sessionStorage.removeItem('skland_switch_to_overview')
-    }
-  } catch (e) {
-    console.error('读取账号信息失败', e)
-  }
 });
 </script>
 
 
 <template>
   <div class="survey-operator-page">
-    <v-card>
-      <v-tabs
-          v-model="displayTabHeader"
-          bg-color="primary">
-        <v-tab value="数据导入导出">数据导入导出</v-tab>
-        <v-tab value="干员筛选">干员筛选</v-tab>
+    <v-expansion-panels v-model="sectionPanels" multiple class="operator-page-sections">
+      <v-expansion-panel class="operator-section-card" value="importExport">
+        <v-expansion-panel-title>
+          <span class="operator-section-title">
+            <v-icon class="operator-section-title-icon">mdi-cloud-sync</v-icon>
+            干员导入/导出
+          </span>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
+          <v-alert :icon="false" color="warning" variant="tonal" density="compact" class="mb-4">
+            导入之前请先登录一图流账号，这样就可以在不同的设备间同步数据
+          </v-alert>
+          <div class="operator-import-actions">
+            <v-btn class="operator-import-action" color="primary" @click="openSklandImportDialog()">
+              <v-icon class="operator-import-action-icon">mdi-cloud-download</v-icon>
+              <span class="operator-import-action-copy">
+                <span class="operator-import-action-title">从森空岛导入</span>
+                <span class="operator-import-action-desc">同步当前账号干员数据</span>
+              </span>
+            </v-btn>
+            <v-btn class="operator-import-action" color="primary" variant="outlined" @click="exportOperatorExcel()">
+              <v-icon class="operator-import-action-icon">mdi-file-excel</v-icon>
+              <span class="operator-import-action-copy">
+                <span class="operator-import-action-title">导出为 Excel</span>
+                <span class="operator-import-action-desc">下载当前干员数据表格</span>
+              </span>
+            </v-btn>
+          </div>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
 
-        <v-tab value="个人干员数据统计">
-          个人干员数据统计
-        </v-tab>
-        <v-tab value="账号一图流">
-          账号一图流
-        </v-tab>
-        <v-tab value="干员练度推荐"
-               @click="getOperatorRecommend()">
-          干员练度推荐
-        </v-tab>
-      </v-tabs>
+      <v-expansion-panel class="operator-section-card operator-statistics-section" value="statistics">
+        <v-expansion-panel-title>
+          <span class="operator-section-title">
+            <v-icon class="operator-section-title-icon">mdi-chart-box-outline</v-icon>
+            干员数据统计
+          </span>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
+          <OperatorStatisticalTable v-model="operatorList"></OperatorStatisticalTable>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
 
-        <v-tabs-window v-model="displayTabHeader">
-          <v-tabs-window-item value="干员筛选">
-            <div class="flex flex-wrap" v-for="(conditions,module) in operatorFilterCondition" :key="module">
-              <v-btn variant="text" class="m-4">{{ conditions.label }}</v-btn>
-              <v-btn color="primary" :variant="btnAction(condition.action)"
-                     class="m-4" rounded="x-large"
-                     v-for="(condition,index) in conditions.conditions" :key="index"
-                     @click="addFilterConditionAndFilterOperator(conditions.actionFunc,index)">
-                {{ condition.label }}
-              </v-btn>
-            </div>
-            <!--            <pre>-->
-            <!--              {{operatorFilterCondition}}-->
-            <!--            </pre>-->
-            <div class="checkbox">
-              <v-btn variant="text" class="checkbox-label">排序</v-btn>
-              <v-btn color="primary" variant="tonal"
-                     @click="sortOperatorList('updateTime')"
-                     class="m-4">
-                按实装顺序
-              </v-btn>
-            </div>
-          </v-tabs-window-item>
-
-          <v-tabs-window-item value="数据导入导出" >
-            <div class="import-export-section">
-              <v-chip color="red" text="导入之前请先登录" class="mb-4"></v-chip>
-              <div class="flex flex-wrap gap-2">
-                <v-btn color="primary" @click="openSklandImportDialog()">
-                  <v-icon>mdi-cloud-download</v-icon>
-                  从森空岛导入
-                </v-btn>
-                <v-btn color="primary" variant="outlined" @click="exportOperatorExcel()">
-                  <v-icon>mdi-file-excel</v-icon>
-                  导出为Excel
-                </v-btn>
-              </div>
-              
-              <v-alert v-if="sklandAccountData" type="success" variant="tonal" class="mt-4">
-                <div class="flex justify-between items-center">
-                  <span>已导入账号：{{ sklandAccountData.nickName }} (UID: {{ sklandAccountData.uid }})</span>
-                  <v-btn size="small" color="primary" @click="displayTabHeader = '账号一图流'">
-                    查看一图流
-                  </v-btn>
-                </div>
-              </v-alert>
-            </div>
-          </v-tabs-window-item>
-
-          <v-tabs-window-item value="个人干员数据统计" v-loading>
-            <OperatorStatisticalTable v-model="operatorList"></OperatorStatisticalTable>
-          </v-tabs-window-item>
-
-          <!-- 
-          <v-tabs-window-item value="账号一图流">
-            <AccountOverviewPanel 
-              ref="accountOverviewPanelRef"
-              :operator-list="operatorList"
-              :skland-account-data="sklandAccountData"
-            />
-          </v-tabs-window-item>
-          -->
-
-          <v-tabs-window-item value="干员练度推荐" v-loading>
-            <v-data-table :headers="headers" :items="operatorRecommendList" hide-default-footer
-            items-per-page="-1" class="operator-recommend-table" >
-              <template v-slot:item="{ item }">
-                 <tr>
-                   <td>
-                     <OperatorAvatar :size="50" :mobile-size="50" :border="true" :char-id="item.charId"></OperatorAvatar>
-                   </td>
-                   <td>
-                     <SkillIcon :icon="item.info.iconId" size="40" mobile-size="40" v-show="item.info.type==='skill'">
-                     </SkillIcon>
-                     <div class="operator-equip-group" v-show="item.info.type==='equip'">
-                       <div class="operator-equip">
-                         <EquipIcon :icon="item.info.iconId" mobile-size="30" size="30" class="block m-a" ></EquipIcon>
-                         <div class="equip-name">{{ item.info.iconId }}</div>
-                       </div>
-                     </div>
-                   </td>
-                   <td>
-                     {{item.info.name}}
-                   </td>
-                   <td>
-                     {{item.current}}级
-                   </td>
-<!--                   <td>-->
-<!--                    {{formatNumber(item.avg,2)}}级-->
-<!--                   </td>-->
-                   <td v-for="rank in item.ranks">
-                     {{formatNumber(rank*100,2)}}%
-                   </td>
-                 </tr>
-              </template>
-            </v-data-table>
-
-          </v-tabs-window-item>
-        </v-tabs-window>
-
-
-    </v-card>
-
-
+      <v-expansion-panel class="operator-section-card" value="filter">
+        <v-expansion-panel-title>
+          <span class="operator-section-title">
+            <v-icon class="operator-section-title-icon">mdi-filter-variant</v-icon>
+            干员筛选
+          </span>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
+          <div class="operator-filter-group" v-for="(conditions,module) in operatorFilterCondition" :key="module">
+            <v-btn variant="text" class="operator-filter-label">{{ conditions.label }}</v-btn>
+            <v-btn color="primary" :variant="btnAction(condition.action)"
+                   class="m-4" rounded="x-large"
+                   v-for="(condition,index) in conditions.conditions" :key="index"
+                   @click="addFilterConditionAndFilterOperator(conditions.actionFunc,index)">
+              {{ condition.label }}
+            </v-btn>
+          </div>
+          <div class="operator-filter-group">
+            <v-btn variant="text" class="operator-filter-label">排序</v-btn>
+            <v-btn color="primary" variant="tonal"
+                   @click="sortOperatorList('updateTime')"
+                   class="m-4">
+              按实装顺序
+            </v-btn>
+          </div>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
 
     <p>点击干员卡片可查看当前干员的练度统计结果</p>
     <!--   干员表单-->
@@ -757,22 +581,40 @@ onMounted(() => {
 
 
     <v-dialog v-model="operatorsStatisticsDetailDialog" max-width="500">
-      <v-card title="干员练度统计结果" subtitle="蓝色高亮为博士当前练度">
-        <v-card-text>
+      <v-card>
+        <div class="operator-detail-dialog-title">
+          <OperatorAvatar
+              :char-id="operatorsStatisticsDetailOperator.charId"
+              :size="40"
+              :mobile-size="36"
+              :border="true"
+          ></OperatorAvatar>
+          <div class="operator-detail-dialog-copy">
+            <div class="operator-detail-dialog-name">{{ operatorsStatisticsDetailOperator.name }}</div>
+            <div class="operator-detail-dialog-desc">表中数值为全服平均练度，蓝色高亮为博士当前练度</div>
+          </div>
+        </div>
+        <v-card-text class="operator-detail-dialog-content">
           <v-data-table
               :headers="detailHeader"
               :items="operatorsStatisticsDetail"
+              class="operator-detail-table"
+              density="compact"
               hide-default-footer
               items-per-page="-1">
             <template v-slot:item="{ item }">
               <tr>
-                <td>{{item.label}}</td>
-                <td>
-                  <EquipIcon :icon="item.iconId"  :size="36"  v-show="item.type==='equip'"></EquipIcon>
-                  <SkillIcon size="40" :mobile-size="30" :border="true" :icon="`${item.iconId}`" v-show="item.type==='skill'"></SkillIcon>
+                <td class="operator-detail-item-cell">
+                  <div class="operator-detail-item">
+                    <div class="operator-detail-item-icon">
+                      <EquipIcon :icon="item.iconId" :size="34" v-show="item.type==='equip'"></EquipIcon>
+                      <SkillIcon size="36" :mobile-size="32" :border="true" :icon="`${item.iconId}`" v-show="item.type==='skill'"></SkillIcon>
+                    </div>
+                    <div class="operator-detail-item-label">{{ item.label }}</div>
+                  </div>
                 </td>
-                <td v-for="rank in item.ranks" >
-                  <div :class="playProgressionHighlight(rank.highlight)" class="p-8">
+                <td v-for="rank in item.ranks" class="operator-detail-rank-cell">
+                  <div :class="playProgressionHighlight(rank.highlight)" class="operator-detail-rank-value">
                     {{rank.rate}}%
                   </div>
                 </td>
@@ -885,12 +727,6 @@ onMounted(() => {
       </v-card>
     </v-dialog>
 
-    <!-- 数据声明 -->
-    <!-- <div class="char_card">此处安放版权声明/开发信息</div> -->
-    <div class="footer_info">
-      除非另有声明，网站其他内容采用
-      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享</a>授权。
-    </div>
   </div>
 </template>
 

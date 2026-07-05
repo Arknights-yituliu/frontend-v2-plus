@@ -488,33 +488,45 @@ const routes = [
     },
     {
         path: '/survey/operators',
-        text: '干员练度调查',
+        text: '我的干员',
         name: 'OperatorSurvey',
         display: true,
         module: 'survey',
         icon: "mdi-chart-box",
         component: SURVEY_OPERATOR,
         meta: {
-            title: '干员练度调查'
+            title: '我的干员'
         }
     },
     {
         path: '/survey/operator-progression-statistics',
-        text: '干员练度调查结果',
+        text: '干员大数据',
         name: 'OperatorRank',
         display: true,
         module: 'survey',
         icon: "mdi-chart-bar-stacked",
         component: () => import('/src/pages/survey/operator-progression-statistics.vue'),
         meta: {
-            title: '干员练度调查结果'
+            title: '干员大数据'
+        }
+    },
+    {
+        path: '/survey/operator-recommend',
+        text: '干员练度推荐',
+        name: 'OperatorRecommend',
+        display: false,
+        module: 'survey',
+        icon: "mdi-chart-box-plus-outline",
+        component: () => import('/src/pages/survey/operator-recommend.vue'),
+        meta: {
+            title: '干员练度推荐'
         }
     },
     {
         path: '/survey/questionnaire',
         text: '干员携带优先级问卷',
         name: 'Questionnaire',
-        display: true,
+        display: false,
         module: 'survey',
         icon: "mdi-chart-bar",
         component: () => import('/src/pages/survey/operator-carry.vue'),
