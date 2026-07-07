@@ -335,16 +335,20 @@ function openOperatorsStatisticsDetail(operator) {
   operatorsStatisticsDetailOperator.value = operator
 
   const result = operatorProgressionStatisticsMap.get(charId)
-  const {skill,equip} = result
+  const skillList = Array.isArray(result.skill) ? result.skill : []
+  const equipList = Array.isArray(result.equip) ? result.equip : []
   const data = []
 
   const playerSkillRankList = [skill1,skill2,skill3]
 
-  for (let index = 0; index < 3; index++) {
-    const info = skill[index]
+  for (let index = 0; index < skillList.length; index++) {
+    const info = skillList[index]
     const playerSkillRank = playerSkillRankList[index]
 
     const ranks = result[`skill${index + 1}`]
+    if(!info || !ranks){
+      continue
+    }
     const item = {
       label: info.name,
       type: 'skill',
@@ -369,9 +373,12 @@ function openOperatorsStatisticsDetail(operator) {
 
 
 
-  for (const info of equip) {
+  for (const info of equipList) {
     const playerEquipRank = operator[`mod${info.typeName2}`]
     const ranks = result[`mod${info.typeName2}`]
+    if(!info || !ranks){
+      continue
+    }
     const item = {
       label: info.uniEquipName,
       type: 'equip',
