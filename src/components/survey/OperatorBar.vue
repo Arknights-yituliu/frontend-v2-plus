@@ -21,6 +21,10 @@ defineProps({
   recommendedEquipIndexes: {
     type: Array,
     default: () => []
+  },
+  isEliteRecommended: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -31,7 +35,7 @@ defineProps({
 
   <v-card :class="['operator-info-card', `operator-rarity-${operatorInfo.rarity || 1}`]">
     <div class="operator-info-bar">
-      <div class="operator-avatar-area">
+      <div :class="['operator-avatar-area', { 'operator-avatar-area-recommended': isEliteRecommended }]">
         <OperatorAvatar :size="56" :mobile-size="44" :char-id="operatorInfo.charId"></OperatorAvatar>
       </div>
       <div class="operator-info">

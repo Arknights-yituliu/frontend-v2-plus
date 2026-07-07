@@ -143,6 +143,10 @@
     background: rgba(var(--v-theme-warning), 0.12);
   }
 
+  .operator-recommend-threshold-group-elite {
+    background: rgba(201, 149, 22, 0.12);
+  }
+
   .operator-recommend-threshold-btn {
     min-width: 62px;
     border-radius: 999px;
@@ -157,6 +161,10 @@
 
   .operator-recommend-threshold-btn-warning.is-active {
     box-shadow: 0 6px 14px rgba(var(--v-theme-warning), 0.24);
+  }
+
+  .operator-recommend-threshold-btn-elite.is-active {
+    box-shadow: 0 6px 14px rgba(201, 149, 22, 0.28);
   }
 
   .operator-recommend-toggle {

@@ -145,7 +145,10 @@ let operatorProgressionStatisticsMap = new Map()
 let operatorProgressionStatistics = ref()
 const recommendThreshold = ref(null)
 const recommendEquipThreshold = ref(null)
+const recommendElite1Threshold = ref(null)
+const recommendEliteThreshold = ref(null)
 const recommendThresholdOptions = [90, 80, 70, 60, 50]
+const recommendEliteThresholdOptions = [90, 80, 70, 60, 50, 40, 30]
 const hideNonRecommendedOperators = ref(false)
 const displayOperatorFilterModules = ['profession', 'rarity', 'date', 'itemObtainApproach', 'own']
 
@@ -252,15 +255,57 @@ const operatorRecommendedEquipMap = computed(() => {
   return highlightMap
 })
 
+const operatorRecommendedEliteSet = computed(() => {
+  const highlightSet = new Set()
+  const threshold = recommendEliteThreshold.value
+
+  if (!threshold) {
+    return highlightSet
+  }
+
+  for (const operator of displayOperatorList.value) {
+    const result = operatorProgressionStatisticsMap.get(operator.charId)
+    const eliteRate = (result?.elite?.rank2 || 0) * 100
+
+    if (operator.elite !== 2 && eliteRate >= threshold) {
+      highlightSet.add(operator.charId)
+    }
+  }
+
+  return highlightSet
+})
+
+const operatorRecommendedElite1Set = computed(() => {
+  const highlightSet = new Set()
+  const threshold = recommendElite1Threshold.value
+
+  if (!threshold) {
+    return highlightSet
+  }
+
+  for (const operator of displayOperatorList.value) {
+    const result = operatorProgressionStatisticsMap.get(operator.charId)
+    const eliteRate = ((result?.elite?.rank1 || 0) + (result?.elite?.rank2 || 0)) * 100
+
+    if (operator.elite < 1 && eliteRate >= threshold) {
+      highlightSet.add(operator.charId)
+    }
+  }
+
+  return highlightSet
+})
+
 const visibleOperatorList = computed(() => {
-  if (!hideNonRecommendedOperators.value || (!recommendThreshold.value && !recommendEquipThreshold.value)) {
+  if (!hideNonRecommendedOperators.value || (!recommendThreshold.value && !recommendEquipThreshold.value && !recommendElite1Threshold.value && !recommendEliteThreshold.value)) {
     return displayOperatorList.value
   }
 
   return displayOperatorList.value.filter((operator) => {
     const recommendedSkillIndexes = operatorRecommendedSkillMap.value.get(operator.charId) || []
     const recommendedEquipIndexes = operatorRecommendedEquipMap.value.get(operator.charId) || []
-    return recommendedSkillIndexes.length > 0 || recommendedEquipIndexes.length > 0
+    const isElite1Recommended = operatorRecommendedElite1Set.value.has(operator.charId)
+    const isEliteRecommended = operatorRecommendedEliteSet.value.has(operator.charId)
+    return recommendedSkillIndexes.length > 0 || recommendedEquipIndexes.length > 0 || isElite1Recommended || isEliteRecommended
   })
 })
 
@@ -451,6 +496,14 @@ function toggleRecommendThreshold(threshold) {
 
 function toggleRecommendEquipThreshold(threshold) {
   recommendEquipThreshold.value = recommendEquipThreshold.value === threshold ? null : threshold
+}
+
+function toggleRecommendElite1Threshold(threshold) {
+  recommendElite1Threshold.value = recommendElite1Threshold.value === threshold ? null : threshold
+}
+
+function toggleRecommendEliteThreshold(threshold) {
+  recommendEliteThreshold.value = recommendEliteThreshold.value === threshold ? null : threshold
 }
 
 let introPopupVisible = ref(false) //网站教程弹窗显示状态
@@ -721,6 +774,48 @@ onMounted(() => {
                   </v-btn>
                 </div>
               </div>
+              <div class="operator-recommend-header">
+                <div class="operator-recommend-label">
+                  推荐精一率高于{{ recommendElite1Threshold ? `${recommendElite1Threshold}%` : "x%" }}的干员
+                </div>
+                <div class="operator-recommend-threshold-group operator-recommend-threshold-group-elite" role="group" aria-label="推荐精一率筛选">
+                  <v-btn
+                      v-for="threshold in recommendEliteThresholdOptions"
+                      :key="`elite1-${threshold}`"
+                      color="#c99516"
+                      :variant="recommendElite1Threshold === threshold ? 'flat' : 'text'"
+                      :class="[
+                        'operator-recommend-threshold-btn',
+                        'operator-recommend-threshold-btn-elite',
+                        { 'is-active': recommendElite1Threshold === threshold }
+                      ]"
+                      @click="toggleRecommendElite1Threshold(threshold)"
+                  >
+                    {{ threshold }}%
+                  </v-btn>
+                </div>
+              </div>
+              <div class="operator-recommend-header">
+                <div class="operator-recommend-label">
+                  推荐精二率高于{{ recommendEliteThreshold ? `${recommendEliteThreshold}%` : "x%" }}的干员
+                </div>
+                <div class="operator-recommend-threshold-group operator-recommend-threshold-group-elite" role="group" aria-label="推荐精二率筛选">
+                  <v-btn
+                      v-for="threshold in recommendEliteThresholdOptions"
+                      :key="`elite-${threshold}`"
+                      color="#c99516"
+                      :variant="recommendEliteThreshold === threshold ? 'flat' : 'text'"
+                      :class="[
+                        'operator-recommend-threshold-btn',
+                        'operator-recommend-threshold-btn-elite',
+                        { 'is-active': recommendEliteThreshold === threshold }
+                      ]"
+                      @click="toggleRecommendEliteThreshold(threshold)"
+                  >
+                    {{ threshold }}%
+                  </v-btn>
+                </div>
+              </div>
               <v-switch
                   v-model="hideNonRecommendedOperators"
                   class="operator-recommend-toggle"
@@ -769,6 +864,7 @@ onMounted(() => {
           :operator-info="operator"
           :recommended-skill-indexes="operatorRecommendedSkillMap.get(operator.charId) || []"
           :recommended-equip-indexes="operatorRecommendedEquipMap.get(operator.charId) || []"
+          :is-elite-recommended="operatorRecommendedElite1Set.has(operator.charId) || operatorRecommendedEliteSet.has(operator.charId)"
           @click="openOperatorsStatisticsDetail(operator)"
       ></OperatorBar>
     </div>

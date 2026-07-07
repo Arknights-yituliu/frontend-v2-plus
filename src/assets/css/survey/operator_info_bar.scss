@@ -70,6 +70,15 @@
     }
   }
 
+  .operator-avatar-area-recommended {
+    border-radius: 4px;
+    box-shadow:
+      0 0 0 1px rgba(204, 157, 34, 0.78),
+      0 0 12px rgba(242, 200, 78, 0.84),
+      0 0 24px rgba(242, 200, 78, 0.52),
+      inset 0 0 12px rgba(255, 229, 160, 0.18);
+  }
+
   .operator-info {
     width: 104px;
     flex: 0 0 104px;
