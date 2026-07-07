@@ -143,6 +143,17 @@ let operatorIdAndIndexDict = ref({})
 let operatorProgressionStatisticsMap = new Map()
 
 let operatorProgressionStatistics = ref()
+const recommendThreshold = ref(null)
+const recommendEquipThreshold = ref(null)
+const recommendThresholdOptions = [90, 80, 70, 60, 50]
+const hideNonRecommendedOperators = ref(false)
+const displayOperatorFilterModules = ['profession', 'rarity', 'date', 'itemObtainApproach', 'own']
+
+const displayOperatorFilterCondition = computed(() => {
+  return displayOperatorFilterModules
+      .map((module) => ({module, conditions: operatorFilterCondition.value[module]}))
+      .filter((item) => item.conditions)
+})
 
 async function getCharStatisticsResult() {
 
@@ -164,6 +175,94 @@ function resultFormat(dividend, divisor) {
 }
 
 getCharStatisticsResult()
+
+const operatorRecommendedSkillMap = computed(() => {
+  const highlightMap = new Map()
+  const threshold = recommendThreshold.value
+
+  if (!threshold) {
+    return highlightMap
+  }
+
+  for (const operator of displayOperatorList.value) {
+    const result = operatorProgressionStatisticsMap.get(operator.charId)
+
+    if (!result || !Array.isArray(operator.skill)) {
+      continue
+    }
+
+    const recommendedSkillIndexes = operator.skill.reduce((indexes, _, index) => {
+      const ranks = result[`skill${index + 1}`]
+      if (!ranks) {
+        return indexes
+      }
+
+      const playerSkillRank = operator[`skill${index + 1}`]
+      const masteryRank3Rate = (ranks.rank3 || 0) * 100
+      if (playerSkillRank !== 3 && masteryRank3Rate >= threshold) {
+        indexes.push(index)
+      }
+
+      return indexes
+    }, [])
+
+    if (recommendedSkillIndexes.length > 0) {
+      highlightMap.set(operator.charId, recommendedSkillIndexes)
+    }
+  }
+
+  return highlightMap
+})
+
+const operatorRecommendedEquipMap = computed(() => {
+  const highlightMap = new Map()
+  const threshold = recommendEquipThreshold.value
+
+  if (!threshold) {
+    return highlightMap
+  }
+
+  for (const operator of displayOperatorList.value) {
+    const result = operatorProgressionStatisticsMap.get(operator.charId)
+
+    if (!result || !Array.isArray(operator.equip)) {
+      continue
+    }
+
+    const recommendedEquipIndexes = operator.equip.reduce((indexes, equip, index) => {
+      const ranks = result[`mod${equip.typeName2}`]
+      if (!ranks) {
+        return indexes
+      }
+
+      const playerEquipRank = operator[`mod${equip.typeName2}`] || 0
+      const unlockRate = ((ranks.rank1 || 0) + (ranks.rank2 || 0) + (ranks.rank3 || 0)) * 100
+      if (playerEquipRank === 0 && unlockRate >= threshold) {
+        indexes.push(index)
+      }
+
+      return indexes
+    }, [])
+
+    if (recommendedEquipIndexes.length > 0) {
+      highlightMap.set(operator.charId, recommendedEquipIndexes)
+    }
+  }
+
+  return highlightMap
+})
+
+const visibleOperatorList = computed(() => {
+  if (!hideNonRecommendedOperators.value || (!recommendThreshold.value && !recommendEquipThreshold.value)) {
+    return displayOperatorList.value
+  }
+
+  return displayOperatorList.value.filter((operator) => {
+    const recommendedSkillIndexes = operatorRecommendedSkillMap.value.get(operator.charId) || []
+    const recommendedEquipIndexes = operatorRecommendedEquipMap.value.get(operator.charId) || []
+    return recommendedSkillIndexes.length > 0 || recommendedEquipIndexes.length > 0
+  })
+})
 
 let operatorsStatisticsDetail = ref({})
 
@@ -346,6 +445,14 @@ function btnAction(action) {
   }
 }
 
+function toggleRecommendThreshold(threshold) {
+  recommendThreshold.value = recommendThreshold.value === threshold ? null : threshold
+}
+
+function toggleRecommendEquipThreshold(threshold) {
+  recommendEquipThreshold.value = recommendEquipThreshold.value === threshold ? null : threshold
+}
+
 let introPopupVisible = ref(false) //网站教程弹窗显示状态
 
 /**
@@ -491,6 +598,29 @@ function sortOperatorList(property) {
   });
 }
 
+function sortOperatorListByLevel() {
+  sortProperty.value.progressionLevel = !sortProperty.value.progressionLevel
+  const direction = sortProperty.value.progressionLevel ? -1 : 1
+  displayOperatorList.value.sort((a, b) => compareOperatorLevel(a, b) * direction)
+}
+
+function compareOperatorLevel(a, b) {
+  const eliteDiff = getSortNumber(a.elite) - getSortNumber(b.elite)
+  if (eliteDiff !== 0) return eliteDiff
+
+  const levelDiff = getSortNumber(a.level) - getSortNumber(b.level)
+  if (levelDiff !== 0) return levelDiff
+
+  const rarityDiff = getSortNumber(a.rarity) - getSortNumber(b.rarity)
+  if (rarityDiff !== 0) return rarityDiff
+
+  return getSortNumber(a.updateTime) - getSortNumber(b.updateTime)
+}
+
+function getSortNumber(value) {
+  return Number(value) || 0
+}
+
 
 onMounted(() => {
   getOperatorData()
@@ -547,26 +677,85 @@ onMounted(() => {
         <v-expansion-panel-title>
           <span class="operator-section-title">
             <v-icon class="operator-section-title-icon">mdi-filter-variant</v-icon>
-            干员筛选
+            大数据养成推荐/干员筛选
           </span>
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <div class="operator-filter-group" v-for="(conditions,module) in operatorFilterCondition" :key="module">
-            <v-btn variant="text" class="operator-filter-label">{{ conditions.label }}</v-btn>
-            <v-btn color="primary" :variant="btnAction(condition.action)"
-                   class="m-4" rounded="x-large"
-                   v-for="(condition,index) in conditions.conditions" :key="index"
-                   @click="addFilterConditionAndFilterOperator(conditions.actionFunc,index)">
-              {{ condition.label }}
-            </v-btn>
-          </div>
-          <div class="operator-filter-group">
-            <v-btn variant="text" class="operator-filter-label">排序</v-btn>
-            <v-btn color="primary" variant="tonal"
-                   @click="sortOperatorList('updateTime')"
-                   class="m-4">
-              按实装顺序
-            </v-btn>
+          <div class="operator-filter-card-content">
+            <div class="operator-recommend-panel">
+              <div class="operator-recommend-header">
+                <div class="operator-recommend-label">
+                  推荐专三率高于{{ recommendThreshold ? `${recommendThreshold}%` : "x%" }}的技能
+                </div>
+                <div class="operator-recommend-threshold-group" role="group" aria-label="推荐专三率筛选">
+                  <v-btn
+                      v-for="threshold in recommendThresholdOptions"
+                      :key="threshold"
+                      color="primary"
+                      :variant="recommendThreshold === threshold ? 'flat' : 'text'"
+                      :class="['operator-recommend-threshold-btn', { 'is-active': recommendThreshold === threshold }]"
+                      @click="toggleRecommendThreshold(threshold)"
+                  >
+                    {{ threshold }}%
+                  </v-btn>
+                </div>
+              </div>
+              <div class="operator-recommend-header">
+                <div class="operator-recommend-label">
+                  推荐模组解锁率高于{{ recommendEquipThreshold ? `${recommendEquipThreshold}%` : "x%" }}的模组
+                </div>
+                <div class="operator-recommend-threshold-group operator-recommend-threshold-group-warning" role="group" aria-label="推荐模组解锁率筛选">
+                  <v-btn
+                      v-for="threshold in recommendThresholdOptions"
+                      :key="`equip-${threshold}`"
+                      color="warning"
+                      :variant="recommendEquipThreshold === threshold ? 'flat' : 'text'"
+                      :class="[
+                        'operator-recommend-threshold-btn',
+                        'operator-recommend-threshold-btn-warning',
+                        { 'is-active': recommendEquipThreshold === threshold }
+                      ]"
+                      @click="toggleRecommendEquipThreshold(threshold)"
+                  >
+                    {{ threshold }}%
+                  </v-btn>
+                </div>
+              </div>
+              <v-switch
+                  v-model="hideNonRecommendedOperators"
+                  class="operator-recommend-toggle"
+                  color="primary"
+                  density="compact"
+                  hide-details
+                  inset
+                  label="隐藏未被推荐的干员"
+              ></v-switch>
+            </div>
+            <v-divider class="operator-filter-divider"></v-divider>
+            <div class="operator-filter-panel">
+              <div class="operator-filter-group" v-for="filterGroup in displayOperatorFilterCondition" :key="filterGroup.module">
+                <v-btn variant="text" class="operator-filter-label">{{ filterGroup.conditions.label }}</v-btn>
+                <v-btn color="primary" :variant="btnAction(condition.action)"
+                       class="m-4" rounded="x-large"
+                       v-for="(condition,index) in filterGroup.conditions.conditions" :key="index"
+                       @click="addFilterConditionAndFilterOperator(filterGroup.conditions.actionFunc,index)">
+                  {{ condition.label }}
+                </v-btn>
+              </div>
+              <div class="operator-filter-group">
+                <v-btn variant="text" class="operator-filter-label">排序</v-btn>
+                <v-btn color="primary" variant="tonal"
+                       @click="sortOperatorList('updateTime')"
+                       class="m-4">
+                  按实装顺序
+                </v-btn>
+                <v-btn color="primary" variant="tonal"
+                       @click="sortOperatorListByLevel()"
+                       class="m-4">
+                  按等级排序
+                </v-btn>
+              </div>
+            </div>
           </div>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -575,7 +764,13 @@ onMounted(() => {
     <p>点击干员卡片可查看当前干员的练度统计结果</p>
     <!--   干员表单-->
     <div class="operator-form">
-      <OperatorBar @click="openOperatorsStatisticsDetail(operator)" v-for="(operator, charId) in displayOperatorList"  :operator-info="operator"></OperatorBar>
+      <OperatorBar
+          v-for="(operator, charId) in visibleOperatorList"
+          :operator-info="operator"
+          :recommended-skill-indexes="operatorRecommendedSkillMap.get(operator.charId) || []"
+          :recommended-equip-indexes="operatorRecommendedEquipMap.get(operator.charId) || []"
+          @click="openOperatorsStatisticsDetail(operator)"
+      ></OperatorBar>
     </div>
 
 

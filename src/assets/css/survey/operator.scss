@@ -101,6 +101,81 @@
     margin-bottom: 8px;
   }
 
+  .operator-filter-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .operator-recommend-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .operator-recommend-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .operator-recommend-label {
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .operator-recommend-threshold-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(var(--v-theme-primary), 0.08);
+  }
+
+  .operator-recommend-threshold-group-warning {
+    background: rgba(var(--v-theme-warning), 0.12);
+  }
+
+  .operator-recommend-threshold-btn {
+    min-width: 62px;
+    border-radius: 999px;
+    letter-spacing: normal;
+    text-transform: none;
+    font-weight: 700;
+  }
+
+  .operator-recommend-threshold-btn.is-active {
+    box-shadow: 0 6px 14px rgba(var(--v-theme-primary), 0.22);
+  }
+
+  .operator-recommend-threshold-btn-warning.is-active {
+    box-shadow: 0 6px 14px rgba(var(--v-theme-warning), 0.24);
+  }
+
+  .operator-recommend-toggle {
+    margin: 0;
+
+    .v-selection-control {
+      min-height: 32px;
+    }
+  }
+
+  .operator-filter-divider {
+    opacity: 0.72;
+  }
+
+  .operator-filter-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
   .operator-filter-label {
     min-width: 96px;
     justify-content: flex-start;
