@@ -69,23 +69,26 @@ async function queryOperatorZootMatcherJobPage({ stageKeyword, page, limit = DEF
 async function searchOperatorZootMatcherJobsByStage(stageKeyword, options = {}) {
     const keyword = stageKeyword?.trim()
     const limit = options.limit ?? DEFAULT_LIMIT
-    const maxPages = options.maxPages ?? DEFAULT_MAX_PAGES
+    const startPage = Math.max(1, Math.floor(Number(options.startPage) || 1))
+    const pageCount = Math.max(1, Math.floor(Number(options.pageCount ?? options.maxPages) || DEFAULT_MAX_PAGES))
+    const endPage = startPage + pageCount - 1
 
     if (!keyword) {
         return {
             jobs: [],
             total: 0,
             fetchedPages: 0,
+            nextPage: startPage,
             truncated: false,
         }
     }
 
     const jobs = []
-    let page = 1
+    let page = startPage
     let hasNext = true
     let total = 0
 
-    while (hasNext && page <= maxPages) {
+    while (hasNext && page <= endPage) {
         const data = await queryOperatorZootMatcherJobPage({
             stageKeyword: keyword,
             page,
@@ -101,9 +104,14 @@ async function searchOperatorZootMatcherJobsByStage(stageKeyword, options = {}) 
     return {
         jobs,
         total,
-        fetchedPages: page - 1,
+        fetchedPages: page - startPage,
+        nextPage: page,
         truncated: hasNext,
     }
+}
+
+async function listOperatorZootMatcherStageInfo() {
+    return fetchOperatorZootMatcherJson(buildOperatorZootMatcherUrl('/arknights/level'))
 }
 
 function buildOperatorZootMatcherJobApiUrl(id) {
@@ -113,5 +121,6 @@ function buildOperatorZootMatcherJobApiUrl(id) {
 export {
     OPERATOR_ZOOT_MATCHER_API_BASE,
     buildOperatorZootMatcherJobApiUrl,
+    listOperatorZootMatcherStageInfo,
     searchOperatorZootMatcherJobsByStage,
 }
