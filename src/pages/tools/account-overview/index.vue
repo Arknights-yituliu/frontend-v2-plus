@@ -360,6 +360,7 @@ function goBack() {
               <code>{{ CONSOLE_CODE }}</code>
             </v-alert>
             <p class="hint-text">执行后凭证会自动复制到剪贴板</p>
+            <p class="hint-text orange">如果遇到了无法粘贴的情况，可以输入“allow pasting”或者“允许粘贴”，然后回车即可</p>
             <v-btn color="primary" @click="copyText(CONSOLE_CODE)" size="small">
               复制命令
             </v-btn>

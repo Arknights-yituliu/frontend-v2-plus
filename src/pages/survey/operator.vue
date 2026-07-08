@@ -917,7 +917,8 @@ onMounted(() => {
                       点击复制命令
                     </v-btn>
                   </div>
-                    <p>输入后按Enter键执行，会自动复制凭证字符串到剪贴板</p>
+                  <p class="mt-4 mb-4">输入后按Enter键执行，会自动复制凭证字符串到剪贴板</p>
+                  <p class="mb-0 orange">如果遇到了无法粘贴的情况，可以输入“allow pasting”或者“允许粘贴”，然后回车即可</p>
                 
                 </v-card-text>
               </v-card>

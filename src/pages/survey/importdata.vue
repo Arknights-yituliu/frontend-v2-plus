@@ -177,6 +177,7 @@ async function getPlayerData(binding) {
                 <code>{{ CONSOLE_CODE }}</code>
               </v-alert>
               <p class="hint-text">执行后凭证会自动复制到剪贴板</p>
+              <p class="hint-text orange">如果遇到了无法粘贴的情况，可以输入“allow pasting”或者“允许粘贴”，然后回车即可</p>
               <div class="flex flex-col justify-center m-8-a">
                 <v-btn color="primary" text="点击复制" @click="copyText(CONSOLE_CODE)">
                 </v-btn>
