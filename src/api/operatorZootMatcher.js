@@ -106,6 +106,10 @@ async function searchOperatorZootMatcherJobsByStage(stageKeyword, options = {}) 
     }
 }
 
+async function listOperatorZootMatcherStageInfo() {
+    return fetchOperatorZootMatcherJson(buildOperatorZootMatcherUrl('/arknights/level'))
+}
+
 function buildOperatorZootMatcherJobApiUrl(id) {
     return buildOperatorZootMatcherUrl(`/copilot/get/${id}`)
 }
@@ -113,5 +117,6 @@ function buildOperatorZootMatcherJobApiUrl(id) {
 export {
     OPERATOR_ZOOT_MATCHER_API_BASE,
     buildOperatorZootMatcherJobApiUrl,
+    listOperatorZootMatcherStageInfo,
     searchOperatorZootMatcherJobsByStage,
 }

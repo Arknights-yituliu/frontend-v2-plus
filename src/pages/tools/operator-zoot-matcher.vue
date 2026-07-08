@@ -2,9 +2,8 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import materialV5API from '/src/api/materialV5.js'
 import operatorDataAPI from '/src/api/operatorData.js'
-import { searchOperatorZootMatcherJobsByStage } from '/src/api/operatorZootMatcher.js'
+import { listOperatorZootMatcherStageInfo, searchOperatorZootMatcherJobsByStage } from '/src/api/operatorZootMatcher.js'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
 import { operatorTableV2 } from '/src/utils/gameData.js'
 import { createMessage } from '/src/utils/message.js'
@@ -973,8 +972,8 @@ function syncStageQuery(keyword) {
 
 async function loadStageInfoList() {
   if (!stageInfoListPromise) {
-    stageInfoListPromise = materialV5API.listStageInfo()
-      .then((response) => (Array.isArray(response?.data) ? response.data : []))
+    stageInfoListPromise = listOperatorZootMatcherStageInfo()
+      .then((response) => (Array.isArray(response) ? response : []))
       .catch((error) => {
         stageInfoListPromise = undefined
         throw error
@@ -990,6 +989,60 @@ function normalizeStageKeyword(text = '') {
 
 function isInternalStageIdKeyword(text = '') {
   return /^[a-z0-9_/-]+$/i.test(text) && text.includes('_')
+}
+
+function getStageInfoField(stage, camelKey, snakeKey) {
+  return String(stage?.[camelKey] ?? stage?.[snakeKey] ?? '').trim()
+}
+
+function getStageInfoStageId(stage) {
+  return getStageInfoField(stage, 'stageId', 'stage_id')
+}
+
+function getStageInfoLevelId(stage) {
+  return getStageInfoField(stage, 'levelId', 'level_id')
+}
+
+function getStageInfoCatThree(stage) {
+  return getStageInfoField(stage, 'catThree', 'cat_three')
+}
+
+function getStageInfoMatchValues(stage) {
+  const levelId = getStageInfoLevelId(stage)
+  const levelIdTail = levelId.split('/').filter(Boolean).pop() || ''
+
+  return [
+    getStageInfoStageId(stage),
+    levelId,
+    levelIdTail,
+    getStageInfoCatThree(stage),
+    getStageInfoField(stage, 'name', 'name'),
+  ].filter(Boolean)
+}
+
+function matchesStageKeyword(stage, normalizedKeyword) {
+  return getStageInfoMatchValues(stage).some((value) => normalizeStageKeyword(value) === normalizedKeyword)
+}
+
+function isToughStageInfo(stage) {
+  const stageId = getStageInfoStageId(stage)
+
+  return stageId.includes('tough') || stageId.includes('#f#')
+}
+
+function collectExactStageNames(stage) {
+  const stageId = getStageInfoStageId(stage)
+  const levelId = getStageInfoLevelId(stage)
+  const levelIdTail = levelId.split('/').filter(Boolean).pop() || ''
+
+  return [
+    stageId,
+    stageId.replace('#f#', ''),
+    levelId,
+    levelIdTail,
+    getStageInfoCatThree(stage),
+    getStageInfoField(stage, 'name', 'name'),
+  ].filter(Boolean)
 }
 
 async function resolveStageSearchPlan(keyword) {
@@ -1019,18 +1072,23 @@ async function resolveStageSearchPlan(keyword) {
     const wantsToughStage = normalizedKeyword.startsWith('H') && /\d/.test(normalizedKeyword[1] || '')
     const stageCodeKeyword = wantsToughStage ? normalizedKeyword.slice(1) : normalizedKeyword
 
-    let matchedStages = stageInfoList.filter((stage) => normalizeStageKeyword(stage?.stageCode) === stageCodeKeyword)
+    let matchedStages = stageInfoList.filter((stage) => matchesStageKeyword(stage, normalizedKeyword))
+
+    if (matchedStages.length === 0 && wantsToughStage) {
+      matchedStages = stageInfoList.filter((stage) => matchesStageKeyword(stage, stageCodeKeyword))
+    }
 
     if (wantsToughStage) {
-      matchedStages = matchedStages.filter((stage) => String(stage?.stageId || '').includes('tough') || String(stage?.zoneId || '').includes('tough'))
+      matchedStages = matchedStages.filter(isToughStageInfo)
     }
 
     if (matchedStages.length > 0) {
-      const exactStageIds = [...new Set(matchedStages.map((stage) => stage.stageId).filter(Boolean))]
+      const queryKeywords = [...new Set(matchedStages.map(getStageInfoStageId).filter(Boolean))]
+      const exactStageIds = [...new Set(matchedStages.flatMap(collectExactStageNames))]
 
-      if (exactStageIds.length > 0) {
+      if (queryKeywords.length > 0 && exactStageIds.length > 0) {
         return {
-          queryKeywords: exactStageIds,
+          queryKeywords,
           exactStageIds,
           note: `已按关卡精确匹配：${trimmedKeyword} -> ${exactStageIds.join(' / ')}`,
         }
@@ -1374,7 +1432,13 @@ async function searchJobs(options = {}) {
 
     const { resolvedJobs: nextResolvedJobs, invalidJobs } = resolveOperatorZootMatcherJobs(jobs, ownedOperatorLookup.value)
     const exactStageResolvedJobs = nextResolvedJobs.filter((job) => {
-      return searchPlan.exactStageIds.length === 0 || searchPlan.exactStageIds.includes(job.stageName)
+      if (searchPlan.exactStageIds.length === 0) {
+        return true
+      }
+
+      const normalizedJobStageName = normalizeStageKeyword(job.stageName)
+
+      return searchPlan.exactStageIds.some((stageName) => normalizeStageKeyword(stageName) === normalizedJobStageName)
     })
 
     resolvedJobs.value = exactStageResolvedJobs.map((job) => {
