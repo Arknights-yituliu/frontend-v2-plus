@@ -14,7 +14,7 @@ const LEGACY_MANUAL_OPERATOR_STORAGE_KEY = 'zoot_manual_owned_operators_v1'
 const OPERATOR_ZOOT_MATCHER_OWNED_OPERATOR_META_STORAGE_KEY = 'operator_zoot_matcher_owned_operator_meta_v1'
 const LEGACY_OWNED_OPERATOR_META_STORAGE_KEY = 'zoot_owned_operator_meta_v1'
 const SKLAND_ACCOUNT_SESSION_STORAGE_KEY = 'skland_account_data'
-const EXACT_STAGE_PAGE_LIMIT = 3
+const JOB_SEARCH_BATCH_PAGE_COUNT = 6
 const OPERATOR_ZOOT_MATCHER_JOB_PAGE_BASE_URL = 'https://prts.plus/'
 const BILIBILI_LINK_REGEXP = /https?:\/\/(?:www\.)?(?:bilibili\.com|b23\.tv)\/[^\s]+/i
 const MAX_LEVELS_BY_RARITY = {
@@ -104,12 +104,6 @@ const resultRatingFilterOptions = [
   { label: '⭐⭐⭐⭐⭐', value: 5 },
 ]
 
-const searchResultFetchOptions = [
-  { label: '搜索作业', value: 'default', multiplier: 1 },
-  { label: '搜索更多作业', value: 'more', multiplier: 2 },
-  { label: '搜索很多作业', value: 'many', multiplier: 4 },
-]
-
 const stageKeyword = ref('')
 const loadingOwnedOperators = ref(false)
 const searching = ref(false)
@@ -128,6 +122,7 @@ const operatorSettingsExpanded = ref(false)
 const stageQueryNote = ref('')
 const searchError = ref('')
 const resolvedJobs = ref([])
+const searchSession = ref(null)
 const searchMeta = ref({
   searched: false,
   fetched: 0,
@@ -138,8 +133,7 @@ const searchMeta = ref({
 })
 
 const exactStageMatchEnabled = ref(true)
-const fuzzySearchPageLimit = ref(8)
-const activeSearchFetchMode = ref('default')
+const activeSearchAction = ref('')
 const resultSortMode = ref('default')
 const resultFilterMode = ref('train')
 const resultRatingFilterMode = ref(4)
@@ -151,6 +145,14 @@ const ownedOperatorLookup = computed(() => buildOwnedOperatorLookup(ownedOperato
 const ownedOperatorCount = computed(() => ownedOperators.value.length)
 const hasOwnedOperators = computed(() => ownedOperatorCount.value > 0)
 const canSearch = computed(() => hasOwnedOperators.value && stageKeyword.value.trim().length > 0 && !loadingOwnedOperators.value)
+const canLoadMoreJobs = computed(() => {
+  const session = searchSession.value
+
+  return canSearch.value
+    && Boolean(session)
+    && session.keyword === stageKeyword.value.trim()
+    && session.queryStates.some((state) => state.hasNext)
+})
 const ownedOperatorInfoSummaryText = computed(() => {
   return `${ownedOperatorCount.value} 位`
 })
@@ -331,14 +333,13 @@ function getResultRatingFilterMinStars(value) {
   return normalizedValue
 }
 
-function getSearchResultFetchMultiplier(value) {
-  return searchResultFetchOptions.find((option) => option.value === value)?.multiplier || 1
+function triggerSearch() {
+  return searchJobs()
 }
 
-function triggerSearch(fetchMode = 'default') {
-  activeSearchFetchMode.value = fetchMode
+function loadMoreJobs() {
   return searchJobs({
-    fetchMode,
+    append: true,
   })
 }
 
@@ -1129,6 +1130,128 @@ function mergeStageQueryResults(results = []) {
   }
 }
 
+function createSearchSession(keyword, searchPlan) {
+  return {
+    keyword,
+    searchPlan,
+    jobs: [],
+    nextQueryIndex: 0,
+    queryStates: searchPlan.queryKeywords.map((queryKeyword) => ({
+      queryKeyword,
+      nextPage: 1,
+      hasNext: true,
+      total: 0,
+      fetchedPages: 0,
+    })),
+  }
+}
+
+function mergeJobList(existingJobs = [], nextJobs = []) {
+  const jobMap = new Map()
+
+  for (const job of existingJobs) {
+    jobMap.set(job.id, job)
+  }
+
+  for (const job of nextJobs) {
+    jobMap.set(job.id, job)
+  }
+
+  return [...jobMap.values()]
+}
+
+function getNextSearchQueryState(session) {
+  const queryStates = session.queryStates
+  const queryCount = queryStates.length
+
+  for (let offset = 0; offset < queryCount; offset += 1) {
+    const stateIndex = (session.nextQueryIndex + offset) % queryCount
+    const state = queryStates[stateIndex]
+
+    if (state?.hasNext) {
+      session.nextQueryIndex = (stateIndex + 1) % queryCount
+
+      return state
+    }
+  }
+
+  return null
+}
+
+async function fetchSearchSessionBatch(session) {
+  const activeQueryStates = session.queryStates.filter((state) => state.hasNext)
+
+  if (activeQueryStates.length === 0) {
+    return {
+      jobs: session.jobs,
+      total: session.queryStates.reduce((sum, state) => sum + Number(state.total || 0), 0),
+      fetchedPages: session.queryStates.reduce((sum, state) => sum + Number(state.fetchedPages || 0), 0),
+      truncated: false,
+    }
+  }
+
+  const stageQueryResults = []
+  let remainingPageCount = JOB_SEARCH_BATCH_PAGE_COUNT
+
+  while (remainingPageCount > 0) {
+    const state = getNextSearchQueryState(session)
+
+    if (!state) {
+      break
+    }
+
+    const result = await searchOperatorZootMatcherJobsByStage(state.queryKeyword, {
+      startPage: state.nextPage,
+      pageCount: 1,
+    })
+
+    state.nextPage = result.nextPage
+    state.hasNext = Boolean(result.truncated)
+    state.total = Number(result.total || 0)
+    state.fetchedPages += Number(result.fetchedPages || 0)
+    stageQueryResults.push(result)
+    remainingPageCount -= Number(result.fetchedPages || 1)
+  }
+
+  const { jobs } = mergeStageQueryResults(stageQueryResults)
+
+  session.jobs = mergeJobList(session.jobs, jobs)
+
+  return {
+    jobs: session.jobs,
+    total: session.queryStates.reduce((sum, state) => sum + Number(state.total || 0), 0),
+    fetchedPages: session.queryStates.reduce((sum, state) => sum + Number(state.fetchedPages || 0), 0),
+    truncated: session.queryStates.some((state) => state.hasNext),
+  }
+}
+
+function applyResolvedSearchJobs(jobs, searchPlan) {
+  const { resolvedJobs: nextResolvedJobs, invalidJobs } = resolveOperatorZootMatcherJobs(jobs, ownedOperatorLookup.value)
+  const exactStageResolvedJobs = nextResolvedJobs.filter((job) => {
+    if (searchPlan.exactStageIds.length === 0) {
+      return true
+    }
+
+    const normalizedJobStageName = normalizeStageKeyword(job.stageName)
+
+    return searchPlan.exactStageIds.some((stageName) => normalizeStageKeyword(stageName) === normalizedJobStageName)
+  })
+
+  resolvedJobs.value = exactStageResolvedJobs.map((job) => {
+    const playabilityState = getJobPlayabilityState(job)
+
+    return {
+      ...job,
+      bilibiliUrl: extractBilibiliLink(job.details),
+      operatorZootMatcherJobUrl: buildOperatorZootMatcherJobPageUrl(job.id),
+      playabilityState,
+      operatorComparisonItems: buildJobOperatorComparisonItems(job),
+    }
+  })
+
+  return invalidJobs.length
+}
+
 function sortMatchedJobs(a, b) {
   return a.totalMissing - b.totalMissing
     || b.matchedRequirementCount - a.matchedRequirementCount
@@ -1373,17 +1496,21 @@ function getJobPlayabilityState(job) {
 }
 
 async function searchJobs(options = {}) {
-  const fetchMode = options.fetchMode || 'default'
+  const append = options.append === true
   const silent = options.silent === true
   const skipQuerySync = options.skipQuerySync === true
   const keyword = stageKeyword.value.trim()
 
   searchMeta.value.searched = true
   searchError.value = ''
-  stageQueryNote.value = ''
+
+  if (!append) {
+    stageQueryNote.value = ''
+  }
 
   if (!keyword) {
     resolvedJobs.value = []
+    searchSession.value = null
 
     if (!silent) {
       createMessage({
@@ -1397,6 +1524,7 @@ async function searchJobs(options = {}) {
 
   if (!hasOwnedOperators.value) {
     resolvedJobs.value = []
+    searchSession.value = null
 
     if (!silent) {
       createMessage({
@@ -1408,69 +1536,83 @@ async function searchJobs(options = {}) {
     return
   }
 
+  if (append && (!searchSession.value || searchSession.value.keyword !== keyword)) {
+    if (!silent) {
+      createMessage({
+        type: 'info',
+        text: '请先搜索作业，再加载更多作业',
+      })
+    }
+
+    return
+  }
+
   const currentTicket = ++searchTicket
   searching.value = true
-  resolvedJobs.value = []
+  activeSearchAction.value = append ? 'more' : 'search'
+
+  if (!append) {
+    resolvedJobs.value = []
+  }
 
   try {
-    const searchPlan = await resolveStageSearchPlan(keyword)
-    stageQueryNote.value = searchPlan.note
-    const pageLimitBase = searchPlan.exactStageIds.length > 0 ? EXACT_STAGE_PAGE_LIMIT : fuzzySearchPageLimit.value
-    const pageLimit = pageLimitBase * getSearchResultFetchMultiplier(fetchMode)
+    let session = append ? searchSession.value : null
 
-    const stageQueryResults = await Promise.all(
-      searchPlan.queryKeywords.map((queryKeyword) => searchOperatorZootMatcherJobsByStage(queryKeyword, {
-        maxPages: pageLimit,
-      })),
-    )
+    if (!session) {
+      const searchPlan = await resolveStageSearchPlan(keyword)
 
-    const { jobs, total, fetchedPages, truncated } = mergeStageQueryResults(stageQueryResults)
+      if (currentTicket !== searchTicket) {
+        return
+      }
+
+      stageQueryNote.value = searchPlan.note
+      session = createSearchSession(keyword, searchPlan)
+      searchSession.value = session
+    } else {
+      stageQueryNote.value = session.searchPlan.note
+    }
+
+    const { jobs, total, fetchedPages, truncated } = await fetchSearchSessionBatch(session)
 
     if (currentTicket !== searchTicket) {
       return
     }
 
-    const { resolvedJobs: nextResolvedJobs, invalidJobs } = resolveOperatorZootMatcherJobs(jobs, ownedOperatorLookup.value)
-    const exactStageResolvedJobs = nextResolvedJobs.filter((job) => {
-      if (searchPlan.exactStageIds.length === 0) {
-        return true
-      }
+    searchSession.value = {
+      ...session,
+      jobs: [...session.jobs],
+      queryStates: session.queryStates.map((state) => ({ ...state })),
+    }
 
-      const normalizedJobStageName = normalizeStageKeyword(job.stageName)
+    const invalidCount = applyResolvedSearchJobs(jobs, session.searchPlan)
 
-      return searchPlan.exactStageIds.some((stageName) => normalizeStageKeyword(stageName) === normalizedJobStageName)
-    })
-
-    resolvedJobs.value = exactStageResolvedJobs.map((job) => {
-      const playabilityState = getJobPlayabilityState(job)
-
-      return {
-        ...job,
-        bilibiliUrl: extractBilibiliLink(job.details),
-        operatorZootMatcherJobUrl: buildOperatorZootMatcherJobPageUrl(job.id),
-        playabilityState,
-        operatorComparisonItems: buildJobOperatorComparisonItems(job),
-      }
-    })
     searchMeta.value = {
       searched: true,
       fetched: jobs.length,
       total,
       fetchedPages,
       truncated,
-      invalidCount: invalidJobs.length,
+      invalidCount,
     }
 
-    if (!skipQuerySync) {
+    if (!append && !skipQuerySync) {
       syncStageQuery(keyword)
     }
 
     if (!silent) {
       createMessage({
         type: filteredJobs.value.length > 0 ? 'success' : 'info',
-        text: filteredJobs.value.length > 0
-          ? `共找到 ${filteredJobs.value.length} 份符合条件的作业`
-          : '没有找到符合当前条件的作业',
+        text: append
+          ? (
+              filteredJobs.value.length > 0
+                ? `已加载更多作业，当前共找到 ${filteredJobs.value.length} 份符合条件的作业`
+                : '已加载更多作业，暂无符合当前条件的作业'
+            )
+          : (
+              filteredJobs.value.length > 0
+                ? `共找到 ${filteredJobs.value.length} 份符合条件的作业`
+                : '没有找到符合当前条件的作业'
+            ),
       })
     }
   } catch (error) {
@@ -1479,8 +1621,12 @@ async function searchJobs(options = {}) {
     }
 
     console.error('searchJobs failed', error)
-    resolvedJobs.value = []
-    searchError.value = error?.message || '检索作业失败'
+    if (!append) {
+      resolvedJobs.value = []
+      searchSession.value = null
+    }
+
+    searchError.value = error?.message || (append ? '加载更多作业失败' : '检索作业失败')
 
     if (!silent) {
       createMessage({
@@ -1491,6 +1637,7 @@ async function searchJobs(options = {}) {
   } finally {
     if (currentTicket === searchTicket) {
       searching.value = false
+      activeSearchAction.value = ''
     }
   }
 }
@@ -2096,22 +2243,30 @@ onMounted(async () => {
                 variant="outlined"
                 density="comfortable"
                 hide-details
-                @keydown.enter="triggerSearch('default')"
+                @keydown.enter="triggerSearch"
               ></v-text-field>
 
               <div class="search-actions">
                 <div class="search-action-group">
                   <v-btn
-                    v-for="option in searchResultFetchOptions"
-                    :key="option.value"
                     class="search-mode-btn"
-                    :color="option.value === 'default' ? 'primary' : 'secondary'"
-                    :variant="option.value === 'default' ? 'flat' : 'outlined'"
-                    :loading="searching && activeSearchFetchMode === option.value"
-                    :disabled="!canSearch"
-                    @click="triggerSearch(option.value)"
+                    color="primary"
+                    variant="flat"
+                    :loading="searching && activeSearchAction === 'search'"
+                    :disabled="!canSearch || searching"
+                    @click="triggerSearch"
                   >
-                    {{ option.label }}
+                    搜索作业
+                  </v-btn>
+                  <v-btn
+                    class="search-mode-btn"
+                    color="secondary"
+                    variant="outlined"
+                    :loading="searching && activeSearchAction === 'more'"
+                    :disabled="!canLoadMoreJobs || searching"
+                    @click="loadMoreJobs"
+                  >
+                    加载更多作业
                   </v-btn>
                 </div>
               </div>
