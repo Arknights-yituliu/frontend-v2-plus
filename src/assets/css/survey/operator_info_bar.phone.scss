@@ -4,23 +4,28 @@
     margin: 4px 0;
 
     .operator-info-bar {
-      min-height: 50px;
-      padding: 6px 8px;
+      min-height: 54px;
+      gap: 6px;
+      padding: 6px 8px 6px 10px;
+    }
+
+    .operator-avatar-area {
+      flex: 0 0 44px;
     }
 
     .operator-info {
-      width: clamp(68px, 20vw, 78px);
-      flex: 0 0 clamp(68px, 20vw, 78px);
-      height: 36px;
+      width: clamp(82px, 23vw, 92px);
+      flex: 0 0 clamp(82px, 23vw, 92px);
+      height: 38px;
       position: relative;
       //border: 1px solid red;
     }
 
     .operator-name {
-      font-size: 11px;
-      line-height: 14px;
+      font-size: 12px;
+      line-height: 16px;
       font-weight: 600;
-      max-width: calc(100% - 4px);
+      max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -30,7 +35,7 @@
 
     .operator-elite-image {
       width: 18px;
-      top: 18px;
+      top: 20px;
       left: 0;
     }
 
@@ -40,15 +45,26 @@
       background-size: 16px;
       font-size: 8px;
       padding-top: 6px;
-      top: 18px;
-      left: 28px;
+      top: 20px;
+      left: 24px;
     }
 
 
     .bar-operator-skill-item {
+      flex: 0 0 30px;
       width: 30px;
       height: 30px;
-      margin: 0 2px;
+      margin: 0;
+    }
+
+    .operator-skill-frame {
+      width: 30px;
+      height: 30px;
+    }
+
+    .operator-skills-area,
+    .operator-modules-area {
+      gap: 4px;
     }
 
     .skill-name {
@@ -62,11 +78,11 @@
     }
 
     .operator-equip-group {
+      flex: 0 0 30px;
       width: 30px;
       height: 30px;
-      margin: 0 2px;
+      margin: 0;
       padding: 1px;
-
     }
 
 
@@ -96,10 +112,5 @@
       top: -2px;
       width: 14px;
     }
-
-    .operator-ap-cost {
-      font-size: 10px;
-    }
-
   }
 }

@@ -12,6 +12,22 @@
       gap: 8px;
     }
 
+    .operator-recommend-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .operator-recommend-threshold-group {
+      width: 100%;
+      border-radius: 16px;
+    }
+
+    .operator-recommend-threshold-btn {
+      min-width: calc(20% - 5px);
+      flex: 1 1 calc(20% - 5px);
+      padding-inline: 0;
+    }
+
 
     .survey-guide-content-container {
       padding: 8px;

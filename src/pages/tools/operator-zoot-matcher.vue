@@ -2,9 +2,8 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import materialV5API from '/src/api/materialV5.js'
 import operatorDataAPI from '/src/api/operatorData.js'
-import { searchOperatorZootMatcherJobsByStage } from '/src/api/operatorZootMatcher.js'
+import { listOperatorZootMatcherStageInfo, searchOperatorZootMatcherJobsByStage } from '/src/api/operatorZootMatcher.js'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
 import { operatorTableV2 } from '/src/utils/gameData.js'
 import { createMessage } from '/src/utils/message.js'
@@ -15,7 +14,7 @@ const LEGACY_MANUAL_OPERATOR_STORAGE_KEY = 'zoot_manual_owned_operators_v1'
 const OPERATOR_ZOOT_MATCHER_OWNED_OPERATOR_META_STORAGE_KEY = 'operator_zoot_matcher_owned_operator_meta_v1'
 const LEGACY_OWNED_OPERATOR_META_STORAGE_KEY = 'zoot_owned_operator_meta_v1'
 const SKLAND_ACCOUNT_SESSION_STORAGE_KEY = 'skland_account_data'
-const EXACT_STAGE_PAGE_LIMIT = 3
+const JOB_SEARCH_BATCH_PAGE_COUNT = 6
 const OPERATOR_ZOOT_MATCHER_JOB_PAGE_BASE_URL = 'https://prts.plus/'
 const BILIBILI_LINK_REGEXP = /https?:\/\/(?:www\.)?(?:bilibili\.com|b23\.tv)\/[^\s]+/i
 const MAX_LEVELS_BY_RARITY = {
@@ -105,12 +104,6 @@ const resultRatingFilterOptions = [
   { label: '⭐⭐⭐⭐⭐', value: 5 },
 ]
 
-const searchResultFetchOptions = [
-  { label: '搜索作业', value: 'default', multiplier: 1 },
-  { label: '搜索更多作业', value: 'more', multiplier: 2 },
-  { label: '搜索很多作业', value: 'many', multiplier: 4 },
-]
-
 const stageKeyword = ref('')
 const loadingOwnedOperators = ref(false)
 const searching = ref(false)
@@ -129,6 +122,7 @@ const operatorSettingsExpanded = ref(false)
 const stageQueryNote = ref('')
 const searchError = ref('')
 const resolvedJobs = ref([])
+const searchSession = ref(null)
 const searchMeta = ref({
   searched: false,
   fetched: 0,
@@ -139,8 +133,7 @@ const searchMeta = ref({
 })
 
 const exactStageMatchEnabled = ref(true)
-const fuzzySearchPageLimit = ref(8)
-const activeSearchFetchMode = ref('default')
+const activeSearchAction = ref('')
 const resultSortMode = ref('default')
 const resultFilterMode = ref('train')
 const resultRatingFilterMode = ref(4)
@@ -152,6 +145,14 @@ const ownedOperatorLookup = computed(() => buildOwnedOperatorLookup(ownedOperato
 const ownedOperatorCount = computed(() => ownedOperators.value.length)
 const hasOwnedOperators = computed(() => ownedOperatorCount.value > 0)
 const canSearch = computed(() => hasOwnedOperators.value && stageKeyword.value.trim().length > 0 && !loadingOwnedOperators.value)
+const canLoadMoreJobs = computed(() => {
+  const session = searchSession.value
+
+  return canSearch.value
+    && Boolean(session)
+    && session.keyword === stageKeyword.value.trim()
+    && session.queryStates.some((state) => state.hasNext)
+})
 const ownedOperatorInfoSummaryText = computed(() => {
   return `${ownedOperatorCount.value} 位`
 })
@@ -332,14 +333,13 @@ function getResultRatingFilterMinStars(value) {
   return normalizedValue
 }
 
-function getSearchResultFetchMultiplier(value) {
-  return searchResultFetchOptions.find((option) => option.value === value)?.multiplier || 1
+function triggerSearch() {
+  return searchJobs()
 }
 
-function triggerSearch(fetchMode = 'default') {
-  activeSearchFetchMode.value = fetchMode
+function loadMoreJobs() {
   return searchJobs({
-    fetchMode,
+    append: true,
   })
 }
 
@@ -973,8 +973,8 @@ function syncStageQuery(keyword) {
 
 async function loadStageInfoList() {
   if (!stageInfoListPromise) {
-    stageInfoListPromise = materialV5API.listStageInfo()
-      .then((response) => (Array.isArray(response?.data) ? response.data : []))
+    stageInfoListPromise = listOperatorZootMatcherStageInfo()
+      .then((response) => (Array.isArray(response) ? response : []))
       .catch((error) => {
         stageInfoListPromise = undefined
         throw error
@@ -990,6 +990,60 @@ function normalizeStageKeyword(text = '') {
 
 function isInternalStageIdKeyword(text = '') {
   return /^[a-z0-9_/-]+$/i.test(text) && text.includes('_')
+}
+
+function getStageInfoField(stage, camelKey, snakeKey) {
+  return String(stage?.[camelKey] ?? stage?.[snakeKey] ?? '').trim()
+}
+
+function getStageInfoStageId(stage) {
+  return getStageInfoField(stage, 'stageId', 'stage_id')
+}
+
+function getStageInfoLevelId(stage) {
+  return getStageInfoField(stage, 'levelId', 'level_id')
+}
+
+function getStageInfoCatThree(stage) {
+  return getStageInfoField(stage, 'catThree', 'cat_three')
+}
+
+function getStageInfoMatchValues(stage) {
+  const levelId = getStageInfoLevelId(stage)
+  const levelIdTail = levelId.split('/').filter(Boolean).pop() || ''
+
+  return [
+    getStageInfoStageId(stage),
+    levelId,
+    levelIdTail,
+    getStageInfoCatThree(stage),
+    getStageInfoField(stage, 'name', 'name'),
+  ].filter(Boolean)
+}
+
+function matchesStageKeyword(stage, normalizedKeyword) {
+  return getStageInfoMatchValues(stage).some((value) => normalizeStageKeyword(value) === normalizedKeyword)
+}
+
+function isToughStageInfo(stage) {
+  const stageId = getStageInfoStageId(stage)
+
+  return stageId.includes('tough') || stageId.includes('#f#')
+}
+
+function collectExactStageNames(stage) {
+  const stageId = getStageInfoStageId(stage)
+  const levelId = getStageInfoLevelId(stage)
+  const levelIdTail = levelId.split('/').filter(Boolean).pop() || ''
+
+  return [
+    stageId,
+    stageId.replace('#f#', ''),
+    levelId,
+    levelIdTail,
+    getStageInfoCatThree(stage),
+    getStageInfoField(stage, 'name', 'name'),
+  ].filter(Boolean)
 }
 
 async function resolveStageSearchPlan(keyword) {
@@ -1019,18 +1073,23 @@ async function resolveStageSearchPlan(keyword) {
     const wantsToughStage = normalizedKeyword.startsWith('H') && /\d/.test(normalizedKeyword[1] || '')
     const stageCodeKeyword = wantsToughStage ? normalizedKeyword.slice(1) : normalizedKeyword
 
-    let matchedStages = stageInfoList.filter((stage) => normalizeStageKeyword(stage?.stageCode) === stageCodeKeyword)
+    let matchedStages = stageInfoList.filter((stage) => matchesStageKeyword(stage, normalizedKeyword))
+
+    if (matchedStages.length === 0 && wantsToughStage) {
+      matchedStages = stageInfoList.filter((stage) => matchesStageKeyword(stage, stageCodeKeyword))
+    }
 
     if (wantsToughStage) {
-      matchedStages = matchedStages.filter((stage) => String(stage?.stageId || '').includes('tough') || String(stage?.zoneId || '').includes('tough'))
+      matchedStages = matchedStages.filter(isToughStageInfo)
     }
 
     if (matchedStages.length > 0) {
-      const exactStageIds = [...new Set(matchedStages.map((stage) => stage.stageId).filter(Boolean))]
+      const queryKeywords = [...new Set(matchedStages.map(getStageInfoStageId).filter(Boolean))]
+      const exactStageIds = [...new Set(matchedStages.flatMap(collectExactStageNames))]
 
-      if (exactStageIds.length > 0) {
+      if (queryKeywords.length > 0 && exactStageIds.length > 0) {
         return {
-          queryKeywords: exactStageIds,
+          queryKeywords,
           exactStageIds,
           note: `已按关卡精确匹配：${trimmedKeyword} -> ${exactStageIds.join(' / ')}`,
         }
@@ -1069,6 +1128,128 @@ function mergeStageQueryResults(results = []) {
     fetchedPages,
     truncated,
   }
+}
+
+function createSearchSession(keyword, searchPlan) {
+  return {
+    keyword,
+    searchPlan,
+    jobs: [],
+    nextQueryIndex: 0,
+    queryStates: searchPlan.queryKeywords.map((queryKeyword) => ({
+      queryKeyword,
+      nextPage: 1,
+      hasNext: true,
+      total: 0,
+      fetchedPages: 0,
+    })),
+  }
+}
+
+function mergeJobList(existingJobs = [], nextJobs = []) {
+  const jobMap = new Map()
+
+  for (const job of existingJobs) {
+    jobMap.set(job.id, job)
+  }
+
+  for (const job of nextJobs) {
+    jobMap.set(job.id, job)
+  }
+
+  return [...jobMap.values()]
+}
+
+function getNextSearchQueryState(session) {
+  const queryStates = session.queryStates
+  const queryCount = queryStates.length
+
+  for (let offset = 0; offset < queryCount; offset += 1) {
+    const stateIndex = (session.nextQueryIndex + offset) % queryCount
+    const state = queryStates[stateIndex]
+
+    if (state?.hasNext) {
+      session.nextQueryIndex = (stateIndex + 1) % queryCount
+
+      return state
+    }
+  }
+
+  return null
+}
+
+async function fetchSearchSessionBatch(session) {
+  const activeQueryStates = session.queryStates.filter((state) => state.hasNext)
+
+  if (activeQueryStates.length === 0) {
+    return {
+      jobs: session.jobs,
+      total: session.queryStates.reduce((sum, state) => sum + Number(state.total || 0), 0),
+      fetchedPages: session.queryStates.reduce((sum, state) => sum + Number(state.fetchedPages || 0), 0),
+      truncated: false,
+    }
+  }
+
+  const stageQueryResults = []
+  let remainingPageCount = JOB_SEARCH_BATCH_PAGE_COUNT
+
+  while (remainingPageCount > 0) {
+    const state = getNextSearchQueryState(session)
+
+    if (!state) {
+      break
+    }
+
+    const result = await searchOperatorZootMatcherJobsByStage(state.queryKeyword, {
+      startPage: state.nextPage,
+      pageCount: 1,
+    })
+
+    state.nextPage = result.nextPage
+    state.hasNext = Boolean(result.truncated)
+    state.total = Number(result.total || 0)
+    state.fetchedPages += Number(result.fetchedPages || 0)
+    stageQueryResults.push(result)
+    remainingPageCount -= Number(result.fetchedPages || 1)
+  }
+
+  const { jobs } = mergeStageQueryResults(stageQueryResults)
+
+  session.jobs = mergeJobList(session.jobs, jobs)
+
+  return {
+    jobs: session.jobs,
+    total: session.queryStates.reduce((sum, state) => sum + Number(state.total || 0), 0),
+    fetchedPages: session.queryStates.reduce((sum, state) => sum + Number(state.fetchedPages || 0), 0),
+    truncated: session.queryStates.some((state) => state.hasNext),
+  }
+}
+
+function applyResolvedSearchJobs(jobs, searchPlan) {
+  const { resolvedJobs: nextResolvedJobs, invalidJobs } = resolveOperatorZootMatcherJobs(jobs, ownedOperatorLookup.value)
+  const exactStageResolvedJobs = nextResolvedJobs.filter((job) => {
+    if (searchPlan.exactStageIds.length === 0) {
+      return true
+    }
+
+    const normalizedJobStageName = normalizeStageKeyword(job.stageName)
+
+    return searchPlan.exactStageIds.some((stageName) => normalizeStageKeyword(stageName) === normalizedJobStageName)
+  })
+
+  resolvedJobs.value = exactStageResolvedJobs.map((job) => {
+    const playabilityState = getJobPlayabilityState(job)
+
+    return {
+      ...job,
+      bilibiliUrl: extractBilibiliLink(job.details),
+      operatorZootMatcherJobUrl: buildOperatorZootMatcherJobPageUrl(job.id),
+      playabilityState,
+      operatorComparisonItems: buildJobOperatorComparisonItems(job),
+    }
+  })
+
+  return invalidJobs.length
 }
 
 function sortMatchedJobs(a, b) {
@@ -1315,17 +1496,21 @@ function getJobPlayabilityState(job) {
 }
 
 async function searchJobs(options = {}) {
-  const fetchMode = options.fetchMode || 'default'
+  const append = options.append === true
   const silent = options.silent === true
   const skipQuerySync = options.skipQuerySync === true
   const keyword = stageKeyword.value.trim()
 
   searchMeta.value.searched = true
   searchError.value = ''
-  stageQueryNote.value = ''
+
+  if (!append) {
+    stageQueryNote.value = ''
+  }
 
   if (!keyword) {
     resolvedJobs.value = []
+    searchSession.value = null
 
     if (!silent) {
       createMessage({
@@ -1339,6 +1524,7 @@ async function searchJobs(options = {}) {
 
   if (!hasOwnedOperators.value) {
     resolvedJobs.value = []
+    searchSession.value = null
 
     if (!silent) {
       createMessage({
@@ -1350,63 +1536,83 @@ async function searchJobs(options = {}) {
     return
   }
 
+  if (append && (!searchSession.value || searchSession.value.keyword !== keyword)) {
+    if (!silent) {
+      createMessage({
+        type: 'info',
+        text: '请先搜索作业，再加载更多作业',
+      })
+    }
+
+    return
+  }
+
   const currentTicket = ++searchTicket
   searching.value = true
-  resolvedJobs.value = []
+  activeSearchAction.value = append ? 'more' : 'search'
+
+  if (!append) {
+    resolvedJobs.value = []
+  }
 
   try {
-    const searchPlan = await resolveStageSearchPlan(keyword)
-    stageQueryNote.value = searchPlan.note
-    const pageLimitBase = searchPlan.exactStageIds.length > 0 ? EXACT_STAGE_PAGE_LIMIT : fuzzySearchPageLimit.value
-    const pageLimit = pageLimitBase * getSearchResultFetchMultiplier(fetchMode)
+    let session = append ? searchSession.value : null
 
-    const stageQueryResults = await Promise.all(
-      searchPlan.queryKeywords.map((queryKeyword) => searchOperatorZootMatcherJobsByStage(queryKeyword, {
-        maxPages: pageLimit,
-      })),
-    )
+    if (!session) {
+      const searchPlan = await resolveStageSearchPlan(keyword)
 
-    const { jobs, total, fetchedPages, truncated } = mergeStageQueryResults(stageQueryResults)
+      if (currentTicket !== searchTicket) {
+        return
+      }
+
+      stageQueryNote.value = searchPlan.note
+      session = createSearchSession(keyword, searchPlan)
+      searchSession.value = session
+    } else {
+      stageQueryNote.value = session.searchPlan.note
+    }
+
+    const { jobs, total, fetchedPages, truncated } = await fetchSearchSessionBatch(session)
 
     if (currentTicket !== searchTicket) {
       return
     }
 
-    const { resolvedJobs: nextResolvedJobs, invalidJobs } = resolveOperatorZootMatcherJobs(jobs, ownedOperatorLookup.value)
-    const exactStageResolvedJobs = nextResolvedJobs.filter((job) => {
-      return searchPlan.exactStageIds.length === 0 || searchPlan.exactStageIds.includes(job.stageName)
-    })
+    searchSession.value = {
+      ...session,
+      jobs: [...session.jobs],
+      queryStates: session.queryStates.map((state) => ({ ...state })),
+    }
 
-    resolvedJobs.value = exactStageResolvedJobs.map((job) => {
-      const playabilityState = getJobPlayabilityState(job)
+    const invalidCount = applyResolvedSearchJobs(jobs, session.searchPlan)
 
-      return {
-        ...job,
-        bilibiliUrl: extractBilibiliLink(job.details),
-        operatorZootMatcherJobUrl: buildOperatorZootMatcherJobPageUrl(job.id),
-        playabilityState,
-        operatorComparisonItems: buildJobOperatorComparisonItems(job),
-      }
-    })
     searchMeta.value = {
       searched: true,
       fetched: jobs.length,
       total,
       fetchedPages,
       truncated,
-      invalidCount: invalidJobs.length,
+      invalidCount,
     }
 
-    if (!skipQuerySync) {
+    if (!append && !skipQuerySync) {
       syncStageQuery(keyword)
     }
 
     if (!silent) {
       createMessage({
         type: filteredJobs.value.length > 0 ? 'success' : 'info',
-        text: filteredJobs.value.length > 0
-          ? `共找到 ${filteredJobs.value.length} 份符合条件的作业`
-          : '没有找到符合当前条件的作业',
+        text: append
+          ? (
+              filteredJobs.value.length > 0
+                ? `已加载更多作业，当前共找到 ${filteredJobs.value.length} 份符合条件的作业`
+                : '已加载更多作业，暂无符合当前条件的作业'
+            )
+          : (
+              filteredJobs.value.length > 0
+                ? `共找到 ${filteredJobs.value.length} 份符合条件的作业`
+                : '没有找到符合当前条件的作业'
+            ),
       })
     }
   } catch (error) {
@@ -1415,8 +1621,12 @@ async function searchJobs(options = {}) {
     }
 
     console.error('searchJobs failed', error)
-    resolvedJobs.value = []
-    searchError.value = error?.message || '检索作业失败'
+    if (!append) {
+      resolvedJobs.value = []
+      searchSession.value = null
+    }
+
+    searchError.value = error?.message || (append ? '加载更多作业失败' : '检索作业失败')
 
     if (!silent) {
       createMessage({
@@ -1427,6 +1637,7 @@ async function searchJobs(options = {}) {
   } finally {
     if (currentTicket === searchTicket) {
       searching.value = false
+      activeSearchAction.value = ''
     }
   }
 }
@@ -2032,22 +2243,30 @@ onMounted(async () => {
                 variant="outlined"
                 density="comfortable"
                 hide-details
-                @keydown.enter="triggerSearch('default')"
+                @keydown.enter="triggerSearch"
               ></v-text-field>
 
               <div class="search-actions">
                 <div class="search-action-group">
                   <v-btn
-                    v-for="option in searchResultFetchOptions"
-                    :key="option.value"
                     class="search-mode-btn"
-                    :color="option.value === 'default' ? 'primary' : 'secondary'"
-                    :variant="option.value === 'default' ? 'flat' : 'outlined'"
-                    :loading="searching && activeSearchFetchMode === option.value"
-                    :disabled="!canSearch"
-                    @click="triggerSearch(option.value)"
+                    color="primary"
+                    variant="flat"
+                    :loading="searching && activeSearchAction === 'search'"
+                    :disabled="!canSearch || searching"
+                    @click="triggerSearch"
                   >
-                    {{ option.label }}
+                    搜索作业
+                  </v-btn>
+                  <v-btn
+                    class="search-mode-btn"
+                    color="secondary"
+                    variant="outlined"
+                    :loading="searching && activeSearchAction === 'more'"
+                    :disabled="!canLoadMoreJobs || searching"
+                    @click="loadMoreJobs"
+                  >
+                    加载更多作业
                   </v-btn>
                 </div>
               </div>
@@ -2391,6 +2610,82 @@ onMounted(async () => {
   padding: 16px;
 }
 
+.operator-zoot-matcher-page,
+.owned-operator-dialog-card {
+  --ozm-text-title: rgba(0, 0, 0, 0.82);
+  --ozm-text-main: rgba(0, 0, 0, 0.72);
+  --ozm-text-muted: rgba(0, 0, 0, 0.62);
+  --ozm-text-soft: rgba(0, 0, 0, 0.48);
+  --ozm-text-faint: rgba(0, 0, 0, 0.45);
+  --ozm-control-text: rgba(0, 0, 0, 0.72);
+  --ozm-control-border: rgba(15, 23, 42, 0.12);
+  --ozm-control-bg: rgba(248, 250, 252, 0.92);
+  --ozm-control-hover-bg: rgba(15, 23, 42, 0.04);
+  --ozm-control-inset: rgba(255, 255, 255, 0.65);
+  --ozm-card-bg: rgba(255, 255, 255, 0.92);
+  --ozm-card-border: rgba(15, 23, 42, 0.12);
+  --ozm-card-subtle-bg: rgba(248, 250, 252, 0.72);
+  --ozm-card-soft-bg: rgba(255, 255, 255, 0.9);
+  --ozm-card-soft-border: rgba(15, 23, 42, 0.08);
+  --ozm-star-empty: rgba(0, 0, 0, 0.22);
+  --ozm-star-fill: #f59e0b;
+  --ozm-status-bg: rgba(15, 23, 42, 0.03);
+  --ozm-status-border: rgba(15, 23, 42, 0.08);
+  --ozm-success-bg: rgba(56, 142, 60, 0.08);
+  --ozm-success-border: rgba(56, 142, 60, 0.18);
+  --ozm-warning-bg: rgba(251, 140, 0, 0.08);
+  --ozm-warning-border: rgba(251, 140, 0, 0.2);
+  --ozm-error-bg: rgba(211, 47, 47, 0.08);
+  --ozm-error-border: rgba(211, 47, 47, 0.18);
+  --ozm-info-bg: rgba(30, 136, 229, 0.08);
+  --ozm-info-border: rgba(30, 136, 229, 0.16);
+  --ozm-unmet-text: #c62828;
+}
+
+:global(.theme-dark .operator-zoot-matcher-page),
+:global(.theme-dark .owned-operator-dialog-card),
+:global(html.dark .operator-zoot-matcher-page),
+:global(html.dark .owned-operator-dialog-card) {
+  --ozm-text-title: rgba(255, 255, 255, 0.92);
+  --ozm-text-main: rgba(255, 255, 255, 0.82);
+  --ozm-text-muted: rgba(255, 255, 255, 0.68);
+  --ozm-text-soft: rgba(255, 255, 255, 0.56);
+  --ozm-text-faint: rgba(255, 255, 255, 0.48);
+  --ozm-control-text: rgba(255, 255, 255, 0.82);
+  --ozm-control-border: rgba(255, 255, 255, 0.14);
+  --ozm-control-bg: rgba(255, 255, 255, 0.08);
+  --ozm-control-hover-bg: rgba(255, 255, 255, 0.13);
+  --ozm-control-inset: rgba(255, 255, 255, 0.08);
+  --ozm-card-bg: rgba(34, 38, 44, 0.96);
+  --ozm-card-border: rgba(255, 255, 255, 0.12);
+  --ozm-card-subtle-bg: rgba(255, 255, 255, 0.045);
+  --ozm-card-soft-bg: rgba(255, 255, 255, 0.06);
+  --ozm-card-soft-border: rgba(255, 255, 255, 0.1);
+  --ozm-star-empty: rgba(255, 255, 255, 0.28);
+  --ozm-star-fill: #fbbf24;
+  --ozm-status-bg: rgba(255, 255, 255, 0.045);
+  --ozm-status-border: rgba(255, 255, 255, 0.1);
+  --ozm-success-bg: rgba(102, 187, 106, 0.16);
+  --ozm-success-border: rgba(102, 187, 106, 0.36);
+  --ozm-warning-bg: rgba(255, 183, 77, 0.16);
+  --ozm-warning-border: rgba(255, 183, 77, 0.36);
+  --ozm-error-bg: rgba(239, 83, 80, 0.16);
+  --ozm-error-border: rgba(239, 83, 80, 0.36);
+  --ozm-info-bg: rgba(100, 181, 246, 0.16);
+  --ozm-info-border: rgba(100, 181, 246, 0.34);
+  --ozm-unmet-text: #ff8a80;
+}
+
+:global(.theme-dark .operator-zoot-matcher-page .toolbox-card),
+:global(.theme-dark .operator-zoot-matcher-page .owned-operator-dialog-card),
+:global(.theme-dark .owned-operator-dialog-card),
+:global(html.dark .operator-zoot-matcher-page .toolbox-card),
+:global(html.dark .operator-zoot-matcher-page .owned-operator-dialog-card),
+:global(html.dark .owned-operator-dialog-card) {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(31, 31, 31, 0.98);
+}
+
 .page-shell {
   display: flex;
   flex-direction: column;
@@ -2422,7 +2717,7 @@ onMounted(async () => {
 }
 
 .card-eyebrow {
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--ozm-text-faint);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -2440,7 +2735,7 @@ onMounted(async () => {
 }
 
 .card-subtitle {
-  color: rgba(0, 0, 0, 0.68);
+  color: var(--ozm-text-muted);
   line-height: 1.6;
   margin-bottom: 0;
 }
@@ -2498,7 +2793,7 @@ onMounted(async () => {
 .search-option-label {
   font-size: 12px;
   line-height: 1.5;
-  color: rgba(0, 0, 0, 0.48);
+  color: var(--ozm-text-soft);
   white-space: nowrap;
 }
 
@@ -2524,12 +2819,12 @@ onMounted(async () => {
   font-size: 13px;
   font-weight: 600;
   line-height: 1.3;
-  color: rgba(0, 0, 0, 0.72);
+  color: var(--ozm-control-text);
   text-transform: none;
-  border: 1px solid rgba(15, 23, 42, 0.12);
+  border: 1px solid var(--ozm-control-border);
   border-radius: 10px !important;
-  background: rgba(248, 250, 252, 0.92);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  background: var(--ozm-control-bg);
+  box-shadow: inset 0 1px 0 var(--ozm-control-inset);
 }
 
 .control-toggle:deep(.v-btn:not(:first-child)) {
@@ -2541,7 +2836,7 @@ onMounted(async () => {
 }
 
 .control-toggle:deep(.v-btn:hover) {
-  background: rgba(15, 23, 42, 0.04);
+  background: var(--ozm-control-hover-bg);
 }
 
 .control-toggle:deep(.v-btn--active) {
@@ -2579,7 +2874,7 @@ onMounted(async () => {
 .operator-inline-stat {
   font-size: 12px;
   line-height: 1.5;
-  color: rgba(0, 0, 0, 0.48);
+  color: var(--ozm-text-soft);
   white-space: nowrap;
 }
 
@@ -2631,8 +2926,8 @@ onMounted(async () => {
 .result-item-card {
   container-type: inline-size;
   border-radius: 16px;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--ozm-card-border);
+  background: var(--ozm-card-bg);
   overflow: hidden;
 }
 
@@ -2646,8 +2941,8 @@ onMounted(async () => {
 
 .result-item-bottom {
   padding: 12px 16px 14px;
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
-  background: rgba(248, 250, 252, 0.72);
+  border-top: 1px solid var(--ozm-card-soft-border);
+  background: var(--ozm-card-subtle-bg);
 }
 
 .result-item-main {
@@ -2673,7 +2968,7 @@ onMounted(async () => {
   gap: 6px 14px;
   font-size: 13px;
   line-height: 1.6;
-  color: rgba(0, 0, 0, 0.62);
+  color: var(--ozm-text-muted);
 }
 
 .rating-inline {
@@ -2693,7 +2988,7 @@ onMounted(async () => {
   display: inline-flex;
   width: 14px;
   height: 14px;
-  color: rgba(0, 0, 0, 0.22);
+  color: var(--ozm-star-empty);
   line-height: 1;
 }
 
@@ -2708,7 +3003,7 @@ onMounted(async () => {
 }
 
 .rating-star-fill {
-  color: #f59e0b;
+  color: var(--ozm-star-fill);
   overflow: hidden;
   justify-content: flex-start;
 }
@@ -2720,8 +3015,8 @@ onMounted(async () => {
 .result-item-status {
   border-radius: 12px;
   padding: 10px 12px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: rgba(15, 23, 42, 0.03);
+  border: 1px solid var(--ozm-status-border);
+  background: var(--ozm-status-bg);
 }
 
 .result-item-status.is-ready-status {
@@ -2733,24 +3028,24 @@ onMounted(async () => {
 }
 
 .result-item-status.tone-success {
-  background: rgba(56, 142, 60, 0.08);
-  border-color: rgba(56, 142, 60, 0.18);
+  background: var(--ozm-success-bg);
+  border-color: var(--ozm-success-border);
 }
 
 .result-item-status.tone-warning {
-  background: rgba(251, 140, 0, 0.08);
-  border-color: rgba(251, 140, 0, 0.2);
+  background: var(--ozm-warning-bg);
+  border-color: var(--ozm-warning-border);
 }
 
 .result-item-status.tone-error {
-  background: rgba(211, 47, 47, 0.08);
-  border-color: rgba(211, 47, 47, 0.18);
+  background: var(--ozm-error-bg);
+  border-color: var(--ozm-error-border);
 }
 
 .result-item-status.tone-info,
 .result-item-status.tone-secondary {
-  background: rgba(30, 136, 229, 0.08);
-  border-color: rgba(30, 136, 229, 0.16);
+  background: var(--ozm-info-bg);
+  border-color: var(--ozm-info-border);
 }
 
 .result-item-status-title {
@@ -2766,7 +3061,7 @@ onMounted(async () => {
   margin-top: 4px;
   font-size: 13px;
   line-height: 1.6;
-  color: rgba(0, 0, 0, 0.72);
+  color: var(--ozm-text-main);
 }
 
 .result-item-compare {
@@ -2785,7 +3080,7 @@ onMounted(async () => {
 .result-compare-title {
   font-size: 13px;
   font-weight: 700;
-  color: rgba(0, 0, 0, 0.68);
+  color: var(--ozm-text-muted);
 }
 
 .result-compare-rows {
@@ -2798,12 +3093,12 @@ onMounted(async () => {
   flex-direction: column;
   border-radius: 12px;
   padding: 10px 12px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--ozm-card-soft-border);
+  background: var(--ozm-card-soft-bg);
 }
 
 .result-compare-item.is-unmet {
-  border-color: rgba(211, 47, 47, 0.16);
+  border-color: var(--ozm-error-border);
 }
 
 .result-compare-item-head {
@@ -2823,18 +3118,18 @@ onMounted(async () => {
   margin-top: 4px;
   font-size: 12px;
   line-height: 1.5;
-  color: rgba(0, 0, 0, 0.56);
+  color: var(--ozm-text-soft);
 }
 
 .result-compare-item-detail {
   margin-top: 4px;
   font-size: 13px;
   line-height: 1.6;
-  color: rgba(0, 0, 0, 0.72);
+  color: var(--ozm-text-main);
 }
 
 .text-unmet {
-  color: #c62828;
+  color: var(--ozm-unmet-text);
   font-weight: 700;
 }
 
@@ -2874,14 +3169,14 @@ onMounted(async () => {
 
 .empty-state,
 .operator-empty {
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--ozm-text-muted);
   padding: 18px 4px 4px;
 }
 
 .empty-title {
   font-size: 18px;
   font-weight: 700;
-  color: rgba(0, 0, 0, 0.82);
+  color: var(--ozm-text-title);
   margin-bottom: 0;
 }
 
@@ -2906,7 +3201,7 @@ onMounted(async () => {
 
 .owned-operator-dialog-subtitle {
   margin-bottom: 0;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--ozm-text-muted);
 }
 
 .operator-dialog-toolbar {
@@ -2936,8 +3231,8 @@ onMounted(async () => {
   gap: 10px;
   border-radius: 14px;
   padding: 10px 12px;
-  background: rgba(248, 250, 252, 0.9);
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: var(--ozm-card-soft-bg);
+  border: 1px solid var(--ozm-card-soft-border);
 }
 
 .operator-dialog-copy {
@@ -2956,7 +3251,7 @@ onMounted(async () => {
 .operator-dialog-meta {
   font-size: 12px;
   line-height: 1.4;
-  color: rgba(0, 0, 0, 0.58);
+  color: var(--ozm-text-soft);
 }
 
 @media screen and (max-width: 900px) {
