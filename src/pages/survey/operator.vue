@@ -1,7 +1,7 @@
 <script setup>
 import {createMessage} from "/src/utils/message.js";
 import operatorDataAPI from "/src/api/operatorData.js"
-import {onMounted, ref, computed} from "vue";
+import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
 import {operatorTable} from "/src/utils/gameData.js";
 import {exportExcel} from '/src/utils/exportExcel.js'
 
@@ -64,7 +64,20 @@ function openSklandImportDialog() {
   sklandImportStep.value = 1 // 重置步骤
 }
 
+function ensureSklandSyncLogin() {
+  if (!hasStoredUserToken()) {
+    createMessage({ type: 'error', text: '请先登录一图流账号，才能同步干员数据' })
+    return false
+  }
+
+  return true
+}
+
 async function getPlayerBindingBySkland() {
+  if (!ensureSklandSyncLogin()) {
+    return
+  }
+
   if (!sklandInputText.value) {
     createMessage({ type: 'error', text: '请输入森空岛凭证' })
     return
@@ -93,8 +106,7 @@ async function getPlayerBindingBySkland() {
 async function getPlayerDataAndSync(binding) {
   const { uid, nickName, channelName, channelMasterId } = binding
 
-  if (!isUserLoggedIn.value) {
-    createMessage({ type: 'error', text: '请先登录一图流账号，才能同步干员数据' })
+  if (!ensureSklandSyncLogin()) {
     return
   }
   
@@ -144,6 +156,107 @@ const recommendThresholdOptions = [90, 80, 70, 60, 50]
 const recommendEliteThresholdOptions = [90, 80, 70, 60, 50, 40, 30]
 const hideCompletedRecommendedOperators = ref(false)
 const displayOperatorFilterModules = ['profession', 'rarity', 'date', 'itemObtainApproach', 'own']
+const hasAutoAppliedGuestOwnFilter = ref(false)
+
+function hasStoredUserToken() {
+  const token = localStorage.getItem("USER_TOKEN")
+  return Boolean(token && token !== 'null' && token !== 'undefined')
+}
+
+function refreshDisplayOperatorList() {
+  displayOperatorList.value = filterOperatorList(operatorList.value)
+}
+
+function resetOperatorFilterActions() {
+  for (const filterGroup of Object.values(operatorFilterCondition.value)) {
+    filterGroup.conditions.forEach((condition) => {
+      condition.action = false
+    })
+  }
+}
+
+function clearOwnFilterActions() {
+  const ownConditions = operatorFilterCondition.value.own?.conditions || []
+  ownConditions.forEach((condition) => {
+    condition.action = false
+  })
+}
+
+function applyGuestOwnFilterDefault() {
+  resetOperatorFilterActions()
+
+  const unownedCondition = operatorFilterCondition.value.own?.conditions?.find((condition) => condition.value === false)
+  if (unownedCondition) {
+    unownedCondition.action = true
+  }
+
+  hasAutoAppliedGuestOwnFilter.value = true
+}
+
+function clearGuestOwnFilterDefault() {
+  if (!hasAutoAppliedGuestOwnFilter.value) {
+    return
+  }
+
+  clearOwnFilterActions()
+  hasAutoAppliedGuestOwnFilter.value = false
+}
+
+function syncGuestOwnFilterDefault(hasData) {
+  if (!hasData && !hasStoredUserToken()) {
+    applyGuestOwnFilterDefault()
+  } else {
+    clearGuestOwnFilterDefault()
+  }
+
+  refreshDisplayOperatorList()
+}
+
+function createOperatorList(list = []) {
+  const operatorMap = {}
+  for (const item of list) {
+    operatorMap[item.charId] = item
+  }
+
+  const tmpList = []
+  for (const charId in operatorTable) {
+    let formatData = deepClone(operatorTable[charId])
+
+    let item = {}
+    if (operatorMap[charId]) {
+      item = operatorMap[charId]
+    } else {
+      item = {
+        elite: 0,
+        level: 0,
+        mainSkill: 0,
+        skill1: 0,
+        skill2: 0,
+        skill3: 0,
+        modX: 0,
+        modY: 0,
+        own: false
+      }
+    }
+
+    formatData.elite = item.elite
+    formatData.level = item.level
+    formatData.potential = item.potential
+    formatData.mainSkill = item.mainSkill
+    formatData.skill1 = item.skill1
+    formatData.skill2 = item.skill2
+    formatData.skill3 = item.skill3
+    formatData.modX = item.modX
+    formatData.modY = item.modY
+    formatData.modD = item.modD
+    formatData.own = item.own
+    formatData.modA = item.modA
+
+    tmpList.push(formatData)
+  }
+
+  return tmpList
+}
 
 const displayOperatorFilterCondition = computed(() => {
   return displayOperatorFilterModules
@@ -466,57 +579,19 @@ function playProgressionHighlight(highlight){
  * 找回填写过的角色信息
  */
 function getOperatorData() {
+  if (!hasStoredUserToken()) {
+    sectionPanels.value = ['importExport']
+    operatorList.value = createOperatorList()
+    syncGuestOwnFilterDefault(false)
+    return
+  }
 
   //根据一图流的token查询用户填写的干员数据
   operatorDataAPI.getOperatorData().then((response) => {
     let list = response.data || []; //后端返回的数据
     sectionPanels.value = list.length > 0 ? [] : ['importExport']
-    //转为前端的数据格式
-
-    const operatorMap = {}
-    for (const item of list) {
-      operatorMap[item.charId] = item;
-    }
-
-    const tmpList = []
-    for (const charId in operatorTable) {
-      let formatData = deepClone(operatorTable[charId])
-
-      let item = {}
-      if (operatorMap[charId]) {
-        item = operatorMap[charId]
-      } else {
-        item = {
-          elite: 0,
-          level: 0,
-          mainSkill: 0,
-          skill1: 0,
-          skill2: 0,
-          skill3: 0,
-          modX: 0,
-          modY: 0,
-          own:false
-        }
-      }
-
-      formatData.elite = item.elite;
-      formatData.level = item.level;
-      formatData.potential = item.potential;
-      formatData.mainSkill = item.mainSkill;
-      formatData.skill1 = item.skill1;
-      formatData.skill2 = item.skill2;
-      formatData.skill3 = item.skill3;
-      formatData.modX = item.modX;
-      formatData.modY = item.modY;
-      formatData.modD = item.modD;
-      formatData.own = item.own;
-      formatData.modA = item.modA;
-
-      tmpList.push(formatData)
-    }
-
-    operatorList.value = tmpList
-    displayOperatorList.value = filterOperatorList(operatorList.value)
+    operatorList.value = createOperatorList(list)
+    syncGuestOwnFilterDefault(list.length > 0)
     createMessage({type:'success',text:"导入了 " + list.length + " 条数据"});
 
   }).catch(() => {
@@ -531,7 +606,7 @@ function getOperatorData() {
  */
 function addFilterConditionAndFilterOperator (func, index){
   func(index)
-  displayOperatorList.value = filterOperatorList(operatorList.value)
+  refreshDisplayOperatorList()
 }
 
 /**
@@ -638,6 +713,19 @@ function getSortNumber(value) {
 onMounted(() => {
   getOperatorData()
 });
+
+watch(isUserLoggedIn, (loggedIn) => {
+  if (!loggedIn) {
+    return
+  }
+
+  clearGuestOwnFilterDefault()
+  refreshDisplayOperatorList()
+})
+
+onBeforeUnmount(() => {
+  clearGuestOwnFilterDefault()
+})
 </script>
 
 
@@ -891,6 +979,16 @@ onMounted(() => {
               <v-card flat>
                 <v-card-text class="text-center">
                   <p class="mb-4">首先登录森空岛网站</p>
+                  <v-alert
+                      v-if="!hasStoredUserToken()"
+                      :icon="false"
+                      color="warning"
+                      variant="tonal"
+                      class="mb-4 text-left"
+                      density="compact"
+                  >
+                    当前未登录一图流账号，可先查看教程；登录后才能获取账号列表并同步到我的干员。
+                  </v-alert>
                   <v-btn color="primary" @click="openLinkOnNewPage(SKLAND_LINK)">
                     <v-icon>mdi-open-in-new</v-icon>
                     打开森空岛官网
