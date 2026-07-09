@@ -631,6 +631,12 @@ const routes = [
         display: false,
         component: () => import('/src/pages/dev/pie-chart.vue')
     },
+    {
+        path: '/dev/open-api-test',
+        text: 'OpenAPI测试',
+        display: false,
+        component: () => import('/src/pages/dev/open-api-test.vue')
+    },
 
     {
         path: '/media/weekly',
