@@ -985,7 +985,11 @@ async function loadStageInfoList() {
 }
 
 function normalizeStageKeyword(text = '') {
-  return String(text).trim().toUpperCase().replace(/\s+/g, '')
+  return String(text)
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, '')
+    .replace(/[（(](?:标准|磨难|简单|普通|突袭)[）)]$/u, '')
 }
 
 function isInternalStageIdKeyword(text = '') {
@@ -1026,9 +1030,10 @@ function matchesStageKeyword(stage, normalizedKeyword) {
 }
 
 function isToughStageInfo(stage) {
-  const stageId = getStageInfoStageId(stage)
+  const stageId = getStageInfoStageId(stage).toLowerCase()
+  const levelId = getStageInfoLevelId(stage).toLowerCase()
 
-  return stageId.includes('tough') || stageId.includes('#f#')
+  return stageId.includes('tough') || stageId.includes('#f#') || stageId.startsWith('hard_') || levelId.includes('/hard/')
 }
 
 function collectExactStageNames(stage) {
