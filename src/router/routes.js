@@ -4,7 +4,6 @@ import GACHA_CALCULATOR from '/src/pages/tools/gacha-calc.vue'
 import REGISTER from '/src/pages/account/register.vue'
 import LOGIN from '/src/pages/account/login.vue'
 import RETRIEVE from '/src/pages/account/retrieve.vue'
-import IMPORT_BY_SKLAND from '/src/pages/survey/importdata.vue'
 import SURVEY_OPERATOR from '/src/pages/survey/operator.vue'
 import USER_HOME from '/src/pages/account/home.vue'
 import STORE from '/src/pages/material/store.vue'
@@ -491,7 +490,12 @@ const routes = [
         path: '/survey/account/importbyskland',
         text: '导入流程',
         name: 'IMPORT_BY_SKLAND',
-        component: IMPORT_BY_SKLAND,
+        redirect: {
+            name: 'OperatorSurvey',
+            query: {
+                openImport: '1'
+            }
+        },
         meta: {
             title: '导入流程'
         }

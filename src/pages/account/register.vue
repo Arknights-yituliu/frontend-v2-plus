@@ -76,9 +76,14 @@ function toRegister() {
   const param = getParam()
   userAPI.registerV3(param).then(response => {
     localStorage.setItem("USER_TOKEN", response.data.token.toString());
-    createMessage({type:'success',text:'登录成功，即将转跳到森空岛导入页面'})
+    createMessage({type:'success',text:'登录成功，即将转跳到我的干员导入流程'})
     setTimeout(() => {
-      router.push({name:'IMPORT_BY_SKLAND'})
+      router.push({
+        name: 'OperatorSurvey',
+        query: {
+          openImport: '1'
+        }
+      })
     }, 3000)
   })
 }

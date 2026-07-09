@@ -20,8 +20,11 @@ import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operator
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
 import { userInfo } from "/src/utils/user/userInfo.js";
+import { useRoute, useRouter } from "vue-router";
 
 const sectionPanels = ref([])
+const route = useRoute()
+const router = useRouter()
 
 // 森空岛导入相关
 const SKLAND_LINK = 'https://www.skland.com/index'
@@ -62,6 +65,22 @@ function openSklandImportDialog() {
   playBindingList.value = []
   sklandInputText.value = ''
   sklandImportStep.value = 1 // 重置步骤
+}
+
+function openImportFlowFromRoute() {
+  if (route.query.openImport !== '1') {
+    return
+  }
+
+  if (!sectionPanels.value.includes('importExport')) {
+    sectionPanels.value = [...sectionPanels.value, 'importExport']
+  }
+
+  openSklandImportDialog()
+
+  const nextQuery = {...route.query}
+  delete nextQuery.openImport
+  router.replace({query: nextQuery})
 }
 
 function ensureSklandSyncLogin() {
@@ -712,6 +731,7 @@ function getSortNumber(value) {
 
 onMounted(() => {
   getOperatorData()
+  openImportFlowFromRoute()
 });
 
 watch(isUserLoggedIn, (loggedIn) => {
@@ -721,6 +741,10 @@ watch(isUserLoggedIn, (loggedIn) => {
 
   clearGuestOwnFilterDefault()
   refreshDisplayOperatorList()
+})
+
+watch(() => route.query.openImport, () => {
+  openImportFlowFromRoute()
 })
 
 onBeforeUnmount(() => {
