@@ -10,6 +10,10 @@ import operatorTableV2 from '/src/static/json/operator/character_table_simple.v2
 import fallbackItemInfo from '/src/static/json/material/item_info.json'
 import itemCache from '/src/plugins/indexedDB/itemCache.js'
 import { getStageConfig } from '/src/utils/user/userConfig.js'
+import {
+  loadLogicalByteCharacterData,
+  normalizeLogicalByteCharacterData,
+} from '/src/utils/logicalByte/characterData.js'
 
 const T5_MATERIAL_ID_REGEX = /^\d{4}5$/
 const T4_MATERIAL_ID_REGEX = /^\d{4}4$/
@@ -36,14 +40,28 @@ const showSkillT4Materials = ref(false)
 const tableCaptureRef = ref(null)
 const isExportingTable = ref(false)
 
+const uploadedCharacterData = loadUploadedCharacterData()
+const activeOperatorTable = {
+  ...operatorTableV2,
+  ...uploadedCharacterData.operatorTable,
+}
+const activeOperatorCostTable = {
+  ...operatorItemCostTable,
+  ...uploadedCharacterData.operatorCostTable,
+}
+
 const operatorCandidates = computed(() => {
   const keyword = operatorName.value.trim()
   if (!keyword) {
     return []
   }
 
-  return Object.entries(operatorTableV2)
+  return Object.entries(activeOperatorTable)
     .filter(([charId, operator]) => {
+      if (!activeOperatorCostTable[charId]) {
+        return false
+      }
+
       const name = operator.name || operatorTable[charId]?.name || ''
       return name.includes(keyword) || charId.includes(keyword)
     })
@@ -84,8 +102,8 @@ const matchedOperator = computed(() => {
 
   return {
     charId,
-    ...(operatorTableV2[charId] || {}),
-    name: operatorTableV2[charId]?.name || operatorTable[charId]?.name || charId,
+    ...(activeOperatorTable[charId] || {}),
+    name: activeOperatorTable[charId]?.name || operatorTable[charId]?.name || charId,
     rarity: getDisplayRarity(charId),
   }
 })
@@ -139,13 +157,34 @@ function createItemInfoMap(list) {
 }
 
 function getDisplayRarity(charId) {
+  const uploadedRarity = uploadedCharacterData.operatorTable[charId]?.displayRarity
+  if (Number.isFinite(uploadedRarity) && uploadedRarity > 0) {
+    return uploadedRarity
+  }
+
   const rarity = operatorTable[charId]?.rarity
   if (Number.isFinite(rarity)) {
     return rarity
   }
 
-  const zeroBasedRarity = operatorTableV2[charId]?.rarity
+  const zeroBasedRarity = activeOperatorTable[charId]?.rarity
   return Number.isFinite(zeroBasedRarity) ? zeroBasedRarity + 1 : 0
+}
+
+function loadUploadedCharacterData() {
+  try {
+    const saved = loadLogicalByteCharacterData()
+    if (saved?.data) {
+      return normalizeLogicalByteCharacterData(saved.data, operatorTableV2)
+    }
+  } catch (error) {
+    console.error('Failed to load LogicalByte character data:', error)
+  }
+
+  return {
+    operatorTable: {},
+    operatorCostTable: {},
+  }
 }
 
 function isT5Material(itemId) {
@@ -260,7 +299,7 @@ function buildRankingContext(map) {
   const eliteCostsByRarity = new Map()
   const skillCostsByRarity = new Map()
 
-  for (const [charId, operatorCost] of Object.entries(operatorItemCostTable)) {
+  for (const [charId, operatorCost] of Object.entries(activeOperatorCostTable)) {
     const rarity = getDisplayRarity(charId)
     if (!rarity) {
       continue
@@ -310,7 +349,7 @@ function mergeCostObjects(list = []) {
 }
 
 function buildOperatorRows(operator, context, map) {
-  const operatorCost = operatorItemCostTable[operator.charId]
+  const operatorCost = activeOperatorCostTable[operator.charId]
   if (!operatorCost) {
     return []
   }
@@ -330,7 +369,7 @@ function buildOperatorRows(operator, context, map) {
     })
   }
 
-  const skillNameList = operatorTableV2[operator.charId]?.skills || []
+  const skillNameList = activeOperatorTable[operator.charId]?.skills || []
   ;(operatorCost.skills || []).forEach((skillCostList, index) => {
     const mergedCost = mergeCostObjects(skillCostList)
     if (Object.keys(mergedCost).length === 0) {

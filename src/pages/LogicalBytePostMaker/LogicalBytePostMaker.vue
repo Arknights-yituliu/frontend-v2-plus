@@ -50,6 +50,11 @@ const pages = [
     to: '/lb/card-maker'
   },
   {
+    title: '封面制作器',
+    description: '制作 LogicalByte 封面图片',
+    to: '/lb/cover-maker'
+  },
+  {
     title: '图片标记器',
     description: '上传底图后，用彩色 tag 和说明条快速做图',
     to: '/lb/image-tagger'

@@ -259,6 +259,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/cover-maker',
+        text: '封面制作器',
+        name: 'CoverMaker',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/CoverMaker.vue'),
+        meta: {
+            title: '封面制作器'
+        }
+    },
+    {
         path: '/lb/image-tagger',
         text: '图片标记器',
         name: 'ImageTagger',
