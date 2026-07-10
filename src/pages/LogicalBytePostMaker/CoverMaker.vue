@@ -37,6 +37,30 @@
             <h2>封面预览</h2>
           </div>
           <div class="preview-header-actions">
+            <div class="canvas-mode-switch" role="group" aria-label="封面方向">
+              <button
+                type="button"
+                :disabled="isExporting"
+                :class="{ active: canvasMode === 'landscape' }"
+                :aria-pressed="canvasMode === 'landscape'"
+                title="切换为横版封面"
+                @click="switchCanvasMode('landscape')"
+              >
+                <span class="mdi mdi-monitor" aria-hidden="true"></span>
+                横版
+              </button>
+              <button
+                type="button"
+                :disabled="isExporting"
+                :class="{ active: canvasMode === 'portrait' }"
+                :aria-pressed="canvasMode === 'portrait'"
+                title="切换为 3:4 竖版封面"
+                @click="switchCanvasMode('portrait')"
+              >
+                <span class="mdi mdi-cellphone" aria-hidden="true"></span>
+                竖版
+              </button>
+            </div>
             <button
               class="preview-guide-button"
               :class="{ active: showReferenceGuides }"
@@ -48,7 +72,7 @@
               <span class="mdi mdi-crop-free" aria-hidden="true"></span>
               参考线
             </button>
-            <span class="preview-size">{{ CANVAS_WIDTH }} × {{ CANVAS_HEIGHT }}</span>
+            <span class="preview-size">{{ canvasWidth }} × {{ canvasHeight }}</span>
           </div>
         </div>
 
@@ -56,14 +80,17 @@
           <div
             class="cover-frame"
             :style="{
-              width: `${CANVAS_WIDTH * previewScale}px`,
-              height: `${CANVAS_HEIGHT * previewScale}px`
+              width: `${canvasWidth * previewScale}px`,
+              height: `${canvasHeight * previewScale}px`
             }"
           >
             <div
               ref="coverCanvasRef"
               class="cover-canvas"
-              :class="{ 'is-exporting': isExporting }"
+              :class="{
+                'is-exporting': isExporting,
+                'is-portrait': isPortrait
+              }"
               :style="canvasStyle"
               data-cover-canvas="main"
               @pointerdown="clearSelection"
@@ -166,13 +193,13 @@
         </div>
 
         <section class="thumbnail-preview-section" aria-label="小图预览">
-          <div class="thumbnail-preview-grid">
+          <div class="thumbnail-preview-grid" :class="{ portrait: isPortrait }">
             <figure class="thumbnail-preview-item">
               <figcaption>
                 <strong>原图</strong>
-                <span>16:9</span>
+                <span>{{ isPortrait ? '3:4' : '16:9' }}</span>
               </figcaption>
-              <div class="thumbnail-image-frame original">
+              <div class="thumbnail-image-frame original" :class="{ portrait: isPortrait }">
                 <img
                   v-if="thumbnailPreviewUrl"
                   :src="thumbnailPreviewUrl"
@@ -182,7 +209,7 @@
               </div>
             </figure>
 
-            <figure class="thumbnail-preview-item">
+            <figure v-if="!isPortrait" class="thumbnail-preview-item">
               <figcaption>
                 <strong>裁剪预览</strong>
                 <span>4:3</span>
@@ -371,7 +398,7 @@
                         @click="resetValue(
                           backgroundSettings,
                           'patternX',
-                          backgroundDefaults.patternX
+                          activeLayoutDefaults.background.patternX
                         )"
                       >
                         <span class="mdi mdi-restore" aria-hidden="true"></span>
@@ -380,8 +407,8 @@
                   </div>
                   <el-slider
                     v-model="backgroundSettings.patternX"
-                    :min="-900"
-                    :max="900"
+                    :min="patternXMin"
+                    :max="patternXMax"
                     :disabled="!backgroundSettings.showPattern"
                   />
                 </div>
@@ -398,7 +425,7 @@
                         @click="resetValue(
                           backgroundSettings,
                           'patternY',
-                          backgroundDefaults.patternY
+                          activeLayoutDefaults.background.patternY
                         )"
                       >
                         <span class="mdi mdi-restore" aria-hidden="true"></span>
@@ -407,8 +434,8 @@
                   </div>
                   <el-slider
                     v-model="backgroundSettings.patternY"
-                    :min="-500"
-                    :max="500"
+                    :min="patternYMin"
+                    :max="patternYMax"
                     :disabled="!backgroundSettings.showPattern"
                   />
                 </div>
@@ -507,13 +534,21 @@
                           type="button"
                           title="重置水平位置"
                           aria-label="重置水平位置"
-                          @click.stop="resetValue(artwork, 'x', artworkDefaults[index].x)"
+                          @click.stop="resetValue(
+                            artwork,
+                            'x',
+                            activeLayoutDefaults.artworks[index].x
+                          )"
                         >
                           <span class="mdi mdi-restore" aria-hidden="true"></span>
                         </button>
                       </div>
                     </div>
-                    <el-slider v-model="artwork.x" :min="-400" :max="2320" />
+                    <el-slider
+                      v-model="artwork.x"
+                      :min="artworkXMin"
+                      :max="artworkXMax"
+                    />
                   </div>
                   <div class="control-field">
                     <div class="field-label">
@@ -525,13 +560,21 @@
                           type="button"
                           title="重置垂直位置"
                           aria-label="重置垂直位置"
-                          @click.stop="resetValue(artwork, 'y', artworkDefaults[index].y)"
+                          @click.stop="resetValue(
+                            artwork,
+                            'y',
+                            activeLayoutDefaults.artworks[index].y
+                          )"
                         >
                           <span class="mdi mdi-restore" aria-hidden="true"></span>
                         </button>
                       </div>
                     </div>
-                    <el-slider v-model="artwork.y" :min="-200" :max="1280" />
+                    <el-slider
+                      v-model="artwork.y"
+                      :min="artworkYMin"
+                      :max="artworkYMax"
+                    />
                   </div>
                   <div class="control-field">
                     <div class="field-label">
@@ -543,7 +586,11 @@
                           type="button"
                           title="重置缩放"
                           aria-label="重置缩放"
-                          @click.stop="resetValue(artwork, 'scale', artworkDefaults[index].scale)"
+                          @click.stop="resetValue(
+                            artwork,
+                            'scale',
+                            activeLayoutDefaults.artworks[index].scale
+                          )"
                         >
                           <span class="mdi mdi-restore" aria-hidden="true"></span>
                         </button>
@@ -668,7 +715,7 @@
                         @click.stop="resetValue(
                           textSettings,
                           group.fontSizeKey,
-                          textDefaults[group.fontSizeKey]
+                          getTextDefaultValue(group.fontSizeKey)
                         )"
                       >
                         <span class="mdi mdi-restore" aria-hidden="true"></span>
@@ -721,13 +768,17 @@
                         type="button"
                         title="重置水平位置"
                         aria-label="重置水平位置"
-                        @click.stop="resetValue(textSettings, 'x', textDefaults.x)"
+                        @click.stop="resetValue(
+                          textSettings,
+                          'x',
+                          activeLayoutDefaults.text.x
+                        )"
                       >
                         <span class="mdi mdi-restore" aria-hidden="true"></span>
                       </button>
                     </div>
                   </div>
-                  <el-slider v-model="textSettings.x" :min="0" :max="1500" />
+                  <el-slider v-model="textSettings.x" :min="0" :max="textXMax" />
                 </div>
                 <div class="control-field">
                   <div class="field-label">
@@ -739,13 +790,39 @@
                         type="button"
                         title="重置垂直位置"
                         aria-label="重置垂直位置"
-                        @click.stop="resetValue(textSettings, 'y', textDefaults.y)"
+                        @click.stop="resetValue(
+                          textSettings,
+                          'y',
+                          activeLayoutDefaults.text.y
+                        )"
                       >
                         <span class="mdi mdi-restore" aria-hidden="true"></span>
                       </button>
                     </div>
                   </div>
-                  <el-slider v-model="textSettings.y" :min="0" :max="900" />
+                  <el-slider v-model="textSettings.y" :min="0" :max="textYMax" />
+                </div>
+                <div v-if="isPortrait" class="control-field">
+                  <div class="field-label">
+                    <label>整体缩放</label>
+                    <div class="field-value-actions">
+                      <span>{{ Math.round(textSettings.scale) }}%</span>
+                      <button
+                        class="field-reset-button"
+                        type="button"
+                        title="重置整体缩放"
+                        aria-label="重置整体缩放"
+                        @click.stop="resetValue(
+                          textSettings,
+                          'scale',
+                          activeLayoutDefaults.text.scale
+                        )"
+                      >
+                        <span class="mdi mdi-restore" aria-hidden="true"></span>
+                      </button>
+                    </div>
+                  </div>
+                  <el-slider v-model="textSettings.scale" :min="60" :max="160" />
                 </div>
               </section>
 
@@ -815,13 +892,17 @@
                             type="button"
                             title="重置水平位置"
                             aria-label="重置水平位置"
-                            @click.stop="resetValue(icon, 'x', iconDefaults[index].x)"
+                            @click.stop="resetValue(
+                              icon,
+                              'x',
+                              activeLayoutDefaults.icons[index].x
+                            )"
                           >
                             <span class="mdi mdi-restore" aria-hidden="true"></span>
                           </button>
                         </div>
                       </div>
-                      <el-slider v-model="icon.x" :min="0" :max="1920" />
+                      <el-slider v-model="icon.x" :min="0" :max="canvasWidth" />
                     </div>
                     <div class="control-field">
                       <div class="field-label">
@@ -833,13 +914,17 @@
                             type="button"
                             title="重置垂直位置"
                             aria-label="重置垂直位置"
-                            @click.stop="resetValue(icon, 'y', iconDefaults[index].y)"
+                            @click.stop="resetValue(
+                              icon,
+                              'y',
+                              activeLayoutDefaults.icons[index].y
+                            )"
                           >
                             <span class="mdi mdi-restore" aria-hidden="true"></span>
                           </button>
                         </div>
                       </div>
-                      <el-slider v-model="icon.y" :min="0" :max="1080" />
+                      <el-slider v-model="icon.y" :min="0" :max="canvasHeight" />
                     </div>
                     <div class="control-field">
                       <div class="field-label">
@@ -851,7 +936,11 @@
                             type="button"
                             title="重置尺寸"
                             aria-label="重置尺寸"
-                            @click.stop="resetValue(icon, 'size', iconDefaults[index].size)"
+                            @click.stop="resetValue(
+                              icon,
+                              'size',
+                              activeLayoutDefaults.icons[index].size
+                            )"
                           >
                             <span class="mdi mdi-restore" aria-hidden="true"></span>
                           </button>
@@ -886,10 +975,16 @@ import { RouterLink } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import Dexie from 'dexie'
 
-const CANVAS_WIDTH = 1920
-const CANVAS_HEIGHT = 1080
-const FOUR_THREE_CROP_WIDTH = CANVAS_HEIGHT * 4 / 3
-const FOUR_THREE_CROP_INSET = (CANVAS_WIDTH - FOUR_THREE_CROP_WIDTH) / 2
+const canvasPresets = {
+  landscape: {
+    width: 1920,
+    height: 1080
+  },
+  portrait: {
+    width: 1440,
+    height: 1920
+  }
+}
 const ARTWORK_BLUR_MAX_RADIUS = 40
 
 const artworkDefaults = [
@@ -905,6 +1000,17 @@ const artworkLayerDefaults = {
 const iconDefaults = [
   { x: 1690, y: 950, size: 130 },
   { x: 1840, y: 950, size: 130 }
+]
+
+const portraitArtworkDefaults = [
+  { x: 360, y: 980, scale: 82 },
+  { x: 760, y: 900, scale: 108 },
+  { x: 1110, y: 1000, scale: 78 }
+]
+
+const portraitIconDefaults = [
+  { x: 1110, y: 1780, size: 130 },
+  { x: 1270, y: 1780, size: 130 }
 ]
 
 const backgroundDefaults = {
@@ -965,11 +1071,47 @@ const textDefaults = {
   titleTwoLetterSpacing: -4,
   x: 170,
   y: 535,
+  scale: 100,
   titleOneFirstColor: '#f6f7f8',
   titleOneSecondColor: '#d9ff24',
   titleTwoFirstColor: '#ffd75e',
   titleTwoSecondColor: '#f6f7f8',
   ampersandColor: '#ff4e55'
+}
+
+const layoutDefaults = {
+  landscape: {
+    background: {
+      patternX: backgroundDefaults.patternX,
+      patternY: backgroundDefaults.patternY
+    },
+    artworks: artworkDefaults,
+    text: {
+      x: textDefaults.x,
+      y: textDefaults.y,
+      scale: textDefaults.scale,
+      eyebrowSize: textDefaults.eyebrowSize,
+      titleOneSize: textDefaults.titleOneSize,
+      titleTwoSize: textDefaults.titleTwoSize
+    },
+    icons: iconDefaults
+  },
+  portrait: {
+    background: {
+      patternX: -380,
+      patternY: 120
+    },
+    artworks: portraitArtworkDefaults,
+    text: {
+      x: 90,
+      y: 1400,
+      scale: 110,
+      eyebrowSize: 54,
+      titleOneSize: 118,
+      titleTwoSize: 118
+    },
+    icons: portraitIconDefaults
+  }
 }
 
 const textFontGroups = [
@@ -1011,9 +1153,19 @@ coverDraftDb.version(1).stores({
   drafts: 'id, updatedAt'
 })
 
+function cloneLayoutProfile(profile) {
+  return {
+    background: { ...profile.background },
+    artworks: profile.artworks.map((artwork) => ({ ...artwork })),
+    text: { ...profile.text },
+    icons: profile.icons.map((icon) => ({ ...icon }))
+  }
+}
+
 const previewViewportRef = ref(null)
 const coverCanvasRef = ref(null)
 const previewScale = ref(0.5)
+const canvasMode = ref('landscape')
 const showReferenceGuides = ref(false)
 const thumbnailPreviewUrl = ref('')
 const isThumbnailRendering = ref(false)
@@ -1063,6 +1215,26 @@ const icons = reactive(
 
 const textSettings = reactive({ ...textDefaults })
 
+const layoutProfiles = reactive({
+  landscape: cloneLayoutProfile(layoutDefaults.landscape),
+  portrait: cloneLayoutProfile(layoutDefaults.portrait)
+})
+
+const activeCanvasPreset = computed(() => canvasPresets[canvasMode.value])
+const activeLayoutDefaults = computed(() => layoutDefaults[canvasMode.value])
+const canvasWidth = computed(() => activeCanvasPreset.value.width)
+const canvasHeight = computed(() => activeCanvasPreset.value.height)
+const isPortrait = computed(() => canvasMode.value === 'portrait')
+const patternXMin = computed(() => -Math.round(canvasWidth.value * 0.5))
+const patternXMax = computed(() => Math.round(canvasWidth.value * 0.5))
+const patternYMin = computed(() => -Math.round(canvasHeight.value * 0.5))
+const patternYMax = computed(() => Math.round(canvasHeight.value * 0.5))
+const artworkXMin = computed(() => -Math.round(canvasWidth.value * 0.25))
+const artworkXMax = computed(() => Math.round(canvasWidth.value * 1.2))
+const artworkYMin = computed(() => -Math.round(canvasHeight.value * 0.2))
+const artworkYMax = computed(() => Math.round(canvasHeight.value * 1.2))
+const textXMax = computed(() => Math.max(0, canvasWidth.value - 120))
+const textYMax = computed(() => Math.max(0, canvasHeight.value - 120))
 const visibleArtworks = computed(() => artworks.filter((artwork) => artwork.src && artwork.visible))
 const visibleIcons = computed(() => icons.filter((icon) => icon.src && icon.visible))
 const hasArtwork = computed(() => visibleArtworks.value.length > 0)
@@ -1087,19 +1259,36 @@ const canvasStyle = computed(() => ({
     : 0,
   '--pattern-offset-x': `${backgroundSettings.patternX}px`,
   '--pattern-offset-y': `${backgroundSettings.patternY}px`,
-  transform: isExporting.value ? 'none' : `scale(${previewScale.value})`
+  width: `${canvasWidth.value}px`,
+  height: `${canvasHeight.value}px`,
+  transform: `scale(${previewScale.value})`
 }))
 
-const referenceGuideStyle = computed(() => ({
-  '--crop-guide-left': `${FOUR_THREE_CROP_INSET}px`,
-  '--crop-guide-right': `${CANVAS_WIDTH - FOUR_THREE_CROP_INSET}px`,
-  '--safe-guide-top': `${CANVAS_HEIGHT * 0.15}px`,
-  '--safe-guide-bottom': `${CANVAS_HEIGHT * 0.85}px`
-}))
+const referenceGuideStyle = computed(() => {
+  if (isPortrait.value) {
+    return {
+      '--crop-guide-left': `${canvasWidth.value * 0.15}px`,
+      '--crop-guide-right': `${canvasWidth.value * 0.85}px`,
+      '--safe-guide-top': `${canvasHeight.value * 0.15}px`,
+      '--safe-guide-bottom': `${canvasHeight.value * 0.85}px`
+    }
+  }
+
+  const cropWidth = canvasHeight.value * 4 / 3
+  const cropInset = (canvasWidth.value - cropWidth) / 2
+
+  return {
+    '--crop-guide-left': `${cropInset}px`,
+    '--crop-guide-right': `${canvasWidth.value - cropInset}px`,
+    '--safe-guide-top': `${canvasHeight.value * 0.15}px`,
+    '--safe-guide-bottom': `${canvasHeight.value * 0.85}px`
+  }
+})
 
 const textBlockStyle = computed(() => ({
   left: `${textSettings.x}px`,
   top: `${textSettings.y}px`,
+  transform: `scale(${textSettings.scale / 100})`,
   '--eyebrow-font-family': textSettings.eyebrowFontFamily,
   '--title-one-font-family': textSettings.titleOneFontFamily,
   '--title-two-font-family': textSettings.titleTwoFontFamily,
@@ -1123,7 +1312,7 @@ function getArtworkStyle(artwork) {
   return {
     left: `${artwork.x}px`,
     top: `${artwork.y}px`,
-    height: `${CANVAS_HEIGHT * artwork.scale / 100}px`,
+    height: `${canvasHeight.value * artwork.scale / 100}px`,
     zIndex: artworks.indexOf(artwork) + 2
   }
 }
@@ -1142,7 +1331,12 @@ function updatePreviewScale() {
   if (!viewport) return
 
   const availableWidth = Math.max(280, viewport.clientWidth - 48)
-  previewScale.value = Math.min(1, availableWidth / CANVAS_WIDTH)
+  const availableHeight = Math.max(360, window.innerHeight - 260)
+  previewScale.value = Math.min(
+    1,
+    availableWidth / canvasWidth.value,
+    availableHeight / canvasHeight.value
+  )
 }
 
 function readFileAsDataUrl(file) {
@@ -1352,12 +1546,110 @@ function removeIcon(icon) {
   }
 }
 
+function getTextDefaultValue(key) {
+  if (Object.prototype.hasOwnProperty.call(activeLayoutDefaults.value.text, key)) {
+    return activeLayoutDefaults.value.text[key]
+  }
+
+  return textDefaults[key]
+}
+
+function captureLayoutProfile(mode = canvasMode.value) {
+  const profile = layoutProfiles[mode]
+  if (!profile) return
+
+  Object.assign(profile.background, {
+    patternX: backgroundSettings.patternX,
+    patternY: backgroundSettings.patternY
+  })
+
+  artworks.forEach((artwork, index) => {
+    if (!profile.artworks[index]) return
+    Object.assign(profile.artworks[index], {
+      x: artwork.x,
+      y: artwork.y,
+      scale: artwork.scale
+    })
+  })
+
+  Object.assign(profile.text, {
+    x: textSettings.x,
+    y: textSettings.y,
+    scale: textSettings.scale,
+    eyebrowSize: textSettings.eyebrowSize,
+    titleOneSize: textSettings.titleOneSize,
+    titleTwoSize: textSettings.titleTwoSize
+  })
+
+  icons.forEach((icon, index) => {
+    if (!profile.icons[index]) return
+    Object.assign(profile.icons[index], {
+      x: icon.x,
+      y: icon.y,
+      size: icon.size
+    })
+  })
+}
+
+function applyLayoutProfile(mode = canvasMode.value) {
+  const profile = layoutProfiles[mode]
+  if (!profile) return
+
+  Object.assign(backgroundSettings, profile.background)
+  artworks.forEach((artwork, index) => {
+    if (profile.artworks[index]) {
+      Object.assign(artwork, profile.artworks[index])
+    }
+  })
+  Object.assign(textSettings, profile.text)
+  icons.forEach((icon, index) => {
+    if (profile.icons[index]) {
+      Object.assign(icon, profile.icons[index])
+    }
+  })
+}
+
+function restoreLayoutProfile(mode, savedProfile) {
+  const restoredProfile = cloneLayoutProfile(layoutDefaults[mode])
+  if (!savedProfile) {
+    layoutProfiles[mode] = restoredProfile
+    return
+  }
+
+  Object.assign(restoredProfile.background, savedProfile.background)
+  savedProfile.artworks?.forEach((savedArtwork, index) => {
+    if (restoredProfile.artworks[index]) {
+      Object.assign(restoredProfile.artworks[index], savedArtwork)
+    }
+  })
+  Object.assign(restoredProfile.text, savedProfile.text)
+  savedProfile.icons?.forEach((savedIcon, index) => {
+    if (restoredProfile.icons[index]) {
+      Object.assign(restoredProfile.icons[index], savedIcon)
+    }
+  })
+  layoutProfiles[mode] = restoredProfile
+}
+
+async function switchCanvasMode(nextMode) {
+  if (!canvasPresets[nextMode] || nextMode === canvasMode.value) return
+
+  captureLayoutProfile()
+  canvasMode.value = nextMode
+  applyLayoutProfile()
+  selectedItemId.value = ''
+
+  await nextTick()
+  updatePreviewScale()
+  scheduleThumbnailRender(0)
+}
+
 function resetArtwork(artwork, index) {
-  Object.assign(artwork, artworkDefaults[index])
+  Object.assign(artwork, activeLayoutDefaults.value.artworks[index])
 }
 
 function resetIcon(icon, index) {
-  Object.assign(icon, iconDefaults[index])
+  Object.assign(icon, activeLayoutDefaults.value.icons[index])
 }
 
 function resetValue(target, key, value) {
@@ -1467,6 +1759,17 @@ function prepareClonedCover(clonedDocument, mode) {
   const clonedCanvas = clonedDocument.querySelector('[data-cover-canvas="main"]')
   if (!clonedCanvas) return
 
+  const nativeWidth = `${canvasWidth.value}px`
+  const nativeHeight = `${canvasHeight.value}px`
+  const clonedFrame = clonedCanvas.closest('.cover-frame')
+
+  if (clonedFrame) {
+    clonedFrame.style.width = nativeWidth
+    clonedFrame.style.height = nativeHeight
+  }
+
+  clonedCanvas.style.width = nativeWidth
+  clonedCanvas.style.height = nativeHeight
   clonedCanvas.style.transform = 'none'
   clonedCanvas.classList.add('is-exporting')
 
@@ -1491,8 +1794,8 @@ function prepareClonedCover(clonedDocument, mode) {
 function renderCoverLayer(html2canvas, scale, mode = 'full') {
   return html2canvas(coverCanvasRef.value, {
     backgroundColor: null,
-    width: CANVAS_WIDTH,
-    height: CANVAS_HEIGHT,
+    width: canvasWidth.value,
+    height: canvasHeight.value,
     scale,
     useCORS: true,
     logging: false,
@@ -1605,7 +1908,7 @@ async function renderThumbnailPreview(revision) {
       document.fonts?.ready || Promise.resolve()
     ])
 
-    const canvas = await renderCoverSnapshot(4 / 15)
+    const canvas = await renderCoverSnapshot(288 / canvasHeight.value)
 
     if (revision === thumbnailRenderRevision) {
       thumbnailPreviewUrl.value = canvas.toDataURL('image/png')
@@ -1642,7 +1945,7 @@ async function exportCover() {
     link.download = `${exportFileName.value.trim() || 'logical-byte-cover'}.png`
     link.href = canvas.toDataURL('image/png')
     link.click()
-    ElMessage.success('1920 × 1080 PNG 已导出')
+    ElMessage.success(`${canvasWidth.value} × ${canvasHeight.value} PNG 已导出`)
   } catch (error) {
     ElMessage.error(error.message || '封面导出失败')
   } finally {
@@ -1664,6 +1967,9 @@ async function resetDraft() {
   Object.assign(backgroundSettings, backgroundDefaults)
   Object.assign(artworkLayerSettings, artworkLayerDefaults)
   clearMonetColors()
+  layoutProfiles.landscape = cloneLayoutProfile(layoutDefaults.landscape)
+  layoutProfiles.portrait = cloneLayoutProfile(layoutDefaults.portrait)
+  canvasMode.value = 'landscape'
 
   artworks.forEach((artwork, index) => {
     Object.assign(artwork, {
@@ -1684,16 +1990,27 @@ async function resetDraft() {
   })
 
   Object.assign(textSettings, textDefaults)
+  applyLayoutProfile()
 
   selectedItemId.value = ''
   showReferenceGuides.value = false
   exportFileName.value = 'logical-byte-cover'
+
+  await nextTick()
+  updatePreviewScale()
 }
 
 function getDraftPayload() {
+  captureLayoutProfile()
+
   return {
     id: DRAFT_ID,
     updatedAt: new Date().toISOString(),
+    canvasMode: canvasMode.value,
+    layoutProfiles: {
+      landscape: cloneLayoutProfile(layoutProfiles.landscape),
+      portrait: cloneLayoutProfile(layoutProfiles.portrait)
+    },
     backgroundSettings: { ...backgroundSettings },
     monetSource: { ...monetSource },
     monetSchemes: monetSchemes.map((scheme) => ({ ...scheme })),
@@ -1803,6 +2120,17 @@ async function restoreDraft() {
       })
     })
 
+    captureLayoutProfile('landscape')
+    if (draft.layoutProfiles) {
+      restoreLayoutProfile('landscape', draft.layoutProfiles.landscape)
+      restoreLayoutProfile('portrait', draft.layoutProfiles.portrait)
+    }
+
+    canvasMode.value = canvasPresets[draft.canvasMode]
+      ? draft.canvasMode
+      : 'landscape'
+    applyLayoutProfile()
+
     if (typeof draft.exportFileName === 'string') {
       exportFileName.value = draft.exportFileName
     }
@@ -1866,6 +2194,7 @@ watch(
     artworks,
     textSettings,
     icons,
+    canvasMode,
     showReferenceGuides,
     exportFileName
   ],
@@ -1874,7 +2203,7 @@ watch(
 )
 
 watch(
-  [backgroundSettings, artworkLayerSettings, artworks, textSettings, icons],
+  [backgroundSettings, artworkLayerSettings, artworks, textSettings, icons, canvasMode],
   () => scheduleThumbnailRender(),
   { deep: true }
 )
@@ -1883,18 +2212,22 @@ let resizeObserver = null
 
 onMounted(async () => {
   updatePreviewScale()
+  window.addEventListener('resize', updatePreviewScale)
   resizeObserver = new ResizeObserver(updatePreviewScale)
   if (previewViewportRef.value) {
     resizeObserver.observe(previewViewportRef.value)
   }
 
   await restoreDraft()
+  await nextTick()
+  updatePreviewScale()
   isDraftReady.value = true
   scheduleThumbnailRender(0)
 })
 
 onBeforeUnmount(() => {
   resizeObserver?.disconnect()
+  window.removeEventListener('resize', updatePreviewScale)
   stopDrag()
   window.removeEventListener('pointerup', stopDrag)
 
@@ -2104,6 +2437,47 @@ onBeforeUnmount(() => {
   gap: 12px;
 }
 
+.canvas-mode-switch {
+  display: inline-flex;
+  height: 32px;
+  padding: 2px;
+  align-items: stretch;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  background: #1c222a;
+}
+
+.canvas-mode-switch button {
+  display: inline-flex;
+  min-width: 58px;
+  padding: 0 8px;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.canvas-mode-switch button.active {
+  background: #a8cf48;
+  color: #11160d;
+}
+
+.canvas-mode-switch button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.canvas-mode-switch .mdi {
+  font-size: 16px;
+}
+
 .preview-guide-button {
   display: inline-flex;
   height: 32px;
@@ -2152,8 +2526,6 @@ onBeforeUnmount(() => {
   position: absolute;
   top: 0;
   left: 0;
-  width: 1920px;
-  height: 1080px;
   overflow: hidden;
   transform-origin: top left;
   background: var(--background-color);
@@ -2520,6 +2892,7 @@ onBeforeUnmount(() => {
   display: grid;
   justify-items: start;
   gap: 13px;
+  transform-origin: top left;
   cursor: grab;
   user-select: none;
 }
@@ -2597,6 +2970,20 @@ onBeforeUnmount(() => {
   line-height: 0.55;
 }
 
+.cover-canvas.is-portrait .copy-line {
+  padding-right: 28px;
+  padding-left: 32px;
+}
+
+.cover-canvas.is-portrait .copy-line-secondary {
+  margin-left: 58px;
+}
+
+.cover-canvas.is-portrait .copy-line strong {
+  margin-right: 14px;
+  margin-left: -58px;
+}
+
 .empty-canvas-hint {
   position: absolute;
   z-index: 20;
@@ -2617,6 +3004,13 @@ onBeforeUnmount(() => {
 .empty-canvas-hint strong {
   font-size: 25px;
   letter-spacing: 0;
+}
+
+.cover-canvas.is-portrait .empty-canvas-hint {
+  top: 42%;
+  right: auto;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .cover-canvas.is-exporting .is-selected {
@@ -2680,6 +3074,11 @@ onBeforeUnmount(() => {
   align-items: end;
 }
 
+.thumbnail-preview-grid.portrait {
+  grid-template-columns: 216px;
+  max-width: 216px;
+}
+
 .thumbnail-preview-item {
   min-width: 0;
   margin: 0;
@@ -2712,6 +3111,10 @@ onBeforeUnmount(() => {
 
 .thumbnail-image-frame.original {
   aspect-ratio: 16 / 9;
+}
+
+.thumbnail-image-frame.original.portrait {
+  aspect-ratio: 3 / 4;
 }
 
 .thumbnail-image-frame.cropped {
@@ -3188,6 +3591,16 @@ onBeforeUnmount(() => {
 
   .preview-header-actions {
     gap: 7px;
+  }
+
+  .canvas-mode-switch button {
+    min-width: 32px;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .canvas-mode-switch .mdi {
+    font-size: 17px;
   }
 
   .preview-guide-button {
