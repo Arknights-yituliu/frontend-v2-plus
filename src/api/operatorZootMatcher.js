@@ -54,20 +54,25 @@ async function fetchOperatorZootMatcherJson(url, options = {}, timeoutMs = DEFAU
     }
 }
 
-async function queryOperatorZootMatcherJobPage({ stageKeyword, page, limit = DEFAULT_LIMIT }) {
+async function queryOperatorZootMatcherJobPage({ keyword, queryMode, page, limit = DEFAULT_LIMIT }) {
+    const keywordQuery = queryMode === 'document'
+        ? { document: keyword }
+        : { levelKeyword: keyword }
+
     return fetchOperatorZootMatcherJson(
         buildOperatorZootMatcherUrl('/copilot/query', {
             limit,
             page,
-            level_keyword: stageKeyword,
+            ...keywordQuery,
             order_by: 'hot',
             desc: true,
         }),
     )
 }
 
-async function searchOperatorZootMatcherJobsByStage(stageKeyword, options = {}) {
-    const keyword = stageKeyword?.trim()
+async function searchOperatorZootMatcherJobs(searchKeyword, options = {}) {
+    const keyword = searchKeyword?.trim()
+    const queryMode = options.queryMode === 'document' ? 'document' : 'level'
     const limit = options.limit ?? DEFAULT_LIMIT
     const startPage = Math.max(1, Math.floor(Number(options.startPage) || 1))
     const pageCount = Math.max(1, Math.floor(Number(options.pageCount ?? options.maxPages) || DEFAULT_MAX_PAGES))
@@ -90,7 +95,8 @@ async function searchOperatorZootMatcherJobsByStage(stageKeyword, options = {}) 
 
     while (hasNext && page <= endPage) {
         const data = await queryOperatorZootMatcherJobPage({
-            stageKeyword: keyword,
+            keyword,
+            queryMode,
             page,
             limit,
         })
@@ -122,5 +128,5 @@ export {
     OPERATOR_ZOOT_MATCHER_API_BASE,
     buildOperatorZootMatcherJobApiUrl,
     listOperatorZootMatcherStageInfo,
-    searchOperatorZootMatcherJobsByStage,
+    searchOperatorZootMatcherJobs,
 }
