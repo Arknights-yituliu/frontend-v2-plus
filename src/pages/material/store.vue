@@ -290,6 +290,8 @@ onMounted(() => {
 
 <style lang="scss">
 #store {
+  max-width: 1320px;
+
   .op_title {
     display: flex;
   }
@@ -329,6 +331,8 @@ onMounted(() => {
 }
 
 #actStore {
+  max-width: 1320px;
+
   p {
     margin: 0;
   }
@@ -362,9 +366,6 @@ onMounted(() => {
   }
 
   &.activity-store-dev-mode {
-    width: fit-content;
-    max-width: 100%;
-
     .activity-store-good {
       background: #ffffff;
       box-shadow: none;
@@ -372,17 +373,11 @@ onMounted(() => {
   }
 
   &.activity-store-layout-4 {
-    .activity-store-content {
-      width: fit-content;
-      max-width: 744px;
-    }
+    max-width: 744px;
   }
 
   &.activity-store-layout-5 {
-    .activity-store-content {
-      width: fit-content;
-      max-width: 930px;
-    }
+    max-width: 930px;
   }
 
   .act_content {
