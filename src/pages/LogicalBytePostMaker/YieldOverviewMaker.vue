@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import ItemImage from '/src/components/sprite/ItemImage.vue'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
@@ -31,14 +31,56 @@ const ELITE_LEVELING_COST_BY_RARITY = {
 const LMD_ITEM_ID = '4001'
 const BASIC_BATTLE_RECORD_ITEM_ID = '2001'
 const BASIC_BATTLE_RECORD_EXP = 200
+const SETTINGS_STORAGE_KEY = 'logicalByte_yieldOverview_settings_v1'
+const PORTRAIT_BASE_URL = 'https://torappu.prts.wiki/assets/char_portrait'
+const PORTRAIT_DB_NAME = 'logicalByteYieldOverview'
+const PORTRAIT_STORE_NAME = 'operatorPortraits'
+const DEFAULT_LAYOUT_SETTINGS = Object.freeze({
+  materialColumnWidth: 315,
+  rowHeight: 96,
+  materialGapX: 10,
+  materialGapY: 8,
+  portraitColumnWidth: 220,
+  portraitScale: 100,
+  portraitOffsetX: 0,
+  portraitOffsetY: 0,
+})
+const layoutControls = [
+  { key: 'materialColumnWidth', label: '主要材料栏宽', min: 180, max: 600, step: 5 },
+  { key: 'rowHeight', label: '内容行高', min: 80, max: 160, step: 2 },
+  { key: 'materialGapX', label: '图标横间距', min: 0, max: 30, step: 1 },
+  { key: 'materialGapY', label: '图标纵间距', min: 0, max: 30, step: 1 },
+]
+const portraitLayoutControls = [
+  { key: 'portraitColumnWidth', label: '立绘区域宽度', min: 150, max: 400, step: 5 },
+  { key: 'portraitScale', label: '立绘大小', min: 50, max: 200, step: 5, unit: '%' },
+  { key: 'portraitOffsetX', label: '水平位置', min: -150, max: 150, step: 5 },
+  { key: 'portraitOffsetY', label: '垂直位置', min: -150, max: 150, step: 5 },
+]
 
-const operatorName = ref('斯卡蒂')
-const selectedOperatorId = ref('')
+const savedSettings = loadYieldOverviewSettings()
+const operatorName = ref(savedSettings.operatorName)
+const selectedOperatorId = ref(savedSettings.selectedOperatorId)
 const itemInfoMap = ref(createItemInfoMap(fallbackItemInfo))
 const itemValueLoading = ref(false)
-const showSkillT4Materials = ref(false)
+const showSkillT4Materials = ref(savedSettings.showSkillT4Materials)
 const tableCaptureRef = ref(null)
 const isExportingTable = ref(false)
+const layoutSettings = ref(savedSettings.layoutSettings)
+const manualPortraitUrl = ref('')
+const manualPortraitFileName = ref('')
+const autoPortraitFailed = ref(false)
+const autoPortraitLoaded = ref(false)
+const portraitLoading = ref(false)
+let portraitObjectUrl = ''
+let portraitLoadVersion = 0
+let portraitDbPromise = null
+
+watch(
+  [operatorName, selectedOperatorId, showSkillT4Materials, layoutSettings],
+  saveYieldOverviewSettings,
+  { deep: true, immediate: true },
+)
 
 const uploadedCharacterData = loadUploadedCharacterData()
 const activeOperatorTable = {
@@ -108,6 +150,36 @@ const matchedOperator = computed(() => {
   }
 })
 
+const autoPortraitUrl = computed(() => {
+  if (!matchedOperatorId.value || autoPortraitFailed.value) {
+    return ''
+  }
+
+  return `${PORTRAIT_BASE_URL}/${matchedOperatorId.value}_1.png`
+})
+
+const portraitSource = computed(() => manualPortraitUrl.value || autoPortraitUrl.value)
+
+const portraitStatusText = computed(() => {
+  if (!matchedOperator.value) {
+    return '请先选择干员'
+  }
+
+  if (portraitLoading.value) {
+    return '正在读取已保存的立绘'
+  }
+
+  if (manualPortraitUrl.value) {
+    return `手动立绘：${manualPortraitFileName.value || '已上传图片'}`
+  }
+
+  if (autoPortraitFailed.value) {
+    return '未匹配到自动立绘，请手动上传'
+  }
+
+  return autoPortraitLoaded.value ? '已自动匹配半身立绘' : '正在匹配半身立绘'
+})
+
 const rankingContext = computed(() => buildRankingContext(itemInfoMap.value))
 
 const tableRows = computed(() => {
@@ -117,6 +189,20 @@ const tableRows = computed(() => {
 
   return buildOperatorRows(matchedOperator.value, rankingContext.value, itemInfoMap.value)
 })
+
+const overviewStyle = computed(() => ({
+  '--overview-card-width':
+    `${layoutSettings.value.materialColumnWidth + 500 + layoutSettings.value.portraitColumnWidth}px`,
+  '--overview-table-width': `${layoutSettings.value.materialColumnWidth + 500}px`,
+  '--overview-material-width': `${layoutSettings.value.materialColumnWidth}px`,
+  '--overview-row-height': `${layoutSettings.value.rowHeight}px`,
+  '--overview-material-gap-x': `${layoutSettings.value.materialGapX}px`,
+  '--overview-material-gap-y': `${layoutSettings.value.materialGapY}px`,
+  '--overview-portrait-width': `${layoutSettings.value.portraitColumnWidth}px`,
+  '--overview-portrait-scale': layoutSettings.value.portraitScale / 100,
+  '--overview-portrait-offset-x': `${layoutSettings.value.portraitOffsetX}px`,
+  '--overview-portrait-offset-y': `${layoutSettings.value.portraitOffsetY}px`,
+}))
 
 const hasAmbiguousMatches = computed(() => {
   if (!operatorName.value.trim()) {
@@ -138,6 +224,8 @@ const matchStatusText = computed(() => {
   return `当前干员：${matchedOperator.value.name}（${matchedOperator.value.rarity}星）`
 })
 
+watch(matchedOperatorId, loadStoredPortrait, { immediate: true })
+
 function getItemValue(item) {
   const value = Number(item?.itemValue ?? item?.itemValueAp ?? 0)
   return Number.isFinite(value) ? value : 0
@@ -154,6 +242,246 @@ function createItemInfoMap(list) {
   }
 
   return map
+}
+
+function loadYieldOverviewSettings() {
+  const defaults = {
+    operatorName: '斯卡蒂',
+    selectedOperatorId: '',
+    showSkillT4Materials: false,
+    layoutSettings: { ...DEFAULT_LAYOUT_SETTINGS },
+  }
+
+  if (typeof window === 'undefined') {
+    return defaults
+  }
+
+  try {
+    const rawSettings = window.localStorage.getItem(SETTINGS_STORAGE_KEY)
+    if (!rawSettings) {
+      return defaults
+    }
+
+    const parsedSettings = JSON.parse(rawSettings)
+    if (!parsedSettings || typeof parsedSettings !== 'object' || Array.isArray(parsedSettings)) {
+      return defaults
+    }
+
+    const restoredLayoutSettings = { ...DEFAULT_LAYOUT_SETTINGS }
+    for (const control of [...layoutControls, ...portraitLayoutControls]) {
+      const value = parsedSettings.layoutSettings?.[control.key]
+      if (typeof value === 'number' && Number.isFinite(value)) {
+        restoredLayoutSettings[control.key] = Math.min(control.max, Math.max(control.min, value))
+      }
+    }
+
+    return {
+      operatorName: typeof parsedSettings.operatorName === 'string'
+        ? parsedSettings.operatorName
+        : defaults.operatorName,
+      selectedOperatorId: typeof parsedSettings.selectedOperatorId === 'string'
+        ? parsedSettings.selectedOperatorId
+        : defaults.selectedOperatorId,
+      showSkillT4Materials: typeof parsedSettings.showSkillT4Materials === 'boolean'
+        ? parsedSettings.showSkillT4Materials
+        : defaults.showSkillT4Materials,
+      layoutSettings: restoredLayoutSettings,
+    }
+  } catch (error) {
+    console.warn('收益速览页面参数读取失败，已使用默认值:', error)
+    return defaults
+  }
+}
+
+function saveYieldOverviewSettings() {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  try {
+    window.localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify({
+      operatorName: operatorName.value,
+      selectedOperatorId: selectedOperatorId.value,
+      showSkillT4Materials: showSkillT4Materials.value,
+      layoutSettings: layoutSettings.value,
+    }))
+  } catch (error) {
+    console.warn('收益速览页面参数保存失败:', error)
+  }
+}
+
+function openPortraitDatabase() {
+  if (portraitDbPromise) {
+    return portraitDbPromise
+  }
+
+  portraitDbPromise = new Promise((resolve, reject) => {
+    if (typeof window === 'undefined' || !window.indexedDB) {
+      reject(new Error('当前浏览器不支持 IndexedDB'))
+      return
+    }
+
+    const request = window.indexedDB.open(PORTRAIT_DB_NAME, 1)
+    request.onupgradeneeded = () => {
+      const database = request.result
+      if (!database.objectStoreNames.contains(PORTRAIT_STORE_NAME)) {
+        database.createObjectStore(PORTRAIT_STORE_NAME, { keyPath: 'charId' })
+      }
+    }
+    request.onsuccess = () => resolve(request.result)
+    request.onerror = () => reject(request.error || new Error('立绘数据库打开失败'))
+  })
+
+  portraitDbPromise.catch(() => {
+    portraitDbPromise = null
+  })
+  return portraitDbPromise
+}
+
+async function getStoredPortrait(charId) {
+  const database = await openPortraitDatabase()
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction(PORTRAIT_STORE_NAME, 'readonly')
+    const request = transaction.objectStore(PORTRAIT_STORE_NAME).get(charId)
+    request.onsuccess = () => resolve(request.result || null)
+    request.onerror = () => reject(request.error || new Error('立绘读取失败'))
+  })
+}
+
+async function saveStoredPortrait(charId, file) {
+  const database = await openPortraitDatabase()
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction(PORTRAIT_STORE_NAME, 'readwrite')
+    transaction.objectStore(PORTRAIT_STORE_NAME).put({
+      charId,
+      file,
+      fileName: file.name,
+      updatedAt: Date.now(),
+    })
+    transaction.oncomplete = () => resolve()
+    transaction.onerror = () => reject(transaction.error || new Error('立绘保存失败'))
+    transaction.onabort = () => reject(transaction.error || new Error('立绘保存失败'))
+  })
+}
+
+async function deleteStoredPortrait(charId) {
+  const database = await openPortraitDatabase()
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction(PORTRAIT_STORE_NAME, 'readwrite')
+    transaction.objectStore(PORTRAIT_STORE_NAME).delete(charId)
+    transaction.oncomplete = () => resolve()
+    transaction.onerror = () => reject(transaction.error || new Error('立绘删除失败'))
+    transaction.onabort = () => reject(transaction.error || new Error('立绘删除失败'))
+  })
+}
+
+function clearManualPortraitPreview() {
+  if (portraitObjectUrl) {
+    URL.revokeObjectURL(portraitObjectUrl)
+    portraitObjectUrl = ''
+  }
+  manualPortraitUrl.value = ''
+  manualPortraitFileName.value = ''
+}
+
+function applyManualPortrait(file, fileName = '') {
+  clearManualPortraitPreview()
+  portraitObjectUrl = URL.createObjectURL(file)
+  manualPortraitUrl.value = portraitObjectUrl
+  manualPortraitFileName.value = fileName || file.name || ''
+}
+
+async function loadStoredPortrait(charId) {
+  const loadVersion = ++portraitLoadVersion
+  clearManualPortraitPreview()
+  autoPortraitFailed.value = false
+  autoPortraitLoaded.value = false
+
+  if (!charId) {
+    portraitLoading.value = false
+    return
+  }
+
+  portraitLoading.value = true
+  try {
+    const storedPortrait = await getStoredPortrait(charId)
+    if (loadVersion !== portraitLoadVersion || !storedPortrait?.file) {
+      return
+    }
+    applyManualPortrait(storedPortrait.file, storedPortrait.fileName)
+  } catch (error) {
+    console.warn('已保存立绘读取失败:', error)
+  } finally {
+    if (loadVersion === portraitLoadVersion) {
+      portraitLoading.value = false
+    }
+  }
+}
+
+async function handlePortraitUpload(event) {
+  const input = event.target
+  const file = input.files?.[0]
+  input.value = ''
+
+  if (!file) {
+    return
+  }
+  if (!matchedOperatorId.value) {
+    ElMessage.warning('请先选择干员')
+    return
+  }
+  if (!file.type.startsWith('image/')) {
+    ElMessage.warning('请选择图片文件')
+    return
+  }
+
+  const charId = matchedOperatorId.value
+  applyManualPortrait(file)
+  autoPortraitFailed.value = false
+
+  try {
+    await saveStoredPortrait(charId, file)
+    ElMessage.success('立绘已上传并保存')
+  } catch (error) {
+    console.warn('立绘保存失败:', error)
+    ElMessage.warning('立绘已应用，但刷新后可能无法恢复')
+  }
+}
+
+async function removeManualPortrait() {
+  const charId = matchedOperatorId.value
+  clearManualPortraitPreview()
+  autoPortraitFailed.value = false
+  autoPortraitLoaded.value = false
+
+  if (!charId) {
+    return
+  }
+
+  try {
+    await deleteStoredPortrait(charId)
+    ElMessage.success('已恢复自动立绘')
+  } catch (error) {
+    console.warn('手动立绘删除失败:', error)
+    ElMessage.warning('已恢复自动立绘，但保存记录删除失败')
+  }
+}
+
+function handlePortraitLoad() {
+  if (!manualPortraitUrl.value) {
+    autoPortraitLoaded.value = true
+  }
+}
+
+function handlePortraitLoadError() {
+  if (manualPortraitUrl.value) {
+    clearManualPortraitPreview()
+    autoPortraitLoaded.value = false
+    return
+  }
+
+  autoPortraitFailed.value = true
+  autoPortraitLoaded.value = false
 }
 
 function getDisplayRarity(charId) {
@@ -264,6 +592,24 @@ function getSkillVisibleMaterialEntries(costObject = {}) {
 
 function getNonChipMaterialEntries(costObject = {}) {
   return toCostEntries(costObject).filter(item => itemInfoMap.value.get(item.itemId)?.type !== '芯片')
+}
+
+function getMaterialLines(materials = []) {
+  const lines = [[]]
+  let hasT5Material = false
+  let splitBeforeT4 = false
+
+  for (const material of materials) {
+    if (!splitBeforeT4 && hasT5Material && isT4Material(material.itemId)) {
+      lines.push([])
+      splitBeforeT4 = true
+    }
+
+    lines.at(-1).push(material)
+    hasT5Material ||= isT5Material(material.itemId)
+  }
+
+  return lines.filter(line => line.length > 0)
 }
 
 function getSkillOtherMaterialSummary(costObject = {}) {
@@ -406,6 +752,24 @@ function getExportFileName() {
   return `收益速览制图-${safeName}-${Date.now()}.png`
 }
 
+function adjustLayoutSetting(control, direction) {
+  const currentValue = layoutSettings.value[control.key]
+  const nextValue = currentValue + control.step * direction
+  layoutSettings.value[control.key] = Math.min(control.max, Math.max(control.min, nextValue))
+}
+
+function resetLayoutSettings() {
+  for (const control of layoutControls) {
+    layoutSettings.value[control.key] = DEFAULT_LAYOUT_SETTINGS[control.key]
+  }
+}
+
+function resetPortraitLayoutSettings() {
+  for (const control of portraitLayoutControls) {
+    layoutSettings.value[control.key] = DEFAULT_LAYOUT_SETTINGS[control.key]
+  }
+}
+
 async function downloadTablePng() {
   if (!tableCaptureRef.value || isExportingTable.value) {
     return
@@ -455,17 +819,25 @@ async function refreshItemValues() {
 onMounted(() => {
   refreshItemValues()
 })
+
+onBeforeUnmount(() => {
+  clearManualPortraitPreview()
+})
 </script>
 
 <template>
-  <div class="yield-overview-maker">
+  <div class="yield-overview-maker" :style="overviewStyle">
     <section class="maker-panel preview-panel">
       <div class="panel-header">
         <h2>制图区</h2>
       </div>
 
       <div class="preview-shell">
-        <div v-if="matchedOperator && tableRows.length > 0" class="preview-card">
+        <div
+          v-if="matchedOperator && tableRows.length > 0"
+          ref="tableCaptureRef"
+          class="preview-card"
+        >
           <header class="preview-header">
             <div class="operator-identity">
               <OperatorAvatar
@@ -482,64 +854,102 @@ onMounted(() => {
             <div class="brand-mark">明日方舟一图流</div>
           </header>
 
-          <div ref="tableCaptureRef" class="table-capture-area">
-            <table class="overview-table">
-              <colgroup>
-                <col class="skill-icon-column">
-                <col class="row-title-column">
-                <col class="material-column">
-                <col class="cost-column">
-                <col class="rank-column">
-              </colgroup>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th></th>
-                  <th>主要材料</th>
-                  <th>理智消耗</th>
-                  <th>排名/总数</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="row in tableRows" :key="row.key">
-                  <td class="skill-icon-cell">
-                    <SkillIcon
-                      v-if="row.skillIcon"
-                      :icon="row.skillIcon"
-                      :size="58"
-                      border
-                    />
-                    <div v-else class="skill-icon-placeholder"></div>
-                  </td>
-                  <td class="row-title-cell">
-                    <div class="row-title">{{ row.title }}</div>
-                    <div v-if="row.subtitle" class="row-subtitle">{{ row.subtitle }}</div>
-                  </td>
-                  <td class="material-cell">
-                    <div v-if="row.materials.length > 0" class="material-list">
-                      <div
-                        v-for="material in row.materials"
-                        :key="row.key + '-' + material.itemId"
-                        class="material-row"
+          <div class="overview-body">
+            <div class="portrait-column">
+              <img
+                v-if="portraitSource"
+                :key="portraitSource"
+                class="operator-portrait"
+                :src="portraitSource"
+                :alt="`${matchedOperator.name}半身立绘`"
+                crossorigin="anonymous"
+                @load="handlePortraitLoad"
+                @error="handlePortraitLoadError"
+              >
+              <div v-else class="portrait-placeholder">
+                <span>暂无立绘</span>
+                <label class="portrait-placeholder-upload">
+                  上传图片
+                  <input
+                    type="file"
+                    accept="image/png,image/webp,image/jpeg"
+                    @change="handlePortraitUpload"
+                  >
+                </label>
+              </div>
+              <div class="portrait-name">{{ matchedOperator.name }}</div>
+            </div>
+
+            <div class="table-capture-area">
+              <table class="overview-table">
+                <colgroup>
+                  <col class="skill-icon-column">
+                  <col class="row-title-column">
+                  <col class="material-column">
+                  <col class="cost-column">
+                  <col class="rank-column">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th>主要材料</th>
+                    <th>理智消耗</th>
+                    <th>排名/总数</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="row in tableRows" :key="row.key">
+                    <td class="skill-icon-cell">
+                      <img
+                        v-if="row.key === 'elite2'"
+                        class="elite2-icon"
+                        src="/image/survey/rank/elite2.png"
+                        alt=""
                       >
+                      <SkillIcon
+                        v-else-if="row.skillIcon"
+                        :icon="row.skillIcon"
+                        :size="58"
+                        border
+                      />
+                      <div v-else class="skill-icon-placeholder"></div>
+                    </td>
+                    <td class="row-title-cell">
+                      <div class="row-title">{{ row.title }}</div>
+                      <div v-if="row.subtitle" class="row-subtitle">{{ row.subtitle }}</div>
+                    </td>
+                    <td class="material-cell">
+                      <div v-if="row.materials.length > 0" class="material-list">
                         <div
-                          v-for="index in material.count"
-                          :key="row.key + '-' + material.itemId + '-' + index"
-                          class="material-entry"
-                          :title="material.itemName"
+                          v-for="(materialLine, lineIndex) in getMaterialLines(row.materials)"
+                          :key="row.key + '-line-' + lineIndex"
+                          class="material-line"
                         >
-                          <ItemImage :item-id="material.itemId" :size="44" />
+                          <template
+                            v-for="material in materialLine"
+                            :key="row.key + '-' + material.itemId"
+                          >
+                            <div
+                              v-for="index in material.count"
+                              :key="row.key + '-' + material.itemId + '-' + index"
+                              class="material-entry"
+                              :title="material.itemName"
+                            >
+                              <ItemImage :item-id="material.itemId" :size="44" />
+                            </div>
+                          </template>
                         </div>
                       </div>
-                    </div>
-                    <div v-else class="no-t5-text">无 T5 精英材料</div>
-                    <div v-if="row.otherSummary" class="other-materials">{{ row.otherSummary }}</div>
-                  </td>
-                  <td class="number-cell">{{ formatCost(row.totalCost) }}</td>
-                  <td class="number-cell">{{ row.rank }}</td>
-                </tr>
-              </tbody>
-            </table>
+                      <div v-else class="no-t5-text">无 T5 精英材料</div>
+                      <div v-if="row.otherSummary" class="other-materials">{{ row.otherSummary }}</div>
+                    </td>
+                    <td class="number-cell">{{ formatCost(row.totalCost) }}</td>
+                    <td class="number-cell">{{ row.rank }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
@@ -582,6 +992,76 @@ onMounted(() => {
           </button>
         </div>
 
+        <div class="portrait-control-section">
+          <div class="portrait-control-header">
+            <span>干员立绘</span>
+            <button
+              v-if="manualPortraitUrl"
+              type="button"
+              class="portrait-auto-button"
+              @click="removeManualPortrait"
+            >
+              恢复自动匹配
+            </button>
+          </div>
+          <label
+            class="portrait-upload-button"
+            :class="{ disabled: !matchedOperator }"
+          >
+            <span>{{ manualPortraitUrl ? '更换立绘' : '手动上传立绘' }}</span>
+            <input
+              type="file"
+              accept="image/png,image/webp,image/jpeg"
+              :disabled="!matchedOperator"
+              @change="handlePortraitUpload"
+            >
+          </label>
+          <div
+            class="portrait-status"
+            :class="{ warning: autoPortraitFailed && !manualPortraitUrl }"
+          >
+            {{ portraitStatusText }}
+          </div>
+        </div>
+
+        <div class="layout-control-section">
+          <div class="layout-control-header">
+            <span>立绘布局</span>
+            <button type="button" class="layout-reset-button" @click="resetPortraitLayoutSettings">
+              重置
+            </button>
+          </div>
+
+          <div
+            v-for="control in portraitLayoutControls"
+            :key="control.key"
+            class="layout-control-row"
+          >
+            <span class="layout-control-label">{{ control.label }}</span>
+            <div class="layout-stepper">
+              <button
+                type="button"
+                :title="`减小${control.label}`"
+                :aria-label="`减小${control.label}`"
+                :disabled="layoutSettings[control.key] <= control.min"
+                @click="adjustLayoutSetting(control, -1)"
+              >
+                −
+              </button>
+              <output>{{ layoutSettings[control.key] }} {{ control.unit || 'px' }}</output>
+              <button
+                type="button"
+                :title="`增大${control.label}`"
+                :aria-label="`增大${control.label}`"
+                :disabled="layoutSettings[control.key] >= control.max"
+                @click="adjustLayoutSetting(control, 1)"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+
         <label class="switch-row">
           <input v-model="showSkillT4Materials" type="checkbox">
           <span class="switch-track">
@@ -594,13 +1074,51 @@ onMounted(() => {
           专精行默认只展开 T5 精英材料；打开开关后追加显示 id 为 xxxx4 的紫色精英材料。理智消耗和排名始终按该行全部材料计算。
         </div>
 
+        <div class="layout-control-section">
+          <div class="layout-control-header">
+            <span>主要材料布局</span>
+            <button type="button" class="layout-reset-button" @click="resetLayoutSettings">
+              重置
+            </button>
+          </div>
+
+          <div
+            v-for="control in layoutControls"
+            :key="control.key"
+            class="layout-control-row"
+          >
+            <span class="layout-control-label">{{ control.label }}</span>
+            <div class="layout-stepper">
+              <button
+                type="button"
+                :title="`减小${control.label}`"
+                :aria-label="`减小${control.label}`"
+                :disabled="layoutSettings[control.key] <= control.min"
+                @click="adjustLayoutSetting(control, -1)"
+              >
+                −
+              </button>
+              <output>{{ layoutSettings[control.key] }} {{ control.unit || 'px' }}</output>
+              <button
+                type="button"
+                :title="`增大${control.label}`"
+                :aria-label="`增大${control.label}`"
+                :disabled="layoutSettings[control.key] >= control.max"
+                @click="adjustLayoutSetting(control, 1)"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+
         <button
           type="button"
           class="screenshot-button"
           :disabled="isExportingTable || !matchedOperator || tableRows.length === 0"
           @click="downloadTablePng"
         >
-          {{ isExportingTable ? '截图中...' : '截图表格' }}
+          {{ isExportingTable ? '截图中...' : '截图整图' }}
         </button>
 
         <button
@@ -618,12 +1136,17 @@ onMounted(() => {
 
 <style scoped>
 .yield-overview-maker {
+  --overview-card-width: 1035px;
   --overview-table-width: 815px;
+  --overview-portrait-width: 220px;
   --overview-skill-icon-width: 70px;
   --overview-row-title-width: 150px;
   --overview-material-width: 315px;
   --overview-cost-width: 140px;
   --overview-rank-width: 140px;
+  --overview-row-height: 96px;
+  --overview-material-gap-x: 10px;
+  --overview-material-gap-y: 8px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 16px;
@@ -663,14 +1186,18 @@ onMounted(() => {
   min-height: calc(100vh - 164px);
   padding: 24px;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
+  overflow: auto;
   background:
     linear-gradient(135deg, rgba(35, 46, 52, 0.84), rgba(42, 42, 42, 0.88)),
     repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 7px);
 }
 
 .preview-card {
-  width: var(--overview-table-width);
+  flex: 0 0 var(--overview-card-width);
+  width: var(--overview-card-width);
+  margin: 0 auto;
+  overflow: hidden;
   background:
     radial-gradient(circle at 80% 8%, rgba(157, 178, 191, 0.2), transparent 34%),
     linear-gradient(145deg, #3d4247, #2c3035);
@@ -714,6 +1241,86 @@ onMounted(() => {
   white-space: nowrap;
 }
 
+.overview-body {
+  display: grid;
+  grid-template-columns: var(--overview-portrait-width) var(--overview-table-width);
+  align-items: stretch;
+}
+
+.portrait-column {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.24)),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 9px);
+}
+
+.operator-portrait {
+  position: absolute;
+  inset: 14px 4px 0;
+  display: block;
+  width: calc(100% - 8px);
+  height: calc(100% - 14px);
+  object-fit: contain;
+  object-position: center bottom;
+  transform:
+    translate(
+      var(--overview-portrait-offset-x),
+      var(--overview-portrait-offset-y)
+    )
+    scale(var(--overview-portrait-scale));
+  transform-origin: center bottom;
+}
+
+.portrait-name {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 30px 14px 13px;
+  background: linear-gradient(transparent, rgba(13, 16, 20, 0.86));
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 21px;
+  line-height: 1.1;
+  font-weight: 800;
+  text-align: center;
+}
+
+.portrait-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 16px;
+}
+
+.portrait-placeholder-upload {
+  padding: 7px 11px;
+  border: 1px solid rgba(127, 183, 255, 0.46);
+  border-radius: 6px;
+  background: rgba(31, 95, 153, 0.78);
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.portrait-placeholder-upload input,
+.portrait-upload-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .overview-table {
   width: var(--overview-table-width);
   table-layout: fixed;
@@ -738,7 +1345,7 @@ onMounted(() => {
 }
 
 .overview-table td {
-  min-height: 96px;
+  height: var(--overview-row-height);
   padding: 16px 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   text-align: center;
@@ -780,6 +1387,13 @@ onMounted(() => {
   height: 58px;
 }
 
+.elite2-icon {
+  display: block;
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+}
+
 .row-title-cell {
   color: rgba(255, 255, 255, 0.9);
 }
@@ -798,25 +1412,25 @@ onMounted(() => {
 }
 
 .material-cell {
-  padding-right: 0;
-  padding-left: 0;
+  padding-right: 14px;
+  padding-left: 14px;
   overflow: visible;
+  text-align: left;
 }
 
 .material-list {
-  display: grid;
-  gap: 8px;
-  justify-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--overview-material-gap-y);
   overflow: visible;
 }
 
-.material-row {
-  display: grid;
-  grid-template-columns: repeat(6, 44px);
-  gap: 0 10px;
+.material-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--overview-material-gap-y) var(--overview-material-gap-x);
   align-items: center;
-  justify-self: center;
-  width: max-content;
+  justify-content: flex-start;
 }
 
 .material-entry {
@@ -938,6 +1552,72 @@ onMounted(() => {
   background: #1f5f99;
 }
 
+.portrait-control-section {
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.portrait-control-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.portrait-auto-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #9ecbff;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.portrait-auto-button:hover {
+  color: #ffffff;
+}
+
+.portrait-upload-button {
+  display: flex;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(127, 183, 255, 0.34);
+  border-radius: 6px;
+  background: #1f5f99;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.portrait-upload-button:hover {
+  background: #256da9;
+}
+
+.portrait-upload-button.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.portrait-status {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 12px;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.portrait-status.warning {
+  color: #ffe7a3;
+}
+
 .switch-row {
   display: flex;
   align-items: center;
@@ -989,6 +1669,85 @@ onMounted(() => {
   color: rgba(255, 255, 255, 0.58);
   font-size: 13px;
   line-height: 1.5;
+}
+
+.layout-control-section {
+  display: grid;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.layout-control-header,
+.layout-control-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.layout-control-header {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.layout-reset-button {
+  padding: 4px 7px;
+  border: 0;
+  background: transparent;
+  color: #9ecbff;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.layout-reset-button:hover {
+  color: #ffffff;
+}
+
+.layout-control-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+}
+
+.layout-stepper {
+  display: grid;
+  grid-template-columns: 30px 72px 30px;
+  height: 30px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  background: #14181e;
+}
+
+.layout-stepper button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: #313946;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.layout-stepper button:hover:not(:disabled) {
+  background: #3c4757;
+}
+
+.layout-stepper button:disabled {
+  cursor: not-allowed;
+  opacity: 0.38;
+}
+
+.layout-stepper output {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
 }
 
 .refresh-button,
