@@ -15,8 +15,10 @@ const storeListFormat = ref([])
 const actStoreList = ref([])
 const actStoreRef = ref(null)
 const isDevMode = ref(false)
-const isExporting = ref(false)
+const exportingActivityStoreIndex = ref(null)
 const activityStoreColumnLimit = ref(5)
+const includeActivityStoreBanner = ref(true)
+const includeActivityStoreTags = ref(true)
 
 const storeTypeList = [
   { typeName: 'green', iconId: '4005', dividing: 0.8, tier: 0.024, borderColor: 'rgb(0, 162, 162)' },
@@ -118,12 +120,14 @@ function switchStore(item) {
   localStorage.setItem('storeStatusList', JSON.stringify(storeStatusList))
 }
 
-function getActivityStoreExportFileName() {
+function getActivityStoreExportFileName(activityStore, index) {
   const date = new Date()
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
-  return `${year}${month}${day}_activity_store_${activityStoreColumnLimit.value}col.png`
+  const storeName = activityStore?.actName || `activity_store_${index + 1}`
+  const safeStoreName = storeName.replace(/[<>:"/\\|?*\u0000-\u001F]/g, '_').trim()
+  return `${year}${month}${day}_${safeStoreName}_${activityStoreColumnLimit.value}col.png`
 }
 
 async function waitForImages(container) {
@@ -143,19 +147,20 @@ async function waitForImages(container) {
   }))
 }
 
-async function exportActivityStorePng() {
-  if (!isDevMode.value || !actStoreRef.value || isExporting.value) {
+async function exportActivityStorePng(activityStore, index) {
+  const storeContainer = actStoreRef.value?.querySelector(`[data-activity-store-index="${index}"]`)
+  if (!isDevMode.value || !storeContainer || exportingActivityStoreIndex.value !== null) {
     return
   }
 
   try {
-    isExporting.value = true
+    exportingActivityStoreIndex.value = index
     await nextTick()
     await document.fonts?.ready
-    await waitForImages(actStoreRef.value)
+    await waitForImages(storeContainer)
 
     const html2canvas = (await import('html2canvas')).default
-    const canvas = await html2canvas(actStoreRef.value, {
+    const canvas = await html2canvas(storeContainer, {
       backgroundColor: null,
       scale: 2,
       useCORS: true,
@@ -164,15 +169,15 @@ async function exportActivityStorePng() {
     })
 
     const link = document.createElement('a')
-    link.download = getActivityStoreExportFileName()
+    link.download = getActivityStoreExportFileName(activityStore, index)
     link.href = canvas.toDataURL('image/png')
     link.click()
-    ElMessage.success('活动商店 PNG 已下载')
+    ElMessage.success(`${activityStore?.actName || '活动商店'} PNG 已下载`)
   } catch (error) {
     console.error('活动商店截图失败', error)
     ElMessage.error(error?.message || '活动商店截图失败')
   } finally {
-    isExporting.value = false
+    exportingActivityStoreIndex.value = null
   }
 }
 
@@ -201,19 +206,55 @@ onMounted(() => {
           <v-btn-toggle v-model="activityStoreColumnLimit" mandatory color="primary" density="comfortable">
             <v-btn :value="4">限制 4 列</v-btn>
             <v-btn :value="5">限制 5 列</v-btn>
+            <v-btn :value="6">限制 6 列</v-btn>
+            <v-btn :value="7">限制 7 列</v-btn>
+            <v-btn :value="8">限制 8 列</v-btn>
           </v-btn-toggle>
-          <v-btn color="primary" :loading="isExporting" @click="exportActivityStorePng">
-            {{ isExporting ? '导出中...' : '导出 PNG' }}
-          </v-btn>
+          <div class="activity-store-export-options">
+            <v-checkbox
+              v-model="includeActivityStoreBanner"
+              label="导出 Banner"
+              density="compact"
+              hide-details
+            />
+            <v-checkbox
+              v-model="includeActivityStoreTags"
+              label="导出 Tag"
+              density="compact"
+              hide-details
+            />
+          </div>
+          <div class="activity-store-export-actions">
+            <v-btn
+              v-for="(singleAct, index) in actStoreList"
+              :key="singleAct.actName || index"
+              color="primary"
+              size="small"
+              :loading="exportingActivityStoreIndex === index"
+              :disabled="exportingActivityStoreIndex !== null && exportingActivityStoreIndex !== index"
+              @click="exportActivityStorePng(singleAct, index)"
+            >
+              导出 {{ singleAct.actName || `活动商店 ${index + 1}` }}
+            </v-btn>
+          </div>
         </div>
       </div>
 
-      <div v-for="(singleAct, index) in actStoreList" :key="index" class="act_store_block">
-        <div class="act-banner-background" :style="getBackground(singleAct.imageLink)">
+      <div
+        v-for="(singleAct, index) in actStoreList"
+        :key="index"
+        class="act_store_block"
+        :data-activity-store-index="index"
+      >
+        <div
+          v-show="!isDevMode || includeActivityStoreBanner"
+          class="act-banner-background"
+          :style="getBackground(singleAct.imageLink)"
+        >
           <img class="act-banner-img" :src="getActStoreBackgroundImage(singleAct.imageLink)" :alt="singleAct.actName" />
         </div>
 
-        <div class="tag-group">
+        <div v-show="!isDevMode || includeActivityStoreTags" class="tag-group">
           <span
             v-for="(singleTag, tagIndex) in singleAct.actTagArea"
             :key="tagIndex"
@@ -365,6 +406,21 @@ onMounted(() => {
     flex-wrap: wrap;
   }
 
+  .activity-store-export-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .activity-store-export-options {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
   &.activity-store-dev-mode {
     .activity-store-good {
       background: #ffffff;
@@ -373,11 +429,28 @@ onMounted(() => {
   }
 
   &.activity-store-layout-4 {
+    width: 744px;
     max-width: 744px;
   }
 
   &.activity-store-layout-5 {
+    width: 930px;
     max-width: 930px;
+  }
+
+  &.activity-store-layout-6 {
+    width: 1116px;
+    max-width: 1116px;
+  }
+
+  &.activity-store-layout-7 {
+    width: 1302px;
+    max-width: 1302px;
+  }
+
+  &.activity-store-layout-8 {
+    width: 1488px;
+    max-width: 1488px;
   }
 
   .act_content {
