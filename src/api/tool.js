@@ -10,6 +10,14 @@ export default {
         });
     },
 
+     accessLog(data) {
+        return request({
+            url: `/access-log`,
+            method: "post",
+            data:data
+        });
+    },
+
     getRecruitResult() {
         return request({
             url: `/maa/recruit/result`,
