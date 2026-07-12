@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { nextTick, onMounted, ref, watch } from "vue";
+import { ElMessage } from "element-plus";
 import { itemSeriesObj } from "/src/utils/item/itemSeries.js";
 import FixedNav from "/src/components/layout/FixedNav.vue";
 import TourGuide from "/src/components/layout/TourGuide.vue";
@@ -295,6 +296,9 @@ function openNewPage() {
 }
 
 onMounted(() => {
+  loadStageScreenshotSettings()
+  screenshotModeEnabled.value = new URLSearchParams(window.location.search).get('mode') === 'dev'
+
   // 读取之前保存的图例显示状态
   const savedLegendDisplay = localStorage.getItem('itemLegendDisplay')
   if (savedLegendDisplay !== null) {
@@ -305,18 +309,196 @@ onMounted(() => {
 })
 
 const clickCount = ref(0)
+const screenshotModeEnabled = ref(false)
+const stageCardsRef = ref(null)
+const stageCardWidth = ref(1530)
+const stageCardGreenBackground = ref(false)
+const stageCardMarksVisible = ref(true)
+const stageCardSettings = ref({})
+const stageCardsScreenshotLoading = ref(false)
+const detailTableRef = ref(null)
+const detailTableScreenshotLoading = ref(false)
+const STAGE_SCREENSHOT_SETTINGS_KEY = 'stageScreenshotSettings'
+const STAGE_CARD_MARK_COLORS = [
+  { value: 'gray', label: '灰色', color: 'rgba(45, 45, 45, 0.72)' },
+  { value: 'dark-red', label: '暗红色', color: 'rgba(112, 24, 32, 0.82)' },
+  { value: 'orange', label: '橙色', color: 'rgba(205, 101, 0, 0.82)' }
+]
+
+function loadStageScreenshotSettings() {
+  try {
+    const savedSettings = JSON.parse(localStorage.getItem(STAGE_SCREENSHOT_SETTINGS_KEY) || '{}')
+    stageCardWidth.value = savedSettings.width ?? 1530
+    normalizeStageCardWidth()
+    stageCardGreenBackground.value = savedSettings.greenBackground === true
+    stageCardMarksVisible.value = savedSettings.marksVisible !== false
+    stageCardSettings.value = savedSettings.cards && typeof savedSettings.cards === 'object' && !Array.isArray(savedSettings.cards)
+      ? savedSettings.cards
+      : {}
+  } catch (error) {
+    console.warn('读取关卡截图设置失败', error)
+  }
+}
+
+function saveStageScreenshotSettings() {
+  try {
+    localStorage.setItem(STAGE_SCREENSHOT_SETTINGS_KEY, JSON.stringify({
+      width: getNormalizedStageCardWidth(),
+      greenBackground: stageCardGreenBackground.value,
+      marksVisible: stageCardMarksVisible.value,
+      cards: stageCardSettings.value
+    }))
+  } catch (error) {
+    console.warn('保存关卡截图设置失败', error)
+  }
+}
+
+function getStageCardKey(stage) {
+  return String(stage.series.T3)
+}
+
+function getStageCardSettings(stage) {
+  const settings = stageCardSettings.value[getStageCardKey(stage)]
+  const markColor = STAGE_CARD_MARK_COLORS.some(option => option.value === settings?.markColor)
+    ? settings.markColor
+    : 'gray'
+
+  return {
+    visible: settings?.visible ?? stage.display,
+    marked: settings?.marked === true,
+    markColor,
+    text: typeof settings?.text === 'string' ? settings.text : ''
+  }
+}
+
+function updateStageCardSetting(stage, field, value) {
+  const key = getStageCardKey(stage)
+  stageCardSettings.value[key] = {
+    ...getStageCardSettings(stage),
+    [field]: value
+  }
+}
+
+function isStageCardVisible(stage) {
+  if (!screenshotModeEnabled.value) {
+    return stage.display
+  }
+  return getStageCardSettings(stage).visible
+}
+
+function isStageCardMarked(stage) {
+  return stageCardMarksVisible.value && getStageCardSettings(stage).marked
+}
+
+function getStageCardMarkBackground(stage) {
+  const markColor = getStageCardSettings(stage).markColor
+  return STAGE_CARD_MARK_COLORS.find(option => option.value === markColor)?.color
+}
+
+function getScreenshotDatePrefix() {
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}${month}${day}`
+}
+
+function downloadCanvas(canvas, fileName) {
+  const link = document.createElement('a')
+  link.download = fileName
+  link.href = canvas.toDataURL('image/png')
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+}
+
+function getNormalizedStageCardWidth() {
+  const width = Number(stageCardWidth.value)
+  if (!Number.isFinite(width)) {
+    return 1530
+  }
+  return Math.min(2400, Math.max(600, Math.round(width)))
+}
+
+function normalizeStageCardWidth() {
+  stageCardWidth.value = getNormalizedStageCardWidth()
+}
+
+watch(
+  [stageCardWidth, stageCardGreenBackground, stageCardMarksVisible, stageCardSettings],
+  saveStageScreenshotSettings,
+  { deep: true }
+)
+
+async function captureStageCards() {
+  if (!screenshotModeEnabled.value || !stageCardsRef.value || stageCardsScreenshotLoading.value) {
+    return
+  }
+
+  try {
+    stageCardsScreenshotLoading.value = true
+    normalizeStageCardWidth()
+    await nextTick()
+    await document.fonts?.ready
+
+    const html2canvas = (await import('html2canvas')).default
+    const canvas = await html2canvas(stageCardsRef.value, {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      logging: false
+    })
+    const greenSuffix = stageCardGreenBackground.value ? '_green' : ''
+    const fileName = `${getScreenshotDatePrefix()}_stage_cards_${stageCardWidth.value}px${greenSuffix}.png`
+
+    downloadCanvas(canvas, fileName)
+    ElMessage.success('关卡推荐截图已下载')
+  } catch (error) {
+    console.error('关卡推荐截图失败', error)
+    ElMessage.error(error?.message || '关卡推荐截图失败')
+  } finally {
+    stageCardsScreenshotLoading.value = false
+  }
+}
+
+async function captureDetailTable() {
+  if (!screenshotModeEnabled.value || !detailTableRef.value || detailTableScreenshotLoading.value) {
+    return
+  }
+
+  try {
+    detailTableScreenshotLoading.value = true
+    await nextTick()
+    await document.fonts?.ready
+
+    const html2canvas = (await import('html2canvas')).default
+    const canvas = await html2canvas(detailTableRef.value, {
+      backgroundColor: '#ffffff',
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      logging: false
+    })
+
+    downloadCanvas(canvas, `${getScreenshotDatePrefix()}_material_detail.png`)
+    ElMessage.success('材料详情截图已下载')
+  } catch (error) {
+    console.error('材料详情截图失败', error)
+    ElMessage.error(error?.message || '材料详情截图失败')
+  } finally {
+    detailTableScreenshotLoading.value = false
+  }
+}
 
 // 点击逻辑
 function handleClick() {
   clickCount.value += 1
   console.log(clickCount.value)
   if (clickCount.value >= 8) {
-    const el0 = document.getElementById('stageForCards')
-    el0.style.width = '1530px'
     const el1 = document.getElementById('retire-card')
     el1.style.display = 'flex'
-    const el2 = document.getElementById('detail-table')
-    el2.style.display = 'block'
+    screenshotModeEnabled.value = true
   }
 }
 </script>
@@ -406,9 +588,17 @@ function handleClick() {
     </v-alert>
 
     <!-- 卡片区域 -->
-    <div id="stageForCards" class="stage-card-wrap">
-      <div class="stage-card" v-for="(stage, index) in stageCardData" :key="index"
-        @click="getItemTableData(index, true)" :id="`c-${index}`" v-show="stage.display">
+    <div
+      id="stageForCards"
+      ref="stageCardsRef"
+      class="stage-card-wrap"
+      :style="screenshotModeEnabled ? {
+        width: `${getNormalizedStageCardWidth()}px`,
+        backgroundColor: stageCardGreenBackground ? '#00ff00' : 'transparent'
+      } : undefined"
+    >
+      <div class="stage-card" v-for="(stage, index) in stageCardData" :key="stage.series.T3"
+        @click="getItemTableData(index, true)" :id="`c-${index}`" v-show="isStageCardVisible(stage)">
         <div class="stage-card-bg-sprite" :class="getCardBgSprite(stage.series.T3)"></div>
         <div class="stage-card-bar-container">
           <div class="stage-card-bar">
@@ -460,6 +650,16 @@ function handleClick() {
             </div>
           </div>
         </div>
+        <div
+          v-if="screenshotModeEnabled && isStageCardMarked(stage)"
+          class="stage-card-screenshot-mark"
+          :style="{ backgroundColor: getStageCardMarkBackground(stage) }"
+          @click.stop
+        >
+          <div class="stage-card-screenshot-mark-text">
+            {{ getStageCardSettings(stage).text || '标记' }}
+          </div>
+        </div>
       </div>
       <!-- 网站信息卡 -->
       <div class="stage-card" style="display: none; align-items: center; flex-grow: 1;">
@@ -488,13 +688,121 @@ function handleClick() {
       <div class="stage-card" style="height: 0;border: 1px;flex-grow: 1;"></div>
     </div>
 
+    <v-card
+      v-if="screenshotModeEnabled"
+      class="stage-screenshot-console"
+      elevation="8"
+      data-html2canvas-ignore="true"
+    >
+      <v-card-text class="stage-screenshot-console-content">
+        <div class="stage-screenshot-console-toolbar">
+          <v-text-field
+            v-model="stageCardWidth"
+            class="stage-screenshot-width-input"
+            type="number"
+            label="卡片宽度"
+            suffix="px"
+            min="600"
+            max="2400"
+            step="10"
+            density="compact"
+            variant="outlined"
+            hide-details
+            @change="normalizeStageCardWidth"
+            @blur="normalizeStageCardWidth"
+          ></v-text-field>
+          <v-checkbox
+            v-model="stageCardGreenBackground"
+            class="stage-screenshot-green-checkbox"
+            label="绿幕"
+            color="success"
+            density="compact"
+            hide-details
+          ></v-checkbox>
+          <v-switch
+            v-model="stageCardMarksVisible"
+            class="stage-screenshot-mark-toggle"
+            label="显示全部标记"
+            color="warning"
+            density="compact"
+            hide-details
+          ></v-switch>
+          <v-btn
+            color="primary"
+            prepend-icon="mdi-download"
+            :loading="stageCardsScreenshotLoading"
+            @click="captureStageCards"
+          >
+            导出 PNG
+          </v-btn>
+        </div>
+
+        <div class="stage-screenshot-card-controls">
+          <div
+            v-for="stage in stageCardData"
+            :key="stage.series.T3"
+            class="stage-screenshot-card-control"
+          >
+            <div class="stage-screenshot-card-identity">
+              <ItemImage :item-id="stage.series.T3" :size="34" :mobile-size="28"></ItemImage>
+              <span>{{ stage.series.T3 }}</span>
+            </div>
+            <v-checkbox
+              :model-value="getStageCardSettings(stage).visible"
+              label="显示"
+              density="compact"
+              hide-details
+              @update:model-value="updateStageCardSetting(stage, 'visible', $event)"
+            ></v-checkbox>
+            <v-checkbox
+              :model-value="getStageCardSettings(stage).marked"
+              label="标记"
+              color="warning"
+              density="compact"
+              hide-details
+              @update:model-value="updateStageCardSetting(stage, 'marked', $event)"
+            ></v-checkbox>
+            <div class="stage-screenshot-mark-colors" role="group" aria-label="标记颜色">
+              <button
+                v-for="option in STAGE_CARD_MARK_COLORS"
+                :key="option.value"
+                type="button"
+                class="stage-screenshot-mark-color"
+                :class="{ 'stage-screenshot-mark-color-active': getStageCardSettings(stage).markColor === option.value }"
+                :style="{ backgroundColor: option.color }"
+                :title="option.label"
+                :aria-label="option.label"
+                :disabled="!getStageCardSettings(stage).marked"
+                @click="updateStageCardSetting(stage, 'markColor', option.value)"
+              ></button>
+            </div>
+            <v-textarea
+              :model-value="getStageCardSettings(stage).text"
+              class="stage-screenshot-mark-text-input"
+              label="说明文字"
+              density="compact"
+              variant="outlined"
+              rows="1"
+              max-rows="4"
+              auto-grow
+              hide-details
+              :disabled="!getStageCardSettings(stage).marked"
+              @update:model-value="updateStageCardSetting(stage, 'text', $event)"
+            ></v-textarea>
+          </div>
+        </div>
+      </v-card-text>
+    </v-card>
+
 
     <div id="detail-table-1"></div>
     <!-- 材料情报卡 -->
     <StageDetailTable v-model="recommendedStageDetailTable" ></StageDetailTable>
-    <div id="detail-table" style="display: none;width: 850px;font-size: 18px !important;color: #000 !important;">
-      <el-table stripe :data="recommendedStageDetailTable.slice(0, 6)" max-height="495" max-width="892"
-        class="stage-detail-table">
+    <div v-show="screenshotModeEnabled" style="display: flex;align-items: flex-start;gap: 8px;">
+      <div ref="detailTableRef" id="detail-table"
+        style="width: 850px;font-size: 18px !important;color: #000 !important;background: #fff;">
+        <el-table stripe :data="recommendedStageDetailTable.slice(0, 6)" max-height="495" max-width="892"
+          class="stage-detail-table">
         <el-table-column fixed prop="stageCode" label="关卡名" width="120px">
           <template #default="scope">
             <div style="font-size: 18px;line-height: 18px;font-weight: 400;color: #000000;height: 44px;">
@@ -546,7 +854,16 @@ function handleClick() {
 
 
 
-      </el-table>
+        </el-table>
+      </div>
+      <v-btn
+        color="primary"
+        icon="mdi-camera-outline"
+        :loading="detailTableScreenshotLoading"
+        title="截图材料详情表格"
+        aria-label="截图材料详情表格"
+        @click="captureDetailTable"
+      ></v-btn>
     </div>
 
     <!-- 搓玉推荐表 -->

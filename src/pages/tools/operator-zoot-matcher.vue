@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import operatorDataAPI from '/src/api/operatorData.js'
-import { listOperatorZootMatcherStageInfo, searchOperatorZootMatcherJobsByStage } from '/src/api/operatorZootMatcher.js'
+import { listOperatorZootMatcherStageInfo, searchOperatorZootMatcherJobs } from '/src/api/operatorZootMatcher.js'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
 import { operatorTableV2 } from '/src/utils/gameData.js'
 import { createMessage } from '/src/utils/message.js'
@@ -15,6 +15,7 @@ const OPERATOR_ZOOT_MATCHER_OWNED_OPERATOR_META_STORAGE_KEY = 'operator_zoot_mat
 const LEGACY_OWNED_OPERATOR_META_STORAGE_KEY = 'zoot_owned_operator_meta_v1'
 const SKLAND_ACCOUNT_SESSION_STORAGE_KEY = 'skland_account_data'
 const JOB_SEARCH_BATCH_PAGE_COUNT = 6
+const DOCUMENT_SEARCH_BATCH_PAGE_COUNT = 1
 const OPERATOR_ZOOT_MATCHER_JOB_PAGE_BASE_URL = 'https://prts.plus/'
 const BILIBILI_LINK_REGEXP = /https?:\/\/(?:www\.)?(?:bilibili\.com|b23\.tv)\/[^\s]+/i
 const MAX_LEVELS_BY_RARITY = {
@@ -985,7 +986,11 @@ async function loadStageInfoList() {
 }
 
 function normalizeStageKeyword(text = '') {
-  return String(text).trim().toUpperCase().replace(/\s+/g, '')
+  return String(text)
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, '')
+    .replace(/[（(](?:标准|磨难|简单|普通|突袭)[）)]$/u, '')
 }
 
 function isInternalStageIdKeyword(text = '') {
@@ -1026,9 +1031,10 @@ function matchesStageKeyword(stage, normalizedKeyword) {
 }
 
 function isToughStageInfo(stage) {
-  const stageId = getStageInfoStageId(stage)
+  const stageId = getStageInfoStageId(stage).toLowerCase()
+  const levelId = getStageInfoLevelId(stage).toLowerCase()
 
-  return stageId.includes('tough') || stageId.includes('#f#')
+  return stageId.includes('tough') || stageId.includes('#f#') || stageId.startsWith('hard_') || levelId.includes('/hard/')
 }
 
 function collectExactStageNames(stage) {
@@ -1046,22 +1052,31 @@ function collectExactStageNames(stage) {
   ].filter(Boolean)
 }
 
+function createDocumentSearchPlan(keyword, note) {
+  return {
+    queryMode: 'document',
+    queryKeywords: [keyword],
+    exactStageIds: [],
+    note,
+  }
+}
+
 async function resolveStageSearchPlan(keyword) {
   const trimmedKeyword = keyword.trim()
   const normalizedKeyword = normalizeStageKeyword(trimmedKeyword)
 
   if (!exactStageMatchEnabled.value) {
-    return {
-      queryKeywords: [trimmedKeyword],
-      exactStageIds: [],
-      note: '当前已关闭关卡精确匹配，使用关键词直接检索公开作业。',
-    }
+    return createDocumentSearchPlan(
+      trimmedKeyword,
+      '当前已关闭关卡精确匹配，使用作业站原生关键词搜索。',
+    )
   }
 
   if (isInternalStageIdKeyword(trimmedKeyword)) {
     const stageId = trimmedKeyword.toLowerCase()
 
     return {
+      queryMode: 'level',
       queryKeywords: [stageId],
       exactStageIds: [stageId],
       note: `已按内部关卡 ID 精确搜索：${stageId}`,
@@ -1089,6 +1104,7 @@ async function resolveStageSearchPlan(keyword) {
 
       if (queryKeywords.length > 0 && exactStageIds.length > 0) {
         return {
+          queryMode: 'level',
           queryKeywords,
           exactStageIds,
           note: `已按关卡精确匹配：${trimmedKeyword} -> ${exactStageIds.join(' / ')}`,
@@ -1099,11 +1115,10 @@ async function resolveStageSearchPlan(keyword) {
     console.error('resolveStageSearchPlan failed', error)
   }
 
-  return {
-    queryKeywords: [trimmedKeyword],
-    exactStageIds: [],
-    note: '未找到本站关卡映射，已回退为关键词搜索。',
-  }
+  return createDocumentSearchPlan(
+    trimmedKeyword,
+    '未找到本站关卡映射，已回退为作业站原生关键词搜索。',
+  )
 }
 
 function mergeStageQueryResults(results = []) {
@@ -1137,6 +1152,7 @@ function createSearchSession(keyword, searchPlan) {
     jobs: [],
     nextQueryIndex: 0,
     queryStates: searchPlan.queryKeywords.map((queryKeyword) => ({
+      queryMode: searchPlan.queryMode,
       queryKeyword,
       nextPage: 1,
       hasNext: true,
@@ -1191,7 +1207,9 @@ async function fetchSearchSessionBatch(session) {
   }
 
   const stageQueryResults = []
-  let remainingPageCount = JOB_SEARCH_BATCH_PAGE_COUNT
+  let remainingPageCount = session.searchPlan.queryMode === 'document'
+    ? DOCUMENT_SEARCH_BATCH_PAGE_COUNT
+    : JOB_SEARCH_BATCH_PAGE_COUNT
 
   while (remainingPageCount > 0) {
     const state = getNextSearchQueryState(session)
@@ -1200,7 +1218,8 @@ async function fetchSearchSessionBatch(session) {
       break
     }
 
-    const result = await searchOperatorZootMatcherJobsByStage(state.queryKeyword, {
+    const result = await searchOperatorZootMatcherJobs(state.queryKeyword, {
+      queryMode: state.queryMode,
       startPage: state.nextPage,
       pageCount: 1,
     })
@@ -1572,10 +1591,30 @@ async function searchJobs(options = {}) {
       stageQueryNote.value = session.searchPlan.note
     }
 
-    const { jobs, total, fetchedPages, truncated } = await fetchSearchSessionBatch(session)
+    let batchResult = await fetchSearchSessionBatch(session)
 
     if (currentTicket !== searchTicket) {
       return
+    }
+
+    let invalidCount = applyResolvedSearchJobs(batchResult.jobs, session.searchPlan)
+
+    if (!append && session.searchPlan.queryMode === 'level' && resolvedJobs.value.length === 0) {
+      const fallbackPlan = createDocumentSearchPlan(
+        keyword,
+        '精确关卡搜索未找到作业，已回退为作业站原生关键词搜索。',
+      )
+
+      session = createSearchSession(keyword, fallbackPlan)
+      searchSession.value = session
+      stageQueryNote.value = fallbackPlan.note
+      batchResult = await fetchSearchSessionBatch(session)
+
+      if (currentTicket !== searchTicket) {
+        return
+      }
+
+      invalidCount = applyResolvedSearchJobs(batchResult.jobs, fallbackPlan)
     }
 
     searchSession.value = {
@@ -1584,14 +1623,12 @@ async function searchJobs(options = {}) {
       queryStates: session.queryStates.map((state) => ({ ...state })),
     }
 
-    const invalidCount = applyResolvedSearchJobs(jobs, session.searchPlan)
-
     searchMeta.value = {
       searched: true,
-      fetched: jobs.length,
-      total,
-      fetchedPages,
-      truncated,
+      fetched: batchResult.jobs.length,
+      total: batchResult.total,
+      fetchedPages: batchResult.fetchedPages,
+      truncated: batchResult.truncated,
       invalidCount,
     }
 
@@ -2238,8 +2275,8 @@ onMounted(async () => {
             <div class="search-inline">
               <v-text-field
                 v-model="stageKeyword"
-                label="关卡关键词"
-                placeholder="例如 7-18、H12-4、FC-EX-2"
+                label="搜索关键词"
+                placeholder="例如 7-18、H12-4、BD、全息"
                 variant="outlined"
                 density="comfortable"
                 hide-details

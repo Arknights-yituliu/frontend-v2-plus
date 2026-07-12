@@ -345,6 +345,11 @@ import operatorTableV2 from '/src/static/json/operator/character_table_simple.v2
 import fallbackItemInfo from '/src/static/json/material/item_info.json'
 import itemCache from '/src/plugins/indexedDB/itemCache.js'
 import { getStageConfig } from '/src/utils/user/userConfig.js'
+import {
+  loadLogicalByteCharacterData,
+  normalizeLogicalByteCharacterData,
+  saveLogicalByteCharacterData,
+} from '/src/utils/logicalByte/characterData.js'
 
 const STORAGE_KEY = 'logicalByte_data'
 
@@ -394,13 +399,28 @@ const jsonLoading = ref(false)
 const jsonLoadError = ref('')
 const lastJsonLoadTime = ref('')
 
-const rankingContext = computed(() => buildRankingContext(itemInfoMap.value))
+const normalizedCharacterData = computed(() =>
+  normalizeLogicalByteCharacterData(characterData.value, operatorTableV2)
+)
+const activeOperatorTable = computed(() => ({
+  ...operatorTableV2,
+  ...normalizedCharacterData.value.operatorTable,
+}))
+const activeOperatorCostTable = computed(() => ({
+  ...operatorItemCostTable,
+  ...normalizedCharacterData.value.operatorCostTable,
+}))
+
+const rankingContext = computed(() =>
+  buildRankingContext(itemInfoMap.value, activeOperatorCostTable.value)
+)
 
 // 保存JSON数据到本地
 const saveJsonToStorage = (data) => {
   try {
-    localStorage.setItem(STORAGE_KEY + '_characterData', JSON.stringify(data))
-    localStorage.setItem(STORAGE_KEY + '_lastLoadTime', new Date().toISOString())
+    saveLogicalByteCharacterData(
+      normalizeLogicalByteCharacterData(data, operatorTableV2)
+    )
     console.log('角色数据已保存到本地存储')
   } catch (error) {
     console.error('保存JSON数据失败:', error)
@@ -410,11 +430,10 @@ const saveJsonToStorage = (data) => {
 // 从本地加载JSON数据
 const loadJsonFromStorage = () => {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY + '_characterData')
-    const lastLoad = localStorage.getItem(STORAGE_KEY + '_lastLoadTime')
+    const saved = loadLogicalByteCharacterData()
     if (saved) {
-      characterData.value = JSON.parse(saved)
-      lastJsonLoadTime.value = lastLoad ? new Date(lastLoad).toLocaleString() : ''
+      characterData.value = saved.data
+      lastJsonLoadTime.value = saved.savedAt ? new Date(saved.savedAt).toLocaleString() : ''
       console.log('已从本地存储恢复角色数据')
       return true
     }
@@ -577,30 +596,19 @@ const loadJsonFile = async (file) => {
 
 // 搜索标题栏的角色名
 const searchTitleCharacter = (slotIndex, name) => {
-  if (!characterData.value || !name) {
+  if (!name) {
     slots.value[slotIndex].titleSearchResult = ''
     return
   }
 
-  const data = characterData.value
   const characterName = name.trim()
+  const operator = getOperatorCandidatesByName(characterName)
+    .find(item => item.name === characterName || item.charId === characterName)
 
-  // 遍历角色数据，查找匹配的角色
-  for (const key in data) {
-    const item = data[key]
-
-    // 检查名称字段 - 完全匹配
-    if (item.name && item.name === characterName) {
-      // 获取父元素的字段名
-      const parentName = key
-      slots.value[slotIndex].titleSearchResult = parentName
-
-      // 自动设置头像图片
-      const avatarUrl = `https://torappu.prts.wiki/assets/char_avatar/${parentName}.png`
-      slots.value[slotIndex].avatar = avatarUrl
-
-      return
-    }
+  if (operator) {
+    slots.value[slotIndex].titleSearchResult = operator.charId
+    slots.value[slotIndex].avatar = `https://torappu.prts.wiki/assets/char_avatar/${operator.charId}.png`
+    return
   }
 
   // 未找到
@@ -942,12 +950,17 @@ function canMatchSlotData(slot, index) {
 }
 
 function getDisplayRarity(charId) {
+  const uploadedRarity = normalizedCharacterData.value.operatorTable[charId]?.displayRarity
+  if (Number.isFinite(uploadedRarity) && uploadedRarity > 0) {
+    return uploadedRarity
+  }
+
   const rarity = operatorTable[charId]?.rarity
   if (Number.isFinite(rarity)) {
     return rarity
   }
 
-  const zeroBasedRarity = operatorTableV2[charId]?.rarity
+  const zeroBasedRarity = activeOperatorTable.value[charId]?.rarity
   return Number.isFinite(zeroBasedRarity) ? zeroBasedRarity + 1 : 0
 }
 
@@ -958,8 +971,8 @@ function getOperatorCandidatesByName(name) {
     return []
   }
 
-  return Object.entries(operatorTableV2)
-    .filter(([charId]) => operatorItemCostTable[charId])
+  return Object.entries(activeOperatorTable.value)
+    .filter(([charId]) => activeOperatorCostTable.value[charId])
     .map(([charId, operator]) => ({
       charId,
       name: operator.name || operatorTable[charId]?.name || charId,
@@ -989,7 +1002,7 @@ function getSlotMatchedOperatorId(slot) {
     return ''
   }
 
-  if (slot.titleSearchResult && operatorItemCostTable[slot.titleSearchResult]) {
+  if (slot.titleSearchResult && activeOperatorCostTable.value[slot.titleSearchResult]) {
     return slot.titleSearchResult
   }
 
@@ -1011,7 +1024,7 @@ function getSlotMatchedOperator(slot) {
 
   return {
     charId,
-    name: operatorTableV2[charId]?.name || operatorTable[charId]?.name || charId,
+    name: activeOperatorTable.value[charId]?.name || operatorTable[charId]?.name || charId,
     rarity: getDisplayRarity(charId),
   }
 }
@@ -1031,7 +1044,7 @@ function handleSlotTitleInput(index) {
 
 function selectSlotCandidate(index, charId) {
   const slot = slots.value[index]
-  if (!slot || !operatorItemCostTable[charId]) {
+  if (!slot || !activeOperatorCostTable.value[charId]) {
     return
   }
 
@@ -1087,11 +1100,11 @@ function getRank(list, cost) {
   return `${index + 1}/${list.length}`
 }
 
-function buildRankingContext(map) {
+function buildRankingContext(map, operatorCostTable) {
   const eliteCostsByRarity = new Map()
   const skillCostsByRarity = new Map()
 
-  for (const [charId, operatorCost] of Object.entries(operatorItemCostTable)) {
+  for (const [charId, operatorCost] of Object.entries(operatorCostTable)) {
     const rarity = getDisplayRarity(charId)
     if (!rarity) {
       continue
@@ -1214,7 +1227,7 @@ function getSlotCalculationDetails(slot) {
     return []
   }
 
-  const operatorCost = operatorItemCostTable[operator.charId]
+  const operatorCost = activeOperatorCostTable.value[operator.charId]
   if (!operatorCost) {
     return []
   }
@@ -1238,7 +1251,7 @@ function getSlotCalculationDetails(slot) {
 }
 
 function buildMatchedDataFromOperator(operator, context, map) {
-  const operatorCost = operatorItemCostTable[operator.charId]
+  const operatorCost = activeOperatorCostTable.value[operator.charId]
   if (!operatorCost) {
     return null
   }

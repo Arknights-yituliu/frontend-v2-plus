@@ -4,7 +4,6 @@ import GACHA_CALCULATOR from '/src/pages/tools/gacha-calc.vue'
 import REGISTER from '/src/pages/account/register.vue'
 import LOGIN from '/src/pages/account/login.vue'
 import RETRIEVE from '/src/pages/account/retrieve.vue'
-import IMPORT_BY_SKLAND from '/src/pages/survey/importdata.vue'
 import SURVEY_OPERATOR from '/src/pages/survey/operator.vue'
 import USER_HOME from '/src/pages/account/home.vue'
 import STORE from '/src/pages/material/store.vue'
@@ -260,6 +259,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/cover-maker',
+        text: '封面制作器',
+        name: 'CoverMaker',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/CoverMaker.vue'),
+        meta: {
+            title: '封面制作器'
+        }
+    },
+    {
         path: '/lb/image-tagger',
         text: '图片标记器',
         name: 'ImageTagger',
@@ -491,7 +500,12 @@ const routes = [
         path: '/survey/account/importbyskland',
         text: '导入流程',
         name: 'IMPORT_BY_SKLAND',
-        component: IMPORT_BY_SKLAND,
+        redirect: {
+            name: 'OperatorSurvey',
+            query: {
+                openImport: '1'
+            }
+        },
         meta: {
             title: '导入流程'
         }
