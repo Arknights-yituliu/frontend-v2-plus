@@ -47,7 +47,7 @@ import Battle from '@/components/information/Battle.vue'
                   </el-link>
                 </el-tooltip>
                 ，选择
-                <el-text tag="ins">“太可怜了，仔细观赏”</el-text>
+                “太可怜了，仔细观赏”
                 （消耗1希望），获得
                 <el-tooltip content="让探索走向不同的结局" effect="light" placement="top"
                 >
@@ -67,7 +67,7 @@ import Battle from '@/components/information/Battle.vue'
                   “疯狂玩偶”
                 </el-link>
                 ，连续选择3次
-                <el-text tag="ins">“护住玩偶”</el-text>
+                “护住玩偶”
                 （总共消耗3目标生命），获得
                 <el-tooltip content="立即获得源石锭+11，希望+3" effect="light" placement="top"
                 >

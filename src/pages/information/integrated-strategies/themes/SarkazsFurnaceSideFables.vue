@@ -28,7 +28,7 @@ import Battle from '@/components/information/Battle.vue'
                   “表达欲”
                 </el-link>
                 ，选择
-                <el-text tag="ins">“奋起反抗”</el-text>
+                “奋起反抗”
                 （消耗2缕构想），获得
                 <el-tooltip
                     content="所有敌方单位的攻击速度+30，移动速度+30%，最大生命值+30%，可在虚实疆界中探索不同的险路恶敌"
@@ -136,7 +136,7 @@ import Battle from '@/components/information/Battle.vue'
                   “表达欲”
                 </el-link>
                 ，选择
-                <el-text tag="ins">“奋起反抗”</el-text>
+                “奋起反抗”
                 （消耗2缕构想），获得
                 <el-tooltip
                     content="所有敌方单位的攻击速度+30，移动速度+30%，最大生命值+30%，可在虚实疆界中探索不同的险路恶敌"
@@ -243,7 +243,7 @@ import Battle from '@/components/information/Battle.vue'
                   “待诉说的真相”
                 </el-link>
                 ，选择
-                <el-text tag="ins">“用构想补足缺陷”</el-text>
+                “用构想补足缺陷”
                 （消耗2缕构想），而后进入一个第三结局专属的诡谲断章
               </div>
             </el-timeline-item>
@@ -307,7 +307,7 @@ import Battle from '@/components/information/Battle.vue'
             <el-timeline-item :icon="Battle" color="#5EDFD6">
               <div>
                  持有片瓣进入狭路相逢节点，选择
-                <el-text tag="ins">“将花瓣掷入故事”</el-text>
+                “将花瓣掷入故事”
                 （消耗2缕构想），进入特殊战斗
                 <el-link
                     href="https://prts.wiki/w/ISW-NO_%E8%BD%BB%E8%88%9F%E5%85%B1%E6%B8%A1"
@@ -443,15 +443,15 @@ import Battle from '@/components/information/Battle.vue'
                 </el-link>
                 ，选择
                 <el-tooltip content="需要“绝望”">
-                  <el-text tag="ins">“以开端铸造钥匙”</el-text>
+                  “以开端铸造钥匙”
                 </el-tooltip>
                 或
                 <el-tooltip content="需要“拯救”">
-                  <el-text tag="ins">“以转变铸造钥匙”</el-text>
+                  “以转变铸造钥匙”
                 </el-tooltip>
                 或
                 <el-tooltip content="需要“停止”">
-                  <el-text tag="ins">“以终点铸造钥匙”</el-text>
+                  “以终点铸造钥匙”
                 </el-tooltip>
                 ，获得（
                 <el-tooltip content="所有干员的部署费用+2，所有敌人受到的物理与法术伤害降低20%" effect="light"

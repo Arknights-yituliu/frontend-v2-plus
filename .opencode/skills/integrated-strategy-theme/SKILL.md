@@ -278,8 +278,8 @@ For option costs and requirements, use direct parenthetical notation **after** t
 
 **Correct:**
 ```html
-选择<el-text tag="ins">"太可怜了，仔细观赏"</el-text>（消耗1希望），获得...
-选择<el-text tag="ins">"用构想补足缺陷"</el-text>（消耗2缕构想），进入...
+选择"太可怜了，仔细观赏"（消耗1希望），获得...
+选择"用构想补足缺陷"（消耗2缕构想），进入...
 ```
 
 **Wrong (do not use):**
@@ -293,9 +293,10 @@ For costs that are not directly tied to a single option choice but describe a br
 （消耗5目标生命值，购买时需至少拥有6目标生命值）
 ```
 
-For choice option names that are quoted:
-- Use Chinese quotation marks `""` within `<el-text tag="ins">`
-- Example: `<el-text tag="ins">"选项文本"</el-text>`
+For choice option names that the player selects:
+- Use Chinese quotation marks `""` directly, **without** `<el-text tag="ins">` (no underline)
+- Example: `选择"选项文本"（消耗1希望），获得`
+- Do NOT wrap option texts in `<el-text tag="ins">` — underline is reserved for collectible names `【】` and special item/concept names
 
 ### 2.11 Ordered List Pattern (ol)
 

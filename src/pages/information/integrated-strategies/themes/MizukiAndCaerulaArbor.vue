@@ -279,7 +279,7 @@ import BOSS from '@/components/information/BOSS.vue'
                 </el-tooltip>
                 ，选择
                 <el-tooltip content="灯火值不低于90时显示">
-                  <el-text tag="ins">“‘我是水月，我会完成博士的请求’”</el-text>
+                  “‘我是水月，我会完成博士的请求’”
                 </el-tooltip>
                 ，获得
                 <el-tooltip
@@ -291,7 +291,7 @@ import BOSS from '@/components/information/BOSS.vue'
                 </el-tooltip>
                 ，或选择
                 <el-tooltip content="灯火值不低于50时显示">
-                  <el-text tag="ins">“‘让时间来解答吧’”</el-text>
+                  “‘让时间来解答吧’”
                 </el-tooltip>
                 ，获得
                 <el-tooltip

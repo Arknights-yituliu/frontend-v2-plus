@@ -321,7 +321,7 @@ import Battle from '@/components/information/Battle.vue'
                   “点睛”
                 </el-link>
                 ，选择
-                <el-text tag="ins">“点墨生器”</el-text>
+                “点墨生器”
                 （消耗5目标生命上限，不会使目标生命上限低于1），获得
                 <el-tooltip
                     content="获得该收藏品将失去全部源石锭和剩余希望，且此后的战斗中获得的指挥经验和源石锭-50%"
