@@ -223,7 +223,7 @@ import Battle from '@/components/information/Battle.vue'
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
                 <span class="optional">（可选）</span>
-                进入不期而遇，触发稀有事件
+                进入不期而遇，触发<b>稀有</b>事件
                 <el-link
                     href="https://prts.wiki/w/%E6%B2%89%E6%B2%A6%E8%80%85%E7%9A%84%E9%BB%91%E6%B5%81%E6%A0%91%E6%B5%B7/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%AE%89%E7%9C%A0%E4%B8%80%E9%9A%85"
                     target="_blank"
