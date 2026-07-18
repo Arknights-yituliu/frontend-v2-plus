@@ -28,10 +28,8 @@ import Battle from '@/components/information/Battle.vue'
                   “表达欲”
                 </el-link>
                 ，选择
-                <el-tooltip content="消耗2缕构想">
-                  <el-text tag="ins">“奋起反抗”</el-text>
-                </el-tooltip>
-                获得
+                <el-text tag="ins">“奋起反抗”</el-text>
+                （消耗2缕构想），获得
                 <el-tooltip
                     content="所有敌方单位的攻击速度+30，移动速度+30%，最大生命值+30%，可在虚实疆界中探索不同的险路恶敌"
                     effect="light"
@@ -138,10 +136,8 @@ import Battle from '@/components/information/Battle.vue'
                   “表达欲”
                 </el-link>
                 ，选择
-                <el-tooltip content="消耗2缕构想">
-                  <el-text tag="ins">“奋起反抗”</el-text>
-                </el-tooltip>
-                获得
+                <el-text tag="ins">“奋起反抗”</el-text>
+                （消耗2缕构想），获得
                 <el-tooltip
                     content="所有敌方单位的攻击速度+30，移动速度+30%，最大生命值+30%，可在虚实疆界中探索不同的险路恶敌"
                     effect="light"
@@ -238,10 +234,7 @@ import Battle from '@/components/information/Battle.vue'
             <el-timeline-item :icon="Flag" type="warning">
               <div>
                 持有先知长角，
-                <el-tooltip content="算上后续选项消耗，需至少准备3缕构想">
-                  <el-text tag="ins">使用1缕构想刷新出命运所指节点</el-text>
-                </el-tooltip>
-                ，进入其中触发事件
+                使用1缕构想刷新出命运所指节点（算上后续选项消耗，需至少准备3缕构想），进入其中触发事件
                 <el-link
                     href="https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%BE%85%E8%AF%89%E8%AF%B4%E7%9A%84%E7%9C%9F%E7%9B%B8"
                     target="_blank"
@@ -250,10 +243,8 @@ import Battle from '@/components/information/Battle.vue'
                   “待诉说的真相”
                 </el-link>
                 ，选择
-                <el-tooltip content="消耗2缕构想">
-                  <el-text tag="ins">“用构想补足缺陷”</el-text>
-                </el-tooltip>
-                ，而后进入一个第三结局专属的诡谲断章
+                <el-text tag="ins">“用构想补足缺陷”</el-text>
+                （消耗2缕构想），而后进入一个第三结局专属的诡谲断章
               </div>
             </el-timeline-item>
             <el-timeline-item :icon="Flag" type="warning">
@@ -315,11 +306,9 @@ import Battle from '@/components/information/Battle.vue'
             </el-timeline-item>
             <el-timeline-item :icon="Battle" color="#5EDFD6">
               <div>
-                持有片瓣进入狭路相逢节点，选择
-                <el-tooltip content="消耗2缕构想">
-                  <el-text tag="ins">“将花瓣掷入故事”</el-text>
-                </el-tooltip>
-                ，进入特殊战斗
+                 持有片瓣进入狭路相逢节点，选择
+                <el-text tag="ins">“将花瓣掷入故事”</el-text>
+                （消耗2缕构想），进入特殊战斗
                 <el-link
                     href="https://prts.wiki/w/ISW-NO_%E8%BD%BB%E8%88%9F%E5%85%B1%E6%B8%A1"
                     target="_blank"

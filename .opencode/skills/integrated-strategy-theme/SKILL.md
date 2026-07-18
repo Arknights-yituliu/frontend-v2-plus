@@ -274,10 +274,23 @@ A single `<el-timeline-item>` step can contain multiple `<div>` blocks. Each `<d
 
 ### 2.10 Inline Condition/Parenthetical Annotations
 
-For short conditions (costs, requirements) inline in the text, use `<el-tooltip>` wrapping `<el-text tag="ins">`:
+For option costs and requirements, use direct parenthetical notation **after** the option text. Do NOT wrap costs inside tooltips.
 
+**Correct:**
+```html
+选择<el-text tag="ins">"太可怜了，仔细观赏"</el-text>（消耗1希望），获得...
+选择<el-text tag="ins">"用构想补足缺陷"</el-text>（消耗2缕构想），进入...
+```
+
+**Wrong (do not use):**
 ```html
 选择<el-tooltip content="消耗1希望"><el-text tag="ins">"太可怜了，仔细观赏"</el-text></el-tooltip>获得...
+```
+
+For costs that are not directly tied to a single option choice but describe a broader requirement, use the same pattern inline:
+
+```html
+（消耗5目标生命值，购买时需至少拥有6目标生命值）
 ```
 
 For choice option names that are quoted:
