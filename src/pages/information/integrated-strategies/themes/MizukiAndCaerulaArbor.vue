@@ -42,7 +42,7 @@ import BOSS from '@/components/information/BOSS.vue'
                       target="_blank"
                       type="primary"
                   >
-                    <el-text tag="ins" type="primary">“狂徒妄念”</el-text>
+                    “狂徒妄念”
                   </el-link>
                 </el-tooltip>
                 ，选择“愤怒”（-2希望）或“呼号”（投掷点数>1），获得
@@ -78,7 +78,7 @@ import BOSS from '@/components/information/BOSS.vue'
             </el-timeline-item>
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
-                <span class="optional">（可选）</span>在猎潮的骑士仍存活的情况下，可触发不期而遇
+                <span class="optional">（可选）</span>在猎潮的骑士仍存活的情况下，可进入不期而遇，触发事件
                 <el-tooltip content="在持有【海潮的气息】时，在抵达第5层前可能遭遇" effect="light" placement="top"
                 >
                   <el-link
@@ -87,7 +87,7 @@ import BOSS from '@/components/information/BOSS.vue'
                       target="_blank"
                       type="primary"
                   >
-                    <el-text tag="ins" type="primary">“骑士仍在”</el-text>
+                    “骑士仍在”
                   </el-link>
                 </el-tooltip>
                 ，并选择“反抗”获得
@@ -142,7 +142,7 @@ import BOSS from '@/components/information/BOSS.vue'
                       target="_blank"
                       type="primary"
                   >
-                    <el-text tag="ins" type="primary">“开端”</el-text>
+                    “开端”
                   </el-link>
                 </el-tooltip>
                 ，选择“决定潜入深海”，获得
@@ -154,7 +154,7 @@ import BOSS from '@/components/information/BOSS.vue'
             </el-timeline-item>
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
-                持有主教的研究可触发不期而遇
+                 持有主教的研究，可进入不期而遇，触发事件
                 <el-tooltip content="灯火值不低于20时，在第5层末尾的【险路恶敌】前可能遭遇" effect="light"
                             placement="top"
                 >
@@ -164,7 +164,7 @@ import BOSS from '@/components/information/BOSS.vue'
                       target="_blank"
                       type="primary"
                   >
-                    <el-text tag="ins" type="primary">“深蓝之心”</el-text>
+                    “深蓝之心”
                   </el-link>
                 </el-tooltip>
                 ，选择“搜寻园林”，获得
@@ -179,7 +179,7 @@ import BOSS from '@/components/information/BOSS.vue'
             </el-timeline-item>
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
-                <span class="optional">（可选）</span>持有深蓝之心，可触发不期而遇
+                <span class="optional">（可选）</span>持有深蓝之心，可进入不期而遇，触发事件
                 <el-tooltip content="第5层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                 >
                   <el-link
@@ -188,7 +188,7 @@ import BOSS from '@/components/information/BOSS.vue'
                       target="_blank"
                       type="primary"
                   >
-                    <el-text tag="ins" type="primary">“赞歌”</el-text>
+                    “赞歌”
                   </el-link>
                 </el-tooltip>
                 ，选择“亲吻猎人们的额头并取走遗物”，获得
@@ -226,7 +226,7 @@ import BOSS from '@/components/information/BOSS.vue'
                       target="_blank"
                       type="primary"
                   >
-                    <el-text tag="ins" type="primary">“开端”</el-text>
+                    “开端”
                   </el-link>
                 </el-tooltip>
                 ，选择“‘深蓝’？！”，获得
@@ -241,7 +241,7 @@ import BOSS from '@/components/information/BOSS.vue'
             </el-timeline-item>
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
-                <span class="optional">（可选）</span>持有深蓝回忆，可触发不期而遇
+                <span class="optional">（可选）</span>持有深蓝回忆，可进入不期而遇，触发事件
                 <el-tooltip content="在抵达第5层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                 >
                   <el-link
@@ -250,7 +250,7 @@ import BOSS from '@/components/information/BOSS.vue'
                       target="_blank"
                       type="primary"
                   >
-                    <el-text tag="ins" type="primary">“深蓝仪式”</el-text>
+                    “深蓝仪式”
                   </el-link>
                 </el-tooltip>
                 ，选择“关闭危险流程”，获得30灯火，或选择“不做任何改动”获得
@@ -265,7 +265,7 @@ import BOSS from '@/components/information/BOSS.vue'
             </el-timeline-item>
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
-                持有深蓝回忆，可触发不期而遇
+                 持有深蓝回忆，可进入不期而遇，触发事件
                 <el-tooltip content="在第4层开始至第5层末尾的【险路恶敌】前可能遭遇" effect="light" placement="top"
                 >
                   <el-link
@@ -274,7 +274,7 @@ import BOSS from '@/components/information/BOSS.vue'
                       target="_blank"
                       type="primary"
                   >
-                    <el-text tag="ins" type="primary">“升华”</el-text>
+                    “升华”
                   </el-link>
                 </el-tooltip>
                 ，选择

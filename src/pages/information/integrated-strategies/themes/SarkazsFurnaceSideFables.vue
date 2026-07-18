@@ -148,7 +148,7 @@ import Battle from '@/components/information/Battle.vue'
               </div>
               <div>
                 <span class="optional">（可选）</span>
-                持有巴别塔誓言可触发不期而遇
+                 持有巴别塔誓言，可进入不期而遇，触发事件
                 <el-link
                     href="https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%A6%BB%E5%8E%BB%E8%80%85%E7%9A%84%E5%BA%AD%E9%99%A2"
                     target="_blank"
@@ -433,7 +433,7 @@ import Battle from '@/components/information/Battle.vue'
                 <el-tooltip content="对应【终结的实相】">
                   <el-text tag="ins">停止</el-text>
                 </el-tooltip>
-                ）可触发不期而遇
+                 ），可进入不期而遇，触发事件
                 <el-link
                     href="https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%AD%A4%E6%B3%A8%E4%B8%80%E6%8E%B7"
                     target="_blank"

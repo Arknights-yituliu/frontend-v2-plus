@@ -172,22 +172,14 @@ Every `<el-timeline-item>` step must have an icon and a visual color. Use this t
 
 ### 2.5 Event Link Patterns (el-link)
 
-**Standard event link** (within flow text):
+**Event link** (within flow text or inside a tooltip for inline event references):
 ```html
 <el-link href="wiki_url" target="_blank" type="primary">
   "事件名称"
 </el-link>
 ```
 
-**Underlined event link inside a tooltip** (for inline event references):
-```html
-<el-link :underline="false"
-         href="wiki_url"
-         target="_blank"
-         type="primary">
-  <el-text tag="ins" type="primary">"事件名称"</el-text>
-</el-link>
-```
+Event names must NOT have underline (`tag="ins"`). Do NOT wrap event name text in `<el-text tag="ins">`.
 
 ### 2.6 Collectible/Item Patterns
 
@@ -362,9 +354,10 @@ Every ending must end with this exact structure:
   - `抵达第N层` = reach floor N
   - `触发事件` = trigger event
   - `进入不期而遇` = enter Encounter node
+  - Must use the full form: `进入不期而遇，触发事件"事件名"` — do NOT shorten to `可触发不期而遇"事件名"`
   - `选择` + `"选项文本"` = select with option quoted
   - `获得` = obtain
-  - `持有...可触发` = holding ... enables triggering
+  - `持有...，可进入不期而遇，触发事件` = holding ... enables entering an encounter and triggering an event
   - `消耗N希望/N源石锭` = costs N hope/N ingots
   - `让探索走向不同的结局` or `让探索开启不同的方向` = diverges exploration to a different ending
 - For enemy/boss names: use `<el-link>` to prts.wiki if the enemy has a page
