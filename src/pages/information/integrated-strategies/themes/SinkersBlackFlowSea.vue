@@ -189,7 +189,7 @@ import Battle from '@/components/information/Battle.vue'
                 >
                   “回滚文明”
                 </el-link>
-                ，选择“复原“文明”（消耗随机2件自然物），获得
+                ，选择‘复原“文明”’（消耗随机2件自然物），获得
                 <el-tooltip
                     content="可以在第6层位于门口附近的命运所指节点中，使“玻利瓦尔，症结之核”的“灾厄之口”无法封锁待部署区"
                     effect="light"
