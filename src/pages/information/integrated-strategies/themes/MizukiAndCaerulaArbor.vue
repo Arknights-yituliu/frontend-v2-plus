@@ -55,7 +55,7 @@ import BOSS from '@/components/information/BOSS.vue'
                 </el-tooltip>
               </div>
             </el-timeline-item>
-            <el-timeline-item :icon="Warning" type="warning">
+            <el-timeline-item :icon="Warning" type="danger">
               <div>
                 <span class="optional warning">（注意）</span>若在抵达第5层之前
                 <el-link

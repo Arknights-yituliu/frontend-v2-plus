@@ -114,7 +114,7 @@ import Battle from '@/components/information/Battle.vue'
                 </el-tooltip>
               </div>
             </el-timeline-item>
-            <el-timeline-item :icon="Search" type="warning">
+            <el-timeline-item :icon="Search" color="rgb(255, 214, 105)">
               <div>
                 在任意一个去伪存真节点将纯白花瓣和无字地契组合成
                 <el-tooltip
@@ -401,7 +401,7 @@ import Battle from '@/components/information/Battle.vue'
                 </el-tooltip>
               </div>
             </el-timeline-item>
-            <el-timeline-item :icon="Search" type="warning">
+            <el-timeline-item :icon="Search" color="rgb(255, 214, 105)">
               <div>
                 <span class="optional">（可选）</span>
                 在任意一个去伪存真节点中消耗1~2个构想将“绝望”逐步组合成
