@@ -398,11 +398,17 @@ This section describes how to convert a user's natural-language description of e
 6. Write in the instructional tone described in Section 2.13
 7. Structure the entire file per Section 2
 
-### 3.2 Mandatory Clarification Rule (MUST FOLLOW)
+### 3.2 Self-Search First Rule
 
-**Before generating ANY code, you MUST identify and ask about every ambiguity in the user's input.** This is the single most important rule of this skill.
+If the user's description contains any specific URLs (e.g., PRTS wiki links to events, stage pages, or collectible pages), **you must first attempt to fetch those URLs** to fill in missing details before asking the user. Use the WebFetch tool to retrieve collectible effect texts, option texts, stage names, enemy names, costs, and other details from the linked pages.
 
-You are a **format converter**, not a content author. You must not invent, infer, or fill in any missing details. Specifically, you MUST ask the user whenever:
+**Only ask the user after you have exhausted available online sources** and still cannot find the required information.
+
+### 3.3 Mandatory Clarification Rule (MUST FOLLOW)
+
+**Before generating ANY code, you MUST identify and address every ambiguity in the user's input.** Follow the Self-Search First Rule (Section 3.2) before asking.
+
+You are a **format converter**, not a content author. You must not invent, infer, or fill in any missing details. Specifically, you must resolve (via self-search or user inquiry) whenever:
 
 - A collectible's effect text is missing or unclear → ask: "这个收藏品的效果是什么？"
 - A step's cost (希望/源石锭/目标生命/灯火/坍缩值) is not specified → ask for exact value
@@ -418,17 +424,17 @@ You are a **format converter**, not a content author. You must not invent, infer
 - The user's phrasing conflicts with any rule in Section 2 → ask how to resolve
 - Any mechanic is described that doesn't fit existing patterns → ask: "这个机制应该如何编码表示？是否需要新增编写风格规定？"
 
-**Question format:** When you identify an ambiguity, list all questions together in a structured way before writing any code. For example:
+**Question format:** Only after you have searched linked URLs and still cannot find the needed information, list all remaining ambiguities together in a structured way. For example:
 
 ```
-在开始编写之前，以下信息需要确认：
+已搜索您提供的网址，但仍有以下信息无法确认：
 1. 【收藏品X】的效果文本是什么？
 2. 事件"Y"中需要选择的具体选项文本是什么？
 3. 第4步的条件"灯火不低于XX"的具体数值是？
 ...
 ```
 
-### 3.3 Step Type Recognition Guide
+### 3.4 Step Type Recognition Guide
 
 When reading the user's description, match phrases to icon types:
 
@@ -444,7 +450,7 @@ When reading the user's description, match phrases to icon types:
 | "先行一步" | Right |
 | "去伪存真", "合成", "组合", "解读" | Search |
 
-### 3.4 Commit Message Format
+### 3.5 Commit Message Format
 
 After completing a new theme or update, suggest the commit message:
 
