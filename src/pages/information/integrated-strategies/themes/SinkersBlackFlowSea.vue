@@ -27,7 +27,7 @@ import Battle from '@/components/information/Battle.vue'
                          href="https://prts.wiki/w/ISW-DF_%E7%97%9B%E8%8B%A6%E5%B0%86%E6%81%AF"
                          target="_blank"
                          type="primary">
-                  <el-tooltip content="追猎触发" effect="light" placement="top">
+                  <el-tooltip content="触发“追猎”事件遭遇" effect="light" placement="top">
                     <el-text tag="ins" type="primary">【ISW-DF 痛苦将息】</el-text>
                   </el-tooltip>
                 </el-link>
