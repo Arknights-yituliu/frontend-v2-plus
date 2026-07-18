@@ -107,7 +107,7 @@ import Battle from '@/components/information/Battle.vue'
                 >
                   “好奇心与死”
                 </el-link>
-                ，选择“修正结果，必须找到目标”（消耗50源石锭），可为正确节点添加特殊标识“谜题与谜底”
+                ，选择“修正结果，必须找到目标”（消耗50源石锭），可为正确节点添加“谜题与谜底”特殊标识
               </div>
             </el-timeline-item>
             <el-timeline-item :icon="Warning" type="danger">
