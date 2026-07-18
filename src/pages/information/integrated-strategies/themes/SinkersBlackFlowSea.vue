@@ -220,9 +220,38 @@ import Battle from '@/components/information/Battle.vue'
                 </el-tooltip>
               </div>
             </el-timeline-item>
+            <el-timeline-item :icon="MoreFilled" type="primary">
+              <div>
+                <span class="optional">（可选）</span>
+                进入不期而遇，触发稀有事件
+                <el-link
+                    href="https://prts.wiki/w/%E6%B2%89%E6%B2%A6%E8%80%85%E7%9A%84%E9%BB%91%E6%B5%81%E6%A0%91%E6%B5%B7/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%AE%89%E7%9C%A0%E4%B8%80%E9%9A%85"
+                    target="_blank"
+                    type="primary"
+                >
+                  “安眠一隅”
+                </el-link>
+                ，选择“进入神秘空间”，获得
+                <el-tooltip
+                    content="立刻获得99源石锭，可代替【击坠“神明”】/【焚毁“文明”】/【湮没“光明”】生效一次"
+                    effect="light"
+                    placement="top"
+                >
+                  <el-text tag="ins">【源私钥】</el-text>
+                </el-tooltip>
+              </div>
+            </el-timeline-item>
+            <el-timeline-item :icon="Flag" type="warning">
+              <div>
+                抵达第6层，进入门口的命运所指节点，视上述的收藏品持有情况对
+                <el-link href="https://prts.wiki/w/%E7%8E%BB%E5%88%A9%E7%93%A6%E5%B0%94%EF%BC%8C%E7%97%87%E7%BB%93%E4%B9%8B%E6%A0%B8" target="_blank" type="primary">
+                  【玻利瓦尔，症结之核】
+                </el-link>施加削弱影响
+              </div>
+            </el-timeline-item>
             <el-timeline-item :icon="BOSS" color="#8A0993">
               <div>
-                抵达第6层，通过
+                通过
                 <el-link href="https://prts.wiki/w/ISW-DF_%E7%95%B8%E7%97%87" target="_blank" type="primary">
                   【ISW-DF 畸症】
                 </el-link>
