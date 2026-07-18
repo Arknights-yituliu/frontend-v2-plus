@@ -17,6 +17,7 @@ import PhantomAndCrimsonSolitaire from "./themes/PhantomAndCrimsonSolitaire.vue"
 import MizukiAndCaerulaArbor from "./themes/MizukiAndCaerulaArbor.vue";
 import ExpeditionersJqklumarkar from "./themes/ExpeditionersJqklumarkar.vue";
 import SarkazsFurnaceSideFables from "./themes/SarkazsFurnaceSideFables.vue";
+import SinkersBlackFlowSea from "./themes/SinkersBlackFlowSea.vue";
 import SuisGardenOfGrotesqueries from "./themes/SuisGardenOfGrotesqueries.vue";
 
 const options = [
@@ -24,7 +25,8 @@ const options = [
   '水月与深蓝之树',
   '探索者的银凇止境',
   '萨卡兹的无终奇语',
-  '岁的界园志异'
+  '岁的界园志异',
+  '沉沦者的黑流树海'
 ]
 
 const selectedOption = ref(options[0])
@@ -35,7 +37,8 @@ const componentMap = {
   '水月与深蓝之树': MizukiAndCaerulaArbor,
   '探索者的银凇止境': ExpeditionersJqklumarkar,
   '萨卡兹的无终奇语': SarkazsFurnaceSideFables,
-  '岁的界园志异': SuisGardenOfGrotesqueries
+  '岁的界园志异': SuisGardenOfGrotesqueries,
+  '沉沦者的黑流树海': SinkersBlackFlowSea
 } as const
 
 const currentComponent = computed(() => {
