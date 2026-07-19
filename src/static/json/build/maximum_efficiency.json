@@ -1,5 +1,19 @@
 [
   {
+    "name": "佩德洛",
+    "profession": "辅助",
+    "max_efficiency": 0.75,
+    "conditions": {
+      "target_profession": "辅助",
+      "skill_name": "实战技巧：游击手",
+      "branch": "游击手",
+      "efficiency_base": 0.3,
+      "efficiency_bonus": 0.45
+    },
+    "skill_name": "进驻训练室协助位时，辅助干员的专精技能训练速度+30%，如果训练位干员分支为游击手，则训练速度额外+45%",
+    "charId": "char_4234_pedro"
+  },
+  {
     "name": "雷狼龙S空爆",
     "profession": "近卫/狙击",
     "max_efficiency": 0.5,

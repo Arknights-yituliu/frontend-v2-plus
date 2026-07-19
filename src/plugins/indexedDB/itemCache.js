@@ -174,7 +174,7 @@ async function getPenguinMatrixCache() {
 
     // penguinData = loadingPenguinImageData(penguinCacheKey)
     const time = new Date().getTime().toString();
-    await axios.get(`https://cos.yituliu.cn/stage-drop/matrix.json?time=${time}`).then(response => {
+    await axios.get(`https://cos.yituliu.cn/arknights/stage-drop/matrix.json`).then(response => {
         console.log(`${penguinCacheKey}.返回一图流镜像数据`)
         const matrix = response.data.matrix
         const info = {
