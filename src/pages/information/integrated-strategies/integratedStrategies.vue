@@ -283,8 +283,10 @@ onBeforeUnmount(clearEndingCountdown)
     color: var(--el-text-color-primary);
     font-size: 18px;
     font-weight: 600;
-    white-space: nowrap;
-    content: "为防止剧透，将在" attr(data-spoiler-countdown) "秒后显示结局";
+    line-height: 1.6;
+    text-align: center;
+    white-space: pre-line;
+    content: "为防止剧透，将在" attr(data-spoiler-countdown) "秒后显示结局\A点击立即显示";
     transform: translate(-50%, -50%);
   }
 }
