@@ -189,15 +189,39 @@ const routes = [
         }
     },
     {
-        path: '/tools/scheduleV2',
+        path: '/tools/riic-schedule-generator',
         text: '排班表生成器',
+        name: 'RiicScheduleGenerator',
+        display: true,
+        module: 'tools',
+        icon: "mdi-home-clock-outline",
+        component: () => import('/src/pages/tools/riic-schedule-generator.vue'),
+        meta: {
+            title: '排班表生成器'
+        }
+    },
+    {
+        path: '/riic',
+        text: '排班表生成器',
+        name: 'RiicScheduleGeneratorShortcut',
+        display: false,
+        module: 'tools',
+        icon: "mdi-home-clock-outline",
+        component: () => import('/src/pages/tools/riic-schedule-generator.vue'),
+        meta: {
+            title: '排班表生成器'
+        }
+    },
+    {
+        path: '/tools/scheduleV2',
+        text: '排班表编辑器',
         name: 'ScheduleV2',
         display: true,
         module: 'tools',
         icon: "mdi-calendar-clock",
         component: () => import('/src/pages/tools/schedule.v2.vue'),
         meta: {
-            title: '排班表生成器'
+            title: '排班表编辑器'
         }
     },
     {
@@ -362,14 +386,14 @@ const routes = [
     },
     {
         path: '/tools/schedule',
-        text: '排班表生成器',
+        text: '排班表编辑器',
         name: 'Schedule',
         display: false,
         module: 'tools',
         icon: "mdi-calendar-clock",
         component: () => import('/src/pages/tools/schedule.v2.vue'),
         meta: {
-            title: '排班表生成器'
+            title: '排班表编辑器'
         }
     },
     {
