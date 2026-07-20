@@ -2,196 +2,176 @@
   <div class="container">
     <div class="theme-selector" role="group" aria-label="集成战略主题">
       <button
-          v-for="option in options"
-          :key="option.label"
-          type="button"
-          class="theme-option"
-          :class="{'is-active': selectedOption === option.label}"
-          :aria-pressed="selectedOption === option.label"
-          :title="option.label"
-          @click="selectedOption = option.label"
+        v-for="option in options"
+        :key="option.label"
+        type="button"
+        class="theme-option"
+        :class="{ 'is-active': selectedOption === option.label }"
+        :aria-pressed="selectedOption === option.label"
+        :title="option.label"
+        @click="selectedOption = option.label"
       >
-        <img
-            :src="option.image"
-            :alt="option.label"
-            decoding="async"
-        />
+        <img :src="option.image" :alt="option.label" decoding="async" />
       </button>
     </div>
 
     <!-- 肉鸽结局触发方式展示切换 -->
-    <div
-        ref="endingContent"
-        class="ending-content"
-        @click="handleSpoilerClick"
-    >
-      <transition
-          name="fade"
-          @before-enter="setupEndingSpoilers"
-          @after-enter="startEndingCountdown"
-      >
-        <component :is="currentComponent" :key="selectedOption"/>
+    <div ref="endingContent" class="ending-content" @click="handleSpoilerClick">
+      <transition name="fade" @before-enter="setupEndingSpoilers" @after-enter="startEndingCountdown">
+        <component :is="currentComponent" :key="selectedOption" />
       </transition>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {computed, onBeforeUnmount, onMounted, ref} from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import PhantomAndCrimsonSolitaire from "./themes/PhantomAndCrimsonSolitaire.vue";
 import MizukiAndCaerulaArbor from "./themes/MizukiAndCaerulaArbor.vue";
 import ExpeditionersJqklumarkar from "./themes/ExpeditionersJqklumarkar.vue";
 import SarkazsFurnaceSideFables from "./themes/SarkazsFurnaceSideFables.vue";
 import SinkersBlackFlowSea from "./themes/SinkersBlackFlowSea.vue";
 import SuisGardenOfGrotesqueries from "./themes/SuisGardenOfGrotesqueries.vue";
-import expeditionersJqklumarkarImage
-  from "@/assets/images/information/integrated-strategies/expeditioners-jqklumarkar.png";
-import mizukiCaerulaArborImage
-  from "@/assets/images/information/integrated-strategies/mizuki-caerula-arbor.png";
-import phantomCrimsonSolitaireImage
-  from "@/assets/images/information/integrated-strategies/phantom-crimson-solitaire.png";
-import sarkazsFurnaceSideFablesImage
-  from "@/assets/images/information/integrated-strategies/sarkazs-furnace-side-fables.png";
-import sinkersBlackFlowSeaImage
-  from "@/assets/images/information/integrated-strategies/sinkers-black-flow-sea.png";
-import suisGardenOfGrotesqueriesImage
-  from "@/assets/images/information/integrated-strategies/suis-garden-of-grotesqueries.png";
+import expeditionersJqklumarkarImage from "@/assets/images/information/integrated-strategies/expeditioners-jqklumarkar.png";
+import mizukiCaerulaArborImage from "@/assets/images/information/integrated-strategies/mizuki-caerula-arbor.png";
+import phantomCrimsonSolitaireImage from "@/assets/images/information/integrated-strategies/phantom-crimson-solitaire.png";
+import sarkazsFurnaceSideFablesImage from "@/assets/images/information/integrated-strategies/sarkazs-furnace-side-fables.png";
+import sinkersBlackFlowSeaImage from "@/assets/images/information/integrated-strategies/sinkers-black-flow-sea.png";
+import suisGardenOfGrotesqueriesImage from "@/assets/images/information/integrated-strategies/suis-garden-of-grotesqueries.png";
 
 // 组件映射
 const componentMap = {
-  '傀影与猩红孤钻': PhantomAndCrimsonSolitaire,
-  '水月与深蓝之树': MizukiAndCaerulaArbor,
-  '探索者的银凇止境': ExpeditionersJqklumarkar,
-  '萨卡兹的无终奇语': SarkazsFurnaceSideFables,
-  '岁的界园志异': SuisGardenOfGrotesqueries,
-  '沉沦者的黑流树海': SinkersBlackFlowSea
-} as const
+  傀影与猩红孤钻: PhantomAndCrimsonSolitaire,
+  水月与深蓝之树: MizukiAndCaerulaArbor,
+  探索者的银凇止境: ExpeditionersJqklumarkar,
+  萨卡兹的无终奇语: SarkazsFurnaceSideFables,
+  岁的界园志异: SuisGardenOfGrotesqueries,
+  沉沦者的黑流树海: SinkersBlackFlowSea,
+} as const;
 
-type ThemeName = keyof typeof componentMap
+type ThemeName = keyof typeof componentMap;
 
-const options: Array<{ label: ThemeName, image: string }> = [
-  {label: '沉沦者的黑流树海', image: sinkersBlackFlowSeaImage},
-  {label: '岁的界园志异', image: suisGardenOfGrotesqueriesImage},
-  {label: '萨卡兹的无终奇语', image: sarkazsFurnaceSideFablesImage},
-  {label: '探索者的银凇止境', image: expeditionersJqklumarkarImage},
-  {label: '水月与深蓝之树', image: mizukiCaerulaArborImage},
-  {label: '傀影与猩红孤钻', image: phantomCrimsonSolitaireImage}
-]
+const options: Array<{ label: ThemeName; image: string }> = [
+  { label: "沉沦者的黑流树海", image: sinkersBlackFlowSeaImage },
+  { label: "岁的界园志异", image: suisGardenOfGrotesqueriesImage },
+  { label: "萨卡兹的无终奇语", image: sarkazsFurnaceSideFablesImage },
+  { label: "探索者的银凇止境", image: expeditionersJqklumarkarImage },
+  { label: "水月与深蓝之树", image: mizukiCaerulaArborImage },
+  { label: "傀影与猩红孤钻", image: phantomCrimsonSolitaireImage },
+];
 
-const selectedOption = ref<ThemeName>(options[0].label)
-const endingContent = ref<HTMLElement | null>(null)
-const SPOILER_DELAY_SECONDS = 4
-let spoilerTimer: ReturnType<typeof setInterval> | null = null
+const selectedOption = ref<ThemeName>(options[0].label);
+const endingContent = ref<HTMLElement | null>(null);
+const SPOILER_DELAY_SECONDS = 4;
+let spoilerTimer: ReturnType<typeof setInterval> | null = null;
 
 const currentComponent = computed(() => {
-  return componentMap[selectedOption.value]
-})
+  return componentMap[selectedOption.value];
+});
 
 const getEndingItems = (contentRoot?: Element) => {
-  const root = contentRoot ?? endingContent.value?.firstElementChild
-  const timeline = root?.querySelector<HTMLElement>(':scope > .el-timeline')
+  const root = contentRoot ?? endingContent.value?.firstElementChild;
+  const timeline = root?.querySelector<HTMLElement>(":scope > .el-timeline");
 
   if (!timeline) {
-    return []
+    return [];
   }
 
   return Array.from(timeline.children).filter((item): item is HTMLElement => {
-    return item instanceof HTMLElement && item.querySelector('.el-card') !== null
-  })
-}
+    return item instanceof HTMLElement && item.querySelector(".el-card") !== null;
+  });
+};
 
 const setupEndingSpoilers = (contentRoot?: Element) => {
-  clearEndingCountdown()
+  clearEndingCountdown();
 
-  const endingItems = getEndingItems(contentRoot)
-  endingItems.forEach((item) => item.classList.add('ending-item'))
+  const endingItems = getEndingItems(contentRoot);
+  endingItems.forEach((item) => item.classList.add("ending-item"));
 
   endingItems.slice(1).forEach((item) => {
-    item.classList.add('spoiler-ending')
-    item.classList.remove('is-revealed')
+    item.classList.add("spoiler-ending");
+    item.classList.remove("is-revealed");
     item
-      .querySelector<HTMLElement>(':scope > .el-timeline-item__wrapper > .el-timeline-item__content')
-      ?.setAttribute('data-spoiler-countdown', SPOILER_DELAY_SECONDS.toString())
-  })
-}
+      .querySelector<HTMLElement>(":scope > .el-timeline-item__wrapper > .el-timeline-item__content")
+      ?.setAttribute("data-spoiler-countdown", SPOILER_DELAY_SECONDS.toString());
+  });
+};
 
 const clearEndingCountdown = () => {
   if (spoilerTimer !== null) {
-    clearInterval(spoilerTimer)
-    spoilerTimer = null
+    clearInterval(spoilerTimer);
+    spoilerTimer = null;
   }
-}
+};
 
 const updateEndingCountdown = (contentRoot: Element, seconds: number) => {
   contentRoot
-    .querySelectorAll<HTMLElement>(
-      '.spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content'
-    )
+    .querySelectorAll<HTMLElement>(".spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content")
     .forEach((content) => {
-      content.dataset.spoilerCountdown = seconds.toString()
-    })
-}
+      content.dataset.spoilerCountdown = seconds.toString();
+    });
+};
 
 const revealEnding = (ending: HTMLElement) => {
-  ending.classList.add('is-revealed')
+  ending.classList.add("is-revealed");
 
-  const timeline = ending.parentElement
+  const timeline = ending.parentElement;
 
-  if (!timeline?.querySelector('.spoiler-ending:not(.is-revealed)')) {
-    clearEndingCountdown()
+  if (!timeline?.querySelector(".spoiler-ending:not(.is-revealed)")) {
+    clearEndingCountdown();
   }
-}
+};
 
 const handleSpoilerClick = (event: MouseEvent) => {
   if (!(event.target instanceof Element)) {
-    return
+    return;
   }
 
-  const content = event.target.closest<HTMLElement>('.el-timeline-item__content')
-  const ending = content?.closest<HTMLElement>('.spoiler-ending:not(.is-revealed)')
+  const content = event.target.closest<HTMLElement>(".el-timeline-item__content");
+  const ending = content?.closest<HTMLElement>(".spoiler-ending:not(.is-revealed)");
 
   if (ending) {
-    revealEnding(ending)
+    revealEnding(ending);
   }
-}
+};
 
 const startEndingCountdown = (contentRoot?: Element) => {
-  const root = contentRoot ?? endingContent.value?.firstElementChild
+  const root = contentRoot ?? endingContent.value?.firstElementChild;
 
   if (!root || getEndingItems(root).length <= 1) {
-    return
+    return;
   }
 
-  clearEndingCountdown()
+  clearEndingCountdown();
 
-  let remainingSeconds = SPOILER_DELAY_SECONDS
-  updateEndingCountdown(root, remainingSeconds)
+  let remainingSeconds = SPOILER_DELAY_SECONDS;
+  updateEndingCountdown(root, remainingSeconds);
 
   spoilerTimer = setInterval(() => {
-    remainingSeconds -= 1
+    remainingSeconds -= 1;
 
     if (remainingSeconds > 0) {
-      updateEndingCountdown(root, remainingSeconds)
-      return
+      updateEndingCountdown(root, remainingSeconds);
+      return;
     }
 
-    clearEndingCountdown()
-    root.querySelectorAll<HTMLElement>('.spoiler-ending').forEach((item) => {
-      item.classList.add('is-revealed')
-    })
-  }, 1000)
-}
+    clearEndingCountdown();
+    root.querySelectorAll<HTMLElement>(".spoiler-ending").forEach((item) => {
+      item.classList.add("is-revealed");
+    });
+  }, 1000);
+};
 
 onMounted(() => {
-  const root = endingContent.value?.firstElementChild
+  const root = endingContent.value?.firstElementChild;
 
   if (root) {
-    setupEndingSpoilers(root)
-    startEndingCountdown(root)
+    setupEndingSpoilers(root);
+    startEndingCountdown(root);
   }
-})
+});
 
-onBeforeUnmount(clearEndingCountdown)
+onBeforeUnmount(clearEndingCountdown);
 </script>
 
 <style lang="scss" scoped>
@@ -219,7 +199,10 @@ onBeforeUnmount(clearEndingCountdown)
   background: transparent;
   cursor: pointer;
   opacity: 0.72;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
 
   img {
     display: block;
@@ -245,17 +228,11 @@ onBeforeUnmount(clearEndingCountdown)
 }
 
 .ending-content {
-  :deep(.ending-item > .el-timeline-item__wrapper > .el-timeline-item__timestamp) {
-    color: var(--el-text-color-primary);
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1.4;
+  :deep(.el-timeline-item__timestamp) {
+    position: relative;
+    transform: translateY(-2px);
   }
-
-  :deep(.ending-item > .el-timeline-item__wrapper > .el-timeline-item__content > .el-card) {
-    transition: filter 1s ease, opacity 1s ease;
-  }
-
+  
   :deep(.spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content) {
     position: relative;
     cursor: pointer;
