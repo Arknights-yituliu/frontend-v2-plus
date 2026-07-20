@@ -24,9 +24,12 @@
         ref="endingContent"
         class="ending-content"
         @click="handleSpoilerClick"
-        @keydown="handleSpoilerKeydown"
     >
-      <transition name="fade" @before-enter="setupEndingSpoilers">
+      <transition
+          name="fade"
+          @before-enter="setupEndingSpoilers"
+          @after-enter="startEndingCountdown"
+      >
         <component :is="currentComponent" :key="selectedOption"/>
       </transition>
     </div>
@@ -34,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, onMounted, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, ref} from "vue";
 import PhantomAndCrimsonSolitaire from "./themes/PhantomAndCrimsonSolitaire.vue";
 import MizukiAndCaerulaArbor from "./themes/MizukiAndCaerulaArbor.vue";
 import ExpeditionersJqklumarkar from "./themes/ExpeditionersJqklumarkar.vue";
@@ -77,84 +80,118 @@ const options: Array<{ label: ThemeName, image: string }> = [
 
 const selectedOption = ref<ThemeName>(options[0].label)
 const endingContent = ref<HTMLElement | null>(null)
-const revealedEndings = new Map<ThemeName, Set<number>>()
+const SPOILER_DELAY_SECONDS = 4
+let spoilerTimer: ReturnType<typeof setInterval> | null = null
 
 const currentComponent = computed(() => {
   return componentMap[selectedOption.value]
 })
 
-const setupEndingSpoilers = (contentRoot?: Element) => {
+const getEndingItems = (contentRoot?: Element) => {
   const root = contentRoot ?? endingContent.value?.firstElementChild
   const timeline = root?.querySelector<HTMLElement>(':scope > .el-timeline')
 
   if (!timeline) {
-    return
+    return []
   }
 
-  const endingItems = Array.from(timeline.children).filter((item): item is HTMLElement => {
+  return Array.from(timeline.children).filter((item): item is HTMLElement => {
     return item instanceof HTMLElement && item.querySelector('.el-card') !== null
   })
-  const revealed = revealedEndings.get(selectedOption.value)
+}
 
-  endingItems.slice(1).forEach((item, index) => {
-    const endingIndex = index + 1
+const setupEndingSpoilers = (contentRoot?: Element) => {
+  clearEndingCountdown()
 
+  const endingItems = getEndingItems(contentRoot)
+  endingItems.forEach((item) => item.classList.add('ending-item'))
+
+  endingItems.slice(1).forEach((item) => {
     item.classList.add('spoiler-ending')
-    item.dataset.endingIndex = endingIndex.toString()
-
-    if (revealed?.has(endingIndex)) {
-      item.classList.add('is-revealed')
-      return
-    }
-
-    item.tabIndex = 0
-    item.setAttribute('role', 'button')
-    item.setAttribute('aria-label', '点击查看该结局')
+    item.classList.remove('is-revealed')
+    item
+      .querySelector<HTMLElement>(':scope > .el-timeline-item__wrapper > .el-timeline-item__content')
+      ?.setAttribute('data-spoiler-countdown', SPOILER_DELAY_SECONDS.toString())
   })
+}
+
+const clearEndingCountdown = () => {
+  if (spoilerTimer !== null) {
+    clearInterval(spoilerTimer)
+    spoilerTimer = null
+  }
+}
+
+const updateEndingCountdown = (contentRoot: Element, seconds: number) => {
+  contentRoot
+    .querySelectorAll<HTMLElement>(
+      '.spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content'
+    )
+    .forEach((content) => {
+      content.dataset.spoilerCountdown = seconds.toString()
+    })
 }
 
 const revealEnding = (ending: HTMLElement) => {
-  const endingIndex = Number(ending.dataset.endingIndex)
-  const revealed = revealedEndings.get(selectedOption.value) ?? new Set<number>()
-
-  revealed.add(endingIndex)
-  revealedEndings.set(selectedOption.value, revealed)
   ending.classList.add('is-revealed')
-  ending.removeAttribute('tabindex')
-  ending.removeAttribute('role')
-  ending.removeAttribute('aria-label')
-}
 
-const getHiddenEnding = (target: EventTarget | null) => {
-  if (!(target instanceof Element)) {
-    return null
+  const timeline = ending.parentElement
+
+  if (!timeline?.querySelector('.spoiler-ending:not(.is-revealed)')) {
+    clearEndingCountdown()
   }
-
-  return target.closest<HTMLElement>('.spoiler-ending:not(.is-revealed)')
 }
 
 const handleSpoilerClick = (event: MouseEvent) => {
-  const ending = getHiddenEnding(event.target)
-
-  if (ending) {
-    revealEnding(ending)
-  }
-}
-
-const handleSpoilerKeydown = (event: KeyboardEvent) => {
-  if (event.key !== 'Enter' && event.key !== ' ') {
+  if (!(event.target instanceof Element)) {
     return
   }
 
-  const ending = getHiddenEnding(event.target)
+  const content = event.target.closest<HTMLElement>('.el-timeline-item__content')
+  const ending = content?.closest<HTMLElement>('.spoiler-ending:not(.is-revealed)')
 
   if (ending) {
-    event.preventDefault()
     revealEnding(ending)
   }
 }
 
-onMounted(setupEndingSpoilers)
+const startEndingCountdown = (contentRoot?: Element) => {
+  const root = contentRoot ?? endingContent.value?.firstElementChild
+
+  if (!root || getEndingItems(root).length <= 1) {
+    return
+  }
+
+  clearEndingCountdown()
+
+  let remainingSeconds = SPOILER_DELAY_SECONDS
+  updateEndingCountdown(root, remainingSeconds)
+
+  spoilerTimer = setInterval(() => {
+    remainingSeconds -= 1
+
+    if (remainingSeconds > 0) {
+      updateEndingCountdown(root, remainingSeconds)
+      return
+    }
+
+    clearEndingCountdown()
+    root.querySelectorAll<HTMLElement>('.spoiler-ending').forEach((item) => {
+      item.classList.add('is-revealed')
+    })
+  }, 1000)
+}
+
+onMounted(() => {
+  const root = endingContent.value?.firstElementChild
+
+  if (root) {
+    setupEndingSpoilers(root)
+    startEndingCountdown(root)
+  }
+})
+
+onBeforeUnmount(clearEndingCountdown)
 </script>
 
 <style lang="scss" scoped>
@@ -208,8 +245,15 @@ onMounted(setupEndingSpoilers)
 }
 
 .ending-content {
-  :deep(.spoiler-ending) {
-    cursor: default;
+  :deep(.ending-item > .el-timeline-item__wrapper > .el-timeline-item__timestamp) {
+    color: var(--el-text-color-primary);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  :deep(.ending-item > .el-timeline-item__wrapper > .el-timeline-item__content > .el-card) {
+    transition: filter 1s ease, opacity 1s ease;
   }
 
   :deep(.spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content) {
@@ -224,7 +268,6 @@ onMounted(setupEndingSpoilers)
     opacity: 0.65;
     pointer-events: none;
     user-select: none;
-    transition: filter 0.2s ease, opacity 0.2s ease;
   }
 
   :deep(.spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content::after) {
@@ -241,18 +284,8 @@ onMounted(setupEndingSpoilers)
     font-size: 18px;
     font-weight: 600;
     white-space: nowrap;
-    content: "点击查看该结局";
+    content: "为防止剧透，将在" attr(data-spoiler-countdown) "秒后显示结局";
     transform: translate(-50%, -50%);
-  }
-
-  :deep(.spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content:hover::after) {
-    border-color: var(--el-color-primary);
-    color: var(--el-color-primary);
-  }
-
-  :deep(.spoiler-ending:focus-visible > .el-timeline-item__wrapper > .el-timeline-item__content) {
-    outline: 2px solid var(--el-color-primary);
-    outline-offset: 3px;
   }
 }
 
