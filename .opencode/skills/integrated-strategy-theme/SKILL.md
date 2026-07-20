@@ -66,29 +66,36 @@ import BOSS from '@/components/information/BOSS.vue'
 
 Edit `src/pages/information/integrated-strategies/integratedStrategies.vue`:
 
-1. Add import line in `<script setup>`:
+1. Add the theme component import in `<script setup>`:
    ```js
    import <EnglishName> from "./themes/<EnglishPascalCaseName>.vue";
    ```
 
-2. Add display name to the `options` array (in release order):
+2. Add the theme image import (follow the existing naming convention: `{camelCaseName}Image` from `@/assets/images/information/integrated-strategies/{kebab-case-name}.png`):
    ```js
-   const options = [
-     '傀影与猩红孤钻',
-     '水月与深蓝之树',
-     // ... existing ...
-     '<中文主题名>'
-   ]
+   import <imageName> from "@/assets/images/information/integrated-strategies/<kebab-case-name>.png";
    ```
 
-3. Add entry to `componentMap`:
+3. Add entry to `componentMap` (keys are **unquoted** Chinese theme names):
    ```js
    const componentMap = {
-     '傀影与猩红孤钻': PhantomAndCrimsonSolitaire,
+     傀影与猩红孤钻: PhantomAndCrimsonSolitaire,
+     水月与深蓝之树: MizukiAndCaerulaArbor,
      // ... existing ...
-     '<中文主题名>': <EnglishName>
-   } as const
+     <中文主题名>: <EnglishName>
+   } as const;
    ```
+
+4. Add to the `options` array with `{ label, image }` (order newest-first, matching release chronology). The first entry in the array is the default selected theme on page load:
+   ```js
+   const options: Array<{ label: ThemeName; image: string }> = [
+     { label: "<最新主题>", image: <newestImage> },
+     // ... existing ...
+     { label: "<最早主题>", image: <oldestImage> },
+   ];
+   ```
+
+   The `ThemeName` type is derived automatically from `keyof typeof componentMap` — adding a key to `componentMap` automatically adds the type entry. No manual type changes needed.
 
 ### 1.3 Update an existing theme
 
@@ -477,5 +484,10 @@ update(集成战略): <主题名><变更简述>
 
 - When a new IS season releases, the route in `src/router/routes.js` already exists at `/information/integratedStrategies` — no route change is needed
 - The `integratedStrategies.scss` file contains all shared styles; do not add local styles to theme files
-- The `integratedStrategies.vue` container uses `<el-segmented>` and `<component :is>` for tab switching; adding a new theme component and name to the `options` array is all that's needed
+- The `integratedStrategies.vue` container uses an image button grid (`.theme-selector`) with PNG theme banners and `<component :is>` for tab switching. Each theme needs both a component file and a banner image at `src/assets/images/information/integrated-strategies/{kebab-case-name}.png` (aspect ratio 1200:385)
+- The container automatically applies **anti-spoiler blur** to all non-first endings via cookie-based persistence. Theme authors do not need to write any spoiler-related code. The system:
+  - Only renders a blurred mask layer ("点击显示第X结局" overlay + `blur(7px)` filter) when the corresponding cookie (`ending_revealed_{theme}_{index}`) does **not** exist; when the cookie is present, no mask elements are rendered at all
+  - On click, transitions the blur away (0.5s fade), then removes the mask entirely and writes the cookie valid for 20 years
+  - Relies on the `<div>` wrapping `<el-timeline>` (as shown in the template skeleton) — the DOM query uses `:scope > .el-timeline` which will fail if `<el-timeline>` is the component root. Also relies on each `el-timeline-item[placement="top"]` containing a single `.el-card`
+- The spoilered ending overlay uses Chinese ordinals from a hardcoded `endingLabels` array (`["一","二","三","四","五","六","七","八"]`) in the container's `setupEndingSpoilers`. If any theme ever introduces a 9th or higher ending, this array must be extended synchronously
 - If a theme has a node type or mechanic not covered by this skill's icon mapping, document it here after confirming the correct pattern with the user
