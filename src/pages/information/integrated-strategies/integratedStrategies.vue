@@ -20,14 +20,21 @@
     </div>
 
     <!-- 肉鸽结局触发方式展示切换 -->
-    <transition name="fade">
-      <component :is="currentComponent" :key="selectedOption"/>
-    </transition>
+    <div
+        ref="endingContent"
+        class="ending-content"
+        @click="handleSpoilerClick"
+        @keydown="handleSpoilerKeydown"
+    >
+      <transition name="fade" @before-enter="setupEndingSpoilers">
+        <component :is="currentComponent" :key="selectedOption"/>
+      </transition>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {ref, computed} from "vue";
+import {computed, onMounted, ref} from "vue";
 import PhantomAndCrimsonSolitaire from "./themes/PhantomAndCrimsonSolitaire.vue";
 import MizukiAndCaerulaArbor from "./themes/MizukiAndCaerulaArbor.vue";
 import ExpeditionersJqklumarkar from "./themes/ExpeditionersJqklumarkar.vue";
@@ -69,10 +76,85 @@ const options: Array<{ label: ThemeName, image: string }> = [
 ]
 
 const selectedOption = ref<ThemeName>(options[0].label)
+const endingContent = ref<HTMLElement | null>(null)
+const revealedEndings = new Map<ThemeName, Set<number>>()
 
 const currentComponent = computed(() => {
   return componentMap[selectedOption.value]
 })
+
+const setupEndingSpoilers = (contentRoot?: Element) => {
+  const root = contentRoot ?? endingContent.value?.firstElementChild
+  const timeline = root?.querySelector<HTMLElement>(':scope > .el-timeline')
+
+  if (!timeline) {
+    return
+  }
+
+  const endingItems = Array.from(timeline.children).filter((item): item is HTMLElement => {
+    return item instanceof HTMLElement && item.querySelector('.el-card') !== null
+  })
+  const revealed = revealedEndings.get(selectedOption.value)
+
+  endingItems.slice(1).forEach((item, index) => {
+    const endingIndex = index + 1
+
+    item.classList.add('spoiler-ending')
+    item.dataset.endingIndex = endingIndex.toString()
+
+    if (revealed?.has(endingIndex)) {
+      item.classList.add('is-revealed')
+      return
+    }
+
+    item.tabIndex = 0
+    item.setAttribute('role', 'button')
+    item.setAttribute('aria-label', '点击查看该结局')
+  })
+}
+
+const revealEnding = (ending: HTMLElement) => {
+  const endingIndex = Number(ending.dataset.endingIndex)
+  const revealed = revealedEndings.get(selectedOption.value) ?? new Set<number>()
+
+  revealed.add(endingIndex)
+  revealedEndings.set(selectedOption.value, revealed)
+  ending.classList.add('is-revealed')
+  ending.removeAttribute('tabindex')
+  ending.removeAttribute('role')
+  ending.removeAttribute('aria-label')
+}
+
+const getHiddenEnding = (target: EventTarget | null) => {
+  if (!(target instanceof Element)) {
+    return null
+  }
+
+  return target.closest<HTMLElement>('.spoiler-ending:not(.is-revealed)')
+}
+
+const handleSpoilerClick = (event: MouseEvent) => {
+  const ending = getHiddenEnding(event.target)
+
+  if (ending) {
+    revealEnding(ending)
+  }
+}
+
+const handleSpoilerKeydown = (event: KeyboardEvent) => {
+  if (event.key !== 'Enter' && event.key !== ' ') {
+    return
+  }
+
+  const ending = getHiddenEnding(event.target)
+
+  if (ending) {
+    event.preventDefault()
+    revealEnding(ending)
+  }
+}
+
+onMounted(setupEndingSpoilers)
 </script>
 
 <style lang="scss" scoped>
@@ -122,6 +204,55 @@ const currentComponent = computed(() => {
     border-color: var(--el-color-primary);
     box-shadow: 0 0 0 1px var(--el-color-primary);
     opacity: 1;
+  }
+}
+
+.ending-content {
+  :deep(.spoiler-ending) {
+    cursor: default;
+  }
+
+  :deep(.spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content) {
+    position: relative;
+    cursor: pointer;
+  }
+
+  :deep(.spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content > .el-card) {
+    max-height: 50dvh;
+    overflow: hidden;
+    filter: blur(7px);
+    opacity: 0.65;
+    pointer-events: none;
+    user-select: none;
+    transition: filter 0.2s ease, opacity 0.2s ease;
+  }
+
+  :deep(.spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content::after) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    padding: 8px 14px;
+    border: 1px solid var(--el-border-color);
+    border-radius: 6px;
+    background: var(--el-bg-color-overlay);
+    box-shadow: var(--el-box-shadow-light);
+    color: var(--el-text-color-primary);
+    font-size: 18px;
+    font-weight: 600;
+    white-space: nowrap;
+    content: "点击查看该结局";
+    transform: translate(-50%, -50%);
+  }
+
+  :deep(.spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content:hover::after) {
+    border-color: var(--el-color-primary);
+    color: var(--el-color-primary);
+  }
+
+  :deep(.spoiler-ending:focus-visible > .el-timeline-item__wrapper > .el-timeline-item__content) {
+    outline: 2px solid var(--el-color-primary);
+    outline-offset: 3px;
   }
 }
 
