@@ -17,7 +17,7 @@
 
     <!-- 肉鸽结局触发方式展示切换 -->
     <div ref="endingContent" class="ending-content" @click="handleSpoilerClick">
-      <transition name="fade" @before-enter="setupEndingSpoilers" @after-enter="startEndingCountdown">
+      <transition name="fade" @enter="onThemeEnter">
         <component :is="currentComponent" :key="selectedOption" />
       </transition>
     </div>
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import PhantomAndCrimsonSolitaire from "./themes/PhantomAndCrimsonSolitaire.vue";
 import MizukiAndCaerulaArbor from "./themes/MizukiAndCaerulaArbor.vue";
 import ExpeditionersJqklumarkar from "./themes/ExpeditionersJqklumarkar.vue";
@@ -62,8 +62,9 @@ const options: Array<{ label: ThemeName; image: string }> = [
 
 const selectedOption = ref<ThemeName>(options[0].label);
 const endingContent = ref<HTMLElement | null>(null);
-const SPOILER_DELAY_SECONDS = 4;
-let spoilerTimer: ReturnType<typeof setInterval> | null = null;
+
+const COOKIE_PREFIX = "ending_revealed_";
+const COOKIE_MAX_AGE = 20 * 365 * 24 * 60 * 60; // 20年
 
 const currentComponent = computed(() => {
   return componentMap[selectedOption.value];
@@ -82,44 +83,46 @@ const getEndingItems = (contentRoot?: Element) => {
   });
 };
 
-const setupEndingSpoilers = (contentRoot?: Element) => {
-  clearEndingCountdown();
+const getEndingCookieKey = (themeName: string, endingIndex: number) =>
+  `${COOKIE_PREFIX}${themeName}_${endingIndex}`;
 
+const getCookie = (name: string): string | null => {
+  const match = document.cookie.match(
+    new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()\[\]\\\/+^])/g, "\\$1") + "=([^;]*)")
+  );
+  return match ? decodeURIComponent(match[1]) : null;
+};
+
+const setCookie = (name: string, value: string, maxAge: number) => {
+  document.cookie = `${name}=${encodeURIComponent(value)}; max-age=${maxAge}; path=/; SameSite=Lax`;
+};
+
+const setupEndingSpoilers = (contentRoot?: Element) => {
   const endingItems = getEndingItems(contentRoot);
   endingItems.forEach((item) => item.classList.add("ending-item"));
 
-  endingItems.slice(1).forEach((item) => {
-    item.classList.add("spoiler-ending");
-    item.classList.remove("is-revealed");
-    item
-      .querySelector<HTMLElement>(":scope > .el-timeline-item__wrapper > .el-timeline-item__content")
-      ?.setAttribute("data-spoiler-countdown", SPOILER_DELAY_SECONDS.toString());
+  endingItems.slice(1).forEach((item, index) => {
+    const endingIndex = index + 2;
+    const cookieKey = getEndingCookieKey(selectedOption.value, endingIndex);
+
+    item.setAttribute("data-ending-index", endingIndex.toString());
+
+    if (getCookie(cookieKey)) {
+      item.classList.add("is-revealed");
+    } else {
+      const endingLabels = ["一", "二", "三", "四", "五", "六", "七", "八"]; // 从“一”开始，目前保留到“八”（应该不会有九个结局的集成战略吧）
+      const label = endingLabels[endingIndex - 1] || String(endingIndex);
+      const content = item.querySelector<HTMLElement>(
+        ":scope > .el-timeline-item__wrapper > .el-timeline-item__content"
+      );
+
+      if (content) {
+        content.setAttribute("data-spoiler-text", `点击显示第${label}结局`);
+      }
+
+      item.classList.add("spoiler-ending");
+    }
   });
-};
-
-const clearEndingCountdown = () => {
-  if (spoilerTimer !== null) {
-    clearInterval(spoilerTimer);
-    spoilerTimer = null;
-  }
-};
-
-const updateEndingCountdown = (contentRoot: Element, seconds: number) => {
-  contentRoot
-    .querySelectorAll<HTMLElement>(".spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content")
-    .forEach((content) => {
-      content.dataset.spoilerCountdown = seconds.toString();
-    });
-};
-
-const revealEnding = (ending: HTMLElement) => {
-  ending.classList.add("is-revealed");
-
-  const timeline = ending.parentElement;
-
-  if (!timeline?.querySelector(".spoiler-ending:not(.is-revealed)")) {
-    clearEndingCountdown();
-  }
 };
 
 const handleSpoilerClick = (event: MouseEvent) => {
@@ -128,50 +131,51 @@ const handleSpoilerClick = (event: MouseEvent) => {
   }
 
   const content = event.target.closest<HTMLElement>(".el-timeline-item__content");
-  const ending = content?.closest<HTMLElement>(".spoiler-ending:not(.is-revealed)");
+  const ending = content?.closest<HTMLElement>(".spoiler-ending:not(.is-revealed):not(.is-revealing)");
 
-  if (ending) {
-    revealEnding(ending);
-  }
-};
-
-const startEndingCountdown = (contentRoot?: Element) => {
-  const root = contentRoot ?? endingContent.value?.firstElementChild;
-
-  if (!root || getEndingItems(root).length <= 1) {
+  if (!ending) {
     return;
   }
 
-  clearEndingCountdown();
+  const endingIndex = parseInt(ending.getAttribute("data-ending-index") || "0");
+  if (!endingIndex) {
+    return;
+  }
 
-  let remainingSeconds = SPOILER_DELAY_SECONDS;
-  updateEndingCountdown(root, remainingSeconds);
+  const cookieKey = getEndingCookieKey(selectedOption.value, endingIndex);
+  const card = ending.querySelector<HTMLElement>(
+    ":scope > .el-timeline-item__wrapper > .el-timeline-item__content > .el-card"
+  );
 
-  spoilerTimer = setInterval(() => {
-    remainingSeconds -= 1;
+  ending.classList.add("is-revealing");
 
-    if (remainingSeconds > 0) {
-      updateEndingCountdown(root, remainingSeconds);
-      return;
-    }
+  const onTransitionEnd = () => {
+    ending.classList.remove("is-revealing", "spoiler-ending");
+    ending.classList.add("is-revealed");
+    setCookie(cookieKey, "1", COOKIE_MAX_AGE);
+  };
 
-    clearEndingCountdown();
-    root.querySelectorAll<HTMLElement>(".spoiler-ending").forEach((item) => {
-      item.classList.add("is-revealed");
-    });
-  }, 1000);
+  if (card) {
+    card.addEventListener("transitionend", onTransitionEnd, { once: true });
+  } else {
+    onTransitionEnd();
+  }
+};
+
+const onThemeEnter = (el: Element) => {
+  nextTick(() => {
+    setupEndingSpoilers(el);
+  });
 };
 
 onMounted(() => {
-  const root = endingContent.value?.firstElementChild;
-
-  if (root) {
-    setupEndingSpoilers(root);
-    startEndingCountdown(root);
-  }
+  nextTick(() => {
+    const root = endingContent.value?.firstElementChild;
+    if (root) {
+      setupEndingSpoilers(root);
+    }
+  });
 });
-
-onBeforeUnmount(clearEndingCountdown);
 </script>
 
 <style lang="scss" scoped>
@@ -232,9 +236,8 @@ onBeforeUnmount(clearEndingCountdown);
     position: relative;
     transform: translateY(-2px);
   }
-  
+
   :deep(.spoiler-ending:not(.is-revealed) > .el-timeline-item__wrapper > .el-timeline-item__content) {
-    position: relative;
     cursor: pointer;
   }
 
@@ -258,13 +261,24 @@ onBeforeUnmount(clearEndingCountdown);
     background: var(--el-bg-color-overlay);
     box-shadow: var(--el-box-shadow-light);
     color: var(--el-text-color-primary);
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     line-height: 1.6;
     text-align: center;
     white-space: pre-line;
-    content: "为防止剧透，将在" attr(data-spoiler-countdown) "秒后显示结局\A点击立即显示";
+    content: attr(data-spoiler-text);
     transform: translate(-50%, -50%);
+  }
+
+  :deep(.spoiler-ending.is-revealing > .el-timeline-item__wrapper > .el-timeline-item__content > .el-card) {
+    filter: blur(0);
+    opacity: 1;
+    transition: filter 0.5s ease, opacity 0.5s ease;
+  }
+
+  :deep(.spoiler-ending.is-revealing > .el-timeline-item__wrapper > .el-timeline-item__content::after) {
+    opacity: 0;
+    transition: opacity 0.5s ease;
   }
 }
 
