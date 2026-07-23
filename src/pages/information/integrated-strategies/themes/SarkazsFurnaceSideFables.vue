@@ -28,10 +28,8 @@ import Battle from '@/components/information/Battle.vue'
                   “表达欲”
                 </el-link>
                 ，选择
-                <el-tooltip content="消耗2缕构想">
-                  <el-text tag="ins">“奋起反抗”</el-text>
-                </el-tooltip>
-                获得
+                “奋起反抗”
+                （消耗2缕构想），获得
                 <el-tooltip
                     content="所有敌方单位的攻击速度+30，移动速度+30%，最大生命值+30%，可在虚实疆界中探索不同的险路恶敌"
                     effect="light"
@@ -114,7 +112,7 @@ import Battle from '@/components/information/Battle.vue'
                 </el-tooltip>
               </div>
             </el-timeline-item>
-            <el-timeline-item :icon="Search" type="warning">
+            <el-timeline-item :icon="Search" color="rgb(255, 214, 105)">
               <div>
                 在任意一个去伪存真节点将纯白花瓣和无字地契组合成
                 <el-tooltip
@@ -138,10 +136,8 @@ import Battle from '@/components/information/Battle.vue'
                   “表达欲”
                 </el-link>
                 ，选择
-                <el-tooltip content="消耗2缕构想">
-                  <el-text tag="ins">“奋起反抗”</el-text>
-                </el-tooltip>
-                获得
+                “奋起反抗”
+                （消耗2缕构想），获得
                 <el-tooltip
                     content="所有敌方单位的攻击速度+30，移动速度+30%，最大生命值+30%，可在虚实疆界中探索不同的险路恶敌"
                     effect="light"
@@ -152,7 +148,7 @@ import Battle from '@/components/information/Battle.vue'
               </div>
               <div>
                 <span class="optional">（可选）</span>
-                持有巴别塔誓言可触发不期而遇
+                 持有巴别塔誓言，可进入不期而遇，触发事件
                 <el-link
                     href="https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%A6%BB%E5%8E%BB%E8%80%85%E7%9A%84%E5%BA%AD%E9%99%A2"
                     target="_blank"
@@ -238,10 +234,7 @@ import Battle from '@/components/information/Battle.vue'
             <el-timeline-item :icon="Flag" type="warning">
               <div>
                 持有先知长角，
-                <el-tooltip content="算上后续选项消耗，需至少准备3缕构想">
-                  <el-text tag="ins">使用1缕构想刷新出命运所指节点</el-text>
-                </el-tooltip>
-                ，进入其中触发事件
+                使用1缕构想刷新出命运所指节点（算上后续选项消耗，需至少准备3缕构想），进入其中触发事件
                 <el-link
                     href="https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%BE%85%E8%AF%89%E8%AF%B4%E7%9A%84%E7%9C%9F%E7%9B%B8"
                     target="_blank"
@@ -250,10 +243,8 @@ import Battle from '@/components/information/Battle.vue'
                   “待诉说的真相”
                 </el-link>
                 ，选择
-                <el-tooltip content="消耗2缕构想">
-                  <el-text tag="ins">“用构想补足缺陷”</el-text>
-                </el-tooltip>
-                ，而后进入一个第三结局专属的诡谲断章
+                “用构想补足缺陷”
+                （消耗2缕构想），而后进入一个第三结局专属的诡谲断章
               </div>
             </el-timeline-item>
             <el-timeline-item :icon="Flag" type="warning">
@@ -315,11 +306,9 @@ import Battle from '@/components/information/Battle.vue'
             </el-timeline-item>
             <el-timeline-item :icon="Battle" color="#5EDFD6">
               <div>
-                持有片瓣进入狭路相逢节点，选择
-                <el-tooltip content="消耗2缕构想">
-                  <el-text tag="ins">“将花瓣掷入故事”</el-text>
-                </el-tooltip>
-                ，进入特殊战斗
+                 持有片瓣进入狭路相逢节点，选择
+                “将花瓣掷入故事”
+                （消耗2缕构想），进入特殊战斗
                 <el-link
                     href="https://prts.wiki/w/ISW-NO_%E8%BD%BB%E8%88%9F%E5%85%B1%E6%B8%A1"
                     target="_blank"
@@ -401,7 +390,7 @@ import Battle from '@/components/information/Battle.vue'
                 </el-tooltip>
               </div>
             </el-timeline-item>
-            <el-timeline-item :icon="Search" type="warning">
+            <el-timeline-item :icon="Search" color="rgb(255, 214, 105)">
               <div>
                 <span class="optional">（可选）</span>
                 在任意一个去伪存真节点中消耗1~2个构想将“绝望”逐步组合成
@@ -444,7 +433,7 @@ import Battle from '@/components/information/Battle.vue'
                 <el-tooltip content="对应【终结的实相】">
                   <el-text tag="ins">停止</el-text>
                 </el-tooltip>
-                ）可触发不期而遇
+                 ），可进入不期而遇，触发事件
                 <el-link
                     href="https://prts.wiki/w/%E8%90%A8%E5%8D%A1%E5%85%B9%E7%9A%84%E6%97%A0%E7%BB%88%E5%A5%87%E8%AF%AD/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%AD%A4%E6%B3%A8%E4%B8%80%E6%8E%B7"
                     target="_blank"
@@ -454,15 +443,15 @@ import Battle from '@/components/information/Battle.vue'
                 </el-link>
                 ，选择
                 <el-tooltip content="需要“绝望”">
-                  <el-text tag="ins">“以开端铸造钥匙”</el-text>
+                  “以开端铸造钥匙”
                 </el-tooltip>
                 或
                 <el-tooltip content="需要“拯救”">
-                  <el-text tag="ins">“以转变铸造钥匙”</el-text>
+                  “以转变铸造钥匙”
                 </el-tooltip>
                 或
                 <el-tooltip content="需要“停止”">
-                  <el-text tag="ins">“以终点铸造钥匙”</el-text>
+                  “以终点铸造钥匙”
                 </el-tooltip>
                 ，获得（
                 <el-tooltip content="所有干员的部署费用+2，所有敌人受到的物理与法术伤害降低20%" effect="light"

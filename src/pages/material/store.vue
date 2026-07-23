@@ -19,6 +19,8 @@ const exportingActivityStoreIndex = ref(null)
 const activityStoreColumnLimit = ref(5)
 const includeActivityStoreBanner = ref(true)
 const includeActivityStoreTags = ref(true)
+const includeActivityStoreOutline = ref(false)
+const activityStoreBackground = ref('transparent')
 
 const storeTypeList = [
   { typeName: 'green', iconId: '4005', dividing: 0.8, tier: 0.024, borderColor: 'rgb(0, 162, 162)' },
@@ -36,6 +38,13 @@ const activityStoreLayoutClass = computed(() => {
     return null
   }
   return `activity-store-layout-${activityStoreColumnLimit.value}`
+})
+
+const activityStoreBackgroundClass = computed(() => {
+  if (!isDevMode.value) {
+    return null
+  }
+  return `activity-store-background-${activityStoreBackground.value}`
 })
 
 async function loadingStoreData() {
@@ -160,12 +169,21 @@ async function exportActivityStorePng(activityStore, index) {
     await waitForImages(storeContainer)
 
     const html2canvas = (await import('html2canvas')).default
+    const exportBackgroundColor = {
+      transparent: 'transparent',
+      white: '#ffffff',
+      gray: '#d9d9d9',
+    }[activityStoreBackground.value]
+
     const canvas = await html2canvas(storeContainer, {
-      backgroundColor: null,
+      backgroundColor: exportBackgroundColor === 'transparent' ? null : exportBackgroundColor,
       scale: 2,
       useCORS: true,
       allowTaint: true,
       logging: false,
+      onclone: (_, clonedStoreContainer) => {
+        clonedStoreContainer.style.setProperty('background', exportBackgroundColor)
+      },
     })
 
     const link = document.createElement('a')
@@ -196,7 +214,13 @@ onMounted(() => {
     <div
       id="actStore"
       ref="actStoreRef"
-      :class="[activityStoreLayoutClass, { 'activity-store-dev-mode': isDevMode }]"
+      :class="[
+        activityStoreLayoutClass,
+        activityStoreBackgroundClass,
+        {
+          'activity-store-dev-mode': isDevMode,
+        },
+      ]"
     >
       <ModuleHeader title="活动商店" title-en="Event Store" />
 
@@ -210,6 +234,11 @@ onMounted(() => {
             <v-btn :value="7">限制 7 列</v-btn>
             <v-btn :value="8">限制 8 列</v-btn>
           </v-btn-toggle>
+          <v-btn-toggle v-model="activityStoreBackground" mandatory color="primary" density="comfortable">
+            <v-btn value="transparent">透明背景</v-btn>
+            <v-btn value="white">白底</v-btn>
+            <v-btn value="gray">灰底</v-btn>
+          </v-btn-toggle>
           <div class="activity-store-export-options">
             <v-checkbox
               v-model="includeActivityStoreBanner"
@@ -220,6 +249,12 @@ onMounted(() => {
             <v-checkbox
               v-model="includeActivityStoreTags"
               label="导出 Tag"
+              density="compact"
+              hide-details
+            />
+            <v-checkbox
+              v-model="includeActivityStoreOutline"
+              label="导出细线"
               density="compact"
               hide-details
             />
@@ -269,7 +304,10 @@ onMounted(() => {
             v-for="(singleItem, itemIndex) in singleArea"
             :key="itemIndex"
             class="activity-store-good"
-            :class="`activity-store-good-area-${areaIndex + 1}`"
+            :class="[
+              `activity-store-good-area-${areaIndex + 1}`,
+              { 'activity-store-good-with-outline': isDevMode && includeActivityStoreOutline },
+            ]"
           >
             <div class="activity-store-good-sprite">
               <div :class="`bg-${singleItem.itemId}`"></div>
@@ -423,8 +461,33 @@ onMounted(() => {
 
   &.activity-store-dev-mode {
     .activity-store-good {
+      box-sizing: border-box;
       background: #ffffff;
       box-shadow: none;
+    }
+
+    .activity-store-good.activity-store-good-with-outline {
+      border-top: 1px solid rgba(128, 128, 128, 0.5);
+      border-right: 1px solid rgba(128, 128, 128, 0.5);
+      border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+    }
+
+    &.activity-store-background-transparent {
+      .act_store_block {
+        background: transparent;
+      }
+    }
+
+    &.activity-store-background-white {
+      .act_store_block {
+        background: #ffffff;
+      }
+    }
+
+    &.activity-store-background-gray {
+      .act_store_block {
+        background: #d9d9d9;
+      }
     }
   }
 
