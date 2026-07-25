@@ -66,6 +66,10 @@
           <span>有差异</span>
           <strong>{{ compareSummary.diff }}</strong>
         </div>
+        <div class="pack-proofread-status-item pending">
+          <span>待确认</span>
+          <strong>{{ compareSummary.ambiguous }}</strong>
+        </div>
         <div class="pack-proofread-status-item danger">
           <span>未匹配</span>
           <strong>{{ compareSummary.missing }}</strong>
@@ -90,6 +94,7 @@
             <el-option label="全部" value="all" />
             <el-option label="完全一致" value="ok" />
             <el-option label="存在差异" value="diff" />
+            <el-option label="待确认" value="ambiguous" />
             <el-option label="未匹配" value="missing" />
           </el-select>
         </div>
@@ -137,7 +142,25 @@
           </template>
         </el-table-column>
         <el-table-column prop="sourceName" label="公告礼包" min-width="180" show-overflow-tooltip />
-        <el-table-column prop="recordedName" label="收录礼包" min-width="180" show-overflow-tooltip />
+        <el-table-column label="收录礼包" min-width="220">
+          <template #default="{ row }">
+            <el-select
+              v-if="row.status === 'ambiguous'"
+              :model-value="row.selectedPackId"
+              placeholder="请选择同名礼包"
+              class="pack-proofread-candidate-select"
+              @change="selectCandidate(row, $event)"
+            >
+              <el-option
+                v-for="candidate in row.candidatePacks"
+                :key="candidate.id"
+                :label="formatCandidateLabel(candidate)"
+                :value="candidate.id"
+              />
+            </el-select>
+            <span v-else>{{ row.recordedName || '—' }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="sourceSaleTime" label="公告售卖时间" min-width="210" show-overflow-tooltip />
         <el-table-column prop="recordedSaleTime" label="收录售卖时间" min-width="210" show-overflow-tooltip />
         <el-table-column prop="timeStatusText" label="时间" width="116">
@@ -189,17 +212,19 @@ const compareSummary = computed(() => {
   const total = compareRows.value.length
   const ok = compareRows.value.filter(row => row.status === 'ok').length
   const missing = compareRows.value.filter(row => row.status === 'missing').length
+  const ambiguous = compareRows.value.filter(row => row.status === 'ambiguous').length
   return {
     total,
     ok,
     missing,
-    diff: total - ok - missing
+    ambiguous,
+    diff: total - ok - missing - ambiguous
   }
 })
 
 const resultSummaryText = computed(() => {
   if (compareRows.value.length === 0) return '等待读取或粘贴礼包公告文本'
-  return `共识别 ${compareSummary.value.total} 个礼包，${compareSummary.value.ok} 个一致，${compareSummary.value.diff} 个存在差异，${compareSummary.value.missing} 个未匹配`
+  return `共识别 ${compareSummary.value.total} 个礼包，${compareSummary.value.ok} 个一致，${compareSummary.value.diff} 个存在差异，${compareSummary.value.ambiguous} 个待确认，${compareSummary.value.missing} 个未匹配`
 })
 
 const filteredRows = computed(() => {
@@ -266,6 +291,21 @@ function parseAndCompare() {
   }
 
   compareRows.value = parsedPacks.map((pack, index) => createCompareRow(pack, index))
+}
+
+function selectCandidate(row, selectedPackId) {
+  const selectedPack = row.candidatePacks.find(pack => String(pack.id) === String(selectedPackId))
+  if (!selectedPack) return
+
+  const rowIndex = compareRows.value.findIndex(item => item.rowKey === row.rowKey)
+  if (rowIndex < 0) return
+
+  compareRows.value.splice(rowIndex, 1, createCompareRow(row.parsedPack, row.sourceIndex, {
+    pack: selectedPack,
+    candidates: [],
+    suggestions: [],
+    ambiguous: false
+  }))
 }
 
 function clearAll() {
@@ -362,7 +402,21 @@ function parsePackText(text) {
   if (!normalizedText) return []
 
   const chunks = splitPackChunks(normalizedText)
-  const parsedPacks = chunks.map(chunk => parsePackChunk(chunk)).filter(pack => pack.name)
+  const parsedPacks = chunks
+    .map(chunk => {
+      const parsedPack = parsePackChunk(chunk)
+      if (parsedPack.saleTimeRaw) return parsedPack
+
+      const inheritedSaleTimeRaw = extractLatestSaleTimeBefore(normalizedText, chunk.start)
+      if (!inheritedSaleTimeRaw) return parsedPack
+
+      return {
+        ...parsedPack,
+        saleTimeRaw: inheritedSaleTimeRaw,
+        saleTimeKey: parseSaleTimeKey(inheritedSaleTimeRaw)
+      }
+    })
+    .filter(pack => pack.name)
 
   if (parsedPacks.length > 0) {
     return parsedPacks
@@ -388,8 +442,18 @@ function splitPackChunks(text) {
 
   return matches.map((item, index) => ({
     name: item.name,
+    start: item.start,
     body: text.slice(item.bodyStart, matches[index + 1]?.start || text.length)
   }))
+}
+
+function extractLatestSaleTimeBefore(text, position) {
+  const lines = normalizeSourceText(text.slice(0, position)).split('\n')
+  for (let index = lines.length - 1; index >= 0; index -= 1) {
+    const match = matchFieldLine(lines[index], ['售卖时间'])
+    if (match) return match.value
+  }
+  return ''
 }
 
 function parsePackChunk(chunk) {
@@ -472,21 +536,29 @@ function parseContentToken(token) {
   }
 }
 
-function createCompareRow(parsedPack, index) {
-  const matchResult = findBestPack(parsedPack.name)
+function createCompareRow(parsedPack, index, givenMatchResult = null) {
+  const matchResult = givenMatchResult || findBestPack(parsedPack)
   const recordedPack = matchResult.pack
   const recordedItems = recordedPack ? getRecordedContentItems(recordedPack) : []
-  const timeCompare = compareSaleTime(parsedPack, recordedPack)
-  const contentCompare = compareContent(parsedPack.contentItems, recordedItems)
-  const status = getRowStatus(recordedPack, timeCompare.status, contentCompare.status)
+  const timeCompare = matchResult.ambiguous
+    ? { status: 'pending', text: '待确认' }
+    : compareSaleTime(parsedPack, recordedPack)
+  const contentCompare = matchResult.ambiguous
+    ? { status: 'pending', text: '待确认', diffs: [] }
+    : compareContent(parsedPack.contentItems, recordedItems)
+  const status = matchResult.ambiguous
+    ? 'ambiguous'
+    : getRowStatus(recordedPack, timeCompare.status, contentCompare.status)
 
   return {
     rowKey: `${parsedPack.name}-${index}`,
+    sourceIndex: index,
+    parsedPack,
     sourceName: parsedPack.name,
     recordedName: recordedPack?.officialName || recordedPack?.displayName || '',
     status,
     statusText: getRowStatusText(status),
-    sourceSaleTime: parsedPack.saleTimeRaw || '未识别',
+    sourceSaleTime: formatSaleTimeKey(parsedPack.saleTimeKey) || '未识别',
     recordedSaleTime: recordedPack ? formatRecordedSaleTime(recordedPack) : '',
     timeStatus: timeCompare.status,
     timeStatusText: timeCompare.text,
@@ -495,12 +567,14 @@ function createCompareRow(parsedPack, index) {
     sourceContentText: formatItemList(parsedPack.contentItems),
     recordedContentText: formatItemList(recordedItems),
     contentDiffs: contentCompare.diffs,
-    suggestions: matchResult.suggestions
+    suggestions: matchResult.suggestions,
+    candidatePacks: matchResult.candidates || [],
+    selectedPackId: recordedPack?.id || null
   }
 }
 
-function findBestPack(sourceName) {
-  const normalizedSourceName = normalizeName(sourceName)
+function findBestPack(parsedPack) {
+  const normalizedSourceName = normalizeName(parsedPack.name)
   const scoredPacks = packInfoList.value
     .map(pack => {
       const names = [pack.officialName, pack.displayName].filter(Boolean)
@@ -521,13 +595,54 @@ function findBestPack(sourceName) {
   if (!best || best.score < 0.72) {
     return {
       pack: null,
-      suggestions
+      candidates: [],
+      suggestions,
+      ambiguous: false
+    }
+  }
+
+  let candidates = scoredPacks
+    .filter(item => item.score === best.score)
+    .map(item => item.pack)
+
+  if (parsedPack.saleTimeKey) {
+    const timeCandidates = candidates.filter(pack => getRecordedSaleTimeKey(pack) === parsedPack.saleTimeKey)
+    if (timeCandidates.length > 0) {
+      candidates = timeCandidates
+    }
+  }
+
+  if (candidates.length > 1 && parsedPack.contentItems.length > 0) {
+    const comparedCandidates = candidates.map(pack => ({
+      pack,
+      contentCompare: compareContent(parsedPack.contentItems, getRecordedContentItems(pack))
+    }))
+    const exactContentCandidates = comparedCandidates.filter(item => item.contentCompare.status === 'ok')
+
+    if (exactContentCandidates.length > 0) {
+      candidates = exactContentCandidates.map(item => item.pack)
+    } else {
+      const smallestDiffCount = Math.min(...comparedCandidates.map(item => item.contentCompare.diffs.length))
+      candidates = comparedCandidates
+        .filter(item => item.contentCompare.diffs.length === smallestDiffCount)
+        .map(item => item.pack)
+    }
+  }
+
+  if (candidates.length === 1) {
+    return {
+      pack: candidates[0],
+      candidates: [],
+      suggestions: [],
+      ambiguous: false
     }
   }
 
   return {
-    pack: best.pack,
-    suggestions: []
+    pack: null,
+    candidates,
+    suggestions: [],
+    ambiguous: true
   }
 }
 
@@ -662,6 +777,7 @@ function getRowStatusText(status) {
   const statusTextMap = {
     ok: '完全一致',
     diff: '存在差异',
+    ambiguous: '待确认',
     missing: '未匹配'
   }
   return statusTextMap[status] || status
@@ -674,26 +790,60 @@ function getContentDiffText(sourceQuantity, recordedQuantity) {
 }
 
 function parseSaleTimeKey(text) {
-  const matches = Array.from(String(text || '').matchAll(/(?:\d{4}年)?\s*(\d{1,2})月(\d{1,2})日\s*(\d{1,2})[:：](\d{1,2})/g))
-  if (matches.length < 2) return ''
-  return matches
+  const saleDates = Array.from(String(text || '').matchAll(/(?:(\d{4})\s*年\s*)?(\d{1,2})月(\d{1,2})日/g))
     .slice(0, 2)
-    .map(match => `${pad2(match[1])}-${pad2(match[2])} ${pad2(match[3])}:${pad2(match[4])}`)
-    .join(' - ')
+    .map(match => ({
+      year: match[1] ? Number(match[1]) : null,
+      month: Number(match[2]),
+      day: Number(match[3])
+    }))
+  if (saleDates.length < 2) return ''
+
+  const [startDate, endDate] = saleDates
+  let startYear = startDate.year || endDate.year || new Date().getFullYear()
+  let endYear = endDate.year || startDate.year || startYear
+
+  if (!endDate.year && isMonthDayEarlier(endDate, startDate)) {
+    endYear += 1
+  }
+  if (!startDate.year && endDate.year && isMonthDayEarlier(endDate, startDate)) {
+    startYear -= 1
+  }
+
+  return [
+    formatSaleDate(startYear, startDate.month, startDate.day),
+    formatSaleDate(endYear, endDate.month, endDate.day)
+  ].join(' - ')
 }
 
 function getRecordedSaleTimeKey(pack) {
   return [
-    dateFormat(pack.start, 'MM-dd HH:mm'),
-    dateFormat(pack.end, 'MM-dd HH:mm')
+    dateFormat(pack.start, 'yyyy-MM-dd'),
+    dateFormat(pack.end, 'yyyy-MM-dd')
   ].join(' - ')
 }
 
 function formatRecordedSaleTime(pack) {
   return [
-    dateFormat(pack.start, 'MM月dd日 HH:mm'),
-    dateFormat(pack.end, 'MM月dd日 HH:mm')
+    dateFormat(pack.start, 'yyyy年MM月dd日'),
+    dateFormat(pack.end, 'yyyy年MM月dd日')
   ].join(' - ')
+}
+
+function formatCandidateLabel(pack) {
+  return `${formatRecordedSaleTime(pack)} · #${pack.id}`
+}
+
+function formatSaleTimeKey(saleTimeKey) {
+  return String(saleTimeKey || '').replace(/(\d{4})-(\d{2})-(\d{2})/g, '$1年$2月$3日')
+}
+
+function formatSaleDate(year, month, day) {
+  return `${year}-${pad2(month)}-${pad2(day)}`
+}
+
+function isMonthDayEarlier(left, right) {
+  return left.month < right.month || (left.month === right.month && left.day < right.day)
 }
 
 function formatItemList(items) {
@@ -739,15 +889,9 @@ function escapeRegExp(text) {
   return String(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-function getStatusTagType(status) {
-  if (status === 'ok') return 'success'
-  if (status === 'missing') return 'danger'
-  return 'warning'
-}
-
 function getDiffTagType(status) {
   if (status === 'ok') return 'success'
-  if (status === 'missing') return 'info'
+  if (status === 'missing' || status === 'pending') return 'info'
   return 'warning'
 }
 
@@ -859,6 +1003,10 @@ function getErrorMessage(error) {
   color: #b86500;
 }
 
+.pack-proofread-status-item.pending strong {
+  color: #2f5d62;
+}
+
 .pack-proofread-status-item.danger strong {
   color: #b83b3b;
 }
@@ -901,6 +1049,10 @@ function getErrorMessage(error) {
 .pack-proofread-table {
   height: auto;
   max-height: none;
+  width: 100%;
+}
+
+.pack-proofread-candidate-select {
   width: 100%;
 }
 

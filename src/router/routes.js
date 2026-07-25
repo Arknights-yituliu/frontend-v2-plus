@@ -249,6 +249,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/gachacal',
+        text: '攒抽计算器卡片视图',
+        name: 'LBGachaCalculator',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/GachaCalculatorPerspective.vue'),
+        meta: {
+            title: '攒抽计算器卡片视图'
+        }
+    },
+    {
         path: '/lb/card-maker',
         text: '卡片生成器',
         name: 'CardMaker',
@@ -326,6 +336,16 @@ const routes = [
         component: () => import('/src/pages/LogicalBytePostMaker/YieldOverviewMaker.vue'),
         meta: {
             title: '收益速览制图'
+        }
+    },
+    {
+        path: '/lb/pack-maker',
+        text: '礼包性价比制图',
+        name: 'LBPackMaker',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/PackMaker.vue'),
+        meta: {
+            title: '礼包性价比制图'
         }
     },
     {
