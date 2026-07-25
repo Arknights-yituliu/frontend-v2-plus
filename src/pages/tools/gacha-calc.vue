@@ -293,16 +293,26 @@ const scheduleOptions = [
     historyStartTime: new Date("2025/08/01 12:00:00"),
     historyEndTime: new Date("2025/08/15 04:01:00"),
   },
-   {
-     name: "感谢庆典",
-     dateString: "敬请期待",
-     start: new Date("2026/11/01 12:00:00"),
-     end: new Date("2026/11/15 04:01:00"),
-     activityType: "周年限定",
-     disabled: true,
-     dailyGiftResources: true,
-     accuracyFlag: true,
-   },
+  {
+    name: "P3R联动",
+    dateString: "(0904-0917)",
+    start: new Date("2026/09/04 12:00:00"),
+    end: new Date("2026/09/17 04:01:00"),
+    activityType: "联动限定",
+    disabled: false,
+    dailyGiftResources: true,
+    accuracyFlag: false,
+  },
+  {
+    name: "感谢庆典",
+    dateString: "敬请期待",
+    start: new Date("2026/11/01 12:00:00"),
+    end: new Date("2026/11/15 04:01:00"),
+    activityType: "周年限定",
+    disabled: true,
+    dailyGiftResources: true,
+    accuracyFlag: false,
+  },
 ];
 
 const packDataLoadingStatus = ref(false);
