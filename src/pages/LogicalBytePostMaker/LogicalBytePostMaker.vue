@@ -56,6 +56,11 @@ const pageGroups = [
         to: '/lb/return'
       },
       {
+        title: '礼包性价比制图',
+        description: '上传头图并将已选在售礼包制作为一张纵向长图',
+        to: '/lb/pack-maker'
+      },
+      {
         title: '收益速览制图',
         description: '输入干员名称生成精二与专精材料收益速览表',
         to: '/lb/yield-overview'

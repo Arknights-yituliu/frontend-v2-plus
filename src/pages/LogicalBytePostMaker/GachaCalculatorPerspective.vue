@@ -1,9 +1,9 @@
-<!--卡池日期配置见 /src/utils/gachaScheduleOptions.js；活动排期见 HONEY_CAKE_TABLE 所引用的 JSON 文件。-->
+<!--修改活动日期按钮请在变量"scheduleOptions"中修改，修改活动排期请在变量"HONEY_CAKE_TABLE"所引入的json文件中修改-->
 <script setup>
-import { watch, onMounted, ref, computed } from "vue";
+import { watch, onMounted, onBeforeUnmount, ref, computed, nextTick } from "vue";
+import Dexie from "dexie";
 import "/src/assets/css/tool/gacha_calc.scss";
 import "/src/assets/css/sprite/sprite_plane_icon.css";
-import "/src/assets/css/tool/gacha_calc.phone.scss";
 
 import POTENTIAL_TABLE from "/src/static/json/tools/potential_gacha_resources.json";
 import HONEY_CAKE_TABLE from "/src/static/json/tools/schedule_by_honeycake.json";
@@ -14,18 +14,22 @@ import { createMessage } from "/src/utils/message.js";
 import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
 import deepClone from "/src/utils/deepClone.js";
-import { dateDiff } from "/src/utils/dateUtil.js";
+import { dateDiff, dateFormat } from "/src/utils/dateUtil.js";
 import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
 import { stringToNumber } from "/src/utils/stringUtils.js";
 import { numberFloor } from "/src/utils/format.js";
-import {
-  createGachaScheduleOptions,
-  formatActivityDateRange,
-  getDailyRewardRemainingDays,
-  getScheduleCalculationEndDate,
-  isRewardAvailableOnSelectedDates,
-} from "/src/utils/gachaScheduleOptions.js";
 import { useRoute } from "vue-router";
+
+const GACHA_VIDEO_DRAFT_ID = "current";
+const GACHA_VIDEO_SETTINGS_STORAGE_KEY = "logicalByte_gachaCalculatorPerspective_settings_v1";
+const gachaVideoDraftDb = new Dexie("LogicalByteGachaCalculatorPerspective");
+gachaVideoDraftDb.version(1).stores({
+  drafts: "id, updatedAt",
+});
+gachaVideoDraftDb.version(2).stores({
+  drafts: "id, updatedAt",
+  poolImages: "id, updatedAt",
+});
 
 // 当前路由
 const route = useRoute();
@@ -135,7 +139,6 @@ let tempActivityScheduleList = [];
 //将预测活动排期分类
 for (const name in FIXED_TABLE) {
   let activityData = FIXED_TABLE[name];
-  activityData.scheduleDateRange = formatActivityDateRange(activityData.start, activityData.end);
   //将活动排期的日期统一转为时间戳
   activityData.start = new Date(activityData.start).getTime();
   activityData.end = new Date(activityData.end).getTime();
@@ -156,7 +159,6 @@ for (const name in FIXED_TABLE) {
 
 for (const name in HONEY_CAKE_TABLE) {
   let activityData = HONEY_CAKE_TABLE[name];
-  activityData.scheduleDateRange = formatActivityDateRange(activityData.start, activityData.end);
   //将活动排期的日期统一转为时间戳
   activityData.start = new Date(activityData.start).getTime();
   activityData.end = new Date(activityData.end).getTime();
@@ -222,7 +224,7 @@ function batchGenerationServerMaintenanceRewards() {
     return reward;
   }
 
-  
+
 }
 
 //用户选择的活动
@@ -289,7 +291,37 @@ function rewardTypeMatchesCurrentActivity(rewardType) {
 // activityType: string 活动类型
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 // 注：历史礼包时间范围已改为动态计算，不再需要 historicalPackTimeRange 配置
-const scheduleOptions = createGachaScheduleOptions();
+const scheduleOptions = [
+  {
+    name: "夏活",
+    dateString: "2026.08.14",
+    start: new Date("2026/08/01 12:00:00"),
+    end: new Date("2026/08/14 04:00:00"),
+    activityType: "夏活限定",
+    disabled: false,
+    dailyGiftResources: true,
+    accuracyFlag: true,
+    historyStartTime: new Date("2025/08/01 12:00:00"),
+    historyEndTime: new Date("2025/08/14 04:00:00"),
+  },
+  {
+    name: "半周年",
+    dateString: "2026.11.14",
+    start: new Date("2026/11/01 12:00:00"),
+    end: new Date("2026/11/14 04:00:00"),
+    activityType: "周年限定",
+    disabled: false,
+    dailyGiftResources: true,
+    accuracyFlag: true,
+    historyStartTime: new Date("2025/11/01 12:00:00"),
+    historyEndTime: new Date("2025/11/14 04:00:00"),
+  },
+];
+
+currentScheduleName.value = scheduleOptions[0].name;
+currentSchedule.value = scheduleOptions[0];
+endDate.value = scheduleOptions[0].end;
+activityType.value = scheduleOptions[0].activityType;
 
 const packDataLoadingStatus = ref(false);
 
@@ -596,10 +628,232 @@ function updateScheduleOption(index) {
   getHistoryPackInfo();
 }
 
-//折叠面板绑定的集合，如果集合中有折叠面板的name，面板会默认展开，当点击展开面板时，面板组件也会将面板组件的name赋值给这个集合
-// 值有 'exist', 'custom', 'daily', 'potential','recharge', 'activity', 'other'
-let resultCollapseActiveNames = ref(["calculationResult", "developer"]);
-let optionsCollapseActiveNames = ref(["exist", "daily", "activity", "other"]);
+const cardTitles = {
+  calculationResult: "总览",
+  daily: "日常积累",
+  custom: "搓玉/绿票/黄票换抽",
+  recharge: "氪金方案",
+  activity: "活动获得",
+  other: "其他资源",
+};
+const activeCardName = ref("calculationResult");
+const dataPanelCardName = ref("calculationResult");
+const activeCardTitle = computed(() => cardTitles[activeCardName.value] ?? "");
+const settingsTab = ref("canvas");
+const displayBackgroundColor = ref("#f5f7fa");
+const leftPerspective = ref(14);
+const rightPerspective = ref(14);
+const stageTopMargin = ref(96);
+const stageBottomMargin = ref(0);
+const stageLeftMargin = ref(0);
+const stageRightMargin = ref(0);
+const cardGroupWidth = ref(420);
+const displayStageStyle = computed(() => ({
+  backgroundColor: displayBackgroundColor.value,
+  "--gacha-left-perspective": `${leftPerspective.value}deg`,
+  "--gacha-left-hover-perspective": `${leftPerspective.value * 0.28}deg`,
+  "--gacha-left-active-perspective": `${leftPerspective.value * 0.1}deg`,
+  "--gacha-right-perspective": `${-rightPerspective.value}deg`,
+  "--gacha-right-perspective-space": `${rightPerspective.value * 20}px`,
+  "--gacha-stage-top-margin": `${stageTopMargin.value}px`,
+  "--gacha-stage-bottom-margin": `${stageBottomMargin.value}px`,
+  "--gacha-stage-left-margin": `${stageLeftMargin.value}px`,
+  "--gacha-stage-right-margin": `${stageRightMargin.value}px`,
+  "--gacha-navigation-width": `${cardGroupWidth.value}px`,
+}));
+
+const videoPoolOptions = [
+  { id: "summer", scheduleIndex: 0, label: "夏活图片", title: "夏活", endDate: "8.14 结束" },
+  { id: "halfAnniversary", scheduleIndex: 1, label: "半周年图片", title: "半周年", endDate: "11.14 结束" },
+];
+const selectedVideoPool = ref("summer");
+const videoPoolImages = ref({
+  summer: "",
+  halfAnniversary: "",
+});
+const videoPoolImageUrls = {};
+
+function setVideoPoolImage(poolId, imageFile) {
+  if (!Object.hasOwn(videoPoolImages.value, poolId)) {
+    return;
+  }
+
+  if (videoPoolImageUrls[poolId]) {
+    URL.revokeObjectURL(videoPoolImageUrls[poolId]);
+  }
+
+  videoPoolImageUrls[poolId] = "";
+  videoPoolImages.value[poolId] = "";
+
+  if (!imageFile) {
+    return;
+  }
+
+  const imageUrl = URL.createObjectURL(imageFile);
+  videoPoolImageUrls[poolId] = imageUrl;
+  videoPoolImages.value[poolId] = imageUrl;
+}
+
+function selectVideoPool(poolId) {
+  const pool = videoPoolOptions.find((item) => item.id === poolId);
+  if (!pool) {
+    return;
+  }
+
+  selectedVideoPool.value = poolId;
+  calPoolEnd.value = true;
+  updateScheduleOption(pool.scheduleIndex);
+}
+
+function selectVideoCard(cardName) {
+  activeCardName.value = cardName;
+  dataPanelCardName.value = cardName;
+}
+
+function updateVideoPoolImage(poolId, uploadFile) {
+  if (!uploadFile?.raw) {
+    return;
+  }
+
+  setVideoPoolImage(poolId, uploadFile.raw);
+  if (gachaVideoDraftRestored) {
+    saveVideoPoolImage(poolId, uploadFile.raw);
+  }
+}
+
+onBeforeUnmount(() => {
+  window.removeEventListener("pagehide", persistVideoGachaSettings);
+  if (gachaVideoDraftRestored) {
+    saveVideoGachaSettings();
+  }
+
+  if (gachaVideoDraftSaveTimer) {
+    clearTimeout(gachaVideoDraftSaveTimer);
+    gachaVideoDraftSaveTimer = 0;
+    saveVideoGachaDraft();
+  }
+
+  for (const imageUrl of Object.values(videoPoolImageUrls)) {
+    if (imageUrl) {
+      URL.revokeObjectURL(imageUrl);
+    }
+  }
+});
+
+function rewardDraws(reward) {
+  return numberFloor(
+    (reward.orundum || 0) / 600 + (reward.originium || 0) * 0.3 + (reward.gachaTicket || 0) + (reward.tenGachaTicket || 0) * 10,
+    1
+  );
+}
+
+const videoOverviewSources = computed(() => [
+  { label: "日常积累", draws: numberFloor(calculationResult.value.dailyTotalDraw, 0), tone: "daily" },
+  { label: "兑换与搓玉", draws: numberFloor(calculationResult.value.produceOrundumTotalDraw, 0), tone: "custom" },
+  { label: "活动获得", draws: numberFloor(calculationResult.value.activityTotalDraw, 0), tone: "activity" },
+  { label: "其他资源", draws: numberFloor(calculationResult.value.otherTotalDraw, 0), tone: "other" },
+  { label: "氪金方案", draws: null, tone: "recharge" },
+]);
+
+const videoResourceIconClasses = {
+  合成玉: "bg-icon_4003",
+  源石: "bg-icon_4002",
+  单抽: "bg-icon_7003",
+  十连: "bg-icon_7004",
+  抽: "bg-icon_7003",
+};
+
+function getVideoResourceIconClass(resourceName) {
+  return videoResourceIconClasses[resourceName] || videoResourceIconClasses.抽;
+}
+
+const videoDailyRows = computed(() => [
+  { label: `日常 ${dailyReward.value.daily} 天`, value: dailyReward.value.dailyOrundumReward, unit: "合成玉" },
+  { label: `周常 ${dailyReward.value.weekly} 周`, value: dailyReward.value.weeklyOrundumReward, unit: "合成玉" },
+  { label: `剿灭 ${dailyReward.value.annihilation} 周`, value: dailyReward.value.annihilationOrundumReward, unit: "合成玉" },
+  { label: `绿票商店 ${dailyReward.value.certificateShoppingTimes} 月`, value: dailyReward.value.purchasedGachaTicketQuantity, unit: "单抽" },
+  { label: `每月签到 ${dailyReward.value.checkIn} 次`, value: dailyReward.value.checkInGachaTicket, unit: "单抽" },
+]);
+
+const videoCustomRows = computed(() => {
+  const yellowTicketDraws =
+    selectedCertificateT2Group.value.reduce((total, item) => total + item.draw, 0) +
+    certificatePackList.value
+      .filter((pack) => selectedCertificatePackList.value.includes(pack.id) && rewardIsExpired(pack))
+      .reduce((total, pack) => total + pack.gachaTicket + pack.tenGachaTicket * 10, 0);
+
+  return [
+    { label: "黄票换抽", value: yellowTicketDraws, unit: "抽" },
+    { label: "绿票兑换", value: numberFloor(certificateStoreF3.value.orundum / 600, 1), unit: "抽" },
+    {
+      label: "搓玉",
+      value: numberFloor((produceOrundum.value.outputByAp + produceOrundum.value.outputByItem) / 600, 1),
+      unit: "抽",
+    },
+  ];
+});
+
+const videoActivityRows = computed(() =>
+  Object.entries(activityScheduleList.value)
+    .filter(([name, activity]) => {
+      const isSelected = selectedActivityName.value.includes(name);
+      return isSelected && ["act", "actRe"].includes(activity.rewardModule) && rewardIsExpired(activity);
+    })
+    .map(([name, activity]) => ({
+      label: name,
+      category: activity.rewardModule === "actRe" ? "复刻活动" : "后续活动",
+      draws: rewardDraws(activity),
+    }))
+);
+
+const videoOtherRows = computed(() =>
+  otherRewardBySchedules.value
+    .filter((reward) => rewardIsExpired(reward) && rewardIsEmpty(reward))
+    .map((reward) => ({
+      label: reward.name,
+      draws: rewardDraws(reward),
+    }))
+);
+
+const videoRechargePlans = [
+  { id: "monthly-card", title: "仅月卡", items: ["月卡"] },
+  { id: "monthly-card-plus-198", title: "月卡 + 198 礼包", items: ["月卡", "198 礼包"] },
+  { id: "monthly-card-plus-two-large", title: "月卡 + 2 个大月卡", items: ["月卡", "大月卡 x 2"] },
+];
+
+const videoProbabilityMetrics = computed(() => {
+  if (isNormalLimitedActivity.value) {
+    return [
+      { label: "拿到限定", value: currentProb.value.limited300 },
+      { label: "限定加陪跑", value: currentProb.value.all300 },
+    ];
+  }
+
+  if (isLinkedLimitedActivity.value) {
+    return [
+      { label: "拿到限定六星", value: currentProb.value[linkedProbKeys.value.limited6] },
+      { label: "拿到全部 UP", value: currentProb.value[linkedProbKeys.value.all] },
+    ];
+  }
+
+  return [
+    { label: "拿到限定六星", value: currentProb.value.怪猎一期和二期都获得UP6星干员 },
+    { label: "拿到全部 UP", value: currentProb.value.怪猎一期和二期都获得全部干员 },
+  ];
+});
+
+function formatProbability(value) {
+  return typeof value === "number" ? `${value.toFixed(1)}%` : "--";
+}
+
+watch(activeCardName, async (name) => {
+  if (name !== "calculationResult" || !myChart) {
+    return;
+  }
+
+  await nextTick();
+  myChart.resize();
+});
 
 //日常资源
 let dailyReward = ref({
@@ -877,13 +1131,332 @@ const userConfigV2 = ref({
   monthlyCardExtraCount: 0,
 });
 
+let gachaVideoDraftRestored = false;
+let gachaVideoDraftSaveTimer = 0;
+
+function getPackPersistenceKey(pack) {
+  return [pack.saleType || "", pack.officialName || "", pack.price || ""].join("\u0001");
+}
+
+function getSelectedPackPersistenceKeys(packList, selectedPackIds) {
+  const selectedIds = new Set(selectedPackIds);
+  return packList.filter((pack) => selectedIds.has(pack.id)).map(getPackPersistenceKey);
+}
+
+function restoreNumberSetting(target, value) {
+  const numericValue = Number(value);
+  if (Number.isFinite(numericValue)) {
+    target.value = numericValue;
+  }
+}
+
+function restoreArraySetting(value, fallback = []) {
+  return Array.isArray(value) ? value : fallback;
+}
+
+function restoreObjectFields(target, source, ignoredKeys = []) {
+  if (!source || typeof source !== "object") {
+    return;
+  }
+
+  for (const key of Object.keys(target)) {
+    if (!ignoredKeys.includes(key) && Object.hasOwn(source, key)) {
+      target[key] = source[key];
+    }
+  }
+}
+
+function getVideoGachaDraft() {
+  return {
+    id: GACHA_VIDEO_DRAFT_ID,
+    updatedAt: Date.now(),
+    canvas: {
+      displayBackgroundColor: displayBackgroundColor.value,
+      leftPerspective: leftPerspective.value,
+      rightPerspective: rightPerspective.value,
+      stageTopMargin: stageTopMargin.value,
+      stageBottomMargin: stageBottomMargin.value,
+      stageLeftMargin: stageLeftMargin.value,
+      stageRightMargin: stageRightMargin.value,
+      cardGroupWidth: cardGroupWidth.value,
+    },
+    view: {
+      settingsTab: settingsTab.value,
+      activeCardName: activeCardName.value,
+      dataPanelCardName: dataPanelCardName.value,
+      selectedVideoPool: selectedVideoPool.value,
+    },
+    calculation: {
+      userConfig: { ...userConfigV2.value },
+      calPoolEnd: calPoolEnd.value,
+      selectedCertificatePackList: [...selectedCertificatePackList.value],
+      selectedCertificateT2Texts: selectedCertificateT2Group.value.map((item) => item.text),
+      produceOrundum: {
+        ap: produceOrundum.value.ap,
+        coEfficient: produceOrundum.value.coEfficient,
+        itemId30012: produceOrundum.value.itemId30012,
+        itemId30062: produceOrundum.value.itemId30062,
+      },
+      certificateStoreF3: {
+        certificates: certificateStoreF3.value.certificates,
+      },
+      selectedCertificateStoreF3Group: [...selectedCertificateStoreF3Group.value],
+      selectedPermanentZoneName: [...selectedPermanentZoneName.value],
+      selectedActivityName: [...selectedActivityName.value],
+      selectedPackKeys: getSelectedPackPersistenceKeys(displayPackList.value, selectedPackCollect.value),
+      selectedHistoryPackKeys: getSelectedPackPersistenceKeys(packListGroupByHistory.value, selectedHistoryPackIndex.value),
+      originiumQuantities: Object.fromEntries(OriginiumTable.value.map((item) => [item.packName, item.quantity])),
+    },
+  };
+}
+
+function saveVideoGachaSettings() {
+  try {
+    localStorage.setItem(GACHA_VIDEO_SETTINGS_STORAGE_KEY, JSON.stringify(getVideoGachaDraft()));
+  } catch (error) {
+    console.warn("Failed to save gacha video settings.", error);
+  }
+}
+
+async function saveVideoPoolImage(poolId, imageFile) {
+  try {
+    if (imageFile) {
+      await gachaVideoDraftDb.table("poolImages").put({
+        id: poolId,
+        imageFile,
+        updatedAt: Date.now(),
+      });
+      return;
+    }
+
+    await gachaVideoDraftDb.table("poolImages").delete(poolId);
+  } catch (error) {
+    console.warn(`Failed to save ${poolId} pool image.`, error);
+  }
+}
+
+async function saveVideoGachaDraft() {
+  saveVideoGachaSettings();
+
+  try {
+    await gachaVideoDraftDb.table("drafts").put(getVideoGachaDraft());
+  } catch (error) {
+    console.warn("Failed to save gacha video draft.", error);
+  }
+}
+
+function queueVideoGachaDraftSave() {
+  if (!gachaVideoDraftRestored) {
+    return;
+  }
+
+  saveVideoGachaSettings();
+
+  if (gachaVideoDraftSaveTimer) {
+    clearTimeout(gachaVideoDraftSaveTimer);
+  }
+
+  gachaVideoDraftSaveTimer = window.setTimeout(() => {
+    gachaVideoDraftSaveTimer = 0;
+    saveVideoGachaDraft();
+  }, 180);
+}
+
+function readVideoGachaSettings() {
+  try {
+    const rawSettings = localStorage.getItem(GACHA_VIDEO_SETTINGS_STORAGE_KEY);
+    return rawSettings ? JSON.parse(rawSettings) : null;
+  } catch (error) {
+    console.warn("Failed to restore gacha video settings.", error);
+    return null;
+  }
+}
+
+async function readVideoPoolImages() {
+  try {
+    const records = await gachaVideoDraftDb.table("poolImages").toArray();
+    return Object.fromEntries(
+      records
+        .filter((record) => videoPoolOptions.some((pool) => pool.id === record.id) && record.imageFile instanceof Blob)
+        .map((record) => [record.id, record.imageFile])
+    );
+  } catch (error) {
+    console.warn("Failed to restore gacha video pool images.", error);
+    return {};
+  }
+}
+
+async function readVideoGachaDraft() {
+  const settings = readVideoGachaSettings();
+
+  try {
+    const [draft, poolImages] = await Promise.all([
+      gachaVideoDraftDb.table("drafts").get(GACHA_VIDEO_DRAFT_ID),
+      readVideoPoolImages(),
+    ]);
+    if (!settings) {
+      return draft
+        ? {
+            ...draft,
+            poolImages: Object.keys(poolImages).length ? poolImages : draft.poolImages || {},
+          }
+        : Object.keys(poolImages).length
+          ? { poolImages }
+          : null;
+    }
+
+    return {
+      ...settings,
+      poolImages: Object.keys(poolImages).length ? poolImages : draft?.poolImages || {},
+    };
+  } catch (error) {
+    console.warn("Failed to restore gacha video draft.", error);
+    return settings;
+  }
+}
+
+function persistVideoGachaSettings() {
+  if (gachaVideoDraftRestored) {
+    saveVideoGachaSettings();
+  }
+}
+
+function restoreVideoGachaDraft(draft) {
+  if (!draft || typeof draft !== "object") {
+    return;
+  }
+
+  const canvas = draft.canvas || {};
+  if (typeof canvas.displayBackgroundColor === "string") {
+    displayBackgroundColor.value = canvas.displayBackgroundColor;
+  }
+  restoreNumberSetting(leftPerspective, canvas.leftPerspective);
+  restoreNumberSetting(rightPerspective, canvas.rightPerspective);
+  restoreNumberSetting(stageTopMargin, canvas.stageTopMargin);
+  restoreNumberSetting(stageBottomMargin, canvas.stageBottomMargin);
+  restoreNumberSetting(stageLeftMargin, canvas.stageLeftMargin);
+  restoreNumberSetting(stageRightMargin, canvas.stageRightMargin);
+  restoreNumberSetting(cardGroupWidth, canvas.cardGroupWidth);
+
+  const view = draft.view || {};
+  if (view.settingsTab === "canvas" || view.settingsTab === "data") {
+    settingsTab.value = view.settingsTab;
+  }
+  if (Object.hasOwn(cardTitles, view.activeCardName)) {
+    activeCardName.value = view.activeCardName;
+  }
+  if (Object.hasOwn(cardTitles, view.dataPanelCardName)) {
+    dataPanelCardName.value = view.dataPanelCardName;
+  }
+  if (videoPoolOptions.some((pool) => pool.id === view.selectedVideoPool)) {
+    selectedVideoPool.value = view.selectedVideoPool;
+  }
+
+  const calculation = draft.calculation || {};
+  restoreObjectFields(userConfigV2.value, calculation.userConfig, ["selectedCertificatePackList"]);
+  if (typeof calculation.calPoolEnd === "boolean") {
+    calPoolEnd.value = calculation.calPoolEnd;
+  }
+  selectedCertificatePackList.value = restoreArraySetting(calculation.selectedCertificatePackList);
+  selectedCertificateT2Group.value = certificateT2Group.filter((item) =>
+    restoreArraySetting(calculation.selectedCertificateT2Texts).includes(item.text)
+  );
+  restoreObjectFields(produceOrundum.value, calculation.produceOrundum, ["outputByAp", "outputByItem", "itemId4001"]);
+  restoreObjectFields(certificateStoreF3.value, calculation.certificateStoreF3, [
+    "remainingCertificates",
+    "disposableCertificate",
+    "orundum",
+  ]);
+
+  const selectedStoreGroups = restoreArraySetting(calculation.selectedCertificateStoreF3Group).filter((item) =>
+    Number.isInteger(item)
+  );
+  selectedCertificateStoreF3Group.value = selectedStoreGroups.length ? selectedStoreGroups : [0];
+  previousSelectedCertificateStoreF3Group = [...selectedCertificateStoreF3Group.value];
+  selectedPermanentZoneName.value = restoreArraySetting(calculation.selectedPermanentZoneName);
+  selectedActivityName.value = restoreArraySetting(calculation.selectedActivityName);
+
+  if (calculation.originiumQuantities && typeof calculation.originiumQuantities === "object") {
+    for (const item of OriginiumTable.value) {
+      const savedQuantity = Number(calculation.originiumQuantities[item.packName]);
+      if (Number.isFinite(savedQuantity)) {
+        item.quantity = savedQuantity;
+      }
+    }
+  }
+
+  const poolImages = draft.poolImages || {};
+  for (const pool of videoPoolOptions) {
+    if (poolImages[pool.id] instanceof Blob) {
+      setVideoPoolImage(pool.id, poolImages[pool.id]);
+    }
+  }
+}
+
+function restoreVideoGachaPackSelections(calculation) {
+  if (!calculation || typeof calculation !== "object") {
+    return;
+  }
+
+  if (Array.isArray(calculation.selectedPackKeys)) {
+    const selectedKeys = new Set(calculation.selectedPackKeys);
+    selectedPackCollect.value = displayPackList.value
+      .filter((pack) => selectedKeys.has(getPackPersistenceKey(pack)))
+      .map((pack) => pack.id);
+  }
+
+  if (Array.isArray(calculation.selectedHistoryPackKeys)) {
+    const selectedKeys = new Set(calculation.selectedHistoryPackKeys);
+    selectedHistoryPackIndex.value = packListGroupByHistory.value
+      .filter((pack) => selectedKeys.has(getPackPersistenceKey(pack)))
+      .map((pack) => pack.id);
+  }
+}
+
+watch(
+  [
+    displayBackgroundColor,
+    leftPerspective,
+    rightPerspective,
+    stageTopMargin,
+    stageBottomMargin,
+    stageLeftMargin,
+    stageRightMargin,
+    cardGroupWidth,
+    settingsTab,
+    activeCardName,
+    dataPanelCardName,
+    selectedVideoPool,
+    userConfigV2,
+    calPoolEnd,
+    selectedCertificatePackList,
+    selectedCertificateT2Group,
+    produceOrundum,
+    certificateStoreF3,
+    selectedCertificateStoreF3Group,
+    selectedPermanentZoneName,
+    selectedActivityName,
+    selectedPackCollect,
+    selectedHistoryPackIndex,
+    OriginiumTable,
+  ],
+  queueVideoGachaDraftSave,
+  { deep: true }
+);
+
 /**
  * 计算抽卡资源
  */
 function gachaResourcesCalculation() {
   logs = [];
 
-  endDate.value = getScheduleCalculationEndDate(currentSchedule.value, calPoolEnd.value);
+  if (calPoolEnd.value) {
+    endDate.value = currentSchedule.value.end;
+  } else {
+    const startTimeStamp = currentSchedule.value.start.getTime();
+
+    endDate.value = new Date(startTimeStamp + 12 * 60 * 60 * 1000);
+  }
 
   //饼图数据暂存区
   let pieChartDataTmp = [];
@@ -892,12 +1465,12 @@ function gachaResourcesCalculation() {
   calculationResult.value.originium = 0;
   calculationResult.value.gachaTicket = 0;
   calculationResult.value.tenGachaTicket = 0;
+  calculationResult.value.existTotalDraw = 0;
+  calculationResult.value.potentialTotalDraw = 0;
 
   clearLastYearOriginiumPackSelection();
   dailyRewardCalculate();
-  existCalculate();
   produceOrundumCalculate();
-  potentialResourcesCalculation();
   honeyCakeCalculate();
   packCalculate();
   activityCalculate();
@@ -1423,10 +1996,6 @@ function gachaResourcesCalculation() {
 
   // console.table(logs)
 
-  userConfigV2.value.selectedCertificatePackList = selectedCertificatePackList.value;
-
-  localStorage.setItem("LastSettings", JSON.stringify(userConfigV2.value));
-
   setPieChart(pieChartData.value);
 
   // console.log(calculationResult.value)
@@ -1439,12 +2008,50 @@ function gachaResourcesCalculation() {
  * @return {number}  剩余天数
  */
 function getRewardRemainingDays(honeyCake) {
-  return getDailyRewardRemainingDays(
-    honeyCake,
-    currentTimestamp.value,
-    currentSchedule.value,
-    calPoolEnd.value
-  );
+  //活动开启时间
+  const rewardStart = honeyCake.start;
+  const scheduleStart = currentSchedule.value.start.getTime();
+
+  //活动结束时间
+  let rewardEnd = honeyCake.end;
+  //使用全局时间戳，支持用户自定义时间
+  const nowTimeStamp = currentTimestamp.value;
+  //如果选择的是计算到活动开启当日,判断活动开启日期是否在奖励结束日之前，true则代表这是个新活动，将活动结束日期设为活动开启日的次日凌晨4点
+  if (!calPoolEnd.value && scheduleStart < rewardEnd) {
+    rewardEnd = rewardStart + 60 * 60 * 12 * 1000;
+  }
+
+  //活动剩余时间
+  let remainingDays;
+
+  //如果活动已经开始，用实际时间计算，否则用活动开启日期计算
+  if (rewardStart < nowTimeStamp) {
+    remainingDays = Math.round((rewardEnd - nowTimeStamp) / 86400000);
+    // console.log(honeyCake.name,'剩余天数:', remainingDays)
+  } else {
+    remainingDays = Math.round((rewardEnd - rewardStart) / 86400000);
+    // console.log(honeyCake.name,'剩余天数:', remainingDays)
+  }
+
+  //大于14天强制为14天
+  if (remainingDays > 14) {
+    remainingDays = 14;
+  }
+
+  // 防止出现负数
+  if (remainingDays < 0) {
+    remainingDays = 0;
+  }
+
+  // console.log(honeyCake.name, " 类型：", rewardType, activityType.value, dateFormat(rewardEnd), dateFormat(rewardStart), dateFormat(scheduleStart), remainingDays)
+
+  // //小于1天强制为1天
+  // if (endTime - startTime < 8640000) {
+  //   remainingDays = 1
+  // }
+
+  console.log("离限定池结束还有" + remainingDays + "天");
+  return remainingDays;
 }
 
 /**
@@ -1453,7 +2060,15 @@ function getRewardRemainingDays(honeyCake) {
  * @returns {boolean} 是否可计入
  */
 function rewardIsExpired(reward) {
-  if (!isRewardAvailableOnSelectedDates(reward, currentTimestamp.value, endDate.value)) {
+  //活动结束时间在当前时间之前，活动已结束
+  if (reward.end <= currentTimestamp.value) {
+    // console.log(reward.name, '活动结束')
+    return false;
+  }
+
+  //活动开始时间在选择的结束时间节点之后，活动未开启
+  if (reward.start > endDate.value.getTime()) {
+    // console.log(reward.name, '活动未开始')
     return false;
   }
 
@@ -1472,6 +2087,10 @@ function rewardIsEmpty(reward) {
 let myChart = void 0;
 
 function setPieChart(data) {
+  if (!myChart) {
+    return;
+  }
+
   let option = {
     tooltip: {
       formatter: "{a} {b} : {c}抽,占 ({d}%)",
@@ -1505,44 +2124,6 @@ function setPieChart(data) {
   };
 
   myChart.setOption(option);
-}
-
-//从本地存储读取上次用户的攒抽设置
-function readLastSettings() {
-  let lastSettings = localStorage.getItem("LastSettings");
-  if (!lastSettings) {
-    return;
-  }
-
-  try {
-    lastSettings = JSON.parse(lastSettings);
-  } catch (error) {
-    console.log(error);
-    return;
-  }
-
-  userConfigV2.value.existOrundum = stringToNumber(lastSettings.existOrundum);
-  userConfigV2.value.existOriginium = stringToNumber(lastSettings.existOriginium);
-  userConfigV2.value.existGachaTicket = stringToNumber(lastSettings.existGachaTicket);
-  userConfigV2.value.existTenGachaTicket = stringToNumber(lastSettings.existTenGachaTicket);
-  userConfigV2.value.correctOrundum = stringToNumber(lastSettings.correctOrundum);
-  userConfigV2.value.skinBudget = stringToNumber(lastSettings.skinBudget);
-  userConfigV2.value.skinBudgetPlus = stringToNumber(lastSettings.skinBudgetPlus);
-  userConfigV2.value.skinBudgetPro = stringToNumber(lastSettings.skinBudgetPro);
-
-  userConfigV2.value.originiumIsUsed = lastSettings.originiumIsUsed;
-  userConfigV2.value.weeklyTaskCompleted = lastSettings.weeklyTaskCompleted;
-  userConfigV2.value.certificateStoreCompleted = lastSettings.certificateStoreCompleted;
-  userConfigV2.value.annihilationCompleted = lastSettings.annihilationCompleted;
-
-  userConfigV2.value.paradox = stringToNumber(lastSettings.paradox);
-  userConfigV2.value.annihilation = stringToNumber(lastSettings.annihilation);
-
-  if (lastSettings.selectedCertificatePackList) {
-    selectedCertificatePackList.value = lastSettings.selectedCertificatePackList;
-  }
-  userConfigV2.value.monthlyCardSelected = lastSettings.monthlyCardSelected === "true" || lastSettings.monthlyCardSelected === true;
-  // userConfigV2.value.monthlyCardExtraCount = stringToNumber(lastSettings.monthlyCardExtraCount);
 }
 
 // 创建一个窗口尺寸变化的监听器
@@ -1625,7 +2206,6 @@ function getProbabilityBoxStyle(limited, all) {
 }
 
 const developerMode = ref(route.query.mode === "dev" ? "dev" : "");
-const showActivityScheduleDates = ref(false);
 
 watch(
   () => route.query.mode,
@@ -1634,16 +2214,24 @@ watch(
   }
 );
 
-function formatActivityScheduleDateRange(activity) {
-  return activity.scheduleDateRange || formatActivityDateRange(activity.start, activity.end);
-}
+onMounted(async () => {
+  const draft = await readVideoGachaDraft();
+  restoreVideoGachaDraft(draft);
+  await nextTick();
 
-onMounted(() => {
-  readLastSettings();
-  myChart = echarts.init(document.getElementById("calculationResultPieChart"));
+  const chartElement = document.getElementById("calculationResultPieChart");
+  if (chartElement) {
+    myChart = echarts.init(chartElement);
+  }
+
   batchGenerationMonthlyPack();
-  updateScheduleOption(0);
-  getAndSortPackData();
+  const selectedPool = videoPoolOptions.find((pool) => pool.id === selectedVideoPool.value) || videoPoolOptions[0];
+  updateScheduleOption(selectedPool.scheduleIndex);
+  await getAndSortPackData();
+  restoreVideoGachaPackSelections(draft?.calculation);
+  gachaResourcesCalculation();
+  gachaVideoDraftRestored = true;
+  window.addEventListener("pagehide", persistVideoGachaSettings);
 
   // ElNotification({
   //   title: '2024.08.16',
@@ -1742,11 +2330,315 @@ function sharePage() {
 <template>
   <!--  <img src="/public/顶部.jpg" alt="" style="width: 600px;position: absolute;top: 50px;left: 360px;z-index:3000;opacity: 0.3" >-->
   <!-- <div style="background-color: #13ce66;width: 600px;height: 114px;">114</div> -->
-  <div class="gacha-calculation-page" id="gachaCalculate" data-video="pro">
-    <!--计算结果-->
-    <div class="collapse-group1" id="result-box" data-video="pro">
+  <div class="gacha-card-editor">
+    <aside class="gacha-card-settings gacha-card-settings-video" aria-label="参数调整">
+      <div class="gacha-card-settings-title">参数调整</div>
+      <el-tabs v-model="settingsTab" class="gacha-card-settings-tabs" stretch>
+        <el-tab-pane label="画面" name="canvas">
+          <div class="gacha-card-setting-image-upload">
+            <span>夏活图片</span>
+            <el-upload
+              accept="image/*"
+              :auto-upload="false"
+              :show-file-list="false"
+              :on-change="(file) => updateVideoPoolImage('summer', file)"
+            >
+              <el-button>上传</el-button>
+            </el-upload>
+          </div>
+          <div class="gacha-card-setting-image-upload">
+            <span>半周年图片</span>
+            <el-upload
+              accept="image/*"
+              :auto-upload="false"
+              :show-file-list="false"
+              :on-change="(file) => updateVideoPoolImage('halfAnniversary', file)"
+            >
+              <el-button>上传</el-button>
+            </el-upload>
+          </div>
+          <div class="gacha-card-setting-row">
+            <span>背景</span>
+            <el-color-picker v-model="displayBackgroundColor" show-alpha />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>左侧透视</span>
+            <el-slider v-model="leftPerspective" :min="0" :max="30" :step="0.1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>右侧透视</span>
+            <el-slider v-model="rightPerspective" :min="0" :max="30" :step="0.1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>顶部边距</span>
+            <el-slider v-model="stageTopMargin" :min="96" :max="280" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>底部边距</span>
+            <el-slider v-model="stageBottomMargin" :min="0" :max="280" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>左侧边距</span>
+            <el-slider v-model="stageLeftMargin" :min="0" :max="320" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>右侧边距</span>
+            <el-slider v-model="stageRightMargin" :min="0" :max="320" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>卡片组宽度</span>
+            <el-slider v-model="cardGroupWidth" :min="320" :max="640" :step="1" show-input input-size="small" />
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="数据" name="data">
+          <div v-if="activeCardName === 'calculationResult'" class="gacha-video-data-empty">卡池由左上图片切换</div>
+          <div id="gacha-video-data-controls" class="gacha-video-data-panel"></div>
+        </el-tab-pane>
+      </el-tabs>
+    </aside>
+
+    <section class="gacha-card-stage" :class="{ 'is-data-controls': settingsTab === 'data' }" :style="displayStageStyle">
+      <div
+        class="gacha-calculation-page gacha-card-browser"
+        :class="{ 'is-data-controls': settingsTab === 'data' }"
+        id="gachaCalculate"
+        data-video="pro"
+      >
+        <div class="gacha-card-stage-heading">攒抽计算器</div>
+        <div v-if="activeCardTitle" class="gacha-card-detail-title">{{ activeCardTitle }}</div>
+        <nav class="gacha-video-navigation" aria-label="视频页导航">
+          <div class="gacha-video-pool-selector">
+            <button
+              v-for="pool in videoPoolOptions"
+              :key="pool.id"
+              type="button"
+              class="gacha-video-pool-button"
+              :class="{ 'is-active': selectedVideoPool === pool.id }"
+            :title="pool.label"
+            @click="selectVideoPool(pool.id)"
+          >
+              <span class="gacha-video-pool-image">
+                <img v-if="videoPoolImages[pool.id]" :src="videoPoolImages[pool.id]" alt="" />
+                <span v-else class="gacha-video-pool-placeholder"></span>
+              </span>
+              <span class="gacha-video-pool-copy">
+                <strong>{{ pool.title }}</strong>
+                <small>{{ pool.endDate }}</small>
+              </span>
+            </button>
+          </div>
+          <button
+            type="button"
+            class="gacha-video-nav-item"
+            :class="{ 'is-active': activeCardName === 'calculationResult' }"
+            @click="selectVideoCard('calculationResult')"
+          >
+            <span>总览</span>
+            <strong>{{ numberFloor(calculationResult.totalDraw, 0) }} 抽</strong>
+          </button>
+          <button
+            type="button"
+            class="gacha-video-nav-item"
+            :class="{ 'is-active': activeCardName === 'daily' }"
+            @click="selectVideoCard('daily')"
+          >
+            <span>日常积累</span>
+            <strong>{{ numberFloor(calculationResult.dailyTotalDraw, 0) }} 抽</strong>
+          </button>
+          <button
+            type="button"
+            class="gacha-video-nav-item"
+            :class="{ 'is-active': activeCardName === 'custom' }"
+            @click="selectVideoCard('custom')"
+          >
+            <span>搓玉 / 凭证</span>
+            <strong>{{ numberFloor(calculationResult.produceOrundumTotalDraw, 0) }} 抽</strong>
+          </button>
+          <button
+            type="button"
+            class="gacha-video-nav-item"
+            :class="{ 'is-active': activeCardName === 'activity' }"
+            @click="selectVideoCard('activity')"
+          >
+            <span>活动获得</span>
+            <strong>{{ numberFloor(calculationResult.activityTotalDraw, 0) }} 抽</strong>
+          </button>
+          <button
+            type="button"
+            class="gacha-video-nav-item"
+            :class="{ 'is-active': activeCardName === 'other' }"
+            @click="selectVideoCard('other')"
+          >
+            <span>其他资源</span>
+            <strong>{{ numberFloor(calculationResult.otherTotalDraw, 0) }} 抽</strong>
+          </button>
+          <button
+            type="button"
+            class="gacha-video-nav-item"
+            :class="{ 'is-active': activeCardName === 'recharge' }"
+            @click="selectVideoCard('recharge')"
+          >
+            <span>氪金方案</span>
+          </button>
+        </nav>
+
+        <section class="gacha-video-detail">
+          <template v-if="activeCardName === 'calculationResult'">
+            <div class="gacha-video-overview-hero">
+              <span>可用抽数</span>
+              <strong>{{ numberFloor(calculationResult.totalDraw, 0) }}</strong>
+              <span class="gacha-video-hero-icon is-artwork" aria-label="寻访凭证">
+                <img src="/image/temp/permit.webp" alt="" />
+              </span>
+            </div>
+            <div class="gacha-video-overview-grid">
+              <div class="gacha-video-source-list">
+                <div v-for="source in videoOverviewSources" :key="source.label" class="gacha-video-source-row">
+                  <span :class="`gacha-video-source-dot is-${source.tone}`"></span>
+                  <span>{{ source.label }}</span>
+                  <strong v-if="source.draws !== null" class="gacha-video-draw-value">
+                    <span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>
+                    {{ source.draws }}
+                  </strong>
+                </div>
+              </div>
+              <div class="gacha-video-resource-list">
+                <div class="gacha-video-resource-item is-artwork">
+                  <span class="gacha-video-resource-icon" aria-label="源石">
+                    <img src="/image/icon/至纯源石.png" alt="" />
+                  </span>
+                  <strong>{{ calculationResult.originium }}</strong>
+                  <small><span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>{{ singleResourceDraws.originium }}</small>
+                </div>
+                <div class="gacha-video-resource-item">
+                  <span class="gacha-video-resource-icon" aria-label="合成玉"><span class="bg-icon_4003"></span></span>
+                  <strong>{{ calculationResult.orundum }}</strong>
+                  <small><span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>{{ singleResourceDraws.orundum }}</small>
+                </div>
+                <div class="gacha-video-resource-item">
+                  <span class="gacha-video-resource-icon" aria-label="寻访凭证"><span class="bg-icon_7003"></span></span>
+                  <strong>{{ calculationResult.gachaTicket }}</strong>
+                  <small><span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>{{ singleResourceDraws.gachaTicket }}</small>
+                </div>
+                <div class="gacha-video-resource-item is-artwork">
+                  <span class="gacha-video-resource-icon" aria-label="十连寻访凭证">
+                    <img src="/image/icon/道具_十连寻访凭证.png" alt="" />
+                  </span>
+                  <strong>{{ calculationResult.tenGachaTicket }}</strong>
+                  <small><span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>{{ singleResourceDraws.tenGachaTicket }}</small>
+                </div>
+              </div>
+            </div>
+            <div class="gacha-video-probability-list">
+              <div v-for="metric in videoProbabilityMetrics" :key="metric.label" class="gacha-video-probability-item">
+                <span>{{ metric.label }}</span>
+                <strong>{{ formatProbability(metric.value) }}</strong>
+              </div>
+            </div>
+          </template>
+
+          <template v-else-if="activeCardName === 'daily'">
+            <div class="gacha-video-section-hero">
+              <span>日常积累</span>
+              <strong>{{ numberFloor(calculationResult.dailyTotalDraw, 0) }}</strong>
+              <span class="gacha-video-hero-icon" aria-label="寻访凭证"><span class="bg-icon_7003"></span></span>
+              <small>从今天开始的稳定收入</small>
+            </div>
+            <div class="gacha-video-detail-rows">
+              <div v-for="row in videoDailyRows" :key="row.label" class="gacha-video-detail-row">
+                <span>{{ row.label }}</span>
+                <strong>{{ row.value }}</strong>
+                <small class="gacha-video-unit-icon" :aria-label="row.unit">
+                  <span :class="getVideoResourceIconClass(row.unit)"></span>
+                </small>
+              </div>
+            </div>
+          </template>
+
+          <template v-else-if="activeCardName === 'custom'">
+            <div class="gacha-video-section-hero">
+              <span>兑换与搓玉</span>
+              <strong>{{ numberFloor(calculationResult.produceOrundumTotalDraw, 0) }}</strong>
+              <span class="gacha-video-hero-icon" aria-label="寻访凭证"><span class="bg-icon_7003"></span></span>
+              <small>按当前选择折算</small>
+            </div>
+            <div class="gacha-video-three-columns">
+              <div v-for="row in videoCustomRows" :key="row.label" class="gacha-video-stat-column">
+                <span>{{ row.label }}</span>
+                <strong>{{ row.value }}</strong>
+                <small class="gacha-video-unit-icon" :aria-label="row.unit">
+                  <span :class="getVideoResourceIconClass(row.unit)"></span>
+                </small>
+              </div>
+            </div>
+          </template>
+
+          <template v-else-if="activeCardName === 'activity'">
+            <div class="gacha-video-section-hero">
+              <span>活动获得</span>
+              <strong>{{ numberFloor(calculationResult.activityTotalDraw, 0) }}</strong>
+              <span class="gacha-video-hero-icon" aria-label="寻访凭证"><span class="bg-icon_7003"></span></span>
+              <small>当前已纳入的活动</small>
+            </div>
+            <div v-if="videoActivityRows.length" class="gacha-video-event-list">
+              <div v-for="activity in videoActivityRows" :key="activity.label" class="gacha-video-event-row">
+                <span>{{ activity.category }}</span>
+                <strong>{{ activity.label }}</strong>
+                <em class="gacha-video-draw-value">
+                  <span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>
+                  +{{ activity.draws }}
+                </em>
+              </div>
+            </div>
+            <div v-else class="gacha-video-empty-state">当前没有纳入活动</div>
+          </template>
+
+          <template v-else-if="activeCardName === 'other'">
+            <div class="gacha-video-section-hero">
+              <span>其他资源</span>
+              <strong>{{ numberFloor(calculationResult.otherTotalDraw, 0) }}</strong>
+              <span class="gacha-video-hero-icon" aria-label="寻访凭证"><span class="bg-icon_7003"></span></span>
+              <small>维护、邮件与其他奖励</small>
+            </div>
+            <div v-if="videoOtherRows.length" class="gacha-video-event-list">
+              <div v-for="reward in videoOtherRows" :key="reward.label" class="gacha-video-event-row">
+                <span>资源</span>
+                <strong>{{ reward.label }}</strong>
+                <em class="gacha-video-draw-value">
+                  <span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>
+                  +{{ reward.draws }}
+                </em>
+              </div>
+            </div>
+            <div v-else class="gacha-video-empty-state">当前没有其他资源</div>
+          </template>
+
+          <template v-else-if="activeCardName === 'recharge'">
+            <div class="gacha-video-plan-heading">
+              <span>氪金方案</span>
+              <strong>预设组合</strong>
+              <small>月卡与礼包组合</small>
+            </div>
+            <div class="gacha-video-recharge-plan-list">
+              <article v-for="(plan, index) in videoRechargePlans" :key="plan.id" class="gacha-video-recharge-plan">
+                <span class="gacha-video-plan-index">0{{ index + 1 }}</span>
+                <h3>{{ plan.title }}</h3>
+                <div class="gacha-video-plan-tokens">
+                  <span v-for="item in plan.items" :key="item" class="gacha-video-plan-token">
+                    <i></i>
+                    {{ item }}
+                  </span>
+                </div>
+              </article>
+            </div>
+          </template>
+        </section>
+
+        <template v-if="settingsTab === 'data'">
+        <!--计算结果-->
+        <div class="collapse-group1" id="result-box" data-video="pro">
       <!-- <div class="collapse-group-content"> -->
-      <el-collapse v-model="resultCollapseActiveNames" class="" style="border: none">
+      <el-collapse v-model="dataPanelCardName" accordion class="" style="border: none">
         <el-collapse-item name="calculationResult" class="collapse-item">
           <template #title>
             <div class="flex align-center">
@@ -1774,6 +2666,7 @@ function sharePage() {
               </span>
             </div>
           </template>
+          <div v-if="false">
           <!--选择攒到某个活动的单选框-->
           <div class="radio-group-wrap" style="padding-top: 4px">
             <el-radio-group v-model="currentScheduleName" size="large" class="custom-radio-group">
@@ -1836,12 +2729,12 @@ function sharePage() {
                   <td>抽</td>
                 </tr>
                 <tr>
-                  <td>活动(估算)</td>
+                  <td>活动获得</td>
                   <td>{{ numberFloor(calculationResult.activityTotalDraw, 0) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
-                  <td>其它(估算)</td>
+                  <td>其他资源</td>
                   <td>{{ numberFloor(calculationResult.otherTotalDraw, 0) }}</td>
                   <td>抽</td>
                 </tr>
@@ -1987,9 +2880,10 @@ function sharePage() {
               </a>
             </div>
           </div>
+          </div>
         </el-collapse-item>
 
-        <el-collapse-item name="developer" class="collapse-item" v-show="developerMode === 'dev'">
+        <el-collapse-item v-if="false" name="developer" class="collapse-item">
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
@@ -2037,10 +2931,6 @@ function sharePage() {
                 <span style="font-weight: 500; color: #606266">宽屏模式：</span>
                 <el-switch v-model="wideScreenModeEnabled" @change="wideScreenMode"></el-switch>
               </div>
-              <div style="display: flex; align-items: center; gap: 12px">
-                <span style="font-weight: 500; color: #606266">显示活动起止日期：</span>
-                <el-switch v-model="showActivityScheduleDates"></el-switch>
-              </div>
             </div>
           </div>
         </el-collapse-item>
@@ -2048,10 +2938,10 @@ function sharePage() {
       <!-- </div> -->
     </div>
 
-    <div class="collapse-group2" id="resources-box" data-video="pro">
-      <el-collapse v-model="optionsCollapseActiveNames" style="border: none">
+        <div class="collapse-group2" id="resources-box" data-video="pro">
+      <el-collapse v-model="dataPanelCardName" accordion style="border: none">
         <!--库存资源-->
-        <el-collapse-item name="exist" class="collapse-item">
+        <el-collapse-item v-if="false" name="exist" class="collapse-item">
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
@@ -2330,7 +3220,7 @@ function sharePage() {
         </el-collapse-item>
 
         <!--潜在资源-->
-        <el-collapse-item name="potential" class="collapse-item">
+        <el-collapse-item v-if="false" name="potential" class="collapse-item">
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
@@ -2470,12 +3360,12 @@ function sharePage() {
           <span class="tip">这些活动的复刻/记录修复日期尚不明确，请根据实际情况选取</span>
         </el-collapse-item>
 
-        <!--氪金资源-->
+        <!--氪金方案-->
         <el-collapse-item name="recharge" class="collapse-item">
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 氪金资源&emsp;{{ numberFloor(calculationResult.rechargeTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 氪金方案 </span>
             </div>
           </template>
 
@@ -2543,7 +3433,7 @@ function sharePage() {
             </el-checkbox-button>
           </el-checkbox-group>
 
-          <div class="collapse-content-subheading"><span></span> 往年礼包（用于估算氪金）</div>
+          <div class="collapse-content-subheading"><span></span> 往年礼包</div>
           <el-checkbox-group v-model="selectedHistoryPackIndex" style="margin: 4px" @change="gachaResourcesCalculation">
             <el-checkbox-button v-for="(pack, index) in packListGroupByHistory" :key="index" :value="pack.id" class="el-checkbox-button">
               <PackButtonContent :data="pack"> </PackButtonContent>
@@ -2571,12 +3461,12 @@ function sharePage() {
           </div>
         </el-collapse-item>
 
-        <!--活动获得(估算)-->
+        <!--活动获得-->
         <el-collapse-item name="activity" class="collapse-item">
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 活动获得（估算）&emsp;{{ numberFloor(calculationResult.activityTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 活动获得&emsp;{{ numberFloor(calculationResult.activityTotalDraw, 0) }}抽 </span>
             </div>
           </template>
           <!--复刻活动-->
@@ -2590,9 +3480,6 @@ function sharePage() {
               class="el-checkbox-button"
             >
               <PackButtonContent :data="activity"> </PackButtonContent>
-              <span v-if="showActivityScheduleDates" class="activity-schedule-date">
-                {{ formatActivityScheduleDateRange(activity) }}
-              </span>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -2610,9 +3497,6 @@ function sharePage() {
               class="el-checkbox-button"
             >
               <PackButtonContent :data="activity"> </PackButtonContent>
-              <span v-if="showActivityScheduleDates" class="activity-schedule-date">
-                {{ formatActivityScheduleDateRange(activity) }}
-              </span>
             </el-checkbox-button>
           </el-checkbox-group>
         </el-collapse-item>
@@ -2622,14 +3506,13 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 其他资源（估算）&emsp;{{ numberFloor(calculationResult.otherTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 其他资源&emsp;{{ numberFloor(calculationResult.otherTotalDraw, 0) }}抽 </span>
             </div>
           </template>
           <activity-gacha-resources
             v-for="(honeyCake, label) in otherRewardBySchedules"
             :key="label"
             :info="honeyCake"
-            :show-schedule-date="showActivityScheduleDates"
             v-show="rewardIsExpired(honeyCake) && rewardIsEmpty(honeyCake)"
           >
           </activity-gacha-resources>
@@ -2642,12 +3525,853 @@ function sharePage() {
           </template>
         </el-collapse-item>
       </el-collapse>
-    </div>
+        </div>
+        </template>
+      </div>
+    </section>
+
   </div>
 </template>
 
 <style scoped>
-.test {
-  background: linear-gradient(45deg, #ff6b6b, #ffa94d, #ffd43b, #69db7c, #4dabf7, #a685e2);
+.gacha-card-editor {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  align-items: start;
+  gap: 28px;
+  padding: 12px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.gacha-card-stage {
+  order: 1;
+  width: 1960px;
+  height: 1120px;
+  padding: 20px;
+  box-sizing: border-box;
+  outline: 1px solid var(--c-border-color);
+  overflow: hidden;
+  box-shadow: 0 8px 24px var(--c-box-shadow-color);
+}
+
+.gacha-card-stage.is-data-controls {
+  overflow: visible;
+}
+
+.gacha-card-browser {
+  --gacha-column-gap: 64px;
+  --gacha-left-surface-perspective: 760px;
+  --gacha-right-surface-perspective: 1400px;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: var(--gacha-stage-top-margin) var(--gacha-stage-right-margin) var(--gacha-stage-bottom-margin)
+    var(--gacha-stage-left-margin);
+  box-sizing: border-box;
+}
+
+.gacha-card-browser:not(.is-data-controls) .collapse-group1,
+.gacha-card-browser:not(.is-data-controls) .collapse-group2 {
+  display: none;
+}
+
+#gachaCalculate.gacha-card-browser.is-data-controls .collapse-group1,
+#gachaCalculate.gacha-card-browser.is-data-controls .collapse-group2 {
+  position: absolute;
+  top: 96px;
+  left: calc(100% + 48px);
+  display: block;
+  width: 340px;
+  min-width: 0;
+  max-width: none;
+  max-height: calc(100% - 96px);
+  overflow: auto;
+  z-index: 4;
+}
+
+#gachaCalculate.gacha-card-browser.is-data-controls .collapse-group1 {
+  pointer-events: none;
+}
+
+.gacha-card-browser.is-data-controls .collapse-group1 :deep(.el-collapse-item__header) {
+  display: none;
+}
+
+.gacha-card-browser.is-data-controls .collapse-group2 :deep(.el-collapse-item__header) {
+  display: none;
+}
+
+.gacha-card-browser.is-data-controls :deep(.el-collapse) {
+  border-top: 0;
+  border-bottom: 0;
+}
+
+.gacha-card-browser.is-data-controls :deep(.collapse-item) {
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.gacha-card-browser.is-data-controls :deep(.el-collapse-item__wrap) {
+  border-bottom: 0;
+}
+
+.gacha-card-browser.is-data-controls :deep(.el-collapse-item__content) {
+  padding: 14px 0 20px;
+}
+
+.gacha-card-stage-heading {
+  position: absolute;
+  top: calc(var(--gacha-stage-top-margin) - 96px);
+  left: var(--gacha-stage-left-margin);
+  display: flex;
+  align-items: center;
+  height: 72px;
+  color: var(--c-text-color);
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.gacha-card-browser .gacha-card-detail-title {
+  position: absolute;
+  top: calc(var(--gacha-stage-top-margin) - 84px);
+  right: var(--gacha-stage-right-margin);
+  left: calc(var(--gacha-stage-left-margin) + var(--gacha-navigation-width) + var(--gacha-column-gap));
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 8px;
+  color: var(--c-text-color);
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.gacha-card-settings {
+  width: 340px;
+  flex: 0 0 340px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 8px;
+  background-color: var(--c-card-background-color);
+  box-shadow: 0 8px 18px var(--c-box-shadow-color);
+}
+
+.gacha-card-settings-video {
+  order: 2;
+  max-height: 1120px;
+  overflow: auto;
+}
+
+.gacha-card-settings-legacy {
+  display: none;
+}
+
+.gacha-card-settings-title {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--c-border-color);
+  color: var(--c-text-color);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.gacha-card-settings-tabs :deep(.el-tabs__header) {
+  margin: 0;
+}
+
+.gacha-card-settings-tabs :deep(.el-tabs__content) {
+  overflow: visible;
+}
+
+.gacha-card-settings-tabs :deep(.el-tab-pane) {
+  min-height: 0;
+}
+
+.gacha-card-setting-image-upload {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+  padding: 0 16px;
+  color: var(--c-text-color);
+}
+
+.gacha-card-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+  padding: 0 16px;
+  color: var(--c-text-color);
+}
+
+.gacha-card-setting-range {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 12px;
+  min-height: 68px;
+  padding: 0 16px;
+  color: var(--c-text-color);
+}
+
+.gacha-card-setting-range :deep(.el-slider) {
+  min-width: 0;
+}
+
+.gacha-video-navigation {
+  position: absolute;
+  top: var(--gacha-stage-top-margin);
+  bottom: var(--gacha-stage-bottom-margin);
+  left: var(--gacha-stage-left-margin);
+  display: flex;
+  width: var(--gacha-navigation-width);
+  flex-direction: column;
+  gap: 14px;
+  transform: perspective(var(--gacha-left-surface-perspective)) rotateY(var(--gacha-left-perspective));
+  transform-origin: right center;
+}
+
+.gacha-video-pool-selector {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.gacha-video-pool-button {
+  position: relative;
+  display: block;
+  min-width: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 1px solid var(--c-border-color);
+  border-radius: 6px;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 86%, #7ea6dc);
+  box-shadow: 0 8px 16px var(--c-box-shadow-color);
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+  backface-visibility: hidden;
+}
+
+.gacha-video-pool-button:hover {
+  box-shadow: 0 12px 22px var(--c-box-shadow-color);
+}
+
+.gacha-video-pool-button.is-active {
+  border-color: var(--el-color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--el-color-primary) 24%, transparent), 0 12px 22px var(--c-box-shadow-color);
+}
+
+.gacha-video-pool-image,
+.gacha-video-pool-image img,
+.gacha-video-pool-placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.gacha-video-pool-image {
+  overflow: hidden;
+  transition: filter 180ms ease;
+}
+
+.gacha-video-pool-image img,
+.gacha-video-pool-placeholder {
+  object-fit: cover;
+}
+
+.gacha-video-pool-button:not(.is-active) .gacha-video-pool-image {
+  filter: saturate(0.28) blur(1px) brightness(0.72);
+}
+
+.gacha-video-pool-copy {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  gap: 2px;
+  padding: 10px 11px 9px;
+  background-color: rgb(0 0 0 / 62%);
+  color: #fff;
+  pointer-events: none;
+  text-align: left;
+}
+
+.gacha-video-pool-copy strong {
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.gacha-video-pool-copy small {
+  color: rgb(255 255 255 / 78%);
+  font-size: 13px;
+  line-height: 1.1;
+}
+
+.gacha-video-pool-placeholder {
+  background:
+    linear-gradient(135deg, transparent 0 48%, color-mix(in srgb, var(--c-border-color) 72%, transparent) 48% 52%, transparent 52%),
+    linear-gradient(45deg, transparent 0 48%, color-mix(in srgb, var(--c-border-color) 72%, transparent) 48% 52%, transparent 52%),
+    color-mix(in srgb, var(--c-card-background-color) 76%, #c7d6e8);
+}
+
+.gacha-video-nav-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 76px;
+  padding: 0 20px;
+  border: 1px solid var(--c-border-color);
+  border-left: 5px solid #5e91d5;
+  border-radius: 6px;
+  background-color: var(--c-card-background-color);
+  box-shadow: 0 8px 18px var(--c-box-shadow-color);
+  color: var(--c-text-color);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+  backface-visibility: hidden;
+}
+
+.gacha-video-nav-item:hover {
+  box-shadow: 0 12px 24px var(--c-box-shadow-color);
+}
+
+.gacha-video-nav-item.is-active {
+  border-color: var(--el-color-primary);
+  border-left-color: var(--el-color-primary);
+  background-color: color-mix(in srgb, var(--c-card-background-color) 90%, #7ea6dc);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--el-color-primary) 18%, transparent), 0 14px 26px var(--c-box-shadow-color);
+}
+
+.gacha-video-nav-item span {
+  font-size: 21px;
+  font-weight: 600;
+}
+
+.gacha-video-nav-item strong {
+  color: var(--el-color-primary);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.gacha-video-detail {
+  position: absolute;
+  top: var(--gacha-stage-top-margin);
+  right: calc(var(--gacha-stage-right-margin) + var(--gacha-right-perspective-space));
+  bottom: var(--gacha-stage-bottom-margin);
+  left: calc(var(--gacha-stage-left-margin) + var(--gacha-navigation-width) + var(--gacha-column-gap));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 54px 64px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 6px;
+  background-color: var(--c-card-background-color);
+  box-shadow: 0 20px 42px var(--c-box-shadow-color);
+  box-sizing: border-box;
+  color: var(--c-text-color);
+  transform: perspective(var(--gacha-right-surface-perspective)) rotateY(var(--gacha-right-perspective));
+  transform-origin: left center;
+  transform-style: preserve-3d;
+}
+
+.gacha-video-overview-hero,
+.gacha-video-section-hero {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: end;
+  column-gap: 18px;
+  min-height: 184px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--c-border-color);
+}
+
+.gacha-video-overview-hero > span:not(.gacha-video-hero-icon),
+.gacha-video-section-hero > span:not(.gacha-video-hero-icon) {
+  grid-column: 1 / -1;
+  align-self: start;
+  color: color-mix(in srgb, var(--c-text-color) 70%, transparent);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.gacha-video-overview-hero strong,
+.gacha-video-section-hero strong {
+  color: var(--el-color-primary);
+  font-size: 120px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  line-height: 0.88;
+}
+
+.gacha-video-overview-hero em,
+.gacha-video-section-hero em {
+  padding-bottom: 6px;
+  color: var(--c-text-color);
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.gacha-video-hero-icon {
+  display: inline-flex;
+  width: 54px;
+  height: 54px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.gacha-video-hero-icon > span {
+  display: block;
+}
+
+.gacha-video-hero-icon.is-artwork {
+  width: 96px;
+  height: 96px;
+  margin-bottom: -10px;
+}
+
+.gacha-video-hero-icon.is-artwork img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 12px color-mix(in srgb, #1b2430 35%, transparent));
+}
+
+.gacha-video-overview-hero small,
+.gacha-video-section-hero small {
+  justify-self: end;
+  padding-bottom: 8px;
+  color: color-mix(in srgb, var(--c-text-color) 68%, transparent);
+  font-size: 20px;
+}
+
+.gacha-video-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 56px;
+  padding: 42px 0;
+}
+
+.gacha-video-source-list {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.gacha-video-source-row {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 14px;
+  min-height: 48px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--c-border-color) 70%, transparent);
+  font-size: 21px;
+}
+
+.gacha-video-source-row strong {
+  color: var(--c-text-color);
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+}
+
+.gacha-video-source-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.gacha-video-source-dot.is-daily {
+  background-color: #4f7fd0;
+}
+
+.gacha-video-source-dot.is-custom {
+  background-color: #d5843e;
+}
+
+.gacha-video-source-dot.is-activity {
+  background-color: #41a77a;
+}
+
+.gacha-video-source-dot.is-other {
+  background-color: #b26d92;
+}
+
+.gacha-video-source-dot.is-recharge {
+  background-color: #7f78c9;
+}
+
+.gacha-video-resource-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.gacha-video-resource-item,
+.gacha-video-stat-column {
+  display: flex;
+  min-width: 0;
+  min-height: 116px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px 22px;
+  border-left: 4px solid #d5843e;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 84%, #dce7f3);
+}
+
+.gacha-video-resource-item:nth-child(2),
+.gacha-video-stat-column:nth-child(2) {
+  border-left-color: #4f7fd0;
+}
+
+.gacha-video-resource-item:nth-child(3),
+.gacha-video-stat-column:nth-child(3) {
+  border-left-color: #41a77a;
+}
+
+.gacha-video-resource-item:nth-child(4) {
+  border-left-color: #b26d92;
+}
+
+.gacha-video-resource-item span,
+.gacha-video-stat-column span {
+  color: color-mix(in srgb, var(--c-text-color) 68%, transparent);
+  font-size: 17px;
+}
+
+.gacha-video-resource-item strong,
+.gacha-video-stat-column strong {
+  margin-top: 4px;
+  color: var(--c-text-color);
+  font-size: 32px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.gacha-video-resource-item small,
+.gacha-video-stat-column small {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  color: color-mix(in srgb, var(--c-text-color) 60%, transparent);
+  font-size: 16px;
+}
+
+.gacha-video-resource-icon {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+.gacha-video-resource-icon > span {
+  display: block;
+}
+
+.gacha-video-resource-item.is-artwork .gacha-video-resource-icon {
+  width: 72px;
+  height: 72px;
+}
+
+.gacha-video-resource-icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 7px 8px color-mix(in srgb, #1b2430 28%, transparent));
+}
+
+.gacha-video-inline-icon,
+.gacha-video-unit-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+}
+
+.gacha-video-inline-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.gacha-video-unit-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.gacha-video-inline-icon > span,
+.gacha-video-unit-icon > span {
+  display: block;
+  transform: scale(0.55);
+}
+
+.gacha-video-unit-icon > span {
+  transform: scale(0.72);
+}
+
+.gacha-video-draw-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.gacha-video-probability-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: auto;
+}
+
+.gacha-video-probability-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 76px;
+  padding: 0 24px;
+  border-top: 2px solid #7f78c9;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 90%, #e6e3f7);
+}
+
+.gacha-video-probability-item span {
+  color: color-mix(in srgb, var(--c-text-color) 72%, transparent);
+  font-size: 19px;
+  font-weight: 600;
+}
+
+.gacha-video-probability-item strong {
+  color: #6e67b5;
+  font-size: 30px;
+  font-variant-numeric: tabular-nums;
+}
+
+.gacha-video-detail-rows,
+.gacha-video-event-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 38px;
+  overflow: auto;
+}
+
+.gacha-video-detail-row,
+.gacha-video-event-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  column-gap: 16px;
+  min-height: 62px;
+  padding: 0 20px;
+  border-left: 4px solid #4f7fd0;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 90%, #dce7f3);
+}
+
+.gacha-video-detail-row span,
+.gacha-video-event-row strong {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 21px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gacha-video-detail-row strong,
+.gacha-video-event-row em {
+  color: var(--el-color-primary);
+  font-size: 25px;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+
+.gacha-video-detail-row small,
+.gacha-video-event-row span {
+  color: color-mix(in srgb, var(--c-text-color) 60%, transparent);
+  font-size: 17px;
+}
+
+.gacha-video-three-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 46px;
+}
+
+.gacha-video-plan-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  min-height: 184px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--c-border-color);
+}
+
+.gacha-video-plan-heading span {
+  grid-column: 1 / -1;
+  align-self: start;
+  color: color-mix(in srgb, var(--c-text-color) 70%, transparent);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.gacha-video-plan-heading strong {
+  color: var(--el-color-primary);
+  font-size: 72px;
+  line-height: 0.95;
+}
+
+.gacha-video-plan-heading small {
+  padding-bottom: 6px;
+  color: color-mix(in srgb, var(--c-text-color) 64%, transparent);
+  font-size: 20px;
+}
+
+.gacha-video-recharge-plan-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 46px;
+}
+
+.gacha-video-recharge-plan {
+  display: flex;
+  min-width: 0;
+  min-height: 258px;
+  flex-direction: column;
+  padding: 26px;
+  border: 1px solid var(--c-border-color);
+  border-top: 5px solid #7f78c9;
+  border-radius: 6px;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #e6e3f7);
+  box-sizing: border-box;
+}
+
+.gacha-video-recharge-plan:nth-child(2) {
+  border-top-color: #d5843e;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #f1e2d2);
+}
+
+.gacha-video-recharge-plan:nth-child(3) {
+  border-top-color: #4f7fd0;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #dce7f3);
+}
+
+.gacha-video-plan-index {
+  color: color-mix(in srgb, var(--c-text-color) 45%, transparent);
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.gacha-video-recharge-plan h3 {
+  margin: auto 0 22px;
+  color: var(--c-text-color);
+  font-size: 29px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.gacha-video-plan-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.gacha-video-plan-token {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--c-border-color) 82%, transparent);
+  background-color: color-mix(in srgb, var(--c-card-background-color) 72%, transparent);
+  color: color-mix(in srgb, var(--c-text-color) 78%, transparent);
+  font-size: 16px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.gacha-video-plan-token i {
+  width: 12px;
+  height: 12px;
+  border: 1px dashed color-mix(in srgb, var(--c-text-color) 48%, transparent);
+  border-radius: 2px;
+}
+
+.gacha-video-stat-column {
+  min-height: 210px;
+}
+
+.gacha-video-event-row {
+  border-left-color: #41a77a;
+}
+
+.gacha-video-empty-state {
+  display: flex;
+  min-height: 220px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 38px;
+  border: 1px dashed var(--c-border-color);
+  color: color-mix(in srgb, var(--c-text-color) 58%, transparent);
+  font-size: 21px;
+}
+
+.gacha-video-data-empty {
+  padding: 24px 16px 10px;
+  color: color-mix(in srgb, var(--c-text-color) 62%, transparent);
+  font-size: 14px;
+}
+
+.gacha-video-data-panel {
+  min-height: 860px;
+  padding: 0 16px 20px;
+  box-sizing: border-box;
+}
+
+#gacha-video-data-controls :deep(.collapse-group1),
+#gacha-video-data-controls :deep(.collapse-group2) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  max-height: none;
+}
+
+#gacha-video-data-controls :deep(.el-collapse) {
+  border-top: 0;
+  border-bottom: 0;
+}
+
+#gacha-video-data-controls :deep(.collapse-item) {
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#gacha-video-data-controls :deep(.el-collapse-item__header) {
+  display: none;
+}
+
+#gacha-video-data-controls :deep(.el-collapse-item__wrap) {
+  border-bottom: 0;
+}
+
+#gacha-video-data-controls :deep(.el-collapse-item__content) {
+  padding: 14px 0 20px;
 }
 </style>
