@@ -379,6 +379,22 @@
     width: 200px;
   }
 
+  .activity-schedule-date {
+    display: block;
+    margin: 0 4px 2px;
+    color: var(--c-text-color);
+    font-size: 12px;
+    line-height: 18px;
+    text-align: left;
+  }
+
+  .activity-resource-schedule-date {
+    display: block;
+    color: var(--c-text-color);
+    font-size: 12px;
+    line-height: 18px;
+  }
+
   /*多选框的氪金资源外部容器样式*/
   .checkbox-button-gacha-resources {
     display: flex;

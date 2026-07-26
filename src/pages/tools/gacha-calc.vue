@@ -1,4 +1,4 @@
-<!--修改活动日期按钮请在变量"scheduleOptions"中修改，修改活动排期请在变量"HONEY_CAKE_TABLE"所引入的json文件中修改-->
+<!--卡池日期配置见 /src/utils/gachaScheduleOptions.js；活动排期见 HONEY_CAKE_TABLE 所引用的 JSON 文件。-->
 <script setup>
 import { watch, onMounted, ref, computed } from "vue";
 import "/src/assets/css/tool/gacha_calc.scss";
@@ -14,10 +14,17 @@ import { createMessage } from "/src/utils/message.js";
 import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
 import deepClone from "/src/utils/deepClone.js";
-import { dateDiff, dateFormat } from "/src/utils/dateUtil.js";
+import { dateDiff } from "/src/utils/dateUtil.js";
 import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
 import { stringToNumber } from "/src/utils/stringUtils.js";
 import { numberFloor } from "/src/utils/format.js";
+import {
+  createGachaScheduleOptions,
+  formatActivityDateRange,
+  getDailyRewardRemainingDays,
+  getScheduleCalculationEndDate,
+  isRewardAvailableOnSelectedDates,
+} from "/src/utils/gachaScheduleOptions.js";
 import { useRoute } from "vue-router";
 
 // 当前路由
@@ -128,6 +135,7 @@ let tempActivityScheduleList = [];
 //将预测活动排期分类
 for (const name in FIXED_TABLE) {
   let activityData = FIXED_TABLE[name];
+  activityData.scheduleDateRange = formatActivityDateRange(activityData.start, activityData.end);
   //将活动排期的日期统一转为时间戳
   activityData.start = new Date(activityData.start).getTime();
   activityData.end = new Date(activityData.end).getTime();
@@ -148,6 +156,7 @@ for (const name in FIXED_TABLE) {
 
 for (const name in HONEY_CAKE_TABLE) {
   let activityData = HONEY_CAKE_TABLE[name];
+  activityData.scheduleDateRange = formatActivityDateRange(activityData.start, activityData.end);
   //将活动排期的日期统一转为时间戳
   activityData.start = new Date(activityData.start).getTime();
   activityData.end = new Date(activityData.end).getTime();
@@ -280,40 +289,7 @@ function rewardTypeMatchesCurrentActivity(rewardType) {
 // activityType: string 活动类型
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 // 注：历史礼包时间范围已改为动态计算，不再需要 historicalPackTimeRange 配置
-const scheduleOptions = [
-  {
-    name: "夏活",
-    dateString: "(0801-0815)",
-    start: new Date("2026/08/01 12:00:00"),
-    end: new Date("2026/08/15 04:01:00"),
-    activityType: "夏活限定",
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-    historyStartTime: new Date("2025/08/01 12:00:00"),
-    historyEndTime: new Date("2025/08/15 04:01:00"),
-  },
-  {
-    name: "P3R联动",
-    dateString: "(0904-0917)",
-    start: new Date("2026/09/04 12:00:00"),
-    end: new Date("2026/09/17 04:01:00"),
-    activityType: "联动限定",
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: false,
-  },
-  {
-    name: "感谢庆典",
-    dateString: "敬请期待",
-    start: new Date("2026/11/01 12:00:00"),
-    end: new Date("2026/11/15 04:01:00"),
-    activityType: "周年限定",
-    disabled: true,
-    dailyGiftResources: true,
-    accuracyFlag: false,
-  },
-];
+const scheduleOptions = createGachaScheduleOptions();
 
 const packDataLoadingStatus = ref(false);
 
@@ -907,13 +883,7 @@ const userConfigV2 = ref({
 function gachaResourcesCalculation() {
   logs = [];
 
-  if (calPoolEnd.value) {
-    endDate.value = currentSchedule.value.end;
-  } else {
-    const startTimeStamp = currentSchedule.value.start.getTime();
-
-    endDate.value = new Date(startTimeStamp + 12 * 60 * 60 * 1000);
-  }
+  endDate.value = getScheduleCalculationEndDate(currentSchedule.value, calPoolEnd.value);
 
   //饼图数据暂存区
   let pieChartDataTmp = [];
@@ -1469,50 +1439,12 @@ function gachaResourcesCalculation() {
  * @return {number}  剩余天数
  */
 function getRewardRemainingDays(honeyCake) {
-  //活动开启时间
-  const rewardStart = honeyCake.start;
-  const scheduleStart = currentSchedule.value.start.getTime();
-
-  //活动结束时间
-  let rewardEnd = honeyCake.end;
-  //使用全局时间戳，支持用户自定义时间
-  const nowTimeStamp = currentTimestamp.value;
-  //如果选择的是计算到活动开启当日,判断活动开启日期是否在奖励结束日之前，true则代表这是个新活动，将活动结束日期设为活动开启日的次日凌晨4点
-  if (!calPoolEnd.value && scheduleStart < rewardEnd) {
-    rewardEnd = rewardStart + 60 * 60 * 12 * 1000;
-  }
-
-  //活动剩余时间
-  let remainingDays;
-
-  //如果活动已经开始，用实际时间计算，否则用活动开启日期计算
-  if (rewardStart < nowTimeStamp) {
-    remainingDays = Math.round((rewardEnd - nowTimeStamp) / 86400000);
-    // console.log(honeyCake.name,'剩余天数:', remainingDays)
-  } else {
-    remainingDays = Math.round((rewardEnd - rewardStart) / 86400000);
-    // console.log(honeyCake.name,'剩余天数:', remainingDays)
-  }
-
-  //大于14天强制为14天
-  if (remainingDays > 14) {
-    remainingDays = 14;
-  }
-
-  // 防止出现负数
-  if (remainingDays < 0) {
-    remainingDays = 0;
-  }
-
-  // console.log(honeyCake.name, " 类型：", rewardType, activityType.value, dateFormat(rewardEnd), dateFormat(rewardStart), dateFormat(scheduleStart), remainingDays)
-
-  // //小于1天强制为1天
-  // if (endTime - startTime < 8640000) {
-  //   remainingDays = 1
-  // }
-
-  console.log("离限定池结束还有" + remainingDays + "天");
-  return remainingDays;
+  return getDailyRewardRemainingDays(
+    honeyCake,
+    currentTimestamp.value,
+    currentSchedule.value,
+    calPoolEnd.value
+  );
 }
 
 /**
@@ -1521,15 +1453,7 @@ function getRewardRemainingDays(honeyCake) {
  * @returns {boolean} 是否可计入
  */
 function rewardIsExpired(reward) {
-  //活动结束时间在当前时间之前，活动已结束
-  if (reward.end <= currentTimestamp.value) {
-    // console.log(reward.name, '活动结束')
-    return false;
-  }
-
-  //活动开始时间在选择的结束时间节点之后，活动未开启
-  if (reward.start > endDate.value.getTime()) {
-    // console.log(reward.name, '活动未开始')
+  if (!isRewardAvailableOnSelectedDates(reward, currentTimestamp.value, endDate.value)) {
     return false;
   }
 
@@ -1701,6 +1625,7 @@ function getProbabilityBoxStyle(limited, all) {
 }
 
 const developerMode = ref(route.query.mode === "dev" ? "dev" : "");
+const showActivityScheduleDates = ref(false);
 
 watch(
   () => route.query.mode,
@@ -1708,6 +1633,10 @@ watch(
     developerMode.value = mode === "dev" ? "dev" : "";
   }
 );
+
+function formatActivityScheduleDateRange(activity) {
+  return activity.scheduleDateRange || formatActivityDateRange(activity.start, activity.end);
+}
 
 onMounted(() => {
   readLastSettings();
@@ -2107,6 +2036,10 @@ function sharePage() {
               <div style="display: flex; align-items: center; gap: 12px">
                 <span style="font-weight: 500; color: #606266">宽屏模式：</span>
                 <el-switch v-model="wideScreenModeEnabled" @change="wideScreenMode"></el-switch>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px">
+                <span style="font-weight: 500; color: #606266">显示活动起止日期：</span>
+                <el-switch v-model="showActivityScheduleDates"></el-switch>
               </div>
             </div>
           </div>
@@ -2657,6 +2590,9 @@ function sharePage() {
               class="el-checkbox-button"
             >
               <PackButtonContent :data="activity"> </PackButtonContent>
+              <span v-if="showActivityScheduleDates" class="activity-schedule-date">
+                {{ formatActivityScheduleDateRange(activity) }}
+              </span>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -2674,6 +2610,9 @@ function sharePage() {
               class="el-checkbox-button"
             >
               <PackButtonContent :data="activity"> </PackButtonContent>
+              <span v-if="showActivityScheduleDates" class="activity-schedule-date">
+                {{ formatActivityScheduleDateRange(activity) }}
+              </span>
             </el-checkbox-button>
           </el-checkbox-group>
         </el-collapse-item>
@@ -2690,6 +2629,7 @@ function sharePage() {
             v-for="(honeyCake, label) in otherRewardBySchedules"
             :key="label"
             :info="honeyCake"
+            :show-schedule-date="showActivityScheduleDates"
             v-show="rewardIsExpired(honeyCake) && rewardIsEmpty(honeyCake)"
           >
           </activity-gacha-resources>
