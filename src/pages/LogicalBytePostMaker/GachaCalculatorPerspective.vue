@@ -1,7 +1,9 @@
-<!--修改活动日期按钮请在变量"scheduleOptions"中修改，修改活动排期请在变量"HONEY_CAKE_TABLE"所引入的json文件中修改-->
+<!--卡池日期配置见 /src/utils/gachaScheduleOptions.js；活动排期见 HONEY_CAKE_TABLE 所引用的 JSON 文件。-->
 <script setup>
 import { watch, onMounted, onBeforeUnmount, ref, computed, nextTick } from "vue";
 import Dexie from "dexie";
+import { ElMessageBox } from "element-plus";
+import { saveAs } from "file-saver";
 import "/src/assets/css/tool/gacha_calc.scss";
 import "/src/assets/css/sprite/sprite_plane_icon.css";
 
@@ -18,10 +20,21 @@ import { dateDiff, dateFormat } from "/src/utils/dateUtil.js";
 import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
 import { stringToNumber } from "/src/utils/stringUtils.js";
 import { numberFloor } from "/src/utils/format.js";
+import {
+  createGachaScheduleOptions,
+  formatActivityDateRange,
+  getDailyRewardRemainingDays,
+  getScheduleCalculationEndDate,
+  isRewardAvailableOnSelectedDates,
+} from "/src/utils/gachaScheduleOptions.js";
+import { Delete, Download, Plus, RefreshLeft, Upload } from "@element-plus/icons-vue";
 import { useRoute } from "vue-router";
 
 const GACHA_VIDEO_DRAFT_ID = "current";
 const GACHA_VIDEO_SETTINGS_STORAGE_KEY = "logicalByte_gachaCalculatorPerspective_settings_v1";
+const GACHA_VIDEO_SETTINGS_FILE_FORMAT = "yituliu-gacha-perspective-settings";
+const GACHA_VIDEO_SETTINGS_FILE_VERSION = 1;
+const GACHA_VIDEO_SETTINGS_FILE_MAX_SIZE = 128 * 1024 * 1024;
 const gachaVideoDraftDb = new Dexie("LogicalByteGachaCalculatorPerspective");
 gachaVideoDraftDb.version(1).stores({
   drafts: "id, updatedAt",
@@ -30,10 +43,17 @@ gachaVideoDraftDb.version(2).stores({
   drafts: "id, updatedAt",
   poolImages: "id, updatedAt",
 });
+gachaVideoDraftDb.version(3).stores({
+  drafts: "id, updatedAt",
+  poolImages: "id, updatedAt",
+  stageAssets: "id, updatedAt",
+});
 
 // 当前路由
 const route = useRoute();
 const eachOriginalDrawPrice = 648.0 / 185 / 0.3;
+const videoGachaSettingsFileInput = ref(null);
+const videoGachaSettingsTransferPending = ref(false);
 
 function getDrawEfficiencyStyle(drawEfficiency) {
   if (drawEfficiency > 1.57) {
@@ -118,9 +138,6 @@ const currentTimestamp = ref(new Date().getTime());
 //当前日期（用于日期选择器绑定）
 const currentDate = ref(new Date());
 
-//选中的黄票兑换抽卡券
-let selectedCertificatePackList = ref([]);
-
 //选中的潜在章节
 let selectedPermanentZoneName = ref([]);
 
@@ -139,6 +156,7 @@ let tempActivityScheduleList = [];
 //将预测活动排期分类
 for (const name in FIXED_TABLE) {
   let activityData = FIXED_TABLE[name];
+  activityData.scheduleDateRange = formatActivityDateRange(activityData.start, activityData.end);
   //将活动排期的日期统一转为时间戳
   activityData.start = new Date(activityData.start).getTime();
   activityData.end = new Date(activityData.end).getTime();
@@ -159,6 +177,7 @@ for (const name in FIXED_TABLE) {
 
 for (const name in HONEY_CAKE_TABLE) {
   let activityData = HONEY_CAKE_TABLE[name];
+  activityData.scheduleDateRange = formatActivityDateRange(activityData.start, activityData.end);
   //将活动排期的日期统一转为时间戳
   activityData.start = new Date(activityData.start).getTime();
   activityData.end = new Date(activityData.end).getTime();
@@ -291,32 +310,7 @@ function rewardTypeMatchesCurrentActivity(rewardType) {
 // activityType: string 活动类型
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 // 注：历史礼包时间范围已改为动态计算，不再需要 historicalPackTimeRange 配置
-const scheduleOptions = [
-  {
-    name: "夏活",
-    dateString: "2026.08.14",
-    start: new Date("2026/08/01 12:00:00"),
-    end: new Date("2026/08/14 04:00:00"),
-    activityType: "夏活限定",
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-    historyStartTime: new Date("2025/08/01 12:00:00"),
-    historyEndTime: new Date("2025/08/14 04:00:00"),
-  },
-  {
-    name: "半周年",
-    dateString: "2026.11.14",
-    start: new Date("2026/11/01 12:00:00"),
-    end: new Date("2026/11/14 04:00:00"),
-    activityType: "周年限定",
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-    historyStartTime: new Date("2025/11/01 12:00:00"),
-    historyEndTime: new Date("2025/11/14 04:00:00"),
-  },
-];
+const scheduleOptions = createGachaScheduleOptions();
 
 currentScheduleName.value = scheduleOptions[0].name;
 currentSchedule.value = scheduleOptions[0];
@@ -380,9 +374,6 @@ function clearLastYearOriginiumPackSelection() {
 
 //全部礼包集合
 let displayPackList = ref([]);
-
-//每月黄票兑换抽卡券(视为礼包)集合
-let certificatePackList = ref([]);
 
 //礼包缓存数据
 let packCacheList = ref([]);
@@ -548,7 +539,6 @@ function getHistoryPackInfo() {
  */
 function batchGenerationMonthlyPack() {
   monthlyPackList.value = [];
-  certificatePackList.value = []; // 清空黄票兑换列表
   displayPackList.value = [];
   const date = new Date(currentTimestamp.value);
   let month = date.getMonth() + 1;
@@ -590,18 +580,6 @@ function batchGenerationMonthlyPack() {
       end: new Date(`${year}/${month.toString().padStart(2, "0")}/${lastDay} 23:59:59`),
     };
 
-    const certificatePack = {
-      id: `${year}-${month}月黄票兑换单抽`,
-      officialName: `${month}月黄票兑换单抽`,
-      gachaTicket: 8,
-      tenGachaTicket: 3,
-      originium: 0,
-      orundum: 0,
-      start: new Date(`${year}/${month.toString().padStart(2, "0")}/01 00:00:00`),
-      end: new Date(`${year}/${month.toString().padStart(2, "0")}/${lastDay} 23:59:59`),
-    };
-    certificatePackList.value.push(certificatePack);
-
     monthlyPackList.value.push(monthlyPack);
     displayPackList.value.push(monthlyPack);
 
@@ -619,6 +597,12 @@ function batchGenerationMonthlyPack() {
  * @param index 选择的活动索引
  */
 function updateScheduleOption(index) {
+  const videoPool = videoPoolOptions.find((pool) => pool.scheduleIndex === index && !pool.disabled);
+  if (videoPool && selectedVideoPool.value !== videoPool.id) {
+    selectVideoPool(videoPool.id);
+    return;
+  }
+
   const schedule = scheduleOptions[index];
   currentScheduleName.value = schedule.name;
   currentSchedule.value = schedule;
@@ -631,47 +615,309 @@ function updateScheduleOption(index) {
 const cardTitles = {
   calculationResult: "总览",
   daily: "日常积累",
-  custom: "搓玉/绿票/黄票换抽",
+  custom: "搓玉",
   recharge: "氪金方案",
   activity: "活动获得",
   other: "其他资源",
 };
 const activeCardName = ref("calculationResult");
 const dataPanelCardName = ref("calculationResult");
-const activeCardTitle = computed(() => cardTitles[activeCardName.value] ?? "");
 const settingsTab = ref("canvas");
+const previewScalePercent = ref(80);
+const navigationNumberStyle = ref("industrial");
+const navigationGroupHeadingLight = ref(false);
+const stageFloatIntensity = ref(3);
+const navigationFlashCardName = ref("");
+let navigationFlashTimer = 0;
+const videoPoolTransitionPhase = ref("");
+const VIDEO_POOL_TRANSITION_EXIT_DURATION = 160;
+const VIDEO_POOL_TRANSITION_ENTER_DURATION = 260;
+let videoPoolTransitionTimer = 0;
 const displayBackgroundColor = ref("#f5f7fa");
+const stageBackgroundImage = ref("");
+const stageBackgroundImageScale = ref(100);
+const stageBackgroundImagePositionX = ref(50);
+const stageBackgroundImagePositionY = ref(50);
+const stageBackgroundImageOpacity = ref(72);
+const stageBackgroundImageBlur = ref(8);
+const stageBackgroundImageBrightness = ref(58);
+const stageBackgroundImageSaturation = ref(42);
+const stageBackgroundOverlayOpacity = ref(54);
+const stageLogoImage = ref("");
+const stageLogoWidth = ref(180);
+const stageLogoLeft = ref(0);
+const stageLogoBottom = ref(44);
+const stageLogoOpacity = ref(88);
+const stageReferenceGuidesVisible = ref(false);
+const STAGE_CURSOR_COLOR_OPTIONS = [
+  { label: "墨黑", value: "black", color: "rgb(0 0 0 / 80%)", pulseColor: "rgb(0 0 0 / 48%)" },
+  { label: "暗金", value: "dark-gold", color: "rgb(143 108 35 / 92%)", pulseColor: "rgb(143 108 35 / 54%)" },
+  { label: "琥珀", value: "amber", color: "rgb(218 154 31 / 94%)", pulseColor: "rgb(218 154 31 / 56%)" },
+  { label: "暖黄", value: "warm-yellow", color: "rgb(232 179 38 / 95%)", pulseColor: "rgb(232 179 38 / 57%)" },
+  { label: "明黄", value: "bright-yellow", color: "rgb(244 202 45 / 96%)", pulseColor: "rgb(244 202 45 / 58%)" },
+  { label: "柠黄", value: "lemon-yellow", color: "rgb(225 220 58 / 96%)", pulseColor: "rgb(225 220 58 / 58%)" },
+];
+const customStageCursorEnabled = ref(false);
+const stageCursorBorderWidth = ref(4);
+const stageCursorColor = ref("black");
+const selectedStageCursorColor = computed(
+  () => STAGE_CURSOR_COLOR_OPTIONS.find((option) => option.value === stageCursorColor.value) || STAGE_CURSOR_COLOR_OPTIONS[0]
+);
+const stageCursorVisible = ref(false);
+const stageCursorElement = ref(null);
+let stageCursorAnimationFrame = 0;
+let stageCursorClickTimer = 0;
+let pendingStageCursorPosition = null;
+const stageAssetUrls = {
+  background: "",
+  logo: "",
+};
+const stageAssetFiles = {
+  background: null,
+  logo: null,
+};
 const leftPerspective = ref(14);
 const rightPerspective = ref(14);
+const navigationOpacity = ref(100);
+const detailCardOpacity = ref(100);
+const detailCardBackgroundColor = ref("#ffffff");
+const inactivePoolImageBlur = ref(1);
+const inactivePoolImageContrastReduction = ref(0);
 const stageTopMargin = ref(96);
 const stageBottomMargin = ref(0);
 const stageLeftMargin = ref(0);
 const stageRightMargin = ref(0);
 const cardGroupWidth = ref(420);
+const VIDEO_DETAIL_MIN_HEIGHT = 420;
+const VIDEO_STAGE_CONTENT_HEIGHT = 1080;
+const rightCardHeight = ref(VIDEO_STAGE_CONTENT_HEIGHT - stageTopMargin.value - stageBottomMargin.value);
+const maxRightCardHeight = computed(
+  () => VIDEO_STAGE_CONTENT_HEIGHT - stageTopMargin.value - stageBottomMargin.value
+);
 const displayStageStyle = computed(() => ({
-  backgroundColor: displayBackgroundColor.value,
+  "--gacha-stage-background-color": displayBackgroundColor.value,
+  "--gacha-stage-background-image-opacity": `${stageBackgroundImageOpacity.value / 100}`,
+  "--gacha-stage-background-image-blur": `${stageBackgroundImageBlur.value}px`,
+  "--gacha-stage-background-image-brightness": `${stageBackgroundImageBrightness.value}%`,
+  "--gacha-stage-background-image-saturation": `${stageBackgroundImageSaturation.value}%`,
+  "--gacha-stage-background-overlay-opacity": `${stageBackgroundOverlayOpacity.value / 100}`,
+  "--gacha-stage-logo-width": `${stageLogoWidth.value}px`,
+  "--gacha-stage-logo-left": `${stageLogoLeft.value}px`,
+  "--gacha-stage-logo-bottom": `${stageLogoBottom.value}px`,
+  "--gacha-stage-logo-opacity": `${stageLogoOpacity.value / 100}`,
+  "--gacha-stage-cursor-border-width": `${stageCursorBorderWidth.value}px`,
+  "--gacha-stage-cursor-color": selectedStageCursorColor.value.color,
+  "--gacha-stage-cursor-pulse-color": selectedStageCursorColor.value.pulseColor,
   "--gacha-left-perspective": `${leftPerspective.value}deg`,
   "--gacha-left-hover-perspective": `${leftPerspective.value * 0.28}deg`,
   "--gacha-left-active-perspective": `${leftPerspective.value * 0.1}deg`,
   "--gacha-right-perspective": `${-rightPerspective.value}deg`,
   "--gacha-right-perspective-space": `${rightPerspective.value * 20}px`,
+  "--gacha-navigation-opacity": `${navigationOpacity.value / 100}`,
+  "--gacha-detail-card-opacity": `${detailCardOpacity.value / 100}`,
+  "--gacha-detail-card-background-color": detailCardBackgroundColor.value,
+  "--gacha-inactive-pool-image-blur": `${inactivePoolImageBlur.value}px`,
+  "--gacha-inactive-pool-image-contrast": `${100 - inactivePoolImageContrastReduction.value}%`,
+  "--gacha-stage-float-positive": `${stageFloatIntensity.value}px`,
+  "--gacha-stage-float-negative": `${-stageFloatIntensity.value}px`,
+  "--gacha-stage-float-soft-positive": `${stageFloatIntensity.value * 0.6}px`,
+  "--gacha-stage-float-soft-negative": `${-stageFloatIntensity.value * 0.6}px`,
   "--gacha-stage-top-margin": `${stageTopMargin.value}px`,
   "--gacha-stage-bottom-margin": `${stageBottomMargin.value}px`,
   "--gacha-stage-left-margin": `${stageLeftMargin.value}px`,
   "--gacha-stage-right-margin": `${stageRightMargin.value}px`,
   "--gacha-navigation-width": `${cardGroupWidth.value}px`,
+  "--gacha-right-card-height": `${Math.min(rightCardHeight.value, maxRightCardHeight.value)}px`,
 }));
 
-const videoPoolOptions = [
-  { id: "summer", scheduleIndex: 0, label: "夏活图片", title: "夏活", endDate: "8.14 结束" },
-  { id: "halfAnniversary", scheduleIndex: 1, label: "半周年图片", title: "半周年", endDate: "11.14 结束" },
-];
-const selectedVideoPool = ref("summer");
-const videoPoolImages = ref({
-  summer: "",
-  halfAnniversary: "",
+const PREVIEW_STAGE_WIDTH = 1960;
+const PREVIEW_STAGE_HEIGHT = 1120;
+const PREVIEW_SCALE_OPTIONS = [20, 40, 60, 80, 100];
+const previewWorkspaceStyle = computed(() => {
+  const scale = previewScalePercent.value / 100;
+  return {
+    "--gacha-preview-stage-width": `${PREVIEW_STAGE_WIDTH * scale}px`,
+    "--gacha-preview-stage-height": `${PREVIEW_STAGE_HEIGHT * scale}px`,
+    "--gacha-preview-scale": scale.toFixed(4),
+  };
 });
+
+const HIDDEN_VIDEO_POOL_IDS = new Set(["thanksgiving"]);
+const NAVIGATION_NUMBER_STYLE_OPTIONS = [
+  { label: "工业黑", value: "industrial" },
+  { label: "机读码", value: "terminal" },
+  { label: "窄体编号", value: "condensed" },
+];
+const videoPoolOptions = scheduleOptions
+  .map((schedule, scheduleIndex) => ({ schedule, scheduleIndex }))
+  .filter(({ schedule }) => !HIDDEN_VIDEO_POOL_IDS.has(schedule.id))
+  .map(({ schedule, scheduleIndex }) => ({
+    id: schedule.id,
+    scheduleIndex,
+    label: `${schedule.name}图片`,
+    title: schedule.name,
+    endDate: schedule.dateString,
+    disabled: schedule.disabled,
+  }));
+const DEFAULT_VIDEO_POOL_IMAGE_LAYOUT = Object.freeze({
+  scale: 100,
+  positionX: 50,
+  positionY: 50,
+});
+const VIDEO_POOL_IMAGE_SCALE_MIN = 100;
+const VIDEO_POOL_IMAGE_SCALE_MAX = 250;
+const selectedVideoPool = ref(videoPoolOptions[0].id);
+const videoPoolImages = ref(Object.fromEntries(videoPoolOptions.map((pool) => [pool.id, ""])));
+const editingVideoPoolId = ref(selectedVideoPool.value);
+const editingVideoRechargePoolId = ref(selectedVideoPool.value);
+const videoPoolImageLayouts = ref(createVideoPoolImageLayouts());
+const videoCalculationStartDatesByPool = ref(createVideoCalculationStartDatesByPool());
 const videoPoolImageUrls = {};
+const videoPoolImageFiles = {};
+
+function normalizeVideoPoolId(poolId) {
+  return poolId;
+}
+
+function isVideoPoolId(poolId) {
+  return videoPoolOptions.some((pool) => pool.id === poolId);
+}
+
+function normalizeVideoCalculationStartDate(value, fallback = currentTimestamp.value) {
+  const timestamp = Number(value);
+  return Number.isFinite(timestamp) ? timestamp : fallback;
+}
+
+function createVideoCalculationStartDatesByPool(fallback = currentTimestamp.value) {
+  return Object.fromEntries(
+    videoPoolOptions.map((pool) => [pool.id, normalizeVideoCalculationStartDate(fallback, Date.now())])
+  );
+}
+
+function normalizeVideoCalculationStartDatesByPool(startDatesByPool, fallback = currentTimestamp.value) {
+  const normalizedDates = createVideoCalculationStartDatesByPool(fallback);
+
+  for (const pool of videoPoolOptions) {
+    normalizedDates[pool.id] = normalizeVideoCalculationStartDate(startDatesByPool?.[pool.id], fallback);
+  }
+
+  return normalizedDates;
+}
+
+function activateVideoPoolCalculationStartDate(poolId) {
+  const timestamp = normalizeVideoCalculationStartDate(
+    videoCalculationStartDatesByPool.value[poolId],
+    currentTimestamp.value
+  );
+  const hasChanged = currentTimestamp.value !== timestamp;
+
+  currentTimestamp.value = timestamp;
+  currentDate.value = new Date(timestamp);
+  return hasChanged;
+}
+
+function setVideoPoolCalculationStartDate(poolId, date) {
+  if (!isVideoPoolId(poolId)) {
+    return false;
+  }
+
+  const timestamp = new Date(date).getTime();
+  if (!Number.isFinite(timestamp)) {
+    return false;
+  }
+
+  videoCalculationStartDatesByPool.value[poolId] = timestamp;
+  currentTimestamp.value = timestamp;
+  currentDate.value = new Date(timestamp);
+  return true;
+}
+
+function clampVideoPoolImageLayoutValue(value, min, max, fallback) {
+  const numericValue = Number(value);
+  if (!Number.isFinite(numericValue)) {
+    return fallback;
+  }
+
+  return Math.min(max, Math.max(min, numericValue));
+}
+
+function normalizeVideoPoolImageLayout(layout) {
+  return {
+    scale: clampVideoPoolImageLayoutValue(
+      layout?.scale,
+      VIDEO_POOL_IMAGE_SCALE_MIN,
+      VIDEO_POOL_IMAGE_SCALE_MAX,
+      DEFAULT_VIDEO_POOL_IMAGE_LAYOUT.scale
+    ),
+    positionX: clampVideoPoolImageLayoutValue(layout?.positionX, 0, 100, DEFAULT_VIDEO_POOL_IMAGE_LAYOUT.positionX),
+    positionY: clampVideoPoolImageLayoutValue(layout?.positionY, 0, 100, DEFAULT_VIDEO_POOL_IMAGE_LAYOUT.positionY),
+  };
+}
+
+function createVideoPoolImageLayouts() {
+  return Object.fromEntries(
+    videoPoolOptions.map((pool) => [pool.id, { ...DEFAULT_VIDEO_POOL_IMAGE_LAYOUT }])
+  );
+}
+
+function normalizeVideoPoolImageLayouts(layouts) {
+  const normalizedLayouts = createVideoPoolImageLayouts();
+  const restoredPoolIds = new Set();
+
+  for (const [poolId, layout] of Object.entries(layouts || {})) {
+    const normalizedPoolId = normalizeVideoPoolId(poolId);
+    if (!isVideoPoolId(normalizedPoolId)) {
+      continue;
+    }
+
+    if (!restoredPoolIds.has(normalizedPoolId) || normalizedPoolId === poolId) {
+      normalizedLayouts[normalizedPoolId] = normalizeVideoPoolImageLayout(layout);
+      restoredPoolIds.add(normalizedPoolId);
+    }
+  }
+
+  return normalizedLayouts;
+}
+
+const editingVideoPoolImageLayout = computed(() => videoPoolImageLayouts.value[editingVideoPoolId.value]);
+
+function getVideoPoolImageStyle(poolId) {
+  const layout = videoPoolImageLayouts.value[poolId] || DEFAULT_VIDEO_POOL_IMAGE_LAYOUT;
+  const scale = layout.scale / 100;
+  // Keep 0% and 100% aligned with the two visible crop edges after zooming.
+  const translateX = ((50 - layout.positionX) / 100) * (scale - 1) * 100;
+  const translateY = ((50 - layout.positionY) / 100) * (scale - 1) * 100;
+  return {
+    objectPosition: `${layout.positionX}% ${layout.positionY}%`,
+    transform: `translate(${translateX}%, ${translateY}%) scale(${scale})`,
+  };
+}
+
+function resetVideoPoolImageLayout(poolId = editingVideoPoolId.value) {
+  const normalizedPoolId = normalizeVideoPoolId(poolId);
+  if (!isVideoPoolId(normalizedPoolId)) {
+    return;
+  }
+
+  videoPoolImageLayouts.value[normalizedPoolId] = { ...DEFAULT_VIDEO_POOL_IMAGE_LAYOUT };
+}
+
+function normalizeVideoPoolImages(poolImages) {
+  const normalizedImages = {};
+
+  for (const [poolId, imageFile] of Object.entries(poolImages || {})) {
+    const normalizedPoolId = normalizeVideoPoolId(poolId);
+    if (!isVideoPoolId(normalizedPoolId) || !(imageFile instanceof Blob)) {
+      continue;
+    }
+
+    if (!Object.hasOwn(normalizedImages, normalizedPoolId) || normalizedPoolId === poolId) {
+      normalizedImages[normalizedPoolId] = imageFile;
+    }
+  }
+
+  return normalizedImages;
+}
 
 function setVideoPoolImage(poolId, imageFile) {
   if (!Object.hasOwn(videoPoolImages.value, poolId)) {
@@ -684,30 +930,266 @@ function setVideoPoolImage(poolId, imageFile) {
 
   videoPoolImageUrls[poolId] = "";
   videoPoolImages.value[poolId] = "";
+  delete videoPoolImageFiles[poolId];
 
   if (!imageFile) {
     return;
   }
 
+  videoPoolImageFiles[poolId] = imageFile;
   const imageUrl = URL.createObjectURL(imageFile);
   videoPoolImageUrls[poolId] = imageUrl;
   videoPoolImages.value[poolId] = imageUrl;
 }
 
-function selectVideoPool(poolId) {
-  const pool = videoPoolOptions.find((item) => item.id === poolId);
-  if (!pool) {
+function resetStageBackgroundImageLayout() {
+  stageBackgroundImageScale.value = 100;
+  stageBackgroundImagePositionX.value = 50;
+  stageBackgroundImagePositionY.value = 50;
+  stageBackgroundImageOpacity.value = 72;
+  stageBackgroundImageBlur.value = 8;
+  stageBackgroundImageBrightness.value = 58;
+  stageBackgroundImageSaturation.value = 42;
+  stageBackgroundOverlayOpacity.value = 54;
+}
+
+function resetStageLogoLayout() {
+  stageLogoWidth.value = 180;
+  stageLogoLeft.value = 0;
+  stageLogoBottom.value = 44;
+  stageLogoOpacity.value = 88;
+}
+
+function getStageAssetRef(assetId) {
+  return assetId === "background" ? stageBackgroundImage : stageLogoImage;
+}
+
+function setStageAssetImage(assetId, imageFile) {
+  const imageRef = getStageAssetRef(assetId);
+  if (stageAssetUrls[assetId]) {
+    URL.revokeObjectURL(stageAssetUrls[assetId]);
+  }
+
+  stageAssetUrls[assetId] = "";
+  imageRef.value = "";
+  stageAssetFiles[assetId] = null;
+  if (!imageFile) {
     return;
   }
 
+  stageAssetFiles[assetId] = imageFile;
+  const imageUrl = URL.createObjectURL(imageFile);
+  stageAssetUrls[assetId] = imageUrl;
+  imageRef.value = imageUrl;
+}
+
+function getStageBackgroundImageStyle() {
+  const scale = stageBackgroundImageScale.value / 100;
+  const translateX = ((50 - stageBackgroundImagePositionX.value) / 100) * (scale - 1) * 100;
+  const translateY = ((50 - stageBackgroundImagePositionY.value) / 100) * (scale - 1) * 100;
+
+  return {
+    objectPosition: `${stageBackgroundImagePositionX.value}% ${stageBackgroundImagePositionY.value}%`,
+    transform: `translate(${translateX}%, ${translateY}%) scale(${scale})`,
+  };
+}
+
+function updateStageCursorPosition(event) {
+  if (!customStageCursorEnabled.value || event.pointerType === "touch") {
+    return;
+  }
+
+  const canvasElement = event.currentTarget;
+  const canvasRect = canvasElement.getBoundingClientRect();
+  if (!canvasRect.width || !canvasRect.height) {
+    return;
+  }
+
+  pendingStageCursorPosition = {
+    x: Math.min(
+      PREVIEW_STAGE_WIDTH,
+      Math.max(0, ((event.clientX - canvasRect.left) / canvasRect.width) * PREVIEW_STAGE_WIDTH)
+    ),
+    y: Math.min(
+      PREVIEW_STAGE_HEIGHT,
+      Math.max(0, ((event.clientY - canvasRect.top) / canvasRect.height) * PREVIEW_STAGE_HEIGHT)
+    ),
+  };
+
+  if (stageCursorAnimationFrame) {
+    return;
+  }
+
+  stageCursorAnimationFrame = window.requestAnimationFrame(() => {
+    stageCursorAnimationFrame = 0;
+    const cursorElement = stageCursorElement.value;
+    const cursorPosition = pendingStageCursorPosition;
+    pendingStageCursorPosition = null;
+    if (!cursorElement || !cursorPosition) {
+      return;
+    }
+
+    cursorElement.style.transform = `translate3d(${cursorPosition.x}px, ${cursorPosition.y}px, 0)`;
+  });
+}
+
+function handleStageCursorEnter(event) {
+  if (!customStageCursorEnabled.value || event.pointerType === "touch") {
+    return;
+  }
+
+  stageCursorVisible.value = true;
+  updateStageCursorPosition(event);
+}
+
+function handleStageCursorMove(event) {
+  if (!customStageCursorEnabled.value || event.pointerType === "touch") {
+    return;
+  }
+
+  stageCursorVisible.value = true;
+  updateStageCursorPosition(event);
+}
+
+function handleStageCursorLeave() {
+  stageCursorVisible.value = false;
+}
+
+function clearStageCursorClickEffect() {
+  if (stageCursorClickTimer) {
+    clearTimeout(stageCursorClickTimer);
+    stageCursorClickTimer = 0;
+  }
+  stageCursorElement.value?.classList.remove("is-clicking");
+}
+
+function handleStageCursorClick(event) {
+  if (!customStageCursorEnabled.value || event.pointerType === "touch") {
+    return;
+  }
+
+  updateStageCursorPosition(event);
+  const cursorElement = stageCursorElement.value;
+  if (!cursorElement) {
+    return;
+  }
+
+  clearStageCursorClickEffect();
+  void cursorElement.offsetWidth;
+  cursorElement.classList.add("is-clicking");
+  stageCursorClickTimer = window.setTimeout(() => {
+    cursorElement.classList.remove("is-clicking");
+    stageCursorClickTimer = 0;
+  }, 380);
+}
+
+watch(customStageCursorEnabled, (enabled) => {
+  if (!enabled) {
+    stageCursorVisible.value = false;
+    clearStageCursorClickEffect();
+  }
+});
+
+function updateStageAssetImage(assetId, uploadFile) {
+  if (!uploadFile?.raw) {
+    return;
+  }
+
+  if (assetId === "background") {
+    resetStageBackgroundImageLayout();
+  } else {
+    resetStageLogoLayout();
+  }
+  setStageAssetImage(assetId, uploadFile.raw);
+  if (gachaVideoDraftRestored) {
+    saveStageAssetImage(assetId, uploadFile.raw);
+  }
+}
+
+function clearStageAssetImage(assetId) {
+  setStageAssetImage(assetId, null);
+  if (gachaVideoDraftRestored) {
+    saveStageAssetImage(assetId, null);
+  }
+}
+
+function applyVideoPoolSelection(pool) {
+  if (activeCardName.value !== "calculationResult") {
+    selectVideoCard("calculationResult");
+  }
+
+  const poolId = pool.id;
+  editingVideoPoolId.value = poolId;
+  editingVideoRechargePoolId.value = poolId;
   selectedVideoPool.value = poolId;
+  const startDateChanged = activateVideoPoolCalculationStartDate(poolId);
+  if (startDateChanged) {
+    batchGenerationServerMaintenanceRewards();
+    batchGenerationMonthlyPack();
+    getAndSortPackData();
+  }
   calPoolEnd.value = true;
   updateScheduleOption(pool.scheduleIndex);
 }
 
+function selectVideoPool(poolId) {
+  const pool = videoPoolOptions.find((item) => item.id === poolId);
+  if (
+    !pool ||
+    pool.disabled ||
+    poolId === selectedVideoPool.value ||
+    videoPoolTransitionPhase.value
+  ) {
+    return;
+  }
+
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    applyVideoPoolSelection(pool);
+    return;
+  }
+
+  videoPoolTransitionPhase.value = "out";
+  videoPoolTransitionTimer = window.setTimeout(() => {
+    applyVideoPoolSelection(pool);
+    videoPoolTransitionPhase.value = "in";
+    videoPoolTransitionTimer = window.setTimeout(() => {
+      videoPoolTransitionPhase.value = "";
+      videoPoolTransitionTimer = 0;
+    }, VIDEO_POOL_TRANSITION_ENTER_DURATION);
+  }, VIDEO_POOL_TRANSITION_EXIT_DURATION);
+}
+
 function selectVideoCard(cardName) {
+  const previousCardName = activeCardName.value;
+
+  if (previousCardName !== cardName) {
+    if (previousCardName === "custom" && videoOrundumStrategy.value !== "none") {
+      videoOrundumStrategy.value = "none";
+      gachaResourcesCalculation();
+    }
+
+    if (
+      previousCardName === "recharge" &&
+      videoRechargePlanSelectionsByPool.value[selectedVideoPool.value] !== "no-spend"
+    ) {
+      videoRechargePlanSelectionsByPool.value[selectedVideoPool.value] = "no-spend";
+    }
+  }
+
   activeCardName.value = cardName;
   dataPanelCardName.value = cardName;
+  navigationFlashCardName.value = "";
+
+  window.requestAnimationFrame(() => {
+    navigationFlashCardName.value = cardName;
+    if (navigationFlashTimer) {
+      clearTimeout(navigationFlashTimer);
+    }
+    navigationFlashTimer = window.setTimeout(() => {
+      navigationFlashCardName.value = "";
+      navigationFlashTimer = 0;
+    }, 460);
+  });
 }
 
 function updateVideoPoolImage(poolId, uploadFile) {
@@ -715,6 +1197,8 @@ function updateVideoPoolImage(poolId, uploadFile) {
     return;
   }
 
+  editingVideoPoolId.value = poolId;
+  resetVideoPoolImageLayout(poolId);
   setVideoPoolImage(poolId, uploadFile.raw);
   if (gachaVideoDraftRestored) {
     saveVideoPoolImage(poolId, uploadFile.raw);
@@ -723,6 +1207,19 @@ function updateVideoPoolImage(poolId, uploadFile) {
 
 onBeforeUnmount(() => {
   window.removeEventListener("pagehide", persistVideoGachaSettings);
+  if (stageCursorAnimationFrame) {
+    window.cancelAnimationFrame(stageCursorAnimationFrame);
+    stageCursorAnimationFrame = 0;
+  }
+  clearStageCursorClickEffect();
+  if (navigationFlashTimer) {
+    clearTimeout(navigationFlashTimer);
+    navigationFlashTimer = 0;
+  }
+  if (videoPoolTransitionTimer) {
+    clearTimeout(videoPoolTransitionTimer);
+    videoPoolTransitionTimer = 0;
+  }
   if (gachaVideoDraftRestored) {
     saveVideoGachaSettings();
   }
@@ -738,6 +1235,12 @@ onBeforeUnmount(() => {
       URL.revokeObjectURL(imageUrl);
     }
   }
+
+  for (const imageUrl of Object.values(stageAssetUrls)) {
+    if (imageUrl) {
+      URL.revokeObjectURL(imageUrl);
+    }
+  }
 });
 
 function rewardDraws(reward) {
@@ -749,77 +1252,344 @@ function rewardDraws(reward) {
 
 const videoOverviewSources = computed(() => [
   { label: "日常积累", draws: numberFloor(calculationResult.value.dailyTotalDraw, 0), tone: "daily" },
-  { label: "兑换与搓玉", draws: numberFloor(calculationResult.value.produceOrundumTotalDraw, 0), tone: "custom" },
   { label: "活动获得", draws: numberFloor(calculationResult.value.activityTotalDraw, 0), tone: "activity" },
   { label: "其他资源", draws: numberFloor(calculationResult.value.otherTotalDraw, 0), tone: "other" },
-  { label: "氪金方案", draws: null, tone: "recharge" },
 ]);
 
-const videoResourceIconClasses = {
-  合成玉: "bg-icon_4003",
-  源石: "bg-icon_4002",
-  单抽: "bg-icon_7003",
-  十连: "bg-icon_7004",
-  抽: "bg-icon_7003",
-};
+const videoMonthlyCardSummary = computed(() => {
+  const remainingDays = Math.max(0, Number(dailyReward.value.daily) || 0);
+  const purchaseCount = remainingDays ? Math.ceil(remainingDays / 30) : 0;
+  const orundum = remainingDays * 200;
+  const originium = purchaseCount * 6;
+  const originiumDraws = userConfigV2.value.originiumIsUsed ? originium * 0.3 : 0;
 
-function getVideoResourceIconClass(resourceName) {
-  return videoResourceIconClasses[resourceName] || videoResourceIconClasses.抽;
-}
+  return {
+    days: remainingDays,
+    price: purchaseCount * 30,
+    orundum,
+    originium,
+    draws: orundum / 600 + originiumDraws,
+  };
+});
+const videoMonthlyCardBonusDraw = computed(() => numberFloor(videoMonthlyCardSummary.value.draws, 0));
 
-const videoDailyRows = computed(() => [
-  { label: `日常 ${dailyReward.value.daily} 天`, value: dailyReward.value.dailyOrundumReward, unit: "合成玉" },
-  { label: `周常 ${dailyReward.value.weekly} 周`, value: dailyReward.value.weeklyOrundumReward, unit: "合成玉" },
-  { label: `剿灭 ${dailyReward.value.annihilation} 周`, value: dailyReward.value.annihilationOrundumReward, unit: "合成玉" },
-  { label: `绿票商店 ${dailyReward.value.certificateShoppingTimes} 月`, value: dailyReward.value.purchasedGachaTicketQuantity, unit: "单抽" },
-  { label: `每月签到 ${dailyReward.value.checkIn} 次`, value: dailyReward.value.checkInGachaTicket, unit: "单抽" },
+const VIDEO_ORUNDUM_STRATEGIES = Object.freeze([
+  {
+    id: "none",
+    label: "不搓玉",
+    coefficient: 0,
+  },
+  {
+    id: "event-stage",
+    label: "活动关搓玉",
+    coefficient: 0.7,
+  },
+  {
+    id: "1-7",
+    label: "1-7搓玉",
+    coefficient: 1.09,
+  },
 ]);
+const videoOrundumStrategy = ref("none");
+const videoOrundumAp = computed(() => Math.max(0, Number(dailyReward.value.daily) || 0) * 240);
+const activeVideoOrundumStrategy = computed(
+  () => VIDEO_ORUNDUM_STRATEGIES.find((strategy) => strategy.id === videoOrundumStrategy.value) || VIDEO_ORUNDUM_STRATEGIES[0]
+);
+const videoOrundumStrategyCards = computed(() => {
+  const ap = videoOrundumAp.value;
 
-const videoCustomRows = computed(() => {
-  const yellowTicketDraws =
-    selectedCertificateT2Group.value.reduce((total, item) => total + item.draw, 0) +
-    certificatePackList.value
-      .filter((pack) => selectedCertificatePackList.value.includes(pack.id) && rewardIsExpired(pack))
-      .reduce((total, pack) => total + pack.gachaTicket + pack.tenGachaTicket * 10, 0);
-
-  return [
-    { label: "黄票换抽", value: yellowTicketDraws, unit: "抽" },
-    { label: "绿票兑换", value: numberFloor(certificateStoreF3.value.orundum / 600, 1), unit: "抽" },
-    {
-      label: "搓玉",
-      value: numberFloor((produceOrundum.value.outputByAp + produceOrundum.value.outputByItem) / 600, 1),
-      unit: "抽",
-    },
-  ];
+  return VIDEO_ORUNDUM_STRATEGIES.map((strategy) => ({
+    ...strategy,
+    isSelected: strategy.id === videoOrundumStrategy.value,
+    orundum: strategy.id === "none" ? 0 : Math.ceil(ap * strategy.coefficient),
+  }));
 });
 
-const videoActivityRows = computed(() =>
-  Object.entries(activityScheduleList.value)
+function selectVideoOrundumStrategy(strategyId) {
+  if (!VIDEO_ORUNDUM_STRATEGIES.some((strategy) => strategy.id === strategyId)) {
+    return;
+  }
+
+  videoOrundumStrategy.value = strategyId;
+  gachaResourcesCalculation();
+}
+
+const standardNavigationItems = computed(() => [
+  {
+    id: "calculationResult",
+    serial: "01",
+    label: "总览",
+    tone: "overview",
+    draws: numberFloor(calculationResult.value.totalDraw, 0) + videoRechargeNavigationOverviewDraws.value,
+  },
+  { id: "daily", serial: "02", label: "日常积累", tone: "daily", draws: numberFloor(calculationResult.value.dailyTotalDraw, 0) },
+  { id: "activity", serial: "03", label: "活动获得", tone: "activity", draws: numberFloor(calculationResult.value.activityTotalDraw, 0) },
+  { id: "other", serial: "04", label: "其他资源", tone: "other", draws: numberFloor(calculationResult.value.otherTotalDraw, 0) },
+]);
+
+const videoResourceImageSources = Object.freeze({
+  合成玉: "/image/icon/gacha-calculator/orundum.png",
+  源石: "/image/icon/gacha-calculator/originium.png",
+  单抽: "/image/icon/gacha-calculator/single-permit.png",
+  十连: "/image/icon/gacha-calculator/ten-permit.png",
+  抽: "/image/icon/gacha-calculator/single-permit.png",
+});
+
+function getVideoResourceImageSrc(resourceName) {
+  return videoResourceImageSources[resourceName] || videoResourceImageSources.抽;
+}
+
+function formatVideoAnchorDate(date, includeYear) {
+  return dateFormat(date, includeYear ? "yyyy.MM.dd" : "MM.dd");
+}
+
+const videoOverviewTimeAnchor = computed(() => {
+  const from = new Date(currentTimestamp.value);
+  const to = new Date(endDate.value);
+  const includeYear = from.getFullYear() !== to.getFullYear();
+
+  return {
+    from: formatVideoAnchorDate(from, includeYear),
+    to: formatVideoAnchorDate(to, includeYear),
+  };
+});
+
+const videoDailyRows = computed(() => [
+  { label: `日常 ${dailyReward.value.daily} 天`, resources: [{ value: dailyReward.value.dailyOrundumReward, unit: "合成玉" }] },
+  { label: `周常 ${dailyReward.value.weekly} 周`, resources: [{ value: dailyReward.value.weeklyOrundumReward, unit: "合成玉" }] },
+  { label: `剿灭 ${dailyReward.value.annihilation} 周`, resources: [{ value: dailyReward.value.annihilationOrundumReward, unit: "合成玉" }] },
+  { label: `绿票商店 ${dailyReward.value.certificateShoppingTimes} 月`, resources: [{ value: dailyReward.value.purchasedGachaTicketQuantity, unit: "单抽" }] },
+  { label: `每月签到 ${dailyReward.value.checkIn} 次`, resources: [{ value: dailyReward.value.checkInGachaTicket, unit: "单抽" }] },
+]);
+
+const VIDEO_RESOURCE_OPTIONS = [
+  { key: "originium", label: "源石", unit: "源石" },
+  { key: "orundum", label: "合成玉", unit: "合成玉" },
+  { key: "gachaTicket", label: "寻访凭证", unit: "单抽" },
+  { key: "tenGachaTicket", label: "十连寻访凭证", unit: "十连" },
+];
+
+function summarizeVideoResources(rewards) {
+  return VIDEO_RESOURCE_OPTIONS.map((option) => ({
+    unit: option.unit,
+    value: rewards.reduce((total, reward) => total + (Number(reward[option.key]) || 0), 0),
+  })).filter((row) => row.value > 0);
+}
+
+function createVideoResourceRow(label, rewards) {
+  const resources = summarizeVideoResources(rewards);
+  return resources.length ? { label, resources } : null;
+}
+
+const videoActivityResourceRows = computed(() => {
+  return Object.entries(activityScheduleList.value)
     .filter(([name, activity]) => {
       const isSelected = selectedActivityName.value.includes(name);
       return isSelected && ["act", "actRe"].includes(activity.rewardModule) && rewardIsExpired(activity);
     })
-    .map(([name, activity]) => ({
-      label: name,
-      category: activity.rewardModule === "actRe" ? "复刻活动" : "后续活动",
-      draws: rewardDraws(activity),
-    }))
-);
+    .map(([name, activity]) => createVideoResourceRow(name, [activity]))
+    .filter(Boolean);
+});
 
-const videoOtherRows = computed(() =>
-  otherRewardBySchedules.value
-    .filter((reward) => rewardIsExpired(reward) && rewardIsEmpty(reward))
-    .map((reward) => ({
-      label: reward.name,
-      draws: rewardDraws(reward),
-    }))
-);
+const videoOtherResourceRows = computed(() => {
+  const maintenanceGroups = new Map([
+    ["停机更新", []],
+    ["游戏维护", []],
+  ]);
+  const rows = [];
 
-const videoRechargePlans = [
-  { id: "monthly-card", title: "仅月卡", items: ["月卡"] },
-  { id: "monthly-card-plus-198", title: "月卡 + 198 礼包", items: ["月卡", "198 礼包"] },
-  { id: "monthly-card-plus-two-large", title: "月卡 + 2 个大月卡", items: ["月卡", "大月卡 x 2"] },
-];
+  for (const reward of otherRewardBySchedules.value.filter((item) => rewardIsExpired(item) && rewardIsEmpty(item))) {
+    if (reward.name.includes("停机更新")) {
+      maintenanceGroups.get("停机更新").push(reward);
+      continue;
+    }
+    if (reward.name.includes("游戏维护")) {
+      maintenanceGroups.get("游戏维护").push(reward);
+      continue;
+    }
+
+    const row = createVideoResourceRow(reward.name, [reward]);
+    if (row) {
+      rows.push(row);
+    }
+  }
+
+  const maintenanceRows = ["停机更新", "游戏维护"]
+    .map((label) => createVideoResourceRow(label, maintenanceGroups.get(label)))
+    .filter(Boolean);
+
+  return selectedVideoPool.value === "p3r" ? [...rows, ...maintenanceRows] : [...maintenanceRows, ...rows];
+});
+
+function createVideoRechargePlansByPool() {
+  return Object.fromEntries(videoPoolOptions.map((pool) => [pool.id, []]));
+}
+
+function createVideoRechargePlanSelectionsByPool() {
+  return Object.fromEntries(videoPoolOptions.map((pool) => [pool.id, "no-spend"]));
+}
+
+function normalizeVideoRechargePlan(plan, usedIds) {
+  const price = Number(plan?.price);
+  const draws = Number.parseFloat(plan?.draws ?? plan?.description);
+  let id = typeof plan?.id === "string" && plan.id ? plan.id : createId();
+
+  while (usedIds.has(id)) {
+    id = createId();
+  }
+  usedIds.add(id);
+
+  return {
+    id,
+    price: Number.isFinite(price) ? Math.max(0, Math.round(price)) : 0,
+    title: typeof plan?.title === "string" ? plan.title : "",
+    draws: Number.isFinite(draws) ? Math.max(0, draws) : 0,
+  };
+}
+
+function normalizeVideoRechargePlansByPool(plansByPool) {
+  const normalizedPlans = createVideoRechargePlansByPool();
+
+  for (const pool of videoPoolOptions) {
+    const sourcePlans = Array.isArray(plansByPool?.[pool.id]) ? plansByPool[pool.id] : [];
+    const usedIds = new Set();
+    normalizedPlans[pool.id] = sourcePlans.map((plan) => normalizeVideoRechargePlan(plan, usedIds));
+  }
+
+  return normalizedPlans;
+}
+
+function normalizeVideoRechargePlanSelectionsByPool(selectionsByPool, plansByPool) {
+  const normalizedSelections = createVideoRechargePlanSelectionsByPool();
+
+  for (const pool of videoPoolOptions) {
+    const selectedPlanId = selectionsByPool?.[pool.id];
+    const customPlans = plansByPool?.[pool.id] || [];
+    const isAvailablePlan =
+      selectedPlanId === "no-spend" ||
+      selectedPlanId === "monthly-card" ||
+      customPlans.some((plan) => plan.id === selectedPlanId);
+
+    if (isAvailablePlan) {
+      normalizedSelections[pool.id] = selectedPlanId;
+    }
+  }
+
+  return normalizedSelections;
+}
+
+const videoRechargePlansByPool = ref(createVideoRechargePlansByPool());
+const videoRechargePlanSelectionsByPool = ref(createVideoRechargePlanSelectionsByPool());
+const editingVideoRechargePlans = computed(() => videoRechargePlansByPool.value[editingVideoRechargePoolId.value] || []);
+const currentVideoPool = computed(
+  () => videoPoolOptions.find((pool) => pool.id === selectedVideoPool.value) || videoPoolOptions[0]
+);
+const currentVideoRechargeCustomPlans = computed(() => videoRechargePlansByPool.value[selectedVideoPool.value] || []);
+const videoMonthlyCardPlan = computed(() => {
+  const monthlyCard = videoMonthlyCardSummary.value;
+
+  return {
+    id: "monthly-card",
+    type: "monthly-card",
+    price: monthlyCard.price,
+    title: `月卡（${monthlyCard.days}天）`,
+    draws: monthlyCard.draws,
+    navDraws: numberFloor(monthlyCard.draws, 0),
+  };
+});
+const videoRechargePlans = computed(() => [
+  {
+    id: "no-spend",
+    type: "no-spend",
+    price: 0,
+    title: "无氪",
+    draws: 0,
+  },
+  videoMonthlyCardPlan.value,
+  ...currentVideoRechargeCustomPlans.value.map((plan) => ({
+    ...plan,
+    type: "custom",
+    title: plan.title || "未命名方案",
+    navDraws: numberFloor(plan.draws, 0),
+  })),
+]);
+const selectedVideoRechargePlan = computed(() => {
+  const selectedPlanId = videoRechargePlanSelectionsByPool.value[selectedVideoPool.value];
+  return videoRechargePlans.value.find((plan) => plan.id === selectedPlanId) || videoRechargePlans.value[0];
+});
+const videoRechargeNavigationOverviewDraws = computed(() =>
+  numberFloor(selectedVideoRechargePlan.value.draws, 0)
+);
+const selectedVideoRechargePlanMeta = computed(() => {
+  const plan = selectedVideoRechargePlan.value;
+  return plan.type === "no-spend" ? "¥ 0 无氪" : formatVideoRechargePrice(plan.price);
+});
+const personalNavigationItems = computed(() => [
+  {
+    id: "custom",
+    marker: "CUSTOM",
+    label: "搓玉",
+    tone: "custom",
+    draws:
+      activeVideoOrundumStrategy.value.id === "none"
+        ? undefined
+        : numberFloor(calculationResult.value.produceOrundumTotalDraw, 0),
+    meta: activeVideoOrundumStrategy.value.id === "none" ? "不搓玉" : undefined,
+  },
+  {
+    id: "recharge",
+    marker: "PLAN",
+    label: "氪金",
+    tone: "recharge",
+    meta: selectedVideoRechargePlanMeta.value,
+    navDraws: selectedVideoRechargePlan.value.navDraws,
+  },
+]);
+
+function formatVideoRechargePrice(price) {
+  return `¥ ${Math.max(0, Math.round(Number(price) || 0))}`;
+}
+
+function formatVideoRechargeDraws(draws) {
+  return Math.max(0, Number(draws) || 0).toFixed(1);
+}
+
+function selectVideoRechargePlan(planId) {
+  if (!videoRechargePlans.value.some((plan) => plan.id === planId)) {
+    return;
+  }
+
+  videoRechargePlanSelectionsByPool.value[selectedVideoPool.value] = planId;
+}
+
+function addVideoRechargePlan() {
+  const plans = videoRechargePlansByPool.value[editingVideoRechargePoolId.value];
+  if (!plans) {
+    return;
+  }
+
+  plans.push({
+    id: createId(),
+    price: 0,
+    title: "新方案",
+    draws: 0,
+  });
+}
+
+function removeVideoRechargePlan(planId) {
+  const plans = videoRechargePlansByPool.value[editingVideoRechargePoolId.value];
+  if (!plans) {
+    return;
+  }
+
+  const planIndex = plans.findIndex((plan) => plan.id === planId);
+  if (planIndex >= 0) {
+    plans.splice(planIndex, 1);
+    if (videoRechargePlanSelectionsByPool.value[editingVideoRechargePoolId.value] === planId) {
+      videoRechargePlanSelectionsByPool.value[editingVideoRechargePoolId.value] = "no-spend";
+    }
+  }
+}
 
 const videoProbabilityMetrics = computed(() => {
   if (isNormalLimitedActivity.value) {
@@ -883,156 +1653,6 @@ let dailyReward = ref({
   //签到次数
   checkInGachaTicket: 0,
 });
-
-//搓玉
-let produceOrundum = ref({
-  // 理智
-  ap: 0,
-  //1理智可转化合成玉倍率
-  coEfficient: 1.09,
-  //理智产出合成玉的数量
-  outputByAp: 0,
-  itemId30012: 0,
-  itemId30062: 0,
-  itemId4001: 0,
-  //材料产出合成玉数量
-  outputByItem: 0,
-});
-
-const updateApWithoutPass = () => {
-  produceOrundum.value.ap = dailyReward.value.daily * 240;
-  gachaResourcesCalculation();
-};
-
-const updateApWithPass = () => {
-  produceOrundum.value.ap = dailyReward.value.daily * 320;
-  gachaResourcesCalculation();
-};
-
-const updateCoEfficient = (value) => {
-  produceOrundum.value.coEfficient = value;
-  gachaResourcesCalculation();
-};
-
-const coEfficientList = [
-  {
-    stage: "1-7",
-    coEfficient: 1.09,
-  },
-  {
-    stage: "活动关",
-    coEfficient: 0.7,
-  },
-  {
-    stage: "活动关",
-    coEfficient: 0.56,
-  },
-  {
-    stage: "活动关",
-    coEfficient: 0.35,
-  },
-];
-
-//黄票商店换不完
-let selectedCertificateT2Group = ref([]);
-const certificateT2Group = [
-  {
-    text: "10黄票",
-    draw: 1,
-  },
-  {
-    text: "18黄票",
-    draw: 2,
-  },
-  {
-    text: "40黄票",
-    draw: 5,
-  },
-  {
-    text: "70黄票",
-    draw: 10,
-  },
-  {
-    text: "120黄票",
-    draw: 20,
-  },
-];
-
-//绿票商店三层
-let certificateStoreF3 = ref({
-  //绿票凭证
-  certificates: 0,
-  //剩余绿票凭证
-  remainingCertificates: 0,
-  //可用于兑换的绿票凭证
-  disposableCertificate: 0,
-  //可兑换合成玉
-  orundum: 0,
-});
-
-const certificateStoreF3Options = [
-  {
-    id: 0,
-    text: "还未兑换",
-    cost: 0,
-  },
-  {
-    id: 1,
-    text: "已换一层",
-    cost: 1490,
-  },
-  {
-    id: 2,
-    text: "已换二层单抽公招",
-    cost: 1200,
-  },
-  {
-    id: 3,
-    text: "已换二层",
-    cost: 9300,
-  },
-];
-
-let selectedCertificateStoreF3Group = ref([0]);
-let previousSelectedCertificateStoreF3Group = [0];
-
-function handleCertificateStoreF3GroupChange(selectedOptions) {
-  const clickedOption = certificateStoreF3Options.find((option) => {
-    const isSelected = selectedOptions.includes(option.id);
-    const wasSelected = previousSelectedCertificateStoreF3Group.includes(option.id);
-    return isSelected !== wasSelected;
-  });
-
-  if (!clickedOption) {
-    gachaResourcesCalculation();
-    return;
-  }
-
-  if (clickedOption.id > 0) {
-    selectedCertificateStoreF3Group.value = certificateStoreF3Options.filter((option) => option.id > 0 && option.id <= clickedOption.id).map((option) => option.id);
-    previousSelectedCertificateStoreF3Group = selectedCertificateStoreF3Group.value;
-    gachaResourcesCalculation();
-    return;
-  }
-
-  const hasClearOption = selectedOptions.includes(0);
-  const wasClearOptionSelected = previousSelectedCertificateStoreF3Group.includes(0);
-
-  if (hasClearOption && !wasClearOptionSelected) {
-    selectedCertificateStoreF3Group.value = [0];
-    previousSelectedCertificateStoreF3Group = selectedCertificateStoreF3Group.value;
-    gachaResourcesCalculation();
-    return;
-  }
-
-  const maxSelectedOption = Math.max(0, ...selectedOptions.filter((option) => option > 0));
-  selectedCertificateStoreF3Group.value = certificateStoreF3Options.filter((option) => option.id > 0 && option.id <= maxSelectedOption).map((option) => option.id);
-  if (selectedCertificateStoreF3Group.value.length === 0) {
-    selectedCertificateStoreF3Group.value = [0];
-  }
-  previousSelectedCertificateStoreF3Group = selectedCertificateStoreF3Group.value;
-  gachaResourcesCalculation();
-}
 
 //是否改用卡池开放当天的数据进行计算
 let calPoolEnd = ref(true);
@@ -1123,8 +1743,6 @@ const userConfigV2 = ref({
   // 悖论模拟、剿灭模拟战
   paradox: 0,
   annihilation: 0,
-  //黄票换抽
-  selectedCertificatePackList: selectedCertificatePackList.value,
   //是否购买月卡
   monthlyCardSelected: true,
   //额外购买月卡数量
@@ -1172,35 +1790,65 @@ function getVideoGachaDraft() {
     updatedAt: Date.now(),
     canvas: {
       displayBackgroundColor: displayBackgroundColor.value,
+      stageBackgroundImageScale: stageBackgroundImageScale.value,
+      stageBackgroundImagePositionX: stageBackgroundImagePositionX.value,
+      stageBackgroundImagePositionY: stageBackgroundImagePositionY.value,
+      stageBackgroundImageOpacity: stageBackgroundImageOpacity.value,
+      stageBackgroundImageBlur: stageBackgroundImageBlur.value,
+      stageBackgroundImageBrightness: stageBackgroundImageBrightness.value,
+      stageBackgroundImageSaturation: stageBackgroundImageSaturation.value,
+      stageBackgroundOverlayOpacity: stageBackgroundOverlayOpacity.value,
+      stageLogoWidth: stageLogoWidth.value,
+      stageLogoLeft: stageLogoLeft.value,
+      stageLogoBottom: stageLogoBottom.value,
+      stageLogoOpacity: stageLogoOpacity.value,
+      stageReferenceGuidesVisible: stageReferenceGuidesVisible.value,
+      customStageCursorEnabled: customStageCursorEnabled.value,
+      stageCursorBorderWidth: stageCursorBorderWidth.value,
+      stageCursorColor: stageCursorColor.value,
       leftPerspective: leftPerspective.value,
       rightPerspective: rightPerspective.value,
+      navigationOpacity: navigationOpacity.value,
+      detailCardOpacity: detailCardOpacity.value,
+      detailCardBackgroundColor: detailCardBackgroundColor.value,
+      inactivePoolImageBlur: inactivePoolImageBlur.value,
+      inactivePoolImageContrastReduction: inactivePoolImageContrastReduction.value,
+      navigationNumberStyle: navigationNumberStyle.value,
+      navigationGroupHeadingLight: navigationGroupHeadingLight.value,
+      stageFloatIntensity: stageFloatIntensity.value,
       stageTopMargin: stageTopMargin.value,
       stageBottomMargin: stageBottomMargin.value,
       stageLeftMargin: stageLeftMargin.value,
       stageRightMargin: stageRightMargin.value,
       cardGroupWidth: cardGroupWidth.value,
+      rightCardHeight: rightCardHeight.value,
     },
     view: {
+      previewScalePercent: previewScalePercent.value,
       settingsTab: settingsTab.value,
       activeCardName: activeCardName.value,
       dataPanelCardName: dataPanelCardName.value,
       selectedVideoPool: selectedVideoPool.value,
+      editingVideoPoolId: editingVideoPoolId.value,
+      editingVideoRechargePoolId: editingVideoRechargePoolId.value,
+      poolImageLayouts: Object.fromEntries(
+        Object.entries(videoPoolImageLayouts.value).map(([poolId, layout]) => [poolId, { ...layout }])
+      ),
+      calculationStartDatesByPool: { ...videoCalculationStartDatesByPool.value },
+      rechargePlansByPool: Object.fromEntries(
+        Object.entries(videoRechargePlansByPool.value).map(([poolId, plans]) => [
+          poolId,
+          plans.map((plan) => ({ ...plan })),
+        ])
+      ),
+      rechargePlanSelectionsByPool: { ...videoRechargePlanSelectionsByPool.value },
     },
     calculation: {
       userConfig: { ...userConfigV2.value },
+      calculationStartDate: currentTimestamp.value,
+      currentTimestamp: currentTimestamp.value,
       calPoolEnd: calPoolEnd.value,
-      selectedCertificatePackList: [...selectedCertificatePackList.value],
-      selectedCertificateT2Texts: selectedCertificateT2Group.value.map((item) => item.text),
-      produceOrundum: {
-        ap: produceOrundum.value.ap,
-        coEfficient: produceOrundum.value.coEfficient,
-        itemId30012: produceOrundum.value.itemId30012,
-        itemId30062: produceOrundum.value.itemId30062,
-      },
-      certificateStoreF3: {
-        certificates: certificateStoreF3.value.certificates,
-      },
-      selectedCertificateStoreF3Group: [...selectedCertificateStoreF3Group.value],
+      orundumStrategy: videoOrundumStrategy.value,
       selectedPermanentZoneName: [...selectedPermanentZoneName.value],
       selectedActivityName: [...selectedActivityName.value],
       selectedPackKeys: getSelectedPackPersistenceKeys(displayPackList.value, selectedPackCollect.value),
@@ -1232,6 +1880,23 @@ async function saveVideoPoolImage(poolId, imageFile) {
     await gachaVideoDraftDb.table("poolImages").delete(poolId);
   } catch (error) {
     console.warn(`Failed to save ${poolId} pool image.`, error);
+  }
+}
+
+async function saveStageAssetImage(assetId, imageFile) {
+  try {
+    if (imageFile) {
+      await gachaVideoDraftDb.table("stageAssets").put({
+        id: assetId,
+        imageFile,
+        updatedAt: Date.now(),
+      });
+      return;
+    }
+
+    await gachaVideoDraftDb.table("stageAssets").delete(assetId);
+  } catch (error) {
+    console.warn(`Failed to save ${assetId} stage asset.`, error);
   }
 }
 
@@ -1275,13 +1940,25 @@ function readVideoGachaSettings() {
 async function readVideoPoolImages() {
   try {
     const records = await gachaVideoDraftDb.table("poolImages").toArray();
-    return Object.fromEntries(
-      records
-        .filter((record) => videoPoolOptions.some((pool) => pool.id === record.id) && record.imageFile instanceof Blob)
-        .map((record) => [record.id, record.imageFile])
+    return normalizeVideoPoolImages(
+      Object.fromEntries(records.filter((record) => record.imageFile instanceof Blob).map((record) => [record.id, record.imageFile]))
     );
   } catch (error) {
     console.warn("Failed to restore gacha video pool images.", error);
+    return {};
+  }
+}
+
+async function readStageAssets() {
+  try {
+    const records = await gachaVideoDraftDb.table("stageAssets").toArray();
+    return Object.fromEntries(
+      records
+        .filter((record) => ["background", "logo"].includes(record.id) && record.imageFile instanceof Blob)
+        .map((record) => [record.id, record.imageFile])
+    );
+  } catch (error) {
+    console.warn("Failed to restore gacha video stage assets.", error);
     return {};
   }
 }
@@ -1290,28 +1967,285 @@ async function readVideoGachaDraft() {
   const settings = readVideoGachaSettings();
 
   try {
-    const [draft, poolImages] = await Promise.all([
+    const [draft, poolImages, stageAssets] = await Promise.all([
       gachaVideoDraftDb.table("drafts").get(GACHA_VIDEO_DRAFT_ID),
       readVideoPoolImages(),
+      readStageAssets(),
     ]);
     if (!settings) {
       return draft
         ? {
             ...draft,
             poolImages: Object.keys(poolImages).length ? poolImages : draft.poolImages || {},
+            stageAssets: Object.keys(stageAssets).length ? stageAssets : draft.stageAssets || {},
           }
-        : Object.keys(poolImages).length
-          ? { poolImages }
+        : Object.keys(poolImages).length || Object.keys(stageAssets).length
+          ? { poolImages, stageAssets }
           : null;
     }
 
     return {
       ...settings,
       poolImages: Object.keys(poolImages).length ? poolImages : draft?.poolImages || {},
+      stageAssets: Object.keys(stageAssets).length ? stageAssets : draft?.stageAssets || {},
     };
   } catch (error) {
     console.warn("Failed to restore gacha video draft.", error);
     return settings;
+  }
+}
+
+function isPlainRecord(value) {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function readBlobAsDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => resolve(reader.result));
+    reader.addEventListener("error", () => reject(reader.error || new Error("图片读取失败")));
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function encodeImageAssetMap(imageAssets) {
+  const entries = await Promise.all(
+    Object.entries(imageAssets)
+      .filter(([, imageFile]) => imageFile instanceof Blob)
+      .map(async ([assetId, imageFile]) => [assetId, await readBlobAsDataUrl(imageFile)])
+  );
+  return Object.fromEntries(entries);
+}
+
+function decodeImageDataUrl(dataUrl, assetLabel) {
+  if (typeof dataUrl !== "string") {
+    throw new Error(`${assetLabel}的图片数据无效`);
+  }
+
+  const match = dataUrl.match(/^data:([^;,]+);base64,([\s\S]*)$/);
+  if (!match || !match[1].startsWith("image/")) {
+    throw new Error(`${assetLabel}不是有效的图片`);
+  }
+
+  let binaryString;
+  try {
+    binaryString = window.atob(match[2]);
+  } catch {
+    throw new Error(`${assetLabel}的图片编码损坏`);
+  }
+
+  const bytes = new Uint8Array(binaryString.length);
+  for (let index = 0; index < binaryString.length; index++) {
+    bytes[index] = binaryString.charCodeAt(index);
+  }
+  return new Blob([bytes], { type: match[1] });
+}
+
+function decodeImageAssetMap(encodedAssets, allowedAssetIds, assetGroupLabel) {
+  if (encodedAssets === undefined || encodedAssets === null) {
+    return {};
+  }
+  if (!isPlainRecord(encodedAssets)) {
+    throw new Error(`${assetGroupLabel}格式无效`);
+  }
+
+  const decodedAssets = {};
+  for (const assetId of allowedAssetIds) {
+    if (Object.hasOwn(encodedAssets, assetId)) {
+      decodedAssets[assetId] = decodeImageDataUrl(encodedAssets[assetId], `${assetGroupLabel}“${assetId}”`);
+    }
+  }
+  return decodedAssets;
+}
+
+function getVideoGachaSettingsExportFileName() {
+  const now = new Date();
+  const date = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("");
+  const time = [String(now.getHours()).padStart(2, "0"), String(now.getMinutes()).padStart(2, "0")].join("");
+  return `攒抽制图设置-${date}-${time}.ytlgacha`;
+}
+
+async function exportVideoGachaSettings() {
+  if (videoGachaSettingsTransferPending.value) {
+    return;
+  }
+
+  videoGachaSettingsTransferPending.value = true;
+  try {
+    const poolImages = normalizeVideoPoolImages(videoPoolImageFiles);
+    const stageAssets = Object.fromEntries(
+      Object.entries(stageAssetFiles).filter(([, imageFile]) => imageFile instanceof Blob)
+    );
+    const [encodedPoolImages, encodedStageAssets] = await Promise.all([
+      encodeImageAssetMap(poolImages),
+      encodeImageAssetMap(stageAssets),
+    ]);
+    const payload = {
+      format: GACHA_VIDEO_SETTINGS_FILE_FORMAT,
+      schemaVersion: GACHA_VIDEO_SETTINGS_FILE_VERSION,
+      exportedAt: new Date().toISOString(),
+      draft: getVideoGachaDraft(),
+      assets: {
+        poolImages: encodedPoolImages,
+        stageAssets: encodedStageAssets,
+      },
+    };
+    const exportFile = new Blob([JSON.stringify(payload)], {
+      type: "application/json;charset=utf-8",
+    });
+
+    saveAs(exportFile, getVideoGachaSettingsExportFileName());
+    createMessage({ type: "success", text: "攒抽制图设置已导出" });
+  } catch (error) {
+    console.warn("Failed to export gacha video settings.", error);
+    createMessage({ type: "error", text: `设置导出失败：${error.message || "未知错误"}` });
+  } finally {
+    videoGachaSettingsTransferPending.value = false;
+  }
+}
+
+async function parseVideoGachaSettingsFile(settingsFile) {
+  if (!(settingsFile instanceof File) || settingsFile.size === 0) {
+    throw new Error("没有读取到有效的设置文件");
+  }
+  if (settingsFile.size > GACHA_VIDEO_SETTINGS_FILE_MAX_SIZE) {
+    throw new Error("设置文件超过 128MB，无法导入");
+  }
+
+  let payload;
+  try {
+    payload = JSON.parse(await settingsFile.text());
+  } catch {
+    throw new Error("设置文件不是有效的 JSON");
+  }
+
+  if (!isPlainRecord(payload) || payload.format !== GACHA_VIDEO_SETTINGS_FILE_FORMAT) {
+    throw new Error("这不是攒抽制图设置文件");
+  }
+
+  const schemaVersion = Number(payload.schemaVersion);
+  if (!Number.isInteger(schemaVersion) || schemaVersion < 1) {
+    throw new Error("设置文件版本无效");
+  }
+  if (schemaVersion > GACHA_VIDEO_SETTINGS_FILE_VERSION) {
+    throw new Error("设置文件来自更高版本，请更新页面后再导入");
+  }
+  if (!isPlainRecord(payload.draft)) {
+    throw new Error("设置文件缺少草稿数据");
+  }
+
+  const assets = isPlainRecord(payload.assets) ? payload.assets : {};
+  return {
+    exportedAt: payload.exportedAt,
+    draft: payload.draft,
+    poolImages: decodeImageAssetMap(
+      assets.poolImages,
+      videoPoolOptions.map((pool) => pool.id),
+      "卡池头图"
+    ),
+    stageAssets: decodeImageAssetMap(assets.stageAssets, ["background", "logo"], "舞台图片"),
+  };
+}
+
+async function replaceStoredVideoGachaSettings(draft, poolImages, stageAssets) {
+  const { poolImages: ignoredPoolImages, stageAssets: ignoredStageAssets, ...draftWithoutAssets } = draft;
+  const updatedAt = Date.now();
+  const storedDraft = {
+    ...draftWithoutAssets,
+    id: GACHA_VIDEO_DRAFT_ID,
+    updatedAt,
+  };
+  const draftTable = gachaVideoDraftDb.table("drafts");
+  const poolImageTable = gachaVideoDraftDb.table("poolImages");
+  const stageAssetTable = gachaVideoDraftDb.table("stageAssets");
+
+  await gachaVideoDraftDb.transaction("rw", draftTable, poolImageTable, stageAssetTable, async () => {
+    await draftTable.put(storedDraft);
+    await poolImageTable.clear();
+    await stageAssetTable.clear();
+
+    const poolImageRecords = Object.entries(poolImages).map(([id, imageFile]) => ({
+      id,
+      imageFile,
+      updatedAt,
+    }));
+    const stageAssetRecords = Object.entries(stageAssets).map(([id, imageFile]) => ({
+      id,
+      imageFile,
+      updatedAt,
+    }));
+    if (poolImageRecords.length) {
+      await poolImageTable.bulkPut(poolImageRecords);
+    }
+    if (stageAssetRecords.length) {
+      await stageAssetTable.bulkPut(stageAssetRecords);
+    }
+  });
+
+  localStorage.setItem(GACHA_VIDEO_SETTINGS_STORAGE_KEY, JSON.stringify(storedDraft));
+}
+
+function openVideoGachaSettingsImport() {
+  if (!videoGachaSettingsTransferPending.value) {
+    videoGachaSettingsFileInput.value?.click();
+  }
+}
+
+async function handleVideoGachaSettingsImport(event) {
+  const fileInput = event.target;
+  const settingsFile = fileInput.files?.[0];
+  fileInput.value = "";
+  if (!settingsFile || videoGachaSettingsTransferPending.value) {
+    return;
+  }
+
+  videoGachaSettingsTransferPending.value = true;
+  let reloadScheduled = false;
+  try {
+    const importedSettings = await parseVideoGachaSettingsFile(settingsFile);
+    const exportedAt = new Date(importedSettings.exportedAt);
+    const exportedAtText = Number.isNaN(exportedAt.getTime())
+      ? ""
+      : `\n导出时间：${exportedAt.toLocaleString("zh-CN")}`;
+
+    await ElMessageBox.confirm(
+      `导入“${settingsFile.name}”将覆盖当前全部参数和图片。${exportedAtText}`,
+      "导入攒抽制图设置",
+      {
+        confirmButtonText: "导入并覆盖",
+        cancelButtonText: "取消",
+        type: "warning",
+      }
+    );
+
+    if (gachaVideoDraftSaveTimer) {
+      clearTimeout(gachaVideoDraftSaveTimer);
+      gachaVideoDraftSaveTimer = 0;
+    }
+    gachaVideoDraftRestored = false;
+    await replaceStoredVideoGachaSettings(
+      importedSettings.draft,
+      importedSettings.poolImages,
+      importedSettings.stageAssets
+    );
+
+    reloadScheduled = true;
+    createMessage({ type: "success", text: "设置导入成功，正在重新加载" });
+    window.setTimeout(() => window.location.reload(), 450);
+  } catch (error) {
+    if (error !== "cancel" && error !== "close") {
+      console.warn("Failed to import gacha video settings.", error);
+      createMessage({ type: "error", text: `设置导入失败：${error.message || "未知错误"}` });
+    }
+  } finally {
+    if (!reloadScheduled) {
+      gachaVideoDraftRestored = true;
+      videoGachaSettingsTransferPending.value = false;
+    }
   }
 }
 
@@ -1330,15 +2264,71 @@ function restoreVideoGachaDraft(draft) {
   if (typeof canvas.displayBackgroundColor === "string") {
     displayBackgroundColor.value = canvas.displayBackgroundColor;
   }
+  restoreNumberSetting(stageBackgroundImageScale, canvas.stageBackgroundImageScale);
+  restoreNumberSetting(stageBackgroundImagePositionX, canvas.stageBackgroundImagePositionX);
+  restoreNumberSetting(stageBackgroundImagePositionY, canvas.stageBackgroundImagePositionY);
+  restoreNumberSetting(stageBackgroundImageOpacity, canvas.stageBackgroundImageOpacity);
+  restoreNumberSetting(stageBackgroundImageBlur, canvas.stageBackgroundImageBlur);
+  restoreNumberSetting(stageBackgroundImageBrightness, canvas.stageBackgroundImageBrightness);
+  restoreNumberSetting(stageBackgroundImageSaturation, canvas.stageBackgroundImageSaturation);
+  restoreNumberSetting(stageBackgroundOverlayOpacity, canvas.stageBackgroundOverlayOpacity);
+  restoreNumberSetting(stageLogoWidth, canvas.stageLogoWidth);
+  restoreNumberSetting(stageLogoLeft, canvas.stageLogoLeft);
+  restoreNumberSetting(stageLogoBottom, canvas.stageLogoBottom);
+  restoreNumberSetting(stageLogoOpacity, canvas.stageLogoOpacity);
+  if (typeof canvas.stageReferenceGuidesVisible === "boolean") {
+    stageReferenceGuidesVisible.value = canvas.stageReferenceGuidesVisible;
+  }
+  if (typeof canvas.customStageCursorEnabled === "boolean") {
+    customStageCursorEnabled.value = canvas.customStageCursorEnabled;
+  }
+  restoreNumberSetting(stageCursorBorderWidth, canvas.stageCursorBorderWidth);
+  stageCursorBorderWidth.value = Math.min(8, Math.max(1, stageCursorBorderWidth.value));
+  if (STAGE_CURSOR_COLOR_OPTIONS.some((option) => option.value === canvas.stageCursorColor)) {
+    stageCursorColor.value = canvas.stageCursorColor;
+  }
   restoreNumberSetting(leftPerspective, canvas.leftPerspective);
   restoreNumberSetting(rightPerspective, canvas.rightPerspective);
+  restoreNumberSetting(navigationOpacity, canvas.navigationOpacity);
+  restoreNumberSetting(detailCardOpacity, canvas.detailCardOpacity);
+  if (typeof canvas.detailCardBackgroundColor === "string") {
+    detailCardBackgroundColor.value = canvas.detailCardBackgroundColor;
+  }
+  restoreNumberSetting(inactivePoolImageBlur, canvas.inactivePoolImageBlur);
+  restoreNumberSetting(inactivePoolImageContrastReduction, canvas.inactivePoolImageContrastReduction);
+  if (NAVIGATION_NUMBER_STYLE_OPTIONS.some((option) => option.value === canvas.navigationNumberStyle)) {
+    navigationNumberStyle.value = canvas.navigationNumberStyle;
+  }
+  if (typeof canvas.navigationGroupHeadingLight === "boolean") {
+    navigationGroupHeadingLight.value = canvas.navigationGroupHeadingLight;
+  }
+  restoreNumberSetting(stageFloatIntensity, canvas.stageFloatIntensity);
   restoreNumberSetting(stageTopMargin, canvas.stageTopMargin);
   restoreNumberSetting(stageBottomMargin, canvas.stageBottomMargin);
   restoreNumberSetting(stageLeftMargin, canvas.stageLeftMargin);
   restoreNumberSetting(stageRightMargin, canvas.stageRightMargin);
   restoreNumberSetting(cardGroupWidth, canvas.cardGroupWidth);
+  restoreNumberSetting(rightCardHeight, canvas.rightCardHeight);
+  rightCardHeight.value = Math.min(
+    maxRightCardHeight.value,
+    Math.max(VIDEO_DETAIL_MIN_HEIGHT, rightCardHeight.value)
+  );
 
   const view = draft.view || {};
+  const restoredPreviewScalePercent = Number(view.previewScalePercent);
+  if (PREVIEW_SCALE_OPTIONS.includes(restoredPreviewScalePercent)) {
+    previewScalePercent.value = restoredPreviewScalePercent;
+  } else if (Number.isFinite(restoredPreviewScalePercent)) {
+    previewScalePercent.value = PREVIEW_SCALE_OPTIONS.reduce((closestScale, scale) =>
+      Math.abs(scale - restoredPreviewScalePercent) < Math.abs(closestScale - restoredPreviewScalePercent)
+        ? scale
+        : closestScale
+    );
+  } else if (view.workspaceMode === "edit") {
+    previewScalePercent.value = 40;
+  } else if (view.workspaceMode === "display") {
+    previewScalePercent.value = 80;
+  }
   if (view.settingsTab === "canvas" || view.settingsTab === "data") {
     settingsTab.value = view.settingsTab;
   }
@@ -1348,31 +2338,41 @@ function restoreVideoGachaDraft(draft) {
   if (Object.hasOwn(cardTitles, view.dataPanelCardName)) {
     dataPanelCardName.value = view.dataPanelCardName;
   }
-  if (videoPoolOptions.some((pool) => pool.id === view.selectedVideoPool)) {
-    selectedVideoPool.value = view.selectedVideoPool;
+  const restoredPoolId = normalizeVideoPoolId(view.selectedVideoPool);
+  if (isVideoPoolId(restoredPoolId)) {
+    selectedVideoPool.value = restoredPoolId;
   }
+  videoPoolImageLayouts.value = normalizeVideoPoolImageLayouts(view.poolImageLayouts);
+  const restoredEditingPoolId = normalizeVideoPoolId(view.editingVideoPoolId);
+  editingVideoPoolId.value = isVideoPoolId(restoredEditingPoolId) ? restoredEditingPoolId : selectedVideoPool.value;
+  const restoredEditingRechargePoolId = normalizeVideoPoolId(view.editingVideoRechargePoolId);
+  editingVideoRechargePoolId.value = isVideoPoolId(restoredEditingRechargePoolId)
+    ? restoredEditingRechargePoolId
+    : selectedVideoPool.value;
+  videoRechargePlansByPool.value = normalizeVideoRechargePlansByPool(view.rechargePlansByPool);
+  videoRechargePlanSelectionsByPool.value = normalizeVideoRechargePlanSelectionsByPool(
+    view.rechargePlanSelectionsByPool,
+    videoRechargePlansByPool.value
+  );
 
   const calculation = draft.calculation || {};
-  restoreObjectFields(userConfigV2.value, calculation.userConfig, ["selectedCertificatePackList"]);
+  restoreObjectFields(userConfigV2.value, calculation.userConfig);
+  const restoredCurrentTimestamp = Number(calculation.calculationStartDate ?? calculation.currentTimestamp);
+  if (Number.isFinite(restoredCurrentTimestamp)) {
+    currentTimestamp.value = restoredCurrentTimestamp;
+    currentDate.value = new Date(restoredCurrentTimestamp);
+  }
+  videoCalculationStartDatesByPool.value = normalizeVideoCalculationStartDatesByPool(
+    view.calculationStartDatesByPool,
+    currentTimestamp.value
+  );
+  activateVideoPoolCalculationStartDate(selectedVideoPool.value);
   if (typeof calculation.calPoolEnd === "boolean") {
     calPoolEnd.value = calculation.calPoolEnd;
   }
-  selectedCertificatePackList.value = restoreArraySetting(calculation.selectedCertificatePackList);
-  selectedCertificateT2Group.value = certificateT2Group.filter((item) =>
-    restoreArraySetting(calculation.selectedCertificateT2Texts).includes(item.text)
-  );
-  restoreObjectFields(produceOrundum.value, calculation.produceOrundum, ["outputByAp", "outputByItem", "itemId4001"]);
-  restoreObjectFields(certificateStoreF3.value, calculation.certificateStoreF3, [
-    "remainingCertificates",
-    "disposableCertificate",
-    "orundum",
-  ]);
-
-  const selectedStoreGroups = restoreArraySetting(calculation.selectedCertificateStoreF3Group).filter((item) =>
-    Number.isInteger(item)
-  );
-  selectedCertificateStoreF3Group.value = selectedStoreGroups.length ? selectedStoreGroups : [0];
-  previousSelectedCertificateStoreF3Group = [...selectedCertificateStoreF3Group.value];
+  if (VIDEO_ORUNDUM_STRATEGIES.some((strategy) => strategy.id === calculation.orundumStrategy)) {
+    videoOrundumStrategy.value = calculation.orundumStrategy;
+  }
   selectedPermanentZoneName.value = restoreArraySetting(calculation.selectedPermanentZoneName);
   selectedActivityName.value = restoreArraySetting(calculation.selectedActivityName);
 
@@ -1385,10 +2385,17 @@ function restoreVideoGachaDraft(draft) {
     }
   }
 
-  const poolImages = draft.poolImages || {};
+  const poolImages = normalizeVideoPoolImages(draft.poolImages);
   for (const pool of videoPoolOptions) {
     if (poolImages[pool.id] instanceof Blob) {
       setVideoPoolImage(pool.id, poolImages[pool.id]);
+    }
+  }
+
+  const stageAssets = draft.stageAssets || {};
+  for (const assetId of ["background", "logo"]) {
+    if (stageAssets[assetId] instanceof Blob) {
+      setStageAssetImage(assetId, stageAssets[assetId]);
     }
   }
 }
@@ -1416,24 +2423,53 @@ function restoreVideoGachaPackSelections(calculation) {
 watch(
   [
     displayBackgroundColor,
+    stageBackgroundImageScale,
+    stageBackgroundImagePositionX,
+    stageBackgroundImagePositionY,
+    stageBackgroundImageOpacity,
+    stageBackgroundImageBlur,
+    stageBackgroundImageBrightness,
+    stageBackgroundImageSaturation,
+    stageBackgroundOverlayOpacity,
+    stageLogoWidth,
+    stageLogoLeft,
+    stageLogoBottom,
+    stageLogoOpacity,
+    stageReferenceGuidesVisible,
+    customStageCursorEnabled,
+    stageCursorBorderWidth,
+    stageCursorColor,
     leftPerspective,
     rightPerspective,
+    navigationOpacity,
+    detailCardOpacity,
+    detailCardBackgroundColor,
+    inactivePoolImageBlur,
+    inactivePoolImageContrastReduction,
+    navigationNumberStyle,
+    navigationGroupHeadingLight,
+    stageFloatIntensity,
     stageTopMargin,
     stageBottomMargin,
     stageLeftMargin,
     stageRightMargin,
     cardGroupWidth,
+    rightCardHeight,
+    previewScalePercent,
     settingsTab,
     activeCardName,
     dataPanelCardName,
     selectedVideoPool,
+    editingVideoPoolId,
+    editingVideoRechargePoolId,
+    videoPoolImageLayouts,
+    videoCalculationStartDatesByPool,
+    videoRechargePlansByPool,
+    videoRechargePlanSelectionsByPool,
+    currentTimestamp,
     userConfigV2,
     calPoolEnd,
-    selectedCertificatePackList,
-    selectedCertificateT2Group,
-    produceOrundum,
-    certificateStoreF3,
-    selectedCertificateStoreF3Group,
+    videoOrundumStrategy,
     selectedPermanentZoneName,
     selectedActivityName,
     selectedPackCollect,
@@ -1444,19 +2480,19 @@ watch(
   { deep: true }
 );
 
+watch([stageTopMargin, stageBottomMargin], () => {
+  if (rightCardHeight.value > maxRightCardHeight.value) {
+    rightCardHeight.value = maxRightCardHeight.value;
+  }
+});
+
 /**
  * 计算抽卡资源
  */
 function gachaResourcesCalculation() {
   logs = [];
 
-  if (calPoolEnd.value) {
-    endDate.value = currentSchedule.value.end;
-  } else {
-    const startTimeStamp = currentSchedule.value.start.getTime();
-
-    endDate.value = new Date(startTimeStamp + 12 * 60 * 60 * 1000);
-  }
+  endDate.value = getScheduleCalculationEndDate(currentSchedule.value, calPoolEnd.value);
 
   //饼图数据暂存区
   let pieChartDataTmp = [];
@@ -1467,12 +2503,14 @@ function gachaResourcesCalculation() {
   calculationResult.value.tenGachaTicket = 0;
   calculationResult.value.existTotalDraw = 0;
   calculationResult.value.potentialTotalDraw = 0;
+  calculationResult.value.rechargeTotalDraw = 0;
+  calculationResult.value.totalAmountOfRecharge = 0;
+  calculationResult.value.monthlyCardAmountOfRecharge = 0;
 
   clearLastYearOriginiumPackSelection();
   dailyRewardCalculate();
   produceOrundumCalculate();
   honeyCakeCalculate();
-  packCalculate();
   activityCalculate();
 
   /**
@@ -1639,49 +2677,11 @@ function gachaResourcesCalculation() {
   }
 
   function produceOrundumCalculate() {
-    let gachaTicket = 0;
-    let tenGachaTicket = 0;
-
-    for (const i of selectedCertificateT2Group.value) {
-      gachaTicket += i.draw;
-    }
-
-    //计算用户选择兑换几次黄票商店的38抽
-    for (const item of certificatePackList.value) {
-      if (!selectedCertificatePackList.value.includes(item.id)) {
-        continue;
-      }
-      if (!rewardIsExpired(item)) {
-        continue;
-      }
-      gachaTicket += item.gachaTicket;
-      tenGachaTicket += item.tenGachaTicket;
-    }
-
-    //计算用理智产出的合成玉数量
-    if (produceOrundum.value.ap && produceOrundum.value.coEfficient) {
-      produceOrundum.value.outputByAp = Math.ceil(stringToNumber(produceOrundum.value.ap) * stringToNumber(produceOrundum.value.coEfficient));
-    }
-    //计算用材料产出的合成玉数量
-    produceOrundum.value.outputByItem = Math.ceil(stringToNumber(produceOrundum.value.itemId30012) * 5 + stringToNumber(produceOrundum.value.itemId30062) * 10);
-    //计算用材料产出合成玉时的龙门币消耗
-    produceOrundum.value.itemId4001 = stringToNumber(produceOrundum.value.itemId30012) * 800 + stringToNumber(produceOrundum.value.itemId30062) * 1000;
-    //可用于兑换商店第三层的凭证数量
-    let certificates = stringToNumber(certificateStoreF3.value.certificates);
-    const remainingCost = certificateStoreF3Options
-      .filter((option) => !selectedCertificateStoreF3Group.value.includes(option.id))
-      .reduce((total, option) => total + option.cost, 0);
-    certificateStoreF3.value.remainingCertificates = Math.max(0, certificates - remainingCost);
-    certificateStoreF3.value.disposableCertificate = certificateStoreF3.value.remainingCertificates;
-    certificateStoreF3.value.orundum = Math.floor((certificateStoreF3.value.disposableCertificate / 50) * 30);
-    //计算两种方式可以产出多少合成玉
-    const orundum = produceOrundum.value.outputByAp + produceOrundum.value.outputByItem + certificateStoreF3.value.orundum;
+    const strategy = activeVideoOrundumStrategy.value;
+    const orundum = strategy.id === "none" ? 0 : Math.ceil(videoOrundumAp.value * strategy.coefficient);
 
     calculationResult.value.orundum += orundum;
-    calculationResult.value.gachaTicket += gachaTicket;
-    calculationResult.value.tenGachaTicket += tenGachaTicket;
-
-    calculationResult.value.produceOrundumTotalDraw = orundum / 600 + gachaTicket + tenGachaTicket * 10;
+    calculationResult.value.produceOrundumTotalDraw = orundum / 600;
 
     if (calculationResult.value.produceOrundumTotalDraw > 0) {
       pieChartDataTmp.push({ value: Math.floor(calculationResult.value.produceOrundumTotalDraw), name: "搓玉" });
@@ -2008,50 +3008,12 @@ function gachaResourcesCalculation() {
  * @return {number}  剩余天数
  */
 function getRewardRemainingDays(honeyCake) {
-  //活动开启时间
-  const rewardStart = honeyCake.start;
-  const scheduleStart = currentSchedule.value.start.getTime();
-
-  //活动结束时间
-  let rewardEnd = honeyCake.end;
-  //使用全局时间戳，支持用户自定义时间
-  const nowTimeStamp = currentTimestamp.value;
-  //如果选择的是计算到活动开启当日,判断活动开启日期是否在奖励结束日之前，true则代表这是个新活动，将活动结束日期设为活动开启日的次日凌晨4点
-  if (!calPoolEnd.value && scheduleStart < rewardEnd) {
-    rewardEnd = rewardStart + 60 * 60 * 12 * 1000;
-  }
-
-  //活动剩余时间
-  let remainingDays;
-
-  //如果活动已经开始，用实际时间计算，否则用活动开启日期计算
-  if (rewardStart < nowTimeStamp) {
-    remainingDays = Math.round((rewardEnd - nowTimeStamp) / 86400000);
-    // console.log(honeyCake.name,'剩余天数:', remainingDays)
-  } else {
-    remainingDays = Math.round((rewardEnd - rewardStart) / 86400000);
-    // console.log(honeyCake.name,'剩余天数:', remainingDays)
-  }
-
-  //大于14天强制为14天
-  if (remainingDays > 14) {
-    remainingDays = 14;
-  }
-
-  // 防止出现负数
-  if (remainingDays < 0) {
-    remainingDays = 0;
-  }
-
-  // console.log(honeyCake.name, " 类型：", rewardType, activityType.value, dateFormat(rewardEnd), dateFormat(rewardStart), dateFormat(scheduleStart), remainingDays)
-
-  // //小于1天强制为1天
-  // if (endTime - startTime < 8640000) {
-  //   remainingDays = 1
-  // }
-
-  console.log("离限定池结束还有" + remainingDays + "天");
-  return remainingDays;
+  return getDailyRewardRemainingDays(
+    honeyCake,
+    currentTimestamp.value,
+    currentSchedule.value,
+    calPoolEnd.value
+  );
 }
 
 /**
@@ -2060,15 +3022,7 @@ function getRewardRemainingDays(honeyCake) {
  * @returns {boolean} 是否可计入
  */
 function rewardIsExpired(reward) {
-  //活动结束时间在当前时间之前，活动已结束
-  if (reward.end <= currentTimestamp.value) {
-    // console.log(reward.name, '活动结束')
-    return false;
-  }
-
-  //活动开始时间在选择的结束时间节点之后，活动未开启
-  if (reward.start > endDate.value.getTime()) {
-    // console.log(reward.name, '活动未开始')
+  if (!isRewardAvailableOnSelectedDates(reward, currentTimestamp.value, endDate.value)) {
     return false;
   }
 
@@ -2131,10 +3085,7 @@ window.addEventListener("resize", handleResize);
 
 // 定义尺寸变化处理函数
 function handleResize() {
-  //判断是否是移动设备或PC端将窗口缩小，如果是就对chart画布进行尺寸重设
-  if (window.innerWidth < 590) {
-    myChart.resize();
-  } else {
+  if (myChart) {
     myChart.resize();
   }
 }
@@ -2225,7 +3176,12 @@ onMounted(async () => {
   }
 
   batchGenerationMonthlyPack();
-  const selectedPool = videoPoolOptions.find((pool) => pool.id === selectedVideoPool.value) || videoPoolOptions[0];
+  const selectedPool =
+    videoPoolOptions.find((pool) => pool.id === selectedVideoPool.value && !pool.disabled) ||
+    videoPoolOptions.find((pool) => !pool.disabled) ||
+    videoPoolOptions[0];
+  selectedVideoPool.value = selectedPool.id;
+  activateVideoPoolCalculationStartDate(selectedPool.id);
   updateScheduleOption(selectedPool.scheduleIndex);
   await getAndSortPackData();
   restoreVideoGachaPackSelections(draft?.calculation);
@@ -2242,8 +3198,7 @@ onMounted(async () => {
 
 //处理时间选择器变化
 function handleDateChange(date) {
-  if (date) {
-    currentTimestamp.value = new Date(date).getTime();
+  if (date && setVideoPoolCalculationStartDate(selectedVideoPool.value, date)) {
     // 重新生成基于时间的数据
     batchGenerationServerMaintenanceRewards();
     // 重新加载礼包数据和计算攒抽资源
@@ -2251,6 +3206,12 @@ function handleDateChange(date) {
     getAndSortPackData();
     gachaResourcesCalculation();
   }
+}
+
+function resetVideoStartTime() {
+  const now = new Date();
+  currentDate.value = now;
+  handleDateChange(now);
 }
 
 const screenshotModeEnabled = ref(false);
@@ -2330,36 +3291,321 @@ function sharePage() {
 <template>
   <!--  <img src="/public/顶部.jpg" alt="" style="width: 600px;position: absolute;top: 50px;left: 360px;z-index:3000;opacity: 0.3" >-->
   <!-- <div style="background-color: #13ce66;width: 600px;height: 114px;">114</div> -->
-  <div class="gacha-card-editor">
+  <div
+    class="gacha-card-editor"
+    :style="previewWorkspaceStyle"
+  >
     <aside class="gacha-card-settings gacha-card-settings-video" aria-label="参数调整">
-      <div class="gacha-card-settings-title">参数调整</div>
+      <div class="gacha-card-settings-title">
+        <div class="gacha-card-settings-title-heading">
+          <span>参数调整</span>
+          <div class="gacha-card-settings-transfer-actions">
+            <el-tooltip content="导入设置" placement="bottom">
+              <el-button
+                :icon="Upload"
+                circle
+                plain
+                :disabled="videoGachaSettingsTransferPending"
+                aria-label="导入设置"
+                @click="openVideoGachaSettingsImport"
+              />
+            </el-tooltip>
+            <el-tooltip content="导出设置" placement="bottom">
+              <el-button
+                :icon="Download"
+                circle
+                plain
+                :disabled="videoGachaSettingsTransferPending"
+                aria-label="导出设置"
+                @click="exportVideoGachaSettings"
+              />
+            </el-tooltip>
+            <input
+              ref="videoGachaSettingsFileInput"
+              class="gacha-card-settings-file-input"
+              type="file"
+              accept=".ytlgacha,.json,application/json"
+              @change="handleVideoGachaSettingsImport"
+            />
+          </div>
+        </div>
+        <el-radio-group
+          v-model="previewScalePercent"
+          size="small"
+          class="gacha-card-preview-scale"
+          aria-label="预览尺寸"
+        >
+          <el-radio-button v-for="scale in PREVIEW_SCALE_OPTIONS" :key="scale" :label="scale">
+            {{ scale }}%
+          </el-radio-button>
+        </el-radio-group>
+      </div>
       <el-tabs v-model="settingsTab" class="gacha-card-settings-tabs" stretch>
         <el-tab-pane label="画面" name="canvas">
+          <div class="gacha-card-setting-section-title">舞台背景</div>
           <div class="gacha-card-setting-image-upload">
-            <span>夏活图片</span>
-            <el-upload
-              accept="image/*"
-              :auto-upload="false"
-              :show-file-list="false"
-              :on-change="(file) => updateVideoPoolImage('summer', file)"
-            >
-              <el-button>上传</el-button>
-            </el-upload>
+            <span>背景图片</span>
+            <div class="gacha-card-setting-upload-actions">
+              <el-upload
+                accept="image/*"
+                :auto-upload="false"
+                :show-file-list="false"
+                :on-change="(file) => updateStageAssetImage('background', file)"
+              >
+                <el-button>上传</el-button>
+              </el-upload>
+              <el-tooltip content="恢复默认背景参数" placement="top">
+                <el-button
+                  :icon="RefreshLeft"
+                  circle
+                  plain
+                  :disabled="!stageBackgroundImage"
+                  aria-label="恢复默认背景参数"
+                  @click="resetStageBackgroundImageLayout"
+                />
+              </el-tooltip>
+              <el-tooltip content="移除背景图片" placement="top">
+                <el-button
+                  :icon="Delete"
+                  circle
+                  plain
+                  :disabled="!stageBackgroundImage"
+                  aria-label="移除背景图片"
+                  @click="clearStageAssetImage('background')"
+                />
+              </el-tooltip>
+            </div>
           </div>
+          <div class="gacha-card-setting-range">
+            <span>背景缩放</span>
+            <el-slider
+              v-model="stageBackgroundImageScale"
+              :min="100"
+              :max="250"
+              :step="1"
+              show-input
+              input-size="small"
+              :disabled="!stageBackgroundImage"
+            />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>水平位置</span>
+            <el-slider
+              v-model="stageBackgroundImagePositionX"
+              :min="0"
+              :max="100"
+              :step="1"
+              show-input
+              input-size="small"
+              :disabled="!stageBackgroundImage"
+            />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>垂直位置</span>
+            <el-slider
+              v-model="stageBackgroundImagePositionY"
+              :min="0"
+              :max="100"
+              :step="1"
+              show-input
+              input-size="small"
+              :disabled="!stageBackgroundImage"
+            />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>背景透明</span>
+            <el-slider v-model="stageBackgroundImageOpacity" :min="0" :max="100" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>背景模糊</span>
+            <el-slider v-model="stageBackgroundImageBlur" :min="0" :max="40" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>背景亮度</span>
+            <el-slider v-model="stageBackgroundImageBrightness" :min="20" :max="120" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>背景饱和</span>
+            <el-slider v-model="stageBackgroundImageSaturation" :min="0" :max="100" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-row">
+            <span>遮罩颜色</span>
+            <el-color-picker v-model="displayBackgroundColor" show-alpha />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>遮罩强度</span>
+            <el-slider v-model="stageBackgroundOverlayOpacity" :min="0" :max="100" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-row">
+            <span>1920 × 1080 参考线</span>
+            <el-switch v-model="stageReferenceGuidesVisible" />
+          </div>
+          <div class="gacha-card-setting-row">
+            <span>展示区鼠标</span>
+            <el-switch
+              v-model="customStageCursorEnabled"
+              active-text="菱形"
+              inactive-text="系统"
+              aria-label="切换展示区域鼠标样式"
+            />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>菱形边框</span>
+            <el-slider
+              v-model="stageCursorBorderWidth"
+              :min="1"
+              :max="8"
+              :step="1"
+              show-input
+              input-size="small"
+              :disabled="!customStageCursorEnabled"
+            />
+          </div>
+          <div class="gacha-card-setting-row is-stacked">
+            <span>菱形颜色</span>
+            <el-radio-group
+              v-model="stageCursorColor"
+              class="gacha-stage-cursor-color-options"
+              size="small"
+              aria-label="菱形鼠标颜色"
+              :disabled="!customStageCursorEnabled"
+            >
+              <el-radio-button v-for="option in STAGE_CURSOR_COLOR_OPTIONS" :key="option.value" :label="option.value">
+                <span class="gacha-stage-cursor-color-swatch" :style="{ backgroundColor: option.color }"></span>
+                <span>{{ option.label }}</span>
+              </el-radio-button>
+            </el-radio-group>
+          </div>
+
+          <div class="gacha-card-setting-section-title">左下角 Logo</div>
           <div class="gacha-card-setting-image-upload">
-            <span>半周年图片</span>
+            <span>Logo 图片</span>
+            <div class="gacha-card-setting-upload-actions">
+              <el-upload
+                accept="image/*"
+                :auto-upload="false"
+                :show-file-list="false"
+                :on-change="(file) => updateStageAssetImage('logo', file)"
+              >
+                <el-button>上传</el-button>
+              </el-upload>
+              <el-tooltip content="恢复默认 Logo 参数" placement="top">
+                <el-button
+                  :icon="RefreshLeft"
+                  circle
+                  plain
+                  :disabled="!stageLogoImage"
+                  aria-label="恢复默认 Logo 参数"
+                  @click="resetStageLogoLayout"
+                />
+              </el-tooltip>
+              <el-tooltip content="移除 Logo" placement="top">
+                <el-button
+                  :icon="Delete"
+                  circle
+                  plain
+                  :disabled="!stageLogoImage"
+                  aria-label="移除 Logo"
+                  @click="clearStageAssetImage('logo')"
+                />
+              </el-tooltip>
+            </div>
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>Logo 宽度</span>
+            <el-slider v-model="stageLogoWidth" :min="60" :max="520" :step="1" show-input input-size="small" :disabled="!stageLogoImage" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>左侧偏移</span>
+            <el-slider v-model="stageLogoLeft" :min="0" :max="320" :step="1" show-input input-size="small" :disabled="!stageLogoImage" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>底部距离</span>
+            <el-slider v-model="stageLogoBottom" :min="0" :max="240" :step="1" show-input input-size="small" :disabled="!stageLogoImage" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>Logo 透明</span>
+            <el-slider v-model="stageLogoOpacity" :min="0" :max="100" :step="1" show-input input-size="small" :disabled="!stageLogoImage" />
+          </div>
+
+          <div class="gacha-card-setting-section-title">卡池头图</div>
+          <div v-for="pool in videoPoolOptions" :key="pool.id" class="gacha-card-setting-image-upload">
+            <span>{{ pool.label }}</span>
             <el-upload
               accept="image/*"
               :auto-upload="false"
               :show-file-list="false"
-              :on-change="(file) => updateVideoPoolImage('halfAnniversary', file)"
+              :on-change="(file) => updateVideoPoolImage(pool.id, file)"
             >
               <el-button>上传</el-button>
             </el-upload>
           </div>
           <div class="gacha-card-setting-row">
-            <span>背景</span>
-            <el-color-picker v-model="displayBackgroundColor" show-alpha />
+            <span>头图裁切</span>
+            <div class="gacha-card-setting-crop-target">
+              <el-select v-model="editingVideoPoolId" size="small" aria-label="正在编辑的头图">
+                <el-option
+                  v-for="pool in videoPoolOptions"
+                  :key="pool.id"
+                  :label="pool.disabled ? `${pool.title}（未开放）` : pool.title"
+                  :value="pool.id"
+                />
+              </el-select>
+              <el-tooltip content="恢复默认裁切" placement="top">
+                <el-button
+                  :icon="RefreshLeft"
+                  circle
+                  plain
+                  :disabled="!videoPoolImages[editingVideoPoolId]"
+                  aria-label="恢复默认裁切"
+                  @click="resetVideoPoolImageLayout()"
+                />
+              </el-tooltip>
+            </div>
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>缩放</span>
+            <el-slider
+              v-model="editingVideoPoolImageLayout.scale"
+              :min="VIDEO_POOL_IMAGE_SCALE_MIN"
+              :max="VIDEO_POOL_IMAGE_SCALE_MAX"
+              :step="1"
+              show-input
+              input-size="small"
+              :disabled="!videoPoolImages[editingVideoPoolId]"
+            />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>水平位置</span>
+            <el-slider
+              v-model="editingVideoPoolImageLayout.positionX"
+              :min="0"
+              :max="100"
+              :step="1"
+              show-input
+              input-size="small"
+              :disabled="!videoPoolImages[editingVideoPoolId]"
+            />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>垂直位置</span>
+            <el-slider
+              v-model="editingVideoPoolImageLayout.positionY"
+              :min="0"
+              :max="100"
+              :step="1"
+              show-input
+              input-size="small"
+              :disabled="!videoPoolImages[editingVideoPoolId]"
+            />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>未选中模糊</span>
+            <el-slider v-model="inactivePoolImageBlur" :min="0" :max="12" :step="0.1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>未选中对比度降低</span>
+            <el-slider v-model="inactivePoolImageContrastReduction" :min="0" :max="80" :step="1" show-input input-size="small" />
           </div>
           <div class="gacha-card-setting-range">
             <span>左侧透视</span>
@@ -2370,12 +3616,35 @@ function sharePage() {
             <el-slider v-model="rightPerspective" :min="0" :max="30" :step="0.1" show-input input-size="small" />
           </div>
           <div class="gacha-card-setting-range">
+            <span>左侧透明</span>
+            <el-slider v-model="navigationOpacity" :min="0" :max="100" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>右侧透明</span>
+            <el-slider v-model="detailCardOpacity" :min="0" :max="100" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-row">
+            <span>右侧卡片颜色</span>
+            <el-color-picker v-model="detailCardBackgroundColor" show-alpha />
+          </div>
+          <div class="gacha-card-setting-range">
             <span>顶部边距</span>
             <el-slider v-model="stageTopMargin" :min="96" :max="280" :step="1" show-input input-size="small" />
           </div>
           <div class="gacha-card-setting-range">
             <span>底部边距</span>
             <el-slider v-model="stageBottomMargin" :min="0" :max="280" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>右侧卡高</span>
+            <el-slider
+              v-model="rightCardHeight"
+              :min="VIDEO_DETAIL_MIN_HEIGHT"
+              :max="maxRightCardHeight"
+              :step="1"
+              show-input
+              input-size="small"
+            />
           </div>
           <div class="gacha-card-setting-range">
             <span>左侧边距</span>
@@ -2389,23 +3658,81 @@ function sharePage() {
             <span>卡片组宽度</span>
             <el-slider v-model="cardGroupWidth" :min="320" :max="640" :step="1" show-input input-size="small" />
           </div>
+          <div class="gacha-card-setting-row is-stacked">
+            <span>导航编号</span>
+            <el-radio-group v-model="navigationNumberStyle" size="small" aria-label="导航编号样式">
+              <el-radio-button v-for="option in NAVIGATION_NUMBER_STYLE_OPTIONS" :key="option.value" :label="option.value">
+                {{ option.label }}
+              </el-radio-button>
+            </el-radio-group>
+          </div>
+          <div class="gacha-card-setting-row">
+            <span>分组标题</span>
+            <el-switch
+              v-model="navigationGroupHeadingLight"
+              active-text="浅色"
+              inactive-text="默认"
+              aria-label="切换固定资源和个人策略标题颜色"
+            />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>画面漂浮</span>
+            <el-slider v-model="stageFloatIntensity" :min="0" :max="8" :step="0.1" show-input input-size="small" />
+          </div>
         </el-tab-pane>
         <el-tab-pane label="数据" name="data">
+          <div class="gacha-card-setting-datetime">
+            <span>本池起始</span>
+            <el-date-picker
+              v-model="currentDate"
+              type="datetime"
+              placeholder="选择日期时间"
+              format="YYYY-MM-DD HH:mm:ss"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              @change="handleDateChange"
+            />
+            <el-tooltip content="重置为当前时间" placement="top">
+              <el-button :icon="RefreshLeft" circle plain aria-label="重置为当前时间" @click="resetVideoStartTime" />
+            </el-tooltip>
+          </div>
           <div v-if="activeCardName === 'calculationResult'" class="gacha-video-data-empty">卡池由左上图片切换</div>
           <div id="gacha-video-data-controls" class="gacha-video-data-panel"></div>
         </el-tab-pane>
       </el-tabs>
     </aside>
 
-    <section class="gacha-card-stage" :class="{ 'is-data-controls': settingsTab === 'data' }" :style="displayStageStyle">
+    <section
+      class="gacha-card-stage"
+      :class="[
+        {
+          'is-data-controls': settingsTab === 'data',
+          'has-stage-float': stageFloatIntensity > 0,
+          'has-light-navigation-group-heading': navigationGroupHeadingLight,
+          'has-custom-stage-cursor': customStageCursorEnabled,
+          'is-pool-switching-out': videoPoolTransitionPhase === 'out',
+          'is-pool-switching-in': videoPoolTransitionPhase === 'in',
+        },
+        `is-navigation-number-${navigationNumberStyle}`,
+      ]"
+      :style="displayStageStyle"
+    >
+      <div
+        class="gacha-card-stage-canvas"
+        @pointerenter="handleStageCursorEnter"
+        @pointermove="handleStageCursorMove"
+        @pointerleave="handleStageCursorLeave"
+        @pointerdown="handleStageCursorClick"
+      >
+      <div v-if="stageBackgroundImage" class="gacha-card-stage-background" aria-hidden="true">
+        <img :src="stageBackgroundImage" :style="getStageBackgroundImageStyle()" alt="" />
+      </div>
+      <div class="gacha-card-stage-overlay" aria-hidden="true"></div>
       <div
         class="gacha-calculation-page gacha-card-browser"
         :class="{ 'is-data-controls': settingsTab === 'data' }"
         id="gachaCalculate"
         data-video="pro"
       >
-        <div class="gacha-card-stage-heading">攒抽计算器</div>
-        <div v-if="activeCardTitle" class="gacha-card-detail-title">{{ activeCardTitle }}</div>
         <nav class="gacha-video-navigation" aria-label="视频页导航">
           <div class="gacha-video-pool-selector">
             <button
@@ -2413,12 +3740,13 @@ function sharePage() {
               :key="pool.id"
               type="button"
               class="gacha-video-pool-button"
-              :class="{ 'is-active': selectedVideoPool === pool.id }"
-            :title="pool.label"
-            @click="selectVideoPool(pool.id)"
-          >
+              :class="{ 'is-active': selectedVideoPool === pool.id, 'is-disabled': pool.disabled }"
+              :disabled="pool.disabled"
+              :title="pool.label"
+              @click="selectVideoPool(pool.id)"
+            >
               <span class="gacha-video-pool-image">
-                <img v-if="videoPoolImages[pool.id]" :src="videoPoolImages[pool.id]" alt="" />
+                <img v-if="videoPoolImages[pool.id]" :src="videoPoolImages[pool.id]" :style="getVideoPoolImageStyle(pool.id)" alt="" />
                 <span v-else class="gacha-video-pool-placeholder"></span>
               </span>
               <span class="gacha-video-pool-copy">
@@ -2427,106 +3755,86 @@ function sharePage() {
               </span>
             </button>
           </div>
-          <button
-            type="button"
-            class="gacha-video-nav-item"
-            :class="{ 'is-active': activeCardName === 'calculationResult' }"
-            @click="selectVideoCard('calculationResult')"
-          >
-            <span>总览</span>
-            <strong>{{ numberFloor(calculationResult.totalDraw, 0) }} 抽</strong>
-          </button>
-          <button
-            type="button"
-            class="gacha-video-nav-item"
-            :class="{ 'is-active': activeCardName === 'daily' }"
-            @click="selectVideoCard('daily')"
-          >
-            <span>日常积累</span>
-            <strong>{{ numberFloor(calculationResult.dailyTotalDraw, 0) }} 抽</strong>
-          </button>
-          <button
-            type="button"
-            class="gacha-video-nav-item"
-            :class="{ 'is-active': activeCardName === 'custom' }"
-            @click="selectVideoCard('custom')"
-          >
-            <span>搓玉 / 凭证</span>
-            <strong>{{ numberFloor(calculationResult.produceOrundumTotalDraw, 0) }} 抽</strong>
-          </button>
-          <button
-            type="button"
-            class="gacha-video-nav-item"
-            :class="{ 'is-active': activeCardName === 'activity' }"
-            @click="selectVideoCard('activity')"
-          >
-            <span>活动获得</span>
-            <strong>{{ numberFloor(calculationResult.activityTotalDraw, 0) }} 抽</strong>
-          </button>
-          <button
-            type="button"
-            class="gacha-video-nav-item"
-            :class="{ 'is-active': activeCardName === 'other' }"
-            @click="selectVideoCard('other')"
-          >
-            <span>其他资源</span>
-            <strong>{{ numberFloor(calculationResult.otherTotalDraw, 0) }} 抽</strong>
-          </button>
-          <button
-            type="button"
-            class="gacha-video-nav-item"
-            :class="{ 'is-active': activeCardName === 'recharge' }"
-            @click="selectVideoCard('recharge')"
-          >
-            <span>氪金方案</span>
-          </button>
+          <div class="gacha-video-nav-group is-standard">
+            <div class="gacha-video-nav-group-heading">
+              <span>固定资源</span>
+              <small>BASELINE</small>
+            </div>
+            <button
+              v-for="item in standardNavigationItems"
+              :key="item.id"
+              type="button"
+              class="gacha-video-nav-item"
+              :class="[
+                `is-${item.tone}`,
+                { 'is-active': activeCardName === item.id, 'is-flashing': navigationFlashCardName === item.id },
+              ]"
+              @click="selectVideoCard(item.id)"
+            >
+              <span class="gacha-video-nav-index">{{ item.serial }}</span>
+              <span class="gacha-video-nav-copy">{{ item.label }}</span>
+              <strong class="gacha-video-nav-draw-value">
+                {{ item.draws }}
+                <span class="gacha-video-inline-icon"><img :src="getVideoResourceImageSrc('抽')" alt="" /></span>
+              </strong>
+            </button>
+          </div>
+          <div class="gacha-video-nav-group is-personal">
+            <div class="gacha-video-nav-group-heading">
+              <span>个人策略</span>
+              <small>PERSONAL</small>
+            </div>
+            <button
+              v-for="item in personalNavigationItems"
+              :key="item.id"
+              type="button"
+              class="gacha-video-nav-item is-personal-item"
+              :class="[
+                `is-${item.tone}`,
+                { 'is-active': activeCardName === item.id, 'is-flashing': navigationFlashCardName === item.id },
+              ]"
+              @click="selectVideoCard(item.id)"
+            >
+              <span class="gacha-video-nav-marker">{{ item.marker }}</span>
+              <span class="gacha-video-nav-copy">{{ item.label }}</span>
+              <strong v-if="item.draws !== undefined" class="gacha-video-nav-draw-value">
+                {{ item.draws }}
+                <span class="gacha-video-inline-icon"><img :src="getVideoResourceImageSrc('抽')" alt="" /></span>
+              </strong>
+              <strong v-else-if="item.meta" class="gacha-video-nav-status">
+                <span>{{ item.meta }}</span>
+                <span v-if="item.navDraws !== undefined" class="gacha-video-nav-status-draw">
+                  {{ item.navDraws }}
+                  <span class="gacha-video-inline-icon"><img :src="getVideoResourceImageSrc('抽')" alt="" /></span>
+                </span>
+              </strong>
+            </button>
+          </div>
         </nav>
 
         <section class="gacha-video-detail">
+          <div :key="activeCardName" class="gacha-video-detail-content">
           <template v-if="activeCardName === 'calculationResult'">
             <div class="gacha-video-overview-hero">
-              <span>可用抽数</span>
-              <strong>{{ numberFloor(calculationResult.totalDraw, 0) }}</strong>
-              <span class="gacha-video-hero-icon is-artwork" aria-label="寻访凭证">
-                <img src="/image/temp/permit.webp" alt="" />
-              </span>
-            </div>
-            <div class="gacha-video-overview-grid">
-              <div class="gacha-video-source-list">
-                <div v-for="source in videoOverviewSources" :key="source.label" class="gacha-video-source-row">
-                  <span :class="`gacha-video-source-dot is-${source.tone}`"></span>
-                  <span>{{ source.label }}</span>
-                  <strong v-if="source.draws !== null" class="gacha-video-draw-value">
-                    <span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>
-                    {{ source.draws }}
-                  </strong>
-                </div>
+              <div v-if="videoPoolImages[selectedVideoPool]" class="gacha-video-overview-backdrop" aria-hidden="true">
+                <img :src="videoPoolImages[selectedVideoPool]" alt="" />
               </div>
-              <div class="gacha-video-resource-list">
-                <div class="gacha-video-resource-item is-artwork">
-                  <span class="gacha-video-resource-icon" aria-label="源石">
-                    <img src="/image/icon/至纯源石.png" alt="" />
-                  </span>
-                  <strong>{{ calculationResult.originium }}</strong>
-                  <small><span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>{{ singleResourceDraws.originium }}</small>
+              <span class="gacha-video-overview-kicker">可用抽数</span>
+              <div class="gacha-video-overview-range" aria-label="计算时间范围">
+                <span>FROM</span>
+                <b>{{ videoOverviewTimeAnchor.from }}</b>
+                <i aria-hidden="true">→</i>
+                <span>TO</span>
+                <b>{{ videoOverviewTimeAnchor.to }}</b>
+              </div>
+              <div class="gacha-video-overview-total-row">
+                <div class="gacha-video-overview-total">
+                  <strong>{{ numberFloor(calculationResult.totalDraw, 0) }}</strong>
+                  <small>月卡党 <b>+{{ videoMonthlyCardBonusDraw }}</b> 抽</small>
                 </div>
-                <div class="gacha-video-resource-item">
-                  <span class="gacha-video-resource-icon" aria-label="合成玉"><span class="bg-icon_4003"></span></span>
-                  <strong>{{ calculationResult.orundum }}</strong>
-                  <small><span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>{{ singleResourceDraws.orundum }}</small>
-                </div>
-                <div class="gacha-video-resource-item">
-                  <span class="gacha-video-resource-icon" aria-label="寻访凭证"><span class="bg-icon_7003"></span></span>
-                  <strong>{{ calculationResult.gachaTicket }}</strong>
-                  <small><span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>{{ singleResourceDraws.gachaTicket }}</small>
-                </div>
-                <div class="gacha-video-resource-item is-artwork">
-                  <span class="gacha-video-resource-icon" aria-label="十连寻访凭证">
-                    <img src="/image/icon/道具_十连寻访凭证.png" alt="" />
-                  </span>
-                  <strong>{{ calculationResult.tenGachaTicket }}</strong>
-                  <small><span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>{{ singleResourceDraws.tenGachaTicket }}</small>
-                </div>
+                <span class="gacha-video-hero-icon is-artwork" aria-label="寻访凭证">
+                  <img src="/image/icon/gacha-calculator/single-permit.png" alt="" />
+                </span>
               </div>
             </div>
             <div class="gacha-video-probability-list">
@@ -2535,41 +3843,97 @@ function sharePage() {
                 <strong>{{ formatProbability(metric.value) }}</strong>
               </div>
             </div>
+            <div class="gacha-video-overview-grid">
+              <div class="gacha-video-source-list">
+                <div v-for="source in videoOverviewSources" :key="source.label" class="gacha-video-source-row">
+                  <span :class="`gacha-video-source-dot is-${source.tone}`"></span>
+                  <span>{{ source.label }}</span>
+                  <strong class="gacha-video-draw-value gacha-video-source-draw">
+                    {{ source.draws }}
+                    <span class="gacha-video-inline-icon"><img :src="getVideoResourceImageSrc('抽')" alt="" /></span>
+                  </strong>
+                </div>
+              </div>
+              <div class="gacha-video-resource-list">
+                <div class="gacha-video-resource-item is-artwork">
+                  <span class="gacha-video-resource-icon" aria-label="源石">
+                    <img src="/image/icon/gacha-calculator/originium.png" alt="" />
+                  </span>
+                  <strong>{{ calculationResult.originium }}</strong>
+                </div>
+                <div class="gacha-video-resource-item is-artwork">
+                  <span class="gacha-video-resource-icon" aria-label="合成玉">
+                    <img src="/image/icon/gacha-calculator/orundum.png" alt="" />
+                  </span>
+                  <strong>{{ calculationResult.orundum }}</strong>
+                </div>
+                <div class="gacha-video-resource-item is-artwork">
+                  <span class="gacha-video-resource-icon" aria-label="寻访凭证">
+                    <img src="/image/icon/gacha-calculator/single-permit.png" alt="" />
+                  </span>
+                  <strong>{{ calculationResult.gachaTicket }}</strong>
+                </div>
+                <div class="gacha-video-resource-item is-artwork">
+                  <span class="gacha-video-resource-icon" aria-label="十连寻访凭证">
+                    <img src="/image/icon/gacha-calculator/ten-permit.png" alt="" />
+                  </span>
+                  <strong>{{ calculationResult.tenGachaTicket }}</strong>
+                </div>
+              </div>
+            </div>
           </template>
 
           <template v-else-if="activeCardName === 'daily'">
             <div class="gacha-video-section-hero">
               <span>日常积累</span>
               <strong>{{ numberFloor(calculationResult.dailyTotalDraw, 0) }}</strong>
-              <span class="gacha-video-hero-icon" aria-label="寻访凭证"><span class="bg-icon_7003"></span></span>
+              <span class="gacha-video-hero-icon" aria-label="寻访凭证"><img :src="getVideoResourceImageSrc('抽')" alt="" /></span>
               <small>从今天开始的稳定收入</small>
             </div>
             <div class="gacha-video-detail-rows">
               <div v-for="row in videoDailyRows" :key="row.label" class="gacha-video-detail-row">
                 <span>{{ row.label }}</span>
-                <strong>{{ row.value }}</strong>
-                <small class="gacha-video-unit-icon" :aria-label="row.unit">
-                  <span :class="getVideoResourceIconClass(row.unit)"></span>
-                </small>
+                <div class="gacha-video-detail-resource-values">
+                  <span v-for="resource in row.resources" :key="resource.unit" class="gacha-video-detail-resource-value">
+                    <strong>{{ resource.value }}</strong>
+                    <small class="gacha-video-unit-icon" :aria-label="resource.unit">
+                      <img :src="getVideoResourceImageSrc(resource.unit)" alt="" />
+                    </small>
+                  </span>
+                </div>
               </div>
             </div>
           </template>
 
           <template v-else-if="activeCardName === 'custom'">
-            <div class="gacha-video-section-hero">
-              <span>兑换与搓玉</span>
-              <strong>{{ numberFloor(calculationResult.produceOrundumTotalDraw, 0) }}</strong>
-              <span class="gacha-video-hero-icon" aria-label="寻访凭证"><span class="bg-icon_7003"></span></span>
-              <small>按当前选择折算</small>
+            <div class="gacha-video-orundum-heading">
+              <span>搓玉</span>
+              <strong>共 {{ videoOrundumAp }} 理智</strong>
+              <small>{{ videoOverviewTimeAnchor.from }} — {{ videoOverviewTimeAnchor.to }} · 每日 240 理智</small>
             </div>
-            <div class="gacha-video-three-columns">
-              <div v-for="row in videoCustomRows" :key="row.label" class="gacha-video-stat-column">
-                <span>{{ row.label }}</span>
-                <strong>{{ row.value }}</strong>
-                <small class="gacha-video-unit-icon" :aria-label="row.unit">
-                  <span :class="getVideoResourceIconClass(row.unit)"></span>
-                </small>
-              </div>
+            <div class="gacha-video-orundum-strategy-list">
+              <button
+                v-for="strategy in videoOrundumStrategyCards"
+                :key="strategy.id"
+                type="button"
+                class="gacha-video-orundum-strategy"
+                :class="{ 'is-selected': strategy.isSelected }"
+                :aria-pressed="strategy.isSelected"
+                @click="selectVideoOrundumStrategy(strategy.id)"
+              >
+                <h3>{{ strategy.label }}</h3>
+                <p>
+                  {{ strategy.coefficient }} 合成玉 / 理智
+                  <span v-if="strategy.id === 'event-stage'">（估算）</span>
+                </p>
+                <div class="gacha-video-orundum-strategy-output">
+                  <strong>{{ strategy.orundum }}</strong>
+                  <span class="gacha-video-unit-icon" aria-label="合成玉">
+                    <img :src="getVideoResourceImageSrc('合成玉')" alt="" />
+                  </span>
+                </div>
+                <span class="gacha-video-orundum-strategy-check" aria-hidden="true">✓</span>
+              </button>
             </div>
           </template>
 
@@ -2577,17 +3941,20 @@ function sharePage() {
             <div class="gacha-video-section-hero">
               <span>活动获得</span>
               <strong>{{ numberFloor(calculationResult.activityTotalDraw, 0) }}</strong>
-              <span class="gacha-video-hero-icon" aria-label="寻访凭证"><span class="bg-icon_7003"></span></span>
-              <small>当前已纳入的活动</small>
+              <span class="gacha-video-hero-icon" aria-label="寻访凭证"><img :src="getVideoResourceImageSrc('抽')" alt="" /></span>
+              <small>已纳入的活动资源</small>
             </div>
-            <div v-if="videoActivityRows.length" class="gacha-video-event-list">
-              <div v-for="activity in videoActivityRows" :key="activity.label" class="gacha-video-event-row">
-                <span>{{ activity.category }}</span>
-                <strong>{{ activity.label }}</strong>
-                <em class="gacha-video-draw-value">
-                  <span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>
-                  +{{ activity.draws }}
-                </em>
+            <div v-if="videoActivityResourceRows.length" class="gacha-video-detail-rows">
+              <div v-for="row in videoActivityResourceRows" :key="row.label" class="gacha-video-detail-row">
+                <span>{{ row.label }}</span>
+                <div class="gacha-video-detail-resource-values">
+                  <span v-for="resource in row.resources" :key="resource.unit" class="gacha-video-detail-resource-value">
+                    <strong>{{ resource.value }}</strong>
+                    <small class="gacha-video-unit-icon" :aria-label="resource.unit">
+                      <img :src="getVideoResourceImageSrc(resource.unit)" alt="" />
+                    </small>
+                  </span>
+                </div>
               </div>
             </div>
             <div v-else class="gacha-video-empty-state">当前没有纳入活动</div>
@@ -2597,17 +3964,24 @@ function sharePage() {
             <div class="gacha-video-section-hero">
               <span>其他资源</span>
               <strong>{{ numberFloor(calculationResult.otherTotalDraw, 0) }}</strong>
-              <span class="gacha-video-hero-icon" aria-label="寻访凭证"><span class="bg-icon_7003"></span></span>
-              <small>维护、邮件与其他奖励</small>
+              <span class="gacha-video-hero-icon" aria-label="寻访凭证"><img :src="getVideoResourceImageSrc('抽')" alt="" /></span>
+              <small>维护与其他奖励</small>
             </div>
-            <div v-if="videoOtherRows.length" class="gacha-video-event-list">
-              <div v-for="reward in videoOtherRows" :key="reward.label" class="gacha-video-event-row">
-                <span>资源</span>
-                <strong>{{ reward.label }}</strong>
-                <em class="gacha-video-draw-value">
-                  <span class="gacha-video-inline-icon"><span class="bg-icon_7003"></span></span>
-                  +{{ reward.draws }}
-                </em>
+            <div
+              v-if="videoOtherResourceRows.length"
+              class="gacha-video-detail-rows"
+              :class="{ 'is-summer-compact-grid': selectedVideoPool === 'summer' }"
+            >
+              <div v-for="row in videoOtherResourceRows" :key="row.label" class="gacha-video-detail-row">
+                <span>{{ row.label }}</span>
+                <div class="gacha-video-detail-resource-values">
+                  <span v-for="resource in row.resources" :key="resource.unit" class="gacha-video-detail-resource-value">
+                    <strong>{{ resource.value }}</strong>
+                    <small class="gacha-video-unit-icon" :aria-label="resource.unit">
+                      <img :src="getVideoResourceImageSrc(resource.unit)" alt="" />
+                    </small>
+                  </span>
+                </div>
               </div>
             </div>
             <div v-else class="gacha-video-empty-state">当前没有其他资源</div>
@@ -2615,26 +3989,41 @@ function sharePage() {
 
           <template v-else-if="activeCardName === 'recharge'">
             <div class="gacha-video-plan-heading">
-              <span>氪金方案</span>
-              <strong>预设组合</strong>
-              <small>月卡与礼包组合</small>
+              <strong>高性价比氪金方案</strong>
+              <small>理性消费，适度氪金</small>
             </div>
-            <div class="gacha-video-recharge-plan-list">
-              <article v-for="(plan, index) in videoRechargePlans" :key="plan.id" class="gacha-video-recharge-plan">
-                <span class="gacha-video-plan-index">0{{ index + 1 }}</span>
-                <h3>{{ plan.title }}</h3>
-                <div class="gacha-video-plan-tokens">
-                  <span v-for="item in plan.items" :key="item" class="gacha-video-plan-token">
-                    <i></i>
-                    {{ item }}
+            <div class="gacha-video-recharge-plan-content">
+              <div class="gacha-video-recharge-plan-list">
+                <button
+                  v-for="plan in videoRechargePlans"
+                  :key="plan.id"
+                  type="button"
+                  class="gacha-video-recharge-plan"
+                  :class="[`is-${plan.type}`, { 'is-selected': selectedVideoRechargePlan.id === plan.id }]"
+                  :aria-pressed="selectedVideoRechargePlan.id === plan.id"
+                  @click="selectVideoRechargePlan(plan.id)"
+                >
+                  <strong class="gacha-video-recharge-price">{{ formatVideoRechargePrice(plan.price) }}</strong>
+                  <h3>{{ plan.title }}</h3>
+                  <span class="gacha-video-recharge-plan-draw">
+                    <strong>{{ formatVideoRechargeDraws(plan.draws) }}</strong>
+                    <span class="gacha-video-unit-icon" aria-label="寻访凭证">
+                      <img :src="getVideoResourceImageSrc('抽')" alt="" />
+                    </span>
                   </span>
-                </div>
-              </article>
+                  <span class="gacha-video-recharge-plan-check" aria-hidden="true">✓</span>
+                </button>
+              </div>
+              <p class="gacha-video-recharge-plan-note">
+                仅列出性价比高于每月寻访组合包的条目，其他礼包性价比可参阅一图流礼包性价比模块
+              </p>
             </div>
           </template>
+          </div>
         </section>
 
         <template v-if="settingsTab === 'data'">
+        <teleport to="#gacha-video-data-controls">
         <!--计算结果-->
         <div class="collapse-group1" id="result-box" data-video="pro">
       <!-- <div class="collapse-group-content"> -->
@@ -2714,7 +4103,7 @@ function sharePage() {
                   <td>抽</td>
                 </tr>
                 <tr>
-                  <td>搓玉/黄绿票</td>
+                  <td>搓玉</td>
                   <td>{{ numberFloor(calculationResult.produceOrundumTotalDraw, 0) }}</td>
                   <td>抽</td>
                 </tr>
@@ -2891,8 +4280,6 @@ function sharePage() {
             </div>
           </template>
           <!-- 时间选择器 -->
-          <div>{{ selectedCertificatePackList }}</div>
-
           <div>{{ selectedPackCollect }}</div>
 
           <div>{{ userConfigV2 }}</div>
@@ -3097,126 +4484,27 @@ function sharePage() {
               <span>{{ dailyReward.checkInGachaTicket }}</span>
             </div>
           </div>
-          <span class="tip"> 黄票换抽计算整合在下面</span>
         </el-collapse-item>
 
-        <!--搓玉/黄票资源-->
+        <!--搓玉-->
         <el-collapse-item name="custom" class="collapse-item">
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 搓玉/绿票/黄票换抽&emsp;{{ numberFloor(calculationResult.produceOrundumTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 搓玉 </span>
             </div>
           </template>
-          <!-- 黄票换抽 -->
-          <div class="collapse-content-subheading"><span></span>黄票换抽</div>
-          <el-checkbox-button
-            v-for="(pack, index) in certificatePackList"
-            :key="index"
-            :value="pack.id"
-            size="small"
-            v-show="rewardIsExpired(pack)"
-            v-model="selectedCertificatePackList"
-            @change="gachaResourcesCalculation"
+          <div class="collapse-content-subheading"><span></span>搓玉策略</div>
+          <el-radio-group
+            :model-value="videoOrundumStrategy"
+            class="gacha-video-orundum-control"
+            @change="selectVideoOrundumStrategy"
           >
-            <div class="checkbox-button">
-              <span class="checkbox-button-pack-label">{{ pack.officialName }}</span>
-              <div class="checkbox-button-pack-gacha-resources">
-                <div class="image-sprite">
-                  <div class="bg-icon_7003"></div>
-                </div>
-                <span>{{ pack.gachaTicket }}</span>
-                <div class="image-sprite">
-                  <div class="bg-icon_7004"></div>
-                </div>
-                <span>{{ pack.tenGachaTicket }}</span>
-              </div>
-            </div>
-          </el-checkbox-button>
-          <v-divider></v-divider>
-          <!-- 换不完38抽 -->
-          <el-checkbox-group style="margin: 4px" @change="gachaResourcesCalculation" v-model="selectedCertificateT2Group" size="small">
-            <el-checkbox-button v-for="(price, index) in certificateT2Group" :key="price" :value="price">
-              <div class="checkbox-button">
-                <span>{{ price.text }}</span>
-                <div class="checkbox-button-gacha-resources">
-                  <div class="image-sprite">
-                    <div class="bg-icon_7003"></div>
-                  </div>
-                  <span>{{ certificateT2Group[index].draw }}</span>
-                </div>
-              </div>
-            </el-checkbox-button>
-          </el-checkbox-group>
-          <span class="tip">越换越便宜，咱尽量还是一次换完吧</span>
-          <div class="collapse-content-subheading"><span></span>搓玉计算</div>
-
-          <div class="resources-line">
-            <input v-model="produceOrundum.ap" @input="gachaResourcesCalculation" />
-            <span>用于搓玉的理智 x </span>
-            <input v-model="produceOrundum.coEfficient" @input="gachaResourcesCalculation" />
-            <span>搓玉系数 = </span>
-            <div class="image-sprite">
-              <div class="bg-icon_4003"></div>
-            </div>
-            <span>{{ produceOrundum.outputByAp }}</span>
-          </div>
-
-          <el-checkbox-group>
-            <el-checkbox-button @click="updateApWithoutPass">
-              <div style="padding: 4px">{{ dailyReward.daily }}天x240={{ dailyReward.daily * 240 }}理智</div>
-            </el-checkbox-button>
-            <el-checkbox-button @click="updateApWithPass">
-              <div style="padding: 4px">{{ dailyReward.daily }}天x320={{ dailyReward.daily * 320 }}理智</div>
-            </el-checkbox-button>
-          </el-checkbox-group>
-          <span class="tip">请根据自身情况填入合适的理智数</span>
-          <el-checkbox-group>
-            <el-checkbox-button v-for="stage in coEfficientList" :key="coEfficient" :value="coEfficient" @click="updateCoEfficient(stage.coEfficient)">
-              <div style="padding: 4px">{{ stage.stage }}({{ stage.coEfficient }})</div>
-            </el-checkbox-button>
-          </el-checkbox-group>
-          <span class="tip">搓玉系数：1理智可搓多少玉，1-7为1.09，活动关请去主页查询</span>
-
-          <div class="resources-line">
-            <input v-model="produceOrundum.itemId30012" @input="gachaResourcesCalculation" />
-            <span>个固源岩 + </span>
-            <input v-model="produceOrundum.itemId30062" @input="gachaResourcesCalculation" />
-            <span>个装置 + </span>
-            <span> {{ produceOrundum.itemId4001 }}龙门币 = </span>
-            <div class="image-sprite">
-              <div class="bg-icon_4003"></div>
-            </div>
-            <span>{{ produceOrundum.outputByItem }}</span>
-          </div>
-
-          <div class="collapse-content-subheading"><span></span> 绿票商店第三层</div>
-
-          <div class="resources-line">
-            <span>现有绿票</span>
-            <input v-model="certificateStoreF3.certificates" @input="gachaResourcesCalculation" />
-            <span> ，有{{ certificateStoreF3.disposableCertificate }}绿票可换 </span>
-            <div class="image-sprite">
-              <div class="bg-icon_4003"></div>
-            </div>
-            <span>{{ certificateStoreF3.orundum }}</span>
-          </div>
-
-          <el-checkbox-group
-            class="certificate-store-f3-group"
-            v-model="selectedCertificateStoreF3Group"
-            size="small"
-            @change="handleCertificateStoreF3GroupChange"
-          >
-            <el-checkbox-button v-for="option in certificateStoreF3Options" :key="option.id" :value="option.id">
-              <div class="certificate-store-f3-button">
-                <span>{{ option.text }}</span>
-              </div>
-            </el-checkbox-button>
-          </el-checkbox-group>
-
-          <span class="tip">未换完的项目会从现有绿票中扣除：第一层1490，二层单抽和公招1200，二层其余9300</span>
-          <span class="tip">鉴于第二层有不少性价比较低的物品，建议囤够2w以上绿票再考虑绿票换玉</span>
+            <el-radio-button v-for="strategy in VIDEO_ORUNDUM_STRATEGIES" :key="strategy.id" :value="strategy.id">
+              {{ strategy.label }}
+            </el-radio-button>
+          </el-radio-group>
+          <span class="tip">按起始日期至结束日期、每日 240 理智计算；选择后立即计入总览。</span>
         </el-collapse-item>
 
         <!--潜在资源-->
@@ -3361,7 +4649,7 @@ function sharePage() {
         </el-collapse-item>
 
         <!--氪金方案-->
-        <el-collapse-item name="recharge" class="collapse-item">
+        <el-collapse-item v-if="false" name="recharge" class="collapse-item">
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
@@ -3461,6 +4749,61 @@ function sharePage() {
           </div>
         </el-collapse-item>
 
+        <el-collapse-item name="recharge" class="collapse-item">
+          <template #title>
+            <div class="flex align-center">
+              <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
+              <span class="collapse-title-font"> 氪金方案 </span>
+            </div>
+          </template>
+          <div class="gacha-video-recharge-editor">
+            <div class="gacha-video-recharge-editor-target">
+              <span>编辑卡池</span>
+              <el-select v-model="editingVideoRechargePoolId" size="small" aria-label="正在编辑的氪金方案卡池">
+                <el-option
+                  v-for="pool in videoPoolOptions"
+                  :key="pool.id"
+                  :label="pool.disabled ? `${pool.title}（未开放）` : pool.title"
+                  :value="pool.id"
+                />
+              </el-select>
+            </div>
+            <div class="gacha-video-recharge-editor-fixed">
+              <span>固定方案</span>
+              <p>¥ 0　无氪　不额外购买资源</p>
+              <p>月卡按自定义开始日期至当前卡池结束日期自动计算，与总览加抽一致。</p>
+            </div>
+            <div class="gacha-video-recharge-editor-labels">
+              <span>价格</span>
+              <span>方案名</span>
+              <span>资源</span>
+            </div>
+            <div
+              v-for="plan in editingVideoRechargePlans"
+              :key="plan.id"
+              class="gacha-video-recharge-editor-row"
+            >
+              <el-input-number v-model="plan.price" :min="0" :step="1" :precision="0" controls-position="right" />
+              <el-input v-model="plan.title" placeholder="方案名" />
+              <el-input-number v-model="plan.draws" :min="0" :step="0.1" :precision="1" controls-position="right" />
+              <el-tooltip content="删除方案" placement="top">
+                <el-button
+                  :icon="Delete"
+                  circle
+                  plain
+                  aria-label="删除方案"
+                  @click="removeVideoRechargePlan(plan.id)"
+                />
+              </el-tooltip>
+            </div>
+            <div class="gacha-video-recharge-editor-actions">
+              <el-tooltip content="新增方案" placement="top">
+                <el-button :icon="Plus" circle plain aria-label="新增方案" @click="addVideoRechargePlan()" />
+              </el-tooltip>
+            </div>
+          </div>
+        </el-collapse-item>
+
         <!--活动获得-->
         <el-collapse-item name="activity" class="collapse-item">
           <template #title>
@@ -3524,9 +4867,23 @@ function sharePage() {
             <span class="collapse-title-font"> 相关链接 </span>
           </template>
         </el-collapse-item>
-      </el-collapse>
+        </el-collapse>
         </div>
+        </teleport>
         </template>
+      </div>
+      <div v-if="stageReferenceGuidesVisible" class="gacha-card-stage-reference" aria-hidden="true"></div>
+      <div v-if="stageLogoImage" class="gacha-card-stage-logo" aria-hidden="true">
+        <img :src="stageLogoImage" alt="" />
+      </div>
+      <div
+        v-show="customStageCursorEnabled && stageCursorVisible"
+        ref="stageCursorElement"
+        class="gacha-card-stage-cursor"
+        aria-hidden="true"
+      >
+        <span class="gacha-card-stage-cursor-shape"></span>
+      </div>
       </div>
     </section>
 
@@ -3534,10 +4891,18 @@ function sharePage() {
 </template>
 
 <style scoped>
+@font-face {
+  font-family: "GachaVideoSerial";
+  src: url("../../assets/fonts/alibaba-sans/AlibabaSans-Black.otf") format("opentype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 900;
+}
+
 .gacha-card-editor {
   display: flex;
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
+  min-width: 0;
   align-items: start;
   gap: 28px;
   padding: 12px;
@@ -3547,13 +4912,148 @@ function sharePage() {
 
 .gacha-card-stage {
   order: 1;
-  width: 1960px;
-  height: 1120px;
-  padding: 20px;
+  width: var(--gacha-preview-stage-width);
+  height: var(--gacha-preview-stage-height);
+  flex: 0 0 var(--gacha-preview-stage-width);
+  padding: 0;
   box-sizing: border-box;
   outline: 1px solid var(--c-border-color);
   overflow: hidden;
   box-shadow: 0 8px 24px var(--c-box-shadow-color);
+}
+
+.gacha-card-stage.has-custom-stage-cursor,
+.gacha-card-stage.has-custom-stage-cursor * {
+  cursor: none !important;
+}
+
+.gacha-card-stage-canvas {
+  position: relative;
+  width: 1960px;
+  height: 1120px;
+  overflow: hidden;
+  padding: 20px;
+  background-color: var(--gacha-stage-background-color);
+  box-sizing: border-box;
+  isolation: isolate;
+  transform: scale(var(--gacha-preview-scale));
+  transform-origin: top left;
+}
+
+.gacha-card-stage-background,
+.gacha-card-stage-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gacha-card-stage-background {
+  z-index: 0;
+  overflow: hidden;
+}
+
+.gacha-card-stage-background img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(var(--gacha-stage-background-image-blur)) brightness(var(--gacha-stage-background-image-brightness))
+    saturate(var(--gacha-stage-background-image-saturation));
+  opacity: var(--gacha-stage-background-image-opacity);
+  transform-origin: center;
+}
+
+.gacha-card-stage-overlay {
+  z-index: 1;
+  background-color: var(--gacha-stage-background-color);
+  opacity: var(--gacha-stage-background-overlay-opacity);
+}
+
+.gacha-card-stage-reference {
+  position: absolute;
+  inset: 20px;
+  z-index: 8;
+  border: 2px solid rgb(255 74 74 / 86%);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 66%),
+    inset 0 0 0 1px rgb(255 255 255 / 66%);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.gacha-card-stage-reference::before,
+.gacha-card-stage-reference::after {
+  position: absolute;
+  content: "";
+  background-color: rgb(255 74 74 / 68%);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 42%);
+}
+
+.gacha-card-stage-reference::before {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+}
+
+.gacha-card-stage-reference::after {
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 1px;
+}
+
+.gacha-card-stage-logo {
+  position: absolute;
+  left: calc(20px + var(--gacha-stage-left-margin) + var(--gacha-stage-logo-left));
+  bottom: var(--gacha-stage-logo-bottom);
+  z-index: 7;
+  width: var(--gacha-stage-logo-width);
+  opacity: var(--gacha-stage-logo-opacity);
+  pointer-events: none;
+}
+
+.gacha-card-stage-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.gacha-card-stage-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 12;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.gacha-card-stage-cursor-shape {
+  position: absolute;
+  top: -15px;
+  left: -15px;
+  display: block;
+  width: 30px;
+  height: 30px;
+  border: var(--gacha-stage-cursor-border-width) solid var(--gacha-stage-cursor-color);
+  border-radius: 0;
+  box-shadow: 0 5px 12px rgb(12 18 26 / 42%);
+  box-sizing: border-box;
+  transform: rotate(45deg);
+}
+
+.gacha-card-stage-cursor-shape::after {
+  position: absolute;
+  inset: -3px;
+  border-radius: 0;
+  content: "";
+  opacity: 0;
+}
+
+.gacha-card-stage-cursor.is-clicking .gacha-card-stage-cursor-shape::after {
+  animation: gacha-stage-cursor-shadow-spread 380ms ease-out both;
 }
 
 .gacha-card-stage.is-data-controls {
@@ -3564,10 +5064,12 @@ function sharePage() {
   --gacha-column-gap: 64px;
   --gacha-left-surface-perspective: 760px;
   --gacha-right-surface-perspective: 1400px;
+  --gacha-stage-accent-color: #356fae;
   position: relative;
   display: block;
   width: 100%;
   height: 100%;
+  z-index: 2;
   padding: var(--gacha-stage-top-margin) var(--gacha-stage-right-margin) var(--gacha-stage-bottom-margin)
     var(--gacha-stage-left-margin);
   box-sizing: border-box;
@@ -3623,35 +5125,9 @@ function sharePage() {
   padding: 14px 0 20px;
 }
 
-.gacha-card-stage-heading {
-  position: absolute;
-  top: calc(var(--gacha-stage-top-margin) - 96px);
-  left: var(--gacha-stage-left-margin);
-  display: flex;
-  align-items: center;
-  height: 72px;
-  color: var(--c-text-color);
-  font-size: 36px;
-  font-weight: 700;
-}
-
-.gacha-card-browser .gacha-card-detail-title {
-  position: absolute;
-  top: calc(var(--gacha-stage-top-margin) - 84px);
-  right: var(--gacha-stage-right-margin);
-  left: calc(var(--gacha-stage-left-margin) + var(--gacha-navigation-width) + var(--gacha-column-gap));
-  display: flex;
-  align-items: center;
-  height: 60px;
-  padding: 0 8px;
-  color: var(--c-text-color);
-  font-size: 30px;
-  font-weight: 600;
-}
-
 .gacha-card-settings {
-  width: 340px;
-  flex: 0 0 340px;
+  min-width: 340px;
+  flex: 1 1 340px;
   border: 1px solid var(--c-border-color);
   border-radius: 8px;
   background-color: var(--c-card-background-color);
@@ -3660,6 +5136,7 @@ function sharePage() {
 
 .gacha-card-settings-video {
   order: 2;
+  height: 1120px;
   max-height: 1120px;
   overflow: auto;
 }
@@ -3669,11 +5146,52 @@ function sharePage() {
 }
 
 .gacha-card-settings-title {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
   padding: 14px 16px;
   border-bottom: 1px solid var(--c-border-color);
+  background-color: var(--c-card-background-color);
   color: var(--c-text-color);
   font-size: 18px;
   font-weight: 600;
+}
+
+.gacha-card-settings-title-heading,
+.gacha-card-settings-transfer-actions {
+  display: flex;
+  align-items: center;
+}
+
+.gacha-card-settings-title-heading {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gacha-card-settings-transfer-actions {
+  gap: 8px;
+}
+
+.gacha-card-settings-file-input {
+  display: none;
+}
+
+.gacha-card-preview-scale {
+  display: flex;
+  width: 100%;
+}
+
+.gacha-card-preview-scale :deep(.el-radio-button) {
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.gacha-card-preview-scale :deep(.el-radio-button__inner) {
+  width: 100%;
 }
 
 .gacha-card-settings-tabs :deep(.el-tabs__header) {
@@ -3697,6 +5215,46 @@ function sharePage() {
   color: var(--c-text-color);
 }
 
+.gacha-card-setting-section-title {
+  margin: 10px 16px 4px;
+  padding: 10px 0 8px;
+  border-bottom: 1px solid color-mix(in srgb, var(--c-border-color) 76%, transparent);
+  color: color-mix(in srgb, var(--c-text-color) 66%, transparent);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.gacha-card-setting-upload-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gacha-stage-cursor-color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.gacha-stage-cursor-color-options :deep(.el-radio-button__inner) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--c-border-color) !important;
+  border-radius: 4px !important;
+  box-shadow: none !important;
+}
+
+.gacha-stage-cursor-color-swatch {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 1px solid rgb(255 255 255 / 58%);
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 18%);
+  box-sizing: border-box;
+}
+
 .gacha-card-setting-row {
   display: flex;
   align-items: center;
@@ -3704,6 +5262,39 @@ function sharePage() {
   min-height: 56px;
   padding: 0 16px;
   color: var(--c-text-color);
+}
+
+.gacha-card-setting-row.is-stacked {
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.gacha-card-setting-crop-target {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gacha-card-setting-crop-target :deep(.el-select) {
+  width: 158px;
+}
+
+.gacha-card-setting-datetime {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) 32px;
+  align-items: center;
+  column-gap: 12px;
+  min-height: 68px;
+  padding: 0 16px;
+  color: var(--c-text-color);
+}
+
+.gacha-card-setting-datetime :deep(.el-date-editor) {
+  width: 100%;
 }
 
 .gacha-card-setting-range {
@@ -3729,13 +5320,16 @@ function sharePage() {
   width: var(--gacha-navigation-width);
   flex-direction: column;
   gap: 14px;
+  opacity: var(--gacha-navigation-opacity);
   transform: perspective(var(--gacha-left-surface-perspective)) rotateY(var(--gacha-left-perspective));
   transform-origin: right center;
+  translate: 0 0;
+  will-change: transform;
 }
 
 .gacha-video-pool-selector {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
   gap: 12px;
   margin-bottom: 6px;
 }
@@ -3761,6 +5355,15 @@ function sharePage() {
   box-shadow: 0 12px 22px var(--c-box-shadow-color);
 }
 
+.gacha-video-pool-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.gacha-video-pool-button:disabled:hover {
+  box-shadow: none;
+}
+
 .gacha-video-pool-button.is-active {
   border-color: var(--el-color-primary);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--el-color-primary) 24%, transparent), 0 12px 22px var(--c-box-shadow-color);
@@ -3784,8 +5387,16 @@ function sharePage() {
   object-fit: cover;
 }
 
+.gacha-video-pool-image img {
+  transform-origin: center;
+  transition:
+    object-position 160ms ease,
+    transform 160ms ease;
+}
+
 .gacha-video-pool-button:not(.is-active) .gacha-video-pool-image {
-  filter: saturate(0.28) blur(1px) brightness(0.72);
+  filter: saturate(0.28) blur(var(--gacha-inactive-pool-image-blur)) brightness(0.72)
+    contrast(var(--gacha-inactive-pool-image-contrast));
 }
 
 .gacha-video-pool-copy {
@@ -3794,22 +5405,25 @@ function sharePage() {
   bottom: 0;
   left: 0;
   display: grid;
-  gap: 2px;
-  padding: 10px 11px 9px;
+  height: 69px;
+  align-content: center;
+  gap: 4px;
+  padding: 8px 14px 7px;
   background-color: rgb(0 0 0 / 62%);
+  box-sizing: border-box;
   color: #fff;
   pointer-events: none;
   text-align: left;
 }
 
 .gacha-video-pool-copy strong {
-  font-size: 18px;
+  font-size: 28px;
   line-height: 1.1;
 }
 
 .gacha-video-pool-copy small {
   color: rgb(255 255 255 / 78%);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.1;
 }
 
@@ -3820,19 +5434,81 @@ function sharePage() {
     color-mix(in srgb, var(--c-card-background-color) 76%, #c7d6e8);
 }
 
-.gacha-video-nav-item {
+.gacha-video-nav-group {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.gacha-video-nav-group.is-personal {
+  gap: 10px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.gacha-video-nav-group-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  min-height: 18px;
+  padding: 0 6px;
+  color: color-mix(in srgb, var(--c-text-color) 66%, transparent);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.gacha-video-nav-group-heading small {
+  color: color-mix(in srgb, var(--c-text-color) 46%, transparent);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.gacha-video-nav-group.is-standard .gacha-video-nav-group-heading,
+.gacha-video-nav-group.is-personal .gacha-video-nav-group-heading {
   align-items: center;
-  min-height: 76px;
-  padding: 0 20px;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 0 6px 0 0;
+}
+
+.gacha-video-nav-group.is-standard .gacha-video-nav-group-heading::after,
+.gacha-video-nav-group.is-personal .gacha-video-nav-group-heading::after {
+  height: 1px;
+  flex: 1 1 auto;
+  content: "";
+  background-color: color-mix(in srgb, var(--c-border-color) 76%, transparent);
+}
+
+.gacha-card-stage.has-light-navigation-group-heading .gacha-video-nav-group-heading {
+  color: rgb(255 255 255 / 92%);
+  text-shadow: 0 2px 5px rgb(0 0 0 / 48%);
+}
+
+.gacha-card-stage.has-light-navigation-group-heading .gacha-video-nav-group-heading small {
+  color: rgb(255 255 255 / 68%);
+}
+
+.gacha-card-stage.has-light-navigation-group-heading .gacha-video-nav-group-heading::after {
+  background-color: rgb(255 255 255 / 44%);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 26%);
+}
+
+.gacha-video-nav-item {
+  --gacha-nav-tone: #5e91d5;
+  position: relative;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 88px;
+  padding: 0 22px 0 16px;
   border: 1px solid var(--c-border-color);
-  border-left: 5px solid #5e91d5;
+  border-left: 5px solid var(--gacha-nav-tone);
   border-radius: 6px;
   background-color: var(--c-card-background-color);
   box-shadow: 0 8px 18px var(--c-box-shadow-color);
   color: var(--c-text-color);
   cursor: pointer;
+  overflow: hidden;
   text-align: left;
   transition:
     background-color 160ms ease,
@@ -3841,34 +5517,153 @@ function sharePage() {
   backface-visibility: hidden;
 }
 
+.gacha-video-nav-item.is-overview {
+  --gacha-nav-tone: #7564bb;
+}
+
+.gacha-video-nav-item.is-daily {
+  --gacha-nav-tone: #4f7fd0;
+}
+
+.gacha-video-nav-item.is-activity {
+  --gacha-nav-tone: #c97946;
+}
+
+.gacha-video-nav-item.is-other {
+  --gacha-nav-tone: #74818b;
+}
+
+.gacha-video-nav-item.is-custom {
+  --gacha-nav-tone: #3e9976;
+}
+
+.gacha-video-nav-item.is-recharge {
+  --gacha-nav-tone: #b16b8d;
+}
+
+.gacha-video-nav-item.is-personal-item {
+  grid-template-columns: 78px minmax(0, 1fr) auto;
+  min-height: 88px;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 92%, var(--gacha-nav-tone));
+}
+
 .gacha-video-nav-item:hover {
   box-shadow: 0 12px 24px var(--c-box-shadow-color);
 }
 
 .gacha-video-nav-item.is-active {
-  border-color: var(--el-color-primary);
-  border-left-color: var(--el-color-primary);
-  background-color: color-mix(in srgb, var(--c-card-background-color) 90%, #7ea6dc);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--el-color-primary) 18%, transparent), 0 14px 26px var(--c-box-shadow-color);
+  border-color: color-mix(in srgb, var(--gacha-nav-tone) 82%, var(--c-border-color));
+  border-left-color: var(--gacha-nav-tone);
+  background-color: color-mix(in srgb, var(--c-card-background-color) 84%, var(--gacha-nav-tone));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gacha-nav-tone) 20%, transparent), 0 14px 26px var(--c-box-shadow-color);
 }
 
-.gacha-video-nav-item span {
-  font-size: 21px;
-  font-weight: 600;
-}
-
-.gacha-video-nav-item strong {
-  color: var(--el-color-primary);
-  font-size: 20px;
+.gacha-video-nav-index {
+  color: var(--gacha-nav-tone);
+  font-family: "GachaVideoSerial", "Microsoft YaHei", sans-serif;
+  font-size: 44px;
   font-variant-numeric: tabular-nums;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.gacha-card-stage.is-navigation-number-terminal .gacha-video-nav-index {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 36px;
+}
+
+.gacha-card-stage.is-navigation-number-condensed .gacha-video-nav-index {
+  display: block;
+  transform: scaleX(0.78);
+  transform-origin: left center;
+}
+
+.gacha-video-nav-marker {
+  color: var(--gacha-nav-tone);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 11px;
   font-weight: 700;
+}
+
+.gacha-video-nav-copy {
+  min-width: 0;
+  color: var(--c-text-color);
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 650;
+}
+
+.gacha-video-nav-draw-value,
+.gacha-video-nav-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--gacha-nav-tone);
+  font-size: 32px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.gacha-video-nav-status {
+  min-width: 0;
+  max-width: 224px;
+  gap: 18px;
+  color: color-mix(in srgb, var(--gacha-nav-tone) 84%, var(--c-text-color));
+  font-size: 21px;
+}
+
+.gacha-video-nav-status > span:first-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gacha-video-nav-status-draw {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  color: var(--gacha-nav-tone);
+  font-size: 32px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+}
+
+.gacha-video-nav-status-draw .gacha-video-inline-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.gacha-video-nav-draw-value .gacha-video-inline-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.gacha-video-nav-item::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(90deg, transparent 0 28%, color-mix(in srgb, #fff 68%, transparent) 48%, transparent 68% 100%);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-120%);
+}
+
+.gacha-video-nav-item.is-flashing {
+  animation: gacha-video-nav-flash 460ms ease-out both;
+}
+
+.gacha-video-nav-item.is-flashing::after {
+  animation: gacha-video-nav-scan 460ms ease-out both;
 }
 
 .gacha-video-detail {
   position: absolute;
   top: var(--gacha-stage-top-margin);
   right: calc(var(--gacha-stage-right-margin) + var(--gacha-right-perspective-space));
-  bottom: var(--gacha-stage-bottom-margin);
+  height: var(--gacha-right-card-height);
   left: calc(var(--gacha-stage-left-margin) + var(--gacha-navigation-width) + var(--gacha-column-gap));
   display: flex;
   flex-direction: column;
@@ -3876,13 +5671,74 @@ function sharePage() {
   padding: 54px 64px;
   border: 1px solid var(--c-border-color);
   border-radius: 6px;
-  background-color: var(--c-card-background-color);
+  background-color: var(--gacha-detail-card-background-color);
   box-shadow: 0 20px 42px var(--c-box-shadow-color);
   box-sizing: border-box;
   color: var(--c-text-color);
+  opacity: var(--gacha-detail-card-opacity);
   transform: perspective(var(--gacha-right-surface-perspective)) rotateY(var(--gacha-right-perspective));
   transform-origin: left center;
   transform-style: preserve-3d;
+  translate: 0 0;
+  will-change: transform;
+}
+
+.gacha-video-detail-content {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  animation: gacha-video-detail-content-enter 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.gacha-card-stage.is-pool-switching-out .gacha-video-navigation,
+.gacha-card-stage.is-pool-switching-out .gacha-video-detail,
+.gacha-card-stage.is-pool-switching-in .gacha-video-navigation,
+.gacha-card-stage.is-pool-switching-in .gacha-video-detail {
+  pointer-events: none;
+  will-change: transform, translate, opacity;
+}
+
+.gacha-card-stage.is-pool-switching-out .gacha-video-navigation {
+  opacity: 0.3;
+  translate: -48px 0;
+  transition:
+    translate 160ms cubic-bezier(0.4, 0, 1, 1),
+    opacity 140ms ease-in;
+}
+
+.gacha-card-stage.is-pool-switching-out .gacha-video-detail {
+  opacity: 0.3;
+  translate: 64px 0;
+  transition:
+    translate 160ms cubic-bezier(0.4, 0, 1, 1),
+    opacity 140ms ease-in;
+}
+
+.gacha-card-stage.is-pool-switching-in .gacha-video-navigation {
+  opacity: var(--gacha-navigation-opacity);
+  translate: 0 0;
+  transition:
+    translate 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 220ms ease-out;
+}
+
+.gacha-card-stage.is-pool-switching-in .gacha-video-detail {
+  opacity: var(--gacha-detail-card-opacity);
+  translate: 0 0;
+  transition:
+    translate 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 220ms ease-out;
+}
+
+.gacha-card-stage.has-stage-float .gacha-video-navigation {
+  animation: gacha-video-navigation-float 6s ease-in-out infinite;
+}
+
+.gacha-card-stage.has-stage-float .gacha-video-detail {
+  animation: gacha-video-detail-float 7s ease-in-out infinite;
 }
 
 .gacha-video-overview-hero,
@@ -3890,59 +5746,155 @@ function sharePage() {
   display: grid;
   grid-template-columns: auto auto 1fr;
   align-items: end;
-  column-gap: 18px;
-  min-height: 184px;
+  column-gap: 22px;
+  min-height: 194px;
   padding-bottom: 32px;
   border-bottom: 1px solid var(--c-border-color);
 }
 
-.gacha-video-overview-hero > span:not(.gacha-video-hero-icon),
+.gacha-video-overview-hero {
+  display: flex;
+  position: relative;
+  min-height: 258px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 12px;
+  overflow: hidden;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.gacha-video-overview-hero > :not(.gacha-video-overview-backdrop) {
+  position: relative;
+  z-index: 1;
+}
+
+.gacha-video-overview-backdrop {
+  position: absolute;
+  inset: -26px -38px -26px 26%;
+  overflow: hidden;
+  opacity: 0.7;
+  pointer-events: none;
+  mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 14%) 30%, rgb(0 0 0 / 86%) 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 14%) 30%, rgb(0 0 0 / 86%) 100%);
+}
+
+.gacha-video-overview-backdrop img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.86) contrast(0.94) brightness(0.92);
+  transform-origin: center;
+}
+
+.gacha-video-overview-hero > span:not(.gacha-video-hero-icon):not(.gacha-video-overview-kicker),
 .gacha-video-section-hero > span:not(.gacha-video-hero-icon) {
   grid-column: 1 / -1;
   align-self: start;
   color: color-mix(in srgb, var(--c-text-color) 70%, transparent);
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 600;
 }
 
-.gacha-video-overview-hero strong,
+.gacha-video-overview-kicker {
+  color: color-mix(in srgb, var(--c-text-color) 56%, transparent);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.gacha-video-overview-total > strong,
 .gacha-video-section-hero strong {
-  color: var(--el-color-primary);
-  font-size: 120px;
+  color: var(--gacha-stage-accent-color);
+  font-size: 132px;
   font-variant-numeric: tabular-nums;
   font-weight: 800;
   line-height: 0.88;
+}
+
+.gacha-video-overview-total {
+  display: grid;
+  gap: 14px;
+}
+
+.gacha-video-overview-total-row {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.gacha-video-overview-total-row .gacha-video-hero-icon.is-artwork {
+  margin-bottom: 0;
+}
+
+.gacha-video-overview-total small {
+  color: color-mix(in srgb, var(--c-text-color) 68%, transparent);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.gacha-video-overview-total small b {
+  color: #3e9976;
+  font-size: 30px;
+  font-variant-numeric: tabular-nums;
+}
+
+.gacha-video-overview-range {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  color: color-mix(in srgb, var(--c-text-color) 62%, transparent);
+  font-family: Consolas, "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.gacha-video-overview-range span {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.gacha-video-overview-range b {
+  color: var(--c-text-color);
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.gacha-video-overview-range i {
+  color: color-mix(in srgb, var(--el-color-primary) 68%, transparent);
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 700;
 }
 
 .gacha-video-overview-hero em,
 .gacha-video-section-hero em {
   padding-bottom: 6px;
   color: var(--c-text-color);
-  font-size: 30px;
+  font-size: 36px;
   font-style: normal;
   font-weight: 600;
 }
 
 .gacha-video-hero-icon {
   display: inline-flex;
-  width: 54px;
-  height: 54px;
+  width: 64px;
+  height: 64px;
   align-items: center;
   justify-content: center;
   margin-bottom: 2px;
 }
 
-.gacha-video-hero-icon > span {
-  display: block;
-}
-
 .gacha-video-hero-icon.is-artwork {
-  width: 96px;
-  height: 96px;
+  width: 112px;
+  height: 112px;
   margin-bottom: -10px;
 }
 
-.gacha-video-hero-icon.is-artwork img {
+.gacha-video-hero-icon img {
   display: block;
   width: 100%;
   height: 100%;
@@ -3950,19 +5902,29 @@ function sharePage() {
   filter: drop-shadow(0 10px 12px color-mix(in srgb, #1b2430 35%, transparent));
 }
 
-.gacha-video-overview-hero small,
-.gacha-video-section-hero small {
+.gacha-video-overview-hero > small,
+.gacha-video-section-hero > small,
+.gacha-video-orundum-heading > small {
   justify-self: end;
-  padding-bottom: 8px;
-  color: color-mix(in srgb, var(--c-text-color) 68%, transparent);
-  font-size: 20px;
+}
+
+.gacha-video-overview-hero > small,
+.gacha-video-section-hero > small,
+.gacha-video-orundum-heading > small,
+.gacha-video-plan-heading > small {
+  padding-bottom: 6px;
+  color: color-mix(in srgb, var(--c-text-color) 64%, transparent);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: nowrap;
 }
 
 .gacha-video-overview-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: 56px;
-  padding: 42px 0;
+  grid-template-columns: minmax(390px, 0.64fr) minmax(0, 1.36fr);
+  gap: 38px;
+  padding: 38px 0 0;
 }
 
 .gacha-video-source-list {
@@ -3973,24 +5935,34 @@ function sharePage() {
 
 .gacha-video-source-row {
   display: grid;
-  grid-template-columns: 14px minmax(0, 1fr) auto;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
   align-items: center;
-  column-gap: 14px;
-  min-height: 48px;
-  padding-bottom: 10px;
+  column-gap: 18px;
+  min-height: 62px;
+  padding-bottom: 14px;
   border-bottom: 1px solid color-mix(in srgb, var(--c-border-color) 70%, transparent);
-  font-size: 21px;
+  font-size: 28px;
 }
 
 .gacha-video-source-row strong {
   color: var(--c-text-color);
-  font-size: 24px;
+  font-size: 36px;
   font-variant-numeric: tabular-nums;
 }
 
+.gacha-video-source-row .gacha-video-source-draw {
+  gap: 10px;
+  font-size: 40px;
+}
+
+.gacha-video-source-row .gacha-video-inline-icon {
+  width: 34px;
+  height: 34px;
+}
+
 .gacha-video-source-dot {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
 }
 
@@ -4020,55 +5992,70 @@ function sharePage() {
   gap: 16px;
 }
 
-.gacha-video-resource-item,
-.gacha-video-stat-column {
+.gacha-video-resource-item {
   display: flex;
   min-width: 0;
-  min-height: 116px;
+  min-height: 126px;
   flex-direction: column;
   justify-content: center;
-  padding: 18px 22px;
-  border-left: 4px solid #d5843e;
-  background-color: color-mix(in srgb, var(--c-card-background-color) 84%, #dce7f3);
+  padding: 20px 24px;
+  border: 1px solid color-mix(in srgb, #d5843e 48%, transparent);
+  border-left: 5px solid #d5843e;
+  background-color: color-mix(in srgb, var(--gacha-detail-card-background-color) 72%, #dce7f3);
+  box-shadow: 0 8px 18px rgb(31 49 72 / 12%);
+  box-sizing: border-box;
 }
 
-.gacha-video-resource-item:nth-child(2),
-.gacha-video-stat-column:nth-child(2) {
+.gacha-video-resource-item {
+  min-height: 118px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 16px 18px;
+}
+
+.gacha-video-resource-item:nth-child(2) {
+  border-color: color-mix(in srgb, #4f7fd0 48%, transparent);
   border-left-color: #4f7fd0;
 }
 
-.gacha-video-resource-item:nth-child(3),
-.gacha-video-stat-column:nth-child(3) {
+.gacha-video-resource-item:nth-child(3) {
+  border-color: color-mix(in srgb, #41a77a 48%, transparent);
   border-left-color: #41a77a;
 }
 
 .gacha-video-resource-item:nth-child(4) {
+  border-color: color-mix(in srgb, #b26d92 48%, transparent);
   border-left-color: #b26d92;
 }
 
-.gacha-video-resource-item span,
-.gacha-video-stat-column span {
+.gacha-video-resource-item span {
   color: color-mix(in srgb, var(--c-text-color) 68%, transparent);
-  font-size: 17px;
+  font-size: 20px;
 }
 
-.gacha-video-resource-item strong,
-.gacha-video-stat-column strong {
+.gacha-video-resource-item strong {
   margin-top: 4px;
   color: var(--c-text-color);
-  font-size: 32px;
+  font-size: 42px;
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
 
-.gacha-video-resource-item small,
-.gacha-video-stat-column small {
+.gacha-video-resource-item strong {
+  margin-top: 0;
+  font-size: 52px;
+  white-space: nowrap;
+}
+
+.gacha-video-resource-item small {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   margin-top: 8px;
   color: color-mix(in srgb, var(--c-text-color) 60%, transparent);
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .gacha-video-resource-icon {
@@ -4084,8 +6071,8 @@ function sharePage() {
 }
 
 .gacha-video-resource-item.is-artwork .gacha-video-resource-icon {
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 76px;
 }
 
 .gacha-video-resource-icon img {
@@ -4106,29 +6093,28 @@ function sharePage() {
 }
 
 .gacha-video-inline-icon {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
 }
 
 .gacha-video-unit-icon {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
 }
 
-.gacha-video-inline-icon > span,
-.gacha-video-unit-icon > span {
+.gacha-video-inline-icon > img,
+.gacha-video-unit-icon > img {
   display: block;
-  transform: scale(0.55);
-}
-
-.gacha-video-unit-icon > span {
-  transform: scale(0.72);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 4px color-mix(in srgb, #1b2430 24%, transparent));
 }
 
 .gacha-video-draw-value {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
   white-space: nowrap;
 }
 
@@ -4136,199 +6122,453 @@ function sharePage() {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 22px;
-  margin-top: auto;
+  margin-top: 30px;
 }
 
 .gacha-video-probability-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 76px;
-  padding: 0 24px;
-  border-top: 2px solid #7f78c9;
-  background-color: color-mix(in srgb, var(--c-card-background-color) 90%, #e6e3f7);
+  min-height: 96px;
+  padding: 0 30px;
+  border: 1px solid color-mix(in srgb, #4f7fd0 50%, transparent);
+  border-left: 5px solid #4f7fd0;
+  border-radius: 6px;
+  background-color: color-mix(in srgb, var(--gacha-detail-card-background-color) 70%, #dce7f3);
+  box-shadow: 0 8px 18px rgb(31 49 72 / 14%);
+  box-sizing: border-box;
 }
 
 .gacha-video-probability-item span {
-  color: color-mix(in srgb, var(--c-text-color) 72%, transparent);
-  font-size: 19px;
-  font-weight: 600;
+  color: color-mix(in srgb, var(--c-text-color) 90%, transparent);
+  font-size: 28px;
+  font-weight: 700;
 }
 
 .gacha-video-probability-item strong {
-  color: #6e67b5;
-  font-size: 30px;
+  color: var(--gacha-stage-accent-color);
+  font-size: 44px;
   font-variant-numeric: tabular-nums;
 }
 
-.gacha-video-detail-rows,
-.gacha-video-event-list {
+.gacha-video-probability-item:nth-child(2) {
+  border-color: color-mix(in srgb, #d5843e 50%, transparent);
+  border-left-color: #d5843e;
+  background-color: color-mix(in srgb, var(--gacha-detail-card-background-color) 70%, #f1e2d2);
+}
+
+.gacha-video-probability-item:nth-child(2) strong {
+  color: #b06a36;
+}
+
+.gacha-video-detail-rows {
   display: grid;
-  gap: 14px;
-  margin-top: 38px;
+  gap: 16px;
+  margin-top: 42px;
   overflow: auto;
 }
 
-.gacha-video-detail-row,
-.gacha-video-event-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: baseline;
-  column-gap: 16px;
-  min-height: 62px;
-  padding: 0 20px;
-  border-left: 4px solid #4f7fd0;
-  background-color: color-mix(in srgb, var(--c-card-background-color) 90%, #dce7f3);
+.gacha-video-detail-rows.is-summer-compact-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  margin-top: 30px;
 }
 
-.gacha-video-detail-row span,
-.gacha-video-event-row strong {
+.gacha-video-detail-row {
+  position: relative;
+  z-index: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 20px;
+  min-height: 76px;
+  padding: 0 26px;
+  border: 1px solid color-mix(in srgb, #4f7fd0 44%, transparent);
+  border-left: 5px solid #4f7fd0;
+  background-color: color-mix(in srgb, var(--gacha-detail-card-background-color) 76%, #dce7f3);
+  box-shadow: 0 7px 16px rgb(31 49 72 / 11%);
+  box-sizing: border-box;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.gacha-video-detail-rows.is-summer-compact-grid .gacha-video-detail-row {
+  column-gap: 14px;
+  padding: 0 20px;
+}
+
+.gacha-video-detail-row > span {
   min-width: 0;
   overflow: hidden;
-  font-size: 21px;
+  font-size: 26px;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.gacha-video-detail-row strong,
-.gacha-video-event-row em {
-  color: var(--el-color-primary);
-  font-size: 25px;
-  font-style: normal;
+.gacha-video-detail-rows.is-summer-compact-grid .gacha-video-detail-row > span {
+  font-size: 22px;
+}
+
+.gacha-video-detail-resource-values {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 14px 18px;
+}
+
+.gacha-video-detail-resource-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.gacha-video-detail-resource-value strong {
+  color: var(--gacha-stage-accent-color);
+  font-size: 34px;
   font-variant-numeric: tabular-nums;
+  transition: color 160ms ease;
 }
 
-.gacha-video-detail-row small,
-.gacha-video-event-row span {
-  color: color-mix(in srgb, var(--c-text-color) 60%, transparent);
-  font-size: 17px;
+.gacha-video-detail-rows.is-summer-compact-grid .gacha-video-detail-resource-value strong {
+  font-size: 30px;
 }
 
-.gacha-video-three-columns {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-  margin-top: 46px;
+.gacha-video-detail-resource-value .gacha-video-unit-icon {
+  margin: 0;
 }
 
-.gacha-video-plan-heading {
+.gacha-video-detail-rows.is-summer-compact-grid .gacha-video-unit-icon {
+  width: 36px;
+  height: 36px;
+}
+
+@media (hover: hover) {
+  .gacha-video-detail-row:hover {
+    z-index: 1;
+    border-color: color-mix(in srgb, #356fae 68%, transparent);
+    border-left-color: #356fae;
+    background-color: color-mix(in srgb, var(--gacha-detail-card-background-color) 68%, #d2e2f2);
+    box-shadow: 0 11px 24px rgb(31 49 72 / 18%);
+  }
+
+  .gacha-video-detail-row:hover .gacha-video-detail-resource-value strong {
+    color: color-mix(in srgb, var(--gacha-stage-accent-color) 84%, #183f6b);
+  }
+}
+
+.gacha-video-orundum-heading {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
-  min-height: 184px;
+  min-height: 194px;
   padding-bottom: 32px;
   border-bottom: 1px solid var(--c-border-color);
 }
 
-.gacha-video-plan-heading span {
+.gacha-video-orundum-heading > span {
   grid-column: 1 / -1;
   align-self: start;
   color: color-mix(in srgb, var(--c-text-color) 70%, transparent);
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 600;
 }
 
-.gacha-video-plan-heading strong {
-  color: var(--el-color-primary);
-  font-size: 72px;
+.gacha-video-orundum-heading strong {
+  color: var(--gacha-stage-accent-color);
+  font-size: 70px;
+  font-variant-numeric: tabular-nums;
   line-height: 0.95;
 }
 
-.gacha-video-plan-heading small {
-  padding-bottom: 6px;
+.gacha-video-orundum-strategy-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 50px;
+}
+
+.gacha-video-orundum-strategy {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 300px;
+  flex-direction: column;
+  padding: 30px;
+  overflow: hidden;
+  border: 1px solid var(--c-border-color);
+  border-top: 5px solid #87929f;
+  border-radius: 6px;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 90%, #e2e7eb);
+  color: var(--c-text-color);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.gacha-video-orundum-strategy:nth-child(2) {
+  border-top-color: #d5843e;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 90%, #f1e2d2);
+}
+
+.gacha-video-orundum-strategy:nth-child(3) {
+  border-top-color: #4f7fd0;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 90%, #dce7f3);
+}
+
+.gacha-video-orundum-strategy:hover {
+  transform: translateY(-3px);
+}
+
+.gacha-video-orundum-strategy.is-selected {
+  border-color: var(--el-color-primary);
+  border-top-color: var(--el-color-primary);
+  background-color: color-mix(in srgb, var(--c-card-background-color) 76%, var(--el-color-primary));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--el-color-primary) 22%, transparent);
+}
+
+.gacha-video-orundum-strategy h3 {
+  margin: 0 0 10px;
+  color: var(--c-text-color);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.gacha-video-orundum-strategy p {
+  min-height: 24px;
+  margin: 0;
   color: color-mix(in srgb, var(--c-text-color) 64%, transparent);
   font-size: 20px;
+  line-height: 1.35;
+}
+
+.gacha-video-orundum-strategy-output {
+  display: inline-flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.gacha-video-orundum-strategy-output strong {
+  color: var(--gacha-stage-accent-color);
+  font-size: 58px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.gacha-video-orundum-strategy-output .gacha-video-unit-icon {
+  width: 46px;
+  height: 46px;
+  margin: 0;
+}
+
+.gacha-video-orundum-strategy-check {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--el-color-primary);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  opacity: 0;
+  transform: scale(0.75);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.gacha-video-orundum-strategy.is-selected .gacha-video-orundum-strategy-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.gacha-video-plan-heading {
+  display: flex;
+  min-height: 80px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--c-border-color);
+}
+
+.gacha-video-plan-heading strong {
+  color: var(--gacha-stage-accent-color);
+  font-size: 54px;
+  line-height: 1;
+}
+
+.gacha-video-recharge-plan-content {
+  min-height: 0;
+  flex: 1 1 auto;
+  margin-top: 18px;
+  padding-right: 4px;
+  overflow: auto;
 }
 
 .gacha-video-recharge-plan-list {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-  margin-top: 46px;
-}
-
-.gacha-video-recharge-plan {
-  display: flex;
-  min-width: 0;
-  min-height: 258px;
-  flex-direction: column;
-  padding: 26px;
-  border: 1px solid var(--c-border-color);
-  border-top: 5px solid #7f78c9;
-  border-radius: 6px;
-  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #e6e3f7);
-  box-sizing: border-box;
-}
-
-.gacha-video-recharge-plan:nth-child(2) {
-  border-top-color: #d5843e;
-  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #f1e2d2);
-}
-
-.gacha-video-recharge-plan:nth-child(3) {
-  border-top-color: #4f7fd0;
-  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #dce7f3);
-}
-
-.gacha-video-plan-index {
-  color: color-mix(in srgb, var(--c-text-color) 45%, transparent);
-  font-size: 17px;
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
-}
-
-.gacha-video-recharge-plan h3 {
-  margin: auto 0 22px;
-  color: var(--c-text-color);
-  font-size: 29px;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.gacha-video-plan-tokens {
-  display: flex;
-  flex-wrap: wrap;
+  grid-auto-rows: 88px;
+  align-content: start;
   gap: 10px;
 }
 
-.gacha-video-plan-token {
-  display: inline-flex;
+.gacha-video-recharge-plan {
+  position: relative;
+  display: grid;
   min-width: 0;
+  width: 100%;
+  min-height: 88px;
+  grid-template-columns: 142px minmax(260px, 1.48fr) minmax(170px, 0.52fr);
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border: 1px solid color-mix(in srgb, var(--c-border-color) 82%, transparent);
-  background-color: color-mix(in srgb, var(--c-card-background-color) 72%, transparent);
-  color: color-mix(in srgb, var(--c-text-color) 78%, transparent);
-  font-size: 16px;
-  line-height: 1;
+  column-gap: 30px;
+  padding: 12px 30px;
+  border: 1px solid var(--c-border-color);
+  border-left: 5px solid #7f78c9;
+  border-radius: 6px;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #e6e3f7);
+  color: var(--c-text-color);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+  box-sizing: border-box;
+}
+
+.gacha-video-recharge-plan.is-no-spend {
+  border-left-color: #7d8792;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 90%, #e2e7eb);
+}
+
+.gacha-video-recharge-plan.is-monthly-card {
+  border-left-color: #d5843e;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #f1e2d2);
+}
+
+.gacha-video-recharge-plan.is-custom {
+  border-left-color: #4f7fd0;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #dce7f3);
+}
+
+.gacha-video-recharge-plan:hover {
+  transform: translateY(-2px);
+}
+
+.gacha-video-recharge-plan:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--el-color-primary) 54%, transparent);
+  outline-offset: 3px;
+}
+
+.gacha-video-recharge-plan.is-selected {
+  border-color: var(--el-color-primary);
+  border-left-color: var(--el-color-primary);
+  background-color: color-mix(in srgb, var(--c-card-background-color) 72%, var(--el-color-primary));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--el-color-primary) 20%, transparent);
+}
+
+.gacha-video-recharge-price {
+  color: var(--gacha-stage-accent-color);
+  font-size: 36px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
   white-space: nowrap;
 }
 
-.gacha-video-plan-token i {
-  width: 12px;
-  height: 12px;
-  border: 1px dashed color-mix(in srgb, var(--c-text-color) 48%, transparent);
-  border-radius: 2px;
+.gacha-video-recharge-plan h3 {
+  min-width: 0;
+  margin: 0;
+  color: var(--c-text-color);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
-.gacha-video-stat-column {
-  min-height: 210px;
+.gacha-video-recharge-plan-draw {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 14px;
+  padding-right: 38px;
 }
 
-.gacha-video-event-row {
-  border-left-color: #41a77a;
+.gacha-video-recharge-plan-draw strong {
+  color: var(--c-text-color);
+  font-size: 42px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.gacha-video-recharge-plan-draw .gacha-video-unit-icon {
+  width: 42px;
+  height: 42px;
+  margin: 0;
+}
+
+.gacha-video-recharge-plan-check {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--el-color-primary);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+  opacity: 0;
+  transform: scale(0.75);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.gacha-video-recharge-plan.is-selected .gacha-video-recharge-plan-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.gacha-video-recharge-plan-note {
+  margin: 10px 4px 0;
+  color: color-mix(in srgb, var(--c-text-color) 64%, transparent);
+  font-size: 20px;
+  line-height: 1.4;
 }
 
 .gacha-video-empty-state {
   display: flex;
-  min-height: 220px;
+  min-height: 230px;
   align-items: center;
   justify-content: center;
   margin-top: 38px;
   border: 1px dashed var(--c-border-color);
   color: color-mix(in srgb, var(--c-text-color) 58%, transparent);
-  font-size: 21px;
+  font-size: 26px;
 }
 
 .gacha-video-data-empty {
@@ -4341,6 +6581,74 @@ function sharePage() {
   min-height: 860px;
   padding: 0 16px 20px;
   box-sizing: border-box;
+}
+
+.gacha-video-recharge-editor {
+  display: grid;
+  gap: 12px;
+}
+
+.gacha-video-recharge-editor-target {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+}
+
+.gacha-video-recharge-editor-target > span,
+.gacha-video-recharge-editor-fixed > span {
+  color: color-mix(in srgb, var(--c-text-color) 68%, transparent);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.gacha-video-recharge-editor-fixed {
+  padding: 12px;
+  border-left: 3px solid #d5843e;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #f1e2d2);
+}
+
+.gacha-video-recharge-editor-fixed p {
+  margin: 6px 0 0;
+  color: color-mix(in srgb, var(--c-text-color) 76%, transparent);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.gacha-video-recharge-editor-labels,
+.gacha-video-recharge-editor-row {
+  display: grid;
+  grid-template-columns: 112px minmax(104px, 0.8fr) minmax(150px, 1.35fr) 32px;
+  align-items: center;
+  gap: 8px;
+}
+
+.gacha-video-recharge-editor-labels {
+  padding: 0 4px;
+  color: color-mix(in srgb, var(--c-text-color) 58%, transparent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.gacha-video-recharge-editor-row {
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--c-border-color) 84%, transparent);
+  background-color: color-mix(in srgb, var(--c-card-background-color) 92%, #dce7f3);
+}
+
+.gacha-video-recharge-editor-row :deep(.el-input-number) {
+  width: 100%;
+}
+
+.gacha-video-recharge-editor-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.gacha-video-orundum-control {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 #gacha-video-data-controls :deep(.collapse-group1),
@@ -4373,5 +6681,92 @@ function sharePage() {
 
 #gacha-video-data-controls :deep(.el-collapse-item__content) {
   padding: 14px 0 20px;
+}
+
+@keyframes gacha-video-navigation-float {
+  0%,
+  100% {
+    transform: perspective(var(--gacha-left-surface-perspective)) rotateY(var(--gacha-left-perspective))
+      translate3d(0, var(--gacha-stage-float-negative), 0);
+  }
+
+  50% {
+    transform: perspective(var(--gacha-left-surface-perspective)) rotateY(var(--gacha-left-perspective))
+      translate3d(0, var(--gacha-stage-float-positive), 0);
+  }
+}
+
+@keyframes gacha-video-detail-float {
+  0%,
+  100% {
+    transform: perspective(var(--gacha-right-surface-perspective)) rotateY(var(--gacha-right-perspective))
+      translate3d(0, var(--gacha-stage-float-soft-positive), 0);
+  }
+
+  50% {
+    transform: perspective(var(--gacha-right-surface-perspective)) rotateY(var(--gacha-right-perspective))
+      translate3d(0, var(--gacha-stage-float-soft-negative), 0);
+  }
+}
+
+@keyframes gacha-video-detail-content-enter {
+  from {
+    opacity: 0.7;
+    transform: translate3d(0, 6px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes gacha-stage-cursor-shadow-spread {
+  0% {
+    box-shadow: 0 0 0 0 var(--gacha-stage-cursor-pulse-color);
+    opacity: 0.8;
+  }
+
+  100% {
+    box-shadow: 0 0 0 20px rgb(12 18 26 / 0%);
+    opacity: 0;
+  }
+}
+
+@keyframes gacha-video-nav-flash {
+  0% {
+    filter: brightness(1);
+  }
+
+  35% {
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--gacha-nav-tone) 34%, transparent), 0 16px 30px var(--c-box-shadow-color);
+    filter: brightness(1.24);
+  }
+
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@keyframes gacha-video-nav-scan {
+  0% {
+    opacity: 0;
+    transform: translateX(-120%);
+  }
+
+  18% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(120%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gacha-video-detail-content {
+    animation: none;
+  }
 }
 </style>
