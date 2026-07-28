@@ -92,7 +92,7 @@ import BOSS from "@/components/information/BOSS.vue";
                   target="_blank"
                   type="primary"
                 >
-                  <el-text tag="ins" type="primary">【ISW-DF “命运的宠儿”】</el-text>
+                  【ISW-DF “命运的宠儿”】
                 </el-link>
                 ，通过此关卡达成结局
               </div>
