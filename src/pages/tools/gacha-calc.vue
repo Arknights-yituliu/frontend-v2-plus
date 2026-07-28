@@ -800,6 +800,8 @@ let pieChartData = ref([
 let calculationResult = ref({
   //总抽数
   totalDraw: 0,
+  //仅用于开发模式显示的精确总抽数
+  preciseTotalDraw: 0,
   //充值总额
   totalAmountOfRecharge: 0,
   //月均氪金
@@ -1393,11 +1395,14 @@ function gachaResourcesCalculation() {
     }
   }
 
-  calculationResult.value.totalDraw = Math.floor(
-    calculationResult.value.orundum / 600 + calculationResult.value.gachaTicket + calculationResult.value.tenGachaTicket * 10
-  );
+  const preciseBaseDraws =
+    calculationResult.value.orundum / 600 + calculationResult.value.gachaTicket + calculationResult.value.tenGachaTicket * 10;
+  const preciseOriginiumDraws = userConfigV2.value.originiumIsUsed ? calculationResult.value.originium * 0.3 : 0;
 
-  singleResourceDraws.value.orundum = Math.floor(calculationResult.value.orundum / 600);
+  calculationResult.value.preciseTotalDraw = preciseBaseDraws + preciseOriginiumDraws;
+  calculationResult.value.totalDraw = Math.floor(preciseBaseDraws);
+
+  singleResourceDraws.value.orundum = calculationResult.value.orundum / 600;
   singleResourceDraws.value.gachaTicket = calculationResult.value.gachaTicket;
   singleResourceDraws.value.tenGachaTicket = calculationResult.value.tenGachaTicket * 10;
   singleResourceDraws.value.originium = 0;
@@ -1408,7 +1413,7 @@ function gachaResourcesCalculation() {
 
   if (userConfigV2.value.originiumIsUsed) {
     calculationResult.value.totalDraw = calculationResult.value.totalDraw + Math.floor(calculationResult.value.originium * 0.3);
-    singleResourceDraws.value.originium = Math.floor(calculationResult.value.originium * 0.3);
+    singleResourceDraws.value.originium = calculationResult.value.originium * 0.3;
   }
 
   logs.push({ key: "计算源石后", value: calculationResult.value.totalDraw });
@@ -1626,6 +1631,7 @@ function getProbabilityBoxStyle(limited, all) {
 
 const developerMode = ref(route.query.mode === "dev" ? "dev" : "");
 const showActivityScheduleDates = ref(false);
+const showDrawDecimals = ref(false);
 
 watch(
   () => route.query.mode,
@@ -1636,6 +1642,11 @@ watch(
 
 function formatActivityScheduleDateRange(activity) {
   return activity.scheduleDateRange || formatActivityDateRange(activity.start, activity.end);
+}
+
+function formatDrawCount(drawCount) {
+  const decimalPlaces = showDrawDecimals.value ? 1 : 0;
+  return numberFloor(drawCount, decimalPlaces).toFixed(decimalPlaces);
 }
 
 onMounted(() => {
@@ -1766,7 +1777,8 @@ function sharePage() {
                 :style="getProbabilityBoxStyle(currentProb.怪猎一期和二期都获得UP6星干员, currentProb.怪猎一期和二期都获得全部干员)"
               ></div>
               <span class="collapse-title-font">
-                共计{{ calculationResult.totalDraw }}抽<span v-if="calculationResult.totalAmountOfRecharge > 0"
+                共计{{ formatDrawCount(showDrawDecimals ? calculationResult.preciseTotalDraw : calculationResult.totalDraw) }}抽<span
+                  v-if="calculationResult.totalAmountOfRecharge > 0"
                   >， 氪金{{ numberFloor(calculationResult.totalAmountOfRecharge, 0) }}元<span v-if="dailyReward.daily >= 45"
                     >，月均氪金约{{ calculationResult.monthlyAverageRecharge.toFixed(1) }}元</span
                   ></span
@@ -1812,37 +1824,37 @@ function sharePage() {
               <tbody>
                 <tr>
                   <td class="gacha-resources-table-title">现有</td>
-                  <td class="gacha-resources-table-quantity">{{ numberFloor(calculationResult.existTotalDraw, 0) }}</td>
+                  <td class="gacha-resources-table-quantity">{{ formatDrawCount(calculationResult.existTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>日常</td>
-                  <td>{{ numberFloor(calculationResult.dailyTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.dailyTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>搓玉/黄绿票</td>
-                  <td>{{ numberFloor(calculationResult.produceOrundumTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.produceOrundumTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>潜在</td>
-                  <td>{{ numberFloor(calculationResult.potentialTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.potentialTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>氪金</td>
-                  <td>{{ numberFloor(calculationResult.rechargeTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.rechargeTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>活动(估算)</td>
-                  <td>{{ numberFloor(calculationResult.activityTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.activityTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>其它(估算)</td>
-                  <td>{{ numberFloor(calculationResult.otherTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.otherTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
               </tbody>
@@ -1856,28 +1868,28 @@ function sharePage() {
                 <div class="bg-icon_4002"></div>
               </div>
               <span class="resources-quantity">{{ calculationResult.originium }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.originium }})</span>
+              <span class="resources-quantity-small">({{ formatDrawCount(singleResourceDraws.originium) }})</span>
             </div>
             <div class="resources-result-single">
               <div class="image-sprite">
                 <div class="bg-icon_4003"></div>
               </div>
               <span class="resources-quantity">{{ calculationResult.orundum }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.orundum }})</span>
+              <span class="resources-quantity-small">({{ formatDrawCount(singleResourceDraws.orundum) }})</span>
             </div>
             <div class="resources-result-single">
               <div class="image-sprite">
                 <div class="bg-icon_7003"></div>
               </div>
               <span class="resources-quantity">{{ calculationResult.gachaTicket }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.gachaTicket }})</span>
+              <span class="resources-quantity-small">({{ formatDrawCount(singleResourceDraws.gachaTicket) }})</span>
             </div>
             <div class="resources-result-single">
               <div class="image-sprite">
                 <div class="bg-icon_7004"></div>
               </div>
               <span class="resources-quantity">{{ calculationResult.tenGachaTicket }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.tenGachaTicket }})</span>
+              <span class="resources-quantity-small">({{ formatDrawCount(singleResourceDraws.tenGachaTicket) }})</span>
             </div>
           </div>
           <!-- 抽卡概率总览 -->
@@ -2041,6 +2053,10 @@ function sharePage() {
                 <span style="font-weight: 500; color: #606266">显示活动起止日期：</span>
                 <el-switch v-model="showActivityScheduleDates"></el-switch>
               </div>
+              <div style="display: flex; align-items: center; gap: 12px">
+                <span style="font-weight: 500; color: #606266">抽数显示一位小数：</span>
+                <el-switch v-model="showDrawDecimals"></el-switch>
+              </div>
             </div>
           </div>
         </el-collapse-item>
@@ -2055,7 +2071,7 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 库存/预留&emsp;{{ numberFloor(calculationResult.existTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 库存/预留&emsp;{{ formatDrawCount(calculationResult.existTotalDraw) }}抽 </span>
             </div>
           </template>
           <div class="collapse-content-subheading"><span></span> 当前库存</div>
@@ -2128,7 +2144,7 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 日常积累&emsp;{{ numberFloor(calculationResult.dailyTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 日常积累&emsp;{{ formatDrawCount(calculationResult.dailyTotalDraw) }}抽 </span>
             </div>
           </template>
 
@@ -2215,7 +2231,9 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 搓玉/绿票/黄票换抽&emsp;{{ numberFloor(calculationResult.produceOrundumTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font">
+                搓玉/绿票/黄票换抽&emsp;{{ formatDrawCount(calculationResult.produceOrundumTotalDraw) }}抽
+              </span>
             </div>
           </template>
           <!-- 黄票换抽 -->
@@ -2334,7 +2352,7 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 潜在资源&emsp;{{ numberFloor(calculationResult.potentialTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 潜在资源&emsp;{{ formatDrawCount(calculationResult.potentialTotalDraw) }}抽 </span>
             </div>
           </template>
           <div class="collapse-content-subheading"><span></span> 悖论模拟/剿灭作战模拟</div>
@@ -2475,7 +2493,7 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 氪金资源&emsp;{{ numberFloor(calculationResult.rechargeTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 氪金资源&emsp;{{ formatDrawCount(calculationResult.rechargeTotalDraw) }}抽 </span>
             </div>
           </template>
 
@@ -2576,7 +2594,7 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 活动获得（估算）&emsp;{{ numberFloor(calculationResult.activityTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 活动获得（估算）&emsp;{{ formatDrawCount(calculationResult.activityTotalDraw) }}抽 </span>
             </div>
           </template>
           <!--复刻活动-->
@@ -2622,7 +2640,7 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 其他资源（估算）&emsp;{{ numberFloor(calculationResult.otherTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 其他资源（估算）&emsp;{{ formatDrawCount(calculationResult.otherTotalDraw) }}抽 </span>
             </div>
           </template>
           <activity-gacha-resources
