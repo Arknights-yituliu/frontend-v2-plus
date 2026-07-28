@@ -7,12 +7,12 @@ async function putCache(data) {
 
 const packInfoCacheKey = 'PackInfo-cache-v1'
 
-async function listPackInfo() {
+async function listPackInfo(forceRefresh = false) {
     let listPackInfo = [];
     const versionResponse = await materialAPI.packInfoVersion()
     const version = versionResponse.data
     const cacheData = await myDatabase.cache_data.get(packInfoCacheKey);
-    if (cacheData) {
+    if (cacheData && !forceRefresh) {
 
         if (cacheData.version === version) {
             console.log(`${packInfoCacheKey}——返回缓存的数据——版本${version}`)
@@ -30,7 +30,7 @@ async function listPackInfo() {
             createTime: Date.now()
         }
         putCache(info)
-        console.log(`${packInfoCacheKey}——返回服务器的数据——版本${version}`)
+        console.log(`${packInfoCacheKey}——返回服务器的数据——版本${version}${forceRefresh ? '（强制刷新）' : ''}`)
         listPackInfo = data
     })
 

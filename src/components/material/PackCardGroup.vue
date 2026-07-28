@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from "vue"
+import { computed, ref, watch } from "vue"
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import { formatNumber } from "/src/utils/format.js";
 
@@ -17,7 +17,19 @@ function generateRandomString(length) {
   return result;
 }
 
-const props = defineProps(["modelValue", "displayPackEfficiency", "screenshotMode"]);
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    default: () => []
+  },
+  displayPackEfficiency: Boolean,
+  screenshotMode: Boolean,
+  forceExpanded: Boolean,
+  displayScale: {
+    type: Number,
+    default: 1
+  }
+});
 
 function getPackImageLink(link) {
   return `https://cos.yituliu.cn/${link}`
@@ -25,6 +37,10 @@ function getPackImageLink(link) {
 
 
 function displayPackContent(packId) {
+  if (props.forceExpanded) {
+    return
+  }
+
   const element = document.getElementById(`${packId}${id}`)
   if ('flex' === element.style.display) {
     element.style.display = 'none'
@@ -42,9 +58,9 @@ let screenWidth = ref(1080)
 
 function getLineBarStyle(lineData) {
 
-  let barWidth = 80
+  let barWidth = 80 * props.displayScale
 
-  if (screenWidth.value < 600 || !screenWidth.value) {
+  if (props.displayScale === 1 && (screenWidth.value < 600 || !screenWidth.value)) {
     barWidth = 50
   }
   const width = barWidth * lineData.value
@@ -84,6 +100,9 @@ function getPackCountdown(endDate, startDate) {
   if (diffDays <= 365) return {type: 'soon', label: `${diffDays}天`}
   return null
 }
+
+const detailItemIconSize = computed(() => 40 * props.displayScale)
+const detailItemMobileIconSize = computed(() => 30 * props.displayScale)
 
 function displayInfoCountdown(countdown) {
   return countdown?.type === 'history'
@@ -142,7 +161,10 @@ async function capturePackImage(packInfo) {
 </script>
 
 <template>
-  <div class="pack-card-container">
+  <div
+    class="pack-card-container"
+    :class="{ 'pack-card-container-scaled': props.displayScale > 1 }"
+  >
     <div v-for="(packInfo, index) in props.modelValue" :key="index" class="pack-card">
       <div :ref="element => setScreenshotTarget(packInfo.id, element)">
         <!-- 图片部分 -->
@@ -186,7 +208,11 @@ async function capturePackImage(packInfo) {
         </div>
 
         <!-- 详情部分 -->
-        <div class="pack-content" :id="`${packInfo.id}${id}`">
+        <div
+          class="pack-content"
+          :class="{ 'pack-content-force-expanded': props.forceExpanded }"
+          :id="`${packInfo.id}${id}`"
+        >
   <!--        <div class="pack-content-gacha">-->
   <!--          <ItemImage :item-id="'4002'" :size="40" :mobile-size="30"></ItemImage>-->
   <!--          <span>X{{ packInfo.originium }}</span>-->
@@ -212,7 +238,12 @@ async function capturePackImage(packInfo) {
                 <tr v-for="item in packInfo.packContentVO.filter(i => i.quantity !== 0)" :key="item.itemId"
                   :style="itemAccentColor(item.itemName)" >
                   <td class="pack-content-item">
-                    <ItemImage :item-id="item.itemId" :size="40" :mobile-size="30" class="m-a"></ItemImage>
+                    <ItemImage
+                      :item-id="item.itemId"
+                      :size="detailItemIconSize"
+                      :mobile-size="detailItemMobileIconSize"
+                      class="m-a"
+                    ></ItemImage>
                     <div class="pack-content-item-name">{{ item.itemName }}</div>
                   </td>
 

@@ -1,6 +1,11 @@
 <script setup>
+import { formatActivityDateRange } from "/src/utils/gachaScheduleOptions.js";
 
-const props = defineProps(["modelValue", 'info','func']);
+const props = defineProps(["modelValue", "info", "func", "showScheduleDate"]);
+
+function formatScheduleDateRange() {
+  return props.info.scheduleDateRange || formatActivityDateRange(props.info.start, props.info.end);
+}
 
 
 
@@ -8,7 +13,12 @@ const props = defineProps(["modelValue", 'info','func']);
 
 <template>
   <div class="resources-line">
-    <span class="resources-line-label" style="width: 240px">{{ props.info.name }}</span>
+    <span class="resources-line-label" style="width: 240px">
+      {{ props.info.name }}
+      <span v-if="props.showScheduleDate" class="activity-resource-schedule-date">
+        {{ formatScheduleDateRange() }}
+      </span>
+    </span>
     <div class="resources-line-content">
       <div class="image-sprite" v-show="props.info.originium > 0">
         <div class="bg-icon_4002"></div>
