@@ -43,14 +43,12 @@ import Battle from '@/components/information/Battle.vue'
                       target="_blank"
                       type="primary"
                   >
-                    <el-text tag="ins" type="primary">“解脱？”</el-text>
+                    “解脱？”
                   </el-link>
                 </el-tooltip>
                 ，选择
-                <el-tooltip content="消耗1希望">
-                  <el-text tag="ins">“太可怜了，仔细观赏”</el-text>
-                </el-tooltip>
-                获得
+                “太可怜了，仔细观赏”
+                （消耗1希望），获得
                 <el-tooltip content="让探索走向不同的结局" effect="light" placement="top"
                 >
                   <el-text tag="ins">【残破的玩偶】</el-text>
@@ -60,7 +58,7 @@ import Battle from '@/components/information/Battle.vue'
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
                 <span class="optional">（可选）</span>
-                持有玩偶可触发不期而遇
+                 持有玩偶，可进入不期而遇，触发事件
                 <el-link
                     href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E7%96%AF%E7%8B%82%E7%8E%A9%E5%81%B6"
                     target="_blank"
@@ -69,10 +67,8 @@ import Battle from '@/components/information/Battle.vue'
                   “疯狂玩偶”
                 </el-link>
                 ，连续选择3次
-                <el-tooltip content="总共消耗3目标生命">
-                  <el-text tag="ins">“护住玩偶”</el-text>
-                </el-tooltip>
-                获得
+                “护住玩偶”
+                （总共消耗3目标生命），获得
                 <el-tooltip content="立即获得源石锭+11，希望+3" effect="light" placement="top"
                 >
                   <el-text tag="ins">【无用的剪刀】</el-text>
@@ -82,7 +78,7 @@ import Battle from '@/components/information/Battle.vue'
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
                 <span class="optional">（可选）</span>
-                持有剪刀可触发不期而遇
+                 持有剪刀，可进入不期而遇，触发事件
                 <el-link
                     href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%A7%A3%E8%84%B1"
                     target="_blank"
@@ -129,7 +125,7 @@ import Battle from '@/components/information/Battle.vue'
                       target="_blank"
                       type="primary"
                   >
-                    <el-text tag="ins" type="primary">“赴宴”</el-text>
+                    “赴宴”
                   </el-link>
                 </el-tooltip>
                 选“白得一套衣服”获得
@@ -153,7 +149,7 @@ import Battle from '@/components/information/Battle.vue'
             </el-timeline-item>
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
-                持替补演员可在第5层触发不期而遇
+                 持替补演员，可在第5层进入不期而遇，触发事件
                 <el-link
                     href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E8%BF%BD%E9%9A%8F%E8%80%85%E9%9B%86%E4%BC%9A"
                     target="_blank"
@@ -203,7 +199,7 @@ import Battle from '@/components/information/Battle.vue'
                       target="_blank"
                       type="primary"
                   >
-                    <el-text tag="ins" type="primary">“别打扰他们”</el-text>
+                    “别打扰他们”
                   </el-link>
                 </el-tooltip>
                 ，选择“靠近听听他们在说什么”，进入特殊战斗
@@ -226,7 +222,7 @@ import Battle from '@/components/information/Battle.vue'
             </el-timeline-item>
             <el-timeline-item :icon="Battle" color="#5EDFD6">
               <div>
-                持有死囚之舞可触发不期而遇
+                 持有死囚之舞，可进入不期而遇，触发事件
                 <el-link
                     href="https://prts.wiki/w/%E5%82%80%E5%BD%B1%E4%B8%8E%E7%8C%A9%E7%BA%A2%E5%AD%A4%E9%92%BB/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%A4%8D%E4%BB%87%E5%89%A7"
                     target="_blank"

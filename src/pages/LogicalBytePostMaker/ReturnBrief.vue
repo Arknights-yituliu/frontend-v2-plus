@@ -554,8 +554,6 @@ const table1 = ref([
   ['', '', ''],  // 总需求量行
   ['', '', '']   // 下次复刻行
 ])
-const createEmptyTable1NextUpIconIds = () => Array.from({ length: 3 }, () => [])
-const table1NextUpIconIds = ref(createEmptyTable1NextUpIconIds())
 
 // 表格1的固定标签
 const table1Labels = ['关卡', '材料', '掉率', '收益率\n(相对主线)', '近两年消耗量', '预计下次up']
@@ -698,14 +696,6 @@ const mapStagesToTableRow = (stageData, mapper) => {
   })
 }
 
-const normalizeTable1NextUpIconIds = (data) => {
-  const source = Array.isArray(data) ? data : []
-  return createEmptyTable1NextUpIconIds().map((_, index) => {
-    const ids = Array.isArray(source[index]) ? source[index] : []
-    return [...new Set(ids.map(itemId => String(itemId)).filter(Boolean))].slice(0, 3)
-  })
-}
-
 const getNextUpActivityNameFromText = (text) => {
   const rawText = String(text || '').trim()
   if (!rawText || rawText === '遥遥无期') {
@@ -721,21 +711,6 @@ const getNextUpActivityNameFromText = (text) => {
 const getNextUpExpectedTimeFromText = (text) => {
   const match = String(text || '').match(/预计\d{4}\/\d{1,2}/)
   return match ? match[0] : ''
-}
-
-const getTable1NextUpIconIds = (colIndex) => {
-  const storedIds = table1NextUpIconIds.value[colIndex] || []
-  if (storedIds.length > 0) {
-    return storedIds
-  }
-
-  const nextUpActivityName = getNextUpActivityNameFromText(table1.value[5]?.[colIndex])
-  if (!nextUpActivityName) {
-    return []
-  }
-
-  const nextUpActivity = sourceHistoryActivityList.value.find(activity => activity?.zoneName === nextUpActivityName)
-  return getNextUpMaterialIconIds(nextUpActivity)
 }
 
 const normalizeTable2Row = (row, rowIndex) => {
@@ -827,6 +802,31 @@ const formatExpectedNextUpTime = (time) => {
   const year = date.getFullYear()
   const month = String(date.getMonth() + 1).padStart(2, '0')
   return `${year}/${month}`
+}
+
+const getNextUpActivityFromText = (text) => {
+  const activityName = getNextUpActivityNameFromText(text)
+  if (!activityName) {
+    return null
+  }
+
+  const expectedTime = getNextUpExpectedTimeFromText(text).replace(/^预计/, '')
+  const matchedActivities = sourceHistoryActivityList.value.filter(activity =>
+    activity?.zoneName === activityName
+  )
+
+  if (!expectedTime) {
+    return matchedActivities[0] || null
+  }
+
+  return matchedActivities.find(activity =>
+    formatExpectedNextUpTime(activity?.endTime) === expectedTime
+  ) || matchedActivities[0] || null
+}
+
+const getTable1NextUpIconIds = (colIndex) => {
+  const nextUpActivity = getNextUpActivityFromText(table1.value[5]?.[colIndex])
+  return getNextUpMaterialIconIds(nextUpActivity)
 }
 
 const getNextUpActivity = (activity, itemId) => {
@@ -963,7 +963,6 @@ const quoteActivityData = (activity) => {
   table1.value[4] = mapStagesToTableRow(stageData, stage => formatRecentTwoYearDemand(stage.itemId))
   const nextUpActivities = mapStagesToTableRow(stageData, stage => getNextUpActivity(activity, stage.itemId))
   table1.value[5] = nextUpActivities.map(nextActivity => formatNextUpText(nextActivity))
-  table1NextUpIconIds.value = normalizeTable1NextUpIconIds(nextUpActivities.map(nextActivity => getNextUpMaterialIconIds(nextActivity)))
   const orundumStages = quoteActivityOrundumData(activity)
 
   activityName.value = activity.zoneName || ''
@@ -1318,11 +1317,6 @@ const loadFromStorage = () => {
           Array.isArray(row) && row.length === 3 ? [...row] : ['', '', '']
         )
       }
-      if (data.table1NextUpIconIds && Array.isArray(data.table1NextUpIconIds)) {
-        table1NextUpIconIds.value = normalizeTable1NextUpIconIds(data.table1NextUpIconIds)
-      } else {
-        table1NextUpIconIds.value = createEmptyTable1NextUpIconIds()
-      }
       if (data.table2 && Array.isArray(data.table2)) {
         table2.value = normalizeTable2(data.table2)
       }
@@ -1354,7 +1348,6 @@ const saveToStorage = () => {
       selectedReferenceActivityName: selectedReferenceActivityName.value || '',
       matchedExportActivityName: matchedExportActivityName.value || '',
       table1: table1.value || [],
-      table1NextUpIconIds: table1NextUpIconIds.value || [],
       table2: table2.value || [],
       table2IconIds: table2IconIds.value || [],
       table2IconSchemaVersion: TABLE2_ICON_SCHEMA_VERSION,
@@ -1368,7 +1361,7 @@ const saveToStorage = () => {
 }
 
 // 监听数据变化并自动保存
-const stopWatch = watch([headerImageUrl, stagePrefix, stageNumber, selectedPreviewThemeKey, activityName, selectedReferenceActivityName, matchedExportActivityName, table1, table1NextUpIconIds, table2, table2IconIds], () => {
+const stopWatch = watch([headerImageUrl, stagePrefix, stageNumber, selectedPreviewThemeKey, activityName, selectedReferenceActivityName, matchedExportActivityName, table1, table2, table2IconIds], () => {
   // 只在组件挂载时才保存
   if (isMounted.value) {
     try {
@@ -1488,7 +1481,6 @@ const clearAllData = () => {
       ['', '', '']
     ]
     table2.value = createEmptyTable2()
-    table1NextUpIconIds.value = createEmptyTable1NextUpIconIds()
     table2IconIds.value = createEmptyTable2IconIds()
     activityName.value = ''
     matchedActivities.value = []
@@ -1614,7 +1606,6 @@ const selectStage = (index) => {
     const activity = getActivityByStage(stage)
     const nextUpActivity = activity ? getNextUpActivity(activity, stage.itemId) : null
     table1.value[5][0] = formatNextUpText(nextUpActivity)
-    table1NextUpIconIds.value[0] = getNextUpMaterialIconIds(nextUpActivity)
     
     console.log('关卡数据已填充到表格:', stage.stageCode)
   }

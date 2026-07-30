@@ -206,7 +206,7 @@ import Battle from '@/components/information/Battle.vue'
             </el-timeline-item>
             <el-timeline-item :icon="Battle" color="#5EDFD6">
               <div>
-                持有视界邀约可触发不期而遇
+                 持有视界邀约，可进入不期而遇，触发事件
                 <el-tooltip
                     content="进入【深埋迷境】外的不期而遇时大概率遭遇，不期而遇节点没有处于全面勘察状态时更有可能遭遇"
                     effect="light" placement="top"

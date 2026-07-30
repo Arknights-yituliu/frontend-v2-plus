@@ -93,10 +93,10 @@ const resultSortOptions = [
 ]
 
 const resultFilterOptions = [
-  { label: '可以直接打', value: 'ready', maxLevel: 1, color: 'success' },
-  { label: '需要借干员', value: 'borrow', maxLevel: 2, color: 'warning' },
-  { label: '需要提升练度', value: 'train', maxLevel: 3, color: 'warning' },
-  { label: '干员不满足要求', value: 'blocked', maxLevel: 4, color: 'error' },
+  { label: '可以直接打', value: 'ready', filterLevel: 1, color: 'success' },
+  { label: '需要借干员', value: 'borrow', filterLevel: 2, color: 'warning' },
+  { label: '需要提升练度', value: 'train', filterLevel: 3, color: 'warning' },
+  { label: '干员不满足要求', value: 'blocked', filterLevel: 4, color: 'error' },
 ]
 
 const resultRatingFilterOptions = [
@@ -136,7 +136,7 @@ const searchMeta = ref({
 const exactStageMatchEnabled = ref(true)
 const activeSearchAction = ref('')
 const resultSortMode = ref('default')
-const resultFilterMode = ref('train')
+const resultFilterModes = ref(['ready', 'borrow', 'train'])
 const resultRatingFilterMode = ref(4)
 
 let searchTicket = 0
@@ -286,10 +286,9 @@ function getUnownedKnownOperatorCount() {
 }
 
 const filteredJobs = computed(() => {
-  const maxFilterLevel = getResultFilterMaxLevel(resultFilterMode.value)
   const minimumRatingStars = getResultRatingFilterMinStars(resultRatingFilterMode.value)
   const jobs = resolvedJobs.value.filter((job) => {
-    return Number(job.playabilityState?.filterLevel || 0) <= maxFilterLevel
+    return resultFilterModes.value.includes(getJobFilterMode(job))
       && getRatingStarValue(job.ratingRatio) >= minimumRatingStars
   })
   const sortedJobs = [...jobs]
@@ -309,19 +308,19 @@ const filteredJobs = computed(() => {
   return sortedJobs.sort(sortMatchedJobs)
 })
 
-const activeResultFilterModes = computed(() => {
-  const maxFilterLevel = getResultFilterMaxLevel(resultFilterMode.value)
-  return resultFilterOptions
-    .filter((option) => option.maxLevel <= maxFilterLevel)
-    .map((option) => option.value)
-})
-
-function getResultFilterMaxLevel(value) {
-  return resultFilterOptions.find((option) => option.value === value)?.maxLevel || resultFilterOptions[resultFilterOptions.length - 1].maxLevel
+function getJobFilterMode(job) {
+  const filterLevel = Number(job.playabilityState?.filterLevel)
+  return resultFilterOptions.find((option) => option.filterLevel === filterLevel)?.value || ''
 }
 
-function setResultFilterMode(value) {
-  resultFilterMode.value = value
+function setResultFilterModes(value) {
+  const nextModes = Array.isArray(value)
+    ? value.filter((mode) => resultFilterOptions.some((option) => option.value === mode))
+    : []
+
+  if (nextModes.length > 0) {
+    resultFilterModes.value = nextModes
+  }
 }
 
 function getResultRatingFilterMinStars(value) {
@@ -2333,18 +2332,19 @@ onMounted(async () => {
               <div class="search-option-block search-option-block-wide">
                 <span class="search-option-label">Box筛选</span>
                 <v-btn-toggle
-                  :model-value="activeResultFilterModes"
+                  :model-value="resultFilterModes"
                   color="primary"
                   multiple
+                  mandatory
                   density="compact"
                   class="control-toggle filter-toggle"
+                  @update:model-value="setResultFilterModes"
                 >
                   <v-btn
                     v-for="option in resultFilterOptions"
                     :key="option.value"
                     :value="option.value"
                     variant="text"
-                    @click="setResultFilterMode(option.value)"
                   >
                     {{ option.label }}
                   </v-btn>

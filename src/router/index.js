@@ -34,10 +34,10 @@ router.beforeEach(async (to, from,next) => {
 })
 
 
-// 可选地，在导航完成时重置加载状态
-router.afterEach((to) => {
-    updateVisits(to.path)
-})
+// // 可选地，在导航完成时重置加载状态
+// router.afterEach((to) => {
+//     updateVisits(to.path)
+// })
 
 
 function updateVisits(pathName) {

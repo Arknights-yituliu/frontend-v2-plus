@@ -1,4 +1,4 @@
-<!--修改活动日期按钮请在变量"scheduleOptions"中修改，修改活动排期请在变量"HONEY_CAKE_TABLE"所引入的json文件中修改-->
+<!--卡池日期配置见 /src/utils/gachaScheduleOptions.js；活动排期见 HONEY_CAKE_TABLE 所引用的 JSON 文件。-->
 <script setup>
 import { watch, onMounted, ref, computed } from "vue";
 import "/src/assets/css/tool/gacha_calc.scss";
@@ -14,10 +14,17 @@ import { createMessage } from "/src/utils/message.js";
 import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
 import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
 import deepClone from "/src/utils/deepClone.js";
-import { dateDiff, dateFormat } from "/src/utils/dateUtil.js";
+import { dateDiff } from "/src/utils/dateUtil.js";
 import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
 import { stringToNumber } from "/src/utils/stringUtils.js";
 import { numberFloor } from "/src/utils/format.js";
+import {
+  createGachaScheduleOptions,
+  formatActivityDateRange,
+  getDailyRewardRemainingDays,
+  getScheduleCalculationEndDate,
+  isRewardAvailableOnSelectedDates,
+} from "/src/utils/gachaScheduleOptions.js";
 import { useRoute } from "vue-router";
 
 // 当前路由
@@ -128,6 +135,7 @@ let tempActivityScheduleList = [];
 //将预测活动排期分类
 for (const name in FIXED_TABLE) {
   let activityData = FIXED_TABLE[name];
+  activityData.scheduleDateRange = formatActivityDateRange(activityData.start, activityData.end);
   //将活动排期的日期统一转为时间戳
   activityData.start = new Date(activityData.start).getTime();
   activityData.end = new Date(activityData.end).getTime();
@@ -148,6 +156,7 @@ for (const name in FIXED_TABLE) {
 
 for (const name in HONEY_CAKE_TABLE) {
   let activityData = HONEY_CAKE_TABLE[name];
+  activityData.scheduleDateRange = formatActivityDateRange(activityData.start, activityData.end);
   //将活动排期的日期统一转为时间戳
   activityData.start = new Date(activityData.start).getTime();
   activityData.end = new Date(activityData.end).getTime();
@@ -280,30 +289,7 @@ function rewardTypeMatchesCurrentActivity(rewardType) {
 // activityType: string 活动类型
 // dailyGiftResources: boolean 活动是否每日赠送抽卡资源
 // 注：历史礼包时间范围已改为动态计算，不再需要 historicalPackTimeRange 配置
-const scheduleOptions = [
-  {
-    name: "夏活",
-    dateString: "(0801-0815)",
-    start: new Date("2026/08/01 12:00:00"),
-    end: new Date("2026/08/15 04:01:00"),
-    activityType: "夏活限定",
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: true,
-    historyStartTime: new Date("2025/08/01 12:00:00"),
-    historyEndTime: new Date("2025/08/15 04:01:00"),
-  },
-   {
-     name: "感谢庆典",
-     dateString: "敬请期待",
-     start: new Date("2026/11/01 12:00:00"),
-     end: new Date("2026/11/15 04:01:00"),
-     activityType: "周年限定",
-     disabled: true,
-     dailyGiftResources: true,
-     accuracyFlag: true,
-   },
-];
+const scheduleOptions = createGachaScheduleOptions();
 
 const packDataLoadingStatus = ref(false);
 
@@ -814,6 +800,8 @@ let pieChartData = ref([
 let calculationResult = ref({
   //总抽数
   totalDraw: 0,
+  //仅用于开发模式显示的精确总抽数
+  preciseTotalDraw: 0,
   //充值总额
   totalAmountOfRecharge: 0,
   //月均氪金
@@ -897,13 +885,7 @@ const userConfigV2 = ref({
 function gachaResourcesCalculation() {
   logs = [];
 
-  if (calPoolEnd.value) {
-    endDate.value = currentSchedule.value.end;
-  } else {
-    const startTimeStamp = currentSchedule.value.start.getTime();
-
-    endDate.value = new Date(startTimeStamp + 12 * 60 * 60 * 1000);
-  }
+  endDate.value = getScheduleCalculationEndDate(currentSchedule.value, calPoolEnd.value);
 
   //饼图数据暂存区
   let pieChartDataTmp = [];
@@ -1413,11 +1395,14 @@ function gachaResourcesCalculation() {
     }
   }
 
-  calculationResult.value.totalDraw = Math.floor(
-    calculationResult.value.orundum / 600 + calculationResult.value.gachaTicket + calculationResult.value.tenGachaTicket * 10
-  );
+  const preciseBaseDraws =
+    calculationResult.value.orundum / 600 + calculationResult.value.gachaTicket + calculationResult.value.tenGachaTicket * 10;
+  const preciseOriginiumDraws = userConfigV2.value.originiumIsUsed ? calculationResult.value.originium * 0.3 : 0;
 
-  singleResourceDraws.value.orundum = Math.floor(calculationResult.value.orundum / 600);
+  calculationResult.value.preciseTotalDraw = preciseBaseDraws + preciseOriginiumDraws;
+  calculationResult.value.totalDraw = Math.floor(preciseBaseDraws);
+
+  singleResourceDraws.value.orundum = calculationResult.value.orundum / 600;
   singleResourceDraws.value.gachaTicket = calculationResult.value.gachaTicket;
   singleResourceDraws.value.tenGachaTicket = calculationResult.value.tenGachaTicket * 10;
   singleResourceDraws.value.originium = 0;
@@ -1428,7 +1413,7 @@ function gachaResourcesCalculation() {
 
   if (userConfigV2.value.originiumIsUsed) {
     calculationResult.value.totalDraw = calculationResult.value.totalDraw + Math.floor(calculationResult.value.originium * 0.3);
-    singleResourceDraws.value.originium = Math.floor(calculationResult.value.originium * 0.3);
+    singleResourceDraws.value.originium = calculationResult.value.originium * 0.3;
   }
 
   logs.push({ key: "计算源石后", value: calculationResult.value.totalDraw });
@@ -1459,50 +1444,12 @@ function gachaResourcesCalculation() {
  * @return {number}  剩余天数
  */
 function getRewardRemainingDays(honeyCake) {
-  //活动开启时间
-  const rewardStart = honeyCake.start;
-  const scheduleStart = currentSchedule.value.start.getTime();
-
-  //活动结束时间
-  let rewardEnd = honeyCake.end;
-  //使用全局时间戳，支持用户自定义时间
-  const nowTimeStamp = currentTimestamp.value;
-  //如果选择的是计算到活动开启当日,判断活动开启日期是否在奖励结束日之前，true则代表这是个新活动，将活动结束日期设为活动开启日的次日凌晨4点
-  if (!calPoolEnd.value && scheduleStart < rewardEnd) {
-    rewardEnd = rewardStart + 60 * 60 * 12 * 1000;
-  }
-
-  //活动剩余时间
-  let remainingDays;
-
-  //如果活动已经开始，用实际时间计算，否则用活动开启日期计算
-  if (rewardStart < nowTimeStamp) {
-    remainingDays = Math.round((rewardEnd - nowTimeStamp) / 86400000);
-    // console.log(honeyCake.name,'剩余天数:', remainingDays)
-  } else {
-    remainingDays = Math.round((rewardEnd - rewardStart) / 86400000);
-    // console.log(honeyCake.name,'剩余天数:', remainingDays)
-  }
-
-  //大于14天强制为14天
-  if (remainingDays > 14) {
-    remainingDays = 14;
-  }
-
-  // 防止出现负数
-  if (remainingDays < 0) {
-    remainingDays = 0;
-  }
-
-  // console.log(honeyCake.name, " 类型：", rewardType, activityType.value, dateFormat(rewardEnd), dateFormat(rewardStart), dateFormat(scheduleStart), remainingDays)
-
-  // //小于1天强制为1天
-  // if (endTime - startTime < 8640000) {
-  //   remainingDays = 1
-  // }
-
-  console.log("离限定池结束还有" + remainingDays + "天");
-  return remainingDays;
+  return getDailyRewardRemainingDays(
+    honeyCake,
+    currentTimestamp.value,
+    currentSchedule.value,
+    calPoolEnd.value
+  );
 }
 
 /**
@@ -1511,15 +1458,7 @@ function getRewardRemainingDays(honeyCake) {
  * @returns {boolean} 是否可计入
  */
 function rewardIsExpired(reward) {
-  //活动结束时间在当前时间之前，活动已结束
-  if (reward.end <= currentTimestamp.value) {
-    // console.log(reward.name, '活动结束')
-    return false;
-  }
-
-  //活动开始时间在选择的结束时间节点之后，活动未开启
-  if (reward.start > endDate.value.getTime()) {
-    // console.log(reward.name, '活动未开始')
+  if (!isRewardAvailableOnSelectedDates(reward, currentTimestamp.value, endDate.value)) {
     return false;
   }
 
@@ -1691,6 +1630,8 @@ function getProbabilityBoxStyle(limited, all) {
 }
 
 const developerMode = ref(route.query.mode === "dev" ? "dev" : "");
+const showActivityScheduleDates = ref(false);
+const showDrawDecimals = ref(false);
 
 watch(
   () => route.query.mode,
@@ -1698,6 +1639,15 @@ watch(
     developerMode.value = mode === "dev" ? "dev" : "";
   }
 );
+
+function formatActivityScheduleDateRange(activity) {
+  return activity.scheduleDateRange || formatActivityDateRange(activity.start, activity.end);
+}
+
+function formatDrawCount(drawCount) {
+  const decimalPlaces = showDrawDecimals.value ? 1 : 0;
+  return numberFloor(drawCount, decimalPlaces).toFixed(decimalPlaces);
+}
 
 onMounted(() => {
   readLastSettings();
@@ -1827,7 +1777,8 @@ function sharePage() {
                 :style="getProbabilityBoxStyle(currentProb.怪猎一期和二期都获得UP6星干员, currentProb.怪猎一期和二期都获得全部干员)"
               ></div>
               <span class="collapse-title-font">
-                共计{{ calculationResult.totalDraw }}抽<span v-if="calculationResult.totalAmountOfRecharge > 0"
+                共计{{ formatDrawCount(showDrawDecimals ? calculationResult.preciseTotalDraw : calculationResult.totalDraw) }}抽<span
+                  v-if="calculationResult.totalAmountOfRecharge > 0"
                   >， 氪金{{ numberFloor(calculationResult.totalAmountOfRecharge, 0) }}元<span v-if="dailyReward.daily >= 45"
                     >，月均氪金约{{ calculationResult.monthlyAverageRecharge.toFixed(1) }}元</span
                   ></span
@@ -1873,37 +1824,37 @@ function sharePage() {
               <tbody>
                 <tr>
                   <td class="gacha-resources-table-title">现有</td>
-                  <td class="gacha-resources-table-quantity">{{ numberFloor(calculationResult.existTotalDraw, 0) }}</td>
+                  <td class="gacha-resources-table-quantity">{{ formatDrawCount(calculationResult.existTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>日常</td>
-                  <td>{{ numberFloor(calculationResult.dailyTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.dailyTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>搓玉/黄绿票</td>
-                  <td>{{ numberFloor(calculationResult.produceOrundumTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.produceOrundumTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>潜在</td>
-                  <td>{{ numberFloor(calculationResult.potentialTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.potentialTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>氪金</td>
-                  <td>{{ numberFloor(calculationResult.rechargeTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.rechargeTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>活动(估算)</td>
-                  <td>{{ numberFloor(calculationResult.activityTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.activityTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
                 <tr>
                   <td>其它(估算)</td>
-                  <td>{{ numberFloor(calculationResult.otherTotalDraw, 0) }}</td>
+                  <td>{{ formatDrawCount(calculationResult.otherTotalDraw) }}</td>
                   <td>抽</td>
                 </tr>
               </tbody>
@@ -1917,28 +1868,28 @@ function sharePage() {
                 <div class="bg-icon_4002"></div>
               </div>
               <span class="resources-quantity">{{ calculationResult.originium }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.originium }})</span>
+              <span class="resources-quantity-small">({{ formatDrawCount(singleResourceDraws.originium) }})</span>
             </div>
             <div class="resources-result-single">
               <div class="image-sprite">
                 <div class="bg-icon_4003"></div>
               </div>
               <span class="resources-quantity">{{ calculationResult.orundum }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.orundum }})</span>
+              <span class="resources-quantity-small">({{ formatDrawCount(singleResourceDraws.orundum) }})</span>
             </div>
             <div class="resources-result-single">
               <div class="image-sprite">
                 <div class="bg-icon_7003"></div>
               </div>
               <span class="resources-quantity">{{ calculationResult.gachaTicket }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.gachaTicket }})</span>
+              <span class="resources-quantity-small">({{ formatDrawCount(singleResourceDraws.gachaTicket) }})</span>
             </div>
             <div class="resources-result-single">
               <div class="image-sprite">
                 <div class="bg-icon_7004"></div>
               </div>
               <span class="resources-quantity">{{ calculationResult.tenGachaTicket }}</span>
-              <span class="resources-quantity-small">({{ singleResourceDraws.tenGachaTicket }})</span>
+              <span class="resources-quantity-small">({{ formatDrawCount(singleResourceDraws.tenGachaTicket) }})</span>
             </div>
           </div>
           <!-- 抽卡概率总览 -->
@@ -2098,6 +2049,14 @@ function sharePage() {
                 <span style="font-weight: 500; color: #606266">宽屏模式：</span>
                 <el-switch v-model="wideScreenModeEnabled" @change="wideScreenMode"></el-switch>
               </div>
+              <div style="display: flex; align-items: center; gap: 12px">
+                <span style="font-weight: 500; color: #606266">显示活动起止日期：</span>
+                <el-switch v-model="showActivityScheduleDates"></el-switch>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px">
+                <span style="font-weight: 500; color: #606266">抽数显示一位小数：</span>
+                <el-switch v-model="showDrawDecimals"></el-switch>
+              </div>
             </div>
           </div>
         </el-collapse-item>
@@ -2112,7 +2071,7 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 库存/预留&emsp;{{ numberFloor(calculationResult.existTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 库存/预留&emsp;{{ formatDrawCount(calculationResult.existTotalDraw) }}抽 </span>
             </div>
           </template>
           <div class="collapse-content-subheading"><span></span> 当前库存</div>
@@ -2185,7 +2144,7 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 日常积累&emsp;{{ numberFloor(calculationResult.dailyTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 日常积累&emsp;{{ formatDrawCount(calculationResult.dailyTotalDraw) }}抽 </span>
             </div>
           </template>
 
@@ -2272,7 +2231,9 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 搓玉/绿票/黄票换抽&emsp;{{ numberFloor(calculationResult.produceOrundumTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font">
+                搓玉/绿票/黄票换抽&emsp;{{ formatDrawCount(calculationResult.produceOrundumTotalDraw) }}抽
+              </span>
             </div>
           </template>
           <!-- 黄票换抽 -->
@@ -2391,7 +2352,7 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 潜在资源&emsp;{{ numberFloor(calculationResult.potentialTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 潜在资源&emsp;{{ formatDrawCount(calculationResult.potentialTotalDraw) }}抽 </span>
             </div>
           </template>
           <div class="collapse-content-subheading"><span></span> 悖论模拟/剿灭作战模拟</div>
@@ -2532,7 +2493,7 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 氪金资源&emsp;{{ numberFloor(calculationResult.rechargeTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 氪金资源&emsp;{{ formatDrawCount(calculationResult.rechargeTotalDraw) }}抽 </span>
             </div>
           </template>
 
@@ -2633,7 +2594,7 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 活动获得（估算）&emsp;{{ numberFloor(calculationResult.activityTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 活动获得（估算）&emsp;{{ formatDrawCount(calculationResult.activityTotalDraw) }}抽 </span>
             </div>
           </template>
           <!--复刻活动-->
@@ -2647,6 +2608,9 @@ function sharePage() {
               class="el-checkbox-button"
             >
               <PackButtonContent :data="activity"> </PackButtonContent>
+              <span v-if="showActivityScheduleDates" class="activity-schedule-date">
+                {{ formatActivityScheduleDateRange(activity) }}
+              </span>
             </el-checkbox-button>
           </el-checkbox-group>
 
@@ -2664,6 +2628,9 @@ function sharePage() {
               class="el-checkbox-button"
             >
               <PackButtonContent :data="activity"> </PackButtonContent>
+              <span v-if="showActivityScheduleDates" class="activity-schedule-date">
+                {{ formatActivityScheduleDateRange(activity) }}
+              </span>
             </el-checkbox-button>
           </el-checkbox-group>
         </el-collapse-item>
@@ -2673,13 +2640,14 @@ function sharePage() {
           <template #title>
             <div class="flex align-center">
               <div class="collapse-title-icon" style="background: rgba(119, 118, 255, 0.8)"></div>
-              <span class="collapse-title-font"> 其他资源（估算）&emsp;{{ numberFloor(calculationResult.otherTotalDraw, 0) }}抽 </span>
+              <span class="collapse-title-font"> 其他资源（估算）&emsp;{{ formatDrawCount(calculationResult.otherTotalDraw) }}抽 </span>
             </div>
           </template>
           <activity-gacha-resources
             v-for="(honeyCake, label) in otherRewardBySchedules"
             :key="label"
             :info="honeyCake"
+            :show-schedule-date="showActivityScheduleDates"
             v-show="rewardIsExpired(honeyCake) && rewardIsEmpty(honeyCake)"
           >
           </activity-gacha-resources>

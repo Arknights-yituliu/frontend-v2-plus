@@ -243,6 +243,10 @@
     overflow: hidden;
   }
 
+  .pack-content.pack-content-force-expanded {
+    display: flex;
+  }
+
   .pack-content-gacha {
     width: 100%;
     padding: 4px;

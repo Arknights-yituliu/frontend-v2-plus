@@ -1,5 +1,17 @@
 {
-  "char_1048_orchd2": {
+  "char_4230_mcnist": {
+    "updateTime": "2026/07/17 12:00:00",
+    "obtainApproach": "赠送干员",
+    "name": "机械师"
+  },"char_4234_pedro": {
+    "updateTime": "2026/07/10 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "佩德洛"
+  }, "char_4229_aphris": {
+    "updateTime": "2026/07/10 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "谬因"
+  },"char_1048_orchd2": {
     "updateTime": "2026/06/01 12:00:00",
     "obtainApproach": "限定干员",
     "name": "焰狐龙梓兰"

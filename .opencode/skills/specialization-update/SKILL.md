@@ -116,7 +116,30 @@ For each profession/branch that the new operator covers, check:
 
 **Do NOT update** if the new efficiency is lower or equal to the existing best.
 
-### Step 6: Commit
+### Step 6: Update UI component branch list
+
+When a **new branch** is added to `optimal_specialization.json` (e.g. `游击手` under `辅助`), the corresponding UI component must also be updated.
+
+Edit `src/components/specialization/OptimalSpecializationPaths.vue` and add the new branch to the `branchesByProfession` object for the matching profession:
+
+```javascript
+const branchesByProfession = {
+  "近卫": ["领主", "斗士"],
+  "狙击": ["攻城手", "速射手"],
+  "术师": [],
+  "医疗": ["链愈师", "行医"],
+  "重装": ["驭法铁卫"],
+  "辅助": ["游击手"],  // ← add new branch here
+  "特种": [],
+  "先锋": []
+};
+```
+
+If the profession already has other branches, simply append the new branch to the existing array. If the profession has no existing branches, create a new array with the branch name.
+
+**Do NOT update** if the branch already exists in the `branchesByProfession` object.
+
+### Step 7: Commit
 
 Use the commit format:
 ```
