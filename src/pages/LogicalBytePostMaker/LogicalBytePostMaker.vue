@@ -100,6 +100,11 @@ const pageGroups = [
         title: '缓存掉率数据对比',
         description: '上传掉率 JSON，与本地 Penguin 缓存矩阵对比',
         to: '/lb/json-cache-compare'
+      },
+      {
+        title: 'OpenAPI 测试',
+        description: '测试第三方 OpenAPI 接口的认证与数据响应',
+        to: '/lb/open-api-test'
       }
     ]
   },

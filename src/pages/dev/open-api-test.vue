@@ -115,7 +115,7 @@ import { ElMessage } from 'element-plus'
 const apiToken = ref('')
 
 /** API 基础地址 */
-const baseUrl = ref('http://127.0.0.1:10010')
+const baseUrl = ref('https://backend.yituliu.cn')
 
 /** 请求加载状态 */
 const loading = ref(false)

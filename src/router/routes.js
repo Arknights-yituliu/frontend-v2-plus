@@ -359,6 +359,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/open-api-test',
+        text: 'OpenAPI测试',
+        name: 'LBOpenApiTest',
+        display: false,
+        component: () => import('/src/pages/dev/open-api-test.vue'),
+        meta: {
+            title: 'OpenAPI测试'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',
