@@ -692,7 +692,7 @@ onMounted(() => {
           <td v-if="detailMode" class="logistics-cost-cell" :title="getMaterialCostTitle(operator)">
             {{ formatCost(getUnlockCost(operator).materials) }}
           </td>
-          <td class="logistics-description-cell">
+          <td>
             <span v-html="operator.description"></span>
           </td>
         </tr>
