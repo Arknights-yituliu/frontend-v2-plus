@@ -104,7 +104,7 @@ const pageGroups = [
       {
         title: 'OpenAPI 测试',
         description: '测试第三方 OpenAPI 接口的认证与数据响应',
-        to: '/lb/open-api-test'
+        to: '/dev/open-api-test'
       }
     ]
   },

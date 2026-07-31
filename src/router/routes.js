@@ -359,7 +359,7 @@ const routes = [
         }
     },
     {
-        path: '/lb/open-api-test',
+        path: '/dev/open-api-test',
         text: 'OpenAPI测试',
         name: 'LBOpenApiTest',
         display: false,
