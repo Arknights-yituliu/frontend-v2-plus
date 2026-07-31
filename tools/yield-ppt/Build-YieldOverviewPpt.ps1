@@ -70,8 +70,31 @@ function Resolve-IssuePath([string]$Path, [string]$Description) {
     return $candidate
 }
 
+function Resolve-ManifestAssetPath([string]$Path, [string]$Description) {
+    if ([string]::IsNullOrWhiteSpace($Path)) {
+        throw "$Description is required."
+    }
+
+    try {
+        $candidate = if ([System.IO.Path]::IsPathRooted($Path)) {
+            [System.IO.Path]::GetFullPath($Path)
+        } else {
+            [System.IO.Path]::GetFullPath((Join-Path $script:manifestRoot $Path))
+        }
+    } catch {
+        throw "$Description has an invalid asset path '$Path' (manifest directory '$script:manifestRoot')."
+    }
+
+    $rootPrefix = $script:issueRoot.TrimEnd('\') + '\'
+    if (-not $candidate.StartsWith($rootPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+        throw "$Description must stay inside the issue directory: $Path"
+    }
+
+    return $candidate
+}
+
 function Assert-ImageFile([string]$Path, [string]$Description) {
-    $resolvedPath = Resolve-IssuePath $Path $Description
+    $resolvedPath = Resolve-ManifestAssetPath $Path $Description
     if (-not (Test-Path -LiteralPath $resolvedPath -PathType Leaf)) {
         throw "$Description was not found: $Path"
     }
@@ -334,10 +357,25 @@ if (-not (Test-Path -LiteralPath $issueRoot -PathType Container)) {
 }
 
 $manifestPath = Resolve-IssuePath $ManifestFile 'Manifest file'
+if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf) -and $ManifestFile -eq 'yield-overview-manifest.json') {
+    $manifestCandidates = @(
+        Get-ChildItem -LiteralPath $issueRoot -Filter $ManifestFile -File -Recurse |
+            Where-Object {
+                $_.DirectoryName.StartsWith($issueRoot, [System.StringComparison]::OrdinalIgnoreCase)
+            }
+    )
+
+    if ($manifestCandidates.Count -eq 1) {
+        $manifestPath = $manifestCandidates[0].FullName
+    } elseif ($manifestCandidates.Count -gt 1) {
+        throw "Multiple material package manifests were found. Specify -ManifestFile explicitly."
+    }
+}
 if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
     throw "Manifest file was not found: $ManifestFile"
 }
 
+$script:manifestRoot = [System.IO.Path]::GetDirectoryName($manifestPath)
 $manifest = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
 Test-Manifest $manifest
 

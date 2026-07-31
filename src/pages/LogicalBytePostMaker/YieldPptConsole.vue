@@ -951,6 +951,9 @@ async function generatePackPageImage(page, index) {
       useCORS: true,
       allowTaint: false,
       logging: false,
+      onclone: (_, clonedTarget) => {
+        clonedTarget.style.setProperty('background', 'transparent', 'important')
+      },
     })
     const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
     if (!blob) {
@@ -2927,6 +2930,89 @@ onBeforeUnmount(() => {
   box-shadow: none;
 }
 
+.yield-ppt-activity-capture-root,
+.yield-ppt-activity-preview-root {
+  max-width: none;
+}
+
+.yield-ppt-activity-capture-root .act_store_block,
+.yield-ppt-activity-preview-root .act_store_block {
+  width: 100%;
+  background: transparent !important;
+}
+
+/* Keep exported store cards on the desktop rendering rules at every viewport. */
+.yield-ppt-activity-capture-root .activity-store-content,
+.yield-ppt-activity-preview-root .activity-store-content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  justify-content: flex-start;
+  margin: 8px 0;
+}
+
+.yield-ppt-activity-capture-root .activity-store-good,
+.yield-ppt-activity-preview-root .activity-store-good {
+  display: flex;
+  align-items: center;
+  width: 180px;
+  min-width: 180px;
+  height: 90px;
+  margin: 3px;
+  overflow: hidden;
+  border-left-width: 4px;
+  border-left-style: solid;
+  border-radius: 8px;
+}
+
+.yield-ppt-activity-capture-root .activity-store-good-sprite,
+.yield-ppt-activity-preview-root .activity-store-good-sprite {
+  position: relative;
+  width: 90px;
+  min-width: 90px;
+  height: 90px;
+  margin: 0;
+}
+
+.yield-ppt-activity-capture-root .activity-store-good-sprite div,
+.yield-ppt-activity-preview-root .activity-store-good-sprite div {
+  position: absolute;
+  top: calc((-183px + 90px) / 2);
+  left: calc((-183px + 90px) / 2);
+  transform: scale(calc(90 / 183));
+}
+
+.yield-ppt-activity-capture-root .activity-store-good-info,
+.yield-ppt-activity-preview-root .activity-store-good-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 90px;
+  height: 100%;
+  padding: 8px 0;
+  text-align: center;
+}
+
+.yield-ppt-activity-capture-root .activity-store-good-name,
+.yield-ppt-activity-capture-root .activity-store-good-price,
+.yield-ppt-activity-preview-root .activity-store-good-name,
+.yield-ppt-activity-preview-root .activity-store-good-price {
+  display: block;
+  width: 100%;
+  color: gray;
+  font-size: 12px;
+}
+
+.yield-ppt-activity-capture-root .activity-store-good-efficiency,
+.yield-ppt-activity-preview-root .activity-store-good-efficiency {
+  font-size: 28px;
+  font-weight: bolder;
+  line-height: 28px;
+}
+
 .yield-ppt-cultivation-capture-layer {
   width: 1035px;
 }
@@ -2949,24 +3035,29 @@ onBeforeUnmount(() => {
   position: fixed;
   top: 0;
   left: -12000px;
-  width: 1040px;
+  width: 1048px;
   pointer-events: none;
 }
 
 .yield-ppt-pack-capture {
-  width: 1040px;
-  padding: 12px;
+  box-sizing: border-box;
+  width: 1048px;
+  padding: 0;
+  background: transparent !important;
 }
 
 .yield-ppt-pack-capture :deep(.pack-card-container),
 .yield-ppt-pack-preview :deep(.pack-card-container) {
-  width: 1024px;
+  width: 1032px;
   max-width: none;
+  background: transparent;
 }
 
 .yield-ppt-pack-capture :deep(.pack-card),
 .yield-ppt-pack-preview :deep(.pack-card) {
+  flex: 0 0 auto;
   width: 500px;
+  margin: 8px;
   max-width: none;
 }
 
@@ -2977,8 +3068,10 @@ onBeforeUnmount(() => {
 }
 
 .yield-ppt-pack-preview {
-  width: 1040px;
-  padding: 12px;
+  box-sizing: border-box;
+  width: 1048px;
+  padding: 0;
+  background: transparent;
 }
 
 .yield-ppt-image-preview-dialog :deep(.v-card-text) {

@@ -125,21 +125,23 @@ const NEED_OPTIONS = [
 const steps = [
   {
     key: "resources",
-    label: "资源需求",
-    title: "先看你现在的养成压力",
+    label: "养成需求",
     fields: [
       {
         key: "lmdNeed",
+        layout: "need",
         label: "在养成干员时，你有多缺龙门币？",
         options: NEED_OPTIONS,
       },
       {
         key: "experienceNeed",
+        layout: "need",
         label: "在养成干员时，你有多缺经验书？",
         options: NEED_OPTIONS,
       },
       {
         key: "farmingHabit",
+        layout: "farming",
         label: "平时会额外刷取龙门币或经验书吗？",
         options: [
           {
@@ -156,7 +158,7 @@ const steps = [
           },
           {
             value: "frequently",
-            label: "每天接近或超过 100 理智",
+            label: "每天 100 理智以上",
             icon: "mdi-battery-90",
             tone: "orange",
           },
@@ -166,11 +168,11 @@ const steps = [
   },
   {
     key: "operation",
-    label: "操作习惯",
-    title: "你通常怎样照看基建？",
+    label: "换班频率",
     fields: [
       {
         key: "shiftMode",
+        layout: "frequency",
         label: "你每天通常能安排几次换班？",
         options: [
           {
@@ -198,6 +200,7 @@ const steps = [
       },
       {
         key: "executionReliability",
+        layout: "reliability",
         label: "在这个频率下，你能否稳定收菜和换班？",
         options: [
           {
@@ -224,42 +227,43 @@ const steps = [
   },
   {
     key: "tradeoffs",
-    label: "长期取舍",
-    title: "最后确认两个长期选择",
+    label: "长期选择",
     fields: [
       {
         key: "orundumPreference",
+        layout: "binary",
         label: "愿意以约 30% 养成产出换取每月约 10 抽吗？",
         options: [
-          {
-            value: "accept",
-            label: "愿意",
-            icon: "mdi-star-four-points-outline",
-            tone: "purple",
-          },
           {
             value: "decline",
             label: "不愿意",
             icon: "mdi-factory",
             tone: "blue",
           },
+          {
+            value: "accept",
+            label: "愿意",
+            icon: "mdi-star-four-points-outline",
+            tone: "purple",
+          },
         ],
       },
       {
         key: "carbonNeed",
+        layout: "binary",
         label: "你是否缺升级基建所用的碳？",
         options: [
-          {
-            value: "needed",
-            label: "缺",
-            icon: "mdi-cube-outline",
-            tone: "orange",
-          },
           {
             value: "notNeeded",
             label: "暂时不缺",
             icon: "mdi-check-circle-outline",
             tone: "green",
+          },
+          {
+            value: "needed",
+            label: "缺",
+            icon: "mdi-cube-outline",
+            tone: "orange",
           },
         ],
       },
@@ -277,41 +281,62 @@ const DEFAULT_ANSWERS = Object.freeze({
   carbonNeed: null,
 });
 const ANSWER_FIELDS = steps.flatMap((step) => step.fields);
-const LAYOUT_CHOICE_META = [
+const LAYOUT_CARD_META = [
   {
-    id: "153",
+    key: "153",
+    layoutId: "153",
     label: "153",
-    description: "经验优先",
+    description: "经验书优先",
     icon: "mdi-book-open-page-variant-outline",
     tone: "blue",
+    compatibleShiftModes: ["twice", "threeTimes"],
   },
   {
-    id: "243",
+    key: "243",
+    layoutId: "243",
     label: "243",
-    description: "龙门币优先/书钱均衡",
+    description: "龙门币优先",
+    icon: "mdi-cash-multiple",
+    tone: "blue",
+    compatibleShiftModes: ["once", "twice", "threeTimes"],
+  },
+  {
+    key: "243-orundum",
+    layoutId: "243",
+    label: "243",
+    description: "合成玉",
+    icon: "mdi-star-four-points-outline",
+    tone: "red",
+    compatibleShiftModes: ["twice", "threeTimes"],
+  },
+  {
+    key: "252-2-gold",
+    layoutId: "252",
+    label: "252（2 赤金）",
+    description: "钱书均衡",
     icon: "mdi-scale-balance",
     tone: "green",
+    compatibleShiftModes: ["twice", "threeTimes"],
   },
   {
-    id: "252",
-    label: "252",
-    description: "书钱均衡",
-    icon: "mdi-factory",
-    tone: "orange",
+    key: "252-3-gold",
+    layoutId: "252",
+    label: "252（3 赤金）",
+    description: "龙门币优先",
+    icon: "mdi-cash-multiple",
+    tone: "blue",
+    compatibleShiftModes: ["twice", "threeTimes"],
   },
   {
-    id: "342",
+    key: "342-orundum",
+    layoutId: "342",
     label: "342",
-    description: "搓玉方向",
+    description: "合成玉",
     icon: "mdi-star-four-points-outline",
-    tone: "purple",
+    tone: "red",
+    compatibleShiftModes: ["twice", "threeTimes"],
   },
 ];
-const LAYOUTS_BY_SHIFT_MODE = {
-  once: ["243"],
-  twice: ["153", "243", "252", "342"],
-  threeTimes: ["153", "243", "252", "342"],
-};
 const LAYOUT_SHIFT_OPTIONS = [
   {
     value: "threeTimes",
@@ -335,26 +360,61 @@ const LAYOUT_SHIFT_OPTIONS = [
     tone: "gray",
   },
 ];
+const LEGACY_LAYOUT_CARD_KEYS = Object.freeze({
+  "243-simplified": "243",
+  "252-right-full-2-gold": "252-2-gold",
+  "252-full-blood-2-gold": "252-2-gold",
+  "252-right-full-3-gold": "252-3-gold",
+});
+
+function isLayoutCardCompatible(card, shiftMode) {
+  return Boolean(
+    card &&
+      (!shiftMode || card.compatibleShiftModes.includes(shiftMode)),
+  );
+}
+
+function getLayoutCardKeyForSchedule(layoutId, variant) {
+  if (layoutId === "252") {
+    if (String(variant).endsWith("2Gold")) {
+      return "252-2-gold";
+    }
+
+    if (String(variant).endsWith("3Gold")) {
+      return "252-3-gold";
+    }
+  }
+
+  if (layoutId === "243") {
+    if (variant === "orundum") {
+      return "243-orundum";
+    }
+  }
+
+  if (layoutId === "342") {
+    return "342-orundum";
+  }
+
+  return LAYOUT_CARD_META.find((card) => card.key === layoutId)?.key || null;
+}
+
 const LAYOUT_SCHEDULE_GROUPS = LAYOUT_SHIFT_OPTIONS.map((shift) => ({
   ...shift,
-  options: LAYOUTS_BY_SHIFT_MODE[shift.value].map((layoutId) => {
-    const layout = LAYOUT_CHOICE_META.find(
-      (choice) => choice.id === layoutId,
-    );
-
-    return {
-      ...layout,
-      ...RIIC_LAYOUT_RECOMMENDATION_LAYOUTS[layoutId],
-      value: `${shift.value}:${layoutId}`,
-    };
-  }),
+  options: LAYOUT_CARD_META.filter((card) =>
+    isLayoutCardCompatible(card, shift.value),
+  ).map((card) => ({
+    ...card,
+    ...RIIC_LAYOUT_RECOMMENDATION_LAYOUTS[card.layoutId],
+    id: card.layoutId,
+    displayShiftMode: shift.value,
+    value: `${shift.value}:${card.key}`,
+  })),
 }));
 
 const answers = reactive({ ...DEFAULT_ANSWERS });
 const currentStep = ref(0);
 const contentPanel = ref(null);
 const scheduleCapturePanel = ref(null);
-const resultStepIndex = steps.length;
 const ownedOperators = ref([]);
 const ownedOperatorSource = ref("");
 const ownedOperatorMessage = ref("");
@@ -388,8 +448,6 @@ const isUserLoggedIn = computed(() => {
   const token = localStorage.getItem("USER_TOKEN");
   return Boolean(token && token !== "null" && token !== "undefined");
 });
-const isResult = computed(() => currentStep.value === resultStepIndex);
-const canContinue = computed(() => isStepComplete(activeStep.value));
 const isRecommendationComplete = computed(() =>
   steps.every((step) => isStepComplete(step)),
 );
@@ -408,25 +466,36 @@ const selectedManualScheduleValue = computed(() => {
     return "";
   }
 
-  return `${confirmedLayoutPlan.value.shiftMode}:${confirmedLayoutPlan.value.layoutId}`;
+  return `${confirmedLayoutPlan.value.shiftMode}:${confirmedLayoutPlan.value.cardKey}`;
 });
 const availableLayoutChoices = computed(() => {
-  return LAYOUT_CHOICE_META.map((choice) => ({
+  return LAYOUT_CARD_META.map((choice) => ({
     ...choice,
-    layout: RIIC_LAYOUT_RECOMMENDATION_LAYOUTS[choice.id],
+    layout: RIIC_LAYOUT_RECOMMENDATION_LAYOUTS[choice.layoutId],
   }));
 });
 const activeLayoutChoice = computed(
   () =>
     availableLayoutChoices.value.find(
-      (choice) => choice.id === activeLayoutId.value,
+      (choice) => choice.layoutId === activeLayoutId.value,
     ) || null,
 );
 const isLayoutRecommended = computed(
-  () => (value) =>
-    recommendation.value &&
-    value ===
-      `${recommendation.value.shiftMode.id}:${recommendation.value.layout.id}`,
+  () => (option) => {
+    const candidate = recommendation.value?.selectedSchedule?.candidate;
+    const requestedShiftMode =
+      recommendation.value?.requestedShiftMode?.id;
+    const recommendedCardKey = getLayoutCardKeyForSchedule(
+      candidate?.layout,
+      candidate?.variant,
+    );
+
+    return Boolean(
+      candidate &&
+        option.displayShiftMode === requestedShiftMode &&
+        option.key === recommendedCardKey,
+    );
+  },
 );
 const isLayoutPlanningReady = computed(
   () => Boolean(confirmedLayoutPlan.value),
@@ -449,14 +518,23 @@ const layoutPlanSummary = computed(() => {
     return "";
   }
 
-  const layout = RIIC_LAYOUT_RECOMMENDATION_LAYOUTS[
-    confirmedLayoutPlan.value.layoutId
-  ];
+  const card = LAYOUT_CARD_META.find(
+    (item) => item.key === confirmedLayoutPlan.value.cardKey,
+  );
   const shift = LAYOUT_SHIFT_OPTIONS.find(
     (option) => option.value === confirmedLayoutPlan.value.shiftMode,
   );
 
-  return [layout?.shortName, shift?.label].filter(Boolean).join(" · ");
+  return [card?.label, card?.description, shift?.label]
+    .filter(Boolean)
+    .join(" · ");
+});
+const recommendationCard = computed(() => {
+  const candidate = recommendation.value?.selectedSchedule?.candidate;
+
+  return getLayoutCardByKey(
+    getLayoutCardKeyForSchedule(candidate?.layout, candidate?.variant),
+  );
 });
 const operatorBoxStatus = computed(() => {
   if (loadingOwnedOperators.value) {
@@ -805,14 +883,42 @@ function normalizePlanningMode(value) {
   return null;
 }
 
+function getLayoutCardByKey(value) {
+  const normalizedKey = LEGACY_LAYOUT_CARD_KEYS[value] || value;
+  return LAYOUT_CARD_META.find((card) => card.key === normalizedKey) || null;
+}
+
+function getDefaultLayoutCard(layoutId, shiftMode) {
+  return (
+    LAYOUT_CARD_META.find(
+      (card) =>
+        card.layoutId === layoutId &&
+        isLayoutCardCompatible(card, shiftMode) &&
+        card.key === layoutId,
+    ) ||
+    LAYOUT_CARD_META.find(
+      (card) =>
+        card.layoutId === layoutId &&
+        isLayoutCardCompatible(card, shiftMode),
+    ) ||
+    null
+  );
+}
+
 function normalizeLayoutEntry(
   value,
   savedPlanningMode,
   savedLayoutId,
   savedAnswers,
 ) {
-  if (LAYOUT_CHOICE_META.some((choice) => choice.id === value)) {
-    return value;
+  const savedCard = getLayoutCardByKey(value);
+  if (savedCard) {
+    return savedCard.key;
+  }
+
+  const legacyCard = getDefaultLayoutCard(value, savedAnswers?.shiftMode);
+  if (legacyCard) {
+    return legacyCard.key;
   }
 
   if (value === "recommend") {
@@ -823,25 +929,34 @@ function normalizeLayoutEntry(
 
   if (
     normalizePlanningMode(savedPlanningMode) === "manual" &&
-    LAYOUT_CHOICE_META.some((choice) => choice.id === savedLayoutId)
+    getDefaultLayoutCard(savedLayoutId, savedAnswers?.shiftMode)
   ) {
-    return savedLayoutId;
+    return getDefaultLayoutCard(savedLayoutId, savedAnswers?.shiftMode).key;
   }
 
   return null;
 }
 
 function normalizeConfirmedLayoutPlan(value) {
+  const card =
+    getLayoutCardByKey(value?.cardKey) ||
+    getLayoutCardByKey(
+      getLayoutCardKeyForSchedule(value?.layoutId, value?.variant),
+    ) ||
+    getDefaultLayoutCard(value?.layoutId, value?.shiftMode);
+
   if (
     !value ||
-    !LAYOUT_CHOICE_META.some((choice) => choice.id === value.layoutId) ||
-    !LAYOUT_SHIFT_OPTIONS.some((option) => option.value === value.shiftMode)
+    !card ||
+    !LAYOUT_SHIFT_OPTIONS.some((option) => option.value === value.shiftMode) ||
+    !isLayoutCardCompatible(card, value.shiftMode)
   ) {
     return null;
   }
 
   return {
-    layoutId: value.layoutId,
+    cardKey: card.key,
+    layoutId: card.layoutId,
     shiftMode: value.shiftMode,
   };
 }
@@ -852,8 +967,9 @@ function isStepComplete(step, candidateAnswers = answers) {
   );
 }
 
-function isLayoutChoiceAvailable(layoutId, shiftMode = answers.shiftMode) {
-  return !shiftMode || LAYOUTS_BY_SHIFT_MODE[shiftMode]?.includes(layoutId);
+function isLayoutChoiceAvailable(cardKey, shiftMode = answers.shiftMode) {
+  const card = getLayoutCardByKey(cardKey);
+  return isLayoutCardCompatible(card, shiftMode);
 }
 
 function getMaxAvailableStep(candidateAnswers) {
@@ -928,13 +1044,14 @@ function loadSavedWizardState() {
         : layoutEntry.value
         ? "manual"
         : null;
-    selectedLayoutId.value = LAYOUT_CHOICE_META.some(
-      (choice) => choice.id === parsedDraft.selectedLayoutId,
+    selectedLayoutId.value = LAYOUT_CARD_META.some(
+      (card) => card.layoutId === parsedDraft.selectedLayoutId,
     )
       ? parsedDraft.selectedLayoutId
       : "";
     if (layoutEntry.value !== "recommend") {
-      selectedLayoutId.value = layoutEntry.value;
+      selectedLayoutId.value =
+        getLayoutCardByKey(layoutEntry.value)?.layoutId || "";
     }
     confirmedLayoutPlan.value = normalizeConfirmedLayoutPlan(
       parsedDraft.confirmedLayoutPlan,
@@ -990,30 +1107,26 @@ function saveWizardState() {
   }
 }
 
-function isStepAvailable(index) {
-  if (index === resultStepIndex) {
-    return steps.every((step) => isStepComplete(step));
-  }
-
-  return steps.slice(0, index).every((step) => isStepComplete(step));
-}
-
 function selectOption(key, value) {
   answers[key] = value;
 }
 
 function selectLayoutEntry(value) {
+  const card =
+    getLayoutCardByKey(value) ||
+    getDefaultLayoutCard(value, answers.shiftMode);
+
   if (
     value !== "recommend" &&
-    !LAYOUT_CHOICE_META.some((choice) => choice.id === value)
+    !card
   ) {
     return;
   }
 
-  layoutEntry.value = value;
+  layoutEntry.value = value === "recommend" ? value : card.key;
   planningMode.value = value === "recommend" ? "recommend" : "manual";
   if (value !== "recommend") {
-    selectedLayoutId.value = value;
+    selectedLayoutId.value = card.layoutId;
     confirmedLayoutPlan.value = null;
   }
   setLayoutPlanExpanded(true);
@@ -1036,18 +1149,19 @@ function selectLayoutChoice(layoutId) {
 }
 
 function selectManualScheduleOption(value) {
-  const [shiftMode, layoutId] = String(value).split(":");
+  const [shiftMode, cardKey] = String(value).split(":");
+  const card = getLayoutCardByKey(cardKey);
 
   if (
     !LAYOUT_SHIFT_OPTIONS.some((option) => option.value === shiftMode) ||
-    !LAYOUT_CHOICE_META.some((choice) => choice.id === layoutId) ||
-    !isLayoutChoiceAvailable(layoutId, shiftMode)
+    !card ||
+    !isLayoutChoiceAvailable(cardKey, shiftMode)
   ) {
     return;
   }
 
   if (
-    confirmedLayoutPlan.value?.layoutId === layoutId &&
+    confirmedLayoutPlan.value?.cardKey === cardKey &&
     confirmedLayoutPlan.value?.shiftMode === shiftMode
   ) {
     selectedLayoutId.value = "";
@@ -1059,11 +1173,15 @@ function selectManualScheduleOption(value) {
     return;
   }
 
-  layoutEntry.value = layoutId;
+  layoutEntry.value = card.key;
   planningMode.value = "manual";
-  selectedLayoutId.value = layoutId;
+  selectedLayoutId.value = card.layoutId;
   answers.shiftMode = shiftMode;
-  confirmedLayoutPlan.value = { layoutId, shiftMode };
+  confirmedLayoutPlan.value = {
+    cardKey: card.key,
+    layoutId: card.layoutId,
+    shiftMode,
+  };
   recommendationPanelOpen.value = false;
   setLayoutPlanExpanded(true);
 }
@@ -1092,26 +1210,35 @@ function openRecommendationPanel() {
   recommendationPanelOpen.value = true;
 }
 
+function toggleRecommendationPanel() {
+  if (recommendationPanelOpen.value) {
+    closeRecommendationPanel();
+    return;
+  }
+
+  openRecommendationPanel();
+}
+
+function selectRecommendationStep(index) {
+  if (!Number.isInteger(index) || !steps[index]) {
+    return;
+  }
+
+  layoutEntry.value = "recommend";
+  planningMode.value = "recommend";
+  currentStep.value = index;
+  recommendationPanelOpen.value = true;
+}
+
 function closeRecommendationPanel() {
   recommendationPanelOpen.value = false;
 }
 
-function nextStep() {
-  if (!canContinue.value) {
-    return;
-  }
-
-  if (currentStep.value >= steps.length - 1) {
-    recommendationPanelOpen.value = false;
-    focusCurrentPanel();
-    return;
-  }
-
-  currentStep.value += 1;
-}
-
-function previousStep() {
-  currentStep.value = Math.max(0, currentStep.value - 1);
+function resetRecommendationAnswers() {
+  Object.assign(answers, DEFAULT_ANSWERS);
+  currentStep.value = 0;
+  layoutEntry.value = "recommend";
+  planningMode.value = "recommend";
 }
 
 function resetWizard() {
@@ -2166,118 +2293,139 @@ onMounted(async () => {
             class="recommendation-entry-panel"
             :class="{ expanded: recommendationPanelOpen }"
           >
-              <el-button
+              <button
+                type="button"
                 class="recommendation-entry-action"
-                type="primary"
-                plain
-                @click="openRecommendationPanel"
+                :aria-expanded="recommendationPanelOpen"
+                @click="toggleRecommendationPanel"
               >
-                不知道选什么，帮我推荐
-                <v-icon icon="mdi-chevron-down" size="18"></v-icon>
-              </el-button>
+                <span>不知道选什么，帮我推荐</span>
+                <v-icon
+                  :icon="
+                    recommendationPanelOpen
+                      ? 'mdi-chevron-up'
+                      : 'mdi-chevron-down'
+                  "
+                  size="18"
+                ></v-icon>
+              </button>
+
+              <div
+                v-if="recommendationPanelOpen"
+                class="recommendation-step-tabs"
+              >
+                <div
+                  class="recommendation-step-tab-list"
+                  role="tablist"
+                  aria-label="布局推荐问卷"
+                >
+                  <button
+                    v-for="(step, index) in steps"
+                    :key="step.key"
+                    type="button"
+                    class="recommendation-step-tab"
+                    :class="{
+                      active: currentStep === index,
+                      complete: isStepComplete(step),
+                    }"
+                    role="tab"
+                    :aria-selected="currentStep === index"
+                    @click="selectRecommendationStep(index)"
+                  >
+                    <v-icon
+                      :icon="
+                        isStepComplete(step)
+                          ? 'mdi-check-circle'
+                          : 'mdi-alert-circle-outline'
+                      "
+                      size="16"
+                    ></v-icon>
+                    <span>{{ step.label }}</span>
+                  </button>
+                </div>
+              </div>
 
               <transition name="recommendation-panel">
                 <section
                   v-if="recommendationPanelOpen && activeStep"
                   class="recommendation-question-panel"
                 >
-                  <header class="recommendation-panel-heading">
-                    <div>
-                      <span>布局推荐 · {{ currentStep + 1 }}/{{ steps.length }}</span>
-                      <h3>{{ activeStep.title }}</h3>
-                    </div>
-                    <el-button
-                      text
-                      circle
-                      aria-label="收起推荐问卷"
-                      @click="closeRecommendationPanel"
-                    >
-                      <v-icon icon="mdi-chevron-up" size="20"></v-icon>
-                    </el-button>
-                  </header>
-
-                  <fieldset
-                    v-for="field in activeStep.fields"
-                    :key="field.key"
-                    class="recommendation-field"
+                  <div
+                    class="recommendation-question-fields"
+                    :class="`question-fields-${activeStep.key}`"
                   >
-                    <legend>{{ field.label }}</legend>
-                    <el-radio-group
-                      v-model="answers[field.key]"
-                      class="recommendation-answer-group"
-                      :class="{ compact: field.options.length <= 2 }"
-                      :aria-label="field.label"
+                    <fieldset
+                      v-for="field in activeStep.fields"
+                      :key="field.key"
+                      class="recommendation-field"
+                      :class="`field-${field.layout}`"
                     >
-                      <el-radio
-                        v-for="option in field.options"
-                        :key="option.value"
-                        :label="option.value"
-                        class="recommendation-answer"
-                        :class="`tone-${option.tone}`"
+                      <legend>{{ field.label }}</legend>
+                      <el-radio-group
+                        v-model="answers[field.key]"
+                        class="recommendation-answer-group"
+                        :class="[
+                          `answer-group-${field.layout}`,
+                          { compact: field.options.length <= 2 },
+                        ]"
+                        :aria-label="field.label"
                       >
-                        {{ option.label }}
-                      </el-radio>
-                    </el-radio-group>
-                  </fieldset>
-
-                  <div class="recommendation-panel-actions">
-                    <el-button
-                      :disabled="currentStep === 0"
-                      @click="previousStep"
-                    >
-                      上一步
-                    </el-button>
-                    <el-button
-                      type="primary"
-                      :disabled="!canContinue"
-                      @click="nextStep"
-                    >
-                      {{ currentStep === steps.length - 1 ? "查看推荐" : "下一步" }}
-                    </el-button>
+                        <el-radio
+                          v-for="option in field.options"
+                          :key="option.value"
+                          :label="option.value"
+                          class="recommendation-answer"
+                          :class="`tone-${option.tone}`"
+                        >
+                          <span class="recommendation-answer-content">
+                            <v-icon :icon="option.icon" size="18"></v-icon>
+                            <span class="recommendation-answer-copy">
+                              <strong>{{ option.label }}</strong>
+                              <small v-if="option.description">
+                                {{ option.description }}
+                              </small>
+                            </span>
+                          </span>
+                        </el-radio>
+                      </el-radio-group>
+                    </fieldset>
                   </div>
+
                 </section>
               </transition>
 
               <section
                 v-if="
-                  !recommendationPanelOpen &&
                   layoutEntry === 'recommend' &&
                   recommendation
                 "
                 class="recommendation-result-panel"
               >
-                <div>
-                  <span>推荐布局</span>
-                  <strong>{{ recommendation.layout.shortName }}</strong>
-                  <small>{{ recommendation.shiftMode.shortName }}</small>
+                <div class="recommendation-result-head">
+                  <span class="recommendation-result-label">推荐布局</span>
+                  <div class="recommendation-result-summary">
+                    <strong>
+                      {{ recommendationCard?.label || recommendation.layout.shortName }}
+                    </strong>
+                    <small>
+                      {{ recommendationCard?.description || "" }}
+                      · {{ recommendation.requestedShiftMode.shortName }}
+                    </small>
+                  </div>
+                  <button
+                    type="button"
+                    class="recommendation-result-reset"
+                    title="重置问卷"
+                    aria-label="重置问卷并清除所有已填写选项"
+                    @click="resetRecommendationAnswers"
+                  >
+                    <v-icon icon="mdi-restart" size="16"></v-icon>
+                    <span>重置</span>
+                  </button>
                 </div>
-                <el-button link type="primary" @click="openRecommendationPanel">
-                  调整回答
-                </el-button>
-              </section>
-              <p
-                v-if="
-                  !recommendationPanelOpen &&
-                  layoutEntry === 'recommend' &&
-                  recommendation
-                "
-                class="recommendation-layout-reason"
-              >
-                {{ recommendation.layoutReason }}
-              </p>
-
-              <section
-                v-if="
-                  !recommendationPanelOpen &&
-                  layoutEntry === 'recommend' &&
-                  !recommendation
-                "
-                class="recommendation-resume-panel"
-              >
-                <span>推荐问卷尚未完成</span>
-                <el-button type="primary" plain @click="openRecommendationPanel">
-                  继续填写
-                </el-button>
+                <p class="recommendation-result-reason">
+                  {{ recommendation.layoutReason }}
+                </p>
               </section>
           </section>
 
@@ -2303,12 +2451,12 @@ onMounted(async () => {
                       type="button"
                       class="layout-choice"
                       :class="[
-                        `layout-${option.id}`,
+                        `layout-${option.key}`,
                         {
                           selected: selectedManualScheduleValue === option.value,
                           recommended:
                             layoutEntry === 'recommend' &&
-                            isLayoutRecommended(option.value),
+                            isLayoutRecommended(option),
                         },
                       ]"
                       role="radio"
@@ -2338,18 +2486,6 @@ onMounted(async () => {
                 </section>
               </div>
 
-              <el-alert
-                v-if="
-                  recommendation?.facilityNote &&
-                  activeLayoutId === recommendation.layout.id
-                "
-                :title="recommendation.facilityNote"
-                type="info"
-                :closable="false"
-                show-icon
-                class="facility-requirement-alert"
-              />
-
         </section>
 
         <section v-if="false" ref="contentPanel" class="result-panel">
@@ -2358,13 +2494,6 @@ onMounted(async () => {
             <span class="result-label">推荐方案</span>
             <h2>{{ recommendation.layout.name }}</h2>
             <p>{{ recommendation.layoutReason }}</p>
-            <p
-              v-if="recommendation.facilityNote"
-              class="facility-requirement-note"
-            >
-              <v-icon icon="mdi-information-outline" size="16"></v-icon>
-              {{ recommendation.facilityNote }}
-            </p>
           </div>
           <div class="layout-code">{{ recommendation.layout.shortName }}</div>
         </div>
@@ -3158,6 +3287,7 @@ onMounted(async () => {
 
 .recommendation-entry-action {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   width: 100%;
   min-height: 58px;
@@ -3165,45 +3295,117 @@ onMounted(async () => {
   padding: 12px 14px;
   border: 0;
   border-radius: 0;
+  background: transparent;
+  color: var(--riic-blue);
+  font: inherit;
   font-weight: 700;
+  text-align: left;
+  cursor: pointer;
 }
 
-.recommendation-entry-action :deep(.v-icon) {
+.recommendation-entry-action > .v-icon {
   margin-left: auto;
 }
 
-.recommendation-question-panel {
-  padding: 0 14px 14px;
-  border-top: 1px solid var(--c-border-color);
-}
-
-.recommendation-panel-heading {
+.recommendation-step-tabs {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 16px 0 14px;
+  align-items: stretch;
+  gap: 8px;
+  padding: 0 14px 14px;
 }
 
-.recommendation-panel-heading span {
-  color: var(--riic-blue);
+.recommendation-step-tab-list {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-width: 0;
+  gap: 6px;
+}
+
+.recommendation-step-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 34px;
+  gap: 5px;
+  padding: 5px 7px;
+  border: 1px solid color-mix(
+    in srgb,
+    var(--riic-gold) 45%,
+    var(--c-border-color)
+  );
+  border-radius: 4px;
+  background: color-mix(
+    in srgb,
+    var(--riic-gold) 8%,
+    var(--c-page-background-color)
+  );
+  color: var(--riic-gold);
+  font: inherit;
   font-size: 12px;
   font-weight: 700;
+  line-height: 1.25;
+  cursor: pointer;
 }
 
-.recommendation-panel-heading h3 {
-  margin: 4px 0 0;
-  color: var(--c-text-color);
-  font-size: 16px;
-  line-height: 1.45;
+.recommendation-step-tab:hover,
+.recommendation-step-tab.active {
+  border-color: color-mix(
+    in srgb,
+    var(--riic-gold) 70%,
+    var(--c-border-color)
+  );
+  background: color-mix(
+    in srgb,
+    var(--riic-gold) 14%,
+    var(--c-page-background-color)
+  );
+  color: var(--riic-gold);
 }
 
-.recommendation-panel-actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 20px;
-  padding-top: 14px;
+.recommendation-step-tab.active {
+  border-color: var(--riic-gold);
+  background: color-mix(
+    in srgb,
+    var(--riic-gold) 22%,
+    var(--c-page-background-color)
+  );
+  box-shadow: inset 0 -3px 0 var(--riic-gold);
+}
+
+.recommendation-step-tab.complete {
+  border-color: color-mix(
+    in srgb,
+    var(--riic-green) 55%,
+    var(--c-border-color)
+  );
+  background: color-mix(
+    in srgb,
+    var(--riic-green) 9%,
+    var(--c-page-background-color)
+  );
+  color: var(--riic-green);
+}
+
+.recommendation-step-tab.complete.active {
+  border-color: var(--riic-green);
+  background: color-mix(
+    in srgb,
+    var(--riic-green) 22%,
+    var(--c-page-background-color)
+  );
+  box-shadow: inset 0 -3px 0 var(--riic-green);
+}
+
+.recommendation-step-tab span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recommendation-question-panel {
+  padding: 14px;
   border-top: 1px solid var(--c-border-color);
 }
 
@@ -3267,54 +3469,102 @@ onMounted(async () => {
   margin-top: 4px;
 }
 
-.recommendation-result-panel,
-.recommendation-resume-panel {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 13px 14px 0;
+.recommendation-result-panel {
+  padding: 14px;
 }
 
-.recommendation-result-panel > div {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
+.recommendation-result-head {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
   min-width: 0;
 }
 
-.recommendation-result-panel span,
-.recommendation-resume-panel > span {
+.recommendation-result-label {
   color: var(--riic-muted);
   font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
-.recommendation-result-panel strong {
+.recommendation-result-summary {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.recommendation-result-summary strong {
+  overflow: hidden;
   color: var(--riic-green);
   font-size: 18px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.recommendation-result-panel small {
+.recommendation-result-summary small {
+  overflow: hidden;
+  margin-top: 3px;
   color: var(--riic-muted);
   font-size: 12px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.recommendation-layout-reason {
-  margin: 6px 14px 14px;
+.recommendation-result-reason {
+  margin: 12px 0 0;
   color: var(--riic-muted);
   font-size: 13px;
   line-height: 1.55;
 }
 
-.recommendation-field {
-  min-width: 0;
-  margin: 0 0 20px;
-  padding: 0;
-  border: 0;
+.recommendation-result-reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 5px 8px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--riic-muted);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
 }
 
-.recommendation-field:last-child {
-  margin-bottom: 0;
+.recommendation-result-reset:hover {
+  border-color: color-mix(
+    in srgb,
+    var(--riic-orange) 48%,
+    var(--c-border-color)
+  );
+  color: var(--riic-orange);
+}
+
+.recommendation-question-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 22px;
+}
+
+.recommendation-question-fields.question-fields-resources {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.recommendation-question-fields .field-farming {
+  grid-column: 1 / -1;
+}
+
+.recommendation-field {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .recommendation-field legend {
@@ -3326,6 +3576,7 @@ onMounted(async () => {
 }
 
 .recommendation-answer-group {
+  --recommendation-answer-height: 46px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
@@ -3338,7 +3589,9 @@ onMounted(async () => {
 }
 
 .recommendation-answer-group :deep(.el-radio) {
+  display: block;
   width: 100%;
+  height: var(--recommendation-answer-height);
   min-width: 0;
   margin: 0;
 }
@@ -3351,7 +3604,11 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--recommendation-answer-height);
+  min-width: 0;
+  min-height: 0;
   padding: 6px 8px;
   border-radius: 4px;
   background: var(--c-page-background-color-secondary);
@@ -3362,6 +3619,104 @@ onMounted(async () => {
   cursor: pointer;
 }
 
+.recommendation-answer-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  gap: 7px;
+}
+
+.recommendation-answer-content > .v-icon {
+  flex: 0 0 auto;
+  color: var(--option-color, var(--riic-blue));
+}
+
+.recommendation-answer-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.recommendation-answer-copy strong {
+  color: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.recommendation-answer-copy small {
+  margin-top: 2px;
+  color: var(--riic-muted);
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.answer-group-frequency {
+  --recommendation-answer-height: 72px;
+}
+
+.answer-group-frequency .recommendation-answer-content,
+.answer-group-farming .recommendation-answer-content {
+  flex-direction: column;
+  gap: 3px;
+  text-align: center;
+}
+
+.answer-group-frequency .recommendation-answer-copy {
+  align-items: center;
+}
+
+.answer-group-reliability {
+  --recommendation-answer-height: 54px;
+}
+
+.answer-group-reliability :deep(.el-radio__label) {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.answer-group-reliability .recommendation-answer-content {
+  justify-content: flex-start;
+}
+
+.answer-group-reliability .recommendation-answer-copy {
+  align-items: flex-start;
+}
+
+.answer-group-binary {
+  --recommendation-answer-height: 50px;
+}
+
+.answer-group-binary :deep(.el-radio__label) {
+  justify-content: flex-start;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.answer-group-binary .recommendation-answer-content {
+  justify-content: flex-start;
+}
+
+.recommendation-answer-group :deep(.el-radio__label) {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.recommendation-answer-group .recommendation-answer-content {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.recommendation-answer-group .recommendation-answer-copy {
+  align-items: flex-start;
+}
+
+.answer-group-frequency .recommendation-answer-content,
+.answer-group-farming .recommendation-answer-content {
+  align-items: flex-start;
+}
+
 .recommendation-answer-group
   :deep(.el-radio__input.is-checked + .el-radio__label) {
   background: color-mix(
@@ -3370,6 +3725,47 @@ onMounted(async () => {
     var(--c-page-background-color)
   );
   box-shadow: inset 3px 0 0 var(--option-color, var(--riic-blue));
+}
+
+@media (min-width: 901px) {
+  .recommendation-question-fields.question-fields-resources {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .recommendation-question-fields.question-fields-operation,
+  .recommendation-question-fields.question-fields-tradeoffs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .recommendation-question-fields .field-farming {
+    grid-column: auto;
+  }
+
+  .recommendation-question-fields .recommendation-answer-group,
+  .recommendation-question-fields .recommendation-answer-group.compact {
+    --recommendation-answer-height: 50px;
+    grid-template-columns: minmax(0, 1fr);
+    width: 288px;
+    max-width: 100%;
+  }
+
+  .recommendation-question-fields
+    .recommendation-answer-content,
+  .recommendation-question-fields .answer-group-frequency .recommendation-answer-content,
+  .recommendation-question-fields .answer-group-farming .recommendation-answer-content {
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .recommendation-question-fields .recommendation-answer-copy,
+  .recommendation-question-fields .answer-group-frequency .recommendation-answer-copy {
+    align-items: flex-start;
+  }
+
+  .recommendation-question-fields .answer-group-frequency {
+    --recommendation-answer-height: 58px;
+  }
 }
 
 .layout-entry-panel {
@@ -3691,21 +4087,22 @@ onMounted(async () => {
   --layout-color: #b48745;
 }
 
-.layout-choice.layout-243 {
+.layout-choice.layout-243,
+.layout-choice.layout-252-3-gold {
   --layout-color: #3c83bd;
 }
 
-.layout-choice.layout-252 {
+.layout-choice.layout-252-2-gold {
   --layout-color: #4f9b72;
 }
 
-.layout-choice.layout-342 {
+.layout-choice.layout-243-orundum,
+.layout-choice.layout-342-orundum {
   --layout-color: #d96b6b;
 }
 
 .layout-choice:hover,
-.layout-choice.selected,
-.layout-choice.recommended {
+.layout-choice.selected {
   border-color: var(--option-color);
 }
 
@@ -3719,38 +4116,36 @@ onMounted(async () => {
 }
 
 .layout-choice.recommended {
-  background: color-mix(
-    in srgb,
-    var(--option-color) 10%,
-    var(--c-page-background-color)
-  );
+  position: relative;
+}
+
+.layout-choice.recommended::after {
+  position: absolute;
+  inset: -4px;
+  border-radius: 6px;
+  content: "";
+  pointer-events: none;
   animation: riic-recommendation-breathe 2.4s ease-in-out infinite;
 }
 
 @keyframes riic-recommendation-breathe {
   0%,
   100% {
-    box-shadow:
-      inset 3px 0 0 var(--option-color),
-      0 0 0 0
-        color-mix(in srgb, var(--riic-blue) 0%, transparent);
+    box-shadow: 0 0 0 0
+      color-mix(in srgb, var(--layout-color) 0%, transparent);
   }
 
   50% {
-    box-shadow:
-      inset 3px 0 0 var(--option-color),
-      0 0 0 4px
-        color-mix(in srgb, var(--riic-blue) 20%, transparent);
+    box-shadow: 0 0 0 4px
+      color-mix(in srgb, var(--layout-color) 36%, transparent);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .layout-choice.recommended {
+  .layout-choice.recommended::after {
     animation: none;
-    box-shadow:
-      inset 3px 0 0 var(--option-color),
-      0 0 0 2px
-        color-mix(in srgb, var(--riic-blue) 18%, transparent);
+    box-shadow: 0 0 0 2px
+      color-mix(in srgb, var(--layout-color) 30%, transparent);
   }
 }
 
@@ -5853,9 +6248,16 @@ onMounted(async () => {
     padding: 0;
   }
 
-  .recommendation-answer-group,
-  .recommendation-answer-group.compact {
-    grid-template-columns: 1fr;
+  .recommendation-question-fields.question-fields-resources {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .answer-group-reliability {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .answer-group-reliability {
+    --recommendation-answer-height: 46px;
   }
 
   .layout-schedule-group {
@@ -5863,6 +6265,10 @@ onMounted(async () => {
   }
 
   .recommendation-question-panel {
+    padding: 12px;
+  }
+
+  .recommendation-step-tabs {
     padding: 0 12px 12px;
   }
 

@@ -249,7 +249,9 @@ function isCandidateShiftCompatible(candidate, requestedShiftMode) {
 }
 
 function getPool(config) {
-  const expectsOrundum = config.orundumPreference === "accept";
+  const expectsOrundum =
+    config.shiftMode !== "once" &&
+    config.orundumPreference === "accept";
 
   return getCurrentTrackCandidates().filter(
     (candidate) =>
@@ -406,14 +408,6 @@ function getDroneReason(tendency) {
   return "无人机按当前库存灵活投向经验制造站或贸易站，不固定偏向某一种资源。";
 }
 
-function getFacilityNote(candidate) {
-  if (!candidate.facilityRequirementLabel) {
-    return "";
-  }
-
-  return `原表将此方案标记为“${candidate.facilityRequirementLabel}”，请先确认你的右侧设施状态是否适用。`;
-}
-
 function getFallbackEntry(entries, selectedEntry, config, tendency) {
   const candidates = entries
     .filter(
@@ -529,7 +523,6 @@ export function createRiicLayoutRecommendation(config) {
     alternatives: buildAlternatives(entries, selectedSchedule, config, tendency),
     layoutReasons: getLayoutReason(config, tendency, candidate),
     layoutReason: getLayoutReason(config, tendency, candidate).join(" "),
-    facilityNote: getFacilityNote(candidate),
     productionIsFallback: false,
     useOwnedOperators: false,
     closestSchedule: null,
