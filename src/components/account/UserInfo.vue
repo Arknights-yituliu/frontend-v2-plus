@@ -7,7 +7,6 @@ import {userInfo} from '/src/utils/user/userInfo.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {operatorTable} from '/src/utils/gameData.js'
 import {useRouter} from "vue-router";
-import {copyTextToClipboard} from "/src/utils/copyText.js";
 const router = useRouter()
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
 
@@ -56,33 +55,6 @@ let displayOrUpdateInfo = ref("online")
 
 //选中的头像id
 let selectedAvatar = ref('')
-
-// OpenAPI Token 相关
-const permissionList = ref([])
-const selectedPermissions = ref([])
-const tokenList = ref([])
-const isGeneratingToken = ref(false)
-const isDeletingToken = ref(false)
-
-/**
- * 根据权限 code 获取描述文本
- */
-function getScopeDesc(code) {
-  const perm = permissionList.value.find(p => p.code === code)
-  return perm ? perm.desc : `权限${code}`
-}
-
-/**
- * 解析 scope JSON 字符串，返回描述文本
- */
-function parseScopeDesc(scopeStr) {
-  try {
-    const codes = JSON.parse(scopeStr)
-    return codes.map(c => getScopeDesc(c)).join('、')
-  } catch {
-    return scopeStr
-  }
-}
 
 //选择头像
 function chooseAvatar(avatar) {
@@ -179,86 +151,6 @@ function toRetrieve() {
   router.push({name: "RETRIEVE"})
 }
 
-/**
- * 进入 OpenAPI Token 管理面板，同时加载已有 Token
- */
-function openOpenApiPanel() {
-  displayOrUpdateInfo.value = 'openapi'
-  fetchTokens()
-}
-
-/**
- * 获取权限列表
- */
-async function fetchPermissions() {
-  try {
-    const response = await userInfoAPI.getOpenApiPermissions()
-    permissionList.value = response.data || []
-  } catch (error) {
-    createMessage({type: 'error', text: '获取权限列表失败'})
-  }
-}
-
-/**
- * 获取所有第三方 Token 列表
- */
-async function fetchTokens() {
-  try {
-    const response = await userInfoAPI.getOpenApiTokens()
-    tokenList.value = response.data || []
-  } catch (error) {
-    // 静默失败，不影响其他功能
-  }
-}
-
-/**
- * 生成第三方 API Token
- */
-async function generateToken() {
-  if (selectedPermissions.value.length === 0) {
-    createMessage({type: 'warn', text: '请至少选择一项权限'})
-    return
-  }
-  isGeneratingToken.value = true
-  try {
-    await userInfoAPI.generateOpenApiToken(selectedPermissions.value)
-    selectedPermissions.value = []
-    createMessage({type: 'success', text: 'Token 生成成功'})
-    // 生成后刷新 token 列表
-    await fetchTokens()
-  } catch (error) {
-    createMessage({type: 'error', text: '生成失败，请稍后再试'})
-  } finally {
-    isGeneratingToken.value = false
-  }
-}
-
-/**
- * 复制 Token 到剪贴板
- */
-function copyToken(token) {
-  if (!token) return
-  copyTextToClipboard(token, () => {
-    createMessage({type: 'success', text: '已复制到剪贴板'})
-  })
-}
-
-/**
- * 删除第三方 API Token
- */
-async function deleteToken(token) {
-  isDeletingToken.value = true
-  try {
-    await userInfoAPI.deleteOpenApiToken(token)
-    tokenList.value = tokenList.value.filter(t => t.token !== token)
-    createMessage({type: 'success', text: 'Token 已删除'})
-  } catch (error) {
-    createMessage({type: 'error', text: '删除失败，请稍后再试'})
-  } finally {
-    isDeletingToken.value = false
-  }
-}
-
 let max = 0
 const intervalId =  setInterval(()=>{
   if(max>9){
@@ -274,9 +166,6 @@ const intervalId =  setInterval(()=>{
 onMounted(() => {
   getUserInfoByToken()
   displayOrUpdateInfo.value = userInfo.value.status>0?'online':''
-  if (userInfo.value.status > 0) {
-    fetchPermissions()
-  }
 })
 </script>
 
@@ -320,15 +209,6 @@ onMounted(() => {
           <div class="flex align-center user-card-bar justify-between">
             <span >{{ userInfo.email }}</span>
             <v-btn color="primary" variant="text" :text="userInfo.hasEmail?'修改邮箱':'绑定邮箱'" @click="updateOrBindEmail"></v-btn>
-          </div>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-title>
-            API Token
-          </v-list-item-title>
-          <div class="flex align-center user-card-bar justify-between">
-            <span class="text-caption opacity-70">第三方接口凭证</span>
-            <v-btn color="primary" variant="text" text="管理" @click="openOpenApiPanel"></v-btn>
           </div>
         </v-list-item>
       </v-list>
@@ -423,57 +303,6 @@ onMounted(() => {
       </div>
 
     </div>
-
-    <v-card v-show="displayOrUpdateInfo==='openapi'">
-      <v-card-text>
-        <div class="text-caption opacity-70 mb-4">选择权限后点击生成，Token 将在30天后过期</div>
-
-        <div class="flex flex-wrap gap-2 mb-6">
-          <v-chip-group v-model="selectedPermissions" multiple>
-            <v-chip
-              v-for="perm in permissionList"
-              :key="perm.code"
-              :value="perm.code"
-              variant="outlined"
-              color="primary"
-            >{{ perm.desc }}</v-chip>
-          </v-chip-group>
-        </div>
-
-        <v-btn
-          color="primary"
-          variant="elevated"
-          text="生成 Token"
-          :disabled="selectedPermissions.length === 0 || isGeneratingToken"
-          :loading="isGeneratingToken"
-          @click="generateToken"
-          class="w-full mb-6"
-        ></v-btn>
-
-        <!-- 已有 Token 列表 -->
-        <div v-if="tokenList.length > 0">
-          <div class="text-subtitle-2 mb-3">已生成的 Token</div>
-          <div class="text-xs text-red-500 mb-3">页面刷新后 Token 将消失，请尽快复制保存</div>
-          <div
-            v-for="item in tokenList"
-            :key="item.token"
-            class="border rounded-lg p-3 mb-3 bg-grey-50"
-          >
-            <div class="flex justify-between items-center mb-1">
-              <span class="text-caption opacity-60">权限：{{ parseScopeDesc(item.scope) }}</span>
-              <div class="flex gap-1">
-                <v-btn size="x-small" color="primary" variant="text" @click="copyToken(item.token)">复制</v-btn>
-                <v-btn size="x-small" color="red" variant="text" :loading="isDeletingToken" @click="deleteToken(item.token)">删除</v-btn>
-              </div>
-            </div>
-            <code class="break-all text-xs opacity-70">{{ item.token }}</code>
-          </div>
-        </div>
-        <div v-else class="text-caption opacity-50 text-center py-4">
-          暂无 Token，请选择权限后生成
-        </div>
-      </v-card-text>
-    </v-card>
 
  </v-card-text>
   </v-card>
