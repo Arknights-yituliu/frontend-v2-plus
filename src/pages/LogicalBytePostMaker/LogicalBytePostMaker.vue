@@ -66,6 +66,11 @@ const pageGroups = [
         to: '/lb/yield-overview'
       },
       {
+        title: '收益速览本期清单',
+        description: '整理本期材料、礼包和培养成本分页素材',
+        to: '/lb/yield-ppt'
+      },
+      {
         title: '卡片生成器',
         description: '创建由多个可配置卡片组成的组件',
         to: '/lb/card-maker'

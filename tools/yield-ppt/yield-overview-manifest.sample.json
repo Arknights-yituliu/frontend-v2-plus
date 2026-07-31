@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "kind": "yield-overview-material-package",
+  "materials": [
+    {
+      "title": "材料一",
+      "detailImage": "自动化素材/material-1-detail.png",
+      "curveImage": "自动化素材/material-1-curve.png"
+    },
+    {
+      "title": "材料二",
+      "detailImage": "自动化素材/material-2-detail.png",
+      "curveImage": "自动化素材/material-2-curve.png"
+    }
+  ],
+  "activityStore": {
+    "title": "活动商店",
+    "columnLimit": 7,
+    "image": "自动化素材/activity-store.png"
+  },
+  "packPages": [
+    {
+      "title": "礼包性价比 - 活动礼包",
+      "caption": "",
+      "image": "自动化素材/pack-page-1.png"
+    }
+  ],
+  "cultivationPages": [
+    {
+      "layout": "detail",
+      "operators": [
+        "干员A",
+        "干员B"
+      ],
+      "caption": "",
+      "image": "自动化素材/cultivation-1.png"
+    }
+  ]
+}

@@ -19,13 +19,18 @@ import {
   RIIC_SCHEDULE_SOURCE,
   buildMaaSchedule,
   buildRecommendationSummary,
-  createRiicRecommendation,
 } from "/src/utils/riicScheduleRecommendation.js";
+import {
+  createRiicLayoutRecommendation,
+  RIIC_LAYOUTS as RIIC_LAYOUT_RECOMMENDATION_LAYOUTS,
+} from "/src/utils/riicLayoutRecommendation.js";
 
 const SKLAND_ACCOUNT_SESSION_STORAGE_KEY = "skland_account_data";
 const RIIC_SCHEDULE_DRAFT_STORAGE_KEY =
+  "riic_schedule_generator_draft_v2";
+const LEGACY_RIIC_SCHEDULE_DRAFT_STORAGE_KEY =
   "riic_schedule_generator_draft_v1";
-const RIIC_SCHEDULE_DRAFT_VERSION = 1;
+const RIIC_SCHEDULE_DRAFT_VERSION = 2;
 const operatorAvatarMap = new Map(
   Object.entries(operatorTableV2).map(([charId, operator]) => [
     operator.name,
@@ -96,141 +101,254 @@ const MANUAL_ROOM_TYPE_META = {
   },
 };
 
+const NEED_OPTIONS = [
+  {
+    value: "high",
+    label: "非常缺",
+    icon: "mdi-alert-circle-outline",
+    tone: "red",
+  },
+  {
+    value: "medium",
+    label: "勉强够用",
+    icon: "mdi-minus-circle-outline",
+    tone: "orange",
+  },
+  {
+    value: "low",
+    label: "暂时不缺",
+    icon: "mdi-check-circle-outline",
+    tone: "green",
+  },
+];
+
 const steps = [
   {
-    key: "resourceGoal",
-    label: "资源目标",
-    title: "你现在更缺什么？",
-    options: [
+    key: "resources",
+    label: "资源需求",
+    title: "先看你现在的养成压力",
+    fields: [
       {
-        value: "experience",
-        label: "缺经验",
-        description: "优先提高作战记录产量",
-        icon: "mdi-book-open-page-variant-outline",
-        tone: "blue",
+        key: "lmdNeed",
+        label: "在养成干员时，你有多缺龙门币？",
+        options: NEED_OPTIONS,
       },
       {
-        value: "lmd",
-        label: "缺龙门币",
-        description: "优先提高贸易站订单产出",
-        icon: "mdi-cash-multiple",
-        tone: "green",
+        key: "experienceNeed",
+        label: "在养成干员时，你有多缺经验书？",
+        options: NEED_OPTIONS,
       },
       {
-        value: "both",
-        label: "两者都缺",
-        description: "在经验和龙门币之间保持均衡",
-        icon: "mdi-scale-balance",
-        tone: "orange",
-      },
-      {
-        value: "unknown",
-        label: "不确定",
-        description: "先采用更稳妥的均衡布局",
-        icon: "mdi-help-circle-outline",
-        tone: "gray",
-      },
-    ],
-  },
-  {
-    key: "goldStock",
-    label: "赤金库存",
-    title: "你的赤金库存怎么样？",
-    options: [
-      {
-        value: "low",
-        label: "经常不够用",
-        description: "贸易站偶尔会因为缺赤金停下来",
-        icon: "mdi-alert-circle-outline",
-        tone: "red",
-      },
-      {
-        value: "balanced",
-        label: "基本平衡",
-        description: "生产与订单消耗大致相当",
-        icon: "mdi-swap-horizontal-circle-outline",
-        tone: "green",
-      },
-      {
-        value: "plenty",
-        label: "库存很多",
-        description: "可以放心把无人机投向其他产出",
-        icon: "mdi-gold",
-        tone: "gold",
-      },
-      {
-        value: "unknown",
-        label: "不清楚",
-        description: "先按不依赖库存的方案推荐",
-        icon: "mdi-database-question-outline",
-        tone: "gray",
+        key: "farmingHabit",
+        label: "平时会额外刷取龙门币或经验书吗？",
+        options: [
+          {
+            value: "rarely",
+            label: "基本不刷",
+            icon: "mdi-battery-10",
+            tone: "gray",
+          },
+          {
+            value: "sometimes",
+            label: "偶尔会刷",
+            icon: "mdi-battery-50",
+            tone: "blue",
+          },
+          {
+            value: "frequently",
+            label: "每天接近或超过 100 理智",
+            icon: "mdi-battery-90",
+            tone: "orange",
+          },
+        ],
       },
     ],
   },
   {
-    key: "shiftMode",
-    label: "换班频率",
-    title: "你每天能操作几次基建？",
-    options: [
+    key: "operation",
+    label: "操作习惯",
+    title: "你通常怎样照看基建？",
+    fields: [
       {
-        value: "twice",
-        label: "每天 2 次",
-        description: "每 12 小时一次，三组队列按 12 / 12 / 12 循环",
-        icon: "mdi-weather-sunset-up",
-        tone: "blue",
+        key: "shiftMode",
+        label: "你每天通常能安排几次换班？",
+        options: [
+          {
+            value: "threeTimes",
+            label: "一天三换",
+            description: "按 12 / 6 / 6 执行",
+            icon: "mdi-clock-fast",
+            tone: "orange",
+          },
+          {
+            value: "twice",
+            label: "一天两换",
+            description: "早晚各一次",
+            icon: "mdi-weather-sunset-up",
+            tone: "blue",
+          },
+          {
+            value: "once",
+            label: "一天一换",
+            description: "每天只操作一次",
+            icon: "mdi-calendar-clock",
+            tone: "gray",
+          },
+        ],
       },
       {
-        value: "threeTimes",
-        label: "每天 3 次",
-        description: "通常按 12 / 6 / 6 安排，推荐结果保留原表时长",
-        icon: "mdi-clock-fast",
-        tone: "orange",
+        key: "executionReliability",
+        label: "在这个频率下，你能否稳定收菜和换班？",
+        options: [
+          {
+            value: "reliable",
+            label: "基本能按时完成",
+            icon: "mdi-check-circle-outline",
+            tone: "green",
+          },
+          {
+            value: "mostlyReliable",
+            label: "偶尔延后，但通常能完成",
+            icon: "mdi-clock-outline",
+            tone: "blue",
+          },
+          {
+            value: "unreliable",
+            label: "经常无法按时完成",
+            icon: "mdi-clock-alert-outline",
+            tone: "orange",
+          },
+        ],
       },
     ],
   },
   {
-    key: "dronePreference",
-    label: "无人机",
-    title: "无人机优先投到哪里？",
-    options: [
+    key: "tradeoffs",
+    label: "长期取舍",
+    title: "最后确认两个长期选择",
+    fields: [
       {
-        value: "auto",
-        label: "自动推荐",
-        description: "根据资源目标和赤金库存决定",
-        icon: "mdi-auto-fix",
-        tone: "blue",
+        key: "orundumPreference",
+        label: "愿意以约 30% 养成产出换取每月约 10 抽吗？",
+        options: [
+          {
+            value: "accept",
+            label: "愿意",
+            icon: "mdi-star-four-points-outline",
+            tone: "purple",
+          },
+          {
+            value: "decline",
+            label: "不愿意",
+            icon: "mdi-factory",
+            tone: "blue",
+          },
+        ],
       },
       {
-        value: "experience",
-        label: "作战记录",
-        description: "全部投入经验制造站",
-        icon: "mdi-book-open-page-variant-outline",
-        tone: "blue",
-      },
-      {
-        value: "gold",
-        label: "赤金",
-        description: "全部投入赤金制造站",
-        icon: "mdi-gold",
-        tone: "gold",
-      },
-      {
-        value: "trading",
-        label: "贸易订单",
-        description: "全部投入贸易站",
-        icon: "mdi-cash-clock",
-        tone: "green",
+        key: "carbonNeed",
+        label: "你是否缺升级基建所用的碳？",
+        options: [
+          {
+            value: "needed",
+            label: "缺",
+            icon: "mdi-cube-outline",
+            tone: "orange",
+          },
+          {
+            value: "notNeeded",
+            label: "暂时不缺",
+            icon: "mdi-check-circle-outline",
+            tone: "green",
+          },
+        ],
       },
     ],
   },
 ];
 
 const DEFAULT_ANSWERS = Object.freeze({
-  resourceGoal: null,
-  goldStock: null,
+  lmdNeed: null,
+  experienceNeed: null,
+  farmingHabit: null,
   shiftMode: null,
-  dronePreference: "auto",
+  executionReliability: null,
+  orundumPreference: null,
+  carbonNeed: null,
 });
+const ANSWER_FIELDS = steps.flatMap((step) => step.fields);
+const LAYOUT_CHOICE_META = [
+  {
+    id: "153",
+    label: "153",
+    description: "经验优先",
+    icon: "mdi-book-open-page-variant-outline",
+    tone: "blue",
+  },
+  {
+    id: "243",
+    label: "243",
+    description: "龙门币优先/书钱均衡",
+    icon: "mdi-scale-balance",
+    tone: "green",
+  },
+  {
+    id: "252",
+    label: "252",
+    description: "书钱均衡",
+    icon: "mdi-factory",
+    tone: "orange",
+  },
+  {
+    id: "342",
+    label: "342",
+    description: "搓玉方向",
+    icon: "mdi-star-four-points-outline",
+    tone: "purple",
+  },
+];
+const LAYOUTS_BY_SHIFT_MODE = {
+  once: ["243"],
+  twice: ["153", "243", "252", "342"],
+  threeTimes: ["153", "243", "252", "342"],
+};
+const LAYOUT_SHIFT_OPTIONS = [
+  {
+    value: "threeTimes",
+    label: "一天三换",
+    description: "12 / 6 / 6",
+    icon: "mdi-clock-fast",
+    tone: "orange",
+  },
+  {
+    value: "twice",
+    label: "一天两换",
+    description: "早晚各一次",
+    icon: "mdi-weather-sunset-up",
+    tone: "blue",
+  },
+  {
+    value: "once",
+    label: "一天一换",
+    description: "每天一次",
+    icon: "mdi-calendar-clock",
+    tone: "gray",
+  },
+];
+const LAYOUT_SCHEDULE_GROUPS = LAYOUT_SHIFT_OPTIONS.map((shift) => ({
+  ...shift,
+  options: LAYOUTS_BY_SHIFT_MODE[shift.value].map((layoutId) => {
+    const layout = LAYOUT_CHOICE_META.find(
+      (choice) => choice.id === layoutId,
+    );
+
+    return {
+      ...layout,
+      ...RIIC_LAYOUT_RECOMMENDATION_LAYOUTS[layoutId],
+      value: `${shift.value}:${layoutId}`,
+    };
+  }),
+}));
 
 const answers = reactive({ ...DEFAULT_ANSWERS });
 const currentStep = ref(0);
@@ -241,6 +359,7 @@ const ownedOperators = ref([]);
 const ownedOperatorSource = ref("");
 const ownedOperatorMessage = ref("");
 const ownedOperatorError = ref("");
+const ownedOperatorLastSyncedAt = ref("");
 const loadingOwnedOperators = ref(false);
 const useOwnedOperators = ref(false);
 const pendingOwnedOperatorPreference = ref(false);
@@ -254,23 +373,115 @@ const developerShiftMode = ref("twice");
 const manualQueueIndex = ref(0);
 const selectedManualRoomId = ref("control-0");
 const manualAssignments = ref({});
+const showScheduleGeneration = false;
+const layoutEntry = ref(null);
+const planningMode = ref(null);
+const selectedLayoutId = ref("");
+const confirmedLayoutPlan = ref(null);
+const layoutStageCollapsed = ref(false);
+const layoutPlanOpenItems = ref(["layout-planning"]);
+const recommendationPanelOpen = ref(false);
 
 const activeStep = computed(() => steps[currentStep.value]);
 const isDeveloperMode = computed(() => route.query.mode === "dev");
-const selectedValue = computed(() =>
-  activeStep.value ? answers[activeStep.value.key] : null,
-);
+const isUserLoggedIn = computed(() => {
+  const token = localStorage.getItem("USER_TOKEN");
+  return Boolean(token && token !== "null" && token !== "undefined");
+});
 const isResult = computed(() => currentStep.value === resultStepIndex);
-const canContinue = computed(() => Boolean(selectedValue.value));
+const canContinue = computed(() => isStepComplete(activeStep.value));
+const isRecommendationComplete = computed(() =>
+  steps.every((step) => isStepComplete(step)),
+);
 const recommendation = computed(() => {
-  if (!isResult.value) {
+  if (!isRecommendationComplete.value) {
     return null;
   }
 
-  return createRiicRecommendation(answers, {
-    ownedOperators: ownedOperators.value,
-    useOwnedOperators: useOwnedOperators.value,
-  });
+  return createRiicLayoutRecommendation(answers);
+});
+const activeLayoutId = computed(
+  () => selectedLayoutId.value || recommendation.value?.layout.id || "",
+);
+const selectedManualScheduleValue = computed(() => {
+  if (!confirmedLayoutPlan.value) {
+    return "";
+  }
+
+  return `${confirmedLayoutPlan.value.shiftMode}:${confirmedLayoutPlan.value.layoutId}`;
+});
+const availableLayoutChoices = computed(() => {
+  return LAYOUT_CHOICE_META.map((choice) => ({
+    ...choice,
+    layout: RIIC_LAYOUT_RECOMMENDATION_LAYOUTS[choice.id],
+  }));
+});
+const activeLayoutChoice = computed(
+  () =>
+    availableLayoutChoices.value.find(
+      (choice) => choice.id === activeLayoutId.value,
+    ) || null,
+);
+const isLayoutRecommended = computed(
+  () => (value) =>
+    recommendation.value &&
+    value ===
+      `${recommendation.value.shiftMode.id}:${recommendation.value.layout.id}`,
+);
+const isLayoutPlanningReady = computed(
+  () => Boolean(confirmedLayoutPlan.value),
+);
+const layoutSelectionStatus = computed(() =>
+  isLayoutPlanningReady.value
+    ? {
+        tone: "success",
+        title: "布局已选择",
+        detail: layoutPlanSummary.value,
+      }
+    : {
+        tone: "warning",
+        title: "尚未选择布局",
+        detail: "请先在布局规划中选择一张布局卡",
+      },
+);
+const layoutPlanSummary = computed(() => {
+  if (!confirmedLayoutPlan.value) {
+    return "";
+  }
+
+  const layout = RIIC_LAYOUT_RECOMMENDATION_LAYOUTS[
+    confirmedLayoutPlan.value.layoutId
+  ];
+  const shift = LAYOUT_SHIFT_OPTIONS.find(
+    (option) => option.value === confirmedLayoutPlan.value.shiftMode,
+  );
+
+  return [layout?.shortName, shift?.label].filter(Boolean).join(" · ");
+});
+const operatorBoxStatus = computed(() => {
+  if (loadingOwnedOperators.value) {
+    return {
+      tone: "warning",
+      title: "正在同步干员数据",
+      detail: "正在读取你的干员 box",
+    };
+  }
+
+  if (isUserLoggedIn.value && ownedOperators.value.length > 0) {
+    return {
+      tone: "success",
+      title: "干员数据已同步",
+      detail: `上次同步：${formatOperatorSyncTime(
+        ownedOperatorLastSyncedAt.value,
+      )}`,
+    };
+  }
+
+  return {
+    tone: "warning",
+    title: "尚未读取干员 box",
+    detail: "请从森空岛或 MAA 同步干员数据",
+  };
 });
 const selectedSchedule = computed(
   () => recommendation.value?.selectedSchedule || null,
@@ -295,7 +506,11 @@ const candidateSourceUrl = computed(() => {
   return `${RIIC_SCHEDULE_SOURCE.repository}/blob/${RIIC_SCHEDULE_SOURCE.commit}/${selectedCandidate.value.sourcePath}`;
 });
 const maaExportPreview = computed(() => {
-  if (!recommendation.value?.selectedSchedule) {
+  if (
+    !recommendation.value?.selectedSchedule ||
+    recommendation.value.droneTarget.id === "flexible" ||
+    recommendation.value.selectedSchedule.candidate.isOrundum
+  ) {
     return null;
   }
 
@@ -568,18 +783,77 @@ const resultSteps = computed(() => [
 
 function normalizeSavedAnswers(savedAnswers) {
   return Object.fromEntries(
-    steps.map((step) => {
-      const savedValue = savedAnswers?.[step.key];
-      const isAllowed = step.options.some(
+    ANSWER_FIELDS.map((field) => {
+      const savedValue = savedAnswers?.[field.key];
+      const isAllowed = field.options.some(
         (option) => option.value === savedValue,
       );
 
       return [
-        step.key,
-        isAllowed ? savedValue : DEFAULT_ANSWERS[step.key],
+        field.key,
+        isAllowed ? savedValue : DEFAULT_ANSWERS[field.key],
       ];
     }),
   );
+}
+
+function normalizePlanningMode(value) {
+  if (value === "manual" || value === "recommend") {
+    return value;
+  }
+
+  return null;
+}
+
+function normalizeLayoutEntry(
+  value,
+  savedPlanningMode,
+  savedLayoutId,
+  savedAnswers,
+) {
+  if (LAYOUT_CHOICE_META.some((choice) => choice.id === value)) {
+    return value;
+  }
+
+  if (value === "recommend") {
+    return ANSWER_FIELDS.some((field) => Boolean(savedAnswers?.[field.key]))
+      ? "recommend"
+      : null;
+  }
+
+  if (
+    normalizePlanningMode(savedPlanningMode) === "manual" &&
+    LAYOUT_CHOICE_META.some((choice) => choice.id === savedLayoutId)
+  ) {
+    return savedLayoutId;
+  }
+
+  return null;
+}
+
+function normalizeConfirmedLayoutPlan(value) {
+  if (
+    !value ||
+    !LAYOUT_CHOICE_META.some((choice) => choice.id === value.layoutId) ||
+    !LAYOUT_SHIFT_OPTIONS.some((option) => option.value === value.shiftMode)
+  ) {
+    return null;
+  }
+
+  return {
+    layoutId: value.layoutId,
+    shiftMode: value.shiftMode,
+  };
+}
+
+function isStepComplete(step, candidateAnswers = answers) {
+  return Boolean(
+    step?.fields?.every((field) => Boolean(candidateAnswers[field.key])),
+  );
+}
+
+function isLayoutChoiceAvailable(layoutId, shiftMode = answers.shiftMode) {
+  return !shiftMode || LAYOUTS_BY_SHIFT_MODE[shiftMode]?.includes(layoutId);
 }
 
 function getMaxAvailableStep(candidateAnswers) {
@@ -587,7 +861,7 @@ function getMaxAvailableStep(candidateAnswers) {
 
   while (
     stepIndex < steps.length &&
-    Boolean(candidateAnswers[steps[stepIndex].key])
+    isStepComplete(steps[stepIndex], candidateAnswers)
   ) {
     stepIndex += 1;
   }
@@ -600,11 +874,29 @@ function loadSavedWizardState() {
     const savedDraft = localStorage.getItem(
       RIIC_SCHEDULE_DRAFT_STORAGE_KEY,
     );
-    if (!savedDraft) {
+    const legacyDraft = savedDraft
+      ? null
+      : localStorage.getItem(LEGACY_RIIC_SCHEDULE_DRAFT_STORAGE_KEY);
+
+    if (!savedDraft && !legacyDraft) {
       return false;
     }
 
-    const parsedDraft = JSON.parse(savedDraft);
+    const parsedDraft = JSON.parse(savedDraft || legacyDraft);
+
+    if (
+      legacyDraft &&
+      parsedDraft?.version === 1 &&
+      ["twice", "threeTimes"].includes(parsedDraft.answers?.shiftMode)
+    ) {
+      answers.shiftMode = parsedDraft.answers.shiftMode;
+      currentStep.value = 0;
+      pendingOwnedOperatorPreference.value =
+        parsedDraft.useOwnedOperators === true;
+      hasSavedWizardState.value = true;
+      return true;
+    }
+
     if (
       parsedDraft?.version !== RIIC_SCHEDULE_DRAFT_VERSION ||
       !parsedDraft.answers
@@ -622,8 +914,37 @@ function loadSavedWizardState() {
     Object.assign(answers, savedAnswers);
     currentStep.value = Math.min(
       Math.max(savedStep, 0),
-      maxAvailableStep,
+      Math.min(maxAvailableStep, steps.length - 1),
     );
+    layoutEntry.value = normalizeLayoutEntry(
+      parsedDraft.layoutEntry,
+      parsedDraft.planningMode,
+      parsedDraft.selectedLayoutId,
+      savedAnswers,
+    );
+    planningMode.value =
+      layoutEntry.value === "recommend"
+        ? "recommend"
+        : layoutEntry.value
+        ? "manual"
+        : null;
+    selectedLayoutId.value = LAYOUT_CHOICE_META.some(
+      (choice) => choice.id === parsedDraft.selectedLayoutId,
+    )
+      ? parsedDraft.selectedLayoutId
+      : "";
+    if (layoutEntry.value !== "recommend") {
+      selectedLayoutId.value = layoutEntry.value;
+    }
+    confirmedLayoutPlan.value = normalizeConfirmedLayoutPlan(
+      parsedDraft.confirmedLayoutPlan,
+    );
+    layoutStageCollapsed.value =
+      parsedDraft.layoutStageCollapsed === true &&
+      Boolean(confirmedLayoutPlan.value);
+    layoutPlanOpenItems.value = layoutStageCollapsed.value
+      ? []
+      : ["layout-planning"];
     pendingOwnedOperatorPreference.value =
       parsedDraft.useOwnedOperators === true;
     hasSavedWizardState.value = true;
@@ -648,13 +969,15 @@ function saveWizardState() {
       RIIC_SCHEDULE_DRAFT_STORAGE_KEY,
       JSON.stringify({
         version: RIIC_SCHEDULE_DRAFT_VERSION,
-        answers: {
-          resourceGoal: answers.resourceGoal,
-          goldStock: answers.goldStock,
-          shiftMode: answers.shiftMode,
-          dronePreference: answers.dronePreference,
-        },
+        answers: Object.fromEntries(
+          ANSWER_FIELDS.map((field) => [field.key, answers[field.key]]),
+        ),
         currentStep: currentStep.value,
+        layoutEntry: layoutEntry.value,
+        planningMode: planningMode.value,
+        selectedLayoutId: selectedLayoutId.value,
+        confirmedLayoutPlan: confirmedLayoutPlan.value,
+        layoutStageCollapsed: layoutStageCollapsed.value,
         useOwnedOperators: ownedOperatorPreferenceReady.value
           ? useOwnedOperators.value
           : pendingOwnedOperatorPreference.value,
@@ -669,21 +992,108 @@ function saveWizardState() {
 
 function isStepAvailable(index) {
   if (index === resultStepIndex) {
-    return Object.values(answers).every(Boolean);
+    return steps.every((step) => isStepComplete(step));
   }
 
-  return steps.slice(0, index).every((step) => Boolean(answers[step.key]));
+  return steps.slice(0, index).every((step) => isStepComplete(step));
 }
 
-function selectOption(value) {
-  answers[activeStep.value.key] = value;
+function selectOption(key, value) {
+  answers[key] = value;
 }
 
-function goToStep(index) {
-  if (isStepAvailable(index)) {
-    currentStep.value = index;
-    focusCurrentPanel();
+function selectLayoutEntry(value) {
+  if (
+    value !== "recommend" &&
+    !LAYOUT_CHOICE_META.some((choice) => choice.id === value)
+  ) {
+    return;
   }
+
+  layoutEntry.value = value;
+  planningMode.value = value === "recommend" ? "recommend" : "manual";
+  if (value !== "recommend") {
+    selectedLayoutId.value = value;
+    confirmedLayoutPlan.value = null;
+  }
+  setLayoutPlanExpanded(true);
+
+  if (value === "recommend") {
+    openRecommendationPanel();
+    return;
+  }
+
+  recommendationPanelOpen.value = false;
+  focusCurrentPanel();
+}
+
+function selectLayoutShift(value) {
+  answers.shiftMode = value;
+}
+
+function selectLayoutChoice(layoutId) {
+  selectLayoutEntry(layoutId);
+}
+
+function selectManualScheduleOption(value) {
+  const [shiftMode, layoutId] = String(value).split(":");
+
+  if (
+    !LAYOUT_SHIFT_OPTIONS.some((option) => option.value === shiftMode) ||
+    !LAYOUT_CHOICE_META.some((choice) => choice.id === layoutId) ||
+    !isLayoutChoiceAvailable(layoutId, shiftMode)
+  ) {
+    return;
+  }
+
+  if (
+    confirmedLayoutPlan.value?.layoutId === layoutId &&
+    confirmedLayoutPlan.value?.shiftMode === shiftMode
+  ) {
+    selectedLayoutId.value = "";
+    confirmedLayoutPlan.value = null;
+    layoutEntry.value = recommendation.value ? "recommend" : null;
+    planningMode.value = recommendation.value ? "recommend" : null;
+    recommendationPanelOpen.value = false;
+    setLayoutPlanExpanded(true);
+    return;
+  }
+
+  layoutEntry.value = layoutId;
+  planningMode.value = "manual";
+  selectedLayoutId.value = layoutId;
+  answers.shiftMode = shiftMode;
+  confirmedLayoutPlan.value = { layoutId, shiftMode };
+  recommendationPanelOpen.value = false;
+  setLayoutPlanExpanded(true);
+}
+
+function expandLayoutStage() {
+  setLayoutPlanExpanded(true);
+  focusCurrentPanel();
+}
+
+function setLayoutPlanExpanded(expanded) {
+  layoutStageCollapsed.value = !expanded;
+  layoutPlanOpenItems.value = expanded ? ["layout-planning"] : [];
+}
+
+function handleLayoutPlanCollapseChange(activeNames) {
+  layoutStageCollapsed.value = !activeNames.includes("layout-planning");
+}
+
+function openRecommendationPanel() {
+  layoutEntry.value = "recommend";
+  planningMode.value = "recommend";
+  currentStep.value = Math.min(
+    getMaxAvailableStep(),
+    steps.length - 1,
+  );
+  recommendationPanelOpen.value = true;
+}
+
+function closeRecommendationPanel() {
+  recommendationPanelOpen.value = false;
 }
 
 function nextStep() {
@@ -691,17 +1101,27 @@ function nextStep() {
     return;
   }
 
+  if (currentStep.value >= steps.length - 1) {
+    recommendationPanelOpen.value = false;
+    focusCurrentPanel();
+    return;
+  }
+
   currentStep.value += 1;
-  focusCurrentPanel();
 }
 
 function previousStep() {
   currentStep.value = Math.max(0, currentStep.value - 1);
-  focusCurrentPanel();
 }
 
 function resetWizard() {
   currentStep.value = 0;
+  layoutEntry.value = null;
+  planningMode.value = null;
+  selectedLayoutId.value = "";
+  confirmedLayoutPlan.value = null;
+  recommendationPanelOpen.value = false;
+  setLayoutPlanExpanded(true);
   focusCurrentPanel();
 }
 
@@ -711,12 +1131,19 @@ async function clearSavedWizardState() {
 
   try {
     localStorage.removeItem(RIIC_SCHEDULE_DRAFT_STORAGE_KEY);
+    localStorage.removeItem(LEGACY_RIIC_SCHEDULE_DRAFT_STORAGE_KEY);
   } catch {
     cleared = false;
   }
 
   Object.assign(answers, DEFAULT_ANSWERS);
   currentStep.value = 0;
+  layoutEntry.value = null;
+  planningMode.value = null;
+  selectedLayoutId.value = "";
+  confirmedLayoutPlan.value = null;
+  recommendationPanelOpen.value = false;
+  setLayoutPlanExpanded(true);
   useOwnedOperators.value = false;
   pendingOwnedOperatorPreference.value = false;
   hasSavedWizardState.value = false;
@@ -762,6 +1189,20 @@ function formatSourceDate(value) {
   }
 
   return value.slice(0, 10);
+}
+
+function formatOperatorSyncTime(value) {
+  const date = new Date(value);
+
+  if (!value || Number.isNaN(date.getTime())) {
+    return "时间未知";
+  }
+
+  return new Intl.DateTimeFormat("zh-CN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    hour12: false,
+  }).format(date);
 }
 
 function formatEliteLevel(value) {
@@ -1077,21 +1518,25 @@ function normalizeOwnedOperators(list = [], requireOwn = false) {
   return [...operatorMap.values()];
 }
 
-function readSklandOperatorsFromSession() {
+function readSklandAccountFromSession() {
   try {
     const savedAccountData = sessionStorage.getItem(
       SKLAND_ACCOUNT_SESSION_STORAGE_KEY,
     );
     if (!savedAccountData) {
-      return [];
+      return null;
     }
 
-    const parsedAccountData = JSON.parse(savedAccountData);
-    return normalizeOwnedOperators(parsedAccountData?.operatorDataList || []);
+    return JSON.parse(savedAccountData);
   } catch (error) {
-    console.error("readSklandOperatorsFromSession failed", error);
-    return [];
+    console.error("readSklandAccountFromSession failed", error);
+    return null;
   }
+}
+
+function readSklandOperatorsFromSession() {
+  const accountData = readSklandAccountFromSession();
+  return normalizeOwnedOperators(accountData?.operatorDataList || []);
 }
 
 async function loadOwnedOperators({ notify = false } = {}) {
@@ -1099,20 +1544,22 @@ async function loadOwnedOperators({ notify = false } = {}) {
   ownedOperatorError.value = "";
 
   try {
+    const sklandAccountData = readSklandAccountFromSession();
     const sklandOperators = readSklandOperatorsFromSession();
 
     if (sklandOperators.length > 0) {
       ownedOperators.value = sklandOperators;
       ownedOperatorSource.value = "森空岛导入缓存";
       ownedOperatorMessage.value = `已读取 ${sklandOperators.length} 名持有干员`;
+      ownedOperatorLastSyncedAt.value =
+        sklandAccountData?.importedAt || new Date().toISOString();
       if (notify) {
         cMessage(ownedOperatorMessage.value);
       }
       return;
     }
 
-    const userToken = localStorage.getItem("USER_TOKEN");
-    if (userToken && userToken !== "null") {
+    if (isUserLoggedIn.value) {
       const response = await operatorDataAPI.getOperatorData();
       const surveyOperators = normalizeOwnedOperators(
         response?.data || [],
@@ -1123,6 +1570,7 @@ async function loadOwnedOperators({ notify = false } = {}) {
         ownedOperators.value = surveyOperators;
         ownedOperatorSource.value = "练度调查";
         ownedOperatorMessage.value = `已读取 ${surveyOperators.length} 名持有干员`;
+        ownedOperatorLastSyncedAt.value = new Date().toISOString();
         if (notify) {
           cMessage(ownedOperatorMessage.value);
         }
@@ -1133,12 +1581,19 @@ async function loadOwnedOperators({ notify = false } = {}) {
     ownedOperators.value = [];
     ownedOperatorSource.value = "";
     ownedOperatorMessage.value = "尚未读取到本站可用的持有干员数据";
+    ownedOperatorLastSyncedAt.value = "";
   } catch (error) {
     console.error("loadOwnedOperators failed", error);
+    ownedOperators.value = [];
+    ownedOperatorLastSyncedAt.value = "";
     ownedOperatorError.value = "持有干员数据读取失败，请稍后重试";
   } finally {
     loadingOwnedOperators.value = false;
   }
+}
+
+function notifyPendingOperatorSync(source) {
+  cMessage(`${source}同步入口将在下一步接入`, "info");
 }
 
 function toggleOwnedRecommendation() {
@@ -1262,10 +1717,18 @@ function exportMaaSchedule() {
 
 watch(
   [
-    () => answers.resourceGoal,
-    () => answers.goldStock,
+    () => answers.lmdNeed,
+    () => answers.experienceNeed,
+    () => answers.farmingHabit,
     () => answers.shiftMode,
-    () => answers.dronePreference,
+    () => answers.executionReliability,
+    () => answers.orundumPreference,
+    () => answers.carbonNeed,
+    layoutEntry,
+    planningMode,
+    selectedLayoutId,
+    confirmedLayoutPlan,
+    layoutStageCollapsed,
     currentStep,
     useOwnedOperators,
   ],
@@ -1298,24 +1761,14 @@ onMounted(async () => {
     <header class="page-heading">
       <div>
         <p class="page-eyebrow">RIIC SCHEDULE</p>
-        <h1>{{ isDeveloperMode ? "基建组合效率" : "基建排班方案" }}</h1>
-        <p class="page-subtitle">
-          {{
-            isDeveloperMode
-              ? "按布局与换班频率浏览原排班文档中的干员组合"
-              : "先确定布局、生产方向与换班节奏"
-          }}
+        <h1>{{ isDeveloperMode ? "基建组合效率" : "基建布局推荐" }}</h1>
+        <p v-if="isDeveloperMode" class="page-subtitle">
+          按布局与换班频率浏览原排班文档中的干员组合
         </p>
       </div>
-      <div class="phase-mark">
-        <v-icon
-          :icon="
-            isDeveloperMode
-              ? 'mdi-flask-outline'
-              : 'mdi-calendar-export'
-          "
-        ></v-icon>
-        {{ isDeveloperMode ? "开发模式" : "推荐、匹配与导出" }}
+      <div v-if="isDeveloperMode" class="phase-mark">
+        <v-icon icon="mdi-flask-outline"></v-icon>
+        开发模式
       </div>
     </header>
 
@@ -1701,113 +2154,217 @@ onMounted(async () => {
       </section>
     </section>
 
-    <div v-else class="wizard-layout">
-      <nav class="step-navigation" aria-label="生成步骤">
-        <button
-          v-for="(step, index) in resultSteps"
-          :key="step.key"
-          type="button"
-          class="step-button"
-          :class="{
-            active: currentStep === index,
-            complete: currentStep > index,
-          }"
-          :disabled="!isStepAvailable(index)"
-          @click="goToStep(index)"
-        >
-          <span class="step-index">
-            <v-icon
-              v-if="currentStep > index"
-              icon="mdi-check"
-              size="16"
-            ></v-icon>
-            <span v-else>{{ index + 1 }}</span>
-          </span>
-          <span>{{ step.label }}</span>
-        </button>
-        <button
-          v-if="hasSavedWizardState"
-          type="button"
-          class="clear-draft-action"
-          title="清除本页保存的选择"
-          @click="clearSavedWizardState"
-        >
-          <v-icon icon="mdi-history-remove" size="17"></v-icon>
-          清除记录
-        </button>
-      </nav>
+    <div v-else class="workflow-shell">
+      <section class="workflow-stage workflow-card layout-workflow-stage">
+        <header class="workflow-card-heading">
+          <h2>布局规划</h2>
+          <span v-if="isLayoutPlanningReady">{{ layoutPlanSummary }}</span>
+        </header>
 
-      <section v-if="!isResult" ref="contentPanel" class="question-panel">
-        <div class="question-heading">
-          <span>步骤 {{ currentStep + 1 }} / {{ steps.length }}</span>
-          <h2>{{ activeStep.title }}</h2>
-        </div>
-
-        <div
-          class="option-grid"
-          :class="{ compact: activeStep.options.length <= 2 }"
-          role="radiogroup"
-          :aria-label="activeStep.title"
-        >
-          <button
-            v-for="option in activeStep.options"
-            :key="option.value"
-            type="button"
-            class="option-button"
-            :class="[
-              `tone-${option.tone}`,
-              { selected: selectedValue === option.value },
-            ]"
-            role="radio"
-            :aria-checked="selectedValue === option.value"
-            @click="selectOption(option.value)"
+        <section ref="contentPanel" class="layout-choice-panel">
+          <section
+            class="recommendation-entry-panel"
+            :class="{ expanded: recommendationPanelOpen }"
           >
-            <span class="option-icon">
-              <v-icon :icon="option.icon" size="28"></v-icon>
-            </span>
-            <span class="option-content">
-              <strong>{{ option.label }}</strong>
-              <small>{{ option.description }}</small>
-            </span>
-            <v-icon
-              class="option-check"
-              icon="mdi-check-circle"
-              size="22"
-            ></v-icon>
-          </button>
-        </div>
+              <el-button
+                class="recommendation-entry-action"
+                type="primary"
+                plain
+                @click="openRecommendationPanel"
+              >
+                不知道选什么，帮我推荐
+                <v-icon icon="mdi-chevron-down" size="18"></v-icon>
+              </el-button>
 
-        <footer class="question-actions">
-          <button
-            v-if="currentStep > 0"
-            type="button"
-            class="icon-action"
-            title="上一步"
-            aria-label="上一步"
-            @click="previousStep"
-          >
-            <v-icon icon="mdi-arrow-left"></v-icon>
-          </button>
-          <span v-else></span>
+              <transition name="recommendation-panel">
+                <section
+                  v-if="recommendationPanelOpen && activeStep"
+                  class="recommendation-question-panel"
+                >
+                  <header class="recommendation-panel-heading">
+                    <div>
+                      <span>布局推荐 · {{ currentStep + 1 }}/{{ steps.length }}</span>
+                      <h3>{{ activeStep.title }}</h3>
+                    </div>
+                    <el-button
+                      text
+                      circle
+                      aria-label="收起推荐问卷"
+                      @click="closeRecommendationPanel"
+                    >
+                      <v-icon icon="mdi-chevron-up" size="20"></v-icon>
+                    </el-button>
+                  </header>
 
-          <button
-            type="button"
-            class="primary-action"
-            :disabled="!canContinue"
-            @click="nextStep"
-          >
-            {{ currentStep === steps.length - 1 ? "生成方案" : "下一步" }}
-            <v-icon icon="mdi-arrow-right" size="19"></v-icon>
-          </button>
-        </footer>
-      </section>
+                  <fieldset
+                    v-for="field in activeStep.fields"
+                    :key="field.key"
+                    class="recommendation-field"
+                  >
+                    <legend>{{ field.label }}</legend>
+                    <el-radio-group
+                      v-model="answers[field.key]"
+                      class="recommendation-answer-group"
+                      :class="{ compact: field.options.length <= 2 }"
+                      :aria-label="field.label"
+                    >
+                      <el-radio
+                        v-for="option in field.options"
+                        :key="option.value"
+                        :label="option.value"
+                        class="recommendation-answer"
+                        :class="`tone-${option.tone}`"
+                      >
+                        {{ option.label }}
+                      </el-radio>
+                    </el-radio-group>
+                  </fieldset>
 
-      <section v-else ref="contentPanel" class="result-panel">
+                  <div class="recommendation-panel-actions">
+                    <el-button
+                      :disabled="currentStep === 0"
+                      @click="previousStep"
+                    >
+                      上一步
+                    </el-button>
+                    <el-button
+                      type="primary"
+                      :disabled="!canContinue"
+                      @click="nextStep"
+                    >
+                      {{ currentStep === steps.length - 1 ? "查看推荐" : "下一步" }}
+                    </el-button>
+                  </div>
+                </section>
+              </transition>
+
+              <section
+                v-if="
+                  !recommendationPanelOpen &&
+                  layoutEntry === 'recommend' &&
+                  recommendation
+                "
+                class="recommendation-result-panel"
+              >
+                <div>
+                  <span>推荐布局</span>
+                  <strong>{{ recommendation.layout.shortName }}</strong>
+                  <small>{{ recommendation.shiftMode.shortName }}</small>
+                </div>
+                <el-button link type="primary" @click="openRecommendationPanel">
+                  调整回答
+                </el-button>
+              </section>
+              <p
+                v-if="
+                  !recommendationPanelOpen &&
+                  layoutEntry === 'recommend' &&
+                  recommendation
+                "
+                class="recommendation-layout-reason"
+              >
+                {{ recommendation.layoutReason }}
+              </p>
+
+              <section
+                v-if="
+                  !recommendationPanelOpen &&
+                  layoutEntry === 'recommend' &&
+                  !recommendation
+                "
+                class="recommendation-resume-panel"
+              >
+                <span>推荐问卷尚未完成</span>
+                <el-button type="primary" plain @click="openRecommendationPanel">
+                  继续填写
+                </el-button>
+              </section>
+          </section>
+
+              <div class="layout-schedule-groups">
+                <section
+                  v-for="group in LAYOUT_SCHEDULE_GROUPS"
+                  :key="group.value"
+                  class="layout-schedule-group"
+                >
+                  <header class="layout-schedule-group-heading">
+                    <h3>{{ group.label }}</h3>
+                    <span>{{ group.description }}</span>
+                  </header>
+
+                  <div
+                    class="layout-choice-grid layout-schedule-choice-grid"
+                    role="radiogroup"
+                    :aria-label="group.label"
+                  >
+                    <button
+                      v-for="option in group.options"
+                      :key="option.value"
+                      type="button"
+                      class="layout-choice"
+                      :class="[
+                        `layout-${option.id}`,
+                        {
+                          selected: selectedManualScheduleValue === option.value,
+                          recommended:
+                            layoutEntry === 'recommend' &&
+                            isLayoutRecommended(option.value),
+                        },
+                      ]"
+                      role="radio"
+                      :aria-checked="
+                        selectedManualScheduleValue === option.value
+                      "
+                      @click="selectManualScheduleOption(option.value)"
+                    >
+                      <span class="layout-choice-topline">
+                        <span class="layout-choice-code">{{ option.label }}</span>
+                        <v-icon :icon="option.icon" size="21"></v-icon>
+                      </span>
+                      <strong>{{ option.description }}</strong>
+                      <span class="layout-choice-facilities">
+                        <span class="layout-choice-facility facility-trading">
+                          {{ option.tradingRooms }} 贸易
+                        </span>
+                        <span class="layout-choice-facility facility-manufacture">
+                          {{ option.manufactureRooms }} 制造
+                        </span>
+                        <span class="layout-choice-facility facility-power">
+                          {{ option.powerRooms }} 发电
+                        </span>
+                      </span>
+                    </button>
+                  </div>
+                </section>
+              </div>
+
+              <el-alert
+                v-if="
+                  recommendation?.facilityNote &&
+                  activeLayoutId === recommendation.layout.id
+                "
+                :title="recommendation.facilityNote"
+                type="info"
+                :closable="false"
+                show-icon
+                class="facility-requirement-alert"
+              />
+
+        </section>
+
+        <section v-if="false" ref="contentPanel" class="result-panel">
         <div class="result-heading">
           <div>
             <span class="result-label">推荐方案</span>
             <h2>{{ recommendation.layout.name }}</h2>
             <p>{{ recommendation.layoutReason }}</p>
+            <p
+              v-if="recommendation.facilityNote"
+              class="facility-requirement-note"
+            >
+              <v-icon icon="mdi-information-outline" size="16"></v-icon>
+              {{ recommendation.facilityNote }}
+            </p>
           </div>
           <div class="layout-code">{{ recommendation.layout.shortName }}</div>
         </div>
@@ -1830,7 +2387,7 @@ onMounted(async () => {
           </div>
         </div>
 
-        <section class="ownership-panel">
+        <section v-if="showScheduleGeneration" class="ownership-panel">
           <div class="ownership-copy">
             <div class="section-title">
               <v-icon icon="mdi-account-check-outline"></v-icon>
@@ -1887,7 +2444,7 @@ onMounted(async () => {
         </section>
 
         <section
-          v-if="useOwnedOperators && !selectedSchedule"
+          v-if="showScheduleGeneration && useOwnedOperators && !selectedSchedule"
           class="compatibility-alert"
         >
           <v-icon icon="mdi-alert-circle-outline" size="24"></v-icon>
@@ -1954,6 +2511,20 @@ onMounted(async () => {
               </div>
               <strong>{{ recommendation.layout.goldRooms }} 座</strong>
             </div>
+            <div
+              v-if="recommendation.layout.orundumRooms"
+              class="allocation-row orundum"
+            >
+              <span>源石碎片</span>
+              <div class="allocation-track">
+                <span
+                  :style="{
+                    width: `${recommendation.layout.orundumRooms / recommendation.layout.manufactureRooms * 100}%`,
+                  }"
+                ></span>
+              </div>
+              <strong>{{ recommendation.layout.orundumRooms }} 座</strong>
+            </div>
           </div>
         </div>
 
@@ -1965,6 +2536,12 @@ onMounted(async () => {
             </div>
             <strong class="section-main">{{ recommendation.shiftMode.name }}</strong>
             <span class="section-secondary">{{ recommendation.shiftMode.description }}</span>
+            <p
+              v-if="recommendation.shiftMode.isCompatibleFallback"
+              class="section-note"
+            >
+              你选择的一天三换可兼容这一套一天两换原表，无需强行增加换班次数。
+            </p>
             <div class="queue-row">
               <div
                 v-for="(hours, index) in recommendation.shiftMode.queueHours"
@@ -1986,10 +2563,24 @@ onMounted(async () => {
             <strong class="section-main">{{ recommendation.droneTarget.roomName }}</strong>
             <span class="section-secondary">每日约 {{ recommendation.production.drones }} 架全部投入</span>
             <p class="section-note">{{ recommendation.droneReason }}</p>
+            <div
+              v-if="recommendation.droneTarget.id === 'flexible'"
+              class="drone-flex-options"
+            >
+              <span>
+                投经验：{{ formatNumber(recommendation.productionAlternatives[0].production.experience) }} EXP
+              </span>
+              <span>
+                投贸易：{{ formatNumber(recommendation.productionAlternatives[1].production.lmd) }} LMD
+              </span>
+            </div>
           </section>
         </div>
 
-        <section v-if="selectedSchedule" class="result-section reference-section">
+        <section
+          v-if="showScheduleGeneration && selectedSchedule"
+          class="result-section reference-section"
+        >
           <div class="section-title">
             <v-icon icon="mdi-clipboard-text-search-outline"></v-icon>
             <h3>方案参考</h3>
@@ -2101,7 +2692,7 @@ onMounted(async () => {
         </section>
 
         <section
-          v-if="selectedSchedule"
+          v-if="showScheduleGeneration && selectedSchedule"
           ref="scheduleCapturePanel"
           class="schedule-detail"
           data-riic-capture
@@ -2266,7 +2857,7 @@ onMounted(async () => {
         >
           <div class="section-title">
             <v-icon icon="mdi-format-list-numbered"></v-icon>
-            <h3>其他高产方案</h3>
+            <h3>备选方案</h3>
           </div>
           <div class="alternative-list">
             <div
@@ -2276,11 +2867,11 @@ onMounted(async () => {
             >
               <div>
                 <strong>
+                  {{ alternative.label }} ·
                   {{ alternative.candidate.title.replace(/\s+/g, " ") }}
                 </strong>
                 <span>
-                  {{ formatSourceDate(alternative.candidate.sourceUpdatedAt) }}
-                  · {{ alternative.candidate.variant === "simplified" ? "简化版" : "标准版" }}
+                  {{ alternative.reason }}
                 </span>
               </div>
               <div class="alternative-output">
@@ -2293,7 +2884,7 @@ onMounted(async () => {
         </section>
 
         <section
-          v-if="maaExportPreview?.warnings.length"
+          v-if="showScheduleGeneration && maaExportPreview?.warnings.length"
           class="export-warning"
         >
           <div class="section-title">
@@ -2308,7 +2899,7 @@ onMounted(async () => {
           </p>
         </section>
 
-        <details class="assumption-panel">
+        <details v-if="showScheduleGeneration" class="assumption-panel">
           <summary>估算口径</summary>
           <div>
             <p>
@@ -2333,6 +2924,7 @@ onMounted(async () => {
             重新选择
           </button>
           <button
+            v-if="showScheduleGeneration"
             type="button"
             class="primary-action"
             @click="copySummary"
@@ -2341,6 +2933,7 @@ onMounted(async () => {
             复制方案摘要
           </button>
           <button
+            v-if="showScheduleGeneration"
             type="button"
             class="secondary-action"
             :disabled="!selectedSchedule || exportingImage"
@@ -2350,6 +2943,7 @@ onMounted(async () => {
             {{ exportingImage ? "正在生成" : "导出图片" }}
           </button>
           <button
+            v-if="showScheduleGeneration"
             type="button"
             class="primary-action"
             :disabled="!selectedSchedule || exportingMaa"
@@ -2359,6 +2953,81 @@ onMounted(async () => {
             {{ exportingMaa ? "正在导出" : "导出 MAA" }}
           </button>
         </footer>
+      </section>
+      </section>
+
+      <section class="workflow-stage workflow-card schedule-generation-stage">
+        <h2>排班表生成</h2>
+        <div class="schedule-generation-status-grid">
+          <section
+            class="schedule-status-card"
+            :class="`tone-${layoutSelectionStatus.tone}`"
+          >
+            <v-icon
+              :icon="
+                isLayoutPlanningReady
+                  ? 'mdi-map-marker-check-outline'
+                  : 'mdi-map-marker-question-outline'
+              "
+              size="22"
+            ></v-icon>
+            <div>
+              <strong>{{ layoutSelectionStatus.title }}</strong>
+              <span>{{ layoutSelectionStatus.detail }}</span>
+            </div>
+          </section>
+
+          <section
+            class="schedule-status-card operator-box-status"
+            :class="`tone-${operatorBoxStatus.tone}`"
+          >
+            <v-icon
+              :icon="
+                operatorBoxStatus.tone === 'success'
+                  ? 'mdi-account-check-outline'
+                  : 'mdi-account-alert-outline'
+              "
+              size="22"
+            ></v-icon>
+            <div>
+              <strong>{{ operatorBoxStatus.title }}</strong>
+              <span>{{ operatorBoxStatus.detail }}</span>
+            </div>
+            <button
+              v-if="isUserLoggedIn && ownedOperators.length"
+              type="button"
+              class="operator-box-refresh"
+              :disabled="loadingOwnedOperators"
+              @click="loadOwnedOperators({ notify: true })"
+            >
+              <v-icon icon="mdi-refresh" size="16"></v-icon>
+              更新干员数据
+            </button>
+          </section>
+
+          <button
+            type="button"
+            class="sync-source-action"
+            @click="notifyPendingOperatorSync('森空岛')"
+          >
+            <v-icon icon="mdi-cloud-sync-outline" size="22"></v-icon>
+            <span>同步森空岛数据</span>
+          </button>
+
+          <button
+            type="button"
+            class="sync-source-action"
+            @click="notifyPendingOperatorSync('MAA')"
+          >
+            <v-icon icon="mdi-robot-outline" size="22"></v-icon>
+            <span>同步 MAA 数据</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="workflow-stage workflow-card future-workflow-stage pending">
+        <h2>排班表输出</h2>
+        <p>生成排班表后即可导出结果</p>
       </section>
     </div>
   </main>
@@ -2383,7 +3052,6 @@ onMounted(async () => {
   justify-content: space-between;
   gap: 24px;
   padding: 18px 4px 24px;
-  border-bottom: 1px solid var(--c-border-color);
 }
 
 .page-eyebrow {
@@ -2416,6 +3084,968 @@ onMounted(async () => {
   color: var(--riic-muted);
   font-size: 13px;
   font-weight: 600;
+}
+
+.workflow-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 0 32px;
+}
+
+.workflow-stage {
+  padding: 22px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 6px;
+  background: var(--c-page-background-color);
+}
+
+.wizard-layout.manual-selection {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 880px;
+}
+
+.layout-choice-panel {
+  margin-top: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.workflow-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+}
+
+.workflow-card-heading h2 {
+  margin: 0;
+  color: var(--c-text-color);
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.workflow-card-heading span {
+  overflow: hidden;
+  color: var(--riic-muted);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recommendation-entry-panel {
+  margin-bottom: 22px;
+  overflow: hidden;
+  border: 1px solid var(--c-border-color);
+  border-radius: 6px;
+  background: var(--c-page-background-color-secondary);
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.recommendation-entry-panel.expanded {
+  border-color: color-mix(
+    in srgb,
+    var(--riic-blue) 42%,
+    var(--c-border-color)
+  );
+  background: var(--c-page-background-color);
+}
+
+.recommendation-entry-action {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 58px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 0;
+  font-weight: 700;
+}
+
+.recommendation-entry-action :deep(.v-icon) {
+  margin-left: auto;
+}
+
+.recommendation-question-panel {
+  padding: 0 14px 14px;
+  border-top: 1px solid var(--c-border-color);
+}
+
+.recommendation-panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 0 14px;
+}
+
+.recommendation-panel-heading span {
+  color: var(--riic-blue);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.recommendation-panel-heading h3 {
+  margin: 4px 0 0;
+  color: var(--c-text-color);
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.recommendation-panel-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--c-border-color);
+}
+
+.recommendation-panel-enter-active,
+.recommendation-panel-leave-active {
+  overflow: hidden;
+  transition:
+    max-height 0.26s ease,
+    opacity 0.18s ease;
+}
+
+.recommendation-panel-enter-from,
+.recommendation-panel-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+
+.recommendation-panel-enter-to,
+.recommendation-panel-leave-from {
+  max-height: 640px;
+  opacity: 1;
+}
+
+.layout-schedule-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.layout-schedule-group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.layout-schedule-group-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.layout-schedule-group-heading h3 {
+  margin: 0;
+  color: var(--c-text-color);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.layout-schedule-group-heading span {
+  color: var(--riic-muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.layout-schedule-choice-grid {
+  margin-top: 0;
+}
+
+.layout-unavailable-alert,
+.facility-requirement-alert {
+  margin-top: 4px;
+}
+
+.recommendation-result-panel,
+.recommendation-resume-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 14px 0;
+}
+
+.recommendation-result-panel > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.recommendation-result-panel span,
+.recommendation-resume-panel > span {
+  color: var(--riic-muted);
+  font-size: 13px;
+}
+
+.recommendation-result-panel strong {
+  color: var(--riic-green);
+  font-size: 18px;
+}
+
+.recommendation-result-panel small {
+  color: var(--riic-muted);
+  font-size: 12px;
+}
+
+.recommendation-layout-reason {
+  margin: 6px 14px 14px;
+  color: var(--riic-muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.recommendation-field {
+  min-width: 0;
+  margin: 0 0 20px;
+  padding: 0;
+  border: 0;
+}
+
+.recommendation-field:last-child {
+  margin-bottom: 0;
+}
+
+.recommendation-field legend {
+  padding: 0;
+  color: var(--c-text-color);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.recommendation-answer-group {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.recommendation-answer-group.compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.recommendation-answer-group :deep(.el-radio) {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.recommendation-answer-group :deep(.el-radio__input) {
+  display: none;
+}
+
+.recommendation-answer-group :deep(.el-radio__label) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: var(--c-page-background-color-secondary);
+  color: var(--c-text-color);
+  font-size: 13px;
+  line-height: 1.35;
+  text-align: center;
+  cursor: pointer;
+}
+
+.recommendation-answer-group
+  :deep(.el-radio__input.is-checked + .el-radio__label) {
+  background: color-mix(
+    in srgb,
+    var(--option-color, var(--riic-blue)) 11%,
+    var(--c-page-background-color)
+  );
+  box-shadow: inset 3px 0 0 var(--option-color, var(--riic-blue));
+}
+
+.layout-entry-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.layout-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.layout-entry {
+  --option-color: var(--riic-blue);
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  align-items: center;
+  gap: 4px 12px;
+  min-width: 0;
+  min-height: 76px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--c-page-background-color-secondary);
+  color: var(--c-text-color);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.18s ease;
+}
+
+.layout-entry-recommend {
+  min-height: 76px;
+}
+
+.layout-entry:hover {
+  background: color-mix(
+    in srgb,
+    var(--option-color) 6%,
+    var(--c-page-background-color-secondary)
+  );
+}
+
+.layout-entry.selected {
+  background: color-mix(
+    in srgb,
+    var(--option-color) 11%,
+    var(--c-page-background-color)
+  );
+  box-shadow: inset 3px 0 0 var(--option-color);
+}
+
+.layout-entry:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.layout-entry.unavailable {
+  border-style: dashed;
+}
+
+.layout-entry-topline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  color: var(--option-color);
+}
+
+.layout-entry-code {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.layout-entry > strong {
+  display: block;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.layout-entry-recommend > strong {
+  font-size: 14px;
+}
+
+.layout-entry-facilities {
+  display: block;
+  grid-column: 2;
+  margin: 0;
+  padding: 0;
+  color: var(--riic-muted);
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.recommendation-question-panel,
+.direct-layout-panel {
+  padding-top: 12px;
+}
+
+.recommendation-step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 0;
+}
+
+.recommendation-step {
+  padding-top: 12px;
+}
+
+.recommendation-step-heading > span {
+  color: var(--riic-blue);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.recommendation-field-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.recommendation-field-list .question-group legend {
+  font-size: 13px;
+}
+
+.recommendation-field-list .option-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.recommendation-field-list .option-grid.compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.recommendation-field-list .option-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--c-page-background-color-secondary);
+  text-align: center;
+}
+
+.recommendation-field-list .option-button:hover {
+  border: 0;
+  background: color-mix(
+    in srgb,
+    var(--option-color, var(--riic-blue)) 7%,
+    var(--c-page-background-color-secondary)
+  );
+  transform: none;
+}
+
+.recommendation-field-list .option-button.selected {
+  border: 0;
+}
+
+.recommendation-field-list .option-content strong {
+  font-size: 13px;
+}
+
+.recommendation-field-list .option-content {
+  align-items: center;
+}
+
+.recommendation-preview {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  margin-top: 2px;
+  padding: 6px 9px;
+  border-left: 3px solid var(--riic-green);
+  background: transparent;
+}
+
+.recommendation-preview span,
+.recommendation-preview strong {
+  display: block;
+}
+
+.recommendation-preview span {
+  color: var(--riic-green);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.recommendation-preview strong {
+  font-size: 15px;
+}
+
+.layout-unavailable-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 16px 0 0;
+  color: var(--riic-orange);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.layout-unavailable-note .v-icon {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.layout-choice-field {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.layout-choice-field legend {
+  padding: 0;
+  color: var(--c-text-color);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.layout-shift-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.layout-shift-choice {
+  --option-color: var(--riic-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 40px;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--c-page-background-color-secondary);
+  color: var(--option-color);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.layout-shift-choice:hover,
+.layout-shift-choice.selected {
+  background: color-mix(
+    in srgb,
+    var(--option-color) 7%,
+    var(--c-page-background-color-secondary)
+  );
+}
+
+.layout-shift-choice.selected {
+  background: color-mix(
+    in srgb,
+    var(--option-color) 10%,
+    var(--c-page-background-color)
+  );
+  box-shadow: inset 3px 0 0 var(--option-color);
+}
+
+.layout-shift-choice > span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  gap: 1px;
+  text-align: center;
+}
+
+.layout-shift-choice strong {
+  color: var(--c-text-color);
+  font-size: 13px;
+}
+
+.layout-shift-choice small {
+  color: var(--riic-muted);
+  font-size: 11px;
+}
+
+.layout-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.layout-choice {
+  --option-color: var(--riic-blue);
+  --layout-color: var(--riic-blue);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  background: var(--c-page-background-color-secondary);
+  color: var(--c-text-color);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.layout-choice.layout-153 {
+  --layout-color: #b48745;
+}
+
+.layout-choice.layout-243 {
+  --layout-color: #3c83bd;
+}
+
+.layout-choice.layout-252 {
+  --layout-color: #4f9b72;
+}
+
+.layout-choice.layout-342 {
+  --layout-color: #d96b6b;
+}
+
+.layout-choice:hover,
+.layout-choice.selected,
+.layout-choice.recommended {
+  border-color: var(--option-color);
+}
+
+.layout-choice.selected {
+  background: color-mix(
+    in srgb,
+    var(--option-color) 10%,
+    var(--c-page-background-color)
+  );
+  box-shadow: inset 3px 0 0 var(--option-color);
+}
+
+.layout-choice.recommended {
+  background: color-mix(
+    in srgb,
+    var(--option-color) 10%,
+    var(--c-page-background-color)
+  );
+  animation: riic-recommendation-breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes riic-recommendation-breathe {
+  0%,
+  100% {
+    box-shadow:
+      inset 3px 0 0 var(--option-color),
+      0 0 0 0
+        color-mix(in srgb, var(--riic-blue) 0%, transparent);
+  }
+
+  50% {
+    box-shadow:
+      inset 3px 0 0 var(--option-color),
+      0 0 0 4px
+        color-mix(in srgb, var(--riic-blue) 20%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layout-choice.recommended {
+    animation: none;
+    box-shadow:
+      inset 3px 0 0 var(--option-color),
+      0 0 0 2px
+        color-mix(in srgb, var(--riic-blue) 18%, transparent);
+  }
+}
+
+.layout-choice-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--layout-color);
+}
+
+.layout-choice-code {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.layout-choice > strong {
+  display: block;
+  margin-top: 7px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.layout-choice-facilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 6px;
+  margin-top: 6px;
+  font-size: 10px;
+}
+
+.layout-choice-facility {
+  --facility-color: var(--riic-blue);
+  display: inline-flex;
+  align-items: center;
+  min-height: 19px;
+  padding: 0 5px;
+  border-radius: 3px;
+  background: color-mix(
+    in srgb,
+    var(--facility-color) 12%,
+    var(--c-page-background-color)
+  );
+  color: var(--facility-color);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.layout-choice-facility.facility-trading {
+  --facility-color: #3c83bd;
+}
+
+.layout-choice-facility.facility-manufacture {
+  --facility-color: #d5aa36;
+}
+
+.layout-choice-facility.facility-power {
+  --facility-color: #4f9b72;
+}
+
+.layout-choice-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-height: 21px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.layout-choice-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 0 6px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 3px;
+  color: var(--riic-muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.layout-choice-tag.recommended {
+  border-color: color-mix(
+    in srgb,
+    var(--option-color) 45%,
+    var(--c-border-color)
+  );
+  color: var(--option-color);
+}
+
+.layout-choice-empty {
+  margin: 12px 0 0;
+  color: var(--riic-muted);
+  font-size: 13px;
+}
+
+.layout-choice-panel > .facility-requirement-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  color: var(--riic-orange);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.layout-choice-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 0;
+}
+
+.future-workflow-stage {
+  min-height: 112px;
+  color: var(--riic-muted);
+}
+
+.future-workflow-stage h2 {
+  margin: 0;
+  color: var(--c-text-color);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.future-workflow-stage p {
+  margin: 7px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.future-workflow-stage.pending {
+  background: var(--c-page-background-color-secondary);
+}
+
+.schedule-generation-stage h2 {
+  margin: 0;
+  color: var(--c-text-color);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.schedule-generation-status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.schedule-status-card,
+.sync-source-action {
+  display: flex;
+  align-items: flex-start;
+  min-width: 0;
+  min-height: 94px;
+  padding: 12px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  background: var(--c-page-background-color-secondary);
+  color: var(--c-text-color);
+}
+
+.schedule-status-card {
+  gap: 9px;
+}
+
+.schedule-status-card > .v-icon {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.schedule-status-card > div {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.schedule-status-card strong {
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.schedule-status-card span {
+  color: var(--riic-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.schedule-status-card.tone-success {
+  border-color: color-mix(
+    in srgb,
+    var(--riic-green) 42%,
+    var(--c-border-color)
+  );
+  background: color-mix(
+    in srgb,
+    var(--riic-green) 8%,
+    var(--c-page-background-color-secondary)
+  );
+}
+
+.schedule-status-card.tone-success > .v-icon,
+.schedule-status-card.tone-success strong {
+  color: var(--riic-green);
+}
+
+.schedule-status-card.tone-warning {
+  border-color: color-mix(
+    in srgb,
+    var(--riic-orange) 42%,
+    var(--c-border-color)
+  );
+  background: color-mix(
+    in srgb,
+    var(--riic-orange) 8%,
+    var(--c-page-background-color-secondary)
+  );
+}
+
+.schedule-status-card.tone-warning > .v-icon,
+.schedule-status-card.tone-warning strong {
+  color: var(--riic-orange);
+}
+
+.operator-box-status {
+  flex-wrap: wrap;
+}
+
+.operator-box-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  margin: auto 0 0 31px;
+  padding: 3px 6px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--riic-green);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.operator-box-refresh:hover {
+  background: color-mix(
+    in srgb,
+    var(--riic-green) 10%,
+    var(--c-page-background-color-secondary)
+  );
+}
+
+.operator-box-refresh:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.sync-source-action {
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.sync-source-action > .v-icon {
+  color: var(--riic-blue);
+}
+
+.sync-source-action span {
+  color: var(--c-text-color);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.sync-source-action:hover {
+  border-color: color-mix(
+    in srgb,
+    var(--riic-blue) 42%,
+    var(--c-border-color)
+  );
+  background: color-mix(
+    in srgb,
+    var(--riic-blue) 7%,
+    var(--c-page-background-color-secondary)
+  );
 }
 
 .wizard-layout {
@@ -3156,11 +4786,33 @@ onMounted(async () => {
   line-height: 1.35;
 }
 
+.question-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 26px;
+}
+
+.question-group {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.question-group legend {
+  padding: 0;
+  color: var(--c-text-color);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
 .option-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  margin-top: 28px;
+  margin-top: 12px;
 }
 
 .option-grid.compact {
@@ -3213,6 +4865,10 @@ onMounted(async () => {
 
 .tone-red {
   --option-color: var(--riic-red);
+}
+
+.tone-purple {
+  --option-color: #7b5bb8;
 }
 
 .tone-gray {
@@ -3336,6 +4992,18 @@ onMounted(async () => {
   color: var(--riic-muted);
   font-size: 14px;
   line-height: 1.6;
+}
+
+.result-heading .facility-requirement-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: var(--riic-orange);
+}
+
+.facility-requirement-note .v-icon {
+  flex: 0 0 auto;
+  margin-top: 3px;
 }
 
 .layout-code {
@@ -3531,6 +5199,10 @@ onMounted(async () => {
   background: var(--riic-gold);
 }
 
+.allocation-row.orundum .allocation-track span {
+  background: #7b5bb8;
+}
+
 .result-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3550,6 +5222,20 @@ onMounted(async () => {
   margin-top: 5px;
   color: var(--riic-muted);
   font-size: 13px;
+}
+
+.drone-flex-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 12px;
+  margin-top: 12px;
+  color: var(--riic-muted);
+  font-size: 12px;
+}
+
+.drone-flex-options span {
+  padding-left: 9px;
+  border-left: 2px solid var(--riic-blue);
 }
 
 .queue-row {
@@ -4050,6 +5736,23 @@ onMounted(async () => {
 }
 
 @media (max-width: 900px) {
+  .schedule-generation-status-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .layout-entry-grid {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+
+  .recommendation-field-list .option-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .layout-choice-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .developer-combination-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -4129,6 +5832,81 @@ onMounted(async () => {
 }
 
 @media (max-width: 640px) {
+  .workflow-shell {
+    gap: 16px;
+    padding-top: 18px;
+  }
+
+  .workflow-stage {
+    padding: 18px;
+  }
+
+  .schedule-generation-status-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .layout-entry-panel {
+    gap: 16px;
+  }
+
+  .layout-choice-panel {
+    padding: 0;
+  }
+
+  .recommendation-answer-group,
+  .recommendation-answer-group.compact {
+    grid-template-columns: 1fr;
+  }
+
+  .layout-schedule-group {
+    gap: 8px;
+  }
+
+  .recommendation-question-panel {
+    padding: 0 12px 12px;
+  }
+
+  .layout-entry-grid,
+  .layout-shift-list {
+    grid-template-columns: 1fr;
+  }
+
+  .layout-entry {
+    grid-template-columns: 62px minmax(0, 1fr);
+  }
+
+  .layout-entry-facilities {
+    grid-column: 2;
+    text-align: left;
+  }
+
+  .recommendation-field-list .option-grid,
+  .recommendation-field-list .option-grid.compact {
+    grid-template-columns: 1fr;
+  }
+
+  .recommendation-preview {
+    align-items: flex-start;
+  }
+
+  .layout-choice {
+    min-height: 100px;
+  }
+
+  .layout-choice-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .layout-choice-actions .primary-action,
+  .layout-choice-actions .secondary-action {
+    width: 100%;
+  }
+
+  .layout-choice-actions :deep(.el-button) {
+    width: 100%;
+  }
+
   .page-heading {
     align-items: flex-start;
     padding-top: 8px;

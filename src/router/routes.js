@@ -363,6 +363,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/yield-ppt',
+        text: '收益速览本期清单',
+        name: 'YieldPptConsole',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/YieldPptConsole.vue'),
+        meta: {
+            title: '收益速览本期清单'
+        }
+    },
+    {
         path: '/lb/pack-maker',
         text: '礼包性价比制图',
         name: 'LBPackMaker',

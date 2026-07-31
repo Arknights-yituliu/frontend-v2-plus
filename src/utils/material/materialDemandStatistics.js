@@ -270,6 +270,52 @@ export function getR3MaterialDemandInRange(itemId, startTime, endTime = Date.now
   }, 0)
 }
 
+export function getTotalR3MaterialDemand(itemId) {
+  if (!itemId) {
+    return 0
+  }
+
+  const {r3ItemCostList} = getMaterialDemandStatistics()
+  return r3ItemCostList.find(item => item.itemId === itemId)?.count || 0
+}
+
+export function getRecentR3MaterialDemandByMonth(itemId, {months = 24, now = new Date()} = {}) {
+  const endDate = now instanceof Date ? new Date(now) : new Date(now)
+  if (!itemId || Number.isNaN(endDate.getTime())) {
+    return []
+  }
+
+  const monthCount = Math.max(1, Math.floor(Number(months) || 0))
+  const startDate = new Date(endDate.getFullYear(), endDate.getMonth() - monthCount + 1, 1)
+  const startTime = startDate.getTime()
+  const endTime = endDate.getTime()
+  const monthlyDemandMap = new Map()
+
+  for (let index = 0; index < monthCount; index++) {
+    const date = new Date(startDate.getFullYear(), startDate.getMonth() + index, 1)
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+    monthlyDemandMap.set(key, 0)
+  }
+
+  const {r3ItemCostListByDate} = getMaterialDemandStatistics()
+  for (const versionCost of r3ItemCostListByDate) {
+    if (versionCost.updateTime < startTime || versionCost.updateTime > endTime) {
+      continue
+    }
+
+    const itemCost = versionCost.list.find(item => item.itemId === itemId)
+    if (!itemCost?.count) {
+      continue
+    }
+
+    const date = new Date(versionCost.updateTime)
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+    monthlyDemandMap.set(key, (monthlyDemandMap.get(key) || 0) + itemCost.count)
+  }
+
+  return [...monthlyDemandMap].map(([month, count]) => ({month, count}))
+}
+
 export function getRecentR3MaterialDemand(itemId, {years = 2, now = new Date()} = {}) {
   const endDate = now instanceof Date ? new Date(now) : new Date(now)
   if (Number.isNaN(endDate.getTime())) {

@@ -25,7 +25,108 @@ const outputPath = path.resolve(
     ),
 );
 const scheduleRoot = path.join(sourceRoot, "src", "assets", "texts", "schedule");
-const targetDirectoryPattern = /^(153|243(?: 简化)?) 一天(?:两换|三换)$/;
+const MINUTES_PER_DAY = 24 * 60;
+const SCHEDULE_DIRECTORY_META = {
+  "153 一天两换": {
+    layout: "153",
+    variant: "standard",
+    shiftMode: "twice",
+    isOrundum: false,
+    facilityRequirement: null,
+    facilityRequirementLabel: "",
+    goldManufactureRooms: null,
+  },
+  "153 一天三换": {
+    layout: "153",
+    variant: "standard",
+    shiftMode: "threeTimes",
+    isOrundum: false,
+    facilityRequirement: null,
+    facilityRequirementLabel: "",
+    goldManufactureRooms: null,
+  },
+  "243 一天一换": {
+    layout: "243",
+    variant: "standard",
+    shiftMode: "once",
+    isOrundum: false,
+    facilityRequirement: null,
+    facilityRequirementLabel: "",
+    goldManufactureRooms: null,
+  },
+  "243 一天两换": {
+    layout: "243",
+    variant: "standard",
+    shiftMode: "twice",
+    isOrundum: false,
+    facilityRequirement: null,
+    facilityRequirementLabel: "",
+    goldManufactureRooms: null,
+  },
+  "243 一天三换": {
+    layout: "243",
+    variant: "standard",
+    shiftMode: "threeTimes",
+    isOrundum: false,
+    facilityRequirement: null,
+    facilityRequirementLabel: "",
+    goldManufactureRooms: null,
+  },
+  "243 简化 一天两换": {
+    layout: "243",
+    variant: "simplified",
+    shiftMode: "twice",
+    isOrundum: false,
+    facilityRequirement: null,
+    facilityRequirementLabel: "",
+    goldManufactureRooms: null,
+  },
+  "243 搓玉 一天两换": {
+    layout: "243",
+    variant: "orundum",
+    shiftMode: "twice",
+    isOrundum: true,
+    facilityRequirement: null,
+    facilityRequirementLabel: "",
+    goldManufactureRooms: null,
+  },
+  "右满 252（2 赤金）一天两换": {
+    layout: "252",
+    variant: "rightFull2Gold",
+    shiftMode: "twice",
+    isOrundum: false,
+    facilityRequirement: "rightFull",
+    facilityRequirementLabel: "右满",
+    goldManufactureRooms: 2,
+  },
+  "右满 252（3 赤金）一天两换": {
+    layout: "252",
+    variant: "rightFull3Gold",
+    shiftMode: "twice",
+    isOrundum: false,
+    facilityRequirement: "rightFull",
+    facilityRequirementLabel: "右满",
+    goldManufactureRooms: 3,
+  },
+  "满血 252（2 赤金）一天三换": {
+    layout: "252",
+    variant: "fullBlood2Gold",
+    shiftMode: "threeTimes",
+    isOrundum: false,
+    facilityRequirement: "fullBlood",
+    facilityRequirementLabel: "满血",
+    goldManufactureRooms: 2,
+  },
+  "右满 342 搓玉 一天两换": {
+    layout: "342",
+    variant: "rightFullOrundum",
+    shiftMode: "twice",
+    isOrundum: true,
+    facilityRequirement: "rightFull",
+    facilityRequirementLabel: "右满",
+    goldManufactureRooms: null,
+  },
+};
 
 function parseStats(value) {
   return value
@@ -138,7 +239,16 @@ function normalizeStat(stat) {
   };
 }
 
-function buildProduction(stats) {
+function getDronesPerDay(powerPlantCount) {
+  if (!Number.isFinite(powerPlantCount)) {
+    return null;
+  }
+
+  // A level-three power plant has a 5% default boost plus the 20% filler assumption.
+  return Math.round((MINUTES_PER_DAY / 6) * (1 + powerPlantCount * 0.25));
+}
+
+function buildProduction(stats, powerPlantCount) {
   const statsMap = new Map(
     stats.map((stat) => [stat.itemName, normalizeStat(stat)]),
   );
@@ -147,18 +257,13 @@ function buildProduction(stats) {
   const lmd = statsMap.get("龙门币") || null;
   const certificate = statsMap.get("高级凭证") || null;
   const orundum = statsMap.get("合成玉") || null;
-  const drones =
-    experience?.drone === null || experience?.drone === undefined
-      ? null
-      : Math.round(experience.drone * 0.06);
-
   return {
     experience,
     goldValue,
     lmd,
     certificate,
     orundum,
-    drones,
+    drones: getDronesPerDay(powerPlantCount),
     complete:
       experience?.base !== null &&
       experience?.drone !== null &&
@@ -239,16 +344,23 @@ function buildCandidate(directoryName, fileName) {
     .split(path.sep)
     .join("/");
   const schedule = parseSchedule(fs.readFileSync(sourcePath, "utf8"));
+  const directoryMeta = SCHEDULE_DIRECTORY_META[directoryName];
+
+  if (!directoryMeta) {
+    throw new Error(`No schedule metadata found for ${directoryName}`);
+  }
 
   return {
     id: `${directoryName}/${fileName.replace(/\.txt$/i, "")}`,
     sourcePath: relativeSourcePath,
     sourceUpdatedAt: parseSourceDate(fileName),
-    layout: directoryName.startsWith("153") ? "153" : "243",
-    variant: directoryName.includes("简化") ? "simplified" : "standard",
-    shiftMode: directoryName.includes("一天三换") ? "threeTimes" : "twice",
+    ...directoryMeta,
+    powerPlantCount: Number.parseInt(directoryMeta.layout.slice(-1), 10),
     ...schedule,
-    production: buildProduction(schedule.stats),
+    production: buildProduction(
+      schedule.stats,
+      Number.parseInt(directoryMeta.layout.slice(-1), 10),
+    ),
     requirements: buildRequirements(schedule),
   };
 }
@@ -260,7 +372,9 @@ if (!fs.existsSync(scheduleRoot)) {
 const candidates = fs
   .readdirSync(scheduleRoot, { withFileTypes: true })
   .filter(
-    (entry) => entry.isDirectory() && targetDirectoryPattern.test(entry.name),
+    (entry) =>
+      entry.isDirectory() &&
+      Object.prototype.hasOwnProperty.call(SCHEDULE_DIRECTORY_META, entry.name),
   )
   .flatMap((entry) =>
     fs
@@ -284,13 +398,7 @@ const payload = {
   source: {
     repository: "https://github.com/BiologyHazard/riic-yituliu",
     commit: getSourceCommit(),
-    directories: [
-      "153 一天两换",
-      "153 一天三换",
-      "243 一天两换",
-      "243 一天三换",
-      "243 简化 一天两换",
-    ],
+    directories: Object.keys(SCHEDULE_DIRECTORY_META),
   },
   candidates,
 };

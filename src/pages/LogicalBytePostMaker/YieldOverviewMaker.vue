@@ -3,7 +3,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import ItemImage from '/src/components/sprite/ItemImage.vue'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
-import SkillIcon from '/src/components/sprite/SkillIcon.vue'
+import YieldOverviewChart from '/src/components/logicalByte/YieldOverviewChart.vue'
 import operatorItemCostTable from '/src/static/json/operator/operator_item_cost_table.json'
 import operatorTable from '/src/static/json/operator/character_table_simple.json'
 import operatorTableV2 from '/src/static/json/operator/character_table_simple.v2.json'
@@ -14,6 +14,12 @@ import {
   loadLogicalByteCharacterData,
   normalizeLogicalByteCharacterData,
 } from '/src/utils/logicalByte/characterData.js'
+import {
+  deleteYieldOverviewStoredPortrait,
+  getYieldOverviewAutoPortraitUrl,
+  getYieldOverviewStoredPortrait,
+  saveYieldOverviewStoredPortrait,
+} from '/src/utils/logicalByte/yieldOverviewPortraits.js'
 
 const T5_MATERIAL_ID_REGEX = /^\d{4}5$/
 const T4_MATERIAL_ID_REGEX = /^\d{4}4$/
@@ -32,9 +38,7 @@ const LMD_ITEM_ID = '4001'
 const BASIC_BATTLE_RECORD_ITEM_ID = '2001'
 const BASIC_BATTLE_RECORD_EXP = 200
 const SETTINGS_STORAGE_KEY = 'logicalByte_yieldOverview_settings_v1'
-const PORTRAIT_BASE_URL = 'https://torappu.prts.wiki/assets/char_portrait'
-const PORTRAIT_DB_NAME = 'logicalByteYieldOverview'
-const PORTRAIT_STORE_NAME = 'operatorPortraits'
+const PPT_PAGE_STORAGE_KEY = 'logicalByte_yieldOverview_pptPage_v1'
 const DEFAULT_LAYOUT_SETTINGS = Object.freeze({
   materialColumnWidth: 315,
   rowHeight: 96,
@@ -48,8 +52,6 @@ const DEFAULT_LAYOUT_SETTINGS = Object.freeze({
 const layoutControls = [
   { key: 'materialColumnWidth', label: '主要材料栏宽', min: 180, max: 600, step: 5 },
   { key: 'rowHeight', label: '内容行高', min: 80, max: 160, step: 2 },
-  { key: 'materialGapX', label: '图标横间距', min: 0, max: 30, step: 1 },
-  { key: 'materialGapY', label: '图标纵间距', min: 0, max: 30, step: 1 },
 ]
 const portraitLayoutControls = [
   { key: 'portraitColumnWidth', label: '立绘区域宽度', min: 150, max: 400, step: 5 },
@@ -66,6 +68,9 @@ const itemValueLoading = ref(false)
 const showSkillT4Materials = ref(savedSettings.showSkillT4Materials)
 const tableCaptureRef = ref(null)
 const isExportingTable = ref(false)
+const pptPageCaptureRef = ref(null)
+const isExportingPptPage = ref(false)
+const pptPageOperatorIds = ref(loadPptPageOperatorIds())
 const layoutSettings = ref(savedSettings.layoutSettings)
 const manualPortraitUrl = ref('')
 const manualPortraitFileName = ref('')
@@ -74,11 +79,16 @@ const autoPortraitLoaded = ref(false)
 const portraitLoading = ref(false)
 let portraitObjectUrl = ''
 let portraitLoadVersion = 0
-let portraitDbPromise = null
 
 watch(
   [operatorName, selectedOperatorId, showSkillT4Materials, layoutSettings],
   saveYieldOverviewSettings,
+  { deep: true, immediate: true },
+)
+
+watch(
+  pptPageOperatorIds,
+  savePptPageOperatorIds,
   { deep: true, immediate: true },
 )
 
@@ -155,7 +165,7 @@ const autoPortraitUrl = computed(() => {
     return ''
   }
 
-  return `${PORTRAIT_BASE_URL}/${matchedOperatorId.value}_1.png`
+  return getYieldOverviewAutoPortraitUrl(matchedOperatorId.value)
 })
 
 const portraitSource = computed(() => manualPortraitUrl.value || autoPortraitUrl.value)
@@ -189,6 +199,28 @@ const tableRows = computed(() => {
 
   return buildOperatorRows(matchedOperator.value, rankingContext.value, itemInfoMap.value)
 })
+
+const pptPageOperators = computed(() => {
+  return pptPageOperatorIds.value
+    .map(charId => {
+      const operator = activeOperatorTable[charId]
+      if (!operator || !activeOperatorCostTable[charId]) {
+        return null
+      }
+
+      const resolvedOperator = {
+        charId,
+        ...operator,
+        name: operator.name || operatorTable[charId]?.name || charId,
+        rarity: getDisplayRarity(charId),
+      }
+      const rows = buildOperatorRows(resolvedOperator, rankingContext.value, itemInfoMap.value)
+      return rows.length > 0 ? { ...resolvedOperator, rows } : null
+    })
+    .filter(Boolean)
+})
+
+const pptPageColumnCount = computed(() => Math.min(3, Math.max(1, pptPageOperators.value.length)))
 
 const overviewStyle = computed(() => ({
   '--overview-card-width':
@@ -310,69 +342,36 @@ function saveYieldOverviewSettings() {
   }
 }
 
-function openPortraitDatabase() {
-  if (portraitDbPromise) {
-    return portraitDbPromise
+function loadPptPageOperatorIds() {
+  if (typeof window === 'undefined') {
+    return []
   }
 
-  portraitDbPromise = new Promise((resolve, reject) => {
-    if (typeof window === 'undefined' || !window.indexedDB) {
-      reject(new Error('当前浏览器不支持 IndexedDB'))
-      return
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(PPT_PAGE_STORAGE_KEY) || '[]')
+    if (!Array.isArray(saved)) {
+      return []
     }
 
-    const request = window.indexedDB.open(PORTRAIT_DB_NAME, 1)
-    request.onupgradeneeded = () => {
-      const database = request.result
-      if (!database.objectStoreNames.contains(PORTRAIT_STORE_NAME)) {
-        database.createObjectStore(PORTRAIT_STORE_NAME, { keyPath: 'charId' })
-      }
-    }
-    request.onsuccess = () => resolve(request.result)
-    request.onerror = () => reject(request.error || new Error('立绘数据库打开失败'))
-  })
-
-  portraitDbPromise.catch(() => {
-    portraitDbPromise = null
-  })
-  return portraitDbPromise
+    return saved
+      .filter(charId => typeof charId === 'string' && charId)
+      .slice(0, 3)
+  } catch (error) {
+    console.warn('读取培养成本分页设置失败', error)
+    return []
+  }
 }
 
-async function getStoredPortrait(charId) {
-  const database = await openPortraitDatabase()
-  return new Promise((resolve, reject) => {
-    const transaction = database.transaction(PORTRAIT_STORE_NAME, 'readonly')
-    const request = transaction.objectStore(PORTRAIT_STORE_NAME).get(charId)
-    request.onsuccess = () => resolve(request.result || null)
-    request.onerror = () => reject(request.error || new Error('立绘读取失败'))
-  })
-}
+function savePptPageOperatorIds() {
+  if (typeof window === 'undefined') {
+    return
+  }
 
-async function saveStoredPortrait(charId, file) {
-  const database = await openPortraitDatabase()
-  return new Promise((resolve, reject) => {
-    const transaction = database.transaction(PORTRAIT_STORE_NAME, 'readwrite')
-    transaction.objectStore(PORTRAIT_STORE_NAME).put({
-      charId,
-      file,
-      fileName: file.name,
-      updatedAt: Date.now(),
-    })
-    transaction.oncomplete = () => resolve()
-    transaction.onerror = () => reject(transaction.error || new Error('立绘保存失败'))
-    transaction.onabort = () => reject(transaction.error || new Error('立绘保存失败'))
-  })
-}
-
-async function deleteStoredPortrait(charId) {
-  const database = await openPortraitDatabase()
-  return new Promise((resolve, reject) => {
-    const transaction = database.transaction(PORTRAIT_STORE_NAME, 'readwrite')
-    transaction.objectStore(PORTRAIT_STORE_NAME).delete(charId)
-    transaction.oncomplete = () => resolve()
-    transaction.onerror = () => reject(transaction.error || new Error('立绘删除失败'))
-    transaction.onabort = () => reject(transaction.error || new Error('立绘删除失败'))
-  })
+  try {
+    window.localStorage.setItem(PPT_PAGE_STORAGE_KEY, JSON.stringify(pptPageOperatorIds.value))
+  } catch (error) {
+    console.warn('保存培养成本分页设置失败', error)
+  }
 }
 
 function clearManualPortraitPreview() {
@@ -404,7 +403,7 @@ async function loadStoredPortrait(charId) {
 
   portraitLoading.value = true
   try {
-    const storedPortrait = await getStoredPortrait(charId)
+    const storedPortrait = await getYieldOverviewStoredPortrait(charId)
     if (loadVersion !== portraitLoadVersion || !storedPortrait?.file) {
       return
     }
@@ -440,7 +439,7 @@ async function handlePortraitUpload(event) {
   autoPortraitFailed.value = false
 
   try {
-    await saveStoredPortrait(charId, file)
+    await saveYieldOverviewStoredPortrait(charId, file)
     ElMessage.success('立绘已上传并保存')
   } catch (error) {
     console.warn('立绘保存失败:', error)
@@ -459,7 +458,7 @@ async function removeManualPortrait() {
   }
 
   try {
-    await deleteStoredPortrait(charId)
+    await deleteYieldOverviewStoredPortrait(charId)
     ElMessage.success('已恢复自动立绘')
   } catch (error) {
     console.warn('手动立绘删除失败:', error)
@@ -528,12 +527,18 @@ function isT4Material(itemId) {
 function toCostEntries(costObject = {}) {
   return Object.entries(costObject)
     .filter(([_, count]) => Number(count) > 0)
-    .map(([itemId, count]) => ({
-      itemId,
-      count: Number(count),
-      itemName: itemInfoMap.value.get(itemId)?.itemName || itemId,
-      rarity: itemInfoMap.value.get(itemId)?.rarity || 0,
-    }))
+    .map(([itemId, count]) => {
+      const item = itemInfoMap.value.get(itemId)
+      return {
+        itemId,
+        count: Number(count),
+        itemName: item?.itemName || itemId,
+        rarity: item?.rarity || 0,
+        type: item?.type || '',
+        isT5: isT5Material(itemId),
+        isT4: isT4Material(itemId),
+      }
+    })
     .sort((a, b) => {
       const aT5 = isT5Material(a.itemId) ? 1 : 0
       const bT5 = isT5Material(b.itemId) ? 1 : 0
@@ -746,10 +751,55 @@ function selectCandidate(charId) {
   selectedOperatorId.value = charId
 }
 
+function addMatchedOperatorToPptPage() {
+  const charId = matchedOperatorId.value
+  if (!charId) {
+    ElMessage.warning('请先选择干员')
+    return
+  }
+
+  if (pptPageOperatorIds.value.includes(charId)) {
+    ElMessage.warning('该干员已经在本页中')
+    return
+  }
+
+  if (pptPageOperatorIds.value.length >= 3) {
+    ElMessage.warning('一页最多放 3 名干员')
+    return
+  }
+
+  pptPageOperatorIds.value.push(charId)
+}
+
+function removePptPageOperator(charId) {
+  pptPageOperatorIds.value = pptPageOperatorIds.value.filter(item => item !== charId)
+}
+
+function movePptPageOperator(index, direction) {
+  const destination = index + direction
+  if (destination < 0 || destination >= pptPageOperatorIds.value.length) {
+    return
+  }
+
+  const next = [...pptPageOperatorIds.value]
+  ;[next[index], next[destination]] = [next[destination], next[index]]
+  pptPageOperatorIds.value = next
+}
+
 function getExportFileName() {
   const name = matchedOperator.value?.name || '收益速览'
   const safeName = name.replace(/[\\/:*?"<>|]/g, '_')
   return `收益速览制图-${safeName}-${Date.now()}.png`
+}
+
+function getPptPageExportFileName() {
+  const names = pptPageOperators.value.map(operator => operator.name).join('-') || '培养成本'
+  const safeNames = names.replace(/[\\/:*?"<>|]/g, '_')
+  return `收益速览-培养成本-${safeNames}-${Date.now()}.png`
+}
+
+function getPptPageMaterials(row) {
+  return row.materials.slice(0, 8)
 }
 
 function adjustLayoutSetting(control, direction) {
@@ -771,7 +821,8 @@ function resetPortraitLayoutSettings() {
 }
 
 async function downloadTablePng() {
-  if (!tableCaptureRef.value || isExportingTable.value) {
+  const target = tableCaptureRef.value?.getElement?.()
+  if (!target || isExportingTable.value) {
     return
   }
 
@@ -781,7 +832,7 @@ async function downloadTablePng() {
     await document.fonts?.ready
 
     const { default: html2canvas } = await import('html2canvas')
-    const canvas = await html2canvas(tableCaptureRef.value, {
+    const canvas = await html2canvas(target, {
       backgroundColor: null,
       scale: 2,
       useCORS: true,
@@ -799,6 +850,38 @@ async function downloadTablePng() {
     ElMessage.error(error?.message || '表格截图失败')
   } finally {
     isExportingTable.value = false
+  }
+}
+
+async function downloadPptPagePng() {
+  if (!pptPageCaptureRef.value || isExportingPptPage.value || pptPageOperators.value.length === 0) {
+    return
+  }
+
+  try {
+    isExportingPptPage.value = true
+    await nextTick()
+    await document.fonts?.ready
+
+    const { default: html2canvas } = await import('html2canvas')
+    const canvas = await html2canvas(pptPageCaptureRef.value, {
+      backgroundColor: '#f4f6f8',
+      scale: 2,
+      useCORS: true,
+      allowTaint: false,
+      logging: false,
+    })
+
+    const link = document.createElement('a')
+    link.download = getPptPageExportFileName()
+    link.href = canvas.toDataURL('image/png')
+    link.click()
+    ElMessage.success('培养成本分页图已下载')
+  } catch (error) {
+    console.error('下载培养成本分页图失败:', error)
+    ElMessage.error(error?.message || '培养成本分页图导出失败')
+  } finally {
+    isExportingPptPage.value = false
   }
 }
 
@@ -833,129 +916,92 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="preview-shell">
-        <div
+        <YieldOverviewChart
           v-if="matchedOperator && tableRows.length > 0"
           ref="tableCaptureRef"
-          class="preview-card"
+          :operator="matchedOperator"
+          :rows="tableRows"
+          :portrait-src="portraitSource"
+          :layout-settings="layoutSettings"
+          @portrait-load="handlePortraitLoad"
+          @portrait-error="handlePortraitLoadError"
         >
-          <header class="preview-header">
-            <div class="operator-identity">
-              <OperatorAvatar
-                :char-id="matchedOperator.charId"
-                :rarity="matchedOperator.rarity"
-                :size="68"
-                border
-              />
-              <div>
-                <div class="operator-name">{{ matchedOperator.name }}</div>
-                <div class="operator-meta">{{ matchedOperator.rarity }}星养成材料收益速览</div>
-              </div>
-            </div>
-            <div class="brand-mark">明日方舟一图流</div>
-          </header>
-
-          <div class="overview-body">
-            <div class="portrait-column">
-              <img
-                v-if="portraitSource"
-                :key="portraitSource"
-                class="operator-portrait"
-                :src="portraitSource"
-                :alt="`${matchedOperator.name}半身立绘`"
-                crossorigin="anonymous"
-                @load="handlePortraitLoad"
-                @error="handlePortraitLoadError"
+          <template #portrait-placeholder>
+            <span>暂无立绘</span>
+            <label class="portrait-placeholder-upload">
+              上传图片
+              <input
+                type="file"
+                accept="image/png,image/webp,image/jpeg"
+                @change="handlePortraitUpload"
               >
-              <div v-else class="portrait-placeholder">
-                <span>暂无立绘</span>
-                <label class="portrait-placeholder-upload">
-                  上传图片
-                  <input
-                    type="file"
-                    accept="image/png,image/webp,image/jpeg"
-                    @change="handlePortraitUpload"
-                  >
-                </label>
-              </div>
-              <div class="portrait-name">{{ matchedOperator.name }}</div>
-            </div>
-
-            <div class="table-capture-area">
-              <table class="overview-table">
-                <colgroup>
-                  <col class="skill-icon-column">
-                  <col class="row-title-column">
-                  <col class="material-column">
-                  <col class="cost-column">
-                  <col class="rank-column">
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th></th>
-                    <th>主要材料</th>
-                    <th>理智消耗</th>
-                    <th>排名/总数</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="row in tableRows" :key="row.key">
-                    <td class="skill-icon-cell">
-                      <img
-                        v-if="row.key === 'elite2'"
-                        class="elite2-icon"
-                        src="/image/survey/rank/elite2.png"
-                        alt=""
-                      >
-                      <SkillIcon
-                        v-else-if="row.skillIcon"
-                        :icon="row.skillIcon"
-                        :size="58"
-                        border
-                      />
-                      <div v-else class="skill-icon-placeholder"></div>
-                    </td>
-                    <td class="row-title-cell">
-                      <div class="row-title">{{ row.title }}</div>
-                      <div v-if="row.subtitle" class="row-subtitle">{{ row.subtitle }}</div>
-                    </td>
-                    <td class="material-cell">
-                      <div v-if="row.materials.length > 0" class="material-list">
-                        <div
-                          v-for="(materialLine, lineIndex) in getMaterialLines(row.materials)"
-                          :key="row.key + '-line-' + lineIndex"
-                          class="material-line"
-                        >
-                          <template
-                            v-for="material in materialLine"
-                            :key="row.key + '-' + material.itemId"
-                          >
-                            <div
-                              v-for="index in material.count"
-                              :key="row.key + '-' + material.itemId + '-' + index"
-                              class="material-entry"
-                              :title="material.itemName"
-                            >
-                              <ItemImage :item-id="material.itemId" :size="44" />
-                            </div>
-                          </template>
-                        </div>
-                      </div>
-                      <div v-else class="no-t5-text">无 T5 精英材料</div>
-                      <div v-if="row.otherSummary" class="other-materials">{{ row.otherSummary }}</div>
-                    </td>
-                    <td class="number-cell">{{ formatCost(row.totalCost) }}</td>
-                    <td class="number-cell">{{ row.rank }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+            </label>
+          </template>
+        </YieldOverviewChart>
 
         <div v-else class="empty-preview">
           输入干员名称后生成表格
         </div>
+
+        <section
+          v-if="pptPageOperators.length > 0"
+          ref="pptPageCaptureRef"
+          class="ppt-page-preview"
+          :style="{ '--ppt-page-columns': pptPageColumnCount }"
+        >
+          <article
+            v-for="operator in pptPageOperators"
+            :key="operator.charId"
+            class="ppt-page-operator"
+          >
+            <header class="ppt-page-operator-header">
+              <OperatorAvatar
+                :char-id="operator.charId"
+                :rarity="operator.rarity"
+                :size="44"
+                border
+              />
+              <div>
+                <strong>{{ operator.name }}</strong>
+                <span>{{ operator.rarity }} 星养成成本</span>
+              </div>
+            </header>
+
+            <table class="ppt-page-table">
+              <thead>
+                <tr>
+                  <th>项目</th>
+                  <th>主要材料</th>
+                  <th>理智</th>
+                  <th>排名</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in operator.rows" :key="operator.charId + row.key">
+                  <td>
+                    <strong>{{ row.title }}</strong>
+                    <span v-if="row.subtitle">{{ row.subtitle }}</span>
+                  </td>
+                  <td>
+                    <div class="ppt-page-materials">
+                      <span
+                        v-for="material in getPptPageMaterials(row)"
+                        :key="operator.charId + row.key + material.itemId"
+                        :title="material.itemName"
+                      >
+                        <ItemImage :item-id="material.itemId" :size="28" />
+                        <b>{{ material.count }}</b>
+                      </span>
+                    </div>
+                    <small v-if="row.otherSummary">{{ row.otherSummary }}</small>
+                  </td>
+                  <td>{{ formatCost(row.totalCost) }}</td>
+                  <td>{{ row.rank }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </article>
+        </section>
       </div>
     </section>
 
@@ -990,6 +1036,64 @@ onBeforeUnmount(() => {
           >
             {{ candidate.name }} · {{ candidate.rarity }}星
           </button>
+        </div>
+
+        <div class="ppt-page-control-section">
+          <div class="ppt-page-control-header">
+            <span>PPT 培养成本页</span>
+            <span>{{ pptPageOperatorIds.length }}/3</span>
+          </div>
+          <v-btn
+            color="primary"
+            variant="tonal"
+            block
+            :disabled="!matchedOperator || pptPageOperatorIds.length >= 3"
+            @click="addMatchedOperatorToPptPage"
+          >
+            加入当前干员
+          </v-btn>
+          <div v-if="pptPageOperators.length === 0" class="ppt-page-control-note">
+            按本期页面顺序加入 1 至 3 名干员，再导出一张培养成本分页图。
+          </div>
+          <ol v-else class="ppt-page-operator-list">
+            <li v-for="(operator, index) in pptPageOperators" :key="operator.charId">
+              <span>{{ index + 1 }}</span>
+              <strong>{{ operator.name }}</strong>
+              <div>
+                <v-btn
+                  icon="mdi-chevron-up"
+                  size="x-small"
+                  variant="text"
+                  :disabled="index === 0"
+                  title="上移"
+                  @click="movePptPageOperator(index, -1)"
+                />
+                <v-btn
+                  icon="mdi-chevron-down"
+                  size="x-small"
+                  variant="text"
+                  :disabled="index === pptPageOperators.length - 1"
+                  title="下移"
+                  @click="movePptPageOperator(index, 1)"
+                />
+                <v-btn
+                  icon="mdi-close"
+                  size="x-small"
+                  variant="text"
+                  title="移除"
+                  @click="removePptPageOperator(operator.charId)"
+                />
+              </div>
+            </li>
+          </ol>
+          <v-btn
+            color="primary"
+            :loading="isExportingPptPage"
+            :disabled="pptPageOperators.length === 0"
+            @click="downloadPptPagePng"
+          >
+            {{ isExportingPptPage ? '导出中...' : '导出培养成本分页图' }}
+          </v-btn>
         </div>
 
         <div class="portrait-control-section">
@@ -1476,6 +1580,195 @@ onBeforeUnmount(() => {
   background: rgba(0, 0, 0, 0.18);
   color: rgba(255, 255, 255, 0.72);
   font-size: 20px;
+}
+
+.ppt-page-preview {
+  display: grid;
+  width: 1600px;
+  grid-template-columns: repeat(var(--ppt-page-columns), minmax(0, 1fr));
+  gap: 18px;
+  margin: 28px auto 0;
+  padding: 22px;
+  background:
+    linear-gradient(145deg, #e8edf2, #f7f8fa),
+    repeating-linear-gradient(135deg, rgba(72, 88, 104, 0.08) 0 1px, transparent 1px 10px);
+  color: #202a35;
+}
+
+.ppt-page-operator {
+  min-width: 0;
+  border: 1px solid #b7c2cf;
+  background: #ffffff;
+  box-shadow: 0 6px 16px rgba(24, 35, 48, 0.12);
+}
+
+.ppt-page-operator-header {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #d6dde5;
+  background: #edf3f8;
+}
+
+.ppt-page-operator-header > div {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.ppt-page-operator-header strong {
+  overflow: hidden;
+  font-size: 22px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ppt-page-operator-header span {
+  color: #667487;
+  font-size: 13px;
+}
+
+.ppt-page-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.ppt-page-table th,
+.ppt-page-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid #e1e6ec;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.ppt-page-table th {
+  background: #f6f8fa;
+  color: #47576a;
+  font-size: 13px;
+}
+
+.ppt-page-table th:first-child {
+  width: 21%;
+}
+
+.ppt-page-table th:nth-child(2) {
+  width: 53%;
+}
+
+.ppt-page-table th:nth-child(3),
+.ppt-page-table th:nth-child(4) {
+  width: 13%;
+}
+
+.ppt-page-table td:first-child {
+  color: #253548;
+  font-size: 14px;
+}
+
+.ppt-page-table td:first-child strong,
+.ppt-page-table td:first-child span {
+  display: block;
+}
+
+.ppt-page-table td:first-child span,
+.ppt-page-table small {
+  margin-top: 3px;
+  color: #788595;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.ppt-page-materials {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 7px;
+}
+
+.ppt-page-materials > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  color: #34475b;
+  font-size: 12px;
+}
+
+.ppt-page-materials b {
+  font-variant-numeric: tabular-nums;
+}
+
+.ppt-page-control-section {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid rgba(127, 183, 255, 0.34);
+  border-radius: 6px;
+  background: rgba(31, 95, 153, 0.1);
+}
+
+.ppt-page-control-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.ppt-page-control-header span:last-child,
+.ppt-page-control-note {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ppt-page-control-note {
+  line-height: 1.45;
+}
+
+.ppt-page-operator-list {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ppt-page-operator-list li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ppt-page-operator-list li:last-child {
+  border-bottom: 0;
+}
+
+.ppt-page-operator-list li > span {
+  color: rgba(255, 255, 255, 0.55);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 12px;
+  text-align: center;
+}
+
+.ppt-page-operator-list strong {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ppt-page-operator-list li > div {
+  display: flex;
 }
 
 .control-panel {
