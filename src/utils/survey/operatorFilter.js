@@ -57,12 +57,13 @@ let operatorFilterCondition = ref({
             operatorFilterCondition.value.rarity.conditions[index].action = !operatorFilterCondition.value.rarity.conditions[index].action
         },
         conditions: [
-            {label: "6★", value: 6, func: filterByRarity, action: true},
-            {label: "5★", value: 5, func: filterByRarity, action: false},
-            {label: "4★", value: 4, func: filterByRarity, action: false},
-            {label: "3★", value: 3, func: filterByRarity, action: false},
-            {label: "2★", value: 2, func: filterByRarity, action: false},
-            {label: "1★", value: 1, func: filterByRarity, action: false},
+            //v2 数据中 rarity 为 0-5, 条件值对应 0=1星 ~ 5=6星
+            {label: "6★", value: 5, func: filterByRarity, action: true},
+            {label: "5★", value: 4, func: filterByRarity, action: false},
+            {label: "4★", value: 3, func: filterByRarity, action: false},
+            {label: "3★", value: 2, func: filterByRarity, action: false},
+            {label: "2★", value: 1, func: filterByRarity, action: false},
+            {label: "1★", value: 0, func: filterByRarity, action: false},
         ]
     },
     'date': {

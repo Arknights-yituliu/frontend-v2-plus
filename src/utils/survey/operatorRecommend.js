@@ -39,7 +39,8 @@ async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
 
     for (const index in operatorTable) {
         const operator = operatorTable[index]
-        if (operator.rarity < 6) continue;
+        //v2 数据中 rarity 为 0-5, 原过滤条件为仅 6 星(星级 6), 对应 v2 rarity 5
+        if (operator.rarity < 5) continue;
         if (!operatorStatisticsResult[operator.charId]) continue;
         if (!operator.own) continue;
         const result = operatorStatisticsResult[operator.charId]
@@ -75,9 +76,11 @@ function getPropertyName(property, operator) {
         let index = 0;
         if (property === 'skill2') index = 1
         if (property === 'skill3') index = 2
+        //v2 数据中技能字段为 skills(数组元素含 skillName/skillIcon), 旧格式为 skill
+        const skill = operator.skills[index] || {}
         return {
-            name: operator.skill[index].name,
-            iconId: operator.skill[index].iconId,
+            name: skill.skillName,
+            iconId: skill.skillIcon,
             type: 'skill'
         }
     }

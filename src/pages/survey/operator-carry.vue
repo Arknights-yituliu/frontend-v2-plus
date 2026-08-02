@@ -1,6 +1,6 @@
 <script setup>
 import {professionDict} from '/src/utils/survey/common.js'
-import {operatorTable} from "/src/utils/gameData.js";
+import {operatorTableV2} from "/src/utils/gameData.js";
 import {onMounted, ref, watch} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
 import {createMessage} from "/src/utils/message.js";
@@ -9,16 +9,17 @@ import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorProgressionStatisticsDataCache from "/src/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import {formatNumber} from "/src/utils/format.js";
 import {NDatePicker} from 'naive-ui'
-import {dateFormat} from "@/utils/dateUtil.js";
+
 
 let operatorGroupByProfession = new Map()
 
 let operatorNameMap = new Map()
 
-for (const charId in operatorTable) {
-  const character = operatorTable[charId]
+for (const charId in operatorTableV2) {
+  const character = operatorTableV2[charId]
   const {profession, rarity, name} = character
-  if (rarity < 4) {
+  //v2 数据中 rarity 为 0-5(0为1星), 原过滤条件为星级>=4, 对应 v2 rarity>=3
+  if (rarity < 3) {
     continue
   }
   operatorNameMap.set(charId, name)

@@ -115,7 +115,9 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     const {allSkill, skills} = OPERATOR_ITEM_COST_TABLE[charId];
 
     //计算干员升级消耗
-    const levelApCost = getLevelUpCostByRarityV2({rarity,
+    //operatorMaxLevelTable 以 1-6 星级为键, v2 数据中 rarity 为 0-5, 需转换为星级
+    const starRarity = (rarity >= 0 && rarity <= 5) ? rarity + 1 : rarity
+    const levelApCost = getLevelUpCostByRarityV2({rarity: starRarity,
         currentElite: currentElite, currentLevel: currentLevel,
         targetElite: targetElite, targetLevel: targetLevel});
 
@@ -546,7 +548,8 @@ async function statisticsOperatorInfo(operatorList) {
             // 解构干员信息
             _statistics(operator, 0)
 
-            if (operator.rarity > 3) {
+            //v2 数据中 rarity 为 0-5, 原过滤条件为星级>3(4星及以上), 对应 v2 rarity>2
+            if (operator.rarity > 2) {
 
                 _statistics(operator, _checkRarity(operator.rarity))
             }
@@ -616,13 +619,14 @@ async function statisticsOperatorInfo(operatorList) {
             statisticalData.info[index].equip[`rank${modA}`]++
         }
 
+        //v2 数据中 rarity 为 0-5, 对应星级映射: 5=6星, 4=5星, 3=4星
         function _checkRarity(rarity) {
             switch (rarity) {
-                case 6:
-                    return 1;
                 case 5:
-                    return 2;
+                    return 1;
                 case 4:
+                    return 2;
+                case 3:
                     return 3;
             }
         }

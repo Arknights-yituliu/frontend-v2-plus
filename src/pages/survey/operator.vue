@@ -2,7 +2,7 @@
 import {createMessage} from "/src/utils/message.js";
 import operatorDataAPI from "/src/api/operatorData.js"
 import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
-import {operatorTable} from "/src/utils/gameData.js";
+import {operatorTableV2} from "/src/utils/gameData.js";
 import {exportExcel} from '/src/utils/exportExcel.js'
 
 import "/src/assets/css/survey/operator.scss";
@@ -238,8 +238,9 @@ function createOperatorList(list = []) {
   }
 
   const tmpList = []
-  for (const charId in operatorTable) {
-    let formatData = deepClone(operatorTable[charId])
+  for (const charId in operatorTableV2) {
+    const sourceOperator = operatorTableV2[charId]
+    let formatData = deepClone(sourceOperator)
 
     let item = {}
     if (operatorMap[charId]) {
@@ -305,11 +306,11 @@ const operatorRecommendedSkillSourceMap = computed(() => {
   for (const operator of displayOperatorList.value) {
     const result = operatorProgressionStatisticsMap.get(operator.charId)
 
-    if (!result || !Array.isArray(operator.skill)) {
+    if (!result || !Array.isArray(operator.skills)) {
       continue
     }
 
-    const recommendedSkillIndexes = operator.skill.reduce((indexes, _, index) => {
+    const recommendedSkillIndexes = operator.skills.reduce((indexes, _, index) => {
       const ranks = result[`skill${index + 1}`]
       if (!ranks) {
         return indexes
@@ -678,7 +679,9 @@ function exportOperatorExcel() {
   )
   for (const operator of sortedOperatorList) {
     const {name,own,rarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA} = operator
-    list.push([name,own,rarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA])
+    //v2 数据中 rarity 为 0-5, 导出时转换为 1-6 星级
+    const starRarity = (rarity >= 0 && rarity <= 5) ? rarity + 1 : rarity
+    list.push([name,own,starRarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA])
   }
 
   console.log(list)
