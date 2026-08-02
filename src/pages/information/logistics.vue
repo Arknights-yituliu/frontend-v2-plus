@@ -5,8 +5,7 @@ import '/src/assets/css/information/logistics.phone.scss'
 import {operatorFilterConditionTable} from "/src/utils/buildingSkillFilter";
 import building_table from '/src/static/json/build/building_table.json'
 import logistics_skill_replace_groups from '/src/static/json/build/logistics_skill_replace_groups.json'
-import operator_item_cost_table from '/src/static/json/operator/operator_item_cost_table.json'
-import operator_table from '/src/static/json/operator/character_table_simple.json'
+import {operatorTableV2} from "/src/utils/gameData.js"; // v2 干员信息与材料消耗数据
 import item_info from '/src/static/json/material/item_info.json'
 import level_cost_table from '/src/static/json/operator/level_cost_table.json'
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
@@ -367,8 +366,8 @@ function getUnlockCost(skill) {
 }
 
 function calculateUnlockCost(skill) {
-  const operatorInfo = operator_table[skill.charId]
-  const rarity = operatorInfo?.rarity
+  const operatorInfo = operatorTableV2[skill.charId]
+  const rarity = operatorInfo?.rarity == null ? undefined : operatorInfo.rarity + 1 // v2的rarity为0-5, 转成1-6
   const targetPhase = Number(skill.phase) || 0
   const targetLevel = Number(skill.level) || 1
 
@@ -410,8 +409,8 @@ function createEmptyCost() {
 
 function getEliteCost(charId, targetPhase) {
   const elite = getOperatorEliteCostList(charId)
-  const operatorInfo = operator_table[charId]
-  const rarity = operatorInfo?.rarity
+  const operatorInfo = operatorTableV2[charId]
+  const rarity = operatorInfo?.rarity == null ? undefined : operatorInfo.rarity + 1 // v2的rarity为0-5, 转成1-6
   let lmdQuantity = 0
   let materials = 0
 
@@ -445,10 +444,10 @@ function hasEliteMaterialData(charId, targetPhase, rarity) {
 
 function getOperatorEliteCostList(charId) {
   if (charId.includes('amiya')) {
-    return operator_item_cost_table.char_002_amiya?.elite
+    return operatorTableV2.char_002_amiya?.elite
   }
 
-  return operator_item_cost_table[charId]?.elite
+  return operatorTableV2[charId]?.elite
 }
 
 function getLevelCostByRarity({rarity, currentElite, currentLevel, targetElite, targetLevel}) {
