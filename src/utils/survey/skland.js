@@ -3,7 +3,7 @@ import md5 from 'crypto-js/md5'
 
 import { createMessage} from "/src/utils/message";
 import toolAPI from '/src/api/tool.js'
-import {operatorTable} from "/src/utils/gameData.js";
+import {operatorTableV2} from "/src/utils/gameData.js";
 
 import axios from "axios";
 
@@ -17,8 +17,8 @@ const CULTIVATE_PLAYER_API = '/api/v1/game/cultivate/player'
 
 let equipDict = new Map()
 if (equipDict.size < 100) {
-    for (const charId in operatorTable) {
-        const characterInfo = operatorTable[charId]
+    for (const charId in operatorTableV2) {
+        const characterInfo = operatorTableV2[charId]
         if (characterInfo.equip) {
             for (const equip of characterInfo.equip) {
                 equipDict.set(equip.uniEquipId, equip.typeName2)
@@ -356,8 +356,8 @@ function formattingOperatorData(characterList) {
         const potential = Math.ceil(potentialRank + 1)
 
         let rarity = 0;
-        if (operatorTable[id]) {
-            rarity = operatorTable[id].rarity
+        if (operatorTableV2[id]) {
+            rarity = operatorTableV2[id].rarity
         } else {
             continue
         }
