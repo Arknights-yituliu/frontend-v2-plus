@@ -750,12 +750,7 @@ const routes = [
         display: false,
         component: () => import('/src/pages/video-material/skland.vue')
     },
-    {
-        path: '/action-table',
-        text: '材料统计',
-        display: false,
-        component: () => import('/src/pages/dev/action-table.vue')
-    },
+
     {
         path: '/operator-add-time',
         text: '材料统计',

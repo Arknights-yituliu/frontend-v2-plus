@@ -1,10 +1,7 @@
 import {dateFormat, formatDateString} from '/src/utils/dateUtil.js'
-import operatorTableSimple from '/src/static/json/operator/character_table_simple.json'
-import OperatorUpdateTime from '/public/json/operator_update_time.json'
-import operatorItemCostTable from '/src/static/json/operator/operator_item_cost_table.json'
 import compositeTableJson from '/src/static/json/material/composite_table.v2.json'
 import itemInfo from '/src/static/json/material/item_info.json'
-import {getEquipUpdateTime} from '/src/utils/gameData.js'
+import {getEquipUpdateTime, operatorTableV2} from '/src/utils/gameData.js'
 
 const MATERIAL_ITEM_ID_REGEX = /^3\d{4}$/
 const DEFAULT_DEMAND_ROUND_STEP = 100
@@ -51,23 +48,19 @@ function buildMaterialDemandStatistics() {
     updateItemCostStatisticsMap(itemId, cost)
   }
 
-  for (const charId in operatorTableSimple) {
-    const operatorTableSimpleElement = operatorTableSimple[charId]
-    const {equip} = operatorTableSimpleElement
-    const operatorItemCostTableElement = operatorItemCostTable[charId]
-    if (!operatorItemCostTableElement) {
-      continue
-    }
-
-    const {skills, allSkill, elite} = operatorItemCostTableElement
-    const operatorUpdateTimeElement = OperatorUpdateTime[charId]
-    let operatorUpdateTime = new Date()
-    let operatorUpdateTimeText = dateFormat(operatorUpdateTime)
-
-    if (operatorUpdateTimeElement) {
-      operatorUpdateTime = new Date(operatorUpdateTimeElement.updateTime)
-      operatorUpdateTimeText = dateFormat(operatorUpdateTime)
-    }
+  for (const charId in operatorTableV2) {
+    //干员信息(v2 数据已合并干员实装时间、材料消耗等信息)
+    const operatorElement = operatorTableV2[charId]
+    const {equip, allSkill, elite} = operatorElement
+    //干员专精消耗(v2 中 skills 为含 skillLevelUpCost 的对象数组, 转换为代码需要的 [{itemId: 数量}] 格式)
+    const skills = (operatorElement.skills || []).map(item => (item.skillLevelUpCost || []).map(rank => {
+      const obj = {}
+      rank.forEach(({count, id}) => { obj[id] = count })
+      return obj
+    }))
+    //干员更新时间(v2 数据中 updateTime 已合并实装时间表的时间戳, 无记录的默认取当前时间)
+    const operatorUpdateTime = new Date(operatorElement.updateTime)
+    const operatorUpdateTimeText = dateFormat(operatorUpdateTime)
 
     let collectByOperator = operatorAndEquipCollectByDate.get(operatorUpdateTimeText)
     if (!collectByOperator) {

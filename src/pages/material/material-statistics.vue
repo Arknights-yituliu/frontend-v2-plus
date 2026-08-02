@@ -2,12 +2,9 @@
 import {onMounted, ref} from "vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import {dateFormat, formatDateString} from "/src/utils/dateUtil.js";
-import operatorTableSimple from '/src/static/json/operator/character_table_simple.json'
-import OperatorUpdateTime from '/public/json/operator_update_time.json'
-import operatorItemCostTable from '/src/static/json/operator/operator_item_cost_table.json'
 import compositeTableJson from '/src/static/json/material/composite_table.v2.json'
 import itemInfo from '/src/static/json/material/item_info.json'
-import {getEquipUpdateTime} from '/src/utils/gameData.js'
+import {getEquipUpdateTime, operatorTableV2} from '/src/utils/gameData.js'
 
 let activeTab = ref('1')
 
@@ -75,28 +72,20 @@ let equipUpdateTimeMap = getEquipUpdateTime()
 
 
 //根据更新时间计算材料消耗数量
-for (const charId in operatorTableSimple) {
-  //干员信息
-  const operatorTableSimpleElement = operatorTableSimple[charId];
-  const {name, equip} = operatorTableSimpleElement
-  //干员材料消耗
-  const operatorItemCostTableElement = operatorItemCostTable[charId];
-  if (!operatorItemCostTableElement) {
-    continue
-  }
-  //干员专精，通用技能，精英化材料消耗信息
-  const {skills, allSkill, elite} = operatorItemCostTableElement
-  //从干员实装时间表中取出的干员更新时间
-  let operatorUpdateTimeElement = OperatorUpdateTime[charId]
-  //干员更新时间默认值为当前时间
-  let operatorUpdateTime = new Date()
-  //干员更新时间的格式化字符串默认为当前时间
-  let operatorUpdateTimeText = dateFormat(new Date())
-  //如果实装时间表中有当前干员的更新时间，将默认值替换为实装时间表中记录的值
-  if (operatorUpdateTimeElement) {
-    operatorUpdateTime = new Date(operatorUpdateTimeElement.updateTime)
-    operatorUpdateTimeText = dateFormat(operatorUpdateTime)
-  }
+for (const charId in operatorTableV2) {
+  //干员信息(v2 数据已合并干员实装时间、材料消耗等信息)
+  const operatorElement = operatorTableV2[charId];
+  const {name, equip, allSkill, elite} = operatorElement
+  //干员专精消耗(v2 中 skills 为含 skillLevelUpCost 的对象数组, 转换为代码需要的 [{itemId: 数量}] 格式)
+  const skills = (operatorElement.skills || []).map(item => (item.skillLevelUpCost || []).map(rank => {
+    const obj = {}
+    rank.forEach(({count, id}) => { obj[id] = count })
+    return obj
+  }))
+  //干员更新时间(v2 数据中 updateTime 已合并实装时间表的时间戳, 无记录的默认取当前时间)
+  const operatorUpdateTime = new Date(operatorElement.updateTime)
+  //干员更新时间的格式化字符串
+  const operatorUpdateTimeText = dateFormat(operatorUpdateTime)
   // console.log(operatorUpdateTimeText)
   //根据干员更新时间的格式化字符串获取对应时间的材料消耗记录对象
   let collectByOperator = operatorAndEquipCollectByDate.get(operatorUpdateTimeText);

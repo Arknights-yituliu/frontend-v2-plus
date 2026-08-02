@@ -98,7 +98,7 @@ import { ArrowLeft, DocumentCopy, Refresh, Search } from '@element-plus/icons-vu
 import materialItemInfo from '/src/static/json/material/item_info.json'
 import customItemInfo from '/src/static/json/material/custom_item_info.json'
 import itemSeriesInfo from '/src/static/json/material/item_series_info.json'
-import operatorTableSimple from '/src/static/json/operator/character_table_simple.json'
+import {operatorTableV2} from '/src/utils/gameData.js'
 import professionDict from '/src/static/json/operator/profession_dict.json'
 
 const keyword = ref('')
@@ -154,15 +154,16 @@ const customItemRows = sortRows(
 )
 
 const operatorRows = sortRows(
-  Object.entries(operatorTableSimple).map(([charId, operator]) =>
+  Object.entries(operatorTableV2).map(([charId, operator]) =>
     createRow({
       id: charId,
       name: operator.name,
       category: getProfessionName(operator.profession),
-      extra: [getProfessionName(operator.subProfessionId), operatorRarityLabel(operator.rarity)]
+      //v2 数据中 rarity 为 0-5, 转换为 1-6 星级展示
+      extra: [getProfessionName(operator.subProfessionId), operatorRarityLabel(operator.rarity >= 0 && operator.rarity <= 5 ? operator.rarity + 1 : operator.rarity)]
         .filter(Boolean)
         .join(' / '),
-      source: 'src/static/json/operator/character_table_simple.json',
+      source: 'src/utils/gameData.js (operatorTableV2)',
       aliases: [operator.charId, operator.profession, operator.subProfessionId]
     })
   )
@@ -271,7 +272,7 @@ onMounted(() => {
 function createEquipRows() {
   const equipMap = new Map()
 
-  for (const operator of Object.values(operatorTableSimple)) {
+  for (const operator of Object.values(operatorTableV2)) {
     for (const equip of operator.equip || []) {
       if (!equip.uniEquipId || equipMap.has(equip.uniEquipId)) continue
 
@@ -282,7 +283,7 @@ function createEquipRows() {
           name: equip.uniEquipName,
           category: operator.name || equip.charId,
           extra: [equip.typeIcon, equip.typeName1, equip.typeName2].filter(Boolean).join(' / '),
-          source: 'src/static/json/operator/character_table_simple.json',
+          source: 'src/utils/gameData.js (operatorTableV2)',
           aliases: [equip.charId, operator.name, equip.uniEquipIcon, equip.typeIcon]
         })
       )

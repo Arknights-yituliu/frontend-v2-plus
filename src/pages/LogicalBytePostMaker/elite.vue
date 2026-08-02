@@ -339,9 +339,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import operatorItemCostTable from '/src/static/json/operator/operator_item_cost_table.json'
-import operatorTable from '/src/static/json/operator/character_table_simple.json'
-import operatorTableV2 from '/src/static/json/operator/character_table_simple.v2.json'
+import {operatorTableV2} from '/src/utils/gameData.js'
 import fallbackItemInfo from '/src/static/json/material/item_info.json'
 import itemCache from '/src/plugins/indexedDB/itemCache.js'
 import { getStageConfig } from '/src/utils/user/userConfig.js'
@@ -406,8 +404,24 @@ const activeOperatorTable = computed(() => ({
   ...operatorTableV2,
   ...normalizedCharacterData.value.operatorTable,
 }))
+//从 v2 干员数据构建材料消耗表(v2 中 skills 为含 skillLevelUpCost 的对象数组, 转换为代码需要的 [{itemId: 数量}] 格式)
+const v2OperatorCostTable = (() => {
+  const costTable = {}
+  for (const [charId, operator] of Object.entries(operatorTableV2)) {
+    costTable[charId] = {
+      elite: operator.elite || [],
+      allSkill: operator.allSkill || [],
+      skills: (operator.skills || []).map(item => (item.skillLevelUpCost || []).map(rank => {
+        const obj = {}
+        rank.forEach(({count, id}) => { obj[id] = count })
+        return obj
+      })),
+    }
+  }
+  return costTable
+})()
 const activeOperatorCostTable = computed(() => ({
-  ...operatorItemCostTable,
+  ...v2OperatorCostTable,
   ...normalizedCharacterData.value.operatorCostTable,
 }))
 
@@ -955,9 +969,10 @@ function getDisplayRarity(charId) {
     return uploadedRarity
   }
 
-  const rarity = operatorTable[charId]?.rarity
+  //v2 数据中 rarity 为 0-5, 转换为 1-6 星级
+  const rarity = operatorTableV2[charId]?.rarity
   if (Number.isFinite(rarity)) {
-    return rarity
+    return rarity >= 0 && rarity <= 5 ? rarity + 1 : rarity
   }
 
   const zeroBasedRarity = activeOperatorTable.value[charId]?.rarity
@@ -975,7 +990,7 @@ function getOperatorCandidatesByName(name) {
     .filter(([charId]) => activeOperatorCostTable.value[charId])
     .map(([charId, operator]) => ({
       charId,
-      name: operator.name || operatorTable[charId]?.name || charId,
+      name: operator.name || operatorTableV2[charId]?.name || charId,
       rarity: getDisplayRarity(charId),
     }))
     .filter(operator => {
@@ -1024,7 +1039,7 @@ function getSlotMatchedOperator(slot) {
 
   return {
     charId,
-    name: activeOperatorTable.value[charId]?.name || operatorTable[charId]?.name || charId,
+    name: activeOperatorTable.value[charId]?.name || operatorTableV2[charId]?.name || charId,
     rarity: getDisplayRarity(charId),
   }
 }
