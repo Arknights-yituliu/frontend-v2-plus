@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from "vue";
 import "/src/assets/css/tool/schedule.v2.css";
 import "/src/assets/css/information/building_skill_font_color.css";
 import SCHEDULE_TEMPLATE from "/src/static/json/build/plans_template.json";
-import { operatorTable } from "/src/utils/gameData.js";
+import { operatorTableV2 } from "/src/utils/gameData.js";
 import SCHEDULE_MENU from "/src/static/json/build/schedule_menu.json";
 import BUILDING_TABLE from "/src/static/json/build/building_table.json";
 import buildingApi from "/src/api/building.js";
@@ -86,8 +86,8 @@ const productTable = {
 
 let characterIdAndName = {};
 
-for (const key in operatorTable) {
-  characterIdAndName[operatorTable[key].name] = replaceCharId(key);
+for (const key in operatorTableV2) {
+  characterIdAndName[operatorTableV2[key].name] = replaceCharId(key);
 }
 
 function replaceCharId(string) {
