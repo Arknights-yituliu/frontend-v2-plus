@@ -71,16 +71,38 @@ export const initOperatorData = () => {
 
 // 创建单个干员数据
 export const createOperatorData = (charId, charInfo) => {
-  const { name, profession, subProfessionId, rarity, itemObtainApproach, equip, skill } = charInfo;
-  let { skills, elite } = operatorMaterialMap.get(charId);
+  const { name, profession, subProfessionId, rarity, itemObtainApproach, equip, skill, skills, elite } = charInfo;
+  // 是否为 v2 新格式数据: skills 数组元素为对象(含 skillName/skillLevelUpCost)而非数组
+  const isV2Data = Array.isArray(skills) && !Array.isArray(skills[0])
+  // 兼容 v1 旧格式(skill)与 v2 新格式(skills): 统一转换为 [{iconId, name}]
+  const skillInfo = isV2Data
+    ? skills.map(item => ({ iconId: item.skillIcon || item.skillId, name: item.skillName }))
+    : skill
+
+  // 材料来源: v2 干员直接从干员数据读取; 旧格式/自定义干员从 operatorMaterialMap 读取
+  let skillItems, eliteItems
+  if (isV2Data) {
+    // v2 中 elite 格式为 [{}, {itemId: quantity}, ...], 与代码期望一致
+    eliteItems = Array.isArray(elite) ? elite : []
+    // v2 中 skillLevelUpCost 格式为 [[{count, id}], ...], 转换为 [{id: count}, ...]
+    skillItems = skills.map(item => (item.skillLevelUpCost || []).map(rank => {
+      const obj = {}
+      rank.forEach(({ count, id }) => { obj[id] = count })
+      return obj
+    }))
+  } else {
+    const operatorMaterial = operatorMaterialMap.get(charId) || { skills: [], elite: [] };
+    skillItems = operatorMaterial.skills
+    eliteItems = operatorMaterial.elite
+  }
 
   // 20250504为解决重复计算阿米娅养成材料问题删掉了阿米娅其他升变形态的精英化材料 char_002_amiya char_1001_amiya2 char_1037_amiya3
   if (charId.includes('amiya')) {
     // 所有阿米娅升变形态皆取术兔精英化材料
-    elite = operatorMaterialMap.get('char_002_amiya').elite
+    eliteItems = operatorMap.get('char_002_amiya')?.elite || []
   }
   // 手动添加精英化所需的龙门币数量
-  const filteredElite = elite.filter(obj => Object.keys(obj).length !== 0)
+  const filteredElite = eliteItems.filter(obj => Object.keys(obj).length !== 0)
   // 精英化材料数据里面没有龙门币数据, 添加精英化时消耗的龙门币数量
   // 因为目前只有4,5,6星干员精二券(也只有4,5,6星干员能精二), 所以仅对4,5,6星干员添加龙门币数量
 
@@ -93,7 +115,7 @@ export const createOperatorData = (charId, charInfo) => {
   }
 
   const eliteInfo = formatElite(filteredElite); // 格式化精英化材料
-  const skillsInfo = mergeSkills(skill, skills, charId, name) // 格式化技能材料
+  const skillsInfo = mergeSkills(skillInfo, skillItems, charId, name) // 格式化技能材料
   const modsInfo = formatMods(equip, name) // 格式化模组材料
   
   const charStatistics = statisticsMap.get(charId); // 干员统计数据
@@ -147,7 +169,7 @@ const mergeSkills = (skillInfoArr, skillItemsArr, charId, operatorName) => {
     charId, // 后续判断是否为自定义干员用
     operatorName, // 表格展示技能所属干员用
     ...item,
-    ...formatTotalMaterials(skillItemsArr[index])
+    ...formatTotalMaterials(skillItemsArr[index] || [])
   }))
 }
 
