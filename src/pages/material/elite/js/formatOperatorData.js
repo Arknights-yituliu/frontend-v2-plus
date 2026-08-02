@@ -236,7 +236,7 @@ const operatorInit = () => {
   fixedMaterialIds = [...baseMaterialIds, ...chipIds] // 合成固定材料id数组
   
   for (const [charId, charInfo] of operatorMap.entries()) {
-    if("char_4195_radian"===charId){
+    if("char_4195_radian"===charId||"char_4230_mcnist"===charId){
       continue
     }
     insertOperatorData(charId, charInfo)
