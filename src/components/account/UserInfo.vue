@@ -5,7 +5,7 @@ import userInfoAPI from "/src/api/userInfo"
 import "/src/assets/css/account/home.scss";
 import {userInfo} from '/src/utils/user/userInfo.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import {operatorTable} from '/src/utils/gameData.js'
+import {operatorTableV2} from '/src/utils/gameData.js'
 import {useRouter} from "vue-router";
 const router = useRouter()
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
@@ -17,11 +17,11 @@ const accountRules = [
 
 let avatarList = []
 
-for (const char_id in operatorTable) {
+for (const char_id in operatorTableV2) {
   const operator = {
     charId: char_id,
-    time: operatorTable[char_id].date,
-    rarity: operatorTable[char_id].rarity,
+    time: operatorTableV2[char_id].date,
+    rarity: operatorTableV2[char_id].rarity,
   }
   avatarList.push(operator)
 }
