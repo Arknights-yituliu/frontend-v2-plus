@@ -1,6 +1,6 @@
-import OPERATOR_ITEM_COST_TABLE from "/src/static/json/operator/operator_item_cost_table.json";
+import {operatorTableV2} from "/src/utils/gameData.js";
 import LEVEL_COST_TABLE from "/src/static/json/operator/level_cost_table.json";
-import COMPOSITE_TABLE from "/src/static/json/operator/composite_table.json";
+
 import deepClone from "/src/utils/deepClone.js";
 import {getStageConfig} from "@/utils/user/userConfig.js";
 import itemCache from "@/plugins/indexedDB/itemCache.js";
@@ -10,6 +10,29 @@ import {saveAs} from 'file-saver';
 
 
 const stageConfig = getStageConfig()
+
+// 从 v2 干员数据构建材料消耗表(v2 中 skills 为含 skillLevelUpCost 的对象数组, 转换为代码需要的 [{itemId: 数量}] 格式; 模组消耗按 typeName2(X/Y/D/A/B) 归组)
+const OPERATOR_ITEM_COST_TABLE = (() => {
+    const costTable = {}
+    for (const [charId, operator] of Object.entries(operatorTableV2)) {
+        const modTable = {}
+        for (const equip of operator.equip || []) {
+            modTable[`mod${equip.typeName2}`] = equip.itemCost || []
+        }
+        costTable[charId] = {
+            elite: operator.elite || [],
+            allSkill: operator.allSkill || [],
+            skills: (operator.skills || []).map(item => (item.skillLevelUpCost || []).map(rank => {
+                const obj = {}
+                rank.forEach(({count, id}) => { obj[id] = count })
+                return obj
+            })),
+            ...modTable,
+        }
+    }
+    return costTable
+})()
+
 let compositeTable = {}
 for (const item of compositeTableJson) {
     const {itemId, resolve, pathway, rarity} = item
