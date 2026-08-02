@@ -517,7 +517,7 @@ function openOperatorsStatisticsDetail(operator) {
   operatorsStatisticsDetailOperator.value = operator
 
   const result = operatorProgressionStatisticsMap.get(charId)
-  const skillList = Array.isArray(result.skill) ? result.skill : []
+  const skillList = Array.isArray(result.skills) ? result.skills : []
   const equipList = Array.isArray(result.equip) ? result.equip : []
   const data = []
 
@@ -532,9 +532,10 @@ function openOperatorsStatisticsDetail(operator) {
       continue
     }
     const item = {
-      label: info.name,
+      //v2 数据中技能字段为 skills(元素含 skillName/skillIcon)
+      label: info.skillName,
       type: 'skill',
-      iconId: info.iconId,
+      iconId: info.skillIcon,
       ranks: [
         {
           highlight: playerSkillRank === 1,

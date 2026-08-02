@@ -17,7 +17,8 @@ async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
 
 
     for (const item of result) {
-        if (item.rarity < 6) continue;
+        //统计结果中的 rarity 现为 v2 的 0-5, 仅统计 6 星(对应 v2 rarity 5)
+        if (item.rarity < 5) continue;
         operatorStatisticsResult[item.charId] = {
             skill1: _average(item.skill1),
             skill2: _average(item.skill2),
