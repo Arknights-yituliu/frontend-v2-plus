@@ -1,13 +1,13 @@
 import { NAvatar, NTag } from 'naive-ui'
 import { h } from 'vue'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
-import { operatorTable } from '@/utils/gameData.js'
+import { operatorTableV2 } from '@/utils/gameData.js'
 
 const nameToCharId = {}
 const charIdToName = {}
-for (const key in operatorTable) {
+for (const key in operatorTableV2) {
   const normalized = normalizeCharId(key)
-  const name = operatorTable[key].name
+  const name = operatorTableV2[key].name
   nameToCharId[name] = normalized
   charIdToName[normalized] = name
 }

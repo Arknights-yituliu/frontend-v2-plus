@@ -5,7 +5,7 @@ import { swap } from '@/utils/mower/common.js'
 import OperatorMultiSelect from './OperatorMultiSelect.vue'
 import HelpText from './HelpText.vue'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
-import { operatorTable } from '@/utils/gameData.js'
+import { operatorTableV2 } from '@/utils/gameData.js'
 
 const {
   operators,
@@ -18,8 +18,8 @@ const {
   facility_operator_limit
 } = mowerPlanStore
 const nameToCharId = {}
-for (const key in operatorTable) {
-  nameToCharId[operatorTable[key].name] = normalizeCharId(key)
+for (const key in operatorTableV2) {
+  nameToCharId[operatorTableV2[key].name] = normalizeCharId(key)
 }
 
 function normalizeCharId(id) {

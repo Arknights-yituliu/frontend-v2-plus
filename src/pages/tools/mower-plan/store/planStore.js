@@ -1,6 +1,6 @@
 import { computed, ref } from 'vue'
 import { deepcopy } from '@/utils/mower/deepcopy'
-import { operatorTable } from '@/utils/gameData.js'
+import { operatorTableV2 } from '@/utils/gameData.js'
 
 const facility_operator_limit = {
   central: 5,
@@ -183,7 +183,7 @@ async function load_plan() {
 }
 
 async function load_operators() {
-  operators.value = Object.values(operatorTable).map((op) => ({
+  operators.value = Object.values(operatorTableV2).map((op) => ({
     value: op.name,
     label: op.name
   }))
