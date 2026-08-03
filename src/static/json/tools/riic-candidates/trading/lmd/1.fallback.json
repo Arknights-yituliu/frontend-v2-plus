@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "scope": {
+    "roomType": "trading",
+    "product": "lmd",
+    "stationLevel": 1,
+    "slotCount": 1
+  },
+  "defaultPercent": 0,
+  "operators": []
+}

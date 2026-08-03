@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 5,
+  "scope": {
+    "roomType": "manufacture",
+    "product": "orundum",
+    "stationLevel": 1,
+    "slotCount": 1
+  },
+  "fallback": {
+    "percent": 25,
+    "label": "基础补位",
+    "poolKey": "manufacture:orundum"
+  },
+  "candidates": [
+    {
+      "id": "candidate-a4a8f7d0676f3634",
+      "variantGroupId": "family-c9aebe3e6ed766ea",
+      "name": "褐果",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "褐果",
+          "elite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 45,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-c92f6139d6001855",
+      "variantGroupId": "family-015da4d6580dcae7",
+      "name": "地灵",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "地灵",
+          "elite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-ce87599241558ade",
+      "variantGroupId": "family-e7fd72f05fd90809",
+      "name": "炎熔",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "炎熔",
+          "elite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-16a2b1ac71e43cdc",
+      "variantGroupId": "family-710f11ccaab505f7",
+      "name": "艾雅法拉",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "艾雅法拉"
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-d95f9fa141fcca32",
+      "variantGroupId": "family-0812045ce091bf7a",
+      "name": "谬因",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "谬因"
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-92e038a249b37d9d",
+      "variantGroupId": "family-899751f259aef4fc",
+      "name": "锡兰",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "锡兰",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    }
+  ]
+}

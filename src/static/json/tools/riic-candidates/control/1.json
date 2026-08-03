@@ -1,0 +1,191 @@
+{
+  "schemaVersion": 5,
+  "scope": {
+    "roomType": "control",
+    "product": "all",
+    "stationLevel": 1,
+    "slotCount": 5
+  },
+  "fallback": {
+    "percent": 0,
+    "label": "常规值班",
+    "poolKey": "control:all"
+  },
+  "candidates": [
+    {
+      "id": "candidate-f746d85f7b080f23",
+      "variantGroupId": "family-de0c5b647841e91e",
+      "name": "Mon3tr + 4位任意补位",
+      "roomType": "control",
+      "members": [
+        {
+          "name": "Mon3tr",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-49ae872442271488",
+      "variantGroupId": "family-8b2e7d2cadb1a4a1",
+      "name": "凯尔希 + 4位任意补位",
+      "roomType": "control",
+      "members": [
+        {
+          "name": "凯尔希",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-8aaadbd4a7c40140",
+      "variantGroupId": "family-50bfb1ed55a68673",
+      "name": "明椒 + 4位任意补位",
+      "roomType": "control",
+      "members": [
+        {
+          "name": "明椒"
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-990c85daef04d26f",
+      "variantGroupId": "family-c22edcccc6faefef",
+      "name": "焰狐龙梓兰 + 4位任意补位",
+      "roomType": "control",
+      "members": [
+        {
+          "name": "焰狐龙梓兰"
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-11834444fda5c139",
+      "variantGroupId": "family-188dd13a655800b5",
+      "name": "祐天寺若麦 + 4位任意补位",
+      "roomType": "control",
+      "members": [
+        {
+          "name": "祐天寺若麦"
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-4339b02c2cc0ea44",
+      "variantGroupId": "family-707cf2f416e42f23",
+      "name": "老鲤 + 4位任意补位",
+      "roomType": "control",
+      "members": [
+        {
+          "name": "老鲤",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-a059cc91cf26a72d",
+      "variantGroupId": "family-a8cc64d193a889d1",
+      "name": "诗怀雅 + 4位任意补位",
+      "roomType": "control",
+      "members": [
+        {
+          "name": "诗怀雅"
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-cc65bdfe7ed67a5c",
+      "variantGroupId": "family-d5d8e7fca18282f7",
+      "name": "阿斯卡纶 + 4位任意补位",
+      "roomType": "control",
+      "members": [
+        {
+          "name": "阿斯卡纶",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-44fbc0e45cb7f3ff",
+      "variantGroupId": "family-0d8b54990199ca03",
+      "name": "阿米娅 + 4位任意补位",
+      "roomType": "control",
+      "members": [
+        {
+          "name": "阿米娅"
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-9344209076f83c26",
+      "variantGroupId": "family-09b6783d00759982",
+      "name": "魔王 + 4位任意补位",
+      "roomType": "control",
+      "members": [
+        {
+          "name": "魔王",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    }
+  ]
+}

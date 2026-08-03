@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "scope": {
+    "roomType": "manufacture",
+    "product": "gold",
+    "stationLevel": 2,
+    "slotCount": 2
+  },
+  "defaultPercent": 0,
+  "operators": [
+    {
+      "name": "阿罗玛",
+      "rates": [
+        {
+          "percent": 25
+        },
+        {
+          "elite": 2,
+          "percent": 36.67
+        }
+      ]
+    },
+    {
+      "name": "斑点",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "苍苔",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "砾",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "温米",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "杏仁",
+      "rates": [
+        {
+          "percent": 25
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "夜烟",
+      "rates": [
+        {
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "引星棘刺",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    }
+  ]
+}

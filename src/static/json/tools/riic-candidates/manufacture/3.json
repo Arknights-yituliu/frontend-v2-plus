@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 5,
+  "scope": {
+    "roomType": "manufacture",
+    "product": "all",
+    "stationLevel": 3,
+    "slotCount": 3
+  },
+  "fallback": {
+    "percent": 25,
+    "label": "基础补位",
+    "poolKey": "manufacture:all"
+  },
+  "candidates": [
+    {
+      "id": "manual-manufacture-all-bubble-vulcan-bena",
+      "variantGroupId": "family-bubble-vulcan-bena",
+      "name": "泡泡 + 火神 + 贝娜",
+      "roomType": "manufacture",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 3,
+      "members": [
+        {
+          "name": "泡泡",
+          "elite": 1
+        },
+        {
+          "name": "火神",
+          "elite": 2
+        },
+        {
+          "name": "贝娜",
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 93,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-bubble-vulcan-chestnut",
+      "variantGroupId": "family-bubble-vulcan-chestnut",
+      "name": "泡泡 + 火神 + 褐果",
+      "roomType": "manufacture",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 3,
+      "members": [
+        {
+          "name": "泡泡",
+          "elite": 1
+        },
+        {
+          "name": "火神",
+          "elite": 2
+        },
+        {
+          "name": "褐果",
+          "elite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 77,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    }
+  ]
+}

@@ -1,0 +1,322 @@
+{
+  "schemaVersion": 1,
+  "scope": {
+    "roomType": "hire",
+    "product": "all",
+    "stationLevel": 1,
+    "slotCount": 1
+  },
+  "defaultPercent": 0,
+  "operators": [
+    {
+      "name": "艾雅法拉",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 45
+        }
+      ]
+    },
+    {
+      "name": "斥罪",
+      "rates": [
+        {
+          "percent": 50
+        }
+      ]
+    },
+    {
+      "name": "淬羽赫默",
+      "rates": [
+        {
+          "percent": 40
+        }
+      ]
+    },
+    {
+      "name": "戴菲恩",
+      "rates": [
+        {
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "地灵",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 1,
+          "percent": 45
+        }
+      ]
+    },
+    {
+      "name": "凯尔希·思衡托",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "林",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "普罗旺斯",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 45
+        }
+      ]
+    },
+    {
+      "name": "桑葚",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 1,
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "山",
+      "rates": [
+        {
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "闪击",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "深律",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "圣聆初雪",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "水灯心",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 45
+        }
+      ]
+    },
+    {
+      "name": "酸糖",
+      "rates": [
+        {
+          "percent": 40
+        }
+      ]
+    },
+    {
+      "name": "乌啾",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "乌有",
+      "rates": [
+        {
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "锡人",
+      "rates": [
+        {
+          "percent": 5
+        },
+        {
+          "elite": 2,
+          "percent": 5
+        }
+      ]
+    },
+    {
+      "name": "行箸",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "絮雨",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "雪绒",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "巡林者",
+      "rates": [
+        {
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "宴",
+      "rates": [
+        {
+          "percent": 40
+        }
+      ]
+    },
+    {
+      "name": "遥",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 45
+        }
+      ]
+    },
+    {
+      "name": "夜魔",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 40
+        }
+      ]
+    },
+    {
+      "name": "伊内丝",
+      "rates": [
+        {
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "伊桑",
+      "rates": [
+        {
+          "percent": 40
+        }
+      ]
+    },
+    {
+      "name": "隐现",
+      "rates": [
+        {
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "月禾",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "早露",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "梓兰",
+      "rates": [
+        {
+          "percent": 40
+        }
+      ]
+    }
+  ]
+}

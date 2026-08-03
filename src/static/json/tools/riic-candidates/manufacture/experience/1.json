@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 5,
+  "scope": {
+    "roomType": "manufacture",
+    "product": "experience",
+    "stationLevel": 1,
+    "slotCount": 1
+  },
+  "fallback": {
+    "percent": 25,
+    "label": "基础补位",
+    "poolKey": "manufacture:experience"
+  },
+  "candidates": [
+    {
+      "id": "candidate-a482748f98920733",
+      "variantGroupId": "family-09dcc1be769fe53d",
+      "name": "酒神",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "酒神",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "quality": "baseOnly",
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "candidate-6ce965e7639cd5b8",
+      "variantGroupId": "family-3a7e41ae85cf5f9b",
+      "name": "弑君者",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "弑君者",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-3d0665df24bb8adb",
+      "variantGroupId": "family-825d39f0bd1b531f",
+      "name": "断罪者",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "断罪者",
+          "elite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-daaedd33d8b8c302",
+      "variantGroupId": "family-70e1249bb959b115",
+      "name": "食铁兽",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "食铁兽",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-731f510126cd70df",
+      "variantGroupId": "family-c49250a9beaa0073",
+      "name": "裂响",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "裂响",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "quality": "baseOnly",
+      "calculationStatus": "estimated"
+    }
+  ]
+}

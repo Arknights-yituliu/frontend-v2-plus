@@ -1,0 +1,325 @@
+{
+  "schemaVersion": 1,
+  "scope": {
+    "roomType": "power",
+    "product": "all",
+    "stationLevel": 1,
+    "slotCount": 1
+  },
+  "defaultPercent": 0,
+  "operators": [
+    {
+      "name": "阿消",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "布丁",
+      "rates": [
+        {
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "承曦格雷伊",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "澄闪",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "菲莱",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 2,
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "格劳克斯",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 2,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "格雷伊",
+      "rates": [
+        {
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "海霓",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "煌",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "空构",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "雷蛇",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "缪尔赛思",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "清流",
+      "rates": [
+        {
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "深靛",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 1,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "司霆惊蛰",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "天空盒",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "协律",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 1,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "炎熔",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "炎狱炎熔",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "伊芙利特",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 2,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "异客",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 2,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "正义骑士号",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "level": 30,
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "烛煌",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "Castle-3",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "CONFESS-47",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "level": 30,
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "Friston-3",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "level": 30,
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "GALLUS²",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "level": 30,
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "Lancet-2",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "PhonoR-0",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "level": 30,
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "THRM-EX",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "level": 30,
+          "percent": 10
+        }
+      ]
+    }
+  ]
+}

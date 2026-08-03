@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "templates": [
+    {
+      "id": "trading-dela",
+      "name": "德拉核心",
+      "room": "贸易站",
+      "members": [
+        "德克萨斯",
+        "拉普兰德"
+      ],
+      "lock": "核心"
+    },
+    {
+      "id": "trading-siege-morgan",
+      "name": "推进之王 + 摩根",
+      "room": "贸易站",
+      "members": [
+        "推进之王",
+        "摩根"
+      ],
+      "lock": "核心"
+    },
+    {
+      "id": "trading-lemuen-angel",
+      "name": "蕾缪安 + 天使",
+      "room": "贸易站",
+      "members": [
+        "蕾缪安"
+      ],
+      "oneOf": [
+        "能天使",
+        "新约能天使"
+      ],
+      "lock": "核心"
+    },
+    {
+      "id": "manufacture-christine-phatm2",
+      "name": "Miss.Christine + 酒神",
+      "room": "制造站",
+      "product": "经验书",
+      "members": [
+        "Miss.Christine",
+        "酒神"
+      ],
+      "sortScore": 2,
+      "lock": "核心"
+    },
+    {
+      "id": "manufacture-alanna-warmy",
+      "name": "阿兰娜 + 温米",
+      "room": "制造站",
+      "product": "赤金",
+      "members": [
+        "阿兰娜",
+        "温米"
+      ],
+      "lock": "核心"
+    },
+    {
+      "id": "trading-laden",
+      "name": "拉德能",
+      "room": "贸易站",
+      "members": [
+        "拉普兰德",
+        "德克萨斯",
+        "能天使"
+      ],
+      "lock": "整组",
+      "calculation": "人工验证",
+      "fallback": "trading-dela"
+    }
+  ]
+}

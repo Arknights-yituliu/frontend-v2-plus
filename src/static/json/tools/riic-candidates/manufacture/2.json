@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 5,
+  "scope": {
+    "roomType": "manufacture",
+    "product": "all",
+    "stationLevel": 2,
+    "slotCount": 2
+  },
+  "fallback": {
+    "percent": 25,
+    "label": "基础补位",
+    "poolKey": "manufacture:all"
+  },
+  "candidates": []
+}

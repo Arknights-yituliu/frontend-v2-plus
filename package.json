@@ -7,6 +7,13 @@
     "dev": "vite --port 4000",
     "build": "vite build",
     "build:logistics-skill-groups": "node scripts/generate-logistics-skill-groups.js",
+    "build:riic-baseline-rules": "node scripts/generate-riic-baseline-skill-rules.js",
+    "build:riic-meeting-candidates": "node scripts/build-riic-meeting-candidate-source.js",
+    "check:riic-baseline-rules": "node scripts/check-riic-baseline-skill-resolver.js",
+    "check:riic-meeting-candidates": "node scripts/check-riic-static-room-candidate-matcher.js",
+    "check:riic-room-candidates": "node scripts/check-riic-room-candidate-generator.js",
+    "check:riic-room-group-rotations": "node scripts/check-riic-room-group-rotation-generator.js",
+    "check:riic-schedule-model": "node scripts/check-riic-schedule-model.js",
     "preview": "vite preview",
     "server": "node .\\server.js"
   },

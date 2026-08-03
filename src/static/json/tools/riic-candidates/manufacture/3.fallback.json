@@ -1,0 +1,968 @@
+{
+  "schemaVersion": 1,
+  "scope": {
+    "roomType": "manufacture",
+    "product": "all",
+    "stationLevel": 3,
+    "slotCount": 3
+  },
+  "defaultPercent": 0,
+  "operators": [
+    {
+      "name": "阿兰娜",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "阿罗玛",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 11.67
+        }
+      ]
+    },
+    {
+      "name": "艾雅法拉",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "白面鸮",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "白雪",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "斑点",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "薄绿",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "贝娜",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "裁度",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "苍苔",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "淬羽赫默",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "导火索",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "地灵",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "调香师",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "冬时",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "豆苗",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 1,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "断罪者",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "多萝西",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "芬",
+      "rates": [
+        {
+          "percent": 23.75
+        }
+      ]
+    },
+    {
+      "name": "海沫",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "褐果",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 1,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "赫默",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "黑角",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "红豆",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "红云",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "槐琥",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "灰毫",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "火神",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "机械师",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "杰西卡",
+      "rates": [
+        {
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "截云",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "酒神",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "卡达",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "卡缇",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "克洛丝",
+      "rates": [
+        {
+          "percent": 22.5
+        }
+      ]
+    },
+    {
+      "name": "刻俄柏",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 23.75
+        }
+      ]
+    },
+    {
+      "name": "历阵锐枪芬",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "砾",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "烈夏",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "裂响",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "流星",
+      "rates": [
+        {
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "掠风",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "罗比菈塔",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "玛露西尔",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "梅尔",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "迷迭香",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "米格鲁",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "谬因",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "钼铅",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "娜仁图亚",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "娜斯提",
+      "rates": [
+        {
+          "percent": 25
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "怒潮凛冬",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "帕拉斯",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "泡泡",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "泡普卡",
+      "rates": [
+        {
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "铅踝",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "清道夫",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "清流",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "森蚺",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "蛇屠箱",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "圣约送葬人",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "石棉",
+      "rates": [
+        {
+          "percent": 25
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "石英",
+      "rates": [
+        {
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "食铁兽",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "史都华德",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "弑君者",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "黍",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "霜叶",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "水月",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "溯光星源",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "泰拉大陆调查团",
+      "rates": [
+        {
+          "level": 30,
+          "percent": 5
+        }
+      ]
+    },
+    {
+      "name": "维伊",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "温蒂",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "温米",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "稀音",
+      "rates": [
+        {
+          "percent": 22.5
+        },
+        {
+          "elite": 2,
+          "percent": 22.5
+        }
+      ]
+    },
+    {
+      "name": "锡兰",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "香草",
+      "rates": [
+        {
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "星源",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "杏仁",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "雪猎",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "炎熔",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "洋灰",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "野鬃",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "夜刀",
+      "rates": [
+        {
+          "level": 30,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "夜烟",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "异客",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "引星棘刺",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "远牙",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "月见夜",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "至简",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "Castle-3",
+      "rates": [
+        {
+          "level": 30,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "Miss.Christine",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    }
+  ]
+}

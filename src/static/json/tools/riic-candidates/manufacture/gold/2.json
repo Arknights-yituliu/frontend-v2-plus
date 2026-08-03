@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 5,
+  "scope": {
+    "roomType": "manufacture",
+    "product": "gold",
+    "stationLevel": 2,
+    "slotCount": 2
+  },
+  "fallback": {
+    "percent": 25,
+    "label": "基础补位",
+    "poolKey": "manufacture:gold"
+  },
+  "candidates": [
+    {
+      "id": "manual-manufacture-gold-automation-qing-weedy-p2-t3",
+      "variantGroupId": "family-automation-qing-weedy",
+      "name": "清流 + 温蒂",
+      "roomType": "manufacture",
+      "product": "gold",
+      "stationLevel": 2,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        },
+        {
+          "name": "温蒂",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 90,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "powerPlantCount": 2,
+      "tradingStationCount": 3,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "candidate-90d76c4fc6ee23e8",
+      "variantGroupId": "family-a264136bc70a418a",
+      "name": "阿罗玛 + 砾",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "阿罗玛",
+          "elite": 2
+        },
+        {
+          "name": "砾",
+          "elite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 71.67,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "quality": "baseOnly",
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-gold-automation-qing-weedy-p2-t2",
+      "variantGroupId": "family-automation-qing-weedy",
+      "name": "清流 + 温蒂",
+      "roomType": "manufacture",
+      "product": "gold",
+      "stationLevel": 2,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        },
+        {
+          "name": "温蒂",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 70,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "powerPlantCount": 2,
+      "tradingStationCount": 2,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-gold-qing-trading-3-l2",
+      "variantGroupId": "family-qing-energy-l2",
+      "name": "清流",
+      "roomType": "manufacture",
+      "product": "gold",
+      "stationLevel": 2,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 60,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "tradingStationCount": 3,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-gold-qing-trading-2-l2",
+      "variantGroupId": "family-qing-energy-l2",
+      "name": "清流",
+      "roomType": "manufacture",
+      "product": "gold",
+      "stationLevel": 2,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 40,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "tradingStationCount": 2,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-gold-thorn2-trading-3-l2",
+      "variantGroupId": "family-06156c79a86aae5e",
+      "name": "引星棘刺（E2）",
+      "roomType": "manufacture",
+      "product": "gold",
+      "stationLevel": 2,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "引星棘刺",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 39,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "tradingStationCount": 3,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "candidate-04936121b9151151",
+      "variantGroupId": "family-23224c770a54b754",
+      "name": "阿罗玛 + 1位任意补位",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "阿罗玛",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 36.67,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "quality": "baseOnly",
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-gold-thorn2-trading-2-l2",
+      "variantGroupId": "family-06156c79a86aae5e",
+      "name": "引星棘刺（E2）",
+      "roomType": "manufacture",
+      "product": "gold",
+      "stationLevel": 2,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "引星棘刺",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 36,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "tradingStationCount": 2,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "candidate-f189e8cd7204e12a",
+      "variantGroupId": "family-44ca19452a81f56b",
+      "name": "砾 + 1位任意补位",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "砾",
+          "elite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    },
+    {
+      "id": "manual-manufacture-gold-thorn2-trading-1-l2",
+      "variantGroupId": "family-06156c79a86aae5e",
+      "name": "引星棘刺（E2）",
+      "roomType": "manufacture",
+      "product": "gold",
+      "stationLevel": 2,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "引星棘刺",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 33,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "tradingStationCount": 1,
+      "calculationStatus": "calculated"
+    }
+  ]
+}

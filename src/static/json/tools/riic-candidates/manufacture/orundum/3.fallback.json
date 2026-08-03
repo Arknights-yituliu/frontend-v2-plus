@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "scope": {
+    "roomType": "manufacture",
+    "product": "orundum",
+    "stationLevel": 3,
+    "slotCount": 3
+  },
+  "defaultPercent": 0,
+  "operators": [
+    {
+      "name": "艾雅法拉",
+      "rates": [
+        {
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "薄绿",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "地灵",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "褐果",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 45
+        }
+      ]
+    },
+    {
+      "name": "谬因",
+      "rates": [
+        {
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "锡兰",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "炎熔",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "月见夜",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 30
+        }
+      ]
+    }
+  ]
+}

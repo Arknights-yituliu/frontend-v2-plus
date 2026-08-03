@@ -1,0 +1,651 @@
+{
+  "schemaVersion": 1,
+  "scope": {
+    "roomType": "control",
+    "product": "all",
+    "stationLevel": 1,
+    "slotCount": 5
+  },
+  "defaultPercent": 0,
+  "operators": [
+    {
+      "name": "阿",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "阿米娅",
+      "rates": [
+        {
+          "percent": 7
+        }
+      ]
+    },
+    {
+      "name": "阿斯卡纶",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 7
+        }
+      ]
+    },
+    {
+      "name": "艾拉",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "八幡海铃",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "摆渡人",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "暴雨",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "冰酿",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "布丁",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "陈",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "戴菲恩",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "涤火杰西卡",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "电弧",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "杜宾",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "丰川祥子",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "歌蕾蒂娅",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "海蒂",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "寒芒克洛丝",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "吽",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "红",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "红隼",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "灰喉",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "灰烬",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "火龙S黑角",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "坚雷",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "惊蛰",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "凯尔希",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 2
+        }
+      ]
+    },
+    {
+      "name": "可露希尔",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "老鲤",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "临光",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "凛御银灰",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "灵知",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "令",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "玛恩纳",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "明椒",
+      "rates": [
+        {
+          "percent": 7
+        }
+      ]
+    },
+    {
+      "name": "魔王",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "妮芙",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "怒潮凛冬",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "麒麟R夜刀",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "琴柳",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "清道夫",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "若叶睦",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "三角初华",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "森蚺",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "闪击",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "诗怀雅",
+      "rates": [
+        {
+          "percent": 7
+        }
+      ]
+    },
+    {
+      "name": "霜华",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "送葬人",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "望",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "薇薇安娜",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "维什戴尔",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "苇草",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "夕",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "炎狱炎熔",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "焰狐龙梓兰",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "焰尾",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "焰影苇草",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "祐天寺若麦",
+      "rates": [
+        {
+          "percent": 5
+        },
+        {
+          "elite": 2,
+          "percent": 5
+        }
+      ]
+    },
+    {
+      "name": "早露",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "斩业星熊",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "战车",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "重岳",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "烛煌",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "濯尘芙蓉",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "Mon3tr",
+      "rates": [
+        {
+          "percent": 0
+        },
+        {
+          "elite": 2,
+          "percent": 2
+        }
+      ]
+    }
+  ]
+}

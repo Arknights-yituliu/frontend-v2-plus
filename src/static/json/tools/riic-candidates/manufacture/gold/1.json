@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 5,
+  "scope": {
+    "roomType": "manufacture",
+    "product": "gold",
+    "stationLevel": 1,
+    "slotCount": 1
+  },
+  "fallback": {
+    "percent": 25,
+    "label": "基础补位",
+    "poolKey": "manufacture:gold"
+  },
+  "candidates": [
+    {
+      "id": "candidate-19c81e89ad4fed27",
+      "variantGroupId": "family-635f1fbb0e39edec",
+      "name": "阿罗玛",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "阿罗玛",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 36.67,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "quality": "baseOnly",
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "candidate-c4503cab50bb233a",
+      "variantGroupId": "family-ad53a11d9e002af8",
+      "name": "砾",
+      "roomType": "manufacture",
+      "members": [
+        {
+          "name": "砾",
+          "elite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 35,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0
+    }
+  ]
+}

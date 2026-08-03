@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 5,
+  "scope": {
+    "roomType": "trading",
+    "product": "lmd",
+    "stationLevel": 2,
+    "slotCount": 2
+  },
+  "fallback": {
+    "percent": 30,
+    "label": "基础补位",
+    "poolKey": "trading:lmd"
+  },
+  "candidates": [
+    {
+      "id": "manual-trading-lmd-butshu-solo-beta-solo-l2-9fec162f0dc6",
+      "variantGroupId": "family-butshu:solo-beta",
+      "name": "但书 β + 1位任意补位",
+      "roomType": "trading",
+      "product": "lmd",
+      "stationLevel": 2,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "但书",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 83.33,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-trading-lmd-butshu-solo-alpha-solo-l2-5bffa531a1b5",
+      "variantGroupId": "family-butshu:solo-alpha",
+      "name": "但书 α + 1位任意补位",
+      "roomType": "trading",
+      "product": "lmd",
+      "stationLevel": 2,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "但书",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 41.67,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 5,
+  "scope": {
+    "roomType": "trading",
+    "product": "orundum",
+    "stationLevel": 3,
+    "slotCount": 3
+  },
+  "fallback": {
+    "percent": 30,
+    "label": "基础补位",
+    "poolKey": "trading:orundum"
+  },
+  "candidates": []
+}

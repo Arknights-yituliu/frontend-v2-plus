@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 5,
+  "scope": {
+    "roomType": "power",
+    "product": "all",
+    "stationLevel": 1,
+    "slotCount": 1
+  },
+  "fallback": {
+    "percent": 15,
+    "label": "基础补位",
+    "poolKey": "power:all"
+  },
+  "candidates": [
+    {
+      "id": "candidate-f81e67d47f3ebe5f",
+      "variantGroupId": "family-066c5d47cab9da11",
+      "name": "天空盒",
+      "roomType": "power",
+      "members": [
+        {
+          "name": "天空盒",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 20,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-94758112c2701dc9",
+      "variantGroupId": "family-9ca6f7c52835fe99",
+      "name": "格雷伊",
+      "roomType": "power",
+      "members": [
+        {
+          "name": "格雷伊"
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 20,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-17a2d62dd4e05702",
+      "variantGroupId": "family-b61c9d49fa19f434",
+      "name": "海霓",
+      "roomType": "power",
+      "members": [
+        {
+          "name": "海霓",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 20,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-00b9cdec47a72a5d",
+      "variantGroupId": "family-5e15702e2b7c68d4",
+      "name": "澄闪",
+      "roomType": "power",
+      "members": [
+        {
+          "name": "澄闪",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 20,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-76620a4e2189e255",
+      "variantGroupId": "family-a94ca12894cf6a3e",
+      "name": "炎狱炎熔",
+      "roomType": "power",
+      "members": [
+        {
+          "name": "炎狱炎熔",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 20,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-55d3e32414a2e49c",
+      "variantGroupId": "family-0b05a9e1754e51de",
+      "name": "烛煌",
+      "roomType": "power",
+      "members": [
+        {
+          "name": "烛煌",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 20,
+      "sortScore": 0
+    },
+    {
+      "id": "candidate-b5ae16bfdca386a1",
+      "variantGroupId": "family-42cf6985becb49b3",
+      "name": "雷蛇",
+      "roomType": "power",
+      "members": [
+        {
+          "name": "雷蛇",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 0,
+      "officePercent": 0,
+      "powerPercent": 20,
+      "sortScore": 0
+    }
+  ]
+}

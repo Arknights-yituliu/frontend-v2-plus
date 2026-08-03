@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 5,
+  "files": [
+    {
+      "key": "control:all:1:5",
+      "file": "control/1.json",
+      "fallbackFile": "control/1.fallback.json",
+      "candidateCount": 10
+    },
+    {
+      "key": "hire:all:1:1",
+      "file": "hire/1.json",
+      "fallbackFile": "hire/1.fallback.json",
+      "candidateCount": 31
+    },
+    {
+      "key": "manufacture:all:1:1",
+      "file": "manufacture/1.json",
+      "fallbackFile": "manufacture/1.fallback.json",
+      "candidateCount": 0
+    },
+    {
+      "key": "manufacture:all:2:2",
+      "file": "manufacture/2.json",
+      "fallbackFile": "manufacture/2.fallback.json",
+      "candidateCount": 0
+    },
+    {
+      "key": "manufacture:all:3:3",
+      "file": "manufacture/3.json",
+      "fallbackFile": "manufacture/3.fallback.json",
+      "candidateCount": 2
+    },
+    {
+      "key": "manufacture:experience:1:1",
+      "file": "manufacture/experience/1.json",
+      "fallbackFile": "manufacture/experience/1.fallback.json",
+      "candidateCount": 5
+    },
+    {
+      "key": "manufacture:experience:2:2",
+      "file": "manufacture/experience/2.json",
+      "fallbackFile": "manufacture/experience/2.fallback.json",
+      "candidateCount": 12
+    },
+    {
+      "key": "manufacture:experience:3:3",
+      "file": "manufacture/experience/3.json",
+      "fallbackFile": "manufacture/experience/3.fallback.json",
+      "candidateCount": 22
+    },
+    {
+      "key": "manufacture:gold:1:1",
+      "file": "manufacture/gold/1.json",
+      "fallbackFile": "manufacture/gold/1.fallback.json",
+      "candidateCount": 2
+    },
+    {
+      "key": "manufacture:gold:2:2",
+      "file": "manufacture/gold/2.json",
+      "fallbackFile": "manufacture/gold/2.fallback.json",
+      "candidateCount": 10
+    },
+    {
+      "key": "manufacture:gold:3:3",
+      "file": "manufacture/gold/3.json",
+      "fallbackFile": "manufacture/gold/3.fallback.json",
+      "candidateCount": 13
+    },
+    {
+      "key": "manufacture:orundum:1:1",
+      "file": "manufacture/orundum/1.json",
+      "fallbackFile": "manufacture/orundum/1.fallback.json",
+      "candidateCount": 6
+    },
+    {
+      "key": "manufacture:orundum:2:2",
+      "file": "manufacture/orundum/2.json",
+      "fallbackFile": "manufacture/orundum/2.fallback.json",
+      "candidateCount": 15
+    },
+    {
+      "key": "manufacture:orundum:3:3",
+      "file": "manufacture/orundum/3.json",
+      "fallbackFile": "manufacture/orundum/3.fallback.json",
+      "candidateCount": 27
+    },
+    {
+      "key": "meeting:all:1:2",
+      "file": "meeting/1.json",
+      "fallbackFile": "meeting/1.fallback.json",
+      "candidateCount": 73
+    },
+    {
+      "key": "meeting:all:3:2",
+      "file": "meeting/3.json",
+      "fallbackFile": "meeting/3.fallback.json",
+      "candidateCount": 73
+    },
+    {
+      "key": "power:all:1:1",
+      "file": "power/1.json",
+      "fallbackFile": "power/1.fallback.json",
+      "candidateCount": 7
+    },
+    {
+      "key": "trading:all:1:1",
+      "file": "trading/1.json",
+      "fallbackFile": "trading/1.fallback.json",
+      "candidateCount": 7
+    },
+    {
+      "key": "trading:all:2:2",
+      "file": "trading/2.json",
+      "fallbackFile": "trading/2.fallback.json",
+      "candidateCount": 10
+    },
+    {
+      "key": "trading:all:3:3",
+      "file": "trading/3.json",
+      "fallbackFile": "trading/3.fallback.json",
+      "candidateCount": 24
+    },
+    {
+      "key": "trading:lmd:1:1",
+      "file": "trading/lmd/1.json",
+      "fallbackFile": "trading/lmd/1.fallback.json",
+      "candidateCount": 2
+    },
+    {
+      "key": "trading:lmd:2:2",
+      "file": "trading/lmd/2.json",
+      "fallbackFile": "trading/lmd/2.fallback.json",
+      "candidateCount": 2
+    },
+    {
+      "key": "trading:lmd:3:3",
+      "file": "trading/lmd/3.json",
+      "fallbackFile": "trading/lmd/3.fallback.json",
+      "candidateCount": 2106
+    },
+    {
+      "key": "trading:orundum:1:1",
+      "file": "trading/orundum/1.json",
+      "fallbackFile": "trading/orundum/1.fallback.json",
+      "candidateCount": 0
+    },
+    {
+      "key": "trading:orundum:2:2",
+      "file": "trading/orundum/2.json",
+      "fallbackFile": "trading/orundum/2.fallback.json",
+      "candidateCount": 0
+    },
+    {
+      "key": "trading:orundum:3:3",
+      "file": "trading/orundum/3.json",
+      "fallbackFile": "trading/orundum/3.fallback.json",
+      "candidateCount": 0
+    }
+  ]
+}

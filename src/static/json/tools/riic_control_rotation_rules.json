@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 2,
+  "shiftCount": 2,
+  "slotsPerShift": 5,
+  "officePriority": [
+    {
+      "charId": "char_1048_orchd2",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_4186_tmoris",
+      "minimumElite": 0
+    }
+  ],
+  "mutuallyExclusiveWithinShift": [
+    [
+      "char_1048_orchd2",
+      "char_4186_tmoris"
+    ]
+  ],
+  "tradingPriority": [
+    {
+      "charId": "char_308_swire",
+      "minimumElite": 0,
+      "role": "swire"
+    },
+    {
+      "charId": "char_002_amiya",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_4071_peper",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_4132_ascln",
+      "minimumElite": 2
+    }
+  ],
+  "manufacturePriority": [
+    {
+      "charId": "char_003_kalts",
+      "minimumElite": 2
+    },
+    {
+      "charId": "char_4179_monstr",
+      "minimumElite": 2
+    }
+  ],
+  "swireManufacturePair": {
+    "charId": "char_1044_hsgma2",
+    "minimumElite": 2
+  },
+  "shiftEffects": [
+    {
+      "charId": "char_1048_orchd2",
+      "minimumElite": 0,
+      "facility": "hire",
+      "percent": 10
+    },
+    {
+      "charId": "char_4186_tmoris",
+      "minimumElite": 0,
+      "facility": "hire",
+      "percent": 10
+    },
+    {
+      "charId": "char_308_swire",
+      "minimumElite": 0,
+      "facility": "trading",
+      "percent": 7
+    },
+    {
+      "charId": "char_002_amiya",
+      "minimumElite": 0,
+      "facility": "trading",
+      "percent": 7
+    },
+    {
+      "charId": "char_4071_peper",
+      "minimumElite": 0,
+      "facility": "trading",
+      "percent": 7
+    },
+    {
+      "charId": "char_4132_ascln",
+      "minimumElite": 2,
+      "facility": "trading",
+      "percent": 7
+    },
+    {
+      "charId": "char_003_kalts",
+      "minimumElite": 2,
+      "facility": "manufacture",
+      "percent": 2
+    },
+    {
+      "charId": "char_4179_monstr",
+      "minimumElite": 2,
+      "facility": "manufacture",
+      "percent": 2
+    },
+    {
+      "charId": "char_1044_hsgma2",
+      "minimumElite": 2,
+      "facility": "manufacture",
+      "percent": 3,
+      "requiresSameShiftOperatorIds": [
+        "char_308_swire"
+      ]
+    }
+  ],
+  "unconditionalControlMorale": [
+    {
+      "charId": "char_4228_closur",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_4195_radian",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_4179_monstr",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_4023_rfalcn",
+      "minimumElite": 2
+    },
+    {
+      "charId": "char_4098_vvana",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_4104_coldst",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_4064_mlynar",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_420_flamtl",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_304_zebra",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_367_swllow",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_261_sddrag",
+      "minimumElite": 2
+    },
+    {
+      "charId": "char_279_excu",
+      "minimumElite": 2
+    },
+    {
+      "charId": "char_260_durnar",
+      "minimumElite": 1
+    },
+    {
+      "charId": "char_148_nearl",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_144_red",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_149_scave",
+      "minimumElite": 0
+    },
+    {
+      "charId": "char_130_doberm",
+      "minimumElite": 0
+    }
+  ],
+  "trainingOnlyOperatorIds": [
+    "char_1012_skadi2",
+    "char_1013_chen2",
+    "char_1014_nearl2",
+    "char_1023_ghost2",
+    "char_1026_gvial2",
+    "char_1028_texas2",
+    "char_1038_whitw2",
+    "char_113_cqbw",
+    "char_136_hsguma",
+    "char_157_dagda",
+    "char_166_skfire",
+    "char_171_bldsk",
+    "char_204_platnm",
+    "char_215_mantic",
+    "char_220_grani",
+    "char_250_phatom",
+    "char_265_sophia",
+    "char_333_sidero",
+    "char_344_beewax",
+    "char_350_surtr",
+    "char_356_broca",
+    "char_358_lisa",
+    "char_362_saga",
+    "char_394_hadiya",
+    "char_4006_melnte",
+    "char_4009_irene",
+    "char_4025_aprot2",
+    "char_4043_erato",
+    "char_4082_qiubai",
+    "char_4121_zuole",
+    "char_4133_logos",
+    "char_4139_papyrs",
+    "char_4145_ulpia",
+    "char_415_flint",
+    "char_4196_reckpr",
+    "char_422_aurora",
+    "char_4234_pedro",
+    "char_426_billro",
+    "char_450_necras",
+    "char_451_robin",
+    "char_475_akafyu",
+    "char_476_blkngt"
+  ]
+}

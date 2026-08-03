@@ -1,0 +1,1720 @@
+{
+  "schemaVersion": 5,
+  "scope": {
+    "roomType": "meeting",
+    "product": "all",
+    "stationLevel": 3,
+    "slotCount": 2
+  },
+  "fallback": {
+    "percent": 0,
+    "label": "常规值班",
+    "poolKey": "meeting:all"
+  },
+  "candidates": [
+    {
+      "id": "meeting-80179053e016feda",
+      "variantGroupId": "meeting-family-ded642c1e94ed0ef",
+      "name": "见行者",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "见行者",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 86,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "meeting-2fbb71a0693bd8de",
+      "variantGroupId": "meeting-family-6a853f2957eb75c3",
+      "name": "伺夜",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "伺夜",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 77,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-595423b1b21f65c3",
+      "variantGroupId": "meeting-family-f676e7145b8c009e",
+      "name": "陈",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "陈",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 77,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-80ec5c6c53d18f13",
+      "variantGroupId": "meeting-family-a01ce1c18224a9ce",
+      "name": "星极",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "星极",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 76,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-3daca80f48176fec",
+      "variantGroupId": "meeting-family-5b6e5d197438420a",
+      "name": "红",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "红",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 76,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-2cb2f29c4b08c9a3",
+      "variantGroupId": "meeting-family-c9e8d190bc10afcc",
+      "name": "远山",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "远山",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 74,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-021d2c3b138071cf",
+      "variantGroupId": "meeting-family-7b49f744a897dd0c",
+      "name": "信仰搅拌机",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "信仰搅拌机",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 72,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-3b2e75068ee816c6",
+      "variantGroupId": "meeting-family-13d1a2b7d6dab268",
+      "name": "忍冬",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "忍冬",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 72,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-595a0690ebe25b4b",
+      "variantGroupId": "meeting-family-ca833c7a33587e2d",
+      "name": "守林人",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "守林人",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 71,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-ba936ab9188e4beb",
+      "variantGroupId": "meeting-family-fee0c07005f84449",
+      "name": "断崖",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "断崖",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 71,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-85633f235b5853ad",
+      "variantGroupId": "meeting-family-b287251f2884fea4",
+      "name": "莱欧斯",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "莱欧斯",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 71,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-89c51517fe602702",
+      "variantGroupId": "meeting-family-87b0d576bb5c79f0",
+      "name": "行箸",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "行箸",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 71,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-704d93e814e3b6bf",
+      "variantGroupId": "meeting-family-6a853f2957eb75c3",
+      "name": "伺夜",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "伺夜",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 69,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-5d435d750adeb712",
+      "variantGroupId": "meeting-family-0a26a100a09cc0fa",
+      "name": "宴",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "宴",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 69,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-e699d19139b8d8dd",
+      "variantGroupId": "meeting-family-61a9548b11db7a6c",
+      "name": "暗索",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "暗索",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 69,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-3d7c11e77c842f8b",
+      "variantGroupId": "meeting-family-b0313b1e1e090682",
+      "name": "杰克",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "杰克",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 69,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-a8c0d0a946bc4caa",
+      "variantGroupId": "meeting-family-660219c8ddac745d",
+      "name": "梅",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "梅",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 69,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-b4d6b354f15875ef",
+      "variantGroupId": "meeting-family-5a01ebd51c8558d8",
+      "name": "白雪",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "白雪",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 69,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-c11db63d921fe5bd",
+      "variantGroupId": "meeting-family-c9e8d190bc10afcc",
+      "name": "远山",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "远山",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 66,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-f78ab38ce465b054",
+      "variantGroupId": "meeting-family-391de86bd3179a5f",
+      "name": "风丸",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "风丸",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 66,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-7160cddfa892e98c",
+      "variantGroupId": "meeting-family-b287251f2884fea4",
+      "name": "莱欧斯",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "莱欧斯",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 63,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-520e8e18c99d3ebd",
+      "variantGroupId": "meeting-family-6a853f2957eb75c3",
+      "name": "伺夜",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "伺夜",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 61,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-8b6c7bb673ef148f",
+      "variantGroupId": "meeting-family-691bcfdf38861357",
+      "name": "哈洛德",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "哈洛德",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 61,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-97dc91bdfc5df6e8",
+      "variantGroupId": "meeting-family-0a26a100a09cc0fa",
+      "name": "宴",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "宴",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 61,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-b7e588be8d242bc2",
+      "variantGroupId": "meeting-family-cd6de510d371923f",
+      "name": "晓歌",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "晓歌",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 61,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-113c9f6fe9244abb",
+      "variantGroupId": "meeting-family-61a9548b11db7a6c",
+      "name": "暗索",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "暗索",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 61,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-2d1cfecdd0efe70e",
+      "variantGroupId": "meeting-family-b0313b1e1e090682",
+      "name": "杰克",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "杰克",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 61,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-02f4b1c20d2dee94",
+      "variantGroupId": "meeting-family-350043939c43c157",
+      "name": "松桐",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "松桐",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 61,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-77c87b2cedf11489",
+      "variantGroupId": "meeting-family-660219c8ddac745d",
+      "name": "梅",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "梅",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 61,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-84393741d3a46ee0",
+      "variantGroupId": "meeting-family-5a01ebd51c8558d8",
+      "name": "白雪",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "白雪",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 61,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-a738468c1d341050",
+      "variantGroupId": "meeting-family-38e79108801c8d68",
+      "name": "谜图",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "谜图",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 61,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-62d0c77c5bf659ee",
+      "variantGroupId": "meeting-family-7b49f744a897dd0c",
+      "name": "信仰搅拌机",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "信仰搅拌机",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 59,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-36941c456890637c",
+      "variantGroupId": "meeting-family-de77b6f727dae215",
+      "name": "跃跃",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "跃跃",
+          "elite": 2
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 59,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-b6aa453a4da3dd8f",
+      "variantGroupId": "meeting-family-391de86bd3179a5f",
+      "name": "风丸",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "风丸",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 58,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-e7aedfb6662000cb",
+      "variantGroupId": "meeting-family-b287251f2884fea4",
+      "name": "莱欧斯",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "莱欧斯",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 55,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-ef8c4875cadda772",
+      "variantGroupId": "meeting-family-46534db602462049",
+      "name": "塞雷娅",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "塞雷娅",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 54,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-26dedf4c486c3a4b",
+      "variantGroupId": "meeting-family-c56cbcdc688d9ca4",
+      "name": "安洁莉娜",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "安洁莉娜",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 54,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-5dda389fdf23d96b",
+      "variantGroupId": "meeting-family-13d1a2b7d6dab268",
+      "name": "忍冬",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "忍冬",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 54,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-47de9457c1091cc8",
+      "variantGroupId": "meeting-family-f4ab1341e849cb40",
+      "name": "莫斯提马",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "莫斯提马",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 54,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-e0e2a1b5f6c20002",
+      "variantGroupId": "meeting-family-691bcfdf38861357",
+      "name": "哈洛德",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "哈洛德",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-b5292392637edaf9",
+      "variantGroupId": "meeting-family-be37eb968390cd0f",
+      "name": "因陀罗",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "因陀罗",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-e80ca84431ffa357",
+      "variantGroupId": "meeting-family-ca833c7a33587e2d",
+      "name": "守林人",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "守林人",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-c4e8ccd4116ccfb7",
+      "variantGroupId": "meeting-family-f2717f6672fd77b7",
+      "name": "微风",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "微风",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-0c96a00dd502362e",
+      "variantGroupId": "meeting-family-fee0c07005f84449",
+      "name": "断崖",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "断崖",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-3e99ac5774d58b29",
+      "variantGroupId": "meeting-family-a01ce1c18224a9ce",
+      "name": "星极",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "星极",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-57448df5fbf25fe3",
+      "variantGroupId": "meeting-family-61a9548b11db7a6c",
+      "name": "暗索",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "暗索",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-213050f9f07f4ee9",
+      "variantGroupId": "meeting-family-350043939c43c157",
+      "name": "松桐",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "松桐",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-8ad08b246289f2c7",
+      "variantGroupId": "meeting-family-660219c8ddac745d",
+      "name": "梅",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "梅",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-650de75a6685a6f6",
+      "variantGroupId": "meeting-family-5a01ebd51c8558d8",
+      "name": "白雪",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "白雪",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-3d0842e374b9aee4",
+      "variantGroupId": "meeting-family-a03b55307d4c7657",
+      "name": "耶拉",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "耶拉",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-5e1bd944ff601ad8",
+      "variantGroupId": "meeting-family-ca55a85fcd2843a6",
+      "name": "芙兰卡",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "芙兰卡",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-fafe3a53dfd2e95c",
+      "variantGroupId": "meeting-family-ded642c1e94ed0ef",
+      "name": "见行者",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "见行者",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-0f061d094ab51331",
+      "variantGroupId": "meeting-family-38e79108801c8d68",
+      "name": "谜图",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "谜图",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 53,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-eff7c70504b1ec9a",
+      "variantGroupId": "meeting-family-7546adb48abab178",
+      "name": "12F",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "12F"
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 51,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-02080a99abbbdddc",
+      "variantGroupId": "meeting-family-7b49f744a897dd0c",
+      "name": "信仰搅拌机",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "信仰搅拌机",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 51,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-2625ea963169d3fa",
+      "variantGroupId": "meeting-family-de77b6f727dae215",
+      "name": "跃跃",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "跃跃",
+          "elite": 1,
+          "maxElite": 1
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 51,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-130cab5823c8be3b",
+      "variantGroupId": "meeting-family-391de86bd3179a5f",
+      "name": "风丸",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "风丸",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 50,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-99d917b1f232f6c4",
+      "variantGroupId": "meeting-family-46534db602462049",
+      "name": "塞雷娅",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "塞雷娅",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 46,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-15127257905b5ea3",
+      "variantGroupId": "meeting-family-c56cbcdc688d9ca4",
+      "name": "安洁莉娜",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "安洁莉娜",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 46,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-437aefa82c69fbcb",
+      "variantGroupId": "meeting-family-13d1a2b7d6dab268",
+      "name": "忍冬",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "忍冬",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 46,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-c35dfdeeae71caf2",
+      "variantGroupId": "meeting-family-f4ab1341e849cb40",
+      "name": "莫斯提马",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "莫斯提马",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 46,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-6d29117e9e897d14",
+      "variantGroupId": "meeting-family-691bcfdf38861357",
+      "name": "哈洛德",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "哈洛德",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 45,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-8577be5a591825f1",
+      "variantGroupId": "meeting-family-be37eb968390cd0f",
+      "name": "因陀罗",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "因陀罗",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 45,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-3d1fb1b00e60f1e4",
+      "variantGroupId": "meeting-family-ca833c7a33587e2d",
+      "name": "守林人",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "守林人",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 45,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-a85cc97503cc35f2",
+      "variantGroupId": "meeting-family-f2717f6672fd77b7",
+      "name": "微风",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "微风",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 45,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-b1956e3b8c2dd91c",
+      "variantGroupId": "meeting-family-fee0c07005f84449",
+      "name": "断崖",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "断崖",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 45,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-cef5e7a9090b1eb6",
+      "variantGroupId": "meeting-family-a01ce1c18224a9ce",
+      "name": "星极",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "星极",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 45,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-d6e33fe9a72fe9c7",
+      "variantGroupId": "meeting-family-350043939c43c157",
+      "name": "松桐",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "松桐",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 45,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-1da387a3eda6635f",
+      "variantGroupId": "meeting-family-a03b55307d4c7657",
+      "name": "耶拉",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "耶拉",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 45,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-f5ab649c82a30f3d",
+      "variantGroupId": "meeting-family-ca55a85fcd2843a6",
+      "name": "芙兰卡",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "芙兰卡",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 45,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-45b6b1b6db31aed1",
+      "variantGroupId": "meeting-family-ded642c1e94ed0ef",
+      "name": "见行者",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "见行者",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 45,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-17e99c60e3338951",
+      "variantGroupId": "meeting-family-38e79108801c8d68",
+      "name": "谜图",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "谜图",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 45,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "meeting-6993d64721eb679c",
+      "variantGroupId": "meeting-family-de77b6f727dae215",
+      "name": "跃跃",
+      "roomType": "meeting",
+      "product": "all",
+      "stationLevel": 3,
+      "slotCount": 2,
+      "members": [
+        {
+          "name": "跃跃",
+          "maxElite": 0
+        }
+      ],
+      "tradingPercent": 0,
+      "manufacturePercent": 0,
+      "meetingPercent": 43,
+      "officePercent": 0,
+      "powerPercent": 0,
+      "sortScore": 0,
+      "selectionMode": "individual",
+      "calculationStatus": "calculated"
+    }
+  ]
+}

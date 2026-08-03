@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "scope": {
+    "roomType": "manufacture",
+    "product": "experience",
+    "stationLevel": 1,
+    "slotCount": 1
+  },
+  "defaultPercent": 0,
+  "operators": [
+    {
+      "name": "白雪",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "断罪者",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "红豆",
+      "rates": [
+        {
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "机械师",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "酒神",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "裂响",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "怒潮凛冬",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "帕拉斯",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "圣约送葬人",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "食铁兽",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "弑君者",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "霜叶",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "Castle-3",
+      "rates": [
+        {
+          "level": 30,
+          "percent": 30
+        }
+      ]
+    }
+  ]
+}
