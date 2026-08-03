@@ -367,7 +367,8 @@ function getUnlockCost(skill) {
 
 function calculateUnlockCost(skill) {
   const operatorInfo = operatorTableV2[skill.charId]
-  const rarity = operatorInfo?.rarity == null ? undefined : operatorInfo.rarity + 1 // v2的rarity为0-5, 转成1-6
+  // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，无需再 +1 转换
+  const rarity = operatorInfo?.rarity == null ? undefined : operatorInfo.rarity
   const targetPhase = Number(skill.phase) || 0
   const targetLevel = Number(skill.level) || 1
 
@@ -410,7 +411,8 @@ function createEmptyCost() {
 function getEliteCost(charId, targetPhase) {
   const elite = getOperatorEliteCostList(charId)
   const operatorInfo = operatorTableV2[charId]
-  const rarity = operatorInfo?.rarity == null ? undefined : operatorInfo.rarity + 1 // v2的rarity为0-5, 转成1-6
+  // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，无需再 +1 转换
+  const rarity = operatorInfo?.rarity == null ? undefined : operatorInfo.rarity
   let lmdQuantity = 0
   let materials = 0
 

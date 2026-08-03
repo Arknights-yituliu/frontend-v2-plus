@@ -970,10 +970,10 @@ function getDisplayRarity(charId) {
     return uploadedRarity
   }
 
-  //v2 数据中 rarity 为 0-5, 转换为 1-6 星级
+  //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，直接使用
   const rarity = operatorTableV2[charId]?.rarity
   if (Number.isFinite(rarity)) {
-    return rarity >= 0 && rarity <= 5 ? rarity + 1 : rarity
+    return rarity
   }
 
   const zeroBasedRarity = activeOperatorTable.value[charId]?.rarity

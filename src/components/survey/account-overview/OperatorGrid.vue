@@ -61,8 +61,8 @@ const rarityTotals = computed(() => {
   for (const charId in operatorTableV2) {
     const operator = operatorTableV2[charId]
     if (operator) {
-      // operatorTableV2中的rarity是0-5，需要转换为1-6
-      const actualRarity = (operator.rarity ?? -1) + 1
+      // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，直接使用
+      const actualRarity = operator.rarity ?? -1
       if (actualRarity >= 1 && actualRarity <= 6) {
         totals[actualRarity]++
       }
@@ -163,9 +163,9 @@ const allNotOwnedOperators = computed(() => {
   for (const charId in operatorTableV2) {
     if (!ownedCharIds.value.has(charId)) {
       const charInfo = operatorTableV2[charId]
-      // operatorTableV2中的rarity是0-5，需要转换为1-6
-      // rarity: 5 = 六星, 4 = 五星, 3 = 四星, 2 = 三星, 1 = 二星, 0 = 一星
-      const actualRarity = (charInfo?.rarity ?? -1) + 1
+      // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，直接使用
+      // rarity: 6 = 六星, 5 = 五星, 4 = 四星, 3 = 三星, 2 = 二星, 1 = 一星
+      const actualRarity = charInfo?.rarity ?? -1
       // 排除一些特殊干员（如召唤物等）
       if (charInfo && actualRarity >= 1 && actualRarity <= 6) {
         notOwned.push({

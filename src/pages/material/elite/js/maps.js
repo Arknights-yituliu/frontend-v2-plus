@@ -49,11 +49,12 @@ professionDictJSON.forEach(profession => {
   });
 });
 
-// 干员信息映射: 使用 v2 新格式数据(含材料消耗), 并将 rarity 从 0-5 统一转换为 1-6
+// 干员信息映射: 使用 v2 新格式数据(含材料消耗)
+// 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，无需再 +1 转换（operatorRarityBaseMaterialMap 键为 4/5/6 星级）
 const operatorMap = new Map(
   Object.entries(operatorTableV2).map(([charId, charInfo]) => [
     charId,
-    { ...charInfo, rarity: charInfo.rarity + 1 }
+    { ...charInfo, rarity: charInfo.rarity }
   ])
 )
 // 干员精英化、专精技能消耗材料映射: 从 v2 干员数据构建, 不再依赖 operator_item_cost_table.json

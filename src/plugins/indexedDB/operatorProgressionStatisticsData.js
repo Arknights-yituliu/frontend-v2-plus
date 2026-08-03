@@ -8,7 +8,8 @@ function putCache(data) {
 }
 
 async function getData() {
-    const cacheKey = 'operatorProgressionStatisticsV6'
+    // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，旧缓存(V6)中的统计结果为 0-5 语义，升级版本号使旧缓存失效并强制重新拉取格式化
+    const cacheKey = 'operatorProgressionStatisticsV7'
     let cacheData = await myDatabase.cache_data.get(cacheKey)
 
     // if (cacheData && cacheData.resource.result.length) {
@@ -41,6 +42,7 @@ async function getData() {
                 let vo = {
                     charId:item.charId,
                     name: charInfo.name,
+                    //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，此处存储的即星级（无需转换）
                     rarity: charInfo.rarity,
                     profession: charInfo.profession,
                     itemObtainApproach: charInfo.itemObtainApproach,

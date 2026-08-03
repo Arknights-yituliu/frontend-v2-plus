@@ -364,7 +364,8 @@ function getDisplayRarityFromStoredRarity(rarity) {
     return 1
   }
 
-  return Math.min(6, Math.max(1, normalizedRarity + 1))
+  // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，存储值即星级，无需再 +1 转换
+  return Math.min(6, Math.max(1, normalizedRarity))
 }
 
 function getOperatorDisplayRarity(operator = {}) {
