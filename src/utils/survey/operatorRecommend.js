@@ -17,8 +17,8 @@ async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
 
 
     for (const item of result) {
-        //统计结果中的 rarity 现为 v2 的 0-5, 仅统计 6 星(对应 v2 rarity 5)
-        if (item.rarity < 5) continue;
+        //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，仅统计 6 星(对应 rarity 6)
+        if (item.rarity < 6) continue;
         operatorStatisticsResult[item.charId] = {
             skill1: _average(item.skill1),
             skill2: _average(item.skill2),
@@ -40,8 +40,8 @@ async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
 
     for (const index in operatorTable) {
         const operator = operatorTable[index]
-        //v2 数据中 rarity 为 0-5, 原过滤条件为仅 6 星(星级 6), 对应 v2 rarity 5
-        if (operator.rarity < 5) continue;
+        //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，原过滤条件为仅 6 星(星级 6)
+        if (operator.rarity < 6) continue;
         if (!operatorStatisticsResult[operator.charId]) continue;
         if (!operator.own) continue;
         const result = operatorStatisticsResult[operator.charId]

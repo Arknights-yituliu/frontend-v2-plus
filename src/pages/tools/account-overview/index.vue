@@ -78,9 +78,9 @@ const totalLimitedSixStar = computed(() => {
     const updateInfo = operatorUpdateTime[charId]
     // 检查是否为限定干员
     if (updateInfo.obtainApproach === '限定干员') {
-      // 从operatorTableV2获取rarity（0-5，其中5=六星）
+      // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，六星即 rarity === 6
       const operator = operatorTableV2[charId]
-      if (operator && operator.rarity === 5) {
+      if (operator && operator.rarity === 6) {
         count++
       }
     }

@@ -137,9 +137,9 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     //解构出通用技能和专精技能的材料消耗
     const {allSkill, skills} = OPERATOR_ITEM_COST_TABLE[charId];
 
-    //计算干员升级消耗
-    //operatorMaxLevelTable 以 1-6 星级为键, v2 数据中 rarity 为 0-5, 需转换为星级
-    const starRarity = (rarity >= 0 && rarity <= 5) ? rarity + 1 : rarity
+    //干员升级消耗
+    //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，operatorMaxLevelTable 键值即星级，直接使用
+    const starRarity = rarity
     const levelApCost = getLevelUpCostByRarityV2({rarity: starRarity,
         currentElite: currentElite, currentLevel: currentLevel,
         targetElite: targetElite, targetLevel: targetLevel});
@@ -571,8 +571,8 @@ async function statisticsOperatorInfo(operatorList) {
             // 解构干员信息
             _statistics(operator, 0)
 
-            //v2 数据中 rarity 为 0-5, 原过滤条件为星级>3(4星及以上), 对应 v2 rarity>2
-            if (operator.rarity > 2) {
+            //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，原过滤条件为星级>3(4星及以上), 对应 rarity>3
+            if (operator.rarity > 3) {
 
                 _statistics(operator, _checkRarity(operator.rarity))
             }

@@ -33,8 +33,8 @@ defineProps({
 
 <template>
 
-  <!--v2 数据中 rarity 为 0-5, 卡片边框 class 使用 1-6 星级, 需 +1 转换-->
-  <v-card :class="['operator-info-card', `operator-rarity-${(operatorInfo.rarity ?? 0) + 1}`]">
+  <!--干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级, 卡片边框 class 直接使用星级-->
+  <v-card :class="['operator-info-card', `operator-rarity-${operatorInfo.rarity ?? 1}`]">
     <div class="operator-info-bar">
       <div :class="['operator-avatar-area', { 'operator-avatar-area-recommended': isEliteRecommended }]">
         <OperatorAvatar :size="56" :mobile-size="44" :char-id="operatorInfo.charId"></OperatorAvatar>

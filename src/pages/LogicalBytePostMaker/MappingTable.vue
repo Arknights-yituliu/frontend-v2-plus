@@ -159,8 +159,8 @@ const operatorRows = sortRows(
       id: charId,
       name: operator.name,
       category: getProfessionName(operator.profession),
-      //v2 数据中 rarity 为 0-5, 转换为 1-6 星级展示
-      extra: [getProfessionName(operator.subProfessionId), operatorRarityLabel(operator.rarity >= 0 && operator.rarity <= 5 ? operator.rarity + 1 : operator.rarity)]
+      //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，直接展示
+      extra: [getProfessionName(operator.subProfessionId), operatorRarityLabel(operator.rarity)]
         .filter(Boolean)
         .join(' / '),
       source: 'src/utils/gameData.js (operatorTableV2)',

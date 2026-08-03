@@ -415,18 +415,6 @@ const routes = [
         }
     },
     {
-        path: '/tools/dps/calculator',
-        text: 'DPS计算器',
-        name: 'DPSCalculator',
-        display: false,
-        module: 'tools',
-        icon: "mdi-calendar-clock",
-        component: () => import('/src/pages/tools/dps/calculator.vue'),
-        meta: {
-            title: 'DPS计算器'
-        }
-    },
-    {
         path: '/tools/specializationTimeCalculate',
         text: '专精时间减半计算器',
         name: 'HalfOperatorCalculate',

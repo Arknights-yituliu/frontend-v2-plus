@@ -18,8 +18,8 @@ let operatorNameMap = new Map()
 for (const charId in operatorTableV2) {
   const character = operatorTableV2[charId]
   const {profession, rarity, name} = character
-  //v2 数据中 rarity 为 0-5(0为1星), 原过滤条件为星级>=4, 对应 v2 rarity>=3
-  if (rarity < 3) {
+  //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，原过滤条件为星级>=4, 对应 rarity>=4
+  if (rarity < 4) {
     continue
   }
   operatorNameMap.set(charId, name)

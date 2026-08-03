@@ -355,6 +355,7 @@ function formattingOperatorData(characterList) {
         const {id, level, evolvePhase, mainSkillLevel, skills, equips, potentialRank} = character
         const potential = Math.ceil(potentialRank + 1)
 
+        // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，去掉 +1 转换
         let rarity = 0;
         if (operatorTableV2[id]) {
             rarity = operatorTableV2[id].rarity

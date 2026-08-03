@@ -680,8 +680,8 @@ function exportOperatorExcel() {
   )
   for (const operator of sortedOperatorList) {
     const {name,own,rarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA} = operator
-    //v2 数据中 rarity 为 0-5, 导出时转换为 1-6 星级
-    const starRarity = (rarity >= 0 && rarity <= 5) ? rarity + 1 : rarity
+    //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，导出时直接使用
+    const starRarity = rarity
     list.push([name,own,starRarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA])
   }
 
