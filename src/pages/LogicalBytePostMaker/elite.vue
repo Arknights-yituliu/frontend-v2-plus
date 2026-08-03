@@ -230,6 +230,7 @@
                       <div class="title-search-result"
                         v-if="getSlotMatchedOperator(slot)">
                         当前干员：{{ getSlotMatchedOperator(slot).name }}（{{ getSlotMatchedOperator(slot).rarity }}星）
+                        <span class="slot-operator-id">ID：{{ getSlotMatchedOperator(slot).charId }}</span>
                       </div>
                       <div class="title-search-result error" v-else-if="slot.title?.trim()">
                         未找到
@@ -2412,6 +2413,12 @@ onMounted(() => {
   font-weight: 500;
 }
 
+.slot-operator-id {
+  margin-left: 8px;
+  font-family: Consolas, "Courier New", monospace;
+  font-weight: 600;
+}
+
 .title-search-result.error {
   background-color: #fee;
   border-color: #f56c6c;
@@ -2800,6 +2807,10 @@ onMounted(() => {
     background-color: #1a3a1a;
     border-color: #2e7d32;
     color: #81c784;
+  }
+
+  .slot-operator-id {
+    color: #b7e3b9;
   }
 
   .title-search-result.error {
