@@ -38,13 +38,13 @@
                   <tbody>
                     <template v-for="(row, rowIndex) in table1" :key="'t1-r' + rowIndex">
                       <tr
-                        v-if="rowIndex !== 1"
+                        v-if="rowIndex !== 1 && (!isNewMaterialPage || rowIndex !== 2)"
                         :class="{
                           'table1-accent-row': rowIndex === 4 || rowIndex === 5,
                           'table1-next-up-row': rowIndex === 5
                         }"
                       >
-                        <td class="data-cell label-cell">{{ table1Labels[rowIndex] }}</td>
+                        <td class="data-cell label-cell">{{ displayTable1Labels[rowIndex] }}</td>
                         <template v-if="rowIndex === 0">
                           <td v-for="(cell, colIndex) in row" :key="'t1-r' + rowIndex + '-c' + colIndex" class="data-cell">
                             <div class="stage-material-cell">
@@ -97,45 +97,50 @@
 
             <!-- 表格2：搓玉数据，四行四列 -->
             <div v-if="table2.some(row => row.some(cell => cell))" class="table-section">
-              <div class="data-grid table2-grid">
+              <div class="data-grid table2-grid" :class="{ 'table2-new-material-grid': isNewMaterialPage }">
                 <table>
                   <colgroup>
-                    <col class="brief-table-label-column" />
-                    <col class="brief-table-data-column" />
-                    <col class="brief-table-data-column" />
-                    <col class="brief-table-data-column" />
+                    <col
+                      v-for="columnIndex in table2DisplayColumns"
+                      :key="'t2-col-' + columnIndex"
+                      :class="columnIndex === 0 ? 'brief-table-label-column' : 'brief-table-data-column'"
+                    />
                   </colgroup>
                   <tbody>
-                    <tr v-for="(row, rowIndex) in table2" :key="'t2-r' + rowIndex">
-                      <td
-                        v-for="(cell, colIndex) in row"
-                        :key="'t2-r' + rowIndex + '-c' + colIndex"
-                        class="data-cell"
-                        :class="{ 'label-cell': colIndex === 0 }"
-                      >
-                        <div v-if="rowIndex === 0 && getTable2CellIconIds(colIndex).length > 0" class="orundum-stage-cell">
-                          <span>{{ cell }}</span>
-                          <span class="orundum-material-icons">
-                            <ItemImage
-                              v-for="itemId in getTable2CellIconIds(colIndex)"
-                              :key="'orundum-icon-' + colIndex + '-' + itemId"
-                              :item-id="itemId"
-                              :size="previewOrundumIconSize"
-                            />
-                          </span>
-                        </div>
-                        <div v-else-if="rowIndex === 1 && colIndex > 0" class="orundum-yield-cell">
-                          <div class="orundum-yield-line">{{ getOrundumYieldPerApText(cell) }}</div>
-                          <div v-if="getOrundumYieldTotalText(cell)" class="orundum-yield-line orundum-yield-total">
-                            <span>{{ getOrundumYieldTotalText(cell) }}</span>
-                            <span class="orundum-result-icon bg-4003_icon" aria-label="合成玉"></span>
+                    <template v-for="(row, rowIndex) in table2" :key="'t2-r' + rowIndex">
+                      <tr v-if="!isNewMaterialPage || rowIndex === 0">
+                        <td
+                          v-for="columnIndex in table2DisplayColumns"
+                          :key="'t2-r' + rowIndex + '-c' + columnIndex"
+                          class="data-cell"
+                          :class="{ 'label-cell': columnIndex === 0 }"
+                        >
+                          <div v-if="rowIndex === 0 && getTable2CellIconIds(columnIndex).length > 0" class="orundum-stage-cell">
+                            <span v-if="getTable2DisplayCellText(row, rowIndex, columnIndex)">
+                              {{ getTable2DisplayCellText(row, rowIndex, columnIndex) }}
+                            </span>
+                            <span class="orundum-material-icons">
+                              <ItemImage
+                                v-for="itemId in getTable2CellIconIds(columnIndex)"
+                                :key="'orundum-icon-' + columnIndex + '-' + itemId"
+                                :item-id="itemId"
+                                :size="previewOrundumIconSize"
+                              />
+                            </span>
                           </div>
-                        </div>
-                        <template v-else>
-                          {{ cell }}
-                        </template>
-                      </td>
-                    </tr>
+                          <div v-else-if="rowIndex === 1 && columnIndex > 0" class="orundum-yield-cell">
+                            <div class="orundum-yield-line">{{ getOrundumYieldPerApText(row[columnIndex]) }}</div>
+                            <div v-if="getOrundumYieldTotalText(row[columnIndex])" class="orundum-yield-line orundum-yield-total">
+                              <span>{{ getOrundumYieldTotalText(row[columnIndex]) }}</span>
+                              <span class="orundum-result-icon bg-4003_icon" aria-label="合成玉"></span>
+                            </div>
+                          </div>
+                          <template v-else>
+                            {{ getTable2DisplayCellText(row, rowIndex, columnIndex) }}
+                          </template>
+                        </td>
+                      </tr>
+                    </template>
                   </tbody>
                 </table>
               </div>
@@ -316,44 +321,82 @@
 
         <!-- 表格1：六行四列（第一列固定为标签） -->
         <div class="input-group">
-          <label class="input-label">表格1（6行 × 4列）</label>
+          <label class="input-label">{{ isNewMaterialPage ? '表格1（5行 × 4列）' : '表格1（6行 × 4列）' }}</label>
           <div class="table-input-container table1-input-container">
             <!-- 关卡行：和其他行一样，3个独立输入框 -->
-            <div v-for="(row, rowIndex) in table1" :key="'t1-input-r' + rowIndex" class="table-row stage-input-row">
-              <span class="row-number label-preview">{{ table1Labels[rowIndex] }}</span>
-              <div class="row-cells">
-                <input
-                  v-for="(cell, colIndex) in row"
-                  :key="'t1-input-r' + rowIndex + '-c' + colIndex"
-                  v-model="table1[rowIndex][colIndex]"
-                  type="text"
-                  class="input-field cell-field"
-                  placeholder=""
-                />
+            <template v-for="(row, rowIndex) in table1" :key="'t1-input-r' + rowIndex">
+              <div v-if="!isNewMaterialPage || rowIndex !== 2" class="table-row stage-input-row">
+                <span class="row-number label-preview">{{ displayTable1Labels[rowIndex] }}</span>
+                <div class="row-cells">
+                  <input
+                    v-for="(cell, colIndex) in row"
+                    :key="'t1-input-r' + rowIndex + '-c' + colIndex"
+                    v-model="table1[rowIndex][colIndex]"
+                    type="text"
+                    class="input-field cell-field"
+                    placeholder=""
+                  />
+                </div>
               </div>
-            </div>
+            </template>
           </div>
         </div>
 
         <!-- 表格2：搓玉数据，左两列固定基准，右两列自动引用活动关 -->
         <div class="input-group">
-          <label class="input-label">表格2（搓玉数据，4行 × 4列）</label>
-          <div class="table-input-container table2-input-container">
-            <div v-for="(row, rowIndex) in table2" :key="'t2-input-r' + rowIndex" class="table-row">
-              <span class="row-number">{{ table2Labels[rowIndex] }}</span>
-              <div class="row-cells">
-                <input
-                  v-for="(cell, colIndex) in row"
-                  :key="'t2-input-r' + rowIndex + '-c' + colIndex"
-                  v-model="table2[rowIndex][colIndex]"
-                  type="text"
-                  class="input-field cell-field"
-                  :class="{ 'fixed-cell-field': colIndex < TABLE2_AUTO_START_COLUMN }"
-                  :readonly="colIndex < TABLE2_AUTO_START_COLUMN"
-                  placeholder=""
-                />
+          <label class="input-label">{{ isNewMaterialPage ? '表格2（1行 × 3列）' : '表格2（搓玉数据，4行 × 4列）' }}</label>
+          <div
+            class="table-input-container table2-input-container"
+            :class="{ 'table2-new-material-input-container': isNewMaterialPage }"
+          >
+            <template v-for="(row, rowIndex) in table2" :key="'t2-input-r' + rowIndex">
+              <div v-if="!isNewMaterialPage || rowIndex === 0" class="table-row">
+                <span class="row-number">{{ displayTable2Labels[rowIndex] }}</span>
+                <div class="row-cells">
+                  <template v-if="isNewMaterialPage">
+                    <div
+                      v-for="columnIndex in table2InputColumns"
+                      :key="'t2-material-selector-' + columnIndex"
+                      class="table2-material-selector"
+                    >
+                      <input
+                        v-model="table2[rowIndex][columnIndex]"
+                        type="text"
+                        class="input-field cell-field table2-stage-field"
+                        placeholder="关卡"
+                      />
+                      <div class="table2-material-options">
+                        <button
+                          v-for="option in ORUNDUM_MATERIAL_OPTIONS"
+                          :key="option.id"
+                          type="button"
+                          class="table2-material-option"
+                          :class="{ 'table2-material-option-active': getTable2CellIconIds(columnIndex).includes(option.id) }"
+                          :aria-label="option.name"
+                          :aria-pressed="getTable2CellIconIds(columnIndex).includes(option.id)"
+                          :title="option.name"
+                          @click="toggleNewMaterialTable2Icon(columnIndex, option.id)"
+                        >
+                          <ItemImage :item-id="option.id" :size="40" />
+                        </button>
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <input
+                      v-for="columnIndex in table2InputColumns"
+                      :key="'t2-input-r' + rowIndex + '-c' + columnIndex"
+                      v-model="table2[rowIndex][columnIndex]"
+                      type="text"
+                      class="input-field cell-field"
+                      :class="{ 'fixed-cell-field': columnIndex < TABLE2_AUTO_START_COLUMN }"
+                      :readonly="columnIndex < TABLE2_AUTO_START_COLUMN"
+                      placeholder=""
+                    />
+                  </template>
+                </div>
               </div>
-            </div>
+            </template>
           </div>
         </div>
       </div>
@@ -372,6 +415,15 @@ import {
 } from '/src/utils/material/materialDemandStatistics.js'
 import { getStageConfig } from '/src/utils/user/userConfig.js'
 import ItemImage from '/src/components/sprite/ItemImage.vue'
+import REPRODUCTION_ACTIVITY from '/src/static/json/material/reproduction_activity.json'
+
+const props = defineProps({
+  variant: {
+    type: String,
+    default: 'return'
+  }
+})
+const isNewMaterialPage = computed(() => props.variant === 'new-material')
 
 const STORAGE_KEY = 'logicalByte_data'
 const TABLE2_ICON_SCHEMA_VERSION = 2
@@ -557,6 +609,9 @@ const table1 = ref([
 
 // 表格1的固定标签
 const table1Labels = ['关卡', '材料', '掉率', '收益率\n(相对主线)', '近两年消耗量', '预计下次up']
+const displayTable1Labels = computed(() => isNewMaterialPage.value
+  ? ['关卡', '材料', '掉率', '史均收益率', '近一年消耗量', '预计下次up']
+  : table1Labels)
 
 // 关卡前缀和编号
 const stagePrefix = ref('')
@@ -595,6 +650,11 @@ const TABLE2_FIXED_ROWS = [
 const table2Labels = TABLE2_FIXED_ROWS.map(row => row[0])
 const TABLE2_COLUMN_COUNT = 4
 const TABLE2_AUTO_START_COLUMN = 2
+const table2DisplayColumns = computed(() => isNewMaterialPage.value ? [0, 2, 3] : [0, 1, 2, 3])
+const table2InputColumns = computed(() => isNewMaterialPage.value ? [2, 3] : [0, 1, 2, 3])
+const displayTable2Labels = computed(() => isNewMaterialPage.value
+  ? ['搓玉关卡', ...table2Labels.slice(1)]
+  : table2Labels)
 const TABLE2_ORUNDUM_BASELINE = 1.0898
 const TABLE2_FIXED_ICON_IDS = [[], ['30012'], [], []]
 const ORUNDUM_MATERIAL_ICON_ORDER = ['30011', '30012', '30061', '30062']
@@ -604,6 +664,12 @@ const ORUNDUM_MATERIAL_ICON_BY_ITEM_ID = {
   30061: '30061',
   30062: '30062'
 }
+const ORUNDUM_MATERIAL_OPTIONS = [
+  { id: '30011', name: '源岩' },
+  { id: '30012', name: '固源岩' },
+  { id: '30061', name: '破损装置' },
+  { id: '30062', name: '装置' }
+]
 
 const createEmptyTable2 = () => TABLE2_FIXED_ROWS.map(row => [
   ...row,
@@ -613,6 +679,32 @@ const createEmptyTable2IconIds = () => TABLE2_FIXED_ICON_IDS.map(ids => [...ids]
 
 const table2 = ref(createEmptyTable2())
 const table2IconIds = ref(createEmptyTable2IconIds())
+
+const getTable2DisplayCellText = (row, rowIndex, columnIndex) => {
+  if (isNewMaterialPage.value && rowIndex === 0) {
+    return columnIndex === 0 ? '搓玉关卡' : ''
+  }
+  return row[columnIndex]
+}
+
+const toggleNewMaterialTable2Icon = (columnIndex, itemId) => {
+  if (!isNewMaterialPage.value || !table2InputColumns.value.includes(columnIndex)) {
+    return
+  }
+
+  const selectedIds = new Set(getTable2CellIconIds(columnIndex))
+  if (selectedIds.has(itemId)) {
+    selectedIds.delete(itemId)
+  } else {
+    selectedIds.add(itemId)
+  }
+
+  table2IconIds.value = table2IconIds.value.map((ids, index) =>
+    index === columnIndex
+      ? ORUNDUM_MATERIAL_ICON_ORDER.filter(iconId => selectedIds.has(iconId))
+      : ids
+  )
+}
 
 // 历史活动数据
 const sourceHistoryActivityList = ref([])
@@ -825,7 +917,13 @@ const getNextUpActivityFromText = (text) => {
 }
 
 const getTable1NextUpIconIds = (colIndex) => {
-  const nextUpActivity = getNextUpActivityFromText(table1.value[5]?.[colIndex])
+  const nextUpText = table1.value[5]?.[colIndex]
+  const scheduledActivity = getScheduledActivityFromText(nextUpText)
+  if (scheduledActivity) {
+    return getScheduledActivityMaterialIconIds(scheduledActivity)
+  }
+
+  const nextUpActivity = getNextUpActivityFromText(nextUpText)
   return getNextUpMaterialIconIds(nextUpActivity)
 }
 
@@ -849,6 +947,105 @@ const formatNextUpText = (nextActivity) => {
   return nextActivity && expectedTime
     ? `${nextActivity.zoneName}\n预计${expectedTime}`
     : '遥遥无期'
+}
+
+const normalizeScheduledActivityName = (name) => String(name || '')
+  .replace(/(?:·)?复刻$/, '')
+  .trim()
+
+const getScheduledActivityMonthValue = (startTime) => {
+  const match = String(startTime || '').match(/(\d{4})\/(\d{1,2})/)
+  if (!match) {
+    return Number.MAX_SAFE_INTEGER
+  }
+  return Number(match[1]) * 12 + Number(match[2])
+}
+
+const getCurrentMonthValue = () => {
+  const now = new Date()
+  return now.getFullYear() * 12 + now.getMonth() + 1
+}
+
+const getActivityItemList = (activity) => {
+  return (activity?.actStageList || []).reduce((itemList, stage) => {
+    const itemId = String(stage?.itemId || '')
+    if (itemId) {
+      itemList[itemId] = stage
+    }
+    return itemList
+  }, {})
+}
+
+const getScheduledActivityItemList = (scheduledActivity) => {
+  const configuredItemList = scheduledActivity?.itemList
+  if (configuredItemList && Object.keys(configuredItemList).length > 0) {
+    return configuredItemList
+  }
+
+  const activityName = normalizeScheduledActivityName(scheduledActivity?.activityName)
+  const sourceActivity = sourceHistoryActivityList.value.find(activity =>
+    normalizeScheduledActivityName(activity?.zoneName) === activityName
+  )
+  return getActivityItemList(sourceActivity)
+}
+
+const getFutureScheduledActivities = () => {
+  const currentMonthValue = getCurrentMonthValue()
+  return REPRODUCTION_ACTIVITY
+    .map(scheduledActivity => ({
+      ...scheduledActivity,
+      itemList: getScheduledActivityItemList(scheduledActivity),
+      monthValue: getScheduledActivityMonthValue(scheduledActivity.startTime)
+    }))
+    .filter(scheduledActivity => scheduledActivity.monthValue >= currentMonthValue)
+    .sort((a, b) => a.monthValue - b.monthValue)
+}
+
+const getScheduledActivityItemIds = (scheduledActivity) => {
+  return Object.entries(scheduledActivity?.itemList || {})
+    .map(([itemId, item]) => String(item?.itemId || itemId))
+    .filter(Boolean)
+}
+
+const getNextScheduledUpActivity = (itemId) => {
+  const normalizedItemId = String(itemId || '').trim()
+  if (!normalizedItemId) {
+    return null
+  }
+
+  return getFutureScheduledActivities().find(scheduledActivity =>
+    getScheduledActivityItemIds(scheduledActivity).includes(normalizedItemId)
+  ) || null
+}
+
+const formatScheduledNextUpText = (scheduledActivity) => {
+  return scheduledActivity?.activityName && scheduledActivity?.startTime
+    ? `${scheduledActivity.activityName}\n${scheduledActivity.startTime}`
+    : '遥遥无期'
+}
+
+const getAutoNextUpText = (itemId, activity = null) => {
+  if (isNewMaterialPage.value) {
+    return formatScheduledNextUpText(getNextScheduledUpActivity(itemId))
+  }
+  return formatNextUpText(activity ? getNextUpActivity(activity, itemId) : null)
+}
+
+const getScheduledActivityFromText = (text) => {
+  const activityName = getNextUpActivityNameFromText(text)
+  const expectedTime = getNextUpExpectedTimeFromText(text)
+  if (!activityName) {
+    return null
+  }
+
+  return getFutureScheduledActivities().find(scheduledActivity =>
+    scheduledActivity.activityName === activityName &&
+    (!expectedTime || scheduledActivity.startTime === expectedTime)
+  ) || null
+}
+
+const getScheduledActivityMaterialIconIds = (scheduledActivity) => {
+  return [...new Set(getScheduledActivityItemIds(scheduledActivity))]
 }
 
 const getNextUpText = (activity, itemId) => {
@@ -961,8 +1158,7 @@ const quoteActivityData = (activity) => {
   table1.value[2] = mapStagesToTableRow(stageData, stage => formatPercent(stage.knockRating, 1))
   table1.value[3] = mapStagesToTableRow(stageData, stage => formatPercent(stage.stageEfficiency, 1))
   table1.value[4] = mapStagesToTableRow(stageData, stage => formatRecentTwoYearDemand(stage.itemId))
-  const nextUpActivities = mapStagesToTableRow(stageData, stage => getNextUpActivity(activity, stage.itemId))
-  table1.value[5] = nextUpActivities.map(nextActivity => formatNextUpText(nextActivity))
+  table1.value[5] = mapStagesToTableRow(stageData, stage => getAutoNextUpText(stage.itemId, activity))
   const orundumStages = quoteActivityOrundumData(activity)
 
   activityName.value = activity.zoneName || ''
@@ -1579,6 +1775,21 @@ watch(stageMatchQuery, (newValue) => {
   })
 })
 
+const syncNewMaterialNextUp = () => {
+  if (!isNewMaterialPage.value) {
+    return
+  }
+
+  const materialRow = Array.isArray(table1.value[1]) ? table1.value[1] : []
+  table1.value[5] = materialRow.map(itemId => getAutoNextUpText(itemId))
+}
+
+watch(
+  [() => [...(table1.value[1] || [])], sourceHistoryActivityList],
+  syncNewMaterialNextUp,
+  { deep: true, immediate: true }
+)
+
 // 选择匹配的关卡
 const selectStage = (index) => {
   const stage = matchedStages.value[index]
@@ -1604,8 +1815,7 @@ const selectStage = (index) => {
 
     // 第六行：预计下次 up
     const activity = getActivityByStage(stage)
-    const nextUpActivity = activity ? getNextUpActivity(activity, stage.itemId) : null
-    table1.value[5][0] = formatNextUpText(nextUpActivity)
+    table1.value[5][0] = getAutoNextUpText(stage.itemId, activity)
     
     console.log('关卡数据已填充到表格:', stage.stageCode)
   }
@@ -1888,6 +2098,10 @@ tr:last-child .data-cell {
 
 .brief-table-data-column {
   width: 24%;
+}
+
+.table2-new-material-grid .brief-table-data-column {
+  width: 36%;
 }
 
 .table1-grid .data-cell.label-cell,
@@ -2364,6 +2578,48 @@ tr:last-child .data-cell {
 
 .table2-input-container .row-cells {
   grid-template-columns: repeat(4, 1fr);
+}
+
+.table2-new-material-input-container .row-cells {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.table2-material-selector {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 6px;
+  min-width: 0;
+}
+
+.table2-material-options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  min-width: 0;
+}
+
+.table2-material-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 48px;
+  padding: 3px;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.table2-material-option:hover {
+  border-color: #409eff;
+}
+
+.table2-material-option-active {
+  border-color: #409eff;
+  background: #ecf5ff;
+  box-shadow: inset 0 0 0 1px #409eff;
 }
 
 .table2-input-container .row-number {

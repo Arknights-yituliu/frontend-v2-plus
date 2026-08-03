@@ -320,6 +320,15 @@ async function getStageData(stageConfig) {
   };
 }
 
+async function getActivityAverageStage(stageConfig) {
+  const stageResultList = await calculationStageEfficiency({
+    ...stageConfig,
+    useActivityAverageStage: true,
+  });
+
+  return stageResultList.filter((stage) => stage.stageType === "YTL_VIRTUAL");
+}
+
 function getRecommendedStage(stageResultList) {
   stageResultList = stageResultList.filter((e) => e.stageEfficiency > 0.5);
 
@@ -457,4 +466,4 @@ const unlimitedItemsInStore = {
   },
 };
 
-export { getStageData, calculationStageEfficiency };
+export { getStageData, getActivityAverageStage, calculationStageEfficiency };

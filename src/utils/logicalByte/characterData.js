@@ -9,14 +9,28 @@ function getLocalStorage() {
 function createCostObject(costList = []) {
   const cost = {}
 
-  for (const item of costList || []) {
-    const itemId = String(item?.id || '')
-    const count = Number(item?.count || 0)
-    if (!itemId || count <= 0) {
-      continue
-    }
+  if (Array.isArray(costList)) {
+    for (const item of costList) {
+      const itemId = String(item?.id || '')
+      const count = Number(item?.count || 0)
+      if (!itemId || count <= 0) {
+        continue
+      }
 
-    cost[itemId] = (cost[itemId] || 0) + count
+      cost[itemId] = (cost[itemId] || 0) + count
+    }
+    return cost
+  }
+
+  if (costList && typeof costList === 'object') {
+    for (const [itemId, count] of Object.entries(costList)) {
+      const numericCount = Number(count || 0)
+      if (!itemId || numericCount <= 0) {
+        continue
+      }
+
+      cost[itemId] = (cost[itemId] || 0) + numericCount
+    }
   }
 
   return cost
