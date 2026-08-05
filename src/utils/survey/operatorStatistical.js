@@ -642,14 +642,14 @@ async function statisticsOperatorInfo(operatorList) {
             statisticalData.info[index].equip[`rank${modA}`]++
         }
 
-        //v2 数据中 rarity 为 0-5, 对应星级映射: 5=6星, 4=5星, 3=4星
+        // 干员星级格式统一化修复: v2 数据 rarity 为 1-6 星级，将星级映射为统计分组索引(1=六星, 2=五星, 3=四星)
         function _checkRarity(rarity) {
-            switch (rarity) {
-                case 5:
+            switch (Number(rarity)) {
+                case 6:
                     return 1;
-                case 4:
+                case 5:
                     return 2;
-                case 3:
+                case 4:
                     return 3;
             }
         }
