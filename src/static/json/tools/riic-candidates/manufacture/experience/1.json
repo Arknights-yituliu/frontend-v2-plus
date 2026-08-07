@@ -1,107 +1,78 @@
 {
-  "schemaVersion": 5,
-  "scope": {
-    "roomType": "manufacture",
-    "product": "experience",
-    "stationLevel": 1,
-    "slotCount": 1
-  },
-  "fallback": {
-    "percent": 25,
-    "label": "基础补位",
-    "poolKey": "manufacture:experience"
-  },
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "candidates": [
     {
-      "id": "candidate-a482748f98920733",
-      "variantGroupId": "family-09dcc1be769fe53d",
+      "id": "baseline:manufacture:experience:1:1:char_1042_phatm2:2-1",
+      "variantGroupId": "baseline:manufacture:experience:1:1:char_1042_phatm2",
       "name": "酒神",
-      "roomType": "manufacture",
       "members": [
         {
           "name": "酒神",
           "elite": 2
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 35,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
+      "efficiency": 35,
       "sortScore": 0,
       "quality": "baseOnly",
       "calculationStatus": "estimated"
     },
     {
-      "id": "candidate-6ce965e7639cd5b8",
-      "variantGroupId": "family-3a7e41ae85cf5f9b",
+      "id": "baseline:manufacture:experience:1:1:char_1502_crosly:2-1",
+      "variantGroupId": "baseline:manufacture:experience:1:1:char_1502_crosly",
       "name": "弑君者",
-      "roomType": "manufacture",
       "members": [
         {
           "name": "弑君者",
           "elite": 2
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 35,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
     },
     {
-      "id": "candidate-3d0665df24bb8adb",
-      "variantGroupId": "family-825d39f0bd1b531f",
+      "id": "baseline:manufacture:experience:1:1:char_159_peacok:1-1",
+      "variantGroupId": "baseline:manufacture:experience:1:1:char_159_peacok",
       "name": "断罪者",
-      "roomType": "manufacture",
       "members": [
         {
           "name": "断罪者",
           "elite": 1
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 35,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
     },
     {
-      "id": "candidate-daaedd33d8b8c302",
-      "variantGroupId": "family-70e1249bb959b115",
+      "id": "baseline:manufacture:experience:1:1:char_241_panda:2-1",
+      "variantGroupId": "baseline:manufacture:experience:1:1:char_241_panda",
       "name": "食铁兽",
-      "roomType": "manufacture",
       "members": [
         {
           "name": "食铁兽",
           "elite": 2
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 35,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
     },
     {
-      "id": "candidate-731f510126cd70df",
-      "variantGroupId": "family-c49250a9beaa0073",
+      "id": "baseline:manufacture:experience:1:1:char_4225_tanya:2-1",
+      "variantGroupId": "baseline:manufacture:experience:1:1:char_4225_tanya",
       "name": "裂响",
-      "roomType": "manufacture",
       "members": [
         {
           "name": "裂响",
           "elite": 2
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 35,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
+      "efficiency": 35,
       "sortScore": 0,
       "quality": "baseOnly",
       "calculationStatus": "estimated"

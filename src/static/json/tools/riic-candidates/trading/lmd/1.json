@@ -1,36 +1,18 @@
 {
-  "schemaVersion": 5,
-  "scope": {
-    "roomType": "trading",
-    "product": "lmd",
-    "stationLevel": 1,
-    "slotCount": 1
-  },
-  "fallback": {
-    "percent": 30,
-    "label": "基础补位",
-    "poolKey": "trading:lmd"
-  },
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "candidates": [
     {
       "id": "manual-trading-lmd-butshu-solo-beta-solo-l1-71f1a9370cb6",
       "variantGroupId": "family-butshu:solo-beta",
       "name": "但书 β",
-      "roomType": "trading",
-      "product": "lmd",
-      "stationLevel": 1,
-      "slotCount": 1,
       "members": [
         {
           "name": "但书",
           "elite": 2
         }
       ],
-      "tradingPercent": 100,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
+      "efficiency": 100,
       "sortScore": 0,
       "calculationStatus": "estimated"
     },
@@ -38,22 +20,44 @@
       "id": "manual-trading-lmd-butshu-solo-alpha-solo-l1-b105509c0b83",
       "variantGroupId": "family-butshu:solo-alpha",
       "name": "但书 α",
-      "roomType": "trading",
-      "product": "lmd",
-      "stationLevel": 1,
-      "slotCount": 1,
       "members": [
         {
           "name": "但书",
           "maxElite": 0
         }
       ],
-      "tradingPercent": 50,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
+      "efficiency": 50,
       "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "baseline:trading:lmd:1:1:char_1049_catap2:2-1",
+      "variantGroupId": "baseline:trading:lmd:1:1:char_1049_catap2",
+      "name": "雷狼龙S空爆",
+      "members": [
+        {
+          "name": "雷狼龙S空爆",
+          "elite": 2
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "baseline:trading:lmd:1:1:char_383_snsant:2-1",
+      "variantGroupId": "baseline:trading:lmd:1:1:char_383_snsant",
+      "name": "雪雉",
+      "members": [
+        {
+          "name": "雪雉",
+          "elite": 2
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "baseOnly",
       "calculationStatus": "estimated"
     }
   ]

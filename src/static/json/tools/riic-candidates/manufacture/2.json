@@ -1,15 +1,78 @@
 {
-  "schemaVersion": 5,
-  "scope": {
-    "roomType": "manufacture",
-    "product": "all",
-    "stationLevel": 2,
-    "slotCount": 2
-  },
-  "fallback": {
-    "percent": 25,
-    "label": "基础补位",
-    "poolKey": "manufacture:all"
-  },
-  "candidates": []
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "manual-manufacture-all-dorothy-nasti",
+      "variantGroupId": "family-dorothy-nasti",
+      "name": "多萝西 + 娜斯提",
+      "members": [
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "娜斯提",
+          "elite": 0
+        }
+      ],
+      "efficiency": 60,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-highmore-dorothy",
+      "variantGroupId": "family-highmore-dorothy",
+      "name": "淬羽赫默 + 多萝西",
+      "members": [
+        {
+          "name": "淬羽赫默",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        }
+      ],
+      "efficiency": 65,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-ptilopsis-dorothy",
+      "variantGroupId": "family-ptilopsis-dorothy",
+      "name": "白面鸮 + 多萝西",
+      "members": [
+        {
+          "name": "白面鸮",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        }
+      ],
+      "efficiency": 60,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-dorothy-silence",
+      "variantGroupId": "family-dorothy-silence",
+      "name": "多萝西 + 赫默",
+      "members": [
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "赫默",
+          "elite": 2
+        }
+      ],
+      "efficiency": 60,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    }
+  ]
 }

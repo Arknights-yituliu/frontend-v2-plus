@@ -1,81 +1,101 @@
 {
   "schemaVersion": 1,
-  "scope": {
-    "roomType": "manufacture",
-    "product": "gold",
-    "stationLevel": 1,
-    "slotCount": 1
-  },
-  "defaultPercent": 0,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "defaultPercent": 25,
   "operators": [
     {
-      "name": "阿罗玛",
+      "name": "克洛丝",
       "rates": [
         {
-          "percent": 25
-        },
-        {
-          "elite": 2,
-          "percent": 36.67
+          "percent": 22.5
         }
       ]
     },
     {
-      "name": "斑点",
+      "name": "刻俄柏",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 23.75
+        }
+      ]
+    },
+    {
+      "name": "卡缇",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "历阵锐枪芬",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "史都华德",
       "rates": [
         {
           "elite": 1,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "苍苔",
-      "rates": [
-        {
-          "percent": 30
-        },
-        {
-          "elite": 2,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "砾",
-      "rates": [
-        {
-          "elite": 1,
-          "percent": 35
-        }
-      ]
-    },
-    {
-      "name": "温米",
-      "rates": [
-        {
-          "elite": 2,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "杏仁",
-      "rates": [
-        {
           "percent": 25
-        },
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "多萝西",
+      "rates": [
         {
           "elite": 2,
           "percent": 25
         }
       ]
+    },
+    {
+      "name": "夜刀",
+      "rates": [
+        {
+          "level": 30,
+          "percent": 15
+        }
+      ],
+      "fillPriority": -1
     },
     {
       "name": "夜烟",
       "rates": [
         {
           "percent": 30
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "娜斯提",
+      "rates": [
+        {
+          "percent": 25
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "导火索",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20
         }
       ]
     },
@@ -90,6 +110,399 @@
           "percent": 30
         }
       ]
+    },
+    {
+      "name": "斑点",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "星源",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "杏仁",
+      "rates": [
+        {
+          "percent": 25
+        },
+        {
+          "elite": 2,
+          "percent": 27
+        }
+      ]
+    },
+    {
+      "name": "杰西卡",
+      "rates": [
+        {
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "梅尔",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "水月",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "泡普卡",
+      "rates": [
+        {
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "泰拉大陆调查团",
+      "rates": [
+        {
+          "level": 30,
+          "percent": 5
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "洋灰",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "流星",
+      "rates": [
+        {
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "海沫",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "淬羽赫默",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "温米",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "溯光星源",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "灰毫",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "玛露西尔",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "白面鸮",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "石棉",
+      "rates": [
+        {
+          "percent": 25
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "石英",
+      "rates": [
+        {
+          "percent": 15
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "砾",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "稀音",
+      "rates": [
+        {
+          "percent": 22.5
+        },
+        {
+          "elite": 2,
+          "percent": 22.5
+        }
+      ]
+    },
+    {
+      "name": "米格鲁",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "罗比菈塔",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "芬",
+      "rates": [
+        {
+          "percent": 23.75
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "苍苔",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "蛇屠箱",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "裁度",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "褐果",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 1,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "调香师",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "豆苗",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 1,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "赫默",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "远牙",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "野鬃",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "钼铅",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "阿罗玛",
+      "rates": [
+        {
+          "percent": 25
+        },
+        {
+          "elite": 2,
+          "percent": 36.67
+        }
+      ]
+    },
+    {
+      "name": "雪猎",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "香草",
+      "rates": [
+        {
+          "percent": 25
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "黑角",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ],
+      "fillPriority": -1
     }
   ]
 }

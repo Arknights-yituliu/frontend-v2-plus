@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "presets": [
+    {
+      "id": "red-pine",
+      "name": "红松林",
+      "description": "焰尾进驻控制中枢后，将可用的红松骑士团成员优先安排到作战记录制造站。",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_420_flamtl",
+            "minimumElite": 2
+          }
+        ],
+        "operatorGroups": [
+          {
+            "id": "red-pine-manufacture-members",
+            "minimumCount": 2,
+            "operators": [
+              {
+                "operatorId": "char_430_fartth",
+                "minimumElite": 0
+              },
+              {
+                "operatorId": "char_431_ashlok",
+                "minimumElite": 0
+              },
+              {
+                "operatorId": "char_496_wildmn",
+                "minimumElite": 0
+              }
+            ]
+          }
+        ]
+      },
+      "actions": {
+        "placements": [
+          {
+            "id": "red-pine-experience",
+            "shiftGroupId": "red-pine-duty",
+            "roomType": "manufacture",
+            "product": "experience",
+            "operatorPoolIds": [
+              "char_430_fartth",
+              "char_431_ashlok",
+              "char_496_wildmn"
+            ],
+            "fillMode": "allAvailable",
+            "locked": true
+          },
+          {
+            "id": "red-pine-control",
+            "shiftGroupId": "red-pine-duty",
+            "roomType": "control",
+            "operatorPoolIds": [
+              "char_420_flamtl",
+              "char_4098_vvana"
+            ],
+            "fillMode": "allAvailable",
+            "locked": true
+          }
+        ]
+      },
+      "effects": [
+        {
+          "when": {
+            "roomType": "control",
+            "operatorId": "char_420_flamtl",
+            "minimumElite": 2
+          },
+          "targetRoomType": "manufacture",
+          "product": "experience",
+          "targetOperatorIds": [
+            "char_430_fartth",
+            "char_431_ashlok",
+            "char_496_wildmn"
+          ],
+          "bonusPercentPerOperator": 10
+        },
+        {
+          "when": {
+            "roomType": "control",
+            "operatorId": "char_420_flamtl",
+            "minimumElite": 2
+          },
+          "targetRoomType": "manufacture",
+          "product": "gold",
+          "targetOperatorIds": [
+            "char_430_fartth",
+            "char_431_ashlok",
+            "char_496_wildmn"
+          ],
+          "bonusPercentPerOperator": -10
+        }
+      ]
+    }
+  ]
+}

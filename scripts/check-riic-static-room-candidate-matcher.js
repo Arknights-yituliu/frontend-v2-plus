@@ -1,936 +1,821 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import path from "node:path";
 import operatorTable from "../src/static/json/operator/character_table_simple.v2.json" with {
   type: "json",
 };
 import { matchRiicStaticRoomCandidates } from "../src/utils/riicStaticRoomCandidateMatcher.js";
-import { buildRiicSchedulePreview } from "../src/utils/riicSchedulePreview.js";
+import {
+  assertRiicRuntimeCandidateCatalog,
+  assertRiicRuntimeFallbackCatalog,
+  assertRiicRuntimeRuleTargetsForCatalog,
+  createRiicRuntimePackageContext,
+  createRiicRuntimeRuleContext,
+  getRiicRuntimeCandidateContributionBreakdown,
+} from "../src/utils/riicRuntimeContribution.js";
 
 const CANDIDATE_ROOT = "src/static/json/tools/riic-candidates";
-const PERCENT_FIELDS = [
-  "tradingPercent",
-  "manufacturePercent",
-  "meetingPercent",
-  "officePercent",
-  "powerPercent",
+const EMPTY_RUNTIME_RULE_CONTEXT = {
+  rulesByCandidateId: new Map(),
+  fallbackPostProcessRulesByOperatorName: new Map(),
+};
+const FORBIDDEN_RUNTIME_FIELDS = [
+  "virtualGoldPerHour",
+  "scheduleEffect",
+  "downstreamBonusPercentByRoom",
 ];
 
 function readJson(relativePath) {
   return JSON.parse(fs.readFileSync(relativePath, "utf8"));
 }
 
-function listPublicJsonFiles(directory) {
-  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    const entryPath = path.join(directory, entry.name);
-    if (entry.isDirectory()) {
-      return listPublicJsonFiles(entryPath);
-    }
-    return entry.name.endsWith(".json") ? [entryPath] : [];
-  });
-}
+function createRuntimePackageMetadata(index) {
+  const candidateSchemaVersion = Number(index?.schemaVersion);
 
-function getMemberSignature(candidate) {
-  return (candidate?.members || [])
-    .map(
-      (member) =>
-        `${member?.name || ""}:${Number(member?.elite || 0)}:${Number(
-          member?.level || 1,
-        )}:${member?.maxElite === undefined ? "" : Number(member.maxElite)}`,
-    )
-    .sort((left, right) => left.localeCompare(right, "en"))
-    .join("|");
-}
-
-function getRoomPercentField(roomType) {
   return {
-    trading: "tradingPercent",
-    manufacture: "manufacturePercent",
-    meeting: "meetingPercent",
-    hire: "officePercent",
-    power: "powerPercent",
-  }[roomType];
-}
-
-function getFallbackRate(fallback, name, elite = 0) {
-  return fallback.operators
-    .find((operator) => operator.name === name)
-    ?.rates.find((rate) => Number(rate.elite || 0) === elite)?.percent;
-}
-
-const index = readJson(`${CANDIDATE_ROOT}/index.json`);
-const tradingCatalog = readJson(`${CANDIDATE_ROOT}/trading/3.json`);
-const tradingFallback = readJson(`${CANDIDATE_ROOT}/trading/3.fallback.json`);
-const tradingLmdFallback = readJson(
-  `${CANDIDATE_ROOT}/trading/lmd/3.fallback.json`,
-);
-const tradingLmdLevelOneCatalog = readJson(
-  `${CANDIDATE_ROOT}/trading/lmd/1.json`,
-);
-const tradingLmdLevelTwoCatalog = readJson(
-  `${CANDIDATE_ROOT}/trading/lmd/2.json`,
-);
-const tradingLmdCatalog = readJson(`${CANDIDATE_ROOT}/trading/lmd/3.json`);
-const manufactureGoldLevelTwoCatalog = readJson(
-  `${CANDIDATE_ROOT}/manufacture/gold/2.json`,
-);
-const manufactureGoldLevelThreeCatalog = readJson(
-  `${CANDIDATE_ROOT}/manufacture/gold/3.json`,
-);
-const manufactureExperienceLevelTwoCatalog = readJson(
-  `${CANDIDATE_ROOT}/manufacture/experience/2.json`,
-);
-const manufactureFallback = readJson(
-  `${CANDIDATE_ROOT}/manufacture/3.fallback.json`,
-);
-const manufactureGoldFallback = readJson(
-  `${CANDIDATE_ROOT}/manufacture/gold/3.fallback.json`,
-);
-const manufactureExperienceLevelThreeCatalog = readJson(
-  `${CANDIDATE_ROOT}/manufacture/experience/3.json`,
-);
-const meetingLevelThreeCatalog = readJson(
-  `${CANDIDATE_ROOT}/meeting/3.json`,
-);
-
-assert.equal(index.schemaVersion, 5);
-assert.equal(index.files.length, 26);
-assert.equal(
-  fs.existsSync("src/static/json/tools/riic-fallback-operators.json"),
-  false,
-);
-
-for (const entry of index.files) {
-  const catalog = readJson(`${CANDIDATE_ROOT}/${entry.file}`);
-  const fallback = readJson(`${CANDIDATE_ROOT}/${entry.fallbackFile}`);
-  assert.equal(catalog.schemaVersion, 5);
-  assert.equal(fallback.schemaVersion, 1);
-  assert.deepEqual(fallback.scope, catalog.scope);
-  assert.equal(catalog.candidates.length, entry.candidateCount);
-
-  for (const candidate of catalog.candidates) {
-    assert.equal(Object.hasOwn(candidate, "corePercent"), false);
-    assert.ok(Number.isFinite(Number(candidate.sortScore)));
-    for (const field of PERCENT_FIELDS) {
-      assert.ok(
-        Number.isFinite(Number(candidate[field])),
-        `${candidate.id} is missing ${field}`,
-      );
-    }
-
-    const localField = getRoomPercentField(catalog.scope.roomType);
-    if (localField) {
-      assert.ok(Number(candidate[localField]) >= 0);
-      if (catalog.scope.roomType === "manufacture") {
-        assert.ok(
-          Number(candidate.manufacturePercent) >= 31,
-          `${candidate.id} is below the manufacture candidate threshold`,
-        );
-      }
-      if (
-        catalog.scope.roomType === "trading" &&
-        !candidate.id.startsWith("manual-")
-      ) {
-        assert.ok(
-          Number(candidate.tradingPercent) >= 31,
-          `${candidate.id} is below the trading candidate threshold`,
-        );
-      }
-      const hasVirtualGoldManufactureContribution =
-        catalog.scope.roomType === "trading" &&
-        Number(candidate.virtualGoldPerHour) > 0;
-      for (const field of PERCENT_FIELDS) {
-        if (field !== localField) {
-          assert.ok(
-            Number(candidate[field]) === 0 ||
-              (hasVirtualGoldManufactureContribution &&
-                field === "manufacturePercent"),
-            `${candidate.id} exposes an unsupported nonlocal ${field}`,
-          );
-        }
-      }
-    }
-  }
-}
-
-assert.equal(getFallbackRate(manufactureFallback, "芬"), 23.75);
-assert.equal(getFallbackRate(manufactureFallback, "克洛丝"), 22.5);
-assert.equal(getFallbackRate(manufactureFallback, "刻俄柏", 2), 23.75);
-assert.equal(getFallbackRate(manufactureFallback, "稀音"), 22.5);
-assert.equal(getFallbackRate(manufactureGoldFallback, "阿罗玛"), 25);
-assert.equal(getFallbackRate(manufactureGoldFallback, "阿罗玛", 2), 36.67);
-
-for (const file of listPublicJsonFiles(CANDIDATE_ROOT)) {
-  const content = fs.readFileSync(file, "utf8");
-  assert.equal(content.includes("charId"), false, `${file} exposes charId`);
-  assert.equal(content.includes("char_"), false, `${file} exposes charId`);
-}
-
-assert.deepEqual(meetingLevelThreeCatalog.scope, {
-  roomType: "meeting",
-  product: "all",
-  stationLevel: 3,
-  slotCount: 2,
-});
-assert.ok(meetingLevelThreeCatalog.candidates.length > 0);
-assert.ok(
-  meetingLevelThreeCatalog.candidates.every(
-    (candidate) =>
-      candidate.selectionMode === "individual" &&
-      candidate.members.length === 1,
-  ),
-);
-assert.equal(
-  meetingLevelThreeCatalog.candidates.some(
-    (candidate) => candidate.members.length > 1,
-  ),
-  false,
-);
-
-for (const roomType of ["manufacture", "trading"]) {
-  const roomDirectory = path.join(CANDIDATE_ROOT, roomType);
-  for (const entry of fs.readdirSync(roomDirectory, { withFileTypes: true })) {
-    if (!entry.isDirectory()) {
-      continue;
-    }
-    for (const level of [1, 2, 3]) {
-      const genericCatalog = readJson(
-        path.join(roomDirectory, `${level}.json`),
-      );
-      const productCatalog = readJson(
-        path.join(roomDirectory, entry.name, `${level}.json`),
-      );
-      const genericCandidatesBySignature = new Map(
-        genericCatalog.candidates.map((candidate) => [
-          getMemberSignature(candidate),
-          candidate,
-        ]),
-      );
-      for (const candidate of productCatalog.candidates) {
-        const genericCandidate = genericCandidatesBySignature.get(
-          getMemberSignature(candidate),
-        );
-        if (genericCandidate) {
-          assert.equal(
-            candidate.variantGroupId,
-            genericCandidate.variantGroupId,
-            `${roomType}/${entry.name}/${level}.json has an ambiguous generic override`,
-          );
-        }
-      }
-    }
-  }
-}
-
-const nameToCharId = new Map(
-  Object.entries(operatorTable).map(([charId, operator]) => [
-    operator.name,
-    charId,
-  ]),
-);
-
-function toRosterEntry(member) {
-  const charId = nameToCharId.get(member.name);
-  assert.ok(charId, `Unknown operator name: ${member.name}`);
-  return {
-    charId,
-    name: member.name,
-    elite: Number(member.elite || 0),
-    level: Number(member.level || 1),
+    releaseId: String(index?.releaseId || ""),
+    runtime: {
+      candidateSchemaVersion,
+    },
+    contract: {
+      id: "riic-runtime-consumer-contract",
+      version: candidateSchemaVersion >= 6 ? "3.0.0" : "2.1.0",
+    },
   };
 }
 
-function getFallbackRoster({ count, excludedNames = new Set() }) {
-  const selected = [];
-  const selectedNames = new Set(excludedNames);
-  const rankedOperators = tradingFallback.operators
-    .map((operator) => ({
-      operator,
-      rate: operator.rates.reduce(
-        (best, current) =>
-          Number(current.percent) > Number(best?.percent || -Infinity)
-            ? current
-            : best,
-        null,
-      ),
-    }))
-    .filter(({ operator, rate }) => rate && nameToCharId.has(operator.name))
-    .sort(
-      (left, right) =>
-        Number(right.rate.percent) - Number(left.rate.percent) ||
-        left.operator.name.localeCompare(right.operator.name, "zh-CN"),
-    );
-
-  for (const { operator, rate } of rankedOperators) {
-    if (selected.length >= count || selectedNames.has(operator.name)) {
-      continue;
-    }
-    selected.push(
-      toRosterEntry({
-        name: operator.name,
-        elite: rate.elite,
-        level: rate.level,
-      }),
-    );
-    selectedNames.add(operator.name);
+function hasObjectKey(value, key) {
+  if (Array.isArray(value)) {
+    return value.some((item) => hasObjectKey(item, key));
   }
-  assert.equal(selected.length, count);
-  return selected;
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+  return (
+    Object.hasOwn(value, key) ||
+    Object.values(value).some((item) => hasObjectKey(item, key))
+  );
 }
 
-const tradingFallbackCatalog = {
-  schemaVersion: 1,
-  pools: [
-    {
-      key: tradingCatalog.fallback.poolKey,
-      defaultPercent: tradingFallback.defaultPercent,
-      operators: tradingFallback.operators,
+function createFixtureCatalog({ slotCount = 1, poolKey = "fixture-fallback" } = {}) {
+  return {
+    schemaVersion: 5,
+    scope: {
+      roomType: "trading",
+      product: "all",
+      stationLevel: 1,
+      slotCount,
     },
-  ],
-};
-const tradingLmdFallbackCatalog = {
-  schemaVersion: 1,
-  pools: [
-    {
-      key: tradingLmdCatalog.fallback.poolKey,
-      defaultPercent: tradingLmdFallback.defaultPercent,
-      operators: tradingLmdFallback.operators,
+    fallback: {
+      percent: 30,
+      label: "Fixture fallback",
+      poolKey,
     },
-  ],
-};
-const meetingFallbackCatalog = {
-  schemaVersion: 1,
-  pools: [],
-};
-const emptyFallbackCatalog = {
-  schemaVersion: 1,
-  pools: [],
-};
+    candidates: [],
+  };
+}
 
-const baselineTradingCandidate = tradingCatalog.candidates.find(
-  (candidate) => candidate.members.length === 1,
-);
-assert.ok(baselineTradingCandidate);
-const tradingResult = matchRiicStaticRoomCandidates({
-  catalog: tradingCatalog,
-  fallbackCatalog: tradingFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: [
-    ...baselineTradingCandidate.members.map(toRosterEntry),
-    ...getFallbackRoster({
-      count: 3,
-      excludedNames: new Set(
-        baselineTradingCandidate.members.map((member) => member.name),
-      ),
-    }),
-  ],
-  roomType: "trading",
-  product: "all",
-  stationLevel: 3,
-  slotCount: 3,
+function createFixtureFallbackCatalog({ poolKey, operators }) {
+  return {
+    schemaVersion: 1,
+    pools: [
+      {
+        key: poolKey,
+        defaultPercent: 30,
+        operators,
+      },
+    ],
+  };
+}
+
+function matchFixture({
+  catalog,
+  fallbackCatalog,
+  ownedOperators,
+  operatorNameToCharId = new Map(),
+  runtimeRuleContext = EMPTY_RUNTIME_RULE_CONTEXT,
+  layoutFacts = {},
+}) {
+  return matchRiicStaticRoomCandidates({
+    catalog,
+    fallbackCatalog,
+    operatorNameToCharId,
+    ownedOperators,
+    roomType: catalog.scope.roomType,
+    product: catalog.scope.product,
+    stationLevel: catalog.scope.stationLevel,
+    slotCount: catalog.scope.slotCount,
+    runtimeRuleContext,
+    ...layoutFacts,
+  });
+}
+
+function getIndexEntryScope(entry) {
+  if (entry?.scope) {
+    return entry.scope;
+  }
+
+  const [roomType, product, stationLevel, slotCount] = String(
+    entry?.key || "",
+  ).split(":");
+  return {
+    roomType,
+    product,
+    stationLevel: Number(stationLevel),
+    slotCount: Number(slotCount),
+  };
+}
+
+const index = readJson(`${CANDIDATE_ROOT}/index.json`);
+const runtimeMetadata = createRuntimePackageMetadata(index);
+const candidateSchemaVersion = Number(index?.schemaVersion);
+const runtimeRules =
+  candidateSchemaVersion === 5
+    ? readJson(`${CANDIDATE_ROOT}/runtime-rules.json`)
+    : null;
+const runtimeRuleContext = createRiicRuntimePackageContext({
+  manifest: runtimeMetadata,
+  index,
+  runtimeRules,
 });
-const matchedTradingCandidate = tradingResult.candidates.find(
-  (candidate) => candidate.key === baselineTradingCandidate.id,
-);
-assert.ok(matchedTradingCandidate);
-assert.equal(
-  matchedTradingCandidate.corePercent,
-  baselineTradingCandidate.tradingPercent + 100,
-);
-assert.equal(
-  matchedTradingCandidate.totalPercent,
-  baselineTradingCandidate.tradingPercent +
-    100 +
-    matchedTradingCandidate.fallback.candidateOperators
-      .slice(0, matchedTradingCandidate.fallback.count)
-      .reduce((total, operator) => total + operator.percent, 0),
-);
-assert.deepEqual(
-  matchedTradingCandidate.operators.map((operator) => operator.charId),
-  matchedTradingCandidate.operatorIds,
-);
-assert.deepEqual(
-  matchedTradingCandidate.operators.map((operator) => operator.name),
-  baselineTradingCandidate.members.map((member) => member.name),
-);
-const tradingPreview = buildRiicSchedulePreview({
-  roomGroups: [
+
+assert.ok([5, 6].includes(candidateSchemaVersion));
+if (candidateSchemaVersion === 5) {
+  assert.ok(runtimeRules);
+} else {
+  assert.equal(runtimeRules, null);
+}
+
+const candidateIds = new Set();
+for (const entry of index.files) {
+  const catalog = readJson(`${CANDIDATE_ROOT}/${entry.file}`);
+  const fallback = readJson(`${CANDIDATE_ROOT}/${entry.fallbackFile}`);
+  const catalogPath = `/src/static/json/tools/riic-candidates/${entry.file}`;
+  const fallbackPath =
+    `/src/static/json/tools/riic-candidates/${entry.fallbackFile}`;
+
+  assertRiicRuntimeCandidateCatalog({
+    context: runtimeRuleContext,
+    catalog,
+    expectedScope: getIndexEntryScope(entry),
+    filePath: catalogPath,
+  });
+  assertRiicRuntimeFallbackCatalog({
+    context: runtimeRuleContext,
+    fallback,
+    expectedScope: getIndexEntryScope(entry),
+    filePath: fallbackPath,
+  });
+  assertRiicRuntimeRuleTargetsForCatalog({
+    context: runtimeRuleContext,
+    catalog,
+  });
+
+  for (const candidate of catalog.candidates) {
+    assert.equal(
+      candidateIds.has(candidate.id),
+      false,
+      `Duplicate RIIC candidate ID: ${candidate.id}`,
+    );
+    candidateIds.add(candidate.id);
+  }
+  for (const forbiddenField of FORBIDDEN_RUNTIME_FIELDS) {
+    assert.equal(
+      hasObjectKey(catalog, forbiddenField),
+      false,
+      `${entry.file} exposes ${forbiddenField}`,
+    );
+  }
+  assert.equal(
+    hasObjectKey(catalog, "charId"),
+    false,
+    `${entry.file} exposes a charId field`,
+  );
+}
+
+const fallbackEligibilityCatalog = createFixtureCatalog();
+const fallbackEligibilityPool = createFixtureFallbackCatalog({
+  poolKey: "fixture-fallback",
+  operators: [
     {
-      id: "trading-preview",
-      label: "贸易站组",
-      facility: "trading",
-      facilityLabel: "贸易站",
-      count: 1,
+      name: "bravo-locked",
+      rates: [{ elite: 1, level: 1, percent: 30 }],
+    },
+    {
+      name: "zulu-eligible",
+      rates: [{ elite: 1, level: 1, percent: 30 }],
     },
   ],
-  scheduleCandidate: {
-    key: "trading-preview",
-    groups: [
+});
+const fallbackEligibilityResult = matchFixture({
+  catalog: fallbackEligibilityCatalog,
+  fallbackCatalog: fallbackEligibilityPool,
+  ownedOperators: [
+    {
+      charId: "fallback-alpha-unlisted",
+      name: "alpha-unlisted",
+      elite: 2,
+      level: 90,
+    },
+    {
+      charId: "fallback-bravo-locked",
+      name: "bravo-locked",
+      elite: 0,
+      level: 1,
+    },
+    {
+      charId: "fallback-zulu-eligible",
+      name: "zulu-eligible",
+      elite: 1,
+      level: 1,
+    },
+  ],
+});
+assert.deepEqual(
+  fallbackEligibilityResult.fallbackCandidate.fallback.candidateOperators.map(
+    (operator) => operator.charId,
+  ),
+  ["fallback-zulu-eligible"],
+);
+assert.equal(fallbackEligibilityResult.fallbackCandidate.totalPercent, 130);
+
+const rankedFallbackRates = [40, 35, 30, 25, 20, 15];
+
+function matchFallbackEstimateFixture({
+  fallbackCount,
+  availableFallbackRates = rankedFallbackRates,
+}) {
+  const slotCount = 3;
+  const coreCount = slotCount - fallbackCount;
+  const poolKey = `fixture-offset-fallback-${fallbackCount}-${availableFallbackRates.length}`;
+  const coreOperators = Array.from({ length: coreCount }, (_, index) => ({
+    charId: `fixture-core-${fallbackCount}-${index}`,
+    name: `fixture-core-${fallbackCount}-${index}`,
+    elite: 0,
+    level: 1,
+    percent: 100 - index,
+  }));
+  const fallbackOperators = availableFallbackRates.map((percent, index) => ({
+    charId: `fixture-rank-${index + 1}`,
+    name: `fixture-rank-${index + 1}`,
+    elite: 0,
+    level: 1,
+    percent,
+  }));
+  const catalog = {
+    ...createFixtureCatalog({ slotCount, poolKey }),
+    candidates: [
       {
-        groupId: "trading-preview",
-        candidate: {
-          segments: [
-            {
-              durationHours: 12,
-              stationAssignments: [
-                {
-                  stationIndex: 0,
-                  candidate: matchedTradingCandidate,
-                },
-              ],
-            },
-          ],
+        id: `fixture-offset-candidate-${fallbackCount}`,
+        name: `Fixture offset candidate ${fallbackCount}`,
+        members: coreOperators.map((operator) => ({
+          name: operator.name,
+        })),
+        tradingPercent: 0,
+        manufacturePercent: 0,
+        meetingPercent: 0,
+        officePercent: 0,
+        powerPercent: 0,
+        sortScore: 0,
+      },
+    ],
+  };
+  const allOperators = [...coreOperators, ...fallbackOperators];
+  const result = matchFixture({
+    catalog,
+    fallbackCatalog: createFixtureFallbackCatalog({
+      poolKey,
+      operators: allOperators.map((operator) => ({
+        name: operator.name,
+        rates: [{ percent: operator.percent }],
+      })),
+    }),
+    operatorNameToCharId: new Map(
+      allOperators.map((operator) => [operator.name, operator.charId]),
+    ),
+    ownedOperators: allOperators,
+  });
+
+  return result.candidates.find(
+    (candidate) => candidate.key === `fixture-offset-candidate-${fallbackCount}`,
+  );
+}
+
+for (const [fallbackCount, expectedFallbackPercent] of [
+  [1, 25],
+  [2, 45],
+  [3, 60],
+]) {
+  const candidate = matchFallbackEstimateFixture({ fallbackCount });
+  assert.ok(candidate);
+  assert.equal(candidate.fallback.count, fallbackCount);
+  assert.equal(candidate.fallback.totalPercent, expectedFallbackPercent);
+  assert.equal(candidate.totalPercent, 100 + expectedFallbackPercent);
+}
+
+const missingFallbackRankCandidate = matchFallbackEstimateFixture({
+  fallbackCount: 2,
+  availableFallbackRates: [40, 35, 30, 25],
+});
+assert.ok(missingFallbackRankCandidate);
+assert.equal(missingFallbackRankCandidate.fallback.totalPercent, 55);
+assert.equal(missingFallbackRankCandidate.totalPercent, 155);
+
+if (candidateSchemaVersion === 5) {
+  const actualTradingFallback = readJson(
+    `${CANDIDATE_ROOT}/trading/lmd/3.fallback.json`,
+  );
+  const actualTradingCatalog = readJson(
+    `${CANDIDATE_ROOT}/trading/lmd/3.json`,
+  );
+  const actualFallbackPoolKey = "actual-trading-lmd-fallback";
+  const unlistedTradingFallbackResult = matchFixture({
+    catalog: {
+      ...actualTradingCatalog,
+      fallback: {
+        ...actualTradingCatalog.fallback,
+        poolKey: actualFallbackPoolKey,
+      },
+      candidates: [],
+    },
+    fallbackCatalog: createFixtureFallbackCatalog({
+      poolKey: actualFallbackPoolKey,
+      operators: actualTradingFallback.operators,
+    }),
+    ownedOperators: [1, 2, 3].map((indexValue) => ({
+      charId: `not-in-trading-fallback-${indexValue}`,
+      name: `not-in-trading-fallback-${indexValue}`,
+      elite: 2,
+      level: 90,
+    })),
+  });
+  assert.equal(unlistedTradingFallbackResult.fallbackCandidate, null);
+
+  const butshuCandidateId =
+    "manual-trading-lmd-butshu-alpha-shamare-tequila-d0aa459dc065";
+  const butshuSourceCandidate = actualTradingCatalog.candidates.find(
+    (candidate) => candidate.id === butshuCandidateId,
+  );
+  assert.ok(butshuSourceCandidate);
+
+  const nameToCharId = new Map(
+    Object.entries(operatorTable).map(([charId, operator]) => [
+      operator.name,
+      charId,
+    ]),
+  );
+  const butshuRoster = butshuSourceCandidate.members.map((member) => {
+    const charId = nameToCharId.get(member.name);
+    assert.ok(charId, `Unknown operator name: ${member.name}`);
+    return {
+      charId,
+      name: member.name,
+      elite: Number(member.maxElite ?? member.elite ?? 0),
+      level: Number(member.level || 90),
+    };
+  });
+  const butshuMatch = matchFixture({
+    catalog: {
+      ...actualTradingCatalog,
+      fallback: {
+        ...actualTradingCatalog.fallback,
+        poolKey: "unused",
+      },
+      candidates: [butshuSourceCandidate],
+    },
+    fallbackCatalog: {
+      schemaVersion: 1,
+      pools: [],
+    },
+    ownedOperators: butshuRoster,
+    operatorNameToCharId: nameToCharId,
+    runtimeRuleContext,
+  });
+  const matchedButshuCandidate = butshuMatch.candidates.find(
+    (candidate) => candidate.key === butshuCandidateId,
+  );
+  assert.ok(matchedButshuCandidate);
+  const butshuContribution =
+    getRiicRuntimeCandidateContributionBreakdown(matchedButshuCandidate);
+  assert.equal(butshuContribution.directBonusPercent, 155.52);
+  assert.equal(butshuContribution.additionalByFacility.manufacture, 13.45);
+  assert.equal(butshuContribution.totalContributionPercent, 168.97);
+  assert.equal(butshuContribution.rankingValue, 68.97);
+}
+
+const schema2ContributionContext = createRiicRuntimeRuleContext({
+  schemaVersion: 2,
+  rules: [
+    {
+      id: "fixture-schema2-trading-contribution",
+      when: {
+        candidateId: "fixture-schema2-trading-candidate",
+        room: {
+          roomType: "trading",
+          product: "all",
+          stationLevel: 1,
+          slotCount: 1,
         },
+      },
+      then: {
+        addContributionPercent: {
+          manufacture: 8.5,
+        },
+      },
+    },
+  ],
+});
+const schema2ContributionResult = matchFixture({
+  catalog: {
+    ...createFixtureCatalog(),
+    candidates: [
+      {
+        id: "fixture-schema2-trading-candidate",
+        name: "Fixture Schema 2 Trading Candidate",
+        members: [],
+        selectionMode: "individual",
+        roomType: "trading",
+        product: "all",
+        stationLevel: 1,
+        slotCount: 1,
+        tradingPercent: 50,
+        sortScore: 2,
+      },
+    ],
+  },
+  fallbackCatalog: {
+    schemaVersion: 1,
+    pools: [],
+  },
+  ownedOperators: [],
+  runtimeRuleContext: schema2ContributionContext,
+});
+const schema2ContributionCandidate =
+  schema2ContributionResult.candidates.find(
+    (candidate) => candidate.key === "fixture-schema2-trading-candidate",
+  );
+assert.ok(schema2ContributionCandidate);
+const schema2Contribution =
+  getRiicRuntimeCandidateContributionBreakdown(schema2ContributionCandidate);
+assert.equal(schema2Contribution.directByFacility.trading, 50);
+assert.equal(schema2Contribution.additionalByFacility.manufacture, 8.5);
+assert.equal(schema2Contribution.totalContributionPercent, 58.5);
+assert.equal(schema2Contribution.rankingValue, 60.5);
+
+const fallbackPostProcessContext = createRiicRuntimeRuleContext({
+  schemaVersion: 2,
+  rules: [
+    {
+      id: "fixture-fallback-post-process:thorn2",
+      when: {
+        operator: "fixture-thorn2",
+        eliteAtLeast: 2,
+        room: {
+          roomType: "manufacture",
+          product: "gold",
+        },
+      },
+      then: {
+        addFallbackPercentPerLayoutRoom: {
+          roomType: "trading",
+          percent: 3,
+        },
+      },
+    },
+  ],
+});
+const fallbackPostProcessCatalog = {
+  ...createFixtureCatalog({
+    poolKey: "fixture-fallback-post-process",
+  }),
+  scope: {
+    roomType: "manufacture",
+    product: "gold",
+    stationLevel: 3,
+    slotCount: 1,
+  },
+};
+const fallbackPostProcessPool = createFixtureFallbackCatalog({
+  poolKey: "fixture-fallback-post-process",
+  operators: [
+    {
+      name: "fixture-thorn2",
+      rates: [
+        {
+          percent: 30,
+        },
+        {
+          elite: 2,
+          percent: 30,
+        },
+      ],
+    },
+    {
+      name: "fixture-ordinary",
+      rates: [
+        {
+          percent: 34,
+        },
+      ],
+    },
+  ],
+});
+const fallbackPostProcessResult = matchFixture({
+  catalog: fallbackPostProcessCatalog,
+  fallbackCatalog: fallbackPostProcessPool,
+  ownedOperators: [
+    {
+      charId: "fixture-thorn2",
+      name: "fixture-thorn2",
+      elite: 2,
+      level: 1,
+    },
+    {
+      charId: "fixture-ordinary",
+      name: "fixture-ordinary",
+      elite: 0,
+      level: 1,
+    },
+  ],
+  runtimeRuleContext: fallbackPostProcessContext,
+  layoutFacts: {
+    tradingStationCount: 2,
+  },
+});
+assert.equal(
+  fallbackPostProcessResult.fallbackCandidate.fallback.candidateOperators[0]
+    .charId,
+  "fixture-thorn2",
+);
+assert.equal(
+  fallbackPostProcessResult.fallbackCandidate.fallback.candidateOperators[0]
+    .percent,
+  36,
+);
+assert.deepEqual(
+  fallbackPostProcessResult.fallbackCandidate.fallback.candidateOperators[0]
+    .runtimeRuleIds,
+  ["fixture-fallback-post-process:thorn2"],
+);
+
+const individualMeetingCatalog = {
+  schemaVersion: 5,
+  scope: {
+    roomType: "meeting",
+    product: "all",
+    stationLevel: 3,
+    slotCount: 2,
+  },
+  fallback: {
+    percent: 0,
+    label: "Meeting fallback",
+    poolKey: "fixture-meeting-fallback",
+  },
+  candidates: [
+    {
+      id: "fixture-meeting-individual",
+      variantGroupId: "fixture-meeting-individual",
+      name: "Fixture meeting specialist",
+      members: [{ name: "fixture-meeting-specialist" }],
+      roomType: "meeting",
+      product: "all",
+      stationLevel: 3,
+      slotCount: 2,
+      tradingPercent: 0,
+      manufacturePercent: 0,
+      meetingPercent: 77,
+      officePercent: 0,
+      powerPercent: 0,
+      sortScore: 0,
+      selectionMode: "individual",
+      calculationStatus: "calculated",
+    },
+  ],
+};
+const individualMeetingFallback = {
+  schemaVersion: 1,
+  pools: [
+    {
+      key: "fixture-meeting-fallback",
+      defaultPercent: 0,
+      operators: [
+        {
+          name: "fixture-meeting-specialist",
+          rates: [{ percent: 77 }],
+        },
+        {
+          name: "fixture-meeting-fill",
+          rates: [{ percent: 25 }],
+        },
+      ],
+    },
+  ],
+};
+const individualMeetingResult = matchFixture({
+  catalog: individualMeetingCatalog,
+  fallbackCatalog: individualMeetingFallback,
+  operatorNameToCharId: new Map([
+    ["fixture-meeting-specialist", "fixture-meeting-specialist"],
+  ]),
+  ownedOperators: [
+    {
+      charId: "fixture-meeting-specialist",
+      name: "fixture-meeting-specialist",
+      elite: 0,
+      level: 1,
+    },
+    {
+      charId: "fixture-meeting-fill",
+      name: "fixture-meeting-fill",
+      elite: 0,
+      level: 1,
+    },
+  ],
+});
+assert.equal(individualMeetingResult.candidates[0].fallback.count, 0);
+assert.equal(individualMeetingResult.candidates[0].totalPercent, 177);
+assert.equal(individualMeetingResult.fallbackCandidate.fallback.count, 1);
+assert.equal(individualMeetingResult.fallbackCandidate.totalPercent, 100);
+
+const compactReleaseId = "fixture-compact-v6";
+const compactScope = {
+  roomType: "trading",
+  product: "lmd",
+  stationLevel: 3,
+  slotCount: 2,
+};
+const compactContext = createRiicRuntimePackageContext({
+  manifest: {
+    manifestSchemaVersion: 1,
+    schemaVersion: 1,
+    kind: "riic-runtime-catalog-preview",
+    releaseId: compactReleaseId,
+    contract: {
+      id: "riic-runtime-consumer-contract",
+      version: "3.0.0",
+    },
+    runtime: {
+      candidateSchemaVersion: 6,
+      fallbackSchemaVersion: 1,
+    },
+    outputFiles: [
+      { file: "index.json", kind: "index" },
+      { file: "trading/lmd/3.json", kind: "candidate" },
+      { file: "trading/lmd/3.fallback.json", kind: "fallback" },
+    ],
+  },
+  index: {
+    schemaVersion: 6,
+    releaseId: compactReleaseId,
+    files: [
+      {
+        scope: {
+          roomType: compactScope.roomType,
+          product: compactScope.product,
+          stationLevel: compactScope.stationLevel,
+        },
+        file: "trading/lmd/3.json",
+        fallbackFile: "trading/lmd/3.fallback.json",
       },
     ],
   },
 });
-assert.deepEqual(
-  tradingPreview.states[0].rooms[0].operators.map(
-    (operator) => operator.charId,
-  ),
-  matchedTradingCandidate.operatorIds,
-);
-
-const meetingCandidate = meetingLevelThreeCatalog.candidates[0];
-const meetingResult = matchRiicStaticRoomCandidates({
-  catalog: meetingLevelThreeCatalog,
-  fallbackCatalog: meetingFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: meetingCandidate.members.map(toRosterEntry),
-  roomType: "meeting",
-  product: "all",
-  stationLevel: 3,
-  slotCount: 2,
-});
-assert.equal(meetingResult.candidates.length, 1);
-assert.equal(meetingResult.candidates[0].selectionMode, "individual");
-assert.equal(meetingResult.candidates[0].fallback.count, 0);
-assert.equal(
-  meetingResult.candidates[0].totalPercent,
-  meetingCandidate.meetingPercent + 100,
-);
-assert.deepEqual(
-  meetingResult.candidates[0].operators.map((operator) => operator.charId),
-  meetingResult.candidates[0].operatorIds,
-);
-
-const automationLevelThreeCandidate =
-  manufactureGoldLevelThreeCatalog.candidates.find(
-    (candidate) =>
-      candidate.id ===
-      "manual-manufacture-gold-automation-qing-weedy-eunectes-p3-t2",
-  );
-assert.ok(automationLevelThreeCandidate);
-assert.equal(automationLevelThreeCandidate.manufacturePercent, 115);
-const automationLevelThreeRoster = automationLevelThreeCandidate.members.map(
-  toRosterEntry,
-);
-const automationLevelThreeResult = matchRiicStaticRoomCandidates({
-  catalog: manufactureGoldLevelThreeCatalog,
-  fallbackCatalog: emptyFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: automationLevelThreeRoster,
-  roomType: "manufacture",
-  product: "gold",
-  stationLevel: 3,
-  slotCount: 3,
-  powerPlantCount: 3,
-  tradingStationCount: 2,
-});
-assert.equal(
-  automationLevelThreeResult.candidates.some(
-    (candidate) => candidate.key === automationLevelThreeCandidate.id,
-  ),
-  true,
-);
-assert.equal(
-  automationLevelThreeResult.candidates.find(
-    (candidate) => candidate.key === automationLevelThreeCandidate.id,
-  )?.totalPercent,
-  215,
-);
-const automationLevelThreeMismatch = matchRiicStaticRoomCandidates({
-  catalog: manufactureGoldLevelThreeCatalog,
-  fallbackCatalog: emptyFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: automationLevelThreeRoster,
-  roomType: "manufacture",
-  product: "gold",
-  stationLevel: 3,
-  slotCount: 3,
-  powerPlantCount: 3,
-  tradingStationCount: 1,
-});
-assert.equal(
-  automationLevelThreeMismatch.candidates.some(
-    (candidate) => candidate.key === automationLevelThreeCandidate.id,
-  ),
-  false,
-);
-
-const automationLevelTwoCandidate =
-  manufactureGoldLevelTwoCatalog.candidates.find(
-    (candidate) =>
-      candidate.id ===
-      "manual-manufacture-gold-automation-qing-weedy-p2-t3",
-  );
-assert.ok(automationLevelTwoCandidate);
-assert.equal(automationLevelTwoCandidate.manufacturePercent, 90);
-const automationLevelTwoResult = matchRiicStaticRoomCandidates({
-  catalog: manufactureGoldLevelTwoCatalog,
-  fallbackCatalog: emptyFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: automationLevelTwoCandidate.members.map(toRosterEntry),
-  roomType: "manufacture",
-  product: "gold",
-  stationLevel: 2,
-  slotCount: 2,
-  powerPlantCount: 2,
-  tradingStationCount: 3,
-});
-assert.equal(
-  automationLevelTwoResult.candidates.find(
-    (candidate) => candidate.key === automationLevelTwoCandidate.id,
-  )?.totalPercent,
-  190,
-);
-
-const tailoredTradingCandidate = tradingLmdCatalog.candidates.find(
-  (candidate) =>
-    candidate.variantGroupId === "family-shamare-tequila-tailor",
-);
-assert.ok(tailoredTradingCandidate);
-assert.equal(tailoredTradingCandidate.tradingPercent, 135.79);
-assert.equal(tailoredTradingCandidate.manufacturePercent, 44.25);
-assert.equal(tailoredTradingCandidate.virtualGoldPerHour, 0.368721);
-const alphaTailoredTradingCandidate = tradingLmdCatalog.candidates.find(
-  (candidate) =>
-    candidate.id ===
-    "manual-trading-lmd-shamare-tequila-tailor-alpha-bena",
-);
-assert.ok(alphaTailoredTradingCandidate);
-assert.equal(alphaTailoredTradingCandidate.tradingPercent, 127.45);
-assert.equal(alphaTailoredTradingCandidate.manufacturePercent, 36.39);
-assert.equal(alphaTailoredTradingCandidate.virtualGoldPerHour, 0.303291);
-
-const butshuAlphaTequilaCandidate = tradingLmdCatalog.candidates.find(
-  (candidate) =>
-    candidate.id ===
-    "manual-trading-lmd-butshu-alpha-tequila-partner-2a5715d352e7",
-);
-assert.ok(butshuAlphaTequilaCandidate);
-assert.equal(butshuAlphaTequilaCandidate.manufacturePercent, 9.2);
-assert.ok(butshuAlphaTequilaCandidate.virtualGoldPerHour > 0);
-const butshuBetaShamareTequilaCandidate = tradingLmdCatalog.candidates.find(
-  (candidate) =>
-    candidate.id ===
-    "manual-trading-lmd-butshu-beta-shamare-tequila-ab0ada61707a",
-);
-assert.ok(butshuBetaShamareTequilaCandidate);
-assert.equal(butshuBetaShamareTequilaCandidate.manufacturePercent, 13.45);
-assert.equal(butshuBetaShamareTequilaCandidate.virtualGoldPerHour, 0.112094);
-assert.equal(butshuBetaShamareTequilaCandidate.tradingPercent, 207.93);
-
-const butshuAlphaShamarePartnerCandidate =
-  tradingLmdCatalog.candidates.find(
-    (candidate) => candidate.name === "但书 α + 巫恋 + 安比尔",
-  );
-assert.ok(butshuAlphaShamarePartnerCandidate);
-assert.equal(butshuAlphaShamarePartnerCandidate.tradingPercent, 142.41);
-
-const butshuBetaShamarePartnerCandidate = tradingLmdCatalog.candidates.find(
-  (candidate) => candidate.name === "但书 β + 巫恋 + 安比尔",
-);
-assert.ok(butshuBetaShamarePartnerCandidate);
-assert.equal(butshuBetaShamarePartnerCandidate.tradingPercent, 194.83);
-
-const butshuAlphaShamareTequilaCandidate =
-  tradingLmdCatalog.candidates.find(
-    (candidate) => candidate.name === "但书 α + 巫恋 + 龙舌兰",
-  );
-assert.ok(butshuAlphaShamareTequilaCandidate);
-assert.equal(butshuAlphaShamareTequilaCandidate.tradingPercent, 155.52);
-
-const butshuSoloCandidates = tradingLmdCatalog.candidates.filter(
-  (candidate) =>
-    candidate.variantGroupId.startsWith("family-butshu:solo-"),
-);
-assert.equal(butshuSoloCandidates.length, 2);
-assert.deepEqual(
-  butshuSoloCandidates
-    .map((candidate) => ({
-      variantGroupId: candidate.variantGroupId,
-      stationLevel: candidate.stationLevel,
-      members: candidate.members.length,
-      tradingPercent: candidate.tradingPercent,
-    }))
-    .sort((left, right) =>
-      left.variantGroupId.localeCompare(right.variantGroupId, "en"),
-    ),
-  [
-    {
-      variantGroupId: "family-butshu:solo-alpha",
-      stationLevel: 3,
-      members: 1,
-      tradingPercent: 27.59,
-    },
-    {
-      variantGroupId: "family-butshu:solo-beta",
-      stationLevel: 3,
-      members: 1,
-      tradingPercent: 55.17,
-    },
-  ],
-);
-
-for (const [catalog, expected] of [
-  [
-    tradingLmdLevelOneCatalog,
-    {
-      alpha: 50,
-      beta: 100,
-    },
-  ],
-  [
-    tradingLmdLevelTwoCatalog,
-    {
-      alpha: 41.67,
-      beta: 83.33,
-    },
-  ],
-]) {
-  const solo = catalog.candidates.filter((candidate) =>
-    candidate.variantGroupId.startsWith("family-butshu:solo-"),
-  );
-  assert.equal(solo.length, 2);
-  assert.deepEqual(
-    Object.fromEntries(
-      solo.map((candidate) => [
-        candidate.variantGroupId.split("-").at(-1),
-        candidate.tradingPercent,
-      ]),
-    ),
-    expected,
-  );
-}
-
-const butshuTailorCandidates = tradingLmdCatalog.candidates.filter(
-  (candidate) =>
-    candidate.id.startsWith("manual-trading-lmd-butshu-tailor-"),
-);
-assert.equal(butshuTailorCandidates.length, 842);
-assert.ok(
-  butshuTailorCandidates.every(
-    (candidate) =>
-      candidate.calculationStatus === "estimated" &&
-      candidate.meetingPercent === 0 &&
-      candidate.officePercent === 0 &&
-      candidate.powerPercent === 0,
-  ),
-);
-const butshuTequilaTailorCandidates = butshuTailorCandidates.filter(
-  (candidate) => candidate.members.some((member) => member.name === "龙舌兰"),
-);
-assert.equal(butshuTequilaTailorCandidates.length, 20);
-assert.ok(
-  butshuTequilaTailorCandidates.every(
-    (candidate) =>
-      candidate.manufacturePercent > 0 && candidate.virtualGoldPerHour > 0,
-  ),
-);
-
-const expectedButshuVariantGroups = [
-  "family-butshu:plain-pair",
-  "family-butshu:shamare-plain",
-  "family-butshu:shamare-tailor-alpha",
-  "family-butshu:shamare-tailor-beta",
-  "family-butshu:shamare-tequila",
-  "family-butshu:solo-alpha",
-  "family-butshu:solo-beta",
-  "family-butshu:tailor-alpha-pair",
-  "family-butshu:tailor-alpha-plain",
-  "family-butshu:tailor-beta-pair",
-  "family-butshu:tailor-beta-plain",
-  "family-butshu:tequila-plain",
-  "family-butshu:tequila-tailor-alpha",
-  "family-butshu:tequila-tailor-beta",
-];
-const expectedFullTeamButshuVariantGroups =
-  expectedButshuVariantGroups.filter(
-    (variantGroupId) => !variantGroupId.startsWith("family-butshu:solo-"),
-  );
-const butshuCandidates = tradingLmdCatalog.candidates.filter((candidate) =>
-  candidate.members.some((member) => member.name === "但书"),
-);
-assert.deepEqual(
-  [...new Set(butshuCandidates.map((candidate) => candidate.variantGroupId))]
-    .sort((left, right) => left.localeCompare(right, "en")),
-  expectedButshuVariantGroups,
-);
-
-const butshuFormulaResult = matchRiicStaticRoomCandidates({
-  catalog: tradingLmdCatalog,
-  fallbackCatalog: emptyFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: butshuCandidates.flatMap((candidate) =>
-    candidate.members.map(toRosterEntry),
-  ),
-  roomType: "trading",
-  product: "lmd",
-  stationLevel: 3,
-  slotCount: 3,
-});
-assert.deepEqual(
-  [
-    ...new Set(
-      butshuFormulaResult.candidates
-        .filter((candidate) =>
-          candidate.variantGroupId.startsWith("family-butshu:"),
-        )
-        .map((candidate) => candidate.variantGroupId),
-    ),
-  ].sort((left, right) => left.localeCompare(right, "en")),
-  expectedFullTeamButshuVariantGroups,
-);
-
-for (const sourceCandidate of butshuSoloCandidates) {
-  const result = matchRiicStaticRoomCandidates({
-    catalog: tradingLmdCatalog,
-    fallbackCatalog: tradingLmdFallbackCatalog,
-    operatorNameToCharId: nameToCharId,
-    ownedOperators: [
-      ...sourceCandidate.members.map(toRosterEntry),
-      ...getFallbackRoster({
-        count: 2,
-        excludedNames: new Set(
-          sourceCandidate.members.map((member) => member.name),
-        ),
-      }),
-    ],
-    roomType: "trading",
-    product: "lmd",
-    stationLevel: 3,
-    slotCount: 3,
-  });
-  const candidate = result.candidates.find(
-    (entry) => entry.variantGroupId === sourceCandidate.variantGroupId,
-  );
-  assert.ok(candidate);
-  assert.equal(candidate.fallback.count, 2);
-  assert.equal(candidate.fallback.candidateOperators.length >= 2, true);
-  assert.equal(
-    candidate.totalPercent,
-    100 + candidate.tradingPercent + candidate.fallback.totalPercent,
-  );
-}
-
-const hongxueCandidate = tradingCatalog.candidates.find(
-  (candidate) =>
-    candidate.id === "manual-trading-all-hongxue-e0-gold-2-l3",
-);
-assert.ok(hongxueCandidate);
-assert.equal(hongxueCandidate.tradingPercent, 10);
-const hongxueResult = matchRiicStaticRoomCandidates({
-  catalog: tradingCatalog,
-  fallbackCatalog: tradingFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: [
-    ...hongxueCandidate.members.map(toRosterEntry),
-    ...getFallbackRoster({
-      count: 2,
-      excludedNames: new Set(
-        hongxueCandidate.members.map((member) => member.name),
-      ),
-    }),
-  ],
-  roomType: "trading",
-  product: "all",
-  stationLevel: 3,
-  slotCount: 3,
-  goldManufactureStationCount: 2,
-});
-assert.equal(
-  hongxueResult.candidates.some(
-    (candidate) => candidate.key === hongxueCandidate.id,
-  ),
-  true,
-);
-const hongxueMismatch = matchRiicStaticRoomCandidates({
-  catalog: tradingCatalog,
-  fallbackCatalog: tradingFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: [
-    ...hongxueCandidate.members.map(toRosterEntry),
-    ...getFallbackRoster({
-      count: 2,
-      excludedNames: new Set(
-        hongxueCandidate.members.map((member) => member.name),
-      ),
-    }),
-  ],
-  roomType: "trading",
-  product: "all",
-  stationLevel: 3,
-  slotCount: 3,
-  goldManufactureStationCount: 1,
-});
-assert.equal(
-  hongxueMismatch.candidates.some(
-    (candidate) => candidate.key === hongxueCandidate.id,
-  ),
-  false,
-);
-
-const warehouseCandidate = manufactureExperienceLevelThreeCatalog.candidates.find(
-  (candidate) =>
-    candidate.id ===
-    "manual-manufacture-experience-redcloud-pallas-scene-12h",
-);
-assert.ok(warehouseCandidate);
-assert.equal(warehouseCandidate.manufacturePercent, 103.5);
-
-const christineAndPhatm2Candidate =
-  manufactureExperienceLevelTwoCatalog.candidates.find(
-    (candidate) =>
-      candidate.members.some((member) => member.name === "Miss.Christine") &&
-      candidate.members.some((member) => member.name === "酒神"),
-  );
-assert.ok(christineAndPhatm2Candidate);
-assert.equal(christineAndPhatm2Candidate.manufacturePercent, 65);
-assert.equal(christineAndPhatm2Candidate.sortScore, 2);
-
-const trainingTestOperatorName = baselineTradingCandidate.members[0].name;
-const trainingTestOperatorId = nameToCharId.get(trainingTestOperatorName);
-assert.ok(trainingTestOperatorId);
-const trainingTestRoster = [
-  {
-    charId: trainingTestOperatorId,
-    name: trainingTestOperatorName,
-    elite: 0,
-    level: 1,
-  },
-];
-const trainingCoreCatalog = {
-  schemaVersion: 5,
-  scope: {
-    roomType: "trading",
-    product: "all",
-    stationLevel: 1,
-    slotCount: 1,
-  },
-  fallback: {
-    percent: 0,
-    label: "基础补位",
-    poolKey: "training-test",
-  },
+const compactCatalog = {
+  schemaVersion: 6,
+  releaseId: compactReleaseId,
   candidates: [
     {
-      id: "training-core",
-      name: "训练核心",
-      members: [
-        {
-          name: trainingTestOperatorName,
-          elite: 2,
-          level: 1,
-        },
-      ],
-      tradingPercent: 20,
-      manufacturePercent: 0,
-      meetingPercent: 0,
-      officePercent: 0,
-      powerPercent: 0,
-      sortScore: 0,
+      id: "fixture-compact-gold-equivalent",
+      variantGroupId: "fixture-compact-gold-equivalent",
+      name: "Fixture compact candidate",
+      members: [{ name: "fixture-compact-core" }],
+      efficiency: 70,
+      gold: 13.45,
+      sortScore: 2,
+      calculationStatus: "calculated",
     },
   ],
 };
-const currentTrainingCoreResult = matchRiicStaticRoomCandidates({
-  catalog: trainingCoreCatalog,
-  fallbackCatalog: emptyFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: trainingTestRoster,
-  roomType: "trading",
-  product: "all",
-  stationLevel: 1,
-  slotCount: 1,
-});
-assert.equal(currentTrainingCoreResult.candidates.length, 0);
-
-const idealTrainingCoreResult = matchRiicStaticRoomCandidates({
-  catalog: trainingCoreCatalog,
-  fallbackCatalog: emptyFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: trainingTestRoster,
-  roomType: "trading",
-  product: "all",
-  stationLevel: 1,
-  slotCount: 1,
-  trainingMode: "ideal",
-});
-assert.equal(idealTrainingCoreResult.candidates.length, 1);
-assert.deepEqual(
-  idealTrainingCoreResult.candidates[0].upgradeRequirements,
-  [
-    {
-      charId: trainingTestOperatorId,
-      name: trainingTestOperatorName,
-      current: { elite: 0, level: 1 },
-      required: { elite: 2, level: 1 },
-    },
-  ],
-);
-
-const trainingFallbackCatalog = {
+const compactFallback = {
   schemaVersion: 1,
-  pools: [
+  releaseId: compactReleaseId,
+  defaultPercent: 30,
+  operators: [
     {
-      key: "training-test",
-      defaultPercent: 10,
-      operators: [
-        {
-          name: trainingTestOperatorName,
-          rates: [
-            { elite: 0, level: 1, percent: 10 },
-            { elite: 2, level: 1, percent: 35 },
-          ],
-        },
-      ],
+      name: "fixture-compact-fill",
+      rates: [{ percent: 30 }],
     },
   ],
 };
-const currentTrainingFallbackResult = matchRiicStaticRoomCandidates({
-  catalog: {
-    ...trainingCoreCatalog,
-    candidates: [],
-  },
-  fallbackCatalog: trainingFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: trainingTestRoster,
-  roomType: "trading",
-  product: "all",
-  stationLevel: 1,
-  slotCount: 1,
+assertRiicRuntimeCandidateCatalog({
+  context: compactContext,
+  catalog: compactCatalog,
+  expectedScope: compactScope,
+  filePath: "/src/static/json/tools/riic-candidates/trading/lmd/3.json",
 });
-assert.equal(currentTrainingFallbackResult.fallbackCandidate.totalPercent, 110);
+assertRiicRuntimeFallbackCatalog({
+  context: compactContext,
+  fallback: compactFallback,
+  expectedScope: compactScope,
+  filePath:
+    "/src/static/json/tools/riic-candidates/trading/lmd/3.fallback.json",
+});
+assertRiicRuntimeRuleTargetsForCatalog({
+  context: compactContext,
+  catalog: compactCatalog,
+});
 
-const idealTrainingFallbackResult = matchRiicStaticRoomCandidates({
-  catalog: {
-    ...trainingCoreCatalog,
-    candidates: [],
-  },
-  fallbackCatalog: trainingFallbackCatalog,
-  operatorNameToCharId: nameToCharId,
-  ownedOperators: trainingTestRoster,
-  roomType: "trading",
-  product: "all",
-  stationLevel: 1,
-  slotCount: 1,
-  trainingMode: "ideal",
-});
-assert.equal(idealTrainingFallbackResult.fallbackCandidate.totalPercent, 135);
-assert.deepEqual(
-  idealTrainingFallbackResult.fallbackCandidate.upgradeRequirements,
-  idealTrainingCoreResult.candidates[0].upgradeRequirements,
+const compactPackageIndex = readJson(`${CANDIDATE_ROOT}/index.json`);
+const compactPackageMetadata = createRuntimePackageMetadata(
+  compactPackageIndex,
 );
+const compactPackageContext = createRiicRuntimePackageContext({
+  manifest: compactPackageMetadata,
+  index: compactPackageIndex,
+});
+
+assert.equal(
+  compactPackageContext.releaseId,
+  compactPackageIndex.releaseId,
+);
+assert.equal(
+  compactPackageContext.candidateSchemaVersion,
+  compactPackageIndex.schemaVersion,
+);
+
+for (const entry of compactPackageIndex.files) {
+  const catalog = readJson(`${CANDIDATE_ROOT}/${entry.file}`);
+  const fallback = readJson(`${CANDIDATE_ROOT}/${entry.fallbackFile}`);
+  const scope = getIndexEntryScope(entry);
+  assertRiicRuntimeCandidateCatalog({
+    context: compactPackageContext,
+    catalog,
+    expectedScope: scope,
+    filePath: `/src/static/json/tools/riic-candidates/${entry.file}`,
+  });
+  assertRiicRuntimeFallbackCatalog({
+    context: compactPackageContext,
+    fallback,
+    expectedScope: scope,
+    filePath: `/src/static/json/tools/riic-candidates/${entry.fallbackFile}`,
+  });
+  assertRiicRuntimeRuleTargetsForCatalog({
+    context: compactPackageContext,
+    catalog,
+  });
+}
+const compactMatch = matchRiicStaticRoomCandidates({
+  catalog: {
+    schemaVersion: 6,
+    scope: compactScope,
+    fallback: {
+      percent: 30,
+      label: "Fixture fallback",
+      poolKey: "fixture-compact-fallback",
+    },
+    candidates: compactCatalog.candidates,
+  },
+  fallbackCatalog: {
+    schemaVersion: 1,
+    pools: [
+      {
+        key: "fixture-compact-fallback",
+        defaultPercent: 30,
+        operators: compactFallback.operators,
+      },
+    ],
+  },
+  operatorNameToCharId: new Map([
+    ["fixture-compact-core", "fixture-compact-core"],
+    ["fixture-compact-fill", "fixture-compact-fill"],
+  ]),
+  ownedOperators: [
+    {
+      charId: "fixture-compact-core",
+      name: "fixture-compact-core",
+      elite: 0,
+      level: 1,
+    },
+    {
+      charId: "fixture-compact-fill",
+      name: "fixture-compact-fill",
+      elite: 0,
+      level: 1,
+    },
+  ],
+  roomType: compactScope.roomType,
+  product: compactScope.product,
+  stationLevel: compactScope.stationLevel,
+  slotCount: compactScope.slotCount,
+});
+const compactCandidate = compactMatch.candidates.find(
+  (candidate) => candidate.key === "fixture-compact-gold-equivalent",
+);
+assert.ok(compactCandidate);
+const compactContribution =
+  getRiicRuntimeCandidateContributionBreakdown(compactCandidate);
+assert.equal(compactContribution.directByFacility.trading, 100);
+assert.equal(compactContribution.additionalByFacility.manufacture, 13.45);
+assert.equal(compactContribution.totalContributionPercent, 113.45);
+assert.equal(compactContribution.rankingValue, 115.45);
 
 console.log("RIIC static room candidate matcher checks passed.");

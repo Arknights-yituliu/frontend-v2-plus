@@ -61,6 +61,22 @@ function normalizeRequirement(requirement) {
     : null;
 }
 
+function normalizeReservedOperatorIds(operatorIds) {
+  return new Set(
+    (operatorIds || [])
+      .map((charId) => String(charId || "").trim())
+      .filter(Boolean),
+  );
+}
+
+function normalizeSuiteRequirementsByShift(requirementsByShift, shiftCount) {
+  return Array.from({ length: shiftCount }, (_, index) =>
+    (requirementsByShift?.[index] || [])
+      .map(normalizeRequirement)
+      .filter(Boolean),
+  );
+}
+
 function normalizeShiftEffect(effect) {
   const charId = String(effect?.charId || "").trim();
   const sourceFacility = String(effect?.facility || "").trim();
@@ -348,6 +364,7 @@ function normalizeTrainingMode(value) {
 function buildControlTrainingRoster({
   ownedOperators,
   roleRequirements,
+  suiteRequirements = [],
   trainingMode,
 }) {
   const roster = normalizeOwnedOperators(ownedOperators);
@@ -377,6 +394,7 @@ function buildControlTrainingRoster({
     ...roleRequirements.manufacture,
     ...roleRequirements.morale,
     roleRequirements.swireManufacturePair,
+    ...suiteRequirements.flat(),
   ]) {
     addRequirement(requirement);
   }
@@ -431,6 +449,8 @@ export function buildRiicControlRotation({
   ownedOperators,
   rules,
   trainingMode = "current",
+  reservedOperatorIds = [],
+  suiteRequirementsByShift = [],
 }) {
   if (!Array.isArray(ownedOperators) || ownedOperators.length === 0) {
     return {
@@ -446,9 +466,15 @@ export function buildRiicControlRotation({
   }
 
   const roleRequirements = getControlRoleRequirements(rules);
+  const shiftCount = Math.max(1, Number(rules?.shiftCount || 2));
+  const suiteRequirements = normalizeSuiteRequirementsByShift(
+    suiteRequirementsByShift,
+    shiftCount,
+  );
   const training = buildControlTrainingRoster({
     ownedOperators,
     roleRequirements,
+    suiteRequirements,
     trainingMode: normalizeTrainingMode(trainingMode),
   });
   const roster = training.roster;
@@ -456,7 +482,8 @@ export function buildRiicControlRotation({
     roster.map((operator) => [operator.charId, operator]),
   );
   const teams = createTeams(rules);
-  const usedOperatorIds = new Set();
+  const usedOperatorIds = normalizeReservedOperatorIds(reservedOperatorIds);
+  const unmetSuiteRequirements = [];
 
   // The two office priorities deliberately start in separate shifts.
   for (const [teamIndex, requirement] of roleRequirements.office.entries()) {
@@ -481,6 +508,27 @@ export function buildRiicControlRotation({
         usedOperatorIds,
         roleRequirements.mutuallyExclusiveWithinShift,
       );
+    }
+  }
+
+  const teamsWithManufacturePriority = new Set();
+  for (const team of teams) {
+    const result = getEligibleConfiguredOperator({
+      requirements: roleRequirements.manufacture,
+      rosterById,
+      usedOperatorIds,
+      team,
+      mutuallyExclusiveWithinShift: roleRequirements.mutuallyExclusiveWithinShift,
+    });
+    if (result) {
+      addOperator(
+        team,
+        result.operator,
+        "制造站加成",
+        usedOperatorIds,
+        roleRequirements.mutuallyExclusiveWithinShift,
+      );
+      teamsWithManufacturePriority.add(team.id);
     }
   }
 
@@ -527,8 +575,9 @@ export function buildRiicControlRotation({
 
   for (const team of teams) {
     if (
-      roleRequirements.swireManufacturePair &&
-      hasOperator(team, roleRequirements.swireManufacturePair.charId)
+      teamsWithManufacturePriority.has(team.id) ||
+      (roleRequirements.swireManufacturePair &&
+        hasOperator(team, roleRequirements.swireManufacturePair.charId))
     ) {
       continue;
     }
@@ -574,6 +623,49 @@ export function buildRiicControlRotation({
         team,
         result.operator,
         "贸易站加成",
+        usedOperatorIds,
+        roleRequirements.mutuallyExclusiveWithinShift,
+      );
+    }
+  }
+
+  for (const [teamIndex, requirements] of suiteRequirements.entries()) {
+    const team = teams[teamIndex];
+    if (!team) {
+      continue;
+    }
+
+    for (const requirement of requirements) {
+      if (team.operators.length >= team.slotsPerShift) {
+        unmetSuiteRequirements.push({
+          ...requirement,
+          shiftId: team.id,
+          reason: "noControlSlot",
+        });
+        continue;
+      }
+
+      const result = getEligibleConfiguredOperator({
+        requirements: [requirement],
+        rosterById,
+        usedOperatorIds,
+        team,
+        mutuallyExclusiveWithinShift:
+          roleRequirements.mutuallyExclusiveWithinShift,
+      });
+      if (!result) {
+        unmetSuiteRequirements.push({
+          ...requirement,
+          shiftId: team.id,
+          reason: "operatorUnavailable",
+        });
+        continue;
+      }
+
+      addOperator(
+        team,
+        result.operator,
+        "套组需求",
         usedOperatorIds,
         roleRequirements.mutuallyExclusiveWithinShift,
       );
@@ -635,6 +727,7 @@ export function buildRiicControlRotation({
     status: missingSlotCount === 0 ? "ready" : "insufficient",
     shifts: teams,
     claimedOperatorIds,
+    unmetSuiteRequirements,
     missingSlotCount,
     upgradeRequirements: training.upgradeRequirements.filter((requirement) =>
       claimedOperatorIdSet.has(requirement.charId),

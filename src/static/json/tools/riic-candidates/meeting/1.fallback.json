@@ -1,11 +1,480 @@
 {
   "schemaVersion": 1,
-  "scope": {
-    "roomType": "meeting",
-    "product": "all",
-    "stationLevel": 1,
-    "slotCount": 2
-  },
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "defaultPercent": 0,
-  "operators": []
+  "operators": [
+    {
+      "name": "12F",
+      "rates": [
+        {
+          "percent": 51
+        }
+      ]
+    },
+    {
+      "name": "安洁莉娜",
+      "rates": [
+        {
+          "percent": 46
+        },
+        {
+          "percent": 54,
+          "elite": 1
+        }
+      ]
+    },
+    {
+      "name": "暗索",
+      "rates": [
+        {
+          "percent": 53
+        },
+        {
+          "percent": 61,
+          "elite": 1
+        },
+        {
+          "percent": 69,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "白雪",
+      "rates": [
+        {
+          "percent": 53
+        },
+        {
+          "percent": 61,
+          "elite": 1
+        },
+        {
+          "percent": 69,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "陈",
+      "rates": [
+        {
+          "percent": 77,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "赤刃明霄陈",
+      "rates": [
+        {
+          "percent": 20,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "伺夜",
+      "rates": [
+        {
+          "percent": 61
+        },
+        {
+          "percent": 69,
+          "elite": 1
+        },
+        {
+          "percent": 77,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "断崖",
+      "rates": [
+        {
+          "percent": 45
+        },
+        {
+          "percent": 53,
+          "elite": 1
+        },
+        {
+          "percent": 71,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "风丸",
+      "rates": [
+        {
+          "percent": 50
+        },
+        {
+          "percent": 58,
+          "elite": 1
+        },
+        {
+          "percent": 66,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "芙兰卡",
+      "rates": [
+        {
+          "percent": 45
+        },
+        {
+          "percent": 53,
+          "elite": 1
+        }
+      ]
+    },
+    {
+      "name": "哈洛德",
+      "rates": [
+        {
+          "percent": 45
+        },
+        {
+          "percent": 53,
+          "elite": 1
+        },
+        {
+          "percent": 61,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "红",
+      "rates": [
+        {
+          "percent": 76,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "见行者",
+      "rates": [
+        {
+          "percent": 45
+        },
+        {
+          "percent": 53,
+          "elite": 1
+        },
+        {
+          "percent": 86,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "杰克",
+      "rates": [
+        {
+          "percent": 61,
+          "elite": 1
+        },
+        {
+          "percent": 69,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "莱欧斯",
+      "rates": [
+        {
+          "percent": 55
+        },
+        {
+          "percent": 63,
+          "elite": 1
+        },
+        {
+          "percent": 71,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "凛视",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "percent": 10,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "梅",
+      "rates": [
+        {
+          "percent": 53
+        },
+        {
+          "percent": 61,
+          "elite": 1
+        },
+        {
+          "percent": 69,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "谜图",
+      "rates": [
+        {
+          "percent": 45
+        },
+        {
+          "percent": 53,
+          "elite": 1
+        },
+        {
+          "percent": 61,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "莫斯提马",
+      "rates": [
+        {
+          "percent": 46
+        },
+        {
+          "percent": 54,
+          "elite": 1
+        }
+      ]
+    },
+    {
+      "name": "忍冬",
+      "rates": [
+        {
+          "percent": 46
+        },
+        {
+          "percent": 54,
+          "elite": 1
+        },
+        {
+          "percent": 72,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "塞雷娅",
+      "rates": [
+        {
+          "percent": 46
+        },
+        {
+          "percent": 54,
+          "elite": 1
+        }
+      ]
+    },
+    {
+      "name": "守林人",
+      "rates": [
+        {
+          "percent": 45
+        },
+        {
+          "percent": 53,
+          "elite": 1
+        },
+        {
+          "percent": 71,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "双月",
+      "rates": [
+        {
+          "percent": 5,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "松桐",
+      "rates": [
+        {
+          "percent": 45
+        },
+        {
+          "percent": 53,
+          "elite": 1
+        },
+        {
+          "percent": 61,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "提丰",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "微风",
+      "rates": [
+        {
+          "percent": 45
+        },
+        {
+          "percent": 53,
+          "elite": 1
+        }
+      ]
+    },
+    {
+      "name": "晓歌",
+      "rates": [
+        {
+          "percent": 61,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "信仰搅拌机",
+      "rates": [
+        {
+          "percent": 51
+        },
+        {
+          "percent": 59,
+          "elite": 1
+        },
+        {
+          "percent": 72,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "星极",
+      "rates": [
+        {
+          "percent": 45
+        },
+        {
+          "percent": 53,
+          "elite": 1
+        },
+        {
+          "percent": 76,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "行箸",
+      "rates": [
+        {
+          "percent": 71,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "寻澜",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "percent": 10,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "宴",
+      "rates": [
+        {
+          "percent": 61,
+          "elite": 1
+        },
+        {
+          "percent": 69,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "耶拉",
+      "rates": [
+        {
+          "percent": 45
+        },
+        {
+          "percent": 53,
+          "elite": 1
+        }
+      ]
+    },
+    {
+      "name": "因陀罗",
+      "rates": [
+        {
+          "percent": 45
+        },
+        {
+          "percent": 53,
+          "elite": 1
+        }
+      ]
+    },
+    {
+      "name": "远山",
+      "rates": [
+        {
+          "percent": 66,
+          "elite": 1
+        },
+        {
+          "percent": 74,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "跃跃",
+      "rates": [
+        {
+          "percent": 43
+        },
+        {
+          "percent": 51,
+          "elite": 1
+        },
+        {
+          "percent": 59,
+          "elite": 2
+        }
+      ]
+    }
+  ]
 }

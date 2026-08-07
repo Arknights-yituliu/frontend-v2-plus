@@ -1,15 +1,27 @@
 {
-  "schemaVersion": 5,
-  "scope": {
-    "roomType": "trading",
-    "product": "orundum",
-    "stationLevel": 3,
-    "slotCount": 3
-  },
-  "fallback": {
-    "percent": 30,
-    "label": "基础补位",
-    "poolKey": "trading:orundum"
-  },
-  "candidates": []
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "template:trading-laden:trading:orundum:3:3:default",
+      "variantGroupId": "template:trading-laden:trading:orundum:3:3",
+      "name": "拉德能",
+      "members": [
+        {
+          "name": "拉普兰德"
+        },
+        {
+          "name": "德克萨斯"
+        },
+        {
+          "name": "能天使",
+          "elite": 2
+        }
+      ],
+      "efficiency": 100,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "estimated"
+    }
+  ]
 }

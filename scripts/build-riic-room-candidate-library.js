@@ -60,6 +60,30 @@ async function readJson(relativePath) {
   return JSON.parse(await fs.readFile(absolute(relativePath), "utf8"));
 }
 
+const outputDirectory = absolute(OUTPUT_DIR);
+const outputRelativePath = path.relative(ROOT, outputDirectory);
+if (
+  !outputRelativePath ||
+  outputRelativePath.startsWith("..") ||
+  path.isAbsolute(outputRelativePath)
+) {
+  throw new Error(`Unsafe RIIC candidate output directory: ${outputDirectory}`);
+}
+try {
+  const existingIndex = JSON.parse(
+    await fs.readFile(path.join(outputDirectory, "index.json"), "utf8"),
+  );
+  if (Number(existingIndex?.schemaVersion) >= 6) {
+    throw new Error(
+      `Refusing to replace the Schema ${existingIndex.schemaVersion} RIIC runtime catalog with the legacy Schema 5 generator`,
+    );
+  }
+} catch (error) {
+  if (error?.code !== "ENOENT") {
+    throw error;
+  }
+}
+
 function compareText(left, right) {
   return String(left).localeCompare(String(right), "en");
 }
@@ -1438,15 +1462,6 @@ for (const group of collected.groups) {
   acceptedRawCandidateCount += 1;
 }
 
-const outputDirectory = absolute(OUTPUT_DIR);
-const outputRelativePath = path.relative(ROOT, outputDirectory);
-if (
-  !outputRelativePath ||
-  outputRelativePath.startsWith("..") ||
-  path.isAbsolute(outputRelativePath)
-) {
-  throw new Error(`Unsafe RIIC candidate output directory: ${outputDirectory}`);
-}
 await fs.rm(outputDirectory, { recursive: true, force: true });
 await fs.mkdir(outputDirectory, { recursive: true });
 

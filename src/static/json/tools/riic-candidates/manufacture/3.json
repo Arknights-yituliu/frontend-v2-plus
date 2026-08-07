@@ -1,25 +1,11 @@
 {
-  "schemaVersion": 5,
-  "scope": {
-    "roomType": "manufacture",
-    "product": "all",
-    "stationLevel": 3,
-    "slotCount": 3
-  },
-  "fallback": {
-    "percent": 25,
-    "label": "基础补位",
-    "poolKey": "manufacture:all"
-  },
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "candidates": [
     {
       "id": "manual-manufacture-all-bubble-vulcan-bena",
       "variantGroupId": "family-bubble-vulcan-bena",
       "name": "泡泡 + 火神 + 贝娜",
-      "roomType": "manufacture",
-      "product": "all",
-      "stationLevel": 3,
-      "slotCount": 3,
       "members": [
         {
           "name": "泡泡",
@@ -34,11 +20,7 @@
           "maxElite": 1
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 93,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
+      "efficiency": 93,
       "sortScore": 0,
       "calculationStatus": "estimated"
     },
@@ -46,10 +28,6 @@
       "id": "manual-manufacture-all-bubble-vulcan-chestnut",
       "variantGroupId": "family-bubble-vulcan-chestnut",
       "name": "泡泡 + 火神 + 褐果",
-      "roomType": "manufacture",
-      "product": "all",
-      "stationLevel": 3,
-      "slotCount": 3,
       "members": [
         {
           "name": "泡泡",
@@ -64,11 +42,205 @@
           "elite": 1
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 77,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
+      "efficiency": 77,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-highmore-dorothy-nasti",
+      "variantGroupId": "family-highmore-dorothy-nasti",
+      "name": "淬羽赫默 + 多萝西 + 娜斯提",
+      "members": [
+        {
+          "name": "淬羽赫默",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "娜斯提",
+          "elite": 0
+        }
+      ],
+      "efficiency": 95,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-ptilopsis-highmore-dorothy",
+      "variantGroupId": "family-ptilopsis-highmore-dorothy",
+      "name": "白面鸮 + 淬羽赫默 + 多萝西",
+      "members": [
+        {
+          "name": "白面鸮",
+          "elite": 2
+        },
+        {
+          "name": "淬羽赫默",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        }
+      ],
+      "efficiency": 95,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-ptilopsis-dorothy-silence",
+      "variantGroupId": "family-ptilopsis-dorothy-silence",
+      "name": "白面鸮 + 多萝西 + 赫默",
+      "members": [
+        {
+          "name": "白面鸮",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "赫默",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-ptilopsis-dorothy-nasti",
+      "variantGroupId": "family-ptilopsis-dorothy-nasti",
+      "name": "白面鸮 + 多萝西 + 娜斯提",
+      "members": [
+        {
+          "name": "白面鸮",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "娜斯提",
+          "elite": 0
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-highmore-dorothy-alt-star",
+      "variantGroupId": "family-highmore-dorothy-alt-star",
+      "name": "淬羽赫默 + 多萝西 + 溯光星源",
+      "members": [
+        {
+          "name": "淬羽赫默",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "溯光星源",
+          "elite": 2
+        }
+      ],
+      "efficiency": 95,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-highmore-dorothy-silence",
+      "variantGroupId": "family-highmore-dorothy-silence",
+      "name": "淬羽赫默 + 多萝西 + 赫默",
+      "members": [
+        {
+          "name": "淬羽赫默",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "赫默",
+          "elite": 2
+        }
+      ],
+      "efficiency": 95,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-dorothy-silence-nasti",
+      "variantGroupId": "family-dorothy-silence-nasti",
+      "name": "多萝西 + 赫默 + 娜斯提",
+      "members": [
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "赫默",
+          "elite": 2
+        },
+        {
+          "name": "娜斯提",
+          "elite": 0
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-ptilopsis-dorothy-star",
+      "variantGroupId": "family-ptilopsis-dorothy-star",
+      "name": "白面鸮 + 多萝西 + 星源",
+      "members": [
+        {
+          "name": "白面鸮",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "星源",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-ptilopsis-dorothy-alt-star",
+      "variantGroupId": "family-ptilopsis-dorothy-alt-star",
+      "name": "白面鸮 + 多萝西 + 溯光星源",
+      "members": [
+        {
+          "name": "白面鸮",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "溯光星源",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
       "sortScore": 0,
       "calculationStatus": "estimated"
     }

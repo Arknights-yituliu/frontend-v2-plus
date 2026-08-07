@@ -1,22 +1,64 @@
 {
-  "schemaVersion": 5,
-  "scope": {
-    "roomType": "trading",
-    "product": "all",
-    "stationLevel": 2,
-    "slotCount": 2
-  },
-  "fallback": {
-    "percent": 30,
-    "label": "基础补位",
-    "poolKey": "trading:all"
-  },
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "candidates": [
     {
-      "id": "candidate-388e65b44941808a",
-      "variantGroupId": "family-3b6d27f4926adbe8",
+      "id": "manual-trading-lmd-demetr-e0-vigil-e2-l2",
+      "variantGroupId": "family-demetr-vigil-e0-lmd",
+      "name": "贝洛内 E0 + 伺夜",
+      "members": [
+        {
+          "name": "贝洛内",
+          "elite": 0
+        },
+        {
+          "name": "伺夜",
+          "elite": 2
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-trading-lmd-demetr-e2-vigil-e2-l2",
+      "variantGroupId": "family-demetr-vigil-e2-lmd",
+      "name": "贝洛内 E2 + 伺夜",
+      "members": [
+        {
+          "name": "贝洛内",
+          "elite": 2
+        },
+        {
+          "name": "伺夜",
+          "elite": 2
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "template:trading-dela:trading:all:2:2:default",
+      "variantGroupId": "template:trading-dela:trading:all:2:2",
+      "name": "德克萨斯 + 拉普兰德",
+      "members": [
+        {
+          "name": "德克萨斯"
+        },
+        {
+          "name": "拉普兰德"
+        }
+      ],
+      "efficiency": 65,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "template:trading-lemuen-angel:trading:all:2:2:char_103_angel",
+      "variantGroupId": "template:trading-lemuen-angel:trading:all:2:2",
       "name": "蕾缪安 + 天使",
-      "roomType": "trading",
       "members": [
         {
           "name": "蕾缪安",
@@ -27,20 +69,15 @@
           "elite": 2
         }
       ],
-      "tradingPercent": 80,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
+      "efficiency": 80,
       "sortScore": 0,
       "quality": "baseOnly",
-      "calculationStatus": "estimated"
+      "calculationStatus": "calculated"
     },
     {
-      "id": "candidate-5bc05b42d6fb3816",
-      "variantGroupId": "family-52522ce21942e5a8",
+      "id": "template:trading-siege-morgan:trading:all:2:2:default",
+      "variantGroupId": "template:trading-siege-morgan:trading:all:2:2",
       "name": "推进之王 + 摩根",
-      "roomType": "trading",
       "members": [
         {
           "name": "推进之王"
@@ -50,174 +87,9 @@
           "elite": 2
         }
       ],
-      "tradingPercent": 75,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
-    },
-    {
-      "id": "candidate-39cd743bb4e6e78b",
-      "variantGroupId": "family-096f8d4b061482e8",
-      "name": "德拉核心",
-      "roomType": "trading",
-      "members": [
-        {
-          "name": "德克萨斯"
-        },
-        {
-          "name": "拉普兰德"
-        }
-      ],
-      "tradingPercent": 65,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
-    },
-    {
-      "id": "candidate-cb12b8215d34dc70",
-      "variantGroupId": "family-99a3bd4851b4f6df",
-      "name": "能天使 + 1位任意补位",
-      "roomType": "trading",
-      "members": [
-        {
-          "name": "能天使",
-          "elite": 2
-        }
-      ],
-      "tradingPercent": 35,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
-    },
-    {
-      "id": "candidate-470999e827832e7e",
-      "variantGroupId": "family-3874e05fc3123d7c",
-      "name": "雷狼龙S空爆 + 1位任意补位",
-      "roomType": "trading",
-      "members": [
-        {
-          "name": "雷狼龙S空爆",
-          "elite": 2
-        }
-      ],
-      "tradingPercent": 35,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
-    },
-    {
-      "id": "candidate-e19d53f50d7c123c",
-      "variantGroupId": "family-d16c1a191d4d2977",
-      "name": "雪雉 + 1位任意补位",
-      "roomType": "trading",
-      "members": [
-        {
-          "name": "雪雉",
-          "elite": 2
-        }
-      ],
-      "tradingPercent": 35,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
+      "efficiency": 75,
       "sortScore": 0,
-      "quality": "baseOnly",
-      "calculationStatus": "estimated"
-    },
-    {
-      "id": "candidate-0003fae59026dd8a",
-      "variantGroupId": "family-f1adee3ce727705b",
-      "name": "海蒂 + 1位任意补位",
-      "roomType": "trading",
-      "members": [
-        {
-          "name": "海蒂",
-          "elite": 2
-        }
-      ],
-      "tradingPercent": 35,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
-    },
-    {
-      "id": "manual-trading-all-hongxue-e0-gold-3-l2",
-      "variantGroupId": "family-hongxue-e0-l2",
-      "name": "鸿雪（精英 0）",
-      "roomType": "trading",
-      "product": "all",
-      "stationLevel": 2,
-      "slotCount": 2,
-      "members": [
-        {
-          "name": "鸿雪",
-          "maxElite": 0
-        }
-      ],
-      "tradingPercent": 15,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0,
-      "goldManufactureStationCount": 3,
-      "calculationStatus": "calculated"
-    },
-    {
-      "id": "manual-trading-all-hongxue-e0-gold-2-l2",
-      "variantGroupId": "family-hongxue-e0-l2",
-      "name": "鸿雪（精英 0）",
-      "roomType": "trading",
-      "product": "all",
-      "stationLevel": 2,
-      "slotCount": 2,
-      "members": [
-        {
-          "name": "鸿雪",
-          "maxElite": 0
-        }
-      ],
-      "tradingPercent": 10,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0,
-      "goldManufactureStationCount": 2,
-      "calculationStatus": "calculated"
-    },
-    {
-      "id": "manual-trading-all-hongxue-e0-gold-1-l2",
-      "variantGroupId": "family-hongxue-e0-l2",
-      "name": "鸿雪（精英 0）",
-      "roomType": "trading",
-      "product": "all",
-      "stationLevel": 2,
-      "slotCount": 2,
-      "members": [
-        {
-          "name": "鸿雪",
-          "maxElite": 0
-        }
-      ],
-      "tradingPercent": 5,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0,
-      "goldManufactureStationCount": 1,
+      "quality": "complete",
       "calculationStatus": "calculated"
     }
   ]

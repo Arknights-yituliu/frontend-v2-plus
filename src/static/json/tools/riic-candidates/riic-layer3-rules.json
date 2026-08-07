@@ -1,0 +1,1375 @@
+{
+  "schemaVersion": 1,
+  "rules": [
+    {
+      "id": "l3-rel001-qingliu-e1-trading-1",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_385_finlpp",
+            "eliteAtLeast": 1
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "trading",
+            "count": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_385_finlpp",
+          "roomType": "manufacture",
+          "product": "gold",
+          "bonusPercent": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel001-qingliu-e1-trading-2",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_385_finlpp",
+            "eliteAtLeast": 1
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "trading",
+            "count": 2
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_385_finlpp",
+          "roomType": "manufacture",
+          "product": "gold",
+          "bonusPercent": 40
+        }
+      ]
+    },
+    {
+      "id": "l3-rel001-qingliu-e1-trading-3",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_385_finlpp",
+            "eliteAtLeast": 1
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "trading",
+            "count": 3
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_385_finlpp",
+          "roomType": "manufacture",
+          "product": "gold",
+          "bonusPercent": 60
+        }
+      ]
+    },
+    {
+      "id": "l3-rel001-thorn2-e2-trading-1",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_1039_thorn2",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "trading",
+            "count": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_1039_thorn2",
+          "roomType": "manufacture",
+          "product": "gold",
+          "bonusPercent": 3
+        }
+      ]
+    },
+    {
+      "id": "l3-rel001-thorn2-e2-trading-2",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_1039_thorn2",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "trading",
+            "count": 2
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_1039_thorn2",
+          "roomType": "manufacture",
+          "product": "gold",
+          "bonusPercent": 6
+        }
+      ]
+    },
+    {
+      "id": "l3-rel001-thorn2-e2-trading-3",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_1039_thorn2",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "trading",
+            "count": 3
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_1039_thorn2",
+          "roomType": "manufacture",
+          "product": "gold",
+          "bonusPercent": 9
+        }
+      ]
+    },
+    {
+      "id": "l3-rel002-bgsnow-e0-gold-lines-1",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4055_bgsnow",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "product": "gold",
+            "count": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4055_bgsnow",
+          "roomType": "trading",
+          "bonusPercent": 5
+        }
+      ]
+    },
+    {
+      "id": "l3-rel002-bgsnow-e0-gold-lines-2",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4055_bgsnow",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "product": "gold",
+            "count": 2
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4055_bgsnow",
+          "roomType": "trading",
+          "bonusPercent": 10
+        }
+      ]
+    },
+    {
+      "id": "l3-rel002-bgsnow-e0-gold-lines-3",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4055_bgsnow",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "product": "gold",
+            "count": 3
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4055_bgsnow",
+          "roomType": "trading",
+          "bonusPercent": 15
+        }
+      ]
+    },
+    {
+      "id": "l3-rel002-bgsnow-e0-gold-lines-4",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4055_bgsnow",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "product": "gold",
+            "count": 4
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4055_bgsnow",
+          "roomType": "trading",
+          "bonusPercent": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel002-bgsnow-e0-gold-lines-5",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4055_bgsnow",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "product": "gold",
+            "count": 5
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4055_bgsnow",
+          "roomType": "trading",
+          "bonusPercent": 25
+        }
+      ]
+    },
+    {
+      "id": "l3-rel002-tuye-base-gold-lines-4",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_402_tuye",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "product": "gold",
+            "count": 4
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_402_tuye",
+          "roomType": "trading",
+          "bonusPercent": 15
+        }
+      ]
+    },
+    {
+      "id": "l3-rel002-tuye-e2-gold-lines-2",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_402_tuye",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "product": "gold",
+            "count": 2
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_402_tuye",
+          "roomType": "trading",
+          "bonusPercent": 15
+        }
+      ]
+    },
+    {
+      "id": "l3-rel002-tuye-e2-gold-lines-3",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_402_tuye",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "product": "gold",
+            "count": 3
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_402_tuye",
+          "roomType": "trading",
+          "bonusPercent": 15
+        }
+      ]
+    },
+    {
+      "id": "l3-rel002-tuye-e2-gold-lines-4",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_402_tuye",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "product": "gold",
+            "count": 4
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_402_tuye",
+          "roomType": "trading",
+          "bonusPercent": 15
+        }
+      ]
+    },
+    {
+      "id": "l3-rel002-tuye-base-gold-lines-5",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_402_tuye",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "product": "gold",
+            "count": 5
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_402_tuye",
+          "roomType": "trading",
+          "bonusPercent": 15
+        }
+      ]
+    },
+    {
+      "id": "l3-rel002-tuye-e2-gold-lines-5",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_402_tuye",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "product": "gold",
+            "count": 5
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_402_tuye",
+          "roomType": "trading",
+          "bonusPercent": 15
+        }
+      ]
+    },
+    {
+      "id": "l3-rel003-narantuya-e2-gold",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4138_narant",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_4138_narant",
+          "roomType": "manufacture",
+          "product": "gold",
+          "bonusPercent": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel003-tinman-base",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4151_tinman",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_4151_tinman",
+          "roomType": "hire",
+          "bonusPercent": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel003-tinman-e2-upgrade",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4151_tinman",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_4151_tinman",
+          "roomType": "hire",
+          "bonusPercent": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel004-veen-e2-training",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4226_veen",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_4226_veen",
+          "roomType": "manufacture",
+          "bonusPercent": 30
+        }
+      ]
+    },
+    {
+      "id": "l3-rel005-quartz-e1-product-kinds-1",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4063_quartz",
+            "eliteAtLeast": 1
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "productKindCount": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4063_quartz",
+          "roomType": "trading",
+          "bonusPercent": 2
+        }
+      ]
+    },
+    {
+      "id": "l3-rel005-quartz-e1-product-kinds-2",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4063_quartz",
+            "eliteAtLeast": 1
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "productKindCount": 2
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4063_quartz",
+          "roomType": "trading",
+          "bonusPercent": 4
+        }
+      ]
+    },
+    {
+      "id": "l3-rel005-quartz-e1-product-kinds-3",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4063_quartz",
+            "eliteAtLeast": 1
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "manufacture",
+            "productKindCount": 3
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4063_quartz",
+          "roomType": "trading",
+          "bonusPercent": 6
+        }
+      ]
+    },
+    {
+      "id": "l3-rel007-wscoot-e0-meeting",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_445_wscoot",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_445_wscoot",
+          "roomType": "meeting",
+          "bonusPercent": 5
+        }
+      ]
+    },
+    {
+      "id": "l3-rel007-lin-e2-hire",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4080_lin",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_4080_lin",
+          "roomType": "hire",
+          "bonusPercent": 10
+        }
+      ]
+    },
+    {
+      "id": "l3-rel008-leto-e2-gummy",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_194_leto",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_194_leto",
+          "roomType": "manufacture",
+          "product": "experience",
+          "bonusPercent": 35,
+          "facilityPriority": {
+            "experience": -34
+          }
+        },
+        {
+          "operatorId": "char_196_sunbr",
+          "roomType": "trading",
+          "roomPriority": 1
+        }
+      ]
+    },
+    {
+      "id": "l3-rel010-hodrer-ines",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4087_ines",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_4088_hodrer",
+          "roomType": "trading",
+          "bonusPercent": 5
+        },
+        {
+          "operatorId": "char_4087_ines",
+          "roomType": "meeting",
+          "roomPriority": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel011-udflow-base-ulpian",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4137_udflow",
+            "eliteAtLeast": 0
+          },
+          {
+            "operatorId": "char_4145_ulpia",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_4137_udflow",
+          "roomType": "trading",
+          "bonusPercent": 5
+        },
+        {
+          "operatorId": "char_4145_ulpia",
+          "idleFillerPriority": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel011-udflow-e2-upgrade",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4137_udflow",
+            "eliteAtLeast": 2
+          },
+          {
+            "operatorId": "char_4145_ulpia",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_4137_udflow",
+          "roomType": "trading",
+          "bonusPercent": 5
+        }
+      ]
+    },
+    {
+      "id": "l3-rel012-sbell2-e2-svash2",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_1046_sbell2",
+            "eliteAtLeast": 2
+          },
+          {
+            "operatorId": "char_1045_svash2",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_1046_sbell2",
+          "roomType": "hire",
+          "bonusPercent": 10
+        },
+        {
+          "operatorId": "char_1045_svash2",
+          "roomType": "control",
+          "roomPriority": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel015-rmixer-e2-fiammetta",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4194_rmixer",
+            "eliteAtLeast": 2
+          },
+          {
+            "operatorId": "char_300_phenxi",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_4194_rmixer",
+          "roomType": "meeting",
+          "bonusPercent": 10
+        },
+        {
+          "operatorId": "char_300_phenxi",
+          "roomType": "dormitory",
+          "roomPriority": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel018-flametail-e2-red-pine",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_420_flamtl",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_430_fartth",
+          "roomType": "manufacture",
+          "product": "experience",
+          "bonusPercent": 10
+        },
+        {
+          "operatorId": "char_430_fartth",
+          "roomType": "manufacture",
+          "product": "gold",
+          "bonusPercent": -10
+        },
+        {
+          "operatorId": "char_456_ash",
+          "roomType": "manufacture",
+          "product": "experience",
+          "bonusPercent": 10
+        },
+        {
+          "operatorId": "char_456_ash",
+          "roomType": "manufacture",
+          "product": "gold",
+          "bonusPercent": -10
+        },
+        {
+          "operatorId": "char_496_wildmn",
+          "roomType": "manufacture",
+          "product": "experience",
+          "bonusPercent": 10
+        },
+        {
+          "operatorId": "char_496_wildmn",
+          "roomType": "manufacture",
+          "product": "gold",
+          "bonusPercent": -10
+        },
+        {
+          "operatorId": "char_4000_jnight",
+          "roomType": "manufacture",
+          "product": "experience",
+          "bonusPercent": 10
+        },
+        {
+          "operatorId": "char_4000_jnight",
+          "roomType": "manufacture",
+          "product": "gold",
+          "bonusPercent": -10
+        },
+        {
+          "operatorId": "char_420_flamtl",
+          "roomType": "control",
+          "roomPriority": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-mantra-e2-staffed-elite-1",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4204_mantra",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4204_mantra",
+          "roomType": "trading",
+          "bonusPercent": 2
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-mantra-e2-staffed-elite-2",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4204_mantra",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 2
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4204_mantra",
+          "roomType": "trading",
+          "bonusPercent": 4
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-mantra-e2-staffed-elite-3",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4204_mantra",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 3
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4204_mantra",
+          "roomType": "trading",
+          "bonusPercent": 6
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-mantra-e2-staffed-elite-4",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4204_mantra",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 4
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4204_mantra",
+          "roomType": "trading",
+          "bonusPercent": 8
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-mantra-e2-staffed-elite-5",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4204_mantra",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 5
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4204_mantra",
+          "roomType": "trading",
+          "bonusPercent": 10
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-mantra-e2-staffed-elite-6",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4204_mantra",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 6
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4204_mantra",
+          "roomType": "trading",
+          "bonusPercent": 12
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-mantra-e2-staffed-elite-7",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4204_mantra",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 7
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4204_mantra",
+          "roomType": "trading",
+          "bonusPercent": 14
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-mantra-e2-staffed-elite-8",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4204_mantra",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 8
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4204_mantra",
+          "roomType": "trading",
+          "bonusPercent": 16
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-mantra-e2-staffed-elite-9",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4204_mantra",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 9
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4204_mantra",
+          "roomType": "trading",
+          "bonusPercent": 18
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-mantra-e2-staffed-elite-10",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4204_mantra",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 10
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4204_mantra",
+          "roomType": "trading",
+          "bonusPercent": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-monster-e2-staffed-elite-1",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4179_monstr",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4179_monstr",
+          "roomType": "hire",
+          "bonusPercent": 4
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-monster-e2-staffed-elite-2",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4179_monstr",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 2
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4179_monstr",
+          "roomType": "hire",
+          "bonusPercent": 8
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-monster-e2-staffed-elite-3",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4179_monstr",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 3
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4179_monstr",
+          "roomType": "hire",
+          "bonusPercent": 12
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-monster-e2-staffed-elite-4",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4179_monstr",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 4
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4179_monstr",
+          "roomType": "hire",
+          "bonusPercent": 16
+        }
+      ]
+    },
+    {
+      "id": "l3-rel006-monster-e2-staffed-elite-5",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4179_monstr",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "any",
+            "staffedEliteCount": 5
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4179_monstr",
+          "roomType": "hire",
+          "bonusPercent": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel007-tknogi-e2-meeting",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_343_tknogi",
+            "eliteAtLeast": 2
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "roomType": "meeting",
+          "bonusPercent": 5
+        }
+      ]
+    },
+    {
+      "id": "l3-rel007-turdus-e0-meeting",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4224_turdus",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "roomType": "meeting",
+          "bonusPercent": 5
+        }
+      ]
+    },
+    {
+      "id": "l3-rel007-nothin-e0-meeting",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_455_nothin",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "roomType": "meeting",
+          "bonusPercent": 5
+        }
+      ]
+    },
+    {
+      "id": "l3-rel007-inside-e0-meeting",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_498_inside",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "roomType": "meeting",
+          "bonusPercent": 5
+        }
+      ]
+    },
+    {
+      "id": "l3-rel016-wisdel-ines",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4087_ines",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "operatorId": "char_1035_wisdel",
+          "roomType": "control",
+          "roomPriority": 20
+        }
+      ]
+    },
+    {
+      "id": "l3-rel021-butshu-shamare-tequila-tailor",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4032_provs",
+            "eliteAtLeast": 0
+          },
+          {
+            "operatorId": "char_486_takila",
+            "eliteAtLeast": 0
+          },
+          {
+            "operatorId": "char_254_vodfox",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": []
+      },
+      "effects": [
+        {
+          "variantGroupId": "family-shamare-tequila-tailor",
+          "roomPriority": 200
+        }
+      ]
+    },
+    {
+      "id": "l3-rel021-butshu-lmd-level-1",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4032_provs",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "trading",
+            "product": "lmd",
+            "stationLevel": 1,
+            "count": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4032_provs",
+          "roomType": "trading",
+          "product": "lmd",
+          "stationLevel": 1,
+          "roomPriority": 200
+        }
+      ]
+    },
+    {
+      "id": "l3-rel021-butshu-lmd-level-2",
+      "conditions": {
+        "operators": [
+          {
+            "operatorId": "char_4032_provs",
+            "eliteAtLeast": 0
+          }
+        ],
+        "facilities": [
+          {
+            "facilityType": "trading",
+            "product": "lmd",
+            "stationLevel": 2,
+            "count": 1
+          }
+        ]
+      },
+      "effects": [
+        {
+          "operatorId": "char_4032_provs",
+          "roomType": "trading",
+          "product": "lmd",
+          "stationLevel": 2,
+          "roomPriority": 200
+        }
+      ]
+    }
+  ]
+}

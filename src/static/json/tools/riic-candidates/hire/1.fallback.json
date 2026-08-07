@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "scope": {
     "roomType": "hire",
     "product": "all",

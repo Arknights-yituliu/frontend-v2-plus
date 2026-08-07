@@ -1,159 +1,36 @@
 {
-  "schemaVersion": 5,
-  "scope": {
-    "roomType": "trading",
-    "product": "all",
-    "stationLevel": 1,
-    "slotCount": 1
-  },
-  "fallback": {
-    "percent": 30,
-    "label": "基础补位",
-    "poolKey": "trading:all"
-  },
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "candidates": [
     {
-      "id": "candidate-b7fc979ef2bbbd56",
-      "variantGroupId": "family-99af3e944461d94c",
-      "name": "能天使",
-      "roomType": "trading",
-      "members": [
-        {
-          "name": "能天使",
-          "elite": 2
-        }
-      ],
-      "tradingPercent": 35,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
-    },
-    {
-      "id": "candidate-01a2acef94dc0105",
-      "variantGroupId": "family-bf7dfad2a4e10054",
+      "id": "baseline:trading:all:1:1:char_1049_catap2:2-1",
+      "variantGroupId": "baseline:trading:all:1:1:char_1049_catap2",
       "name": "雷狼龙S空爆",
-      "roomType": "trading",
       "members": [
         {
           "name": "雷狼龙S空爆",
           "elite": 2
         }
       ],
-      "tradingPercent": 35,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
     },
     {
-      "id": "candidate-5f18d8fdb7fdef7d",
-      "variantGroupId": "family-91c5e97040e10e6b",
+      "id": "baseline:trading:all:1:1:char_383_snsant:2-1",
+      "variantGroupId": "baseline:trading:all:1:1:char_383_snsant",
       "name": "雪雉",
-      "roomType": "trading",
       "members": [
         {
           "name": "雪雉",
           "elite": 2
         }
       ],
-      "tradingPercent": 35,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
+      "efficiency": 35,
       "sortScore": 0,
       "quality": "baseOnly",
       "calculationStatus": "estimated"
-    },
-    {
-      "id": "candidate-2c91a70d72936edf",
-      "variantGroupId": "family-33e3c647ca346448",
-      "name": "海蒂",
-      "roomType": "trading",
-      "members": [
-        {
-          "name": "海蒂",
-          "elite": 2
-        }
-      ],
-      "tradingPercent": 35,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
-    },
-    {
-      "id": "manual-trading-all-hongxue-e0-gold-3-l1",
-      "variantGroupId": "family-hongxue-e0-l1",
-      "name": "鸿雪（精英 0）",
-      "roomType": "trading",
-      "product": "all",
-      "stationLevel": 1,
-      "slotCount": 1,
-      "members": [
-        {
-          "name": "鸿雪",
-          "maxElite": 0
-        }
-      ],
-      "tradingPercent": 15,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0,
-      "goldManufactureStationCount": 3,
-      "calculationStatus": "calculated"
-    },
-    {
-      "id": "manual-trading-all-hongxue-e0-gold-2-l1",
-      "variantGroupId": "family-hongxue-e0-l1",
-      "name": "鸿雪（精英 0）",
-      "roomType": "trading",
-      "product": "all",
-      "stationLevel": 1,
-      "slotCount": 1,
-      "members": [
-        {
-          "name": "鸿雪",
-          "maxElite": 0
-        }
-      ],
-      "tradingPercent": 10,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0,
-      "goldManufactureStationCount": 2,
-      "calculationStatus": "calculated"
-    },
-    {
-      "id": "manual-trading-all-hongxue-e0-gold-1-l1",
-      "variantGroupId": "family-hongxue-e0-l1",
-      "name": "鸿雪（精英 0）",
-      "roomType": "trading",
-      "product": "all",
-      "stationLevel": 1,
-      "slotCount": 1,
-      "members": [
-        {
-          "name": "鸿雪",
-          "maxElite": 0
-        }
-      ],
-      "tradingPercent": 5,
-      "manufacturePercent": 0,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0,
-      "goldManufactureStationCount": 1,
-      "calculationStatus": "calculated"
     }
   ]
 }

@@ -7,11 +7,19 @@ function normalizePercent(value) {
   return Number.isFinite(percent) ? percent : 0;
 }
 
+function normalizeCount(value) {
+  const count = Number(value);
+  return Number.isFinite(count) ? Math.max(0, Math.trunc(count)) : 0;
+}
+
 function compareFallbackOperators(left, right) {
-  const leftPriority = left?.publicSkill ? 1 : 0;
-  const rightPriority = right?.publicSkill ? 1 : 0;
-  if (leftPriority !== rightPriority) {
-    return leftPriority - rightPriority;
+  const fillScoreDifference =
+    normalizePercent(right?.percent) +
+      normalizePercent(right?.fillPriority) -
+      (normalizePercent(left?.percent) +
+        normalizePercent(left?.fillPriority));
+  if (fillScoreDifference !== 0) {
+    return fillScoreDifference;
   }
 
   const percentDifference =
@@ -37,15 +45,16 @@ function getCandidateFallbackOperators(candidate) {
       charId: normalizeOperatorId(operator?.charId),
       name: String(operator?.name || operator?.charId || "").trim(),
       percent: normalizePercent(operator?.percent),
+      basePercent: normalizePercent(
+        operator?.basePercent ?? operator?.percent,
+      ),
+      layer3Bonus: normalizePercent(operator?.layer3Bonus),
+      fillPriority: normalizePercent(operator?.fillPriority),
       publicSkill: Boolean(operator?.publicSkill),
       upgradeRequirement: operator?.upgradeRequirement || null,
     }))
     .filter((operator) => operator.charId && operator.name)
     .sort(compareFallbackOperators);
-}
-
-function getFallbackBaseline(candidate) {
-  return normalizePercent(candidate?.fallback?.percent);
 }
 
 function getFallbackSlots(selectedEntries) {
@@ -63,8 +72,7 @@ function mergeOperatorById(operatorById, operator) {
   const current = operatorById.get(operator.charId);
   if (
     !current ||
-    compareFallbackOperators(operator, current) < 0 ||
-    normalizePercent(operator.percent) > normalizePercent(current.percent)
+    compareFallbackOperators(operator, current) < 0
   ) {
     operatorById.set(operator.charId, operator);
   }
@@ -78,6 +86,8 @@ function mergeOperatorById(operatorById, operator) {
 export function createRiicRoomGroupFallbackPlan({
   selectedEntries = [],
   occupiedOperatorIds = new Set(),
+  preferredOperatorIds = [],
+  allowAutomaticFill = true,
 }) {
   const occupied = new Set(
     [...(occupiedOperatorIds || [])]
@@ -88,74 +98,82 @@ export function createRiicRoomGroupFallbackPlan({
   const selectedIds = new Set();
   const assignmentsBySelectionKey = new Map();
   const allOperatorsById = new Map();
-  const highOperatorsById = new Map();
-  const basicOperatorsById = new Map();
 
   for (const entry of selectedEntries) {
     for (const operator of getCandidateFallbackOperators(entry.candidate)) {
       mergeOperatorById(allOperatorsById, operator);
-      if (operator.percent >= getFallbackBaseline(entry.candidate)) {
-        mergeOperatorById(highOperatorsById, operator);
-      } else {
-        mergeOperatorById(basicOperatorsById, operator);
-      }
     }
   }
 
   const slotOptions = slots.map((slot) => {
-    const operators = getCandidateFallbackOperators(slot.candidate);
-    const baseline = getFallbackBaseline(slot.candidate);
-    const highOperators = operators.filter(
-      (operator) => operator.percent >= baseline,
-    );
-    const basicOperators = operators.filter(
-      (operator) => operator.percent < baseline,
-    );
-
     return {
       ...slot,
-      highOperators,
-      basicOperators,
-      allOperators: operators,
+      operators: getCandidateFallbackOperators(slot.candidate),
     };
   });
 
-  // Resolve constrained slots first. Within a slot, high-efficiency entries
-  // win, while public/shared skills are deliberately placed later.
-  slotOptions.sort(
-    (left, right) =>
-      left.highOperators.length - right.highOperators.length ||
-      left.allOperators.length - right.allOperators.length ||
-      left.key.localeCompare(right.key, "en"),
-  );
-
-  for (const slot of slotOptions) {
-    const options = [
-      ...slot.highOperators.sort(compareFallbackOperators),
-      ...slot.basicOperators.sort(compareFallbackOperators),
-    ];
-    const selected = options.find(
-      (operator) =>
-        !occupied.has(operator.charId) && !selectedIds.has(operator.charId),
-    );
-
-    if (!selected) {
-      continue;
-    }
-
-    selectedIds.add(selected.charId);
+  const assignedSlotKeys = new Set();
+  const selectOperatorForSlot = (slot, operator) => {
+    selectedIds.add(operator.charId);
+    assignedSlotKeys.add(slot.key);
     if (!assignmentsBySelectionKey.has(slot.selectionKey)) {
       assignmentsBySelectionKey.set(slot.selectionKey, []);
     }
-    assignmentsBySelectionKey.get(slot.selectionKey).push(selected);
+    assignmentsBySelectionKey.get(slot.selectionKey).push(operator);
+  };
+
+  for (const preferredOperatorId of preferredOperatorIds || []) {
+    const charId = normalizeOperatorId(preferredOperatorId);
+    if (
+      !allOperatorsById.has(charId) ||
+      occupied.has(charId) ||
+      selectedIds.has(charId)
+    ) {
+      continue;
+    }
+
+    const slot = slotOptions.find(
+      (item) =>
+        !assignedSlotKeys.has(item.key) &&
+        item.operators.some(
+          (candidateOperator) => candidateOperator.charId === charId,
+        ),
+    );
+    if (slot) {
+      const slotOperator = slot.operators.find(
+        (candidateOperator) => candidateOperator.charId === charId,
+      );
+      selectOperatorForSlot(slot, slotOperator);
+    }
+  }
+
+  if (allowAutomaticFill) {
+    // Resolve constrained slots first. Within a slot, fill score wins.
+    const automaticSlotOptions = [...slotOptions].sort(
+      (left, right) =>
+        left.operators.length - right.operators.length ||
+        left.key.localeCompare(right.key, "en"),
+    );
+
+    for (const slot of automaticSlotOptions) {
+      if (assignedSlotKeys.has(slot.key)) {
+        continue;
+      }
+
+      const selected = slot.operators.find(
+        (operator) =>
+          !occupied.has(operator.charId) && !selectedIds.has(operator.charId),
+      );
+
+      if (selected) {
+        selectOperatorForSlot(slot, selected);
+      }
+    }
   }
 
   const sortForDisplay = (left, right) =>
     compareFallbackOperators(left, right) ||
     Number(occupied.has(left.charId)) - Number(occupied.has(right.charId));
-  const selectedBasicOperators = [...basicOperatorsById.values()]
-    .filter((operator) => selectedIds.has(operator.charId))
-    .sort(sortForDisplay);
 
   return {
     status: selectedIds.size === slots.length ? "ready" : "insufficient",
@@ -169,22 +187,56 @@ export function createRiicRoomGroupFallbackPlan({
       ]),
     ),
     operators: [...allOperatorsById.values()].sort(sortForDisplay),
-    highEfficiencyOperators: [...highOperatorsById.values()].sort(sortForDisplay),
-    basicOperators: [...basicOperatorsById.values()]
-      .filter((operator) => !highOperatorsById.has(operator.charId))
-      .sort(sortForDisplay),
-    selectedBasicOperators,
+  };
+}
+
+export function createRiicFallbackEstimate({
+  rankedOperators = [],
+  slotCount = 0,
+  fallbackCount = 0,
+  defaultPercent = 0,
+} = {}) {
+  const normalizedSlotCount = normalizeCount(slotCount);
+  const normalizedFallbackCount = normalizeCount(fallbackCount);
+  const selectedOperators = (Array.isArray(rankedOperators)
+    ? rankedOperators
+    : []
+  ).slice(
+    normalizedSlotCount,
+    normalizedSlotCount + normalizedFallbackCount,
+  );
+  const missingCount = Math.max(
+    0,
+    normalizedFallbackCount - selectedOperators.length,
+  );
+  const totalPercent =
+    selectedOperators.reduce(
+      (total, operator) => total + normalizePercent(operator?.percent),
+      0,
+    ) +
+    missingCount * normalizePercent(defaultPercent);
+
+  return {
+    selectedOperators,
+    missingCount,
+    totalPercent,
   };
 }
 
 export function getRiicFallbackPreviewOperators(candidate, count) {
-  const normalizedCount = Math.max(0, Number(count || 0));
-  return getCandidateFallbackOperators(candidate).slice(0, normalizedCount);
+  return createRiicFallbackEstimate({
+    rankedOperators: getCandidateFallbackOperators(candidate),
+    slotCount: candidate?.candidateScope?.slotCount,
+    fallbackCount: count,
+    defaultPercent: candidate?.fallback?.percent,
+  }).selectedOperators;
 }
 
 export function getRiicFallbackPreviewTotalPercent(candidate) {
-  return getRiicFallbackPreviewOperators(
-    candidate,
-    candidate?.fallback?.count,
-  ).reduce((total, operator) => total + operator.percent, 0);
+  return createRiicFallbackEstimate({
+    rankedOperators: getCandidateFallbackOperators(candidate),
+    slotCount: candidate?.candidateScope?.slotCount,
+    fallbackCount: candidate?.fallback?.count,
+    defaultPercent: candidate?.fallback?.percent,
+  }).totalPercent;
 }

@@ -1,54 +1,36 @@
 {
-  "schemaVersion": 5,
-  "scope": {
-    "roomType": "manufacture",
-    "product": "gold",
-    "stationLevel": 1,
-    "slotCount": 1
-  },
-  "fallback": {
-    "percent": 25,
-    "label": "基础补位",
-    "poolKey": "manufacture:gold"
-  },
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "candidates": [
     {
-      "id": "candidate-19c81e89ad4fed27",
-      "variantGroupId": "family-635f1fbb0e39edec",
+      "id": "baseline:manufacture:gold:1:1:char_446_aroma:2-1",
+      "variantGroupId": "baseline:manufacture:gold:1:1:char_446_aroma",
       "name": "阿罗玛",
-      "roomType": "manufacture",
       "members": [
         {
           "name": "阿罗玛",
           "elite": 2
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 36.67,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
+      "efficiency": 36.666667,
       "sortScore": 0,
       "quality": "baseOnly",
       "calculationStatus": "estimated"
     },
     {
-      "id": "candidate-c4503cab50bb233a",
-      "variantGroupId": "family-ad53a11d9e002af8",
+      "id": "baseline:manufacture:gold:1:1:char_237_gravel:1-1",
+      "variantGroupId": "baseline:manufacture:gold:1:1:char_237_gravel",
       "name": "砾",
-      "roomType": "manufacture",
       "members": [
         {
           "name": "砾",
           "elite": 1
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 35,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
     }
   ]
 }

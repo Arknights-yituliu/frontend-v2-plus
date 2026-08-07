@@ -137,6 +137,12 @@ function createRoomPreview({
       : isInvalidated
         ? []
         : candidate.operators || [],
+    efficiency:
+      candidate?.totalPercent !== null &&
+      candidate?.totalPercent !== "" &&
+      Number.isFinite(Number(candidate?.totalPercent))
+      ? Number(candidate.totalPercent)
+      : null,
     fallbackCount: getFallbackCount(candidate),
     effectMetrics: candidate.effectMetrics || [],
     isStatic: false,
@@ -172,6 +178,7 @@ function createStaticRoomPreview({
       : isInvalidated
         ? []
         : room?.operators || [],
+    efficiency: null,
     fallbackCount: 0,
     effectMetrics: [],
     isStatic: true,
@@ -190,6 +197,62 @@ function applyRoomOperatorOverride(room, stateIndex, roomOperatorOverrides) {
         manuallyEdited: true,
       }
     : room;
+}
+
+function normalizeFacility(facility) {
+  return facility === "hire" ? "office" : facility;
+}
+
+function getControlBonusByFacility(rooms) {
+  const highestBonusByFacility = new Map();
+
+  for (const room of rooms || []) {
+    if (room?.facility !== "control") {
+      continue;
+    }
+
+    for (const metric of room.effectMetrics || []) {
+      const facility = normalizeFacility(metric?.facility);
+      const percent = Number(metric?.percent);
+      if (!facility || !Number.isFinite(percent) || percent <= 0) {
+        continue;
+      }
+
+      highestBonusByFacility.set(
+        facility,
+        Math.max(highestBonusByFacility.get(facility) || 0, percent),
+      );
+    }
+  }
+
+  return highestBonusByFacility;
+}
+
+function applyRoomDisplayEfficiencies(rooms) {
+  const controlBonusByFacility = getControlBonusByFacility(rooms);
+
+  return (rooms || []).map((room) => {
+    const sourceEfficiency = room?.efficiency;
+    const baseEfficiency = Number(sourceEfficiency);
+    if (
+      sourceEfficiency === null ||
+      sourceEfficiency === "" ||
+      !Number.isFinite(baseEfficiency)
+    ) {
+      return room;
+    }
+
+    const facility = normalizeFacility(room.facility);
+    const staffingBonus = ["trading", "manufacture"].includes(facility)
+      ? (room.operators || []).length
+      : 0;
+    const controlBonus = Number(controlBonusByFacility.get(facility) || 0);
+
+    return {
+      ...room,
+      efficiency: baseEfficiency + staffingBonus + controlBonus,
+    };
+  });
 }
 
 function findStickyPlacement(groupEntries, stickyOperatorIds) {
@@ -240,14 +303,20 @@ function getStationAssignmentsForState({
     !targetAssignment ||
     stickyAssignment === targetAssignment
   ) {
-    return assignments;
+    return assignments.sort(
+      (left, right) =>
+        Number(left?.stationIndex || 0) - Number(right?.stationIndex || 0),
+    );
   }
 
   const stationIndex = stickyAssignment.stationIndex;
   stickyAssignment.stationIndex = targetAssignment.stationIndex;
   targetAssignment.stationIndex = stationIndex;
 
-  return assignments;
+  return assignments.sort(
+    (left, right) =>
+      Number(left?.stationIndex || 0) - Number(right?.stationIndex || 0),
+  );
 }
 
 function getOrderedSourceStateIndexes(stateCount, stateOrder) {
@@ -308,13 +377,26 @@ export function buildRiicSchedulePreview({
   productOverrides = {},
   invalidatedRoomKeys = {},
   stickyOperatorIds = [],
+  shiftGroupBindings = [],
 } = {}) {
   const groupById = new Map(
     (roomGroups || []).map((group) => [String(group?.id || ""), group]),
   );
-  const groupEntries = (scheduleCandidate?.groups || [])
-    .map((entry) => {
-      const group = groupById.get(String(entry?.groupId || ""));
+  const candidateEntriesByGroupId = new Map(
+    (scheduleCandidate?.groups || []).flatMap((entry) => {
+      const groupId = String(entry?.groupId || "");
+      return groupId ? [[groupId, entry]] : [];
+    }),
+  );
+  const orderedGroups =
+    roomGroups?.length > 0
+      ? roomGroups
+      : (scheduleCandidate?.groups || [])
+          .map((entry) => groupById.get(String(entry?.groupId || "")))
+          .filter(Boolean);
+  const groupEntries = orderedGroups
+    .map((group) => {
+      const entry = candidateEntriesByGroupId.get(String(group?.id || ""));
       const segments = entry?.candidate?.segments || [];
       const cycleHours = getSegmentCycleHours(segments);
 
@@ -392,8 +474,10 @@ export function buildRiicSchedulePreview({
     ...rawStates[sourceStateIndex],
     id: `state-${index + 1}`,
     index,
-    rooms: rawStates[sourceStateIndex].rooms.map((room) =>
-      applyRoomOperatorOverride(room, index, roomOperatorOverrides),
+    rooms: applyRoomDisplayEfficiencies(
+      rawStates[sourceStateIndex].rooms.map((room) =>
+        applyRoomOperatorOverride(room, index, roomOperatorOverrides),
+      ),
     ),
   }));
 
@@ -404,6 +488,9 @@ export function buildRiicSchedulePreview({
     key: `${sourceKey}:${Object.keys(roomOperatorOverrides || {}).join(",")}:${Object.keys(productOverrides || {}).join(",")}:${Object.keys(invalidatedRoomKeys || {}).join(",")}`,
     cycleHours,
     states,
+    shiftGroupBindings: Array.isArray(shiftGroupBindings)
+      ? shiftGroupBindings
+      : [],
     preferredDroneRoomKey: getPreferredDroneRoomKey({
       states,
       stickyPlacement,

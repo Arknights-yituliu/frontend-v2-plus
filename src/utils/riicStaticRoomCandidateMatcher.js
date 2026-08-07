@@ -1,3 +1,16 @@
+import {
+  getRiicRuntimeCandidateRankingValue,
+} from "./riicRuntimeContribution.js";
+import { createRiicFallbackEstimate } from "./riicDynamicFallback.js";
+import {
+  getRiicLayer3CandidateRoomPriority,
+  getRiicLayer3OperatorLocalBonus,
+} from "./riicLayer3Rules.js";
+import {
+  getRiicButshuFallbackMinimumPercent,
+  recalculateRiicButshuCandidate,
+} from "./riicButshuDynamicFallback.js";
+
 function toNonNegativeInteger(value, fallback = 0) {
   const number = Number(value);
   return Number.isInteger(number) && number >= 0 ? number : fallback;
@@ -17,26 +30,25 @@ const PERCENT_FIELDS = Object.freeze([
   "officePercent",
   "powerPercent",
 ]);
-
 function getPercentField(roomType) {
   return PERCENT_FIELD_BY_ROOM_TYPE[roomType] || null;
 }
 
-function getCandidatePercentFields(candidate) {
-  return Object.fromEntries(
-    PERCENT_FIELDS.map((field) => [field, Number(candidate?.[field] || 0)]),
-  );
-}
-
-function getLocalFacilityBonusPercent(candidate) {
-  const localPercentField = getPercentField(candidate?.sourceRoomType);
-  return Number(localPercentField ? candidate?.[localPercentField] || 0 : 0);
-}
-
 function getCandidateRankingBonus(candidate) {
-  return (
-    getLocalFacilityBonusPercent(candidate) + Number(candidate?.sortScore || 0)
-  );
+  return getRiicRuntimeCandidateRankingValue(candidate);
+}
+
+function getCandidateCoreBonusPercent(candidate) {
+  return Number(candidate?.efficiency || 0);
+}
+
+function getCandidatePublishedEquivalentByProduct(candidate) {
+  if (!Object.hasOwn(candidate || {}, "gold")) {
+    return {};
+  }
+
+  const gold = Number(candidate.gold);
+  return Number.isFinite(gold) && gold !== 0 ? { gold } : {};
 }
 
 function compareUnlock(left, right) {
@@ -157,11 +169,13 @@ function normalizeFallbackPools(fallbackCatalog) {
           if (!name) {
             return [];
           }
+          const fillPriority = Number(operator?.fillPriority || 0);
           const rates = (operator?.rates || [])
             .map((rate) => ({
               elite: toNonNegativeInteger(rate?.elite),
               level: toNonNegativeInteger(rate?.level, 1),
               percent: Number(rate?.percent || 0),
+              fillPriority: Number.isFinite(fillPriority) ? fillPriority : 0,
             }))
             .filter((rate) => Number.isFinite(rate.percent))
             .sort(compareUnlock);
@@ -176,7 +190,6 @@ function normalizeFallbackPools(fallbackCatalog) {
 
 function getRateForTrainingMode(operator, pool, trainingMode) {
   const rates = pool.operatorsByName.get(operator.name) || [];
-  let percent = Number(pool.defaultPercent || 0);
   let appliedRate = null;
 
   for (const rate of rates) {
@@ -184,39 +197,44 @@ function getRateForTrainingMode(operator, pool, trainingMode) {
       trainingMode === "ideal" ||
       compareUnlock(operator, rate) >= 0
     ) {
-      percent = rate.percent;
       appliedRate = rate;
     }
   }
 
-  return {
-    percent,
-    upgradeRequirement:
-      trainingMode === "ideal"
-        ? createUpgradeRequirement(operator, appliedRate)
-        : null,
-  };
+  return appliedRate
+    ? {
+        percent: appliedRate.percent,
+        fillPriority: appliedRate.fillPriority,
+        elite: appliedRate.elite,
+        level: appliedRate.level,
+        upgradeRequirement:
+          trainingMode === "ideal"
+            ? createUpgradeRequirement(operator, appliedRate)
+            : null,
+      }
+    : null;
 }
 
 function getCandidateFallback(catalog, candidate) {
+  const createFallback = (count) => ({
+    count,
+    percent: Number(catalog?.fallback?.percent || 0),
+    label: catalog?.fallback?.label || "基础补位",
+    poolKey: String(catalog?.fallback?.poolKey || "").trim(),
+  });
+
+  if (candidate?.isIndividualFallback) {
+    return createFallback(1);
+  }
+
   if (candidate?.selectionMode === "individual") {
-    return {
-      count: 0,
-      percent: Number(catalog?.fallback?.percent || 0),
-      label: catalog?.fallback?.label || "基础补位",
-      poolKey: String(catalog?.fallback?.poolKey || "").trim(),
-    };
+    return createFallback(0);
   }
 
   const slotCount = Number(catalog?.scope?.slotCount || 0);
   const memberCount = (candidate?.members || []).length;
 
-  return {
-    count: Math.max(0, slotCount - memberCount),
-    percent: Number(catalog?.fallback?.percent || 0),
-    label: catalog?.fallback?.label || "基础补位",
-    poolKey: String(catalog?.fallback?.poolKey || "").trim(),
-  };
+  return createFallback(Math.max(0, slotCount - memberCount));
 }
 
 function matchesCandidateFacilityCounts({
@@ -335,6 +353,9 @@ function getFallbackOperators({
   excludedOperatorIds,
   fallbackPools,
   trainingMode,
+  scope,
+  layoutFacts,
+  minimumPercent = null,
 }) {
   if (fallback.count === 0) {
     return [];
@@ -345,24 +366,52 @@ function getFallbackOperators({
     return null;
   }
 
+  const normalizedMinimumPercent =
+    minimumPercent === null || minimumPercent === undefined
+      ? null
+      : Number(minimumPercent);
   const selected = [...rosterById.values()]
     .filter((operator) => !excludedOperatorIds.has(operator.charId))
-    .map((operator) => {
+    .flatMap((operator) => {
       const rate = getRateForTrainingMode(
         operator,
         pool,
         trainingMode,
       );
+      const layer3Bonus = rate
+        ? getRiicLayer3OperatorLocalBonus({
+            operatorId: operator.charId,
+            ownedOperators: rosterById,
+            scope,
+            layoutFacts,
+          })
+        : null;
 
-      return {
-        charId: operator.charId,
-        name: operator.name,
-        percent: rate.percent,
-        upgradeRequirement: rate.upgradeRequirement,
-      };
+      return rate && Number.isFinite(layer3Bonus)
+        ? [
+            {
+              charId: operator.charId,
+              name: operator.name,
+              percent: rate.percent + layer3Bonus,
+              basePercent: rate.percent,
+              layer3Bonus,
+              fillPriority: rate.fillPriority,
+              upgradeRequirement: rate.upgradeRequirement,
+            },
+          ]
+        : [];
     })
+    .filter(
+      (operator) =>
+        normalizedMinimumPercent === null ||
+        !Number.isFinite(normalizedMinimumPercent) ||
+        operator.percent >= normalizedMinimumPercent,
+    )
     .sort(
       (left, right) =>
+        right.percent +
+          right.fillPriority -
+          (left.percent + left.fillPriority) ||
         right.percent - left.percent ||
         left.name.localeCompare(right.name, "zh-CN") ||
         left.charId.localeCompare(right.charId, "en"),
@@ -384,30 +433,76 @@ function toRuntimeCandidate({
   coreUpgradeRequirements,
   rosterById,
   fallbackOperators,
+  layoutFacts,
 }) {
   const fallback = getCandidateFallback(catalog, candidate);
   const sourceRoomType = String(catalog?.scope?.roomType || "").trim();
   const localPercentField = getPercentField(sourceRoomType);
-  const percentFields = getCandidatePercentFields(candidate);
-  const coreBonusPercent = Number(
-    localPercentField ? percentFields[localPercentField] : 0,
-  );
-  const fallbackPreviewOperators = [...fallbackOperators]
-    .sort(
-      (left, right) =>
-        right.percent - left.percent ||
-        left.name.localeCompare(right.name, "zh-CN") ||
-        left.charId.localeCompare(right.charId, "en"),
-    )
-    .slice(0, fallback.count);
-  const fallbackPercent = fallbackPreviewOperators.reduce(
-    (total, operator) => total + operator.percent,
+  const publishedCoreBonusPercent = getCandidateCoreBonusPercent(candidate);
+  const candidateScope = {
+    roomType: String(catalog?.scope?.roomType || ""),
+    product: String(catalog?.scope?.product || ""),
+    stationLevel: Number(catalog?.scope?.stationLevel),
+    slotCount: Number(catalog?.scope?.slotCount),
+  };
+  const layer3RoomPriority = getRiicLayer3CandidateRoomPriority({
+    candidate,
+    operatorIds,
+    ownedOperators: rosterById,
+    scope: candidateScope,
+    layoutFacts,
+  });
+  const layer3CoreBonusPercent = operatorIds.reduce(
+    (total, operatorId) =>
+      total +
+      getRiicLayer3OperatorLocalBonus({
+        operatorId,
+        ownedOperators: rosterById,
+        scope: candidateScope,
+        layoutFacts,
+      }),
     0,
   );
+  const coreBonusPercent = publishedCoreBonusPercent + layer3CoreBonusPercent;
+  const fallbackEstimate = createRiicFallbackEstimate({
+    rankedOperators: fallbackOperators,
+    slotCount: candidateScope.slotCount,
+    fallbackCount: fallback.count,
+    defaultPercent: fallback.percent,
+  });
+  const fallbackPreviewOperators = fallbackEstimate.selectedOperators;
+  const fallbackPercent = fallbackEstimate.totalPercent;
+  const butshuResult = recalculateRiicButshuCandidate({
+    candidate,
+    scope: candidateScope,
+    fallbackOperators: fallbackPreviewOperators,
+  });
+  if (
+    getRiicButshuFallbackMinimumPercent(candidate) !== null &&
+    fallbackEstimate.missingCount > 0
+  ) {
+    return null;
+  }
+  const resolvedCoreBonusPercent = butshuResult
+    ? butshuResult.tradingPercent - fallbackPercent
+    : coreBonusPercent;
+  const resolvedTotalPercent = butshuResult
+    ? 100 + butshuResult.tradingPercent
+    : 100 + coreBonusPercent + fallbackPercent;
   const fallbackUpgradeRequirements = mergeUpgradeRequirements(
     fallbackPreviewOperators.map((operator) => operator.upgradeRequirement),
   );
-  const totalPercent = 100 + coreBonusPercent + fallbackPercent;
+  let publishedEquivalentByProduct =
+    getCandidatePublishedEquivalentByProduct(candidate);
+  if (butshuResult && Object.hasOwn(butshuResult, "gold")) {
+    publishedEquivalentByProduct = { gold: butshuResult.gold };
+  }
+  const runtimePercentFields = {
+    ...Object.fromEntries(PERCENT_FIELDS.map((field) => [field, 0])),
+    ...(localPercentField
+      ? { [localPercentField]: resolvedCoreBonusPercent }
+      : {}),
+  };
 
   return {
     key: candidate.id,
@@ -429,17 +524,17 @@ function toRuntimeCandidate({
       operators: [],
       totalPercent: fallbackPercent,
     },
-    bestAvailableTotalPercent: totalPercent,
-    corePercent: 100 + coreBonusPercent,
-    totalPercent,
-    bonusPercent: coreBonusPercent + fallbackPercent,
+    bestAvailableTotalPercent: resolvedTotalPercent,
+    corePercent: 100 + resolvedCoreBonusPercent,
+    totalPercent: resolvedTotalPercent,
+    bonusPercent: resolvedTotalPercent - 100,
     sourceRoomType,
-    ...percentFields,
+    candidateScope,
+    localBonusPercent: resolvedCoreBonusPercent,
+    publishedEquivalentByProduct,
+    ...runtimePercentFields,
     sortScore: Number(candidate?.sortScore || 0),
-    ...(Number.isFinite(Number(candidate?.virtualGoldPerHour)) &&
-    Number(candidate.virtualGoldPerHour) > 0
-      ? { virtualGoldPerHour: Number(candidate.virtualGoldPerHour) }
-      : {}),
+    layer3RoomPriority,
     ...(candidate?.selectionMode === "individual"
       ? { selectionMode: "individual" }
       : {}),
@@ -497,15 +592,16 @@ export function matchRiicStaticRoomCandidates({
   powerPlantCount,
   tradingStationCount,
   goldManufactureStationCount,
+  manufactureProductKindCount,
+  facilities,
   trainingMode = "current",
 }) {
-  if (!catalog || Number(catalog.schemaVersion) !== 5) {
+  if (!catalog) {
     throw new Error("A RIIC static room candidate catalog is required");
   }
-  if (!fallbackCatalog || Number(fallbackCatalog.schemaVersion) !== 1) {
+  if (!fallbackCatalog) {
     throw new Error("A RIIC fallback operator catalog is required");
   }
-
   const normalizedStationLevel = Number(stationLevel);
   const normalizedSlotCount = Number(slotCount);
   if (
@@ -521,19 +617,23 @@ export function matchRiicStaticRoomCandidates({
     );
   }
 
-  if (
-    catalog?.scope?.roomType !== roomType ||
-    catalog?.scope?.product !== product ||
-    Number(catalog?.scope?.stationLevel) !== normalizedStationLevel ||
-    Number(catalog?.scope?.slotCount) !== normalizedSlotCount
-  ) {
-    throw new Error("RIIC static room candidate catalog scope does not match");
-  }
-
   const normalizedTrainingMode = normalizeTrainingMode(trainingMode);
   const rosterById = normalizeRoster(ownedOperators);
   const nameToCharId = normalizeNameToCharId(operatorNameToCharId);
   const fallbackPools = normalizeFallbackPools(fallbackCatalog);
+  const fallbackScope = {
+    roomType,
+    product,
+    stationLevel: normalizedStationLevel,
+    slotCount: normalizedSlotCount,
+  };
+  const layoutFacts = {
+    powerPlantCount,
+    tradingStationCount,
+    goldManufactureStationCount,
+    manufactureProductKindCount,
+    facilities,
+  };
   const matchingCandidates = (catalog.candidates || []).flatMap(
     (candidate) => {
       if (
@@ -564,21 +664,24 @@ export function matchRiicStaticRoomCandidates({
         excludedOperatorIds: new Set(memberResolution.operatorIds),
         fallbackPools,
         trainingMode: normalizedTrainingMode,
+        scope: fallbackScope,
+        layoutFacts,
+        minimumPercent: getRiicButshuFallbackMinimumPercent(candidate),
       });
       if (!fallbackOperators) {
         return [];
       }
 
-      return [
-        toRuntimeCandidate({
+      const runtimeCandidate = toRuntimeCandidate({
           catalog,
           candidate,
           operatorIds: memberResolution.operatorIds,
           coreUpgradeRequirements: memberResolution.upgradeRequirements,
           rosterById,
           fallbackOperators,
-        }),
-      ];
+          layoutFacts,
+        });
+      return runtimeCandidate ? [runtimeCandidate] : [];
     },
   );
   const fallback = getCandidateFallback(catalog, { members: [] });
@@ -588,7 +691,12 @@ export function matchRiicStaticRoomCandidates({
     excludedOperatorIds: new Set(),
     fallbackPools,
     trainingMode: normalizedTrainingMode,
+    scope: fallbackScope,
+    layoutFacts,
   });
+  const usesIndividualSelection = (catalog.candidates || []).some(
+    (candidate) => candidate?.selectionMode === "individual",
+  );
   const fallbackCandidate = fallbackOperators
     ? toRuntimeCandidate({
         catalog,
@@ -596,17 +704,15 @@ export function matchRiicStaticRoomCandidates({
           id: `fallback:${roomType}:${product}:${normalizedStationLevel}:${normalizedSlotCount}`,
           name: fallback.label,
           members: [],
-          tradingPercent: 0,
-          manufacturePercent: 0,
-          meetingPercent: 0,
-          officePercent: 0,
-          powerPercent: 0,
+          ...(usesIndividualSelection ? { isIndividualFallback: true } : {}),
+          efficiency: 0,
           sortScore: 0,
         },
         operatorIds: [],
         coreUpgradeRequirements: [],
         rosterById,
         fallbackOperators,
+        layoutFacts,
       })
     : null;
 

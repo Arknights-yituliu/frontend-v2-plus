@@ -1,176 +1,14 @@
 {
   "schemaVersion": 1,
-  "scope": {
-    "roomType": "trading",
-    "product": "all",
-    "stationLevel": 1,
-    "slotCount": 1
-  },
-  "defaultPercent": 0,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "defaultPercent": 30,
   "operators": [
-    {
-      "name": "安比尔",
-      "rates": [
-        {
-          "elite": 1,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "安德切尔",
-      "rates": [
-        {
-          "percent": 20
-        }
-      ]
-    },
-    {
-      "name": "暗索",
-      "rates": [
-        {
-          "elite": 1,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "柏喙",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "拜松",
-      "rates": [
-        {
-          "percent": 20
-        },
-        {
-          "elite": 2,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "贝洛内",
-      "rates": [
-        {
-          "percent": 25
-        },
-        {
-          "elite": 2,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "贝娜",
-      "rates": [
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "缠丸",
-      "rates": [
-        {
-          "elite": 1,
-          "percent": 30
-        }
-      ]
-    },
     {
       "name": "伺夜",
       "rates": [
         {
           "elite": 2,
-          "percent": 25
-        }
-      ]
-    },
-    {
-      "name": "但书",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "德克萨斯",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "涤火杰西卡",
-      "rates": [
-        {
-          "percent": 10
-        }
-      ]
-    },
-    {
-      "name": "渡桥",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 15
-        }
-      ]
-    },
-    {
-      "name": "铎铃",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "芬",
-      "rates": [
-        {
-          "elite": 1,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "风絮",
-      "rates": [
-        {
-          "percent": 20
-        },
-        {
-          "elite": 2,
-          "percent": 20
+          "percent": 40
         }
       ]
     },
@@ -179,164 +17,6 @@
       "rates": [
         {
           "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "瑰盐",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "海蒂",
-      "rates": [
-        {
-          "percent": 20
-        },
-        {
-          "elite": 2,
-          "percent": 35
-        }
-      ]
-    },
-    {
-      "name": "赫德雷",
-      "rates": [
-        {
-          "percent": 25
-        },
-        {
-          "elite": 2,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "黑键",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "黑角",
-      "rates": [
-        {
-          "level": 30,
-          "percent": 10
-        }
-      ]
-    },
-    {
-      "name": "衡沙",
-      "rates": [
-        {
-          "percent": 20
-        },
-        {
-          "elite": 2,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "鸿雪",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "火哨",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "吉星",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "锏",
-      "rates": [
-        {
-          "percent": 20
-        },
-        {
-          "elite": 2,
-          "percent": 25
-        }
-      ]
-    },
-    {
-      "name": "角峰",
-      "rates": [
-        {
-          "percent": 15
-        }
-      ]
-    },
-    {
-      "name": "孑",
-      "rates": [
-        {
-          "percent": 4
-        },
-        {
-          "elite": 1,
-          "percent": 4
-        }
-      ]
-    },
-    {
-      "name": "卡夫卡",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "可露希尔",
-      "rates": [
-        {
-          "elite": 2,
-          "percent": 0
         }
       ]
     },
@@ -353,126 +33,83 @@
       ]
     },
     {
-      "name": "空",
+      "name": "四月",
       "rates": [
         {
-          "elite": 2,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "空爆",
-      "rates": [
-        {
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "空弦",
-      "rates": [
-        {
-          "percent": 0
+          "percent": 10
         },
         {
           "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "拉普兰德",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "雷狼龙S空爆",
-      "rates": [
-        {
-          "elite": 2,
-          "percent": 35
-        }
-      ]
-    },
-    {
-      "name": "蕾缪安",
-      "rates": [
-        {
-          "percent": 20
-        },
-        {
-          "elite": 2,
-          "percent": 20
-        }
-      ]
-    },
-    {
-      "name": "琳琅诗怀雅",
-      "rates": [
-        {
-          "percent": 20
-        },
-        {
-          "elite": 2,
-          "percent": 20
-        }
-      ]
-    },
-    {
-      "name": "翎羽",
-      "rates": [
-        {
-          "elite": 1,
           "percent": 10
         }
       ]
     },
     {
-      "name": "龙舌兰",
+      "name": "图耶",
       "rates": [
         {
-          "percent": 0
+          "percent": 5
         },
         {
           "elite": 2,
-          "percent": 0
+          "percent": 5
         }
       ]
     },
     {
-      "name": "玫兰莎",
+      "name": "夜刀",
       "rates": [
         {
-          "percent": 25
+          "percent": 30
         }
-      ]
+      ],
+      "fillPriority": -1
     },
     {
-      "name": "明椒",
+      "name": "夜烟",
       "rates": [
         {
-          "percent": 0
+          "elite": 1,
+          "percent": 30
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "孑",
+      "rates": [
+        {
+          "percent": 4
         },
         {
-          "elite": 2,
-          "percent": 0
+          "elite": 1,
+          "percent": 4
         }
       ]
     },
     {
-      "name": "摩根",
+      "name": "安德切尔",
       "rates": [
         {
-          "elite": 2,
           "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "安比尔",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "崖心",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 15
         }
       ]
     },
@@ -485,7 +122,46 @@
       ]
     },
     {
-      "name": "能天使",
+      "name": "拜松",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "月见夜",
+      "rates": [
+        {
+          "percent": 30
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "梓兰",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "泰拉大陆调查团",
+      "rates": [
+        {
+          "percent": 5
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "海蒂",
       "rates": [
         {
           "percent": 20
@@ -497,47 +173,10 @@
       ]
     },
     {
-      "name": "佩佩",
+      "name": "涤火杰西卡",
       "rates": [
         {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "齐尔查克",
-      "rates": [
-        {
-          "percent": 30
-        },
-        {
-          "elite": 2,
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "绮良",
-      "rates": [
-        {
-          "percent": 5
-        },
-        {
-          "elite": 2,
-          "percent": 5
-        }
-      ]
-    },
-    {
-      "name": "蛇屠箱",
-      "rates": [
-        {
-          "elite": 1,
-          "percent": 20
+          "percent": 10
         }
       ]
     },
@@ -562,52 +201,84 @@
       ]
     },
     {
+      "name": "渡桥",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "玫兰莎",
+      "rates": [
+        {
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "琳琅诗怀雅",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "瑰盐",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "真言",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
       "name": "石英",
       "rates": [
         {
           "elite": 1,
           "percent": 30
         }
-      ]
+      ],
+      "fillPriority": -1
     },
     {
-      "name": "史都华德",
+      "name": "空",
       "rates": [
-        {
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "四月",
-      "rates": [
-        {
-          "percent": 10
-        },
         {
           "elite": 2,
-          "percent": 10
+          "percent": 30
         }
       ]
     },
     {
-      "name": "泰拉大陆调查团",
+      "name": "空爆",
       "rates": [
         {
-          "percent": 5
+          "percent": 30
         }
       ]
     },
     {
-      "name": "桃金娘",
-      "rates": [
-        {
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "图耶",
+      "name": "绮良",
       "rates": [
         {
           "percent": 5
@@ -631,53 +302,96 @@
       ]
     },
     {
-      "name": "乌有",
-      "rates": [
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "巫恋",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "香草",
+      "name": "缠丸",
       "rates": [
         {
           "elite": 1,
+          "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "翎羽",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "能天使",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "空弦",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 40
+        }
+      ]
+    },
+    {
+      "name": "芬",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 30
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "蕾缪安",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
           "percent": 20
         }
       ]
     },
     {
-      "name": "新约能天使",
+      "name": "蛇屠箱",
       "rates": [
         {
+          "elite": 1,
+          "percent": 20
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "衡沙",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
           "elite": 2,
-          "percent": 0
+          "percent": 30
         }
       ]
     },
     {
-      "name": "雪雉",
+      "name": "角峰",
       "rates": [
         {
-          "percent": 25
-        },
-        {
-          "elite": 2,
-          "percent": 35
+          "percent": 15
         }
       ]
     },
@@ -690,37 +404,34 @@
       ]
     },
     {
-      "name": "崖心",
+      "name": "贝洛内",
       "rates": [
+        {
+          "percent": 25
+        },
         {
           "elite": 2,
-          "percent": 15
-        }
-      ]
-    },
-    {
-      "name": "焰狐龙梓兰",
-      "rates": [
-        {
-          "elite": 2,
-          "percent": 20
-        }
-      ]
-    },
-    {
-      "name": "夜刀",
-      "rates": [
-        {
           "percent": 30
         }
       ]
     },
     {
-      "name": "夜烟",
+      "name": "赫德雷",
       "rates": [
         {
-          "elite": 1,
+          "percent": 25
+        },
+        {
+          "elite": 2,
           "percent": 30
+        }
+      ]
+    },
+    {
+      "name": "远山",
+      "rates": [
+        {
+          "percent": 25
         }
       ]
     },
@@ -737,35 +448,7 @@
       ]
     },
     {
-      "name": "远山",
-      "rates": [
-        {
-          "percent": 25
-        }
-      ]
-    },
-    {
-      "name": "月见夜",
-      "rates": [
-        {
-          "percent": 30
-        }
-      ]
-    },
-    {
-      "name": "折光",
-      "rates": [
-        {
-          "percent": 0
-        },
-        {
-          "elite": 2,
-          "percent": 0
-        }
-      ]
-    },
-    {
-      "name": "真言",
+      "name": "锏",
       "rates": [
         {
           "percent": 20
@@ -777,19 +460,67 @@
       ]
     },
     {
-      "name": "梓兰",
+      "name": "雪雉",
       "rates": [
         {
-          "elite": 1,
           "percent": 25
+        },
+        {
+          "elite": 2,
+          "percent": 35
         }
       ]
     },
     {
-      "name": "U-Official",
+      "name": "雷狼龙S空爆",
       "rates": [
         {
-          "percent": 0
+          "elite": 2,
+          "percent": 35
+        }
+      ]
+    },
+    {
+      "name": "风絮",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "香草",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 20
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "黑角",
+      "rates": [
+        {
+          "level": 30,
+          "percent": 10
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "齐尔查克",
+      "rates": [
+        {
+          "percent": 30
+        },
+        {
+          "elite": 2,
+          "percent": 30
         }
       ]
     }

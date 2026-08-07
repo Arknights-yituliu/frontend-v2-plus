@@ -1,122 +1,94 @@
 {
-  "schemaVersion": 5,
-  "scope": {
-    "roomType": "manufacture",
-    "product": "orundum",
-    "stationLevel": 1,
-    "slotCount": 1
-  },
-  "fallback": {
-    "percent": 25,
-    "label": "基础补位",
-    "poolKey": "manufacture:orundum"
-  },
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "candidates": [
     {
-      "id": "candidate-a4a8f7d0676f3634",
-      "variantGroupId": "family-c9aebe3e6ed766ea",
+      "id": "baseline:manufacture:orundum:1:1:char_4041_chnut:1-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_4041_chnut",
       "name": "褐果",
-      "roomType": "manufacture",
       "members": [
         {
           "name": "褐果",
           "elite": 1
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 45,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
+      "efficiency": 45,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
     },
     {
-      "id": "candidate-c92f6139d6001855",
-      "variantGroupId": "family-015da4d6580dcae7",
-      "name": "地灵",
-      "roomType": "manufacture",
-      "members": [
-        {
-          "name": "地灵",
-          "elite": 1
-        }
-      ],
-      "tradingPercent": 0,
-      "manufacturePercent": 35,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
-    },
-    {
-      "id": "candidate-ce87599241558ade",
-      "variantGroupId": "family-e7fd72f05fd90809",
+      "id": "baseline:manufacture:orundum:1:1:char_121_lava:1-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_121_lava",
       "name": "炎熔",
-      "roomType": "manufacture",
       "members": [
         {
           "name": "炎熔",
           "elite": 1
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 35,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
     },
     {
-      "id": "candidate-16a2b1ac71e43cdc",
-      "variantGroupId": "family-710f11ccaab505f7",
+      "id": "baseline:manufacture:orundum:1:1:char_180_amgoat:0-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_180_amgoat",
       "name": "艾雅法拉",
-      "roomType": "manufacture",
       "members": [
         {
           "name": "艾雅法拉"
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 35,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
     },
     {
-      "id": "candidate-d95f9fa141fcca32",
-      "variantGroupId": "family-0812045ce091bf7a",
-      "name": "谬因",
-      "roomType": "manufacture",
+      "id": "baseline:manufacture:orundum:1:1:char_183_skgoat:1-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_183_skgoat",
+      "name": "地灵",
       "members": [
         {
-          "name": "谬因"
+          "name": "地灵",
+          "elite": 1
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 35,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
     },
     {
-      "id": "candidate-92e038a249b37d9d",
-      "variantGroupId": "family-899751f259aef4fc",
+      "id": "baseline:manufacture:orundum:1:1:char_348_ceylon:2-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_348_ceylon",
       "name": "锡兰",
-      "roomType": "manufacture",
       "members": [
         {
           "name": "锡兰",
           "elite": 2
         }
       ],
-      "tradingPercent": 0,
-      "manufacturePercent": 35,
-      "meetingPercent": 0,
-      "officePercent": 0,
-      "powerPercent": 0,
-      "sortScore": 0
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "baseline:manufacture:orundum:1:1:char_4229_aphris:0-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_4229_aphris",
+      "name": "谬因",
+      "members": [
+        {
+          "name": "谬因"
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
     }
   ]
 }

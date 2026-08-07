@@ -140,6 +140,16 @@ Custom Vite plugin `buildTimePlugin()` in `vite.config.js` injects build timesta
 ### Multi-entry Build
 The build produces two separate HTML files. When working with routes, be aware that `/docs` paths redirect to `docs.html` (handled in router beforeEach guard).
 
+### RIIC Research Boundary
+`D:\AK\2026\A202608\A2608-排班表研究\00_coordination\riic-runtime-consumer-contract.md`
+is the scheduler-owned consumer contract for Research-generated runtime
+catalogs. It may describe supported schemas, paths, validation, and runtime
+behavior, but it must not include raw schedules, private economic/cross-room
+rules, research evidence, or unpublished candidate data. Changes to that
+contract require a new Research preview and explicit frontend sync approval;
+they do not authorize editing the Research workspace or replacing runtime JSON
+automatically.
+
 ### Path Aliases
 `@` alias is configured to point to `src/` directory in vite.config.js
 
