@@ -13,7 +13,10 @@
       "name": "Castle-3",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
         }
       ]
     },
@@ -21,11 +24,19 @@
       "name": "CONFESS-47",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "laterano",
+            "work-platform"
+          ]
         },
         {
           "level": 30,
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "laterano",
+            "work-platform"
+          ]
         }
       ]
     },
@@ -33,11 +44,17 @@
       "name": "Friston-3",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
         },
         {
           "level": 30,
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
         }
       ]
     },
@@ -45,11 +62,17 @@
       "name": "GALLUS²",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
         },
         {
           "level": 30,
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
         }
       ]
     },
@@ -57,7 +80,10 @@
       "name": "Lancet-2",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
         }
       ]
     },
@@ -65,11 +91,17 @@
       "name": "PhonoR-0",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
         },
         {
           "level": 30,
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
         }
       ]
     },
@@ -77,11 +109,17 @@
       "name": "THRM-EX",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
         },
         {
           "level": 30,
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
         }
       ]
     },
@@ -89,11 +127,17 @@
       "name": "伊芙利特",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "rhine-lab"
+          ]
         },
         {
           "elite": 2,
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "rhine-lab"
+          ]
         }
       ]
     },
@@ -138,11 +182,17 @@
       "name": "异客",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "sargon"
+          ]
         },
         {
           "elite": 2,
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "sargon"
+          ]
         }
       ]
     },
@@ -178,11 +228,21 @@
       "name": "正义骑士号",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "work-platform"
+          ]
         },
         {
           "level": 30,
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "work-platform"
+          ]
         }
       ]
     },
@@ -234,7 +294,10 @@
       "name": "炎熔",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "a1-team"
+          ]
         }
       ]
     },
@@ -269,7 +332,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "rhine-lab"
+          ]
         }
       ]
     },
@@ -277,11 +343,17 @@
       "name": "菲莱",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "sargon"
+          ]
         },
         {
           "elite": 2,
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "sargon"
+          ]
         }
       ]
     },
@@ -298,11 +370,17 @@
       "name": "雷蛇",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "blacksteel-international"
+          ]
         },
         {
           "elite": 2,
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "blacksteel-international"
+          ]
         }
       ]
     }

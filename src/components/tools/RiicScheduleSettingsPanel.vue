@@ -28,21 +28,13 @@ defineProps({
     type: Boolean,
     default: false,
   },
-  presetOptions: {
-    type: Array,
-    default: () => [],
-  },
-  selectedPresetId: {
-    type: String,
-    default: "",
-  },
-  presetNote: {
-    type: String,
-    default: "",
-  },
-  getPresetTitle: {
-    type: Function,
-    default: () => "",
+  idealTrainingRaritySelection: {
+    type: Object,
+    default: () => ({
+      six: true,
+      five: true,
+      fourOrBelow: true,
+    }),
   },
 });
 
@@ -50,7 +42,7 @@ const emit = defineEmits([
   "select-two-shift-rotation",
   "select-facility-requirement",
   "set-training-mode",
-  "toggle-preset",
+  "set-training-rarity-selection",
 ]);
 </script>
 
@@ -142,7 +134,57 @@ const emit = defineEmits([
             :disabled="ownedOperatorCount === 0"
             @click="emit('set-training-mode', true)"
           >
-            视为已解锁全部基建技能
+            基建技能视为已解锁
+          </button>
+        </div>
+        <div
+          v-if="treatUnderleveledOperatorsAsQualified"
+          class="facility-profile-options training-rarity-options"
+        >
+          <button
+            type="button"
+            class="facility-profile-option"
+            :class="{ active: idealTrainingRaritySelection.six }"
+            :aria-pressed="idealTrainingRaritySelection.six"
+            :disabled="ownedOperatorCount === 0"
+            @click="
+              emit('set-training-rarity-selection', {
+                ...idealTrainingRaritySelection,
+                six: !idealTrainingRaritySelection.six,
+              })
+            "
+          >
+            解锁6星
+          </button>
+          <button
+            type="button"
+            class="facility-profile-option"
+            :class="{ active: idealTrainingRaritySelection.five }"
+            :aria-pressed="idealTrainingRaritySelection.five"
+            :disabled="ownedOperatorCount === 0"
+            @click="
+              emit('set-training-rarity-selection', {
+                ...idealTrainingRaritySelection,
+                five: !idealTrainingRaritySelection.five,
+              })
+            "
+          >
+            解锁5星
+          </button>
+          <button
+            type="button"
+            class="facility-profile-option"
+            :class="{ active: idealTrainingRaritySelection.fourOrBelow }"
+            :aria-pressed="idealTrainingRaritySelection.fourOrBelow"
+            :disabled="ownedOperatorCount === 0"
+            @click="
+              emit('set-training-rarity-selection', {
+                ...idealTrainingRaritySelection,
+                fourOrBelow: !idealTrainingRaritySelection.fourOrBelow,
+              })
+            "
+          >
+            解锁4星及以下
           </button>
         </div>
         <span class="facility-profile-note operator-training-mode-note">
@@ -150,29 +192,6 @@ const emit = defineEmits([
         </span>
       </section>
 
-      <section
-        v-if="presetOptions.length > 0"
-        class="facility-profile-switch"
-        aria-label="套组预填"
-      >
-        <span class="facility-profile-label">套组预填</span>
-        <div class="facility-profile-options">
-          <button
-            v-for="option in presetOptions"
-            :key="option.id"
-            type="button"
-            class="facility-profile-option"
-            :class="{ active: selectedPresetId === option.id }"
-            :aria-pressed="selectedPresetId === option.id"
-            :disabled="!option.available"
-            :title="getPresetTitle(option)"
-            @click="emit('toggle-preset', option.id)"
-          >
-            {{ option.name }}
-          </button>
-        </div>
-        <span class="facility-profile-note">{{ presetNote }}</span>
-      </section>
     </div>
   </section>
 </template>
@@ -196,6 +215,11 @@ const emit = defineEmits([
 
 .operator-training-mode .facility-profile-options {
   max-width: 100%;
+}
+
+.training-rarity-options {
+  flex: 0 1 auto;
+  width: auto;
 }
 
 .operator-training-mode .facility-profile-option:disabled {

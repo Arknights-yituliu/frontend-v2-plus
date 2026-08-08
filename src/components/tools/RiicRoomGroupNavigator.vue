@@ -1,9 +1,5 @@
 <script setup>
 const props = defineProps({
-  progressItems: {
-    type: Array,
-    default: () => [],
-  },
   selectionRows: {
     type: Array,
     default: () => [],
@@ -16,62 +12,31 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  hasRestorableRecommendedSchedule: {
-    type: Boolean,
-    default: false,
-  },
-  autoGeneratingSchedule: {
-    type: Boolean,
-    default: false,
-  },
-  getGroupCandidateStatus: {
+  getGroupStatus: {
     type: Function,
     required: true,
   },
 });
 
-const emit = defineEmits(["select-group", "restore-recommended"]);
+const emit = defineEmits(["select-group"]);
 
 function selectGroup(groupId) {
   emit("select-group", groupId);
+}
+
+function getTileStatus(group) {
+  return (
+    props.getGroupStatus(group) || {
+      tone: "pending",
+      icon: "mdi-alert-circle-outline",
+      title: "待填入",
+    }
+  );
 }
 </script>
 
 <template>
   <div class="room-group-selection-layout">
-    <aside class="room-group-progress" aria-label="房间组填写进度">
-      <strong class="room-group-progress-heading">填写进度</strong>
-      <button
-        v-for="item in progressItems"
-        :key="item.group.id"
-        type="button"
-        class="room-group-progress-item"
-        :class="[
-          `tone-${item.tone}`,
-          { active: activeGroupId === item.group.id },
-        ]"
-        :aria-pressed="activeGroupId === item.group.id"
-        @click="selectGroup(item.group.id)"
-      >
-        <span class="room-group-progress-label">
-          <v-icon :icon="item.group.icon" size="16"></v-icon>
-          <span>{{ item.group.label }}</span>
-        </span>
-        <small>{{ item.label }}</small>
-      </button>
-      <button
-        type="button"
-        class="restore-recommended-schedule"
-        :disabled="
-          !hasRestorableRecommendedSchedule || autoGeneratingSchedule
-        "
-        @click="emit('restore-recommended')"
-      >
-        <v-icon icon="mdi-restore" size="16"></v-icon>
-        <span>恢复推荐方案</span>
-      </button>
-    </aside>
-
     <div class="room-group-schematic">
       <header class="room-workbench-heading">
         <div>
@@ -96,8 +61,8 @@ function selectGroup(groupId) {
             class="room-group-tile"
             :class="[
               `tone-${group.tone}`,
+              `status-${getTileStatus(group).tone}`,
               { active: activeGroupId === group.id },
-              { 'width-double': group.width === 2 },
             ]"
             :aria-pressed="activeGroupId === group.id"
             @click="selectGroup(group.id)"
@@ -106,11 +71,11 @@ function selectGroup(groupId) {
               <v-icon :icon="group.icon" size="20"></v-icon>
               <strong>{{ group.label }}</strong>
               <v-icon
-                v-if="getGroupCandidateStatus(group)"
+                v-if="getTileStatus(group).tone !== 'complete'"
                 class="room-group-status-icon"
-                :class="`tone-${getGroupCandidateStatus(group).tone}`"
-                :icon="getGroupCandidateStatus(group).icon"
-                :title="getGroupCandidateStatus(group).title"
+                :class="`status-${getTileStatus(group).tone}`"
+                :icon="getTileStatus(group).icon"
+                :title="getTileStatus(group).title"
                 size="15"
               ></v-icon>
             </span>
@@ -315,7 +280,7 @@ function selectGroup(groupId) {
   max-width: 180px;
   min-height: 82px;
   padding: 10px;
-  border: 0;
+  border: 1px solid var(--c-border-color);
   border-left: 3px solid
     color-mix(in srgb, var(--room-group-color) 70%, var(--c-border-color));
   border-radius: 0;
@@ -383,12 +348,8 @@ function selectGroup(groupId) {
 }
 
 .room-group-tile.active {
-  border-left-width: 5px;
-  background: color-mix(
-    in srgb,
-    var(--room-group-color) 13%,
-    var(--c-page-background-color)
-  );
+  border-left-width: 3px;
+  background: var(--c-page-background-color-secondary);
 }
 
 .room-group-tile-title {
@@ -546,6 +507,122 @@ function selectGroup(groupId) {
     width: 100%;
     min-width: 0;
     max-width: none;
+  }
+}
+
+/* The three schematic rows use completion status for emphasis while retaining
+ * facility-colored icons for fast recognition. */
+.room-group-selection-layout {
+  display: block;
+  padding: 12px;
+}
+
+.room-group-schematic {
+  width: 100%;
+}
+
+.room-group-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  flex-wrap: nowrap;
+}
+
+.room-group-tile {
+  --room-group-facility-color: var(--room-group-color);
+  --room-group-status-color: var(--riic-orange);
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  border-left-color: color-mix(
+    in srgb,
+    var(--room-group-status-color) 70%,
+    var(--c-border-color)
+  );
+  background: color-mix(
+    in srgb,
+    var(--room-group-status-color) 4%,
+    var(--c-page-background-color-secondary)
+  );
+}
+
+.room-group-tile.status-complete {
+  --room-group-status-color: var(--riic-green);
+}
+
+.room-group-tile.status-error {
+  --room-group-status-color: var(--riic-red);
+}
+
+.room-group-tile:hover {
+  background: color-mix(
+    in srgb,
+    var(--room-group-status-color) 8%,
+    var(--c-page-background-color-secondary)
+  );
+}
+
+.room-group-tile.active {
+  background: color-mix(
+    in srgb,
+    var(--room-group-status-color) 4%,
+    var(--c-page-background-color-secondary)
+  );
+  animation: room-group-active-pulse 1.8s ease-in-out infinite;
+}
+
+.room-group-tile-title > .v-icon {
+  color: var(--room-group-facility-color);
+}
+
+.room-group-tile-title > .room-group-status-icon.status-complete {
+  color: var(--riic-green);
+}
+
+.room-group-tile-title > .room-group-status-icon.status-pending {
+  color: var(--riic-orange);
+}
+
+.room-group-tile-title > .room-group-status-icon.status-error {
+  color: var(--riic-red);
+}
+
+.room-group-count i {
+  border-color: color-mix(
+    in srgb,
+    var(--room-group-status-color) 58%,
+    var(--c-border-color)
+  );
+  background: color-mix(
+    in srgb,
+    var(--room-group-status-color) 14%,
+    var(--c-page-background-color)
+  );
+}
+
+.restore-recommended-schedule {
+  margin: 0 0 12px;
+}
+
+@keyframes room-group-active-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 1px
+      color-mix(in srgb, var(--riic-blue) 48%, transparent);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 2px
+        color-mix(in srgb, var(--riic-blue) 78%, transparent),
+      0 0 10px
+        color-mix(in srgb, var(--riic-blue) 28%, transparent);
+  }
+}
+
+@media (max-width: 760px) {
+  .room-group-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>

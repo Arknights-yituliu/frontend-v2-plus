@@ -243,6 +243,28 @@
       "efficiency": 90,
       "sortScore": 0,
       "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-red-pine-fartooth-wildmane-ashlock",
+      "variantGroupId": "family-red-pine-fartooth-wildmane-ashlock",
+      "name": "远牙 + 野鬃 + 灰毫",
+      "members": [
+        {
+          "name": "远牙",
+          "elite": 2
+        },
+        {
+          "name": "野鬃",
+          "elite": 2
+        },
+        {
+          "name": "灰毫",
+          "elite": 2
+        }
+      ],
+      "efficiency": 75,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
     }
   ]
 }

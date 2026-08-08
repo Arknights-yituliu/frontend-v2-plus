@@ -160,7 +160,7 @@
         "key": "trading:lmd:3:3",
         "file": "trading/lmd/3.json",
         "fallbackFile": "trading/lmd/1.fallback.json",
-        "candidateCount": 84,
+        "candidateCount": 86,
         "operatorCount": 50
       },
     {

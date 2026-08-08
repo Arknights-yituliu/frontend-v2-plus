@@ -12,6 +12,7 @@ import { saveAs } from "file-saver";
 import { useRoute, useRouter } from "vue-router";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import RiicAdditionalInfoPanel from "/src/components/tools/RiicAdditionalInfoPanel.vue";
+import RiicControlCenterStaffingPanel from "/src/components/tools/RiicControlCenterStaffingPanel.vue";
 import RiicDeveloperWorkbench from "/src/components/tools/RiicDeveloperWorkbench.vue";
 import RiicOperatorSourcePanel from "/src/components/tools/RiicOperatorSourcePanel.vue";
 import RiicRoomGroupNavigator from "/src/components/tools/RiicRoomGroupNavigator.vue";
@@ -29,8 +30,7 @@ import {
 import { useRiicOperatorSources } from "/src/utils/riicOperatorSources.js";
 import { operatorTableV2 } from "/src/utils/gameData.js";
 import RIIC_BASELINE_SKILL_RULES from "/src/static/json/tools/riic_baseline_skill_rules.json";
-import RIIC_CONTROL_ROTATION_RULES from "/src/static/json/tools/riic_control_rotation_rules.json";
-import RIIC_SCHEDULE_PRESETS from "/src/static/json/tools/riic-candidates/preSet.json";
+import RIIC_CONTROL_CENTER_SKILLS from "/src/static/json/tools/riic-candidates/riic-04-control.json";
 import {
   ESTIMATION_ASSUMPTIONS,
   RIIC_SCHEDULE_CANDIDATES,
@@ -49,32 +49,49 @@ import {
   RIIC_FACILITY_REQUIREMENTS,
 } from "/src/utils/riicScheduleModel.js";
 import { resolveRiicBaselineSkills } from "/src/utils/riicBaselineSkillResolver.js";
-import { buildRiicControlRotation } from "/src/utils/riicControlRotation.js";
 import {
-  buildRiicSchedulePresetRuntime,
-  getRiicSchedulePresetOptions,
-} from "/src/utils/riicSchedulePreset.js";
-import { getRiicLayer3RuleConditionChecks } from "/src/utils/riicLayer3Rules.js";
+  getRiicLayer3ControlCenterEffects,
+  getRiicLayer3RuleConditionChecks,
+  getRiicLayer3SupportRoomPlacements,
+} from "/src/utils/riic03Rules.js";
 import {
   createRiicRoomGroupFallbackPlan,
 } from "/src/utils/riicDynamicFallback.js";
+import {
+  recalculateRiicAutomationManufacture,
+} from "/src/utils/riicAutomationDynamicFallback.js";
 import { getRiicRoomGroupStaffingRequirement } from "/src/utils/riicStaffingRequirement.js";
 import {
-  matchRiicStaticRoomCandidates,
-} from "/src/utils/riicStaticRoomCandidateMatcher.js";
+  resolveRiicRoomCandidateSkeletons,
+} from "/src/utils/riic02Groups.js";
+import {
+  materializeRiicRoomCandidateSkeletons,
+} from "/src/utils/riic03aCandidates.js";
 import {
   getRiicStaticRoomCandidateCatalogKey,
   loadRiicStaticRoomCandidateCatalog,
-} from "/src/utils/riicStaticRoomCandidateCatalog.js";
+} from "/src/utils/riic01Catalog.js";
+import {
+  normalizeRiicIdealTrainingRaritySelection,
+  isRiicIdealTrainingEnabledForOperator,
+} from "/src/utils/riicTrainingPolicy.js";
 import {
   getRiicRuntimeCandidateContributionBreakdown,
   getRiicRuntimeCandidateRankingValue,
 } from "/src/utils/riicRuntimeContribution.js";
+import { evaluateRiicControlCenterScenarios } from "/src/utils/riic04Trial.js";
+import { evaluateRiicPerceptionResourceTrials } from "/src/utils/riic05PerceptionTrial.js";
 import { buildRiicSchedulePreview } from "/src/utils/riicSchedulePreview.js";
+import { summarizeRiicActualSchedule } from "/src/utils/riic07Actual.js";
 import { buildRiicMaaScheduleFromPreview } from "/src/utils/riicScheduleExport.js";
 import {
   createRiicYieldEngineRunningResult,
 } from "/src/utils/riicYieldEngines/contract.js";
+import {
+  buildRiicControlCenterRuntimeContext,
+  getRiicControlCenterRoomAdjustment,
+} from "/src/utils/riicControlCenterRuntime.js";
+import { alignRiicScheduleSameShiftBindings } from "/src/utils/riicSameShiftBindings.js";
 import {
   RIIC_YIELD_ENGINE_REGISTRY,
 } from "/src/utils/riicYieldEngines/engineRegistry.js";
@@ -88,9 +105,117 @@ const RIIC_SCHEDULE_DRAFT_STORAGE_KEY =
   "riic_schedule_generator_draft_v2";
 const LEGACY_RIIC_SCHEDULE_DRAFT_STORAGE_KEY =
   "riic_schedule_generator_draft_v1";
-const RIIC_SCHEDULE_DRAFT_VERSION = 19;
+const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
+  "riic_schedule_generator_to_legacy_editor_v1";
+const RIIC_SCHEDULE_DRAFT_VERSION = 23;
+const RIIC_SCHEDULE_DRAFT_PREVIOUS_VERSION = 22;
+const RIIC_SCHEDULE_DRAFT_LEGACY_VERSION = 21;
 const ROOM_STAFFING_CANDIDATE_PAGE_SIZE = 24;
-const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "6";
+const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "7";
+const CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS = Object.freeze([
+  {
+    id: "trading",
+    label: "贸易站功能位",
+    targetRoomType: "trading",
+    buffTags: ["trading-station"],
+  },
+  {
+    id: "manufacture",
+    label: "制造站功能位",
+    targetRoomType: "manufacture",
+    buffTags: ["manufacture-station"],
+  },
+  {
+    id: "office",
+    label: "办公室功能位",
+    targetRoomType: "hire",
+    buffTags: ["office"],
+  },
+]);
+function toRiicControlCenterUnlockNumber(value, fallback = 0) {
+  const number = Number(value);
+  return Number.isInteger(number) && number >= 0 ? number : fallback;
+}
+
+function isRiicControlCenterSkillUnlocked(
+  operator,
+  skill,
+  { trainingMode = "current", idealTrainingRaritySelection } = {},
+) {
+  if (
+    trainingMode === "ideal" &&
+    isRiicIdealTrainingEnabledForOperator(
+      operator,
+      idealTrainingRaritySelection,
+    )
+  ) {
+    return true;
+  }
+
+  const operatorElite = toRiicControlCenterUnlockNumber(operator?.elite);
+  const requiredElite = toRiicControlCenterUnlockNumber(skill?.elite);
+  if (operatorElite !== requiredElite) {
+    return operatorElite > requiredElite;
+  }
+
+  return (
+    toRiicControlCenterUnlockNumber(operator?.level, 1) >=
+    toRiicControlCenterUnlockNumber(skill?.level, 1)
+  );
+}
+
+function isRiicControlCenterRoomEffect(effect) {
+  const target = effect?.target || {};
+  const scope = String(target?.scope || "").trim();
+  return Boolean(
+    ["allRooms", "operators"].includes(scope) &&
+      ["trading", "manufacture", "hire"].includes(
+        String(target?.roomType || "").trim(),
+      ) &&
+      (scope !== "operators" ||
+        (target?.operatorIds || []).some(
+          (operatorId) => String(operatorId || "").trim(),
+        )) &&
+      Number.isFinite(Number(effect?.bonusPercent)),
+  );
+}
+
+function getRiicControlCenterRoomEffectKey(effect) {
+  const target = effect?.target || {};
+  return [
+    String(target?.scope || "").trim(),
+    String(target?.roomType || "").trim(),
+    String(target?.product || "").trim(),
+    String(effect?.metric || "").trim(),
+    Number(effect?.bonusPercent),
+    (target?.operatorIds || [])
+      .map((operatorId) => String(operatorId || "").trim())
+      .filter(Boolean)
+      .sort()
+      .join(","),
+    JSON.stringify(effect?.conditions || null),
+  ].join(":");
+}
+
+function formatRiicControlCenterRoomEffect(effect) {
+  const roomLabel =
+    {
+      trading: "贸易站",
+      manufacture: "制造站",
+      hire: "办公室",
+    }[String(effect?.target?.roomType || "").trim()] || "";
+  const bonusPercent = Number(effect?.bonusPercent);
+  if (!roomLabel || !Number.isFinite(bonusPercent)) {
+    return "";
+  }
+
+  const targetLabel =
+    String(effect?.target?.scope || "").trim() === "operators"
+      ? "\u6307\u5b9a\u5e72\u5458 "
+      : "";
+  return `${roomLabel} ${targetLabel}${bonusPercent >= 0 ? "+" : ""}${bonusPercent}%`;
+}
+
 const ROOM_PRODUCT_OPTIONS = Object.freeze({
   trading: [
     { value: "lmd", label: "龙门币" },
@@ -283,7 +408,7 @@ const STATIC_SCHEDULE_ROOM_GROUPS = Object.freeze([
     row: "core",
     width: 1,
     rotationRequired: true,
-    automaticScheduling: true,
+    manualControl: true,
   },
   {
     id: "support:meeting",
@@ -840,6 +965,9 @@ const scheduleCapturePanel = ref(null);
 const schedulePreviewCapturePanel = ref(null);
 const useOwnedOperators = ref(false);
 const treatUnderleveledOperatorsAsQualified = ref(false);
+const idealTrainingRaritySelection = ref(
+  normalizeRiicIdealTrainingRaritySelection(),
+);
 const showCandidateDebugValues = ref(false);
 const pendingOwnedOperatorPreference = ref(false);
 const ownedOperatorPreferenceReady = ref(false);
@@ -865,7 +993,14 @@ const recommendedScheduleSnapshot = ref(null);
 const activeScheduleRoomGroupKey = ref("");
 const selectedRoomGroupTeamCandidateKeys = ref({});
 const roomGroupFallbackQueueStates = ref({});
-const presetRequests = ref([]);
+const controlCenterRoleSettings = ref({
+  officeEnabled: false,
+});
+const controlCenterManualOverrides = ref({
+  removedOperatorIds: [],
+  addedOperatorIdsByTeamIndex: {},
+});
+const controlCenterLateFillExcludedOperatorIds = ref([]);
 const scheduleExecutionSettings = reactive({
   shifts: [],
   droneTarget: "",
@@ -881,6 +1016,7 @@ const invalidatedScheduleRoomKeys = ref({});
 const scheduleRoomEditorOperatorInput = ref("");
 const {
   yituliuTokenInput,
+  yituliuSourceLabelInput,
   customSourceImportPanelOpen,
   customSourceImportType,
   customSourceImporting,
@@ -952,6 +1088,16 @@ function getSchedulePreviewStateOrder(
       : [2, 0, 1],
     threeTimes: [1, 2, 0],
   }[shiftMode] || [];
+}
+
+function getDefaultSchedulePreviewStateIndex(
+  shiftMode = confirmedLayoutPlan.value?.shiftMode,
+) {
+  if (shiftMode === "threeTimes") {
+    return 2;
+  }
+
+  return shiftMode ? 1 : 0;
 }
 
 function createDefaultScheduleShifts(
@@ -1049,7 +1195,8 @@ function resetScheduleExecutionSettings() {
   scheduleRoomProductOverrides.value = {};
   invalidatedScheduleRoomKeys.value = {};
   scheduleRoomEditorOperatorInput.value = "";
-  activeSchedulePreviewStateIndex.value = 0;
+  activeSchedulePreviewStateIndex.value =
+    getDefaultSchedulePreviewStateIndex();
 }
 
 const activeStep = computed(() => steps[currentStep.value]);
@@ -1309,10 +1456,10 @@ const scheduleRoomRows = computed(() => {
             .join(" / ")
         : "",
       candidateProduct,
-      automaticScheduling: Boolean(group.automaticScheduling),
+      manualControl: Boolean(group.manualControl),
       fallbackOnly: Boolean(group.fallbackOnly),
       candidateGenerationAvailable:
-        Boolean(candidateProduct) && !group.automaticScheduling,
+        Boolean(candidateProduct) && !group.manualControl,
       rotationRequired: group.rotationRequired,
     };
   };
@@ -1348,36 +1495,42 @@ const roomGroupSelectionRows = computed(() => {
 
   return [
     {
+      id: "control",
+      groups: ["control"].map((key) => groupsByKey.get(key)).filter(Boolean),
+    },
+    {
       id: "production",
       groups: scheduleRoomGroups.value,
     },
     {
-      id: "core",
-      groups: ["meeting", "office", "control"]
+      id: "support",
+      groups: ["meeting", "office", "dormitory", "processing", "training"]
         .map((key) => groupsByKey.get(key))
         .filter(Boolean),
     },
   ];
 });
-const selectableScheduleRoomGroups = computed(() =>
+const navigableScheduleRoomGroups = computed(() =>
   roomGroupSelectionRows.value.flatMap((row) => row.groups),
 );
-const roomGroupProgressItems = computed(() =>
-  selectableScheduleRoomGroups.value.map((group) => ({
-    group,
-    ...getRoomGroupProgressStatus(group),
-  })),
+const selectableScheduleRoomGroups = computed(() =>
+  navigableScheduleRoomGroups.value.filter(
+    (group) =>
+      group.manualControl ||
+      group.candidateGenerationAvailable ||
+      group.fallbackOnly,
+  ),
 );
 const activeScheduleRoomGroup = computed(
   () =>
-    selectableScheduleRoomGroups.value.find(
+    navigableScheduleRoomGroups.value.find(
       (group) => group.id === activeScheduleRoomGroupKey.value,
     ) || null,
 );
 const controlScheduleRoomGroup = computed(
   () =>
     selectableScheduleRoomGroups.value.find(
-      (group) => group.automaticScheduling,
+      (group) => group.manualControl,
     ) || null,
 );
 const riicMatchingRoster = computed(() => {
@@ -1403,128 +1556,679 @@ const riicLayer3MatchedRuleCount = computed(
 const riicTrainingMode = computed(() =>
   treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
 );
-const riicSchedulePresetOptions = computed(() =>
-  getRiicSchedulePresetOptions({
-    presets: RIIC_SCHEDULE_PRESETS.presets,
-    ownedOperators: riicMatchingRoster.value || [],
-    trainingMode: riicTrainingMode.value,
-  }),
-);
-const selectedRiicSchedulePresetId = computed(() =>
-  String(presetRequests.value[0]?.presetId || "").trim(),
-);
-const riicSchedulePresetRuntime = computed(() =>
-  buildRiicSchedulePresetRuntime({
-    presetRequests: presetRequests.value,
-    presets: RIIC_SCHEDULE_PRESETS.presets,
-    ownedOperators: riicMatchingRoster.value || [],
-    trainingMode: riicTrainingMode.value,
-    roomGroups: scheduleRoomGroups.value,
-    shiftMode: confirmedLayoutPlan.value?.shiftMode,
-    twoShiftRotationMode: twoShiftRotationMode.value,
-    controlShiftCount: RIIC_CONTROL_ROTATION_RULES.shiftCount,
-  }),
-);
-const riicSchedulePresetControlPreflight = computed(() => {
-  const runtime = riicSchedulePresetRuntime.value;
-  if (runtime.status !== "ready") {
-    return null;
+
+const controlCenterStaffingRequirement = computed(() => {
+  const group = controlScheduleRoomGroup.value;
+  if (!group) {
+    return { status: "missingCapacity", segmentHours: [] };
   }
 
-  return buildRiicControlRotation({
-    ownedOperators: riicMatchingRoster.value,
-    rules: RIIC_CONTROL_ROTATION_RULES,
-    trainingMode: riicTrainingMode.value,
-    suiteRequirementsByShift: runtime.suiteRequirementsByShift,
+  return getRiicRoomGroupStaffingRequirement({
+    stations: group.stations,
+    shiftMode: confirmedLayoutPlan.value?.shiftMode,
+    roomType: "control",
+    twoShiftRotationMode: twoShiftRotationMode.value,
   });
 });
-const activeRiicSchedulePresetRuntime = computed(() => {
-  const runtime = riicSchedulePresetRuntime.value;
-  const preflight = riicSchedulePresetControlPreflight.value;
+const controlCenterCandidateOperators = computed(() => {
+  const rosterById = new Map();
 
-  if (
-    runtime.status !== "ready" ||
-    (preflight?.unmetSuiteRequirements || []).length > 0
-  ) {
-    return null;
+  for (const operator of riicMatchingRoster.value || []) {
+    const charId = String(operator?.charId || "").trim();
+    if (!charId) {
+      continue;
+    }
+
+    const current = rosterById.get(charId);
+    if (
+      !current ||
+      toRiicControlCenterUnlockNumber(operator?.elite) >
+        toRiicControlCenterUnlockNumber(current?.elite) ||
+      (toRiicControlCenterUnlockNumber(operator?.elite) ===
+        toRiicControlCenterUnlockNumber(current?.elite) &&
+        toRiicControlCenterUnlockNumber(operator?.level, 1) >
+          toRiicControlCenterUnlockNumber(current?.level, 1))
+    ) {
+      rosterById.set(charId, operator);
+    }
   }
 
-  return runtime;
+  const activeTagsByOperatorId = new Map();
+  const activeEffectsByOperatorId = new Map();
+  for (const skill of RIIC_CONTROL_CENTER_SKILLS.skills || []) {
+    const charId = String(skill?.operatorId || "").trim();
+    const operator = rosterById.get(charId);
+    const tags = [...new Set(skill?.bufftag || [])].filter(Boolean);
+    if (
+      !operator ||
+      tags.length === 0 ||
+      !isRiicControlCenterSkillUnlocked(operator, skill, {
+        trainingMode: riicTrainingMode.value,
+        idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+      })
+    ) {
+      continue;
+    }
+
+    const activeTags = activeTagsByOperatorId.get(charId) || new Set();
+    tags.forEach((tag) => activeTags.add(tag));
+    activeTagsByOperatorId.set(charId, activeTags);
+
+    const activeEffects = activeEffectsByOperatorId.get(charId) || new Map();
+    for (const effect of skill?.resolvedEffects || []) {
+      if (isRiicControlCenterRoomEffect(effect)) {
+        activeEffects.set(getRiicControlCenterRoomEffectKey(effect), effect);
+      }
+    }
+    activeEffectsByOperatorId.set(charId, activeEffects);
+  }
+
+  return [...activeTagsByOperatorId.entries()]
+    .map(([charId, tags]) => {
+      const resolvedEffects = new Map(
+        activeEffectsByOperatorId.get(charId) || [],
+      );
+      for (const effect of getRiicLayer3ControlCenterEffects({
+        operatorId: charId,
+        ownedOperators: riicMatchingRoster.value,
+        layoutFacts: activeLayoutFacilityCounts.value,
+      })) {
+        if (isRiicControlCenterRoomEffect(effect)) {
+          resolvedEffects.set(getRiicControlCenterRoomEffectKey(effect), effect);
+        }
+      }
+
+      return {
+        ...rosterById.get(charId),
+        controlCenterBuffTags: [...tags],
+        controlCenterResolvedEffects: [...resolvedEffects.values()],
+        controlCenterRoomEffectLabel: [...resolvedEffects.values()]
+          .map(formatRiicControlCenterRoomEffect)
+          .filter(Boolean)
+          .join(" / "),
+      };
+    })
+    .sort(
+      (left, right) =>
+        String(left?.name || "").localeCompare(
+          String(right?.name || ""),
+          "zh-CN",
+        ) ||
+        String(left?.charId || "").localeCompare(
+          String(right?.charId || ""),
+          "en",
+        ),
+    );
 });
-const riicSchedulePresetControlOperatorIds = computed(
-  () =>
-    new Set(
-      (activeRiicSchedulePresetRuntime.value?.suiteRequirementsByShift || [])
-        .flatMap((requirements) =>
-          (requirements || []).map((requirement) =>
-            String(requirement?.charId || "").trim(),
-          ),
-        )
-        .filter(Boolean),
-    ),
-);
-const riicSchedulePresetNote = computed(() => {
-  const runtime = riicSchedulePresetRuntime.value;
-  if (!selectedRiicSchedulePresetId.value) {
-    return "可选套组会在自动排班时预填对应房间。";
-  }
-  if (runtime.status !== "ready") {
-    return {
-      conditions: "当前持有干员或精英等级不满足该套组。",
-      missingRoom: "当前布局没有可用于该套组的目标房间。",
-      missingCapacity: "当前布局的目标房间容量无法安排该套组。",
-    }[runtime.reason] || "当前条件无法安排该套组。";
-  }
-  if (
-    (riicSchedulePresetControlPreflight.value?.unmetSuiteRequirements || [])
-      .length > 0
-  ) {
-    return "控制中枢没有足够位置安排该套组。";
-  }
-  return runtime.preset?.description || "";
-});
-
-function getRiicSchedulePresetOptionTitle(option) {
-  if (option?.available) {
-    return option.description || option.name;
-  }
-
-  const names = (option?.missingOperatorIds || [])
-    .map((charId) => operatorTableV2?.[charId]?.name || charId)
-    .join("、");
-  return names ? `条件未满足：${names}` : "当前条件未满足";
+function operatorMatchesControlCenterFunctionRole(operator, role) {
+  const tags = operator?.controlCenterBuffTags || [];
+  return role.buffTags.some((tag) => tags.includes(tag));
 }
 
-function toggleRiicSchedulePreset(presetId) {
-  const option = riicSchedulePresetOptions.value.find(
-    (item) => item.id === presetId,
+function getControlCenterFunctionRoleScore(operator, role) {
+  return Math.max(
+    0,
+    ...(operator?.controlCenterResolvedEffects || [])
+      .filter(
+        (effect) =>
+          !effect?.conditions &&
+          String(effect?.target?.roomType || "").trim() ===
+          role.targetRoomType,
+      )
+      .map((effect) => Number(effect?.bonusPercent || 0))
+      .filter(Number.isFinite),
   );
-  if (!option?.available) {
+}
+
+function getControlCenterScenarioTrialScore(operator) {
+  const operatorId = String(operator?.charId || "").trim();
+  const scenario = (
+    riicControlCenterScenarioTrialState.value?.scenarios || []
+  ).find((item) => String(item?.sourceOperatorId || "").trim() === operatorId);
+  const score = Number(scenario?.deltaScore ?? scenario?.contributionScore);
+  return Number.isFinite(score) ? score : 0;
+}
+
+const controlCenterAutomaticRoleState = computed(() => {
+  const requirement = controlCenterStaffingRequirement.value;
+  const group = controlScheduleRoomGroup.value;
+  if (requirement.status !== "ready" || !group) {
+    return {
+      status: "missingCapacity",
+      roles: [],
+      operatorIds: [],
+      segments: [],
+      emptySlotCount: 0,
+    };
+  }
+
+  if (!riicMatchingRoster.value) {
+    return {
+      status: "requiresOperators",
+      roles: [],
+      operatorIds: [],
+      segments: [],
+      emptySlotCount: 0,
+    };
+  }
+
+  const station = group.stations.find(Boolean);
+  const slotCount = Number.isInteger(station?.slotCount)
+    ? station.slotCount
+    : 5;
+  const roleTeamCount = Math.max(
+    1,
+    Number(requirement?.cohorts?.[0]?.teamCount) || 1,
+  );
+  const roleCapacity = Math.min(2, roleTeamCount);
+  const roles = CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS.map((definition) => ({
+    ...definition,
+    enabled: true,
+    candidates: controlCenterCandidateOperators.value.filter((operator) =>
+      operatorMatchesControlCenterFunctionRole(operator, definition),
+    ),
+  }));
+  const claimedOperatorIds = new Set();
+  const selectedOperatorsByRoleId = new Map(
+    roles.map((role) => [role.id, []]),
+  );
+  const candidateRolePairs = roles
+    .filter((role) => role.enabled)
+    .flatMap((role) =>
+      role.candidates.map((operator) => ({
+        role,
+        operator,
+      })),
+    )
+    .sort(
+      (left, right) =>
+        getControlCenterScenarioTrialScore(right.operator) -
+          getControlCenterScenarioTrialScore(left.operator) ||
+        getControlCenterFunctionRoleScore(right.operator, right.role) -
+          getControlCenterFunctionRoleScore(left.operator, left.role) ||
+        left.role.candidates.length - right.role.candidates.length ||
+        String(left.operator?.name || "").localeCompare(
+          String(right.operator?.name || ""),
+          "zh-CN",
+        ) ||
+        String(left.operator?.charId || "").localeCompare(
+          String(right.operator?.charId || ""),
+          "en",
+        ) ||
+        left.role.id.localeCompare(right.role.id, "en"),
+    );
+
+  for (const { role, operator } of candidateRolePairs) {
+    const selectedOperators = selectedOperatorsByRoleId.get(role.id) || [];
+    if (
+      claimedOperatorIds.has(operator.charId) ||
+      selectedOperators.length >= roleCapacity
+    ) {
+      continue;
+    }
+
+    selectedOperators.push(operator);
+    selectedOperatorsByRoleId.set(role.id, selectedOperators);
+    claimedOperatorIds.add(operator.charId);
+  }
+
+  const resolvedRoles = roles.map((role) => ({
+    ...role,
+    operators: selectedOperatorsByRoleId.get(role.id) || [],
+    operator: (selectedOperatorsByRoleId.get(role.id) || [])[0] || null,
+  }));
+  const allRoles = [
+    ...resolvedRoles,
+    {
+      id: "other",
+      label: "其他中枢干员",
+      targetRoomType: "",
+      buffTags: [],
+      enabled: true,
+      candidates: controlCenterCandidateOperators.value,
+      operators: [],
+      operator: null,
+    },
+  ];
+  const operatorIds = [
+    ...new Set(
+      allRoles.flatMap((role) =>
+        role.operators.map((operator) => operator.charId),
+      ),
+    ),
+  ];
+  const controlCohort = requirement?.cohorts?.[0];
+  const segments = requirement.segmentHours.map((durationHours, index) => {
+    const rotationSegment = controlCohort?.rotationSegments?.[index];
+    const teamIndex = Number.isInteger(rotationSegment?.activeTeamIndexes?.[0])
+      ? rotationSegment.activeTeamIndexes[0]
+      : index % roleTeamCount;
+    const operators = [
+      ...resolvedRoles.map((role) => role.operators[teamIndex]),
+    ].filter(Boolean);
+
+    return {
+      id: `control-segment-${index + 1}`,
+      index,
+      durationHours,
+      slotCount,
+      teamIndex,
+      operatorIds: operators.map((operator) => operator.charId),
+      operators,
+    };
+  });
+  const maxSegmentOperatorCount = Math.max(
+    0,
+    ...segments.map((segment) => segment.operatorIds.length),
+  );
+
+  return {
+    status: "ready",
+    roles: allRoles,
+    operatorIds,
+    segments,
+    emptySlotCount: Math.max(0, slotCount - maxSegmentOperatorCount),
+  };
+});
+function getControlCenterManualAddedOperatorIds(overrides) {
+  return [
+    ...new Set(
+      Object.values(overrides?.addedOperatorIdsByTeamIndex || {})
+        .flat()
+        .map((charId) => String(charId || "").trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
+function getControlCenterManualOperatorById(charId) {
+  return (
+    controlCenterCandidateOperators.value.find(
+      (operator) => operator.charId === charId,
+    ) || null
+  );
+}
+
+const controlCenterRoleState = computed(() => {
+  const automaticState = controlCenterAutomaticRoleState.value;
+  if (automaticState.status !== "ready") {
+    return automaticState;
+  }
+
+  const removedOperatorIds = new Set(
+    controlCenterManualOverrides.value.removedOperatorIds || [],
+  );
+  const addedOperatorIds = new Set(
+    getControlCenterManualAddedOperatorIds(controlCenterManualOverrides.value),
+  );
+  const manuallyAddedOperators = [...addedOperatorIds]
+    .map(getControlCenterManualOperatorById)
+    .filter(Boolean);
+
+  const roles = automaticState.roles.map((role) => {
+    const operators = role.operators.filter(
+      (operator) =>
+        !removedOperatorIds.has(operator.charId) &&
+        !addedOperatorIds.has(operator.charId),
+    );
+    if (role.id === "other") {
+      operators.push(...manuallyAddedOperators);
+    }
+
+    return {
+      ...role,
+      operators,
+      operator: operators[0] || null,
+    };
+  });
+  const segments = automaticState.segments.map((segment) => {
+    const operators = segment.operators.filter(
+      (operator) =>
+        !removedOperatorIds.has(operator.charId) &&
+        !addedOperatorIds.has(operator.charId),
+    );
+    const manuallyAddedOperatorsForTeam = (
+      controlCenterManualOverrides.value.addedOperatorIdsByTeamIndex?.[
+        String(segment.teamIndex)
+      ] || []
+    )
+      .map((charId) => getControlCenterManualOperatorById(charId))
+      .filter(Boolean);
+    const nextOperators = [
+      ...operators,
+      ...manuallyAddedOperatorsForTeam,
+    ].filter(
+      (operator, index, list) =>
+        list.findIndex((item) => item.charId === operator.charId) === index,
+    );
+    const finalOperators = nextOperators.slice(0, segment.slotCount);
+
+    return {
+      ...segment,
+      operatorIds: finalOperators.map((operator) => operator.charId),
+      operators: finalOperators,
+    };
+  });
+  const operatorIds = [
+    ...new Set(segments.flatMap((segment) => segment.operatorIds)),
+  ];
+  const maxSegmentOperatorCount = Math.max(
+    0,
+    ...segments.map((segment) => segment.operatorIds.length),
+  );
+
+  return {
+    ...automaticState,
+    roles,
+    segments,
+    operatorIds,
+    emptySlotCount: Math.max(
+      0,
+      (automaticState.segments[0]?.slotCount || 0) - maxSegmentOperatorCount,
+    ),
+  };
+});
+
+function clearScheduleSelectionsAfterControlCenterChange() {
+  clearSelectedRoomGroupTeamCandidates();
+  recommendedScheduleSnapshot.value = null;
+}
+
+function getControlCenterManualTeamIndexWithCapacity() {
+  const segments = controlCenterRoleState.value.segments || [];
+  const teamIndexes = [
+    ...new Set(
+      segments
+        .map((segment) => Number(segment?.teamIndex))
+        .filter((teamIndex) => Number.isInteger(teamIndex) && teamIndex >= 0),
+    ),
+  ];
+
+  return (
+    teamIndexes.find((teamIndex) => {
+      const teamSegments = segments.filter(
+        (segment) => Number(segment?.teamIndex) === teamIndex,
+      );
+      return (
+        teamSegments.length > 0 &&
+        teamSegments.every(
+          (segment) =>
+            (segment.operatorIds || []).length <
+            Number(segment.slotCount || 0),
+        )
+      );
+    }) ?? null
+  );
+}
+
+function addControlCenterOperator(charId) {
+  const normalizedCharId = String(charId || "").trim();
+  if (
+    !normalizedCharId ||
+    controlCenterRoleState.value.status !== "ready" ||
+    !getControlCenterManualOperatorById(normalizedCharId)
+  ) {
     return;
   }
 
-  presetRequests.value =
-    selectedRiicSchedulePresetId.value === presetId
-      ? []
-      : [{ presetId }];
-  clearSelectedRoomGroupTeamCandidates();
+  if (controlCenterSelectedOperatorIds.value.has(normalizedCharId)) {
+    return;
+  }
+
+  const nextOverrides = normalizeControlCenterManualOverrides(
+    controlCenterManualOverrides.value,
+  );
+  const automaticOperatorIds = new Set(
+    controlCenterAutomaticRoleState.value.operatorIds || [],
+  );
+  nextOverrides.removedOperatorIds = nextOverrides.removedOperatorIds.filter(
+    (operatorId) => operatorId !== normalizedCharId,
+  );
+
+  if (automaticOperatorIds.has(normalizedCharId)) {
+    controlCenterManualOverrides.value = nextOverrides;
+    clearScheduleSelectionsAfterControlCenterChange();
+    return;
+  }
+
+  const teamIndex = getControlCenterManualTeamIndexWithCapacity();
+  if (teamIndex === null) {
+    cMessage("控制中枢没有可用空位", "warn");
+    return;
+  }
+
+  const teamKey = String(teamIndex);
+  const teamOperatorIds =
+    nextOverrides.addedOperatorIdsByTeamIndex[teamKey] || [];
+  if (!teamOperatorIds.includes(normalizedCharId)) {
+    nextOverrides.addedOperatorIdsByTeamIndex[teamKey] = [
+      ...teamOperatorIds,
+      normalizedCharId,
+    ];
+  }
+  controlCenterManualOverrides.value = nextOverrides;
+  clearScheduleSelectionsAfterControlCenterChange();
 }
 
-const controlAutoRotationPlan = computed(() =>
-  buildRiicControlRotation({
-    ownedOperators: riicMatchingRoster.value,
-    rules: RIIC_CONTROL_ROTATION_RULES,
-    trainingMode: riicTrainingMode.value,
-    reservedOperatorIds: [...getClaimedNamedOperatorIds()],
-    suiteRequirementsByShift:
-      activeRiicSchedulePresetRuntime.value?.suiteRequirementsByShift || [],
+function removeControlCenterOperator(charId) {
+  const normalizedCharId = String(charId || "").trim();
+  if (!normalizedCharId) {
+    return;
+  }
+
+  const lateFillOperatorIds = new Set(
+    controlCenterLateFillState.value.operatorIds || [],
+  );
+  const nextOverrides = normalizeControlCenterManualOverrides(
+    controlCenterManualOverrides.value,
+  );
+  let wasManuallyAdded = false;
+  for (const [teamIndex, operatorIds] of Object.entries(
+    nextOverrides.addedOperatorIdsByTeamIndex,
+  )) {
+    const nextOperatorIds = operatorIds.filter(
+      (operatorId) => operatorId !== normalizedCharId,
+    );
+    wasManuallyAdded =
+      wasManuallyAdded || nextOperatorIds.length !== operatorIds.length;
+    if (nextOperatorIds.length > 0) {
+      nextOverrides.addedOperatorIdsByTeamIndex[teamIndex] = nextOperatorIds;
+    } else {
+      delete nextOverrides.addedOperatorIdsByTeamIndex[teamIndex];
+    }
+  }
+
+  if (
+    !wasManuallyAdded &&
+    (controlCenterAutomaticRoleState.value.operatorIds || []).includes(
+      normalizedCharId,
+    ) &&
+    !nextOverrides.removedOperatorIds.includes(normalizedCharId)
+  ) {
+    nextOverrides.removedOperatorIds.push(normalizedCharId);
+  }
+
+  if (
+    !wasManuallyAdded &&
+    !(controlCenterAutomaticRoleState.value.operatorIds || []).includes(
+      normalizedCharId,
+    ) &&
+    lateFillOperatorIds.has(normalizedCharId)
+  ) {
+    controlCenterLateFillExcludedOperatorIds.value = [
+      ...new Set([
+        ...controlCenterLateFillExcludedOperatorIds.value,
+        normalizedCharId,
+      ]),
+    ];
+    return;
+  }
+
+  controlCenterManualOverrides.value = nextOverrides;
+  clearScheduleSelectionsAfterControlCenterChange();
+}
+
+const controlCenterSelectedOperatorIds = computed(
+  () => new Set(controlCenterRoleState.value.operatorIds),
+);
+const controlCenterRuntimeContext = computed(() =>
+  buildRiicControlCenterRuntimeContext({
+    controlState: controlCenterRoleState.value,
   }),
 );
+
+function formatRiicControlCenterSignedPercent(value) {
+  const percent = Number(value);
+  if (!Number.isFinite(percent)) {
+    return "--";
+  }
+
+  return `${percent >= 0 ? "+" : ""}${
+    Number.isInteger(percent) ? percent : percent.toFixed(1)
+  }%`;
+}
+
+const riicControlCenterOperatorEffectDebugState = computed(() => {
+  if (!riicMatchingRoster.value) {
+    return {
+      status: "requiresOperators",
+      effects: [],
+    };
+  }
+
+  const context = controlCenterRuntimeContext.value;
+  if (context.status !== "ready") {
+    return {
+      status: context.status,
+      effects: [],
+    };
+  }
+
+  const ownedOperatorIds = new Set(
+    riicMatchingRoster.value
+      .map((operator) => String(operator?.charId || "").trim())
+      .filter(Boolean),
+  );
+  const calculationsByKey = new Map();
+
+  for (const [teamIndex, teamEffects] of Object.entries(
+    context.effectsByTeamIndex || {},
+  )) {
+    for (const [effectIndex, effect] of (teamEffects || []).entries()) {
+      if (effect?.scope !== "operators") {
+        continue;
+      }
+
+      const sourceOperatorIds = (effect?.sourceOperatorIds || [])
+        .map((operatorId) => String(operatorId || "").trim())
+        .filter(Boolean);
+      for (const operatorId of (effect?.targetOperatorIds || [])
+        .map((operatorId) => String(operatorId || "").trim())
+        .filter((operatorId) => ownedOperatorIds.has(operatorId))
+      ) {
+        const roomType = String(effect?.roomType || "").trim();
+        const product = String(effect?.product || "").trim();
+        const metric = String(effect?.metric || "").trim();
+        const key = [
+          teamIndex,
+          operatorId,
+          roomType,
+          product,
+          metric,
+        ].join(":");
+        const calculation = calculationsByKey.get(key) || {
+          key,
+          teamIndex: Number(teamIndex),
+          targetOperatorId: operatorId,
+          roomType,
+          product,
+          metric,
+          contributions: [],
+        };
+
+        calculation.contributions.push({
+          key: [
+            key,
+            effectIndex,
+            ...sourceOperatorIds,
+          ].join(":"),
+          sourceOperatorIds,
+          bonusPercent: Number(effect?.bonusPercent || 0),
+          sourceOrder: effectIndex,
+        });
+        calculationsByKey.set(key, calculation);
+      }
+    }
+  }
+
+  const effects = [...calculationsByKey.values()].map((calculation) => {
+    let totalBonusPercent = 0;
+    const contributions = calculation.contributions
+      .sort(
+        (left, right) =>
+          left.sourceOrder - right.sourceOrder ||
+          left.key.localeCompare(right.key, "en"),
+      )
+      .map((contribution, index) => {
+        const beforeBonusPercent = totalBonusPercent;
+        totalBonusPercent += contribution.bonusPercent;
+        return {
+          ...contribution,
+          step: index + 1,
+          beforeBonusPercent,
+          totalAfterBonusPercent: totalBonusPercent,
+        };
+      });
+
+    return {
+      ...calculation,
+      contributions,
+      totalBonusPercent,
+      formula: contributions
+        .map((contribution) =>
+          formatRiicControlCenterSignedPercent(contribution.bonusPercent),
+        )
+        .join(" + "),
+    };
+  });
+
+  return {
+    status: "ready",
+    effects: effects.sort(
+      (left, right) =>
+        left.teamIndex - right.teamIndex ||
+        left.targetOperatorId.localeCompare(right.targetOperatorId, "en") ||
+        left.key.localeCompare(right.key, "en"),
+    ),
+  };
+});
+const controlCenterAssignmentSignature = computed(() => {
+  const roleSignature = controlCenterRoleState.value.roles
+    .map(
+      (role) =>
+        `${role.id}:${role.operators
+          .map((operator) => operator.charId)
+          .join(",")}`,
+    )
+    .join("|");
+  const segmentSignature = controlCenterRoleState.value.segments
+    .map(
+      (segment) =>
+        `${segment.teamIndex}:${segment.operatorIds.join(",")}`,
+    )
+    .join("|");
+
+  return `${roleSignature}::${segmentSignature}`;
+});
+
 const riicResolvedSkills = computed(() =>
   resolveRiicBaselineSkills(
     riicMatchingRoster.value || [],
     RIIC_BASELINE_SKILL_RULES,
-    { trainingMode: riicTrainingMode.value },
+    {
+      trainingMode: riicTrainingMode.value,
+      idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+    },
   ),
 );
 const riicPublicSkillOperatorIds = computed(() => {
@@ -1668,6 +2372,10 @@ function compareRoomGroupCandidates(left, right) {
 }
 
 async function ensureRoomGroupCatalogLoaded(group) {
+  if (!group?.candidateGenerationAvailable) {
+    return;
+  }
+
   const requests = getRoomGroupCatalogRequests(group).filter(
     (request) => request.key,
   );
@@ -1780,53 +2488,6 @@ function enrichRoomGroupCandidateFallback(candidate) {
   };
 }
 
-function createRiicPresetRoomGroupCandidate(
-  group,
-  cohort,
-  fallbackCandidate,
-) {
-  const runtime = activeRiicSchedulePresetRuntime.value;
-  const placement = runtime?.roomPlacements?.find(
-    (item) => item.groupId === group?.id && item.cohortId === cohort?.id,
-  );
-  if (!placement) {
-    return null;
-  }
-
-  const fallback = fallbackCandidate?.fallback || {};
-  return {
-    key: placement.candidateKey,
-    name: `${runtime.preset?.name || runtime.preset?.id || "套组"}（预填）`,
-    operatorIds: placement.operatorIds,
-    operators: placement.operatorIds.map((charId) => ({
-      charId,
-      name: operatorTableV2?.[charId]?.name || charId,
-      scored: true,
-      preset: true,
-    })),
-    sourceRoomType: group.facility,
-    corePercent: 100,
-    totalPercent: 100,
-    bonusPercent: 0,
-    sortScore: 0,
-    quality: placement.fallbackCount > 0 ? "partial" : "complete",
-    calculationStatus: "preset",
-    fallback: {
-      ...fallback,
-      count: placement.fallbackCount,
-      operators: [],
-      fallbackOperatorIds: [],
-      materialized: false,
-    },
-    preset: {
-      presetId: runtime.preset?.id,
-      placementId: placement.id,
-      shiftGroupId: placement.shiftGroupId,
-      locked: true,
-    },
-  };
-}
-
 function createFallbackOnlyRoomGroupCohort(cohort, fallbackCandidate) {
   if (!fallbackCandidate) {
     return {
@@ -1870,8 +2531,8 @@ function createRoomGroupCandidateState(group) {
     return { status: "idle", cohorts: [] };
   }
 
-  if (group.automaticScheduling) {
-    return { status: "automaticControl", cohorts: [] };
+  if (group.manualControl) {
+    return { status: "manualControl", cohorts: [] };
   }
 
   if (!group.candidateGenerationAvailable) {
@@ -1929,7 +2590,7 @@ function createRoomGroupCandidateState(group) {
 
   const cohorts = staffingRequirement.cohorts.map((cohort) => {
     const library = catalogsByCohortId.get(cohort.id);
-    const matchedCandidates = matchRiicStaticRoomCandidates({
+    const candidateSkeletons = resolveRiicRoomCandidateSkeletons({
       catalog: group.fallbackOnly
         ? {
             ...library.catalog,
@@ -1952,6 +2613,11 @@ function createRoomGroupCandidateState(group) {
         activeLayoutFacilityCounts.value.manufactureProductKindCount,
       facilities: activeLayoutFacilityCounts.value.facilities,
       trainingMode: riicTrainingMode.value,
+      idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+    });
+    const matchedCandidates = materializeRiicRoomCandidateSkeletons({
+      resolution: candidateSkeletons,
+      controlCenterRuntimeContext: controlCenterRuntimeContext.value,
     });
 
     const candidates = matchedCandidates.candidates
@@ -1985,16 +2651,9 @@ function createRoomGroupCandidateState(group) {
         )
       : [];
 
-    const presetCandidate = createRiicPresetRoomGroupCandidate(
-      group,
-      cohort,
-      fallbackCandidate,
-    );
-
     return {
       ...cohort,
       candidates: [
-        ...(presetCandidate ? [presetCandidate] : []),
         ...candidates,
         ...manualFallbackCandidates,
       ],
@@ -2002,9 +2661,9 @@ function createRoomGroupCandidateState(group) {
       manualFallbackCandidates,
     };
   });
-  const hasMissingFallbackPreset = cohorts.some(
-    (cohort) => !cohort.fallbackCandidate,
-  );
+  const hasMissingFallbackPreset =
+    group.fallbackOnly &&
+    cohorts.some((cohort) => !cohort.fallbackCandidate);
 
   return {
     status: hasMissingFallbackPreset ? "missingFallbackPreset" : "ready",
@@ -2021,11 +2680,60 @@ const roomGroupCandidateStates = computed(() =>
     ]),
   ),
 );
+const riicControlCenterScenarioTrialState = computed(() => {
+  if (!confirmedLayoutPlan.value) {
+    return {
+      status: "requiresLayout",
+      scenarios: [],
+    };
+  }
+  if (!riicMatchingRoster.value) {
+    return {
+      status: "requiresOperators",
+      scenarios: [],
+    };
+  }
+
+  return {
+    status: "ready",
+    scenarios: evaluateRiicControlCenterScenarios({
+      skills: RIIC_CONTROL_CENTER_SKILLS.skills,
+      ownedOperators: riicMatchingRoster.value,
+      layoutFacts: activeLayoutFacilityCounts.value,
+      trainingMode: riicTrainingMode.value,
+      idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+    }),
+  };
+});
+const riicPerceptionResourceTrialState = computed(() => {
+  if (!confirmedLayoutPlan.value) {
+    return {
+      status: "requiresLayout",
+      scenarios: [],
+    };
+  }
+  if (!riicMatchingRoster.value) {
+    return {
+      status: "requiresOperators",
+      scenarios: [],
+    };
+  }
+
+  return evaluateRiicPerceptionResourceTrials({
+    ownedOperators: riicMatchingRoster.value,
+    layoutFacts: activeLayoutFacilityCounts.value,
+    controlState: controlCenterRoleState.value,
+  });
+});
 const activeRoomGroupCandidateState = computed(() => {
   const group = activeScheduleRoomGroup.value;
 
   if (!group) {
     return { status: "idle", cohorts: [] };
+  }
+
+  if (!group.manualControl && !group.candidateGenerationAvailable) {
+    return { status: "outOfScope", cohorts: [] };
   }
 
   return (
@@ -2055,7 +2763,10 @@ watch(
     ];
   },
   () => {
-    ensureRoomGroupCatalogLoaded(activeScheduleRoomGroup.value);
+    const group = activeScheduleRoomGroup.value;
+    if (group?.candidateGenerationAvailable) {
+      ensureRoomGroupCatalogLoaded(group);
+    }
   },
   { immediate: true },
 );
@@ -2235,8 +2946,10 @@ function getSelectedRoomGroupCoreOperatorIds(group, state) {
   return operatorIds;
 }
 
-function getClaimedNamedOperatorIds() {
-  const claimedOperatorIds = new Set();
+function getClaimedNamedOperatorIds({ includeControlCenter = true } = {}) {
+  const claimedOperatorIds = new Set(
+    includeControlCenter ? controlCenterSelectedOperatorIds.value : [],
+  );
 
   for (const group of candidateEnabledScheduleRoomGroups.value) {
     const state = roomGroupCandidateStates.value[group.id];
@@ -2333,13 +3046,6 @@ function getRoomGroupSelectionProgress(group) {
   };
 }
 
-function isLockedRiicPresetCandidate(candidate) {
-  return Boolean(
-    candidate?.preset?.locked &&
-      candidate.preset.presetId === selectedRiicSchedulePresetId.value,
-  );
-}
-
 function canAddRoomGroupTeamCandidate(group, cohort, candidate) {
   if (
     !candidate ||
@@ -2357,15 +3063,6 @@ function canAddRoomGroupTeamCandidate(group, cohort, candidate) {
     return true;
   }
 
-  if (
-    !isLockedRiicPresetCandidate(candidate) &&
-    candidateOperatorIds.some((charId) =>
-      riicSchedulePresetControlOperatorIds.value.has(charId),
-    )
-  ) {
-    return false;
-  }
-
   const claimedOperatorIds = getClaimedNamedOperatorIds();
   return !candidateOperatorIds.some((charId) =>
     claimedOperatorIds.has(charId),
@@ -2373,10 +3070,6 @@ function canAddRoomGroupTeamCandidate(group, cohort, candidate) {
 }
 
 function getRoomGroupCandidateAvailabilityMessage(group, cohort, candidate) {
-  if (isLockedRiicPresetCandidate(candidate)) {
-    return "已由套组预填锁定";
-  }
-
   if (getSelectedRoomCandidateCount(group, cohort, candidate?.key) > 0) {
     return "取消选择";
   }
@@ -2421,10 +3114,6 @@ function getRoomGroupCandidateTooltip(group, cohort, candidate) {
 }
 
 function canToggleRoomGroupTeamCandidate(group, cohort, candidate) {
-  if (isLockedRiicPresetCandidate(candidate)) {
-    return false;
-  }
-
   return (
     getSelectedRoomCandidateCount(group, cohort, candidate?.key) > 0 ||
     canAddRoomGroupTeamCandidate(group, cohort, candidate)
@@ -2490,20 +3179,6 @@ function getRoomGroupFallbackPlanningGroups() {
   );
 }
 
-function getRiicPresetInitialRoomGroupSelections() {
-  const selections = {};
-
-  for (const placement of activeRiicSchedulePresetRuntime.value
-    ?.roomPlacements || []) {
-    selections[placement.groupId] = {
-      ...selections[placement.groupId],
-      [placement.cohortId]: [placement.candidateKey],
-    };
-  }
-
-  return selections;
-}
-
 function buildAutomaticRoomGroupSelectionsForGroups({
   groups,
   claimedOperatorIds,
@@ -2547,12 +3222,7 @@ function buildAutomaticRoomGroupSelectionsForGroups({
     }
   }
 
-  while (
-    pendingCohorts.some(
-      ({ selectedKeys, cohort }) =>
-        selectedKeys.length < cohort.teamCount,
-    )
-  ) {
+  while (true) {
     const availableStates = pendingCohorts
       .filter(
         ({ selectedKeys, cohort }) =>
@@ -2577,16 +3247,24 @@ function buildAutomaticRoomGroupSelectionsForGroups({
             selection.cohort.teamCount - selection.selectedKeys.length,
         };
       });
-    const blockedSelection = availableStates.find(
-      ({ availableCandidates, remainingCount }) =>
-        availableCandidates.length < remainingCount,
-    );
-    if (blockedSelection) {
-      unavailableGroups.push(blockedSelection.group.label);
+
+    if (availableStates.length === 0) {
       break;
     }
 
-    const nextSelection = availableStates.sort((left, right) => {
+    for (const state of availableStates) {
+      if (state.availableCandidates.length === 0) {
+        unavailableGroups.push(state.group.label);
+      }
+    }
+    const selectableStates = availableStates.filter(
+      ({ availableCandidates }) => availableCandidates.length > 0,
+    );
+    if (selectableStates.length === 0) {
+      break;
+    }
+
+    const nextSelection = selectableStates.sort((left, right) => {
       const rankingDifference =
         getRoomGroupCandidateSortBonus(right.availableCandidates[0]) -
         getRoomGroupCandidateSortBonus(left.availableCandidates[0]);
@@ -2604,6 +3282,12 @@ function buildAutomaticRoomGroupSelectionsForGroups({
     nextSelection.selectedKeys.push(candidate.key);
     for (const charId of candidate.operatorIds || []) {
       claimedOperatorIds.add(charId);
+    }
+  }
+
+  for (const { group, cohort, selectedKeys } of pendingCohorts) {
+    if (selectedKeys.length < cohort.teamCount) {
+      unavailableGroups.push(group.label);
     }
   }
 
@@ -2635,6 +3319,7 @@ function reserveAutomaticRoomGroupFallbackOperators({
       group,
       state,
       selections[group.id],
+      { allowPartial: true },
     );
     if (!selected) {
       unavailableGroups.push(group.label);
@@ -2650,7 +3335,6 @@ function reserveAutomaticRoomGroupFallbackOperators({
     });
     if (plan.status !== "ready") {
       unavailableGroups.push(group.label);
-      continue;
     }
 
     for (const charId of plan.selectedOperatorIds) {
@@ -2671,58 +3355,27 @@ function buildAutomaticRoomGroupSelections() {
   const supportGroups = groups.filter(
     (group) => getAutomaticRoomGroupPriority(group) > 0,
   );
-  const initialSelections = getRiicPresetInitialRoomGroupSelections();
-  const reservedOperatorIds =
-    riicSchedulePresetControlOperatorIds.value;
-  const claimedOperatorIds = new Set(
-    (activeRiicSchedulePresetRuntime.value?.roomPlacements || []).flatMap(
-      (placement) => placement.operatorIds,
-    ),
-  );
+  const claimedOperatorIds = new Set(controlCenterSelectedOperatorIds.value);
   const primarySelection = buildAutomaticRoomGroupSelectionsForGroups({
     groups: primaryGroups,
     claimedOperatorIds,
-    reservedOperatorIds,
-    initialSelections,
   });
-  if (primarySelection.unavailableGroups.length > 0) {
-    return primarySelection;
-  }
 
   const primaryFallbackReservation = reserveAutomaticRoomGroupFallbackOperators({
     groups: primaryGroups,
     selections: primarySelection.selections,
     claimedOperatorIds,
-    reservedOperatorIds,
   });
-  if (primaryFallbackReservation.unavailableGroups.length > 0) {
-    return {
-      selections: primarySelection.selections,
-      unavailableGroups: primaryFallbackReservation.unavailableGroups,
-    };
-  }
 
   const supportSelection = buildAutomaticRoomGroupSelectionsForGroups({
     groups: supportGroups,
     claimedOperatorIds,
-    reservedOperatorIds,
-    initialSelections,
   });
-  if (supportSelection.unavailableGroups.length > 0) {
-    return {
-      selections: {
-        ...primarySelection.selections,
-        ...supportSelection.selections,
-      },
-      unavailableGroups: supportSelection.unavailableGroups,
-    };
-  }
 
   const supportFallbackReservation = reserveAutomaticRoomGroupFallbackOperators({
     groups: supportGroups,
     selections: supportSelection.selections,
     claimedOperatorIds,
-    reservedOperatorIds,
   });
 
   return {
@@ -2730,7 +3383,14 @@ function buildAutomaticRoomGroupSelections() {
       ...primarySelection.selections,
       ...supportSelection.selections,
     },
-    unavailableGroups: supportFallbackReservation.unavailableGroups,
+    unavailableGroups: [
+      ...primarySelection.unavailableGroups,
+      ...primaryFallbackReservation.unavailableGroups,
+      ...supportSelection.unavailableGroups,
+      ...supportFallbackReservation.unavailableGroups,
+    ].filter(
+      (groupLabel, index, labels) => labels.indexOf(groupLabel) === index,
+    ),
   };
 }
 
@@ -2747,7 +3407,7 @@ function createAutomaticRoomGroupFallbackQueueStates() {
           group.id,
           {
             signature: plan.fallbackQueueSignature,
-            operatorIds: plan.selectedOperatorIds,
+            operatorIdBySlotKey: plan.operatorIdBySlotKey,
           },
         ],
       ];
@@ -2788,14 +3448,15 @@ async function generateAutomaticSchedule({ silentSuccess = false } = {}) {
         `无法自动填满：${unavailableGroups.join("、")}`,
         "warn",
       );
-      return;
     }
 
     selectedRoomGroupTeamCandidateKeys.value = selections;
     roomGroupFallbackQueueStates.value = {};
     resetScheduleExecutionSettings();
     activeScheduleRoomGroupKey.value =
-      candidateEnabledScheduleRoomGroups.value[0]?.id || "";
+      controlScheduleRoomGroup.value?.id ||
+      candidateEnabledScheduleRoomGroups.value[0]?.id ||
+      "";
     await nextTick();
     roomGroupFallbackQueueStates.value =
       createAutomaticRoomGroupFallbackQueueStates();
@@ -2821,49 +3482,12 @@ async function generateAutomaticSchedule({ silentSuccess = false } = {}) {
 }
 
 function restoreRecommendedSchedule() {
-  const snapshot = recommendedScheduleSnapshot.value;
-  if (
-    !snapshot ||
-    snapshot.triggerKey !== automaticGenerationTriggerKey.value
-  ) {
-    cMessage("当前条件下没有可恢复的推荐方案", "warn");
-    return;
-  }
-
-  const nextSettings = normalizeScheduleExecutionSettings(
-    snapshot.scheduleExecutionSettings,
-    confirmedLayoutPlan.value?.shiftMode,
-    twoShiftRotationMode.value,
-  );
-
-  selectedRoomGroupTeamCandidateKeys.value =
-    normalizeSavedRoomGroupTeamCandidateKeys(
-      snapshot.selectedRoomGroupTeamCandidateKeys,
-    );
-  roomGroupFallbackQueueStates.value =
-    normalizeSavedRoomGroupFallbackQueueStates(
-      snapshot.roomGroupFallbackQueueStates,
-    );
-  scheduleExecutionSettings.shifts = nextSettings.shifts;
-  scheduleExecutionSettings.droneTarget = nextSettings.droneTarget;
-  scheduleExecutionSettings.droneTargetPinned =
-    nextSettings.droneTargetPinned;
-  scheduleRoomOperatorOverrides.value = {};
-  scheduleRoomProductOverrides.value = {};
-  invalidatedScheduleRoomKeys.value = {};
-  selectedSchedulePreviewRoomKey.value = "";
-  scheduleRoomEditorOperatorInput.value = "";
-  activeSchedulePreviewStateIndex.value = 0;
-  activeScheduleRoomGroupKey.value =
-    candidateEnabledScheduleRoomGroups.value[0]?.id || "";
-
-  cMessage("已恢复推荐方案", "success");
+  void generateAutomaticSchedule();
 }
 
 const candidateEnabledScheduleRoomGroups = computed(() =>
   selectableScheduleRoomGroups.value.filter(
-    (group) =>
-      group.candidateGenerationAvailable && !group.automaticScheduling,
+    (group) => group.candidateGenerationAvailable,
   ),
 );
 const completedRoomGroupCatalogLoadKey = computed(() => {
@@ -2919,64 +3543,24 @@ const automaticGenerationTriggerKey = computed(() => {
     confirmedLayoutPlan.value.facilityRequirement || "",
     twoShiftRotationMode.value,
     treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
-    presetRequests.value
-      .map((request) => String(request?.presetId || "").trim())
-      .filter(Boolean)
-      .join(","),
+    JSON.stringify(idealTrainingRaritySelection.value),
+    controlCenterAssignmentSignature.value,
     rosterSignature,
   ].join("::");
 });
-const hasRestorableRecommendedSchedule = computed(
-  () => {
-    const snapshot = recommendedScheduleSnapshot.value;
-    if (
-      !snapshot?.triggerKey ||
-      snapshot.triggerKey !== automaticGenerationTriggerKey.value
-    ) {
-      return false;
-    }
-
-    const currentSettings = normalizeScheduleExecutionSettings(
-      {
-        shifts: scheduleExecutionSettings.shifts,
-        droneTarget: scheduleExecutionSettings.droneTarget,
-        droneTargetPinned: scheduleExecutionSettings.droneTargetPinned,
-      },
-      confirmedLayoutPlan.value?.shiftMode,
-      twoShiftRotationMode.value,
-    );
-
-    return (
-      JSON.stringify(
-        normalizeSavedRoomGroupTeamCandidateKeys(
-          selectedRoomGroupTeamCandidateKeys.value,
-        ),
-      ) !==
-        JSON.stringify(snapshot.selectedRoomGroupTeamCandidateKeys) ||
-      JSON.stringify(
-        normalizeSavedRoomGroupFallbackQueueStates(
-          roomGroupFallbackQueueStates.value,
-        ),
-      ) !==
-        JSON.stringify(snapshot.roomGroupFallbackQueueStates) ||
-      JSON.stringify(currentSettings) !==
-        JSON.stringify(snapshot.scheduleExecutionSettings) ||
-      Object.keys(scheduleRoomOperatorOverrides.value).length > 0 ||
-      Object.keys(scheduleRoomProductOverrides.value).length > 0 ||
-      Object.keys(invalidatedScheduleRoomKeys.value).length > 0
-    );
-  },
+const candidateRoomGroupCatalogRequestKey = computed(() =>
+  candidateEnabledScheduleRoomGroups.value
+    .map((group) => {
+      const requestKeys = getRoomGroupCatalogRequests(group)
+        .map((request) => request.key)
+        .join(",");
+      return `${group.id}:${requestKeys}`;
+    })
+    .join("|"),
 );
 const staffingSelectionSummary = computed(() => {
   let selectedTeamCount = 0;
   let requiredTeamCount = 0;
-
-  if (controlScheduleRoomGroup.value) {
-    requiredTeamCount += 2;
-    if (controlAutoRotationPlan.value.status === "ready") {
-      selectedTeamCount += 2;
-    }
-  }
 
   for (const group of candidateEnabledScheduleRoomGroups.value) {
     const progress = getRoomGroupSelectionProgress(group);
@@ -2989,6 +3573,21 @@ const staffingSelectionSummary = computed(() => {
     requiredTeamCount,
   };
 });
+watch(
+  [candidateRoomGroupCatalogRequestKey, automaticGenerationTriggerKey],
+  ([catalogRequestKey, triggerKey]) => {
+    if (!catalogRequestKey) {
+      return;
+    }
+
+    void Promise.all(
+      candidateEnabledScheduleRoomGroups.value.map((group) =>
+        ensureRoomGroupCatalogLoaded(group),
+      ),
+    );
+  },
+  { immediate: true },
+);
 watch(
   automaticGenerationTriggerKey,
   (triggerKey, previousTriggerKey) => {
@@ -3012,8 +3611,7 @@ watch(operatorSourceSwitching, (isSwitching, wasSwitching) => {
   if (
     isSwitching ||
     wasSwitching !== true ||
-    !automaticGenerationTriggerKey.value ||
-    autoGeneratingSchedule.value
+    !automaticGenerationTriggerKey.value
   ) {
     return;
   }
@@ -3053,6 +3651,7 @@ function getRoomGroupCandidateEntriesForKeys(
   group,
   state,
   selectedCandidateKeysByCohort,
+  { allowPartial = false } = {},
 ) {
   if (state?.status !== "ready") {
     return null;
@@ -3072,7 +3671,7 @@ function getRoomGroupCandidateEntriesForKeys(
         cohort.candidates.find((candidate) => candidate.key === candidateKey),
       )
       .filter(Boolean);
-    if (selectedCandidates.length !== cohort.teamCount) {
+    if (!allowPartial && selectedCandidates.length !== cohort.teamCount) {
       return null;
     }
 
@@ -3092,11 +3691,12 @@ function getRoomGroupCandidateEntriesForKeys(
   };
 }
 
-function getSelectedRoomGroupCandidateEntries(group, state) {
+function getSelectedRoomGroupCandidateEntries(group, state, options) {
   return getRoomGroupCandidateEntriesForKeys(
     group,
     state,
     getRoomGroupTeamCandidateKeys(group.id),
+    options,
   );
 }
 
@@ -3133,9 +3733,16 @@ function mergeCandidateUpgradeRequirements(requirements) {
   );
 }
 
-function materializeRoomGroupCandidate(candidate, fallbackOperators) {
+function materializeRoomGroupCandidate(
+  candidate,
+  fallbackOperators,
+  { controlCenterRuntimeContext: runtimeContext } = {},
+) {
   const operators = fallbackOperators || [];
-  const fallbackPercent = operators.reduce(
+  const ordinaryFallbackOperators = operators.filter(
+    (operator) => !operator?.taggedMember,
+  );
+  const fallbackPercent = ordinaryFallbackOperators.reduce(
     (total, operator) => total + Number(operator.percent || 0),
     0,
   );
@@ -3151,6 +3758,49 @@ function materializeRoomGroupCandidate(candidate, fallbackOperators) {
       []),
     ...operators.map((operator) => operator?.upgradeRequirement),
   ]);
+  const automationResult = recalculateRiicAutomationManufacture({
+    scope: candidate?.candidateScope,
+    coreBaseBonusPercent: candidate?.coreBaseBonusPercent,
+    coreLayer3BonusPercent: candidate?.coreLayer3BonusPercent,
+    fallbackOperators: operators,
+  });
+  const expectedControlCenterOperatorBonusPercent = Number(
+    candidate?.controlCenterOperatorBonusPercent || 0,
+  );
+  const controlCenterAdjustment = runtimeContext
+    ? getRiicControlCenterRoomAdjustment({
+        context: runtimeContext,
+        scope: candidate?.candidateScope,
+        operatorIds,
+      })
+    : null;
+  const controlCenterOperatorBonusPercent = controlCenterAdjustment
+    ? Number(controlCenterAdjustment.operatorBonusPercent || 0)
+    : expectedControlCenterOperatorBonusPercent;
+  const controlCenterFacilityBonusPercent = controlCenterAdjustment
+    ? Number(controlCenterAdjustment.facilityBonusPercent || 0)
+    : Number(candidate?.controlCenterFacilityBonusPercent || 0);
+  const corePercentBeforeControl =
+    Number(candidate?.corePercent || 100) -
+    expectedControlCenterOperatorBonusPercent;
+  const corePercent =
+    corePercentBeforeControl + controlCenterOperatorBonusPercent;
+  const totalPercent = automationResult
+    ? automationResult.totalPercent + controlCenterOperatorBonusPercent
+    : corePercent + fallbackPercent;
+  const bonusPercent = totalPercent - 100;
+  const localBonusPercent =
+    Number(candidate?.localBonusPercent || 0) -
+    expectedControlCenterOperatorBonusPercent +
+    controlCenterOperatorBonusPercent;
+  const localPercentField =
+    {
+      trading: "tradingPercent",
+      manufacture: "manufacturePercent",
+      meeting: "meetingPercent",
+      hire: "officePercent",
+      power: "powerPercent",
+    }[String(candidate?.sourceRoomType || "").trim()] || "";
 
   return {
     ...candidate,
@@ -3161,22 +3811,83 @@ function materializeRoomGroupCandidate(candidate, fallbackOperators) {
         charId: operator.charId,
         name: operator.name,
         scored: true,
-        fallback: true,
+        fallback: !operator.taggedMember,
+        taggedMember: Boolean(operator.taggedMember),
         upgradeRequirement: operator.upgradeRequirement || null,
       })),
     ],
     upgradeRequirements,
     fallback: {
       ...candidate.fallback,
-      count: operators.length > 0 ? 0 : candidate.fallback?.count || 0,
+      count: Math.max(
+        0,
+        Number(candidate.fallback?.count || 0) - ordinaryFallbackOperators.length,
+      ),
       operators,
       fallbackOperatorIds: operators.map((operator) => operator.charId),
       totalPercent: fallbackPercent,
       materialized: operators.length > 0,
     },
-    totalPercent: Number(candidate?.corePercent || 100) + fallbackPercent,
-    bonusPercent:
-      Number(candidate?.corePercent || 100) + fallbackPercent - 100,
+    corePercent,
+    totalPercent,
+    bonusPercent,
+    bestAvailableTotalPercent: totalPercent,
+    localBonusPercent,
+    ...(localPercentField
+      ? {
+          [localPercentField]: localBonusPercent,
+        }
+      : {}),
+    controlCenterFacilityBonusPercent,
+    controlCenterOperatorBonusPercent,
+    controlCenterOperatorBonusById: controlCenterAdjustment
+      ? { ...(controlCenterAdjustment.operatorBonusById || {}) }
+      : { ...(candidate?.controlCenterOperatorBonusById || {}) },
+    controlCenterExpectedBonusPercent:
+      controlCenterFacilityBonusPercent + controlCenterOperatorBonusPercent,
+    controlCenterFacilityCalculation:
+      controlCenterAdjustment?.facilityCalculation ||
+      candidate?.controlCenterFacilityCalculation,
+    controlCenterOperatorCalculation:
+      controlCenterAdjustment?.operatorCalculation ||
+      candidate?.controlCenterOperatorCalculation,
+    sameShiftBindings:
+      controlCenterAdjustment?.sameShiftBindings ||
+      candidate?.sameShiftBindings ||
+      [],
+    ...(automationResult
+      ? {
+          localBonusPercent: bonusPercent,
+          manufacturePercent: bonusPercent,
+          automationCalculation: automationResult,
+        }
+      : {}),
+  };
+}
+
+function createEmptyRoomCandidate({
+  key,
+  roomType = "",
+  slotCount = 0,
+} = {}) {
+  const expectedSlots = Math.max(0, Number(slotCount) || 0);
+
+  return {
+    key: `empty:${key || roomType || "room"}`,
+    name: "空位",
+    operatorIds: [],
+    operators: [],
+    sourceRoomType: roomType,
+    corePercent: 0,
+    totalPercent: 0,
+    bonusPercent: -100,
+    bestAvailableTotalPercent: 0,
+    fallback: {
+      count: expectedSlots,
+      operators: [],
+      materialized: false,
+    },
+    incomplete: true,
   };
 }
 
@@ -3222,8 +3933,13 @@ function buildManualRoomGroupRotationCandidate(
   group,
   state,
   fallbackPlan = null,
+  {
+    controlCenterRuntimeContext: runtimeContext = controlCenterRuntimeContext.value,
+  } = {},
 ) {
-  const selected = getSelectedRoomGroupCandidateEntries(group, state);
+  const selected = getSelectedRoomGroupCandidateEntries(group, state, {
+    allowPartial: true,
+  });
   if (!selected) {
     return null;
   }
@@ -3240,42 +3956,51 @@ function buildManualRoomGroupRotationCandidate(
           const candidateIndexes = Array.isArray(assignment.candidateIndexes)
             ? assignment.candidateIndexes
             : [assignment.teamIndex];
-          const sourceCandidates = candidateIndexes
-            .map((candidateIndex) => selectedCandidates[candidateIndex])
-            .filter(Boolean);
-          if (sourceCandidates.length !== candidateIndexes.length) {
-            return null;
-          }
-
           const selectionKeys = candidateIndexes.map(
             (candidateIndex) => `${cohort.id}:${candidateIndex}`,
           );
+          const sourceCandidates = candidateIndexes.map(
+            (candidateIndex) => selectedCandidates[candidateIndex] || null,
+          );
+          const materializedCandidates = sourceCandidates.map(
+            (sourceCandidate, index) => {
+              if (!sourceCandidate) {
+                return createEmptyRoomCandidate({
+                  key: selectionKeys[index],
+                  roomType: group.facility,
+                  slotCount: cohort.slotCount,
+                });
+              }
+
+              if (
+                cohort.selectionMode === "individual" &&
+                !sourceCandidate.isManualFallbackTeam
+              ) {
+                return sourceCandidate;
+              }
+
+              return materializeRoomGroupCandidate(
+                sourceCandidate,
+                fallbackPlan?.assignmentsBySelectionKey?.[selectionKeys[index]] ||
+                  [],
+                {
+                  controlCenterRuntimeContext: runtimeContext,
+                },
+              );
+            },
+          );
           const candidate =
             cohort.selectionMode === "individual"
-              ? mergeIndividualRoomCandidates(
-                  sourceCandidates.map((sourceCandidate, index) =>
-                    sourceCandidate?.isManualFallbackTeam
-                      ? materializeRoomGroupCandidate(
-                          sourceCandidate,
-                          fallbackPlan?.assignmentsBySelectionKey?.[
-                            selectionKeys[index]
-                          ] || [],
-                        )
-                      : sourceCandidate,
-                  ),
-                )
+              ? mergeIndividualRoomCandidates(materializedCandidates)
               : {
-                  ...materializeRoomGroupCandidate(
-                    sourceCandidates[0],
-                    fallbackPlan?.assignmentsBySelectionKey?.[selectionKeys[0]] ||
-                      [],
-                  ),
+                  ...materializedCandidates[0],
                   fallbackSelectionKey: selectionKeys[0],
                 };
           stationAssignments.push({
             stationIndex: assignment.stationIndex,
             stationLevel: cohort.stationLevel,
             expectedSlots: cohort.slotCount,
+            activeTeamIndexes: candidateIndexes,
             candidate,
           });
         }
@@ -3311,24 +4036,8 @@ function buildManualRoomGroupRotationCandidate(
   };
 }
 
-function getControlRotationSegmentHours(shiftMode, rotationMode) {
-  if (shiftMode === "threeTimes") {
-    return [12, 6, 6];
-  }
-
-  if (shiftMode === "once") {
-    return [24, 24];
-  }
-
-  if (isMaaTwoShiftRotation(shiftMode, rotationMode)) {
-    return [12, 12];
-  }
-
-  return [12, 12, 12];
-}
-
-function buildAutomaticControlRotationCandidate(group, plan) {
-  if (!group || plan?.status !== "ready" || plan.shifts?.length !== 2) {
+function buildControlCenterRoleCandidate(group, controlState) {
+  if (!group || controlState?.status !== "ready") {
     return null;
   }
 
@@ -3339,90 +4048,63 @@ function buildAutomaticControlRotationCandidate(group, plan) {
   const expectedSlots = Number.isInteger(station.slotCount)
     ? station.slotCount
     : 5;
-  const shiftMode = confirmedLayoutPlan.value?.shiftMode;
-  const usesMaaTwoShiftRotation = isMaaTwoShiftRotation(
-    shiftMode,
-    twoShiftRotationMode.value,
-  );
-  const segmentHours = getControlRotationSegmentHours(
-    shiftMode,
-    twoShiftRotationMode.value,
-  );
-  const defaultShiftIndexes =
-    shiftMode === "once"
-      ? [0, 1]
-      : usesMaaTwoShiftRotation
-        ? [0, 1]
-      : [0, 0, 1];
-  const presetShiftIndexes =
-    activeRiicSchedulePresetRuntime.value?.controlShiftIndexesBySegment || [];
-  const shiftIndexes =
-    presetShiftIndexes.length === segmentHours.length
-      ? presetShiftIndexes
-      : defaultShiftIndexes;
-
-  const segments = segmentHours.map(
-    (durationHours, segmentIndex) => {
-    const shift = plan.shifts[shiftIndexes[segmentIndex]];
-    const operatorIds = shift.operators.map((operator) => operator.charId);
-
-    return {
-      index: segmentIndex,
-      durationHours,
-      stationAssignments: [
-        {
-          stationIndex: 0,
-          stationLevel,
-          expectedSlots,
-          candidate: {
-            key: `${group.id}:${shift.id}`,
-            name: shift.label,
-            operatorIds,
-            operators: shift.operators,
-            effectMetrics: shift.effectMetrics || [],
-            upgradeRequirements: plan.upgradeRequirements || [],
-            corePercent: 100,
-            totalPercent: 100,
-            bonusPercent: 0,
-            fallback: {
-              count: 0,
-              operators: [],
-              materialized: true,
-            },
+  const segments = controlState.segments.map((segment) => ({
+    index: segment.index,
+    durationHours: segment.durationHours,
+    stationAssignments: [
+      {
+        stationIndex: 0,
+        stationLevel,
+        expectedSlots,
+        candidate: {
+          key: `${group.id}:segment-${segment.index + 1}:${segment.operatorIds.join(",")}`,
+          name: `中枢时段 ${segment.index + 1}`,
+          controlCenterTeamIndex: segment.teamIndex,
+          operatorIds: segment.operatorIds,
+          operators: segment.operators,
+          corePercent: 100,
+          totalPercent: 100,
+          bonusPercent: 0,
+          fallback: {
+            count: 0,
+            operators: [],
+            materialized: true,
           },
         },
-      ],
-    };
-    },
-  );
+      },
+    ],
+  }));
 
   return {
-    key: `${group.id}:${plan.claimedOperatorIds.join(",")}:${confirmedLayoutPlan.value?.shiftMode || ""}:${twoShiftRotationMode.value}:${shiftIndexes.join(",")}`,
+    key: `${group.id}:${controlState.segments
+      .map(
+        (segment) =>
+          `${segment.teamIndex}:${(segment.operatorIds || []).join(",")}`,
+      )
+      .join("|")}`,
     segments,
   };
 }
 
-const automaticControlRoomGroupCandidate = computed(() => {
+const manualControlRoomGroupCandidate = computed(() => {
   const group = controlScheduleRoomGroup.value;
-  const candidate = buildAutomaticControlRotationCandidate(
+  const candidate = buildControlCenterRoleCandidate(
     group,
-    controlAutoRotationPlan.value,
+    controlCenterFinalRoleState.value,
   );
 
   return {
     group,
     candidate,
     reason:
-      controlAutoRotationPlan.value.status === "ready"
+      controlCenterFinalRoleState.value.status === "ready"
         ? null
-        : controlAutoRotationPlan.value.status,
+        : controlCenterFinalRoleState.value.status,
   };
 });
 
 const roomGroupFallbackPlanStates = computed(() => {
-  const occupiedOperatorIds = new Set(
-    riicSchedulePresetControlOperatorIds.value,
-  );
+  const occupiedOperatorIds = new Set(controlCenterSelectedOperatorIds.value);
   const plans = {};
   const selectedCoreOperatorIds = new Set(
     candidateEnabledScheduleRoomGroups.value.flatMap((group) => [
@@ -3435,7 +4117,9 @@ const roomGroupFallbackPlanStates = computed(() => {
 
   for (const group of candidateEnabledScheduleRoomGroups.value) {
     const state = roomGroupCandidateStates.value[group.id];
-    const selected = getSelectedRoomGroupCandidateEntries(group, state);
+    const selected = getSelectedRoomGroupCandidateEntries(group, state, {
+      allowPartial: true,
+    });
     if (!selected) {
       plans[group.id] = null;
       continue;
@@ -3463,14 +4147,12 @@ const roomGroupFallbackPlanStates = computed(() => {
       selectedEntries: selected.selectedEntries,
       occupiedOperatorIds: occupiedIds,
     });
-    const fallbackQueueOperatorIds = hasManualFallbackQueue
-      ? savedQueue.operatorIds
-      : automaticPlan.selectedOperatorIds;
     const plan = hasManualFallbackQueue
       ? createRiicRoomGroupFallbackPlan({
           selectedEntries: selected.selectedEntries,
           occupiedOperatorIds: occupiedIds,
-          preferredOperatorIds: fallbackQueueOperatorIds,
+          preferredOperatorIdBySlotKey: savedQueue?.operatorIdBySlotKey,
+          preferredOperatorIds: savedQueue?.operatorIds,
           allowAutomaticFill: false,
         })
       : automaticPlan;
@@ -3482,7 +4164,8 @@ const roomGroupFallbackPlanStates = computed(() => {
       coreOperatorIds,
       occupiedOperatorIds: [...occupiedOperatorIds],
       fallbackQueueSignature,
-      fallbackQueueOperatorIds,
+      fallbackQueueOperatorIds: plan.selectedOperatorIds,
+      fallbackQueueOperatorIdBySlotKey: plan.operatorIdBySlotKey,
       hasManualFallbackQueue,
     };
 
@@ -3494,6 +4177,162 @@ const roomGroupFallbackPlanStates = computed(() => {
   return plans;
 });
 
+const controlCenterLateFillState = computed(() => {
+  const baseState = controlCenterRoleState.value;
+  if (baseState.status !== "ready") {
+    return {
+      status: baseState.status,
+      teamEntries: [],
+      operatorIds: [],
+    };
+  }
+
+  const excludedOperatorIds = new Set(
+    controlCenterLateFillExcludedOperatorIds.value,
+  );
+  const occupiedOperatorIds = new Set(baseState.operatorIds || []);
+  for (const plan of Object.values(roomGroupFallbackPlanStates.value)) {
+    for (const charId of [
+      ...(plan?.coreOperatorIds || []),
+      ...(plan?.selectedOperatorIds || []),
+    ]) {
+      occupiedOperatorIds.add(charId);
+    }
+  }
+
+  const controlCandidates = controlCenterCandidateOperators.value
+    .filter((operator) => {
+      const charId = String(operator?.charId || "").trim();
+      return charId && !excludedOperatorIds.has(charId);
+    })
+    .map((operator) => ({
+      ...operator,
+      lateFillSource: "effect",
+    }));
+  const controlCandidateIds = new Set(
+    controlCandidates.map((operator) => operator.charId),
+  );
+  const rosterById = new Map();
+  for (const operator of riicMatchingRoster.value || []) {
+    const charId = String(operator?.charId || "").trim();
+    if (
+      !charId ||
+      excludedOperatorIds.has(charId) ||
+      controlCandidateIds.has(charId) ||
+      rosterById.has(charId)
+    ) {
+      continue;
+    }
+
+    rosterById.set(charId, {
+      ...operator,
+      controlCenterBuffTags: [],
+      controlCenterResolvedEffects: [],
+      controlCenterRoomEffectLabel: "",
+      lateFillSource: "idle",
+    });
+  }
+  const candidateQueue = [
+    ...controlCandidates,
+    ...rosterById.values(),
+  ];
+  const teamEntries = [];
+  const teamIndexes = [
+    ...new Set(
+      (baseState.segments || [])
+        .map((segment) => Number(segment?.teamIndex))
+        .filter((teamIndex) => Number.isInteger(teamIndex) && teamIndex >= 0),
+    ),
+  ].sort((left, right) => left - right);
+
+  for (const teamIndex of teamIndexes) {
+    const sourceSegment = (baseState.segments || []).find(
+      (segment) => Number(segment?.teamIndex) === teamIndex,
+    );
+    const slotCount = Math.max(0, Number(sourceSegment?.slotCount || 0));
+    const operators = [...(sourceSegment?.operators || [])];
+    const fillers = [];
+
+    for (const operator of candidateQueue) {
+      if (operators.length + fillers.length >= slotCount) {
+        break;
+      }
+
+      const charId = String(operator?.charId || "").trim();
+      if (!charId || occupiedOperatorIds.has(charId)) {
+        continue;
+      }
+
+      fillers.push(operator);
+      occupiedOperatorIds.add(charId);
+    }
+
+    teamEntries.push({
+      teamIndex,
+      slotCount,
+      operators: fillers,
+      operatorIds: fillers.map((operator) => operator.charId),
+      emptySlotCount: Math.max(
+        0,
+        slotCount - operators.length - fillers.length,
+      ),
+    });
+  }
+
+  return {
+    status: "ready",
+    teamEntries,
+    operatorIds: teamEntries.flatMap((entry) => entry.operatorIds),
+  };
+});
+
+const controlCenterFinalRoleState = computed(() => {
+  const baseState = controlCenterRoleState.value;
+  const lateFillState = controlCenterLateFillState.value;
+  if (baseState.status !== "ready" || lateFillState.status !== "ready") {
+    return baseState;
+  }
+
+  const lateFillByTeamIndex = new Map(
+    lateFillState.teamEntries.map((entry) => [entry.teamIndex, entry]),
+  );
+  const segments = (baseState.segments || []).map((segment) => {
+    const lateFill = lateFillByTeamIndex.get(segment.teamIndex);
+    const operators = [
+      ...(segment.operators || []),
+      ...(lateFill?.operators || []),
+    ].slice(0, segment.slotCount);
+
+    return {
+      ...segment,
+      operators,
+      operatorIds: operators.map((operator) => operator.charId),
+    };
+  });
+  const maxSegmentOperatorCount = Math.max(
+    0,
+    ...segments.map((segment) => segment.operatorIds.length),
+  );
+
+  return {
+    ...baseState,
+    segments,
+    operatorIds: [
+      ...new Set(segments.flatMap((segment) => segment.operatorIds || [])),
+    ],
+    emptySlotCount: Math.max(
+      0,
+      (segments[0]?.slotCount || 0) - maxSegmentOperatorCount,
+    ),
+  };
+});
+
+const controlCenterFinalRuntimeContext = computed(() =>
+  buildRiicControlCenterRuntimeContext({
+    controlState: controlCenterFinalRoleState.value,
+  }),
+);
+
 watch(
   roomGroupFallbackPlanStates,
   (plans) => {
@@ -3504,14 +4343,15 @@ watch(
       if (
         !plan?.fallbackQueueSignature ||
         plan.pendingCount <= 0 ||
-        nextQueues[groupId]?.signature === plan.fallbackQueueSignature
+        (nextQueues[groupId]?.signature === plan.fallbackQueueSignature &&
+          nextQueues[groupId]?.operatorIdBySlotKey)
       ) {
         continue;
       }
 
       nextQueues[groupId] = {
         signature: plan.fallbackQueueSignature,
-        operatorIds: plan.selectedOperatorIds,
+        operatorIdBySlotKey: plan.operatorIdBySlotKey,
       };
       changed = true;
     }
@@ -3579,37 +4419,95 @@ function getRoomGroupFallbackQueueOperators(plan) {
     .filter(Boolean);
 }
 
-function setRoomGroupFallbackQueue(group, plan, operatorIds) {
+function getRoomGroupFallbackSections(plan) {
+  const operatorById = new Map(
+    (plan?.operators || []).map((operator) => [operator.charId, operator]),
+  );
+  const selectedOperatorIds = new Set(plan?.selectedOperatorIds || []);
+  const rankByOperatorId = new Map(
+    (plan?.operators || []).map((operator, index) => [
+      operator.charId,
+      index,
+    ]),
+  );
+  const sectionsByKey = new Map();
+
+  for (const slot of plan?.slots || []) {
+    const sectionKey = String(slot?.sectionKey || slot?.kind || "ordinary");
+    const section = sectionsByKey.get(sectionKey) || {
+      key: sectionKey,
+      title: String(slot?.sectionTitle || "补位").trim() || "补位",
+      slots: [],
+      candidateById: new Map(),
+    };
+    const assignedOperator = operatorById.get(slot.assignedOperatorId) || null;
+    section.slots.push({
+      ...slot,
+      assignedOperator,
+    });
+
+    if (!assignedOperator) {
+      for (const operator of slot.operators || []) {
+        if (!selectedOperatorIds.has(operator.charId)) {
+          section.candidateById.set(operator.charId, operator);
+        }
+      }
+    }
+
+    sectionsByKey.set(sectionKey, section);
+  }
+
+  return [...sectionsByKey.values()].map((section) => ({
+    key: section.key,
+    title: section.title,
+    slots: section.slots,
+    selectedCount: section.slots.filter((slot) => slot.assignedOperator).length,
+    pendingCount: section.slots.length,
+    candidates: [...section.candidateById.values()].sort(
+      (left, right) =>
+        Number(rankByOperatorId.get(left.charId) ?? Infinity) -
+          Number(rankByOperatorId.get(right.charId) ?? Infinity) ||
+        left.name.localeCompare(right.name, "zh-CN") ||
+        left.charId.localeCompare(right.charId, "en"),
+    ),
+  }));
+}
+
+function setRoomGroupFallbackQueue(group, plan, operatorIdBySlotKey) {
   if (!group?.id || !plan?.fallbackQueueSignature) {
     return;
   }
 
-  const availableIds = new Set(
-    (plan.operators || []).map((operator) => operator.charId),
+  const slotsByKey = new Map(
+    (plan?.slots || []).map((slot) => [slot.key, slot]),
   );
-  const nextOperatorIds = [];
-  const seenIds = new Set();
+  const nextOperatorIdBySlotKey = {};
+  const selectedOperatorIds = new Set();
 
-  for (const value of operatorIds || []) {
+  for (const [slotKey, value] of Object.entries(operatorIdBySlotKey || {})) {
+    const normalizedSlotKey = String(slotKey || "").trim();
     const charId = String(value || "").trim();
+    const slot = slotsByKey.get(normalizedSlotKey);
     if (
+      !slot ||
       !charId ||
-      seenIds.has(charId) ||
-      !availableIds.has(charId) ||
-      nextOperatorIds.length >= plan.pendingCount
+      selectedOperatorIds.has(charId) ||
+      !(slot.operators || []).some(
+        (operator) => operator.charId === charId,
+      )
     ) {
       continue;
     }
 
-    seenIds.add(charId);
-    nextOperatorIds.push(charId);
+    selectedOperatorIds.add(charId);
+    nextOperatorIdBySlotKey[normalizedSlotKey] = charId;
   }
 
   roomGroupFallbackQueueStates.value = {
     ...roomGroupFallbackQueueStates.value,
     [group.id]: {
       signature: plan.fallbackQueueSignature,
-      operatorIds: nextOperatorIds,
+      operatorIdBySlotKey: nextOperatorIdBySlotKey,
     },
   };
 }
@@ -3624,18 +4522,31 @@ function clearRoomGroupFallbackQueue(groupId) {
   roomGroupFallbackQueueStates.value = nextQueues;
 }
 
-function isRoomGroupFallbackQueueOperatorSelected(plan, charId) {
-  return (plan?.fallbackQueueOperatorIds || []).includes(charId);
+function getFallbackSectionOpenSlot(section, operator) {
+  const charId = String(operator?.charId || "").trim();
+  return (section?.slots || []).find(
+    (slot) =>
+      !slot.assignedOperator &&
+      (slot?.operators || []).some(
+        (candidateOperator) => candidateOperator.charId === charId,
+      ),
+  );
 }
 
-function canAppendRoomGroupFallbackQueueOperator(group, plan, operator) {
+function canAppendRoomGroupFallbackQueueOperator(
+  group,
+  plan,
+  section,
+  operator,
+) {
   const charId = String(operator?.charId || "").trim();
   if (
     !group ||
     !plan ||
+    !section ||
     !charId ||
-    isRoomGroupFallbackQueueOperatorSelected(plan, charId) ||
-    (plan?.fallbackQueueOperatorIds || []).length >= plan.pendingCount
+    (plan?.selectedOperatorIds || []).includes(charId) ||
+    !getFallbackSectionOpenSlot(section, operator)
   ) {
     return false;
   }
@@ -3643,29 +4554,30 @@ function canAppendRoomGroupFallbackQueueOperator(group, plan, operator) {
   return !getFallbackOperatorDestination(charId);
 }
 
-function appendRoomGroupFallbackQueueOperator(group, plan, operator) {
-  if (!canAppendRoomGroupFallbackQueueOperator(group, plan, operator)) {
+function appendRoomGroupFallbackQueueOperator(group, plan, section, operator) {
+  if (
+    !canAppendRoomGroupFallbackQueueOperator(group, plan, section, operator)
+  ) {
     return;
   }
 
-  setRoomGroupFallbackQueue(group, plan, [
-    ...(plan.fallbackQueueOperatorIds || []),
-    operator.charId,
-  ]);
+  const slot = getFallbackSectionOpenSlot(section, operator);
+  setRoomGroupFallbackQueue(group, plan, {
+    ...(plan.operatorIdBySlotKey || {}),
+    [slot.key]: operator.charId,
+  });
 }
 
-function removeRoomGroupFallbackQueueOperator(group, plan, operator) {
-  if (!group || !plan || !operator?.charId) {
+function removeRoomGroupFallbackQueueOperator(group, plan, slot) {
+  if (!group || !plan || !slot?.key) {
     return;
   }
 
-  setRoomGroupFallbackQueue(
-    group,
-    plan,
-    (plan.fallbackQueueOperatorIds || []).filter(
-      (charId) => charId !== operator.charId,
-    ),
-  );
+  const nextOperatorIdBySlotKey = {
+    ...(plan.operatorIdBySlotKey || {}),
+  };
+  delete nextOperatorIdBySlotKey[slot.key];
+  setRoomGroupFallbackQueue(group, plan, nextOperatorIdBySlotKey);
 }
 
 function getFallbackOperatorDestination(charId) {
@@ -3697,11 +4609,18 @@ function getRoomFallbackOperatorDebugValues(operator) {
     ? Number(operator.basePercent)
     : Number(operator?.percent || 0);
   const layoutRuleBonus = Number(operator?.layer3Bonus || 0);
+  const controlCenterOperatorBonusPercent = Number(
+    operator?.controlCenterOperatorBonusPercent || 0,
+  );
 
   return {
     basePercent,
     layoutRuleBonus,
-    totalPercent: Number(operator?.percent || 0),
+    controlCenterOperatorBonusPercent,
+    totalPercent: Number(
+      operator?.effectivePercent ??
+        Number(operator?.percent || 0) + controlCenterOperatorBonusPercent,
+    ),
   };
 }
 
@@ -3709,21 +4628,9 @@ const activeRoomGroupFallbackPlan = computed(() =>
   getRoomGroupFallbackPlan(activeScheduleRoomGroup.value),
 );
 
-const activeRoomGroupFallbackQueueOperators = computed(() =>
-  getRoomGroupFallbackQueueOperators(activeRoomGroupFallbackPlan.value),
+const activeRoomGroupFallbackSections = computed(() =>
+  getRoomGroupFallbackSections(activeRoomGroupFallbackPlan.value),
 );
-
-const activeRoomGroupFallbackCandidates = computed(() => {
-  const plan = activeRoomGroupFallbackPlan.value;
-  const isQueued = (operator) =>
-    isRoomGroupFallbackQueueOperatorSelected(plan, operator?.charId);
-
-  return {
-    operators: (plan?.operators || []).filter(
-      (operator) => !isQueued(operator),
-    ),
-  };
-});
 
 function getRoomGroupCandidateFallbackQueueOperators(
   group,
@@ -3751,7 +4658,8 @@ function getRoomGroupCandidateFallbackPlaceholderCount(
 ) {
   return Math.max(
     0,
-    Number(candidate?.fallback?.count || 0) -
+    Number(candidate?.fallback?.count || 0) +
+      Number(candidate?.fallback?.taggedMemberRequirements?.length || 0) -
       getRoomGroupCandidateFallbackQueueOperators(group, cohort, candidate)
         .length,
   );
@@ -3765,12 +4673,15 @@ const manualRoomGroupCandidates = computed(() =>
       group,
       state,
       fallbackPlan,
+      {
+        controlCenterRuntimeContext: controlCenterFinalRuntimeContext.value,
+      },
     );
-    if (!sourceCandidate || fallbackPlan?.status !== "ready") {
+    if (!sourceCandidate) {
       return {
         group,
         candidate: null,
-        reason: sourceCandidate ? "fallbackSelection" : "manualSelection",
+        reason: "manualSelection",
       };
     }
 
@@ -3782,7 +4693,7 @@ const manualRoomGroupCandidates = computed(() =>
   }),
 );
 const assembledRoomGroupCandidates = computed(() => [
-  automaticControlRoomGroupCandidate.value,
+  manualControlRoomGroupCandidate.value,
   ...manualRoomGroupCandidates.value,
 ]);
 
@@ -3865,43 +4776,6 @@ const assembledScheduleCandidateState = computed(() => {
     };
   }
 
-  const incompleteGroups = candidateGroups
-    .filter((group) => !getRoomGroupSelectionProgress(group).complete)
-    .map((group) => ({
-      id: group.id,
-      label: group.label,
-      reason: "manualSelection",
-    }));
-  if (incompleteGroups.length > 0) {
-    return {
-      status: "waiting",
-      candidates: [],
-      blockedGroups: incompleteGroups,
-      summary: staffingSelectionSummary.value,
-    };
-  }
-
-  if (
-    controlScheduleRoomGroup.value &&
-    controlAutoRotationPlan.value.status !== "ready"
-  ) {
-    return {
-      status:
-        controlAutoRotationPlan.value.status === "requiresOperators"
-          ? "requiresOperators"
-          : "waiting",
-      candidates: [],
-      blockedGroups: [
-        {
-          id: controlScheduleRoomGroup.value.id,
-          label: controlScheduleRoomGroup.value.label,
-          reason: controlAutoRotationPlan.value.status,
-        },
-      ],
-      summary: staffingSelectionSummary.value,
-    };
-  }
-
   const unresolvedGroups = assembledRoomGroupCandidates.value
     .filter(({ candidate }) => !candidate)
     .map(({ group, reason }) => ({
@@ -3929,16 +4803,22 @@ const assembledScheduleCandidateState = computed(() => {
     };
   }
 
+  const sameShiftAlignment = alignRiicScheduleSameShiftBindings({
+    groupEntries: selectedGroups,
+  });
+  const alignedGroups = sameShiftAlignment.groupEntries;
+
   return {
     status: "ready",
     candidates: [
       {
-        key: selectedGroups
-          .map(({ group, candidate }) => `${group.id}:${candidate.key}`)
+        key: alignedGroups
+          .map(
+            ({ group, candidate }) =>
+              `${group.id}:${candidate.key}:${candidate.sameShiftBindingOffset || 0}`,
+          )
           .join("|"),
-        shiftGroupBindings:
-          activeRiicSchedulePresetRuntime.value?.shiftGroupBindings || [],
-        groups: selectedGroups.map(({ group, candidate }) => ({
+        groups: alignedGroups.map(({ group, candidate }) => ({
           groupId: group.id,
           groupLabel: group.label,
           facility: group.facility,
@@ -3946,6 +4826,7 @@ const assembledScheduleCandidateState = computed(() => {
           candidate,
           claimedOperatorIds: getManualRoomGroupCandidateOperatorIds(candidate),
         })),
+        sameShiftBindingSummary: sameShiftAlignment.summary,
       },
     ],
     blockedGroups: [],
@@ -3972,7 +4853,6 @@ const scheduleTrainingRequirements = computed(() => {
   }
 
   return mergeCandidateUpgradeRequirements([
-    ...(controlAutoRotationPlan.value.upgradeRequirements || []),
     ...manualRoomGroupCandidates.value.flatMap(({ candidate }) =>
       (candidate?.segments || []).flatMap((segment) =>
         (segment?.stationAssignments || []).flatMap(
@@ -3982,25 +4862,60 @@ const scheduleTrainingRequirements = computed(() => {
     ),
   ]);
 });
-const schedulePreviewStaticRooms = computed(() =>
-  scheduleRoomRows.value
+const riicSupportRoomPlacements = computed(() =>
+  getRiicLayer3SupportRoomPlacements({
+    roomAssignments: candidateEnabledScheduleRoomGroups.value.map((group) => ({
+      roomType: group.facility,
+      operatorIds: [
+        ...getSelectedRoomGroupCoreOperatorIds(
+          group,
+          roomGroupCandidateStates.value[group.id],
+        ),
+        ...(roomGroupFallbackPlanStates.value[group.id]?.selectedOperatorIds ||
+          []),
+      ],
+    })),
+    ownedOperators: riicMatchingRoster.value || [],
+    claimedOperatorIds: getClaimedNamedOperatorIds(),
+    layoutFacts: activeLayoutFacilityCounts.value,
+  }),
+);
+
+const schedulePreviewStaticRooms = computed(() => {
+  const placementOffsetByFacility = new Map();
+
+  return scheduleRoomRows.value
     .flatMap((row) => row.groups)
     .filter(
       (group) =>
-        !group.candidateGenerationAvailable && !group.automaticScheduling,
+        !group.candidateGenerationAvailable && !group.manualControl,
     )
     .flatMap((group) =>
-      Array.from({ length: group.count }, (_, index) => ({
-        key: `${group.id}:${index}`,
-        label:
-          group.count > 1
-            ? `${group.facilityLabel} ${index + 1}`
-            : group.facilityLabel,
-        facility: group.facility,
-        expectedSlots: group.facility === "dormitory" ? 5 : 1,
-      })),
-    ),
-);
+      Array.from({ length: group.count }, (_, index) => {
+        const expectedSlots =
+          group.facility === "dormitory"
+            ? 5
+            : group.facility === "training"
+              ? 2
+              : 1;
+        const offset = placementOffsetByFacility.get(group.facility) || 0;
+        const operators = (riicSupportRoomPlacements.value[group.facility] || [])
+          .slice(offset, offset + expectedSlots);
+        placementOffsetByFacility.set(group.facility, offset + expectedSlots);
+
+        return {
+          key: `${group.id}:${index}`,
+          label:
+            group.count > 1
+              ? `${group.facilityLabel} ${index + 1}`
+              : group.facilityLabel,
+          facility: group.facility,
+          expectedSlots,
+          operators,
+        };
+      }),
+    );
+});
 const riicSchedulePreview = computed(() =>
   buildRiicSchedulePreview({
     scheduleCandidate: activeAssembledScheduleCandidate.value,
@@ -4013,8 +4928,6 @@ const riicSchedulePreview = computed(() =>
     roomOperatorOverrides: scheduleRoomOperatorOverrides.value,
     productOverrides: scheduleRoomProductOverrides.value,
     invalidatedRoomKeys: invalidatedScheduleRoomKeys.value,
-    shiftGroupBindings:
-      activeRiicSchedulePresetRuntime.value?.shiftGroupBindings || [],
     stickyOperatorIds: [
       operatorNameToCharId.get("但书"),
       operatorNameToCharId.get("龙舌兰"),
@@ -4090,6 +5003,13 @@ const riicSchedulePreviewPlaceholder = computed(() => {
 });
 const displayedRiicSchedulePreview = computed(
   () => riicSchedulePreview.value || riicSchedulePreviewPlaceholder.value,
+);
+const riicActualScheduleMetrics = computed(() =>
+  riicSchedulePreview.value
+    ? summarizeRiicActualSchedule({
+        preview: riicSchedulePreview.value,
+      })
+    : null,
 );
 const generatedMaaExportPreview = computed(() => {
   if (!riicSchedulePreview.value || !scheduleExecutionSettingsComplete.value) {
@@ -4357,7 +5277,8 @@ const scheduleRoomEditorProductOptions = computed(() =>
 watch(
   () => riicSchedulePreview.value?.sourceKey,
   () => {
-    activeSchedulePreviewStateIndex.value = 0;
+    activeSchedulePreviewStateIndex.value =
+      getDefaultSchedulePreviewStateIndex();
     selectedSchedulePreviewRoomKey.value = "";
   },
 );
@@ -4588,8 +5509,33 @@ function getRoomGroupCandidateMetrics(candidate) {
 
 function getRoomGroupCandidateDebugValues(candidate) {
   const contribution = getRiicRuntimeCandidateContributionBreakdown(candidate);
+  const controlCenterOperatorBonusPercent = Number(
+    candidate?.controlCenterOperatorBonusPercent || 0,
+  );
+  const candidateCoreBonusPercent =
+    Number(candidate?.localBonusPercent || 0) -
+    controlCenterOperatorBonusPercent;
+  const fallbackBonusPercent = Number(candidate?.fallback?.totalPercent || 0);
+  const controlCenterFacilityBonusPercent = Number(
+    candidate?.controlCenterFacilityBonusPercent || 0,
+  );
+  const controlCenterFacilityCalculation =
+    candidate?.controlCenterFacilityCalculation || {
+      totalHours: 0,
+      weightedBonusPercent: 0,
+      segments: [],
+    };
+  const controlCenterOperatorCalculation =
+    candidate?.controlCenterOperatorCalculation || {
+      totalHours: 0,
+      weightedBonusPercent: 0,
+      segments: [],
+    };
 
   return {
+    sourceFile: String(
+      candidate?.sourceFile || candidate?.fallback?.sourceFile || "",
+    ).trim(),
     directMetrics: ROOM_CANDIDATE_EFFECT_META.flatMap((effect) => {
       const bonus = Number(
         contribution.directByFacility?.[effect.facility] || 0,
@@ -4602,8 +5548,13 @@ function getRoomGroupCandidateDebugValues(candidate) {
       );
       return bonus > 0 ? [{ ...effect, bonus }] : [];
     }),
-    fallbackBonusPercent: Number(candidate?.fallback?.totalPercent || 0),
+    fallbackBonusPercent,
     fallbackCount: Number(candidate?.fallback?.count || 0),
+    candidateCoreBonusPercent,
+    controlCenterOperatorBonusPercent,
+    controlCenterOperatorCalculation,
+    controlCenterFacilityBonusPercent,
+    controlCenterFacilityCalculation,
     directBonusPercent: contribution.directBonusPercent,
     additionalBonusPercent: contribution.additionalBonusPercent,
     totalContributionPercent: contribution.totalContributionPercent,
@@ -4763,35 +5714,10 @@ function formatRiicLayer3RuleEffect(effect) {
     : "未支持的效果";
 }
 
-function getControlShiftEffectMetrics(shift) {
-  return (shift?.effectMetrics || []).flatMap((metric) => {
-    const effect = ROOM_CANDIDATE_EFFECT_META.find(
-      (item) => item.facility === metric.facility,
-    );
-    const bonus = Number(metric?.percent || 0);
-
-    return effect && bonus > 0
-      ? [
-          {
-            ...effect,
-            bonus,
-          },
-        ]
-      : [];
-  });
-}
-
 function getRoomGroupCandidateStatus(group) {
-  if (group?.automaticScheduling) {
-    if (controlAutoRotationPlan.value.status === "ready") {
-      return {
-        icon: "mdi-check-circle",
-        tone: "ready",
-        title: "已自动排好两班",
-      };
-    }
-
-    if (controlAutoRotationPlan.value.status === "requiresOperators") {
+  if (group?.manualControl) {
+    const controlState = controlCenterRoleState.value;
+    if (controlState.status === "requiresOperators") {
       return {
         icon: "mdi-account-alert-outline",
         tone: "waiting",
@@ -4799,10 +5725,18 @@ function getRoomGroupCandidateStatus(group) {
       };
     }
 
+    if (controlState.status !== "ready") {
+      return {
+        icon: "mdi-alert-circle-outline",
+        tone: "blocked",
+        title: "缺少控制中枢容量信息",
+      };
+    }
+
     return {
-      icon: "mdi-alert-circle-outline",
-      tone: "blocked",
-      title: `还缺 ${controlAutoRotationPlan.value.missingSlotCount || 0} 名干员`,
+      icon: "mdi-check-circle",
+      tone: "ready",
+      title: `自动安排 ${controlState.operatorIds.length} 个功能位，留空 ${controlState.emptySlotCount} 格`,
     };
   }
 
@@ -4874,22 +5808,23 @@ function getRoomGroupCandidateStatus(group) {
 }
 
 function getRoomGroupProgressStatus(group) {
-  if (group?.automaticScheduling) {
-    if (controlAutoRotationPlan.value.status === "ready") {
+  if (group?.manualControl) {
+    const controlState = controlCenterRoleState.value;
+    if (controlState.status === "requiresOperators") {
       return {
-        tone: "complete",
-        label: "自动生成",
+        tone: "pending",
+        label: "待同步数据",
       };
     }
 
-    return controlAutoRotationPlan.value.status === "requiresOperators"
+    return controlState.status === "ready"
       ? {
-          tone: "pending",
-          label: "待同步数据",
+          tone: "complete",
+          label: `自动安排 ${controlState.operatorIds.length} 人`,
         }
       : {
           tone: "error",
-          label: "人手不足",
+          label: "容量异常",
         };
   }
 
@@ -4947,6 +5882,41 @@ function getRoomGroupProgressStatus(group) {
         tone: "pending",
         label: "待填入",
       };
+}
+
+function getRoomGroupDisplayStatus(group) {
+  const progress = getRoomGroupProgressStatus(group);
+  const candidateStatus = getRoomGroupCandidateStatus(group);
+
+  if (progress.tone === "notRequired") {
+    return {
+      tone: "complete",
+      icon: "mdi-check-circle",
+      title: "无需操作",
+    };
+  }
+
+  if (progress.tone === "complete") {
+    return {
+      tone: "complete",
+      icon: candidateStatus?.icon || "mdi-check-circle",
+      title: candidateStatus?.title || progress.label,
+    };
+  }
+
+  if (progress.tone === "error") {
+    return {
+      tone: "error",
+      icon: candidateStatus?.icon || "mdi-alert-circle-outline",
+      title: candidateStatus?.title || progress.label,
+    };
+  }
+
+  return {
+    tone: "pending",
+    icon: candidateStatus?.icon || "mdi-alert-circle-outline",
+    title: candidateStatus?.title || progress.label,
+  };
 }
 
 function getAssembledCandidateBlockedMessage(state) {
@@ -5297,7 +6267,7 @@ const developerCombinationCount = computed(() =>
 const developerSourceUrl = `${RIIC_SCHEDULE_SOURCE.repository}/tree/${RIIC_SCHEDULE_SOURCE.commit}/src/assets/texts/schedule`;
 
 watch(
-  selectableScheduleRoomGroups,
+  navigableScheduleRoomGroups,
   (groups) => {
     if (
       !groups.some(
@@ -5479,7 +6449,7 @@ function normalizeSavedStaticCandidateKey(value) {
     !parts[2] ||
     !parts[3]
   ) {
-    return key;
+    return key.startsWith("preset:") ? "" : key;
   }
 
   const memberSetKey = parts[3]
@@ -5536,11 +6506,49 @@ function normalizeSavedRoomGroupTeamCandidateKeys(value) {
   );
 }
 
-function normalizeSavedPresetRequests(value) {
-  const presetId = String(
-    Array.isArray(value) ? value[0]?.presetId : "",
-  ).trim();
-  return presetId ? [{ presetId }] : [];
+function normalizeControlCenterRoleSettings(value) {
+  return {
+    officeEnabled: value?.officeEnabled === true,
+  };
+}
+
+function normalizeControlCenterManualOverrides(value) {
+  const removedOperatorIds = [
+    ...new Set(
+      (value?.removedOperatorIds || [])
+        .map((charId) => String(charId || "").trim())
+        .filter(Boolean),
+    ),
+  ];
+  const addedOperatorIdsByTeamIndex = Object.fromEntries(
+    Object.entries(value?.addedOperatorIdsByTeamIndex || {}).flatMap(
+      ([teamIndex, operatorIds]) => {
+        const normalizedTeamIndex = String(teamIndex || "").trim();
+        if (
+          !/^\d+$/.test(normalizedTeamIndex) ||
+          !Array.isArray(operatorIds)
+        ) {
+          return [];
+        }
+
+        const normalizedOperatorIds = [
+          ...new Set(
+            operatorIds
+              .map((charId) => String(charId || "").trim())
+              .filter(Boolean),
+          ),
+        ];
+        return normalizedOperatorIds.length > 0
+          ? [[normalizedTeamIndex, normalizedOperatorIds]]
+          : [];
+      },
+    ),
+  );
+
+  return {
+    removedOperatorIds,
+    addedOperatorIdsByTeamIndex,
+  };
 }
 
 function normalizeSavedRoomGroupFallbackQueueStates(value) {
@@ -5550,20 +6558,46 @@ function normalizeSavedRoomGroupFallbackQueueStates(value) {
       if (
         typeof roomGroupId !== "string" ||
         !roomGroupId ||
-        !signature ||
-        !Array.isArray(queueState?.operatorIds)
+        !signature
       ) {
         return [];
       }
 
+      const operatorIdBySlotKey = Object.fromEntries(
+        Object.entries(queueState?.operatorIdBySlotKey || {}).flatMap(
+          ([slotKey, charId]) => {
+            const normalizedSlotKey = String(slotKey || "").trim();
+            const normalizedCharId = String(charId || "").trim();
+            return normalizedSlotKey && normalizedCharId
+              ? [[normalizedSlotKey, normalizedCharId]]
+              : [];
+          },
+        ),
+      );
       const operatorIds = [
         ...new Set(
-          queueState.operatorIds
+          (queueState?.operatorIds || [])
             .map((charId) => String(charId || "").trim())
             .filter(Boolean),
         ),
       ];
-      return [[roomGroupId, { signature, operatorIds }]];
+      if (
+        Object.keys(operatorIdBySlotKey).length === 0 &&
+        operatorIds.length === 0
+      ) {
+        return [];
+      }
+
+      return [
+        [
+          roomGroupId,
+          {
+            signature,
+            operatorIdBySlotKey,
+            ...(operatorIds.length > 0 ? { operatorIds } : {}),
+          },
+        ],
+      ];
     }),
   );
 }
@@ -5637,6 +6671,12 @@ function normalizeRecommendedScheduleSnapshot(value) {
 
   return {
     triggerKey,
+    controlCenterRoleSettings: normalizeControlCenterRoleSettings(
+      value?.controlCenterRoleSettings,
+    ),
+    controlCenterManualOverrides: normalizeControlCenterManualOverrides(
+      value?.controlCenterManualOverrides,
+    ),
     selectedRoomGroupTeamCandidateKeys:
       normalizeSavedRoomGroupTeamCandidateKeys(
         value?.selectedRoomGroupTeamCandidateKeys,
@@ -5655,6 +6695,8 @@ function normalizeRecommendedScheduleSnapshot(value) {
 function createRecommendedScheduleSnapshot(triggerKey) {
   return normalizeRecommendedScheduleSnapshot({
     triggerKey,
+    controlCenterRoleSettings: controlCenterRoleSettings.value,
+    controlCenterManualOverrides: controlCenterManualOverrides.value,
     selectedRoomGroupTeamCandidateKeys:
       selectedRoomGroupTeamCandidateKeys.value,
     roomGroupFallbackQueueStates: roomGroupFallbackQueueStates.value,
@@ -5680,7 +6722,9 @@ function createWizardStateSnapshot() {
     twoShiftRotationMode: twoShiftRotationMode.value,
     treatUnderleveledOperatorsAsQualified:
       treatUnderleveledOperatorsAsQualified.value,
-    presetRequests: presetRequests.value,
+    idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+    controlCenterRoleSettings: controlCenterRoleSettings.value,
+    controlCenterManualOverrides: controlCenterManualOverrides.value,
     selectedRoomGroupTeamCandidateKeys:
       selectedRoomGroupTeamCandidateKeys.value,
     roomGroupFallbackQueueStates: roomGroupFallbackQueueStates.value,
@@ -5772,6 +6816,8 @@ function applySavedWizardState(parsedDraft) {
       shiftMode: parsedDraft.answers.shiftMode,
     });
     currentStep.value = 0;
+    idealTrainingRaritySelection.value =
+      normalizeRiicIdealTrainingRaritySelection();
     pendingOwnedOperatorPreference.value =
       parsedDraft.useOwnedOperators === true;
     hasSavedWizardState.value = true;
@@ -5793,6 +6839,9 @@ function applySavedWizardState(parsedDraft) {
       15,
       16,
       17,
+      19,
+      21,
+      RIIC_SCHEDULE_DRAFT_PREVIOUS_VERSION,
       RIIC_SCHEDULE_DRAFT_VERSION,
     ].includes(parsedDraft?.version) ||
     !parsedDraft.answers
@@ -5842,18 +6891,30 @@ function applySavedWizardState(parsedDraft) {
   treatUnderleveledOperatorsAsQualified.value =
     parsedDraft.version >= 15 &&
     parsedDraft.treatUnderleveledOperatorsAsQualified === true;
-  presetRequests.value =
-    parsedDraft.version >= 19
-      ? normalizeSavedPresetRequests(parsedDraft.presetRequests)
-      : [];
+  idealTrainingRaritySelection.value =
+    normalizeRiicIdealTrainingRaritySelection(
+      parsedDraft.idealTrainingRaritySelection,
+    );
   selectedRoomGroupTeamCandidateKeys.value =
-    parsedDraft.version >= 10
+    parsedDraft.version >= RIIC_SCHEDULE_DRAFT_LEGACY_VERSION
       ? normalizeSavedRoomGroupTeamCandidateKeys(
           parsedDraft.selectedRoomGroupTeamCandidateKeys,
         )
       : {};
+  controlCenterRoleSettings.value =
+    parsedDraft.version >= RIIC_SCHEDULE_DRAFT_LEGACY_VERSION
+      ? normalizeControlCenterRoleSettings(
+          parsedDraft.controlCenterRoleSettings,
+        )
+      : { officeEnabled: false };
+  controlCenterManualOverrides.value =
+    parsedDraft.version >= RIIC_SCHEDULE_DRAFT_VERSION
+      ? normalizeControlCenterManualOverrides(
+          parsedDraft.controlCenterManualOverrides,
+        )
+      : normalizeControlCenterManualOverrides();
   roomGroupFallbackQueueStates.value =
-    parsedDraft.version >= 18
+    parsedDraft.version >= RIIC_SCHEDULE_DRAFT_LEGACY_VERSION
       ? normalizeSavedRoomGroupFallbackQueueStates(
           parsedDraft.roomGroupFallbackQueueStates,
         )
@@ -5886,7 +6947,7 @@ function applySavedWizardState(parsedDraft) {
         )
       : {};
   recommendedScheduleSnapshot.value =
-    parsedDraft.version >= 17
+    parsedDraft.version >= RIIC_SCHEDULE_DRAFT_LEGACY_VERSION
       ? normalizeRecommendedScheduleSnapshot(
           parsedDraft.recommendedScheduleSnapshot,
         )
@@ -6056,6 +7117,19 @@ function setTreatUnderleveledOperatorsAsQualified(value) {
   clearSelectedRoomGroupTeamCandidates();
 }
 
+function setIdealTrainingRaritySelection(value) {
+  const nextSelection = normalizeRiicIdealTrainingRaritySelection(value);
+  if (
+    JSON.stringify(idealTrainingRaritySelection.value) ===
+    JSON.stringify(nextSelection)
+  ) {
+    return;
+  }
+
+  idealTrainingRaritySelection.value = nextSelection;
+  clearSelectedRoomGroupTeamCandidates();
+}
+
 function selectManualScheduleOption(value) {
   const [shiftMode, cardKey] = String(value).split(":");
   const card = getLayoutCardByKey(cardKey);
@@ -6140,7 +7214,11 @@ function resetWizard() {
   currentStep.value = 0;
   applyDefaultLayoutSelection();
   treatUnderleveledOperatorsAsQualified.value = false;
-  presetRequests.value = [];
+  idealTrainingRaritySelection.value =
+    normalizeRiicIdealTrainingRaritySelection();
+  controlCenterRoleSettings.value = { officeEnabled: false };
+  controlCenterManualOverrides.value = normalizeControlCenterManualOverrides();
+  controlCenterLateFillExcludedOperatorIds.value = [];
   recommendedScheduleSnapshot.value = null;
   clearSelectedRoomGroupTeamCandidates();
   recommendationPanelOpen.value = false;
@@ -6188,6 +7266,11 @@ async function clearSavedWizardState() {
   applyDefaultLayoutSelection();
   twoShiftRotationMode.value = "maa";
   treatUnderleveledOperatorsAsQualified.value = false;
+  idealTrainingRaritySelection.value =
+    normalizeRiicIdealTrainingRaritySelection();
+  controlCenterRoleSettings.value = { officeEnabled: false };
+  controlCenterManualOverrides.value = normalizeControlCenterManualOverrides();
+  controlCenterLateFillExcludedOperatorIds.value = [];
   recommendedScheduleSnapshot.value = null;
   clearSelectedRoomGroupTeamCandidates();
   recommendationPanelOpen.value = false;
@@ -6671,6 +7754,31 @@ function exportGeneratedMaaSchedule() {
   }
 }
 
+function openGeneratedScheduleInLegacyEditor() {
+  const schedule = generatedMaaExportPreview.value?.schedule;
+  if (!schedule) {
+    cMessage("当前没有可转交到旧版编辑器的排班", "warn");
+    return;
+  }
+
+  try {
+    sessionStorage.setItem(
+      RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY,
+      JSON.stringify({
+        version: 1,
+        source: "riic-schedule-generator",
+        schedule,
+      }),
+    );
+  } catch (error) {
+    console.error(error);
+    cMessage("排班转交失败，请稍后重试", "error");
+    return;
+  }
+
+  router.push({ name: "ScheduleV2" });
+}
+
 async function exportScheduleImage() {
   if (!scheduleCapturePanel.value || !selectedCandidate.value) {
     cMessage("当前没有可导出的完整排班", "warn");
@@ -6773,7 +7881,8 @@ watch(
     useOwnedOperators,
     twoShiftRotationMode,
     treatUnderleveledOperatorsAsQualified,
-    presetRequests,
+    controlCenterRoleSettings,
+    controlCenterManualOverrides,
     recommendedScheduleSnapshot,
     selectedRoomGroupTeamCandidateKeys,
     roomGroupFallbackQueueStates,
@@ -7559,6 +8668,7 @@ onBeforeUnmount(() => {
           :custom-source-import-type="customSourceImportType"
           :custom-source-importing="customSourceImporting"
           :yituliu-token="yituliuTokenInput"
+          :yituliu-source-label="yituliuSourceLabelInput"
           :max-custom-sources="RIIC_MAX_CUSTOM_OPERATOR_SOURCES"
           @open-skland="openSklandImport"
           @select-source="
@@ -7570,6 +8680,7 @@ onBeforeUnmount(() => {
           @import-yituliu="importYituliuOperatorSource"
           @delete-source="deleteCustomOperatorSource"
           @update:yituliu-token="yituliuTokenInput = $event"
+          @update:yituliu-source-label="yituliuSourceLabelInput = $event"
         />
 
         <RiicScheduleSettingsPanel
@@ -7583,43 +8694,43 @@ onBeforeUnmount(() => {
           :treat-underleveled-operators-as-qualified="
             treatUnderleveledOperatorsAsQualified
           "
-          :preset-options="riicSchedulePresetOptions"
-          :selected-preset-id="selectedRiicSchedulePresetId"
-          :preset-note="riicSchedulePresetNote"
-          :get-preset-title="getRiicSchedulePresetOptionTitle"
+          :ideal-training-rarity-selection="idealTrainingRaritySelection"
           @select-two-shift-rotation="selectTwoShiftRotationMode"
           @select-facility-requirement="selectFacilityRequirement"
           @set-training-mode="setTreatUnderleveledOperatorsAsQualified"
-          @toggle-preset="toggleRiicSchedulePreset"
+          @set-training-rarity-selection="setIdealTrainingRaritySelection"
         ></RiicScheduleSettingsPanel>
 
         <section v-if="isLayoutPlanningReady" class="room-workbench">
           <RiicRoomGroupNavigator
-            :progress-items="roomGroupProgressItems"
             :selection-rows="roomGroupSelectionRows"
             :active-group-id="activeScheduleRoomGroup?.id || ''"
             :layout-plan-summary="layoutPlanSummary"
-            :has-restorable-recommended-schedule="
-              hasRestorableRecommendedSchedule
-            "
-            :auto-generating-schedule="autoGeneratingSchedule"
-            :get-group-candidate-status="getRoomGroupCandidateStatus"
+            :get-group-status="getRoomGroupDisplayStatus"
             @select-group="activeScheduleRoomGroupKey = $event"
-            @restore-recommended="restoreRecommendedSchedule"
           />
 
           <div
             v-if="activeScheduleRoomGroup"
             ref="roomEditorPanel"
           >
-            <RiicRoomGroupStaffingPanel
+            <RiicControlCenterStaffingPanel
+              v-if="activeScheduleRoomGroup.manualControl"
               :room-group="activeScheduleRoomGroup"
-              :control-auto-rotation-plan="controlAutoRotationPlan"
+              :control-state="controlCenterRoleState"
+              :late-fill-state="controlCenterLateFillState"
+              :operators="controlCenterCandidateOperators"
+              :operator-table="operatorTableV2"
+              @add-operator="addControlCenterOperator"
+              @remove-operator="removeControlCenterOperator"
+            />
+            <RiicRoomGroupStaffingPanel
+              v-else
+              :room-group="activeScheduleRoomGroup"
               :operator-table="operatorTableV2"
               :candidate-state="activeRoomGroupCandidateState"
               :visible-cohorts="visibleActiveRoomGroupStaffingCohorts"
               :show-debug="showCandidateDebugValues"
-              :get-control-shift-effect-metrics="getControlShiftEffectMetrics"
               :format-room-group-bonus-percent="formatRoomGroupBonusPercent"
               :get-selected-team-candidate-count="
                 getSelectedTeamCandidateCount
@@ -7648,8 +8759,7 @@ onBeforeUnmount(() => {
                 getRoomGroupSelectionProgress
               "
               :fallback-plan="activeRoomGroupFallbackPlan"
-              :fallback-queue-operators="activeRoomGroupFallbackQueueOperators"
-              :fallback-candidates="activeRoomGroupFallbackCandidates"
+              :fallback-sections="activeRoomGroupFallbackSections"
               :get-room-fallback-operator-classes="
                 getRoomFallbackOperatorClasses
               "
@@ -7684,11 +8794,21 @@ onBeforeUnmount(() => {
                 appendRoomGroupFallbackQueueOperator(
                   activeScheduleRoomGroup,
                   activeRoomGroupFallbackPlan,
-                  $event,
+                  $event.section,
+                  $event.operator,
                 )
               "
             ></RiicRoomGroupStaffingPanel>
           </div>
+
+          <button
+            type="button"
+            class="room-workbench-restore"
+            @click="restoreRecommendedSchedule"
+          >
+            <v-icon icon="mdi-restore" size="16"></v-icon>
+            <span>恢复推荐方案</span>
+          </button>
 
         </section>
 
@@ -7803,6 +8923,7 @@ onBeforeUnmount(() => {
           :exporting-maa="exportingMaa"
           @export-image="exportGeneratedScheduleImage"
           @export-maa="exportGeneratedMaaSchedule"
+          @open-legacy-editor="openGeneratedScheduleInLegacyEditor"
         ></RiicScheduleExportActions>
         <p v-else class="schedule-output-empty">
           选择并生成全部房间组后即可导出结果
@@ -7843,10 +8964,20 @@ onBeforeUnmount(() => {
           :schedule-training-requirements="scheduleTrainingRequirements"
           :operator-table="operatorTableV2"
           :riic-yield-engine-results="riicYieldEngineResults"
+          :riic-actual-schedule-metrics="riicActualScheduleMetrics"
           :confirmed-layout-plan="confirmedLayoutPlan"
           :riic-matching-roster="riicMatchingRoster"
           :riic-layer3-matched-rule-count="riicLayer3MatchedRuleCount"
           :riic-layer3-rule-checks="riicLayer3RuleChecks"
+          :riic-control-center-scenario-trial-state="
+            riicControlCenterScenarioTrialState
+          "
+          :riic-perception-resource-trial-state="
+            riicPerceptionResourceTrialState
+          "
+          :riic-control-center-operator-effect-debug-state="
+            riicControlCenterOperatorEffectDebugState
+          "
           :show-candidate-debug-values="showCandidateDebugValues"
           :format-training-requirement="formatTrainingRequirement"
           :get-riic-yield-engine-status-meta="getRiicYieldEngineStatusMeta"
@@ -8409,6 +9540,39 @@ onBeforeUnmount(() => {
 
 .room-workbench {
   margin-top: 14px;
+}
+
+.room-workbench-restore {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  gap: 5px;
+  margin-top: 12px;
+  padding: 4px 8px;
+  border: 1px solid
+    color-mix(in srgb, var(--riic-blue) 48%, var(--c-border-color));
+  border-radius: 4px;
+  background: transparent;
+  color: var(--riic-blue);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.room-workbench-restore:hover:not(:disabled) {
+  background: color-mix(
+    in srgb,
+    var(--riic-blue) 9%,
+    var(--c-page-background-color-secondary)
+  );
+}
+
+.room-workbench-restore:disabled {
+  cursor: default;
+  opacity: 0.55;
 }
 
 .assembled-schedule-panel {

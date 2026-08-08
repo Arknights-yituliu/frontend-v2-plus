@@ -1,5 +1,7 @@
 <script setup>
-defineProps({
+import { computed } from "vue";
+
+const props = defineProps({
   recommendationPanelOpen: {
     type: Boolean,
     default: false,
@@ -66,6 +68,33 @@ const emit = defineEmits([
   "select-layout-shift",
   "select-manual-schedule-option",
 ]);
+
+const visibleLayoutScheduleOptionRows = computed(() => {
+  const options = props.visibleLayoutScheduleOptions || [];
+  if (props.selectedLayoutShiftMode === "once") {
+    return options.length ? [options] : [];
+  }
+
+  const rows = new Map([
+    [3, []],
+    [2, []],
+  ]);
+  const otherOptions = [];
+
+  for (const option of options) {
+    const powerPlantCount = Number(
+      option?.rooms?.find((room) => room?.facility === "power")?.count,
+    );
+    const row = rows.get(powerPlantCount);
+    if (row) {
+      row.push(option);
+    } else {
+      otherOptions.push(option);
+    }
+  }
+
+  return [...rows.values(), otherOptions].filter((row) => row.length > 0);
+});
 
 function updateAnswer(key, value) {
   emit("update-answer", { key, value });
@@ -235,46 +264,52 @@ function updateAnswer(key, value) {
 
     <section class="layout-options-section">
       <div
-        v-if="visibleLayoutScheduleOptions.length"
-        class="layout-choice-grid layout-schedule-choice-grid"
+        v-if="visibleLayoutScheduleOptionRows.length"
+        class="layout-choice-rows"
         role="radiogroup"
         aria-label="可选布局"
       >
-        <button
-          v-for="option in visibleLayoutScheduleOptions"
-          :key="option.value"
-          type="button"
-          class="layout-choice"
-          :class="[
-            `layout-${option.key}`,
-            {
-              selected: selectedManualScheduleValue === option.value,
-              recommended:
-                layoutEntry === 'recommend' && isLayoutRecommended(option),
-            },
-          ]"
-          role="radio"
-          :aria-checked="selectedManualScheduleValue === option.value"
-          @click="emit('select-manual-schedule-option', option.value)"
+        <div
+          v-for="(row, rowIndex) in visibleLayoutScheduleOptionRows"
+          :key="`layout-row-${rowIndex}`"
+          class="layout-choice-grid layout-schedule-choice-grid"
         >
-          <span class="layout-choice-topline">
-            <span class="layout-choice-code">{{ option.label }}</span>
-            <span class="layout-choice-icons">
-              <v-icon :icon="option.icon" size="18"></v-icon>
-              <v-icon
-                v-if="option.secondaryIcon"
-                :icon="option.secondaryIcon"
-                size="18"
-              ></v-icon>
+          <button
+            v-for="option in row"
+            :key="option.value"
+            type="button"
+            class="layout-choice"
+            :class="[
+              `layout-${option.key}`,
+              {
+                selected: selectedManualScheduleValue === option.value,
+                recommended:
+                  layoutEntry === 'recommend' && isLayoutRecommended(option),
+              },
+            ]"
+            role="radio"
+            :aria-checked="selectedManualScheduleValue === option.value"
+            @click="emit('select-manual-schedule-option', option.value)"
+          >
+            <span class="layout-choice-topline">
+              <span class="layout-choice-code">{{ option.label }}</span>
+              <span class="layout-choice-icons">
+                <v-icon :icon="option.icon" size="18"></v-icon>
+                <v-icon
+                  v-if="option.secondaryIcon"
+                  :icon="option.secondaryIcon"
+                  size="18"
+                ></v-icon>
+              </span>
             </span>
-          </span>
-          <span class="layout-choice-description">
-            {{ option.description }}
-          </span>
-          <span class="layout-choice-facilities">
-            {{ option.facilitySummary }}
-          </span>
-        </button>
+            <span class="layout-choice-description">
+              {{ option.description }}
+            </span>
+            <span class="layout-choice-facilities">
+              {{ option.facilitySummary }}
+            </span>
+          </button>
+        </div>
       </div>
     </section>
   </section>
@@ -471,8 +506,14 @@ function updateAnswer(key, value) {
   margin-top: 14px;
 }
 
-.layout-schedule-choice-grid {
+.layout-choice-grid.layout-schedule-choice-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: 0;
+}
+
+.layout-choice-rows {
+  display: grid;
+  gap: 8px;
 }
 
 .recommendation-result-panel {
@@ -950,6 +991,10 @@ function updateAnswer(key, value) {
   .layout-choice-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .layout-choice-grid.layout-schedule-choice-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 640px) {
@@ -976,6 +1021,10 @@ function updateAnswer(key, value) {
 
   .layout-choice-grid,
   .layout-shift-list {
+    grid-template-columns: 1fr;
+  }
+
+  .layout-choice-grid.layout-schedule-choice-grid {
     grid-template-columns: 1fr;
   }
 

@@ -10,6 +10,10 @@ const SAME_ROOM_CONDITION_TYPES = new Set([
   "sameRoomHasAny",
   "sameRoomMemberCount",
 ]);
+import {
+  normalizeRiicIdealTrainingRaritySelection,
+  isRiicIdealTrainingEnabledForOperator,
+} from "./riicTrainingPolicy.js";
 
 function toNonNegativeInteger(value, fallback = null) {
   const number = Number(value);
@@ -58,6 +62,7 @@ function normalizeOwnedOperators(ownedOperators) {
       operatorMap.set(charId, {
         charId,
         name: String(operator?.name || charId),
+        rarity: toNonNegativeInteger(operator?.rarity, null),
         elite,
         level,
       });
@@ -106,13 +111,28 @@ function getIdealUnlockTargets(ruleData) {
   return targets;
 }
 
-export function createRiicIdealTrainingRoster(ownedOperators, ruleData) {
+export function createRiicIdealTrainingRoster(
+  ownedOperators,
+  ruleData,
+  idealTrainingRaritySelection,
+) {
   const owned = normalizeOwnedOperators(ownedOperators);
+  const normalizedRaritySelection =
+    normalizeRiicIdealTrainingRaritySelection(
+      idealTrainingRaritySelection,
+    );
   const idealTargets = getIdealUnlockTargets(ruleData);
   const upgradeRequirements = [];
   const operators = owned.operators.map((operator) => {
     const target = idealTargets.get(operator.charId);
-    if (!target || isRiicBaselineRuleUnlocked(operator, { unlock: target })) {
+    if (
+      !target ||
+      !isRiicIdealTrainingEnabledForOperator(
+        operator,
+        normalizedRaritySelection,
+      ) ||
+      isRiicBaselineRuleUnlocked(operator, { unlock: target })
+    ) {
       return operator;
     }
 
@@ -469,7 +489,10 @@ function getSameRoomRuleMultiplier(rule, occupantIds, ownerCharId) {
 export function resolveRiicBaselineSkills(
   ownedOperators,
   ruleData,
-  { trainingMode = "current" } = {},
+  {
+    trainingMode = "current",
+    idealTrainingRaritySelection,
+  } = {},
 ) {
   if (!["current", "ideal"].includes(trainingMode)) {
     throw new Error("trainingMode must be current or ideal");
@@ -477,7 +500,11 @@ export function resolveRiicBaselineSkills(
 
   const idealTraining =
     trainingMode === "ideal"
-      ? createRiicIdealTrainingRoster(ownedOperators, ruleData)
+      ? createRiicIdealTrainingRoster(
+          ownedOperators,
+          ruleData,
+          idealTrainingRaritySelection,
+        )
       : null;
   const owned = idealTraining
     ? {
@@ -571,6 +598,9 @@ export function resolveRiicBaselineSkills(
     schemaVersion: 2,
     training: {
       mode: trainingMode,
+      idealTrainingRaritySelection: normalizeRiicIdealTrainingRaritySelection(
+        idealTrainingRaritySelection,
+      ),
       upgradeRequirements: idealTraining?.upgradeRequirements || [],
     },
     summary: {

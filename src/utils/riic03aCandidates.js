@@ -1,20 +1,29 @@
 import {
   getRiicRuntimeCandidateRankingValue,
 } from "./riicRuntimeContribution.js";
-import { createRiicFallbackEstimate } from "./riicDynamicFallback.js";
 import {
+  applyRiicFallbackOperatorControlCenterBonus,
+  createRiicFallbackEstimate,
+} from "./riicDynamicFallback.js";
+import {
+  getRiicLayer3CandidateEquivalentByProduct,
+  getRiicLayer3CandidateLocalBonus,
   getRiicLayer3CandidateRoomPriority,
   getRiicLayer3OperatorLocalBonus,
-} from "./riicLayer3Rules.js";
+} from "./riic03Rules.js";
 import {
   getRiicButshuFallbackMinimumPercent,
   recalculateRiicButshuCandidate,
 } from "./riicButshuDynamicFallback.js";
-
-function toNonNegativeInteger(value, fallback = 0) {
-  const number = Number(value);
-  return Number.isInteger(number) && number >= 0 ? number : fallback;
-}
+import {
+  recalculateRiicAutomationManufacture,
+} from "./riicAutomationDynamicFallback.js";
+import {
+  getRiicControlCenterRoomAdjustment,
+} from "./riicControlCenterRuntime.js";
+import {
+  isRiicIdealTrainingEnabledForOperator,
+} from "./riicTrainingPolicy.js";
 
 const PERCENT_FIELD_BY_ROOM_TYPE = Object.freeze({
   trading: "tradingPercent",
@@ -30,6 +39,17 @@ const PERCENT_FIELDS = Object.freeze([
   "officePercent",
   "powerPercent",
 ]);
+const VALID_STATUSES = new Set([
+  "calculated",
+  "estimated",
+  "estimatePending",
+]);
+
+function toNonNegativeInteger(value, fallback = 0) {
+  const number = Number(value);
+  return Number.isInteger(number) && number >= 0 ? number : fallback;
+}
+
 function getPercentField(roomType) {
   return PERCENT_FIELD_BY_ROOM_TYPE[roomType] || null;
 }
@@ -62,10 +82,6 @@ function compareUnlock(left, right) {
     toNonNegativeInteger(left?.level, 1) -
     toNonNegativeInteger(right?.level, 1)
   );
-}
-
-function normalizeTrainingMode(value) {
-  return value === "ideal" ? "ideal" : "current";
 }
 
 function createUpgradeRequirement(operator, requirement) {
@@ -112,46 +128,6 @@ function mergeUpgradeRequirements(requirements) {
   );
 }
 
-function normalizeRoster(ownedOperators) {
-  const byId = new Map();
-
-  for (const operator of ownedOperators || []) {
-    const charId = String(operator?.charId || "").trim();
-    if (!charId) {
-      continue;
-    }
-
-    const normalized = {
-      charId,
-      name: String(operator?.name || charId).trim() || charId,
-      elite: toNonNegativeInteger(operator?.elite),
-      level: toNonNegativeInteger(operator?.level, 1),
-    };
-    const existing = byId.get(charId);
-    if (!existing || compareUnlock(normalized, existing) > 0) {
-      byId.set(charId, normalized);
-    }
-  }
-
-  return byId;
-}
-
-function normalizeNameToCharId(operatorNameToCharId) {
-  if (operatorNameToCharId instanceof Map) {
-    return operatorNameToCharId;
-  }
-
-  return new Map(
-    Object.entries(operatorNameToCharId || {}).flatMap(([name, charId]) => {
-      const normalizedName = String(name || "").trim();
-      const normalizedCharId = String(charId || "").trim();
-      return normalizedName && normalizedCharId
-        ? [[normalizedName, normalizedCharId]]
-        : [];
-    }),
-  );
-}
-
 function normalizeFallbackPools(fallbackCatalog) {
   const pools = new Map();
 
@@ -176,6 +152,13 @@ function normalizeFallbackPools(fallbackCatalog) {
               level: toNonNegativeInteger(rate?.level, 1),
               percent: Number(rate?.percent || 0),
               fillPriority: Number.isFinite(fillPriority) ? fillPriority : 0,
+              tags: [
+                ...new Set(
+                  (rate?.tags || [])
+                    .map((tag) => String(tag || "").trim())
+                    .filter(Boolean),
+                ),
+              ],
             }))
             .filter((rate) => Number.isFinite(rate.percent))
             .sort(compareUnlock);
@@ -188,15 +171,23 @@ function normalizeFallbackPools(fallbackCatalog) {
   return pools;
 }
 
-function getRateForTrainingMode(operator, pool, trainingMode) {
+function getRateForTrainingMode(
+  operator,
+  pool,
+  trainingMode,
+  idealTrainingRaritySelection,
+) {
   const rates = pool.operatorsByName.get(operator.name) || [];
   let appliedRate = null;
+  const useIdealTraining =
+    trainingMode === "ideal" &&
+    isRiicIdealTrainingEnabledForOperator(
+      operator,
+      idealTrainingRaritySelection,
+    );
 
   for (const rate of rates) {
-    if (
-      trainingMode === "ideal" ||
-      compareUnlock(operator, rate) >= 0
-    ) {
+    if (useIdealTraining || compareUnlock(operator, rate) >= 0) {
       appliedRate = rate;
     }
   }
@@ -207,8 +198,9 @@ function getRateForTrainingMode(operator, pool, trainingMode) {
         fillPriority: appliedRate.fillPriority,
         elite: appliedRate.elite,
         level: appliedRate.level,
+        tags: appliedRate.tags,
         upgradeRequirement:
-          trainingMode === "ideal"
+          useIdealTraining
             ? createUpgradeRequirement(operator, appliedRate)
             : null,
       }
@@ -219,8 +211,9 @@ function getCandidateFallback(catalog, candidate) {
   const createFallback = (count) => ({
     count,
     percent: Number(catalog?.fallback?.percent || 0),
-    label: catalog?.fallback?.label || "基础补位",
+    label: catalog?.fallback?.label || "Fallback",
     poolKey: String(catalog?.fallback?.poolKey || "").trim(),
+    sourceFile: String(catalog?.fallback?.sourceFile || "").trim(),
   });
 
   if (candidate?.isIndividualFallback) {
@@ -237,89 +230,50 @@ function getCandidateFallback(catalog, candidate) {
   return createFallback(Math.max(0, slotCount - memberCount));
 }
 
-function matchesCandidateFacilityCounts({
-  candidate,
-  powerPlantCount,
-  tradingStationCount,
-  goldManufactureStationCount,
-}) {
-  const counts = {
-    powerPlantCount,
-    tradingStationCount,
-    goldManufactureStationCount,
-  };
+function operatorMatchesTags(operator, requiredTags) {
+  const operatorTags = new Set(operator?.tags || []);
+  return requiredTags.every((tag) => operatorTags.has(tag));
+}
 
-  return [
-    "powerPlantCount",
-    "tradingStationCount",
-    "goldManufactureStationCount",
-  ].every((field) => {
-    if (!Object.hasOwn(candidate || {}, field)) {
-      return true;
-    }
-
-    const required = Number(candidate?.[field]);
-    const actual = Number(counts[field]);
-    return (
-      Number.isInteger(required) &&
-      required >= 1 &&
-      Number.isInteger(actual) &&
-      actual >= 1 &&
-      required === actual
-    );
+function getOrdinaryFallbackOperators(fallbackOperators) {
+  return (fallbackOperators || []).filter((operator) => {
+    const tags = new Set(operator?.tags || []);
+    return !tags.has("tailor") && !tags.has("automation");
   });
 }
 
-function resolveCandidateMembers({
-  candidate,
-  rosterById,
-  nameToCharId,
-  trainingMode,
-}) {
-  const operatorIds = [];
-  const upgradeRequirements = [];
-
-  for (const member of candidate?.members || []) {
-    const name = String(member?.name || "").trim();
-    const charId = nameToCharId.get(name);
-    if (!name || !charId || operatorIds.includes(charId)) {
-      return null;
-    }
-
-    const operator = rosterById.get(charId);
-    const requirement = {
-      elite: toNonNegativeInteger(member?.elite),
-      level: toNonNegativeInteger(member?.level, 1),
-    };
-    const hasMaxElite = Object.hasOwn(member || {}, "maxElite");
-    const maxElite = Number(member?.maxElite);
-    if (
-      !operator ||
-      (hasMaxElite &&
-        (member.maxElite === null ||
-          member.maxElite === "" ||
-          !Number.isInteger(maxElite) ||
-          maxElite < requirement.elite ||
-          operator.elite > maxElite))
-    ) {
-      return null;
-    }
-
-    const upgradeRequirement = createUpgradeRequirement(operator, requirement);
-    if (upgradeRequirement) {
-      if (trainingMode !== "ideal") {
-        return null;
-      }
-      upgradeRequirements.push(upgradeRequirement);
-    }
-
-    operatorIds.push(charId);
+function canFillTaggedMemberRequirements(requirements, fallbackOperators) {
+  const slots = (requirements || [])
+    .map((requirement) => ({
+      tags: [...new Set(requirement?.tags || [])],
+    }))
+    .sort((left, right) => left.tags.length - right.tags.length);
+  if (slots.length === 0) {
+    return true;
   }
 
-  return {
-    operatorIds,
-    upgradeRequirements,
+  const usedOperatorIds = new Set();
+  const tryAssign = (index) => {
+    if (index >= slots.length) {
+      return true;
+    }
+
+    return (fallbackOperators || []).some((operator) => {
+      if (
+        usedOperatorIds.has(operator.charId) ||
+        !operatorMatchesTags(operator, slots[index].tags)
+      ) {
+        return false;
+      }
+
+      usedOperatorIds.add(operator.charId);
+      const matched = tryAssign(index + 1);
+      usedOperatorIds.delete(operator.charId);
+      return matched;
+    });
   };
+
+  return tryAssign(0);
 }
 
 function getMatchedOperators(
@@ -353,11 +307,13 @@ function getFallbackOperators({
   excludedOperatorIds,
   fallbackPools,
   trainingMode,
+  idealTrainingRaritySelection,
   scope,
   layoutFacts,
   minimumPercent = null,
+  includeCandidatesWhenNoFallback = false,
 }) {
-  if (fallback.count === 0) {
+  if (fallback.count === 0 && !includeCandidatesWhenNoFallback) {
     return [];
   }
 
@@ -377,6 +333,7 @@ function getFallbackOperators({
         operator,
         pool,
         trainingMode,
+        idealTrainingRaritySelection,
       );
       const layer3Bonus = rate
         ? getRiicLayer3OperatorLocalBonus({
@@ -396,6 +353,7 @@ function getFallbackOperators({
               basePercent: rate.percent,
               layer3Bonus,
               fillPriority: rate.fillPriority,
+              tags: rate.tags,
               upgradeRequirement: rate.upgradeRequirement,
             },
           ]
@@ -420,11 +378,33 @@ function getFallbackOperators({
   return selected.length >= fallback.count ? selected : null;
 }
 
-const VALID_STATUSES = new Set([
-  "calculated",
-  "estimated",
-  "estimatePending",
-]);
+function getTaggedFallbackPreviewOperators(
+  taggedMemberRequirements,
+  fallbackOperators,
+) {
+  const usedOperatorIds = new Set();
+
+  return (taggedMemberRequirements || []).flatMap((requirement) => {
+    const requiredTags = new Set(
+      (requirement?.tags || [])
+        .map((tag) => String(tag || "").trim())
+        .filter(Boolean),
+    );
+    const operator = (fallbackOperators || []).find(
+      (candidateOperator) =>
+        !usedOperatorIds.has(candidateOperator.charId) &&
+        [...requiredTags].every((tag) =>
+          (candidateOperator?.tags || []).includes(tag),
+        ),
+    );
+    if (!operator) {
+      return [];
+    }
+
+    usedOperatorIds.add(operator.charId);
+    return [{ ...operator, taggedMember: true }];
+  });
+}
 
 function toRuntimeCandidate({
   catalog,
@@ -434,6 +414,8 @@ function toRuntimeCandidate({
   rosterById,
   fallbackOperators,
   layoutFacts,
+  taggedMemberRequirements = [],
+  controlCenterRuntimeContext,
 }) {
   const fallback = getCandidateFallback(catalog, candidate);
   const sourceRoomType = String(catalog?.scope?.roomType || "").trim();
@@ -445,6 +427,21 @@ function toRuntimeCandidate({
     stationLevel: Number(catalog?.scope?.stationLevel),
     slotCount: Number(catalog?.scope?.slotCount),
   };
+  const fallbackPoolAdjustment = getRiicControlCenterRoomAdjustment({
+    context: controlCenterRuntimeContext,
+    scope: candidateScope,
+    operatorIds: [
+      ...operatorIds,
+      ...(fallbackOperators || []).map((operator) => operator?.charId),
+    ],
+  });
+  const rankedFallbackOperators = applyRiicFallbackOperatorControlCenterBonus(
+    fallbackOperators,
+    fallbackPoolAdjustment.operatorBonusById,
+  );
+  const ordinaryFallbackOperators = getOrdinaryFallbackOperators(
+    rankedFallbackOperators,
+  );
   const layer3RoomPriority = getRiicLayer3CandidateRoomPriority({
     candidate,
     operatorIds,
@@ -452,7 +449,13 @@ function toRuntimeCandidate({
     scope: candidateScope,
     layoutFacts,
   });
-  const layer3CoreBonusPercent = operatorIds.reduce(
+  const layer3EquivalentByProduct = getRiicLayer3CandidateEquivalentByProduct({
+    candidate,
+    ownedOperators: rosterById,
+    scope: candidateScope,
+    layoutFacts,
+  });
+  const layer3OperatorBonusPercent = operatorIds.reduce(
     (total, operatorId) =>
       total +
       getRiicLayer3OperatorLocalBonus({
@@ -463,18 +466,68 @@ function toRuntimeCandidate({
       }),
     0,
   );
+  const layer3CandidateLocalBonusPercent =
+    getRiicLayer3CandidateLocalBonus({
+      candidate,
+      ownedOperators: rosterById,
+      scope: candidateScope,
+      layoutFacts,
+    });
+  const layer3CoreBonusPercent =
+    layer3OperatorBonusPercent + layer3CandidateLocalBonusPercent;
   const coreBonusPercent = publishedCoreBonusPercent + layer3CoreBonusPercent;
   const fallbackEstimate = createRiicFallbackEstimate({
-    rankedOperators: fallbackOperators,
+    rankedOperators: ordinaryFallbackOperators,
     slotCount: candidateScope.slotCount,
     fallbackCount: fallback.count,
     defaultPercent: fallback.percent,
   });
-  const fallbackPreviewOperators = fallbackEstimate.selectedOperators;
-  const fallbackPercent = fallbackEstimate.totalPercent;
+  const taggedFallbackPreviewOperators = getTaggedFallbackPreviewOperators(
+    taggedMemberRequirements,
+    rankedFallbackOperators,
+  );
+  const fallbackPreviewOperators = [
+    ...taggedFallbackPreviewOperators,
+    ...fallbackEstimate.selectedOperators.filter(
+      (operator) =>
+        !taggedFallbackPreviewOperators.some(
+          (taggedOperator) => taggedOperator.charId === operator.charId,
+        ),
+    ),
+  ];
+  const controlCenterAdjustment = getRiicControlCenterRoomAdjustment({
+    context: controlCenterRuntimeContext,
+    scope: candidateScope,
+    operatorIds: [
+      ...operatorIds,
+      ...fallbackPreviewOperators.map((operator) => operator?.charId),
+    ],
+  });
+  const controlCenterFacilityBonusPercent = Number(
+    controlCenterAdjustment.facilityBonusPercent || 0,
+  );
+  const controlCenterOperatorBonusPercent = Number(
+    controlCenterAdjustment.operatorBonusPercent || 0,
+  );
+  const controlCenterOperatorBonusById = {
+    ...(controlCenterAdjustment.operatorBonusById || {}),
+  };
+  const controlCenterExpectedBonusPercent = Number(
+    controlCenterAdjustment.bonusPercent || 0,
+  );
+  const fallbackPercent = fallbackPreviewOperators.reduce(
+    (total, operator) => total + Number(operator?.percent || 0),
+    0,
+  );
   const butshuResult = recalculateRiicButshuCandidate({
     candidate,
     scope: candidateScope,
+    fallbackOperators: fallbackPreviewOperators,
+  });
+  const automationResult = recalculateRiicAutomationManufacture({
+    scope: candidateScope,
+    coreBaseBonusPercent: publishedCoreBonusPercent,
+    coreLayer3BonusPercent: layer3CoreBonusPercent,
     fallbackOperators: fallbackPreviewOperators,
   });
   if (
@@ -483,17 +536,27 @@ function toRuntimeCandidate({
   ) {
     return null;
   }
-  const resolvedCoreBonusPercent = butshuResult
+  const resolvedCoreBonusPercentBeforeControl = butshuResult
     ? butshuResult.tradingPercent - fallbackPercent
-    : coreBonusPercent;
-  const resolvedTotalPercent = butshuResult
+    : automationResult
+      ? automationResult.coreBonusPercent
+      : coreBonusPercent;
+  const resolvedTotalPercentBeforeControl = butshuResult
     ? 100 + butshuResult.tradingPercent
-    : 100 + coreBonusPercent + fallbackPercent;
+    : automationResult
+      ? automationResult.totalPercent
+      : 100 + coreBonusPercent + fallbackPercent;
+  const resolvedCoreBonusPercent =
+    resolvedCoreBonusPercentBeforeControl + controlCenterOperatorBonusPercent;
+  const resolvedTotalPercent =
+    resolvedTotalPercentBeforeControl + controlCenterOperatorBonusPercent;
   const fallbackUpgradeRequirements = mergeUpgradeRequirements(
     fallbackPreviewOperators.map((operator) => operator.upgradeRequirement),
   );
-  let publishedEquivalentByProduct =
-    getCandidatePublishedEquivalentByProduct(candidate);
+  let publishedEquivalentByProduct = {
+    ...getCandidatePublishedEquivalentByProduct(candidate),
+    ...layer3EquivalentByProduct,
+  };
   if (butshuResult && Object.hasOwn(butshuResult, "gold")) {
     publishedEquivalentByProduct = { gold: butshuResult.gold };
   }
@@ -507,6 +570,9 @@ function toRuntimeCandidate({
   return {
     key: candidate.id,
     name: String(candidate?.name || fallback.label).trim() || fallback.label,
+    sourceFile: String(
+      candidate?.sourceFile || fallback?.sourceFile || "",
+    ).trim(),
     operatorIds,
     operators: getMatchedOperators(
       operatorIds,
@@ -520,11 +586,15 @@ function toRuntimeCandidate({
     ]),
     fallback: {
       ...fallback,
-      candidateOperators: fallbackOperators,
+      candidateOperators: rankedFallbackOperators,
       operators: [],
       totalPercent: fallbackPercent,
+      taggedMemberRequirements,
     },
     bestAvailableTotalPercent: resolvedTotalPercent,
+    coreBaseBonusPercent: publishedCoreBonusPercent,
+    coreLayer3BonusPercent: layer3CoreBonusPercent,
+    layer3CandidateLocalBonusPercent,
     corePercent: 100 + resolvedCoreBonusPercent,
     totalPercent: resolvedTotalPercent,
     bonusPercent: resolvedTotalPercent - 100,
@@ -535,6 +605,15 @@ function toRuntimeCandidate({
     ...runtimePercentFields,
     sortScore: Number(candidate?.sortScore || 0),
     layer3RoomPriority,
+    controlCenterFacilityBonusPercent,
+    controlCenterOperatorBonusPercent,
+    controlCenterOperatorBonusById,
+    controlCenterExpectedBonusPercent,
+    controlCenterFacilityCalculation:
+      controlCenterAdjustment.facilityCalculation,
+    controlCenterOperatorCalculation:
+      controlCenterAdjustment.operatorCalculation,
+    sameShiftBindings: controlCenterAdjustment.sameShiftBindings,
     ...(candidate?.selectionMode === "individual"
       ? { selectionMode: "individual" }
       : {}),
@@ -580,144 +659,74 @@ function getHighestAvailableVariants(candidates) {
   return [...byGroup.values()].sort(compareCandidates);
 }
 
-export function matchRiicStaticRoomCandidates({
-  catalog,
-  fallbackCatalog,
-  operatorNameToCharId,
-  ownedOperators,
-  roomType,
-  product,
-  stationLevel,
-  slotCount,
-  powerPlantCount,
-  tradingStationCount,
-  goldManufactureStationCount,
-  manufactureProductKindCount,
-  facilities,
-  trainingMode = "current",
-}) {
-  if (!catalog) {
-    throw new Error("A RIIC static room candidate catalog is required");
-  }
-  if (!fallbackCatalog) {
-    throw new Error("A RIIC fallback operator catalog is required");
-  }
-  const normalizedStationLevel = Number(stationLevel);
-  const normalizedSlotCount = Number(slotCount);
-  if (
-    !String(roomType || "").trim() ||
-    !String(product || "").trim() ||
-    !Number.isInteger(normalizedStationLevel) ||
-    normalizedStationLevel < 1 ||
-    !Number.isInteger(normalizedSlotCount) ||
-    normalizedSlotCount < 1
-  ) {
-    throw new Error(
-      "A room type, product, station level, and slot count are required",
-    );
+export function materializeRiicRoomCandidateSkeletons({
+  resolution,
+  controlCenterRuntimeContext,
+} = {}) {
+  if (!resolution?.catalog || !resolution?.fallbackCatalog) {
+    throw new Error("A RIIC candidate skeleton resolution is required");
   }
 
-  const normalizedTrainingMode = normalizeTrainingMode(trainingMode);
-  const rosterById = normalizeRoster(ownedOperators);
-  const nameToCharId = normalizeNameToCharId(operatorNameToCharId);
-  const fallbackPools = normalizeFallbackPools(fallbackCatalog);
-  const fallbackScope = {
-    roomType,
-    product,
-    stationLevel: normalizedStationLevel,
-    slotCount: normalizedSlotCount,
-  };
-  const layoutFacts = {
-    powerPlantCount,
-    tradingStationCount,
-    goldManufactureStationCount,
-    manufactureProductKindCount,
-    facilities,
-  };
-  const matchingCandidates = (catalog.candidates || []).flatMap(
-    (candidate) => {
-      if (
-        !matchesCandidateFacilityCounts({
-          candidate,
-          powerPlantCount,
-          tradingStationCount,
-          goldManufactureStationCount,
-        })
-      ) {
-        return [];
-      }
-
-      const memberResolution = resolveCandidateMembers({
-        candidate,
-        rosterById,
-        nameToCharId,
-        trainingMode: normalizedTrainingMode,
-      });
-      if (!memberResolution) {
-        return [];
-      }
-
-      const fallback = getCandidateFallback(catalog, candidate);
-      const fallbackOperators = getFallbackOperators({
-        fallback,
-        rosterById,
-        excludedOperatorIds: new Set(memberResolution.operatorIds),
-        fallbackPools,
-        trainingMode: normalizedTrainingMode,
-        scope: fallbackScope,
-        layoutFacts,
-        minimumPercent: getRiicButshuFallbackMinimumPercent(candidate),
-      });
-      if (!fallbackOperators) {
-        return [];
-      }
-
-      const runtimeCandidate = toRuntimeCandidate({
-          catalog,
-          candidate,
-          operatorIds: memberResolution.operatorIds,
-          coreUpgradeRequirements: memberResolution.upgradeRequirements,
-          rosterById,
-          fallbackOperators,
-          layoutFacts,
-        });
-      return runtimeCandidate ? [runtimeCandidate] : [];
-    },
-  );
-  const fallback = getCandidateFallback(catalog, { members: [] });
-  const fallbackOperators = getFallbackOperators({
-    fallback,
+  const {
+    catalog,
+    fallbackCatalog,
     rosterById,
-    excludedOperatorIds: new Set(),
-    fallbackPools,
-    trainingMode: normalizedTrainingMode,
-    scope: fallbackScope,
+    trainingMode,
+    idealTrainingRaritySelection,
+    scope,
     layoutFacts,
-  });
-  const usesIndividualSelection = (catalog.candidates || []).some(
-    (candidate) => candidate?.selectionMode === "individual",
-  );
-  const fallbackCandidate = fallbackOperators
-    ? toRuntimeCandidate({
-        catalog,
-        candidate: {
-          id: `fallback:${roomType}:${product}:${normalizedStationLevel}:${normalizedSlotCount}`,
-          name: fallback.label,
-          members: [],
-          ...(usesIndividualSelection ? { isIndividualFallback: true } : {}),
-          efficiency: 0,
-          sortScore: 0,
-        },
-        operatorIds: [],
-        coreUpgradeRequirements: [],
-        rosterById,
+    candidateSkeletons = [],
+    fallbackCandidateSkeleton,
+  } = resolution;
+  const fallbackPools = normalizeFallbackPools(fallbackCatalog);
+  const materializeCandidate = (skeleton) => {
+    const fallback = getCandidateFallback(catalog, skeleton.candidate);
+    const fallbackOperators = getFallbackOperators({
+      fallback,
+      rosterById,
+      excludedOperatorIds: new Set(skeleton.operatorIds),
+      fallbackPools,
+      trainingMode,
+      idealTrainingRaritySelection,
+      scope,
+      layoutFacts,
+      minimumPercent: getRiicButshuFallbackMinimumPercent(skeleton.candidate),
+      includeCandidatesWhenNoFallback:
+        skeleton.taggedMemberRequirements.length > 0,
+    });
+    if (
+      !fallbackOperators ||
+      getOrdinaryFallbackOperators(fallbackOperators).length < fallback.count ||
+      !canFillTaggedMemberRequirements(
+        skeleton.taggedMemberRequirements,
         fallbackOperators,
-        layoutFacts,
-      })
+      )
+    ) {
+      return null;
+    }
+
+    return toRuntimeCandidate({
+      catalog,
+      candidate: skeleton.candidate,
+      operatorIds: skeleton.operatorIds,
+      coreUpgradeRequirements: skeleton.coreUpgradeRequirements,
+      rosterById,
+      fallbackOperators,
+      layoutFacts,
+      taggedMemberRequirements: skeleton.taggedMemberRequirements,
+      controlCenterRuntimeContext,
+    });
+  };
+
+  const candidates = candidateSkeletons
+    .map(materializeCandidate)
+    .filter(Boolean);
+  const fallbackCandidate = fallbackCandidateSkeleton
+    ? materializeCandidate(fallbackCandidateSkeleton)
     : null;
 
   return {
-    candidates: getHighestAvailableVariants(matchingCandidates),
+    candidates: getHighestAvailableVariants(candidates),
     fallbackCandidate,
   };
 }

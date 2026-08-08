@@ -3,6 +3,9 @@ import RIIC_RUNTIME_INDEX from "/src/static/json/tools/riic-candidates/index.jso
 const CATALOG_LOADERS = import.meta.glob([
   "/src/static/json/tools/riic-candidates/**/*.json",
   "!/src/static/json/tools/riic-candidates/index.json",
+  "!/src/static/json/tools/riic-candidates/preSet.json",
+  "!/src/static/json/tools/riic-candidates/riic-03-rules.json",
+  "!/src/static/json/tools/riic-candidates/riic-04-control.json",
 ]);
 function normalizeProduct(roomType, product) {
   return roomType === "manufacture" || roomType === "trading"
@@ -115,31 +118,23 @@ function getLv3CompatibilitySourceRequest(request) {
   );
 }
 
-function getCandidateLayoutSignature(candidate) {
-  return [
-    "powerPlantCount",
-    "tradingStationCount",
-    "goldManufactureStationCount",
-  ]
-    .map((field) =>
-      Object.hasOwn(candidate || {}, field)
-        ? `${field}:${Number(candidate[field])}`
-        : `${field}:*`,
-    )
-    .join("|");
-}
-
 function getMemberSignature(candidate) {
   const memberSignature = (candidate?.members || [])
     .map(
       (member) =>
         `${member?.name || ""}:${Number(member?.elite || 0)}:${Number(
           member?.level || 1,
-        )}:${member?.maxElite === undefined ? "" : Number(member.maxElite)}`,
+        )}:${member?.maxElite === undefined ? "" : Number(member.maxElite)}:${
+          (member?.tags || [])
+            .map((tag) => String(tag || "").trim())
+            .filter(Boolean)
+            .sort((left, right) => left.localeCompare(right, "en"))
+            .join(",")
+        }`,
     )
     .sort((left, right) => left.localeCompare(right, "en"))
     .join("|");
-  return `${memberSignature}::${getCandidateLayoutSignature(candidate)}`;
+  return memberSignature;
 }
 
 function getLv3CompatibilitySignature(candidate) {
@@ -151,7 +146,7 @@ function getLv3CompatibilitySignature(candidate) {
     .sort((left, right) => left.localeCompare(right, "zh-CN"))
     .join("|");
 
-  return `${memberSignature}::${getCandidateLayoutSignature(candidate)}`;
+  return memberSignature;
 }
 
 function createLv3CompatibleCandidate(candidate) {
@@ -169,6 +164,13 @@ function createLv3CompatibleCandidate(candidate) {
     ...candidate,
     id: `lv3-compatible:${sourceId}`,
   };
+}
+
+function withCandidateSourceFile(candidate, sourceFile) {
+  const normalizedSourceFile = String(sourceFile || "").trim();
+  return normalizedSourceFile
+    ? { ...candidate, sourceFile: normalizedSourceFile }
+    : { ...candidate };
 }
 
 function getRateSignature(rate) {
@@ -198,6 +200,17 @@ function mergeFallbackOperators(genericFallback, productFallback) {
             ? { level: Number(rate.level) }
             : {}),
           percent,
+          ...(Array.isArray(rate?.tags) && rate.tags.length > 0
+            ? {
+                tags: [
+                  ...new Set(
+                    rate.tags
+                      .map((tag) => String(tag || "").trim())
+                      .filter(Boolean),
+                  ),
+                ],
+              }
+            : {}),
         });
       }
       ratesByName.set(name, rates);
@@ -231,12 +244,7 @@ function buildImplicitMeetingFallbackOperators(candidates, fallbackOperators) {
         : null;
     const name = String(member?.name || "").trim();
     const percent = Number(candidate?.efficiency);
-    const hasStaticLayoutRequirement = [
-      "powerPlantCount",
-      "tradingStationCount",
-      "goldManufactureStationCount",
-    ].some((field) => Object.hasOwn(candidate || {}, field));
-    if (!name || !Number.isFinite(percent) || percent <= 0 || hasStaticLayoutRequirement) {
+    if (!name || !Number.isFinite(percent) || percent <= 0) {
       continue;
     }
 
@@ -340,28 +348,52 @@ export async function loadRiicStaticRoomCandidateCatalog({
       .filter((candidate) => (candidate?.members || []).length < 3)
       .map(getLv3CompatibilitySignature),
   );
-  for (const sourceCandidate of [
-    ...(compatibleGenericCatalog?.candidates || []),
-    ...(compatibleProductCatalog?.candidates || []),
+  for (const [sourceCandidates, sourceFile] of [
+    [
+      compatibleGenericCatalog?.candidates || [],
+      lv3CompatibilitySourceRequest?.genericFile,
+    ],
+    [
+      compatibleProductCatalog?.candidates || [],
+      lv3CompatibilitySourceRequest?.productFile,
+    ],
   ]) {
-    const candidate = createLv3CompatibleCandidate(sourceCandidate);
-    if (
-      candidate &&
-      !explicitLv3CandidateSignatures.has(
-        getLv3CompatibilitySignature(candidate),
-      )
-    ) {
-      candidatesBySignature.set(getMemberSignature(candidate), candidate);
+    for (const sourceCandidate of sourceCandidates) {
+      const candidate = createLv3CompatibleCandidate(
+        withCandidateSourceFile(sourceCandidate, sourceFile),
+      );
+      if (
+        candidate &&
+        !explicitLv3CandidateSignatures.has(
+          getLv3CompatibilitySignature(candidate),
+        )
+      ) {
+        candidatesBySignature.set(getMemberSignature(candidate), candidate);
+      }
     }
   }
   for (const candidate of genericCatalog.candidates || []) {
-    candidatesBySignature.set(getMemberSignature(candidate), candidate);
+    const candidateWithSource = withCandidateSourceFile(
+      candidate,
+      request.genericFile,
+    );
+    candidatesBySignature.set(
+      getMemberSignature(candidateWithSource),
+      candidateWithSource,
+    );
   }
   for (const candidate of productCatalog?.candidates || []) {
-    const signature = getMemberSignature(candidate);
-    candidatesBySignature.set(signature, candidate);
+    const candidateWithSource = withCandidateSourceFile(
+      candidate,
+      request.productFile,
+    );
+    const signature = getMemberSignature(candidateWithSource);
+    candidatesBySignature.set(signature, candidateWithSource);
   }
   const fallbackSource = productFallback || genericFallback;
+  const fallbackSourceFile = productFallback
+    ? request.productFallbackFile
+    : request.genericFallbackFile;
   const fallback = {
     percent: Number(
       fallbackSource?.defaultPercent ??
@@ -373,6 +405,7 @@ export async function loadRiicStaticRoomCandidateCatalog({
       productCatalog?.fallback?.label ||
       genericCatalog?.fallback?.label ||
       "基础补位",
+    sourceFile: fallbackSourceFile,
   };
   const fallbackPoolKey = `${request.key}:fallback`;
   const candidates = [...candidatesBySignature.values()];

@@ -1,5 +1,90 @@
 {
   "schemaVersion": 6,
   "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
-  "candidates": []
+  "candidates": [
+    {
+      "id": "manual-manufacture-all-automation-weedy-e0-l1",
+      "variantGroupId": "family-automation-weedy",
+      "name": "温蒂（未精二）",
+      "members": [
+        {
+          "name": "温蒂",
+          "maxElite": 1
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-all-automation-weedy-e2-l1",
+      "variantGroupId": "family-automation-weedy",
+      "name": "温蒂（精英 2）",
+      "members": [
+        {
+          "name": "温蒂",
+          "elite": 2
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-all-automation-eunectes-e0-l1",
+      "variantGroupId": "family-automation-eunectes",
+      "name": "森蚺（未精二）",
+      "members": [
+        {
+          "name": "森蚺",
+          "maxElite": 1
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-all-automation-eunectes-e2-l1",
+      "variantGroupId": "family-automation-eunectes",
+      "name": "森蚺（精英 2）",
+      "members": [
+        {
+          "name": "森蚺",
+          "elite": 2
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-all-automation-passen-e2-l1",
+      "variantGroupId": "family-automation-passen",
+      "name": "异客（精英 2）",
+      "members": [
+        {
+          "name": "异客",
+          "elite": 2
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-all-automation-folivo-e2-l1",
+      "variantGroupId": "family-automation-folivo",
+      "name": "掠风（精英 2）",
+      "members": [
+        {
+          "name": "掠风",
+          "elite": 2
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    }
+  ]
 }

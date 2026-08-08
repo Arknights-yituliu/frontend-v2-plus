@@ -30,6 +30,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  yituliuSourceLabel: {
+    type: String,
+    default: "",
+  },
   maxCustomSources: {
     type: Number,
     default: 3,
@@ -45,6 +49,7 @@ const emit = defineEmits([
   "import-yituliu",
   "delete-source",
   "update:yituliu-token",
+  "update:yituliu-source-label",
 ]);
 
 const maaFileInput = ref(null);
@@ -74,6 +79,41 @@ function handleMaaFileChange(event) {
 function updateYituliuToken(event) {
   emit("update:yituliu-token", event.target.value);
 }
+
+function updateYituliuSourceLabel(event) {
+  emit("update:yituliu-source-label", event.target.value);
+}
+
+function confirmDeleteSource(source) {
+  const label = getCustomSourceTitle(source);
+  if (window.confirm(`确认删除数据源“${label}”吗？`)) {
+    emit("delete-source", source.id);
+  }
+}
+
+function formatImportedAtLabel(value) {
+  const date = new Date(value);
+  if (!value || Number.isNaN(date.getTime())) {
+    return "一图流数据";
+  }
+
+  const pad = (number) => String(number).padStart(2, "0");
+  return `${pad(date.getMonth() + 1)}${pad(date.getDate())}${pad(
+    date.getHours(),
+  )}${pad(date.getMinutes())}`;
+}
+
+function getCustomSourceTitle(source) {
+  if (source.type === "maa") {
+    return source.fileName || source.label || "MAA 数据";
+  }
+
+  if (source.label && source.label !== "一图流数据") {
+    return source.label;
+  }
+
+  return formatImportedAtLabel(source.importedAt);
+}
 </script>
 
 <template>
@@ -90,7 +130,7 @@ function updateYituliuToken(event) {
     </header>
 
     <div class="operator-source-choice-grid">
-      <div class="operator-source-choice">
+      <div class="operator-source-choice skland-operator-source-choice">
         <button
           type="button"
           class="sync-source-action"
@@ -101,12 +141,12 @@ function updateYituliuToken(event) {
         >
           <span class="operator-source-action-head">
             <v-icon icon="mdi-cloud-sync-outline" size="22"></v-icon>
-            <v-icon
+            <small
               v-if="sklandOperatorSourceStatus.active"
-              class="operator-source-selected-mark"
-              icon="mdi-check-circle"
-              size="36"
-            ></v-icon>
+              class="operator-source-current-tag"
+            >
+              当前数据源
+            </small>
           </span>
           <span>{{ sklandOperatorSourceStatus.title }}</span>
           <small>{{ sklandOperatorSourceStatus.detail }}</small>
@@ -116,7 +156,7 @@ function updateYituliuToken(event) {
           type="button"
           class="operator-source-text-action"
           :disabled="operatorSourceStates.skland?.loading"
-          @click="emit('open-skland')"
+          @click.stop="emit('open-skland')"
         >
           重新同步
         </button>
@@ -144,32 +184,24 @@ function updateYituliuToken(event) {
               "
               size="22"
             ></v-icon>
-            <v-icon
+            <small
               v-if="item.status.active"
-              class="operator-source-selected-mark"
-              icon="mdi-check-circle"
-              size="36"
-            ></v-icon>
+              class="operator-source-current-tag"
+            >
+              当前数据源
+            </small>
           </span>
-          <span>{{ item.status.title }}</span>
+          <span>{{ getCustomSourceTitle(item.source) }}</span>
           <small>{{ item.status.detail }}</small>
         </button>
-        <div class="operator-source-choice-actions">
-          <button
-            type="button"
-            class="operator-source-text-action"
-            @click="emit('select-source', item.source.id)"
-          >
-            使用
-          </button>
-          <button
-            type="button"
-            class="operator-source-text-action danger"
-            @click="emit('delete-source', item.source.id)"
-          >
-            删除
-          </button>
-        </div>
+        <button
+          v-if="item.status.active"
+          type="button"
+          class="operator-source-text-action danger"
+          @click.stop="confirmDeleteSource(item.source)"
+        >
+          删除
+        </button>
       </div>
 
       <button
@@ -221,6 +253,14 @@ function updateYituliuToken(event) {
           :disabled="customSourceImporting"
           @input="updateYituliuToken"
         />
+        <input
+          :value="yituliuSourceLabel"
+          type="text"
+          autocomplete="off"
+          placeholder="数据源名称（可选）"
+          :disabled="customSourceImporting"
+          @input="updateYituliuSourceLabel"
+        />
         <button
           type="button"
           class="secondary-action"
@@ -256,21 +296,22 @@ function updateYituliuToken(event) {
 
 .operator-source-choice-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
+}
+
+.operator-source-choice,
+.operator-source-add-card {
+  grid-column: span 1;
+  min-width: 0;
 }
 
 .operator-source-choice {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 4px;
+  position: relative;
 }
 
-.operator-source-choice-actions {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
+.skland-operator-source-choice {
+  grid-column: span 3;
 }
 
 .operator-source-file-input {
@@ -279,21 +320,22 @@ function updateYituliuToken(event) {
 
 .sync-source-action {
   display: flex;
-  align-items: flex-start;
   position: relative;
   width: 100%;
   min-width: 0;
-  min-height: 78px;
-  padding: 10px 58px 10px 11px;
+  height: 112px;
+  padding: 10px 11px 34px;
   border: 1px solid var(--c-border-color);
   border-radius: 4px;
   background: var(--c-page-background-color-secondary);
   color: var(--c-text-color);
   flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
   gap: 6px;
   text-align: left;
   cursor: pointer;
+  overflow: hidden;
   transition:
     background-color 0.18s ease,
     box-shadow 0.18s ease;
@@ -310,12 +352,11 @@ function updateYituliuToken(event) {
   color: var(--riic-blue);
 }
 
-.operator-source-selected-mark {
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  color: var(--riic-green);
-  transform: translateY(-50%);
+.operator-source-current-tag {
+  color: var(--riic-green) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
 }
 
 .sync-source-action span {
@@ -325,10 +366,23 @@ function updateYituliuToken(event) {
   line-height: 1.35;
 }
 
+.sync-source-action > span:not(.operator-source-action-head) {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .sync-source-action small {
+  display: block;
+  width: 100%;
+  overflow: hidden;
   color: var(--riic-muted);
   font-size: 12px;
   line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sync-source-action.active {
@@ -346,7 +400,9 @@ function updateYituliuToken(event) {
 }
 
 .operator-source-text-action {
-  align-self: center;
+  position: absolute;
+  right: 8px;
+  bottom: 7px;
   min-height: 24px;
   padding: 2px 6px;
   border: 0;
@@ -355,6 +411,11 @@ function updateYituliuToken(event) {
   font: inherit;
   font-size: 12px;
   cursor: pointer;
+}
+
+.custom-operator-source-choice > .operator-source-text-action {
+  right: auto;
+  left: 8px;
 }
 
 .operator-source-text-action:hover {
@@ -372,8 +433,7 @@ function updateYituliuToken(event) {
 
 .operator-source-add-card {
   display: flex;
-  min-width: 0;
-  min-height: 78px;
+  height: 112px;
   align-items: center;
   justify-content: center;
   gap: 5px;
@@ -459,7 +519,6 @@ function updateYituliuToken(event) {
 }
 
 .yituliu-token-import input {
-  flex: 1;
   min-width: 0;
   min-height: 32px;
   padding: 5px 8px;
@@ -469,6 +528,14 @@ function updateYituliuToken(event) {
   color: var(--c-text-color);
   font: inherit;
   font-size: 12px;
+}
+
+.yituliu-token-import input:first-child {
+  flex: 1.5;
+}
+
+.yituliu-token-import input:nth-child(2) {
+  flex: 1;
 }
 
 .sync-source-action:hover {
@@ -481,7 +548,31 @@ function updateYituliuToken(event) {
 
 @media (max-width: 900px) {
   .operator-source-choice-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .skland-operator-source-choice {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 560px) {
+  .operator-source-choice-grid {
     grid-template-columns: 1fr;
+  }
+
+  .skland-operator-source-choice,
+  .operator-source-choice,
+  .operator-source-add-card {
+    grid-column: span 1;
+  }
+
+  .yituliu-token-import {
+    flex-wrap: wrap;
+  }
+
+  .yituliu-token-import input {
+    flex: 1 1 100% !important;
   }
 }
 </style>

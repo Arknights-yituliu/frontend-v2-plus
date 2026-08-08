@@ -15,11 +15,17 @@
       "name": "安洁莉娜",
       "rates": [
         {
-          "percent": 46
+          "percent": 46,
+          "tags": [
+            "siracusa"
+          ]
         },
         {
           "percent": 54,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "siracusa"
+          ]
         }
       ]
     },
@@ -60,7 +66,10 @@
       "rates": [
         {
           "percent": 77,
-          "elite": 2
+          "elite": 2,
+          "tags": [
+            "lungmen-guard-department"
+          ]
         }
       ]
     },
@@ -77,15 +86,24 @@
       "name": "伺夜",
       "rates": [
         {
-          "percent": 61
+          "percent": 61,
+          "tags": [
+            "siracusa"
+          ]
         },
         {
           "percent": 69,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "siracusa"
+          ]
         },
         {
           "percent": 77,
-          "elite": 2
+          "elite": 2,
+          "tags": [
+            "siracusa"
+          ]
         }
       ]
     },
@@ -125,11 +143,17 @@
       "name": "芙兰卡",
       "rates": [
         {
-          "percent": 45
+          "percent": 45,
+          "tags": [
+            "blacksteel-international"
+          ]
         },
         {
           "percent": 53,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "blacksteel-international"
+          ]
         }
       ]
     },
@@ -162,15 +186,24 @@
       "name": "见行者",
       "rates": [
         {
-          "percent": 45
+          "percent": 45,
+          "tags": [
+            "laterano"
+          ]
         },
         {
           "percent": 53,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "laterano"
+          ]
         },
         {
           "percent": 86,
-          "elite": 2
+          "elite": 2,
+          "tags": [
+            "laterano"
+          ]
         }
       ]
     },
@@ -191,15 +224,24 @@
       "name": "莱欧斯",
       "rates": [
         {
-          "percent": 55
+          "percent": 55,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
         },
         {
           "percent": 63,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
         },
         {
           "percent": 71,
-          "elite": 2
+          "elite": 2,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
         }
       ]
     },
@@ -207,11 +249,17 @@
       "name": "凛视",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "sami"
+          ]
         },
         {
           "percent": 10,
-          "elite": 2
+          "elite": 2,
+          "tags": [
+            "sami"
+          ]
         }
       ]
     },
@@ -251,11 +299,17 @@
       "name": "莫斯提马",
       "rates": [
         {
-          "percent": 46
+          "percent": 46,
+          "tags": [
+            "laterano"
+          ]
         },
         {
           "percent": 54,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "laterano"
+          ]
         }
       ]
     },
@@ -263,15 +317,24 @@
       "name": "忍冬",
       "rates": [
         {
-          "percent": 46
+          "percent": 46,
+          "tags": [
+            "siracusa"
+          ]
         },
         {
           "percent": 54,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "siracusa"
+          ]
         },
         {
           "percent": 72,
-          "elite": 2
+          "elite": 2,
+          "tags": [
+            "siracusa"
+          ]
         }
       ]
     },
@@ -279,11 +342,17 @@
       "name": "塞雷娅",
       "rates": [
         {
-          "percent": 46
+          "percent": 46,
+          "tags": [
+            "rhine-lab"
+          ]
         },
         {
           "percent": 54,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "rhine-lab"
+          ]
         }
       ]
     },
@@ -308,7 +377,10 @@
       "rates": [
         {
           "percent": 5,
-          "elite": 2
+          "elite": 2,
+          "tags": [
+            "rainbow-squad"
+          ]
         }
       ]
     },
@@ -332,7 +404,10 @@
       "name": "提丰",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "sami"
+          ]
         }
       ]
     },
@@ -361,15 +436,24 @@
       "name": "信仰搅拌机",
       "rates": [
         {
-          "percent": 51
+          "percent": 51,
+          "tags": [
+            "laterano"
+          ]
         },
         {
           "percent": 59,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "laterano"
+          ]
         },
         {
           "percent": 72,
-          "elite": 2
+          "elite": 2,
+          "tags": [
+            "laterano"
+          ]
         }
       ]
     },
@@ -402,11 +486,17 @@
       "name": "寻澜",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "blacksteel-international"
+          ]
         },
         {
           "percent": 10,
-          "elite": 2
+          "elite": 2,
+          "tags": [
+            "blacksteel-international"
+          ]
         }
       ]
     },
@@ -427,11 +517,17 @@
       "name": "耶拉",
       "rates": [
         {
-          "percent": 45
+          "percent": 45,
+          "tags": [
+            "kjerag"
+          ]
         },
         {
           "percent": 53,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "kjerag"
+          ]
         }
       ]
     },
@@ -439,11 +535,17 @@
       "name": "因陀罗",
       "rates": [
         {
-          "percent": 45
+          "percent": 45,
+          "tags": [
+            "glasgow-gang"
+          ]
         },
         {
           "percent": 53,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "glasgow-gang"
+          ]
         }
       ]
     },
@@ -452,11 +554,17 @@
       "rates": [
         {
           "percent": 66,
-          "elite": 1
+          "elite": 1,
+          "tags": [
+            "sami"
+          ]
         },
         {
           "percent": 74,
-          "elite": 2
+          "elite": 2,
+          "tags": [
+            "sami"
+          ]
         }
       ]
     },

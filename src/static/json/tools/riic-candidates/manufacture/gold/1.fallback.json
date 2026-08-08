@@ -7,7 +7,10 @@
       "name": "克洛丝",
       "rates": [
         {
-          "percent": 22.5
+          "percent": 22.5,
+          "tags": [
+            "a1-team"
+          ]
         }
       ]
     },
@@ -32,11 +35,17 @@
       "name": "历阵锐枪芬",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
         },
         {
           "elite": 2,
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
         }
       ]
     },
@@ -45,7 +54,10 @@
       "rates": [
         {
           "elite": 1,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "standardized-skill"
+          ]
         }
       ],
       "fillPriority": -1
@@ -55,7 +67,11 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
         }
       ]
     },
@@ -64,7 +80,10 @@
       "rates": [
         {
           "level": 30,
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
         }
       ],
       "fillPriority": -1
@@ -73,7 +92,10 @@
       "name": "夜烟",
       "rates": [
         {
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "metalwork"
+          ]
         }
       ],
       "fillPriority": -1
@@ -82,11 +104,19 @@
       "name": "娜斯提",
       "rates": [
         {
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
         },
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
         }
       ]
     },
@@ -95,7 +125,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "rainbow-squad"
+          ]
         }
       ]
     },
@@ -103,11 +136,17 @@
       "name": "引星棘刺",
       "rates": [
         {
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "metalwork"
+          ]
         },
         {
           "elite": 2,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "metalwork"
+          ]
         }
       ]
     },
@@ -116,7 +155,10 @@
       "rates": [
         {
           "elite": 1,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "metalwork"
+          ]
         }
       ]
     },
@@ -124,11 +166,19 @@
       "name": "星源",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
         },
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
         }
       ]
     },
@@ -136,11 +186,17 @@
       "name": "杏仁",
       "rates": [
         {
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "blacksteel-international"
+          ]
         },
         {
           "elite": 2,
-          "percent": 27
+          "percent": 27,
+          "tags": [
+            "blacksteel-international"
+          ]
         }
       ]
     },
@@ -148,7 +204,11 @@
       "name": "杰西卡",
       "rates": [
         {
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "blacksteel-international",
+            "standardized-skill"
+          ]
         }
       ]
     },
@@ -157,7 +217,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "rhine-lab"
+          ]
         }
       ]
     },
@@ -166,7 +229,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "standardized-skill"
+          ]
         }
       ]
     },
@@ -183,7 +249,10 @@
       "rates": [
         {
           "level": 30,
-          "percent": 5
+          "percent": 5,
+          "tags": [
+            "monster-hunter-party"
+          ]
         }
       ],
       "fillPriority": -1
@@ -192,11 +261,17 @@
       "name": "洋灰",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
         },
         {
           "elite": 2,
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
         }
       ]
     },
@@ -204,7 +279,10 @@
       "name": "流星",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
         }
       ]
     },
@@ -213,7 +291,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "standardized-skill"
+          ]
         }
       ]
     },
@@ -222,7 +303,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "rhine-tech-skill"
+          ]
         }
       ]
     },
@@ -231,7 +315,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "metalwork"
+          ]
         }
       ]
     },
@@ -240,7 +327,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "rhine-tech-skill"
+          ]
         }
       ]
     },
@@ -248,11 +338,21 @@
       "name": "灰毫",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
         },
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
         }
       ]
     },
@@ -260,11 +360,17 @@
       "name": "玛露西尔",
       "rates": [
         {
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
         },
         {
           "elite": 2,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
         }
       ]
     },
@@ -272,11 +378,19 @@
       "name": "白面鸮",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
         },
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
         }
       ]
     },
@@ -296,7 +410,10 @@
       "name": "石英",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
         }
       ],
       "fillPriority": -1
@@ -306,7 +423,11 @@
       "rates": [
         {
           "elite": 1,
-          "percent": 35
+          "percent": 35,
+          "tags": [
+            "knight",
+            "metalwork"
+          ]
         }
       ]
     },
@@ -314,11 +435,17 @@
       "name": "稀音",
       "rates": [
         {
-          "percent": 22.5
+          "percent": 22.5,
+          "tags": [
+            "sargon"
+          ]
         },
         {
           "elite": 2,
-          "percent": 22.5
+          "percent": 22.5,
+          "tags": [
+            "sargon"
+          ]
         }
       ]
     },
@@ -326,7 +453,10 @@
       "name": "米格鲁",
       "rates": [
         {
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "a1-team"
+          ]
         }
       ]
     },
@@ -335,7 +465,10 @@
       "rates": [
         {
           "elite": 1,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "standardized-skill"
+          ]
         }
       ]
     },
@@ -343,7 +476,10 @@
       "name": "芬",
       "rates": [
         {
-          "percent": 23.75
+          "percent": 23.75,
+          "tags": [
+            "a1-team"
+          ]
         }
       ],
       "fillPriority": -1
@@ -352,11 +488,17 @@
       "name": "苍苔",
       "rates": [
         {
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "metalwork"
+          ]
         },
         {
           "elite": 2,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "metalwork"
+          ]
         }
       ]
     },
@@ -373,11 +515,17 @@
       "name": "裁度",
       "rates": [
         {
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "siracusa"
+          ]
         },
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "siracusa"
+          ]
         }
       ]
     },
@@ -385,11 +533,19 @@
       "name": "褐果",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "durin",
+            "standardized-skill"
+          ]
         },
         {
           "elite": 1,
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "durin",
+            "standardized-skill"
+          ]
         }
       ]
     },
@@ -398,7 +554,10 @@
       "rates": [
         {
           "elite": 1,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "standardized-skill"
+          ]
         }
       ]
     },
@@ -418,11 +577,19 @@
       "name": "赫默",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
         },
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
         }
       ]
     },
@@ -430,11 +597,21 @@
       "name": "远牙",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
         },
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
         }
       ]
     },
@@ -442,11 +619,21 @@
       "name": "野鬃",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
         },
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
         }
       ]
     },
@@ -454,11 +641,17 @@
       "name": "钼铅",
       "rates": [
         {
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "sargon"
+          ]
         },
         {
           "elite": 2,
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "sargon"
+          ]
         }
       ]
     },
@@ -466,11 +659,17 @@
       "name": "阿罗玛",
       "rates": [
         {
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "siracusa"
+          ]
         },
         {
           "elite": 2,
-          "percent": 36.67
+          "percent": 36.67,
+          "tags": [
+            "siracusa"
+          ]
         }
       ]
     },
@@ -478,11 +677,17 @@
       "name": "雪猎",
       "rates": [
         {
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "kjerag"
+          ]
         },
         {
           "elite": 2,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "kjerag"
+          ]
         }
       ]
     },
@@ -490,7 +695,11 @@
       "name": "香草",
       "rates": [
         {
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "blacksteel-international",
+            "standardized-skill"
+          ]
         }
       ],
       "fillPriority": -1

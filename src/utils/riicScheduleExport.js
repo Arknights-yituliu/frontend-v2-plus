@@ -163,6 +163,25 @@ function getDroneSetting(state, droneTarget) {
   };
 }
 
+function createLegacyScheduleType(state, planTimes) {
+  const scheduleType = {
+    planTimes,
+    trading: 0,
+    manufacture: 0,
+    power: 0,
+    dormitory: 0,
+  };
+
+  for (const room of state?.rooms || []) {
+    const facility = String(room?.facility || "").trim();
+    if (Object.prototype.hasOwnProperty.call(scheduleType, facility)) {
+      scheduleType[facility] += 1;
+    }
+  }
+
+  return scheduleType;
+}
+
 /**
  * Serializes the assembled preview only. It deliberately does not inspect or
  * score candidate data: all schedule choices have already happened upstream.
@@ -219,8 +238,13 @@ export function buildRiicMaaScheduleFromPreview({
     return plan;
   });
 
+  const planTimes = plans.length;
+  const scheduleType = createLegacyScheduleType(states[0], planTimes);
+
   return {
     schedule: {
+      planTimes: `${planTimes}班`,
+      scheduleType,
       title: String(title || "一图流基建排班表").trim(),
       description: "由一图流基建排班表生成器导出。",
       plans,

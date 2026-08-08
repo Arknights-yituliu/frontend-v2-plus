@@ -20,8 +20,8 @@
           "elite": 2
         }
       ],
-      "efficiency": 207.93,
-      "gold": 13.45,
+      "efficiency": 194.83,
+      "gold": 31.83,
       "sortScore": -100,
       "calculationStatus": "estimated"
     },
@@ -43,15 +43,15 @@
           "elite": 2
         }
       ],
-      "efficiency": 155.52,
-      "gold": 13.45,
+      "efficiency": 142.41,
+      "gold": 31.83,
       "sortScore": -100,
       "calculationStatus": "estimated"
     },
     {
-      "id": "manual-trading-lmd-shamare-tequila-tailor-beta-bibeak",
-      "variantGroupId": "family-shamare-tequila-tailor",
-      "name": "巫恋 + 龙舌兰 + 裁缝 β（柏喙）",
+      "id": "manual-trading-lmd-shamare-tequila-tailor-beta",
+      "variantGroupId": "family-shamare-tequila-tailor-beta",
+      "name": "巫恋 + 龙舌兰 + 裁缝 β",
       "members": [
         {
           "name": "巫恋",
@@ -62,77 +62,7 @@
           "elite": 2
         },
         {
-          "name": "柏喙",
-          "elite": 2
-        }
-      ],
-      "efficiency": 135.79,
-      "gold": 44.25,
-      "sortScore": 0,
-      "calculationStatus": "estimated"
-    },
-    {
-      "id": "manual-trading-lmd-shamare-tequila-tailor-beta-kafka",
-      "variantGroupId": "family-shamare-tequila-tailor",
-      "name": "巫恋 + 龙舌兰 + 裁缝 β（卡夫卡）",
-      "members": [
-        {
-          "name": "巫恋",
-          "elite": 2
-        },
-        {
-          "name": "龙舌兰",
-          "elite": 2
-        },
-        {
-          "name": "卡夫卡",
-          "elite": 2
-        }
-      ],
-      "efficiency": 135.79,
-      "gold": 44.25,
-      "sortScore": 0,
-      "calculationStatus": "estimated"
-    },
-    {
-      "id": "manual-trading-lmd-shamare-tequila-tailor-beta-kaitou",
-      "variantGroupId": "family-shamare-tequila-tailor",
-      "name": "巫恋 + 龙舌兰 + 裁缝 β（折光）",
-      "members": [
-        {
-          "name": "巫恋",
-          "elite": 2
-        },
-        {
-          "name": "龙舌兰",
-          "elite": 2
-        },
-        {
-          "name": "折光",
-          "elite": 2
-        }
-      ],
-      "efficiency": 135.79,
-      "gold": 44.25,
-      "sortScore": 0,
-      "calculationStatus": "estimated"
-    },
-    {
-      "id": "manual-trading-lmd-shamare-tequila-tailor-beta-paprika",
-      "variantGroupId": "family-shamare-tequila-tailor",
-      "name": "巫恋 + 龙舌兰 + 裁缝 β（明椒）",
-      "members": [
-        {
-          "name": "巫恋",
-          "elite": 2
-        },
-        {
-          "name": "龙舌兰",
-          "elite": 2
-        },
-        {
-          "name": "明椒",
-          "elite": 2
+          "tags": ["tailor", "tailor-beta"]
         }
       ],
       "efficiency": 135.79,
@@ -273,9 +203,9 @@
       "calculationStatus": "estimated"
     },
     {
-      "id": "manual-trading-lmd-shamare-tequila-tailor-alpha-bena",
-      "variantGroupId": "family-shamare-tequila-tailor",
-      "name": "巫恋 + 龙舌兰 + 裁缝 α（贝娜）",
+      "id": "manual-trading-lmd-shamare-tequila-tailor-alpha",
+      "variantGroupId": "family-shamare-tequila-tailor-alpha",
+      "name": "巫恋 + 龙舌兰 + 裁缝 α",
       "members": [
         {
           "name": "巫恋",
@@ -286,123 +216,7 @@
           "elite": 2
         },
         {
-          "name": "贝娜",
-          "elite": 2
-        }
-      ],
-      "efficiency": 127.45,
-      "gold": 36.39,
-      "sortScore": 0,
-      "calculationStatus": "estimated"
-    },
-    {
-      "id": "manual-trading-lmd-shamare-tequila-tailor-alpha-bibeak",
-      "variantGroupId": "family-shamare-tequila-tailor",
-      "name": "巫恋 + 龙舌兰 + 裁缝 α（柏喙）",
-      "members": [
-        {
-          "name": "巫恋",
-          "elite": 2
-        },
-        {
-          "name": "龙舌兰",
-          "elite": 2
-        },
-        {
-          "name": "柏喙",
-          "maxElite": 0
-        }
-      ],
-      "efficiency": 127.45,
-      "gold": 36.39,
-      "sortScore": 0,
-      "calculationStatus": "estimated"
-    },
-    {
-      "id": "manual-trading-lmd-shamare-tequila-tailor-alpha-kafka",
-      "variantGroupId": "family-shamare-tequila-tailor",
-      "name": "巫恋 + 龙舌兰 + 裁缝 α（卡夫卡）",
-      "members": [
-        {
-          "name": "巫恋",
-          "elite": 2
-        },
-        {
-          "name": "龙舌兰",
-          "elite": 2
-        },
-        {
-          "name": "卡夫卡",
-          "maxElite": 0
-        }
-      ],
-      "efficiency": 127.45,
-      "gold": 36.39,
-      "sortScore": 0,
-      "calculationStatus": "estimated"
-    },
-    {
-      "id": "manual-trading-lmd-shamare-tequila-tailor-alpha-kaitou",
-      "variantGroupId": "family-shamare-tequila-tailor",
-      "name": "巫恋 + 龙舌兰 + 裁缝 α（折光）",
-      "members": [
-        {
-          "name": "巫恋",
-          "elite": 2
-        },
-        {
-          "name": "龙舌兰",
-          "elite": 2
-        },
-        {
-          "name": "折光",
-          "maxElite": 0
-        }
-      ],
-      "efficiency": 127.45,
-      "gold": 36.39,
-      "sortScore": 0,
-      "calculationStatus": "estimated"
-    },
-    {
-      "id": "manual-trading-lmd-shamare-tequila-tailor-alpha-mitm",
-      "variantGroupId": "family-shamare-tequila-tailor",
-      "name": "巫恋 + 龙舌兰 + 裁缝 α（渡桥）",
-      "members": [
-        {
-          "name": "巫恋",
-          "elite": 2
-        },
-        {
-          "name": "龙舌兰",
-          "elite": 2
-        },
-        {
-          "name": "渡桥",
-          "maxElite": 0
-        }
-      ],
-      "efficiency": 127.45,
-      "gold": 36.39,
-      "sortScore": 0,
-      "calculationStatus": "estimated"
-    },
-    {
-      "id": "manual-trading-lmd-shamare-tequila-tailor-alpha-paprika",
-      "variantGroupId": "family-shamare-tequila-tailor",
-      "name": "巫恋 + 龙舌兰 + 裁缝 α（明椒）",
-      "members": [
-        {
-          "name": "巫恋",
-          "elite": 2
-        },
-        {
-          "name": "龙舌兰",
-          "elite": 2
-        },
-        {
-          "name": "明椒",
-          "maxElite": 0
+          "tags": ["tailor", "tailor-alpha"]
         }
       ],
       "efficiency": 127.45,
@@ -1673,8 +1487,7 @@
           "elite": 2
         }
       ],
-      "efficiency": 50,
-      "gold": 35,
+      "efficiency": -10,
       "sortScore": 0,
       "calculationStatus": "estimated"
     },
@@ -1742,8 +1555,7 @@
           "elite": 2
         }
       ],
-      "efficiency": 90,
-      "gold": 38,
+      "efficiency": 30,
       "sortScore": 0,
       "calculationStatus": "estimated"
     },
@@ -1769,6 +1581,138 @@
       "gold": 38,
       "sortScore": 15,
       "calculationStatus": "estimated"
+    },
+    {
+      "id": "template-trading-lmd-butshu-alpha-vigil-e2-arkoe-e2-l3",
+      "variantGroupId": "template:trading-lmd-butshu-vigil-arkoe:3:3",
+      "name": "但书 α + 伺夜 E2 + 空弦 E2",
+      "members": [
+        {
+          "name": "但书",
+          "maxElite": 0
+        },
+        {
+          "name": "伺夜",
+          "elite": 2
+        },
+        {
+          "name": "空弦",
+          "elite": 2
+        }
+      ],
+      "efficiency": 53.1,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "template-trading-lmd-butshu-beta-vigil-e2-arkoe-e2-l3",
+      "variantGroupId": "template:trading-lmd-butshu-vigil-arkoe:3:3",
+      "name": "但书 β + 伺夜 E2 + 空弦 E2",
+      "members": [
+        {
+          "name": "但书",
+          "elite": 2
+        },
+        {
+          "name": "伺夜",
+          "elite": 2
+        },
+        {
+          "name": "空弦",
+          "elite": 2
+        }
+      ],
+      "efficiency": 86.21,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "template-trading-lmd-butshu-alpha-vigil-e2-demetr-e0-l3",
+      "variantGroupId": "template:trading-lmd-butshu-vigil-demetr:3:3",
+      "name": "但书 α + 伺夜 E2 + 贝洛内 E0",
+      "members": [
+        {
+          "name": "但书",
+          "maxElite": 0
+        },
+        {
+          "name": "伺夜",
+          "elite": 2
+        },
+        {
+          "name": "贝洛内",
+          "elite": 0
+        }
+      ],
+      "efficiency": 116.9,
+      "sortScore": 3,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "template-trading-lmd-butshu-alpha-vigil-e2-demetr-e2-l3",
+      "variantGroupId": "template:trading-lmd-butshu-vigil-demetr:3:3",
+      "name": "但书 α + 伺夜 E2 + 贝洛内 E2",
+      "members": [
+        {
+          "name": "但书",
+          "maxElite": 0
+        },
+        {
+          "name": "伺夜",
+          "elite": 2
+        },
+        {
+          "name": "贝洛内",
+          "elite": 2
+        }
+      ],
+      "efficiency": 129.66,
+      "sortScore": 3,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "template-trading-lmd-butshu-beta-vigil-e2-demetr-e0-l3",
+      "variantGroupId": "template:trading-lmd-butshu-vigil-demetr:3:3",
+      "name": "但书 β + 伺夜 E2 + 贝洛内 E0",
+      "members": [
+        {
+          "name": "但书",
+          "elite": 2
+        },
+        {
+          "name": "伺夜",
+          "elite": 2
+        },
+        {
+          "name": "贝洛内",
+          "elite": 0
+        }
+      ],
+      "efficiency": 163.79,
+      "sortScore": 3,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "template-trading-lmd-butshu-beta-vigil-e2-demetr-e2-l3",
+      "variantGroupId": "template:trading-lmd-butshu-vigil-demetr:3:3",
+      "name": "但书 β + 伺夜 E2 + 贝洛内 E2",
+      "members": [
+        {
+          "name": "但书",
+          "elite": 2
+        },
+        {
+          "name": "伺夜",
+          "elite": 2
+        },
+        {
+          "name": "贝洛内",
+          "elite": 2
+        }
+      ],
+      "efficiency": 179.31,
+      "sortScore": 3,
+      "calculationStatus": "calculated"
     }
   ]
 }

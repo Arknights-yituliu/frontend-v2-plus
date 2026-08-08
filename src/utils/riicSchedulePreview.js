@@ -1,3 +1,5 @@
+import { getRiicSameShiftBindingAtHour } from "./riicSameShiftBindings.js";
+
 function toPositiveHours(value) {
   const hours = Number(value);
   return Number.isFinite(hours) && hours > 0 ? hours : 0;
@@ -114,12 +116,17 @@ function createRoomPreview({
   roomOperatorOverrides,
   productOverrides,
   invalidatedRoomKeys,
+  sameShiftBinding,
 }) {
   const candidate = assignment?.candidate || {};
   const key = `${group.id}:${assignment?.stationIndex ?? 0}`;
   const overrideKey = `${stateIndex}:${key}`;
   const overriddenOperators = roomOperatorOverrides?.[overrideKey];
   const isInvalidated = invalidatedRoomKeys?.[key] === true;
+  const candidateTotalPercent = Number(candidate?.totalPercent);
+  const estimatedControlCenterOperatorBonusPercent = Number(
+    candidate?.controlCenterOperatorBonusPercent || 0,
+  );
 
   return {
     key,
@@ -140,11 +147,27 @@ function createRoomPreview({
     efficiency:
       candidate?.totalPercent !== null &&
       candidate?.totalPercent !== "" &&
-      Number.isFinite(Number(candidate?.totalPercent))
-      ? Number(candidate.totalPercent)
+      Number.isFinite(candidateTotalPercent)
+      ? candidateTotalPercent -
+        (Number.isFinite(estimatedControlCenterOperatorBonusPercent)
+          ? estimatedControlCenterOperatorBonusPercent
+          : 0)
       : null,
     fallbackCount: getFallbackCount(candidate),
     effectMetrics: candidate.effectMetrics || [],
+    controlCenterFacilityBonusPercent: Number.isFinite(
+      Number(sameShiftBinding?.facilityBonusPercent),
+    )
+      ? Number(sameShiftBinding.facilityBonusPercent)
+      : 0,
+    controlCenterOperatorBonusPercent: Number.isFinite(
+      Number(sameShiftBinding?.operatorBonusPercent),
+    )
+      ? Number(sameShiftBinding.operatorBonusPercent)
+      : 0,
+    controlCenterOperatorBonuses: sameShiftBinding?.operatorBonuses || [],
+    sameShiftBindingStatus: sameShiftBinding?.status || "notApplicable",
+    sameShiftBindings: sameShiftBinding?.bindings || [],
     isStatic: false,
     manuallyEdited: Array.isArray(overriddenOperators) || isInvalidated,
   };
@@ -199,38 +222,7 @@ function applyRoomOperatorOverride(room, stateIndex, roomOperatorOverrides) {
     : room;
 }
 
-function normalizeFacility(facility) {
-  return facility === "hire" ? "office" : facility;
-}
-
-function getControlBonusByFacility(rooms) {
-  const highestBonusByFacility = new Map();
-
-  for (const room of rooms || []) {
-    if (room?.facility !== "control") {
-      continue;
-    }
-
-    for (const metric of room.effectMetrics || []) {
-      const facility = normalizeFacility(metric?.facility);
-      const percent = Number(metric?.percent);
-      if (!facility || !Number.isFinite(percent) || percent <= 0) {
-        continue;
-      }
-
-      highestBonusByFacility.set(
-        facility,
-        Math.max(highestBonusByFacility.get(facility) || 0, percent),
-      );
-    }
-  }
-
-  return highestBonusByFacility;
-}
-
 function applyRoomDisplayEfficiencies(rooms) {
-  const controlBonusByFacility = getControlBonusByFacility(rooms);
-
   return (rooms || []).map((room) => {
     const sourceEfficiency = room?.efficiency;
     const baseEfficiency = Number(sourceEfficiency);
@@ -242,15 +234,26 @@ function applyRoomDisplayEfficiencies(rooms) {
       return room;
     }
 
-    const facility = normalizeFacility(room.facility);
+    const facility = room.facility === "hire" ? "office" : room.facility;
     const staffingBonus = ["trading", "manufacture"].includes(facility)
       ? (room.operators || []).length
       : 0;
-    const controlBonus = Number(controlBonusByFacility.get(facility) || 0);
+    const controlFacilityBonus = Number(
+      room?.controlCenterFacilityBonusPercent || 0,
+    );
+    const controlOperatorBonus = Number(
+      room?.controlCenterOperatorBonusPercent || 0,
+    );
 
     return {
       ...room,
-      efficiency: baseEfficiency + staffingBonus + controlBonus,
+      efficiency:
+        baseEfficiency +
+        staffingBonus +
+        (Number.isFinite(controlFacilityBonus)
+          ? controlFacilityBonus
+          : 0) +
+        (Number.isFinite(controlOperatorBonus) ? controlOperatorBonus : 0),
     };
   });
 }
@@ -426,6 +429,8 @@ export function buildRiicSchedulePreview({
     groupEntries,
     stickyOperatorIds,
   );
+  const controlGroupEntry =
+    groupEntries.find((entry) => entry.group?.facility === "control") || null;
   const boundaries = getTimelineBoundaries(groupEntries, cycleHours);
   const rawStates = boundaries.slice(0, -1).map((startHour, index) => {
     const endHour = boundaries[index + 1];
@@ -436,16 +441,27 @@ export function buildRiicSchedulePreview({
           candidate,
           startHour,
           stickyPlacement,
-        }).map((assignment) =>
-          createRoomPreview({
+        }).map((assignment) => {
+          const sameShiftBinding =
+            group?.facility === "control" || !controlGroupEntry
+              ? null
+              : getRiicSameShiftBindingAtHour({
+                  controlCandidate: controlGroupEntry.candidate,
+                  group,
+                  candidate: assignment?.candidate,
+                  startHour,
+                });
+
+          return createRoomPreview({
             group,
             assignment,
             stateIndex: index,
             roomOperatorOverrides: {},
             productOverrides,
             invalidatedRoomKeys,
-          }),
-        ),
+            sameShiftBinding,
+          });
+        }),
       ),
       ...(staticRooms || []).map((room) =>
         createStaticRoomPreview({
@@ -488,6 +504,11 @@ export function buildRiicSchedulePreview({
     key: `${sourceKey}:${Object.keys(roomOperatorOverrides || {}).join(",")}:${Object.keys(productOverrides || {}).join(",")}:${Object.keys(invalidatedRoomKeys || {}).join(",")}`,
     cycleHours,
     states,
+    sameShiftBindingSummary: Array.isArray(
+      scheduleCandidate?.sameShiftBindingSummary,
+    )
+      ? scheduleCandidate.sameShiftBindingSummary
+      : [],
     shiftGroupBindings: Array.isArray(shiftGroupBindings)
       ? shiftGroupBindings
       : [],

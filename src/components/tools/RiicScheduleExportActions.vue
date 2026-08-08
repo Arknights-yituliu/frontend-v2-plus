@@ -10,7 +10,11 @@ defineProps({
   },
 });
 
-const emit = defineEmits(["export-image", "export-maa"]);
+const emit = defineEmits([
+  "export-image",
+  "export-maa",
+  "open-legacy-editor",
+]);
 </script>
 
 <template>
@@ -34,6 +38,14 @@ const emit = defineEmits(["export-image", "export-maa"]);
         <v-icon icon="mdi-code-json" size="18"></v-icon>
         {{ exportingMaa ? "正在导出" : "导出 MAA" }}
       </button>
+      <button
+        type="button"
+        class="schedule-output-open-legacy"
+        @click="emit('open-legacy-editor')"
+      >
+        <v-icon icon="mdi-pencil-outline" size="18"></v-icon>
+        转到旧版编辑器
+      </button>
     </div>
   </div>
 </template>
@@ -47,7 +59,7 @@ const emit = defineEmits(["export-image", "export-maa"]);
 
 .schedule-output-actions {
   display: flex;
-  width: min(100%, 420px);
+  width: min(100%, 620px);
   gap: 10px;
 }
 
@@ -81,6 +93,12 @@ const emit = defineEmits(["export-image", "export-maa"]);
 .schedule-output-export-maa {
   background: var(--riic-green);
   color: #fff;
+}
+
+.schedule-output-open-legacy {
+  border-color: color-mix(in srgb, var(--riic-blue) 32%, var(--c-border-color));
+  background: var(--c-page-background-color);
+  color: var(--c-text-color-secondary);
 }
 
 .schedule-output-actions button:hover:not(:disabled) {

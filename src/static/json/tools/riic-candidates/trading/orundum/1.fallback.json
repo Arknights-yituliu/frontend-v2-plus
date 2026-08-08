@@ -8,7 +8,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 40
+          "percent": 40,
+          "tags": [
+            "siracusa"
+          ]
         }
       ]
     },
@@ -16,7 +19,10 @@
       "name": "古米",
       "rates": [
         {
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "ursus-student-self-government"
+          ]
         }
       ]
     },
@@ -48,11 +54,17 @@
       "name": "图耶",
       "rates": [
         {
-          "percent": 5
+          "percent": 5,
+          "tags": [
+            "sargon"
+          ]
         },
         {
           "elite": 2,
-          "percent": 5
+          "percent": 5,
+          "tags": [
+            "sargon"
+          ]
         }
       ]
     },
@@ -91,7 +103,10 @@
       "name": "安德切尔",
       "rates": [
         {
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "laterano"
+          ]
         }
       ]
     },
@@ -100,7 +115,10 @@
       "rates": [
         {
           "elite": 1,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "laterano"
+          ]
         }
       ]
     },
@@ -109,7 +127,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "kjerag"
+          ]
         }
       ]
     },
@@ -155,7 +176,10 @@
       "name": "泰拉大陆调查团",
       "rates": [
         {
-          "percent": 5
+          "percent": 5,
+          "tags": [
+            "monster-hunter-party"
+          ]
         }
       ],
       "fillPriority": -1
@@ -315,7 +339,10 @@
       "rates": [
         {
           "elite": 1,
-          "percent": 10
+          "percent": 10,
+          "tags": [
+            "laterano"
+          ]
         }
       ]
     },
@@ -336,7 +363,10 @@
       "rates": [
         {
           "elite": 1,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "a1-team"
+          ]
         }
       ],
       "fillPriority": -1
@@ -345,11 +375,17 @@
       "name": "蕾缪安",
       "rates": [
         {
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "laterano"
+          ]
         },
         {
           "elite": 2,
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "laterano"
+          ]
         }
       ]
     },
@@ -367,11 +403,17 @@
       "name": "衡沙",
       "rates": [
         {
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "sargon"
+          ]
         },
         {
           "elite": 2,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "sargon"
+          ]
         }
       ]
     },
@@ -379,7 +421,10 @@
       "name": "角峰",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "kjerag"
+          ]
         }
       ]
     },
@@ -387,7 +432,10 @@
       "name": "讯使",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "kjerag"
+          ]
         }
       ]
     },
@@ -395,11 +443,17 @@
       "name": "贝洛内",
       "rates": [
         {
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "siracusa"
+          ]
         },
         {
           "elite": 2,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "siracusa"
+          ]
         }
       ]
     },
@@ -419,7 +473,10 @@
       "name": "远山",
       "rates": [
         {
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "sami"
+          ]
         }
       ]
     },
@@ -427,11 +484,17 @@
       "name": "银灰",
       "rates": [
         {
-          "percent": 15
+          "percent": 15,
+          "tags": [
+            "kjerag"
+          ]
         },
         {
           "elite": 2,
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "kjerag"
+          ]
         }
       ]
     },
@@ -439,11 +502,17 @@
       "name": "锏",
       "rates": [
         {
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "kjerag"
+          ]
         },
         {
           "elite": 2,
-          "percent": 25
+          "percent": 25,
+          "tags": [
+            "kjerag"
+          ]
         }
       ]
     },
@@ -464,7 +533,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 35
+          "percent": 35,
+          "tags": [
+            "sunbreak-hunter-team"
+          ]
         }
       ]
     },
@@ -485,7 +557,10 @@
       "rates": [
         {
           "elite": 1,
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "blacksteel-international"
+          ]
         }
       ],
       "fillPriority": -1
@@ -504,11 +579,17 @@
       "name": "齐尔查克",
       "rates": [
         {
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
         },
         {
           "elite": 2,
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
         }
       ]
     }

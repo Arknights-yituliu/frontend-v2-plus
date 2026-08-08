@@ -3,7 +3,7 @@ import fs from "node:fs";
 import operatorTable from "../src/static/json/operator/character_table_simple.v2.json" with {
   type: "json",
 };
-import { matchRiicStaticRoomCandidates } from "../src/utils/riicStaticRoomCandidateMatcher.js";
+import { matchRiicStaticRoomCandidates } from "../src/utils/riic02Groups.js";
 import {
   assertRiicRuntimeCandidateCatalog,
   assertRiicRuntimeFallbackCatalog,

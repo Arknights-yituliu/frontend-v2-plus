@@ -29,6 +29,18 @@ function formatOperatorSyncTime(value) {
   }).format(date);
 }
 
+function formatYituliuSourceLabel(value) {
+  const date = new Date(value);
+  if (!value || Number.isNaN(date.getTime())) {
+    return "一图流数据";
+  }
+
+  const pad = (number) => String(number).padStart(2, "0");
+  return `${pad(date.getMonth() + 1)}${pad(date.getDate())}${pad(
+    date.getHours(),
+  )}${pad(date.getMinutes())}`;
+}
+
 export function useRiicOperatorSources(options = {}) {
   const {
     router,
@@ -55,6 +67,7 @@ export function useRiicOperatorSources(options = {}) {
   };
 
   const yituliuTokenInput = ref("");
+  const yituliuSourceLabelInput = ref("");
   const customSourceImportPanelOpen = ref(false);
   const customSourceImportType = ref("");
   const customSourceImporting = ref(false);
@@ -534,7 +547,7 @@ async function loadOwnedOperators({ notify = false } = {}) {
     if (nextSource) {
       await setActiveOperatorSource(nextSource, {
         restoreWorkspace: false,
-        generate: false,
+        generate: true,
       });
       if (notify) {
         cMessage(ownedOperatorMessage.value);
@@ -659,6 +672,7 @@ async function createCustomOperatorSource({
   operators,
   fileName = "",
   warnings = [],
+  importedAt = new Date().toISOString(),
   initialWorkspace = null,
 }) {
   if (customOperatorSources.value.length >= RIIC_MAX_CUSTOM_OPERATOR_SOURCES) {
@@ -670,7 +684,7 @@ async function createCustomOperatorSource({
     type,
     label,
     fileName,
-    importedAt: new Date().toISOString(),
+    importedAt,
     warnings,
     operators,
   };
@@ -695,6 +709,7 @@ function openCustomSourceImportPanel() {
   customSourceImportPanelOpen.value = !customSourceImportPanelOpen.value;
   customSourceImportType.value = "";
   yituliuTokenInput.value = "";
+  yituliuSourceLabelInput.value = "";
 }
 
 async function importYituliuOperatorSource() {
@@ -726,15 +741,21 @@ async function importYituliuOperatorSource() {
     if (parsed.operators.length === 0) {
       throw new Error("一图流数据中未找到可用的持有干员");
     }
+    const importedAt = new Date().toISOString();
+    const label =
+      yituliuSourceLabelInput.value.trim() ||
+      formatYituliuSourceLabel(importedAt);
 
     await createCustomOperatorSource({
       type: "yituliu",
-      label: "一图流数据",
+      label,
       operators: parsed.operators,
       warnings: parsed.warnings,
+      importedAt,
       initialWorkspace,
     });
     yituliuTokenInput.value = "";
+    yituliuSourceLabelInput.value = "";
     customSourceImportPanelOpen.value = false;
     cMessage(`一图流数据已导入，共 ${parsed.operators.length} 名持有干员`, "success");
   } catch (error) {
@@ -805,11 +826,13 @@ async function deleteCustomOperatorSource(sourceId) {
     customSourceImportType.value = "";
     customSourceImporting.value = false;
     yituliuTokenInput.value = "";
+    yituliuSourceLabelInput.value = "";
     operatorSourceSwitching.value = false;
   }
 
   return {
     yituliuTokenInput,
+    yituliuSourceLabelInput,
     customSourceImportPanelOpen,
     customSourceImportType,
     customSourceImporting,

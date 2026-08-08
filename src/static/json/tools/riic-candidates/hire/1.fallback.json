@@ -22,7 +22,10 @@
       "name": "斥罪",
       "rates": [
         {
-          "percent": 50
+          "percent": 50,
+          "tags": [
+            "siracusa"
+          ]
         }
       ]
     },
@@ -79,11 +82,17 @@
       "name": "普罗旺斯",
       "rates": [
         {
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "siracusa"
+          ]
         },
         {
           "elite": 2,
-          "percent": 45
+          "percent": 45,
+          "tags": [
+            "siracusa"
+          ]
         }
       ]
     },
@@ -116,7 +125,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "rainbow-squad"
+          ]
         }
       ]
     },
@@ -224,11 +236,17 @@
       "name": "雪绒",
       "rates": [
         {
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "sami"
+          ]
         },
         {
           "elite": 2,
-          "percent": 35
+          "percent": 35,
+          "tags": [
+            "sami"
+          ]
         }
       ]
     },
@@ -286,7 +304,10 @@
       "name": "隐现",
       "rates": [
         {
-          "percent": 30
+          "percent": 30,
+          "tags": [
+            "laterano"
+          ]
         }
       ]
     },
@@ -307,7 +328,10 @@
       "rates": [
         {
           "elite": 2,
-          "percent": 20
+          "percent": 20,
+          "tags": [
+            "ursus-student-self-government"
+          ]
         }
       ]
     },

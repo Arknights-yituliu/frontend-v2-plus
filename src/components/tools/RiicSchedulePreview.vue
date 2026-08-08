@@ -333,6 +333,12 @@ function endDroneDrag() {
               :aria-pressed="option.value === droneTarget"
               @click="selectDroneTarget(option)"
             >
+              <v-icon
+                v-if="option.value === droneTarget"
+                class="schedule-preview-drone-option-icon"
+                icon="mdi-quadcopter"
+                size="14"
+              ></v-icon>
               {{ option.label }}
             </button>
           </div>
@@ -793,6 +799,11 @@ function endDroneDrag() {
   text-overflow: ellipsis;
   white-space: nowrap;
   cursor: pointer;
+}
+
+.schedule-preview-drone-option-icon {
+  margin-right: 2px;
+  vertical-align: -2px;
 }
 
 .schedule-preview-drone-controls.has-three-rows

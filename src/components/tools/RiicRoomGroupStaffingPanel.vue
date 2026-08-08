@@ -6,10 +6,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  controlAutoRotationPlan: {
-    type: Object,
-    default: () => ({}),
-  },
   operatorTable: {
     type: Object,
     default: () => ({}),
@@ -25,10 +21,6 @@ const props = defineProps({
   showDebug: {
     type: Boolean,
     default: false,
-  },
-  getControlShiftEffectMetrics: {
-    type: Function,
-    required: true,
   },
   formatRoomGroupBonusPercent: {
     type: Function,
@@ -78,13 +70,9 @@ const props = defineProps({
     type: Object,
     default: null,
   },
-  fallbackQueueOperators: {
+  fallbackSections: {
     type: Array,
     default: () => [],
-  },
-  fallbackCandidates: {
-    type: Object,
-    default: () => ({ operators: [] }),
   },
   getRoomFallbackOperatorClasses: {
     type: Function,
@@ -120,12 +108,12 @@ function showMoreCandidates(cohort) {
   emit("show-more-candidates", cohort);
 }
 
-function removeFallbackOperator(operator) {
-  emit("remove-fallback-operator", operator);
+function removeFallbackOperator(slot) {
+  emit("remove-fallback-operator", slot);
 }
 
-function appendFallbackOperator(operator) {
-  emit("append-fallback-operator", operator);
+function appendFallbackOperator(section, operator) {
+  emit("append-fallback-operator", { section, operator });
 }
 </script>
 
@@ -151,80 +139,10 @@ function appendFallbackOperator(operator) {
     </header>
 
     <div
-      v-if="roomGroup.automaticScheduling"
-      class="control-rotation-panel"
-    >
-      <div
-        v-if="controlAutoRotationPlan.status === 'requiresOperators'"
-        class="room-editor-empty"
-      >
-        <span>同步干员数据后即可自动安排控制中枢两班。</span>
-      </div>
-      <div
-        v-else-if="controlAutoRotationPlan.status === 'insufficient'"
-        class="room-editor-empty"
-      >
-        <span>
-          已使用所有可用的优先干员与普通值班干员，仍缺
-          {{ controlAutoRotationPlan.missingSlotCount }} 人。
-        </span>
-      </div>
-      <template v-else>
-        <div class="control-rotation-summary">
-          <span>控制中枢排班自动生成，可于导出阶段手动调整</span>
-        </div>
-        <div class="control-rotation-shifts">
-          <section
-            v-for="shift in controlAutoRotationPlan.shifts"
-            :key="shift.id"
-            class="control-rotation-shift"
-          >
-            <div class="room-staffing-candidate-main">
-              <div class="room-staffing-candidate-team">
-                <span class="room-staffing-candidate-name">
-                  {{ shift.label }}
-                </span>
-                <div class="room-staffing-candidate-avatars">
-                  <div
-                    v-for="operator in shift.operators"
-                    :key="operator.charId"
-                    class="control-rotation-operator"
-                    :title="`${operator.name}：${operator.reason}`"
-                  >
-                    <OperatorAvatar
-                      :char-id="operator.charId"
-                      :rarity="operatorTable?.[operator.charId]?.rarity || 1"
-                      :size="32"
-                      :mobile-size="30"
-                      border
-                    ></OperatorAvatar>
-                  </div>
-                </div>
-              </div>
-              <div class="room-staffing-candidate-details">
-                <strong
-                  v-for="metric in getControlShiftEffectMetrics(shift)"
-                  :key="metric.facility"
-                  class="room-staffing-candidate-metric"
-                  :class="`facility-${metric.facility}`"
-                >
-                  {{ formatRoomGroupBonusPercent(metric.bonus) }}
-                </strong>
-              </div>
-            </div>
-          </section>
-        </div>
-      </template>
-    </div>
-
-    <div
-      v-else-if="candidateState.status === 'outOfScope'"
+      v-if="candidateState.status === 'outOfScope'"
       class="room-editor-empty"
     >
-      <span v-if="roomGroup.stationSlotSummary">
-        每站可进驻：{{ roomGroup.stationSlotSummary }} 位
-      </span>
-      <span>该设施不参与排班表生成，可在导出阶段手动调整</span>
+      <span>无需操作，若需手动调整，可在后续步骤中进行。</span>
     </div>
 
     <div
@@ -421,7 +339,16 @@ function appendFallbackOperator(operator) {
                   <span>
                     {{
                       getRoomGroupCandidateDebugValues(candidate)
-                        .calculationStatusLabel
+                      .calculationStatusLabel
+                    }}
+                  </span>
+                </div>
+                <div class="room-staffing-candidate-debug-row">
+                  <span>来源文件</span>
+                  <span>
+                    {{
+                      getRoomGroupCandidateDebugValues(candidate).sourceFile ||
+                      "未记录"
                     }}
                   </span>
                 </div>
@@ -516,6 +443,126 @@ function appendFallbackOperator(operator) {
                     )
                   }}
                 </div>
+                <div class="room-staffing-candidate-debug-row">
+                  <span>抓人计算</span>
+                  <span>
+                    班组/干员自身
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        getRoomGroupCandidateDebugValues(candidate)
+                          .candidateCoreBonusPercent,
+                      )
+                    }}
+                    +
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        getRoomGroupCandidateDebugValues(candidate)
+                          .fallbackBonusPercent,
+                      )
+                    }}
+                    补位 =
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        getRoomGroupCandidateDebugValues(candidate)
+                          .candidateCoreBonusPercent +
+                          getRoomGroupCandidateDebugValues(candidate)
+                            .fallbackBonusPercent,
+                      )
+                    }}%
+                    （不含中枢设施加成）
+                  </span>
+                </div>
+                <div class="room-staffing-candidate-debug-row">
+                  <span>中枢设施加成</span>
+                  <span>
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        getRoomGroupCandidateDebugValues(candidate)
+                          .controlCenterFacilityBonusPercent,
+                      )
+                    }}%
+                    （不参与抓人排序）
+                  </span>
+                </div>
+                <div
+                  v-if="
+                    getRoomGroupCandidateDebugValues(candidate)
+                      .controlCenterOperatorBonusPercent
+                  "
+                  class="room-staffing-candidate-debug-row"
+                >
+                  <span>中枢干员加成</span>
+                  <span>
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        getRoomGroupCandidateDebugValues(candidate)
+                          .controlCenterOperatorBonusPercent,
+                      )
+                    }}%
+                    （参与抓人排序）
+                  </span>
+                </div>
+                <div
+                  v-for="segment in getRoomGroupCandidateDebugValues(candidate)
+                    .controlCenterFacilityCalculation.segments"
+                  :key="`control-facility-${candidate.key}-${segment.index}`"
+                  class="room-staffing-candidate-debug-row"
+                >
+                  <span>
+                    中枢第{{ segment.index + 1 }}段
+                    {{ segment.durationHours }}h
+                  </span>
+                  <span>
+                    {{
+                      segment.teams
+                        .map(
+                          (team) =>
+                            `班组${team.teamIndex + 1} ${formatRoomGroupCandidateDebugValue(
+                              team.bonusPercent,
+                            )}%`,
+                        )
+                        .join(" + ") || "无中枢设施加成"
+                    }}
+                    =
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        segment.segmentBonus,
+                      )
+                    }}%
+                  </span>
+                </div>
+                <div
+                  v-if="
+                    getRoomGroupCandidateDebugValues(candidate)
+                      .controlCenterFacilityCalculation.segments.length > 0
+                  "
+                  class="room-staffing-candidate-debug-formula"
+                >
+                  中枢设施轮班平均 =
+                  {{
+                    getRoomGroupCandidateDebugValues(candidate)
+                      .controlCenterFacilityCalculation.segments
+                      .map(
+                        (segment) =>
+                          `${formatRoomGroupCandidateDebugValue(
+                            segment.segmentBonus,
+                          )}%×${segment.durationHours}h`,
+                      )
+                      .join(" + ")
+                  }}
+                  /
+                  {{
+                    getRoomGroupCandidateDebugValues(candidate)
+                      .controlCenterFacilityCalculation.totalHours
+                  }}h
+                  =
+                  {{
+                    formatRoomGroupCandidateDebugValue(
+                      getRoomGroupCandidateDebugValues(candidate)
+                        .controlCenterFacilityCalculation.weightedBonusPercent,
+                    )
+                  }}%
+                </div>
               </div>
             </button>
           </div>
@@ -550,128 +597,188 @@ function appendFallbackOperator(operator) {
         <header class="room-fallback-heading">
           <strong>补位队列</strong>
           <span>
-            {{ fallbackQueueOperators.length }}/{{ fallbackPlan.pendingCount }}
+            {{ fallbackPlan.selectedCount }}/{{ fallbackPlan.pendingCount }}
           </span>
         </header>
-        <TransitionGroup
-          name="room-fallback-card"
-          tag="div"
-          class="room-fallback-queue"
+        <section
+          v-for="section in fallbackSections"
+          :key="section.key"
+          class="room-fallback-section"
         >
-          <button
-            v-for="operator in fallbackQueueOperators"
-            :key="`queue-${operator.charId}`"
-            type="button"
-            class="room-fallback-queue-operator"
-            :class="[
-              getRoomFallbackOperatorClasses(operator),
-              { debugging: showDebug },
-            ]"
-            :aria-label="`移出补位队列：${operator.name}`"
-            @click="removeFallbackOperator(operator)"
-          >
-            <OperatorAvatar
-              :char-id="operator.charId"
-              :rarity="operatorTable?.[operator.charId]?.rarity || 1"
-              :size="34"
-              :mobile-size="32"
-              border
-            ></OperatorAvatar>
-            <small>{{ operator.name }}</small>
-            <span class="room-fallback-operator-efficiency">
-              {{ formatRoomFallbackOperatorPercent(operator.percent) }}
-            </span>
-            <span v-if="showDebug" class="room-fallback-operator-debug">
-              基础
-              {{
-                formatRoomFallbackOperatorPercent(
-                  getRoomFallbackOperatorDebugValues(operator).basePercent,
-                )
-              }}
-              + 规则
-              {{
-                formatRoomFallbackOperatorPercent(
-                  getRoomFallbackOperatorDebugValues(operator).layoutRuleBonus,
-                )
-              }}
-              =
-              {{
-                formatRoomFallbackOperatorPercent(
-                  getRoomFallbackOperatorDebugValues(operator).totalPercent,
-                )
-              }}
-            </span>
-          </button>
-          <span
-            v-for="index in Math.max(
-              0,
-              fallbackPlan.pendingCount - fallbackQueueOperators.length,
-            )"
-            :key="`queue-placeholder-${index}`"
-            class="room-fallback-queue-placeholder"
-            aria-hidden="true"
-          >
-            <v-icon icon="mdi-account-outline" size="22"></v-icon>
-          </span>
-        </TransitionGroup>
-        <div
-          v-if="fallbackCandidates.operators.length"
-          class="room-fallback-candidates"
-        >
-          <header class="room-fallback-heading">
-            <strong>补位候选干员</strong>
+          <header class="room-fallback-heading room-fallback-section-heading">
+            <strong>{{ section.title }}</strong>
+            <span>{{ section.selectedCount }}/{{ section.pendingCount }}</span>
           </header>
           <TransitionGroup
             name="room-fallback-card"
             tag="div"
-            class="room-fallback-candidate-list"
+            class="room-fallback-queue"
           >
-            <button
-              v-for="operator in fallbackCandidates.operators"
-              :key="`candidate-${operator.charId}`"
-              type="button"
-              class="room-fallback-operator"
-              :class="[
-                getRoomFallbackOperatorClasses(operator),
-                { debugging: showDebug },
-              ]"
-              :disabled="!canAppendFallbackOperator(roomGroup, fallbackPlan, operator)"
-              @click="appendFallbackOperator(operator)"
-            >
-              <OperatorAvatar
-                :char-id="operator.charId"
-                :rarity="operatorTable?.[operator.charId]?.rarity || 1"
-                :size="34"
-                :mobile-size="32"
-                border
-              ></OperatorAvatar>
-              <small>{{ operator.name }}</small>
-              <span class="room-fallback-operator-efficiency">
-                {{ formatRoomFallbackOperatorPercent(operator.percent) }}
+            <template v-for="slot in section.slots" :key="slot.key">
+              <button
+                v-if="slot.assignedOperator"
+                :key="`queue-${slot.key}`"
+                type="button"
+                class="room-fallback-queue-operator"
+                :class="[
+                  getRoomFallbackOperatorClasses(slot.assignedOperator),
+                  { debugging: showDebug },
+                ]"
+                :aria-label="`移出补位：${slot.assignedOperator.name}`"
+                @click="removeFallbackOperator(slot)"
+              >
+                <OperatorAvatar
+                  :char-id="slot.assignedOperator.charId"
+                  :rarity="
+                    operatorTable?.[slot.assignedOperator.charId]?.rarity || 1
+                  "
+                  :size="34"
+                  :mobile-size="32"
+                  border
+                ></OperatorAvatar>
+                <small>{{ slot.assignedOperator.name }}</small>
+                <span class="room-fallback-operator-efficiency">
+                  {{
+                    formatRoomFallbackOperatorPercent(
+                      slot.assignedOperator.effectivePercent ??
+                        slot.assignedOperator.percent,
+                    )
+                  }}
+                </span>
+                <span v-if="showDebug" class="room-fallback-operator-debug">
+                  基础
+                  {{
+                    formatRoomFallbackOperatorPercent(
+                      getRoomFallbackOperatorDebugValues(slot.assignedOperator)
+                        .basePercent,
+                    )
+                  }}
+                  + 规则
+                  {{
+                    formatRoomFallbackOperatorPercent(
+                      getRoomFallbackOperatorDebugValues(slot.assignedOperator)
+                        .layoutRuleBonus,
+                    )
+                  }}
+                  <template
+                    v-if="
+                      getRoomFallbackOperatorDebugValues(slot.assignedOperator)
+                        .controlCenterOperatorBonusPercent
+                    "
+                  >
+                    + 中枢
+                    {{
+                      formatRoomFallbackOperatorPercent(
+                        getRoomFallbackOperatorDebugValues(
+                          slot.assignedOperator,
+                        ).controlCenterOperatorBonusPercent,
+                      )
+                    }}
+                  </template>
+                  =
+                  {{
+                    formatRoomFallbackOperatorPercent(
+                      getRoomFallbackOperatorDebugValues(slot.assignedOperator)
+                        .totalPercent,
+                    )
+                  }}
+                </span>
+              </button>
+              <span
+                v-else
+                :key="`queue-placeholder-${slot.key}`"
+                class="room-fallback-queue-placeholder"
+                aria-hidden="true"
+              >
+                <v-icon icon="mdi-account-outline" size="22"></v-icon>
               </span>
-              <span v-if="showDebug" class="room-fallback-operator-debug">
-                基础
-                {{
-                  formatRoomFallbackOperatorPercent(
-                    getRoomFallbackOperatorDebugValues(operator).basePercent,
-                  )
-                }}
-                + 规则
-                {{
-                  formatRoomFallbackOperatorPercent(
-                    getRoomFallbackOperatorDebugValues(operator).layoutRuleBonus,
-                  )
-                }}
-                =
-                {{
-                  formatRoomFallbackOperatorPercent(
-                    getRoomFallbackOperatorDebugValues(operator).totalPercent,
-                  )
-                }}
-              </span>
-            </button>
+            </template>
           </TransitionGroup>
-        </div>
+          <div
+            v-if="section.candidates.length"
+            class="room-fallback-candidates"
+          >
+            <header class="room-fallback-heading">
+              <strong>补位候选干员</strong>
+            </header>
+            <TransitionGroup
+              name="room-fallback-card"
+              tag="div"
+              class="room-fallback-candidate-list"
+            >
+              <button
+                v-for="operator in section.candidates"
+                :key="`candidate-${section.key}-${operator.charId}`"
+                type="button"
+                class="room-fallback-operator"
+                :class="[
+                  getRoomFallbackOperatorClasses(operator),
+                  { debugging: showDebug },
+                ]"
+                :disabled="
+                  !canAppendFallbackOperator(
+                    roomGroup,
+                    fallbackPlan,
+                    section,
+                    operator,
+                  )
+                "
+                @click="appendFallbackOperator(section, operator)"
+              >
+                <OperatorAvatar
+                  :char-id="operator.charId"
+                  :rarity="operatorTable?.[operator.charId]?.rarity || 1"
+                  :size="34"
+                  :mobile-size="32"
+                  border
+                ></OperatorAvatar>
+                <small>{{ operator.name }}</small>
+                <span class="room-fallback-operator-efficiency">
+                  {{
+                    formatRoomFallbackOperatorPercent(
+                      operator.effectivePercent ?? operator.percent,
+                    )
+                  }}
+                </span>
+                <span v-if="showDebug" class="room-fallback-operator-debug">
+                  基础
+                  {{
+                    formatRoomFallbackOperatorPercent(
+                      getRoomFallbackOperatorDebugValues(operator).basePercent,
+                    )
+                  }}
+                  + 规则
+                  {{
+                    formatRoomFallbackOperatorPercent(
+                      getRoomFallbackOperatorDebugValues(operator)
+                        .layoutRuleBonus,
+                    )
+                  }}
+                  <template
+                    v-if="
+                      getRoomFallbackOperatorDebugValues(operator)
+                        .controlCenterOperatorBonusPercent
+                    "
+                  >
+                    + 中枢
+                    {{
+                      formatRoomFallbackOperatorPercent(
+                        getRoomFallbackOperatorDebugValues(operator)
+                          .controlCenterOperatorBonusPercent,
+                      )
+                    }}
+                  </template>
+                  =
+                  {{
+                    formatRoomFallbackOperatorPercent(
+                      getRoomFallbackOperatorDebugValues(operator).totalPercent,
+                    )
+                  }}
+                </span>
+              </button>
+            </TransitionGroup>
+          </div>
+        </section>
       </section>
     </div>
 
@@ -738,42 +845,6 @@ function appendFallbackOperator(operator) {
 
 .room-editor-empty span {
   white-space: nowrap;
-}
-
-.control-rotation-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.control-rotation-summary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 16px;
-  color: var(--riic-muted);
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.control-rotation-shifts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.control-rotation-shift {
-  min-width: 0;
-  min-height: 72px;
-  padding: 8px 10px;
-  border: 1px solid var(--c-border-color);
-  border-left: 3px solid var(--riic-green);
-  border-radius: 4px;
-  background: var(--c-page-background-color);
-}
-
-.control-rotation-operator {
-  flex: 0 0 auto;
 }
 
 .room-staffing-results {
@@ -1379,10 +1450,6 @@ function appendFallbackOperator(operator) {
 }
 
 @media (max-width: 640px) {
-  .control-rotation-shifts {
-    grid-template-columns: 1fr;
-  }
-
   .room-staffing-candidate-main {
     gap: 8px;
   }
