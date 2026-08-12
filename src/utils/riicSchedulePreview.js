@@ -1,4 +1,4 @@
-import { getRiicSameShiftBindingAtHour } from "./riicSameShiftBindings.js";
+import { getRiicSameShiftBindingAtHour } from "./riic/l81-same-shift-bindings.js";
 
 function toPositiveHours(value) {
   const hours = Number(value);
@@ -83,6 +83,23 @@ function getTimelineBoundaries(groupEntries, cycleHours) {
   return [...boundaries].sort((left, right) => left - right);
 }
 
+function getCandidateSegmentStartHours(candidate) {
+  const startHours = [];
+  let startHour = 0;
+
+  for (const segment of candidate?.segments || []) {
+    const durationHours = toPositiveHours(segment?.durationHours);
+    if (durationHours <= 0) {
+      continue;
+    }
+
+    startHours.push(startHour);
+    startHour += durationHours;
+  }
+
+  return startHours;
+}
+
 function getFallbackCount(candidate) {
   const configuredCount = Number(candidate?.fallback?.count || 0);
   const materializedCount = (candidate?.operators || []).filter(
@@ -123,11 +140,22 @@ function createRoomPreview({
   const overrideKey = `${stateIndex}:${key}`;
   const overriddenOperators = roomOperatorOverrides?.[overrideKey];
   const isInvalidated = invalidatedRoomKeys?.[key] === true;
-  const candidateTotalPercent = Number(candidate?.totalPercent);
-  const estimatedControlCenterOperatorBonusPercent = Number(
-    candidate?.controlCenterOperatorBonusPercent || 0,
-  );
-
+  const operators = Array.isArray(overriddenOperators)
+    ? overriddenOperators
+    : isInvalidated
+      ? []
+      : candidate.operators || [];
+  const manuallyEdited = Array.isArray(overriddenOperators) || isInvalidated;
+  const controlCenterFacilityBonusPercent = Number.isFinite(
+    Number(sameShiftBinding?.facilityBonusPercent),
+  )
+    ? Number(sameShiftBinding.facilityBonusPercent)
+    : 0;
+  const controlCenterOperatorBonusPercent = Number.isFinite(
+    Number(sameShiftBinding?.operatorBonusPercent),
+  )
+    ? Number(sameShiftBinding.operatorBonusPercent)
+    : 0;
   return {
     key,
     groupId: group.id,
@@ -139,37 +167,23 @@ function createRoomPreview({
     stationIndex: Number(assignment?.stationIndex || 0),
     stationLevel: assignment?.stationLevel || null,
     expectedSlots: assignment?.expectedSlots || null,
-    operators: Array.isArray(overriddenOperators)
-      ? overriddenOperators
-      : isInvalidated
-        ? []
-        : candidate.operators || [],
-    efficiency:
-      candidate?.totalPercent !== null &&
-      candidate?.totalPercent !== "" &&
-      Number.isFinite(candidateTotalPercent)
-      ? candidateTotalPercent -
-        (Number.isFinite(estimatedControlCenterOperatorBonusPercent)
-          ? estimatedControlCenterOperatorBonusPercent
-          : 0)
-      : null,
+    operators,
+    efficiency: null,
     fallbackCount: getFallbackCount(candidate),
     effectMetrics: candidate.effectMetrics || [],
-    controlCenterFacilityBonusPercent: Number.isFinite(
-      Number(sameShiftBinding?.facilityBonusPercent),
-    )
-      ? Number(sameShiftBinding.facilityBonusPercent)
-      : 0,
-    controlCenterOperatorBonusPercent: Number.isFinite(
-      Number(sameShiftBinding?.operatorBonusPercent),
-    )
-      ? Number(sameShiftBinding.operatorBonusPercent)
-      : 0,
+    controlCenterFacilityBonusPercent,
+    controlCenterOperatorBonusPercent,
     controlCenterOperatorBonuses: sameShiftBinding?.operatorBonuses || [],
     sameShiftBindingStatus: sameShiftBinding?.status || "notApplicable",
     sameShiftBindings: sameShiftBinding?.bindings || [],
     isStatic: false,
-    manuallyEdited: Array.isArray(overriddenOperators) || isInvalidated,
+    manuallyEdited,
+    efficiencySource: {
+      candidate,
+      candidateTotalPercent: candidate?.totalPercent,
+      estimatedControlCenterOperatorBonusPercent:
+        candidate?.controlCenterOperatorBonusPercent,
+    },
   };
 }
 
@@ -184,6 +198,7 @@ function createStaticRoomPreview({
   const overrideKey = `${stateIndex}:${key}`;
   const overriddenOperators = roomOperatorOverrides?.[overrideKey];
   const isInvalidated = invalidatedRoomKeys?.[key] === true;
+  const stateOperators = room?.operatorsByStateIndex?.[stateIndex];
 
   return {
     key,
@@ -200,7 +215,9 @@ function createStaticRoomPreview({
       ? overriddenOperators
       : isInvalidated
         ? []
-        : room?.operators || [],
+        : Array.isArray(stateOperators)
+          ? stateOperators
+          : room?.operators || [],
     efficiency: null,
     fallbackCount: 0,
     effectMetrics: [],
@@ -217,43 +234,35 @@ function applyRoomOperatorOverride(room, stateIndex, roomOperatorOverrides) {
     ? {
         ...room,
         operators: overriddenOperators,
+        efficiency: null,
         manuallyEdited: true,
       }
     : room;
 }
 
-function applyRoomDisplayEfficiencies(rooms) {
-  return (rooms || []).map((room) => {
-    const sourceEfficiency = room?.efficiency;
-    const baseEfficiency = Number(sourceEfficiency);
-    if (
-      sourceEfficiency === null ||
-      sourceEfficiency === "" ||
-      !Number.isFinite(baseEfficiency)
-    ) {
+function invalidateSameShiftBindingsForManualEdits(rooms = []) {
+  const hasEditedControlCenter = rooms.some(
+    (room) => room?.facility === "control" && room?.manuallyEdited,
+  );
+
+  return rooms.map((room) => {
+    const hasSameShiftBinding = (room?.sameShiftBindings || []).length > 0;
+    const requiresReview =
+      hasSameShiftBinding &&
+      room?.facility !== "control" &&
+      (room?.manuallyEdited || hasEditedControlCenter);
+    if (!requiresReview) {
       return room;
     }
 
-    const facility = room.facility === "hire" ? "office" : room.facility;
-    const staffingBonus = ["trading", "manufacture"].includes(facility)
-      ? (room.operators || []).length
-      : 0;
-    const controlFacilityBonus = Number(
-      room?.controlCenterFacilityBonusPercent || 0,
-    );
-    const controlOperatorBonus = Number(
-      room?.controlCenterOperatorBonusPercent || 0,
-    );
-
     return {
       ...room,
-      efficiency:
-        baseEfficiency +
-        staffingBonus +
-        (Number.isFinite(controlFacilityBonus)
-          ? controlFacilityBonus
-          : 0) +
-        (Number.isFinite(controlOperatorBonus) ? controlOperatorBonus : 0),
+      controlCenterFacilityBonusPercent: 0,
+      controlCenterOperatorBonusPercent: 0,
+      controlCenterOperatorBonuses: [],
+      sameShiftBindingStatus: "manualReviewRequired",
+      sameShiftBindings: [],
+      sameShiftBindingInvalidatedByManualEdit: true,
     };
   });
 }
@@ -337,6 +346,10 @@ function getOrderedSourceStateIndexes(stateCount, stateOrder) {
       ordered.push(index);
       seen.add(index);
     }
+  }
+
+  if (ordered.length > 0) {
+    return ordered;
   }
 
   for (let index = 0; index < stateCount; index += 1) {
@@ -432,8 +445,14 @@ export function buildRiicSchedulePreview({
   const controlGroupEntry =
     groupEntries.find((entry) => entry.group?.facility === "control") || null;
   const boundaries = getTimelineBoundaries(groupEntries, cycleHours);
-  const rawStates = boundaries.slice(0, -1).map((startHour, index) => {
-    const endHour = boundaries[index + 1];
+  // The control-center rotation defines the displayed shift cards. Other
+  // rooms may have extra internal boundaries that must not hide a control team.
+  const stateStartHours =
+    getCandidateSegmentStartHours(controlGroupEntry?.candidate).length > 0
+      ? getCandidateSegmentStartHours(controlGroupEntry?.candidate)
+      : boundaries.slice(0, -1);
+  const rawStates = stateStartHours.map((startHour, index) => {
+    const endHour = stateStartHours[index + 1] ?? cycleHours;
     const rooms = [
       ...groupEntries.flatMap(({ group, candidate }) =>
         getStationAssignmentsForState({
@@ -490,7 +509,7 @@ export function buildRiicSchedulePreview({
     ...rawStates[sourceStateIndex],
     id: `state-${index + 1}`,
     index,
-    rooms: applyRoomDisplayEfficiencies(
+    rooms: invalidateSameShiftBindingsForManualEdits(
       rawStates[sourceStateIndex].rooms.map((room) =>
         applyRoomOperatorOverride(room, index, roomOperatorOverrides),
       ),

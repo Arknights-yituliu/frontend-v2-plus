@@ -208,7 +208,7 @@ function appendFallbackOperator(section, operator) {
         >
           <header class="room-staffing-cohort-heading">
             <strong>
-              班组选择（{{
+              {{ roomGroup.label }} 班组选择（{{
                 getSelectedTeamCandidateCount(roomGroup, cohort)
               }}/{{ cohort.teamCount }}）
             </strong>
@@ -216,30 +216,34 @@ function appendFallbackOperator(section, operator) {
 
           <div class="room-staffing-candidate-list">
             <button
-              v-for="candidate in cohort.displayCandidates"
-              :key="candidate.key"
+              v-for="(candidate, candidateIndex) in cohort.displayCandidates"
+              :key="`${candidate.key}:${candidateIndex}`"
               type="button"
               class="room-staffing-candidate"
               :class="{
                 selected:
+                  !candidate.repeatableTeam &&
                   getSelectedRoomCandidateCount(
                     roomGroup,
                     cohort,
                     candidate.key,
                   ) > 0,
+                repeatable: candidate.repeatableTeam,
                 unavailable:
                   !canToggleRoomGroupTeamCandidate(
                     roomGroup,
                     cohort,
                     candidate,
                   ) &&
-                  getSelectedRoomCandidateCount(
-                    roomGroup,
-                    cohort,
-                    candidate.key,
-                  ) === 0,
+                  (candidate.repeatableTeam ||
+                    getSelectedRoomCandidateCount(
+                      roomGroup,
+                      cohort,
+                      candidate.key,
+                    ) === 0),
               }"
               :aria-pressed="
+                !candidate.repeatableTeam &&
                 getSelectedRoomCandidateCount(
                   roomGroup,
                   cohort,
@@ -264,6 +268,12 @@ function appendFallbackOperator(section, operator) {
                   >
                     {{ candidate.name }}
                   </strong>
+                  <span
+                    v-if="candidate.repeatableTeam"
+                    class="room-staffing-candidate-repeat-label"
+                  >
+                    下一班
+                  </span>
                   <div class="room-staffing-candidate-avatars">
                     <OperatorAvatar
                       v-for="charId in candidate.operatorIds"
@@ -472,6 +482,70 @@ function appendFallbackOperator(section, operator) {
                     （不含中枢设施加成）
                   </span>
                 </div>
+                <div
+                  v-if="
+                    getRoomGroupCandidateDebugValues(candidate)
+                      .closureCalculation
+                  "
+                  class="room-staffing-candidate-debug-row"
+                >
+                  <span>可露希尔特别订单</span>
+                  <span>
+                    队友普通订单
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        getRoomGroupCandidateDebugValues(candidate)
+                          .closureCalculation.sourceOrderBonusPercent,
+                      )
+                    }}
+                    +
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        getRoomGroupCandidateDebugValues(candidate)
+                          .closureCalculation.fallbackOrderBonusPercent,
+                      )
+                    }}
+                    +
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        getRoomGroupCandidateDebugValues(candidate)
+                          .closureCalculation.controlCenterOrderBonusPercent,
+                      )
+                    }}
+                    =
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        getRoomGroupCandidateDebugValues(candidate)
+                          .closureCalculation.teammateOrderBonusPercent,
+                      )
+                    }}%
+                  </span>
+                </div>
+                <div
+                  v-if="
+                    getRoomGroupCandidateDebugValues(candidate)
+                      .closureCalculation
+                  "
+                  class="room-staffing-candidate-debug-row"
+                >
+                  <span>特别订单等效</span>
+                  <span>
+                    贸易站
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        getRoomGroupCandidateDebugValues(candidate)
+                          .closureCalculation.tradeEquivalentBonusPercent,
+                      )
+                    }}%
+                    ，虚拟赤金
+                    {{
+                      formatRoomGroupCandidateDebugValue(
+                        getRoomGroupCandidateDebugValues(candidate)
+                          .closureCalculation.goldEquivalentProductionPercent,
+                      )
+                    }}%
+                  </span>
+                </div>
                 <div class="room-staffing-candidate-debug-row">
                   <span>中枢设施加成</span>
                   <span>
@@ -637,6 +711,12 @@ function appendFallbackOperator(section, operator) {
                   border
                 ></OperatorAvatar>
                 <small>{{ slot.assignedOperator.name }}</small>
+                <span
+                  v-if="slot.assignedOperator.idleFill"
+                  class="room-fallback-idle-label"
+                >
+                  闲置补位
+                </span>
                 <span class="room-fallback-operator-efficiency">
                   {{
                     formatRoomFallbackOperatorPercent(
@@ -733,6 +813,12 @@ function appendFallbackOperator(section, operator) {
                   border
                 ></OperatorAvatar>
                 <small>{{ operator.name }}</small>
+                <span
+                  v-if="operator.idleFill"
+                  class="room-fallback-idle-label"
+                >
+                  闲置补位
+                </span>
                 <span class="room-fallback-operator-efficiency">
                   {{
                     formatRoomFallbackOperatorPercent(
@@ -860,13 +946,15 @@ function appendFallbackOperator(section, operator) {
 
 .room-staffing-cohort-heading {
   display: flex;
-  align-items: baseline;
-  padding: 0 0 7px;
+  align-items: center;
+  min-height: 17px;
+  padding: 0 0 8px;
 }
 
 .room-staffing-cohort-heading strong {
-  color: var(--c-text-color);
-  font-size: 13px;
+  color: var(--riic-muted);
+  font-size: 12px;
+  font-weight: 700;
   line-height: 1.4;
 }
 
@@ -955,6 +1043,16 @@ function appendFallbackOperator(section, operator) {
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.room-staffing-candidate-repeat-label {
+  padding: 1px 4px;
+  border: 1px solid var(--riic-blue);
+  border-radius: 3px;
+  color: var(--riic-blue);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
 .room-staffing-candidate-avatars {
@@ -1323,6 +1421,23 @@ function appendFallbackOperator(section, operator) {
   font-size: 10px;
   font-variant-numeric: tabular-nums;
   line-height: 1.2;
+}
+
+.room-fallback-idle-label {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  padding: 1px 3px;
+  border-radius: 2px;
+  color: #775600;
+  background: #fff2c4;
+  font-size: 8px;
+  line-height: 1.2;
+}
+
+.room-fallback-operator.idle-fill,
+.room-fallback-queue-operator.idle-fill {
+  border-style: dashed;
 }
 
 .room-fallback-operator.debugging,

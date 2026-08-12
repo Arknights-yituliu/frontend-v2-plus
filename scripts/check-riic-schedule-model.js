@@ -5,7 +5,7 @@ import {
   getRiicRotationCycle,
   getRiicRotationCycles,
   getRiicRotationSegmentHours,
-} from "../src/utils/riicScheduleModel.js";
+} from "../src/utils/riic/l10-facility-model.js";
 
 assert.deepEqual(getRiicRotationSegmentHours("once"), [24]);
 assert.deepEqual(getRiicRotationSegmentHours("twice"), [12]);

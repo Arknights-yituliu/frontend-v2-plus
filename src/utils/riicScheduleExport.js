@@ -74,7 +74,21 @@ function getPeriod(startTime, endTime) {
   ];
 }
 
-function createMaaRoom(room) {
+function getRoomSettingsOverride(room, stateIndex, roomSettingOverrides) {
+  const key = `${stateIndex}:${String(room?.key || "").trim()}`;
+  const value = roomSettingOverrides?.[key];
+  if (!value || typeof value !== "object") {
+    return {};
+  }
+
+  return Object.fromEntries(
+    ["sort", "autofill", "skip"].flatMap((field) =>
+      typeof value[field] === "boolean" ? [[field, value[field]]] : [],
+    ),
+  );
+}
+
+function createMaaRoom(room, stateIndex, roomSettingOverrides) {
   const operators = getRoomOperators(room);
   const maaRoom = {
     operators,
@@ -82,15 +96,10 @@ function createMaaRoom(room) {
   };
 
   if (room?.facility === "dormitory") {
-    return {
-      ...maaRoom,
-      sort: false,
-      autofill: true,
-    };
-  }
-
-  if (operators.length === 0) {
-    return { skip: true };
+    maaRoom.sort = false;
+    maaRoom.autofill = true;
+  } else if (operators.length === 0) {
+    maaRoom.skip = true;
   }
 
   if (ROOM_TYPES_WITH_PRODUCT.has(room?.facility)) {
@@ -104,10 +113,13 @@ function createMaaRoom(room) {
     maaRoom.autofill = true;
   }
 
-  return maaRoom;
+  return {
+    ...maaRoom,
+    ...getRoomSettingsOverride(room, stateIndex, roomSettingOverrides),
+  };
 }
 
-function createPlanRooms(rooms) {
+function createPlanRooms(rooms, stateIndex, roomSettingOverrides) {
   const byType = new Map();
 
   for (const room of rooms || []) {
@@ -129,18 +141,26 @@ function createPlanRooms(rooms) {
 
     if (
       roomType !== "dormitory" &&
-      sortedRooms.every((room) => getRoomOperators(room).length === 0)
+      sortedRooms.every((room) => getRoomOperators(room).length === 0) &&
+      !sortedRooms.some(
+        (room) =>
+          Object.keys(
+            getRoomSettingsOverride(room, stateIndex, roomSettingOverrides),
+          ).length > 0,
+      )
     ) {
       continue;
     }
 
-    maaRooms[roomType] = sortedRooms.map(createMaaRoom);
+    maaRooms[roomType] = sortedRooms.map((room) =>
+      createMaaRoom(room, stateIndex, roomSettingOverrides),
+    );
   }
 
   return maaRooms;
 }
 
-function getDroneSetting(state, droneTarget) {
+function getDroneSetting(state, droneTarget, droneOrder) {
   const targetKey = String(droneTarget || "").trim();
   if (!targetKey) {
     return null;
@@ -159,7 +179,16 @@ function getDroneSetting(state, droneTarget) {
     room: targetRoom.facility,
     index: Number.isInteger(stationIndex) && stationIndex >= 0 ? stationIndex + 1 : 1,
     rule: "all",
-    order: "pre",
+    order: droneOrder === "post" ? "post" : "pre",
+  };
+}
+
+function getFiammettaSetting(shift) {
+  const source = shift?.fiammetta;
+  return {
+    enable: source?.enable === true,
+    target: String(source?.target || "").trim(),
+    order: source?.order === "post" ? "post" : "pre",
   };
 }
 
@@ -190,8 +219,13 @@ export function buildRiicMaaScheduleFromPreview({
   preview,
   shifts,
   droneTarget,
+  droneOrder = "pre",
   shiftMode,
   title = "一图流基建排班表",
+  author = "",
+  description = "",
+  roomSettingOverrides = {},
+  hasFiammetta = false,
 } = {}) {
   const states = Array.isArray(preview?.states) ? preview.states : [];
   if (states.length === 0) {
@@ -207,7 +241,8 @@ export function buildRiicMaaScheduleFromPreview({
     const nextTime = String(nextShift?.time || "").trim();
     const duration = getDurationMinutes(time, nextTime);
     const period = getPeriod(time, nextTime);
-    const drones = getDroneSetting(state, droneTarget);
+    const drones = getDroneSetting(state, droneTarget, droneOrder);
+    const fiammetta = getFiammettaSetting(shift);
     const usesAlternatingDailyPlans = shiftMode === "once" && states.length > 1;
 
     if (!duration || period.length === 0) {
@@ -225,14 +260,28 @@ export function buildRiicMaaScheduleFromPreview({
     const plan = {
       name,
       duration: duration || Math.round(Number(state?.durationHours || 0) * 60),
-      rooms: createPlanRooms(state?.rooms),
+      rooms: createPlanRooms(state?.rooms, index, roomSettingOverrides),
     };
 
+    const shiftDescription = String(shift?.description || "").trim();
+    const shiftDescriptionPost = String(shift?.descriptionPost || "").trim();
+    if (shiftDescription) {
+      plan.description = shiftDescription;
+    }
+    if (shiftDescriptionPost) {
+      plan.description_post = shiftDescriptionPost;
+    }
     if (period.length && !usesAlternatingDailyPlans) {
       plan.period = period;
     }
     if (drones) {
       plan.drones = drones;
+    }
+    if (hasFiammetta) {
+      plan.Fiammetta = fiammetta;
+      if (fiammetta.enable && !fiammetta.target) {
+        warnings.add(`“${name}”已启用菲亚梅塔，但未选择回复目标。`);
+      }
     }
 
     return plan;
@@ -246,7 +295,9 @@ export function buildRiicMaaScheduleFromPreview({
       planTimes: `${planTimes}班`,
       scheduleType,
       title: String(title || "一图流基建排班表").trim(),
-      description: "由一图流基建排班表生成器导出。",
+      author: String(author || "").trim(),
+      description:
+        String(description || "").trim() || "由一图流基建排班表生成器导出。",
       plans,
     },
     warnings: [...warnings],

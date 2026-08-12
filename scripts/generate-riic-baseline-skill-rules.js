@@ -4,7 +4,7 @@ const INPUT_PATH = "src/static/json/build/building_table.json";
 const REPLACE_GROUP_PATH =
   "src/static/json/build/logistics_skill_replace_groups.json";
 const TERM_DESCRIPTION_PATH = "src/static/json/build/term_description.json";
-const OUTPUT_PATH = "src/static/json/tools/riic_baseline_skill_rules.json";
+const OUTPUT_PATH = "src/static/json/tools/R00-baseline.json";
 
 const ROOM_TYPES = new Set([
   "manufacture",

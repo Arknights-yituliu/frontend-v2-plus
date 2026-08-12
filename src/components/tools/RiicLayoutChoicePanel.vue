@@ -759,8 +759,7 @@ function updateAnswer(key, value) {
   gap: 5px;
   padding: 4px 7px;
   border: 0;
-  border-bottom: 3px solid transparent;
-  border-radius: 3px 3px 0 0;
+  border-radius: 3px;
   background: var(--c-page-background-color-secondary);
   color: var(--option-color);
   font: inherit;
@@ -783,7 +782,6 @@ function updateAnswer(key, value) {
     var(--option-color) 10%,
     var(--c-page-background-color)
   );
-  border-bottom-color: var(--option-color);
 }
 
 .layout-shift-choice > span {

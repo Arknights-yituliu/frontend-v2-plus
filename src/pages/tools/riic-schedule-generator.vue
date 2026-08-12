@@ -6,17 +6,20 @@ import {
   onMounted,
   reactive,
   ref,
+  toRaw,
   watch,
 } from "vue";
 import { saveAs } from "file-saver";
 import { useRoute, useRouter } from "vue-router";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import RiicAdditionalInfoPanel from "/src/components/tools/RiicAdditionalInfoPanel.vue";
 import RiicControlCenterStaffingPanel from "/src/components/tools/RiicControlCenterStaffingPanel.vue";
-import RiicDeveloperWorkbench from "/src/components/tools/RiicDeveloperWorkbench.vue";
 import RiicOperatorSourcePanel from "/src/components/tools/RiicOperatorSourcePanel.vue";
+import RiicPipelineDebugPanel from "/src/components/tools/RiicPipelineDebugPanel.vue";
 import RiicRoomGroupNavigator from "/src/components/tools/RiicRoomGroupNavigator.vue";
 import RiicScheduleExportActions from "/src/components/tools/RiicScheduleExportActions.vue";
+import RiicScheduleExportSettings from "/src/components/tools/RiicScheduleExportSettings.vue";
+import RiicFiammettaRecoverySetting from "/src/components/tools/RiicFiammettaRecoverySetting.vue";
+import RiicScheduleFiammettaSettings from "/src/components/tools/RiicScheduleFiammettaSettings.vue";
 import RiicLayoutChoicePanel from "/src/components/tools/RiicLayoutChoicePanel.vue";
 import RiicSchedulePreview from "/src/components/tools/RiicSchedulePreview.vue";
 import RiicScheduleRoomEditorPanel from "/src/components/tools/RiicScheduleRoomEditorPanel.vue";
@@ -29,69 +32,116 @@ import {
 } from "/src/utils/riicOperatorSources.js";
 import { useRiicOperatorSources } from "/src/utils/riicOperatorSources.js";
 import { operatorTableV2 } from "/src/utils/gameData.js";
-import RIIC_BASELINE_SKILL_RULES from "/src/static/json/tools/riic_baseline_skill_rules.json";
-import RIIC_CONTROL_CENTER_SKILLS from "/src/static/json/tools/riic-candidates/riic-04-control.json";
 import {
-  ESTIMATION_ASSUMPTIONS,
-  RIIC_SCHEDULE_CANDIDATES,
-  RIIC_SCHEDULE_SOURCE,
-  buildMaaSchedule,
-  buildRecommendationSummary,
-} from "/src/utils/riicScheduleRecommendation.js";
+  createRiicOperatorSearchEntries,
+  findRiicOperatorSearchMatches,
+} from "/src/utils/riicOperatorSearch.js";
+import RIIC_BASELINE_SKILL_RULES from "/src/static/json/tools/R00-baseline.json";
+import RIIC_CONTROL_CENTER_SKILLS from "/src/static/json/tools/riic-candidates/R50-control.json";
 import {
   createRiicLayoutRecommendation,
   RIIC_LAYOUTS as RIIC_LAYOUT_RECOMMENDATION_LAYOUTS,
 } from "/src/utils/riicLayoutRecommendation.js";
 import {
+  DEFAULT_ANSWERS,
+  DEFAULT_LAYOUT_SELECTION,
+  getLayoutFacilitySummary,
+  getLayoutRoomFacility,
+  isLayoutCardCompatible,
+  LAYOUT_CARD_META,
+  LAYOUT_SHIFT_OPTIONS,
+  RIIC_SCHEDULE_ANSWER_FIELDS as ANSWER_FIELDS,
+  RIIC_SCHEDULE_STEPS as steps,
+  ROOM_CANDIDATE_EFFECT_META,
+  ROOM_CANDIDATE_PRODUCTS,
+  ROOM_PRODUCT_OPTIONS,
+  SCHEDULE_ROOM_GROUP_ICONS,
+  SCHEDULE_ROOM_GROUP_META,
+  STATIC_SCHEDULE_ROOM_GROUPS,
+} from "/src/utils/riicScheduleConfiguration.js";
+
+import {
   getRiicFacilityProfile,
   getRiicRoomStations,
   normalizeRiicFacilityRequirement,
   RIIC_FACILITY_REQUIREMENTS,
-} from "/src/utils/riicScheduleModel.js";
-import { resolveRiicBaselineSkills } from "/src/utils/riicBaselineSkillResolver.js";
+} from "/src/utils/riic/l10-facility-model.js";
+import {
+  createRiicIdealTrainingRoster,
+  resolveRiicBaselineSkills,
+} from "/src/utils/riic/l00-baseline-resolver.js";
 import {
   getRiicLayer3ControlCenterEffects,
   getRiicLayer3RuleConditionChecks,
   getRiicLayer3SupportRoomPlacements,
-} from "/src/utils/riic03Rules.js";
+} from "/src/utils/riic/l30-rules.js";
 import {
   createRiicRoomGroupFallbackPlan,
-} from "/src/utils/riicDynamicFallback.js";
+} from "/src/utils/riic/l63-fallback.js";
 import {
-  recalculateRiicAutomationManufacture,
-} from "/src/utils/riicAutomationDynamicFallback.js";
-import { getRiicRoomGroupStaffingRequirement } from "/src/utils/riicStaffingRequirement.js";
+  createRiicEmptyRoomTeamCandidate,
+  materializeRiicRoomTeamCandidate,
+  mergeRiicIndividualRoomTeamCandidates,
+} from "/src/utils/riic/l62-room-team-materializer.js";
 import {
-  resolveRiicRoomCandidateSkeletons,
-} from "/src/utils/riic02Groups.js";
+  getRiicAutomaticRoomGroupPlanningOrder,
+} from "/src/utils/riic/l70-automatic-room-selection.js";
 import {
-  materializeRiicRoomCandidateSkeletons,
-} from "/src/utils/riic03aCandidates.js";
+  getRiicIdleFillOperators,
+  withRiicIdleFillOperators,
+} from "/src/utils/riic/l71-idle-fill.js";
 import {
-  getRiicStaticRoomCandidateCatalogKey,
+  isRiicAutomaticScheduleAbortError,
+  runRiicAutomaticScheduleInWorker,
+} from "/src/utils/riic/l70-scheduler-runner.js";
+import { getRiicRoomGroupStaffingRequirement } from "/src/utils/riic/l60-staffing.js";
+import {
+  getRiicFiammettaScheduleUsage,
+  getRiicFiammettaTeamStateIndexes,
+} from "/src/utils/riic/l65-fiammetta-recovery.js";
+import {
   loadRiicStaticRoomCandidateCatalog,
-} from "/src/utils/riic01Catalog.js";
+} from "/src/utils/riic/l10-catalog.js";
+import {
+  createRiicRoomGroupCandidateState,
+  getRiicRoomGroupCatalogKey as getRoomGroupCatalogKey,
+  getRiicRoomGroupCatalogRequests as getRoomGroupCatalogRequests,
+  getRiicStaticRoomCandidateCatalogFacility as getStaticRoomCandidateCatalogFacility,
+} from "/src/utils/riic/l60-room-group-state.js";
 import {
   normalizeRiicIdealTrainingRaritySelection,
   isRiicIdealTrainingEnabledForOperator,
-} from "/src/utils/riicTrainingPolicy.js";
+} from "/src/utils/riic/l00-training-policy.js";
 import {
   getRiicRuntimeCandidateContributionBreakdown,
-  getRiicRuntimeCandidateRankingValue,
-} from "/src/utils/riicRuntimeContribution.js";
-import { evaluateRiicControlCenterScenarios } from "/src/utils/riic04Trial.js";
-import { evaluateRiicPerceptionResourceTrials } from "/src/utils/riic05PerceptionTrial.js";
+} from "/src/utils/riic/l60-candidate-ranking.js";
+import { evaluateRiicControlCenterScenarios } from "/src/utils/riic/l40-control-trial.js";
+import { evaluateRiicPerceptionResourceTrials } from "/src/utils/riic/l41-perception-trial.js";
 import { buildRiicSchedulePreview } from "/src/utils/riicSchedulePreview.js";
-import { summarizeRiicActualSchedule } from "/src/utils/riic07Actual.js";
+import { summarizeRiicActualSchedule } from "/src/utils/riic/l80-actual-settlement.js";
+import {
+  settleRiicScheduleEfficiency,
+} from "/src/utils/riic/l79-preview-efficiency-settlement.js";
+import {
+  getRiicDormitoryOccupantCount,
+} from "/src/utils/riic/l28-perception-baseline.js";
 import { buildRiicMaaScheduleFromPreview } from "/src/utils/riicScheduleExport.js";
 import {
   createRiicYieldEngineRunningResult,
 } from "/src/utils/riicYieldEngines/contract.js";
 import {
   buildRiicControlCenterRuntimeContext,
-  getRiicControlCenterRoomAdjustment,
-} from "/src/utils/riicControlCenterRuntime.js";
-import { alignRiicScheduleSameShiftBindings } from "/src/utils/riicSameShiftBindings.js";
+} from "/src/utils/riic/l51-control-effects.js";
+import {
+  applyRiicControlCenterManualOverrides,
+  buildRiicControlCenterAutomaticRoleState,
+  buildRiicControlCenterLateFillState,
+  mergeRiicControlCenterLateFillState,
+} from "/src/utils/riic/l50-control-planner.js";
+import { alignRiicScheduleSameShiftBindings } from "/src/utils/riic/l81-same-shift-bindings.js";
+import {
+  getRiicScheduleTrainingRecommendations,
+} from "/src/utils/riic/l83-training-recommendations.js";
 import {
   RIIC_YIELD_ENGINE_REGISTRY,
 } from "/src/utils/riicYieldEngines/engineRegistry.js";
@@ -101,17 +151,27 @@ import {
 
 const RIIC_OPERATOR_WORKSPACES_STORAGE_KEY =
   "riic_schedule_generator_workspaces_v1";
-const RIIC_SCHEDULE_DRAFT_STORAGE_KEY =
-  "riic_schedule_generator_draft_v2";
-const LEGACY_RIIC_SCHEDULE_DRAFT_STORAGE_KEY =
-  "riic_schedule_generator_draft_v1";
 const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
   "riic_schedule_generator_to_legacy_editor_v1";
-const RIIC_SCHEDULE_DRAFT_VERSION = 23;
-const RIIC_SCHEDULE_DRAFT_PREVIOUS_VERSION = 22;
-const RIIC_SCHEDULE_DRAFT_LEGACY_VERSION = 21;
+const RIIC_SCHEDULE_DRAFT_VERSION = 25;
 const ROOM_STAFFING_CANDIDATE_PAGE_SIZE = 24;
-const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "7";
+const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "9";
+const RIIC_AUTOMATIC_SEARCH_CONFIGS = Object.freeze({
+  fast: {
+    selectionBeamLimit: 8,
+    fallbackPlanLimit: 4,
+  },
+  deep: {
+    selectionBeamLimit: 32,
+    fallbackPlanLimit: 12,
+  },
+});
+const FIAMMETTA_RECOVERY_TARGET_NAMES = Object.freeze([
+  "但书",
+  "可露希尔",
+  "龙舌兰",
+  "巫恋",
+]);
 const CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS = Object.freeze([
   {
     id: "trading",
@@ -130,6 +190,12 @@ const CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS = Object.freeze([
     label: "办公室功能位",
     targetRoomType: "hire",
     buffTags: ["office"],
+  },
+  {
+    id: "operator",
+    label: "干员加成位",
+    targetRoomType: "",
+    buffTags: ["trading-operator", "manufacture-operator"],
   },
 ]);
 function toRiicControlCenterUnlockNumber(value, fallback = 0) {
@@ -216,26 +282,6 @@ function formatRiicControlCenterRoomEffect(effect) {
   return `${roomLabel} ${targetLabel}${bonusPercent >= 0 ? "+" : ""}${bonusPercent}%`;
 }
 
-const ROOM_PRODUCT_OPTIONS = Object.freeze({
-  trading: [
-    { value: "lmd", label: "龙门币" },
-    { value: "orundum", label: "源石碎片" },
-  ],
-  manufacture: [
-    { value: "experience", label: "作战记录" },
-    { value: "gold", label: "赤金" },
-    { value: "orundum", label: "源石碎片" },
-  ],
-});
-const operatorAvatarMap = new Map(
-  Object.entries(operatorTableV2).map(([charId, operator]) => [
-    operator.name,
-    {
-      charId,
-      rarity: operator.rarity,
-    },
-  ]),
-);
 const operatorNameToCharId = new Map(
   Object.entries(operatorTableV2).map(([charId, operator]) => [
     operator.name,
@@ -245,742 +291,19 @@ const operatorNameToCharId = new Map(
 const route = useRoute();
 const router = useRouter();
 
-const developerLayoutOptions = [
-  {
-    value: "153",
-    label: "153",
-    description: "1 座贸易站、5 座制造站",
-  },
-  {
-    value: "243",
-    label: "243",
-    description: "2 座贸易站、4 座制造站",
-  },
-];
-const developerShiftOptions = [
-  {
-    value: "twice",
-    label: "一天两换",
-    description: "原表中的两次换班作业",
-  },
-  {
-    value: "threeTimes",
-    label: "一天三换",
-    description: "原表中的三次换班作业",
-  },
-];
-const MANUAL_ROOM_TYPE_META = {
-  control: {
-    label: "控制中枢",
-    icon: "mdi-home-variant-outline",
-  },
-  manufacture: {
-    label: "制造站",
-    icon: "mdi-factory",
-  },
-  trading: {
-    label: "贸易站",
-    icon: "mdi-handshake-outline",
-  },
-  power: {
-    label: "发电站",
-    icon: "mdi-lightning-bolt",
-  },
-  meeting: {
-    label: "会客室",
-    icon: "mdi-account-group-outline",
-  },
-  office: {
-    label: "办公室",
-    icon: "mdi-briefcase-outline",
-  },
-  processing: {
-    label: "加工 / 训练",
-    icon: "mdi-hammer-wrench",
-  },
-  dormitory: {
-    label: "宿舍",
-    icon: "mdi-bed-outline",
-  },
-};
-const SCHEDULE_ROOM_GROUP_META = {
-  control: {
-    facilityLabel: "控制中枢",
-    icon: "mdi-home-variant-outline",
-    tone: "control",
-  },
-  meeting: {
-    facilityLabel: "会客室",
-    icon: "mdi-account-group-outline",
-    tone: "meeting",
-  },
-  trading: {
-    facilityLabel: "贸易站",
-    icon: "mdi-handshake-outline",
-    tone: "trading",
-  },
-  manufacture: {
-    facilityLabel: "制造站",
-    icon: "mdi-factory",
-    tone: "manufacture",
-  },
-  power: {
-    facilityLabel: "发电站",
-    icon: "mdi-lightning-bolt",
-    tone: "power",
-  },
-  dormitory: {
-    facilityLabel: "宿舍",
-    icon: "mdi-bed-outline",
-    tone: "dormitory",
-  },
-  processing: {
-    facilityLabel: "加工站",
-    icon: "mdi-hammer-wrench",
-    tone: "processing",
-  },
-  office: {
-    facilityLabel: "办公室",
-    icon: "mdi-briefcase-outline",
-    tone: "office",
-  },
-  training: {
-    facilityLabel: "训练室",
-    icon: "mdi-school-outline",
-    tone: "training",
-  },
-};
-const SCHEDULE_ROOM_GROUP_ICONS = {
-  "lmd-trading": "mdi-cash-multiple",
-  "experience-manufacture": "mdi-book-open-page-variant-outline",
-  "gold-manufacture": "mdi-gold",
-  "orundum-trading": "mdi-star-four-points-outline",
-  "orundum-manufacture": "mdi-star-four-points-outline",
-  power: "mdi-lightning-bolt",
-};
-const ROOM_CANDIDATE_PRODUCTS = Object.freeze({
-  "lmd-trading": "lmd",
-  "experience-manufacture": "experience",
-  "gold-manufacture": "gold",
-  "orundum-trading": "orundum",
-  "orundum-manufacture": "orundum",
-  power: "all",
-  control: "all",
-  meeting: "all",
-  office: "all",
-});
-const ROOM_CANDIDATE_EFFECT_META = Object.freeze([
-  {
-    facility: "trading",
-    field: "tradingPercent",
-    label: "贸易",
-  },
-  {
-    facility: "manufacture",
-    field: "manufacturePercent",
-    label: "制造",
-  },
-  {
-    facility: "power",
-    field: "powerPercent",
-    label: "发电",
-  },
-  {
-    facility: "meeting",
-    field: "meetingPercent",
-    label: "会客",
-  },
-  {
-    facility: "office",
-    field: "officePercent",
-    label: "办公室",
-  },
-]);
-const STATIC_SCHEDULE_ROOM_GROUPS = Object.freeze([
-  {
-    id: "support:control",
-    key: "control",
-    label: "控制中枢",
-    facilityLabel: "控制中枢",
-    icon: "mdi-home-variant-outline",
-    tone: "control",
-    count: 1,
-    row: "core",
-    width: 1,
-    rotationRequired: true,
-    manualControl: true,
-  },
-  {
-    id: "support:meeting",
-    key: "meeting",
-    label: "会客室",
-    facilityLabel: "会客室",
-    icon: "mdi-account-group-outline",
-    tone: "meeting",
-    count: 1,
-    row: "core",
-    width: 1,
-    rotationRequired: true,
-    fallbackOnly: true,
-  },
-  {
-    id: "support:dormitory",
-    key: "dormitory",
-    label: "宿舍组",
-    facilityLabel: "宿舍",
-    icon: "mdi-bed-outline",
-    tone: "dormitory",
-    count: 4,
-    row: "support",
-    width: 1,
-    rotationRequired: false,
-  },
-  {
-    id: "support:processing",
-    key: "processing",
-    label: "加工站",
-    facilityLabel: "加工站",
-    icon: "mdi-hammer-wrench",
-    tone: "processing",
-    count: 1,
-    row: "support",
-    width: 1,
-    rotationRequired: false,
-  },
-  {
-    id: "support:office",
-    key: "office",
-    label: "办公室",
-    facilityLabel: "办公室",
-    icon: "mdi-briefcase-outline",
-    tone: "office",
-    count: 1,
-    row: "support",
-    width: 1,
-    rotationRequired: true,
-    fallbackOnly: true,
-  },
-  {
-    id: "support:training",
-    key: "training",
-    label: "训练室",
-    facilityLabel: "训练室",
-    icon: "mdi-school-outline",
-    tone: "training",
-    count: 1,
-    row: "support",
-    width: 1,
-    rotationRequired: false,
-  },
-]);
-
-const NEED_OPTIONS = [
-  {
-    value: "high",
-    label: "非常缺",
-    icon: "mdi-alert-circle-outline",
-    tone: "red",
-  },
-  {
-    value: "medium",
-    label: "勉强够用",
-    icon: "mdi-minus-circle-outline",
-    tone: "orange",
-  },
-  {
-    value: "low",
-    label: "暂时不缺",
-    icon: "mdi-check-circle-outline",
-    tone: "green",
-  },
-];
-
-const steps = [
-  {
-    key: "resources",
-    label: "养成需求",
-    fields: [
-      {
-        key: "lmdNeed",
-        layout: "need",
-        label: "在养成干员时，你有多缺龙门币？",
-        options: NEED_OPTIONS,
-      },
-      {
-        key: "experienceNeed",
-        layout: "need",
-        label: "在养成干员时，你有多缺经验书？",
-        options: NEED_OPTIONS,
-      },
-      {
-        key: "farmingHabit",
-        layout: "farming",
-        label: "平时会额外刷取龙门币或经验书吗？",
-        options: [
-          {
-            value: "rarely",
-            label: "基本不刷",
-            icon: "mdi-battery-10",
-            tone: "gray",
-          },
-          {
-            value: "sometimes",
-            label: "偶尔会刷",
-            icon: "mdi-battery-50",
-            tone: "blue",
-          },
-          {
-            value: "frequently",
-            label: "每天 100 理智以上",
-            icon: "mdi-battery-90",
-            tone: "orange",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    key: "operation",
-    label: "换班频率",
-    fields: [
-      {
-        key: "shiftMode",
-        layout: "frequency",
-        label: "你每天通常能安排几次换班？",
-        options: [
-          {
-            value: "threeTimes",
-            label: "一天三换",
-            icon: "mdi-clock-fast",
-            tone: "orange",
-          },
-          {
-            value: "twice",
-            label: "一天两换",
-            icon: "mdi-weather-sunset-up",
-            tone: "blue",
-          },
-          {
-            value: "once",
-            label: "一天一换",
-            icon: "mdi-calendar-clock",
-            tone: "gray",
-          },
-        ],
-      },
-      {
-        key: "executionReliability",
-        layout: "reliability",
-        label: "在这个频率下，你能否稳定收菜和换班？",
-        options: [
-          {
-            value: "reliable",
-            label: "基本能按时完成",
-            icon: "mdi-check-circle-outline",
-            tone: "green",
-          },
-          {
-            value: "mostlyReliable",
-            label: "偶尔延后，但通常能完成",
-            icon: "mdi-clock-outline",
-            tone: "blue",
-          },
-          {
-            value: "unreliable",
-            label: "经常无法按时完成",
-            icon: "mdi-clock-alert-outline",
-            tone: "orange",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    key: "tradeoffs",
-    label: "长期选择",
-    fields: [
-      {
-        key: "orundumPreference",
-        layout: "binary",
-        label: "愿意以约 30% 养成产出换取每月约 10 抽吗？",
-        options: [
-          {
-            value: "decline",
-            label: "不愿意",
-            icon: "mdi-factory",
-            tone: "blue",
-          },
-          {
-            value: "accept",
-            label: "愿意",
-            icon: "mdi-star-four-points-outline",
-            tone: "purple",
-          },
-        ],
-      },
-      {
-        key: "carbonNeed",
-        layout: "binary",
-        label: "你是否缺升级基建所用的碳？",
-        options: [
-          {
-            value: "notNeeded",
-            label: "暂时不缺",
-            icon: "mdi-check-circle-outline",
-            tone: "green",
-          },
-          {
-            value: "needed",
-            label: "缺",
-            icon: "mdi-cube-outline",
-            tone: "orange",
-          },
-        ],
-      },
-    ],
-  },
-];
-
-const DEFAULT_ANSWERS = Object.freeze({
-  lmdNeed: null,
-  experienceNeed: null,
-  farmingHabit: null,
-  shiftMode: null,
-  executionReliability: null,
-  orundumPreference: null,
-  carbonNeed: null,
-});
-const ANSWER_FIELDS = steps.flatMap((step) => step.fields);
-const LAYOUT_CARD_META = [
-  {
-    key: "153",
-    layoutId: "153",
-    label: "153",
-    description: "经验书优先",
-    icon: "mdi-book-open-page-variant-outline",
-    tone: "blue",
-    compatibleShiftModes: ["twice", "threeTimes"],
-    rooms: [
-      {
-        key: "lmd-trading",
-        count: 1,
-        label: "龙门币",
-        facility: "trading",
-      },
-      {
-        key: "experience-manufacture",
-        count: 4,
-        label: "经验书",
-        facility: "manufacture",
-      },
-      {
-        key: "gold-manufacture",
-        count: 1,
-        label: "赤金",
-        facility: "manufacture",
-      },
-      { key: "power", count: 3, label: "发电站", facility: "power" },
-    ],
-  },
-  {
-    key: "243",
-    layoutId: "243",
-    label: "243",
-    description: "钱书均衡/龙门币优先",
-    icon: "mdi-scale-balance",
-    secondaryIcon: "mdi-cash-multiple",
-    tone: "green",
-    compatibleShiftModes: ["once", "twice", "threeTimes"],
-    rooms: [
-      {
-        key: "lmd-trading",
-        count: 2,
-        label: "龙门币",
-        facility: "trading",
-      },
-      {
-        key: "experience-manufacture",
-        count: 2,
-        label: "经验书",
-        facility: "manufacture",
-      },
-      {
-        key: "gold-manufacture",
-        count: 2,
-        label: "赤金",
-        facility: "manufacture",
-      },
-      { key: "power", count: 3, label: "发电站", facility: "power" },
-    ],
-  },
-  {
-    key: "243-orundum",
-    layoutId: "243",
-    label: "243（搓玉）",
-    description: "合成玉",
-    icon: "mdi-star-four-points-outline",
-    tone: "red",
-    compatibleShiftModes: ["twice", "threeTimes"],
-    rooms: [
-      {
-        key: "lmd-trading",
-        count: 1,
-        label: "龙门币",
-        facility: "trading",
-      },
-      {
-        key: "orundum-trading",
-        count: 1,
-        label: "源石碎片",
-        facility: "trading",
-      },
-      {
-        key: "experience-manufacture",
-        count: 1,
-        label: "经验书",
-        facility: "manufacture",
-      },
-      {
-        key: "orundum-manufacture",
-        count: 1,
-        label: "源石碎片",
-        facility: "manufacture",
-      },
-      {
-        key: "gold-manufacture",
-        count: 2,
-        label: "赤金",
-        facility: "manufacture",
-      },
-      { key: "power", count: 3, label: "发电站", facility: "power" },
-    ],
-  },
-  {
-    key: "252-2-gold",
-    layoutId: "252",
-    label: "252（2 赤金）",
-    description: "钱书均衡",
-    icon: "mdi-scale-balance",
-    tone: "green",
-    compatibleShiftModes: ["twice", "threeTimes"],
-    rooms: [
-      {
-        key: "lmd-trading",
-        count: 2,
-        label: "龙门币",
-        facility: "trading",
-      },
-      {
-        key: "experience-manufacture",
-        count: 3,
-        label: "经验书",
-        facility: "manufacture",
-      },
-      {
-        key: "gold-manufacture",
-        count: 2,
-        label: "赤金",
-        facility: "manufacture",
-      },
-      { key: "power", count: 2, label: "发电站", facility: "power" },
-    ],
-  },
-  {
-    key: "252-3-gold",
-    layoutId: "252",
-    label: "252（3 赤金）",
-    description: "龙门币优先",
-    icon: "mdi-cash-multiple",
-    tone: "blue",
-    compatibleShiftModes: ["twice", "threeTimes"],
-    rooms: [
-      {
-        key: "lmd-trading",
-        count: 2,
-        label: "龙门币",
-        facility: "trading",
-      },
-      {
-        key: "experience-manufacture",
-        count: 2,
-        label: "经验书",
-        facility: "manufacture",
-      },
-      {
-        key: "gold-manufacture",
-        count: 3,
-        label: "赤金",
-        facility: "manufacture",
-      },
-      { key: "power", count: 2, label: "发电站", facility: "power" },
-    ],
-  },
-  {
-    key: "342-orundum",
-    layoutId: "342",
-    label: "342（搓玉）",
-    description: "合成玉",
-    icon: "mdi-star-four-points-outline",
-    tone: "red",
-    compatibleShiftModes: ["twice", "threeTimes"],
-    rooms: [
-      {
-        key: "lmd-trading",
-        count: 2,
-        label: "龙门币",
-        facility: "trading",
-      },
-      {
-        key: "orundum-trading",
-        count: 1,
-        label: "源石碎片",
-        facility: "trading",
-      },
-      {
-        key: "orundum-manufacture",
-        count: 1,
-        label: "源石碎片",
-        facility: "manufacture",
-      },
-      {
-        key: "experience-manufacture",
-        count: 1,
-        label: "经验书",
-        facility: "manufacture",
-      },
-      {
-        key: "gold-manufacture",
-        count: 2,
-        label: "赤金",
-        facility: "manufacture",
-      },
-      { key: "power", count: 2, label: "发电站", facility: "power" },
-    ],
-  },
-];
-const LAYOUT_SHIFT_OPTIONS = [
-  {
-    value: "threeTimes",
-    label: "一天三换",
-    icon: "mdi-clock-fast",
-    tone: "orange",
-  },
-  {
-    value: "twice",
-    label: "一天两换",
-    icon: "mdi-weather-sunset-up",
-    tone: "blue",
-  },
-  {
-    value: "once",
-    label: "一天一换",
-    icon: "mdi-calendar-clock",
-    tone: "gray",
-  },
-];
-const DEFAULT_LAYOUT_SELECTION = Object.freeze({
-  cardKey: "243",
-  layoutId: "243",
-  shiftMode: "twice",
-});
-const LEGACY_LAYOUT_CARD_KEYS = Object.freeze({
-  "243-simplified": "243",
-  "252-right-full-2-gold": "252-2-gold",
-  "252-full-blood-2-gold": "252-2-gold",
-  "252-right-full-3-gold": "252-3-gold",
-});
-
-function isLayoutCardCompatible(card, shiftMode) {
-  return Boolean(
-    card &&
-      (!shiftMode || card.compatibleShiftModes.includes(shiftMode)),
-  );
-}
-
-function getLayoutRoomFacility(room) {
-  if (room.facility) {
-    return room.facility;
-  }
-
-  if (room.key === "lmd-trading") {
-    return "trading";
-  }
-
-  if (room.key === "power") {
-    return "power";
-  }
-
-  return "manufacture";
-}
-
-function getLayoutFacilitySummary(card) {
-  return [
-    ["trading", "贸易站"],
-    ["manufacture", "制造站"],
-    ["power", "发电站"],
-  ]
-    .map(([facility, label]) => {
-      const count = (card?.rooms || []).reduce(
-        (total, room) =>
-          getLayoutRoomFacility(room) === facility
-            ? total + Number(room?.count || 0)
-            : total,
-        0,
-      );
-
-      return count > 0 ? `${count}${label}` : "";
-    })
-    .filter(Boolean)
-    .join(" · ");
-}
-
-function getLayoutCardKeyForSchedule(layoutId, variant) {
-  if (layoutId === "252") {
-    if (String(variant).endsWith("2Gold")) {
-      return "252-2-gold";
-    }
-
-    if (String(variant).endsWith("3Gold")) {
-      return "252-3-gold";
-    }
-  }
-
-  if (layoutId === "243") {
-    if (variant === "orundum") {
-      return "243-orundum";
-    }
-  }
-
-  if (layoutId === "342") {
-    return "342-orundum";
-  }
-
-  return LAYOUT_CARD_META.find((card) => card.key === layoutId)?.key || null;
-}
-
 const answers = reactive({ ...DEFAULT_ANSWERS });
 const currentStep = ref(0);
 const contentPanel = ref(null);
-const scheduleCapturePanel = ref(null);
-const schedulePreviewCapturePanel = ref(null);
-const useOwnedOperators = ref(false);
+const schedulePreviewExportCapturePanel = ref(null);
 const treatUnderleveledOperatorsAsQualified = ref(false);
 const idealTrainingRaritySelection = ref(
   normalizeRiicIdealTrainingRaritySelection(),
 );
-const showCandidateDebugValues = ref(false);
-const pendingOwnedOperatorPreference = ref(false);
-const ownedOperatorPreferenceReady = ref(false);
+const showCandidateDebugValues = computed(() => route.query.mode === "dev");
 const hasSavedWizardState = ref(false);
 const storageReady = ref(false);
 const exportingImage = ref(false);
 const exportingMaa = ref(false);
-const developerLayoutId = ref("153");
-const developerShiftMode = ref("twice");
-const manualQueueIndex = ref(0);
-const selectedManualRoomId = ref("control-0");
-const manualAssignments = ref({});
-const showScheduleGeneration = false;
 const layoutEntry = ref(DEFAULT_LAYOUT_SELECTION.cardKey);
 const planningMode = ref("manual");
 const selectedLayoutId = ref(DEFAULT_LAYOUT_SELECTION.layoutId);
@@ -988,8 +311,18 @@ const confirmedLayoutPlan = ref(createDefaultConfirmedLayoutPlan());
 const recommendationPanelOpen = ref(false);
 const twoShiftRotationMode = ref("maa");
 const autoGeneratingSchedule = ref(false);
-let automaticGenerationQueued = false;
-const recommendedScheduleSnapshot = ref(null);
+const automaticGenerationPhase = ref("");
+const automaticGenerationNoticeOperators = ref([]);
+const automaticGenerationNoticeAvatarLoop = computed(() => [
+  ...automaticGenerationNoticeOperators.value,
+  ...automaticGenerationNoticeOperators.value,
+]);
+const riicAutomaticGenerationDebugState = ref(null);
+const deepScheduleConfirmationOpen = ref(false);
+let automaticGenerationAbortController = null;
+let automaticGenerationQueuedOptions = null;
+let automaticGenerationRequestId = 0;
+const lastAutomaticGenerationTriggerKey = ref("");
 const activeScheduleRoomGroupKey = ref("");
 const selectedRoomGroupTeamCandidateKeys = ref({});
 const roomGroupFallbackQueueStates = ref({});
@@ -1001,10 +334,22 @@ const controlCenterManualOverrides = ref({
   addedOperatorIdsByTeamIndex: {},
 });
 const controlCenterLateFillExcludedOperatorIds = ref([]);
+const fiammettaRecoverySettings = ref({
+  target: "但书",
+  custom: false,
+  customTarget: "",
+});
 const scheduleExecutionSettings = reactive({
   shifts: [],
   droneTarget: "",
   droneTargetPinned: false,
+  droneTargetDisabled: false,
+  droneOrder: "pre",
+  exportInfo: {
+    title: "",
+    author: "",
+    description: "",
+  },
 });
 const visibleRoomGroupCandidateCounts = ref({});
 const activeSchedulePreviewStateIndex = ref(0);
@@ -1013,6 +358,9 @@ const selectedSchedulePreviewRoomKey = ref("");
 const scheduleRoomOperatorOverrides = ref({});
 const scheduleRoomProductOverrides = ref({});
 const invalidatedScheduleRoomKeys = ref({});
+const scheduleRoomMaaSettingOverrides = ref({});
+const copiedScheduleRoomOperators = ref(null);
+const copiedScheduleShiftOperators = ref(null);
 const scheduleRoomEditorOperatorInput = ref("");
 const {
   yituliuTokenInput,
@@ -1108,7 +456,16 @@ function createDefaultScheduleShifts(
     return [
       { id: "shift-1", name: "B\u73ed", time: "09:00" },
       { id: "shift-2", name: "A\u73ed", time: "21:00" },
-    ];
+    ].map((shift) => ({
+      ...shift,
+      description: "",
+      descriptionPost: "",
+      fiammetta: {
+        enable: false,
+        target: "",
+        order: "pre",
+      },
+    }));
   }
 
   const defaults = {
@@ -1131,7 +488,43 @@ function createDefaultScheduleShifts(
   return defaults.map((shift, index) => ({
     id: `shift-${index + 1}`,
     ...shift,
+    description: "",
+    descriptionPost: "",
+    fiammetta: {
+      enable: false,
+      target: "",
+      order: "pre",
+    },
   }));
+}
+
+function normalizeScheduleExportInfo(value) {
+  return {
+    title: String(value?.title || "").trim(),
+    author: String(value?.author || "").trim(),
+    description: String(value?.description || "").trim(),
+  };
+}
+
+function normalizeScheduleFiammettaSettings(value) {
+  return {
+    enable: value?.enable === true,
+    target: String(value?.target || "").trim(),
+    order: value?.order === "post" ? "post" : "pre",
+  };
+}
+
+function normalizeFiammettaRecoverySettings(value) {
+  const hasTarget =
+    value &&
+    typeof value === "object" &&
+    Object.hasOwn(value, "target");
+
+  return {
+    target: hasTarget ? String(value.target ?? "").trim() : "但书",
+    custom: value?.custom === true,
+    customTarget: String(value?.customTarget || "").trim(),
+  };
 }
 
 function createEmptyScheduleExecutionSettings(
@@ -1142,7 +535,21 @@ function createEmptyScheduleExecutionSettings(
     shifts: createDefaultScheduleShifts(shiftMode, rotationMode),
     droneTarget: "",
     droneTargetPinned: false,
+    droneTargetDisabled: false,
+    droneOrder: "pre",
+    exportInfo: normalizeScheduleExportInfo(),
   };
+}
+
+function getScheduleExecutionSettingsModeKey(
+  shiftMode,
+  rotationMode = twoShiftRotationMode.value,
+) {
+  return `${String(shiftMode || "").trim()}:${
+    isMaaTwoShiftRotation(shiftMode, rotationMode)
+      ? "maa"
+      : normalizeTwoShiftRotationMode(rotationMode)
+  }`;
 }
 
 function normalizeScheduleExecutionSettings(
@@ -1154,11 +561,17 @@ function normalizeScheduleExecutionSettings(
     shiftMode,
     rotationMode,
   );
-  const sourceShifts = Array.isArray(value?.shifts) ? value.shifts : [];
-  const legacyTimes = Array.isArray(value?.changeTimes)
+  const modeMatches =
+    String(value?.modeKey || "").trim() ===
+    getScheduleExecutionSettingsModeKey(shiftMode, rotationMode);
+  const sourceShifts =
+    modeMatches && Array.isArray(value?.shifts) ? value.shifts : [];
+  const legacyTimes = modeMatches && Array.isArray(value?.changeTimes)
     ? value.changeTimes
     : [];
   const droneTarget = String(value?.droneTarget || "").trim();
+  const droneTargetDisabled = value?.droneTargetDisabled === true;
+  const droneOrder = value?.droneOrder === "post" ? "post" : "pre";
 
   return {
     shifts: emptySettings.shifts.map((defaultShift, index) => {
@@ -1174,10 +587,40 @@ function normalizeScheduleExecutionSettings(
         id: defaultShift.id,
         name: name || defaultShift.name,
         time: /^\d{2}:\d{2}$/.test(time) ? time : defaultShift.time,
+        description: String(sourceShift?.description || "").trim(),
+        descriptionPost: String(sourceShift?.descriptionPost || "").trim(),
+        fiammetta: normalizeScheduleFiammettaSettings(
+          sourceShift?.fiammetta,
+        ),
       };
     }),
-    droneTarget,
+    droneTarget: droneTargetDisabled ? "" : droneTarget,
     droneTargetPinned: value?.droneTargetPinned === true,
+    droneTargetDisabled,
+    droneOrder,
+    exportInfo: normalizeScheduleExportInfo(value?.exportInfo),
+  };
+}
+
+function createScheduleExecutionSettingsSnapshot() {
+  return {
+    modeKey: getScheduleExecutionSettingsModeKey(
+      confirmedLayoutPlan.value?.shiftMode,
+      twoShiftRotationMode.value,
+    ),
+    shifts: scheduleExecutionSettings.shifts.map((shift) => ({
+      id: shift.id,
+      name: shift.name,
+      time: shift.time,
+      description: shift.description,
+      descriptionPost: shift.descriptionPost,
+      fiammetta: normalizeScheduleFiammettaSettings(shift.fiammetta),
+    })),
+    droneTarget: scheduleExecutionSettings.droneTarget,
+    droneTargetPinned: scheduleExecutionSettings.droneTargetPinned,
+    droneTargetDisabled: scheduleExecutionSettings.droneTargetDisabled,
+    droneOrder: scheduleExecutionSettings.droneOrder,
+    exportInfo: normalizeScheduleExportInfo(scheduleExecutionSettings.exportInfo),
   };
 }
 
@@ -1190,18 +633,23 @@ function resetScheduleExecutionSettings() {
   scheduleExecutionSettings.droneTarget = nextSettings.droneTarget;
   scheduleExecutionSettings.droneTargetPinned =
     nextSettings.droneTargetPinned;
+  scheduleExecutionSettings.droneTargetDisabled =
+    nextSettings.droneTargetDisabled;
+  scheduleExecutionSettings.droneOrder = nextSettings.droneOrder;
+  scheduleExecutionSettings.exportInfo = nextSettings.exportInfo;
   selectedSchedulePreviewRoomKey.value = "";
   scheduleRoomOperatorOverrides.value = {};
   scheduleRoomProductOverrides.value = {};
   invalidatedScheduleRoomKeys.value = {};
+  scheduleRoomMaaSettingOverrides.value = {};
+  copiedScheduleRoomOperators.value = null;
+  copiedScheduleShiftOperators.value = null;
   scheduleRoomEditorOperatorInput.value = "";
   activeSchedulePreviewStateIndex.value =
     getDefaultSchedulePreviewStateIndex();
 }
 
 const activeStep = computed(() => steps[currentStep.value]);
-const isDeveloperMode = computed(() => route.query.mode === "dev");
-const showLegacyScheduleReference = false;
 const isUserLoggedIn = computed(() => {
   const token = localStorage.getItem("USER_TOKEN");
   return Boolean(token && token !== "null" && token !== "undefined");
@@ -1350,22 +798,6 @@ const activeLayoutFacilityCounts = computed(() => {
       ),
     ).size,
   };
-});
-const layoutPlanSummary = computed(() => {
-  if (!confirmedLayoutPlan.value) {
-    return "";
-  }
-
-  const card = LAYOUT_CARD_META.find(
-    (item) => item.key === confirmedLayoutPlan.value.cardKey,
-  );
-  const shift = LAYOUT_SHIFT_OPTIONS.find(
-    (option) => option.value === confirmedLayoutPlan.value.shiftMode,
-  );
-
-  return [card?.label, card?.description, shift?.label]
-    .filter(Boolean)
-    .join(" · ");
 });
 function formatStationLevelSummary(stations) {
   if (!stations.some((station) => station !== null)) {
@@ -1533,9 +965,20 @@ const controlScheduleRoomGroup = computed(
       (group) => group.manualControl,
     ) || null,
 );
+const riicTrainingMode = computed(() =>
+  treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
+);
 const riicMatchingRoster = computed(() => {
   if (ownedOperators.value.length === 0) {
     return null;
+  }
+
+  if (riicTrainingMode.value === "ideal") {
+    return createRiicIdealTrainingRoster(
+      ownedOperators.value,
+      RIIC_BASELINE_SKILL_RULES,
+      idealTrainingRaritySelection.value,
+    ).operators;
   }
 
   return ownedOperators.value;
@@ -1553,8 +996,11 @@ const riicLayer3RuleChecks = computed(() => {
 const riicLayer3MatchedRuleCount = computed(
   () => riicLayer3RuleChecks.value.filter((rule) => rule.matched).length,
 );
-const riicTrainingMode = computed(() =>
-  treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
+const riicIdleFillOperators = computed(() =>
+  getRiicIdleFillOperators({
+    roster: riicMatchingRoster.value || [],
+    unlockAllSkills: riicTrainingMode.value === "ideal",
+  }),
 );
 
 const controlCenterStaffingRequirement = computed(() => {
@@ -1595,6 +1041,7 @@ const controlCenterCandidateOperators = computed(() => {
 
   const activeTagsByOperatorId = new Map();
   const activeEffectsByOperatorId = new Map();
+  const sameTeamPartnerIdsByOperatorId = new Map();
   for (const skill of RIIC_CONTROL_CENTER_SKILLS.skills || []) {
     const charId = String(skill?.operatorId || "").trim();
     const operator = rosterById.get(charId);
@@ -1621,6 +1068,22 @@ const controlCenterCandidateOperators = computed(() => {
       }
     }
     activeEffectsByOperatorId.set(charId, activeEffects);
+
+    const sameTeamPartnerIds = [
+      ...new Set(
+        (skill?.sameTeamWithOperatorIds || [])
+          .map((operatorId) => String(operatorId || "").trim())
+          .filter((operatorId) => operatorId && operatorId !== charId),
+      ),
+    ];
+    if (sameTeamPartnerIds.length > 0) {
+      const existingPartnerIds =
+        sameTeamPartnerIdsByOperatorId.get(charId) || new Set();
+      sameTeamPartnerIds.forEach((operatorId) =>
+        existingPartnerIds.add(operatorId),
+      );
+      sameTeamPartnerIdsByOperatorId.set(charId, existingPartnerIds);
+    }
   }
 
   return [...activeTagsByOperatorId.entries()]
@@ -1642,6 +1105,9 @@ const controlCenterCandidateOperators = computed(() => {
         ...rosterById.get(charId),
         controlCenterBuffTags: [...tags],
         controlCenterResolvedEffects: [...resolvedEffects.values()],
+        controlCenterSameTeamWithOperatorIds: [
+          ...(sameTeamPartnerIdsByOperatorId.get(charId) || []),
+        ],
         controlCenterRoomEffectLabel: [...resolvedEffects.values()]
           .map(formatRiicControlCenterRoomEffect)
           .filter(Boolean)
@@ -1660,187 +1126,191 @@ const controlCenterCandidateOperators = computed(() => {
         ),
     );
 });
-function operatorMatchesControlCenterFunctionRole(operator, role) {
-  const tags = operator?.controlCenterBuffTags || [];
-  return role.buffTags.some((tag) => tags.includes(tag));
-}
-
-function getControlCenterFunctionRoleScore(operator, role) {
-  return Math.max(
-    0,
-    ...(operator?.controlCenterResolvedEffects || [])
-      .filter(
-        (effect) =>
-          !effect?.conditions &&
-          String(effect?.target?.roomType || "").trim() ===
-          role.targetRoomType,
-      )
-      .map((effect) => Number(effect?.bonusPercent || 0))
-      .filter(Number.isFinite),
-  );
-}
-
-function getControlCenterScenarioTrialScore(operator) {
-  const operatorId = String(operator?.charId || "").trim();
-  const scenario = (
-    riicControlCenterScenarioTrialState.value?.scenarios || []
-  ).find((item) => String(item?.sourceOperatorId || "").trim() === operatorId);
-  const score = Number(scenario?.deltaScore ?? scenario?.contributionScore);
-  return Number.isFinite(score) ? score : 0;
-}
-
-const controlCenterAutomaticRoleState = computed(() => {
-  const requirement = controlCenterStaffingRequirement.value;
-  const group = controlScheduleRoomGroup.value;
-  if (requirement.status !== "ready" || !group) {
-    return {
-      status: "missingCapacity",
-      roles: [],
-      operatorIds: [],
-      segments: [],
-      emptySlotCount: 0,
-    };
-  }
-
-  if (!riicMatchingRoster.value) {
-    return {
-      status: "requiresOperators",
-      roles: [],
-      operatorIds: [],
-      segments: [],
-      emptySlotCount: 0,
-    };
-  }
-
-  const station = group.stations.find(Boolean);
-  const slotCount = Number.isInteger(station?.slotCount)
-    ? station.slotCount
-    : 5;
-  const roleTeamCount = Math.max(
-    1,
-    Number(requirement?.cohorts?.[0]?.teamCount) || 1,
-  );
-  const roleCapacity = Math.min(2, roleTeamCount);
-  const roles = CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS.map((definition) => ({
-    ...definition,
-    enabled: true,
-    candidates: controlCenterCandidateOperators.value.filter((operator) =>
-      operatorMatchesControlCenterFunctionRole(operator, definition),
-    ),
+const hasFiammetta = computed(() =>
+  (riicMatchingRoster.value || []).some((operator) => {
+    const charId = String(operator?.charId || "").trim();
+    const name = String(
+      operator?.name || operatorTableV2?.[charId]?.name || "",
+    ).trim();
+    return name === "菲亚梅塔";
+  }),
+);
+const fiammettaTargetOptions = computed(() => {
+  return FIAMMETTA_RECOVERY_TARGET_NAMES.map((name) => ({
+    charId: operatorNameToCharId.get(name) || "",
+    name,
   }));
-  const claimedOperatorIds = new Set();
-  const selectedOperatorsByRoleId = new Map(
-    roles.map((role) => [role.id, []]),
+});
+const fiammettaTargetName = computed(() => {
+  const settings = normalizeFiammettaRecoverySettings(
+    fiammettaRecoverySettings.value,
   );
-  const candidateRolePairs = roles
-    .filter((role) => role.enabled)
-    .flatMap((role) =>
-      role.candidates.map((operator) => ({
-        role,
-        operator,
-      })),
-    )
+  return settings.custom ? settings.customTarget : settings.target;
+});
+const fiammettaCustomTargetOptions = computed(() =>
+  createRiicOperatorSearchEntries(
+    riicMatchingRoster.value || [],
+    operatorTableV2,
+  ),
+);
+const fiammettaTargetResolution = computed(() => {
+  const settings = normalizeFiammettaRecoverySettings(
+    fiammettaRecoverySettings.value,
+  );
+  const targetName = fiammettaTargetName.value;
+  if (!targetName) {
+    return {
+      operator: null,
+      source: "disabled",
+    };
+  }
+
+  const selectedOperator = fiammettaCustomTargetOptions.value.find(
+    (operator) => operator.name === targetName,
+  );
+  if (selectedOperator) {
+    return {
+      operator: selectedOperator,
+      source: "selected",
+    };
+  }
+
+  if (settings.custom) {
+    return {
+      operator: null,
+      source: "missing",
+    };
+  }
+
+  for (const recommendedName of FIAMMETTA_RECOVERY_TARGET_NAMES) {
+    const recommendedOperator = fiammettaCustomTargetOptions.value.find(
+      (operator) => operator.name === recommendedName,
+    );
+    if (recommendedOperator) {
+      return {
+        operator: recommendedOperator,
+        source: "recommended",
+      };
+    }
+  }
+
+  const fiammettaCharId = operatorNameToCharId.get("菲亚梅塔");
+  const fallbackCandidates = (riicResolvedSkills.value?.operators || [])
+    .filter((operator) => operator.charId !== fiammettaCharId)
+    .map((operator) => ({
+      operator,
+      percent: Math.max(
+        0,
+        ...(operator.activeRules || [])
+          .filter((rule) =>
+            ["trading", "manufacture"].includes(rule?.roomType),
+          )
+          .map((rule) => Number(rule?.effect?.percent || 0)),
+      ),
+    }))
+    .filter((candidate) => candidate.percent > 0)
     .sort(
       (left, right) =>
-        getControlCenterScenarioTrialScore(right.operator) -
-          getControlCenterScenarioTrialScore(left.operator) ||
-        getControlCenterFunctionRoleScore(right.operator, right.role) -
-          getControlCenterFunctionRoleScore(left.operator, left.role) ||
-        left.role.candidates.length - right.role.candidates.length ||
-        String(left.operator?.name || "").localeCompare(
-          String(right.operator?.name || ""),
-          "zh-CN",
-        ) ||
+        right.percent - left.percent ||
         String(left.operator?.charId || "").localeCompare(
           String(right.operator?.charId || ""),
           "en",
-        ) ||
-        left.role.id.localeCompare(right.role.id, "en"),
+        ),
     );
 
-  for (const { role, operator } of candidateRolePairs) {
-    const selectedOperators = selectedOperatorsByRoleId.get(role.id) || [];
-    if (
-      claimedOperatorIds.has(operator.charId) ||
-      selectedOperators.length >= roleCapacity
-    ) {
-      continue;
-    }
-
-    selectedOperators.push(operator);
-    selectedOperatorsByRoleId.set(role.id, selectedOperators);
-    claimedOperatorIds.add(operator.charId);
-  }
-
-  const resolvedRoles = roles.map((role) => ({
-    ...role,
-    operators: selectedOperatorsByRoleId.get(role.id) || [],
-    operator: (selectedOperatorsByRoleId.get(role.id) || [])[0] || null,
-  }));
-  const allRoles = [
-    ...resolvedRoles,
-    {
-      id: "other",
-      label: "其他中枢干员",
-      targetRoomType: "",
-      buffTags: [],
-      enabled: true,
-      candidates: controlCenterCandidateOperators.value,
-      operators: [],
-      operator: null,
-    },
-  ];
-  const operatorIds = [
-    ...new Set(
-      allRoles.flatMap((role) =>
-        role.operators.map((operator) => operator.charId),
-      ),
-    ),
-  ];
-  const controlCohort = requirement?.cohorts?.[0];
-  const segments = requirement.segmentHours.map((durationHours, index) => {
-    const rotationSegment = controlCohort?.rotationSegments?.[index];
-    const teamIndex = Number.isInteger(rotationSegment?.activeTeamIndexes?.[0])
-      ? rotationSegment.activeTeamIndexes[0]
-      : index % roleTeamCount;
-    const operators = [
-      ...resolvedRoles.map((role) => role.operators[teamIndex]),
-    ].filter(Boolean);
-
-    return {
-      id: `control-segment-${index + 1}`,
-      index,
-      durationHours,
-      slotCount,
-      teamIndex,
-      operatorIds: operators.map((operator) => operator.charId),
-      operators,
-    };
-  });
-  const maxSegmentOperatorCount = Math.max(
-    0,
-    ...segments.map((segment) => segment.operatorIds.length),
+  return {
+    operator: fallbackCandidates[0]?.operator || null,
+    source: fallbackCandidates.length ? "efficiencyFallback" : "missing",
+  };
+});
+const fiammettaTargetOperator = computed(
+  () => fiammettaTargetResolution.value.operator,
+);
+const fiammettaTargetNameForSchedule = computed(
+  () => fiammettaTargetOperator.value?.name || fiammettaTargetName.value,
+);
+const fiammettaRecoveryConfig = computed(() => {
+  const targetOperatorId = String(
+    fiammettaTargetOperator.value?.charId || "",
+  ).trim();
+  const targetIsOwned = fiammettaCustomTargetOptions.value.some(
+    (operator) => operator.charId === targetOperatorId,
   );
 
   return {
-    status: "ready",
-    roles: allRoles,
-    operatorIds,
-    segments,
-    emptySlotCount: Math.max(0, slotCount - maxSegmentOperatorCount),
+    enabled:
+      hasFiammetta.value &&
+      Boolean(targetOperatorId) &&
+      targetIsOwned &&
+      targetOperatorId !== operatorNameToCharId.get("菲亚梅塔"),
+    targetOperatorId,
   };
 });
-function getControlCenterManualAddedOperatorIds(overrides) {
-  return [
-    ...new Set(
-      Object.values(overrides?.addedOperatorIdsByTeamIndex || {})
-        .flat()
-        .map((charId) => String(charId || "").trim())
-        .filter(Boolean),
-    ),
-  ];
-}
+const fiammettaRecoveryStatus = computed(() => {
+  const resolution = fiammettaTargetResolution.value;
+  const targetName = fiammettaTargetNameForSchedule.value;
+  const targetOperatorId = String(
+    fiammettaRecoveryConfig.value.targetOperatorId || "",
+  ).trim();
 
+  if (!hasFiammetta.value) {
+    return {
+      tone: "muted",
+      text: "未拥有菲亚梅塔",
+    };
+  }
+  if (!targetName) {
+    return {
+      tone: "muted",
+      text: "未选择恢复目标",
+    };
+  }
+  if (!targetOperatorId) {
+    return {
+      tone: "warning",
+      text: "未匹配到当前干员数据，无法参与自动组装",
+    };
+  }
+  if (targetOperatorId === operatorNameToCharId.get("菲亚梅塔")) {
+    return {
+      tone: "warning",
+      text: "菲亚梅塔不能选择自己作为恢复目标",
+    };
+  }
+  if (!fiammettaRecoveryConfig.value.enabled) {
+    return {
+      tone: "warning",
+      text: "当前数据源未包含该干员，无法参与自动组装",
+    };
+  }
+  if (resolution.source === "recommended") {
+    return {
+      tone: "success",
+      text: `自动改用：${targetName}`,
+    };
+  }
+  if (resolution.source === "efficiencyFallback") {
+    return {
+      tone: "success",
+      text: `自动选择：${targetName}`,
+    };
+  }
+  return {
+    tone: "success",
+    text: "已匹配，将参与自动组装",
+  };
+});
+const controlCenterAutomaticRoleState = computed(() =>
+  buildRiicControlCenterAutomaticRoleState({
+    staffingRequirement: controlCenterStaffingRequirement.value,
+    roomGroup: controlScheduleRoomGroup.value,
+    hasRoster: Boolean(riicMatchingRoster.value),
+    candidates: controlCenterCandidateOperators.value,
+    roleDefinitions: CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS,
+    scenarioTrials: riicControlCenterScenarioTrialState.value?.scenarios || [],
+    fiammettaRecovery: fiammettaRecoveryConfig.value,
+  }),
+);
 function getControlCenterManualOperatorById(charId) {
   return (
     controlCenterCandidateOperators.value.find(
@@ -1849,92 +1319,97 @@ function getControlCenterManualOperatorById(charId) {
   );
 }
 
-const controlCenterRoleState = computed(() => {
-  const automaticState = controlCenterAutomaticRoleState.value;
-  if (automaticState.status !== "ready") {
-    return automaticState;
+function getControlCenterSameTeamOperatorIds(charId) {
+  const operatorsById = new Map(
+    controlCenterCandidateOperators.value.map((operator) => [
+      String(operator?.charId || "").trim(),
+      operator,
+    ]),
+  );
+  const normalizedCharId = String(charId || "").trim();
+  if (!normalizedCharId || !operatorsById.has(normalizedCharId)) {
+    return [];
   }
 
-  const removedOperatorIds = new Set(
-    controlCenterManualOverrides.value.removedOperatorIds || [],
-  );
-  const addedOperatorIds = new Set(
-    getControlCenterManualAddedOperatorIds(controlCenterManualOverrides.value),
-  );
-  const manuallyAddedOperators = [...addedOperatorIds]
-    .map(getControlCenterManualOperatorById)
-    .filter(Boolean);
-
-  const roles = automaticState.roles.map((role) => {
-    const operators = role.operators.filter(
-      (operator) =>
-        !removedOperatorIds.has(operator.charId) &&
-        !addedOperatorIds.has(operator.charId),
-    );
-    if (role.id === "other") {
-      operators.push(...manuallyAddedOperators);
+  const operatorIds = new Set();
+  const pendingOperatorIds = [normalizedCharId];
+  while (pendingOperatorIds.length > 0) {
+    const operatorId = pendingOperatorIds.pop();
+    if (!operatorId || operatorIds.has(operatorId)) {
+      continue;
     }
 
-    return {
-      ...role,
-      operators,
-      operator: operators[0] || null,
-    };
-  });
-  const segments = automaticState.segments.map((segment) => {
-    const operators = segment.operators.filter(
-      (operator) =>
-        !removedOperatorIds.has(operator.charId) &&
-        !addedOperatorIds.has(operator.charId),
+    operatorIds.add(operatorId);
+    const operator = operatorsById.get(operatorId);
+    const partnerIds = new Set(
+      operator?.controlCenterSameTeamWithOperatorIds || [],
     );
-    const manuallyAddedOperatorsForTeam = (
-      controlCenterManualOverrides.value.addedOperatorIdsByTeamIndex?.[
-        String(segment.teamIndex)
-      ] || []
-    )
-      .map((charId) => getControlCenterManualOperatorById(charId))
-      .filter(Boolean);
-    const nextOperators = [
-      ...operators,
-      ...manuallyAddedOperatorsForTeam,
-    ].filter(
-      (operator, index, list) =>
-        list.findIndex((item) => item.charId === operator.charId) === index,
-    );
-    const finalOperators = nextOperators.slice(0, segment.slotCount);
+    for (const [candidateId, candidate] of operatorsById) {
+      if (
+        (candidate?.controlCenterSameTeamWithOperatorIds || []).includes(
+          operatorId,
+        )
+      ) {
+        partnerIds.add(candidateId);
+      }
+    }
+    for (const partnerId of partnerIds) {
+      const normalizedPartnerId = String(partnerId || "").trim();
+      if (operatorsById.has(normalizedPartnerId)) {
+        pendingOperatorIds.push(normalizedPartnerId);
+      }
+    }
+  }
 
-    return {
-      ...segment,
-      operatorIds: finalOperators.map((operator) => operator.charId),
-      operators: finalOperators,
-    };
+  return [...operatorIds];
+}
+
+const controlCenterRoleState = computed(() => {
+  return applyRiicControlCenterManualOverrides({
+    automaticState: controlCenterAutomaticRoleState.value,
+    manualOverrides: controlCenterManualOverrides.value,
+    candidates: controlCenterCandidateOperators.value,
   });
-  const operatorIds = [
-    ...new Set(segments.flatMap((segment) => segment.operatorIds)),
-  ];
-  const maxSegmentOperatorCount = Math.max(
-    0,
-    ...segments.map((segment) => segment.operatorIds.length),
-  );
+});
+const controlCenterFiammettaTargetUsage = computed(() => {
+  const recovery = fiammettaRecoveryConfig.value;
+  const stateIndexes = new Set();
+  const teamIndexes = new Set();
+  if (!recovery.enabled) {
+    return {
+      selectionCount: 0,
+      stateIndexes: [],
+    };
+  }
+
+  for (const segment of controlCenterRoleState.value.segments || []) {
+    if (!(segment?.operatorIds || []).includes(recovery.targetOperatorId)) {
+      continue;
+    }
+
+    const stateIndex = Number(segment?.index);
+    if (Number.isInteger(stateIndex) && stateIndex >= 0) {
+      stateIndexes.add(stateIndex);
+    }
+
+    const teamIndex = Number(segment?.teamIndex);
+    if (Number.isInteger(teamIndex) && teamIndex >= 0) {
+      teamIndexes.add(teamIndex);
+    }
+  }
 
   return {
-    ...automaticState,
-    roles,
-    segments,
-    operatorIds,
-    emptySlotCount: Math.max(
-      0,
-      (automaticState.segments[0]?.slotCount || 0) - maxSegmentOperatorCount,
-    ),
+    selectionCount: teamIndexes.size,
+    stateIndexes: [...stateIndexes].sort((left, right) => left - right),
   };
 });
 
 function clearScheduleSelectionsAfterControlCenterChange() {
   clearSelectedRoomGroupTeamCandidates();
-  recommendedScheduleSnapshot.value = null;
+  lastAutomaticGenerationTriggerKey.value = "";
 }
 
-function getControlCenterManualTeamIndexWithCapacity() {
+function getControlCenterManualTeamIndexWithCapacity(requiredSlotCount = 1) {
   const segments = controlCenterRoleState.value.segments || [];
   const teamIndexes = [
     ...new Set(
@@ -1953,7 +1428,7 @@ function getControlCenterManualTeamIndexWithCapacity() {
         teamSegments.length > 0 &&
         teamSegments.every(
           (segment) =>
-            (segment.operatorIds || []).length <
+            (segment.operatorIds || []).length + requiredSlotCount <=
             Number(segment.slotCount || 0),
         )
       );
@@ -1978,20 +1453,32 @@ function addControlCenterOperator(charId) {
   const nextOverrides = normalizeControlCenterManualOverrides(
     controlCenterManualOverrides.value,
   );
+  const sameTeamOperatorIds = getControlCenterSameTeamOperatorIds(
+    normalizedCharId,
+  );
+  if (sameTeamOperatorIds.length === 0) {
+    return;
+  }
   const automaticOperatorIds = new Set(
     controlCenterAutomaticRoleState.value.operatorIds || [],
   );
   nextOverrides.removedOperatorIds = nextOverrides.removedOperatorIds.filter(
-    (operatorId) => operatorId !== normalizedCharId,
+    (operatorId) => !sameTeamOperatorIds.includes(operatorId),
   );
 
-  if (automaticOperatorIds.has(normalizedCharId)) {
+  if (
+    sameTeamOperatorIds.every((operatorId) =>
+      automaticOperatorIds.has(operatorId),
+    )
+  ) {
     controlCenterManualOverrides.value = nextOverrides;
     clearScheduleSelectionsAfterControlCenterChange();
     return;
   }
 
-  const teamIndex = getControlCenterManualTeamIndexWithCapacity();
+  const teamIndex = getControlCenterManualTeamIndexWithCapacity(
+    sameTeamOperatorIds.length,
+  );
   if (teamIndex === null) {
     cMessage("控制中枢没有可用空位", "warn");
     return;
@@ -2000,10 +1487,16 @@ function addControlCenterOperator(charId) {
   const teamKey = String(teamIndex);
   const teamOperatorIds =
     nextOverrides.addedOperatorIdsByTeamIndex[teamKey] || [];
-  if (!teamOperatorIds.includes(normalizedCharId)) {
+  if (
+    sameTeamOperatorIds.some(
+      (operatorId) => !teamOperatorIds.includes(operatorId),
+    )
+  ) {
     nextOverrides.addedOperatorIdsByTeamIndex[teamKey] = [
       ...teamOperatorIds,
-      normalizedCharId,
+      ...sameTeamOperatorIds.filter(
+        (operatorId) => !teamOperatorIds.includes(operatorId),
+      ),
     ];
   }
   controlCenterManualOverrides.value = nextOverrides;
@@ -2019,6 +1512,12 @@ function removeControlCenterOperator(charId) {
   const lateFillOperatorIds = new Set(
     controlCenterLateFillState.value.operatorIds || [],
   );
+  const sameTeamOperatorIds = getControlCenterSameTeamOperatorIds(
+    normalizedCharId,
+  );
+  if (sameTeamOperatorIds.length === 0) {
+    return;
+  }
   const nextOverrides = normalizeControlCenterManualOverrides(
     controlCenterManualOverrides.value,
   );
@@ -2027,7 +1526,7 @@ function removeControlCenterOperator(charId) {
     nextOverrides.addedOperatorIdsByTeamIndex,
   )) {
     const nextOperatorIds = operatorIds.filter(
-      (operatorId) => operatorId !== normalizedCharId,
+      (operatorId) => !sameTeamOperatorIds.includes(operatorId),
     );
     wasManuallyAdded =
       wasManuallyAdded || nextOperatorIds.length !== operatorIds.length;
@@ -2040,25 +1539,35 @@ function removeControlCenterOperator(charId) {
 
   if (
     !wasManuallyAdded &&
-    (controlCenterAutomaticRoleState.value.operatorIds || []).includes(
-      normalizedCharId,
-    ) &&
-    !nextOverrides.removedOperatorIds.includes(normalizedCharId)
+    sameTeamOperatorIds.some((operatorId) =>
+      (controlCenterAutomaticRoleState.value.operatorIds || []).includes(
+        operatorId,
+      ),
+    )
   ) {
-    nextOverrides.removedOperatorIds.push(normalizedCharId);
+    nextOverrides.removedOperatorIds = [
+      ...new Set([
+        ...nextOverrides.removedOperatorIds,
+        ...sameTeamOperatorIds,
+      ]),
+    ];
   }
 
   if (
     !wasManuallyAdded &&
-    !(controlCenterAutomaticRoleState.value.operatorIds || []).includes(
-      normalizedCharId,
+    !sameTeamOperatorIds.some((operatorId) =>
+      (controlCenterAutomaticRoleState.value.operatorIds || []).includes(
+        operatorId,
+      ),
     ) &&
-    lateFillOperatorIds.has(normalizedCharId)
+    sameTeamOperatorIds.some((operatorId) =>
+      lateFillOperatorIds.has(operatorId),
+    )
   ) {
     controlCenterLateFillExcludedOperatorIds.value = [
       ...new Set([
         ...controlCenterLateFillExcludedOperatorIds.value,
-        normalizedCharId,
+        ...sameTeamOperatorIds,
       ]),
     ];
     return;
@@ -2076,7 +1585,29 @@ const controlCenterRuntimeContext = computed(() =>
     controlState: controlCenterRoleState.value,
   }),
 );
+const riicPerceptionResourceFacts = computed(() => {
+  const facilities = activeLayoutFacilityCounts.value?.facilities || [];
+  const powerPlantCount = facilities.filter(
+    (facility) => facility?.facilityType === "power",
+  ).length;
 
+  return {
+    dormitoryOccupantCount: getRiicDormitoryOccupantCount({
+      layoutFacts: activeLayoutFacilityCounts.value,
+    }),
+    dormitoryLevel:
+      powerPlantCount === 3 ? 5 : powerPlantCount === 2 ? 3 : null,
+    dormitorySupportOccupantCount: 5,
+    assumeDormitorySupport: true,
+    officeExtraRecruitmentSlots: facilities.some(
+      (facility) => facility?.facilityType === "hire",
+    )
+      ? 3
+      : 0,
+    duskMoodAbove12: true,
+    lingMoodAbove12: true,
+  };
+});
 function formatRiicControlCenterSignedPercent(value) {
   const percent = Number(value);
   if (!Number.isFinite(percent)) {
@@ -2249,128 +1780,6 @@ const riicStaticCatalogLoadStatesByKey = ref({});
 const riicStaticCatalogErrorsByKey = ref({});
 const riicStaticCatalogLoadingPromisesByKey = new Map();
 
-function getStaticRoomCandidateCatalogFacility(group) {
-  return group?.facility === "office" ? "hire" : group?.facility;
-}
-
-function getRoomGroupCatalogKey(group, station) {
-  if (!group?.candidateGenerationAvailable) {
-    return null;
-  }
-
-  return getRiicStaticRoomCandidateCatalogKey({
-    roomType: getStaticRoomCandidateCatalogFacility(group),
-    product: group.candidateProduct,
-    stationLevel: station?.stationLevel,
-    slotCount: station?.slotCount,
-  });
-}
-
-function getRoomGroupCatalogRequests(group) {
-  if (!group?.candidateGenerationAvailable) {
-    return [];
-  }
-
-  return [
-    ...new Map(
-      (group.stations || [])
-        .filter(
-          (station) =>
-            Number.isInteger(station?.stationLevel) &&
-            station.stationLevel > 0 &&
-            Number.isInteger(station?.slotCount) &&
-            station.slotCount > 0,
-        )
-        .map((station) => {
-          const key = getRoomGroupCatalogKey(group, station);
-          return [key || `${station.stationLevel}:${station.slotCount}`, {
-            station,
-            key,
-          }];
-        }),
-    ).values(),
-  ];
-}
-
-function getRoomGroupCatalogErrors(group) {
-  return getRoomGroupCatalogRequests(group)
-    .map((request) =>
-      request.key
-        ? riicStaticCatalogErrorsByKey.value[request.key]
-        : `Invalid RIIC catalog request: ${group?.label || ""}`,
-    )
-    .filter(Boolean);
-}
-
-function getRoomGroupCatalogLoadState(group) {
-  const requests = getRoomGroupCatalogRequests(group);
-  if (requests.length === 0) {
-    return "unsupported";
-  }
-  if (requests.some((request) => !request.key)) {
-    return "failed";
-  }
-  if (
-    requests.every(
-      (request) => riicStaticCatalogsByKey.value[request.key],
-    )
-  ) {
-    return "ready";
-  }
-  if (
-    requests.some(
-      (request) =>
-        riicStaticCatalogLoadStatesByKey.value[request.key] === "failed",
-    )
-  ) {
-    return "failed";
-  }
-
-  if (
-    requests.some(
-      (request) =>
-        riicStaticCatalogLoadStatesByKey.value[request.key] === "loading" ||
-        riicStaticCatalogLoadingPromisesByKey.has(request.key),
-    )
-  ) {
-    return "loading";
-  }
-
-  return "idle";
-}
-
-function getRoomGroupCandidateSortBonus(candidate) {
-  return getRiicRuntimeCandidateRankingValue(candidate);
-}
-
-function compareRoomGroupCandidates(left, right) {
-  const bonusDifference =
-    getRoomGroupCandidateSortBonus(right) -
-    getRoomGroupCandidateSortBonus(left);
-  if (bonusDifference !== 0) {
-    return bonusDifference;
-  }
-
-  const fallbackCountDifference =
-    Number(left?.fallback?.count || 0) - Number(right?.fallback?.count || 0);
-  if (fallbackCountDifference !== 0) {
-    return fallbackCountDifference;
-  }
-
-  if (left?.quality !== right?.quality) {
-    return left?.quality === "complete" ? -1 : 1;
-  }
-
-  if (left?.calculationStatus !== right?.calculationStatus) {
-    return String(left?.calculationStatus || "").localeCompare(
-      String(right?.calculationStatus || ""),
-      "en",
-    );
-  }
-
-  return String(left?.key || "").localeCompare(String(right?.key || ""), "en");
-}
-
 async function ensureRoomGroupCatalogLoaded(group) {
   if (!group?.candidateGenerationAvailable) {
     return;
@@ -2464,219 +1873,28 @@ function retryActiveRoomGroupCatalogLoad() {
   ensureRoomGroupCatalogLoaded(group);
 }
 
-function enrichRoomGroupCandidateFallback(candidate) {
-  if (!candidate) {
-    return candidate;
-  }
-
-  const candidateOperators = (
-    candidate.fallback?.candidateOperators ||
-    candidate.fallback?.operators ||
-    []
-  ).map((operator) => ({
-    ...operator,
-    publicSkill: riicPublicSkillOperatorIds.value.has(operator.charId),
-  }));
-
-  return {
-    ...candidate,
-    fallback: {
-      ...candidate.fallback,
-      candidateOperators,
-      operators: candidate.fallback?.operators || [],
-    },
-  };
-}
-
-function createFallbackOnlyRoomGroupCohort(cohort, fallbackCandidate) {
-  if (!fallbackCandidate) {
-    return {
-      ...cohort,
-      candidates: [],
-      fallbackCandidate: null,
-      manualFallbackCandidates: [],
-    };
-  }
-
-  const fallbackCount =
-    cohort.selectionMode === "individual"
-      ? 1
-      : Math.max(1, Number(cohort.slotCount || 1));
-  const candidates = Array.from(
-    { length: Math.max(0, Number(cohort.teamCount || 0)) },
-    (_, index) => ({
-      ...fallbackCandidate,
-      key: `${fallbackCandidate.key}:fallback-only-${index + 1}`,
-      name: `补位 ${index + 1}`,
-      isManualFallbackTeam: true,
-      fallback: {
-        ...fallbackCandidate.fallback,
-        count: fallbackCount,
-        operators: [],
-        materialized: false,
-      },
-    }),
-  );
-
-  return {
-    ...cohort,
-    candidates,
-    fallbackCandidate,
-    manualFallbackCandidates: candidates,
-  };
-}
-
-function createRoomGroupCandidateState(group) {
-  if (!group) {
-    return { status: "idle", cohorts: [] };
-  }
-
-  if (group.manualControl) {
-    return { status: "manualControl", cohorts: [] };
-  }
-
-  if (!group.candidateGenerationAvailable) {
-    return { status: "outOfScope", cohorts: [] };
-  }
-
-  if (!riicMatchingRoster.value) {
-    return { status: "requiresOperators", cohorts: [] };
-  }
-
-  if (
-    group.stations.some(
-      (station) =>
-        !Number.isInteger(station?.stationLevel) ||
-        !Number.isInteger(station?.slotCount),
-    )
-  ) {
-    return { status: "missingCapacity", cohorts: [] };
-  }
-
-  const staffingRequirement = getRiicRoomGroupStaffingRequirement({
-    stations: group.stations,
-    shiftMode: confirmedLayoutPlan.value?.shiftMode,
-    roomType: group.facility,
-    twoShiftRotationMode: twoShiftRotationMode.value,
-  });
-  if (staffingRequirement.status !== "ready") {
-    return {
-      status: "missingCapacity",
-      staffingRequirement,
-      cohorts: [],
-    };
-  }
-
-  const catalogsByCohortId = new Map(
-    staffingRequirement.cohorts.map((cohort) => {
-      const key = getRoomGroupCatalogKey(group, cohort);
-      return [cohort.id, key ? riicStaticCatalogsByKey.value[key] : null];
-    }),
-  );
-  if ([...catalogsByCohortId.values()].some((catalog) => !catalog)) {
-    const catalogLoadState = getRoomGroupCatalogLoadState(group);
-
-    return {
-      status:
-        catalogLoadState === "failed"
-          ? "catalogLoadFailed"
-          : catalogLoadState === "idle"
-            ? "catalogNotLoaded"
-            : "catalogLoading",
-      catalogErrors: getRoomGroupCatalogErrors(group),
-      cohorts: [],
-    };
-  }
-
-  const cohorts = staffingRequirement.cohorts.map((cohort) => {
-    const library = catalogsByCohortId.get(cohort.id);
-    const candidateSkeletons = resolveRiicRoomCandidateSkeletons({
-      catalog: group.fallbackOnly
-        ? {
-            ...library.catalog,
-            candidates: [],
-          }
-        : library.catalog,
-      fallbackCatalog: library.fallbackCatalog,
-      operatorNameToCharId,
-      ownedOperators: riicMatchingRoster.value,
-      roomType: getStaticRoomCandidateCatalogFacility(group),
-      product: group.candidateProduct,
-      stationLevel: cohort.stationLevel,
-      slotCount: cohort.slotCount,
-      powerPlantCount: activeLayoutFacilityCounts.value.powerPlantCount,
-      tradingStationCount:
-        activeLayoutFacilityCounts.value.tradingStationCount,
-      goldManufactureStationCount:
-        activeLayoutFacilityCounts.value.goldManufactureStationCount,
-      manufactureProductKindCount:
-        activeLayoutFacilityCounts.value.manufactureProductKindCount,
-      facilities: activeLayoutFacilityCounts.value.facilities,
-      trainingMode: riicTrainingMode.value,
-      idealTrainingRaritySelection: idealTrainingRaritySelection.value,
-    });
-    const matchedCandidates = materializeRiicRoomCandidateSkeletons({
-      resolution: candidateSkeletons,
-      controlCenterRuntimeContext: controlCenterRuntimeContext.value,
-    });
-
-    const candidates = matchedCandidates.candidates
-      .map(enrichRoomGroupCandidateFallback)
-      .sort(compareRoomGroupCandidates);
-    const fallbackCandidate = enrichRoomGroupCandidateFallback(
-      matchedCandidates.fallbackCandidate,
-    );
-    if (group.fallbackOnly) {
-      return createFallbackOnlyRoomGroupCohort(cohort, fallbackCandidate);
-    }
-    const manualFallbackCandidates = fallbackCandidate
-      ? Array.from(
-          {
-            length: cohort.teamCount,
-          },
-          (_, index) => ({
-            ...fallbackCandidate,
-            key: `${fallbackCandidate.key}:manual-${index + 1}`,
-            name:
-              cohort.selectionMode === "individual"
-                ? `纯补位干员 ${index + 1}`
-                : `纯补位班组 ${index + 1}`,
-            isManualFallbackTeam: true,
-            fallback: {
-              ...fallbackCandidate.fallback,
-              operators: [],
-              materialized: false,
-            },
-          }),
-        )
-      : [];
-
-    return {
-      ...cohort,
-      candidates: [
-        ...candidates,
-        ...manualFallbackCandidates,
-      ],
-      fallbackCandidate,
-      manualFallbackCandidates,
-    };
-  });
-  const hasMissingFallbackPreset =
-    group.fallbackOnly &&
-    cohorts.some((cohort) => !cohort.fallbackCandidate);
-
-  return {
-    status: hasMissingFallbackPreset ? "missingFallbackPreset" : "ready",
-    staffingRequirement,
-    cohorts,
-    fallbackOnly: Boolean(group.fallbackOnly),
-  };
-}
 const roomGroupCandidateStates = computed(() =>
   Object.fromEntries(
     selectableScheduleRoomGroups.value.map((group) => [
       group.id,
-      createRoomGroupCandidateState(group),
+      createRiicRoomGroupCandidateState({
+        group,
+        roster: riicMatchingRoster.value,
+        currentOwnedOperators: ownedOperators.value,
+        shiftMode: confirmedLayoutPlan.value?.shiftMode,
+        twoShiftRotationMode: twoShiftRotationMode.value,
+        catalogsByKey: riicStaticCatalogsByKey.value,
+        catalogLoadStatesByKey: riicStaticCatalogLoadStatesByKey.value,
+        catalogErrorsByKey: riicStaticCatalogErrorsByKey.value,
+        loadingCatalogKeys: riicStaticCatalogLoadingPromisesByKey,
+        operatorNameToCharId,
+        publicSkillOperatorIds: riicPublicSkillOperatorIds.value,
+        layoutFacts: activeLayoutFacilityCounts.value,
+        trainingMode: riicTrainingMode.value,
+        idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+        controlCenterRuntimeContext: controlCenterRuntimeContext.value,
+        idleFillOperators: riicIdleFillOperators.value,
+      }),
     ]),
   ),
 );
@@ -2793,33 +2011,105 @@ function showMoreRoomGroupCandidates(group, cohort) {
   };
 }
 
+function getDisplayedRoomGroupTeamCandidate(
+  group,
+  cohort,
+  candidate,
+  selectionIndex,
+) {
+  const fallbackPlan = roomGroupFallbackPlanStates.value[group?.id];
+  const fallbackOperators =
+    fallbackPlan?.assignmentsBySelectionKey?.[
+      `${cohort?.id}:${selectionIndex}`
+    ];
+
+  if (!candidate || !Array.isArray(fallbackOperators)) {
+    return candidate;
+  }
+
+  const materializedCandidate = materializeRiicRoomTeamCandidate(
+    candidate,
+    fallbackOperators,
+    {
+      controlCenterRuntimeContext: controlCenterRuntimeContext.value,
+    },
+  );
+  if (!materializedCandidate) {
+    return candidate;
+  }
+
+  return {
+    ...materializedCandidate,
+    // Candidate selection continues to use only the fixed core members.
+    operatorIds: candidate.operatorIds,
+    operators: candidate.operators,
+  };
+}
+
 const visibleActiveRoomGroupStaffingCohorts = computed(() => {
   const group = activeScheduleRoomGroup.value;
 
   return activeRoomGroupStaffingCohorts.value.map((cohort) => {
-    const selectedCandidateKeys = new Set(
-      getSelectedTeamCandidateKeys(group?.id, cohort),
+    const selectedCandidateKeys = getSelectedTeamCandidateKeys(
+      group?.id,
+      cohort,
+    );
+    const selectedCandidateKeySet = new Set(selectedCandidateKeys);
+    const candidateByKey = new Map(
+      (cohort.candidates || []).map((candidate) => [
+        candidate.key,
+        candidate,
+      ]),
     );
     const fallbackCandidate = cohort.fallbackCandidate || null;
-    const selectedCandidates = cohort.candidates.filter((candidate) =>
-      selectedCandidateKeys.has(candidate.key),
-    );
+    const selectedCandidates = selectedCandidateKeys
+      .map((candidateKey, selectionIndex) => {
+        const candidate = candidateByKey.get(candidateKey);
+        return candidate
+          ? {
+              ...getDisplayedRoomGroupTeamCandidate(
+                group,
+                cohort,
+                candidate,
+                selectionIndex,
+              ),
+              selectionIndex,
+            }
+          : null;
+      })
+      .filter(Boolean);
     const selectionComplete =
       selectedCandidates.length >= Number(cohort.teamCount || 0);
     const selectableNamedCandidates = cohort.candidates.filter(
       (candidate) =>
         (candidate.operatorIds || []).length > 0 &&
-        !selectedCandidateKeys.has(candidate.key) &&
+        !selectedCandidateKeySet.has(candidate.key) &&
         canToggleRoomGroupTeamCandidate(group, cohort, candidate),
     );
     const selectableFallbackCandidates = cohort.candidates.filter(
       (candidate) =>
         candidate.isManualFallbackTeam &&
-        !selectedCandidateKeys.has(candidate.key),
+        !selectedCandidateKeySet.has(candidate.key),
     );
+    const repeatableTeamCandidates = selectedCandidates
+      .filter(
+        (candidate, index, candidates) =>
+          candidates.findIndex((item) => item.key === candidate.key) ===
+            index &&
+          isFiammettaReusableTeamCandidate(candidate) &&
+          getSelectedRoomCandidateCount(group, cohort, candidate.key) <
+            Number(cohort.teamCount || 0) &&
+          canAddRoomGroupTeamCandidate(group, cohort, candidate),
+      )
+      .map((candidate) => ({
+        ...candidate,
+        repeatableTeam: true,
+        selectionIndex: selectedCandidates.length,
+      }));
     const fallbackCandidateCount = cohort.teamCount;
     const selectableCandidates = [
       ...selectedCandidates,
+      ...repeatableTeamCandidates,
       ...selectableNamedCandidates,
       ...selectableFallbackCandidates.slice(0, fallbackCandidateCount),
     ];
@@ -2836,6 +2126,7 @@ const visibleActiveRoomGroupStaffingCohorts = computed(() => {
       ? selectedCandidates
       : [
           ...selectedCandidates,
+          ...repeatableTeamCandidates,
           ...displayNamedCandidates,
           ...displayFallbackCandidates,
         ];
@@ -2852,6 +2143,44 @@ const visibleActiveRoomGroupStaffingCohorts = computed(() => {
     };
   });
 });
+
+function getActiveFiammettaRecovery() {
+  return fiammettaRecoveryConfig.value;
+}
+
+function isFiammettaReusableTeamCandidate(candidate) {
+  const recovery = getActiveFiammettaRecovery();
+
+  return (
+    recovery.enabled &&
+    (candidate?.operatorIds || []).includes(recovery.targetOperatorId)
+  );
+}
+
+function getSelectedFiammettaTargetStateIndexes(recovery) {
+  const stateIndexes = new Set();
+  if (!recovery?.enabled) {
+    return stateIndexes;
+  }
+
+  for (const stateIndex of controlCenterFiammettaTargetUsage.value
+    .stateIndexes || []) {
+    stateIndexes.add(stateIndex);
+  }
+
+  for (const group of candidateEnabledScheduleRoomGroups.value) {
+    const state = roomGroupCandidateStates.value[group.id];
+    for (const stateIndex of getSelectedRoomGroupFiammettaStateIndexes(
+      group,
+      state,
+      recovery,
+    )) {
+      stateIndexes.add(stateIndex);
+    }
+  }
+
+  return stateIndexes;
+}
 
 function getRoomGroupTeamCandidateKeys(groupId) {
   const state = roomGroupCandidateStates.value[groupId];
@@ -2881,7 +2210,10 @@ function getRoomGroupTeamCandidateKeys(groupId) {
           continue;
         }
 
-        if (selectedKeys.includes(candidate.key)) {
+        if (
+          selectedKeys.includes(candidate.key) &&
+          !isFiammettaReusableTeamCandidate(candidate)
+        ) {
           continue;
         }
 
@@ -2911,11 +2243,9 @@ function getSavedTeamCandidateCount(groupId, cohort) {
     selectedRoomGroupTeamCandidateKeys.value[groupId]?.[cohort?.id] || [];
 
   return Math.min(
-    new Set(
-      savedKeys
-        .map((key) => String(key || "").trim())
-        .filter(Boolean),
-    ).size,
+    savedKeys
+      .map((key) => String(key || "").trim())
+      .filter(Boolean).length,
     Number(cohort?.teamCount || 0),
   );
 }
@@ -2944,6 +2274,44 @@ function getSelectedRoomGroupCoreOperatorIds(group, state) {
   }
 
   return operatorIds;
+}
+
+function getSelectedRoomGroupFiammettaStateIndexes(
+  group,
+  state,
+  recovery,
+) {
+  const stateIndexes = new Set();
+  if (!recovery?.enabled) {
+    return stateIndexes;
+  }
+
+  for (const cohort of state?.cohorts || []) {
+    for (const [teamIndex, candidateKey] of getSelectedTeamCandidateKeys(
+      group.id,
+      cohort,
+    ).entries()) {
+      const candidate = cohort.candidates.find(
+        (item) => item.key === candidateKey,
+      );
+      if (
+        !(candidate?.operatorIds || []).includes(
+          recovery.targetOperatorId,
+        )
+      ) {
+        continue;
+      }
+
+      for (const stateIndex of getRiicFiammettaTeamStateIndexes(
+        cohort,
+        teamIndex,
+      )) {
+        stateIndexes.add(stateIndex);
+      }
+    }
+  }
+
+  return stateIndexes;
 }
 
 function getClaimedNamedOperatorIds({ includeControlCenter = true } = {}) {
@@ -3054,7 +2422,17 @@ function canAddRoomGroupTeamCandidate(group, cohort, candidate) {
     return false;
   }
 
-  if (getSelectedRoomCandidateCount(group, cohort, candidate.key) > 0) {
+  const selectedCount = getSelectedRoomCandidateCount(
+    group,
+    cohort,
+    candidate.key,
+  );
+  const recovery = getActiveFiammettaRecovery();
+  const reusableTargetCandidate =
+    recovery.enabled &&
+    (candidate.operatorIds || []).includes(recovery.targetOperatorId);
+
+  if (selectedCount > 0 && !reusableTargetCandidate) {
     return false;
   }
 
@@ -3063,15 +2441,44 @@ function canAddRoomGroupTeamCandidate(group, cohort, candidate) {
     return true;
   }
 
+  if (reusableTargetCandidate) {
+    const nextStateIndexes = getRiicFiammettaTeamStateIndexes(
+      cohort,
+      getSelectedTeamCandidateCount(group, cohort),
+    );
+    const usedStateIndexes = getSelectedFiammettaTargetStateIndexes(recovery);
+    if (
+      nextStateIndexes.length === 0 ||
+      nextStateIndexes.some((stateIndex) => usedStateIndexes.has(stateIndex))
+    ) {
+      return false;
+    }
+  }
+
   const claimedOperatorIds = getClaimedNamedOperatorIds();
-  return !candidateOperatorIds.some((charId) =>
-    claimedOperatorIds.has(charId),
+  return !candidateOperatorIds.some(
+    (charId) =>
+      charId !== recovery.targetOperatorId && claimedOperatorIds.has(charId),
   );
 }
 
 function getRoomGroupCandidateAvailabilityMessage(group, cohort, candidate) {
-  if (getSelectedRoomCandidateCount(group, cohort, candidate?.key) > 0) {
-    return "取消选择";
+  const selectedCount = getSelectedRoomCandidateCount(
+    group,
+    cohort,
+    candidate?.key,
+  );
+  if (selectedCount > 0) {
+    if (
+      candidate?.repeatableTeam &&
+      isFiammettaReusableTeamCandidate(candidate) &&
+      selectedCount < Number(cohort?.teamCount || 0) &&
+      canAddRoomGroupTeamCandidate(group, cohort, candidate)
+    ) {
+      return `已选 ${selectedCount}/${cohort.teamCount} 班，点击再选一班`;
+    }
+
+    return `已选 ${selectedCount}/${cohort.teamCount} 班，点击取消最后一班`;
   }
 
   if (canAddRoomGroupTeamCandidate(group, cohort, candidate)) {
@@ -3114,6 +2521,10 @@ function getRoomGroupCandidateTooltip(group, cohort, candidate) {
 }
 
 function canToggleRoomGroupTeamCandidate(group, cohort, candidate) {
+  if (candidate?.repeatableTeam) {
+    return canAddRoomGroupTeamCandidate(group, cohort, candidate);
+  }
+
   return (
     getSelectedRoomCandidateCount(group, cohort, candidate?.key) > 0 ||
     canAddRoomGroupTeamCandidate(group, cohort, candidate)
@@ -3130,12 +2541,19 @@ function toggleRoomGroupTeamCandidate({ group, cohort, candidate }) {
     candidate?.key,
   );
 
-  if (selectedCount > 0) {
+  const canAddAnotherTeam =
+    candidate?.repeatableTeam &&
+    selectedCount > 0 &&
+    isFiammettaReusableTeamCandidate(candidate) &&
+    canAddRoomGroupTeamCandidate(group, cohort, candidate);
+
+  if (selectedCount > 0 && !canAddAnotherTeam) {
+    const removeIndex = selectedKeys.lastIndexOf(candidate.key);
     selectedRoomGroupTeamCandidateKeys.value = {
       ...selectedRoomGroupTeamCandidateKeys.value,
       [group.id]: {
         ...currentGroupSelections,
-        [cohort.id]: selectedKeys.filter((key) => key !== candidate.key),
+        [cohort.id]: selectedKeys.filter((_, index) => index !== removeIndex),
       },
     };
     clearRoomGroupFallbackQueue(group.id);
@@ -3161,244 +2579,24 @@ function toggleRoomGroupTeamCandidate({ group, cohort, candidate }) {
   clearRoomGroupFallbackQueue(group.id);
 }
 
-function getAutomaticRoomGroupPriority(group) {
-  return ["meeting", "office"].includes(group?.facility) ? 1 : 0;
-}
-
-function getRoomGroupFallbackPlanningGroups() {
-  const groups = [...candidateEnabledScheduleRoomGroups.value];
-  const orderById = new Map(
-    groups.map((group, index) => [group.id, index]),
-  );
-
-  return groups.sort(
-    (left, right) =>
-      getAutomaticRoomGroupPriority(left) -
-        getAutomaticRoomGroupPriority(right) ||
-      Number(orderById.get(left.id) || 0) - Number(orderById.get(right.id) || 0),
-  );
-}
-
-function buildAutomaticRoomGroupSelectionsForGroups({
-  groups,
-  claimedOperatorIds,
-  reservedOperatorIds = new Set(),
-  initialSelections = {},
-}) {
-  const unavailableGroups = [];
-  const pendingCohorts = [];
-
-  for (const group of groups) {
-    if (group.fallbackOnly) {
-      continue;
-    }
-
-    const state = roomGroupCandidateStates.value[group.id];
-    if (state?.status !== "ready") {
-      unavailableGroups.push(group.label);
-      continue;
-    }
-
-    for (const cohort of state.cohorts || []) {
-      const initialKeys = [
-        ...new Set(initialSelections[group.id]?.[cohort.id] || []),
-      ];
-      const availableKeys = new Set(
-        (cohort.candidates || []).map((candidate) => candidate.key),
-      );
-      if (
-        initialKeys.length > cohort.teamCount ||
-        initialKeys.some((candidateKey) => !availableKeys.has(candidateKey))
-      ) {
-        unavailableGroups.push(group.label);
-        continue;
-      }
-
-      pendingCohorts.push({
-        group,
-        cohort,
-        selectedKeys: initialKeys,
-      });
-    }
-  }
-
-  while (true) {
-    const availableStates = pendingCohorts
-      .filter(
-        ({ selectedKeys, cohort }) =>
-          selectedKeys.length < cohort.teamCount,
-      )
-      .map((selection) => {
-        const availableCandidates = (selection.cohort.candidates || []).filter(
-          (candidate) =>
-            candidate &&
-            !selection.selectedKeys.includes(candidate.key) &&
-            !(candidate.operatorIds || []).some(
-              (charId) =>
-                claimedOperatorIds.has(charId) ||
-                reservedOperatorIds.has(charId),
-            ),
-        );
-
-        return {
-          ...selection,
-          availableCandidates,
-          remainingCount:
-            selection.cohort.teamCount - selection.selectedKeys.length,
-        };
-      });
-
-    if (availableStates.length === 0) {
-      break;
-    }
-
-    for (const state of availableStates) {
-      if (state.availableCandidates.length === 0) {
-        unavailableGroups.push(state.group.label);
-      }
-    }
-    const selectableStates = availableStates.filter(
-      ({ availableCandidates }) => availableCandidates.length > 0,
-    );
-    if (selectableStates.length === 0) {
-      break;
-    }
-
-    const nextSelection = selectableStates.sort((left, right) => {
-      const rankingDifference =
-        getRoomGroupCandidateSortBonus(right.availableCandidates[0]) -
-        getRoomGroupCandidateSortBonus(left.availableCandidates[0]);
-      if (rankingDifference !== 0) {
-        return rankingDifference;
-      }
-
-      return `${left.group.id}:${left.cohort.id}`.localeCompare(
-        `${right.group.id}:${right.cohort.id}`,
-        "en",
-      );
-    })[0];
-    const candidate = nextSelection.availableCandidates[0];
-
-    nextSelection.selectedKeys.push(candidate.key);
-    for (const charId of candidate.operatorIds || []) {
-      claimedOperatorIds.add(charId);
-    }
-  }
-
-  for (const { group, cohort, selectedKeys } of pendingCohorts) {
-    if (selectedKeys.length < cohort.teamCount) {
-      unavailableGroups.push(group.label);
-    }
-  }
-
-  const selectionGroups = {};
-  for (const { group, cohort, selectedKeys } of pendingCohorts) {
-    selectionGroups[group.id] = {
-      ...selectionGroups[group.id],
-      [cohort.id]: selectedKeys,
-    };
-  }
-
-  return {
-    selections: selectionGroups,
-    unavailableGroups: [...new Set(unavailableGroups)],
-  };
-}
-
-function reserveAutomaticRoomGroupFallbackOperators({
-  groups,
+function createAutomaticRoomGroupFallbackQueueStates({
   selections,
-  claimedOperatorIds,
-  reservedOperatorIds = new Set(),
+  fallbackOperatorIdBySlotKeyByGroup,
 }) {
-  const unavailableGroups = [];
-
-  for (const group of groups) {
-    const state = roomGroupCandidateStates.value[group.id];
-    const selected = getRoomGroupCandidateEntriesForKeys(
-      group,
-      state,
-      selections[group.id],
-      { allowPartial: true },
-    );
-    if (!selected) {
-      unavailableGroups.push(group.label);
-      continue;
-    }
-
-    const plan = createRiicRoomGroupFallbackPlan({
-      selectedEntries: selected.selectedEntries,
-      occupiedOperatorIds: new Set([
-        ...claimedOperatorIds,
-        ...reservedOperatorIds,
-      ]),
-    });
-    if (plan.status !== "ready") {
-      unavailableGroups.push(group.label);
-    }
-
-    for (const charId of plan.selectedOperatorIds) {
-      claimedOperatorIds.add(charId);
-    }
-  }
-
-  return {
-    unavailableGroups: [...new Set(unavailableGroups)],
-  };
-}
-
-function buildAutomaticRoomGroupSelections() {
-  const groups = getRoomGroupFallbackPlanningGroups();
-  const primaryGroups = groups.filter(
-    (group) => getAutomaticRoomGroupPriority(group) === 0,
-  );
-  const supportGroups = groups.filter(
-    (group) => getAutomaticRoomGroupPriority(group) > 0,
-  );
-  const claimedOperatorIds = new Set(controlCenterSelectedOperatorIds.value);
-  const primarySelection = buildAutomaticRoomGroupSelectionsForGroups({
-    groups: primaryGroups,
-    claimedOperatorIds,
-  });
-
-  const primaryFallbackReservation = reserveAutomaticRoomGroupFallbackOperators({
-    groups: primaryGroups,
-    selections: primarySelection.selections,
-    claimedOperatorIds,
-  });
-
-  const supportSelection = buildAutomaticRoomGroupSelectionsForGroups({
-    groups: supportGroups,
-    claimedOperatorIds,
-  });
-
-  const supportFallbackReservation = reserveAutomaticRoomGroupFallbackOperators({
-    groups: supportGroups,
-    selections: supportSelection.selections,
-    claimedOperatorIds,
-  });
-
-  return {
-    selections: {
-      ...primarySelection.selections,
-      ...supportSelection.selections,
-    },
-    unavailableGroups: [
-      ...primarySelection.unavailableGroups,
-      ...primaryFallbackReservation.unavailableGroups,
-      ...supportSelection.unavailableGroups,
-      ...supportFallbackReservation.unavailableGroups,
-    ].filter(
-      (groupLabel, index, labels) => labels.indexOf(groupLabel) === index,
-    ),
-  };
-}
-
-function createAutomaticRoomGroupFallbackQueueStates() {
   return Object.fromEntries(
-    getRoomGroupFallbackPlanningGroups().flatMap((group) => {
-      const plan = roomGroupFallbackPlanStates.value[group.id];
-      if (!plan?.fallbackQueueSignature || plan.pendingCount <= 0) {
+    candidateEnabledScheduleRoomGroups.value.flatMap((group) => {
+      const state = roomGroupCandidateStates.value[group.id];
+      const selected = getRoomGroupCandidateEntriesForKeys(
+        group,
+        state,
+        selections?.[group.id],
+      );
+      const operatorIdBySlotKey =
+        fallbackOperatorIdBySlotKeyByGroup?.[group.id] || {};
+      if (
+        !selected ||
+        Object.keys(operatorIdBySlotKey).length === 0
+      ) {
         return [];
       }
 
@@ -3406,8 +2604,10 @@ function createAutomaticRoomGroupFallbackQueueStates() {
         [
           group.id,
           {
-            signature: plan.fallbackQueueSignature,
-            operatorIdBySlotKey: plan.operatorIdBySlotKey,
+            signature: getRoomGroupFallbackQueueSignature(
+              selected.selectedEntries,
+            ),
+            operatorIdBySlotKey,
           },
         ],
       ];
@@ -3415,9 +2615,69 @@ function createAutomaticRoomGroupFallbackQueueStates() {
   );
 }
 
-async function generateAutomaticSchedule({ silentSuccess = false } = {}) {
+function cloneRiicAutomaticScheduleWorkerInput(value) {
+  return JSON.parse(JSON.stringify(toRaw(value)));
+}
+
+function createRiicAutomaticScheduleWorkerInput(searchConfig) {
+  const fiammettaRecovery = {
+    ...fiammettaRecoveryConfig.value,
+    usedStateIndexes:
+      controlCenterFiammettaTargetUsage.value.stateIndexes,
+  };
+
+  return cloneRiicAutomaticScheduleWorkerInput({
+    groups: candidateEnabledScheduleRoomGroups.value,
+    candidateStatesByGroupId: roomGroupCandidateStates.value,
+    controlCenterOperatorIds: [...controlCenterSelectedOperatorIds.value],
+    controlCenterRuntimeContext: controlCenterRuntimeContext.value,
+    selectionBeamLimit: searchConfig.selectionBeamLimit,
+    fallbackPlanLimit: searchConfig.fallbackPlanLimit,
+    ownedOperators: riicMatchingRoster.value,
+    controlCenterSegments: controlCenterFinalRoleState.value.segments,
+    fiammettaRecovery,
+    idleFillOperators: riicIdleFillOperators.value,
+    fiammettaControlUsage: controlCenterFiammettaTargetUsage.value,
+  });
+}
+
+function getRandomAutomaticGenerationNoticeOperators() {
+  const operatorsById = new Map(
+    (riicMatchingRoster.value || []).flatMap((operator) => {
+      const charId = String(operator?.charId || "").trim();
+      return charId && operatorTableV2?.[charId]
+        ? [[charId, { charId }]]
+        : [];
+    }),
+  );
+  const operators = [...operatorsById.values()];
+
+  for (let index = operators.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [operators[index], operators[randomIndex]] = [
+      operators[randomIndex],
+      operators[index],
+    ];
+  }
+
+  if (operators.length === 0) {
+    return [];
+  }
+
+  return Array.from(
+    { length: 12 },
+    (_, index) => operators[index % operators.length],
+  );
+}
+
+async function generateAutomaticSchedule({
+  silentSuccess = false,
+  strategy = "fast",
+} = {}) {
+  const requestId = ++automaticGenerationRequestId;
   if (autoGeneratingSchedule.value) {
-    automaticGenerationQueued = true;
+    automaticGenerationQueuedOptions = { silentSuccess, strategy };
+    automaticGenerationAbortController?.abort();
     return;
   }
 
@@ -3432,7 +2692,15 @@ async function generateAutomaticSchedule({ silentSuccess = false } = {}) {
   }
 
   const generationTriggerKey = automaticGenerationTriggerKey.value;
+  const searchConfig =
+    RIIC_AUTOMATIC_SEARCH_CONFIGS[strategy] ||
+    RIIC_AUTOMATIC_SEARCH_CONFIGS.fast;
+  const abortController = new AbortController();
+  automaticGenerationAbortController = abortController;
   autoGeneratingSchedule.value = true;
+  automaticGenerationPhase.value = "正在加载候选";
+  automaticGenerationNoticeOperators.value =
+    getRandomAutomaticGenerationNoticeOperators();
   try {
     await Promise.all(
       candidateEnabledScheduleRoomGroups.value.map((group) =>
@@ -3441,11 +2709,37 @@ async function generateAutomaticSchedule({ silentSuccess = false } = {}) {
     );
     await nextTick();
 
-    const { selections, unavailableGroups } =
-      buildAutomaticRoomGroupSelections();
-    if (unavailableGroups.length > 0) {
+    automaticGenerationPhase.value = "正在后台计算";
+    const workerResult = await runRiicAutomaticScheduleInWorker({
+      input: createRiicAutomaticScheduleWorkerInput(searchConfig),
+      signal: abortController.signal,
+    });
+    if (
+      abortController.signal.aborted ||
+      requestId !== automaticGenerationRequestId
+    ) {
+      return;
+    }
+
+    automaticGenerationPhase.value = "正在组装结果";
+    const {
+      automaticSelection,
+      tailFillResult,
+      resourceSuiteResult,
+    } = workerResult;
+    const {
+      selections,
+      fallbackOperatorIdBySlotKeyByGroup,
+    } = resourceSuiteResult.tailFillResult;
+    riicAutomaticGenerationDebugState.value = {
+      strategy,
+      l70: automaticSelection.debug || null,
+      l71: tailFillResult,
+      l72: resourceSuiteResult.debug,
+    };
+    if (automaticSelection.unavailableGroups.length > 0) {
       cMessage(
-        `无法自动填满：${unavailableGroups.join("、")}`,
+        `无法自动填满：${automaticSelection.unavailableGroups.join("、")}`,
         "warn",
       );
     }
@@ -3459,30 +2753,55 @@ async function generateAutomaticSchedule({ silentSuccess = false } = {}) {
       "";
     await nextTick();
     roomGroupFallbackQueueStates.value =
-      createAutomaticRoomGroupFallbackQueueStates();
+      createAutomaticRoomGroupFallbackQueueStates({
+        selections,
+        fallbackOperatorIdBySlotKeyByGroup,
+    });
     await nextTick();
-    recommendedScheduleSnapshot.value = createRecommendedScheduleSnapshot(
-      generationTriggerKey,
+    syncFiammettaRecoveryUsage(
+      fiammettaTargetName.value,
+      fiammettaRecoveryConfig.value,
+      assembledFiammettaTargetUsage.value,
     );
+    lastAutomaticGenerationTriggerKey.value = generationTriggerKey;
     if (!silentSuccess) {
       cMessage("已自动生成排班表", "success");
     }
   } catch (error) {
+    if (isRiicAutomaticScheduleAbortError(error)) {
+      return;
+    }
+
     console.error(error);
     cMessage("自动生成失败，请稍后重试", "error");
   } finally {
-    autoGeneratingSchedule.value = false;
-    if (automaticGenerationQueued) {
-      automaticGenerationQueued = false;
+    if (automaticGenerationAbortController === abortController) {
+      automaticGenerationAbortController = null;
+      autoGeneratingSchedule.value = false;
+      automaticGenerationPhase.value = "";
+      automaticGenerationNoticeOperators.value = [];
+    }
+    if (automaticGenerationQueuedOptions) {
+      const queuedOptions = automaticGenerationQueuedOptions;
+      automaticGenerationQueuedOptions = null;
       if (automaticGenerationTriggerKey.value) {
-        void generateAutomaticSchedule({ silentSuccess: true });
+        void generateAutomaticSchedule(queuedOptions);
       }
     }
   }
 }
 
-function restoreRecommendedSchedule() {
+function regenerateSchedule() {
   void generateAutomaticSchedule();
+}
+
+function openDeepScheduleConfirmation() {
+  deepScheduleConfirmationOpen.value = true;
+}
+
+function confirmDeepSchedule() {
+  deepScheduleConfirmationOpen.value = false;
+  void generateAutomaticSchedule({ strategy: "deep" });
 }
 
 const candidateEnabledScheduleRoomGroups = computed(() =>
@@ -3545,6 +2864,7 @@ const automaticGenerationTriggerKey = computed(() => {
     treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
     JSON.stringify(idealTrainingRaritySelection.value),
     controlCenterAssignmentSignature.value,
+    JSON.stringify(fiammettaRecoverySettings.value),
     rosterSignature,
   ].join("::");
 });
@@ -3592,14 +2912,20 @@ watch(
   automaticGenerationTriggerKey,
   (triggerKey, previousTriggerKey) => {
     if (
-      !triggerKey ||
       triggerKey === previousTriggerKey ||
       operatorSourceSwitching.value
     ) {
       return;
     }
 
-    if (recommendedScheduleSnapshot.value?.triggerKey === triggerKey) {
+    if (!triggerKey) {
+      automaticGenerationQueuedOptions = null;
+      automaticGenerationRequestId += 1;
+      automaticGenerationAbortController?.abort();
+      return;
+    }
+
+    if (lastAutomaticGenerationTriggerKey.value === triggerKey) {
       return;
     }
 
@@ -3617,7 +2943,7 @@ watch(operatorSourceSwitching, (isSwitching, wasSwitching) => {
   }
 
   if (
-    recommendedScheduleSnapshot.value?.triggerKey ===
+    lastAutomaticGenerationTriggerKey.value ===
     automaticGenerationTriggerKey.value
   ) {
     return;
@@ -3680,6 +3006,8 @@ function getRoomGroupCandidateEntriesForKeys(
       selectedEntries.push({
         selectionKey: `${cohort.id}:${teamIndex}`,
         candidate,
+        cohort,
+        teamIndex,
       });
     }
   }
@@ -3698,235 +3026,6 @@ function getSelectedRoomGroupCandidateEntries(group, state, options) {
     getRoomGroupTeamCandidateKeys(group.id),
     options,
   );
-}
-
-function mergeCandidateUpgradeRequirements(requirements) {
-  const byCharId = new Map();
-
-  for (const requirement of requirements || []) {
-    const charId = String(requirement?.charId || "").trim();
-    if (!charId) {
-      continue;
-    }
-
-    const current = byCharId.get(charId);
-    const requiredElite = Number(requirement?.required?.elite || 0);
-    const requiredLevel = Number(requirement?.required?.level || 1);
-    const currentElite = Number(current?.required?.elite || 0);
-    const currentLevel = Number(current?.required?.level || 1);
-    if (
-      !current ||
-      requiredElite > currentElite ||
-      (requiredElite === currentElite && requiredLevel > currentLevel)
-    ) {
-      byCharId.set(charId, requirement);
-    }
-  }
-
-  return [...byCharId.values()].sort(
-    (left, right) =>
-      String(left?.name || "").localeCompare(String(right?.name || ""), "zh-CN") ||
-      String(left?.charId || "").localeCompare(
-        String(right?.charId || ""),
-        "en",
-      ),
-  );
-}
-
-function materializeRoomGroupCandidate(
-  candidate,
-  fallbackOperators,
-  { controlCenterRuntimeContext: runtimeContext } = {},
-) {
-  const operators = fallbackOperators || [];
-  const ordinaryFallbackOperators = operators.filter(
-    (operator) => !operator?.taggedMember,
-  );
-  const fallbackPercent = ordinaryFallbackOperators.reduce(
-    (total, operator) => total + Number(operator.percent || 0),
-    0,
-  );
-  const operatorIds = [
-    ...new Set([
-      ...(candidate?.operatorIds || []),
-      ...operators.map((operator) => operator.charId),
-    ]),
-  ];
-  const upgradeRequirements = mergeCandidateUpgradeRequirements([
-    ...(candidate?.coreUpgradeRequirements ||
-      candidate?.upgradeRequirements ||
-      []),
-    ...operators.map((operator) => operator?.upgradeRequirement),
-  ]);
-  const automationResult = recalculateRiicAutomationManufacture({
-    scope: candidate?.candidateScope,
-    coreBaseBonusPercent: candidate?.coreBaseBonusPercent,
-    coreLayer3BonusPercent: candidate?.coreLayer3BonusPercent,
-    fallbackOperators: operators,
-  });
-  const expectedControlCenterOperatorBonusPercent = Number(
-    candidate?.controlCenterOperatorBonusPercent || 0,
-  );
-  const controlCenterAdjustment = runtimeContext
-    ? getRiicControlCenterRoomAdjustment({
-        context: runtimeContext,
-        scope: candidate?.candidateScope,
-        operatorIds,
-      })
-    : null;
-  const controlCenterOperatorBonusPercent = controlCenterAdjustment
-    ? Number(controlCenterAdjustment.operatorBonusPercent || 0)
-    : expectedControlCenterOperatorBonusPercent;
-  const controlCenterFacilityBonusPercent = controlCenterAdjustment
-    ? Number(controlCenterAdjustment.facilityBonusPercent || 0)
-    : Number(candidate?.controlCenterFacilityBonusPercent || 0);
-  const corePercentBeforeControl =
-    Number(candidate?.corePercent || 100) -
-    expectedControlCenterOperatorBonusPercent;
-  const corePercent =
-    corePercentBeforeControl + controlCenterOperatorBonusPercent;
-  const totalPercent = automationResult
-    ? automationResult.totalPercent + controlCenterOperatorBonusPercent
-    : corePercent + fallbackPercent;
-  const bonusPercent = totalPercent - 100;
-  const localBonusPercent =
-    Number(candidate?.localBonusPercent || 0) -
-    expectedControlCenterOperatorBonusPercent +
-    controlCenterOperatorBonusPercent;
-  const localPercentField =
-    {
-      trading: "tradingPercent",
-      manufacture: "manufacturePercent",
-      meeting: "meetingPercent",
-      hire: "officePercent",
-      power: "powerPercent",
-    }[String(candidate?.sourceRoomType || "").trim()] || "";
-
-  return {
-    ...candidate,
-    operatorIds,
-    operators: [
-      ...(candidate?.operators || []),
-      ...operators.map((operator) => ({
-        charId: operator.charId,
-        name: operator.name,
-        scored: true,
-        fallback: !operator.taggedMember,
-        taggedMember: Boolean(operator.taggedMember),
-        upgradeRequirement: operator.upgradeRequirement || null,
-      })),
-    ],
-    upgradeRequirements,
-    fallback: {
-      ...candidate.fallback,
-      count: Math.max(
-        0,
-        Number(candidate.fallback?.count || 0) - ordinaryFallbackOperators.length,
-      ),
-      operators,
-      fallbackOperatorIds: operators.map((operator) => operator.charId),
-      totalPercent: fallbackPercent,
-      materialized: operators.length > 0,
-    },
-    corePercent,
-    totalPercent,
-    bonusPercent,
-    bestAvailableTotalPercent: totalPercent,
-    localBonusPercent,
-    ...(localPercentField
-      ? {
-          [localPercentField]: localBonusPercent,
-        }
-      : {}),
-    controlCenterFacilityBonusPercent,
-    controlCenterOperatorBonusPercent,
-    controlCenterOperatorBonusById: controlCenterAdjustment
-      ? { ...(controlCenterAdjustment.operatorBonusById || {}) }
-      : { ...(candidate?.controlCenterOperatorBonusById || {}) },
-    controlCenterExpectedBonusPercent:
-      controlCenterFacilityBonusPercent + controlCenterOperatorBonusPercent,
-    controlCenterFacilityCalculation:
-      controlCenterAdjustment?.facilityCalculation ||
-      candidate?.controlCenterFacilityCalculation,
-    controlCenterOperatorCalculation:
-      controlCenterAdjustment?.operatorCalculation ||
-      candidate?.controlCenterOperatorCalculation,
-    sameShiftBindings:
-      controlCenterAdjustment?.sameShiftBindings ||
-      candidate?.sameShiftBindings ||
-      [],
-    ...(automationResult
-      ? {
-          localBonusPercent: bonusPercent,
-          manufacturePercent: bonusPercent,
-          automationCalculation: automationResult,
-        }
-      : {}),
-  };
-}
-
-function createEmptyRoomCandidate({
-  key,
-  roomType = "",
-  slotCount = 0,
-} = {}) {
-  const expectedSlots = Math.max(0, Number(slotCount) || 0);
-
-  return {
-    key: `empty:${key || roomType || "room"}`,
-    name: "空位",
-    operatorIds: [],
-    operators: [],
-    sourceRoomType: roomType,
-    corePercent: 0,
-    totalPercent: 0,
-    bonusPercent: -100,
-    bestAvailableTotalPercent: 0,
-    fallback: {
-      count: expectedSlots,
-      operators: [],
-      materialized: false,
-    },
-    incomplete: true,
-  };
-}
-
-function mergeIndividualRoomCandidates(candidates) {
-  const operatorIds = [
-    ...new Set(
-      candidates.flatMap((candidate) => candidate?.operatorIds || []),
-    ),
-  ];
-  const totalPercent =
-    candidates.reduce(
-      (total, candidate) => total + Number(candidate?.totalPercent || 0),
-      0,
-    ) / Math.max(candidates.length, 1);
-
-  return {
-    key: `individual:${candidates.map((candidate) => candidate.key).join("+")}`,
-    name: candidates.map((candidate) => candidate.name).join(" + "),
-    operatorIds,
-    operators: candidates.flatMap((candidate) => candidate?.operators || []),
-    coreUpgradeRequirements: mergeCandidateUpgradeRequirements(
-      candidates.flatMap(
-        (candidate) => candidate?.coreUpgradeRequirements || [],
-      ),
-    ),
-    upgradeRequirements: mergeCandidateUpgradeRequirements(
-      candidates.flatMap((candidate) => candidate?.upgradeRequirements || []),
-    ),
-    sourceRoomType: "meeting",
-    corePercent: totalPercent,
-    totalPercent,
-    bonusPercent: totalPercent - 100,
-    fallback: {
-      count: 0,
-      operators: [],
-      materialized: true,
-    },
-    selectionMode: "individual",
-  };
 }
 
 function buildManualRoomGroupRotationCandidate(
@@ -3965,7 +3064,7 @@ function buildManualRoomGroupRotationCandidate(
           const materializedCandidates = sourceCandidates.map(
             (sourceCandidate, index) => {
               if (!sourceCandidate) {
-                return createEmptyRoomCandidate({
+                return createRiicEmptyRoomTeamCandidate({
                   key: selectionKeys[index],
                   roomType: group.facility,
                   slotCount: cohort.slotCount,
@@ -3979,7 +3078,7 @@ function buildManualRoomGroupRotationCandidate(
                 return sourceCandidate;
               }
 
-              return materializeRoomGroupCandidate(
+              return materializeRiicRoomTeamCandidate(
                 sourceCandidate,
                 fallbackPlan?.assignmentsBySelectionKey?.[selectionKeys[index]] ||
                   [],
@@ -3991,7 +3090,7 @@ function buildManualRoomGroupRotationCandidate(
           );
           const candidate =
             cohort.selectionMode === "individual"
-              ? mergeIndividualRoomCandidates(materializedCandidates)
+              ? mergeRiicIndividualRoomTeamCandidates(materializedCandidates)
               : {
                   ...materializedCandidates[0],
                   fallbackSelectionKey: selectionKeys[0],
@@ -4104,18 +3203,39 @@ const manualControlRoomGroupCandidate = computed(() => {
 });
 
 const roomGroupFallbackPlanStates = computed(() => {
-  const occupiedOperatorIds = new Set(controlCenterSelectedOperatorIds.value);
+  const recovery = fiammettaRecoveryConfig.value;
+  const planningGroups = getRiicAutomaticRoomGroupPlanningOrder(
+    candidateEnabledScheduleRoomGroups.value,
+  );
+  const fiammettaTargetStateIndexes = new Set(
+    controlCenterFiammettaTargetUsage.value.stateIndexes,
+  );
+  for (const group of planningGroups) {
+    const state = roomGroupCandidateStates.value[group.id];
+    for (const stateIndex of getSelectedRoomGroupFiammettaStateIndexes(
+      group,
+      state,
+      recovery,
+    )) {
+      fiammettaTargetStateIndexes.add(stateIndex);
+    }
+  }
+  const occupiedOperatorIds = new Set(
+    [...controlCenterSelectedOperatorIds.value].filter(
+      (charId) => charId !== recovery.targetOperatorId,
+    ),
+  );
   const plans = {};
   const selectedCoreOperatorIds = new Set(
-    candidateEnabledScheduleRoomGroups.value.flatMap((group) => [
-      ...getSelectedRoomGroupCoreOperatorIds(
+    planningGroups.flatMap((group) => [
+      ...[...getSelectedRoomGroupCoreOperatorIds(
         group,
         roomGroupCandidateStates.value[group.id],
-      ),
+      )].filter((charId) => charId !== recovery.targetOperatorId),
     ]),
   );
 
-  for (const group of candidateEnabledScheduleRoomGroups.value) {
+  for (const group of planningGroups) {
     const state = roomGroupCandidateStates.value[group.id];
     const selected = getSelectedRoomGroupCandidateEntries(group, state, {
       allowPartial: true,
@@ -4135,22 +3255,57 @@ const roomGroupFallbackPlanStates = computed(() => {
     const occupiedIds = new Set([
       ...selectedCoreOperatorIds,
       ...occupiedOperatorIds,
-      ...coreOperatorIds,
-    ]);
+    ].filter((charId) => charId !== recovery.targetOperatorId));
     const fallbackQueueSignature = getRoomGroupFallbackQueueSignature(
       selected.selectedEntries,
     );
     const savedQueue = roomGroupFallbackQueueStates.value[group.id];
     const hasManualFallbackQueue =
       savedQueue?.signature === fallbackQueueSignature;
+    const selectedEntries = withRiicIdleFillOperators(
+      selected.selectedEntries,
+      riicIdleFillOperators.value,
+    );
     const automaticPlan = createRiicRoomGroupFallbackPlan({
-      selectedEntries: selected.selectedEntries,
+      selectedEntries,
       occupiedOperatorIds: occupiedIds,
+      excludedOperatorIds: coreOperatorIds,
+      ownedOperators: riicMatchingRoster.value,
+      activeOperatorIds: occupiedIds,
+      fiammettaRecovery: {
+        ...recovery,
+        usedStateIndexes: [...fiammettaTargetStateIndexes],
+        stateIndexesBySelectionKey: Object.fromEntries(
+          selected.selectedEntries.map((entry) => [
+            entry.selectionKey,
+            getRiicFiammettaTeamStateIndexes(
+              entry.cohort,
+              entry.teamIndex,
+            ),
+          ]),
+        ),
+      },
     });
     const plan = hasManualFallbackQueue
       ? createRiicRoomGroupFallbackPlan({
-          selectedEntries: selected.selectedEntries,
+          selectedEntries,
           occupiedOperatorIds: occupiedIds,
+          excludedOperatorIds: coreOperatorIds,
+          ownedOperators: riicMatchingRoster.value,
+          activeOperatorIds: occupiedIds,
+          fiammettaRecovery: {
+            ...recovery,
+            usedStateIndexes: [...fiammettaTargetStateIndexes],
+            stateIndexesBySelectionKey: Object.fromEntries(
+              selected.selectedEntries.map((entry) => [
+                entry.selectionKey,
+                getRiicFiammettaTeamStateIndexes(
+                  entry.cohort,
+                  entry.teamIndex,
+                ),
+              ]),
+            ),
+          },
           preferredOperatorIdBySlotKey: savedQueue?.operatorIdBySlotKey,
           preferredOperatorIds: savedQueue?.operatorIds,
           allowAutomaticFill: false,
@@ -4170,7 +3325,12 @@ const roomGroupFallbackPlanStates = computed(() => {
     };
 
     for (const charId of [...coreOperatorIds, ...plan.selectedOperatorIds]) {
-      occupiedOperatorIds.add(charId);
+      if (charId !== recovery.targetOperatorId) {
+        occupiedOperatorIds.add(charId);
+      }
+    }
+    for (const stateIndex of plan.fiammettaTargetStateIndexes || []) {
+      fiammettaTargetStateIndexes.add(stateIndex);
     }
   }
 
@@ -4178,153 +3338,20 @@ const roomGroupFallbackPlanStates = computed(() => {
 });
 
 const controlCenterLateFillState = computed(() => {
-  const baseState = controlCenterRoleState.value;
-  if (baseState.status !== "ready") {
-    return {
-      status: baseState.status,
-      teamEntries: [],
-      operatorIds: [],
-    };
-  }
-
-  const excludedOperatorIds = new Set(
-    controlCenterLateFillExcludedOperatorIds.value,
-  );
-  const occupiedOperatorIds = new Set(baseState.operatorIds || []);
-  for (const plan of Object.values(roomGroupFallbackPlanStates.value)) {
-    for (const charId of [
-      ...(plan?.coreOperatorIds || []),
-      ...(plan?.selectedOperatorIds || []),
-    ]) {
-      occupiedOperatorIds.add(charId);
-    }
-  }
-
-  const controlCandidates = controlCenterCandidateOperators.value
-    .filter((operator) => {
-      const charId = String(operator?.charId || "").trim();
-      return charId && !excludedOperatorIds.has(charId);
-    })
-    .map((operator) => ({
-      ...operator,
-      lateFillSource: "effect",
-    }));
-  const controlCandidateIds = new Set(
-    controlCandidates.map((operator) => operator.charId),
-  );
-  const rosterById = new Map();
-  for (const operator of riicMatchingRoster.value || []) {
-    const charId = String(operator?.charId || "").trim();
-    if (
-      !charId ||
-      excludedOperatorIds.has(charId) ||
-      controlCandidateIds.has(charId) ||
-      rosterById.has(charId)
-    ) {
-      continue;
-    }
-
-    rosterById.set(charId, {
-      ...operator,
-      controlCenterBuffTags: [],
-      controlCenterResolvedEffects: [],
-      controlCenterRoomEffectLabel: "",
-      lateFillSource: "idle",
-    });
-  }
-  const candidateQueue = [
-    ...controlCandidates,
-    ...rosterById.values(),
-  ];
-  const teamEntries = [];
-  const teamIndexes = [
-    ...new Set(
-      (baseState.segments || [])
-        .map((segment) => Number(segment?.teamIndex))
-        .filter((teamIndex) => Number.isInteger(teamIndex) && teamIndex >= 0),
-    ),
-  ].sort((left, right) => left - right);
-
-  for (const teamIndex of teamIndexes) {
-    const sourceSegment = (baseState.segments || []).find(
-      (segment) => Number(segment?.teamIndex) === teamIndex,
-    );
-    const slotCount = Math.max(0, Number(sourceSegment?.slotCount || 0));
-    const operators = [...(sourceSegment?.operators || [])];
-    const fillers = [];
-
-    for (const operator of candidateQueue) {
-      if (operators.length + fillers.length >= slotCount) {
-        break;
-      }
-
-      const charId = String(operator?.charId || "").trim();
-      if (!charId || occupiedOperatorIds.has(charId)) {
-        continue;
-      }
-
-      fillers.push(operator);
-      occupiedOperatorIds.add(charId);
-    }
-
-    teamEntries.push({
-      teamIndex,
-      slotCount,
-      operators: fillers,
-      operatorIds: fillers.map((operator) => operator.charId),
-      emptySlotCount: Math.max(
-        0,
-        slotCount - operators.length - fillers.length,
-      ),
-    });
-  }
-
-  return {
-    status: "ready",
-    teamEntries,
-    operatorIds: teamEntries.flatMap((entry) => entry.operatorIds),
-  };
+  return buildRiicControlCenterLateFillState({
+    baseState: controlCenterRoleState.value,
+    fallbackPlans: roomGroupFallbackPlanStates.value,
+    excludedOperatorIds: controlCenterLateFillExcludedOperatorIds.value,
+    controlCandidates: controlCenterCandidateOperators.value,
+    roster: riicMatchingRoster.value,
+  });
 });
 
 const controlCenterFinalRoleState = computed(() => {
-  const baseState = controlCenterRoleState.value;
-  const lateFillState = controlCenterLateFillState.value;
-  if (baseState.status !== "ready" || lateFillState.status !== "ready") {
-    return baseState;
-  }
-
-  const lateFillByTeamIndex = new Map(
-    lateFillState.teamEntries.map((entry) => [entry.teamIndex, entry]),
-  );
-  const segments = (baseState.segments || []).map((segment) => {
-    const lateFill = lateFillByTeamIndex.get(segment.teamIndex);
-    const operators = [
-      ...(segment.operators || []),
-      ...(lateFill?.operators || []),
-    ].slice(0, segment.slotCount);
-
-    return {
-      ...segment,
-      operators,
-      operatorIds: operators.map((operator) => operator.charId),
-    };
+  return mergeRiicControlCenterLateFillState({
+    baseState: controlCenterRoleState.value,
+    lateFillState: controlCenterLateFillState.value,
   });
-  const maxSegmentOperatorCount = Math.max(
-    0,
-    ...segments.map((segment) => segment.operatorIds.length),
-  );
-
-  return {
-    ...baseState,
-    segments,
-    operatorIds: [
-      ...new Set(segments.flatMap((segment) => segment.operatorIds || [])),
-    ],
-    emptySlotCount: Math.max(
-      0,
-      (segments[0]?.slotCount || 0) - maxSegmentOperatorCount,
-    ),
-  };
 });
 
 const controlCenterFinalRuntimeContext = computed(() =>
@@ -4366,7 +3393,9 @@ watch(
 const roomGroupOperatorDestinations = computed(() => {
   const destinations = {};
 
-  for (const group of getRoomGroupFallbackPlanningGroups()) {
+  for (const group of getRiicAutomaticRoomGroupPlanningOrder(
+    candidateEnabledScheduleRoomGroups.value,
+  )) {
     const state = roomGroupCandidateStates.value[group.id];
     for (const charId of getSelectedRoomGroupCoreOperatorIds(group, state)) {
       if (!destinations[charId]) {
@@ -4375,7 +3404,9 @@ const roomGroupOperatorDestinations = computed(() => {
     }
   }
 
-  for (const group of candidateEnabledScheduleRoomGroups.value) {
+  for (const group of getRiicAutomaticRoomGroupPlanningOrder(
+    candidateEnabledScheduleRoomGroups.value,
+  )) {
     const plan = roomGroupFallbackPlanStates.value[group.id];
     if (!plan) {
       continue;
@@ -4595,6 +3626,7 @@ function getRoomFallbackOperatorClasses(operator) {
   return {
     occupied: Boolean(destination),
     selected,
+    "idle-fill": Boolean(operator?.idleFill),
     [`destination-${destination}`]: Boolean(destination),
   };
 }
@@ -4637,13 +3669,12 @@ function getRoomGroupCandidateFallbackQueueOperators(
   cohort,
   candidate,
 ) {
-  const selectedKeys = getSelectedTeamCandidateKeys(group?.id, cohort);
-  const candidateIndex = selectedKeys.indexOf(candidate?.key);
-  if (candidateIndex < 0) {
+  const selectionIndex = Number(candidate?.selectionIndex);
+  if (!Number.isInteger(selectionIndex) || selectionIndex < 0) {
     return [];
   }
 
-  const selectionKey = `${cohort.id}:${candidateIndex}`;
+  const selectionKey = `${cohort.id}:${selectionIndex}`;
   return (
     getRoomGroupFallbackPlan(group)?.assignmentsBySelectionKey?.[
       selectionKey
@@ -4709,12 +3740,19 @@ function getManualRoomGroupCandidateOperatorIds(candidate) {
   ];
 }
 
-function getManualRoomGroupConflictGroups(candidates) {
+function getManualRoomGroupConflictGroups(
+  candidates,
+  { ignoredOperatorIds = [] } = {},
+) {
   const groupIdsByOperator = new Map();
   const conflictGroupIds = new Set();
+  const ignoredIds = new Set(ignoredOperatorIds);
 
   for (const { group, candidate } of candidates) {
     for (const charId of getManualRoomGroupCandidateOperatorIds(candidate)) {
+      if (ignoredIds.has(charId)) {
+        continue;
+      }
       const existingGroupIds = groupIdsByOperator.get(charId) || new Set();
       for (const existingGroupId of existingGroupIds) {
         conflictGroupIds.add(existingGroupId);
@@ -4793,7 +3831,11 @@ const assembledScheduleCandidateState = computed(() => {
   }
 
   const selectedGroups = assembledRoomGroupCandidates.value;
-  const conflictGroups = getManualRoomGroupConflictGroups(selectedGroups);
+  const conflictGroups = getManualRoomGroupConflictGroups(selectedGroups, {
+    ignoredOperatorIds: fiammettaRecoveryConfig.value.enabled
+      ? [fiammettaRecoveryConfig.value.targetOperatorId]
+      : [],
+  });
   if (conflictGroups.length > 0) {
     return {
       status: "blocked",
@@ -4805,6 +3847,12 @@ const assembledScheduleCandidateState = computed(() => {
 
   const sameShiftAlignment = alignRiicScheduleSameShiftBindings({
     groupEntries: selectedGroups,
+    lockedOperatorIds: [
+      "char_391_rosmon",
+      "char_4046_ebnhlz",
+      "char_436_whispr",
+      "char_4109_baslin",
+    ],
   });
   const alignedGroups = sameShiftAlignment.groupEntries;
 
@@ -4844,6 +3892,12 @@ const activeAssembledScheduleCandidate = computed(() => {
 
   return candidates[0];
 });
+const assembledFiammettaTargetUsage = computed(() =>
+  getRiicFiammettaScheduleUsage({
+    scheduleCandidate: activeAssembledScheduleCandidate.value,
+    targetOperatorId: fiammettaRecoveryConfig.value.targetOperatorId,
+  }),
+);
 const scheduleTrainingRequirements = computed(() => {
   if (
     !treatUnderleveledOperatorsAsQualified.value ||
@@ -4852,38 +3906,148 @@ const scheduleTrainingRequirements = computed(() => {
     return [];
   }
 
-  return mergeCandidateUpgradeRequirements([
-    ...manualRoomGroupCandidates.value.flatMap(({ candidate }) =>
-      (candidate?.segments || []).flatMap((segment) =>
-        (segment?.stationAssignments || []).flatMap(
-          (assignment) => assignment?.candidate?.upgradeRequirements || [],
-        ),
-      ),
+  return getRiicScheduleTrainingRecommendations({
+    scheduleCandidates: manualRoomGroupCandidates.value.map(
+      ({ candidate }) => candidate,
     ),
-  ]);
+    ownedOperators: ownedOperators.value,
+    matchingOperators: riicMatchingRoster.value,
+    operatorNameToCharId,
+  });
 });
-const riicSupportRoomPlacements = computed(() =>
-  getRiicLayer3SupportRoomPlacements({
-    roomAssignments: candidateEnabledScheduleRoomGroups.value.map((group) => ({
-      roomType: group.facility,
-      operatorIds: [
-        ...getSelectedRoomGroupCoreOperatorIds(
-          group,
-          roomGroupCandidateStates.value[group.id],
-        ),
-        ...(roomGroupFallbackPlanStates.value[group.id]?.selectedOperatorIds ||
-          []),
-      ],
-    })),
-    ownedOperators: riicMatchingRoster.value || [],
-    claimedOperatorIds: getClaimedNamedOperatorIds(),
-    layoutFacts: activeLayoutFacilityCounts.value,
+const riicSchedulePreviewWithoutSupportRooms = computed(() =>
+  buildRiicSchedulePreview({
+    scheduleCandidate: activeAssembledScheduleCandidate.value,
+    roomGroups: selectableScheduleRoomGroups.value,
+    staticRooms: [],
+    stateOrder: getSchedulePreviewStateOrder(
+      confirmedLayoutPlan.value?.shiftMode,
+      twoShiftRotationMode.value,
+    ),
+    roomOperatorOverrides: scheduleRoomOperatorOverrides.value,
+    productOverrides: scheduleRoomProductOverrides.value,
+    invalidatedRoomKeys: invalidatedScheduleRoomKeys.value,
+    stickyOperatorIds: [
+      operatorNameToCharId.get("但书"),
+      operatorNameToCharId.get("龙舌兰"),
+    ].filter(Boolean),
   }),
 );
+const schedulePreviewStaticRoomKeys = computed(
+  () =>
+    new Set(
+      scheduleRoomRows.value
+        .flatMap((row) => row.groups)
+        .filter(
+          (group) =>
+            !group.candidateGenerationAvailable && !group.manualControl,
+        )
+        .flatMap((group) =>
+          Array.from(
+            { length: Math.max(0, Number(group.count) || 0) },
+            (_, index) => `${group.id}:${index}`,
+          ),
+        ),
+    ),
+);
+
+function getSchedulePreviewManualStaticOperatorIds(stateIndex) {
+  const prefix = `${stateIndex}:`;
+  const staticRoomKeys = schedulePreviewStaticRoomKeys.value;
+
+  return Object.entries(scheduleRoomOperatorOverrides.value).flatMap(
+    ([overrideKey, operators]) => {
+      const roomKey = String(overrideKey || "").slice(prefix.length);
+      return overrideKey.startsWith(prefix) && staticRoomKeys.has(roomKey)
+        ? (operators || [])
+            .map((operator) => String(operator?.charId || "").trim())
+            .filter(Boolean)
+        : [];
+    },
+  );
+}
+
+const riicSupportRoomPlacementsBySourceStateIndex = computed(() =>
+  Object.fromEntries(
+    (riicSchedulePreviewWithoutSupportRooms.value?.states || []).map(
+      (state) => {
+        const roomAssignments = (state?.rooms || [])
+          .filter((room) => !room?.isStatic)
+          .map((room) => ({
+            roomType: room.facility,
+            operatorIds: (room?.operators || [])
+              .map((operator) => operator?.charId)
+              .filter(Boolean),
+          }));
+        const claimedOperatorIds = new Set(
+          roomAssignments.flatMap((assignment) => assignment.operatorIds),
+        );
+        for (const operatorId of getSchedulePreviewManualStaticOperatorIds(
+          state.index,
+        )) {
+          claimedOperatorIds.add(operatorId);
+        }
+        const sourceStateIndex = Number.isInteger(state?.sourceStateIndex)
+          ? state.sourceStateIndex
+          : state?.index;
+
+        return [
+          sourceStateIndex,
+          getRiicLayer3SupportRoomPlacements({
+            roomAssignments,
+            ownedOperators: riicMatchingRoster.value || [],
+            claimedOperatorIds,
+            layoutFacts: activeLayoutFacilityCounts.value,
+          }),
+        ];
+      },
+    ),
+  ),
+);
+
+function distributeRiicSupportRoomPlacements(
+  placements = [],
+  roomCount = 0,
+  slotCount = 0,
+) {
+  const rooms = Array.from(
+    { length: Math.max(0, Number(roomCount) || 0) },
+    () => [],
+  );
+  const normalizedSlotCount = Math.max(0, Number(slotCount) || 0);
+  if (rooms.length === 0 || normalizedSlotCount === 0) {
+    return rooms;
+  }
+
+  const fillRooms = (operators, roomIndexes) => {
+    let roomCursor = 0;
+    for (const operator of operators) {
+      while (
+        roomCursor < roomIndexes.length &&
+        rooms[roomIndexes[roomCursor]].length >= normalizedSlotCount
+      ) {
+        roomCursor += 1;
+      }
+      if (roomCursor >= roomIndexes.length) {
+        return;
+      }
+      rooms[roomIndexes[roomCursor]].push(operator);
+    }
+  };
+
+  fillRooms(
+    placements.filter((placement) => placement?.roomOrder !== "last"),
+    rooms.map((_, index) => index),
+  );
+  fillRooms(
+    placements.filter((placement) => placement?.roomOrder === "last"),
+    rooms.map((_, index) => rooms.length - 1 - index),
+  );
+
+  return rooms;
+}
 
 const schedulePreviewStaticRooms = computed(() => {
-  const placementOffsetByFacility = new Map();
-
   return scheduleRoomRows.value
     .flatMap((row) => row.groups)
     .filter(
@@ -4898,10 +4062,18 @@ const schedulePreviewStaticRooms = computed(() => {
             : group.facility === "training"
               ? 2
               : 1;
-        const offset = placementOffsetByFacility.get(group.facility) || 0;
-        const operators = (riicSupportRoomPlacements.value[group.facility] || [])
-          .slice(offset, offset + expectedSlots);
-        placementOffsetByFacility.set(group.facility, offset + expectedSlots);
+        const operatorsByStateIndex = Object.fromEntries(
+          Object.entries(
+            riicSupportRoomPlacementsBySourceStateIndex.value,
+          ).map(([stateIndex, placements]) => [
+            stateIndex,
+            distributeRiicSupportRoomPlacements(
+              placements?.[group.facility] || [],
+              group.count,
+              expectedSlots,
+            )[index] || [],
+          ]),
+        );
 
         return {
           key: `${group.id}:${index}`,
@@ -4911,12 +4083,12 @@ const schedulePreviewStaticRooms = computed(() => {
               : group.facilityLabel,
           facility: group.facility,
           expectedSlots,
-          operators,
+          operatorsByStateIndex,
         };
       }),
     );
 });
-const riicSchedulePreview = computed(() =>
+const riicSchedulePreviewBase = computed(() =>
   buildRiicSchedulePreview({
     scheduleCandidate: activeAssembledScheduleCandidate.value,
     roomGroups: selectableScheduleRoomGroups.value,
@@ -4932,6 +4104,14 @@ const riicSchedulePreview = computed(() =>
       operatorNameToCharId.get("但书"),
       operatorNameToCharId.get("龙舌兰"),
     ].filter(Boolean),
+  }),
+);
+const riicSchedulePreview = computed(() =>
+  settleRiicScheduleEfficiency({
+    preview: riicSchedulePreviewBase.value,
+    ownedOperators: riicMatchingRoster.value || [],
+    resourceFacts: riicPerceptionResourceFacts.value,
+    resolvedSkills: riicResolvedSkills.value,
   }),
 );
 function createSchedulePreviewPlaceholderRoom(group, station, stationIndex) {
@@ -5004,15 +4184,25 @@ const riicSchedulePreviewPlaceholder = computed(() => {
 const displayedRiicSchedulePreview = computed(
   () => riicSchedulePreview.value || riicSchedulePreviewPlaceholder.value,
 );
-const riicActualScheduleMetrics = computed(() =>
-  riicSchedulePreview.value
+const riicActualScheduleMetrics = computed(() => {
+  const selectionSummary = staffingSelectionSummary.value;
+  const scheduleSettlementReady =
+    assembledScheduleCandidateState.value.status === "ready" &&
+    selectionSummary.selectedTeamCount === selectionSummary.requiredTeamCount;
+
+  return scheduleSettlementReady && riicSchedulePreview.value
     ? summarizeRiicActualSchedule({
         preview: riicSchedulePreview.value,
+        droneTargetKey: scheduleExecutionSettings.droneTarget,
       })
-    : null,
-);
+    : null;
+});
 const generatedMaaExportPreview = computed(() => {
-  if (!riicSchedulePreview.value || !scheduleExecutionSettingsComplete.value) {
+  if (
+    !Array.isArray(riicSchedulePreview.value?.states) ||
+    riicSchedulePreview.value.states.length === 0 ||
+    !scheduleExecutionSettingsComplete.value
+  ) {
     return null;
   }
 
@@ -5021,13 +4211,61 @@ const generatedMaaExportPreview = computed(() => {
       preview: riicSchedulePreview.value,
       shifts: schedulePreviewShifts.value,
       droneTarget: scheduleExecutionSettings.droneTarget,
+      droneOrder: scheduleExecutionSettings.droneOrder,
       shiftMode: confirmedLayoutPlan.value?.shiftMode,
-      title: `一图流 ${confirmedLayoutPlan.value?.cardKey || "基建"} 排班表`,
+      title:
+        scheduleExecutionSettings.exportInfo.title ||
+        getDefaultGeneratedScheduleTitle(),
+      author: scheduleExecutionSettings.exportInfo.author,
+      description: scheduleExecutionSettings.exportInfo.description,
+      roomSettingOverrides: scheduleRoomMaaSettingOverrides.value,
+      hasFiammetta: schedulePreviewShifts.value.some(
+        (shift) => shift?.fiammetta?.enable === true,
+      ),
     });
   } catch (error) {
     console.error(error);
     return null;
   }
+});
+function getDefaultGeneratedScheduleTitle() {
+  return `一图流 ${confirmedLayoutPlan.value?.cardKey || "基建"} 排班表`;
+}
+const riicScheduleDuplicateOperatorChecks = computed(() => {
+  const states = riicSchedulePreview.value?.states || [];
+
+  return states.flatMap((state, stateIndex) => {
+    const roomsByOperatorKey = new Map();
+    for (const room of state?.rooms || []) {
+      for (const operator of room?.operators || []) {
+        const charId = String(operator?.charId || "").trim();
+        const name = String(
+          operator?.name || operatorTableV2?.[charId]?.name || "",
+        ).trim();
+        const key = charId || name;
+        if (!key) {
+          continue;
+        }
+
+        const rooms = roomsByOperatorKey.get(key) || [];
+        rooms.push(room?.label || room?.key || "未命名房间");
+        roomsByOperatorKey.set(key, rooms);
+      }
+    }
+
+    return [...roomsByOperatorKey.entries()]
+      .filter(([, rooms]) => rooms.length > 1)
+      .map(([operatorKey, rooms]) => ({
+        stateIndex,
+        shiftName:
+          schedulePreviewShifts.value[stateIndex]?.name ||
+          `班次 ${stateIndex + 1}`,
+        operatorKey,
+        operatorName:
+          operatorTableV2?.[operatorKey]?.name || operatorKey,
+        rooms,
+      }));
+  });
 });
 const riicYieldEngineResults = ref([]);
 let riicYieldEngineAbortController = null;
@@ -5239,6 +4477,14 @@ const scheduleRoomEditorOperators = computed(() => {
     })
     .filter(Boolean);
 });
+const riicOperatorSearchEntries = createRiicOperatorSearchEntries(
+  Object.entries(operatorTableV2).map(([charId, operator]) => ({
+    charId,
+    name: operator?.name || charId,
+    rarity: operator?.rarity || 1,
+  })),
+  operatorTableV2,
+);
 const scheduleRoomEditorOperatorOptions = computed(() => {
   const selectedOperatorKeys = new Set(
     scheduleRoomEditorOperators.value.map((operator) =>
@@ -5246,32 +4492,110 @@ const scheduleRoomEditorOperatorOptions = computed(() => {
     ),
   );
 
-  return (riicMatchingRoster.value || [])
-    .filter(
-      (operator) =>
-        !selectedOperatorKeys.has(
-          getScheduleRoomEditorOperatorKey(operator),
-        ),
-    )
-    .map((operator) => ({
-      charId: operator.charId,
-      name: operator.name || operatorTableV2?.[operator.charId]?.name || operator.charId,
-      rarity: operatorTableV2?.[operator.charId]?.rarity || 1,
-    }));
+  return riicOperatorSearchEntries.filter(
+    (operator) =>
+      !selectedOperatorKeys.has(
+        getScheduleRoomEditorOperatorKey(operator),
+      ),
+  );
 });
+const scheduleRoomEditorOperatorMatches = computed(() =>
+  findRiicOperatorSearchMatches(
+    scheduleRoomEditorOperatorOptions.value,
+    scheduleRoomEditorOperatorInput.value,
+  ),
+);
 const scheduleRoomEditorInputName = computed(() =>
   String(scheduleRoomEditorOperatorInput.value || "").trim(),
 );
 const scheduleRoomEditorInputCharId = computed(
-  () => operatorNameToCharId.get(scheduleRoomEditorInputName.value) || "",
+  () =>
+    operatorNameToCharId.get(scheduleRoomEditorInputName.value) ||
+    (operatorTableV2?.[scheduleRoomEditorInputName.value]
+      ? scheduleRoomEditorInputName.value
+      : ""),
 );
 const scheduleRoomEditorInputUnmatched = computed(
   () =>
     Boolean(scheduleRoomEditorInputName.value) &&
-    !scheduleRoomEditorInputCharId.value,
+    scheduleRoomEditorOperatorMatches.value.length === 0,
 );
 const scheduleRoomEditorProductOptions = computed(() =>
   ROOM_PRODUCT_OPTIONS[activeSchedulePreviewRoom.value?.facility] || [],
+);
+
+function syncFiammettaRecoveryUsage(
+  targetName,
+  recovery,
+  usage,
+) {
+  const enabled =
+    recovery?.enabled === true &&
+    Number(usage?.selectionCount || 0) > 1;
+  const targetOperatorId = String(recovery?.targetOperatorId || "").trim();
+
+  scheduleExecutionSettings.shifts = scheduleExecutionSettings.shifts.map(
+    (shift, index) => {
+      const targetAppearsInShift = (
+        riicSchedulePreview.value?.states?.[index]?.rooms || []
+      ).some((room) =>
+        (room?.operators || []).some(
+          (operator) => String(operator?.charId || "").trim() === targetOperatorId,
+        ),
+      );
+      const appliesToShift =
+        enabled &&
+        Boolean(targetOperatorId) &&
+        targetAppearsInShift;
+
+      return {
+        ...shift,
+        fiammetta: {
+          enable: appliesToShift,
+          target: appliesToShift ? targetName : "",
+          order: "pre",
+        },
+      };
+    },
+  );
+}
+
+const fiammettaRecoverySyncKey = computed(() => {
+  const targetOperatorId = String(
+    fiammettaRecoveryConfig.value.targetOperatorId || "",
+  ).trim();
+  const targetStateIndexes = (riicSchedulePreview.value?.states || [])
+    .flatMap((state, stateIndex) =>
+      (state?.rooms || []).some((room) =>
+        (room?.operators || []).some(
+          (operator) =>
+            String(operator?.charId || "").trim() === targetOperatorId,
+        ),
+      )
+        ? [stateIndex]
+        : [],
+    )
+    .join(",");
+
+  return [
+    targetOperatorId,
+    fiammettaRecoveryConfig.value.enabled ? "enabled" : "disabled",
+    fiammettaTargetName.value,
+    Number(assembledFiammettaTargetUsage.value.selectionCount || 0),
+    targetStateIndexes,
+  ].join("|");
+});
+
+watch(
+  fiammettaRecoverySyncKey,
+  () => {
+    syncFiammettaRecoveryUsage(
+      fiammettaTargetName.value,
+      fiammettaRecoveryConfig.value,
+      assembledFiammettaTargetUsage.value,
+    );
+  },
+  { flush: "post" },
 );
 
 watch(
@@ -5292,8 +4616,15 @@ watch(
         .filter((option) => !option.disabled)
         .map((option) => option.value)
         .join("|"),
+    () => scheduleExecutionSettings.droneTargetDisabled,
   ],
   () => {
+    if (scheduleExecutionSettings.droneTargetDisabled) {
+      scheduleExecutionSettings.droneTarget = "";
+      scheduleExecutionSettings.droneTargetPinned = false;
+      return;
+    }
+
     const availableTargets = new Set(
       scheduleDroneTargetOptions.value
         .filter((option) => !option.disabled)
@@ -5321,6 +4652,67 @@ function getScheduleRoomOverrideKey(stateIndex, roomKey) {
   return `${stateIndex}:${roomKey}`;
 }
 
+function getDefaultScheduleRoomMaaSettings(room) {
+  const operatorCount = Array.isArray(room?.operators)
+    ? room.operators.length
+    : 0;
+  const facility = String(room?.facility || "");
+
+  return {
+    sort: ["control", "manufacture", "trading"].includes(facility),
+    autofill:
+      facility === "dormitory" ||
+      (facility === "meeting" && operatorCount < 2),
+    skip: facility !== "dormitory" && operatorCount === 0,
+  };
+}
+
+function getScheduleRoomMaaSettings(room, stateIndex) {
+  if (!room) {
+    return getDefaultScheduleRoomMaaSettings();
+  }
+
+  return {
+    ...getDefaultScheduleRoomMaaSettings(room),
+    ...(scheduleRoomMaaSettingOverrides.value[
+      getScheduleRoomOverrideKey(stateIndex, room.key)
+    ] || {}),
+  };
+}
+
+const activeScheduleRoomMaaSettings = computed(() =>
+  getScheduleRoomMaaSettings(
+    activeSchedulePreviewRoom.value,
+    activeSchedulePreviewStateIndex.value,
+  ),
+);
+
+function updateScheduleRoomMaaSettings(nextSettings) {
+  const room = activeSchedulePreviewRoom.value;
+  const stateIndex = activeSchedulePreviewStateIndex.value;
+  if (!room || !Number.isInteger(stateIndex)) {
+    return;
+  }
+
+  const defaults = getDefaultScheduleRoomMaaSettings(room);
+  const normalized = Object.fromEntries(
+    ["sort", "autofill", "skip"].flatMap((field) =>
+      typeof nextSettings?.[field] === "boolean" &&
+      nextSettings[field] !== defaults[field]
+        ? [[field, nextSettings[field]]]
+        : [],
+    ),
+  );
+  const key = getScheduleRoomOverrideKey(stateIndex, room.key);
+  const nextOverrides = { ...scheduleRoomMaaSettingOverrides.value };
+  if (Object.keys(normalized).length > 0) {
+    nextOverrides[key] = normalized;
+  } else {
+    delete nextOverrides[key];
+  }
+  scheduleRoomMaaSettingOverrides.value = nextOverrides;
+}
+
 function getScheduleRoomOriginalProduct(room) {
   const group = selectableScheduleRoomGroups.value.find(
     (item) => item.id === room?.groupId,
@@ -5336,20 +4728,151 @@ function setScheduleRoomOperatorOverride(roomKey, stateIndex, operators) {
   };
 }
 
+function getSchedulePreviewRoomOperatorKey(operator) {
+  return getScheduleRoomEditorOperatorKey(operator);
+}
+
+function hasDuplicateSchedulePreviewRoomOperators(operators) {
+  const operatorKeys = new Set();
+  for (const operator of operators || []) {
+    const operatorKey = getSchedulePreviewRoomOperatorKey(operator);
+    if (!operatorKey || operatorKeys.has(operatorKey)) {
+      return true;
+    }
+    operatorKeys.add(operatorKey);
+  }
+  return false;
+}
+
+function canFitSchedulePreviewRoomOperators(room, operators) {
+  const expectedSlots = Number(room?.expectedSlots);
+  return (
+    !Number.isInteger(expectedSlots) ||
+    expectedSlots < 1 ||
+    operators.length <= expectedSlots
+  );
+}
+
+function moveSchedulePreviewOperator({
+  stateIndex,
+  sourceRoomKey,
+  sourceOperatorKey,
+  targetRoomKey,
+  targetOperatorKey = "",
+} = {}) {
+  if (
+    !Number.isInteger(stateIndex) ||
+    !sourceRoomKey ||
+    !sourceOperatorKey ||
+    !targetRoomKey ||
+    sourceRoomKey === targetRoomKey
+  ) {
+    return;
+  }
+
+  const state = riicSchedulePreview.value?.states?.[stateIndex];
+  const sourceRoom = (state?.rooms || []).find(
+    (room) => room.key === sourceRoomKey,
+  );
+  const targetRoom = (state?.rooms || []).find(
+    (room) => room.key === targetRoomKey,
+  );
+  if (!sourceRoom || !targetRoom) {
+    return;
+  }
+
+  const sourceOperators = [...(sourceRoom.operators || [])];
+  const targetOperators = [...(targetRoom.operators || [])];
+  const sourceIndex = sourceOperators.findIndex(
+    (operator) =>
+      getSchedulePreviewRoomOperatorKey(operator) === sourceOperatorKey,
+  );
+  if (sourceIndex < 0) {
+    return;
+  }
+
+  const sourceOperator = sourceOperators[sourceIndex];
+  let nextSourceOperators;
+  let nextTargetOperators;
+
+  if (targetOperatorKey) {
+    const targetIndex = targetOperators.findIndex(
+      (operator) =>
+        getSchedulePreviewRoomOperatorKey(operator) === targetOperatorKey,
+    );
+    if (
+      targetIndex < 0 ||
+      targetOperatorKey === sourceOperatorKey ||
+      targetOperators.some(
+        (operator) =>
+          getSchedulePreviewRoomOperatorKey(operator) === sourceOperatorKey,
+      ) ||
+      sourceOperators.some(
+        (operator) =>
+          getSchedulePreviewRoomOperatorKey(operator) === targetOperatorKey,
+      )
+    ) {
+      return;
+    }
+
+    const targetOperator = targetOperators[targetIndex];
+    nextSourceOperators = sourceOperators.map((operator, index) =>
+      index === sourceIndex ? targetOperator : operator,
+    );
+    nextTargetOperators = targetOperators.map((operator, index) =>
+      index === targetIndex ? sourceOperator : operator,
+    );
+  } else {
+    if (
+      targetOperators.some(
+        (operator) =>
+          getSchedulePreviewRoomOperatorKey(operator) === sourceOperatorKey,
+      )
+    ) {
+      return;
+    }
+
+    nextSourceOperators = sourceOperators.filter(
+      (_, index) => index !== sourceIndex,
+    );
+    nextTargetOperators = [...targetOperators, sourceOperator];
+  }
+
+  if (
+    !canFitSchedulePreviewRoomOperators(sourceRoom, nextSourceOperators) ||
+    !canFitSchedulePreviewRoomOperators(targetRoom, nextTargetOperators) ||
+    hasDuplicateSchedulePreviewRoomOperators(nextSourceOperators) ||
+    hasDuplicateSchedulePreviewRoomOperators(nextTargetOperators)
+  ) {
+    return;
+  }
+
+  scheduleRoomOperatorOverrides.value = {
+    ...scheduleRoomOperatorOverrides.value,
+    [getScheduleRoomOverrideKey(stateIndex, sourceRoom.key)]:
+      nextSourceOperators,
+    [getScheduleRoomOverrideKey(stateIndex, targetRoom.key)]:
+      nextTargetOperators,
+  };
+}
+
 function selectSchedulePreviewRoom({ roomKey, stateIndex }) {
   if (!roomKey) {
+    return;
+  }
+
+  if (
+    selectedSchedulePreviewRoomKey.value === roomKey &&
+    activeSchedulePreviewStateIndex.value === stateIndex
+  ) {
+    selectedSchedulePreviewRoomKey.value = "";
+    scheduleRoomEditorOperatorInput.value = "";
     return;
   }
 
   activeSchedulePreviewStateIndex.value = stateIndex;
   selectedSchedulePreviewRoomKey.value = roomKey;
   scheduleRoomEditorOperatorInput.value = "";
-  nextTick(() => {
-    roomEditorPanel.value?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  });
 }
 
 function getScheduleRoomEditorOperatorKey(operator) {
@@ -5361,14 +4884,18 @@ function getScheduleRoomEditorOperatorKey(operator) {
   return `name:${String(operator?.name || "").trim()}`;
 }
 
-function addScheduleRoomEditorOperator() {
+function addScheduleRoomEditorOperator(selectedOperator = null) {
   const room = activeSchedulePreviewRoom.value;
-  const name = scheduleRoomEditorInputName.value;
+  const name = String(
+    selectedOperator?.name || scheduleRoomEditorInputName.value,
+  ).trim();
   if (!room || !name) {
     return;
   }
 
-  const charId = scheduleRoomEditorInputCharId.value;
+  const charId = String(
+    selectedOperator?.charId || scheduleRoomEditorInputCharId.value,
+  ).trim();
   const nextOperator = {
     charId,
     name,
@@ -5409,6 +4936,31 @@ function removeScheduleRoomEditorOperator(operatorToRemove) {
   );
 }
 
+function reorderScheduleRoomEditorOperator({ fromIndex, toIndex } = {}) {
+  const room = activeSchedulePreviewRoom.value;
+  const operators = [...scheduleRoomEditorOperators.value];
+  if (
+    !room ||
+    !Number.isInteger(fromIndex) ||
+    !Number.isInteger(toIndex) ||
+    fromIndex < 0 ||
+    toIndex < 0 ||
+    fromIndex >= operators.length ||
+    toIndex >= operators.length ||
+    fromIndex === toIndex
+  ) {
+    return;
+  }
+
+  const [operator] = operators.splice(fromIndex, 1);
+  operators.splice(toIndex, 0, operator);
+  setScheduleRoomOperatorOverride(
+    room.key,
+    activeSchedulePreviewStateIndex.value,
+    operators,
+  );
+}
+
 function changeScheduleRoomProduct(product) {
   const room = activeSchedulePreviewRoom.value;
   if (!room || !product) {
@@ -5418,13 +4970,6 @@ function changeScheduleRoomProduct(product) {
   const originalProduct = getScheduleRoomOriginalProduct(room);
   const nextProductOverrides = { ...scheduleRoomProductOverrides.value };
   const nextInvalidatedRoomKeys = { ...invalidatedScheduleRoomKeys.value };
-  const nextOperatorOverrides = { ...scheduleRoomOperatorOverrides.value };
-
-  for (const key of Object.keys(nextOperatorOverrides)) {
-    if (key.endsWith(`:${room.key}`)) {
-      delete nextOperatorOverrides[key];
-    }
-  }
 
   if (product === originalProduct) {
     delete nextProductOverrides[room.key];
@@ -5436,7 +4981,6 @@ function changeScheduleRoomProduct(product) {
 
   scheduleRoomProductOverrides.value = nextProductOverrides;
   invalidatedScheduleRoomKeys.value = nextInvalidatedRoomKeys;
-  scheduleRoomOperatorOverrides.value = nextOperatorOverrides;
 }
 
 function resetSchedulePreviewRoom() {
@@ -5448,6 +4992,9 @@ function resetSchedulePreviewRoom() {
   const nextProductOverrides = { ...scheduleRoomProductOverrides.value };
   const nextInvalidatedRoomKeys = { ...invalidatedScheduleRoomKeys.value };
   const nextOperatorOverrides = { ...scheduleRoomOperatorOverrides.value };
+  const nextMaaSettingOverrides = {
+    ...scheduleRoomMaaSettingOverrides.value,
+  };
   delete nextProductOverrides[room.key];
   delete nextInvalidatedRoomKeys[room.key];
   for (const key of Object.keys(nextOperatorOverrides)) {
@@ -5455,10 +5002,14 @@ function resetSchedulePreviewRoom() {
       delete nextOperatorOverrides[key];
     }
   }
+  delete nextMaaSettingOverrides[
+    getScheduleRoomOverrideKey(activeSchedulePreviewStateIndex.value, room.key)
+  ];
 
   scheduleRoomProductOverrides.value = nextProductOverrides;
   invalidatedScheduleRoomKeys.value = nextInvalidatedRoomKeys;
   scheduleRoomOperatorOverrides.value = nextOperatorOverrides;
+  scheduleRoomMaaSettingOverrides.value = nextMaaSettingOverrides;
 }
 
 function selectScheduleDroneTarget(value) {
@@ -5470,11 +5021,105 @@ function selectScheduleDroneTarget(value) {
     return;
   }
 
+  if (scheduleExecutionSettings.droneTarget === value) {
+    scheduleExecutionSettings.droneTarget = "";
+    scheduleExecutionSettings.droneTargetPinned = false;
+    scheduleExecutionSettings.droneTargetDisabled = true;
+    return;
+  }
+
   scheduleExecutionSettings.droneTarget = value;
   scheduleExecutionSettings.droneTargetPinned = true;
+  scheduleExecutionSettings.droneTargetDisabled = false;
 }
 
-function updateSchedulePreviewShift({ index, time, name }) {
+function normalizeScheduleRoomOperatorClipboard(operators, expectedSlots) {
+  const normalized = (operators || [])
+    .map((operator) => {
+      const charId = String(operator?.charId || "").trim();
+      const name = String(
+        operator?.name || operatorTableV2?.[charId]?.name || "",
+      ).trim();
+      return name ? { charId, name } : null;
+    })
+    .filter(Boolean);
+
+  return Number.isInteger(Number(expectedSlots)) && Number(expectedSlots) > 0
+    ? normalized.slice(0, Number(expectedSlots))
+    : normalized;
+}
+
+function copyScheduleRoomEditorOperators() {
+  copiedScheduleRoomOperators.value = normalizeScheduleRoomOperatorClipboard(
+    scheduleRoomEditorOperators.value,
+    activeSchedulePreviewRoom.value?.expectedSlots,
+  );
+}
+
+function pasteScheduleRoomEditorOperators() {
+  const room = activeSchedulePreviewRoom.value;
+  if (!room || !Array.isArray(copiedScheduleRoomOperators.value)) {
+    return;
+  }
+
+  setScheduleRoomOperatorOverride(
+    room.key,
+    activeSchedulePreviewStateIndex.value,
+    normalizeScheduleRoomOperatorClipboard(
+      copiedScheduleRoomOperators.value,
+      room.expectedSlots,
+    ),
+  );
+}
+
+function copySchedulePreviewShift() {
+  const state =
+    riicSchedulePreview.value?.states?.[
+      activeSchedulePreviewStateIndex.value
+    ];
+  if (!state) {
+    return;
+  }
+
+  copiedScheduleShiftOperators.value = Object.fromEntries(
+    (state.rooms || []).map((room) => [
+      room.key,
+      normalizeScheduleRoomOperatorClipboard(room.operators, room.expectedSlots),
+    ]),
+  );
+}
+
+function pasteSchedulePreviewShift() {
+  const state =
+    riicSchedulePreview.value?.states?.[
+      activeSchedulePreviewStateIndex.value
+    ];
+  if (!state || !copiedScheduleShiftOperators.value) {
+    return;
+  }
+
+  const stateIndex = activeSchedulePreviewStateIndex.value;
+  const nextOverrides = { ...scheduleRoomOperatorOverrides.value };
+  for (const room of state.rooms || []) {
+    if (
+      !Object.prototype.hasOwnProperty.call(
+        copiedScheduleShiftOperators.value,
+        room.key,
+      )
+    ) {
+      continue;
+    }
+
+    nextOverrides[getScheduleRoomOverrideKey(stateIndex, room.key)] =
+      normalizeScheduleRoomOperatorClipboard(
+        copiedScheduleShiftOperators.value[room.key],
+        room.expectedSlots,
+      );
+  }
+  scheduleRoomOperatorOverrides.value = nextOverrides;
+}
+
+function updateSchedulePreviewShift({ index, ...patch }) {
   if (
     !Number.isInteger(index) ||
     !scheduleExecutionSettings.shifts[index]
@@ -5485,9 +5130,23 @@ function updateSchedulePreviewShift({ index, time, name }) {
   const currentShift = scheduleExecutionSettings.shifts[index];
   scheduleExecutionSettings.shifts.splice(index, 1, {
     ...currentShift,
-    ...(typeof time === "string" ? { time } : {}),
-    ...(typeof name === "string" ? { name } : {}),
+    ...(typeof patch.time === "string" ? { time: patch.time } : {}),
+    ...(typeof patch.name === "string" ? { name: patch.name } : {}),
+    ...(typeof patch.description === "string"
+      ? { description: patch.description }
+      : {}),
+    ...(typeof patch.descriptionPost === "string"
+      ? { descriptionPost: patch.descriptionPost }
+      : {}),
+    ...(patch.fiammetta && typeof patch.fiammetta === "object"
+      ? { fiammetta: normalizeScheduleFiammettaSettings(patch.fiammetta) }
+      : {}),
   });
+}
+
+function updateScheduleExportInfo(nextExportInfo) {
+  scheduleExecutionSettings.exportInfo =
+    normalizeScheduleExportInfo(nextExportInfo);
 }
 
 function formatRoomGroupBonusPercent(value) {
@@ -5531,6 +5190,11 @@ function getRoomGroupCandidateDebugValues(candidate) {
       weightedBonusPercent: 0,
       segments: [],
     };
+  const closureCalculation =
+    candidate?.closureCalculation &&
+    candidate.closureCalculation.type === "closureSpecialOrder"
+      ? candidate.closureCalculation
+      : null;
 
   return {
     sourceFile: String(
@@ -5555,6 +5219,7 @@ function getRoomGroupCandidateDebugValues(candidate) {
     controlCenterOperatorCalculation,
     controlCenterFacilityBonusPercent,
     controlCenterFacilityCalculation,
+    closureCalculation,
     directBonusPercent: contribution.directBonusPercent,
     additionalBonusPercent: contribution.additionalBonusPercent,
     totalContributionPercent: contribution.totalContributionPercent,
@@ -5602,16 +5267,16 @@ function formatRiicLayer3FacilityCondition(condition) {
   const actualText = Number.isFinite(actualValue) ? actualValue : "?";
 
   if (condition?.kind === "powerCount") {
-    return `发电站 ${expectedCount} 座（当前 ${actualText}）`;
+    return `发电站${expectedCount} 座（当前 ${actualText}）`;
   }
   if (condition?.kind === "tradingCount") {
-    return `贸易站 ${expectedCount} 座（当前 ${actualText}）`;
+    return `贸易站${expectedCount} 座（当前 ${actualText}）`;
   }
   if (condition?.kind === "goldManufactureCount") {
     return `赤金制造站 ${expectedCount} 座（当前 ${actualText}）`;
   }
   if (condition?.kind === "manufactureProductKindCount") {
-    return `制造产物 ${expectedProductKindCount} 类（当前 ${actualText}）`;
+    return `制造产物${expectedProductKindCount} 类（当前 ${actualText}）`;
   }
   if (condition?.kind === "facilityCount") {
     const facilityLabel =
@@ -5706,7 +5371,7 @@ function formatRiicLayer3RuleEffect(effect) {
     Number.isFinite(roomPriority) &&
     (variantGroupId || hasScopedRoomPriority)
   ) {
-    details.push(`房间优先级 ${formatRiicLayer3SignedValue(roomPriority)}`);
+    details.push(`房间优先级${formatRiicLayer3SignedValue(roomPriority)}`);
   }
 
   return details.length
@@ -5736,7 +5401,7 @@ function getRoomGroupCandidateStatus(group) {
     return {
       icon: "mdi-check-circle",
       tone: "ready",
-      title: `自动安排 ${controlState.operatorIds.length} 个功能位，留空 ${controlState.emptySlotCount} 格`,
+      title: `自动安排 ${controlState.operatorIds.length} 个功能位，留空${controlState.emptySlotCount} 格`,
     };
   }
 
@@ -5926,10 +5591,10 @@ function getAssembledCandidateBlockedMessage(state) {
     .join("、");
 
   if (state?.status === "requiresOperators") {
-    return "同步干员数据后，即可组装完整候选排班。";
+    return "同步干员数据后，即可组装完整候选排班表";
   }
   if (state?.status === "catalogLoading") {
-    return "正在载入所选设施组的固定候选列表。";
+    return "正在载入所选设施组的固定候选列表需要";
   }
   if (state?.status === "waiting") {
     if (
@@ -5937,11 +5602,11 @@ function getAssembledCandidateBlockedMessage(state) {
         (group) => group.reason === "insufficient",
       )
     ) {
-      return "当前干员数量不足以补满控制中枢两班。";
+      return "当前干员数量不足以补满控制中枢两班需要";
     }
     return labels
-      ? `请先完成以下房间组的人手组选择：${labels}`
-      : "请先完成房间组的人手组选择。";
+      ? `请先完成以下房间组的人手组选择需要{labels}`
+      : "请先完成房间组的人手组选择需要";
   }
   if (state?.status === "blocked") {
     if (
@@ -5950,15 +5615,15 @@ function getAssembledCandidateBlockedMessage(state) {
       )
     ) {
       return labels
-        ? `以下房间组缺少基础补位预设：${labels}`
-        : "基础补位预设不完整。";
+        ? `以下房间组缺少基础补位预设施{labels}`
+        : "基础补位预设不完整需要";
     }
     return labels
       ? `这些房间组存在干员冲突：${labels}`
-      : "当前候选无法组成一套不重复占用干员的排班。";
+      : "当前候选无法组成一套不重复占用干员的排班表";
   }
 
-  return "选择布局并准备房间组候选后，即可生成完整排班。";
+  return "选择布局并准备房间组候选后，即可生成完整排班表";
 }
 
 const recommendationCard = computed(() => {
@@ -5973,298 +5638,6 @@ const customOperatorSourceStatuses = computed(() =>
     status: getOperatorSourceStatus(source.id),
   })),
 );
-const selectedSchedule = computed(
-  () => recommendation.value?.selectedSchedule || null,
-);
-const selectedCandidate = computed(
-  () => selectedSchedule.value?.candidate || null,
-);
-const selectedStations = computed(
-  () => selectedCandidate.value?.lines.flat() || [],
-);
-const selectedDescriptionLines = computed(() =>
-  String(selectedCandidate.value?.description || "")
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean),
-);
-const candidateSourceUrl = computed(() => {
-  if (!selectedCandidate.value) {
-    return "";
-  }
-
-  return `${RIIC_SCHEDULE_SOURCE.repository}/blob/${RIIC_SCHEDULE_SOURCE.commit}/${selectedCandidate.value.sourcePath}`;
-});
-const maaExportPreview = computed(() => {
-  if (
-    !recommendation.value?.selectedSchedule ||
-    recommendation.value.droneTarget.id === "flexible" ||
-    recommendation.value.selectedSchedule.candidate.isOrundum
-  ) {
-    return null;
-  }
-
-  try {
-    return buildMaaSchedule(recommendation.value);
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-});
-const developerCandidates = computed(() =>
-  RIIC_SCHEDULE_CANDIDATES.filter(
-    (candidate) =>
-      candidate.layout === developerLayoutId.value &&
-      candidate.shiftMode === developerShiftMode.value,
-  ),
-);
-const manualRooms = computed(() => createManualRooms(developerLayoutId.value));
-const manualBlueprintRows = computed(() => {
-  const rows = [
-    { id: "core", label: "中枢与供电", rooms: [] },
-    { id: "production", label: "生产区", rooms: [] },
-    { id: "support", label: "功能区", rooms: [] },
-    { id: "dormitory", label: "宿舍区", rooms: [] },
-  ];
-  const rowMap = new Map(rows.map((row) => [row.id, row]));
-
-  for (const room of manualRooms.value) {
-    rowMap.get(room.blueprintRow)?.rooms.push(room);
-  }
-
-  return rows.filter((row) => row.rooms.length);
-});
-const manualQueueCount = computed(() =>
-  Math.max(
-    1,
-    ...developerCandidates.value.map(
-      (candidate) => candidate.queueDescriptions.length,
-    ),
-  ),
-);
-const selectedManualRoom = computed(
-  () =>
-    manualRooms.value.find((room) => room.id === selectedManualRoomId.value) ||
-    null,
-);
-const manualSelectedAssignment = computed(() => {
-  if (!selectedManualRoom.value) {
-    return null;
-  }
-
-  return getManualRoomAssignment(
-    selectedManualRoom.value.id,
-    manualQueueIndex.value,
-  );
-});
-const manualGroupOptions = computed(() => {
-  const room = selectedManualRoom.value;
-
-  if (!room) {
-    return [];
-  }
-
-  const uniqueGroups = new Map();
-
-  for (const candidate of developerCandidates.value) {
-    for (const station of candidate.lines.flat()) {
-      if (!stationMatchesManualRoom(station, room)) {
-        continue;
-      }
-
-      const queue = station.queues[manualQueueIndex.value];
-      if (!queue) {
-        continue;
-      }
-
-      const duration =
-        candidate.queueDescriptions[manualQueueIndex.value] || "时长未标注";
-      const source = {
-        title: candidate.title.replace(/\s+/g, " "),
-        sourcePath: candidate.sourcePath,
-        sourceUpdatedAt: candidate.sourceUpdatedAt,
-        queueIndex: manualQueueIndex.value,
-      };
-      const groups =
-        room.roomType === "power"
-          ? queue.operators.map((operator, powerSlotIndex) => ({
-              description: queue.description
-                ? `原表三座发电站组合：${queue.description}`
-                : "原表未标注发电效率",
-              efficiency: null,
-              operators: [operator],
-              powerSlotIndex,
-            }))
-          : [
-              {
-                description:
-                  queue.description || "原表没有为这组干员补充效率说明",
-                efficiency: getQueueEfficiency(queue.description),
-                operators: queue.operators || [],
-                powerSlotIndex: null,
-              },
-            ];
-
-      for (const group of groups) {
-        const key = JSON.stringify({
-          roomType: room.roomType,
-          sourceKey: room.sourceKey,
-          duration,
-          description: group.description,
-          operators: group.operators.map((operator) => [
-            operator.displayName,
-            operator.eliteLevel,
-            operator.isTired,
-          ]),
-        });
-        const existing = uniqueGroups.get(key);
-        const groupSource = {
-          ...source,
-          powerSlotIndex: group.powerSlotIndex,
-        };
-
-        if (existing) {
-          existing.sources.push(groupSource);
-          continue;
-        }
-
-        uniqueGroups.set(key, {
-          key,
-          duration,
-          description: group.description,
-          efficiency: group.efficiency,
-          operators: group.operators,
-          sources: [groupSource],
-        });
-      }
-    }
-  }
-
-  const options = [...uniqueGroups.values()].sort(compareDeveloperCombinations);
-
-  if (options.length) {
-    return options;
-  }
-
-  return [
-    {
-      key: `keep-current-${room.id}-${manualQueueIndex.value}`,
-      duration: "本队列",
-      description:
-        "当前原表没有覆盖这个设施。本队列不换人，保留它原本的安排。",
-      efficiency: null,
-      fallback: true,
-      operators: [],
-      sources: [],
-    },
-  ];
-});
-const manualAssignmentCount = computed(
-  () => Object.keys(manualAssignments.value).length,
-);
-const manualActiveQueueConflicts = computed(() => {
-  const assignedOperators = new Map();
-
-  for (const room of manualRooms.value) {
-    const assignment = getManualRoomAssignment(
-      room.id,
-      manualQueueIndex.value,
-    );
-
-    for (const operator of assignment?.operators || []) {
-      const roomIds = assignedOperators.get(operator.displayName) || [];
-      roomIds.push(room.id);
-      assignedOperators.set(operator.displayName, roomIds);
-    }
-  }
-
-  return new Map(
-    [...assignedOperators].filter(([, roomIds]) => roomIds.length > 1),
-  );
-});
-const developerCombinationGroups = computed(() => {
-  const uniqueCombinations = new Map();
-
-  for (const candidate of developerCandidates.value) {
-    for (const station of candidate.lines.flat()) {
-      station.queues.forEach((queue, queueIndex) => {
-        const duration =
-          candidate.queueDescriptions[queueIndex] || "时长未标注";
-        const efficiency = getQueueEfficiency(queue.description);
-        const operators = queue.operators || [];
-        const key = JSON.stringify({
-          station: station.title,
-          duration,
-          description: queue.description || "",
-          operators: operators.map((operator) => [
-            operator.displayName,
-            operator.eliteLevel,
-            operator.isTired,
-          ]),
-        });
-        const existing = uniqueCombinations.get(key);
-        const source = {
-          title: candidate.title.replace(/\s+/g, " "),
-          sourcePath: candidate.sourcePath,
-          sourceUpdatedAt: candidate.sourceUpdatedAt,
-          queueIndex,
-        };
-
-        if (existing) {
-          existing.sources.push(source);
-          existing.queueIndexes.add(queueIndex);
-          return;
-        }
-
-        uniqueCombinations.set(key, {
-          key,
-          station: station.title,
-          stationType: station.stationType,
-          duration,
-          description: queue.description || "",
-          efficiency,
-          operators,
-          sources: [source],
-          queueIndexes: new Set([queueIndex]),
-        });
-      });
-    }
-  }
-
-  const groups = new Map();
-
-  for (const combination of uniqueCombinations.values()) {
-    const group = groups.get(combination.station) || {
-      title: combination.station,
-      stationType: combination.stationType,
-      combinations: [],
-    };
-    group.combinations.push({
-      ...combination,
-      queueIndexes: [...combination.queueIndexes].sort(
-        (left, right) => left - right,
-      ),
-    });
-    groups.set(combination.station, group);
-  }
-
-  return [...groups.values()]
-    .sort(
-      (left, right) =>
-        getStationOrder(left.title) - getStationOrder(right.title),
-    )
-    .map((group) => ({
-      ...group,
-      combinations: group.combinations.sort(compareDeveloperCombinations),
-    }));
-});
-const developerCombinationCount = computed(() =>
-  developerCombinationGroups.value.reduce(
-    (total, group) => total + group.combinations.length,
-    0,
-  ),
-);
-const developerSourceUrl = `${RIIC_SCHEDULE_SOURCE.repository}/tree/${RIIC_SCHEDULE_SOURCE.commit}/src/assets/texts/schedule`;
 
 watch(
   navigableScheduleRoomGroups,
@@ -6288,11 +5661,6 @@ watch(
   { immediate: true },
 );
 
-const resultSteps = computed(() => [
-  ...steps,
-  { key: "result", label: "推荐方案" },
-]);
-
 function normalizeSavedAnswers(savedAnswers) {
   return Object.fromEntries(
     ANSWER_FIELDS.map((field) => {
@@ -6309,34 +5677,8 @@ function normalizeSavedAnswers(savedAnswers) {
   );
 }
 
-function normalizePlanningMode(value) {
-  if (value === "manual" || value === "recommend") {
-    return value;
-  }
-
-  return null;
-}
-
 function getLayoutCardByKey(value) {
-  const normalizedKey = LEGACY_LAYOUT_CARD_KEYS[value] || value;
-  return LAYOUT_CARD_META.find((card) => card.key === normalizedKey) || null;
-}
-
-function getDefaultLayoutCard(layoutId, shiftMode) {
-  return (
-    LAYOUT_CARD_META.find(
-      (card) =>
-        card.layoutId === layoutId &&
-        isLayoutCardCompatible(card, shiftMode) &&
-        card.key === layoutId,
-    ) ||
-    LAYOUT_CARD_META.find(
-      (card) =>
-        card.layoutId === layoutId &&
-        isLayoutCardCompatible(card, shiftMode),
-    ) ||
-    null
-  );
+  return LAYOUT_CARD_META.find((card) => card.key === value) || null;
 }
 
 function createDefaultConfirmedLayoutPlan() {
@@ -6355,20 +5697,10 @@ function applyDefaultLayoutSelection() {
   confirmedLayoutPlan.value = createDefaultConfirmedLayoutPlan();
 }
 
-function normalizeLayoutEntry(
-  value,
-  savedPlanningMode,
-  savedLayoutId,
-  savedAnswers,
-) {
+function normalizeLayoutEntry(value, savedAnswers) {
   const savedCard = getLayoutCardByKey(value);
   if (savedCard) {
     return savedCard.key;
-  }
-
-  const legacyCard = getDefaultLayoutCard(value, savedAnswers?.shiftMode);
-  if (legacyCard) {
-    return legacyCard.key;
   }
 
   if (value === "recommend") {
@@ -6377,23 +5709,11 @@ function normalizeLayoutEntry(
       : null;
   }
 
-  if (
-    normalizePlanningMode(savedPlanningMode) === "manual" &&
-    getDefaultLayoutCard(savedLayoutId, savedAnswers?.shiftMode)
-  ) {
-    return getDefaultLayoutCard(savedLayoutId, savedAnswers?.shiftMode).key;
-  }
-
   return null;
 }
 
 function normalizeConfirmedLayoutPlan(value) {
-  const card =
-    getLayoutCardByKey(value?.cardKey) ||
-    getLayoutCardByKey(
-      getLayoutCardKeyForSchedule(value?.layoutId, value?.variant),
-    ) ||
-    getDefaultLayoutCard(value?.layoutId, value?.shiftMode);
+  const card = getLayoutCardByKey(value?.cardKey);
 
   if (
     !value ||
@@ -6663,49 +5983,23 @@ function normalizeSavedInvalidatedScheduleRoomKeys(value) {
   );
 }
 
-function normalizeRecommendedScheduleSnapshot(value) {
-  const triggerKey = String(value?.triggerKey || "").trim();
-  if (!triggerKey) {
-    return null;
-  }
+function normalizeSavedScheduleRoomMaaSettingOverrides(value) {
+  return Object.fromEntries(
+    Object.entries(value || {}).flatMap(([key, settings]) => {
+      if (typeof key !== "string" || !key || !settings) {
+        return [];
+      }
 
-  return {
-    triggerKey,
-    controlCenterRoleSettings: normalizeControlCenterRoleSettings(
-      value?.controlCenterRoleSettings,
-    ),
-    controlCenterManualOverrides: normalizeControlCenterManualOverrides(
-      value?.controlCenterManualOverrides,
-    ),
-    selectedRoomGroupTeamCandidateKeys:
-      normalizeSavedRoomGroupTeamCandidateKeys(
-        value?.selectedRoomGroupTeamCandidateKeys,
-      ),
-    roomGroupFallbackQueueStates: normalizeSavedRoomGroupFallbackQueueStates(
-      value?.roomGroupFallbackQueueStates,
-    ),
-    scheduleExecutionSettings: normalizeScheduleExecutionSettings(
-      value?.scheduleExecutionSettings,
-      confirmedLayoutPlan.value?.shiftMode,
-      twoShiftRotationMode.value,
-    ),
-  };
-}
-
-function createRecommendedScheduleSnapshot(triggerKey) {
-  return normalizeRecommendedScheduleSnapshot({
-    triggerKey,
-    controlCenterRoleSettings: controlCenterRoleSettings.value,
-    controlCenterManualOverrides: controlCenterManualOverrides.value,
-    selectedRoomGroupTeamCandidateKeys:
-      selectedRoomGroupTeamCandidateKeys.value,
-    roomGroupFallbackQueueStates: roomGroupFallbackQueueStates.value,
-    scheduleExecutionSettings: {
-      shifts: scheduleExecutionSettings.shifts,
-      droneTarget: scheduleExecutionSettings.droneTarget,
-      droneTargetPinned: scheduleExecutionSettings.droneTargetPinned,
-    },
-  });
+      const normalized = Object.fromEntries(
+        ["sort", "autofill", "skip"].flatMap((field) =>
+          typeof settings[field] === "boolean"
+            ? [[field, settings[field]]]
+            : [],
+        ),
+      );
+      return Object.keys(normalized).length > 0 ? [[key, normalized]] : [];
+    }),
+  );
 }
 
 function createWizardStateSnapshot() {
@@ -6725,25 +6019,17 @@ function createWizardStateSnapshot() {
     idealTrainingRaritySelection: idealTrainingRaritySelection.value,
     controlCenterRoleSettings: controlCenterRoleSettings.value,
     controlCenterManualOverrides: controlCenterManualOverrides.value,
+    fiammettaRecoverySettings: fiammettaRecoverySettings.value,
     selectedRoomGroupTeamCandidateKeys:
       selectedRoomGroupTeamCandidateKeys.value,
     roomGroupFallbackQueueStates: roomGroupFallbackQueueStates.value,
-    scheduleExecutionSettings: {
-      shifts: scheduleExecutionSettings.shifts.map((shift) => ({
-        id: shift.id,
-        name: shift.name,
-        time: shift.time,
-      })),
-      droneTarget: scheduleExecutionSettings.droneTarget,
-      droneTargetPinned: scheduleExecutionSettings.droneTargetPinned,
-    },
+    scheduleExecutionSettings: createScheduleExecutionSettingsSnapshot(),
     scheduleRoomOperatorOverrides: scheduleRoomOperatorOverrides.value,
     scheduleRoomProductOverrides: scheduleRoomProductOverrides.value,
     invalidatedScheduleRoomKeys: invalidatedScheduleRoomKeys.value,
-    recommendedScheduleSnapshot: recommendedScheduleSnapshot.value,
-    useOwnedOperators: ownedOperatorPreferenceReady.value
-      ? useOwnedOperators.value
-      : pendingOwnedOperatorPreference.value,
+    scheduleRoomMaaSettingOverrides: scheduleRoomMaaSettingOverrides.value,
+    lastAutomaticGenerationTriggerKey:
+      lastAutomaticGenerationTriggerKey.value,
     updatedAt: new Date().toISOString(),
   };
 }
@@ -6758,11 +6044,15 @@ function createInitialWorkspaceFromCurrent() {
       shifts: [],
       droneTarget: "",
       droneTargetPinned: false,
+      droneTargetDisabled: false,
+      droneOrder: "pre",
+      exportInfo: normalizeScheduleExportInfo(),
     },
     scheduleRoomOperatorOverrides: {},
     scheduleRoomProductOverrides: {},
     invalidatedScheduleRoomKeys: {},
-    recommendedScheduleSnapshot: null,
+    scheduleRoomMaaSettingOverrides: {},
+    lastAutomaticGenerationTriggerKey: "",
   };
 }
 
@@ -6809,41 +6099,7 @@ function removeOperatorSourceWorkspace(sourceId) {
 
 function applySavedWizardState(parsedDraft) {
   if (
-    parsedDraft?.version === 1 &&
-    ["twice", "threeTimes"].includes(parsedDraft.answers?.shiftMode)
-  ) {
-    Object.assign(answers, DEFAULT_ANSWERS, {
-      shiftMode: parsedDraft.answers.shiftMode,
-    });
-    currentStep.value = 0;
-    idealTrainingRaritySelection.value =
-      normalizeRiicIdealTrainingRaritySelection();
-    pendingOwnedOperatorPreference.value =
-      parsedDraft.useOwnedOperators === true;
-    hasSavedWizardState.value = true;
-    return true;
-  }
-
-  if (
-    ![
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      10,
-      11,
-      12,
-      15,
-      16,
-      17,
-      19,
-      21,
-      RIIC_SCHEDULE_DRAFT_PREVIOUS_VERSION,
-      RIIC_SCHEDULE_DRAFT_VERSION,
-    ].includes(parsedDraft?.version) ||
+    parsedDraft?.version !== RIIC_SCHEDULE_DRAFT_VERSION ||
     !parsedDraft.answers
   ) {
     return false;
@@ -6862,8 +6118,6 @@ function applySavedWizardState(parsedDraft) {
   );
   layoutEntry.value = normalizeLayoutEntry(
     parsedDraft.layoutEntry,
-    parsedDraft.planningMode,
-    parsedDraft.selectedLayoutId,
     savedAnswers,
   );
   planningMode.value =
@@ -6885,40 +6139,29 @@ function applySavedWizardState(parsedDraft) {
     parsedDraft.confirmedLayoutPlan,
   );
   twoShiftRotationMode.value =
-    parsedDraft.version >= 14
-      ? normalizeTwoShiftRotationMode(parsedDraft.twoShiftRotationMode)
-      : "manual";
+    normalizeTwoShiftRotationMode(parsedDraft.twoShiftRotationMode);
   treatUnderleveledOperatorsAsQualified.value =
-    parsedDraft.version >= 15 &&
     parsedDraft.treatUnderleveledOperatorsAsQualified === true;
   idealTrainingRaritySelection.value =
     normalizeRiicIdealTrainingRaritySelection(
       parsedDraft.idealTrainingRaritySelection,
     );
   selectedRoomGroupTeamCandidateKeys.value =
-    parsedDraft.version >= RIIC_SCHEDULE_DRAFT_LEGACY_VERSION
-      ? normalizeSavedRoomGroupTeamCandidateKeys(
-          parsedDraft.selectedRoomGroupTeamCandidateKeys,
-        )
-      : {};
+    normalizeSavedRoomGroupTeamCandidateKeys(
+      parsedDraft.selectedRoomGroupTeamCandidateKeys,
+    );
   controlCenterRoleSettings.value =
-    parsedDraft.version >= RIIC_SCHEDULE_DRAFT_LEGACY_VERSION
-      ? normalizeControlCenterRoleSettings(
-          parsedDraft.controlCenterRoleSettings,
-        )
-      : { officeEnabled: false };
+    normalizeControlCenterRoleSettings(parsedDraft.controlCenterRoleSettings);
   controlCenterManualOverrides.value =
-    parsedDraft.version >= RIIC_SCHEDULE_DRAFT_VERSION
-      ? normalizeControlCenterManualOverrides(
-          parsedDraft.controlCenterManualOverrides,
-        )
-      : normalizeControlCenterManualOverrides();
+    normalizeControlCenterManualOverrides(
+      parsedDraft.controlCenterManualOverrides,
+    );
+  fiammettaRecoverySettings.value =
+    normalizeFiammettaRecoverySettings(parsedDraft.fiammettaRecoverySettings);
   roomGroupFallbackQueueStates.value =
-    parsedDraft.version >= RIIC_SCHEDULE_DRAFT_LEGACY_VERSION
-      ? normalizeSavedRoomGroupFallbackQueueStates(
-          parsedDraft.roomGroupFallbackQueueStates,
-        )
-      : {};
+    normalizeSavedRoomGroupFallbackQueueStates(
+      parsedDraft.roomGroupFallbackQueueStates,
+    );
   const savedExecutionSettings = normalizeScheduleExecutionSettings(
     parsedDraft.scheduleExecutionSettings,
     confirmedLayoutPlan.value?.shiftMode,
@@ -6928,32 +6171,29 @@ function applySavedWizardState(parsedDraft) {
   scheduleExecutionSettings.droneTarget = savedExecutionSettings.droneTarget;
   scheduleExecutionSettings.droneTargetPinned =
     savedExecutionSettings.droneTargetPinned;
+  scheduleExecutionSettings.droneTargetDisabled =
+    savedExecutionSettings.droneTargetDisabled;
+  scheduleExecutionSettings.droneOrder = savedExecutionSettings.droneOrder;
+  scheduleExecutionSettings.exportInfo = savedExecutionSettings.exportInfo;
   scheduleRoomOperatorOverrides.value =
-    parsedDraft.version >= 13
-      ? normalizeSavedScheduleRoomOperatorOverrides(
-          parsedDraft.scheduleRoomOperatorOverrides,
-        )
-      : {};
+    normalizeSavedScheduleRoomOperatorOverrides(
+      parsedDraft.scheduleRoomOperatorOverrides,
+    );
   scheduleRoomProductOverrides.value =
-    parsedDraft.version >= 13
-      ? normalizeSavedScheduleRoomProductOverrides(
-          parsedDraft.scheduleRoomProductOverrides,
-        )
-      : {};
+    normalizeSavedScheduleRoomProductOverrides(
+      parsedDraft.scheduleRoomProductOverrides,
+    );
   invalidatedScheduleRoomKeys.value =
-    parsedDraft.version >= 13
-      ? normalizeSavedInvalidatedScheduleRoomKeys(
-          parsedDraft.invalidatedScheduleRoomKeys,
-        )
-      : {};
-  recommendedScheduleSnapshot.value =
-    parsedDraft.version >= RIIC_SCHEDULE_DRAFT_LEGACY_VERSION
-      ? normalizeRecommendedScheduleSnapshot(
-          parsedDraft.recommendedScheduleSnapshot,
-        )
-      : null;
-  pendingOwnedOperatorPreference.value =
-    parsedDraft.useOwnedOperators === true;
+    normalizeSavedInvalidatedScheduleRoomKeys(
+      parsedDraft.invalidatedScheduleRoomKeys,
+    );
+  scheduleRoomMaaSettingOverrides.value =
+    normalizeSavedScheduleRoomMaaSettingOverrides(
+      parsedDraft.scheduleRoomMaaSettingOverrides,
+    );
+  lastAutomaticGenerationTriggerKey.value = String(
+    parsedDraft.lastAutomaticGenerationTriggerKey || "",
+  ).trim();
   hasSavedWizardState.value = true;
   return true;
 }
@@ -6972,28 +6212,7 @@ function loadSavedWizardState({
       return applySavedWizardState(initialWorkspace);
     }
 
-    if (sourceId !== OPERATOR_SOURCE_KEYS.skland) {
-      return false;
-    }
-
-    const savedDraft = localStorage.getItem(
-      RIIC_SCHEDULE_DRAFT_STORAGE_KEY,
-    );
-    const legacyDraft = savedDraft
-      ? null
-      : localStorage.getItem(LEGACY_RIIC_SCHEDULE_DRAFT_STORAGE_KEY);
-    if (!savedDraft && !legacyDraft) {
-      return false;
-    }
-
-    const parsedDraft = JSON.parse(savedDraft || legacyDraft);
-    const restored = applySavedWizardState(parsedDraft);
-    if (restored) {
-      const nextWorkspaces = readOperatorSourceWorkspaces();
-      nextWorkspaces[sourceId] = createWizardStateSnapshot();
-      saveOperatorSourceWorkspaces(nextWorkspaces);
-    }
-    return restored;
+    return false;
   } catch {
     return false;
   }
@@ -7024,9 +6243,7 @@ function selectOption(key, value) {
 }
 
 function selectLayoutEntry(value) {
-  const card =
-    getLayoutCardByKey(value) ||
-    getDefaultLayoutCard(value, answers.shiftMode);
+  const card = getLayoutCardByKey(value);
 
   if (
     value !== "recommend" &&
@@ -7219,7 +6436,8 @@ function resetWizard() {
   controlCenterRoleSettings.value = { officeEnabled: false };
   controlCenterManualOverrides.value = normalizeControlCenterManualOverrides();
   controlCenterLateFillExcludedOperatorIds.value = [];
-  recommendedScheduleSnapshot.value = null;
+  fiammettaRecoverySettings.value = normalizeFiammettaRecoverySettings();
+  lastAutomaticGenerationTriggerKey.value = "";
   clearSelectedRoomGroupTeamCandidates();
   recommendationPanelOpen.value = false;
   if (automaticGenerationTriggerKey.value) {
@@ -7254,8 +6472,6 @@ async function clearSavedWizardState() {
   let cleared = true;
 
   try {
-    localStorage.removeItem(RIIC_SCHEDULE_DRAFT_STORAGE_KEY);
-    localStorage.removeItem(LEGACY_RIIC_SCHEDULE_DRAFT_STORAGE_KEY);
     localStorage.removeItem(RIIC_OPERATOR_WORKSPACES_STORAGE_KEY);
   } catch {
     cleared = false;
@@ -7271,11 +6487,10 @@ async function clearSavedWizardState() {
   controlCenterRoleSettings.value = { officeEnabled: false };
   controlCenterManualOverrides.value = normalizeControlCenterManualOverrides();
   controlCenterLateFillExcludedOperatorIds.value = [];
-  recommendedScheduleSnapshot.value = null;
+  fiammettaRecoverySettings.value = normalizeFiammettaRecoverySettings();
+  lastAutomaticGenerationTriggerKey.value = "";
   clearSelectedRoomGroupTeamCandidates();
   recommendationPanelOpen.value = false;
-  useOwnedOperators.value = false;
-  pendingOwnedOperatorPreference.value = false;
   resetOperatorSources({ clearStorage: true });
   hasSavedWizardState.value = false;
 
@@ -7308,346 +6523,13 @@ function formatNumber(value, digits = 0) {
   }).format(value);
 }
 
-function formatSigned(value) {
-  return `${value >= 0 ? "+" : ""}${formatNumber(value, 1)}`;
-}
-
-function formatSignedInteger(value) {
-  return `${value >= 0 ? "+" : ""}${formatNumber(value)}`;
-}
-
-function formatSourceDate(value) {
-  if (!value) {
-    return "日期未知";
-  }
-
-  return value.slice(0, 10);
-}
-
 function formatTrainingRequirement(requirement) {
   const currentElite = Number(requirement?.current?.elite || 0);
   const currentLevel = Number(requirement?.current?.level || 1);
   const requiredElite = Number(requirement?.required?.elite || 0);
   const requiredLevel = Number(requirement?.required?.level || 1);
 
-  return `精${currentElite} ${currentLevel} → 精${requiredElite} ${requiredLevel}`;
-}
-
-function formatEliteLevel(value) {
-  return value === null || value === undefined ? "未标注" : `精英 ${value}`;
-}
-
-function getOperatorAvatar(displayName) {
-  return operatorAvatarMap.get(displayName) || null;
-}
-
-function getQueueEfficiency(description) {
-  const match = String(description || "").match(/(\d+(?:\.\d+)?)%/);
-
-  return match ? Number.parseFloat(match[1]) : null;
-}
-
-function getStationOrder(stationTitle) {
-  if (stationTitle.startsWith("制造站")) {
-    return 1;
-  }
-  if (stationTitle.startsWith("贸易站")) {
-    return 2;
-  }
-  if (stationTitle === "发电站") {
-    return 3;
-  }
-  if (stationTitle === "控制中枢") {
-    return 4;
-  }
-
-  return 5;
-}
-
-function compareDeveloperCombinations(left, right) {
-  if (left.efficiency !== null && right.efficiency !== null) {
-    if (left.efficiency !== right.efficiency) {
-      return right.efficiency - left.efficiency;
-    }
-  } else if (left.efficiency !== null) {
-    return -1;
-  } else if (right.efficiency !== null) {
-    return 1;
-  }
-
-  if (left.duration !== right.duration) {
-    return left.duration.localeCompare(right.duration, "zh-CN");
-  }
-
-  return left.operators
-    .map((operator) => operator.displayName)
-    .join("、")
-    .localeCompare(
-      right.operators.map((operator) => operator.displayName).join("、"),
-      "zh-CN",
-    );
-}
-
-function getCandidateSourceUrl(candidate) {
-  return `${RIIC_SCHEDULE_SOURCE.repository}/blob/${RIIC_SCHEDULE_SOURCE.commit}/${candidate.sourcePath}`;
-}
-
-function createManualRooms(layoutId) {
-  const manufactureProducts =
-    layoutId === "153"
-      ? [
-          { product: "experience", label: "作战记录站 1" },
-          { product: "experience", label: "作战记录站 2" },
-          { product: "experience", label: "作战记录站 3" },
-          { product: "experience", label: "作战记录站 4" },
-          { product: "gold", label: "赤金站 1" },
-        ]
-      : [
-          { product: "experience", label: "作战记录站 1" },
-          { product: "experience", label: "作战记录站 2" },
-          { product: "gold", label: "赤金站 1" },
-          { product: "gold", label: "赤金站 2" },
-        ];
-  const tradingCount = layoutId === "153" ? 1 : 2;
-  const rooms = [
-    {
-      id: "control-0",
-      label: "控制中枢",
-      roomType: "control",
-      roomIndex: 0,
-      sourceKey: "control",
-      blueprintRow: "core",
-    },
-    ...Array.from({ length: 3 }, (_, index) => ({
-      id: `power-${index}`,
-      label: `发电站 ${index + 1}`,
-      roomType: "power",
-      roomIndex: index,
-      sourceKey: "power",
-      blueprintRow: "core",
-    })),
-    ...manufactureProducts.map((room, index) => ({
-      id: `manufacture-${room.product}-${index}`,
-      label: room.label,
-      roomType: "manufacture",
-      roomIndex: index,
-      sourceKey: room.product,
-      blueprintRow: "production",
-    })),
-    ...Array.from({ length: tradingCount }, (_, index) => ({
-      id: `trading-${index}`,
-      label: `贸易站 ${index + 1}`,
-      roomType: "trading",
-      roomIndex: index,
-      sourceKey: "trading",
-      blueprintRow: "production",
-    })),
-    {
-      id: "meeting-0",
-      label: "会客室",
-      roomType: "meeting",
-      roomIndex: 0,
-      sourceKey: "meeting",
-      blueprintRow: "support",
-    },
-    {
-      id: "hire-0",
-      label: "办公室",
-      roomType: "hire",
-      roomIndex: 0,
-      sourceKey: "hire",
-      blueprintRow: "support",
-    },
-    {
-      id: "processing-0",
-      label: "加工站 / 训练室",
-      roomType: "processing",
-      roomIndex: 0,
-      sourceKey: "processing",
-      blueprintRow: "support",
-    },
-    ...Array.from({ length: 4 }, (_, index) => ({
-      id: `dormitory-${index}`,
-      label: `宿舍 ${index + 1}`,
-      roomType: "dormitory",
-      roomIndex: index,
-      sourceKey: "dormitory",
-      blueprintRow: "dormitory",
-    })),
-  ];
-
-  return rooms.map((room) => ({
-    ...room,
-    typeLabel: MANUAL_ROOM_TYPE_META[room.roomType].label,
-    icon: MANUAL_ROOM_TYPE_META[room.roomType].icon,
-  }));
-}
-
-function stationMatchesManualRoom(station, room) {
-  if (room.sourceKey === "experience") {
-    return station.title.includes("中级作战记录");
-  }
-  if (room.sourceKey === "gold") {
-    return station.title.includes("赤金");
-  }
-  if (room.sourceKey === "trading") {
-    return station.title.startsWith("贸易站");
-  }
-  if (room.sourceKey === "control") {
-    return station.title === "控制中枢";
-  }
-  if (room.sourceKey === "power") {
-    return station.title === "发电站";
-  }
-  if (room.sourceKey === "meeting") {
-    return station.title === "会客室";
-  }
-  if (room.sourceKey === "hire") {
-    return station.title === "办公室";
-  }
-  if (room.sourceKey === "processing") {
-    return station.title.startsWith("加工站");
-  }
-  if (room.sourceKey === "dormitory") {
-    return station.title === "宿舍";
-  }
-
-  return false;
-}
-
-function getManualAssignmentKey(roomId, queueIndex) {
-  return `${roomId}-${queueIndex}`;
-}
-
-function getManualRoomAssignment(roomId, queueIndex) {
-  return (
-    manualAssignments.value[getManualAssignmentKey(roomId, queueIndex)] ||
-    null
-  );
-}
-
-function getManualRoomAssignmentLabel(roomId, queueIndex) {
-  const assignment = getManualRoomAssignment(roomId, queueIndex);
-
-  if (!assignment) {
-    return "未选择干员组";
-  }
-  if (assignment.fallback) {
-    return "保持原有安排";
-  }
-
-  return (
-    assignment.operators
-      .map((operator) => operator.displayName)
-      .join("、") || "保持 / 不指定"
-  );
-}
-
-function selectManualRoom(roomId) {
-  selectedManualRoomId.value = roomId;
-}
-
-function assignManualGroup(option) {
-  if (!selectedManualRoom.value) {
-    return;
-  }
-
-  manualAssignments.value[
-    getManualAssignmentKey(
-      selectedManualRoom.value.id,
-      manualQueueIndex.value,
-    )
-  ] = option;
-}
-
-function clearManualRoomAssignment() {
-  if (!selectedManualRoom.value) {
-    return;
-  }
-
-  delete manualAssignments.value[
-    getManualAssignmentKey(
-      selectedManualRoom.value.id,
-      manualQueueIndex.value,
-    )
-  ];
-}
-
-function isManualOptionSelected(option) {
-  return manualSelectedAssignment.value?.key === option.key;
-}
-
-function getManualRoomConflictNames(room) {
-  const assignment = getManualRoomAssignment(
-    room.id,
-    manualQueueIndex.value,
-  );
-
-  return (assignment?.operators || [])
-    .map((operator) => operator.displayName)
-    .filter((name) => manualActiveQueueConflicts.value.has(name));
-}
-
-function getManualOptionConflictNames(option) {
-  const selectedRoom = selectedManualRoom.value;
-  const occupiedOperators = new Set();
-
-  for (const room of manualRooms.value) {
-    if (room.id === selectedRoom?.id) {
-      continue;
-    }
-
-    for (const operator of getManualRoomAssignment(
-      room.id,
-      manualQueueIndex.value,
-    )?.operators || []) {
-      occupiedOperators.add(operator.displayName);
-    }
-  }
-
-  return option.operators
-    .map((operator) => operator.displayName)
-    .filter((name) => occupiedOperators.has(name));
-}
-
-function resetManualSchedule() {
-  manualQueueIndex.value = 0;
-  manualAssignments.value = {};
-  selectedManualRoomId.value = "control-0";
-}
-
-function toggleOwnedRecommendation() {
-  if (ownedOperators.value.length === 0) {
-    loadOwnedOperators({ notify: true });
-    return;
-  }
-
-  useOwnedOperators.value = !useOwnedOperators.value;
-}
-
-function disableOwnedRecommendation() {
-  useOwnedOperators.value = false;
-}
-
-async function copySummary() {
-  try {
-    await navigator.clipboard.writeText(
-      buildRecommendationSummary(recommendation.value),
-    );
-    cMessage("方案摘要已复制");
-  } catch (error) {
-    console.error(error);
-    cMessage("复制失败，请稍后重试", "error");
-  }
-}
-
-function getExportFileBase() {
-  const layout = recommendation.value?.layout.shortName || "RIIC";
-  const shift = recommendation.value?.shiftMode.shortName || "排班";
-  const date = formatSourceDate(
-    selectedCandidate.value?.sourceUpdatedAt,
-  ).replaceAll("-", "");
-  return `一图流-${layout}-${shift}-${date}`;
+  return `精英 ${currentElite} Lv.${currentLevel} → 精英 ${requiredElite} Lv.${requiredLevel}`;
 }
 
 function getGeneratedScheduleExportFileBase() {
@@ -7662,7 +6544,7 @@ function getGeneratedScheduleExportFileBase() {
 }
 
 async function exportGeneratedScheduleImage() {
-  if (!schedulePreviewCapturePanel.value || !riicSchedulePreview.value) {
+  if (!schedulePreviewExportCapturePanel.value || !riicSchedulePreview.value) {
     cMessage("当前没有可导出的排班表", "warn");
     return;
   }
@@ -7674,10 +6556,10 @@ async function exportGeneratedScheduleImage() {
     const { default: html2canvas } = await import("html2canvas");
     const isDark = document.documentElement.classList.contains("dark");
     const captureWidth = Math.max(
-      schedulePreviewCapturePanel.value.scrollWidth,
+      schedulePreviewExportCapturePanel.value.scrollWidth,
       720,
     );
-    const canvas = await html2canvas(schedulePreviewCapturePanel.value, {
+    const canvas = await html2canvas(schedulePreviewExportCapturePanel.value, {
       backgroundColor: isDark ? "#17191d" : "#ffffff",
       scale: 2,
       useCORS: true,
@@ -7685,7 +6567,7 @@ async function exportGeneratedScheduleImage() {
       windowWidth: captureWidth,
       onclone(clonedDocument) {
         const clonedPanel = clonedDocument.querySelector(
-          "[data-riic-preview-capture]",
+          "[data-riic-export-preview-capture]",
         );
         if (clonedPanel) {
           clonedPanel.style.width = `${captureWidth}px`;
@@ -7702,9 +6584,19 @@ async function exportGeneratedScheduleImage() {
             "--riic-export-edited-surface",
             isDark ? "#20242a" : "#f4f6f8",
           );
+          clonedPanel.style.setProperty(
+            "--riic-export-border",
+            isDark ? "#b6b6b6" : "#d7d7d7",
+          );
+          clonedPanel.style.setProperty(
+            "--riic-export-text",
+            isDark ? "#e6e6e6" : "#191919",
+          );
           clonedPanel
-            .querySelector(".riic-schedule-preview")
-            ?.classList.add("export-capture");
+            .querySelectorAll(".riic-schedule-preview")
+            .forEach((previewElement) =>
+              previewElement.classList.add("export-capture"),
+            );
         }
       },
     });
@@ -7779,91 +6671,6 @@ function openGeneratedScheduleInLegacyEditor() {
   router.push({ name: "ScheduleV2" });
 }
 
-async function exportScheduleImage() {
-  if (!scheduleCapturePanel.value || !selectedCandidate.value) {
-    cMessage("当前没有可导出的完整排班", "warn");
-    return;
-  }
-
-  exportingImage.value = true;
-
-  try {
-    await document.fonts?.ready;
-    const { default: html2canvas } = await import("html2canvas");
-    const isDark = document.documentElement.classList.contains("dark");
-    const captureWidth = Math.max(
-      scheduleCapturePanel.value.scrollWidth,
-      1080,
-    );
-    const canvas = await html2canvas(scheduleCapturePanel.value, {
-      backgroundColor: isDark ? "#17191d" : "#ffffff",
-      scale: 2,
-      useCORS: true,
-      width: captureWidth,
-      windowWidth: captureWidth,
-      onclone(clonedDocument) {
-        const clonedPanel = clonedDocument.querySelector(
-          "[data-riic-capture]",
-        );
-        const scrollContainer = clonedPanel?.querySelector(
-          ".schedule-board-scroll",
-        );
-
-        if (clonedPanel) {
-          clonedPanel.style.width = `${captureWidth}px`;
-          clonedPanel.style.maxWidth = "none";
-        }
-        if (scrollContainer) {
-          scrollContainer.style.overflow = "visible";
-        }
-      },
-    });
-    const blob = await new Promise((resolve) =>
-      canvas.toBlob(resolve, "image/png"),
-    );
-
-    if (!blob) {
-      throw new Error("Failed to create schedule image");
-    }
-
-    saveAs(blob, `${getExportFileBase()}.png`);
-    cMessage("排班表图片已导出");
-  } catch (error) {
-    console.error(error);
-    cMessage("图片导出失败，请稍后重试", "error");
-  } finally {
-    exportingImage.value = false;
-  }
-}
-
-function exportMaaSchedule() {
-  if (!maaExportPreview.value) {
-    cMessage("当前没有可导出的 MAA 排班", "warn");
-    return;
-  }
-
-  exportingMaa.value = true;
-
-  try {
-    const blob = new Blob(
-      [JSON.stringify(maaExportPreview.value.schedule, null, 2)],
-      { type: "application/json;charset=utf-8" },
-    );
-    saveAs(blob, `${getExportFileBase()}-MAA.json`);
-    cMessage(
-      maaExportPreview.value.warnings.length
-        ? "MAA 排班已导出，请查看页面上的转换提示"
-        : "MAA 排班已导出",
-      maaExportPreview.value.warnings.length ? "warn" : "success",
-    );
-  } catch (error) {
-    console.error(error);
-    cMessage("MAA 排班导出失败，请稍后重试", "error");
-  } finally {
-    exportingMaa.value = false;
-  }
-}
-
 watch(
   [
     () => answers.lmdNeed,
@@ -7878,30 +6685,32 @@ watch(
     selectedLayoutId,
     confirmedLayoutPlan,
     currentStep,
-    useOwnedOperators,
     twoShiftRotationMode,
     treatUnderleveledOperatorsAsQualified,
     controlCenterRoleSettings,
     controlCenterManualOverrides,
-    recommendedScheduleSnapshot,
+    fiammettaRecoverySettings,
+    lastAutomaticGenerationTriggerKey,
     selectedRoomGroupTeamCandidateKeys,
     roomGroupFallbackQueueStates,
     () =>
       scheduleExecutionSettings.shifts
-        .map((shift) => `${shift.name}|${shift.time}`)
+        .map(
+          (shift) =>
+            `${shift.name}|${shift.time}|${shift.description}|${shift.descriptionPost}|${JSON.stringify(shift.fiammetta || {})}`,
+        )
         .join("||"),
     () => scheduleExecutionSettings.droneTarget,
     () => scheduleExecutionSettings.droneTargetPinned,
+    () => scheduleExecutionSettings.droneTargetDisabled,
+    () => scheduleExecutionSettings.droneOrder,
+    () => JSON.stringify(scheduleExecutionSettings.exportInfo),
     scheduleRoomOperatorOverrides,
     scheduleRoomProductOverrides,
     invalidatedScheduleRoomKeys,
+    scheduleRoomMaaSettingOverrides,
   ],
   saveWizardState,
-);
-
-watch(
-  [developerLayoutId, developerShiftMode],
-  resetManualSchedule,
 );
 
 onMounted(async () => {
@@ -7910,78 +6719,27 @@ onMounted(async () => {
   storageReady.value = true;
   await loadOwnedOperators();
 
-  ownedOperatorPreferenceReady.value = true;
-  useOwnedOperators.value =
-    pendingOwnedOperatorPreference.value &&
-    ownedOperators.value.length > 0;
-
   if (hasSavedWizardState.value) {
     saveWizardState();
   }
 });
 
 onBeforeUnmount(() => {
+  automaticGenerationQueuedOptions = null;
+  automaticGenerationRequestId += 1;
+  automaticGenerationAbortController?.abort();
   riicYieldEngineAbortController?.abort();
 });
 </script>
 
 <template>
   <main class="riic-generator">
-    <header class="page-heading">
-      <div>
-        <p class="page-eyebrow">RIIC SCHEDULE</p>
-        <h1>{{ isDeveloperMode ? "基建组合效率" : "基建布局推荐" }}</h1>
-        <p v-if="isDeveloperMode" class="page-subtitle">
-          按布局与换班频率浏览原排班文档中的干员组合
-        </p>
-      </div>
-      <div v-if="isDeveloperMode" class="phase-mark">
-        <v-icon icon="mdi-flask-outline"></v-icon>
-        开发模式
-      </div>
-    </header>
-
-    <RiicDeveloperWorkbench
-      v-if="isDeveloperMode"
-      :developer-source-url="developerSourceUrl"
-      :developer-layout-options="developerLayoutOptions"
-      :developer-shift-options="developerShiftOptions"
-      :developer-layout-id="developerLayoutId"
-      :developer-shift-mode="developerShiftMode"
-      :developer-candidates="developerCandidates"
-      :developer-combination-groups="developerCombinationGroups"
-      :developer-combination-count="developerCombinationCount"
-      :manual-queue-index="manualQueueIndex"
-      :manual-queue-count="manualQueueCount"
-      :manual-assignment-count="manualAssignmentCount"
-      :manual-rooms="manualRooms"
-      :manual-blueprint-rows="manualBlueprintRows"
-      :selected-manual-room-id="selectedManualRoomId"
-      :selected-manual-room="selectedManualRoom"
-      :manual-selected-assignment="manualSelectedAssignment"
-      :manual-group-options="manualGroupOptions"
-      :get-manual-room-assignment="getManualRoomAssignment"
-      :get-manual-room-assignment-label="getManualRoomAssignmentLabel"
-      :get-manual-room-conflict-names="getManualRoomConflictNames"
-      :is-manual-option-selected="isManualOptionSelected"
-      :get-manual-option-conflict-names="getManualOptionConflictNames"
-      :get-operator-avatar="getOperatorAvatar"
-      :get-candidate-source-url="getCandidateSourceUrl"
-      :format-source-date="formatSourceDate"
-      @update:developer-layout-id="developerLayoutId = $event"
-      @update:developer-shift-mode="developerShiftMode = $event"
-      @update:manual-queue-index="manualQueueIndex = $event"
-      @select-manual-room="selectManualRoom"
-      @clear-manual-room-assignment="clearManualRoomAssignment"
-      @assign-manual-group="assignManualGroup"
-    ></RiicDeveloperWorkbench>
-
-    <div v-else class="workflow-shell">
+    <div class="workflow-shell">
       <section
         class="workflow-stage workflow-card layout-workflow-stage"
         :class="`workflow-card-${layoutWorkflowCardState}`"
       >
-        <header class="workflow-card-heading" data-step="STEP 1 OF 3">
+        <header class="workflow-card-heading">
           <div class="workflow-card-heading-copy">
             <h2>布局规划</h2>
             <span
@@ -8025,610 +6783,13 @@ onBeforeUnmount(() => {
           @select-manual-schedule-option="selectManualScheduleOption"
         ></RiicLayoutChoicePanel>
 
-        <section
-          v-if="showLegacyScheduleReference"
-          class="result-panel"
-        >
-        <div class="result-heading">
-          <div>
-            <span class="result-label">推荐方案</span>
-            <h2>{{ recommendation.layout.name }}</h2>
-            <p>{{ recommendation.layoutReason }}</p>
-          </div>
-          <div class="layout-code">{{ recommendation.layout.shortName }}</div>
-        </div>
-
-        <div class="facility-strip">
-          <div class="facility-item trading">
-            <v-icon icon="mdi-handshake-outline"></v-icon>
-            <span>贸易站</span>
-            <strong>{{ recommendation.layout.tradingRooms }}</strong>
-          </div>
-          <div class="facility-item manufacture">
-            <v-icon icon="mdi-factory"></v-icon>
-            <span>制造站</span>
-            <strong>{{ recommendation.layout.manufactureRooms }}</strong>
-          </div>
-          <div class="facility-item power">
-            <v-icon icon="mdi-lightning-bolt"></v-icon>
-            <span>发电站</span>
-            <strong>{{ recommendation.layout.powerRooms }}</strong>
-          </div>
-        </div>
-
-        <section v-if="showScheduleGeneration" class="ownership-panel">
-          <div class="ownership-copy">
-            <div class="section-title">
-              <v-icon icon="mdi-account-check-outline"></v-icon>
-              <h3>按持有干员筛选</h3>
-            </div>
-            <strong v-if="loadingOwnedOperators">正在读取持有干员数据</strong>
-            <template v-else-if="ownedOperators.length">
-              <strong>
-                {{ ownedOperatorMessage }}，来源：{{ ownedOperatorSource }}
-              </strong>
-              <span>
-                {{
-                  useOwnedOperators
-                    ? "当前只会采用你能够完整执行的排班"
-                    : "当前先按全干员范围寻找高产方案"
-                }}
-              </span>
-            </template>
-            <template v-else>
-              <strong>{{ ownedOperatorError || ownedOperatorMessage }}</strong>
-              <span>
-                可先在练度调查中导入干员，再回到这里生成个人排班。
-              </span>
-            </template>
-          </div>
-          <div class="ownership-actions">
-            <a
-              v-if="!loadingOwnedOperators && ownedOperators.length === 0"
-              class="text-link"
-              href="/survey/operators"
-            >
-              导入干员
-              <v-icon icon="mdi-open-in-new" size="16"></v-icon>
-            </a>
-            <button
-              type="button"
-              class="secondary-action"
-              :disabled="loadingOwnedOperators"
-              @click="toggleOwnedRecommendation"
-            >
-              <v-icon
-                :icon="
-                  useOwnedOperators
-                    ? 'mdi-account-multiple'
-                    : 'mdi-account-filter-outline'
-                "
-                size="19"
-              ></v-icon>
-              {{
-                useOwnedOperators ? "查看全干员最优" : "使用我的干员"
-              }}
-            </button>
-          </div>
-        </section>
-
-        <section
-          v-if="showScheduleGeneration && useOwnedOperators && !selectedSchedule"
-          class="compatibility-alert"
-        >
-          <v-icon icon="mdi-alert-circle-outline" size="24"></v-icon>
-          <div>
-            <strong>没有找到你能完整执行的现成排班</strong>
-            <p v-if="recommendation.closestSchedule">
-              最接近的方案还缺
-              {{ recommendation.closestSchedule.ownership.unavailableCount }}
-              名干员或练度条件，因此没有把它当成可导出结果。
-            </p>
-            <div
-              v-if="recommendation.closestSchedule"
-              class="missing-operator-list"
-            >
-              <span
-                v-for="operator in recommendation.closestSchedule.ownership.missing.slice(0, 12)"
-                :key="`missing-${operator.name}`"
-              >
-                {{ operator.name }} · {{ formatEliteLevel(operator.eliteLevel) }}
-              </span>
-              <span
-                v-for="operator in recommendation.closestSchedule.ownership.underleveled.slice(0, 8)"
-                :key="`underleveled-${operator.name}`"
-              >
-                {{ operator.name }} · 当前精英 {{ operator.currentElite }} /
-                需要 {{ operator.eliteLevel }}
-              </span>
-            </div>
-          </div>
-          <button
-            type="button"
-            class="secondary-action"
-            @click="disableOwnedRecommendation"
-          >
-            查看全干员方案
-          </button>
-        </section>
-
-        <div class="result-section">
-          <div class="section-title">
-            <v-icon icon="mdi-factory"></v-icon>
-            <h3>制造分配</h3>
-          </div>
-          <div class="production-allocation">
-            <div class="allocation-row experience">
-              <span>作战记录</span>
-              <div class="allocation-track">
-                <span
-                  :style="{
-                    width: `${recommendation.layout.experienceRooms / recommendation.layout.manufactureRooms * 100}%`,
-                  }"
-                ></span>
-              </div>
-              <strong>{{ recommendation.layout.experienceRooms }} 座</strong>
-            </div>
-            <div class="allocation-row gold">
-              <span>赤金</span>
-              <div class="allocation-track">
-                <span
-                  :style="{
-                    width: `${recommendation.layout.goldRooms / recommendation.layout.manufactureRooms * 100}%`,
-                  }"
-                ></span>
-              </div>
-              <strong>{{ recommendation.layout.goldRooms }} 座</strong>
-            </div>
-            <div
-              v-if="recommendation.layout.orundumRooms"
-              class="allocation-row orundum"
-            >
-              <span>源石碎片</span>
-              <div class="allocation-track">
-                <span
-                  :style="{
-                    width: `${recommendation.layout.orundumRooms / recommendation.layout.manufactureRooms * 100}%`,
-                  }"
-                ></span>
-              </div>
-              <strong>{{ recommendation.layout.orundumRooms }} 座</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="result-grid">
-          <section class="result-section">
-            <div class="section-title">
-              <v-icon icon="mdi-clock-outline"></v-icon>
-              <h3>换班队列</h3>
-            </div>
-            <strong class="section-main">{{ recommendation.shiftMode.name }}</strong>
-            <p
-              v-if="recommendation.shiftMode.isCompatibleFallback"
-              class="section-note"
-            >
-              你选择的一天三换可兼容这一套一天两换原表，无需强行增加换班次数。
-            </p>
-            <div class="queue-row">
-              <div
-                v-for="(hours, index) in recommendation.shiftMode.queueHours"
-                :key="index"
-                class="queue-item"
-              >
-                <span>队列 {{ index + 1 }}</span>
-                <strong>{{ hours }}h</strong>
-              </div>
-            </div>
-            <p class="section-note">换班和收取产物时，已有生产进度正常保留。</p>
-          </section>
-
-          <section class="result-section">
-            <div class="section-title">
-              <v-icon icon="mdi-quadcopter"></v-icon>
-              <h3>无人机投向</h3>
-            </div>
-            <strong class="section-main">{{ recommendation.droneTarget.roomName }}</strong>
-            <span class="section-secondary">每日约 {{ recommendation.production.drones }} 架全部投入</span>
-            <p class="section-note">{{ recommendation.droneReason }}</p>
-            <div
-              v-if="recommendation.droneTarget.id === 'flexible'"
-              class="drone-flex-options"
-            >
-              <span>
-                投经验：{{ formatNumber(recommendation.productionAlternatives[0].production.experience) }} EXP
-              </span>
-              <span>
-                投贸易：{{ formatNumber(recommendation.productionAlternatives[1].production.lmd) }} LMD
-              </span>
-            </div>
-          </section>
-        </div>
-
-        <section
-          v-if="showScheduleGeneration && selectedSchedule"
-          class="result-section reference-section"
-        >
-          <div class="section-title">
-            <v-icon icon="mdi-clipboard-text-search-outline"></v-icon>
-            <h3>方案参考</h3>
-          </div>
-
-          <div class="reference-grid">
-            <div class="reference-item">
-              <span class="reference-label">推荐依据</span>
-              <ul class="reference-basis">
-                <li
-                  v-for="basis in recommendation.reference.selectionBasis"
-                  :key="basis"
-                >
-                  <v-icon icon="mdi-check" size="15"></v-icon>
-                  <span>{{ basis }}</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="reference-item">
-              <span class="reference-label">执行规模</span>
-              <strong>
-                {{ selectedSchedule.ownership.requiredCount }} 名干员
-                <template v-if="recommendation.reference.fullRotationHours">
-                  · {{ recommendation.reference.fullRotationHours }} 小时一轮
-                </template>
-              </strong>
-              <p>
-                {{
-                  recommendation.useOwnedOperators
-                    ? "已通过持有与精英化要求检查"
-                    : "全干员范围推荐，尚未校验你的持有情况"
-                }}
-              </p>
-            </div>
-
-            <div class="reference-item">
-              <span class="reference-label">产量口径</span>
-              <strong>
-                {{
-                  recommendation.productionIsFallback
-                    ? "基础布局估算"
-                    : "文档完整产量"
-                }}
-              </strong>
-              <p v-if="recommendation.productionIsFallback">
-                当前原表缺少完整产量字段，结果改按普通补位 190% 估算，
-                不再把缺失值显示为 0。
-              </p>
-              <p v-else>
-                基础产量取自原排班文档，无人机增量按本次选择的投向计入。
-              </p>
-            </div>
-
-            <div class="reference-item">
-              <span class="reference-label">相对下一方案</span>
-              <template v-if="recommendation.reference.comparison">
-                <strong>
-                  {{ formatSourceDate(recommendation.reference.comparison.sourceUpdatedAt) }}
-                  ·
-                  {{
-                    recommendation.reference.comparison.variant === "simplified"
-                      ? "简化版"
-                      : "标准版"
-                  }}
-                </strong>
-                <div class="comparison-metrics">
-                  <span>
-                    EXP
-                    {{ formatSignedInteger(recommendation.reference.comparison.experience) }}
-                  </span>
-                  <span>
-                    LMD
-                    {{ formatSignedInteger(recommendation.reference.comparison.lmd) }}
-                  </span>
-                  <span>
-                    赤金净
-                    {{ formatSigned(recommendation.reference.comparison.goldNet) }}
-                  </span>
-                </div>
-                <p>以上为当前方案减去下一可用高产方案的稳定日均差值。</p>
-              </template>
-              <p v-else>
-                当前没有同布局、同换班频率且产量完整的第二方案可比较。
-              </p>
-            </div>
-          </div>
-
-          <div
-            v-if="recommendation.reference.operationRisks.length"
-            class="operation-reference"
-          >
-            <span class="reference-label">执行条件</span>
-            <div class="operation-reference-list">
-              <div
-                v-for="risk in recommendation.reference.operationRisks"
-                :key="risk.id"
-                class="operation-reference-item"
-                :class="`tone-${risk.tone}`"
-              >
-                <v-icon :icon="risk.icon" size="18"></v-icon>
-                <div>
-                  <strong>{{ risk.label }}</strong>
-                  <span>{{ risk.detail }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          v-if="showScheduleGeneration && selectedSchedule"
-          ref="scheduleCapturePanel"
-          class="schedule-detail"
-          data-riic-capture
-        >
-          <header class="schedule-detail-heading">
-            <div>
-              <span class="result-label">推荐完整排班</span>
-              <h3>{{ selectedCandidate.title.replace(/\s+/g, " ") }}</h3>
-              <p>
-                来源版本 {{ formatSourceDate(selectedCandidate.sourceUpdatedAt) }}
-                · 需要 {{ selectedSchedule.ownership.requiredCount }} 名不同干员
-              </p>
-            </div>
-            <a
-              class="source-link"
-              :href="candidateSourceUrl"
-              target="_blank"
-              rel="noreferrer"
-            >
-              查看原表
-              <v-icon icon="mdi-open-in-new" size="16"></v-icon>
-            </a>
-          </header>
-
-          <div
-            v-if="selectedDescriptionLines.length"
-            class="schedule-notices"
-          >
-            <span
-              v-for="line in selectedDescriptionLines"
-              :key="line"
-            >
-              <v-icon
-                :icon="
-                  line.includes('严格') || line.includes('不建议')
-                    ? 'mdi-alert-outline'
-                    : 'mdi-information-outline'
-                "
-                size="17"
-              ></v-icon>
-              {{ line }}
-            </span>
-          </div>
-
-          <div class="schedule-board-scroll">
-            <div class="schedule-board">
-              <div class="schedule-board-head">
-                <strong>房间</strong>
-                <strong
-                  v-for="(description, index) in selectedCandidate.queueDescriptions"
-                  :key="description"
-                >
-                  队列 {{ index + 1 }}
-                  <small>{{ description }}</small>
-                </strong>
-              </div>
-              <div
-                v-for="(station, stationIndex) in selectedStations"
-                :key="`${station.title}-${stationIndex}`"
-                class="schedule-station-row"
-              >
-                <div class="station-name">
-                  <span>{{ station.title }}</span>
-                  <small>{{ station.stationType }}</small>
-                </div>
-                <div
-                  v-for="(queue, queueIndex) in station.queues"
-                  :key="queueIndex"
-                  class="station-queue"
-                >
-                  <div
-                    v-if="queue.operators.length"
-                    class="operator-list"
-                  >
-                    <div
-                      v-for="operator in queue.operators"
-                      :key="`${operator.displayName}-${operator.eliteLevel}`"
-                      class="operator-name"
-                      :class="{ tired: operator.isTired }"
-                    >
-                      <OperatorAvatar
-                        v-if="getOperatorAvatar(operator.displayName)"
-                        :char-id="
-                          getOperatorAvatar(operator.displayName).charId
-                        "
-                        :rarity="
-                          getOperatorAvatar(operator.displayName).rarity
-                        "
-                        :size="34"
-                        :mobile-size="32"
-                        border
-                        class="operator-avatar"
-                      ></OperatorAvatar>
-                      <span class="operator-label">
-                        <span>{{ operator.displayName }}</span>
-                        <small v-if="operator.eliteLevel !== null">
-                          E{{ operator.eliteLevel }}
-                        </small>
-                      </span>
-                    </div>
-                  </div>
-                  <span v-else class="empty-queue">保持 / 不指定</span>
-                  <p v-if="queue.description">{{ queue.description }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <footer class="schedule-source-note">
-            产量和干员组合来自一图流排班文档；本工具负责按目标、换班频率与持有情况筛选整套方案。
-          </footer>
-        </section>
-
-        <div class="result-section output-section">
-          <div class="section-title">
-            <v-icon icon="mdi-chart-box-outline"></v-icon>
-            <h3>
-              {{
-                recommendation.productionIsFallback
-                  ? "基础布局兜底估算"
-                  : "原排班稳定日均"
-              }}
-            </h3>
-          </div>
-          <p class="output-basis-note">
-            {{
-              recommendation.productionIsFallback
-                ? "当前排班文档未提供完整产量，以下按 3 名 +30% 普通补位干员、房间总效率 190% 估算。"
-                : "基础产量来自原排班文档，无人机增量按当前投向计算。"
-            }}
-          </p>
-          <div class="metric-grid">
-            <div class="metric-item experience">
-              <span>经验</span>
-              <strong>{{ formatNumber(recommendation.production.experience) }}</strong>
-              <small>EXP / 日</small>
-            </div>
-            <div class="metric-item lmd">
-              <span>龙门币</span>
-              <strong>{{ formatNumber(recommendation.production.lmd) }}</strong>
-              <small>LMD / 日</small>
-            </div>
-            <div class="metric-item gold">
-              <span>赤金生产</span>
-              <strong>{{ formatNumber(recommendation.production.goldProduced, 1) }}</strong>
-              <small>
-                消耗 {{ formatNumber(recommendation.production.goldConsumed, 1) }}，
-                净 {{ formatSigned(recommendation.production.goldNet) }}
-              </small>
-            </div>
-            <div class="metric-item drones">
-              <span>无人机恢复</span>
-              <strong>{{ recommendation.production.drones }}</strong>
-              <small>架 / 日</small>
-            </div>
-          </div>
-        </div>
-
-        <section
-          v-if="recommendation.alternatives.length"
-          class="alternative-section"
-        >
-          <div class="section-title">
-            <v-icon icon="mdi-format-list-numbered"></v-icon>
-            <h3>备选方案</h3>
-          </div>
-          <div class="alternative-list">
-            <div
-              v-for="alternative in recommendation.alternatives"
-              :key="alternative.candidate.id"
-              class="alternative-row"
-            >
-              <div>
-                <strong>
-                  {{ alternative.label }} ·
-                  {{ alternative.candidate.title.replace(/\s+/g, " ") }}
-                </strong>
-                <span>
-                  {{ alternative.reason }}
-                </span>
-              </div>
-              <div class="alternative-output">
-                <span>{{ formatNumber(alternative.production.experience) }} EXP</span>
-                <span>{{ formatNumber(alternative.production.lmd) }} LMD</span>
-                <span>赤金净 {{ formatSigned(alternative.production.goldNet) }}</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          v-if="showScheduleGeneration && maaExportPreview?.warnings.length"
-          class="export-warning"
-        >
-          <div class="section-title">
-            <v-icon icon="mdi-alert-outline"></v-icon>
-            <h3>MAA 转换提示</h3>
-          </div>
-          <p
-            v-for="warning in maaExportPreview.warnings"
-            :key="warning"
-          >
-            {{ warning }}
-          </p>
-        </section>
-
-        <details v-if="showScheduleGeneration" class="assumption-panel">
-          <summary>估算口径</summary>
-          <div>
-            <p>
-              未匹配到文档排班时，制造站与贸易站按普通补位计算：3 名 +30% 干员，
-              房间总效率为 {{ formatNumber(ESTIMATION_ASSUMPTIONS.roomEfficiency * 100) }}%。
-            </p>
-            <p>
-              3 座普通发电站每日约恢复 {{ ESTIMATION_ASSUMPTIONS.dronesPerDay }} 架无人机；
-              每架推进 3 分钟，无人机推进量不乘房间效率。
-            </p>
-            <p>假设及时收取产物，不计算仓库满仓停产。</p>
-          </div>
-        </details>
-
-        <footer class="result-actions">
-          <button
-            type="button"
-            class="secondary-action"
-            @click="resetWizard"
-          >
-            <v-icon icon="mdi-refresh" size="19"></v-icon>
-            重新选择
-          </button>
-          <button
-            v-if="showScheduleGeneration"
-            type="button"
-            class="primary-action"
-            @click="copySummary"
-          >
-            <v-icon icon="mdi-content-copy" size="19"></v-icon>
-            复制方案摘要
-          </button>
-          <button
-            v-if="showScheduleGeneration"
-            type="button"
-            class="secondary-action"
-            :disabled="!selectedSchedule || exportingImage"
-            @click="exportScheduleImage"
-          >
-            <v-icon icon="mdi-image-outline" size="19"></v-icon>
-            {{ exportingImage ? "正在生成" : "导出图片" }}
-          </button>
-          <button
-            v-if="showScheduleGeneration"
-            type="button"
-            class="primary-action"
-            :disabled="!selectedSchedule || exportingMaa"
-            @click="exportMaaSchedule"
-          >
-            <v-icon icon="mdi-code-json" size="19"></v-icon>
-            {{ exportingMaa ? "正在导出" : "导出 MAA" }}
-          </button>
-        </footer>
       </section>
-        </section>
 
       <section
         class="workflow-stage workflow-card schedule-generation-stage"
         :class="`workflow-card-${scheduleGenerationWorkflowCardState}`"
       >
-        <div class="workflow-card-heading" data-step="STEP 2 OF 3">
+        <div class="workflow-card-heading">
           <div class="workflow-card-heading-copy">
             <h2>导入干员与生成排班表</h2>
             <span
@@ -8656,56 +6817,129 @@ onBeforeUnmount(() => {
               "
               class="workflow-card-status-note"
             >
-              请导入至少一份干员数据
-            </span>
+              请导入至少一份干员数据            </span>
           </div>
         </div>
-        <RiicOperatorSourcePanel
-          :skland-operator-source-status="sklandOperatorSourceStatus"
-          :custom-operator-source-statuses="customOperatorSourceStatuses"
-          :operator-source-states="operatorSourceStates"
-          :custom-source-import-panel-open="customSourceImportPanelOpen"
-          :custom-source-import-type="customSourceImportType"
-          :custom-source-importing="customSourceImporting"
-          :yituliu-token="yituliuTokenInput"
-          :yituliu-source-label="yituliuSourceLabelInput"
-          :max-custom-sources="RIIC_MAX_CUSTOM_OPERATOR_SOURCES"
-          @open-skland="openSklandImport"
-          @select-source="
-            setActiveOperatorSource($event, { notify: true })
-          "
-          @open-import-panel="openCustomSourceImportPanel"
-          @select-import-type="customSourceImportType = $event"
-          @import-maa="handleMaaFileChange"
-          @import-yituliu="importYituliuOperatorSource"
-          @delete-source="deleteCustomOperatorSource"
-          @update:yituliu-token="yituliuTokenInput = $event"
-          @update:yituliu-source-label="yituliuSourceLabelInput = $event"
-        />
+        <Transition name="schedule-generation-running-notice">
+          <div
+            v-if="autoGeneratingSchedule"
+            class="schedule-generation-running-notice"
+            role="status"
+            aria-live="polite"
+          >
+            <div
+              v-if="automaticGenerationNoticeAvatarLoop.length > 0"
+              class="schedule-generation-running-marquee"
+              aria-hidden="true"
+            >
+              <div class="schedule-generation-running-avatar-track">
+                <span
+                  v-for="(operator, index) in automaticGenerationNoticeAvatarLoop"
+                  :key="`${operator.charId}:${index}`"
+                  class="schedule-generation-running-avatar"
+                >
+                  <span
+                    class="sprite-avatar"
+                    :class="`bg-${operator.charId}`"
+                  ></span>
+                </span>
+              </div>
+            </div>
+            <span class="schedule-generation-running-icon">
+              <v-progress-circular
+                indeterminate
+                size="28"
+                width="3"
+              ></v-progress-circular>
+            </span>
+            <div class="schedule-generation-running-copy">
+              <strong>正在后台排班</strong>
+              <span>{{
+                automaticGenerationPhase || "正在计算候选与补位"
+              }}</span>
+            </div>
+          </div>
+        </Transition>
+        <section class="schedule-generation-data-source-module">
+          <RiicOperatorSourcePanel
+            :skland-operator-source-status="sklandOperatorSourceStatus"
+            :custom-operator-source-statuses="customOperatorSourceStatuses"
+            :operator-source-states="operatorSourceStates"
+            :custom-source-import-panel-open="customSourceImportPanelOpen"
+            :custom-source-import-type="customSourceImportType"
+            :custom-source-importing="customSourceImporting"
+            :yituliu-token="yituliuTokenInput"
+            :yituliu-source-label="yituliuSourceLabelInput"
+            :max-custom-sources="RIIC_MAX_CUSTOM_OPERATOR_SOURCES"
+            @open-skland="openSklandImport"
+            @select-source="
+              setActiveOperatorSource($event, { notify: true })
+            "
+            @open-import-panel="openCustomSourceImportPanel"
+            @select-import-type="customSourceImportType = $event"
+            @import-maa="handleMaaFileChange"
+            @import-yituliu="importYituliuOperatorSource"
+            @delete-source="deleteCustomOperatorSource"
+            @update:yituliu-token="yituliuTokenInput = $event"
+            @update:yituliu-source-label="yituliuSourceLabelInput = $event"
+          />
+        </section>
 
-        <RiicScheduleSettingsPanel
-          v-if="isLayoutPlanningReady"
-          :shift-mode="confirmedLayoutPlan?.shiftMode"
-          :two-shift-rotation-mode="twoShiftRotationMode"
-          :is252-layout-plan="is252LayoutPlan"
-          :active-facility-requirement="activeFacilityRequirement"
-          :facility-requirements="RIIC_FACILITY_REQUIREMENTS"
-          :owned-operator-count="ownedOperators.length"
-          :treat-underleveled-operators-as-qualified="
-            treatUnderleveledOperatorsAsQualified
-          "
-          :ideal-training-rarity-selection="idealTrainingRaritySelection"
-          @select-two-shift-rotation="selectTwoShiftRotationMode"
-          @select-facility-requirement="selectFacilityRequirement"
-          @set-training-mode="setTreatUnderleveledOperatorsAsQualified"
-          @set-training-rarity-selection="setIdealTrainingRaritySelection"
-        ></RiicScheduleSettingsPanel>
+        <section
+          v-if="hasFiammetta || isLayoutPlanningReady"
+          class="schedule-generation-settings-module"
+        >
+          <header class="schedule-generation-section-heading">
+            <strong>设置</strong>
+          </header>
+
+          <RiicFiammettaRecoverySetting
+            v-if="hasFiammetta && !isLayoutPlanningReady"
+            v-model="fiammettaRecoverySettings"
+            :has-fiammetta="hasFiammetta"
+            :target-options="fiammettaTargetOptions"
+            :custom-target-options="fiammettaCustomTargetOptions"
+            :status="fiammettaRecoveryStatus"
+          ></RiicFiammettaRecoverySetting>
+
+          <RiicScheduleSettingsPanel
+            v-if="isLayoutPlanningReady"
+            :shift-mode="confirmedLayoutPlan?.shiftMode"
+            :two-shift-rotation-mode="twoShiftRotationMode"
+            :is252-layout-plan="is252LayoutPlan"
+            :active-facility-requirement="activeFacilityRequirement"
+            :facility-requirements="RIIC_FACILITY_REQUIREMENTS"
+            :owned-operator-count="ownedOperators.length"
+            :treat-underleveled-operators-as-qualified="
+              treatUnderleveledOperatorsAsQualified
+            "
+            :ideal-training-rarity-selection="idealTrainingRaritySelection"
+            @select-two-shift-rotation="selectTwoShiftRotationMode"
+            @select-facility-requirement="selectFacilityRequirement"
+            @set-training-mode="setTreatUnderleveledOperatorsAsQualified"
+            @set-training-rarity-selection="setIdealTrainingRaritySelection"
+          >
+            <template v-if="hasFiammetta" #before-settings>
+              <RiicFiammettaRecoverySetting
+                v-model="fiammettaRecoverySettings"
+                compact
+                :has-fiammetta="hasFiammetta"
+                :target-options="fiammettaTargetOptions"
+                :custom-target-options="fiammettaCustomTargetOptions"
+                :status="fiammettaRecoveryStatus"
+              ></RiicFiammettaRecoverySetting>
+            </template>
+          </RiicScheduleSettingsPanel>
+        </section>
 
         <section v-if="isLayoutPlanningReady" class="room-workbench">
+          <header class="schedule-generation-section-heading">
+            <strong>房间组</strong>
+          </header>
+
           <RiicRoomGroupNavigator
             :selection-rows="roomGroupSelectionRows"
             :active-group-id="activeScheduleRoomGroup?.id || ''"
-            :layout-plan-summary="layoutPlanSummary"
             :get-group-status="getRoomGroupDisplayStatus"
             @select-group="activeScheduleRoomGroupKey = $event"
           />
@@ -8801,14 +7035,58 @@ onBeforeUnmount(() => {
             ></RiicRoomGroupStaffingPanel>
           </div>
 
-          <button
-            type="button"
-            class="room-workbench-restore"
-            @click="restoreRecommendedSchedule"
+          <div class="room-workbench-actions">
+            <button
+              type="button"
+              class="room-workbench-action"
+              :disabled="autoGeneratingSchedule"
+              @click="regenerateSchedule"
+            >
+              <v-icon icon="mdi-refresh" size="16"></v-icon>
+              <span>{{
+                autoGeneratingSchedule
+                  ? automaticGenerationPhase || "正在生成排班"
+                  : "重新生成排班"
+              }}</span>
+            </button>
+            <button
+              type="button"
+              class="room-workbench-action room-workbench-action-deep"
+              :disabled="autoGeneratingSchedule"
+              @click="openDeepScheduleConfirmation"
+            >
+              <v-icon icon="mdi-calculator-variant-outline" size="16"></v-icon>
+              <span>执行深度排班</span>
+            </button>
+          </div>
+
+          <v-dialog
+            v-model="deepScheduleConfirmationOpen"
+            max-width="440"
           >
-            <v-icon icon="mdi-restore" size="16"></v-icon>
-            <span>恢复推荐方案</span>
-          </button>
+            <v-card>
+              <v-card-title>执行深度排班</v-card-title>
+              <v-card-text>
+                深度排班会进行更多组合与补位计算。复杂干员表可能持续 30 秒以上，但页面仍可继续操作。继续执行吗？
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  variant="text"
+                  @click="deepScheduleConfirmationOpen = false"
+                >
+                  取消
+                </v-btn>
+                <v-btn
+                  color="warning"
+                  variant="flat"
+                  @click="confirmDeepSchedule"
+                >
+                  继续执行
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
 
         </section>
 
@@ -8821,7 +7099,7 @@ onBeforeUnmount(() => {
         class="workflow-stage workflow-card schedule-output-stage"
         :class="`workflow-card-${scheduleOutputWorkflowCardState}`"
       >
-        <div class="workflow-card-heading" data-step="STEP 3 OF 3">
+        <div class="workflow-card-heading">
           <div class="workflow-card-heading-copy">
             <h2>排班表调整与导出</h2>
             <span
@@ -8853,11 +7131,7 @@ onBeforeUnmount(() => {
             v-if="displayedRiicSchedulePreview"
             class="assembled-schedule-content"
           >
-            <div
-              ref="schedulePreviewCapturePanel"
-              class="schedule-preview-capture"
-              data-riic-preview-capture
-            >
+            <div class="schedule-preview-capture">
               <RiicSchedulePreview
                 :preview="displayedRiicSchedulePreview"
                 :placeholder="!riicSchedulePreview"
@@ -8867,12 +7141,36 @@ onBeforeUnmount(() => {
                 :shifts="schedulePreviewShifts"
                 :drone-target-options="scheduleDroneTargetOptions"
                 :drone-target="scheduleExecutionSettings.droneTarget"
+                :drone-order="scheduleExecutionSettings.droneOrder"
                 @update:active-state-index="
                   activeSchedulePreviewStateIndex = $event
                 "
                 @update:shift="updateSchedulePreviewShift"
+                @update:drone-order="
+                  scheduleExecutionSettings.droneOrder =
+                    $event === 'post' ? 'post' : 'pre'
+                "
                 @edit-room="selectSchedulePreviewRoom"
+                @move-operator="moveSchedulePreviewOperator"
                 @select-drone-target="selectScheduleDroneTarget"
+              ></RiicSchedulePreview>
+            </div>
+            <div
+              v-if="riicSchedulePreview"
+              ref="schedulePreviewExportCapturePanel"
+              class="schedule-preview-export-capture"
+              data-riic-export-preview-capture
+              aria-hidden="true"
+            >
+              <RiicSchedulePreview
+                v-for="(_, stateIndex) in riicSchedulePreview.states"
+                :key="`export-${riicSchedulePreview.key}-${stateIndex}`"
+                :preview="riicSchedulePreview"
+                :active-state-index="stateIndex"
+                :operator-table="operatorTableV2"
+                :shifts="schedulePreviewShifts"
+                :drone-target="scheduleExecutionSettings.droneTarget"
+                export-static
               ></RiicSchedulePreview>
             </div>
             <div
@@ -8886,17 +7184,29 @@ onBeforeUnmount(() => {
                     ?.name || '当前班次'
                 "
                 :operators="scheduleRoomEditorOperators"
-                :operator-options="scheduleRoomEditorOperatorOptions"
+                :operator-matches="scheduleRoomEditorOperatorMatches"
                 :product-options="scheduleRoomEditorProductOptions"
                 :operator-input="scheduleRoomEditorOperatorInput"
                 :input-unmatched="scheduleRoomEditorInputUnmatched"
+                :maa-settings="activeScheduleRoomMaaSettings"
+                :can-paste-operators="
+                  Array.isArray(copiedScheduleRoomOperators)
+                "
+                :can-paste-shift="Boolean(copiedScheduleShiftOperators)"
                 @reset="resetSchedulePreviewRoom"
                 @change-product="changeScheduleRoomProduct"
+                @update:maa-settings="updateScheduleRoomMaaSettings"
                 @update:operator-input="
                   scheduleRoomEditorOperatorInput = $event
                 "
                 @add-operator="addScheduleRoomEditorOperator"
+                @select-operator="addScheduleRoomEditorOperator"
                 @remove-operator="removeScheduleRoomEditorOperator"
+                @reorder-operator="reorderScheduleRoomEditorOperator"
+                @copy-operators="copyScheduleRoomEditorOperators"
+                @paste-operators="pasteScheduleRoomEditorOperators"
+                @copy-shift="copySchedulePreviewShift"
+                @paste-shift="pasteSchedulePreviewShift"
               ></RiicScheduleRoomEditorPanel>
             </div>
 
@@ -8908,10 +7218,29 @@ onBeforeUnmount(() => {
                 ? getAssembledCandidateBlockedMessage(
                     assembledScheduleCandidateState,
                   )
-                : "选择布局并完成班组配置后即可调整排班表"
+                         : "选择布局并完成班组配置后即可调整排班表"
             }}
           </p>
         </section>
+
+        <RiicScheduleFiammettaSettings
+          v-if="
+            assembledScheduleCandidateState.status === 'ready' &&
+            riicSchedulePreview &&
+            hasFiammetta &&
+            schedulePreviewShifts[activeSchedulePreviewStateIndex]
+          "
+          :fiammetta="
+            schedulePreviewShifts[activeSchedulePreviewStateIndex]?.fiammetta
+          "
+          :target-options="fiammettaTargetOptions"
+          @update="
+            updateSchedulePreviewShift({
+              index: activeSchedulePreviewStateIndex,
+              fiammetta: $event,
+            })
+          "
+        ></RiicScheduleFiammettaSettings>
 
         <RiicScheduleExportActions
           v-if="
@@ -8924,7 +7253,17 @@ onBeforeUnmount(() => {
           @export-image="exportGeneratedScheduleImage"
           @export-maa="exportGeneratedMaaSchedule"
           @open-legacy-editor="openGeneratedScheduleInLegacyEditor"
-        ></RiicScheduleExportActions>
+        >
+          <template #before-image>
+            <RiicScheduleExportSettings
+              :export-info="scheduleExecutionSettings.exportInfo"
+              :default-title="getDefaultGeneratedScheduleTitle()"
+              :shifts="schedulePreviewShifts"
+              @update:export-info="updateScheduleExportInfo"
+              @update:shift="updateSchedulePreviewShift"
+            ></RiicScheduleExportSettings>
+          </template>
+        </RiicScheduleExportActions>
         <p v-else class="schedule-output-empty">
           选择并生成全部房间组后即可导出结果
         </p>
@@ -8960,64 +7299,56 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
+        <RiicPipelineDebugPanel
+          v-if="showCandidateDebugValues"
+          :groups="candidateEnabledScheduleRoomGroups"
+          :candidate-states-by-group-id="roomGroupCandidateStates"
+          :layer3-rule-checks="riicLayer3RuleChecks"
+          :control-state="controlCenterRoleState"
+          :control-final-state="controlCenterFinalRoleState"
+          :control-scenario-trial-state="riicControlCenterScenarioTrialState"
+          :perception-resource-trial-state="riicPerceptionResourceTrialState"
+          :control-operator-effect-debug-state="
+            riicControlCenterOperatorEffectDebugState
+          "
+          :fallback-plans-by-group-id="roomGroupFallbackPlanStates"
+          :pre-assembly-group-candidates="assembledRoomGroupCandidates"
+          :assembled-schedule-candidate="activeAssembledScheduleCandidate"
+          :fiammetta-recovery="fiammettaRecoveryConfig"
+          :fiammetta-control-usage="controlCenterFiammettaTargetUsage"
+          :automatic-generation-debug-state="
+            riicAutomaticGenerationDebugState
+          "
+          :operator-table="operatorTableV2"
+          :roster="riicMatchingRoster || []"
+          :operator-source-label="ownedOperatorSource"
+          :training-mode="riicTrainingMode"
+          :ideal-training-rarity-selection="idealTrainingRaritySelection"
+          :actual-schedule-metrics="riicActualScheduleMetrics"
+          :schedule-preview="riicSchedulePreview"
+          :duplicate-operator-checks="riicScheduleDuplicateOperatorChecks"
+          :format-layer3-operator-condition="
+            formatRiicLayer3OperatorCondition
+          "
+          :format-layer3-facility-condition="
+            formatRiicLayer3FacilityCondition
+          "
+          :format-layer3-rule-effect="formatRiicLayer3RuleEffect"
+        />
         <RiicAdditionalInfoPanel
           :schedule-training-requirements="scheduleTrainingRequirements"
           :operator-table="operatorTableV2"
           :riic-yield-engine-results="riicYieldEngineResults"
-          :riic-actual-schedule-metrics="riicActualScheduleMetrics"
-          :confirmed-layout-plan="confirmedLayoutPlan"
-          :riic-matching-roster="riicMatchingRoster"
-          :riic-layer3-matched-rule-count="riicLayer3MatchedRuleCount"
-          :riic-layer3-rule-checks="riicLayer3RuleChecks"
-          :riic-control-center-scenario-trial-state="
-            riicControlCenterScenarioTrialState
-          "
-          :riic-perception-resource-trial-state="
-            riicPerceptionResourceTrialState
-          "
-          :riic-control-center-operator-effect-debug-state="
-            riicControlCenterOperatorEffectDebugState
-          "
           :show-candidate-debug-values="showCandidateDebugValues"
           :format-training-requirement="formatTrainingRequirement"
           :get-riic-yield-engine-status-meta="getRiicYieldEngineStatusMeta"
           :format-riic-yield-metric="formatRiicYieldMetric"
-          :format-riic-layer3-operator-condition="
-            formatRiicLayer3OperatorCondition
-          "
-          :format-riic-layer3-facility-condition="
-            formatRiicLayer3FacilityCondition
-          "
-          :format-riic-layer3-rule-effect="formatRiicLayer3RuleEffect"
         />
       </section>
 
       <div class="page-cache-reset">
         <button type="button" @click="clearSavedWizardState">
           清空本页缓存
-        </button>
-        <button
-          type="button"
-          class="candidate-debug-toggle"
-          :class="{ active: showCandidateDebugValues }"
-          :aria-pressed="showCandidateDebugValues"
-          @click="showCandidateDebugValues = !showCandidateDebugValues"
-        >
-          <v-icon
-            :icon="
-              showCandidateDebugValues
-                ? 'mdi-bug-check-outline'
-                : 'mdi-bug-outline'
-            "
-            size="16"
-          ></v-icon>
-          <span>
-            {{
-              showCandidateDebugValues
-                ? "隐藏调试信息"
-                : "显示调试信息"
-            }}
-          </span>
         </button>
       </div>
     </div>
@@ -9042,10 +7373,29 @@ onBeforeUnmount(() => {
   background: var(--c-page-background-color);
 }
 
+.schedule-preview-export-capture {
+  position: fixed;
+  top: 0;
+  left: -10000px;
+  width: 960px;
+  max-width: none;
+  pointer-events: none;
+  background: var(--c-page-background-color);
+}
+
+.schedule-preview-export-capture > .riic-schedule-preview + .riic-schedule-preview {
+  margin-top: 20px;
+}
+
 .schedule-output-stage {
   display: flex;
+  order: -1;
   flex-direction: column;
-  gap: 14px;
+  gap: 0;
+}
+
+.schedule-output-stage > .assembled-schedule-panel + * {
+  margin-top: 14px;
 }
 
 .schedule-output-empty {
@@ -9053,46 +7403,6 @@ onBeforeUnmount(() => {
   color: var(--riic-muted);
   font-size: 12px;
   line-height: 1.55;
-}
-
-.page-heading {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 18px 4px 24px;
-}
-
-.page-eyebrow {
-  margin: 0 0 6px;
-  color: var(--riic-blue);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.page-heading h1 {
-  margin: 0;
-  font-size: 30px;
-  line-height: 1.25;
-}
-
-.page-subtitle {
-  margin: 8px 0 0;
-  color: var(--riic-muted);
-  font-size: 15px;
-}
-
-.phase-mark {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: max-content;
-  padding: 7px 10px;
-  border: 1px solid var(--c-border-color);
-  border-radius: 4px;
-  color: var(--riic-muted);
-  font-size: 13px;
-  font-weight: 600;
 }
 
 .workflow-shell {
@@ -9164,22 +7474,6 @@ onBeforeUnmount(() => {
 
 .workflow-card-complete .workflow-card-heading {
   background: var(--riic-green);
-}
-
-.workflow-card-heading[data-step]::before {
-  position: absolute;
-  z-index: 0;
-  top: 50%;
-  right: 16px;
-  color: rgb(255 255 255 / 18%);
-  content: attr(data-step);
-  font-family: "Arial Narrow", Arial, sans-serif;
-  font-size: 44px;
-  font-weight: 800;
-  line-height: 1;
-  transform: translateY(-50%);
-  white-space: nowrap;
-  pointer-events: none;
 }
 
 .workflow-card-heading > * {
@@ -9501,6 +7795,197 @@ onBeforeUnmount(() => {
   font-weight: 600;
 }
 
+.schedule-generation-running-notice {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 1200;
+  gap: 11px 14px;
+  width: min(520px, calc(100vw - 40px));
+  padding: 15px 16px;
+  border: 1px solid color-mix(in srgb, var(--riic-blue) 52%, var(--c-border-color));
+  border-radius: 6px;
+  background: color-mix(
+    in srgb,
+    var(--riic-blue) 12%,
+    var(--c-page-background-color-secondary)
+  );
+  color: var(--riic-blue);
+  box-shadow: 0 10px 24px color-mix(in srgb, #000 18%, transparent);
+}
+
+.schedule-generation-running-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  grid-row: 2;
+}
+
+.schedule-generation-running-copy {
+  display: flex;
+  flex-direction: column;
+  grid-row: 2;
+  gap: 3px;
+  min-width: 0;
+}
+
+.schedule-generation-running-notice strong {
+  color: var(--c-text-color);
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.schedule-generation-running-notice span {
+  color: var(--riic-muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.schedule-generation-running-marquee {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  overflow: hidden;
+  width: 100%;
+  padding: 1px 0 4px;
+}
+
+.schedule-generation-running-avatar-track {
+  display: flex;
+  width: max-content;
+  animation: schedule-generation-running-avatar-scroll 12s infinite;
+}
+
+.schedule-generation-running-avatar {
+  position: relative;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  margin-right: 6px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--riic-blue) 46%, var(--c-border-color));
+  border-radius: 50%;
+  background: var(--c-page-background-color);
+}
+
+.schedule-generation-running-avatar .sprite-avatar {
+  position: absolute;
+  top: -73px;
+  left: -73px;
+  transform: scale(0.2);
+}
+
+@keyframes schedule-generation-running-avatar-scroll {
+  0%,
+  5% {
+    transform: translateX(0);
+  }
+
+  8.333%,
+  13.333% {
+    transform: translateX(-40px);
+  }
+
+  16.667%,
+  21.667% {
+    transform: translateX(-80px);
+  }
+
+  25%,
+  30% {
+    transform: translateX(-120px);
+  }
+
+  33.333%,
+  38.333% {
+    transform: translateX(-160px);
+  }
+
+  41.667%,
+  46.667% {
+    transform: translateX(-200px);
+  }
+
+  50%,
+  55% {
+    transform: translateX(-240px);
+  }
+
+  58.333%,
+  63.333% {
+    transform: translateX(-280px);
+  }
+
+  66.667%,
+  71.667% {
+    transform: translateX(-320px);
+  }
+
+  75%,
+  80% {
+    transform: translateX(-360px);
+  }
+
+  83.333%,
+  88.333% {
+    transform: translateX(-400px);
+  }
+
+  91.667%,
+  96.667% {
+    transform: translateX(-440px);
+  }
+
+  100% {
+    transform: translateX(-480px);
+  }
+}
+
+.schedule-generation-running-notice-enter-active,
+.schedule-generation-running-notice-leave-active {
+  transition:
+    opacity 180ms ease,
+    transform 220ms cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+.schedule-generation-running-notice-enter-from,
+.schedule-generation-running-notice-leave-to {
+  opacity: 0;
+  transform: translateY(14px) scale(0.96);
+}
+
+@media (max-width: 560px) {
+  .schedule-generation-running-notice {
+    grid-template-columns: auto minmax(0, 1fr);
+    right: 12px;
+    bottom: 12px;
+    width: calc(100vw - 24px);
+    gap: 10px;
+    padding: 13px 14px;
+  }
+
+  .schedule-generation-running-marquee {
+    width: 100%;
+  }
+
+  .schedule-generation-running-notice strong {
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schedule-generation-running-avatar-track {
+    animation: none;
+  }
+
+  .schedule-generation-running-notice-enter-active,
+  .schedule-generation-running-notice-leave-active {
+    transition: none;
+  }
+}
+
 .schedule-generation-section-label {
   color: var(--riic-muted);
   font-size: 12px;
@@ -9508,47 +7993,46 @@ onBeforeUnmount(() => {
   line-height: 1.4;
 }
 
-.candidate-debug-toggle {
-  display: inline-flex;
+.schedule-generation-data-source-module,
+.schedule-generation-settings-module {
+  min-width: 0;
+}
+
+.schedule-generation-settings-module {
+  margin-top: 18px;
+}
+
+.schedule-generation-section-heading {
+  display: flex;
   align-items: center;
-  gap: 5px;
-  margin: 0;
-  padding: 3px 0;
-  border: 0;
-  background: transparent;
+  min-height: 17px;
+  margin-bottom: 8px;
+}
+
+.schedule-generation-section-heading > strong {
   color: var(--riic-muted);
-  font: inherit;
   font-size: 12px;
+  font-weight: 700;
   line-height: 1.4;
-  cursor: pointer;
-}
-
-.candidate-debug-toggle:hover,
-.candidate-debug-toggle.active {
-  color: var(--riic-blue);
-}
-
-.page-cache-reset .candidate-debug-toggle:hover,
-.page-cache-reset .candidate-debug-toggle.active {
-  border-color: color-mix(
-    in srgb,
-    var(--riic-blue) 54%,
-    var(--c-border-color)
-  );
-  color: var(--riic-blue);
 }
 
 .room-workbench {
   margin-top: 14px;
 }
 
-.room-workbench-restore {
+.room-workbench-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.room-workbench-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 28px;
   gap: 5px;
-  margin-top: 12px;
   padding: 4px 8px;
   border: 1px solid
     color-mix(in srgb, var(--riic-blue) 48%, var(--c-border-color));
@@ -9562,7 +8046,7 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 
-.room-workbench-restore:hover:not(:disabled) {
+.room-workbench-action:hover:not(:disabled) {
   background: color-mix(
     in srgb,
     var(--riic-blue) 9%,
@@ -9570,7 +8054,24 @@ onBeforeUnmount(() => {
   );
 }
 
-.room-workbench-restore:disabled {
+.room-workbench-action-deep {
+  border-color: color-mix(
+    in srgb,
+    var(--riic-orange) 52%,
+    var(--c-border-color)
+  );
+  color: var(--riic-orange);
+}
+
+.room-workbench-action-deep:hover:not(:disabled) {
+  background: color-mix(
+    in srgb,
+    var(--riic-orange) 10%,
+    var(--c-page-background-color-secondary)
+  );
+}
+
+.room-workbench-action:disabled {
   cursor: default;
   opacity: 0.55;
 }
@@ -10579,689 +9080,6 @@ onBeforeUnmount(() => {
   color: var(--riic-gold);
 }
 
-.ownership-panel,
-.compatibility-alert {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 16px 18px;
-  border: 1px solid var(--c-border-color);
-  border-left: 4px solid var(--riic-blue);
-  border-radius: 6px;
-  background: var(--c-page-background-color);
-}
-
-.ownership-copy {
-  min-width: 0;
-}
-
-.ownership-copy .section-title {
-  margin-bottom: 7px;
-}
-
-.ownership-copy strong,
-.ownership-copy span {
-  display: block;
-}
-
-.ownership-copy strong {
-  font-size: 14px;
-}
-
-.ownership-copy span {
-  margin-top: 4px;
-  color: var(--riic-muted);
-  font-size: 12px;
-}
-
-.ownership-actions {
-  display: flex;
-  align-items: center;
-  flex: 0 0 auto;
-  gap: 10px;
-}
-
-.text-link,
-.source-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--riic-blue);
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.compatibility-alert {
-  align-items: flex-start;
-  border-left-color: var(--riic-orange);
-}
-
-.compatibility-alert > .v-icon {
-  flex: 0 0 auto;
-  color: var(--riic-orange);
-}
-
-.compatibility-alert > div {
-  flex: 1;
-  min-width: 0;
-}
-
-.compatibility-alert p {
-  margin: 5px 0 0;
-  color: var(--riic-muted);
-  font-size: 13px;
-  line-height: 1.55;
-}
-
-.missing-operator-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.missing-operator-list span {
-  padding: 4px 7px;
-  border: 1px solid var(--c-border-color);
-  border-radius: 4px;
-  color: var(--riic-muted);
-  font-size: 11px;
-}
-
-.result-section {
-  padding: 20px;
-  border: 1px solid var(--c-border-color);
-  border-radius: 6px;
-  background: var(--c-page-background-color);
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 16px;
-  color: var(--riic-blue);
-}
-
-.section-title h3 {
-  margin: 0;
-  color: var(--c-text-color);
-  font-size: 16px;
-}
-
-.production-allocation {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.allocation-row {
-  display: grid;
-  grid-template-columns: 88px minmax(100px, 1fr) 48px;
-  align-items: center;
-  gap: 12px;
-  font-size: 14px;
-}
-
-.allocation-track {
-  height: 8px;
-  border-radius: 4px;
-  background: var(--c-page-background-color-secondary);
-  overflow: hidden;
-}
-
-.allocation-track span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-}
-
-.allocation-row.experience .allocation-track span {
-  background: var(--riic-blue);
-}
-
-.allocation-row.gold .allocation-track span {
-  background: var(--riic-gold);
-}
-
-.allocation-row.orundum .allocation-track span {
-  background: #7b5bb8;
-}
-
-.result-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.section-main,
-.section-secondary {
-  display: block;
-}
-
-.section-main {
-  font-size: 20px;
-}
-
-.section-secondary {
-  margin-top: 5px;
-  color: var(--riic-muted);
-  font-size: 13px;
-}
-
-.drone-flex-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px 12px;
-  margin-top: 12px;
-  color: var(--riic-muted);
-  font-size: 12px;
-}
-
-.drone-flex-options span {
-  padding-left: 9px;
-  border-left: 2px solid var(--riic-blue);
-}
-
-.queue-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 18px;
-}
-
-.queue-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 10px;
-  border-left: 3px solid var(--riic-orange);
-  background: var(--c-page-background-color-secondary);
-}
-
-.queue-item span {
-  color: var(--riic-muted);
-  font-size: 12px;
-}
-
-.queue-item strong {
-  font-size: 18px;
-}
-
-.section-note {
-  margin: 18px 0 0;
-  color: var(--riic-muted);
-  font-size: 13px;
-  line-height: 1.55;
-}
-
-.schedule-detail {
-  min-width: 0;
-  padding: 22px;
-  border: 1px solid var(--c-border-color);
-  border-radius: 6px;
-  background: var(--c-page-background-color);
-}
-
-.reference-section {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.reference-section .section-title {
-  margin-bottom: 0;
-}
-
-.reference-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  border-top: 1px solid var(--c-border-color);
-  border-left: 1px solid var(--c-border-color);
-}
-
-.reference-item {
-  min-width: 0;
-  padding: 15px;
-  border-right: 1px solid var(--c-border-color);
-  border-bottom: 1px solid var(--c-border-color);
-}
-
-.reference-label {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--riic-muted);
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.reference-item > strong {
-  display: block;
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-.reference-item p {
-  margin: 7px 0 0;
-  color: var(--riic-muted);
-  font-size: 12px;
-  line-height: 1.55;
-}
-
-.reference-basis {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.reference-basis li {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  color: var(--riic-muted);
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.reference-basis .v-icon {
-  flex: 0 0 auto;
-  margin-top: 1px;
-  color: var(--riic-green);
-}
-
-.comparison-metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 12px;
-  margin-top: 9px;
-}
-
-.comparison-metrics span {
-  color: var(--riic-muted);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.operation-reference {
-  padding-top: 1px;
-}
-
-.operation-reference-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 16px;
-}
-
-.operation-reference-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 9px;
-  min-width: 0;
-  padding: 9px 0;
-  border-top: 1px solid var(--c-border-color);
-}
-
-.operation-reference-item .v-icon {
-  flex: 0 0 auto;
-  margin-top: 1px;
-  color: var(--riic-blue);
-}
-
-.operation-reference-item.tone-warning .v-icon {
-  color: var(--riic-orange);
-}
-
-.operation-reference-item.tone-danger .v-icon {
-  color: var(--riic-red);
-}
-
-.operation-reference-item strong,
-.operation-reference-item span {
-  display: block;
-}
-
-.operation-reference-item strong {
-  font-size: 12px;
-}
-
-.operation-reference-item span {
-  margin-top: 3px;
-  color: var(--riic-muted);
-  font-size: 11px;
-  line-height: 1.45;
-}
-
-.schedule-detail-heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 18px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--c-border-color);
-}
-
-.schedule-detail-heading h3 {
-  margin: 7px 0 0;
-  font-size: 21px;
-  line-height: 1.35;
-}
-
-.schedule-detail-heading p {
-  margin: 6px 0 0;
-  color: var(--riic-muted);
-  font-size: 12px;
-}
-
-.schedule-notices {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  padding: 13px 0;
-}
-
-.schedule-notices span {
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  color: var(--riic-muted);
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.schedule-notices .v-icon {
-  flex: 0 0 auto;
-  margin-top: 1px;
-  color: var(--riic-orange);
-}
-
-.schedule-board-scroll {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.schedule-board {
-  min-width: 900px;
-  border-top: 1px solid var(--c-border-color);
-  border-left: 1px solid var(--c-border-color);
-}
-
-.schedule-board-head,
-.schedule-station-row {
-  display: grid;
-  grid-template-columns: 180px repeat(3, minmax(220px, 1fr));
-}
-
-.schedule-board-head {
-  background: var(--c-page-background-color-secondary);
-}
-
-.schedule-board-head > *,
-.schedule-station-row > * {
-  min-width: 0;
-  padding: 10px;
-  border-right: 1px solid var(--c-border-color);
-  border-bottom: 1px solid var(--c-border-color);
-}
-
-.schedule-board-head strong {
-  font-size: 13px;
-}
-
-.schedule-board-head small {
-  display: block;
-  margin-top: 3px;
-  color: var(--riic-muted);
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.station-name {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border-left: 4px solid var(--riic-blue);
-}
-
-.station-name span {
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.station-name small {
-  margin-top: 4px;
-  color: var(--riic-muted);
-  font-size: 11px;
-}
-
-.station-queue {
-  min-height: 70px;
-}
-
-.operator-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.operator-name {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-width: 0;
-  padding: 4px;
-  border: 1px solid var(--c-border-color);
-  border-radius: 4px;
-  background: var(--c-page-background-color-secondary);
-  font-size: 12px;
-  line-height: 1.2;
-}
-
-.operator-avatar {
-  flex: 0 0 auto;
-}
-
-.operator-label {
-  display: flex;
-  align-items: baseline;
-  gap: 3px;
-  min-width: 0;
-  padding-right: 3px;
-}
-
-.operator-label > span {
-  overflow-wrap: anywhere;
-}
-
-.operator-label small {
-  flex: 0 0 auto;
-  color: var(--riic-blue);
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.operator-name.tired {
-  border-color: var(--riic-red);
-  color: var(--riic-red);
-}
-
-.station-queue p,
-.empty-queue {
-  display: block;
-  margin: 7px 0 0;
-  color: var(--riic-muted);
-  font-size: 10px;
-  line-height: 1.4;
-}
-
-.empty-queue {
-  margin: 0;
-}
-
-.schedule-source-note {
-  padding-top: 12px;
-  color: var(--riic-muted);
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.metric-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.output-basis-note {
-  margin: -5px 0 14px;
-  color: var(--riic-muted);
-  font-size: 12px;
-  line-height: 1.55;
-}
-
-.metric-item {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 116px;
-  padding: 14px;
-  border-top: 3px solid var(--metric-color);
-  background: var(--c-page-background-color-secondary);
-}
-
-.metric-item > span {
-  color: var(--riic-muted);
-  font-size: 13px;
-}
-
-.metric-item strong {
-  margin-top: 13px;
-  color: var(--metric-color);
-  font-size: 25px;
-  line-height: 1.2;
-  overflow-wrap: anywhere;
-}
-
-.metric-item small {
-  margin-top: 7px;
-  color: var(--riic-muted);
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.metric-item.experience {
-  --metric-color: var(--riic-blue);
-}
-
-.metric-item.lmd {
-  --metric-color: var(--riic-green);
-}
-
-.metric-item.gold {
-  --metric-color: var(--riic-gold);
-}
-
-.metric-item.drones {
-  --metric-color: var(--riic-orange);
-}
-
-.alternative-section,
-.export-warning {
-  padding: 18px 20px;
-  border-top: 1px solid var(--c-border-color);
-  border-bottom: 1px solid var(--c-border-color);
-}
-
-.alternative-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.alternative-row {
-  display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(300px, auto);
-  align-items: center;
-  gap: 18px;
-  padding: 12px 0;
-  border-top: 1px solid var(--c-border-color);
-}
-
-.alternative-row:first-child {
-  border-top: 0;
-}
-
-.alternative-row strong,
-.alternative-row span {
-  display: block;
-}
-
-.alternative-row strong {
-  font-size: 13px;
-}
-
-.alternative-row > div > span {
-  margin-top: 4px;
-  color: var(--riic-muted);
-  font-size: 11px;
-}
-
-.alternative-output {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  gap: 14px;
-  color: var(--riic-muted);
-  font-size: 12px;
-  text-align: right;
-}
-
-.export-warning {
-  border-color: color-mix(in srgb, var(--riic-orange) 40%, var(--c-border-color));
-}
-
-.export-warning .section-title {
-  color: var(--riic-orange);
-}
-
-.export-warning p {
-  margin: 6px 0;
-  color: var(--riic-muted);
-  font-size: 12px;
-  line-height: 1.55;
-}
-
-.assumption-panel {
-  border-top: 1px solid var(--c-border-color);
-  border-bottom: 1px solid var(--c-border-color);
-}
-
-.assumption-panel summary {
-  padding: 13px 2px;
-  color: var(--riic-muted);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.assumption-panel div {
-  padding: 0 2px 12px;
-}
-
-.assumption-panel p {
-  margin: 6px 0;
-  color: var(--riic-muted);
-  font-size: 12px;
-  line-height: 1.6;
-}
-
-.result-actions {
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  margin-top: 4px;
-}
-
 @media (max-width: 900px) {
   .schedule-settings-control-grid {
     grid-template-columns: 1fr;
@@ -11310,34 +9128,6 @@ onBeforeUnmount(() => {
     margin-top: 6px;
   }
 
-  .metric-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .reference-grid,
-  .operation-reference-list {
-    grid-template-columns: 1fr;
-  }
-
-  .ownership-panel,
-  .compatibility-alert {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .ownership-actions {
-    justify-content: flex-end;
-  }
-
-  .alternative-row {
-    grid-template-columns: 1fr;
-  }
-
-  .alternative-output {
-    justify-content: start;
-    text-align: left;
-  }
-
 }
 
 @media (max-width: 640px) {
@@ -11352,11 +9142,6 @@ onBeforeUnmount(() => {
 
   .workflow-card-heading {
     margin: -18px -18px 18px;
-  }
-
-  .workflow-card-heading[data-step]::before {
-    right: 14px;
-    font-size: 34px;
   }
 
   .layout-entry-panel {
@@ -11383,19 +9168,6 @@ onBeforeUnmount(() => {
 
   .recommendation-preview {
     align-items: flex-start;
-  }
-
-  .page-heading {
-    align-items: flex-start;
-    padding-top: 8px;
-  }
-
-  .page-heading h1 {
-    font-size: 25px;
-  }
-
-  .phase-mark {
-    display: none;
   }
 
   .wizard-layout {
@@ -11432,65 +9204,8 @@ onBeforeUnmount(() => {
     min-height: 78px;
   }
 
-  .result-heading {
-    align-items: flex-start;
-  }
-
-  .layout-code {
-    font-size: 36px;
-  }
-
-  .facility-strip {
-    grid-template-columns: 1fr;
-  }
-
-  .facility-item {
-    border-right: 0;
-    border-bottom: 1px solid var(--c-border-color);
-  }
-
-  .facility-item:last-child {
-    border-bottom: 0;
-  }
-
-  .result-grid,
-  .metric-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .ownership-actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .ownership-actions .secondary-action {
-    width: 100%;
-  }
-
   .result-section {
     padding: 16px 14px;
-  }
-
-  .schedule-detail {
-    padding: 16px 12px;
-  }
-
-  .schedule-detail-heading {
-    flex-direction: column;
-  }
-
-  .alternative-section,
-  .export-warning {
-    padding: 16px 2px;
-  }
-
-  .alternative-output {
-    grid-template-columns: 1fr;
-    gap: 5px;
-  }
-
-  .metric-item {
-    min-height: 100px;
   }
 
   .result-actions {

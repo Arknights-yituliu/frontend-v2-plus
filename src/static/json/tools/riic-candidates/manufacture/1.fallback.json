@@ -4,6 +4,14 @@
   "defaultPercent": 25,
   "operators": [
     {
+      "name": "至简",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
       "name": "温蒂",
       "rates": [
         {
@@ -235,6 +243,15 @@
           ]
         }
       ]
+    },
+    {
+      "name": "迷迭香",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ],
+      "fillPriority": 20
     },
     {
       "name": "水月",

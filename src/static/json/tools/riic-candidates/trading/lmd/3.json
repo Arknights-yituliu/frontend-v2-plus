@@ -3,6 +3,20 @@
   "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "candidates": [
     {
+      "id": "manual-trading-lmd-shamare-e2-idle-pair-l3",
+      "variantGroupId": "family-shamare:idle-pair",
+      "name": "巫恋 E2 + 2位闲人补位",
+      "members": [
+        {
+          "name": "巫恋",
+          "elite": 2
+        }
+      ],
+      "efficiency": 91.66,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
       "id": "manual-trading-lmd-butshu-beta-shamare-tequila-ab0ada61707a",
       "variantGroupId": "family-butshu:shamare-tequila",
       "name": "但书 β + 巫恋 + 龙舌兰",
@@ -20,8 +34,8 @@
           "elite": 2
         }
       ],
-      "efficiency": 194.83,
-      "gold": 31.83,
+      "efficiency": 207.93,
+      "gold": 13.45,
       "sortScore": -100,
       "calculationStatus": "estimated"
     },
@@ -43,8 +57,8 @@
           "elite": 2
         }
       ],
-      "efficiency": 142.41,
-      "gold": 31.83,
+      "efficiency": 155.52,
+      "gold": 13.45,
       "sortScore": -100,
       "calculationStatus": "estimated"
     },
@@ -1468,8 +1482,11 @@
           "elite": 2
         }
       ],
+      "teamCalculation": {
+        "type": "closureSpecialOrder",
+        "sourceMember": "可露希尔"
+      },
       "efficiency": 50,
-      "gold": 35,
       "sortScore": 0,
       "calculationStatus": "estimated"
     },
@@ -1487,7 +1504,11 @@
           "elite": 2
         }
       ],
-      "efficiency": -10,
+      "teamCalculation": {
+        "type": "closureSpecialOrder",
+        "sourceMember": "可露希尔"
+      },
+      "efficiency": 10,
       "sortScore": 0,
       "calculationStatus": "estimated"
     },
@@ -1509,8 +1530,11 @@
           "elite": 0
         }
       ],
-      "efficiency": 80,
-      "gold": 37,
+      "teamCalculation": {
+        "type": "closureSpecialOrder",
+        "sourceMember": "可露希尔"
+      },
+      "efficiency": 70,
       "sortScore": 20,
       "calculationStatus": "estimated"
     },
@@ -1532,8 +1556,11 @@
           "elite": 2
         }
       ],
-      "efficiency": 90,
-      "gold": 38,
+      "teamCalculation": {
+        "type": "closureSpecialOrder",
+        "sourceMember": "可露希尔"
+      },
+      "efficiency": 80,
       "sortScore": 20,
       "calculationStatus": "estimated"
     },
@@ -1555,7 +1582,11 @@
           "elite": 2
         }
       ],
-      "efficiency": 30,
+      "teamCalculation": {
+        "type": "closureSpecialOrder",
+        "sourceMember": "可露希尔"
+      },
+      "efficiency": 50,
       "sortScore": 0,
       "calculationStatus": "estimated"
     },
@@ -1577,10 +1608,189 @@
           "elite": 2
         }
       ],
-      "efficiency": 90,
-      "gold": 38,
+      "teamCalculation": {
+        "type": "closureSpecialOrder",
+        "sourceMember": "可露希尔"
+      },
+      "efficiency": 80,
       "sortScore": 15,
       "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-trading-lmd-jaye-e0-texas-e0-lappland-e2-l3",
+      "variantGroupId": "family-jaye:texas-lappland",
+      "name": "孑 E0 + 德克萨斯 E0 + 拉普兰德 E2",
+      "members": [
+        {
+          "name": "孑",
+          "maxElite": 0
+        },
+        {
+          "name": "德克萨斯",
+          "maxElite": 0
+        },
+        {
+          "name": "拉普兰德",
+          "elite": 2
+        }
+      ],
+      "efficiency": 107.59,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-trading-lmd-jaye-e1-texas-e0-lappland-e2-l3",
+      "variantGroupId": "family-jaye:texas-lappland",
+      "name": "孑 E1 + 德克萨斯 E0 + 拉普兰德 E2",
+      "members": [
+        {
+          "name": "孑",
+          "elite": 1
+        },
+        {
+          "name": "德克萨斯",
+          "maxElite": 0
+        },
+        {
+          "name": "拉普兰德",
+          "elite": 2
+        }
+      ],
+      "efficiency": 75.48,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-trading-lmd-jaye-e0-silverash-e2-exusiai-e2-l3",
+      "variantGroupId": "family-jaye:silverash-exusiai",
+      "name": "孑 E0 + 银灰 E2 + 能天使 E2",
+      "members": [
+        {
+          "name": "孑",
+          "maxElite": 0
+        },
+        {
+          "name": "银灰",
+          "elite": 2
+        },
+        {
+          "name": "能天使",
+          "elite": 2
+        }
+      ],
+      "efficiency": 98.26,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-trading-lmd-jaye-e1-silverash-e2-exusiai-e2-l3",
+      "variantGroupId": "family-jaye:silverash-exusiai",
+      "name": "孑 E1 + 银灰 E2 + 能天使 E2",
+      "members": [
+        {
+          "name": "孑",
+          "elite": 1
+        },
+        {
+          "name": "银灰",
+          "elite": 2
+        },
+        {
+          "name": "能天使",
+          "elite": 2
+        }
+      ],
+      "efficiency": 64.76,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-trading-lmd-jaye-e0-silverash-e2-cliffheart-e2-l3",
+      "variantGroupId": "family-jaye:silverash-cliffheart",
+      "name": "孑 E0 + 银灰 E2 + 崖心 E2",
+      "members": [
+        {
+          "name": "孑",
+          "maxElite": 0
+        },
+        {
+          "name": "银灰",
+          "elite": 2
+        },
+        {
+          "name": "崖心",
+          "elite": 2
+        }
+      ],
+      "efficiency": 94.53,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-trading-lmd-jaye-e1-silverash-e2-cliffheart-e2-l3",
+      "variantGroupId": "family-jaye:silverash-cliffheart",
+      "name": "孑 E1 + 银灰 E2 + 崖心 E2",
+      "members": [
+        {
+          "name": "孑",
+          "elite": 1
+        },
+        {
+          "name": "银灰",
+          "elite": 2
+        },
+        {
+          "name": "崖心",
+          "elite": 2
+        }
+      ],
+      "efficiency": 43.28,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-trading-lmd-jaye-e0-silverash-e2-swire-e2-l3",
+      "variantGroupId": "family-jaye:silverash-swire",
+      "name": "孑 E0 + 银灰 E2 + 琳琅诗怀雅 E2",
+      "members": [
+        {
+          "name": "孑",
+          "maxElite": 0
+        },
+        {
+          "name": "银灰",
+          "elite": 2
+        },
+        {
+          "name": "琳琅诗怀雅",
+          "elite": 2
+        }
+      ],
+      "efficiency": 80.54,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-trading-lmd-jaye-e1-silverash-e2-swire-e2-l3",
+      "variantGroupId": "family-jaye:silverash-swire",
+      "name": "孑 E1 + 银灰 E2 + 琳琅诗怀雅 E2",
+      "members": [
+        {
+          "name": "孑",
+          "elite": 1
+        },
+        {
+          "name": "银灰",
+          "elite": 2
+        },
+        {
+          "name": "琳琅诗怀雅",
+          "elite": 2
+        }
+      ],
+      "efficiency": 44.35,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
     },
     {
       "id": "template-trading-lmd-butshu-alpha-vigil-e2-arkoe-e2-l3",

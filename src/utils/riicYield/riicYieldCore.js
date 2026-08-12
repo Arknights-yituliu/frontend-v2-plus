@@ -9,7 +9,7 @@ const ENGINE = Object.freeze({
   version: "0.1.0",
 });
 
-const REFERENCE_DAILY_RATES = Object.freeze({
+export const RIIC_REFERENCE_DAILY_RATES = Object.freeze({
   manufacture: Object.freeze({
     exp: 8000,
     gold: 10000,
@@ -239,7 +239,7 @@ function inspectScheduleSupport(schedule, issues) {
 
 function getReferenceRate(room) {
   if (room.facility !== "trading") {
-    return REFERENCE_DAILY_RATES[room.facility]?.[room.product] || null;
+    return RIIC_REFERENCE_DAILY_RATES[room.facility]?.[room.product] || null;
   }
 
   if (room.product !== "lmd") {

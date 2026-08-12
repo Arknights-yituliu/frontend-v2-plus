@@ -253,6 +253,32 @@
       "calculationStatus": "estimated"
     },
     {
+      "id": "buffer-manufacture-gold-almond-e2-jessica-e0-vanilla-e0-core-l3",
+      "variantGroupId": "family-almond-jessica-vanilla-e2-e0-e0-gold",
+      "name": "杏仁（精英 2） + 杰西卡（精英 0） + 香草（精英 0）",
+      "members": [
+        {
+          "name": "杏仁",
+          "elite": 2,
+          "level": 1
+        },
+        {
+          "name": "杰西卡",
+          "elite": 0,
+          "level": 1
+        },
+        {
+          "name": "香草",
+          "elite": 0,
+          "level": 1
+        }
+      ],
+      "efficiency": 81,
+      "sortScore": 0,
+      "selectionMode": "atomicCore",
+      "calculationStatus": "calculated"
+    },
+    {
       "id": "manual-manufacture-gold-qingliu-l3",
       "variantGroupId": "family-qingliu",
       "name": "清流",

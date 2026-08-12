@@ -139,6 +139,12 @@ function normalizeOwnedOperators(list = [], requireOwn = false) {
   return [...operatorMap.values()];
 }
 
+function normalizeYituliuStoredOperators(list = []) {
+  return normalizeOwnedOperators(list).filter(
+    (operator) => Number(operator?.level) >= 1,
+  );
+}
+
 function readSklandAccountFromSession() {
   try {
     const savedAccountData = sessionStorage.getItem(
@@ -295,7 +301,10 @@ function createStoredCustomOperatorSource(source) {
     id: source.id,
     type: source.type,
     label,
-    operators: normalizeOwnedOperators(source.operators || []),
+    operators:
+      source.type === "yituliu"
+        ? normalizeYituliuStoredOperators(source.operators || [])
+        : normalizeOwnedOperators(source.operators || []),
     importedAt: source.importedAt || "",
     fileName: source.fileName || "",
     warnings: Array.isArray(source.warnings) ? source.warnings : [],
@@ -331,6 +340,7 @@ function saveOperatorSources() {
 
 function loadOperatorSources() {
   customOperatorSources.value = [];
+  let cleanedYituliuCache = false;
 
   try {
     const raw = localStorage.getItem(RIIC_OPERATOR_SOURCES_STORAGE_KEY);
@@ -344,7 +354,16 @@ function loadOperatorSources() {
         ) {
           continue;
         }
-        createStoredCustomOperatorSource(source);
+        if (createStoredCustomOperatorSource(source)) {
+          const storedOperators =
+            getOperatorSourceState(source.id)?.operators || [];
+          if (
+            source.type === "yituliu" &&
+            storedOperators.length !== source.operators.length
+          ) {
+            cleanedYituliuCache = true;
+          }
+        }
       }
     } else {
       const legacySnapshot = readStoredMaaOperatorSnapshot();
@@ -364,6 +383,10 @@ function loadOperatorSources() {
   } catch (error) {
     console.error("loadOperatorSources failed", error);
     customOperatorSources.value = [];
+  }
+
+  if (cleanedYituliuCache) {
+    saveOperatorSources();
   }
 
   let savedSource = readSavedOperatorSource();
@@ -647,12 +670,15 @@ function normalizeYituliuOperatorBox(payload) {
     const elite = Number(record?.evolvePhase);
     const level = Number(record?.level);
     const potential = Number(record?.potentialRank);
+    if (!Number.isInteger(level) || level < 1) {
+      continue;
+    }
     operators.push({
       charId,
       name: knownOperator.name,
       rarity: knownOperator.rarity,
       elite: Number.isInteger(elite) && elite >= 0 && elite <= 2 ? elite : 0,
-      level: Number.isInteger(level) && level >= 0 ? level : 0,
+      level,
       potential:
         Number.isInteger(potential) && potential >= 0 && potential <= 6
           ? potential

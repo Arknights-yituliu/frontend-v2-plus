@@ -2,9 +2,11 @@ import assert from "node:assert/strict";
 import {
   createRiicFallbackEstimate,
   createRiicRoomGroupFallbackPlan,
+  createRiicRoomGroupFallbackPlanAlternatives,
   getRiicFallbackPreviewOperators,
   getRiicFallbackPreviewTotalPercent,
-} from "../src/utils/riicDynamicFallback.js";
+} from "../src/utils/riic/l63-fallback.js";
+import { planRiicAutomaticRoomSelections } from "../src/utils/riic/l70-selection-planner.js";
 
 const candidate = {
   key: "candidate-a",
@@ -170,5 +172,41 @@ assert.deepEqual(
   ),
   ["tie-bravo"],
 );
+
+const automaticFallbackOperators = Array.from({ length: 8 }, (_, index) => ({
+  charId: `automatic-${index + 1}`,
+  name: `Automatic ${index + 1}`,
+  percent: 30,
+}));
+const automaticFallbackSlots = Array.from({ length: 4 }, (_, index) => {
+  const selectionKey = `automatic:${index + 1}`;
+  const automaticCandidate = {
+    key: `automatic-candidate-${index + 1}`,
+    fallback: {
+      count: 2,
+      candidateOperators: automaticFallbackOperators,
+    },
+  };
+  const options = createRiicRoomGroupFallbackPlanAlternatives({
+    selectedEntries: [{ selectionKey, candidate: automaticCandidate }],
+  }).map((fallbackPlan) => ({
+    candidateKey: automaticCandidate.key,
+    claimedOperatorIds: fallbackPlan.selectedOperatorIds,
+    rankingValue: fallbackPlan.score,
+  }));
+
+  return {
+    key: `automatic-slot-${index + 1}`,
+    groupId: "automatic-group",
+    cohortKey: `automatic-cohort-${index + 1}`,
+    options,
+  };
+});
+const automaticFallbackPlan = planRiicAutomaticRoomSelections({
+  selectionSlots: automaticFallbackSlots,
+  beamLimit: 32,
+});
+assert.equal(automaticFallbackPlan.unavailableGroupIds.length, 0);
+assert.equal(automaticFallbackPlan.bestPlan.selections.length, 4);
 
 console.log("RIIC dynamic fallback checks passed.");

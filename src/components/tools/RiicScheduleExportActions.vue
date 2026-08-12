@@ -20,6 +20,7 @@ const emit = defineEmits([
 <template>
   <div class="schedule-output-ready">
     <div class="schedule-output-actions">
+      <slot name="before-image"></slot>
       <button
         type="button"
         class="schedule-output-export-image"
@@ -31,6 +32,14 @@ const emit = defineEmits([
       </button>
       <button
         type="button"
+        class="schedule-output-open-legacy"
+        @click="emit('open-legacy-editor')"
+      >
+        <v-icon icon="mdi-pencil-outline" size="18"></v-icon>
+        转到旧版编辑器
+      </button>
+      <button
+        type="button"
         class="schedule-output-export-maa"
         :disabled="exportingMaa"
         @click="emit('export-maa')"
@@ -38,28 +47,19 @@ const emit = defineEmits([
         <v-icon icon="mdi-code-json" size="18"></v-icon>
         {{ exportingMaa ? "正在导出" : "导出 MAA" }}
       </button>
-      <button
-        type="button"
-        class="schedule-output-open-legacy"
-        @click="emit('open-legacy-editor')"
-      >
-        <v-icon icon="mdi-pencil-outline" size="18"></v-icon>
-        转到旧版编辑器
-      </button>
     </div>
   </div>
 </template>
 
 <style scoped>
 .schedule-output-ready {
-  display: flex;
-  justify-content: flex-end;
   margin-top: 12px;
 }
 
 .schedule-output-actions {
   display: flex;
-  width: min(100%, 620px);
+  flex-wrap: wrap;
+  width: 100%;
   gap: 10px;
 }
 
@@ -80,7 +80,8 @@ const emit = defineEmits([
   cursor: pointer;
 }
 
-.schedule-output-export-image {
+.schedule-output-export-image,
+.schedule-output-open-legacy {
   border-color: color-mix(in srgb, var(--riic-blue) 46%, var(--c-border-color));
   background: color-mix(
     in srgb,
@@ -95,12 +96,6 @@ const emit = defineEmits([
   color: #fff;
 }
 
-.schedule-output-open-legacy {
-  border-color: color-mix(in srgb, var(--riic-blue) 32%, var(--c-border-color));
-  background: var(--c-page-background-color);
-  color: var(--c-text-color-secondary);
-}
-
 .schedule-output-actions button:hover:not(:disabled) {
   filter: brightness(0.97);
 }
@@ -109,4 +104,5 @@ const emit = defineEmits([
   cursor: default;
   opacity: 0.55;
 }
+
 </style>

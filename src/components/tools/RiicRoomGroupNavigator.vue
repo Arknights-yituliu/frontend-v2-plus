@@ -8,10 +8,6 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  layoutPlanSummary: {
-    type: String,
-    default: "",
-  },
   getGroupStatus: {
     type: Function,
     required: true,
@@ -38,15 +34,6 @@ function getTileStatus(group) {
 <template>
   <div class="room-group-selection-layout">
     <div class="room-group-schematic">
-      <header class="room-workbench-heading">
-        <div>
-          <strong>房间组</strong>
-        </div>
-        <span class="room-layout-summary">
-          {{ layoutPlanSummary }}
-        </span>
-      </header>
-
       <div class="room-group-rows" aria-label="房间组列表">
         <div
           v-for="row in selectionRows"
@@ -215,41 +202,6 @@ function getTileStatus(group) {
 
 .room-group-schematic {
   min-width: 0;
-}
-
-.room-workbench-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.room-workbench-heading > div {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-}
-
-.room-workbench-heading strong {
-  color: var(--c-text-color);
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.room-workbench-heading span {
-  color: var(--riic-muted);
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-.room-layout-summary {
-  overflow: hidden;
-  max-width: 48%;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .room-group-rows {
@@ -426,44 +378,6 @@ function getTileStatus(group) {
   white-space: nowrap;
 }
 
-.restore-recommended-schedule {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-start;
-  flex: 0 0 auto;
-  gap: 5px;
-  min-height: 28px;
-  margin-top: 8px;
-  padding: 4px 8px;
-  border: 1px solid color-mix(
-    in srgb,
-    var(--riic-blue) 48%,
-    var(--c-border-color)
-  );
-  border-radius: 4px;
-  background: transparent;
-  color: var(--riic-blue);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.3;
-  cursor: pointer;
-}
-
-.restore-recommended-schedule:hover:not(:disabled) {
-  background: color-mix(
-    in srgb,
-    var(--riic-blue) 9%,
-    var(--c-page-background-color-secondary)
-  );
-}
-
-.restore-recommended-schedule:disabled {
-  cursor: default;
-  opacity: 0.55;
-}
-
 @media (max-width: 640px) {
   .room-group-selection-layout {
     grid-template-columns: 1fr;
@@ -478,21 +392,6 @@ function getTileStatus(group) {
 
   .room-group-progress-heading {
     grid-column: 1 / -1;
-  }
-
-  .room-group-progress .restore-recommended-schedule {
-    grid-column: 1 / -1;
-  }
-
-  .room-workbench-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .room-layout-summary {
-    max-width: 100%;
-    text-align: left;
   }
 
   .room-group-tile {
@@ -598,10 +497,6 @@ function getTileStatus(group) {
     var(--room-group-status-color) 14%,
     var(--c-page-background-color)
   );
-}
-
-.restore-recommended-schedule {
-  margin: 0 0 12px;
 }
 
 @keyframes room-group-active-pulse {

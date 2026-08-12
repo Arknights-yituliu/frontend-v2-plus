@@ -49,6 +49,8 @@ const emit = defineEmits([
 <template>
   <section class="schedule-settings-panel" aria-label="排班设置">
     <div class="schedule-settings-control-grid">
+      <slot name="before-settings"></slot>
+
       <section
         v-if="shiftMode === 'twice'"
         class="facility-profile-switch two-shift-rotation-switch"

@@ -3,6 +3,25 @@
   "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "candidates": [
     {
+      "id": "runtime-manufacture-all-waaifu-e2-l2",
+      "variantGroupId": "family-waaifu-dynamic",
+      "name": "槐琥（按同站队友计算）",
+      "members": [
+        {
+          "name": "槐琥",
+          "elite": 2
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "calculationStatus": "calculated",
+      "teamCalculation": {
+        "type": "copyOtherManufactureProduction",
+        "sourceMember": "槐琥",
+        "maximumPercent": 40
+      }
+    },
+    {
       "id": "manual-manufacture-all-dorothy-nasti",
       "variantGroupId": "family-dorothy-nasti",
       "name": "多萝西 + 娜斯提",
@@ -90,7 +109,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -109,7 +128,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -128,7 +147,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -147,7 +166,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -166,7 +185,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -185,7 +204,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -204,7 +223,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -223,7 +242,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -242,7 +261,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -261,7 +280,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -280,7 +299,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -299,7 +318,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -318,8 +337,230 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-l2",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang",
+      "name": "?? + ?????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        }
+      ],
+      "efficiency": 50,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-steward-l2",
+      "variantGroupId": "family-mizuki-standardized-steward",
+      "name": "?? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        }
+      ],
+      "efficiency": 60,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-yato-l2",
+      "variantGroupId": "family-mizuki-standardized-yato",
+      "name": "?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "level": 30
+        }
+      ],
+      "efficiency": 50,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-jessica-l2",
+      "variantGroupId": "family-mizuki-standardized-jessica",
+      "name": "?? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???"
+        }
+      ],
+      "efficiency": 60,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-cement-l2",
+      "variantGroupId": "family-mizuki-standardized-cement",
+      "name": "?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 50,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-meteor-l2",
+      "variantGroupId": "family-mizuki-standardized-meteor",
+      "name": "?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 50,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-l2",
+      "variantGroupId": "family-mizuki-standardized-highmore",
+      "name": "?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        }
+      ],
+      "efficiency": 60,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-quartz-l2",
+      "variantGroupId": "family-mizuki-standardized-quartz",
+      "name": "?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 50,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-roberta-l2",
+      "variantGroupId": "family-mizuki-standardized-roberta",
+      "name": "?? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        }
+      ],
+      "efficiency": 60,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-chestnut-l2",
+      "variantGroupId": "family-mizuki-standardized-chestnut",
+      "name": "?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 1
+        }
+      ],
+      "efficiency": 50,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-perfumer-l2",
+      "variantGroupId": "family-mizuki-standardized-perfumer",
+      "name": "?? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???",
+          "elite": 1
+        }
+      ],
+      "efficiency": 60,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-vanilla-l2",
+      "variantGroupId": "family-mizuki-standardized-vanilla",
+      "name": "?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 60,
+      "sortScore": 0,
+      "calculationStatus": "estimated",
+      "lv3CoreFallback": false
     }
   ]
 }

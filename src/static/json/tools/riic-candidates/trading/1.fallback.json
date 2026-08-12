@@ -362,14 +362,14 @@
       "name": "空弦",
       "rates": [
         {
-          "percent": -10,
+          "percent": 0,
           "tags": [
             "laterano"
           ]
         },
         {
           "elite": 2,
-          "percent": -20,
+          "percent": 0,
           "tags": [
             "laterano"
           ]
@@ -582,6 +582,15 @@
         }
       ],
       "fillPriority": -1
+    },
+    {
+      "name": "黑键",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ],
+      "fillPriority": 10
     },
     {
       "name": "黑角",

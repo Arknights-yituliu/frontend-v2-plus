@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {
   getRiicRoomGroupStaffingRequirement,
-} from "../src/utils/riicStaffingRequirement.js";
+} from "../src/utils/riic/l60-staffing.js";
 
 const twoTradingStations = getRiicRoomGroupStaffingRequirement({
   stations: [

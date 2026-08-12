@@ -7,7 +7,7 @@
       "name": "12F",
       "rates": [
         {
-          "percent": 51
+          "percent": 25
         }
       ]
     },
@@ -15,13 +15,13 @@
       "name": "安洁莉娜",
       "rates": [
         {
-          "percent": 46,
+          "percent": 20,
           "tags": [
             "siracusa"
           ]
         },
         {
-          "percent": 54,
+          "percent": 28,
           "elite": 1,
           "tags": [
             "siracusa"
@@ -33,14 +33,14 @@
       "name": "暗索",
       "rates": [
         {
-          "percent": 53
+          "percent": 27
         },
         {
-          "percent": 61,
+          "percent": 35,
           "elite": 1
         },
         {
-          "percent": 69,
+          "percent": 43,
           "elite": 2
         }
       ]
@@ -49,14 +49,14 @@
       "name": "白雪",
       "rates": [
         {
-          "percent": 53
+          "percent": 27
         },
         {
-          "percent": 61,
+          "percent": 35,
           "elite": 1
         },
         {
-          "percent": 69,
+          "percent": 43,
           "elite": 2
         }
       ]
@@ -65,7 +65,7 @@
       "name": "陈",
       "rates": [
         {
-          "percent": 77,
+          "percent": 51,
           "elite": 2,
           "tags": [
             "lungmen-guard-department"
@@ -77,7 +77,7 @@
       "name": "赤刃明霄陈",
       "rates": [
         {
-          "percent": 20,
+          "percent": 46,
           "elite": 2
         }
       ]
@@ -86,20 +86,20 @@
       "name": "伺夜",
       "rates": [
         {
-          "percent": 61,
+          "percent": 35,
           "tags": [
             "siracusa"
           ]
         },
         {
-          "percent": 69,
+          "percent": 43,
           "elite": 1,
           "tags": [
             "siracusa"
           ]
         },
         {
-          "percent": 77,
+          "percent": 51,
           "elite": 2,
           "tags": [
             "siracusa"
@@ -111,14 +111,14 @@
       "name": "断崖",
       "rates": [
         {
-          "percent": 45
+          "percent": 19
         },
         {
-          "percent": 53,
+          "percent": 27,
           "elite": 1
         },
         {
-          "percent": 71,
+          "percent": 45,
           "elite": 2
         }
       ]
@@ -127,14 +127,14 @@
       "name": "风丸",
       "rates": [
         {
-          "percent": 50
+          "percent": 24
         },
         {
-          "percent": 58,
+          "percent": 32,
           "elite": 1
         },
         {
-          "percent": 66,
+          "percent": 40,
           "elite": 2
         }
       ]
@@ -143,13 +143,13 @@
       "name": "芙兰卡",
       "rates": [
         {
-          "percent": 45,
+          "percent": 19,
           "tags": [
             "blacksteel-international"
           ]
         },
         {
-          "percent": 53,
+          "percent": 27,
           "elite": 1,
           "tags": [
             "blacksteel-international"
@@ -161,14 +161,14 @@
       "name": "哈洛德",
       "rates": [
         {
-          "percent": 45
+          "percent": 19
         },
         {
-          "percent": 53,
+          "percent": 27,
           "elite": 1
         },
         {
-          "percent": 61,
+          "percent": 35,
           "elite": 2
         }
       ]
@@ -177,7 +177,7 @@
       "name": "红",
       "rates": [
         {
-          "percent": 76,
+          "percent": 50,
           "elite": 2
         }
       ]
@@ -186,20 +186,20 @@
       "name": "见行者",
       "rates": [
         {
-          "percent": 45,
+          "percent": 19,
           "tags": [
             "laterano"
           ]
         },
         {
-          "percent": 53,
+          "percent": 27,
           "elite": 1,
           "tags": [
             "laterano"
           ]
         },
         {
-          "percent": 86,
+          "percent": 43.64,
           "elite": 2,
           "tags": [
             "laterano"
@@ -211,11 +211,11 @@
       "name": "杰克",
       "rates": [
         {
-          "percent": 61,
+          "percent": 35,
           "elite": 1
         },
         {
-          "percent": 69,
+          "percent": 43,
           "elite": 2
         }
       ]
@@ -224,20 +224,20 @@
       "name": "莱欧斯",
       "rates": [
         {
-          "percent": 55,
+          "percent": 29,
           "tags": [
             "dungeon-meshi-party"
           ]
         },
         {
-          "percent": 63,
+          "percent": 37,
           "elite": 1,
           "tags": [
             "dungeon-meshi-party"
           ]
         },
         {
-          "percent": 71,
+          "percent": 45,
           "elite": 2,
           "tags": [
             "dungeon-meshi-party"
@@ -249,13 +249,13 @@
       "name": "凛视",
       "rates": [
         {
-          "percent": 10,
+          "percent": 19,
           "tags": [
             "sami"
           ]
         },
         {
-          "percent": 10,
+          "percent": 35,
           "elite": 2,
           "tags": [
             "sami"
@@ -267,14 +267,14 @@
       "name": "梅",
       "rates": [
         {
-          "percent": 53
+          "percent": 27
         },
         {
-          "percent": 61,
+          "percent": 35,
           "elite": 1
         },
         {
-          "percent": 69,
+          "percent": 43,
           "elite": 2
         }
       ]
@@ -283,14 +283,14 @@
       "name": "谜图",
       "rates": [
         {
-          "percent": 45
+          "percent": 19
         },
         {
-          "percent": 53,
+          "percent": 27,
           "elite": 1
         },
         {
-          "percent": 61,
+          "percent": 35,
           "elite": 2
         }
       ]
@@ -299,13 +299,13 @@
       "name": "莫斯提马",
       "rates": [
         {
-          "percent": 46,
+          "percent": 20,
           "tags": [
             "laterano"
           ]
         },
         {
-          "percent": 54,
+          "percent": 28,
           "elite": 1,
           "tags": [
             "laterano"
@@ -317,20 +317,20 @@
       "name": "忍冬",
       "rates": [
         {
-          "percent": 46,
+          "percent": 20,
           "tags": [
             "siracusa"
           ]
         },
         {
-          "percent": 54,
+          "percent": 28,
           "elite": 1,
           "tags": [
             "siracusa"
           ]
         },
         {
-          "percent": 72,
+          "percent": 46,
           "elite": 2,
           "tags": [
             "siracusa"
@@ -342,13 +342,13 @@
       "name": "塞雷娅",
       "rates": [
         {
-          "percent": 46,
+          "percent": 20,
           "tags": [
             "rhine-lab"
           ]
         },
         {
-          "percent": 54,
+          "percent": 28,
           "elite": 1,
           "tags": [
             "rhine-lab"
@@ -360,14 +360,14 @@
       "name": "守林人",
       "rates": [
         {
-          "percent": 45
+          "percent": 19
         },
         {
-          "percent": 53,
+          "percent": 27,
           "elite": 1
         },
         {
-          "percent": 71,
+          "percent": 45,
           "elite": 2
         }
       ]
@@ -376,7 +376,7 @@
       "name": "双月",
       "rates": [
         {
-          "percent": 5,
+          "percent": 30,
           "elite": 2,
           "tags": [
             "rainbow-squad"
@@ -388,14 +388,14 @@
       "name": "松桐",
       "rates": [
         {
-          "percent": 45
+          "percent": 19
         },
         {
-          "percent": 53,
+          "percent": 27,
           "elite": 1
         },
         {
-          "percent": 61,
+          "percent": 35,
           "elite": 2
         }
       ]
@@ -404,7 +404,7 @@
       "name": "提丰",
       "rates": [
         {
-          "percent": 10,
+          "percent": 20,
           "tags": [
             "sami"
           ]
@@ -415,10 +415,10 @@
       "name": "微风",
       "rates": [
         {
-          "percent": 45
+          "percent": 19
         },
         {
-          "percent": 53,
+          "percent": 27,
           "elite": 1
         }
       ]
@@ -427,7 +427,7 @@
       "name": "晓歌",
       "rates": [
         {
-          "percent": 61,
+          "percent": 35,
           "elite": 2
         }
       ]
@@ -436,20 +436,20 @@
       "name": "信仰搅拌机",
       "rates": [
         {
-          "percent": 51,
+          "percent": 25,
           "tags": [
             "laterano"
           ]
         },
         {
-          "percent": 59,
+          "percent": 33,
           "elite": 1,
           "tags": [
             "laterano"
           ]
         },
         {
-          "percent": 72,
+          "percent": 46,
           "elite": 2,
           "tags": [
             "laterano"
@@ -461,14 +461,14 @@
       "name": "星极",
       "rates": [
         {
-          "percent": 45
+          "percent": 19
         },
         {
-          "percent": 53,
+          "percent": 27,
           "elite": 1
         },
         {
-          "percent": 76,
+          "percent": 50,
           "elite": 2
         }
       ]
@@ -477,7 +477,7 @@
       "name": "行箸",
       "rates": [
         {
-          "percent": 71,
+          "percent": 45,
           "elite": 2
         }
       ]
@@ -486,13 +486,13 @@
       "name": "寻澜",
       "rates": [
         {
-          "percent": 10,
+          "percent": 19,
           "tags": [
             "blacksteel-international"
           ]
         },
         {
-          "percent": 10,
+          "percent": 35,
           "elite": 2,
           "tags": [
             "blacksteel-international"
@@ -504,11 +504,11 @@
       "name": "宴",
       "rates": [
         {
-          "percent": 61,
+          "percent": 35,
           "elite": 1
         },
         {
-          "percent": 69,
+          "percent": 43,
           "elite": 2
         }
       ]
@@ -517,13 +517,13 @@
       "name": "耶拉",
       "rates": [
         {
-          "percent": 45,
+          "percent": 19,
           "tags": [
             "kjerag"
           ]
         },
         {
-          "percent": 53,
+          "percent": 27,
           "elite": 1,
           "tags": [
             "kjerag"
@@ -535,13 +535,13 @@
       "name": "因陀罗",
       "rates": [
         {
-          "percent": 45,
+          "percent": 19,
           "tags": [
             "glasgow-gang"
           ]
         },
         {
-          "percent": 53,
+          "percent": 27,
           "elite": 1,
           "tags": [
             "glasgow-gang"
@@ -553,14 +553,14 @@
       "name": "远山",
       "rates": [
         {
-          "percent": 66,
+          "percent": 40,
           "elite": 1,
           "tags": [
             "sami"
           ]
         },
         {
-          "percent": 74,
+          "percent": 48,
           "elite": 2,
           "tags": [
             "sami"
@@ -572,14 +572,14 @@
       "name": "跃跃",
       "rates": [
         {
-          "percent": 43
+          "percent": 17
         },
         {
-          "percent": 51,
+          "percent": 25,
           "elite": 1
         },
         {
-          "percent": 59,
+          "percent": 33,
           "elite": 2
         }
       ]

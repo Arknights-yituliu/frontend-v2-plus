@@ -18,6 +18,7 @@
       ],
       "efficiency": 70,
       "sortScore": 0,
+      "lv3PairComponent": true,
       "calculationStatus": "calculated"
     },
     {
@@ -36,6 +37,7 @@
       ],
       "efficiency": 80,
       "sortScore": 0,
+      "lv3PairComponent": true,
       "calculationStatus": "calculated"
     },
     {
@@ -72,6 +74,7 @@
       "efficiency": 80,
       "sortScore": 0,
       "quality": "baseOnly",
+      "lv3PairComponent": true,
       "calculationStatus": "calculated"
     },
     {
@@ -90,6 +93,7 @@
       "efficiency": 75,
       "sortScore": 0,
       "quality": "complete",
+      "lv3PairComponent": true,
       "calculationStatus": "calculated"
     }
   ]

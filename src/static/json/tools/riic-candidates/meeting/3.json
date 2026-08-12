@@ -2,20 +2,6 @@
   "schemaVersion": 6,
   "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
   "candidates": [
-    {
-      "id": "baseline:meeting:all:3:2:char_010_chen:2-1",
-      "variantGroupId": "baseline:meeting:all:3:2:char_010_chen",
-      "name": "陈+补位",
-      "members": [
-        {
-          "name": "陈",
-          "elite": 2
-        }
-      ],
-      "efficiency": 25,
-      "sortScore": 0,
-      "quality": "complete",
-      "calculationStatus": "calculated"
-    }
+
   ]
 }

@@ -19,6 +19,7 @@
       "efficiency": 65,
       "sortScore": 2,
       "quality": "baseOnly",
+      "lv3PairComponent": true,
       "calculationStatus": "calculated"
     }
   ]

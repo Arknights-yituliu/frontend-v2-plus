@@ -32,7 +32,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -51,7 +51,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -70,7 +70,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -89,7 +89,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -108,7 +108,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -127,7 +127,7 @@
       ],
       "efficiency": 0,
       "sortScore": 0,
-      "lv3compatible": false,
+      "lv3CoreFallback": false,
       "calculationStatus": "calculated"
     },
     {
@@ -142,6 +142,27 @@
         },
         {
           "name": "杰西卡",
+          "elite": 0,
+          "level": 1
+        }
+      ],
+      "efficiency": 54,
+      "sortScore": 0,
+      "selectionMode": "atomicCore",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "buffer-manufacture-gold-almond-e2-vanilla-e0-core-l2",
+      "variantGroupId": "family-almond-vanilla-e2-e0-gold",
+      "name": "杏仁（精英 2） + 香草（精英 0）",
+      "members": [
+        {
+          "name": "杏仁",
+          "elite": 2,
+          "level": 1
+        },
+        {
+          "name": "香草",
           "elite": 0,
           "level": 1
         }

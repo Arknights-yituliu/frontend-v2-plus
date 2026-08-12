@@ -3,11 +3,11 @@ import fs from "node:fs/promises";
 import {
   calculateRiicRoomEfficiency,
   resolveRiicBaselineSkills,
-} from "../src/utils/riicBaselineSkillResolver.js";
+} from "../src/utils/riic/l00-baseline-resolver.js";
 
 const ruleData = JSON.parse(
   await fs.readFile(
-    "src/static/json/tools/riic_baseline_skill_rules.json",
+    "src/static/json/tools/R00-baseline.json",
     "utf8",
   ),
 );

@@ -5,7 +5,6 @@ import REGISTER from '/src/pages/account/register.vue'
 import LOGIN from '/src/pages/account/login.vue'
 import RETRIEVE from '/src/pages/account/retrieve.vue'
 import SURVEY_OPERATOR from '/src/pages/survey/operator.vue'
-import USER_HOME from '/src/pages/account/home.vue'
 import STORE from '/src/pages/material/store.vue'
 import PACK from '/src/pages/material/pack.vue'
 import ITEM_VALUE from '/src/pages/material/value.vue'
@@ -164,18 +163,6 @@ const routes = [
         }
     },
     {
-        path: '/tools/schedule-images',
-        text: '一图流排班表',
-        name: 'ScheduleImages',
-        display: true,
-        module: 'tools',
-        icon: "mdi-image-multiple",
-        component: () => import('/src/pages/tools/schedule-images.vue'),
-        meta: {
-            title: '一图流排班表'
-        }
-    },
-    {
         path: '/tools/operator-zoot-matcher',
         pageTitle: '干员-作业匹配器',
         text: '我能抄什么作业？',
@@ -189,11 +176,23 @@ const routes = [
         }
     },
     {
+        path: '/information/logistics',
+        text: '基建技能一览',
+        name: 'Logistics',
+        display: true,
+        module: 'riic',
+        icon: "mdi-floor-plan",
+        component: () => import('/src/pages/information/logistics.vue'),
+        meta: {
+            title: '基建技能一览'
+        }
+    },
+    {
         path: '/tools/riic-schedule-generator',
-        text: '排班表生成器',
+        text: '一键生成排班表（beta）',
         name: 'RiicScheduleGenerator',
         display: true,
-        module: 'tools',
+        module: 'riic',
         icon: "mdi-home-clock-outline",
         component: () => import('/src/pages/tools/riic-schedule-generator.vue'),
         meta: {
@@ -214,10 +213,10 @@ const routes = [
     },
     {
         path: '/tools/scheduleV2',
-        text: '排班表编辑器',
+        text: '排班表（MAA）',
         name: 'ScheduleV2',
         display: true,
-        module: 'tools',
+        module: 'riic',
         icon: "mdi-calendar-clock",
         component: () => import('/src/pages/tools/schedule.v2.vue'),
         meta: {
@@ -229,11 +228,23 @@ const routes = [
         text: '排班表（Mower）',
         name: 'MowerPlan',
         display: true,
-        module: 'tools',
+        module: 'riic',
         icon: "mdi-mower",
         component: () => import('/src/pages/tools/mower-plan.vue'),
         meta: {
             title: 'Mower排班表生成器'
+        }
+    },
+    {
+        path: '/tools/schedule-images',
+        text: '排班表参考',
+        name: 'ScheduleImages',
+        display: true,
+        module: 'riic',
+        icon: "mdi-image-multiple",
+        component: () => import('/src/pages/tools/schedule-images.vue'),
+        meta: {
+            title: '一图流排班表'
         }
     },
     {
@@ -473,18 +484,6 @@ const routes = [
         }
     },
     {
-        path: '/information/logistics',
-        text: '基建技能一览',
-        name: 'Logistics',
-        display: true,
-        module: 'information',
-        icon: "mdi-floor-plan",
-        component: () => import('/src/pages/information/logistics.vue'),
-        meta: {
-            title: '基建技能一览'
-        }
-    },
-    {
         path: '/information/sandboxFoods',
         text: '生息演算食材一览',
         name: 'SandboxFoods',
@@ -536,16 +535,6 @@ const routes = [
         component: RETRIEVE,
         meta: {
             title: '找回账号'
-        }
-    },
-    {
-        path: '/account/home',
-        text: '用户中心',
-        name: 'AccountHome',
-        display: false,
-        component: USER_HOME,
-        meta: {
-            title: '用户中心'
         }
     },
     {
@@ -698,13 +687,6 @@ const routes = [
         component: () => import('/src/pages/dev/pie-chart.vue')
     },
     {
-        path: '/dev/open-api-test',
-        text: 'OpenAPI测试',
-        display: false,
-        component: () => import('/src/pages/dev/open-api-test.vue')
-    },
-
-    {
         path: '/media/weekly',
         text: '周报做图用',
         display: false,
@@ -821,6 +803,13 @@ const LinkedTable = {
         text: "一图流工具箱",
         display: true,
         icon: 'mdi-toolbox',
+        child: []
+    },
+    riic: {
+        path: '/',
+        text: "罗德岛基建",
+        display: true,
+        icon: 'mdi-home-city-outline',
         child: []
     },
     survey: {
