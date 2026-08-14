@@ -385,6 +385,7 @@ const scheduleRoomMaaSettingOverrides = ref({});
 const copiedScheduleRoomOperators = ref(null);
 const copiedScheduleShiftOperators = ref(null);
 const scheduleRoomEditorOperatorInput = ref("");
+const manualOperatorEditorEnabled = import.meta.env.DEV;
 const {
   yituliuTokenInput,
   yituliuSourceLabelInput,
@@ -5908,6 +5909,9 @@ const recommendationCard = computed(() => {
 const sklandOperatorSourceStatus = computed(() =>
   getOperatorSourceStatus(OPERATOR_SOURCE_KEYS.skland),
 );
+const manualOperatorSourceStatus = computed(() =>
+  getOperatorSourceStatus(OPERATOR_SOURCE_KEYS.manual),
+);
 const customOperatorSourceStatuses = computed(() =>
   customOperatorSources.value.map((source) => ({
     source,
@@ -7127,6 +7131,8 @@ onBeforeUnmount(() => {
         <section class="schedule-generation-data-source-module">
           <RiicOperatorSourcePanel
             :skland-operator-source-status="sklandOperatorSourceStatus"
+            :manual-operator-source-status="manualOperatorSourceStatus"
+            :manual-source-enabled="manualOperatorEditorEnabled"
             :custom-operator-source-statuses="customOperatorSourceStatuses"
             :operator-source-states="operatorSourceStates"
             :custom-source-import-panel-open="customSourceImportPanelOpen"
@@ -7136,6 +7142,7 @@ onBeforeUnmount(() => {
             :yituliu-source-label="yituliuSourceLabelInput"
             :max-custom-sources="RIIC_MAX_CUSTOM_OPERATOR_SOURCES"
             @open-skland="openSklandImport"
+            @open-manual="router.push('/dev/operator')"
             @select-source="
               setActiveOperatorSource($event, { notify: true })
             "

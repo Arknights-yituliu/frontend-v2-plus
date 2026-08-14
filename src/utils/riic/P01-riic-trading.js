@@ -46,7 +46,11 @@ const ORDER_EFFICIENCY_CLAUSE_PATTERN =
   /\u8ba2\u5355\u83b7\u53d6\u6548\u7387[^+]*\+\s*\d+(?:\.\d+)?%/;
 const HARMLESS_EXCLUSION_PATTERN =
   /\u5fc3\u60c5|\u8ba2\u5355\u4e0a\u9650/;
-const ALLOWED_IGNORED_MECHANICS = new Set(["morale", "orderLimit"]);
+const ALLOWED_IGNORED_MECHANICS = new Set([
+  "morale",
+  "orderLimit",
+  "conditionalThresholdApproximation",
+]);
 const LMD_ONLY_EXCLUSION_REASONS = new Set([
   "specialOrderOrProbability",
   "timeDependentOrThreshold",
@@ -652,6 +656,14 @@ function createTradingContext(operators, product, facilityContext) {
     }
 
     if (isCompleteOutputRule(rule)) {
+      continue;
+    }
+
+    if (
+      (rule?.ignoredMechanics || []).includes(
+        "conditionalThresholdApproximation",
+      )
+    ) {
       continue;
     }
 

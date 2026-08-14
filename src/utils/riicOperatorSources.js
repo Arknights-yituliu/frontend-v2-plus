@@ -3,6 +3,11 @@ import operatorDataAPI from "/src/api/operatorData.js";
 import { cMessage } from "/src/utils/message.js";
 import { operatorTableV2 } from "/src/utils/gameData.js";
 import { parseRiicMaaOperatorBox } from "/src/utils/riicMaaOperatorData.js";
+import {
+  RIIC_MANUAL_OPERATOR_SOURCE_KEY,
+  RIIC_MANUAL_OPERATOR_STORAGE_KEY,
+  readRiicManualOperatorSnapshot,
+} from "/src/utils/riicManualOperatorData.js";
 
 const SKLAND_ACCOUNT_SESSION_STORAGE_KEY = "skland_account_data";
 const RIIC_MAA_OPERATOR_STORAGE_KEY = "riic_maa_operator_data_v1";
@@ -10,9 +15,11 @@ const RIIC_OPERATOR_SOURCE_STORAGE_KEY = "riic_operator_source_v1";
 const RIIC_OPERATOR_SOURCES_STORAGE_KEY = "riic_operator_sources_v2";
 const RIIC_YITULIU_OPERATOR_API_URL =
   "https://backend.yituliu.cn/open-api/operator/info";
+const ENABLE_MANUAL_OPERATOR_SOURCE = import.meta.env.DEV;
 export const RIIC_MAX_CUSTOM_OPERATOR_SOURCES = 3;
 export const OPERATOR_SOURCE_KEYS = Object.freeze({
   skland: "skland",
+  manual: RIIC_MANUAL_OPERATOR_SOURCE_KEY,
 });
 
 function formatOperatorSyncTime(value) {
@@ -85,6 +92,15 @@ export function useRiicOperatorSources(options = {}) {
       id: OPERATOR_SOURCE_KEYS.skland,
       type: "skland",
       label: "???",
+      operators: [],
+      importedAt: "",
+      loading: false,
+      error: "",
+    },
+    manual: {
+      id: OPERATOR_SOURCE_KEYS.manual,
+      type: "manual",
+      label: "手动编辑",
       operators: [],
       importedAt: "",
       loading: false,
@@ -174,12 +190,20 @@ function getOperatorSourceLabel(source) {
     return "森空岛";
   }
 
+  if (source === OPERATOR_SOURCE_KEYS.manual) {
+    return "手动编辑";
+  }
+
   return getOperatorSourceRecord(source)?.label || "自定义数据源";
 }
 
 function getOperatorSourceType(source) {
   if (source === OPERATOR_SOURCE_KEYS.skland) {
     return "skland";
+  }
+
+  if (source === OPERATOR_SOURCE_KEYS.manual) {
+    return "manual";
   }
 
   return getOperatorSourceRecord(source)?.type || "";
@@ -190,16 +214,21 @@ function getOperatorSourceStatus(source) {
   const available = Boolean(state?.operators?.length);
   const type = getOperatorSourceType(source);
   const isSkland = type === "skland";
+  const isManual = type === "manual";
   const isMaa = type === "maa";
 
   let detail = isSkland
     ? "点击打开森空岛同步流程"
+    : isManual
+      ? "点击前往干员编辑"
     : isMaa
       ? "点击导入 MAA JSON 文件"
       : "点击使用一图流 Token";
   if (state?.loading) {
     detail = isSkland
       ? "正在读取森空岛数据"
+      : isManual
+        ? "正在读取手动编辑数据"
       : isMaa
         ? "正在读取 MAA JSON 文件"
         : "正在读取一图流数据";
@@ -224,6 +253,10 @@ function getOperatorSourceStatus(source) {
         ? available
           ? "MAA 数据已导入"
           : "未导入 MAA 数据"
+        : isManual
+          ? available
+            ? "手动编辑数据"
+            : "未设置手动编辑数据"
         : available
           ? "一图流数据已导入"
           : "未导入一图流数据",
@@ -237,6 +270,8 @@ function readSavedOperatorSource() {
     const source = localStorage.getItem(RIIC_OPERATOR_SOURCE_STORAGE_KEY);
     if (
       source === OPERATOR_SOURCE_KEYS.skland ||
+      (ENABLE_MANUAL_OPERATOR_SOURCE &&
+        source === OPERATOR_SOURCE_KEYS.manual) ||
       Boolean(getOperatorSourceRecord(source))
     ) {
       return source;
@@ -400,9 +435,34 @@ function loadOperatorSources() {
   }
   activeOperatorSource.value =
     savedSource === OPERATOR_SOURCE_KEYS.skland ||
+    (ENABLE_MANUAL_OPERATOR_SOURCE &&
+      savedSource === OPERATOR_SOURCE_KEYS.manual) ||
     getOperatorSourceRecord(savedSource)
       ? savedSource
       : OPERATOR_SOURCE_KEYS.skland;
+}
+
+function loadManualOperatorSource() {
+  if (!ENABLE_MANUAL_OPERATOR_SOURCE) {
+    return;
+  }
+
+  const state = operatorSourceStates.manual;
+  state.loading = true;
+  state.error = "";
+
+  try {
+    const snapshot = readRiicManualOperatorSnapshot();
+    state.operators = normalizeOwnedOperators(snapshot?.operators || []);
+    state.importedAt = snapshot?.updatedAt || "";
+  } catch (error) {
+    console.error("loadManualOperatorSource failed", error);
+    state.operators = [];
+    state.importedAt = "";
+    state.error = "手动编辑数据读取失败";
+  } finally {
+    state.loading = false;
+  }
 }
 
 function loadStoredMaaOperatorSource() {
@@ -551,6 +611,7 @@ async function loadOwnedOperators({ notify = false } = {}) {
   try {
     const previousSource = activeOperatorSource.value;
     await loadSklandOperatorSource();
+    loadManualOperatorSource();
     loadStoredMaaOperatorSource();
 
     const savedSource = readSavedOperatorSource();
@@ -558,6 +619,9 @@ async function loadOwnedOperators({ notify = false } = {}) {
       savedSource,
       previousSource,
       OPERATOR_SOURCE_KEYS.skland,
+      ...(ENABLE_MANUAL_OPERATOR_SOURCE
+        ? [OPERATOR_SOURCE_KEYS.manual]
+        : []),
       ...customOperatorSources.value.map((source) => source.id),
     ];
     const nextSource = preferredSources.find(
@@ -830,6 +894,7 @@ async function deleteCustomOperatorSource(sourceId) {
     if (clearStorage) {
       try {
         localStorage.removeItem(RIIC_MAA_OPERATOR_STORAGE_KEY);
+        localStorage.removeItem(RIIC_MANUAL_OPERATOR_STORAGE_KEY);
         localStorage.removeItem(RIIC_OPERATOR_SOURCE_STORAGE_KEY);
         localStorage.removeItem(RIIC_OPERATOR_SOURCES_STORAGE_KEY);
       } catch {
@@ -839,6 +904,12 @@ async function deleteCustomOperatorSource(sourceId) {
 
     clearActiveOperatorSource();
     Object.assign(operatorSourceStates.skland, {
+      loading: false,
+      operators: [],
+      importedAt: "",
+      error: "",
+    });
+    Object.assign(operatorSourceStates.manual, {
       loading: false,
       operators: [],
       importedAt: "",
@@ -878,6 +949,7 @@ async function deleteCustomOperatorSource(sourceId) {
     getOperatorSourceType,
     getOperatorSourceStatus,
     loadOperatorSources,
+    loadManualOperatorSource,
     loadStoredMaaOperatorSource,
     loadOwnedOperators,
     setActiveOperatorSource,

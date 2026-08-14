@@ -811,6 +811,21 @@ const routes = [
     }
 ]
 
+if (import.meta.env.DEV) {
+    const catchAllRouteIndex = routes.findIndex((route) => route.path === '/:catchAll(.*)')
+    routes.splice(catchAllRouteIndex, 0, {
+        path: '/dev/operator',
+        text: '排班干员编辑',
+        name: 'DevOperatorRoster',
+        display: false,
+        module: 'dev',
+        component: () => import('/src/pages/dev/operator.vue'),
+        meta: {
+            title: '排班干员编辑'
+        }
+    })
+}
+
 
 const LinkedTable = {
     material: {
