@@ -31,6 +31,14 @@ const BELLONE_ID = "char_4037_demetr";
 const ULPIAN_ID = "char_4145_ulpia";
 const ARCHET_ID = "char_332_archet";
 const QUARTZ_ID = "char_4063_quartz";
+const VIGNA_ID = "char_1019_siege2";
+const DEGENBRECHER_ID = "char_4116_blkkgt";
+const GLASGOW_OPERATOR_IDS = new Set([
+  "char_112_siege",
+  "char_154_morgan",
+  "char_157_dagda",
+  "char_155_tiger",
+]);
 const ARCHET_ALPHA_SKILL_ID =
   `${ARCHET_ID}|trading|\u8654\u8bda\u7b79\u6b3e\u00b7\u03b1|0|1`;
 const ARCHET_BETA_SKILL_ID =
@@ -39,6 +47,10 @@ const BELLONE_ALPHA_SKILL_ID =
   `${BELLONE_ID}|trading|\u5bb6\u65cf\u7ecf\u8425\u00b7\u03b1|0|1`;
 const BELLONE_BETA_SKILL_ID =
   `${BELLONE_ID}|trading|\u5bb6\u65cf\u7ecf\u8425\u00b7\u03b2|2|1`;
+const VIGNA_BETA_SKILL_ID =
+  `${VIGNA_ID}|trading|\u5916\u8d38\u51b3\u8bae\u00b7\u03b2|2|1`;
+const DEGENBRECHER_CHAMPION_SKILL_ID =
+  `${DEGENBRECHER_ID}|trading|\u51a0\u519b\u98ce\u91c7|2|1`;
 
 const HIGH_QUALITY_ORDER_PATTERN =
   /\u9ad8\u54c1\u8d28\u8d35\u91d1\u5c5e\u8ba2\u5355/;
@@ -455,8 +467,16 @@ function hasResolvableSameRoomRule(rule, sameRoomRules, product) {
   );
 }
 
-function getExternalOrderBonus(rule, facilityContext) {
+function getExternalOrderBonus(rule, facilityContext, operators) {
   const skillId = String(rule?.sourceSkillId || rule?.id || "").trim();
+
+  if (skillId === VIGNA_BETA_SKILL_ID) {
+    return operators.some((operator) =>
+      GLASGOW_OPERATOR_IDS.has(operator.charId),
+    )
+      ? 10
+      : 0;
+  }
 
   if (
     skillId === BELLONE_ALPHA_SKILL_ID ||
@@ -505,6 +525,36 @@ function getExternalOrderBonus(rule, facilityContext) {
   }
 
   return null;
+}
+
+function getPositiveOrderLimitIncrease(rule) {
+  const description = String(rule?.rawDescription || "");
+  const matches = description.matchAll(
+    /\u8ba2\u5355\u4e0a\u9650\s*\+\s*(\d+(?:\.\d+)?)/g,
+  );
+  let increase = 0;
+
+  for (const match of matches) {
+    increase += Number(match[1]);
+  }
+
+  return increase;
+}
+
+function getDegenbrecherChampionBonus(context) {
+  if (!context.hasDegenbrecherChampion) {
+    return 0;
+  }
+
+  const increasedOrderLimit = context.directRules.reduce(
+    (total, rule) =>
+      rule.charId === DEGENBRECHER_ID
+        ? total
+        : total + getPositiveOrderLimitIncrease(rule),
+    0,
+  );
+
+  return Math.min(100, Math.floor(increasedOrderLimit / 5) * 25);
 }
 
 function getArchetDormitoryOrderBonus(exclusion, facilityContext) {
@@ -609,6 +659,7 @@ function createTradingContext(operators, product, facilityContext) {
           rule.charId === TEQUILA_ID ||
           rule.charId === CLOSURE_ID ||
           rule.charId === SHAMARE_ID ||
+          rule.id === DEGENBRECHER_CHAMPION_SKILL_ID ||
           isArchetDormitoryOrderExclusion(rule) ||
           isHarmlessExclusion(rule),
       )
@@ -675,7 +726,11 @@ function createTradingContext(operators, product, facilityContext) {
       continue;
     }
 
-    const externalBonus = getExternalOrderBonus(rule, facilityContext);
+    const externalBonus = getExternalOrderBonus(
+      rule,
+      facilityContext,
+      operators,
+    );
     if (externalBonus === null) {
       return { error: "notSupported" };
     }
@@ -689,6 +744,9 @@ function createTradingContext(operators, product, facilityContext) {
     directRules,
     hasButshu,
     hasClosure,
+    hasDegenbrecherChampion: exclusions.some(
+      (rule) => rule.id === DEGENBRECHER_CHAMPION_SKILL_ID,
+    ),
     hasShamareOverride,
     hasTequila,
     highQualityOrderSkills,
@@ -734,7 +792,9 @@ function calculateLocalOrderBonus(context, operators, product) {
     return 45 * Math.max(0, operatorIds.length - 1);
   }
 
-  let result = Number(context.conditionalOrderBonus || 0);
+  let result =
+    Number(context.conditionalOrderBonus || 0) +
+    getDegenbrecherChampionBonus(context);
   const maxRules = new Map();
 
   for (const rule of context.directRules) {

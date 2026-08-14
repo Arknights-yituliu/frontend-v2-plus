@@ -10,7 +10,6 @@ import {
   recalculateRiicButshuCandidate,
 } from "./l62-butshu-calculation.js";
 import {
-  isRiicShamareIdleCandidate,
   recalculateRiicShamareIdleCandidate,
 } from "./l62-shamare-calculation.js";
 import {
@@ -149,6 +148,9 @@ function normalizeFallbackPools(fallbackCatalog) {
             .map((rate) => ({
               elite: toNonNegativeInteger(rate?.elite),
               level: toNonNegativeInteger(rate?.level, 1),
+              ...(toNonNegativeInteger(rate?.slotCount) > 0
+                ? { slotCount: toNonNegativeInteger(rate.slotCount) }
+                : {}),
               percent: Number(rate?.percent || 0),
               fillPriority: Number.isFinite(fillPriority) ? fillPriority : 0,
               tags: [
@@ -176,8 +178,10 @@ function getRateForTrainingMode(
   trainingMode,
   idealTrainingRaritySelection,
   currentOperator = operator,
+  scope = null,
 ) {
   const rates = pool.operatorsByName.get(operator.name) || [];
+  const slotCount = Number(scope?.slotCount);
   let appliedRate = null;
   const useIdealTraining =
     trainingMode === "ideal" &&
@@ -187,9 +191,12 @@ function getRateForTrainingMode(
     );
 
   for (const rate of rates) {
+    const matchesSlotCount =
+      !rate.slotCount ||
+      (Number.isFinite(slotCount) && rate.slotCount === slotCount);
     if (
-      useIdealTraining ||
-      compareRiicOperatorUnlock(operator, rate) >= 0
+      matchesSlotCount &&
+      (useIdealTraining || compareRiicOperatorUnlock(operator, rate) >= 0)
     ) {
       appliedRate = rate;
     }
@@ -326,6 +333,7 @@ function createFallbackOperatorProfiles({
         trainingMode,
         idealTrainingRaritySelection,
         currentRosterById?.get(operator.charId) || operator,
+        scope,
       );
       const layer3Bonus = rate && !rate.skipR30
         ? getRiicStaticFallbackOperatorBonus({
@@ -487,6 +495,14 @@ function getRiicShamareIdleFallbackOperators({
   });
 
   return operators.length >= fallback.count ? operators : null;
+}
+
+function isRiicShamareIdleFillCandidate(candidate) {
+  const variantGroupId = String(candidate?.variantGroupId || "").trim();
+  return (
+    variantGroupId === "family-shamare:idle-pair" ||
+    variantGroupId === "family-butshu:shamare-idle"
+  );
 }
 
 function getTeamMemberProductionProfiles({
@@ -904,7 +920,7 @@ export function materializeRiicRoomCandidateSkeletons({
     { allowIncompleteFallback = false } = {},
   ) => {
     const fallback = getCandidateFallback(catalog, skeleton.candidate);
-    const fallbackOperators = isRiicShamareIdleCandidate(skeleton.candidate)
+    const fallbackOperators = isRiicShamareIdleFillCandidate(skeleton.candidate)
       ? getRiicShamareIdleFallbackOperators({
           fallback,
           idleFillOperators,

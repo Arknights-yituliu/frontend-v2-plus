@@ -175,7 +175,9 @@ function withCandidateSourceFile(candidate, sourceFile) {
 }
 
 function getRateSignature(rate) {
-  return `${Number(rate?.elite || 0)}:${Number(rate?.level || 1)}`;
+  return `${Number(rate?.elite || 0)}:${Number(rate?.level || 1)}:${Number(
+    rate?.slotCount || 0,
+  )}`;
 }
 
 function mergeFallbackOperators(genericFallback, productFallback) {
@@ -200,6 +202,9 @@ function mergeFallbackOperators(genericFallback, productFallback) {
             : {}),
           ...(Number(rate?.level || 1) > 1
             ? { level: Number(rate.level) }
+            : {}),
+          ...(Number(rate?.slotCount || 0) > 0
+            ? { slotCount: Number(rate.slotCount) }
             : {}),
           percent,
           ...(rate?.skipR30 === true ? { skipR30: true } : {}),

@@ -563,6 +563,39 @@ assertClose(
   41.666667,
 );
 
+const vignaWithoutGlasgow = calculateRiicTrading(
+  facility(3),
+  [
+    operator("char_282_catap", 1, 55),
+    operator("char_185_frncat", 1, 55),
+    operator("char_1019_siege2", 2, 1),
+  ],
+);
+assert.equal(vignaWithoutGlasgow.ok, true);
+assertClose(vignaWithoutGlasgow.rate, 193);
+
+const vignaWithGlasgow = calculateRiicTrading(
+  facility(3),
+  [
+    operator("char_282_catap", 1, 55),
+    operator("char_1019_siege2", 2, 1),
+    operator("char_112_siege", 2, 1),
+  ],
+);
+assert.equal(vignaWithGlasgow.ok, true);
+assertClose(vignaWithGlasgow.rate, 173);
+
+const degenbrecherWithOrderLimitOperators = calculateRiicTrading(
+  facility(3),
+  [
+    operator("char_4116_blkkgt", 2, 1),
+    operator("char_208_melan", 1, 55),
+    operator("char_109_fmout", 1, 55),
+  ],
+);
+assert.equal(degenbrecherWithOrderLimitOperators.ok, true);
+assertClose(degenbrecherWithOrderLimitOperators.rate, 178);
+
 const unresolvedDeep = calculateRiicTrading(
   facility(2),
   [
@@ -586,7 +619,7 @@ assert.deepEqual(unresolvedDeep, {
 const unsupported = calculateRiicTrading(
   facility(3),
   [
-    operator("char_1019_siege2", 2, 1),
+    operator("char_1033_swire2", 2, 1),
     operator("char_502_nblade", 0, 30),
     operator("char_123_fang", 1, 1),
   ],
@@ -607,7 +640,7 @@ assert.deepEqual(unsupported, {
 const unsupportedOrundum = calculateRiicTrading(
   facility(3, "orundum"),
   [
-    operator("char_1019_siege2", 2, 1),
+    operator("char_1033_swire2", 2, 1),
     operator("char_502_nblade", 0, 30),
     operator("char_123_fang", 1, 1),
   ],

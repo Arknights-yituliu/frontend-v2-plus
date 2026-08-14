@@ -603,6 +603,29 @@
       "fillPriority": -1
     },
     {
+      "name": "吉星",
+      "rates": [
+        {
+          "percent": 10,
+          "slotCount": 2
+        },
+        {
+          "percent": 20,
+          "slotCount": 3
+        },
+        {
+          "elite": 2,
+          "percent": 20,
+          "slotCount": 2
+        },
+        {
+          "elite": 2,
+          "percent": 40,
+          "slotCount": 3
+        }
+      ]
+    },
+    {
       "name": "齐尔查克",
       "rates": [
         {

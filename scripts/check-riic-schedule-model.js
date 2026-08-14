@@ -90,6 +90,43 @@ const facilityCases = [
       { stationLevel: 1, slotCount: 1 },
     ],
   },
+  {
+    input: { layoutId: "342", cardKey: "342" },
+    roomKey: "lmd-trading",
+    expected: [
+      { stationLevel: 3, slotCount: 3 },
+      { stationLevel: 3, slotCount: 3 },
+      { stationLevel: 1, slotCount: 1 },
+    ],
+  },
+  {
+    input: { layoutId: "342", cardKey: "342" },
+    roomKey: "gold-manufacture",
+    expected: [
+      { stationLevel: 3, slotCount: 3 },
+      { stationLevel: 3, slotCount: 3 },
+      { stationLevel: 2, slotCount: 2 },
+      { stationLevel: 2, slotCount: 2 },
+    ],
+  },
+  {
+    input: { layoutId: "333", cardKey: "333" },
+    roomKey: "lmd-trading",
+    expected: [
+      { stationLevel: 3, slotCount: 3 },
+      { stationLevel: 3, slotCount: 3 },
+      { stationLevel: 3, slotCount: 3 },
+    ],
+  },
+  {
+    input: { layoutId: "333", cardKey: "333" },
+    roomKey: "gold-manufacture",
+    expected: [
+      { stationLevel: 3, slotCount: 3 },
+      { stationLevel: 3, slotCount: 3 },
+      { stationLevel: 3, slotCount: 3 },
+    ],
+  },
 ];
 
 for (const { input, roomKey, expected } of facilityCases) {
@@ -137,11 +174,6 @@ assert.deepEqual(
   }),
   [{ stationLevel: 1, slotCount: 2 }],
 );
-assert.equal(
-  getRiicFacilityProfile({ layoutId: "342", cardKey: "342" }),
-  null,
-);
-
 const trainingPreferenceCatalog = {
   scope: {
     roomType: "hire",
@@ -657,7 +689,7 @@ const unsupportedP01TradePreview = {
           facility: "trading",
           product: "lmd",
           operators: [
-            { charId: "char_1019_siege2" },
+            { charId: "char_1033_swire2" },
             { charId: "char_502_nblade" },
             { charId: "char_123_fang" },
           ],
@@ -669,7 +701,7 @@ const unsupportedP01TradePreview = {
 const unsupportedP01TradeSettlement = summarizeRiicActualSchedule({
   preview: unsupportedP01TradePreview,
   tradingOperators: [
-    { charId: "char_1019_siege2", elite: 2, level: 1 },
+    { charId: "char_1033_swire2", elite: 2, level: 1 },
     ...normalTradingOperators.slice(0, 2),
   ],
 });

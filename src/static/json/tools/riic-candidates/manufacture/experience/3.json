@@ -66,6 +66,28 @@
       "efficiency": 76,
       "sortScore": 0,
       "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-experience-redcloud-christine-winegod-l3",
+      "variantGroupId": "family-redcloud-christine-winegod",
+      "name": "红云 + Miss.Christine + 酒神",
+      "members": [
+        {
+          "name": "红云",
+          "elite": 1
+        },
+        {
+          "name": "Miss.Christine",
+          "elite": 2
+        },
+        {
+          "name": "酒神",
+          "elite": 2
+        }
+      ],
+      "efficiency": 101,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
     }
   ]
 }

@@ -791,9 +791,9 @@
       "calculationStatus": "estimated"
     },
     {
-      "id": "manual-trading-lmd-butshu-core-α-shamare-l3",
-      "variantGroupId": "family-butshu:shamare-plain",
-      "name": "但书 α + 巫恋 + 1位补位",
+      "id": "manual-trading-lmd-butshu-core-α-shamare-idle-l3",
+      "variantGroupId": "family-butshu:shamare-idle",
+      "name": "但书 α + 巫恋 + 1位闲人补位",
       "members": [
         {
           "name": "但书",
@@ -1022,9 +1022,9 @@
       "calculationStatus": "estimated"
     },
     {
-      "id": "manual-trading-lmd-butshu-core-β-shamare-l3",
-      "variantGroupId": "family-butshu:shamare-plain",
-      "name": "但书 β + 巫恋 + 1位补位",
+      "id": "manual-trading-lmd-butshu-core-β-shamare-idle-l3",
+      "variantGroupId": "family-butshu:shamare-idle",
+      "name": "但书 β + 巫恋 + 1位闲人补位",
       "members": [
         {
           "name": "但书",
