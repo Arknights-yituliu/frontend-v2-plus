@@ -27,7 +27,19 @@ function comparePlans(left, right) {
     return right.rankingValue - left.rankingValue;
   }
 
+  const upgradeRequirementDifference =
+    Number(left.unmetUpgradeRequirementCount || 0) -
+    Number(right.unmetUpgradeRequirementCount || 0);
+  if (upgradeRequirementDifference !== 0) {
+    return upgradeRequirementDifference;
+  }
+
   return left.key.localeCompare(right.key, "en");
+}
+
+function pruneNextBeamPlans(nextPlans, beamLimit) {
+  const sortedPlans = [...nextPlans].sort(comparePlans);
+  return sortedPlans.slice(0, beamLimit);
 }
 
 function createNextPlan(
@@ -59,12 +71,17 @@ function createNextPlan(
   const baseRankingValue =
     Number(plan.baseRankingValue ?? plan.rankingValue ?? 0) +
     Number(option.baseRankingValue ?? option.rankingValue ?? 0);
-  const nextPlan = {
-    key: plan.key
+  const unmetUpgradeRequirementCount =
+    Number(plan.unmetUpgradeRequirementCount || 0) +
+    Number(option.unmetUpgradeRequirementCount || 0);
+  const planKey = plan.key
       ? `${plan.key}>>${cohort.key}:${selectionKey}:${option.key}`
-      : `${cohort.key}:${selectionKey}:${option.key}`,
+      : `${cohort.key}:${selectionKey}:${option.key}`;
+  const nextPlan = {
+    key: planKey,
     baseRankingValue,
     rankingValue: baseRankingValue,
+    unmetUpgradeRequirementCount,
     claimedOperatorIds: [...claimedOperatorIds].sort((left, right) =>
       left.localeCompare(right, "en"),
     ),
@@ -72,7 +89,15 @@ function createNextPlan(
       (left, right) => left - right,
     ),
     selectedCandidateKeysByCohort,
-    selections: [...plan.selections, { slot: cohort, option }],
+    selections: [
+      ...plan.selections,
+      {
+        slot: cohort,
+        option,
+        parentPlanKey: plan.key,
+        planKey,
+      },
+    ],
   };
 
   const evaluatedRankingValue = Number(evaluatePlan?.(nextPlan));
@@ -95,6 +120,9 @@ export function planRiicAutomaticRoomSelections({
   beamLimit = DEFAULT_BEAM_LIMIT,
   resolveTeamOptions,
   evaluatePlan,
+  collectDebug = false,
+  onOptionsResolved,
+  onOptionEvaluated,
 } = {}) {
   const normalizedBeamLimit = normalizePositiveInteger(
     beamLimit,
@@ -114,11 +142,13 @@ export function planRiicAutomaticRoomSelections({
     0,
   );
   const completedPlans = [];
+  const planningRounds = [];
   let beam = [
     {
       key: "",
       baseRankingValue: 0,
       rankingValue: 0,
+      unmetUpgradeRequirementCount: 0,
       claimedOperatorIds: normalizeOperatorIds(initiallyClaimedOperatorIds),
       fiammettaTargetStateIndexes: [],
       selectedCandidateKeysByCohort: {},
@@ -153,31 +183,67 @@ export function planRiicAutomaticRoomSelections({
           }) ||
           cohort.options ||
           [];
+        onOptionsResolved?.({
+          roundIndex,
+          parentPlanKey: plan.key,
+          parentRankingValue: Number(plan.rankingValue || 0),
+          parentBaseRankingValue: Number(plan.baseRankingValue || 0),
+          cohort,
+          selectionKey,
+          options,
+        });
 
         for (const option of options) {
-          if (
-            (selectedCandidateKeys.includes(option.candidateKey) &&
-              option.allowDuplicateCandidateKey !== true) ||
-            option.claimedOperatorIds.some((operatorId) =>
-              claimedOperatorIds.has(operatorId),
-            ) ||
-            (option.fiammettaTargetStateIndexes || []).some((stateIndex) =>
-              plan.fiammettaTargetStateIndexes.includes(stateIndex),
-            )
-          ) {
+          const duplicateCandidateKey =
+            selectedCandidateKeys.includes(option.candidateKey) &&
+            option.allowDuplicateCandidateKey !== true;
+          const claimedOperatorId = option.claimedOperatorIds.find(
+            (operatorId) => claimedOperatorIds.has(operatorId),
+          );
+          const fiammettaStateIndex = (
+            option.fiammettaTargetStateIndexes || []
+          ).find((stateIndex) =>
+            plan.fiammettaTargetStateIndexes.includes(stateIndex),
+          );
+
+          if (duplicateCandidateKey || claimedOperatorId || fiammettaStateIndex !== undefined) {
+            onOptionEvaluated?.({
+              roundIndex,
+              parentPlanKey: plan.key,
+              cohort,
+              selectionKey,
+              option,
+              status: "rejected",
+              reason: duplicateCandidateKey
+                ? "duplicateCandidate"
+                : claimedOperatorId
+                  ? "claimedOperator"
+                  : "fiammettaState",
+              claimedOperatorId: claimedOperatorId || "",
+              fiammettaStateIndex:
+                fiammettaStateIndex === undefined ? null : fiammettaStateIndex,
+            });
             continue;
           }
 
           canExpandPlan = true;
-          nextPlans.push(
-            createNextPlan(
-              plan,
-              cohort,
-              selectionKey,
-              option,
-              evaluatePlan,
-            ),
+          const nextPlan = createNextPlan(
+            plan,
+            cohort,
+            selectionKey,
+            option,
+            evaluatePlan,
           );
+          nextPlans.push(nextPlan);
+          onOptionEvaluated?.({
+            roundIndex,
+            parentPlanKey: plan.key,
+            cohort,
+            selectionKey,
+            option,
+            status: "generated",
+            planKey: nextPlan.key,
+          });
         }
       }
 
@@ -190,12 +256,36 @@ export function planRiicAutomaticRoomSelections({
       break;
     }
 
-    beam = nextPlans.sort(comparePlans).slice(0, normalizedBeamLimit);
+    const rankedNextPlans = [...nextPlans].sort(comparePlans);
+    beam = pruneNextBeamPlans(rankedNextPlans, normalizedBeamLimit);
+    if (collectDebug) {
+      const retainedPlanKeys = new Set(beam.map((plan) => plan.key));
+      planningRounds.push({
+        roundIndex,
+        generatedPlanCount: nextPlans.length,
+        retainedPlanKeys: [...retainedPlanKeys],
+        plansByKey: Object.fromEntries(
+          rankedNextPlans.map((plan, index) => [
+            plan.key,
+            {
+              rank: index + 1,
+              rankingValue: Number(plan.rankingValue || 0),
+              baseRankingValue: Number(plan.baseRankingValue || 0),
+              retained: retainedPlanKeys.has(plan.key),
+            },
+          ]),
+        ),
+      });
+    }
   }
 
   const bestPlan = [...completedPlans, ...beam].sort(comparePlans)[0] || null;
   return {
     bestPlan,
-    unavailableGroupIds: [],
+    debug: collectDebug
+      ? {
+          planningRounds,
+        }
+      : null,
   };
 }

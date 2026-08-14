@@ -20,12 +20,16 @@ import RiicScheduleExportActions from "/src/components/tools/RiicScheduleExportA
 import RiicScheduleExportSettings from "/src/components/tools/RiicScheduleExportSettings.vue";
 import RiicFiammettaRecoverySetting from "/src/components/tools/RiicFiammettaRecoverySetting.vue";
 import RiicScheduleFiammettaSettings from "/src/components/tools/RiicScheduleFiammettaSettings.vue";
+import RiicScheduleResourceSummary from "/src/components/tools/RiicScheduleResourceSummary.vue";
 import RiicLayoutChoicePanel from "/src/components/tools/RiicLayoutChoicePanel.vue";
 import RiicSchedulePreview from "/src/components/tools/RiicSchedulePreview.vue";
 import RiicScheduleRoomEditorPanel from "/src/components/tools/RiicScheduleRoomEditorPanel.vue";
 import RiicRoomGroupStaffingPanel from "/src/components/tools/RiicRoomGroupStaffingPanel.vue";
 import RiicScheduleSettingsPanel from "/src/components/tools/RiicScheduleSettingsPanel.vue";
 import { cMessage } from "/src/utils/message.js";
+import battleRecordImage from "/src/assets/images/riic-schedule-preview/battle-record.png";
+import lmdImage from "/src/assets/images/riic-schedule-preview/lmd.png";
+import orundumImage from "/src/assets/images/riic-schedule-preview/orundum.png";
 import {
   OPERATOR_SOURCE_KEYS,
   RIIC_MAX_CUSTOM_OPERATOR_SOURCES,
@@ -155,11 +159,11 @@ const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
   "riic_schedule_generator_to_legacy_editor_v1";
 const RIIC_SCHEDULE_DRAFT_VERSION = 25;
 const ROOM_STAFFING_CANDIDATE_PAGE_SIZE = 24;
-const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "9";
+const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "10";
 const RIIC_AUTOMATIC_SEARCH_CONFIGS = Object.freeze({
   fast: {
     selectionBeamLimit: 8,
-    fallbackPlanLimit: 4,
+    fallbackPlanLimit: 12,
   },
   deep: {
     selectionBeamLimit: 32,
@@ -235,7 +239,7 @@ function isRiicControlCenterRoomEffect(effect) {
   const scope = String(target?.scope || "").trim();
   return Boolean(
     ["allRooms", "operators"].includes(scope) &&
-      ["trading", "manufacture", "hire"].includes(
+      ["trading", "manufacture", "meeting", "hire"].includes(
         String(target?.roomType || "").trim(),
       ) &&
       (scope !== "operators" ||
@@ -268,6 +272,7 @@ function formatRiicControlCenterRoomEffect(effect) {
     {
       trading: "贸易站",
       manufacture: "制造站",
+      meeting: "会客室",
       hire: "办公室",
     }[String(effect?.target?.roomType || "").trim()] || "";
   const bonusPercent = Number(effect?.bonusPercent);
@@ -300,6 +305,7 @@ const idealTrainingRaritySelection = ref(
   normalizeRiicIdealTrainingRaritySelection(),
 );
 const showCandidateDebugValues = computed(() => route.query.mode === "dev");
+const isOutputPreviewMode = computed(() => route.query.mode === "output");
 const hasSavedWizardState = ref(false);
 const storageReady = ref(false);
 const exportingImage = ref(false);
@@ -317,6 +323,26 @@ const automaticGenerationNoticeAvatarLoop = computed(() => [
   ...automaticGenerationNoticeOperators.value,
   ...automaticGenerationNoticeOperators.value,
 ]);
+const scheduleGenerationLoading = computed(
+  () =>
+    loadingOwnedOperators.value ||
+    operatorSourceSwitching.value ||
+    autoGeneratingSchedule.value,
+);
+const scheduleGenerationLoadingTitle = computed(() =>
+  autoGeneratingSchedule.value ? "正在后台排班" : "正在加载干员数据",
+);
+const scheduleGenerationLoadingPhase = computed(() => {
+  if (autoGeneratingSchedule.value) {
+    return automaticGenerationPhase.value || "正在计算候选与补位";
+  }
+
+  if (operatorSourceSwitching.value) {
+    return "正在切换当前数据源";
+  }
+
+  return "正在读取当前数据源";
+});
 const riicAutomaticGenerationDebugState = ref(null);
 const deepScheduleConfirmationOpen = ref(false);
 let automaticGenerationAbortController = null;
@@ -341,10 +367,7 @@ const fiammettaRecoverySettings = ref({
 });
 const scheduleExecutionSettings = reactive({
   shifts: [],
-  droneTarget: "",
-  droneTargetPinned: false,
-  droneTargetDisabled: false,
-  droneOrder: "pre",
+  orundumCraftMaterial: "orirock",
   exportInfo: {
     title: "",
     author: "",
@@ -465,6 +488,12 @@ function createDefaultScheduleShifts(
         target: "",
         order: "pre",
       },
+      drone: {
+        target: "",
+        pinned: false,
+        disabled: false,
+        order: "pre",
+      },
     }));
   }
 
@@ -479,9 +508,9 @@ function createDefaultScheduleShifts(
       { name: "B班", time: "09:00" },
     ],
     threeTimes: [
-      { name: "B班", time: "09:00" },
-      { name: "C班", time: "15:00" },
-      { name: "A班", time: "21:00" },
+      { name: "A班", time: "09:00" },
+      { name: "B班", time: "15:00" },
+      { name: "C班", time: "21:00" },
     ],
   }[shiftMode] || [];
 
@@ -495,6 +524,12 @@ function createDefaultScheduleShifts(
       target: "",
       order: "pre",
     },
+    drone: {
+      target: "",
+      pinned: false,
+      disabled: false,
+      order: "pre",
+    },
   }));
 }
 
@@ -506,11 +541,40 @@ function normalizeScheduleExportInfo(value) {
   };
 }
 
+function normalizeOrundumCraftMaterial(value) {
+  return value === "device" ? "device" : "orirock";
+}
+
 function normalizeScheduleFiammettaSettings(value) {
   return {
     enable: value?.enable === true,
     target: String(value?.target || "").trim(),
     order: value?.order === "post" ? "post" : "pre",
+  };
+}
+
+function normalizeScheduleDroneSettings(value, fallback = {}) {
+  const source = value && typeof value === "object" ? value : {};
+  const fallbackValue =
+    fallback && typeof fallback === "object" ? fallback : {};
+  const disabled = Object.hasOwn(source, "disabled")
+    ? source.disabled === true
+    : fallbackValue.disabled === true;
+  const target = String(
+    Object.hasOwn(source, "target") ? source.target : fallbackValue.target || "",
+  ).trim();
+
+  return {
+    target: disabled ? "" : target,
+    pinned: Object.hasOwn(source, "pinned")
+      ? source.pinned === true
+      : fallbackValue.pinned === true,
+    disabled,
+    order:
+      (Object.hasOwn(source, "order") ? source.order : fallbackValue.order) ===
+      "post"
+        ? "post"
+        : "pre",
   };
 }
 
@@ -533,10 +597,7 @@ function createEmptyScheduleExecutionSettings(
 ) {
   return {
     shifts: createDefaultScheduleShifts(shiftMode, rotationMode),
-    droneTarget: "",
-    droneTargetPinned: false,
-    droneTargetDisabled: false,
-    droneOrder: "pre",
+    orundumCraftMaterial: "orirock",
     exportInfo: normalizeScheduleExportInfo(),
   };
 }
@@ -569,9 +630,12 @@ function normalizeScheduleExecutionSettings(
   const legacyTimes = modeMatches && Array.isArray(value?.changeTimes)
     ? value.changeTimes
     : [];
-  const droneTarget = String(value?.droneTarget || "").trim();
-  const droneTargetDisabled = value?.droneTargetDisabled === true;
-  const droneOrder = value?.droneOrder === "post" ? "post" : "pre";
+  const legacyDrone = normalizeScheduleDroneSettings({
+    target: value?.droneTarget,
+    pinned: value?.droneTargetPinned,
+    disabled: value?.droneTargetDisabled,
+    order: value?.droneOrder,
+  });
 
   return {
     shifts: emptySettings.shifts.map((defaultShift, index) => {
@@ -592,12 +656,12 @@ function normalizeScheduleExecutionSettings(
         fiammetta: normalizeScheduleFiammettaSettings(
           sourceShift?.fiammetta,
         ),
+        drone: normalizeScheduleDroneSettings(sourceShift?.drone, legacyDrone),
       };
     }),
-    droneTarget: droneTargetDisabled ? "" : droneTarget,
-    droneTargetPinned: value?.droneTargetPinned === true,
-    droneTargetDisabled,
-    droneOrder,
+    orundumCraftMaterial: normalizeOrundumCraftMaterial(
+      value?.orundumCraftMaterial,
+    ),
     exportInfo: normalizeScheduleExportInfo(value?.exportInfo),
   };
 }
@@ -615,11 +679,11 @@ function createScheduleExecutionSettingsSnapshot() {
       description: shift.description,
       descriptionPost: shift.descriptionPost,
       fiammetta: normalizeScheduleFiammettaSettings(shift.fiammetta),
+      drone: normalizeScheduleDroneSettings(shift.drone),
     })),
-    droneTarget: scheduleExecutionSettings.droneTarget,
-    droneTargetPinned: scheduleExecutionSettings.droneTargetPinned,
-    droneTargetDisabled: scheduleExecutionSettings.droneTargetDisabled,
-    droneOrder: scheduleExecutionSettings.droneOrder,
+    orundumCraftMaterial: normalizeOrundumCraftMaterial(
+      scheduleExecutionSettings.orundumCraftMaterial,
+    ),
     exportInfo: normalizeScheduleExportInfo(scheduleExecutionSettings.exportInfo),
   };
 }
@@ -630,12 +694,8 @@ function resetScheduleExecutionSettings() {
     twoShiftRotationMode.value,
   );
   scheduleExecutionSettings.shifts = nextSettings.shifts;
-  scheduleExecutionSettings.droneTarget = nextSettings.droneTarget;
-  scheduleExecutionSettings.droneTargetPinned =
-    nextSettings.droneTargetPinned;
-  scheduleExecutionSettings.droneTargetDisabled =
-    nextSettings.droneTargetDisabled;
-  scheduleExecutionSettings.droneOrder = nextSettings.droneOrder;
+  scheduleExecutionSettings.orundumCraftMaterial =
+    nextSettings.orundumCraftMaterial;
   scheduleExecutionSettings.exportInfo = nextSettings.exportInfo;
   selectedSchedulePreviewRoomKey.value = "";
   scheduleRoomOperatorOverrides.value = {};
@@ -1295,10 +1355,7 @@ const fiammettaRecoveryStatus = computed(() => {
       text: `自动选择：${targetName}`,
     };
   }
-  return {
-    tone: "success",
-    text: "已匹配，将参与自动组装",
-  };
+  return null;
 });
 const controlCenterAutomaticRoleState = computed(() =>
   buildRiicControlCenterAutomaticRoleState({
@@ -2638,6 +2695,7 @@ function createRiicAutomaticScheduleWorkerInput(searchConfig) {
     fiammettaRecovery,
     idleFillOperators: riicIdleFillOperators.value,
     fiammettaControlUsage: controlCenterFiammettaTargetUsage.value,
+    collectPlanningDebug: showCandidateDebugValues.value,
   });
 }
 
@@ -2744,19 +2802,18 @@ async function generateAutomaticSchedule({
       );
     }
 
+    const fallbackQueueStates = createAutomaticRoomGroupFallbackQueueStates({
+      selections,
+      fallbackOperatorIdBySlotKeyByGroup,
+    });
+
     selectedRoomGroupTeamCandidateKeys.value = selections;
-    roomGroupFallbackQueueStates.value = {};
+    roomGroupFallbackQueueStates.value = fallbackQueueStates;
     resetScheduleExecutionSettings();
     activeScheduleRoomGroupKey.value =
       controlScheduleRoomGroup.value?.id ||
       candidateEnabledScheduleRoomGroups.value[0]?.id ||
       "";
-    await nextTick();
-    roomGroupFallbackQueueStates.value =
-      createAutomaticRoomGroupFallbackQueueStates({
-        selections,
-        fallbackOperatorIdBySlotKeyByGroup,
-    });
     await nextTick();
     syncFiammettaRecoveryUsage(
       fiammettaTargetName.value,
@@ -2972,6 +3029,22 @@ const schedulePreviewShifts = computed(() =>
   scheduleExecutionSettingsComplete.value
     ? scheduleExecutionSettings.shifts.map((shift) => ({ ...shift }))
     : [],
+);
+const orderedSchedulePreviewStateIndexes = computed(() =>
+  (riicSchedulePreview.value?.states || [])
+    .map((_, index) => index)
+    .sort((left, right) =>
+      String(schedulePreviewShifts.value[left]?.name || "").localeCompare(
+        String(schedulePreviewShifts.value[right]?.name || ""),
+        "zh-CN",
+      ),
+    ),
+);
+const activeSchedulePreviewDrone = computed(() =>
+  normalizeScheduleDroneSettings(
+    scheduleExecutionSettings.shifts[activeSchedulePreviewStateIndex.value]
+      ?.drone,
+  ),
 );
 function getRoomGroupCandidateEntriesForKeys(
   group,
@@ -4056,6 +4129,7 @@ const schedulePreviewStaticRooms = computed(() => {
     )
     .flatMap((group) =>
       Array.from({ length: group.count }, (_, index) => {
+        const station = group.stations?.[index] || null;
         const expectedSlots =
           group.facility === "dormitory"
             ? 5
@@ -4082,6 +4156,7 @@ const schedulePreviewStaticRooms = computed(() => {
               ? `${group.facilityLabel} ${index + 1}`
               : group.facilityLabel,
           facility: group.facility,
+          stationLevel: station?.stationLevel || null,
           expectedSlots,
           operatorsByStateIndex,
         };
@@ -4193,10 +4268,100 @@ const riicActualScheduleMetrics = computed(() => {
   return scheduleSettlementReady && riicSchedulePreview.value
     ? summarizeRiicActualSchedule({
         preview: riicSchedulePreview.value,
-        droneTargetKey: scheduleExecutionSettings.droneTarget,
+        droneTargetKeysByState: schedulePreviewShifts.value.map(
+          (shift) => shift?.drone?.target || "",
+        ),
+        tradingOperators: riicMatchingRoster.value || [],
+        orundumCraftMaterial:
+          scheduleExecutionSettings.orundumCraftMaterial,
       })
     : null;
 });
+const outputPreviewTitle = computed(
+  () =>
+    scheduleExecutionSettings.exportInfo.title ||
+    getDefaultGeneratedScheduleTitle(),
+);
+const outputPreviewScheduleMeta = computed(() => {
+  const layoutFacts = activeLayoutFacilityCounts.value;
+  const manufactureStationCount = (layoutFacts?.facilities || []).filter(
+    (facility) => facility?.facilityType === "manufacture",
+  ).length;
+  const layoutSummary = confirmedLayoutPlan.value
+    ? [
+        `${layoutFacts?.tradingStationCount || 0}贸易站`,
+        `${manufactureStationCount}制造站`,
+        `${layoutFacts?.powerPlantCount || 0}发电站`,
+      ].join(" ")
+    : "";
+  const shiftMode =
+    {
+      once: "一天一换",
+      twice: "一天两换",
+      threeTimes: "一天三换",
+    }[confirmedLayoutPlan.value?.shiftMode] || "";
+
+  return [layoutSummary, shiftMode]
+    .filter(Boolean)
+    .join(" · ");
+});
+const outputPreviewYieldItems = computed(() => {
+  const resources = new Map(
+    (riicActualScheduleMetrics.value?.yield?.resources || []).map(
+      (item) => [String(item?.resource || ""), item],
+    ),
+  );
+
+  return [
+    { resource: "lmd", label: "龙门币", image: lmdImage },
+    { resource: "exp", label: "经验书", image: battleRecordImage },
+    { resource: "orundum", label: "搓玉", image: orundumImage },
+  ]
+    .map(({ resource, label, image }) => {
+      const item = resources.get(resource);
+      const value = Number(item?.outputPerDay);
+      return {
+        resource,
+        label,
+        image,
+        value,
+        isCalculated:
+          item?.isCalculated === true && Number.isFinite(value) && value !== 0,
+      };
+    })
+    .filter((item) => item.isCalculated);
+});
+const outputPreviewGeneratedDate = computed(() => {
+  const now = new Date();
+  const pad = (value) => String(value).padStart(2, "0");
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+});
+const outputPreviewHeaderTheme = computed(() => {
+  const yields = new Map(
+    outputPreviewYieldItems.value.map((item) => [item.resource, item.value]),
+  );
+  const lmd = Number(yields.get("lmd") || 0);
+  const exp = Number(yields.get("exp") || 0);
+  const orundum = Number(yields.get("orundum") || 0);
+
+  if (orundum > 0) {
+    return { tone: "orundum", images: [orundumImage] };
+  }
+  if (exp > lmd * 1.5) {
+    return { tone: "experience", images: [battleRecordImage] };
+  }
+  if (exp > lmd * 0.7) {
+    return { tone: "balanced", images: [battleRecordImage, lmdImage] };
+  }
+  return { tone: "lmd", images: [lmdImage] };
+});
+
+function formatOutputPreviewYield(value) {
+  return new Intl.NumberFormat("zh-CN", {
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 const generatedMaaExportPreview = computed(() => {
   if (
     !Array.isArray(riicSchedulePreview.value?.states) ||
@@ -4210,8 +4375,6 @@ const generatedMaaExportPreview = computed(() => {
     return buildRiicMaaScheduleFromPreview({
       preview: riicSchedulePreview.value,
       shifts: schedulePreviewShifts.value,
-      droneTarget: scheduleExecutionSettings.droneTarget,
-      droneOrder: scheduleExecutionSettings.droneOrder,
       shiftMode: confirmedLayoutPlan.value?.shiftMode,
       title:
         scheduleExecutionSettings.exportInfo.title ||
@@ -4229,7 +4392,29 @@ const generatedMaaExportPreview = computed(() => {
   }
 });
 function getDefaultGeneratedScheduleTitle() {
-  return `一图流 ${confirmedLayoutPlan.value?.cardKey || "基建"} 排班表`;
+  const now = new Date();
+  const pad = (value) => String(value).padStart(2, "0");
+  const date = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(
+    now.getDate(),
+  )}`;
+  const layout = confirmedLayoutPlan.value?.cardKey || "基建";
+  const shift = {
+    once: "一换",
+    twice: "两换",
+    threeTimes: "三换",
+  }[confirmedLayoutPlan.value?.shiftMode] || "排班";
+  const activeYituliuSource = customOperatorSources.value.find(
+    (source) =>
+      source.id === activeOperatorSource.value && source.type === "yituliu",
+  );
+  const sourceId = String(activeYituliuSource?.label || "").trim();
+
+  return [
+    "一图流排班表",
+    date,
+    `${layout}${shift}`,
+    ...(sourceId ? [sourceId] : []),
+  ].join("-");
 }
 const riicScheduleDuplicateOperatorChecks = computed(() => {
   const states = riicSchedulePreview.value?.states || [];
@@ -4413,38 +4598,56 @@ const riicYieldWorkflowCardState = computed(() => {
     : "pending";
 });
 const scheduleDroneTargetOptions = computed(() => {
+  return getScheduleDroneTargetOptionsForState(
+    activeSchedulePreviewStateIndex.value,
+  );
+});
+const scheduleDroneTargetOptionKeysByState = computed(() =>
+  (displayedRiicSchedulePreview.value?.states || [])
+    .map((_, stateIndex) =>
+      getScheduleDroneTargetOptionsForState(stateIndex)
+        .filter((option) => !option.disabled)
+        .map((option) => option.value)
+        .join("|"),
+    )
+    .join("||"),
+);
+
+function getScheduleDroneTargetOptionsForState(stateIndex) {
   const optionsByKey = new Map();
+  const activeState =
+    displayedRiicSchedulePreview.value?.states?.[
+      stateIndex
+    ];
 
-  for (const state of displayedRiicSchedulePreview.value?.states || []) {
-    for (const room of state.rooms || []) {
-      if (
-        !["trading", "manufacture", "power"].includes(room.facility) ||
-        optionsByKey.has(room.key)
-      ) {
-        continue;
-      }
-
-      const product =
-        ROOM_PRODUCT_OPTIONS[room.facility]?.find(
-          (option) => option.value === room.product,
-        )?.label || "";
-      const facilityLabel =
-        SCHEDULE_ROOM_GROUP_META[room.facility]?.facilityLabel || room.label;
-      const stationNumber = Math.max(Number(room.stationIndex || 0) + 1, 1);
-      optionsByKey.set(room.key, {
-        value: room.key,
-        label:
-          room.facility === "power"
-            ? `${facilityLabel}${stationNumber}`
-            : `${product}${facilityLabel}${stationNumber}`,
-        facility: room.facility,
-        disabled: room.facility === "power",
-      });
+  for (const room of activeState?.rooms || []) {
+    if (
+      !["trading", "manufacture", "power"].includes(room.facility) ||
+      optionsByKey.has(room.key)
+    ) {
+      continue;
     }
+
+    const product =
+      ROOM_PRODUCT_OPTIONS[room.facility]?.find(
+        (option) => option.value === room.product,
+      )?.label || "";
+    const facilityLabel =
+      SCHEDULE_ROOM_GROUP_META[room.facility]?.facilityLabel || room.label;
+    const stationNumber = Math.max(Number(room.stationIndex || 0) + 1, 1);
+    optionsByKey.set(room.key, {
+      value: room.key,
+      label:
+        room.facility === "power"
+          ? `${facilityLabel}${stationNumber}`
+          : `${product}${facilityLabel}${stationNumber}`,
+      facility: room.facility,
+      disabled: room.facility === "power",
+    });
   }
 
   return [...optionsByKey.values()];
-});
+}
 const activeSchedulePreviewRoom = computed(() => {
   const state =
     riicSchedulePreview.value?.states?.[activeSchedulePreviewStateIndex.value];
@@ -4611,39 +4814,65 @@ watch(
   [
     () => displayedRiicSchedulePreview.value?.key,
     () => displayedRiicSchedulePreview.value?.preferredDroneRoomKey,
+    scheduleDroneTargetOptionKeysByState,
     () =>
-      scheduleDroneTargetOptions.value
-        .filter((option) => !option.disabled)
-        .map((option) => option.value)
-        .join("|"),
-    () => scheduleExecutionSettings.droneTargetDisabled,
+      scheduleExecutionSettings.shifts.map(
+        (shift) => JSON.stringify(shift?.drone || {}),
+      ),
+    () => scheduleExecutionSettings.shifts.length,
   ],
   () => {
-    if (scheduleExecutionSettings.droneTargetDisabled) {
-      scheduleExecutionSettings.droneTarget = "";
-      scheduleExecutionSettings.droneTargetPinned = false;
-      return;
-    }
-
-    const availableTargets = new Set(
-      scheduleDroneTargetOptions.value
-        .filter((option) => !option.disabled)
-        .map((option) => option.value),
-    );
-
-    if (
-      scheduleExecutionSettings.droneTargetPinned &&
-      availableTargets.has(scheduleExecutionSettings.droneTarget)
+    for (
+      let index = 0;
+      index < scheduleExecutionSettings.shifts.length;
+      index += 1
     ) {
-      return;
-    }
+      const shift = scheduleExecutionSettings.shifts[index];
+      const drone = normalizeScheduleDroneSettings(shift?.drone);
+      if (drone.disabled) {
+        if (drone.target || drone.pinned) {
+          updateSchedulePreviewShift({
+            index,
+            drone: {
+              ...drone,
+              target: "",
+              pinned: false,
+            },
+          });
+        }
+        continue;
+      }
 
-    scheduleExecutionSettings.droneTargetPinned = false;
-    scheduleExecutionSettings.droneTarget =
-      displayedRiicSchedulePreview.value?.preferredDroneRoomKey ||
-      scheduleDroneTargetOptions.value.find((option) => !option.disabled)
-        ?.value ||
-      "";
+      const availableTargetOptions = getScheduleDroneTargetOptionsForState(
+        index,
+      ).filter((option) => !option.disabled);
+      const availableTargets = new Set(
+        availableTargetOptions.map((option) => option.value),
+      );
+      if (drone.pinned && availableTargets.has(drone.target)) {
+        continue;
+      }
+
+      const preferredTarget = String(
+        displayedRiicSchedulePreview.value?.preferredDroneRoomKey || "",
+      ).trim();
+      const recommendedTarget = availableTargets.has(preferredTarget)
+        ? preferredTarget
+        : availableTargetOptions[0]?.value || "";
+      if (drone.target === recommendedTarget && !drone.pinned) {
+        continue;
+      }
+
+      updateSchedulePreviewShift({
+        index,
+        drone: {
+          ...drone,
+          target: recommendedTarget,
+          pinned: false,
+          disabled: false,
+        },
+      });
+    }
   },
   { immediate: true },
 );
@@ -5012,25 +5241,69 @@ function resetSchedulePreviewRoom() {
   scheduleRoomMaaSettingOverrides.value = nextMaaSettingOverrides;
 }
 
-function selectScheduleDroneTarget(value) {
+function selectScheduleDroneTarget(payload) {
+  const isPayloadObject = payload && typeof payload === "object";
+  const index = Number.isInteger(Number(payload?.index))
+    ? Number(payload.index)
+    : activeSchedulePreviewStateIndex.value;
+  const value = String(
+    isPayloadObject ? payload.target || "" : payload || "",
+  ).trim();
+
   if (
-    !scheduleDroneTargetOptions.value.some(
+    !getScheduleDroneTargetOptionsForState(index).some(
       (option) => option.value === value && !option.disabled,
     )
   ) {
     return;
   }
 
-  if (scheduleExecutionSettings.droneTarget === value) {
-    scheduleExecutionSettings.droneTarget = "";
-    scheduleExecutionSettings.droneTargetPinned = false;
-    scheduleExecutionSettings.droneTargetDisabled = true;
+  const drone = normalizeScheduleDroneSettings(
+    scheduleExecutionSettings.shifts[index]?.drone,
+  );
+  if (drone.target === value && !drone.disabled) {
+    updateSchedulePreviewShift({
+      index,
+      drone: {
+        ...drone,
+        target: "",
+        pinned: false,
+        disabled: true,
+      },
+    });
     return;
   }
 
-  scheduleExecutionSettings.droneTarget = value;
-  scheduleExecutionSettings.droneTargetPinned = true;
-  scheduleExecutionSettings.droneTargetDisabled = false;
+  updateSchedulePreviewShift({
+    index,
+    drone: {
+      ...drone,
+      target: value,
+      pinned: true,
+      disabled: false,
+    },
+  });
+}
+
+function updateScheduleDroneOrder({ index, order }) {
+  const normalizedIndex = Number(index);
+  if (
+    !Number.isInteger(normalizedIndex) ||
+    !scheduleExecutionSettings.shifts[normalizedIndex]
+  ) {
+    return;
+  }
+
+  const drone = normalizeScheduleDroneSettings(
+    scheduleExecutionSettings.shifts[normalizedIndex]?.drone,
+  );
+  updateSchedulePreviewShift({
+    index: normalizedIndex,
+    drone: {
+      ...drone,
+      order: order === "post" ? "post" : "pre",
+    },
+  });
 }
 
 function normalizeScheduleRoomOperatorClipboard(operators, expectedSlots) {
@@ -5140,6 +5413,9 @@ function updateSchedulePreviewShift({ index, ...patch }) {
       : {}),
     ...(patch.fiammetta && typeof patch.fiammetta === "object"
       ? { fiammetta: normalizeScheduleFiammettaSettings(patch.fiammetta) }
+      : {}),
+    ...(patch.drone && typeof patch.drone === "object"
+      ? { drone: normalizeScheduleDroneSettings(patch.drone) }
       : {}),
   });
 }
@@ -6042,10 +6318,7 @@ function createInitialWorkspaceFromCurrent() {
     roomGroupFallbackQueueStates: {},
     scheduleExecutionSettings: {
       shifts: [],
-      droneTarget: "",
-      droneTargetPinned: false,
-      droneTargetDisabled: false,
-      droneOrder: "pre",
+      orundumCraftMaterial: "orirock",
       exportInfo: normalizeScheduleExportInfo(),
     },
     scheduleRoomOperatorOverrides: {},
@@ -6168,12 +6441,8 @@ function applySavedWizardState(parsedDraft) {
     twoShiftRotationMode.value,
   );
   scheduleExecutionSettings.shifts = savedExecutionSettings.shifts;
-  scheduleExecutionSettings.droneTarget = savedExecutionSettings.droneTarget;
-  scheduleExecutionSettings.droneTargetPinned =
-    savedExecutionSettings.droneTargetPinned;
-  scheduleExecutionSettings.droneTargetDisabled =
-    savedExecutionSettings.droneTargetDisabled;
-  scheduleExecutionSettings.droneOrder = savedExecutionSettings.droneOrder;
+  scheduleExecutionSettings.orundumCraftMaterial =
+    savedExecutionSettings.orundumCraftMaterial;
   scheduleExecutionSettings.exportInfo = savedExecutionSettings.exportInfo;
   scheduleRoomOperatorOverrides.value =
     normalizeSavedScheduleRoomOperatorOverrides(
@@ -6697,14 +6966,11 @@ watch(
       scheduleExecutionSettings.shifts
         .map(
           (shift) =>
-            `${shift.name}|${shift.time}|${shift.description}|${shift.descriptionPost}|${JSON.stringify(shift.fiammetta || {})}`,
+            `${shift.name}|${shift.time}|${shift.description}|${shift.descriptionPost}|${JSON.stringify(shift.fiammetta || {})}|${JSON.stringify(shift.drone || {})}`,
         )
         .join("||"),
-    () => scheduleExecutionSettings.droneTarget,
-    () => scheduleExecutionSettings.droneTargetPinned,
-    () => scheduleExecutionSettings.droneTargetDisabled,
-    () => scheduleExecutionSettings.droneOrder,
     () => JSON.stringify(scheduleExecutionSettings.exportInfo),
+    () => scheduleExecutionSettings.orundumCraftMaterial,
     scheduleRoomOperatorOverrides,
     scheduleRoomProductOverrides,
     invalidatedScheduleRoomKeys,
@@ -6822,7 +7088,7 @@ onBeforeUnmount(() => {
         </div>
         <Transition name="schedule-generation-running-notice">
           <div
-            v-if="autoGeneratingSchedule"
+            v-if="scheduleGenerationLoading"
             class="schedule-generation-running-notice"
             role="status"
             aria-live="polite"
@@ -6853,10 +7119,8 @@ onBeforeUnmount(() => {
               ></v-progress-circular>
             </span>
             <div class="schedule-generation-running-copy">
-              <strong>正在后台排班</strong>
-              <span>{{
-                automaticGenerationPhase || "正在计算候选与补位"
-              }}</span>
+              <strong>{{ scheduleGenerationLoadingTitle }}</strong>
+              <span>{{ scheduleGenerationLoadingPhase }}</span>
             </div>
           </div>
         </Transition>
@@ -7131,51 +7395,239 @@ onBeforeUnmount(() => {
             v-if="displayedRiicSchedulePreview"
             class="assembled-schedule-content"
           >
-            <div class="schedule-preview-capture">
+            <div
+              v-if="isOutputPreviewMode && riicSchedulePreview"
+              class="schedule-output-document"
+            >
+              <header
+                class="schedule-output-document-header"
+                :class="`theme-${outputPreviewHeaderTheme.tone}`"
+              >
+                <div class="schedule-output-document-header-art" aria-hidden="true">
+                  <img
+                    v-for="image in outputPreviewHeaderTheme.images"
+                    :key="image"
+                    :src="image"
+                    alt=""
+                  />
+                </div>
+                <h3>{{ outputPreviewTitle }}</h3>
+                <p
+                  v-if="outputPreviewScheduleMeta"
+                  class="schedule-output-document-meta"
+                >
+                  {{ outputPreviewScheduleMeta }}
+                </p>
+                <div
+                  v-if="outputPreviewYieldItems.length"
+                  class="schedule-output-document-yield"
+                >
+                  <span>预计日产</span>
+                  <strong
+                    v-for="item in outputPreviewYieldItems"
+                    :key="item.resource"
+                  >
+                    <img
+                      :src="item.image"
+                      :alt="item.label"
+                      class="schedule-output-document-yield-icon"
+                    />
+                    {{ formatOutputPreviewYield(item.value) }}
+                  </strong>
+                </div>
+                <p
+                  v-if="scheduleExecutionSettings.exportInfo.description"
+                  class="schedule-output-document-description"
+                >
+                  {{ scheduleExecutionSettings.exportInfo.description }}
+                </p>
+              </header>
+              <RiicSchedulePreview
+                v-for="stateIndex in orderedSchedulePreviewStateIndexes"
+                :key="`output-preview-${riicSchedulePreview.key}-${stateIndex}`"
+                :preview="riicSchedulePreview"
+                :active-state-index="stateIndex"
+                :operator-table="operatorTableV2"
+                :shifts="schedulePreviewShifts"
+                :drone-target="
+                  schedulePreviewShifts[stateIndex]?.drone?.target || ''
+                "
+                :output-decorated="isOutputPreviewMode"
+                :output-theme="outputPreviewHeaderTheme.tone"
+                :show-room-efficiency="showCandidateDebugValues"
+                export-static
+              ></RiicSchedulePreview>
+                <footer class="schedule-output-document-footer">
+                  <div class="schedule-output-document-brand">
+                    <div class="schedule-output-document-brand-heading">
+                      <strong>明日方舟一图流-排班表自动生成器</strong>
+                      <p class="schedule-output-document-generated-at">
+                        生成于 {{ outputPreviewGeneratedDate }}
+                      </p>
+                    </div>
+                    <a
+                      href="https://ark.yituliu.cn/tools/scheduleV3"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      https://ark.yituliu.cn/tools/scheduleV3
+                    </a>
+                    <span>Bilibili：逻辑元LogicalByte</span>
+                  </div>
+                  <img
+                    src="/image/website/QR/riic-schedule-generator.png"
+                    alt="明日方舟一图流二维码"
+                    class="schedule-output-document-qr"
+                  />
+              </footer>
+            </div>
+            <div v-else class="schedule-preview-capture">
               <RiicSchedulePreview
                 :preview="displayedRiicSchedulePreview"
                 :placeholder="!riicSchedulePreview"
                 :active-state-index="activeSchedulePreviewStateIndex"
                 :operator-table="operatorTableV2"
                 :selected-room-key="selectedSchedulePreviewRoomKey"
+                :title="scheduleExecutionSettings.exportInfo.title"
+                :default-title="getDefaultGeneratedScheduleTitle()"
                 :shifts="schedulePreviewShifts"
-                :drone-target-options="scheduleDroneTargetOptions"
-                :drone-target="scheduleExecutionSettings.droneTarget"
-                :drone-order="scheduleExecutionSettings.droneOrder"
+                :drone-target="activeSchedulePreviewDrone.target"
+                :show-room-efficiency="showCandidateDebugValues"
                 @update:active-state-index="
                   activeSchedulePreviewStateIndex = $event
                 "
                 @update:shift="updateSchedulePreviewShift"
-                @update:drone-order="
-                  scheduleExecutionSettings.droneOrder =
-                    $event === 'post' ? 'post' : 'pre'
+                @update:title="
+                  updateScheduleExportInfo({
+                    ...scheduleExecutionSettings.exportInfo,
+                    title: $event,
+                  })
                 "
                 @edit-room="selectSchedulePreviewRoom"
                 @move-operator="moveSchedulePreviewOperator"
                 @select-drone-target="selectScheduleDroneTarget"
-              ></RiicSchedulePreview>
+              >
+                <template
+                  v-if="
+                    assembledScheduleCandidateState.status === 'ready' &&
+                    riicSchedulePreview &&
+                    hasFiammetta &&
+                    schedulePreviewShifts[activeSchedulePreviewStateIndex]
+                  "
+                  #schedule-auxiliary
+                >
+                  <RiicScheduleFiammettaSettings
+                    :fiammetta="
+                      schedulePreviewShifts[activeSchedulePreviewStateIndex]
+                        ?.fiammetta
+                    "
+                    :target-options="fiammettaTargetOptions"
+                    @update="
+                      updateSchedulePreviewShift({
+                        index: activeSchedulePreviewStateIndex,
+                        fiammetta: $event,
+                      })
+                    "
+                  ></RiicScheduleFiammettaSettings>
+                </template>
+              </RiicSchedulePreview>
             </div>
             <div
               v-if="riicSchedulePreview"
               ref="schedulePreviewExportCapturePanel"
-              class="schedule-preview-export-capture"
+              class="schedule-preview-export-capture schedule-output-document"
               data-riic-export-preview-capture
               aria-hidden="true"
             >
+              <header
+                class="schedule-output-document-header"
+                :class="`theme-${outputPreviewHeaderTheme.tone}`"
+              >
+                <div class="schedule-output-document-header-art" aria-hidden="true">
+                  <img
+                    v-for="image in outputPreviewHeaderTheme.images"
+                    :key="image"
+                    :src="image"
+                    alt=""
+                  />
+                </div>
+                <h3>{{ outputPreviewTitle }}</h3>
+                <p
+                  v-if="outputPreviewScheduleMeta"
+                  class="schedule-output-document-meta"
+                >
+                  {{ outputPreviewScheduleMeta }}
+                </p>
+                <div
+                  v-if="outputPreviewYieldItems.length"
+                  class="schedule-output-document-yield"
+                >
+                  <span>预计日产</span>
+                  <strong
+                    v-for="item in outputPreviewYieldItems"
+                    :key="item.resource"
+                  >
+                    <img
+                      :src="item.image"
+                      :alt="item.label"
+                      class="schedule-output-document-yield-icon"
+                    />
+                    {{ formatOutputPreviewYield(item.value) }}
+                  </strong>
+                </div>
+                <p
+                  v-if="scheduleExecutionSettings.exportInfo.description"
+                  class="schedule-output-document-description"
+                >
+                  {{ scheduleExecutionSettings.exportInfo.description }}
+                </p>
+              </header>
               <RiicSchedulePreview
-                v-for="(_, stateIndex) in riicSchedulePreview.states"
+                v-for="stateIndex in orderedSchedulePreviewStateIndexes"
                 :key="`export-${riicSchedulePreview.key}-${stateIndex}`"
                 :preview="riicSchedulePreview"
                 :active-state-index="stateIndex"
                 :operator-table="operatorTableV2"
                 :shifts="schedulePreviewShifts"
-                :drone-target="scheduleExecutionSettings.droneTarget"
+                :drone-target="
+                  schedulePreviewShifts[stateIndex]?.drone?.target || ''
+                "
+                output-decorated
+                :output-theme="outputPreviewHeaderTheme.tone"
+                :show-room-efficiency="showCandidateDebugValues"
                 export-static
               ></RiicSchedulePreview>
+              <footer class="schedule-output-document-footer">
+                <div class="schedule-output-document-brand">
+                  <div class="schedule-output-document-brand-heading">
+                    <strong>明日方舟一图流-排班表自动生成器</strong>
+                    <p class="schedule-output-document-generated-at">
+                      生成于 {{ outputPreviewGeneratedDate }}
+                    </p>
+                  </div>
+                  <a
+                    href="https://ark.yituliu.cn/tools/scheduleV3"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    https://ark.yituliu.cn/tools/scheduleV3
+                  </a>
+                  <span>Bilibili：逻辑元LogicalByte</span>
+                </div>
+                <img
+                  src="/image/website/QR/riic-schedule-generator.png"
+                  alt="明日方舟一图流二维码"
+                  class="schedule-output-document-qr"
+                />
+              </footer>
             </div>
             <div
               ref="roomEditorPanel"
-              v-if="riicSchedulePreview && activeSchedulePreviewRoom"
+              v-if="
+                !isOutputPreviewMode &&
+                riicSchedulePreview &&
+                activeSchedulePreviewRoom
+              "
             >
               <RiicScheduleRoomEditorPanel
                 :room="activeSchedulePreviewRoom"
@@ -7223,24 +7675,16 @@ onBeforeUnmount(() => {
           </p>
         </section>
 
-        <RiicScheduleFiammettaSettings
+        <RiicScheduleResourceSummary
           v-if="
             assembledScheduleCandidateState.status === 'ready' &&
-            riicSchedulePreview &&
-            hasFiammetta &&
-            schedulePreviewShifts[activeSchedulePreviewStateIndex]
+            riicActualScheduleMetrics?.yield
           "
-          :fiammetta="
-            schedulePreviewShifts[activeSchedulePreviewStateIndex]?.fiammetta
-          "
-          :target-options="fiammettaTargetOptions"
-          @update="
-            updateSchedulePreviewShift({
-              index: activeSchedulePreviewStateIndex,
-              fiammetta: $event,
-            })
-          "
-        ></RiicScheduleFiammettaSettings>
+          :yield="riicActualScheduleMetrics.yield"
+          :shifts="schedulePreviewShifts"
+          @select-drone-target="selectScheduleDroneTarget"
+          @update-drone-order="updateScheduleDroneOrder"
+        ></RiicScheduleResourceSummary>
 
         <RiicScheduleExportActions
           v-if="
@@ -7257,9 +7701,16 @@ onBeforeUnmount(() => {
           <template #before-image>
             <RiicScheduleExportSettings
               :export-info="scheduleExecutionSettings.exportInfo"
+              :orundum-craft-material="
+                scheduleExecutionSettings.orundumCraftMaterial
+              "
               :default-title="getDefaultGeneratedScheduleTitle()"
               :shifts="schedulePreviewShifts"
               @update:export-info="updateScheduleExportInfo"
+              @update:orundum-craft-material="
+                scheduleExecutionSettings.orundumCraftMaterial =
+                  normalizeOrundumCraftMaterial($event)
+              "
               @update:shift="updateSchedulePreviewShift"
             ></RiicScheduleExportSettings>
           </template>
@@ -7326,6 +7777,7 @@ onBeforeUnmount(() => {
           :ideal-training-rarity-selection="idealTrainingRaritySelection"
           :actual-schedule-metrics="riicActualScheduleMetrics"
           :schedule-preview="riicSchedulePreview"
+          :schedule-shifts="schedulePreviewShifts"
           :duplicate-operator-checks="riicScheduleDuplicateOperatorChecks"
           :format-layer3-operator-condition="
             formatRiicLayer3OperatorCondition
@@ -7350,6 +7802,14 @@ onBeforeUnmount(() => {
         <button type="button" @click="clearSavedWizardState">
           清空本页缓存
         </button>
+        <a
+          class="page-cache-reset-link"
+          href="https://qm.qq.com/q/T3XVZh9Au6"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          基建/自动排班交流群：782204269
+        </a>
       </div>
     </div>
   </main>
@@ -7373,18 +7833,259 @@ onBeforeUnmount(() => {
   background: var(--c-page-background-color);
 }
 
+.schedule-output-document {
+  --c-page-background-color: #fff;
+  --c-page-background-color-secondary: #f5f7f9;
+  --c-text-color: #17212b;
+  --c-text-tip-color: #66717d;
+  --c-border-color: #d8dee5;
+  --riic-muted: #66717d;
+  width: min(1080px, 100%);
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid #d8dee5;
+  background: #fff;
+  color: #17212b;
+}
+
+.schedule-output-document-header {
+  display: grid;
+  gap: 8px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  height: 120px;
+  min-height: 120px;
+  box-sizing: border-box;
+  padding: 16px 190px 12px 30px;
+  border-bottom: 4px solid #e7b719;
+  box-shadow: 0 6px 16px rgba(23, 33, 43, 0.2);
+}
+
+.schedule-output-document-header::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: "";
+}
+
+.schedule-output-document-header.theme-orundum::before {
+  background: linear-gradient(
+    to left,
+    rgba(190, 52, 52, 0.34),
+    rgba(190, 52, 52, 0.14) 42%,
+    transparent 72%
+  );
+}
+
+.schedule-output-document-header.theme-experience::before {
+  background: linear-gradient(
+    to left,
+    rgba(202, 156, 43, 0.34),
+    rgba(202, 156, 43, 0.14) 42%,
+    transparent 72%
+  );
+}
+
+.schedule-output-document-header.theme-balanced::before {
+  background: linear-gradient(
+    to left,
+    rgba(39, 92, 70, 0.34),
+    rgba(39, 92, 70, 0.14) 42%,
+    transparent 72%
+  );
+}
+
+.schedule-output-document-header.theme-lmd::before {
+  background: linear-gradient(
+    to left,
+    rgba(41, 105, 180, 0.34),
+    rgba(41, 105, 180, 0.14) 42%,
+    transparent 72%
+  );
+}
+
+.schedule-output-document-header-art {
+  display: flex;
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: 28px;
+  align-items: center;
+  gap: 10px;
+  transform: translateY(-50%);
+}
+
+.schedule-output-document-header-art img {
+  width: 144px;
+  height: 144px;
+  opacity: 0.36;
+  object-fit: contain;
+}
+
+.schedule-output-document-header > :not(.schedule-output-document-header-art) {
+  position: relative;
+  z-index: 1;
+}
+
+.schedule-output-document-header h3,
+.schedule-output-document-header p,
+.schedule-output-document-footer p {
+  margin: 0;
+}
+
+.schedule-output-document-header h3 {
+  color: #17212b;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.schedule-output-document-meta {
+  color: #54616e;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.schedule-output-document-yield {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  padding-top: 2px;
+  color: #17212b;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.schedule-output-document-yield > span {
+  color: #8b6510;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.schedule-output-document-yield > strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.schedule-output-document-yield-icon {
+  display: block;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.schedule-output-document-description {
+  color: #54616e;
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.schedule-output-document > .riic-schedule-preview + .riic-schedule-preview {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 1px solid #d8dee5;
+}
+
+.schedule-output-document-generated-at {
+  color: #7b8793;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.schedule-output-document-brand-heading {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  gap: 10px;
+}
+
+.schedule-output-document-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 120px;
+  min-height: 120px;
+  gap: 24px;
+  padding: 0 0 0 30px;
+  background: #202b35;
+  color: #fff;
+  box-shadow: 0 -6px 16px rgba(23, 33, 43, 0.2);
+}
+
+.schedule-output-document-brand {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+  padding: 0 0 0 16px;
+  border-left: 3px solid rgba(255, 255, 255, 0.82);
+}
+
+.schedule-output-document-brand-heading > strong {
+  font-weight: 700;
+}
+
+.schedule-output-document-brand-heading > strong,
+.schedule-output-document-brand > span,
+.schedule-output-document-brand > a {
+  font-size: 21px;
+  line-height: 1.45;
+}
+
+.schedule-output-document-brand > span {
+  color: #d9e0e6;
+}
+
+.schedule-output-document-brand > a {
+  width: fit-content;
+  max-width: 100%;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.schedule-output-document-qr {
+  align-self: center;
+  flex: 0 0 120px;
+  width: 120px;
+  height: 120px;
+  margin-left: auto;
+  padding: 0;
+  background: #fff;
+  object-fit: contain;
+}
+
 .schedule-preview-export-capture {
   position: fixed;
   top: 0;
   left: -10000px;
-  width: 960px;
+  width: 1080px;
   max-width: none;
   pointer-events: none;
   background: var(--c-page-background-color);
 }
 
+.schedule-preview-export-capture.schedule-output-document {
+  width: 1080px;
+  max-width: none;
+}
+
 .schedule-preview-export-capture > .riic-schedule-preview + .riic-schedule-preview {
   margin-top: 20px;
+}
+
+.schedule-preview-export-capture.schedule-output-document
+  > .riic-schedule-preview
+  + .riic-schedule-preview {
+  margin-top: 0;
 }
 
 .schedule-output-stage {
@@ -7432,6 +8133,20 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 
+.page-cache-reset-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--riic-muted);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  text-decoration: none;
+}
+
 .page-cache-reset button:hover {
   border-color: color-mix(
     in srgb,
@@ -7439,6 +8154,15 @@ onBeforeUnmount(() => {
     var(--c-border-color)
   );
   color: var(--riic-orange);
+}
+
+.page-cache-reset-link:hover {
+  border-color: color-mix(
+    in srgb,
+    var(--riic-blue) 54%,
+    var(--c-border-color)
+  );
+  color: var(--riic-blue);
 }
 
 .workflow-stage {
@@ -8077,7 +8801,7 @@ onBeforeUnmount(() => {
 }
 
 .assembled-schedule-panel {
-  margin-top: 18px;
+  margin-top: 0;
 }
 
 .assembled-schedule-panel.state-requiresOperators,

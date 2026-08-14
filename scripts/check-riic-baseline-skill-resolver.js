@@ -376,6 +376,15 @@ const morganScore = calculateRiicRoomEfficiency({
 });
 assert.equal(morganScore.bonusPercent, 95);
 
+const productiveRoomStaffingScore = calculateRiicRoomEfficiency({
+  resolvedSkills: supportRooms,
+  roomType: "trading",
+  operatorIds: ["char_002_amiya"],
+  expectedSlots: 1,
+});
+assert.equal(productiveRoomStaffingScore.basePercent, 100);
+assert.equal(productiveRoomStaffingScore.totalPercent, 100);
+
 const invalidRosterScore = calculateRiicRoomEfficiency({
   resolvedSkills: christAndPhantom,
   roomType: "manufacture",

@@ -9,6 +9,8 @@
     "build:logistics-skill-groups": "node scripts/generate-logistics-skill-groups.js",
     "build:riic-baseline-rules": "node scripts/generate-riic-baseline-skill-rules.js",
     "check:riic-baseline-rules": "node scripts/check-riic-baseline-skill-resolver.js",
+    "check:riic-dynamic-fallback": "node scripts/check-riic-dynamic-fallback.js",
+    "check:riic-trading-formula": "node scripts/check-riic-trading-formula.js",
     "check:riic-schedule-model": "node scripts/check-riic-schedule-model.js",
     "preview": "vite preview",
     "server": "node .\\server.js"

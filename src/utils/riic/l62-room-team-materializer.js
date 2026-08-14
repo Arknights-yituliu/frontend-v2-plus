@@ -16,6 +16,9 @@ import {
 import {
   getRiicControlCenterRoomAdjustment,
 } from "./l51-control-effects.js";
+import {
+  mergeRiicUpgradeRequirements,
+} from "./P00-upgrade-requirements.js";
 
 const PERCENT_FIELD_BY_ROOM_TYPE = Object.freeze({
   trading: "tradingPercent",
@@ -24,39 +27,6 @@ const PERCENT_FIELD_BY_ROOM_TYPE = Object.freeze({
   hire: "officePercent",
   power: "powerPercent",
 });
-
-function mergeUpgradeRequirements(requirements) {
-  const byCharId = new Map();
-
-  for (const requirement of requirements || []) {
-    const charId = String(requirement?.charId || "").trim();
-    if (!charId) {
-      continue;
-    }
-
-    const current = byCharId.get(charId);
-    const requiredElite = Number(requirement?.required?.elite || 0);
-    const requiredLevel = Number(requirement?.required?.level || 1);
-    const currentElite = Number(current?.required?.elite || 0);
-    const currentLevel = Number(current?.required?.level || 1);
-    if (
-      !current ||
-      requiredElite > currentElite ||
-      (requiredElite === currentElite && requiredLevel > currentLevel)
-    ) {
-      byCharId.set(charId, requirement);
-    }
-  }
-
-  return [...byCharId.values()].sort(
-    (left, right) =>
-      String(left?.name || "").localeCompare(String(right?.name || ""), "zh-CN") ||
-      String(left?.charId || "").localeCompare(
-        String(right?.charId || ""),
-        "en",
-      ),
-  );
-}
 
 /**
  * L62: materialize a complete room team after fallback identities are known.
@@ -81,7 +51,7 @@ export function materializeRiicRoomTeamCandidate(
       ...operators.map((operator) => operator.charId),
     ]),
   ];
-  const upgradeRequirements = mergeUpgradeRequirements([
+  const upgradeRequirements = mergeRiicUpgradeRequirements([
     ...(candidate?.coreUpgradeRequirements ||
       candidate?.upgradeRequirements ||
       []),
@@ -337,12 +307,12 @@ export function mergeRiicIndividualRoomTeamCandidates(candidates) {
     members: candidates.flatMap((candidate) => candidate?.members || []),
     operatorIds,
     operators: candidates.flatMap((candidate) => candidate?.operators || []),
-    coreUpgradeRequirements: mergeUpgradeRequirements(
+    coreUpgradeRequirements: mergeRiicUpgradeRequirements(
       candidates.flatMap(
         (candidate) => candidate?.coreUpgradeRequirements || [],
       ),
     ),
-    upgradeRequirements: mergeUpgradeRequirements(
+    upgradeRequirements: mergeRiicUpgradeRequirements(
       candidates.flatMap((candidate) => candidate?.upgradeRequirements || []),
     ),
     sourceRoomType: "meeting",

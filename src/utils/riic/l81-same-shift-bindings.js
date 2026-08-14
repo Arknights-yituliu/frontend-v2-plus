@@ -127,7 +127,7 @@ function getCandidateBindings(candidate, group) {
 function getBindingBonusBreakdown(binding) {
   const effects = Array.isArray(binding?.effects) ? binding.effects : [];
   const highestFacilityBonusByMetric = new Map();
-  const highestOperatorBonusByMetricAndId = new Map();
+  const highestOperatorBonusBySourceMetricAndId = new Map();
 
   for (const effect of effects) {
     const bonusPercent = Number(effect?.bonusPercent || 0);
@@ -151,10 +151,17 @@ function getBindingBonusBreakdown(binding) {
     }
 
     for (const operatorId of affectedOperatorIds) {
-      const key = [String(effect?.metric || "").trim(), operatorId].join(":");
-      const existing = highestOperatorBonusByMetricAndId.get(key);
+      const key = [
+        ...(effect?.sourceOperatorIds || [])
+          .map((sourceOperatorId) => String(sourceOperatorId || "").trim())
+          .filter(Boolean)
+          .sort(),
+        String(effect?.metric || "").trim(),
+        operatorId,
+      ].join(":");
+      const existing = highestOperatorBonusBySourceMetricAndId.get(key);
       if (!existing || bonusPercent > existing.bonusPercent) {
-        highestOperatorBonusByMetricAndId.set(key, {
+        highestOperatorBonusBySourceMetricAndId.set(key, {
           operatorId,
           bonusPercent,
         });
@@ -167,7 +174,7 @@ function getBindingBonusBreakdown(binding) {
     0,
   );
   const operatorBonusById = {};
-  for (const { operatorId, bonusPercent } of highestOperatorBonusByMetricAndId.values()) {
+  for (const { operatorId, bonusPercent } of highestOperatorBonusBySourceMetricAndId.values()) {
     operatorBonusById[operatorId] =
       Number(operatorBonusById[operatorId] || 0) + Number(bonusPercent || 0);
   }

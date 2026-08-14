@@ -8,6 +8,10 @@ import {
 import {
   createRiicPairComponentCandidateSkeletons,
 } from "./l21-pair-components.js";
+import {
+  compareRiicOperatorUnlock,
+  createRiicUpgradeRequirement,
+} from "./P00-upgrade-requirements.js";
 
 const ROSMONTIS_OPERATOR_ID = "char_391_rosmon";
 const EBENHOLZ_OPERATOR_ID = "char_4046_ebnhlz";
@@ -17,40 +21,8 @@ function toNonNegativeInteger(value, fallback = 0) {
   return Number.isInteger(number) && number >= 0 ? number : fallback;
 }
 
-function compareUnlock(left, right) {
-  const eliteDifference =
-    toNonNegativeInteger(left?.elite) - toNonNegativeInteger(right?.elite);
-  if (eliteDifference !== 0) {
-    return eliteDifference;
-  }
-
-  return (
-    toNonNegativeInteger(left?.level, 1) -
-    toNonNegativeInteger(right?.level, 1)
-  );
-}
-
 function normalizeTrainingMode(value) {
   return value === "ideal" ? "ideal" : "current";
-}
-
-function createUpgradeRequirement(operator, requirement) {
-  if (!operator || compareUnlock(operator, requirement) >= 0) {
-    return null;
-  }
-
-  return {
-    charId: operator.charId,
-    name: operator.name,
-    current: {
-      elite: toNonNegativeInteger(operator.elite),
-      level: toNonNegativeInteger(operator.level, 1),
-    },
-    required: {
-      elite: toNonNegativeInteger(requirement?.elite),
-      level: toNonNegativeInteger(requirement?.level, 1),
-    },
-  };
 }
 
 function normalizeRoster(ownedOperators) {
@@ -70,7 +42,10 @@ function normalizeRoster(ownedOperators) {
       level: toNonNegativeInteger(operator?.level, 1),
     };
     const existing = byId.get(charId);
-    if (!existing || compareUnlock(normalized, existing) > 0) {
+    if (
+      !existing ||
+      compareRiicOperatorUnlock(normalized, existing) > 0
+    ) {
       byId.set(charId, normalized);
     }
   }
@@ -97,6 +72,7 @@ function normalizeNameToCharId(operatorNameToCharId) {
 function resolveCandidateMembers({
   candidate,
   rosterById,
+  currentRosterById,
   nameToCharId,
   trainingMode,
   idealTrainingRaritySelection,
@@ -143,7 +119,10 @@ function resolveCandidateMembers({
       return null;
     }
 
-    const upgradeRequirement = createUpgradeRequirement(operator, requirement);
+    const upgradeRequirement = createRiicUpgradeRequirement(
+      currentRosterById.get(charId) || operator,
+      requirement,
+    );
     if (upgradeRequirement) {
       if (
         trainingMode !== "ideal" ||
@@ -340,6 +319,7 @@ export function resolveRiicRoomCandidateSkeletons({
   fallbackCatalog,
   operatorNameToCharId,
   ownedOperators,
+  currentOwnedOperators,
   roomType,
   product,
   stationLevel,
@@ -380,6 +360,9 @@ export function resolveRiicRoomCandidateSkeletons({
       idealTrainingRaritySelection,
     );
   const rosterById = normalizeRoster(ownedOperators);
+  const currentRosterById = normalizeRoster(
+    currentOwnedOperators || ownedOperators,
+  );
   const nameToCharId = normalizeNameToCharId(operatorNameToCharId);
   const scope = {
     roomType,
@@ -415,6 +398,7 @@ export function resolveRiicRoomCandidateSkeletons({
     const resolution = resolveCandidateMembers({
       candidate,
       rosterById,
+      currentRosterById,
       nameToCharId,
       trainingMode: normalizedTrainingMode,
       idealTrainingRaritySelection: normalizedRaritySelection,

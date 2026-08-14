@@ -351,6 +351,22 @@
       "sameTeamWithOperatorIds": [
         "char_308_swire"
       ],
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "controlCoassignedOperatorIds": [
+              "char_308_swire"
+            ]
+          },
+          "target": {
+            "scope": "allRooms",
+            "roomType": "manufacture",
+            "product": "all"
+          },
+          "metric": "production",
+          "bonusPercent": 3
+        }
+      ],
       "bufftag": [
         "manufacture-station"
       ]

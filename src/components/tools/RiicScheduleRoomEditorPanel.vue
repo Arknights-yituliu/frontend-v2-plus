@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 
-defineProps({
+const props = defineProps({
   room: {
     type: Object,
     required: true,

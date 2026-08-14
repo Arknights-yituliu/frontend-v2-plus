@@ -1,4 +1,9 @@
-const VALID_ROOM_TYPES = new Set(["trading", "manufacture", "hire"]);
+const VALID_ROOM_TYPES = new Set([
+  "trading",
+  "manufacture",
+  "meeting",
+  "hire",
+]);
 
 function normalizeTeamIndex(value) {
   const number = Number(value);

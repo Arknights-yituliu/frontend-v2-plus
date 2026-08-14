@@ -114,6 +114,7 @@ export function recalculateRiicClosureSpecialOrder({
   normalCoreBonusPercent,
   fallbackOperators = [],
   operatorBonusById,
+  staffingBonusPercent = 0,
 } = {}) {
   if (!isClosureSpecialOrder(candidate, scope)) {
     return null;
@@ -142,10 +143,12 @@ export function recalculateRiicClosureSpecialOrder({
     (total, entry) => total + entry.bonusPercent,
     0,
   );
+  const resolvedStaffingBonusPercent = toFinitePercent(staffingBonusPercent);
   const teammateOrderBonusPercent =
     resolvedNormalCoreBonusPercent +
     fallbackOrderBonusPercent +
-    controlCenterOrderBonusPercent;
+    controlCenterOrderBonusPercent +
+    resolvedStaffingBonusPercent;
   const actualGoldSalePerHour =
     11 / 12 + teammateOrderBonusPercent / 120;
   const virtualGoldProductionPerHour =
@@ -167,6 +170,7 @@ export function recalculateRiicClosureSpecialOrder({
     fallbackOrderBonusPercent,
     controlCenterBonusByOperator,
     controlCenterOrderBonusPercent,
+    staffingBonusPercent: resolvedStaffingBonusPercent,
     teammateOrderBonusPercent,
     actualGoldSalePerHour: round(actualGoldSalePerHour, 5),
     virtualGoldProductionPerHour: round(virtualGoldProductionPerHour, 5),

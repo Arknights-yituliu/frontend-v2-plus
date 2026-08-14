@@ -7,7 +7,7 @@ import droneBackground from "/src/assets/images/riic-schedule-preview/drone.png"
 import goldBackground from "/src/assets/images/riic-schedule-preview/gold.png";
 import highCertificateBackground from "/src/assets/images/riic-schedule-preview/high-certificate.png";
 import lmdBackground from "/src/assets/images/riic-schedule-preview/lmd.png";
-import originiumShardBackground from "/src/assets/images/riic-schedule-preview/originium-shard.png";
+import orundumBackground from "/src/assets/images/riic-schedule-preview/orundum.png";
 
 const props = defineProps({
   preview: {
@@ -26,21 +26,21 @@ const props = defineProps({
     type: String,
     default: "",
   },
-  shifts: {
-    type: Array,
-    default: () => [],
+  title: {
+    type: String,
+    default: "",
   },
-  droneTargetOptions: {
+  defaultTitle: {
+    type: String,
+    default: "一图流排班表",
+  },
+  shifts: {
     type: Array,
     default: () => [],
   },
   droneTarget: {
     type: String,
     default: "",
-  },
-  droneOrder: {
-    type: String,
-    default: "pre",
   },
   placeholder: {
     type: Boolean,
@@ -50,49 +50,121 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  outputDecorated: {
+    type: Boolean,
+    default: false,
+  },
+  outputTheme: {
+    type: String,
+    default: "balanced",
+  },
+  showRoomEfficiency: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits([
   "update:activeStateIndex",
   "update:shift",
+  "update:title",
   "edit-room",
   "move-operator",
   "select-drone-target",
-  "update:drone-order",
 ]);
 
 const isDraggingDrone = ref(false);
 const draggedOperator = ref(null);
 const suppressNextRoomClick = ref(false);
+const displayTitle = computed(
+  () => String(props.title || "").trim() || props.defaultTitle,
+);
 const activeState = computed(() => {
   const states = props.preview?.states || [];
   return states[props.activeStateIndex] || states[0] || null;
 });
 const displayShifts = computed(() =>
-  (props.preview?.states || []).map((state, index) => {
-    const savedShift = props.shifts[index] || {};
-    return {
-      ...state,
-      name: String(savedShift.name || `${String.fromCharCode(65 + index)}班`),
-      time: String(savedShift.time || "09:00"),
-      fiammetta:
-        savedShift?.fiammetta?.enable === true
-          ? {
-              target: String(savedShift.fiammetta.target || "").trim(),
-            }
-          : null,
-    };
-  }),
+  (props.preview?.states || [])
+    .map((state, index) => {
+      const savedShift = props.shifts[index] || {};
+      return {
+        ...state,
+        name: String(savedShift.name || `${String.fromCharCode(65 + index)}班`),
+        time: String(savedShift.time || "09:00"),
+        fiammetta:
+          savedShift?.fiammetta?.enable === true
+            ? {
+                target: String(savedShift.fiammetta.target || "").trim(),
+              }
+            : null,
+      };
+    })
+    .sort((left, right) => left.name.localeCompare(right.name, "zh-CN")),
 );
 const activeShift = computed(
   () =>
-    displayShifts.value[props.activeStateIndex] ||
+    displayShifts.value.find(
+      (shift) => shift.index === props.activeStateIndex,
+    ) ||
     displayShifts.value[0] ||
     null,
 );
-const visibleDroneTargetOptions = computed(() =>
-  props.droneTargetOptions.filter((option) => option?.facility !== "power"),
-);
+const activeShiftPeriod = computed(() => {
+  const startMinutes = parseShiftTime(activeShift.value?.time);
+  if (startMinutes === null) {
+    return String(activeShift.value?.time || "").trim();
+  }
+
+  const nextShiftDelta = displayShifts.value
+    .map((shift) => parseShiftTime(shift.time))
+    .filter((minutes) => minutes !== null)
+    .map((minutes) => (minutes - startMinutes + 1440) % 1440)
+    .filter((delta) => delta > 0)
+    .sort((left, right) => left - right)[0];
+  const duration = nextShiftDelta || 1440;
+  const endMinutes = (startMinutes + duration - 1) % 1440;
+
+  return `${formatShiftTime(startMinutes)} - ${formatShiftTime(endMinutes)}`;
+});
+const outputFiammettaTargetOperator = computed(() => {
+  const targetName = String(activeShift.value?.fiammetta?.target || "").trim();
+  if (!targetName) {
+    return null;
+  }
+
+  const match = Object.entries(props.operatorTable || {}).find(
+    ([, operator]) =>
+      String(operator?.name || "").trim() === targetName,
+  );
+
+  return {
+    charId: match?.[0] || "",
+    name: targetName,
+  };
+});
+
+function parseShiftTime(value) {
+  const match = /^(\d{1,2}):(\d{2})$/.exec(String(value || "").trim());
+  const hours = Number(match?.[1]);
+  const minutes = Number(match?.[2]);
+  return match &&
+    Number.isInteger(hours) &&
+    Number.isInteger(minutes) &&
+    hours >= 0 &&
+    hours < 24 &&
+    minutes >= 0 &&
+    minutes < 60
+    ? hours * 60 + minutes
+    : null;
+}
+
+function formatShiftTime(totalMinutes) {
+  const minutes = ((totalMinutes % 1440) + 1440) % 1440;
+  return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(
+    minutes % 60,
+  ).padStart(2, "0")}`;
+}
+
 const layoutCells = computed(() => {
   const rooms = activeState.value?.rooms || [];
   const roomsByFacility = new Map();
@@ -178,7 +250,7 @@ function getRoomProductBackground(room) {
     lmd: lmdBackground,
     experience: battleRecordBackground,
     gold: goldBackground,
-    orundum: originiumShardBackground,
+    orundum: orundumBackground,
   };
   if (imageByProduct[room?.product]) {
     return {
@@ -236,14 +308,8 @@ function updateShift(index, field, event) {
   });
 }
 
-function selectDroneTarget(option) {
-  if (!option?.disabled && option?.value) {
-    emit("select-drone-target", option.value);
-  }
-}
-
-function selectDroneOrder(order) {
-  emit("update:drone-order", order === "post" ? "post" : "pre");
+function updateTitle(event) {
+  emit("update:title", event.target.value);
 }
 
 function startDroneDrag(event) {
@@ -260,9 +326,7 @@ function startDroneDrag(event) {
 }
 
 function isDroneDropRoom(room) {
-  return visibleDroneTargetOptions.value.some(
-    (option) => option.value === room?.key && !option.disabled,
-  );
+  return ["trading", "manufacture"].includes(room?.facility);
 }
 
 function allowRoomDroneDrop(room, event) {
@@ -273,11 +337,7 @@ function allowRoomDroneDrop(room, event) {
 
 function dropRoomDroneTarget(room) {
   if (isDroneDropRoom(room)) {
-    selectDroneTarget(
-      visibleDroneTargetOptions.value.find(
-        (option) => option.value === room.key,
-      ),
-    );
+    emit("select-drone-target", room.key);
   }
 }
 
@@ -422,9 +482,21 @@ function dropOperator(room, operator) {
 </script>
 
 <template>
-  <section class="riic-schedule-preview">
+  <section
+    class="riic-schedule-preview"
+    :class="{
+      'export-output': outputDecorated,
+      [`export-output-theme-${outputTheme}`]: outputDecorated,
+    }"
+  >
     <header v-if="!exportStatic" class="schedule-preview-heading">
-      <strong>排班表</strong>
+      <input
+        :value="displayTitle"
+        type="text"
+        class="schedule-preview-title-input"
+        aria-label="排班表标题"
+        @input="updateTitle"
+      />
       <div
         class="schedule-preview-state-tabs"
         :style="{
@@ -467,79 +539,77 @@ function dropOperator(room, operator) {
         </div>
       </div>
     </header>
-    <header v-else class="schedule-preview-export-heading">
+    <header
+      v-else-if="!outputDecorated"
+      class="schedule-preview-export-heading"
+    >
       <strong>{{ activeShift?.name || "班次" }}</strong>
       <span>{{ activeShift?.time || "09:00" }}</span>
+    </header>
+    <header v-else class="schedule-preview-output-shift-heading">
+      <strong>{{ activeShift?.name || "班次" }}</strong>
+      <span>{{ activeShiftPeriod }}</span>
     </header>
 
     <div v-if="activeState" class="schedule-preview-layout">
       <template v-for="(room, index) in layoutCells" :key="`cell-${index}`">
-        <div
+        <template
           v-if="
             !exportStatic &&
-            index === 20 &&
-            visibleDroneTargetOptions.length
+            $slots['schedule-auxiliary'] &&
+            index === 20
           "
-          class="schedule-preview-drone-controls"
-          :class="{
-            'has-three-rows': visibleDroneTargetOptions.length > 6,
-          }"
-          aria-label="无人机投向"
         >
-          <div class="schedule-preview-drone-mode">
-            <v-icon
-              class="schedule-preview-drone-icon"
-              icon="mdi-quadcopter"
-              size="21"
-              aria-hidden="true"
-            ></v-icon>
-            <div class="schedule-preview-drone-order">
-              <button
-                type="button"
-                :class="{ active: droneOrder !== 'post' }"
-                :aria-pressed="droneOrder !== 'post'"
-                @click="selectDroneOrder('pre')"
+          <div class="schedule-preview-auxiliary">
+            <slot name="schedule-auxiliary"></slot>
+          </div>
+        </template>
+        <template
+          v-else-if="
+            exportStatic ||
+            !$slots['schedule-auxiliary'] ||
+            index !== 21
+          "
+        >
+          <div
+            v-if="
+              outputDecorated &&
+              index === 22 &&
+              outputFiammettaTargetOperator
+            "
+            class="schedule-preview-fiammetta-card"
+            :title="`菲亚梅塔应用：${outputFiammettaTargetOperator.name}`"
+          >
+            <div class="schedule-preview-fiammetta-flow">
+              <OperatorAvatar
+                char-id="char_300_phenxi"
+                :size="45"
+                :mobile-size="39"
+                :border="true"
+              ></OperatorAvatar>
+              <v-icon
+                icon="mdi-arrow-right"
+                size="22"
+                aria-hidden="true"
+              ></v-icon>
+              <OperatorAvatar
+                v-if="outputFiammettaTargetOperator.charId"
+                :char-id="outputFiammettaTargetOperator.charId"
+                :rarity="getRarity(outputFiammettaTargetOperator.charId)"
+                :size="45"
+                :mobile-size="39"
+                :border="true"
+              ></OperatorAvatar>
+              <span
+                v-else
+                class="schedule-preview-fiammetta-manual-target"
               >
-                换班前
-              </button>
-              <button
-                type="button"
-                :class="{ active: droneOrder === 'post' }"
-                :aria-pressed="droneOrder === 'post'"
-                @click="selectDroneOrder('post')"
-              >
-                换班后
-              </button>
+                {{ outputFiammettaTargetOperator.name }}
+              </span>
             </div>
           </div>
-          <div class="schedule-preview-drone-options">
-            <button
-              v-for="option in visibleDroneTargetOptions"
-              :key="option.value"
-              type="button"
-              :class="[
-                `facility-${option.facility}`,
-                {
-                  active: option.value === droneTarget,
-                  disabled: option.disabled,
-                },
-              ]"
-              :disabled="option.disabled"
-              :aria-pressed="option.value === droneTarget"
-              @click="selectDroneTarget(option)"
-            >
-              <v-icon
-                v-if="option.value === droneTarget"
-                class="schedule-preview-drone-option-icon"
-                icon="mdi-quadcopter"
-                size="14"
-              ></v-icon>
-              {{ option.label }}
-            </button>
-          </div>
-        </div>
-        <button
-          v-else-if="room"
+          <button
+            v-else-if="room"
           type="button"
           class="schedule-preview-room"
           :class="[
@@ -628,23 +698,15 @@ function dropOperator(room, operator) {
              ></span>
            </div>
           <span
-            v-if="getRoomEfficiencyLabel(room)"
+            v-if="showRoomEfficiency && getRoomEfficiencyLabel(room)"
             class="schedule-preview-efficiency"
             :title="`效率 ${getRoomEfficiencyLabel(room)}`"
           >
             {{ getRoomEfficiencyLabel(room) }}
           </span>
-        </button>
-        <div
-          v-else-if="
-            !(
-              visibleDroneTargetOptions.length &&
-              index === 21
-            )
-          "
-          class="schedule-preview-empty-cell"
-          aria-hidden="true"
-        ></div>
+          </button>
+          <div v-else class="schedule-preview-empty-cell" aria-hidden="true"></div>
+        </template>
       </template>
     </div>
   </section>
@@ -653,6 +715,58 @@ function dropOperator(room, operator) {
 <style scoped>
 .riic-schedule-preview {
   background: transparent;
+}
+
+.riic-schedule-preview.export-output {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--riic-export-surface);
+}
+
+.riic-schedule-preview.export-output::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: transparent;
+  content: "";
+  pointer-events: none;
+}
+
+.riic-schedule-preview.export-output-theme-orundum::before {
+  background: linear-gradient(
+    30deg,
+    rgba(190, 52, 52, 0.28) 0%,
+    rgba(190, 52, 52, 0.16) 14%,
+    transparent 40%
+  );
+}
+
+.riic-schedule-preview.export-output-theme-experience::before {
+  background: linear-gradient(
+    30deg,
+    rgba(202, 156, 43, 0.28) 0%,
+    rgba(202, 156, 43, 0.16) 14%,
+    transparent 40%
+  );
+}
+
+.riic-schedule-preview.export-output-theme-balanced::before {
+  background: linear-gradient(
+    30deg,
+    rgba(39, 92, 70, 0.28) 0%,
+    rgba(39, 92, 70, 0.16) 14%,
+    transparent 40%
+  );
+}
+
+.riic-schedule-preview.export-output-theme-lmd::before {
+  background: linear-gradient(
+    30deg,
+    rgba(41, 105, 180, 0.28) 0%,
+    rgba(41, 105, 180, 0.16) 14%,
+    transparent 40%
+  );
 }
 
 .schedule-preview-heading {
@@ -665,12 +779,35 @@ function dropOperator(room, operator) {
   border-bottom: 1px solid var(--c-border-color);
 }
 
-.schedule-preview-heading > strong {
-  flex: 0 0 auto;
+.schedule-preview-title-input {
+  width: min(420px, 42%);
+  min-width: 180px;
+  padding: 2px 0;
+  overflow: hidden;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: transparent;
   color: var(--c-text-color);
+  font: inherit;
   font-size: 14px;
   font-weight: 600;
   line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  outline: 0;
+}
+
+.schedule-preview-title-input:hover,
+.schedule-preview-title-input:focus {
+  border-bottom-color: color-mix(
+    in srgb,
+    var(--riic-blue, #2878c8) 54%,
+    var(--c-border-color)
+  );
+}
+
+.schedule-preview-title-input:focus {
+  color: var(--riic-blue, #2878c8);
 }
 
 .schedule-preview-state-tabs {
@@ -715,6 +852,34 @@ function dropOperator(room, operator) {
   color: var(--c-text-tip-color);
   font-size: 13px;
   font-variant-numeric: tabular-nums;
+}
+
+.schedule-preview-output-shift-heading {
+  display: flex;
+  position: absolute;
+  z-index: 2;
+  bottom: 12px;
+  left: 18px;
+  align-items: baseline;
+  gap: 12px;
+  max-width: calc(100% - 36px);
+  color: rgba(78, 87, 96, 0.72);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.schedule-preview-output-shift-heading > strong {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.schedule-preview-output-shift-heading > span {
+  color: inherit;
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 400;
+  line-height: 1.15;
 }
 
 .schedule-preview-state-tab:hover,
@@ -782,6 +947,8 @@ function dropOperator(room, operator) {
 
 .schedule-preview-layout {
   display: grid;
+  position: relative;
+  z-index: 1;
   grid-template-columns:
     repeat(3, minmax(0, 0.9fr))
     minmax(0, 1.28fr)
@@ -793,6 +960,61 @@ function dropOperator(room, operator) {
 .schedule-preview-empty-cell {
   min-width: 0;
   min-height: 88px;
+}
+
+.schedule-preview-auxiliary {
+  grid-column: span 2;
+  min-width: 0;
+  min-height: 88px;
+}
+
+.schedule-preview-fiammetta-card {
+  --room-color: #4f9b72;
+  display: flex;
+  position: relative;
+  min-width: 0;
+  min-height: 88px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 9px 18px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 4px;
+  background: #e4e8eb;
+  color: var(--riic-export-text);
+}
+
+.schedule-preview-fiammetta-flow {
+  display: flex;
+  position: relative;
+  z-index: 1;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  gap: 5px;
+}
+
+.schedule-preview-fiammetta-flow > .v-icon {
+  flex: 0 0 auto;
+  color: var(--room-color);
+}
+
+.schedule-preview-fiammetta-manual-target {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 28px;
+  padding: 0 4px;
+  overflow: hidden;
+  border: 1px solid var(--room-color);
+  border-radius: 3px;
+  color: var(--room-color);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .schedule-preview-room {
@@ -1036,14 +1258,6 @@ function dropOperator(room, operator) {
   border-color: var(--room-color);
 }
 
-.riic-schedule-preview.export-capture .schedule-preview-drone-controls {
-  background: rgba(125, 135, 146, 0.1);
-}
-
-.riic-schedule-preview.export-capture .schedule-preview-drone-order button.active {
-  background: var(--riic-export-active-surface);
-}
-
 .schedule-preview-efficiency {
   position: absolute;
   z-index: 1;
@@ -1054,131 +1268,6 @@ function dropOperator(room, operator) {
   font-variant-numeric: tabular-nums;
   font-weight: 700;
   line-height: 1.2;
-}
-
-.schedule-preview-drone-controls {
-  display: grid;
-  grid-column: 1 / span 2;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: stretch;
-  justify-self: stretch;
-  width: auto;
-  gap: 8px;
-  padding: 8px;
-  border-radius: 8px;
-  background: rgba(125, 135, 146, 0.1);
-}
-
-.schedule-preview-drone-icon {
-  color: #6b7785;
-}
-
-.schedule-preview-drone-mode {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-.schedule-preview-drone-options {
-  display: grid;
-  align-self: stretch;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: minmax(0, 1fr);
-  gap: 4px;
-}
-
-.schedule-preview-drone-order {
-  display: inline-flex;
-  align-items: stretch;
-  overflow: hidden;
-  border: 1px solid var(--c-border-color);
-  border-radius: 4px;
-}
-
-.schedule-preview-drone-order button {
-  min-width: 48px;
-  padding: 3px 6px;
-  border: 0;
-  border-left: 1px solid var(--c-border-color);
-  background: transparent;
-  color: var(--riic-muted);
-  font: inherit;
-  font-size: 10px;
-  line-height: 1.2;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.schedule-preview-drone-order button:first-child {
-  border-left: 0;
-}
-
-.schedule-preview-drone-order button.active {
-  background: color-mix(
-    in srgb,
-    var(--riic-blue) 13%,
-    var(--c-page-background-color)
-  );
-  color: var(--riic-blue);
-  font-weight: 700;
-}
-
-.schedule-preview-drone-options button {
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
-  padding: 3px 5px;
-  border: 1px solid var(--room-color, #7d8792);
-  border-radius: 4px;
-  background: transparent;
-  color: var(--room-color, #65717f);
-  font: inherit;
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.schedule-preview-drone-option-icon {
-  margin-right: 2px;
-  vertical-align: -2px;
-}
-
-.schedule-preview-drone-controls.has-three-rows
-  .schedule-preview-drone-options
-  button {
-  min-height: 0;
-  padding-top: 2px;
-  padding-bottom: 2px;
-}
-
-.schedule-preview-drone-options button:hover,
-.schedule-preview-drone-options button.active {
-  background: var(--drone-target-surface, rgba(125, 135, 146, 0.12));
-  color: var(--room-color, #65717f);
-}
-
-.schedule-preview-drone-options button.active {
-  box-shadow: inset 0 0 0 1px var(--room-color, #65717f);
-}
-
-.schedule-preview-drone-options button.disabled,
-.schedule-preview-drone-options button:disabled {
-  cursor: default;
-  opacity: 0.56;
-}
-
-.schedule-preview-drone-options button.facility-trading {
-  --drone-target-surface: rgba(40, 120, 200, 0.12);
-}
-
-.schedule-preview-drone-options button.facility-manufacture {
-  --drone-target-surface: rgba(184, 134, 22, 0.13);
 }
 
 .facility-trading {
@@ -1264,20 +1353,5 @@ function dropOperator(room, operator) {
     font-size: 10px;
   }
 
-  .schedule-preview-drone-controls {
-    grid-column: 1 / -1;
-    padding: 6px;
-  }
-
-  .schedule-preview-drone-order button {
-    min-width: 44px;
-    padding-inline: 5px;
-  }
-
-  .schedule-preview-drone-options button {
-    min-height: 20px;
-    padding: 3px 4px;
-    font-size: 10px;
-  }
 }
 </style>

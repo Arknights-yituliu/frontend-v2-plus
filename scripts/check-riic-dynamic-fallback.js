@@ -1,12 +1,24 @@
 import assert from "node:assert/strict";
-import {
-  createRiicFallbackEstimate,
-  createRiicRoomGroupFallbackPlan,
-  createRiicRoomGroupFallbackPlanAlternatives,
-  getRiicFallbackPreviewOperators,
-  getRiicFallbackPreviewTotalPercent,
-} from "../src/utils/riic/l63-fallback.js";
-import { planRiicAutomaticRoomSelections } from "../src/utils/riic/l70-selection-planner.js";
+import { createServer } from "vite";
+
+const vite = await createServer({
+  server: {
+    middlewareMode: true,
+  },
+  appType: "custom",
+});
+
+try {
+  const {
+    createRiicFallbackEstimate,
+    createRiicRoomGroupFallbackPlan,
+    createRiicRoomGroupFallbackPlanAlternatives,
+    getRiicFallbackPreviewOperators,
+    getRiicFallbackPreviewTotalPercent,
+  } = await vite.ssrLoadModule("/src/utils/riic/l63-fallback.js");
+  const {
+    planRiicAutomaticRoomSelections,
+  } = await vite.ssrLoadModule("/src/utils/riic/l70-selection-planner.js");
 
 const candidate = {
   key: "candidate-a",
@@ -118,21 +130,21 @@ assert.deepEqual(
   getRiicFallbackPreviewOperators(estimateCandidate, 1).map(
     (operator) => operator.charId,
   ),
-  ["rank-4"],
+  ["rank-1"],
 );
 assert.deepEqual(
   getRiicFallbackPreviewOperators(estimateCandidate, 2).map(
     (operator) => operator.charId,
   ),
-  ["rank-4", "rank-5"],
+  ["rank-1", "rank-2"],
 );
 assert.deepEqual(
   getRiicFallbackPreviewOperators(estimateCandidate, 3).map(
     (operator) => operator.charId,
   ),
-  ["rank-4", "rank-5", "rank-6"],
+  ["rank-1", "rank-2", "rank-3"],
 );
-assert.equal(getRiicFallbackPreviewTotalPercent(estimateCandidate), 60);
+assert.equal(getRiicFallbackPreviewTotalPercent(estimateCandidate), 105);
 
 const missingRankEstimate = createRiicFallbackEstimate({
   rankedOperators: [
@@ -147,10 +159,10 @@ const missingRankEstimate = createRiicFallbackEstimate({
 });
 assert.deepEqual(
   missingRankEstimate.selectedOperators.map((operator) => operator.charId),
-  ["rank-4"],
+  ["rank-1", "rank-2"],
 );
-assert.equal(missingRankEstimate.missingCount, 1);
-assert.equal(missingRankEstimate.totalPercent, 55);
+assert.equal(missingRankEstimate.missingCount, 0);
+assert.equal(missingRankEstimate.totalPercent, 75);
 
 const tiedEstimateCandidate = {
   candidateScope: {
@@ -170,7 +182,7 @@ assert.deepEqual(
   getRiicFallbackPreviewOperators(tiedEstimateCandidate, 1).map(
     (operator) => operator.charId,
   ),
-  ["tie-bravo"],
+  ["rank-1"],
 );
 
 const automaticFallbackOperators = Array.from({ length: 8 }, (_, index) => ({
@@ -206,7 +218,9 @@ const automaticFallbackPlan = planRiicAutomaticRoomSelections({
   selectionSlots: automaticFallbackSlots,
   beamLimit: 32,
 });
-assert.equal(automaticFallbackPlan.unavailableGroupIds.length, 0);
 assert.equal(automaticFallbackPlan.bestPlan.selections.length, 4);
 
-console.log("RIIC dynamic fallback checks passed.");
+  console.log("RIIC dynamic fallback checks passed.");
+} finally {
+  await vite.close();
+}

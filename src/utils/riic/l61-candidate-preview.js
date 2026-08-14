@@ -38,6 +38,11 @@ import {
 import {
   getRiicPerceptionCoreBaseline,
 } from "./l28-perception-baseline.js";
+import {
+  compareRiicOperatorUnlock,
+  createRiicUpgradeRequirement,
+  mergeRiicUpgradeRequirements,
+} from "./P00-upgrade-requirements.js";
 
 const PERCENT_FIELD_BY_ROOM_TYPE = Object.freeze({
   trading: "tradingPercent",
@@ -95,38 +100,6 @@ function getCandidatePublishedEquivalentByProduct(candidate) {
   return Number.isFinite(gold) && gold !== 0 ? { gold } : {};
 }
 
-function compareUnlock(left, right) {
-  const eliteDifference =
-    toNonNegativeInteger(left?.elite) - toNonNegativeInteger(right?.elite);
-  if (eliteDifference !== 0) {
-    return eliteDifference;
-  }
-
-  return (
-    toNonNegativeInteger(left?.level, 1) -
-    toNonNegativeInteger(right?.level, 1)
-  );
-}
-
-function createUpgradeRequirement(operator, requirement) {
-  if (!operator || compareUnlock(operator, requirement) >= 0) {
-    return null;
-  }
-
-  return {
-    charId: operator.charId,
-    name: operator.name,
-    current: {
-      elite: toNonNegativeInteger(operator.elite),
-      level: toNonNegativeInteger(operator.level, 1),
-    },
-    required: {
-      elite: toNonNegativeInteger(requirement?.elite),
-      level: toNonNegativeInteger(requirement?.level, 1),
-    },
-  };
-}
-
 function getRosterById(operators) {
   const rosterById = new Map();
 
@@ -138,41 +111,20 @@ function getRosterById(operators) {
 
     const normalized = {
       charId,
+      name: String(operator?.name || charId).trim() || charId,
       elite: toNonNegativeInteger(operator?.elite),
       level: toNonNegativeInteger(operator?.level, 1),
     };
     const current = rosterById.get(charId);
-    if (!current || compareUnlock(normalized, current) > 0) {
+    if (
+      !current ||
+      compareRiicOperatorUnlock(normalized, current) > 0
+    ) {
       rosterById.set(charId, normalized);
     }
   }
 
   return rosterById;
-}
-
-function mergeUpgradeRequirements(requirements) {
-  const byCharId = new Map();
-
-  for (const requirement of requirements || []) {
-    const charId = String(requirement?.charId || "").trim();
-    if (!charId) {
-      continue;
-    }
-
-    const current = byCharId.get(charId);
-    if (
-      !current ||
-      compareUnlock(requirement.required, current.required) > 0
-    ) {
-      byCharId.set(charId, requirement);
-    }
-  }
-
-  return [...byCharId.values()].sort(
-    (left, right) =>
-      left.name.localeCompare(right.name, "zh-CN") ||
-      left.charId.localeCompare(right.charId, "en"),
-  );
 }
 
 function normalizeFallbackPools(fallbackCatalog) {
@@ -208,7 +160,7 @@ function normalizeFallbackPools(fallbackCatalog) {
               ],
             }))
             .filter((rate) => Number.isFinite(rate.percent))
-            .sort(compareUnlock);
+            .sort(compareRiicOperatorUnlock);
           return [[name, rates]];
         }),
       ),
@@ -223,6 +175,7 @@ function getRateForTrainingMode(
   pool,
   trainingMode,
   idealTrainingRaritySelection,
+  currentOperator = operator,
 ) {
   const rates = pool.operatorsByName.get(operator.name) || [];
   let appliedRate = null;
@@ -234,7 +187,10 @@ function getRateForTrainingMode(
     );
 
   for (const rate of rates) {
-    if (useIdealTraining || compareUnlock(operator, rate) >= 0) {
+    if (
+      useIdealTraining ||
+      compareRiicOperatorUnlock(operator, rate) >= 0
+    ) {
       appliedRate = rate;
     }
   }
@@ -247,10 +203,10 @@ function getRateForTrainingMode(
         level: appliedRate.level,
         tags: appliedRate.tags,
         skipR30: appliedRate.skipR30 === true,
-        upgradeRequirement:
-          useIdealTraining
-            ? createUpgradeRequirement(operator, appliedRate)
-            : null,
+        upgradeRequirement: createRiicUpgradeRequirement(
+          currentOperator || operator,
+          appliedRate,
+        ),
       }
     : null;
 }
@@ -349,52 +305,27 @@ function getMatchedOperators(
     }));
 }
 
-function getFallbackOperators({
-  fallback,
+function createFallbackOperatorProfiles({
   rosterById,
   currentRosterById,
-  excludedOperatorIds,
-  includedOperatorIds = null,
-  fallbackPools,
   trainingMode,
   idealTrainingRaritySelection,
   scope,
   layoutFacts,
-  minimumPercent = null,
-  includeCandidatesWhenNoFallback = false,
-  allowIncomplete = false,
+  pool,
 }) {
-  if (fallback.count === 0 && !includeCandidatesWhenNoFallback) {
+  if (!pool) {
     return [];
   }
 
-  const pool = fallbackPools.get(fallback.poolKey);
-  if (!pool) {
-    return null;
-  }
-
-  const normalizedMinimumPercent =
-    minimumPercent === null || minimumPercent === undefined
-      ? null
-      : Number(minimumPercent);
-  const includedIds =
-    includedOperatorIds instanceof Set
-      ? includedOperatorIds
-      : Array.isArray(includedOperatorIds)
-        ? new Set(includedOperatorIds)
-        : null;
-  const selected = [...rosterById.values()]
-    .filter(
-      (operator) =>
-        !excludedOperatorIds.has(operator.charId) &&
-        (!includedIds || includedIds.has(operator.charId)),
-    )
+  return [...rosterById.values()]
     .flatMap((operator) => {
       const rate = getRateForTrainingMode(
         operator,
         pool,
         trainingMode,
         idealTrainingRaritySelection,
+        currentRosterById?.get(operator.charId) || operator,
       );
       const layer3Bonus = rate && !rate.skipR30
         ? getRiicStaticFallbackOperatorBonus({
@@ -428,13 +359,6 @@ function getFallbackOperators({
           ? resourceChainBaseline?.bonusPercent || 0
           : 0,
       );
-      const currentOperator = currentRosterById?.get(operator.charId);
-      const fillPriority =
-        Number(rate?.fillPriority || 0) -
-        (trainingMode === "ideal" &&
-        (!currentOperator || compareUnlock(currentOperator, rate) < 0)
-          ? 0.01
-          : 0);
 
       return rate && Number.isFinite(layer3Bonus)
         ? [
@@ -448,19 +372,13 @@ function getFallbackOperators({
                 rate.percent +
                 resourceChainBonus +
                 teammateLayer3Bonus,
-              fillPriority,
+              fillPriority: Number(rate.fillPriority || 0),
               tags: rate.tags,
               upgradeRequirement: rate.upgradeRequirement,
             },
           ]
         : [];
     })
-    .filter(
-      (operator) =>
-        normalizedMinimumPercent === null ||
-        !Number.isFinite(normalizedMinimumPercent) ||
-        operator.percent >= normalizedMinimumPercent,
-    )
     .sort(
       (left, right) =>
         right.percent +
@@ -469,6 +387,82 @@ function getFallbackOperators({
         right.percent - left.percent ||
         left.name.localeCompare(right.name, "zh-CN") ||
         left.charId.localeCompare(right.charId, "en"),
+    );
+}
+
+function createFallbackOperatorProfilesByPool({
+  fallbackPools,
+  rosterById,
+  currentRosterById,
+  trainingMode,
+  idealTrainingRaritySelection,
+  scope,
+  layoutFacts,
+}) {
+  return new Map(
+    [...fallbackPools.entries()].map(([poolKey, pool]) => [
+      poolKey,
+      (() => {
+        const operators = createFallbackOperatorProfiles({
+          rosterById,
+          currentRosterById,
+          trainingMode,
+          idealTrainingRaritySelection,
+          scope,
+          layoutFacts,
+          pool,
+        });
+
+        return {
+          operators,
+          operatorsById: new Map(
+            operators.map((operator) => [operator.charId, operator]),
+          ),
+        };
+      })(),
+    ]),
+  );
+}
+
+function getFallbackOperators({
+  fallback,
+  excludedOperatorIds,
+  includedOperatorIds = null,
+  fallbackOperatorProfilesByPool,
+  minimumPercent = null,
+  includeCandidatesWhenNoFallback = false,
+  allowIncomplete = false,
+}) {
+  if (fallback.count === 0 && !includeCandidatesWhenNoFallback) {
+    return [];
+  }
+
+  const profilePool = fallbackOperatorProfilesByPool.get(fallback.poolKey);
+  if (!profilePool) {
+    return null;
+  }
+
+  const normalizedMinimumPercent =
+    minimumPercent === null || minimumPercent === undefined
+      ? null
+      : Number(minimumPercent);
+  const includedIds =
+    includedOperatorIds instanceof Set
+      ? includedOperatorIds
+      : Array.isArray(includedOperatorIds)
+        ? new Set(includedOperatorIds)
+        : null;
+  const selected = profilePool.operators
+    .filter(
+      (operator) =>
+        !excludedOperatorIds.has(operator.charId) &&
+        (!includedIds || includedIds.has(operator.charId)),
+    )
+    .filter(
+      (operator) =>
+        normalizedMinimumPercent === null ||
+        !Number.isFinite(normalizedMinimumPercent) ||
+        operator.percent >= normalizedMinimumPercent,
     );
 
   return allowIncomplete || selected.length >= fallback.count ? selected : null;
@@ -497,37 +491,21 @@ function getRiicShamareIdleFallbackOperators({
 
 function getTeamMemberProductionProfiles({
   operatorIds,
-  fallback,
   rosterById,
-  fallbackPools,
-  trainingMode,
-  idealTrainingRaritySelection,
-  scope,
-  layoutFacts,
+  fallbackOperatorProfilesByPool,
+  fallbackPoolKey,
 }) {
   const normalizedOperatorIds = (operatorIds || [])
     .map((operatorId) => String(operatorId || "").trim())
     .filter(Boolean);
-  const profilesById = new Map(
-    (getFallbackOperators({
-      fallback,
-      rosterById,
-      excludedOperatorIds: new Set(),
-      includedOperatorIds: new Set(normalizedOperatorIds),
-      fallbackPools,
-      trainingMode,
-      idealTrainingRaritySelection,
-      scope,
-      layoutFacts,
-      includeCandidatesWhenNoFallback: true,
-      allowIncomplete: true,
-    }) || []).map((operator) => [operator.charId, operator]),
-  );
+  const profilesById =
+    fallbackOperatorProfilesByPool.get(fallbackPoolKey)?.operatorsById ||
+    new Map();
 
   return normalizedOperatorIds.map((charId) => {
     const profile = profilesById.get(charId);
     if (profile) {
-      return profile;
+      return { ...profile };
     }
 
     const operator = rosterById.get(charId);
@@ -739,7 +717,7 @@ function toRuntimeCandidate({
   const resolvedTotalPercent = closureCalculation
     ? resolvedTotalPercentBeforeControl
     : resolvedTotalPercentBeforeControl + controlCenterOperatorBonusPercent;
-  const fallbackUpgradeRequirements = mergeUpgradeRequirements(
+  const fallbackUpgradeRequirements = mergeRiicUpgradeRequirements(
     fallbackPreviewOperators.map((operator) => operator.upgradeRequirement),
   );
   let publishedEquivalentByProduct = {
@@ -780,7 +758,7 @@ function toRuntimeCandidate({
       coreUpgradeRequirements,
     ),
     coreUpgradeRequirements,
-    upgradeRequirements: mergeUpgradeRequirements([
+    upgradeRequirements: mergeRiicUpgradeRequirements([
       ...coreUpgradeRequirements,
       ...fallbackUpgradeRequirements,
     ]),
@@ -912,6 +890,15 @@ export function materializeRiicRoomCandidateSkeletons({
   } = resolution;
   const fallbackPools = normalizeFallbackPools(fallbackCatalog);
   const currentRosterById = getRosterById(currentOwnedOperators);
+  const fallbackOperatorProfilesByPool = createFallbackOperatorProfilesByPool({
+    fallbackPools,
+    rosterById,
+    currentRosterById,
+    trainingMode,
+    idealTrainingRaritySelection,
+    scope,
+    layoutFacts,
+  });
   const materializeCandidate = (
     skeleton,
     { allowIncompleteFallback = false } = {},
@@ -925,14 +912,8 @@ export function materializeRiicRoomCandidateSkeletons({
         })
       : getFallbackOperators({
           fallback,
-          rosterById,
-          currentRosterById,
           excludedOperatorIds: new Set(skeleton.operatorIds),
-          fallbackPools,
-          trainingMode,
-          idealTrainingRaritySelection,
-          scope,
-          layoutFacts,
+          fallbackOperatorProfilesByPool,
           minimumPercent: getRiicButshuFallbackMinimumPercent(skeleton.candidate),
           includeCandidatesWhenNoFallback:
             skeleton.taggedMemberRequirements.length > 0,
@@ -960,13 +941,9 @@ export function materializeRiicRoomCandidateSkeletons({
       fallbackOperators,
       teamMemberProductionProfiles: getTeamMemberProductionProfiles({
         operatorIds: skeleton.operatorIds,
-        fallback,
         rosterById,
-        fallbackPools,
-        trainingMode,
-        idealTrainingRaritySelection,
-        scope,
-        layoutFacts,
+        fallbackOperatorProfilesByPool,
+        fallbackPoolKey: fallback.poolKey,
       }),
       layoutFacts,
       taggedMemberRequirements: skeleton.taggedMemberRequirements,

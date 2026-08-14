@@ -66,6 +66,10 @@ function compareFallbackOperators(left, right) {
   );
 }
 
+function getSelectableFallbackSlotOperators(slot, operators, canSelect) {
+  return (operators || []).filter((operator) => canSelect(slot, operator));
+}
+
 function normalizeFallbackOperator(operator, { idleFill = false } = {}) {
   return {
     charId: normalizeOperatorId(operator?.charId),
@@ -378,16 +382,12 @@ function createSeededFallbackPlanVariants({
     let score = 0;
 
     for (const [slotIndex, slot] of slotOptions.entries()) {
-      const operators = slot.operators || [];
-      const startIndex =
-        (seedIndex * slotOptions.length + slotIndex) % operators.length;
-      let selectedOperator = null;
-
-      for (let offset = 0; offset < operators.length; offset += 1) {
-        const operator = operators[(startIndex + offset) % operators.length];
-        if (
+      const operators = getSelectableFallbackSlotOperators(
+        slot,
+        slot.operators,
+        (candidateOperator) =>
           canSelectFallbackOperator({
-            operator,
+            operator: candidateOperator,
             slot,
             occupied,
             excluded,
@@ -395,16 +395,14 @@ function createSeededFallbackPlanVariants({
             recovery: fiammettaRecovery,
             selectedFiammettaTargetStateIndexes:
               fiammettaTargetStateIndexes,
-          })
-        ) {
-          selectedOperator = operator;
-          break;
-        }
-      }
-
-      if (!selectedOperator) {
+          }),
+      );
+      if (operators.length === 0) {
         return null;
       }
+      const startIndex =
+        (seedIndex * slotOptions.length + slotIndex) % operators.length;
+      const selectedOperator = operators[startIndex];
 
       const assignedOperator = {
         ...selectedOperator,
@@ -510,7 +508,7 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
       return {
         ...slot,
         operators: isSpecialSlot
-          ? operators
+          ? [...operators].sort(compareFallbackOperators)
           : operators.slice(0, normalizedOrdinaryOperatorLimit),
       };
     })
@@ -630,10 +628,12 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
     }
 
     const slot = slotOptions[slotIndex];
-    for (const operator of slot.operators) {
-      if (
-        !canSelectFallbackOperator({
-          operator,
+    const operators = getSelectableFallbackSlotOperators(
+      slot,
+      slot.operators,
+      (candidateOperator) =>
+        canSelectFallbackOperator({
+          operator: candidateOperator,
           slot,
           occupied,
           excluded,
@@ -641,10 +641,9 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
           recovery,
           selectedFiammettaTargetStateIndexes:
             getSelectedFiammettaTargetStateIndexes(),
-        })
-      ) {
-        continue;
-      }
+        }),
+    );
+    for (const operator of operators) {
 
       assign(slot, operator);
       visit(
@@ -730,15 +729,14 @@ export function createRiicRoomGroupFallbackPlan({
   const fiammettaTargetSelectionKeys = new Set();
 
   const slotOptions = slots.map((slot) => {
-    const operators = getCandidateFallbackOperators(
-      slot.candidate,
-      {
-        ownedOperators,
-        activeOperatorIds,
-      },
-    ).filter((operator) =>
-      operatorMatchesRequiredTags(operator, slot.requiredTags),
-    );
+    const operators = getCandidateFallbackOperators(slot.candidate, {
+      ownedOperators,
+      activeOperatorIds,
+    })
+      .filter((operator) =>
+        operatorMatchesRequiredTags(operator, slot.requiredTags),
+      )
+      .sort(compareFallbackOperators);
     for (const operator of operators) {
       mergeOperatorById(allOperatorsById, operator);
     }
@@ -851,8 +849,10 @@ export function createRiicRoomGroupFallbackPlan({
         continue;
       }
 
-      const selected = slot.operators.find(
-        (operator) => canSelect(slot, operator),
+      const [selected] = getSelectableFallbackSlotOperators(
+        slot,
+        slot.operators,
+        canSelect,
       );
 
       if (selected) {

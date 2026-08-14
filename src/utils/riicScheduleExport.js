@@ -160,8 +160,8 @@ function createPlanRooms(rooms, stateIndex, roomSettingOverrides) {
   return maaRooms;
 }
 
-function getDroneSetting(state, droneTarget, droneOrder) {
-  const targetKey = String(droneTarget || "").trim();
+function getDroneSetting(state, drone) {
+  const targetKey = String(drone?.target || "").trim();
   if (!targetKey) {
     return null;
   }
@@ -179,7 +179,7 @@ function getDroneSetting(state, droneTarget, droneOrder) {
     room: targetRoom.facility,
     index: Number.isInteger(stationIndex) && stationIndex >= 0 ? stationIndex + 1 : 1,
     rule: "all",
-    order: droneOrder === "post" ? "post" : "pre",
+    order: drone?.order === "post" ? "post" : "pre",
   };
 }
 
@@ -218,8 +218,6 @@ function createLegacyScheduleType(state, planTimes) {
 export function buildRiicMaaScheduleFromPreview({
   preview,
   shifts,
-  droneTarget,
-  droneOrder = "pre",
   shiftMode,
   title = "一图流基建排班表",
   author = "",
@@ -241,7 +239,7 @@ export function buildRiicMaaScheduleFromPreview({
     const nextTime = String(nextShift?.time || "").trim();
     const duration = getDurationMinutes(time, nextTime);
     const period = getPeriod(time, nextTime);
-    const drones = getDroneSetting(state, droneTarget, droneOrder);
+    const drones = getDroneSetting(state, shift?.drone);
     const fiammetta = getFiammettaSetting(shift);
     const usesAlternatingDailyPlans = shiftMode === "once" && states.length > 1;
 
@@ -253,7 +251,7 @@ export function buildRiicMaaScheduleFromPreview({
         "一天一换为隔日 A/B 轮换，已保留两份计划，但未写入会重叠的时间段。",
       );
     }
-    if (!drones && droneTarget) {
+    if (!drones && String(shift?.drone?.target || "").trim()) {
       warnings.add("无人机目标未匹配到可导出的贸易站或制造站。");
     }
 

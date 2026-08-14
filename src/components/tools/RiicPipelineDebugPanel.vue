@@ -86,6 +86,10 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  scheduleShifts: {
+    type: Array,
+    default: () => [],
+  },
   duplicateOperatorChecks: {
     type: Array,
     default: () => [],
@@ -177,8 +181,6 @@ function getYieldAssumptionText(value) {
     {
       level3ProductionRoomsOnly: "制造站和贸易站仅结算三级设施。",
       l79EfficiencyAndShiftDuration: "按 L79 最终效率与班次时长换算。",
-      orundumSustainedByShardSupplyAndTradeCapacity:
-        "合成玉按碎片供给与订单产能的较小值结算。",
       officeNetRefreshAboveBaseContactSpeed:
         "公招净刷新只计办公室相对基础速度增加的部分。",
       goldNetAfterLmdTradeConsumption:
@@ -189,8 +191,6 @@ function getYieldAssumptionText(value) {
         "贸易站已拆分普通订单、但书/龙舌兰订单与可露希尔特别订单的龙门币、赤金消耗和虚拟赤金。",
       droneChargeFromFinalPowerRoster:
         "无人机按最终发电站在岗干员的每人 +5% 与 L79 后勤技能加成计算；基础充能为每 6 分钟 1 架，未分配至具体设施。",
-      droneTargetBenefitFromFinalRoomOutput:
-        "无人机投向收益将每班段产生的无人机全部换算为目标房间的 3 分钟加速产出，仅作展示，不回写资源总卡或排班。",
     }[value] || ""
   );
 }
@@ -409,6 +409,231 @@ function formatSignedPercent(value) {
     Number.isInteger(percent) ? percent : percent.toFixed(1)
   }%`;
 }
+
+function getRoomTraceOperatorNames(room) {
+  return (room?.operators || [])
+    .map((operator) => {
+      const charId = String(operator?.charId || "").trim();
+      return String(
+        operator?.name || props.operatorTable?.[charId]?.name || charId,
+      ).trim();
+    })
+    .filter(Boolean)
+    .join("、");
+}
+
+function getOperatorNames(operatorIds) {
+  return (operatorIds || [])
+    .map((charId) => getOperatorName(charId))
+    .filter(Boolean)
+    .join("、");
+}
+
+function getFinalEfficiencyTraceMode(row) {
+  if (row?.breakdown?.closureCalculation) {
+    return "closure";
+  }
+  if (row?.breakdown?.finalRosterCalculation) {
+    return "finalRoster";
+  }
+  if (Number.isFinite(Number(row?.breakdown?.candidateTotalPercent))) {
+    return "candidate";
+  }
+  return "unavailable";
+}
+
+function getFinalEfficiencyTraceModeLabel(row) {
+  return (
+    {
+      closure: "特别订单换算",
+      finalRoster: "最终名单重算",
+      candidate: "候选值回算",
+      unavailable: "无可用公式",
+    }[getFinalEfficiencyTraceMode(row)] || "无可用公式"
+  );
+}
+
+function getFinalEfficiencyTraceReason(row) {
+  const reason = String(
+    row?.breakdown?.finalRosterCalculation?.reason || "",
+  ).trim();
+  return (
+    {
+      unsupportedRoomType: "该房间类型尚无最终名单计算器",
+      missingExpectedSlots: "缺少房间容量",
+      invalidRoster: "最终名单不完整或存在重复成员",
+      closure: "特别订单需要候选专用计算",
+      butshu: "但书组合需要候选专用计算",
+      shamare: "巫恋组合需要候选专用计算",
+      automation: "自动化组合需要候选专用计算",
+      teamCalculation: "该组合需要候选专用计算",
+    }[reason] || reason
+  );
+}
+
+function getRuleOwnerName(rule) {
+  return getOperatorName(rule?.ownerCharId) || rule?.ownerCharId || "--";
+}
+
+const finalEfficiencyTraceRows = computed(() =>
+  (props.schedulePreview?.states || []).flatMap((state, stateIndex) =>
+    (state?.rooms || []).map((room) => {
+      const actual = room?.efficiencyMetrics?.actual || {};
+      const breakdown = actual?.breakdown || {};
+      const closureCalculation = breakdown?.closureCalculation || null;
+      const finalRosterCalculation =
+        breakdown?.finalRosterCalculation || null;
+
+      return {
+        key: `${stateIndex}:${String(room?.key || "").trim()}`,
+        stateIndex,
+        startHour: Number(state?.startHour || 0),
+        durationHours: Number(state?.durationHours || 0),
+        label: String(room?.label || room?.key || "").trim(),
+        facility: String(room?.facility || "").trim(),
+        product: String(room?.product || "").trim(),
+        stationLevel: Number(room?.stationLevel) || null,
+        operators: getRoomTraceOperatorNames(room),
+        efficiency: room?.efficiency,
+        status: String(actual?.status || "").trim(),
+        candidateName: String(
+          room?.efficiencySource?.candidate?.name || "",
+        ).trim(),
+        breakdown,
+        closureCalculation,
+        finalRosterCalculation,
+        controlCenterOperatorBonuses: room?.controlCenterOperatorBonuses || [],
+      };
+    }),
+  ),
+);
+
+function getDroneTableRoomLabel(room, key) {
+  const label = String(room?.label || "").trim();
+  if (label) {
+    return label;
+  }
+
+  return String(key || "").trim() || "--";
+}
+
+function getDroneTableShiftLabel(shift, index) {
+  const name = String(
+    shift?.name || `${String.fromCharCode(65 + index)}班`,
+  ).trim();
+  const time = String(shift?.time || "").trim();
+  return time ? `${name} ${time}` : name;
+}
+
+function getDroneTableOrderLabel(shift) {
+  return shift?.drone?.order === "post" ? "换班后" : "换班前";
+}
+
+const droneTableDebug = computed(() => {
+  const yieldSummary = props.actualScheduleMetrics?.yield;
+  const previewStates = props.schedulePreview?.states || [];
+  const roomsByKey = new Map(
+    (yieldSummary?.rooms || []).map((room, index) => [
+      String(room?.key || "").trim(),
+      { ...room, order: index },
+    ]),
+  );
+  const settlementsByKey = new Map(
+    (yieldSummary?.droneTargetSettlements || []).map((settlement) => [
+      String(settlement?.key || "").trim(),
+      settlement,
+    ]),
+  );
+  const columns = [...settlementsByKey.entries()]
+    .map(([key, settlement]) => {
+      const room = roomsByKey.get(key) || {};
+      return {
+        key,
+        label: getDroneTableRoomLabel(room, key),
+        facility: String(room?.facility || "").trim(),
+        product: String(room?.product || "").trim(),
+        order: Number(room?.order || 0),
+        settlement,
+      };
+    })
+    .filter(
+      (column) =>
+        column.key &&
+        ["trading", "manufacture"].includes(column.facility),
+    )
+    .sort((left, right) => left.order - right.order);
+  const stateCount = Math.max(
+    previewStates.length,
+    props.scheduleShifts.length,
+    ...columns.map(
+      (column) =>
+        Math.max(
+          column.settlement?.segments?.length || 0,
+          column.settlement?.resourceEffectsBySegment?.length || 0,
+        ),
+    ),
+  );
+
+  return {
+    columns,
+    rows: Array.from({ length: stateCount }, (_, stateIndex) => {
+      const shift = props.scheduleShifts[stateIndex] || {};
+      const state = previewStates[stateIndex] || {};
+      const drone = shift?.drone || {};
+      const selectedTarget = drone?.disabled === true
+        ? ""
+        : String(drone?.target || "").trim();
+
+      return {
+        key: `${stateIndex}:${selectedTarget}`,
+        label: getDroneTableShiftLabel(shift, stateIndex),
+        durationHours: Number(state?.durationHours || 0),
+        droneOrder: getDroneTableOrderLabel(shift),
+        selectedTarget,
+        disabled: drone?.disabled === true,
+        cells: columns.map((column) => {
+          const segment = column.settlement?.segments?.[stateIndex] || {};
+          const resourceEffect =
+            column.settlement?.resourceEffectsBySegment?.[stateIndex] || {};
+          const room = (state?.rooms || []).find(
+            (item) => String(item?.key || "").trim() === column.key,
+          );
+          const isCalculated =
+            segment?.calculated === true &&
+            resourceEffect?.isCalculated === true;
+
+          return {
+            key: `${stateIndex}:${column.key}`,
+            label: column.label,
+            operators: getRoomTraceOperatorNames(room) || "--",
+            selected: selectedTarget === column.key,
+            isCalculated,
+            primaryResource: String(
+              resourceEffect?.primaryResource || segment?.resource || "",
+            ).trim(),
+            displayedOutput: resourceEffect?.primaryOutput ?? null,
+            rawOutput: segment?.output ?? null,
+            droneOutput: segment?.droneOutput ?? null,
+            acceleratedHours: segment?.acceleratedHours ?? null,
+            goldConsumption: resourceEffect?.goldConsumption ?? null,
+            shardConsumption: resourceEffect?.shardConsumption ?? null,
+            lmdConsumption: resourceEffect?.lmdConsumption ?? null,
+            craftMaterial: resourceEffect?.craftMaterial ?? "",
+            craftMaterialLabel: resourceEffect?.craftMaterialLabel ?? "",
+            craftMaterialConsumption:
+              resourceEffect?.craftMaterialConsumption ?? null,
+            netGold: resourceEffect?.netGold ?? null,
+            unavailableReason:
+              String(segment?.unavailableReason || "").trim() ||
+              (resourceEffect?.isCalculated === false
+                ? "resourceSettlementUnavailable"
+                : ""),
+          };
+        }),
+      };
+    }),
+  };
+});
 </script>
 
 <template>
@@ -1048,6 +1273,85 @@ function formatSignedPercent(value) {
             </li>
           </ul>
           <details
+            v-if="automaticGenerationDebugState.l70?.selectionDiagnostics?.length"
+            class="pipeline-nested"
+          >
+            <summary>L70 选中位置候选对照</summary>
+            <article
+              v-for="diagnostic in automaticGenerationDebugState.l70
+                ?.selectionDiagnostics || []"
+              :key="`${diagnostic.groupId}:${diagnostic.selectionKey}`"
+              class="pipeline-actual-room"
+            >
+              <header>
+                <strong>
+                  {{ diagnostic.groupId }} / {{ diagnostic.cohortId }} /
+                  {{ diagnostic.selectionKey }}
+                </strong>
+                <span>
+                  实选：{{ diagnostic.selected.candidateName }}（本地第
+                  {{ diagnostic.selectedRank }} / {{ diagnostic.availableOptionCount }}）
+                </span>
+              </header>
+              <small v-if="!diagnostic.traceFound">
+                未找到实际搜索分支记录。
+              </small>
+              <small>
+                实选成员：{{ getCandidateNames(diagnostic.selected.operatorIds) }}；
+                候选排序值 {{ formatNumber(diagnostic.selected.rankingValue) }}；
+                补位方案分 {{ formatNumber(diagnostic.selected.fallbackPlanScore) }}
+              </small>
+              <ul class="pipeline-list">
+                <li
+                  v-for="alternative in diagnostic.alternatives"
+                  :key="alternative.key"
+                >
+                  <strong>
+                    {{
+                      alternative.key === diagnostic.selected.key
+                        ? "已选"
+                        : "备选"
+                    }}
+                  </strong>
+                  {{ alternative.candidateName }}
+                  <span>
+                    {{ getCandidateNames(alternative.operatorIds) }}
+                  </span>
+                  <span>
+                    候选排序值 {{ formatNumber(alternative.rankingValue) }}
+                  </span>
+                  <span>
+                    补位方案分 {{ formatNumber(alternative.fallbackPlanScore) }}
+                  </span>
+                  <span v-if="alternative.planRank">
+                    实际子分支：全局第 {{ alternative.planRank }}，
+                    总分 {{ formatNumber(alternative.planRankingValue) }}，
+                    基础 {{ formatNumber(alternative.planBaseRankingValue) }}，
+                    {{ alternative.planRetained ? "保留" : "截断" }}
+                  </span>
+                  <span
+                    v-else-if="alternative.rejectionReason === 'duplicateCandidate'"
+                  >
+                    未生成：同一候选已被本房间组使用
+                  </span>
+                  <span
+                    v-else-if="alternative.rejectionReason === 'claimedOperator'"
+                  >
+                    未生成：{{ getOperatorName(alternative.claimedOperatorId) }}
+                    已被前序班组抓取
+                  </span>
+                  <span
+                    v-else-if="alternative.rejectionReason === 'fiammettaState'"
+                  >
+                    未生成：菲亚梅塔班段 {{ alternative.fiammettaStateIndex + 1 }}
+                    已被占用
+                  </span>
+                  <span v-else>该候选未生成实际子分支</span>
+                </li>
+              </ul>
+            </article>
+          </details>
+          <details
             v-if="automaticGenerationDebugState.l70?.bestPlan?.activeRosterEffects?.summaries?.length"
             class="pipeline-nested"
           >
@@ -1236,6 +1540,236 @@ function formatSignedPercent(value) {
             </details>
           </article>
         </div>
+
+        <div class="pipeline-final-efficiency-trace">
+          <h4>排班表显示值明细</h4>
+          <p>
+            直接读取排班预览的 <code>room.efficiency</code>，与排班表卡片使用同一数值。
+          </p>
+          <details
+            v-for="row in finalEfficiencyTraceRows"
+            :key="row.key"
+            class="pipeline-actual-room-details pipeline-final-efficiency-trace-row"
+          >
+            <summary>
+              班段 {{ row.stateIndex + 1 }}（{{ row.startHour }}h 起，{{
+                row.durationHours
+              }}h）/ {{ row.label }}：{{ formatPercent(row.efficiency) }}
+              <span>{{ getFinalEfficiencyTraceModeLabel(row) }}</span>
+            </summary>
+            <div>
+              <span>
+                成员：{{ row.operators || "无人" }}
+                <template v-if="row.product">；产物 {{ row.product }}</template>
+                <template v-if="row.stationLevel">
+                  ；Lv.{{ row.stationLevel }}
+                </template>
+                <template v-if="row.candidateName">
+                  ；候选 {{ row.candidateName }}
+                </template>
+              </span>
+              <template v-if="row.status === 'calculated'">
+                <span v-if="getFinalEfficiencyTraceMode(row) === 'candidate'">
+                  候选原始
+                  {{ formatPercent(row.breakdown.candidateTotalPercent) }}
+                  - 候选期中枢指定干员预估
+                  {{
+                    formatPercent(
+                      row.breakdown.estimatedControlCenterOperatorBonusPercent,
+                    )
+                  }}
+                  + 在岗基础
+                  {{ formatSignedPercent(row.breakdown.staffingBonusPercent) }}
+                  + 实际中枢房间
+                  {{
+                    formatSignedPercent(
+                      row.breakdown.actualControlCenterFacilityBonusPercent,
+                    )
+                  }}
+                  + 实际中枢指定干员
+                  {{
+                    formatSignedPercent(
+                      row.breakdown.actualControlCenterOperatorBonusPercent,
+                    )
+                  }}
+                  + L65 当前班组
+                  {{
+                    formatSignedPercent(
+                      row.breakdown.activeRosterBonusPercent || 0,
+                    )
+                  }}
+                  + 资源链额外
+                  {{
+                    formatSignedPercent(
+                      row.breakdown.resourceChainAdditionalBonusPercent || 0,
+                    )
+                  }}
+                  = {{ formatPercent(row.efficiency) }}
+                </span>
+
+                <template v-else-if="getFinalEfficiencyTraceMode(row) === 'finalRoster'">
+                  <span>
+                    基础
+                    {{
+                      formatPercent(
+                        row.finalRosterCalculation.calculation?.basePercent,
+                      )
+                    }}
+                    + 本地规则
+                    {{
+                      formatSignedPercent(
+                        row.finalRosterCalculation.calculation?.localBonusPercent,
+                      )
+                    }}
+                    + 在岗基础
+                    {{
+                      formatSignedPercent(
+                        row.finalRosterCalculation.staffingBonusPercent,
+                      )
+                    }}
+                    + 实际中枢房间
+                    {{
+                      formatSignedPercent(
+                        row.finalRosterCalculation.controlCenterFacilityBonus,
+                      )
+                    }}
+                    + 实际中枢指定干员
+                    {{
+                      formatSignedPercent(
+                        row.finalRosterCalculation.controlCenterOperatorBonus,
+                      )
+                    }}
+                    = 最终名单小计
+                    {{ formatPercent(row.finalRosterCalculation.value) }}
+                  </span>
+                  <span
+                    v-for="rule in row.finalRosterCalculation.calculation
+                      ?.appliedRules || []"
+                    :key="`${row.key}:${rule.id}:${rule.ownerCharId || ''}`"
+                  >
+                    规则 {{ rule.id }}：{{ getRuleOwnerName(rule) }}
+                    {{ formatSignedPercent(rule.percent) }}
+                    <template v-if="rule.multiplier">
+                      （同室 x{{ rule.multiplier }}）
+                    </template>
+                  </span>
+                  <span>
+                    最终名单小计
+                    {{ formatPercent(row.finalRosterCalculation.value) }}
+                    + L65 当前班组
+                    {{
+                      formatSignedPercent(
+                        row.breakdown.activeRosterBonusPercent || 0,
+                      )
+                    }}
+                    + 资源链额外
+                    {{
+                      formatSignedPercent(
+                        row.breakdown.resourceChainAdditionalBonusPercent || 0,
+                      )
+                    }}
+                    = {{ formatPercent(row.efficiency) }}
+                  </span>
+                </template>
+
+                <template v-else-if="getFinalEfficiencyTraceMode(row) === 'closure'">
+                  <span>
+                    队友普通订单：
+                    {{
+                      formatPercent(
+                        row.closureCalculation.normalCoreBonusPercent,
+                      )
+                    }}
+                    + 补位
+                    {{
+                      formatPercent(
+                        row.closureCalculation.fallbackOrderBonusPercent,
+                      )
+                    }}
+                    + 中枢指定干员
+                    {{
+                      formatPercent(
+                        row.closureCalculation.controlCenterOrderBonusPercent,
+                      )
+                    }}
+                    + 在岗基础
+                    {{
+                      formatPercent(row.closureCalculation.staffingBonusPercent)
+                    }}
+                    = {{ formatPercent(row.closureCalculation.teammateOrderBonusPercent) }}
+                  </span>
+                  <span
+                    v-for="bonus in row.closureCalculation
+                      .controlCenterBonusByOperator || []"
+                    :key="`${row.key}:closure:${bonus.operatorId}`"
+                  >
+                    中枢指定 {{ bonus.name }}：{{
+                      formatSignedPercent(bonus.bonusPercent)
+                    }}
+                  </span>
+                  <span>
+                    特别订单等效
+                    {{
+                      formatPercent(
+                        row.closureCalculation.tradeEquivalentTotalPercent,
+                      )
+                    }}
+                    + 实际中枢房间
+                    {{
+                      formatSignedPercent(
+                        row.breakdown.actualControlCenterFacilityBonusPercent,
+                      )
+                    }}
+                    + L65 当前班组
+                    {{
+                      formatSignedPercent(
+                        row.breakdown.activeRosterBonusPercent || 0,
+                      )
+                    }}
+                    + 资源链额外
+                    {{
+                      formatSignedPercent(
+                        row.breakdown.resourceChainAdditionalBonusPercent || 0,
+                      )
+                    }}
+                    = {{ formatPercent(row.efficiency) }}
+                  </span>
+                  <span>
+                    实际赤金卖出 {{ formatNumber(row.closureCalculation.actualGoldSalePerHour) }} / h；
+                    虚拟赤金 {{ formatNumber(row.closureCalculation.virtualGoldProductionPerHour) }} / h；
+                    等效赤金卖出
+                    {{ formatNumber(row.closureCalculation.equivalentGoldSalePerHour) }} / h
+                  </span>
+                </template>
+
+                <span
+                  v-for="bonus in row.controlCenterOperatorBonuses"
+                  :key="`${row.key}:control:${bonus.operatorId}`"
+                >
+                  实际中枢指定 {{ getOperatorName(bonus.operatorId) }}：{{
+                    formatSignedPercent(bonus.bonusPercent)
+                  }}
+                </span>
+                <span
+                  v-for="effect in row.breakdown.activeRosterEffects || []"
+                  :key="`${row.key}:active:${effect.ruleId}:${effect.ownerId}`"
+                >
+                  L65 {{ effect.ruleId }}：{{ effect.ownerName }}
+                  {{ formatSignedPercent(effect.bonusPercent) }}（{{
+                    effect.matchingOperatorNames.join("、")
+                  }}）
+                </span>
+              </template>
+              <span v-else>
+                未生成可显示的最终效率：
+                {{ getActualScheduleCalculationLabel(row.status) }}
+                <template v-if="getFinalEfficiencyTraceReason(row)">
+                  （{{ getFinalEfficiencyTraceReason(row) }}）
+                </template>
+              </span>
+            </div>
+          </details>
+        </div>
       </div>
     </details>
 
@@ -1268,6 +1802,32 @@ function formatSignedPercent(value) {
               .join(" ")
           }}
         </p>
+        <p
+          v-if="
+            actualScheduleMetrics.yield.resourceFlows?.orundum
+              ?.lmdConsumptionPerDay !== null
+          "
+        >
+          搓玉制造总账：{{
+            actualScheduleMetrics.yield.resourceFlows.orundum
+              .craftMaterialLabel || "--"
+          }} {{
+            formatYield(
+              actualScheduleMetrics.yield.resourceFlows.orundum
+                .craftMaterialConsumptionPerDay,
+            )
+          }} / 天；龙门币消耗 {{
+            formatYield(
+              actualScheduleMetrics.yield.resourceFlows.orundum
+                .lmdConsumptionPerDay,
+            )
+          }} / 天；源石碎片消耗 {{
+            formatYield(
+              actualScheduleMetrics.yield.resourceFlows.orundum
+                .shardConsumptionPerDay,
+            )
+          }} / 天
+        </p>
         <div
           v-if="actualScheduleMetrics.yield.tradingSettlements?.length"
           class="pipeline-actual-room-list"
@@ -1294,6 +1854,10 @@ function formatSignedPercent(value) {
               龙门币 {{ formatYield(segment.lmdOutput) }}，
               赤金消耗 {{ formatYield(segment.goldConsumption) }}，
               虚拟赤金 {{ formatYield(segment.virtualGoldOutput) }}
+              <template v-if="segment.operatorIds?.length">
+                ，在岗 {{ getOperatorNames(segment.operatorIds) }}
+              </template>
+              <code v-if="segment.error">，P01：{{ segment.error }}</code>
             </small>
           </article>
         </div>
@@ -1311,7 +1875,7 @@ function formatSignedPercent(value) {
             }"
           >
             <header>
-              <strong>无人机投向收益（全投此站）</strong>
+              <strong>无人机资源差额（全投此站）</strong>
               <span>{{
                 settlement.label
               }}</span>
@@ -1322,32 +1886,46 @@ function formatSignedPercent(value) {
               "
             >
               {{
-                settlement.resourceLabel
+                settlement.resourceEffects?.primaryResource === "orundum"
+                  ? "合成玉"
+                  : settlement.resourceLabel
               }}
               +{{
                 formatYield(
-                  settlement.outputPerDay,
+                  settlement.resourceEffects?.primaryOutput,
                 )
               }}
-              / 天
+              / 轮换
+              <template v-if="settlement.resourceEffects?.netGold !== null">
+                ；净赤金
+                {{
+                  formatYield(
+                    settlement.resourceEffects?.netGold,
+                  )
+                }}
+                / 轮换
+              </template>
               <template
-                v-if="
-                  settlement.resource === 'lmd'
-                "
+                v-if="settlement.resourceEffects?.shardConsumption !== null"
               >
-                ；赤金消耗
+                ；源石碎片消耗
                 {{
                   formatYield(
-                    settlement.goldConsumptionPerDay,
+                    settlement.resourceEffects?.shardConsumption,
                   )
                 }}
-                / 天；虚拟赤金
+                / 轮换
+              </template>
+              <template
+                v-if="settlement.resourceEffects?.lmdConsumption !== null"
+              >
+                ；龙门币消耗
                 {{
                   formatYield(
-                    settlement.virtualGoldOutputPerDay,
+                    settlement.resourceEffects?.lmdConsumption,
                   )
                 }}
-                / 天
+                / 轮换
               </template>
             </p>
             <p v-else>目标房间存在未完成效率核算的班段。</p>
@@ -1357,16 +1935,107 @@ function formatSignedPercent(value) {
             >
               班段 {{ index + 1 }}：{{ formatYield(segment.droneOutput) }} 架，
               加速 {{ formatYield(segment.acceleratedHours) }}h，
-              {{ segment.resourceLabel }} +{{ formatYield(segment.output) }}
+              房间裸加速 {{ segment.resourceLabel }} +{{ formatYield(segment.output) }}
               <template v-if="segment.tradingFlow">
                 （{{ segment.tradingFlow.typeLabel }}；赤金消耗
                 {{ formatYield(segment.tradingFlow.goldConsumption) }}，
                 虚拟赤金
-                {{ formatYield(segment.tradingFlow.virtualGoldOutput) }}）
+                {{ formatYield(segment.tradingFlow.virtualGoldOutput) }}，
+                源石碎片消耗
+                {{ formatYield(segment.tradingFlow.shardConsumption) }}，
+                ）
+              </template>
+              <template v-if="segment.orundumManufactureFlow">
+                （龙门币消耗
+                {{ formatYield(segment.orundumManufactureFlow.lmdConsumption) }}，
+                {{ segment.orundumManufactureFlow.craftMaterialLabel }}消耗
+                {{ formatYield(segment.orundumManufactureFlow.craftMaterialConsumption) }}）
               </template>
             </small>
           </article>
         </div>
+        <section
+          v-if="droneTableDebug.columns.length"
+          class="pipeline-drone-table-debug"
+        >
+          <header>
+            <strong>无人机表格原始数据</strong>
+            <span>与页面无人机表逐格对应</span>
+          </header>
+          <div class="pipeline-drone-table-debug-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">班次</th>
+                  <th
+                    v-for="column in droneTableDebug.columns"
+                    :key="column.key"
+                    scope="col"
+                  >
+                    {{ column.label }}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in droneTableDebug.rows" :key="row.key">
+                  <th scope="row">
+                    <strong>{{ row.label }}</strong>
+                    <span>{{ formatYield(row.durationHours) }}h</span>
+                    <small>{{ row.disabled ? "不使用无人机" : row.droneOrder }}</small>
+                  </th>
+                  <td
+                    v-for="cell in row.cells"
+                    :key="cell.key"
+                    :class="{
+                      selected: cell.selected,
+                      unavailable: !cell.isCalculated,
+                    }"
+                  >
+                    <strong>
+                      主表：
+                      {{
+                        cell.isCalculated
+                          ? formatYield(cell.displayedOutput)
+                          : "--"
+                      }}
+                    </strong>
+                    <span>在岗：{{ cell.operators }}</span>
+                    <span>无人机：{{ formatYield(cell.droneOutput) }} 架</span>
+                    <span>加速：{{ formatYield(cell.acceleratedHours) }}h</span>
+                    <span>房间原始：{{ formatYield(cell.rawOutput) }}</span>
+                    <span>
+                      资源：{{ cell.primaryResource || "--" }}
+                    </span>
+                    <span v-if="cell.goldConsumption !== null">
+                      订单消耗赤金：{{ formatYield(cell.goldConsumption) }}
+                    </span>
+                    <span v-if="cell.shardConsumption !== null">
+                      订单消耗源石碎片：{{
+                        formatYield(cell.shardConsumption)
+                      }}
+                    </span>
+                    <span v-if="cell.lmdConsumption !== null">
+                      源石碎片制造消耗龙门币：{{
+                        formatYield(cell.lmdConsumption)
+                      }}
+                    </span>
+                    <span v-if="cell.craftMaterialConsumption !== null">
+                      {{ cell.craftMaterialLabel || cell.craftMaterial }}消耗：{{
+                        formatYield(cell.craftMaterialConsumption)
+                      }}
+                    </span>
+                    <span v-if="cell.netGold !== null">
+                      净赤金：{{ formatYield(cell.netGold) }}
+                    </span>
+                    <code v-if="cell.unavailableReason">
+                      {{ cell.unavailableReason }}
+                    </code>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
         <div
           v-if="actualScheduleMetrics.yield.droneCharge"
           class="pipeline-actual-room-list"
@@ -2073,6 +2742,126 @@ function formatSignedPercent(value) {
   margin-top: 3px;
 }
 
+.pipeline-drone-table-debug {
+  overflow: hidden;
+  border: 1px solid var(--c-border-color);
+  background: var(--c-page-background-color-secondary);
+}
+
+.pipeline-drone-table-debug > header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--c-border-color);
+}
+
+.pipeline-drone-table-debug > header strong {
+  color: var(--c-text-color);
+  font-size: 12px;
+}
+
+.pipeline-drone-table-debug > header span {
+  color: var(--riic-muted);
+  font-size: 11px;
+}
+
+.pipeline-drone-table-debug-scroll {
+  overflow-x: auto;
+}
+
+.pipeline-drone-table-debug table {
+  width: 100%;
+  min-width: 820px;
+  border-spacing: 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.pipeline-drone-table-debug th,
+.pipeline-drone-table-debug td {
+  min-width: 0;
+  padding: 7px 8px;
+  border-right: 1px solid var(--c-border-color);
+  border-bottom: 1px solid var(--c-border-color);
+  text-align: left;
+  vertical-align: top;
+}
+
+.pipeline-drone-table-debug tr > :last-child {
+  border-right: 0;
+}
+
+.pipeline-drone-table-debug tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.pipeline-drone-table-debug thead th {
+  background: var(--c-page-background-color);
+  color: var(--c-text-color);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pipeline-drone-table-debug tbody th {
+  width: 110px;
+  background: var(--c-page-background-color);
+}
+
+.pipeline-drone-table-debug tbody th > strong,
+.pipeline-drone-table-debug tbody th > span,
+.pipeline-drone-table-debug tbody th > small,
+.pipeline-drone-table-debug td > strong,
+.pipeline-drone-table-debug td > span,
+.pipeline-drone-table-debug td > code {
+  display: block;
+}
+
+.pipeline-drone-table-debug tbody th > strong {
+  color: var(--c-text-color);
+  font-size: 12px;
+}
+
+.pipeline-drone-table-debug tbody th > span,
+.pipeline-drone-table-debug tbody th > small,
+.pipeline-drone-table-debug td > span {
+  margin-top: 2px;
+  color: var(--riic-muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.pipeline-drone-table-debug td {
+  background: var(--c-page-background-color);
+}
+
+.pipeline-drone-table-debug td.selected {
+  box-shadow: inset 3px 0 0 var(--riic-blue);
+}
+
+.pipeline-drone-table-debug td.unavailable {
+  background: color-mix(
+    in srgb,
+    var(--riic-orange) 5%,
+    var(--c-page-background-color)
+  );
+}
+
+.pipeline-drone-table-debug td > strong {
+  color: var(--riic-blue);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pipeline-drone-table-debug td > code {
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+  color: var(--riic-orange);
+  font-size: 10px;
+  line-height: 1.3;
+}
+
 .pipeline-actual-room-details {
   margin-top: 6px;
   color: var(--riic-muted);
@@ -2090,6 +2879,46 @@ function formatSignedPercent(value) {
   flex-direction: column;
   gap: 2px;
   padding-top: 5px;
+}
+
+.pipeline-final-efficiency-trace {
+  margin-top: 12px;
+}
+
+.pipeline-final-efficiency-trace > h4 {
+  margin: 0;
+  color: var(--c-text-color);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.pipeline-final-efficiency-trace > p {
+  margin: 3px 0 0;
+  color: var(--riic-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.pipeline-final-efficiency-trace-row {
+  margin-top: 7px;
+  padding: 6px 8px;
+  border-left: 2px solid var(--c-border-color);
+  background: var(--c-page-background-color);
+}
+
+.pipeline-final-efficiency-trace-row[open] {
+  border-left-color: var(--riic-green);
+}
+
+.pipeline-final-efficiency-trace-row summary {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.pipeline-final-efficiency-trace-row summary > span {
+  color: var(--riic-muted);
+  font-size: 11px;
 }
 
 @media (max-width: 760px) {

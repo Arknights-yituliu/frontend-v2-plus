@@ -371,6 +371,7 @@ export function createRiicRoomGroupCandidateState({
       fallbackCatalog: library.fallbackCatalog,
       operatorNameToCharId,
       ownedOperators: roster,
+      currentOwnedOperators,
       roomType: getRiicStaticRoomCandidateCatalogFacility(group),
       product: group.candidateProduct,
       stationLevel: cohort.stationLevel,

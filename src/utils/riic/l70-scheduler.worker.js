@@ -19,6 +19,7 @@ function runRiicAutomaticSchedule(input = {}) {
     ownedOperators: input.ownedOperators,
     controlCenterSegments: input.controlCenterSegments,
     fiammettaRecovery: input.fiammettaRecovery,
+    collectPlanningDebug: input.collectPlanningDebug === true,
   });
   const tailFillResult = buildRiicTailFillResult({
     groups: input.groups,

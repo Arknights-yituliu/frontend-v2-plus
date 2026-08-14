@@ -200,6 +200,18 @@ const routes = [
         }
     },
     {
+        path: '/tools/scheduleV3',
+        text: '排班表生成器',
+        name: 'ScheduleV3',
+        display: false,
+        module: 'riic',
+        icon: "mdi-home-clock-outline",
+        component: () => import('/src/pages/tools/riic-schedule-generator.vue'),
+        meta: {
+            title: '排班表生成器'
+        }
+    },
+    {
         path: '/riic',
         text: '排班表生成器',
         name: 'RiicScheduleGeneratorShortcut',
@@ -411,6 +423,16 @@ const routes = [
         component: () => import('/src/pages/dev/open-api-test.vue'),
         meta: {
             title: 'OpenAPI测试'
+        }
+    },
+    {
+        path: '/dev/riic-test',
+        text: 'RIIC计算测试',
+        name: 'RiicCalculationTest',
+        display: false,
+        component: () => import('/src/pages/dev/riic-test.vue'),
+        meta: {
+            title: 'RIIC计算测试'
         }
     },
     {

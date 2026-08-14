@@ -1,19 +1,12 @@
+import {
+  compareRiicOperatorUnlock,
+  createRiicUpgradeRequirement,
+  mergeRiicUpgradeRequirements,
+} from "./P00-upgrade-requirements.js";
+
 function toNonNegativeInteger(value, fallback = 0) {
   const number = Number(value);
   return Number.isInteger(number) && number >= 0 ? number : fallback;
-}
-
-function compareUnlock(left, right) {
-  const eliteDifference =
-    toNonNegativeInteger(left?.elite) - toNonNegativeInteger(right?.elite);
-  if (eliteDifference !== 0) {
-    return eliteDifference;
-  }
-
-  return (
-    toNonNegativeInteger(left?.level, 1) -
-    toNonNegativeInteger(right?.level, 1)
-  );
 }
 
 function getCurrentRosterById(ownedOperators) {
@@ -32,7 +25,10 @@ function getCurrentRosterById(ownedOperators) {
       level: toNonNegativeInteger(operator?.level, 1),
     };
     const current = rosterById.get(charId);
-    if (!current || compareUnlock(normalized, current) > 0) {
+    if (
+      !current ||
+      compareRiicOperatorUnlock(normalized, current) > 0
+    ) {
       rosterById.set(charId, normalized);
     }
   }
@@ -56,49 +52,6 @@ function normalizeNameToCharId(operatorNameToCharId) {
   );
 }
 
-function createRequirement(operator, required) {
-  if (!operator || compareUnlock(operator, required) >= 0) {
-    return null;
-  }
-
-  return {
-    charId: operator.charId,
-    name: operator.name,
-    current: {
-      elite: operator.elite,
-      level: operator.level,
-    },
-    required: {
-      elite: toNonNegativeInteger(required?.elite),
-      level: toNonNegativeInteger(required?.level, 1),
-    },
-  };
-}
-
-function mergeRequirements(requirements) {
-  const byCharId = new Map();
-
-  for (const requirement of requirements) {
-    if (!requirement?.charId) {
-      continue;
-    }
-
-    const current = byCharId.get(requirement.charId);
-    if (
-      !current ||
-      compareUnlock(requirement.required, current.required) > 0
-    ) {
-      byCharId.set(requirement.charId, requirement);
-    }
-  }
-
-  return [...byCharId.values()].sort(
-    (left, right) =>
-      left.name.localeCompare(right.name, "zh-CN") ||
-      left.charId.localeCompare(right.charId, "en"),
-  );
-}
-
 function collectCandidateRequirements(
   candidate,
   rosterById,
@@ -115,7 +68,7 @@ function collectCandidateRequirements(
       String(member?.name || "").trim(),
     );
     const operator = rosterById.get(charId);
-    const requirement = createRequirement(operator, {
+    const requirement = createRiicUpgradeRequirement(operator, {
       elite: member?.elite,
       level: member?.level,
     });
@@ -135,7 +88,10 @@ function collectCandidateRequirements(
     const matchingOperator = matchingRosterById.get(
       String(fallbackOperator?.charId || "").trim(),
     );
-    const requirement = createRequirement(operator, matchingOperator);
+    const requirement = createRiicUpgradeRequirement(
+      operator,
+      matchingOperator,
+    );
     if (requirement) {
       requirements.push(requirement);
     }
@@ -174,5 +130,5 @@ export function getRiicScheduleTrainingRecommendations({
     }
   }
 
-  return mergeRequirements(requirements);
+  return mergeRiicUpgradeRequirements(requirements);
 }

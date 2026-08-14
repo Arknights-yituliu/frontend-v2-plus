@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps({
   exportInfo: {
@@ -18,12 +18,27 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  orundumCraftMaterial: {
+    type: String,
+    default: "orirock",
+  },
 });
 
 const exportSettingsOpen = ref(false);
+const displayShifts = computed(() =>
+  props.shifts
+    .map((shift, index) => ({ shift, index }))
+    .sort((left, right) =>
+      String(left.shift?.name || "").localeCompare(
+        String(right.shift?.name || ""),
+        "zh-CN",
+      ),
+    ),
+);
 
 const emit = defineEmits([
   "update:export-info",
+  "update:orundum-craft-material",
   "update:shift",
 ]);
 
@@ -39,6 +54,10 @@ function updateShift(index, field, event) {
     index,
     [field]: event.target.value,
   });
+}
+
+function updateOrundumCraftMaterial(value) {
+  emit("update:orundum-craft-material", value);
 }
 </script>
 
@@ -88,28 +107,58 @@ function updateShift(index, field, event) {
         </div>
       </section>
 
+      <section class="schedule-export-module schedule-export-orundum-module">
+        <header class="schedule-export-module-heading">
+          <strong>搓玉原料</strong>
+        </header>
+        <div class="schedule-export-orundum-options">
+          <button
+            type="button"
+            :class="{ active: orundumCraftMaterial === 'orirock' }"
+            @click="updateOrundumCraftMaterial('orirock')"
+          >
+            固源岩
+          </button>
+          <button
+            type="button"
+            :class="{ active: orundumCraftMaterial === 'device' }"
+            @click="updateOrundumCraftMaterial('device')"
+          >
+            装置
+          </button>
+        </div>
+      </section>
+
       <div class="schedule-export-shift-fields">
         <section
-          v-for="(shift, index) in shifts"
-          :key="shift.id || index"
+          v-for="entry in displayShifts"
+          :key="entry.shift.id || entry.index"
           class="schedule-export-module schedule-export-shift-field"
         >
           <header class="schedule-export-module-heading">
-            <strong>{{ shift.name || `班次 ${index + 1}` }}</strong>
-            <span>{{ shift.time }}</span>
+            <strong>{{ entry.shift.name || `班次 ${entry.index + 1}` }}</strong>
+            <span>{{ entry.shift.time }}</span>
           </header>
+          <label>
+            <span>班次起始时间</span>
+            <input
+              :value="entry.shift.time"
+              type="time"
+              @input="updateShift(entry.index, 'time', $event)"
+            />
+          </label>
           <label>
             <span>班次说明</span>
             <input
-              :value="shift.description"
-              @input="updateShift(index, 'description', $event)"
+              :value="entry.shift.description"
+              @input="updateShift(entry.index, 'description', $event)"
             />
           </label>
           <label>
             <span>换班后说明</span>
             <input
-              :value="shift.descriptionPost"
-              @input="updateShift(index, 'descriptionPost', $event)"
+              :value="entry.shift.descriptionPost"
+              @input="updateShift(entry.index, 'descriptionPost', $event)"
             />
           </label>
         </section>
@@ -231,6 +280,36 @@ function updateShift(index, field, event) {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 8px;
+}
+
+.schedule-export-orundum-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.schedule-export-orundum-options button {
+  min-width: 72px;
+  min-height: 30px;
+  padding: 4px 9px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  background: var(--c-page-background-color-secondary);
+  color: var(--c-text-color-secondary);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+}
+
+.schedule-export-orundum-options button.active {
+  border-color: color-mix(in srgb, var(--riic-blue) 60%, var(--c-border-color));
+  background: color-mix(
+    in srgb,
+    var(--riic-blue) 12%,
+    var(--c-page-background-color)
+  );
+  color: var(--riic-blue);
+  font-weight: 600;
 }
 
 .schedule-export-shift-field {

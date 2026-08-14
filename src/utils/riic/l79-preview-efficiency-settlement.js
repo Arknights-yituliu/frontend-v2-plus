@@ -19,6 +19,7 @@ const GENERIC_ROOM_TYPES = new Set([
   "meeting",
   "hire",
 ]);
+const PRODUCTIVE_ROOM_TYPES = new Set(["manufacture", "trading"]);
 
 function toFinitePercent(value) {
   if (value === null || value === undefined || value === "") {
@@ -49,6 +50,12 @@ function getOperatorBonusById(operatorBonuses) {
 function normalizeRoomType(facility) {
   const roomType = String(facility || "").trim();
   return roomType === "office" ? "hire" : roomType;
+}
+
+function getStaffingBonusPercent({ facility, operators = [] } = {}) {
+  return PRODUCTIVE_ROOM_TYPES.has(normalizeRoomType(facility))
+    ? (operators || []).length
+    : 0;
 }
 
 function getCandidateSpecificCalculationReason(candidate) {
@@ -158,8 +165,10 @@ export function calculateRiicFinalRoomRosterEfficiency({
     toFinitePercent(actualControlCenterFacilityBonusPercent) || 0;
   const controlCenterOperatorBonus =
     toFinitePercent(actualControlCenterOperatorBonusPercent) || 0;
+  const staffingBonusPercent = getStaffingBonusPercent({ facility, operators });
   const roomPercent =
     Number(calculation.localTotalPercent || 0) +
+    staffingBonusPercent +
     controlCenterFacilityBonus +
     controlCenterOperatorBonus;
 
@@ -167,6 +176,7 @@ export function calculateRiicFinalRoomRosterEfficiency({
     status: "calculated",
     value: roomPercent,
     calculation,
+    staffingBonusPercent,
     controlCenterFacilityBonus,
     controlCenterOperatorBonus,
   };
@@ -200,6 +210,10 @@ export function settleRiicPreviewRoomEfficiency({
   const actualControlCenterOperatorBonus = toFinitePercent(
     actualControlCenterOperatorBonusPercent,
   );
+  const staffingBonusPercent = getStaffingBonusPercent({
+    facility,
+    operators,
+  });
   const finalRosterCalculation =
     manuallyEdited && resolvedSkills
       ? calculateRiicFinalRoomRosterEfficiency({
@@ -233,6 +247,7 @@ export function settleRiicPreviewRoomEfficiency({
           operatorBonusById: getOperatorBonusById(
             actualControlCenterOperatorBonuses,
           ),
+          staffingBonusPercent,
         })
       : null;
   const actualValue =
@@ -244,6 +259,7 @@ export function settleRiicPreviewRoomEfficiency({
           (actualControlCenterFacilityBonus || 0)
         : candidateTotal -
           (estimatedControlCenterOperatorBonus || 0) +
+          staffingBonusPercent +
           (actualControlCenterFacilityBonus || 0) +
           (actualControlCenterOperatorBonus || 0)
       : null;
@@ -257,7 +273,7 @@ export function settleRiicPreviewRoomEfficiency({
         candidateTotalPercent: candidateTotal,
         estimatedControlCenterOperatorBonusPercent:
           estimatedControlCenterOperatorBonus || 0,
-        staffingBonusPercent: 0,
+        staffingBonusPercent,
         actualControlCenterFacilityBonusPercent:
           actualControlCenterFacilityBonus || 0,
         actualControlCenterOperatorBonusPercent:
@@ -381,7 +397,6 @@ export function applyRiicPreviewResourceChainSettlement({
 
   return {
     ...(preview || {}),
-    resourceChainSettlement: settlement || null,
     states: (preview?.states || []).map((state) => ({
       ...state,
       rooms: (state?.rooms || []).map((room) => {

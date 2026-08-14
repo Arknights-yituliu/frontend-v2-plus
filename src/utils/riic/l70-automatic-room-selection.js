@@ -155,6 +155,9 @@ function getAutomaticRoomTeamOptions({
         activeRosterPriority,
         baseRankingValue,
         rankingValue: baseRankingValue,
+        unmetUpgradeRequirementCount: (
+          materializedCandidate?.upgradeRequirements || []
+        ).length,
       },
     ];
   });
@@ -199,6 +202,83 @@ function createSelectionCohorts({
   };
 }
 
+function createAutomaticSelectionDiagnostics({
+  selections = [],
+  plannerDebug,
+  plannerOptionTraces,
+  plannerOptionEvaluations,
+}) {
+  const planningRounds = plannerDebug?.planningRounds || [];
+
+  return (selections || []).map(({ slot, option, parentPlanKey, planKey }, roundIndex) => {
+    const trace = (plannerOptionTraces || []).find(
+      (item) =>
+        item.roundIndex === roundIndex &&
+        item.parentPlanKey === parentPlanKey &&
+        item.groupId === slot?.groupId &&
+        item.cohortId === slot?.cohortId,
+    );
+    const planningRound = planningRounds.find(
+      (item) => item.roundIndex === roundIndex,
+    );
+    const evaluationsByOptionKey = new Map(
+      (plannerOptionEvaluations || [])
+        .filter(
+          (item) =>
+            item.roundIndex === roundIndex &&
+            item.parentPlanKey === parentPlanKey &&
+            item.groupId === slot?.groupId &&
+            item.cohortId === slot?.cohortId &&
+            item.selectionKey === trace?.selectionKey,
+        )
+        .map((item) => [item.optionKey, item]),
+    );
+    const summarizePlan = (optionTrace) => {
+      const optionPlanKey = parentPlanKey
+        ? `${parentPlanKey}>>${slot.key}:${trace?.selectionKey}:${optionTrace.key}`
+        : `${slot.key}:${trace?.selectionKey}:${optionTrace.key}`;
+      const plan = planningRound?.plansByKey?.[optionPlanKey] || null;
+      const evaluation = evaluationsByOptionKey.get(optionTrace.key);
+
+      return {
+        ...optionTrace,
+        planRank: Number(plan?.rank || 0),
+        planRankingValue: Number(plan?.rankingValue || 0),
+        planBaseRankingValue: Number(plan?.baseRankingValue || 0),
+        planRetained: plan?.retained === true,
+        rejectionReason: evaluation?.reason || "",
+        claimedOperatorId: evaluation?.claimedOperatorId || "",
+        fiammettaStateIndex: evaluation?.fiammettaStateIndex ?? null,
+      };
+    };
+    const selected = summarizePlan({
+      key: option?.key || "",
+      candidateName: option?.materializedCandidate?.name || "",
+      operatorIds: option?.materializedCandidate?.operatorIds || [],
+      fallbackPlanScore: Number(option?.fallbackPlan?.score || 0),
+      rankingValue: Number(option?.rankingValue || 0),
+    });
+    const alternatives = (trace?.options || []).map(summarizePlan);
+    if (!alternatives.some((item) => item.key === selected.key)) {
+      alternatives.push(selected);
+    }
+
+    return {
+      groupId: slot?.groupId || "",
+      cohortId: slot?.cohortId || "",
+      selectionKey: trace?.selectionKey || "",
+      selected,
+      selectedRank: Math.max(
+        1,
+        alternatives.findIndex((item) => item.key === selected.key) + 1,
+      ),
+      availableOptionCount: Number(trace?.optionCount || alternatives.length),
+      alternatives,
+      traceFound: Boolean(trace),
+    };
+  });
+}
+
 /**
  * L70: choose mutually exclusive, fully materialized room-team options.
  * L61 fallback alternatives and L62 formulas are resolved for each beam branch,
@@ -214,6 +294,7 @@ export function buildRiicAutomaticRoomGroupSelections({
   fiammettaRecovery,
   ownedOperators = [],
   controlCenterSegments = [],
+  collectPlanningDebug = false,
 } = {}) {
   const planningGroups = getRiicAutomaticRoomGroupPlanningOrder(groups);
   const groupLabelById = new Map(
@@ -232,7 +313,9 @@ export function buildRiicAutomaticRoomGroupSelections({
       groups: planningGroups,
       candidateStatesByGroupId,
     });
-  const { bestPlan } = planRiicAutomaticRoomSelections({
+  const plannerOptionTraces = [];
+  const plannerOptionEvaluations = [];
+  const { bestPlan, debug: plannerDebug } = planRiicAutomaticRoomSelections({
     selectionCohorts,
     initiallyClaimedOperatorIds: [...normalizedControlCenterOperatorIds].filter(
       (charId) => charId !== recovery.targetOperatorId,
@@ -297,6 +380,59 @@ export function buildRiicAutomaticRoomGroupSelections({
         Number(activeRosterEffects.rankingBonus || 0)
       );
     },
+    collectDebug: collectPlanningDebug,
+    onOptionsResolved: collectPlanningDebug
+      ? ({
+          roundIndex,
+          parentPlanKey,
+          cohort,
+          selectionKey,
+          options,
+        }) => {
+          plannerOptionTraces.push({
+            roundIndex,
+            parentPlanKey,
+            groupId: cohort.groupId,
+            cohortId: cohort.cohortId,
+            selectionKey,
+            optionCount: options.length,
+            options: options.slice(0, 12).map((item) => ({
+              key: item.key,
+              candidateName: item.materializedCandidate?.name || "",
+              operatorIds: item.materializedCandidate?.operatorIds || [],
+              fallbackPlanScore: Number(item.fallbackPlan?.score || 0),
+              rankingValue: Number(item.rankingValue || 0),
+            })),
+          });
+        }
+      : null,
+    onOptionEvaluated: collectPlanningDebug
+      ? ({
+          roundIndex,
+          parentPlanKey,
+          cohort,
+          selectionKey,
+          option,
+          status,
+          reason,
+          claimedOperatorId,
+          fiammettaStateIndex,
+        }) => {
+          plannerOptionEvaluations.push({
+            roundIndex,
+            parentPlanKey,
+            groupId: cohort.groupId,
+            cohortId: cohort.cohortId,
+            selectionKey,
+            optionKey: option.key,
+            status,
+            reason: reason || "",
+            claimedOperatorId: claimedOperatorId || "",
+            fiammettaStateIndex:
+              fiammettaStateIndex === undefined ? null : fiammettaStateIndex,
+          });
+        }
+      : null,
   });
   const selections = {};
   const fallbackOperatorIdBySlotKeyByGroup = {};
@@ -359,6 +495,14 @@ export function buildRiicAutomaticRoomGroupSelections({
             })),
           }
         : null,
+      selectionDiagnostics: collectPlanningDebug
+        ? createAutomaticSelectionDiagnostics({
+            selections: bestPlan?.selections,
+            plannerDebug,
+            plannerOptionTraces,
+            plannerOptionEvaluations,
+          })
+        : [],
     },
   };
 }

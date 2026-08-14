@@ -92,8 +92,8 @@ function confirmCustomTarget() {
       <OperatorAvatar
         class="schedule-fiammetta-avatar"
         char-id="char_300_phenxi"
-        :size="42"
-        :mobile-size="42"
+        :size="34"
+        :mobile-size="34"
         :border="true"
       ></OperatorAvatar>
       <span class="schedule-fiammetta-question">要我替你休息吗？</span>
@@ -115,9 +115,7 @@ function confirmCustomTarget() {
           要
         </button>
       </div>
-    </div>
-    <div v-if="fiammetta.enable" class="schedule-fiammetta-details">
-      <div class="schedule-fiammetta-order">
+      <div v-if="fiammetta.enable" class="schedule-fiammetta-order">
         <button
           type="button"
           :class="{ active: fiammetta.order !== 'post' }"
@@ -133,11 +131,12 @@ function confirmCustomTarget() {
           换班后
         </button>
       </div>
+    </div>
+    <div v-if="fiammetta.enable" class="schedule-fiammetta-details">
       <select
         :value="selectedTarget"
         @change="updateTarget"
       >
-        <option :value="CUSTOM_TARGET_VALUE">选择恢复目标</option>
         <option
           v-for="operator in targetOptions"
           :key="operator.charId || operator.name"
@@ -145,6 +144,7 @@ function confirmCustomTarget() {
         >
           {{ operator.name }}
         </option>
+        <option :value="CUSTOM_TARGET_VALUE">其他恢复目标…</option>
       </select>
       <div
         v-if="showCustomTargetInput"
@@ -168,13 +168,17 @@ function confirmCustomTarget() {
 .schedule-fiammetta-settings {
   display: flex;
   align-items: center;
+  width: 100%;
+  min-height: 88px;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-  padding: 8px;
-  border: 1px solid var(--c-border-color);
-  border-radius: 4px;
-  background: var(--c-page-background-color-secondary);
+  gap: 6px 8px;
+  margin: 0;
+  padding: 7px 9px;
+  background: color-mix(
+    in srgb,
+    var(--c-page-background-color-secondary) 96%,
+    #000
+  );
 }
 
 .schedule-fiammetta-main,
@@ -188,7 +192,7 @@ function confirmCustomTarget() {
 .schedule-fiammetta-question {
   min-width: 0;
   color: var(--c-text-color);
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.35;
 }
 
@@ -202,8 +206,8 @@ function confirmCustomTarget() {
 
 .schedule-fiammetta-choice button,
 .schedule-fiammetta-order button {
-  min-height: 28px;
-  padding: 4px 8px;
+  min-height: 25px;
+  padding: 3px 7px;
   border: 0;
   border-left: 1px solid var(--c-border-color);
   background: var(--c-page-background-color);
@@ -247,9 +251,9 @@ function confirmCustomTarget() {
 .schedule-fiammetta-settings select,
 .schedule-fiammetta-custom-target input,
 .schedule-fiammetta-custom-target button {
-  min-width: 148px;
-  min-height: 30px;
-  padding: 4px 7px;
+  min-width: 130px;
+  min-height: 26px;
+  padding: 3px 6px;
   border: 1px solid var(--c-border-color);
   border-radius: 4px;
   background: var(--c-page-background-color);
@@ -266,7 +270,7 @@ function confirmCustomTarget() {
 }
 
 .schedule-fiammetta-custom-target input {
-  width: 148px;
+  width: 130px;
 }
 
 .schedule-fiammetta-custom-target button {
