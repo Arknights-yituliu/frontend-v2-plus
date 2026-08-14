@@ -832,7 +832,8 @@ function updateAnswer(key, value) {
   --layout-color: #b48745;
 }
 
-.layout-choice.layout-252-3-gold {
+.layout-choice.layout-252-3-gold,
+.layout-choice.layout-333 {
   --layout-color: #3c83bd;
 }
 

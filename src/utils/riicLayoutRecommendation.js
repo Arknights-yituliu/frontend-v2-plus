@@ -23,6 +23,14 @@ export const RIIC_LAYOUTS = {
     manufactureRooms: 5,
     powerRooms: 2,
   },
+  333: {
+    id: "333",
+    name: "333 龙门币与赤金布局",
+    shortName: "333",
+    tradingRooms: 3,
+    manufactureRooms: 3,
+    powerRooms: 3,
+  },
   342: {
     id: "342",
     name: "342 搓玉布局",
@@ -104,6 +112,8 @@ const CARD_LAYOUT_IDS = {
   "243-orundum": "243",
   "252-2-gold": "252",
   "252-3-gold": "252",
+  333: "333",
+  342: "342",
   "342-orundum": "342",
 };
 

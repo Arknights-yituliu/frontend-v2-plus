@@ -69,6 +69,21 @@ const FIXED_LAYOUT_ROOM_STATIONS = Object.freeze({
     "gold-manufacture": [station(2), station(2)],
     power: [station(1), station(1)],
   },
+  333: {
+    "lmd-trading": [station(3), station(3), station(3)],
+    "gold-manufacture": [station(3), station(3), station(3)],
+    power: [station(1), station(1), station(1)],
+  },
+  342: {
+    "lmd-trading": [station(3), station(3), station(1)],
+    "gold-manufacture": [
+      station(3),
+      station(3),
+      station(2),
+      station(2),
+    ],
+    power: [station(1), station(1)],
+  },
 });
 
 const STATIC_ROOM_STATIONS = Object.freeze({

@@ -120,7 +120,7 @@ function getButshuFamilyConfiguration(candidate) {
       fixedMemberCount: 3,
     };
   }
-  if (group === "shamare-plain") {
+  if (group === "shamare-plain" || group === "shamare-idle") {
     return {
       elite: firstMemberElite,
       hasShamare: true,
