@@ -365,30 +365,57 @@ function getFallbackPlanAssignmentSignature(plan) {
     .join("|");
 }
 
-function createSeededFallbackPlanVariants({
+function prioritizeDistinctFallbackOperatorSets(variants) {
+  const seenOperatorSets = new Set();
+  const distinctVariants = [];
+  const duplicateVariants = [];
+
+  for (const variant of variants) {
+    const operatorSetSignature = [...(variant?.selectedOperatorIds || [])]
+      .sort((left, right) => left.localeCompare(right, "en"))
+      .join("|");
+    if (seenOperatorSets.has(operatorSetSignature)) {
+      duplicateVariants.push(variant);
+    } else {
+      seenOperatorSets.add(operatorSetSignature);
+      distinctVariants.push(variant);
+    }
+  }
+
+  return [...distinctVariants, ...duplicateVariants];
+}
+
+function createAnchoredFallbackPlanVariant({
   slots,
   slotOptions,
   occupied,
   excluded,
   fiammettaRecovery,
-  maxPlanCount,
+  anchor,
 }) {
-  return Array.from({ length: maxPlanCount }, (_, seedIndex) => {
-    const selectedOperatorIds = new Set();
-    const assignedOperatorBySlotKey = new Map();
-    const assignmentsBySelectionKey = new Map();
-    const fiammettaTargetStateIndexes = new Set();
-    const fiammettaTargetSelectionKeys = new Set();
-    let score = 0;
+  const selectedOperatorIds = new Set();
+  const assignedOperatorBySlotKey = new Map();
+  const assignmentsBySelectionKey = new Map();
+  const fiammettaTargetStateIndexes = new Set();
+  const fiammettaTargetSelectionKeys = new Set();
+  let score = 0;
 
-    for (const [slotIndex, slot] of slotOptions.entries()) {
-      const operators = getSelectableFallbackSlotOperators(
+  for (const slot of slotOptions) {
+    const selectedOperator = (() => {
+      if (slot.key === anchor.slot.key) {
+        return slot.operators.find(
+          (operator) => operator.charId === anchor.operator.charId,
+        );
+      }
+
+      const selectableOperators = getSelectableFallbackSlotOperators(
         slot,
         slot.operators,
-        (candidateOperator) =>
+        (candidateSlot, candidateOperator) =>
+          candidateOperator.charId !== anchor.operator.charId &&
           canSelectFallbackOperator({
             operator: candidateOperator,
-            slot,
+            slot: candidateSlot,
             occupied,
             excluded,
             selectedOperatorIds,
@@ -397,49 +424,59 @@ function createSeededFallbackPlanVariants({
               fiammettaTargetStateIndexes,
           }),
       );
-      if (operators.length === 0) {
-        return null;
-      }
-      const startIndex =
-        (seedIndex * slotOptions.length + slotIndex) % operators.length;
-      const selectedOperator = operators[startIndex];
+      return selectableOperators[
+        anchor.optionIndex % Math.max(1, selectableOperators.length)
+      ];
+    })();
 
-      const assignedOperator = {
-        ...selectedOperator,
-        taggedMember: slot.kind === "taggedMember",
-      };
-      selectedOperatorIds.add(selectedOperator.charId);
-      if (isFiammettaTarget(fiammettaRecovery, selectedOperator.charId)) {
-        fiammettaTargetSelectionKeys.add(slot.selectionKey);
-        for (const stateIndex of getRiicFiammettaSelectionStateIndexes(
-          fiammettaRecovery,
-          slot.selectionKey,
-        )) {
-          fiammettaTargetStateIndexes.add(stateIndex);
-        }
-      }
-      assignedOperatorBySlotKey.set(slot.key, assignedOperator);
-      if (!assignmentsBySelectionKey.has(slot.selectionKey)) {
-        assignmentsBySelectionKey.set(slot.selectionKey, []);
-      }
-      assignmentsBySelectionKey
-        .get(slot.selectionKey)
-        .push(assignedOperator);
-      score +=
-        normalizePercent(
-          selectedOperator.effectivePercent ?? selectedOperator.percent,
-        ) + normalizePercent(selectedOperator.fillPriority);
+    if (
+      !selectedOperator ||
+      !canSelectFallbackOperator({
+        operator: selectedOperator,
+        slot,
+        occupied,
+        excluded,
+        selectedOperatorIds,
+        recovery: fiammettaRecovery,
+        selectedFiammettaTargetStateIndexes: fiammettaTargetStateIndexes,
+      })
+    ) {
+      return null;
     }
 
-    return createFallbackPlanVariant({
-      slots,
-      assignedOperatorBySlotKey,
-      assignmentsBySelectionKey,
-      score,
-      fiammettaTargetSelectionKeys,
-      fiammettaTargetStateIndexes,
-    });
-  }).filter(Boolean);
+    const assignedOperator = {
+      ...selectedOperator,
+      taggedMember: slot.kind === "taggedMember",
+    };
+    selectedOperatorIds.add(selectedOperator.charId);
+    if (isFiammettaTarget(fiammettaRecovery, selectedOperator.charId)) {
+      fiammettaTargetSelectionKeys.add(slot.selectionKey);
+      for (const stateIndex of getRiicFiammettaSelectionStateIndexes(
+        fiammettaRecovery,
+        slot.selectionKey,
+      )) {
+        fiammettaTargetStateIndexes.add(stateIndex);
+      }
+    }
+    assignedOperatorBySlotKey.set(slot.key, assignedOperator);
+    if (!assignmentsBySelectionKey.has(slot.selectionKey)) {
+      assignmentsBySelectionKey.set(slot.selectionKey, []);
+    }
+    assignmentsBySelectionKey.get(slot.selectionKey).push(assignedOperator);
+    score +=
+      normalizePercent(
+        selectedOperator.effectivePercent ?? selectedOperator.percent,
+      ) + normalizePercent(selectedOperator.fillPriority);
+  }
+
+  return createFallbackPlanVariant({
+    slots,
+    assignedOperatorBySlotKey,
+    assignmentsBySelectionKey,
+    score,
+    fiammettaTargetSelectionKeys,
+    fiammettaTargetStateIndexes,
+  });
 }
 
 /**
@@ -631,10 +668,10 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
     const operators = getSelectableFallbackSlotOperators(
       slot,
       slot.operators,
-      (candidateOperator) =>
+      (candidateSlot, candidateOperator) =>
         canSelectFallbackOperator({
           operator: candidateOperator,
-          slot,
+          slot: candidateSlot,
           occupied,
           excluded,
           selectedOperatorIds,
@@ -667,19 +704,49 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
           "en",
         ),
     );
-  const seededVariants = createSeededFallbackPlanVariants({
-    slots,
-    slotOptions,
-    occupied,
-    excluded,
-    fiammettaRecovery: recovery,
-    maxPlanCount: normalizedMaxPlanCount,
-  });
+  const anchors = slotOptions
+    .filter((slot) => slot.kind === "fallback")
+    .flatMap((slot) =>
+      slot.operators
+        .filter(
+          (operator) =>
+            !isFiammettaTarget(recovery, operator.charId) &&
+            canSelectFallbackOperator({
+              operator,
+              slot,
+              occupied,
+              excluded,
+              selectedOperatorIds: new Set(),
+              recovery,
+              selectedFiammettaTargetStateIndexes: [],
+            }),
+        )
+        .map((operator, optionIndex) => ({ slot, operator, optionIndex })),
+    )
+    .sort(
+      (left, right) =>
+        compareFallbackOperators(left.operator, right.operator) ||
+        left.slot.key.localeCompare(right.slot.key, "en"),
+    );
+  const anchoredVariants = prioritizeDistinctFallbackOperatorSets(
+    anchors
+      .map((anchor) =>
+        createAnchoredFallbackPlanVariant({
+          slots,
+          slotOptions,
+          occupied,
+          excluded,
+          fiammettaRecovery: recovery,
+          anchor,
+        }),
+      )
+      .filter(Boolean),
+  );
   const candidatesByAssignment = new Map();
 
   for (const variant of [
     rankedVariants[0],
-    ...seededVariants,
+    ...anchoredVariants,
     ...rankedVariants,
   ].filter(Boolean)) {
     const signature = getFallbackPlanAssignmentSignature(variant);

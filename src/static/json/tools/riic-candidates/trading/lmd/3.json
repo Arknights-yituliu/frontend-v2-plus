@@ -34,8 +34,8 @@
           "elite": 2
         }
       ],
-      "efficiency": 207.93,
-      "gold": 13.45,
+      "efficiency": 173.4,
+      "gold": 31.83,
       "sortScore": -100,
       "calculationStatus": "estimated"
     },
@@ -57,8 +57,8 @@
           "elite": 2
         }
       ],
-      "efficiency": 155.52,
-      "gold": 13.45,
+      "efficiency": 148.03,
+      "gold": 31.83,
       "sortScore": -100,
       "calculationStatus": "estimated"
     },
@@ -804,7 +804,7 @@
           "elite": 2
         }
       ],
-      "efficiency": 142.41,
+      "efficiency": 117.03,
       "sortScore": 0,
       "calculationStatus": "estimated"
     },
@@ -1035,7 +1035,7 @@
           "elite": 2
         }
       ],
-      "efficiency": 194.83,
+      "efficiency": 142.4,
       "sortScore": 0,
       "calculationStatus": "estimated"
     },

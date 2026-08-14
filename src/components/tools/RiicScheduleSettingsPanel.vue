@@ -190,7 +190,7 @@ const emit = defineEmits([
           </button>
         </div>
         <span class="facility-profile-note operator-training-mode-note">
-          使用当前练度则会在下方出现干员推荐
+          解锁基建技能则会在下方出现干员推荐
         </span>
       </section>
 

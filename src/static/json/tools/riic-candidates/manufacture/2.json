@@ -170,6 +170,44 @@
       "calculationStatus": "calculated"
     },
     {
+      "id": "manual-manufacture-all-automation-weedy-e0-wintim-e1-l2",
+      "variantGroupId": "family-automation-weedy-wintim",
+      "name": "温蒂（未精二） + 冬时",
+      "members": [
+        {
+          "name": "温蒂",
+          "maxElite": 1
+        },
+        {
+          "name": "冬时",
+          "elite": 1
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-all-automation-weedy-e2-wintim-e1-l2",
+      "variantGroupId": "family-automation-weedy-wintim",
+      "name": "温蒂（精英 2） + 冬时",
+      "members": [
+        {
+          "name": "温蒂",
+          "elite": 2
+        },
+        {
+          "name": "冬时",
+          "elite": 1
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
       "id": "manual-manufacture-all-automation-weedy-e0-passen-e2-l2",
       "variantGroupId": "family-automation-weedy-passen",
       "name": "温蒂（未精二） + 异客",
@@ -284,6 +322,44 @@
       "calculationStatus": "calculated"
     },
     {
+      "id": "manual-manufacture-all-automation-eunectes-e0-wintim-e1-l2",
+      "variantGroupId": "family-automation-eunectes-wintim",
+      "name": "森蚺（未精二） + 冬时",
+      "members": [
+        {
+          "name": "森蚺",
+          "maxElite": 1
+        },
+        {
+          "name": "冬时",
+          "elite": 1
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-all-automation-eunectes-e2-wintim-e1-l2",
+      "variantGroupId": "family-automation-eunectes-wintim",
+      "name": "森蚺（精英 2） + 冬时",
+      "members": [
+        {
+          "name": "森蚺",
+          "elite": 2
+        },
+        {
+          "name": "冬时",
+          "elite": 1
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
       "id": "manual-manufacture-all-automation-eunectes-e0-folivo-e2-l2",
       "variantGroupId": "family-automation-eunectes-folivo",
       "name": "森蚺（未精二） + 掠风",
@@ -329,6 +405,25 @@
         {
           "name": "异客",
           "elite": 2
+        },
+        {
+          "name": "掠风",
+          "elite": 2
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-all-automation-wintim-e1-folivo-e2-l2",
+      "variantGroupId": "family-automation-wintim-folivo",
+      "name": "冬时 + 掠风",
+      "members": [
+        {
+          "name": "冬时",
+          "elite": 1
         },
         {
           "name": "掠风",

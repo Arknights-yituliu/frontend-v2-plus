@@ -205,6 +205,26 @@ const lemuenAndExusiaiScore = calculateRiicRoomEfficiency({
 });
 assert.equal(lemuenAndExusiaiScore.bonusPercent, 80);
 
+const lemuenAndNewExusiai = resolveRiicBaselineSkills(
+  [
+    { charId: "char_4193_lemuen", name: "Lemuen", elite: 2, level: 1 },
+    {
+      charId: "char_1041_angel2",
+      name: "New Exusiai",
+      elite: 2,
+      level: 1,
+    },
+  ],
+  ruleData,
+);
+const lemuenAndNewExusiaiScore = calculateRiicRoomEfficiency({
+  resolvedSkills: lemuenAndNewExusiai,
+  roomType: "trading",
+  operatorIds: ["char_4193_lemuen", "char_1041_angel2"],
+  expectedSlots: 2,
+});
+assert.equal(lemuenAndNewExusiaiScore.bonusPercent, 60);
+
 const supportRooms = resolveRiicBaselineSkills(
   [
     { charId: "char_4132_ascln", name: "Ascalon", elite: 2, level: 1 },

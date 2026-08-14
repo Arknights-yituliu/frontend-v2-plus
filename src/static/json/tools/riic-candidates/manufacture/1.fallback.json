@@ -60,6 +60,19 @@
       ]
     },
     {
+      "name": "冬时",
+      "fillPriority": 1,
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 0,
+          "tags": [
+            "automation"
+          ]
+        }
+      ]
+    },
+    {
       "name": "掠风",
       "rates": [
         {

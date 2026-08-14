@@ -112,6 +112,25 @@
       "calculationStatus": "calculated"
     },
     {
+      "id": "manual-manufacture-gold-qingliu-wintim-e1-l2",
+      "variantGroupId": "family-qingliu-wintim",
+      "name": "清流 + 冬时",
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        },
+        {
+          "name": "冬时",
+          "elite": 1
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
       "id": "manual-manufacture-gold-qingliu-folivo-e2-l2",
       "variantGroupId": "family-qingliu-folivo",
       "name": "清流 + 掠风",

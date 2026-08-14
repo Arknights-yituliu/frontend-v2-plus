@@ -1842,7 +1842,15 @@ const droneTableDebug = computed(() => {
               <strong>{{ settlement.label }}</strong>
               <span>{{ settlement.typeLabel }}</span>
             </header>
-            <p v-if="settlement.isCalculated">
+            <p
+              v-if="
+                settlement.isCalculated && settlement.product === 'orundum'
+              "
+            >
+              合成玉 {{ formatYield(settlement.orundumOutputPerDay) }} / 天；
+              源石碎片消耗 {{ formatYield(settlement.shardConsumptionPerDay) }} / 天
+            </p>
+            <p v-else-if="settlement.isCalculated">
               龙门币 {{ formatYield(settlement.lmdOutputPerDay) }} / 天；
               赤金消耗 {{ formatYield(settlement.goldConsumptionPerDay) }} / 天；
               虚拟赤金 {{ formatYield(settlement.virtualGoldOutputPerDay) }} / 天
@@ -1851,9 +1859,15 @@ const droneTableDebug = computed(() => {
             <small v-for="(segment, index) in settlement.segments" :key="index">
               班段 {{ index + 1 }}（{{ formatYield(segment.durationHours) }}h）：
               {{ segment.typeLabel }}，
-              龙门币 {{ formatYield(segment.lmdOutput) }}，
-              赤金消耗 {{ formatYield(segment.goldConsumption) }}，
-              虚拟赤金 {{ formatYield(segment.virtualGoldOutput) }}
+              <template v-if="settlement.product === 'orundum'">
+                合成玉 {{ formatYield(segment.orundumOutput) }}，
+                源石碎片消耗 {{ formatYield(segment.shardConsumption) }}
+              </template>
+              <template v-else>
+                龙门币 {{ formatYield(segment.lmdOutput) }}，
+                赤金消耗 {{ formatYield(segment.goldConsumption) }}，
+                虚拟赤金 {{ formatYield(segment.virtualGoldOutput) }}
+              </template>
               <template v-if="segment.operatorIds?.length">
                 ，在岗 {{ getOperatorNames(segment.operatorIds) }}
               </template>

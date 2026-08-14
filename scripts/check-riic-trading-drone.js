@@ -84,6 +84,21 @@ assert.equal(tailorAlpha.ok, true);
 assert.equal(tailorBeta.ok, true);
 assert.ok(tailorBeta.lmdOutput > tailorAlpha.lmdOutput);
 
+for (const [charId, elite, expected] of [
+  ["char_214_kafka", 0, tailorAlpha],
+  ["char_499_kaitou", 0, tailorAlpha],
+  ["char_214_kafka", 2, tailorBeta],
+  ["char_499_kaitou", 2, tailorBeta],
+]) {
+  const result = calculateRiicTradingDrone(
+    facility(3),
+    [operator(charId, elite, 1)],
+  );
+  assert.equal(result.ok, true);
+  assertClose(result.lmdOutput, expected.lmdOutput);
+  assertClose(result.goldConsumption, expected.goldConsumption);
+}
+
 const closure = calculateRiicTradingDrone(
   facility(3),
   [operator("char_4228_closur", 2, 1)],

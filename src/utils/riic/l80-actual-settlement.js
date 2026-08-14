@@ -6,6 +6,7 @@ import { calculateRiicTradingDrone } from "./P02-riic-trading-drone.js";
 
 const EPSILON = 1e-9;
 const PURE_GOLD_LMD_VALUE = 500;
+const ORUNDUM_PER_ORIGINIUM_SHARD = 10;
 const DRONE_BASE_CHARGE_MINUTES = 6;
 const DRONE_BASE_PER_HOUR = 60 / DRONE_BASE_CHARGE_MINUTES;
 const POWER_OPERATOR_CHARGE_BONUS_PERCENT = 5;
@@ -171,6 +172,13 @@ function isTradingRoom(room) {
   );
 }
 
+function isOrundumTradingRoom(room) {
+  return (
+    isTradingRoom(room) &&
+    String(room?.product || "").trim() === "orundum"
+  );
+}
+
 function isOrundumManufactureRoom(room) {
   return (
     String(room?.facility || "").trim() === "manufacture" &&
@@ -266,6 +274,19 @@ function getTradingFacilityContext(stateRooms) {
   };
 }
 
+function getPerceptionState(perceptionSettlement, state) {
+  const stateIndex = Number(state?.index);
+  if (!Number.isInteger(stateIndex)) {
+    return null;
+  }
+
+  return (
+    (perceptionSettlement?.states || []).find(
+      (candidate) => Number(candidate?.index) === stateIndex,
+    ) || null
+  );
+}
+
 function getTradingOperatorBonuses(room) {
   return (room?.controlCenterOperatorBonuses || []).reduce(
     (bonuses, entry) => {
@@ -286,6 +307,7 @@ function calculateTradingRoom({
   room,
   rosterById,
   stateRooms,
+  perceptionState,
 }) {
   if (!isTradingRoom(room)) {
     return null;
@@ -301,7 +323,12 @@ function calculateTradingRoom({
       type: "trading",
       product: String(room?.product || "").trim(),
       level: Number(room?.stationLevel),
-      context: getTradingFacilityContext(stateRooms),
+      context: {
+        ...getTradingFacilityContext(stateRooms),
+        silentResonance: Number(
+          perceptionState?.resources?.silentResonance,
+        ),
+      },
     },
     getTradingOperators(room, rosterById || new Map()),
     {
@@ -374,6 +401,22 @@ function createTradingFlow(calculation, durationHours) {
   };
 }
 
+function createOrundumTradingFlow(orundumOutput) {
+  const output = Number(orundumOutput);
+  if (!Number.isFinite(output) || output < 0) {
+    return null;
+  }
+
+  return {
+    type: "normal",
+    lmdOutput: 0,
+    orundumOutput: output,
+    goldConsumption: 0,
+    virtualGoldOutput: 0,
+    shardConsumption: output / ORUNDUM_PER_ORIGINIUM_SHARD,
+  };
+}
+
 function createRoomSummary(room) {
   return {
     key: String(room?.key || "").trim(),
@@ -443,6 +486,7 @@ function createYieldSegment({
   durationHours,
   tradingRosterById,
   stateRooms,
+  perceptionState,
   orundumCraftMaterial,
 }) {
   const efficiency = toFinitePercent(room?.efficiency);
@@ -451,39 +495,43 @@ function createYieldSegment({
     room?.efficiencyMetrics?.actual?.status === "calculated";
   const meta = getRoomYieldMeta(room);
   const dailyRate = getReferenceDailyRate(room, meta);
-  const tradingCalculation = isTradingRoom(room)
+  const isOrundumTrading = isOrundumTradingRoom(room);
+  const usesDirectEfficiency = isOrundumTrading || !isTradingRoom(room);
+  const tradingCalculation = isTradingRoom(room) && !isOrundumTrading
     ? calculateTradingRoom({
       room,
       rosterById: tradingRosterById,
       stateRooms,
-      })
+      perceptionState,
+    })
     : null;
-  const tradingFlow = tradingCalculation?.ok
+  const calculatedTradingFlow = tradingCalculation?.ok
     ? createTradingFlow(tradingCalculation, durationHours)
     : null;
-  const unavailableReason = isTradingRoom(room)
-    ? tradingCalculation?.ok
+  const unavailableReason = usesDirectEfficiency
+    ? !efficiencyCalculated
+      ? "efficiencyUnavailable"
+      : !meta
+        ? "unsupportedProduct"
+        : dailyRate === null
+          ? "unsupportedStationLevel"
+          : ""
+    : tradingCalculation?.ok
       ? ""
-      : tradingCalculation?.error || "tradingCalculationUnavailable"
-    : !efficiencyCalculated
-    ? "efficiencyUnavailable"
-    : !meta
-      ? "unsupportedProduct"
-      : dailyRate === null
-        ? "unsupportedStationLevel"
-        : "";
+      : tradingCalculation?.error || "tradingCalculationUnavailable";
 
   const output = unavailableReason
     ? null
-    : tradingFlow
-      ? tradingCalculation.product === "orundum"
-        ? tradingFlow.orundumOutput
-        : tradingFlow.lmdOutput
+    : calculatedTradingFlow
+      ? calculatedTradingFlow.lmdOutput
       : meta.isNetBonus
         ? dailyRate *
           Math.max(0, (efficiency - 100) / 100) *
           (durationHours / 24)
         : dailyRate * (efficiency / 100) * (durationHours / 24);
+  const tradingFlow = isOrundumTrading && output !== null
+    ? createOrundumTradingFlow(output)
+    : calculatedTradingFlow;
   const orundumManufactureFlow =
     isOrundumManufactureRoom(room) && output !== null
       ? createOrundumManufactureFlow(output, orundumCraftMaterial)
@@ -726,6 +774,10 @@ function buildTradingFlowTotals({
   let virtualGoldOutputPerCycle = 0;
 
   for (const settlement of tradingSettlements || []) {
+    if (String(settlement?.product || "").trim() !== "lmd") {
+      continue;
+    }
+
     if (!settlement?.isCalculated) {
       isCalculated = false;
       continue;
@@ -768,55 +820,24 @@ function buildTradingFlowTotals({
 }
 
 function buildOrundumTradeFlowTotals({
-  states,
+  tradingSettlements,
   droneTargetSettlement,
-  tradingRosterById,
 }) {
   let isCalculated = true;
   let shardConsumptionPerCycle = 0;
-  const roomSummariesByKey = new Map();
+  const orundumSettlements = (tradingSettlements || []).filter(
+    (settlement) => String(settlement?.product || "").trim() === "orundum",
+  );
 
-  for (const state of states || []) {
-    const durationHours = toPositiveHours(state?.durationHours);
-    if (durationHours <= 0) {
+  for (const settlement of orundumSettlements) {
+    if (!settlement?.isCalculated) {
+      isCalculated = false;
       continue;
     }
 
-    for (const room of state?.rooms || []) {
-      if (
-        String(room?.facility || "").trim() !== "trading" ||
-        String(room?.product || "").trim() !== "orundum"
-      ) {
-        continue;
-      }
-
-      const key = String(room?.key || "").trim();
-      if (!key) {
-        continue;
-      }
-      const summary = roomSummariesByKey.get(key) || {
-        segmentCount: 0,
-        calculatedSegmentCount: 0,
-      };
-      summary.segmentCount += 1;
-      const segment = createYieldSegment({
-        room,
-        durationHours,
-        tradingRosterById,
-        stateRooms: state?.rooms || [],
-      });
-      if (!segment.calculated || !segment.tradingFlow) {
-        isCalculated = false;
-        roomSummariesByKey.set(key, summary);
-        continue;
-      }
-
-      summary.calculatedSegmentCount += 1;
-      shardConsumptionPerCycle += Number(
-        segment.tradingFlow.shardConsumption || 0,
-      );
-      roomSummariesByKey.set(key, summary);
-    }
+    shardConsumptionPerCycle += Number(
+      settlement.shardConsumptionPerCycle || 0,
+    );
   }
 
   for (const segment of droneTargetSettlement?.segments || []) {
@@ -835,11 +856,9 @@ function buildOrundumTradeFlowTotals({
 
   return {
     isCalculated,
-    roomCount: roomSummariesByKey.size,
-    calculatedRoomCount: [...roomSummariesByKey.values()].filter(
-      (summary) =>
-        summary.segmentCount > 0 &&
-        summary.segmentCount === summary.calculatedSegmentCount,
+    roomCount: orundumSettlements.length,
+    calculatedRoomCount: orundumSettlements.filter(
+      (settlement) => settlement?.isCalculated,
     ).length,
     shardConsumptionPerCycle,
   };
@@ -1330,6 +1349,7 @@ function buildTradingSettlements({
   cycleHours,
   tradingRosterById,
   orundumCraftMaterial,
+  perceptionSettlement,
 }) {
   const summariesByKey = new Map();
 
@@ -1340,10 +1360,7 @@ function buildTradingSettlements({
     }
 
     for (const room of state?.rooms || []) {
-      if (
-        String(room?.facility || "").trim() !== "trading" ||
-        String(room?.product || "").trim() !== "lmd"
-      ) {
+      if (String(room?.facility || "").trim() !== "trading") {
         continue;
       }
 
@@ -1352,6 +1369,7 @@ function buildTradingSettlements({
         durationHours,
         tradingRosterById,
         stateRooms: state?.rooms || [],
+        perceptionState: getPerceptionState(perceptionSettlement, state),
         orundumCraftMaterial,
       });
       const key = String(room?.key || "").trim();
@@ -1362,23 +1380,33 @@ function buildTradingSettlements({
       const summary = summariesByKey.get(key) || {
         key,
         label: String(room?.label || key).trim(),
+        products: new Set(),
         durationHours: 0,
         calculatedDurationHours: 0,
         lmdOutputPerCycle: 0,
+        orundumOutputPerCycle: 0,
         goldConsumptionPerCycle: 0,
+        shardConsumptionPerCycle: 0,
         virtualGoldOutputPerCycle: 0,
         types: new Set(),
         segments: [],
       };
       summary.durationHours += durationHours;
+      summary.products.add(String(room?.product || "").trim());
 
       if (segment.calculated && segment.tradingFlow) {
         summary.calculatedDurationHours += durationHours;
-        summary.lmdOutputPerCycle += segment.tradingFlow.lmdOutput;
-        summary.goldConsumptionPerCycle +=
-          segment.tradingFlow.goldConsumption;
-        summary.virtualGoldOutputPerCycle +=
-          segment.tradingFlow.virtualGoldOutput;
+        if (String(room?.product || "").trim() === "orundum") {
+          summary.orundumOutputPerCycle += segment.tradingFlow.orundumOutput;
+          summary.shardConsumptionPerCycle +=
+            segment.tradingFlow.shardConsumption;
+        } else {
+          summary.lmdOutputPerCycle += segment.tradingFlow.lmdOutput;
+          summary.goldConsumptionPerCycle +=
+            segment.tradingFlow.goldConsumption;
+          summary.virtualGoldOutputPerCycle +=
+            segment.tradingFlow.virtualGoldOutput;
+        }
         summary.types.add(segment.tradingFlow.type);
       }
 
@@ -1394,8 +1422,14 @@ function buildTradingSettlements({
         lmdOutput: segment.tradingFlow
           ? roundYield(segment.tradingFlow.lmdOutput)
           : null,
+        orundumOutput: segment.tradingFlow
+          ? roundYield(segment.tradingFlow.orundumOutput)
+          : null,
         goldConsumption: segment.tradingFlow
           ? roundYield(segment.tradingFlow.goldConsumption)
+          : null,
+        shardConsumption: segment.tradingFlow
+          ? roundYield(segment.tradingFlow.shardConsumption)
           : null,
         virtualGoldOutput: segment.tradingFlow
           ? roundYield(segment.tradingFlow.virtualGoldOutput)
@@ -1420,6 +1454,8 @@ function buildTradingSettlements({
     return {
       key: summary.key,
       label: summary.label,
+      product:
+        summary.products.size === 1 ? [...summary.products][0] : "",
       type,
       typeLabel:
         type ? getTradingSettlementTypeLabel(type) : "混合贸易订单",
@@ -1432,11 +1468,23 @@ function buildTradingSettlements({
       lmdOutputPerDay: calculated
         ? roundYield(summary.lmdOutputPerCycle * perDayMultiplier)
         : null,
+      orundumOutputPerCycle: calculated
+        ? roundYield(summary.orundumOutputPerCycle)
+        : null,
+      orundumOutputPerDay: calculated
+        ? roundYield(summary.orundumOutputPerCycle * perDayMultiplier)
+        : null,
       goldConsumptionPerCycle: calculated
         ? roundYield(summary.goldConsumptionPerCycle)
         : null,
       goldConsumptionPerDay: calculated
         ? roundYield(summary.goldConsumptionPerCycle * perDayMultiplier)
+        : null,
+      shardConsumptionPerCycle: calculated
+        ? roundYield(summary.shardConsumptionPerCycle)
+        : null,
+      shardConsumptionPerDay: calculated
+        ? roundYield(summary.shardConsumptionPerCycle * perDayMultiplier)
         : null,
       virtualGoldOutputPerCycle: calculated
         ? roundYield(summary.virtualGoldOutputPerCycle)
@@ -1903,6 +1951,7 @@ function buildYieldSummary({
   droneTargetKeysByState,
   tradingOperators,
   orundumCraftMaterial,
+  perceptionSettlement,
 }) {
   const tradingRosterById = createOperatorRosterById(tradingOperators);
   const summariesByKey = new Map();
@@ -1912,6 +1961,7 @@ function buildYieldSummary({
     if (durationHours <= 0) {
       continue;
     }
+    const perceptionState = getPerceptionState(perceptionSettlement, state);
 
     for (const room of state?.rooms || []) {
       if (!YIELD_FACILITIES.has(String(room?.facility || "").trim())) {
@@ -1930,6 +1980,7 @@ function buildYieldSummary({
         durationHours,
         tradingRosterById,
         stateRooms: state?.rooms || [],
+        perceptionState,
         orundumCraftMaterial,
       });
       summary.durationHours += durationHours;
@@ -1953,6 +2004,7 @@ function buildYieldSummary({
     states,
     cycleHours,
     tradingRosterById,
+    perceptionSettlement,
   });
   const droneTargetSettlement = buildDroneTargetSettlement({
     states,
@@ -1964,9 +2016,8 @@ function buildYieldSummary({
     orundumCraftMaterial,
   });
   const orundumTradeFlowTotals = buildOrundumTradeFlowTotals({
-    states,
+    tradingSettlements,
     droneTargetSettlement,
-    tradingRosterById,
   });
   const orundumManufactureFlowTotals = buildOrundumManufactureFlowTotals({
     states,
@@ -2109,6 +2160,7 @@ export function summarizeRiicActualSchedule({
       droneTargetKeysByState,
       tradingOperators,
       orundumCraftMaterial,
+      perceptionSettlement: preview?.perceptionSettlement,
     }),
   };
 }

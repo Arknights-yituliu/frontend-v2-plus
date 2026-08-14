@@ -4,27 +4,175 @@
 
     <el-tabs v-model="activeModule">
       <el-tab-pane label="P01 贸易站" name="p01">
-        <section class="module-panel">
-          <el-input
-            v-model="p01FacilityText"
-            type="textarea"
-            :rows="7"
-            resize="vertical"
-          />
-          <el-input
-            v-model="p01OperatorsText"
-            type="textarea"
-            :rows="10"
-            resize="vertical"
-          />
-          <el-input
-            v-model="p01BonusText"
-            type="textarea"
-            :rows="7"
-            resize="vertical"
-          />
-          <el-button type="primary" @click="runP01">计算 P01</el-button>
-          <pre class="result-json">{{ p01ResultText }}</pre>
+        <section class="trading-workbench">
+          <section class="trading-workspace-panel">
+            <header class="trading-workspace-header">
+              <div class="panel-heading">
+                <img :src="lmdImage" alt="" class="panel-heading-icon" />
+                <div>
+                  <h2>贸易站收益</h2>
+                  <p>按小时计算贸易站产出与资源消耗</p>
+                </div>
+              </div>
+              <div class="station-settings">
+                <div class="setting-group">
+                  <span class="setting-label">订单类型</span>
+                  <el-radio-group
+                    :model-value="p01Product"
+                    class="product-toggle"
+                    @change="setP01Product"
+                  >
+                    <el-radio-button label="lmd">龙门币</el-radio-button>
+                    <el-radio-button label="orundum">合成玉</el-radio-button>
+                  </el-radio-group>
+                </div>
+                <div class="setting-group">
+                  <span class="setting-label">等级</span>
+                  <el-radio-group v-model="p01StationLevel" class="level-toggle">
+                    <el-radio-button
+                      v-for="level in [1, 2, 3]"
+                      :key="level"
+                      :label="level"
+                      :disabled="p01Product === 'orundum' && level !== 3"
+                    >
+                      {{ level }}
+                    </el-radio-button>
+                  </el-radio-group>
+                </div>
+              </div>
+            </header>
+
+            <div class="trading-workspace-body">
+              <section class="trading-input-panel">
+                <div class="operator-heading">
+                  <div>
+                    <h2>入驻干员</h2>
+                    <p class="section-hint">点击卡片启用，最多选择 3 名</p>
+                  </div>
+                  <span>{{ p01ActiveOperatorCount }}/3</span>
+                </div>
+
+                <div class="operator-row-list">
+                  <div
+                    v-for="operator in p01OperatorOptions"
+                    :key="operator.charId"
+                    class="drone-operator-row"
+                    :class="{ active: p01OperatorStates[operator.charId].enabled }"
+                    role="button"
+                    tabindex="0"
+                    @click="toggleP01Operator(operator.charId)"
+                    @keydown.enter.prevent="toggleP01Operator(operator.charId)"
+                    @keydown.space.prevent="toggleP01Operator(operator.charId)"
+                  >
+                    <OperatorAvatar
+                      :char-id="operator.charId"
+                      :rarity="operator.rarity"
+                      :size="44"
+                      :mobile-size="40"
+                      border
+                    />
+                    <div class="operator-card-main">
+                      <strong>{{ operator.name }}</strong>
+                      <span>{{ operator.description }}</span>
+                    </div>
+                    <div
+                      class="operator-elite-control"
+                      :class="{ inactive: !p01OperatorStates[operator.charId].enabled }"
+                      @click.stop
+                    >
+                      <el-radio-group
+                        v-model="p01OperatorStates[operator.charId].elite"
+                        size="small"
+                        :disabled="!p01OperatorStates[operator.charId].enabled"
+                      >
+                        <el-radio-button :label="0">E0</el-radio-button>
+                        <el-radio-button :label="1">E1</el-radio-button>
+                        <el-radio-button :label="2">E2</el-radio-button>
+                      </el-radio-group>
+                    </div>
+                    <el-input-number
+                      v-model="p01OperatorStates[operator.charId].level"
+                      class="operator-level-control"
+                      :min="1"
+                      :max="90"
+                      :step="1"
+                      controls-position="right"
+                      :disabled="!p01OperatorStates[operator.charId].enabled"
+                      @click.stop
+                    />
+                    <el-switch
+                      :model-value="p01OperatorStates[operator.charId].enabled"
+                      @click.stop
+                      @update:model-value="setP01OperatorEnabled(operator.charId, $event)"
+                    />
+                  </div>
+                </div>
+
+                <div class="bonus-controls">
+                  <label>
+                    <span>设施额外加成</span>
+                    <el-input-number
+                      v-model="p01RoomBonus"
+                      :min="-100"
+                      :max="200"
+                      :step="1"
+                      controls-position="right"
+                    />
+                    <em>%</em>
+                  </label>
+                  <label>
+                    <span>其他干员加成</span>
+                    <el-input-number
+                      v-model="p01OperatorBonus"
+                      :min="-100"
+                      :max="200"
+                      :step="1"
+                      controls-position="right"
+                    />
+                    <em>%</em>
+                  </label>
+                </div>
+              </section>
+
+              <section
+                class="trading-result-panel"
+                :class="{ 'has-error': !p01Result.ok }"
+              >
+                <div class="result-heading">
+                  <div>
+                    <span class="eyebrow">每小时结算</span>
+                    <strong class="result-rate">
+                      {{ p01Result.ok ? formatPercent(p01Result.rate) : "--" }}
+                    </strong>
+                  </div>
+                  <el-tag :type="p01Result.ok ? 'success' : 'danger'" effect="plain">
+                    {{ p01ResultStatus }}
+                  </el-tag>
+                </div>
+
+                <div v-if="p01Result.ok" class="resource-result-list">
+                  <div
+                    v-for="resource in p01ResourceResults"
+                    :key="resource.key"
+                    class="resource-result"
+                  >
+                    <img :src="resource.image" :alt="resource.name" />
+                    <span>{{ resource.name }}</span>
+                    <strong :class="{ consumption: resource.value < 0 }">
+                      {{ formatResultValue(resource.value) }}
+                    </strong>
+                  </div>
+                </div>
+                <p v-else class="result-error">{{ p01ResultStatus }}</p>
+              </section>
+            </div>
+
+            <el-collapse class="raw-result-collapse">
+              <el-collapse-item title="原始计算结果">
+                <pre class="result-json">{{ p01ResultText }}</pre>
+              </el-collapse-item>
+            </el-collapse>
+          </section>
         </section>
       </el-tab-pane>
 
@@ -180,21 +328,152 @@ import { calculateRiicTradingDrone } from "@/utils/riic/P02-riic-trading-drone.j
 
 const activeModule = ref("p01");
 
-const p01FacilityText = ref(`{
-  "type": "trading",
-  "product": "lmd",
-  "level": 3
-}`);
-const p01OperatorsText = ref(`[
-  { "charId": "char_502_nblade", "elite": 0, "level": 30 },
-  { "charId": "char_123_fang", "elite": 1, "level": 1 },
-  { "charId": "char_282_catap", "elite": 0, "level": 1 }
-]`);
-const p01BonusText = ref(`{
-  "room": 0,
-  "operators": {}
-}`);
-const p01ResultText = ref("");
+const p01Product = ref("lmd");
+const p01StationLevel = ref(3);
+const p01RoomBonus = ref(0);
+const p01OperatorBonus = ref(0);
+const p01OperatorOptions = Object.freeze([
+  {
+    charId: "char_4228_closur",
+    name: "可露希尔",
+    rarity: 6,
+    description: "精二固定获取特别订单",
+  },
+  {
+    charId: "char_4032_provs",
+    name: "但书",
+    rarity: 5,
+    description: "改变黄金订单交付数",
+  },
+  {
+    charId: "char_486_takila",
+    name: "龙舌兰",
+    rarity: 5,
+    description: "高品质订单额外龙门币",
+  },
+  {
+    charId: "char_252_bibeak",
+    name: "裁缝",
+    rarity: 5,
+    description: "三级站改变订单概率",
+  },
+  {
+    charId: "char_502_nblade",
+    name: "夜刀",
+    rarity: 2,
+    description: "订单获取效率 +30%",
+  },
+  {
+    charId: "char_123_fang",
+    name: "芬",
+    rarity: 3,
+    description: "订单获取效率 +30%",
+  },
+  {
+    charId: "char_282_catap",
+    name: "空爆",
+    rarity: 3,
+    description: "订单获取效率 +30%",
+  },
+  {
+    charId: "char_103_angel",
+    name: "能天使",
+    rarity: 6,
+    description: "订单获取效率 +30%",
+  },
+]);
+const p01OperatorStates = reactive({
+  char_4228_closur: { enabled: false, elite: 2, level: 1 },
+  char_4032_provs: { enabled: false, elite: 2, level: 1 },
+  char_486_takila: { enabled: false, elite: 2, level: 1 },
+  char_252_bibeak: { enabled: false, elite: 2, level: 1 },
+  char_502_nblade: { enabled: true, elite: 0, level: 30 },
+  char_123_fang: { enabled: true, elite: 1, level: 1 },
+  char_282_catap: { enabled: true, elite: 0, level: 1 },
+  char_103_angel: { enabled: false, elite: 2, level: 1 },
+});
+const p01ActiveOperators = computed(() =>
+  p01OperatorOptions
+    .filter((operator) => p01OperatorStates[operator.charId].enabled)
+    .map((operator) => ({
+      charId: operator.charId,
+      elite: p01OperatorStates[operator.charId].elite,
+      level: p01OperatorStates[operator.charId].level,
+    })),
+);
+const p01ActiveOperatorCount = computed(() => p01ActiveOperators.value.length);
+const p01Result = computed(() =>
+  calculateRiicTrading(
+    {
+      type: "trading",
+      product: p01Product.value,
+      level: p01StationLevel.value,
+    },
+    p01ActiveOperators.value,
+    {
+      room: p01RoomBonus.value,
+      operators: p01OperatorBonus.value
+        ? { extra: p01OperatorBonus.value }
+        : {},
+    },
+  ),
+);
+const p01ResultText = computed(() =>
+  JSON.stringify(p01Result.value, null, 2),
+);
+const p01ResultStatus = computed(() => {
+  if (p01Result.value.ok) {
+    return "计算完成";
+  }
+
+  const errorLabels = {
+    invalidFacility: "设施配置无效",
+    invalidOperators: "干员配置无效",
+    invalidBonus: "加成配置无效",
+    notSupported: "当前组合暂不支持计算",
+    timeDependentOrderProbability: "订单概率随时间变化，暂不支持计算",
+  };
+  return errorLabels[p01Result.value.error] || p01Result.value.error || "计算失败";
+});
+const p01ResourceResults = computed(() => {
+  const result = p01Result.value;
+  if (!result.ok) {
+    return [];
+  }
+
+  return [
+    {
+      key: "lmd",
+      name: "龙门币",
+      image: lmdImage,
+      value: result.lmd,
+    },
+    {
+      key: "gold",
+      name: "赤金",
+      image: goldImage,
+      value: result.gold,
+    },
+    {
+      key: "virtual-gold",
+      name: "虚拟赤金",
+      image: goldImage,
+      value: result.virtualGold,
+    },
+    {
+      key: "orundum",
+      name: "合成玉产能",
+      image: orundumImage,
+      value: result.orundumCapacity,
+    },
+    {
+      key: "shard",
+      name: "源石碎片",
+      image: shardImage,
+      value: result.shardConsumption,
+    },
+  ].filter((resource) => resource.value !== null && resource.value !== 0);
+});
 
 const p02Product = ref("lmd");
 const p02StationLevel = ref(3);
@@ -299,39 +578,25 @@ const p02ResourceResults = computed(() => {
   return resources.filter((resource) => resource.value !== null && resource.value !== 0);
 });
 
-function parseJson(text, fieldName) {
-  try {
-    return JSON.parse(text);
-  } catch {
-    throw new Error(`${fieldName} 不是有效 JSON`);
+function setP01Product(product) {
+  p01Product.value = product;
+  if (product === "orundum") {
+    p01StationLevel.value = 3;
   }
 }
 
-function runCalculation({ facilityText, operatorsText, bonusText, calculate }) {
-  const facility = parseJson(facilityText.value, "设施信息");
-  const operators = parseJson(operatorsText.value, "干员信息");
-  const bonus = bonusText
-    ? parseJson(bonusText.value, "加成信息")
-    : undefined;
-  return calculate(facility, operators, bonus);
+function setP01OperatorEnabled(charId, enabled) {
+  const state = p01OperatorStates[charId];
+  if (enabled && !state.enabled && p01ActiveOperatorCount.value >= 3) {
+    ElMessage.warning("贸易站最多选择 3 名干员");
+    return;
+  }
+  state.enabled = enabled;
 }
 
-function runP01() {
-  try {
-    p01ResultText.value = JSON.stringify(
-      runCalculation({
-        facilityText: p01FacilityText,
-        operatorsText: p01OperatorsText,
-        bonusText: p01BonusText,
-        calculate: calculateRiicTrading,
-      }),
-      null,
-      2,
-    );
-  } catch (error) {
-    p01ResultText.value = String(error.message || error);
-    ElMessage.error(p01ResultText.value);
-  }
+function toggleP01Operator(charId) {
+  const state = p01OperatorStates[charId];
+  setP01OperatorEnabled(charId, !state.enabled);
 }
 
 function setP02Product(product) {
@@ -360,7 +625,10 @@ function formatResultValue(value) {
   return `${prefix}${Number(value).toFixed(3).replace(/\.?0+$/, "")}`;
 }
 
-runP01();
+function formatPercent(value) {
+  return `${Number(value).toFixed(2).replace(/\.?0+$/, "")}%`;
+}
+
 </script>
 
 <style scoped>
@@ -386,10 +654,12 @@ runP01();
   grid-column: 1 / -1;
 }
 
+.trading-workbench,
 .trading-drone-workbench {
-  max-width: 920px;
+  max-width: 1040px;
 }
 
+.trading-workspace-panel,
 .drone-workspace-panel {
   border: 1px solid var(--el-border-color);
   border-radius: 8px;
@@ -397,6 +667,7 @@ runP01();
   overflow: hidden;
 }
 
+.trading-workspace-header,
 .drone-workspace-header {
   display: flex;
   justify-content: space-between;
@@ -458,11 +729,13 @@ runP01();
   min-width: 50px;
 }
 
+.trading-workspace-body,
 .drone-workspace-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 270px;
 }
 
+.trading-input-panel,
 .drone-operators-panel {
   min-width: 0;
   padding: 16px 18px;
@@ -539,11 +812,46 @@ runP01();
   visibility: hidden;
 }
 
+.operator-level-control {
+  width: 104px;
+}
+
+.trading-input-panel .drone-operator-row {
+  grid-template-columns: auto minmax(0, 1fr) auto 104px auto;
+}
+
+.bonus-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--el-border-color-lighter);
+}
+
+.bonus-controls label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 112px auto;
+  gap: 7px;
+  align-items: center;
+  min-width: 0;
+  color: var(--el-text-color-regular);
+  font-size: 12px;
+}
+
+.bonus-controls em {
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+  font-style: normal;
+}
+
+.trading-result-panel,
 .drone-result-panel {
   border-left: 1px solid var(--el-border-color-lighter);
   background: var(--el-fill-color-light);
 }
 
+.trading-result-panel.has-error,
 .drone-result-panel.has-error {
   border-color: var(--el-color-danger-light-5);
 }
@@ -579,6 +887,12 @@ runP01();
 
 .drone-cost strong {
   font-size: 18px;
+}
+
+.result-rate {
+  color: var(--el-text-color-primary);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
 }
 
 .resource-result-list {
@@ -661,10 +975,12 @@ runP01();
   }
 
   .module-panel,
+  .trading-workbench,
   .trading-drone-workbench {
     grid-template-columns: 1fr;
   }
 
+.trading-workspace-header,
   .drone-workspace-header,
   .station-settings {
     align-items: stretch;
@@ -672,10 +988,12 @@ runP01();
     gap: 12px;
   }
 
+  .trading-workspace-body,
   .drone-workspace-body {
     grid-template-columns: 1fr;
   }
 
+  .trading-result-panel,
   .drone-result-panel {
     border-top: 1px solid var(--el-border-color-lighter);
     border-left: 0;
@@ -693,6 +1011,20 @@ runP01();
   .drone-operator-row :deep(.el-switch) {
     grid-column: 3;
     grid-row: 1;
+  }
+
+  .trading-input-panel .operator-elite-control {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .trading-input-panel .operator-level-control {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
+  .bonus-controls {
+    grid-template-columns: 1fr;
   }
 }
 </style>

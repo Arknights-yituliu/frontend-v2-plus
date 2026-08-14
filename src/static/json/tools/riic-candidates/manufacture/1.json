@@ -73,6 +73,20 @@
       "calculationStatus": "calculated"
     },
     {
+      "id": "manual-manufacture-all-automation-wintim-e1-l1",
+      "variantGroupId": "family-automation-wintim",
+      "name": "冬时（精英 1）",
+      "members": [
+        {
+          "name": "冬时",
+          "elite": 1
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
       "id": "manual-manufacture-all-automation-folivo-e2-l1",
       "variantGroupId": "family-automation-folivo",
       "name": "掠风（精英 2）",

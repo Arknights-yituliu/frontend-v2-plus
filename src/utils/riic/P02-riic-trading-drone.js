@@ -1,3 +1,7 @@
+import BUILDING_TABLE from "../../static/json/build/building_table.json" with {
+  type: "json",
+};
+
 const ORDER_SECONDS = Object.freeze([8640, 12600, 16560]);
 const ORDER_GOLD = Object.freeze([2, 3, 4]);
 const ORDER_DISTRIBUTION_BY_LEVEL = Object.freeze({
@@ -7,6 +11,8 @@ const ORDER_DISTRIBUTION_BY_LEVEL = Object.freeze({
 });
 const TAILOR_ALPHA_DISTRIBUTION = Object.freeze([0.15, 0.3, 0.55]);
 const TAILOR_BETA_DISTRIBUTION = Object.freeze([0.05, 0.1, 0.85]);
+const TAILOR_ALPHA_PAIR_DISTRIBUTION = Object.freeze([0.13, 0.22, 0.65]);
+const HIGH_QUALITY_ORDER_PATTERN = /高品质贵金属订单/;
 
 const DRONE_SECONDS = 180;
 const LMD_PER_GOLD = 500;
@@ -17,7 +23,6 @@ const ORUNDUM_PER_SHARD = 10;
 const CLOSURE_ID = "char_4228_closur";
 const BUTSHU_ID = "char_4032_provs";
 const TEQUILA_ID = "char_486_takila";
-const TAILOR_ID = "char_252_bibeak";
 
 function round(value, digits = 6) {
   return Number(Number(value).toFixed(digits));
@@ -95,15 +100,51 @@ function getOperator(operators, charId) {
   return operators.find((operator) => operator.charId === charId) || null;
 }
 
-function getOrderDistribution({ stationLevel, tailor }) {
-  if (!tailor) {
+function getHighQualityOrderVariant(operator) {
+  const skill = (BUILDING_TABLE || [])
+    .filter(
+      (candidate) =>
+        candidate?.charId === operator.charId &&
+        candidate?.roomType === "trading" &&
+        Number(candidate?.phase) <= operator.elite &&
+        Number(candidate?.level) <= operator.level &&
+        HIGH_QUALITY_ORDER_PATTERN.test(String(candidate?.description || "")),
+    )
+    .sort(
+      (left, right) =>
+        Number(right?.phase) - Number(left?.phase) ||
+        Number(right?.level) - Number(left?.level),
+    )[0];
+
+  if (!skill) {
+    return null;
+  }
+
+  return String(skill.description || "").includes("小幅提升")
+    ? "alpha"
+    : "beta";
+}
+
+function getOrderDistribution({ stationLevel, highQualityVariants }) {
+  if (highQualityVariants.length === 0) {
     return ORDER_DISTRIBUTION_BY_LEVEL[stationLevel] || null;
   }
   if (stationLevel !== 3) {
     return null;
   }
-  return tailor.elite >= 2
-    ? TAILOR_BETA_DISTRIBUTION
+
+  const betaCount = highQualityVariants.filter(
+    (variant) => variant === "beta",
+  ).length;
+  const alphaCount = highQualityVariants.length - betaCount;
+  if (betaCount > 1 || alphaCount > 2) {
+    return null;
+  }
+  if (betaCount === 1) {
+    return TAILOR_BETA_DISTRIBUTION;
+  }
+  return alphaCount === 2
+    ? TAILOR_ALPHA_PAIR_DISTRIBUTION
     : TAILOR_ALPHA_DISTRIBUTION;
 }
 
@@ -111,7 +152,9 @@ function calculateLmdDrone({ stationLevel, operators }) {
   const closure = getOperator(operators, CLOSURE_ID);
   const butshu = getOperator(operators, BUTSHU_ID);
   const tequila = getOperator(operators, TEQUILA_ID);
-  const tailor = getOperator(operators, TAILOR_ID);
+  const highQualityVariants = operators
+    .map(getHighQualityOrderVariant)
+    .filter(Boolean);
   const hasClosureSpecialOrder = closure?.elite >= 2;
 
   if (hasClosureSpecialOrder) {
@@ -127,7 +170,10 @@ function calculateLmdDrone({ stationLevel, operators }) {
     });
   }
 
-  const distribution = getOrderDistribution({ stationLevel, tailor });
+  const distribution = getOrderDistribution({
+    stationLevel,
+    highQualityVariants,
+  });
   if (!distribution) {
     return createFailure("notSupported");
   }

@@ -116,7 +116,7 @@ function getButshuFamilyConfiguration(candidate) {
       elite: firstMemberElite,
       hasShamare: true,
       hasTequila: true,
-      distribution: "default",
+      distribution: "alpha",
       fixedMemberCount: 3,
     };
   }
@@ -125,7 +125,7 @@ function getButshuFamilyConfiguration(candidate) {
       elite: firstMemberElite,
       hasShamare: true,
       hasTequila: false,
-      distribution: "default",
+      distribution: "alpha",
       fixedMemberCount: 2,
     };
   }
@@ -230,10 +230,11 @@ export function recalculateRiicButshuCandidate({
     return null;
   }
 
-  const fallbackPercent = (fallbackOperators || []).reduce(
+  const rawFallbackPercent = (fallbackOperators || []).reduce(
     (total, operator) => total + Number(operator?.percent || 0),
     0,
   );
+  const fallbackPercent = configuration.hasShamare ? 0 : rawFallbackPercent;
   const fixedPartnerPercent = getButshuFixedPartnerPercent(candidate);
   const rawOrderEfficiency =
     (configuration.hasShamare ? 90 : 0) +
