@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "manual-manufacture-experience-redcloud-pallas-scene-12h",
+      "variantGroupId": "family-redcloud-pallas-scene",
+      "name": "红云 + 帕拉斯 + 稀音",
+      "members": [
+        {
+          "name": "红云",
+          "elite": 1
+        },
+        {
+          "name": "帕拉斯",
+          "elite": 2
+        },
+        {
+          "name": "稀音",
+          "elite": 2
+        }
+      ],
+      "efficiency": 103.5,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-experience-redcloud-scene-ceobe-12h",
+      "variantGroupId": "family-redcloud-scene-ceobe",
+      "name": "红云 + 稀音 + 刻俄柏",
+      "members": [
+        {
+          "name": "红云",
+          "elite": 1
+        },
+        {
+          "name": "稀音",
+          "elite": 2
+        },
+        {
+          "name": "刻俄柏",
+          "elite": 2
+        }
+      ],
+      "efficiency": 102.25,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-experience-redcloud-noircorne-cuora",
+      "variantGroupId": "family-redcloud-noircorne-cuora",
+      "name": "红云 + 黑角 + 蛇屠箱",
+      "members": [
+        {
+          "name": "红云",
+          "elite": 1
+        },
+        {
+          "name": "黑角"
+        },
+        {
+          "name": "蛇屠箱",
+          "maxElite": 0
+        }
+      ],
+      "efficiency": 76,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    }
+  ]
+}

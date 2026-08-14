@@ -17,6 +17,7 @@ async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
 
 
     for (const item of result) {
+        //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，仅统计 6 星(对应 rarity 6)
         if (item.rarity < 6) continue;
         operatorStatisticsResult[item.charId] = {
             skill1: _average(item.skill1),
@@ -39,6 +40,7 @@ async function operatorRecommend(operatorTable, operatorProgressionStatistics) {
 
     for (const index in operatorTable) {
         const operator = operatorTable[index]
+        //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，原过滤条件为仅 6 星(星级 6)
         if (operator.rarity < 6) continue;
         if (!operatorStatisticsResult[operator.charId]) continue;
         if (!operator.own) continue;
@@ -75,9 +77,11 @@ function getPropertyName(property, operator) {
         let index = 0;
         if (property === 'skill2') index = 1
         if (property === 'skill3') index = 2
+        //v2 数据中技能字段为 skills(数组元素含 skillName/skillIcon), 旧格式为 skill
+        const skill = operator.skills[index] || {}
         return {
-            name: operator.skill[index].name,
-            iconId: operator.skill[index].iconId,
+            name: skill.skillName,
+            iconId: skill.skillIcon,
             type: 'skill'
         }
     }

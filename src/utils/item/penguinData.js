@@ -54,6 +54,7 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
 
 
     let stageDropCollect = new Map()
+    const activityAverageStageInfo = deepClone(ytlStageInfo)
 
     for (let item of penguinMatrix) {
 
@@ -102,9 +103,9 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
 
         const {stageCode, apCost, spm, stageType, zoneName, zoneId} = stageInfo
 
-        if (stageType === 'ACT' && apCost === 21 && ytlStageInfo[itemId]) {
-            ytlStageInfo[itemId].quantity += item.quantity
-            ytlStageInfo[itemId].times += item.times
+        if (stageType === 'ACT' && apCost === 21 && activityAverageStageInfo[itemId]) {
+            activityAverageStageInfo[itemId].quantity += item.quantity
+            activityAverageStageInfo[itemId].times += item.times
         }
 
         const mergeItem = {
@@ -146,8 +147,8 @@ async function getStageDropCollect(stageConfig, useStageBlacklist) {
     }
 
 
-    for (const itemId in ytlStageInfo) {
-        const dropInfo = ytlStageInfo[itemId]
+    for (const itemId in activityAverageStageInfo) {
+        const dropInfo = activityAverageStageInfo[itemId]
         if (dropInfo.times > 0) {
 
             const lmdDrop = createDropTemplate(dropInfo, {

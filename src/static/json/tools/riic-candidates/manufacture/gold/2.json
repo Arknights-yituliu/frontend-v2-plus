@@ -1,0 +1,276 @@
+{
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "manual-manufacture-gold-qingliu-l2",
+      "variantGroupId": "family-qingliu",
+      "name": "清流",
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-gold-qingliu-weedy-e0-l2",
+      "variantGroupId": "family-qingliu-weedy",
+      "name": "清流 + 温蒂（未精二）",
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        },
+        {
+          "name": "温蒂",
+          "maxElite": 1
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-gold-qingliu-weedy-e2-l2",
+      "variantGroupId": "family-qingliu-weedy",
+      "name": "清流 + 温蒂（精英 2）",
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        },
+        {
+          "name": "温蒂",
+          "elite": 2
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-gold-qingliu-eunectes-e0-l2",
+      "variantGroupId": "family-qingliu-eunectes",
+      "name": "清流 + 森蚺（未精二）",
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        },
+        {
+          "name": "森蚺",
+          "maxElite": 1
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-gold-qingliu-eunectes-e2-l2",
+      "variantGroupId": "family-qingliu-eunectes",
+      "name": "清流 + 森蚺（精英 2）",
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        },
+        {
+          "name": "森蚺",
+          "elite": 2
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-gold-qingliu-passen-e2-l2",
+      "variantGroupId": "family-qingliu-passen",
+      "name": "清流 + 异客",
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        },
+        {
+          "name": "异客",
+          "elite": 2
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-gold-qingliu-folivo-e2-l2",
+      "variantGroupId": "family-qingliu-folivo",
+      "name": "清流 + 掠风",
+      "members": [
+        {
+          "name": "清流",
+          "elite": 1
+        },
+        {
+          "name": "掠风",
+          "elite": 2
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "lv3CoreFallback": false,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "buffer-manufacture-gold-almond-e2-jessica-e0-core-l2",
+      "variantGroupId": "family-almond-jessica-e2-e0-gold",
+      "name": "杏仁（精英 2） + 杰西卡（精英 0）",
+      "members": [
+        {
+          "name": "杏仁",
+          "elite": 2,
+          "level": 1
+        },
+        {
+          "name": "杰西卡",
+          "elite": 0,
+          "level": 1
+        }
+      ],
+      "efficiency": 54,
+      "sortScore": 0,
+      "selectionMode": "atomicCore",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "buffer-manufacture-gold-almond-e2-vanilla-e0-core-l2",
+      "variantGroupId": "family-almond-vanilla-e2-e0-gold",
+      "name": "杏仁（精英 2） + 香草（精英 0）",
+      "members": [
+        {
+          "name": "杏仁",
+          "elite": 2,
+          "level": 1
+        },
+        {
+          "name": "香草",
+          "elite": 0,
+          "level": 1
+        }
+      ],
+      "efficiency": 54,
+      "sortScore": 0,
+      "selectionMode": "atomicCore",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-manufacture-gold-cangtai-e2-gravel-e1-l2",
+      "variantGroupId": "family-cangtai-gravel",
+      "name": "苍苔 + 砾",
+      "members": [
+        {
+          "name": "苍苔",
+          "elite": 2,
+          "level": 1
+        },
+        {
+          "name": "砾",
+          "elite": 1,
+          "level": 1
+        }
+      ],
+      "efficiency": 75,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-gold-cangtai-e2-thorn2-e2-l2",
+      "variantGroupId": "family-cangtai-thorn2",
+      "name": "苍苔 + 引星棘刺",
+      "members": [
+        {
+          "name": "苍苔",
+          "elite": 2,
+          "level": 1
+        },
+        {
+          "name": "引星棘刺",
+          "elite": 2,
+          "level": 1
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-gold-cangtai-e2-night-e0-l2",
+      "variantGroupId": "family-cangtai-night",
+      "name": "苍苔 + 夜烟",
+      "members": [
+        {
+          "name": "苍苔",
+          "elite": 2,
+          "level": 1
+        },
+        {
+          "name": "夜烟",
+          "elite": 0,
+          "level": 1
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-gold-cangtai-e2-spot-e1-l2",
+      "variantGroupId": "family-cangtai-spot",
+      "name": "苍苔 + 斑点",
+      "members": [
+        {
+          "name": "苍苔",
+          "elite": 2,
+          "level": 1
+        },
+        {
+          "name": "斑点",
+          "elite": 1,
+          "level": 1
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-gold-cangtai-e2-warmy-e2-l2",
+      "variantGroupId": "family-cangtai-warmy",
+      "name": "苍苔 + 温米",
+      "members": [
+        {
+          "name": "苍苔",
+          "elite": 2,
+          "level": 1
+        },
+        {
+          "name": "温米",
+          "elite": 2,
+          "level": 1
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    }
+  ]
+}

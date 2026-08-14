@@ -1,13 +1,23 @@
 .account-home-page {
-  .user-card {
+  .account-user-column {
     width: 600px;
     margin: 8px;
+  }
+
+  .user-card {
+    width: 100%;
+    margin: 0;
 
     .v-list-item-title {
       font-weight: bolder;
     }
 
     min-width: 330px;
+  }
+
+  .open-api-token-card {
+    width: 100%;
+    margin-top: 16px;
   }
 
 
@@ -89,10 +99,13 @@
 
 @media screen and (max-width: 600px) {
   .account-home-page {
-    .user-card {
-      max-width: none;
+    .account-user-column {
       width: 99%;
       margin: 4px;
+    }
+
+    .user-card {
+      width: 100%;
 
     }
 

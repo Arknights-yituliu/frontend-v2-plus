@@ -33,7 +33,8 @@ defineProps({
 
 <template>
 
-  <v-card :class="['operator-info-card', `operator-rarity-${operatorInfo.rarity || 1}`]">
+  <!--干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级, 卡片边框 class 直接使用星级-->
+  <v-card :class="['operator-info-card', `operator-rarity-${operatorInfo.rarity ?? 1}`]">
     <div class="operator-info-bar">
       <div :class="['operator-avatar-area', { 'operator-avatar-area-recommended': isEliteRecommended }]">
         <OperatorAvatar :size="56" :mobile-size="44" :char-id="operatorInfo.charId"></OperatorAvatar>
@@ -47,9 +48,10 @@ defineProps({
       </div>
 
       <div class="operator-skills-area">
-        <div class="bar-operator-skill-item" v-for="(skill,index) in operatorInfo.skill" :key="index">
+        <!--v2 数据中技能字段为 skills(元素含 skillIcon/skillName), 旧格式为 skill-->
+        <div class="bar-operator-skill-item" v-for="(skill,index) in operatorInfo.skills" :key="index">
           <div :class="['operator-skill-frame', { 'operator-skill-frame-recommended': recommendedSkillIndexes.includes(index) }]">
-            <SkillIcon :size="40" :mobile-size="30" :icon="`${skill.iconId}`"></SkillIcon>
+            <SkillIcon :size="40" :mobile-size="30" :icon="`${skill.skillIcon}`"></SkillIcon>
           </div>
           <img :src="`/image/survey/skill-rank-${operatorInfo[`skill${index+1}`]}-v1.jpg`"
                v-show="operatorInfo[`skill${index+1}`]>0"

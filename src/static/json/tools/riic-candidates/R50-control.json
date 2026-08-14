@@ -1,0 +1,1735 @@
+{
+  "schemaVersion": 1,
+  "source": "01_reference/runtime-catalog-source-snapshot-2026-08-04/riic_baseline_skill_rules.json",
+  "operatorCount": 65,
+  "skillCount": 96,
+  "skills": [
+    {
+      "operatorId": "char_002_amiya",
+      "name": "阿米娅",
+      "skillName": "合作协议",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有贸易站订单效率+7%（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "trading",
+            "product": "all"
+          },
+          "metric": "orderEfficiency",
+          "bonusPercent": 7
+        }
+      ],
+      "bufftag": [
+        "trading-station"
+      ]
+    },
+    {
+      "operatorId": "char_003_kalts",
+      "name": "凯尔希",
+      "skillName": "最高权限",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有制造站生产力+2%（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "manufacture",
+            "product": "all"
+          },
+          "metric": "production",
+          "bonusPercent": 2
+        }
+      ],
+      "bufftag": [
+        "manufacture-station"
+      ]
+    },
+    {
+      "operatorId": "char_010_chen",
+      "name": "陈",
+      "skillName": "德才兼备",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每个龙门近卫局干员可使控制中枢内所有干员的心情每小时恢复+0.05"
+    },
+    {
+      "operatorId": "char_1011_lava2",
+      "name": "炎狱炎熔",
+      "skillName": "异格者",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每个异格干员可使控制中枢内所有干员的心情每小时恢复+0.05"
+    },
+    {
+      "operatorId": "char_1020_reed2",
+      "name": "焰影苇草",
+      "skillName": "领袖",
+      "elite": 1,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有宿舍内所有干员的心情每小时恢复+0.05（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "dormitory"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_1021_kroos2",
+      "name": "寒芒克洛丝",
+      "skillName": "异格者",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每个异格干员可使控制中枢内所有干员的心情每小时恢复+0.05"
+    },
+    {
+      "operatorId": "char_1024_hbisc2",
+      "name": "濯尘芙蓉",
+      "skillName": "异格者",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每个异格干员可使控制中枢内所有干员的心情每小时恢复+0.05"
+    },
+    {
+      "operatorId": "char_1029_yato2",
+      "name": "麒麟R夜刀",
+      "skillName": "耐力回复",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，自身心情每小时消耗+0.5，木天蓼+8",
+      "humanVerified": 0,
+      "intermediateProducts": [
+        "catnip"
+      ],
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "sourceOperator",
+            "roomType": "control"
+          },
+          "metric": "moraleCost",
+          "perHour": 0.5
+        },
+        {
+          "target": {
+            "scope": "controlCenterState"
+          },
+          "metric": "resource",
+          "resource": "catnip",
+          "value": 8
+        }
+      ],
+      "bufftag": [
+        "intermediate-catnip"
+      ]
+    },
+    {
+      "operatorId": "char_1029_yato2",
+      "name": "麒麟R夜刀",
+      "skillName": "以身作则",
+      "elite": 2,
+      "level": 1,
+      "effect": "当与怪物猎人小队干员进驻控制中枢一起工作时，所有制造站生产力+2%（同种效果取最高）",
+      "humanVerified": 1,
+      "sameTeamWithOperatorIds": [
+        "char_1030_noirc2"
+      ],
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "controlCoassignedOperatorIds": [
+              "char_1030_noirc2"
+            ]
+          },
+          "target": {
+            "scope": "allRooms",
+            "roomType": "manufacture",
+            "product": "all"
+          },
+          "metric": "production",
+          "bonusPercent": 2
+        }
+      ],
+      "bufftag": [
+        "manufacture-station"
+      ]
+    },
+    {
+      "operatorId": "char_1030_noirc2",
+      "name": "火龙S黑角",
+      "skillName": "团队合作",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每有1名怪物猎人小队干员，则木天蓼+2",
+      "humanVerified": 0,
+      "intermediateProducts": [
+        "catnip"
+      ],
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "perControlOperatorIds": [
+              "char_1029_yato2",
+              "char_1030_noirc2",
+              "char_4077_palico"
+            ]
+          },
+          "target": {
+            "scope": "controlCenterState"
+          },
+          "metric": "resource",
+          "resource": "catnip",
+          "valuePerMatchingOperator": 2
+        }
+      ],
+      "bufftag": [
+        "intermediate-catnip"
+      ]
+    },
+    {
+      "operatorId": "char_1030_noirc2",
+      "name": "火龙S黑角",
+      "skillName": "秘传交涉术",
+      "elite": 2,
+      "level": 1,
+      "effect": "当与怪物猎人小队干员进驻控制中枢一起工作时，所有贸易站订单效率+7%（同种效果取最高）",
+      "humanVerified": 1,
+      "sameTeamWithOperatorIds": [
+        "char_1029_yato2"
+      ],
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "controlCoassignedOperatorIds": [
+              "char_1029_yato2"
+            ]
+          },
+          "target": {
+            "scope": "allRooms",
+            "roomType": "trading",
+            "product": "all"
+          },
+          "metric": "orderEfficiency",
+          "bonusPercent": 7
+        }
+      ],
+      "bufftag": [
+        "trading-station"
+      ]
+    },
+    {
+      "operatorId": "char_1034_jesca2",
+      "name": "涤火杰西卡",
+      "skillName": "老友相聚",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，自身心情每小时消耗+0.5；每个进驻在制造站的黑钢国际干员，生产力+5%",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "sourceOperator",
+            "roomType": "control"
+          },
+          "metric": "moraleCost",
+          "perHour": 0.5
+        },
+        {
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_106_franka",
+              "char_107_liskam",
+              "char_235_jesica",
+              "char_240_wyvern",
+              "char_4052_surfer",
+              "char_4105_almond"
+            ],
+            "roomType": "manufacture",
+            "product": "all"
+          },
+          "metric": "production",
+          "bonusPercent": 5
+        }
+      ],
+      "bufftag": [
+        "manufacture-operator"
+      ]
+    },
+    {
+      "operatorId": "char_1035_wisdel",
+      "name": "维什戴尔",
+      "skillName": "同谋·α",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，当伊内丝入驻会客室时，会客室线索搜集速度+5%；当赫德雷入驻贸易站时，赫德雷所在贸易站订单上限+1",
+      "bufftag": [
+        "trading-station"
+      ]
+    },
+    {
+      "operatorId": "char_1035_wisdel",
+      "name": "维什戴尔",
+      "skillName": "巴别塔之帜",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，其他设施内处于工作状态的干员心情每小时恢复+0.1，当魔王进驻中枢时额外+0.1（与控制中枢加成有特殊比较规则）"
+    },
+    {
+      "operatorId": "char_1035_wisdel",
+      "name": "维什戴尔",
+      "skillName": "同谋·β",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，当伊内丝入驻会客室时，会客室线索搜集速度+5%；当赫德雷入驻贸易站时，赫德雷所在贸易站订单上限+2",
+      "bufftag": [
+        "trading-station"
+      ]
+    },
+    {
+      "operatorId": "char_1040_blaze2",
+      "name": "烛煌",
+      "skillName": "断金之交",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，如训练室有干员在进行技能专精，则该干员的专精技能训练速度+5%（同种效果取最高）",
+      "humanVerified": 0,
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "trainingInProgress": true
+          },
+          "target": {
+            "scope": "currentTrainingOperator",
+            "roomType": "training"
+          },
+          "metric": "trainingSpeed",
+          "bonusPercent": 5
+        }
+      ]
+    },
+    {
+      "operatorId": "char_1044_hsgma2",
+      "name": "斩业星熊",
+      "skillName": "下城人脉",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，如训练室有干员在进行技能专精，则该干员的专精技能训练速度+5%（同种效果取最高）",
+      "humanVerified": 0,
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "trainingInProgress": true
+          },
+          "target": {
+            "scope": "currentTrainingOperator",
+            "roomType": "training"
+          },
+          "metric": "trainingSpeed",
+          "bonusPercent": 5
+        }
+      ]
+    },
+    {
+      "operatorId": "char_1044_hsgma2",
+      "name": "斩业星熊",
+      "skillName": "共事情谊",
+      "elite": 2,
+      "level": 1,
+      "effect": "当与龙门近卫局干员进驻控制中枢一起工作时，所有制造站生产力+3%（同种效果取最高）",
+      "sameTeamWithOperatorIds": [
+        "char_308_swire"
+      ],
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "controlCoassignedOperatorIds": [
+              "char_308_swire"
+            ]
+          },
+          "target": {
+            "scope": "allRooms",
+            "roomType": "manufacture",
+            "product": "all"
+          },
+          "metric": "production",
+          "bonusPercent": 3
+        }
+      ],
+      "bufftag": [
+        "manufacture-station"
+      ]
+    },
+    {
+      "operatorId": "char_1045_svash2",
+      "name": "凛御银灰",
+      "skillName": "商业版图",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，每个存在3名谢拉格干员的贸易站，订单获取效率+10%",
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_1046_sbell2"
+            ],
+            "roomType": "hire",
+            "product": "all"
+          },
+          "metric": "contactSpeed",
+          "bonusPercent": 10
+        }
+      ],
+      "bufftag": [
+        "trading-station"
+      ]
+    },
+    {
+      "operatorId": "char_1048_orchd2",
+      "name": "焰狐龙梓兰",
+      "skillName": "办公室年度人物",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，人力办公室联络速度+10%（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "hire",
+            "product": "all"
+          },
+          "metric": "contactSpeed",
+          "bonusPercent": 10
+        }
+      ],
+      "bufftag": [
+        "office"
+      ]
+    },
+    {
+      "operatorId": "char_1051_headb2",
+      "name": "怒潮凛冬",
+      "skillName": "“是，团长！”",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，自身心情每小时消耗+0.5，每个进驻在会客室的乌萨斯学生自治团干员，线索搜集速度+10%"
+    },
+    {
+      "operatorId": "char_130_doberm",
+      "name": "杜宾",
+      "skillName": "左膀右臂",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_144_red",
+      "name": "红",
+      "skillName": "S.W.E.E.P.",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_148_nearl",
+      "name": "临光",
+      "skillName": "左膀右臂",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_149_scave",
+      "name": "清道夫",
+      "skillName": "S.W.E.E.P.",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_197_poca",
+      "name": "早露",
+      "skillName": "学生会会长",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每个乌萨斯学生自治团干员可使控制中枢内所有干员的心情每小时恢复+0.05"
+    },
+    {
+      "operatorId": "char_2015_dusk",
+      "name": "夕",
+      "skillName": "不以己悲",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，自身心情每小时消耗+0.5；当自身心情大于12时，感知信息+10",
+      "humanVerified": 0,
+      "intermediateProducts": [
+        "perceptionInformation"
+      ],
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "sourceOperator",
+            "roomType": "control"
+          },
+          "metric": "moraleCost",
+          "perHour": 0.5
+        },
+        {
+          "conditions": {
+            "sourceMorale": {
+              "greaterThan": 12
+            }
+          },
+          "target": {
+            "scope": "controlCenterState"
+          },
+          "metric": "resource",
+          "resource": "perceptionInformation",
+          "value": 10
+        }
+      ],
+      "bufftag": [
+        "intermediate-perceptionInformation"
+      ]
+    },
+    {
+      "operatorId": "char_2015_dusk",
+      "name": "夕",
+      "skillName": "不以物喜",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05；当自身心情处于12以下时，人间烟火+15",
+      "humanVerified": 0,
+      "intermediateProducts": [
+        "humanFireworks"
+      ],
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        },
+        {
+          "conditions": {
+            "sourceMorale": {
+              "lessThan": 12
+            }
+          },
+          "target": {
+            "scope": "controlCenterState"
+          },
+          "metric": "resource",
+          "resource": "humanFireworks",
+          "value": 15
+        }
+      ],
+      "bufftag": [
+        "intermediate-humanFireworks"
+      ]
+    },
+    {
+      "operatorId": "char_2023_ling",
+      "name": "令",
+      "skillName": "杯莫停",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，消除当前控制中枢内所有岁干员自身心情消耗的影响"
+    },
+    {
+      "operatorId": "char_2023_ling",
+      "name": "令",
+      "skillName": "“山河远阔”",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，当自身心情大于12时，人间烟火+15；当自身心情处于12以下时，感知信息+10",
+      "intermediateProducts": [
+        "humanFireworks",
+        "perceptionInformation"
+      ],
+      "bufftag": [
+        "intermediate-humanFireworks",
+        "intermediate-perceptionInformation"
+      ]
+    },
+    {
+      "operatorId": "char_2024_chyue",
+      "name": "重岳",
+      "skillName": "知我为我",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，自身心情每小时消耗+0.5；每个岁干员进驻在宿舍和活动室以外的设施则人间烟火+5（最多5名）",
+      "intermediateProducts": [
+        "humanFireworks"
+      ],
+      "bufftag": [
+        "intermediate-humanFireworks"
+      ]
+    },
+    {
+      "operatorId": "char_2024_chyue",
+      "name": "重岳",
+      "skillName": "孤光共照",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，其他设施内处于工作状态的干员心情每小时恢复+0.05；同时每有20点人间烟火，则额外+0.05，（与控制中枢加成有特殊比较规则）",
+      "intermediateProducts": [
+        "humanFireworks"
+      ],
+      "bufftag": [
+        "intermediate-humanFireworks"
+      ]
+    },
+    {
+      "operatorId": "char_2027_wang",
+      "name": "望",
+      "skillName": "权变",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，若外势大于等于实地，所有贸易站订单效率+7%；若实地大于外势，所有制造站生产力+2%（同种效果取最高）",
+      "bufftag": [
+        "manufacture-station",
+        "trading-station"
+      ]
+    },
+    {
+      "operatorId": "char_206_gnosis",
+      "name": "灵知",
+      "skillName": "幕后指挥",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每个谢拉格干员可使控制中枢内所有干员的心情每小时恢复+0.05"
+    },
+    {
+      "operatorId": "char_206_gnosis",
+      "name": "灵知",
+      "skillName": "精密计算",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，每个进驻在贸易站的谢拉格干员，订单获取效率-15%，订单上限+6",
+      "bufftag": [
+        "trading-operator"
+      ]
+    },
+    {
+      "operatorId": "char_225_haak",
+      "name": "阿",
+      "skillName": "神经质",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，提升会客室内干员所属派系的线索倾向效果，但控制中枢内所有干员的心情每小时消耗+1.5"
+    },
+    {
+      "operatorId": "char_226_hmau",
+      "name": "吽",
+      "skillName": "坚毅随和",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每个鲤氏侦探事务所干员可使该派系干员额外恢复心情，同时每人可使控制中枢内所有干员的心情每小时恢复+0.2"
+    },
+    {
+      "operatorId": "char_260_durnar",
+      "name": "坚雷",
+      "skillName": "零食网络",
+      "elite": 1,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_261_sddrag",
+      "name": "苇草",
+      "skillName": "替身",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_279_excu",
+      "name": "送葬人",
+      "skillName": "清理协议",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_304_zebra",
+      "name": "暴雨",
+      "skillName": "护卫",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_306_leizi",
+      "name": "惊蛰",
+      "skillName": "至察",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，小幅提升会客室内干员所属派系的线索倾向效果，但控制中枢内所有干员的心情每小时消耗+0.5"
+    },
+    {
+      "operatorId": "char_306_leizi",
+      "name": "惊蛰",
+      "skillName": "断事如神",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，小幅提升会客室内干员所属派系的线索倾向效果"
+    },
+    {
+      "operatorId": "char_308_swire",
+      "name": "诗怀雅",
+      "skillName": "大小姐",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有贸易站订单效率+7%（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "trading",
+            "product": "all"
+          },
+          "metric": "orderEfficiency",
+          "bonusPercent": 7
+        }
+      ],
+      "bufftag": [
+        "trading-station"
+      ]
+    },
+    {
+      "operatorId": "char_322_lmlee",
+      "name": "老鲤",
+      "skillName": "浮生得闲",
+      "elite": 0,
+      "level": 1,
+      "effect": "当与阿进驻控制中枢一起工作时，控制中枢内所有干员心情每小时恢复+0.25"
+    },
+    {
+      "operatorId": "char_322_lmlee",
+      "name": "老鲤",
+      "skillName": "世事洞明",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，会客室线索搜集速度+25%（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "meeting",
+            "product": "all"
+          },
+          "metric": "clueSearch",
+          "bonusPercent": 25
+        }
+      ]
+    },
+    {
+      "operatorId": "char_367_swllow",
+      "name": "灰喉",
+      "skillName": "必要责任",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4004_pudd",
+      "name": "布丁",
+      "skillName": "超频",
+      "elite": 1,
+      "level": 1,
+      "effect": "进驻控制中枢时，如果有2台以上作业平台进驻在发电站，则所有制造站生产力+2%（同种效果取最高）",
+      "bufftag": [
+        "manufacture-station"
+      ]
+    },
+    {
+      "operatorId": "char_4023_rfalcn",
+      "name": "红隼",
+      "skillName": "战纹",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有宿舍内所有干员的心情每小时恢复+0.05（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "dormitory"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4023_rfalcn",
+      "name": "红隼",
+      "skillName": "捍卫之道",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4045_heidi",
+      "name": "海蒂",
+      "skillName": "“一千封信”",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，会客室更容易获得格拉斯哥帮线索（工作时长影响概率）"
+    },
+    {
+      "operatorId": "char_4064_mlynar",
+      "name": "玛恩纳",
+      "skillName": "独善其身",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4064_mlynar",
+      "name": "玛恩纳",
+      "skillName": "公事公办",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，部分设施内处于工作状态的干员心情每小时恢复+0.1；同时控制中枢内部分技能可以为其他设施内处于工作状态的干员额外提供心情恢复"
+    },
+    {
+      "operatorId": "char_4071_peper",
+      "name": "明椒",
+      "skillName": "朝气蓬勃",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有贸易站订单效率+7%（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "trading",
+            "product": "all"
+          },
+          "metric": "orderEfficiency",
+          "bonusPercent": 7
+        }
+      ],
+      "bufftag": [
+        "trading-station"
+      ]
+    },
+    {
+      "operatorId": "char_4098_vvana",
+      "name": "薇薇安娜",
+      "skillName": "金盏花诗会",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4098_vvana",
+      "name": "薇薇安娜",
+      "skillName": "烛骑士微光",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，每个进驻在制造站的骑士干员生产力+7%",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_1014_nearl2",
+              "char_148_nearl",
+              "char_237_gravel",
+              "char_265_sophia",
+              "char_4000_jnight",
+              "char_420_flamtl",
+              "char_423_blemsh",
+              "char_430_fartth",
+              "char_431_ashlok",
+              "char_496_wildmn"
+            ],
+            "roomType": "manufacture",
+            "product": "all"
+          },
+          "metric": "production",
+          "bonusPercent": 7
+        }
+      ],
+      "bufftag": [
+        "manufacture-operator"
+      ]
+    },
+    {
+      "operatorId": "char_4104_coldst",
+      "name": "冰酿",
+      "skillName": "笑靥如春",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4110_delphn",
+      "name": "戴菲恩",
+      "skillName": "运筹好手",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，同一贸易站中，每有1名格拉斯哥帮干员，订单获取效率+10%",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_112_siege",
+              "char_154_morgan",
+              "char_155_tiger",
+              "char_157_dagda"
+            ],
+            "roomType": "trading",
+            "product": "all"
+          },
+          "metric": "orderEfficiency",
+          "bonusPercent": 10
+        }
+      ],
+      "bufftag": [
+        "trading-operator"
+      ]
+    },
+    {
+      "operatorId": "char_4123_ela",
+      "name": "艾拉",
+      "skillName": "反抗者",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，更容易获得线索板上尚未拥有的线索，但控制中枢内除自身以外的其余干员心情每小时消耗+0.25"
+    },
+    {
+      "operatorId": "char_4132_ascln",
+      "name": "阿斯卡纶",
+      "skillName": "S.W.E.E.P.主管",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，如训练室有干员在进行技能专精，则该干员的专精技能训练速度+5%（同种效果取最高）",
+      "humanVerified": 0,
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "trainingInProgress": true
+          },
+          "target": {
+            "scope": "currentTrainingOperator",
+            "roomType": "training"
+          },
+          "metric": "trainingSpeed",
+          "bonusPercent": 5
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4132_ascln",
+      "name": "阿斯卡纶",
+      "skillName": "情报主脑",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有贸易站订单效率+7%（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "trading",
+            "product": "all"
+          },
+          "metric": "orderEfficiency",
+          "bonusPercent": 7
+        }
+      ],
+      "bufftag": [
+        "trading-station"
+      ]
+    },
+    {
+      "operatorId": "char_4134_cetsyr",
+      "name": "魔王",
+      "skillName": "魔王传承",
+      "elite": 0,
+      "level": 1,
+      "effect": "当与阿米娅一起进驻控制中枢时，自身和阿米娅心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "controlCoassignedOperatorIds": [
+              "char_002_amiya"
+            ]
+          },
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_002_amiya",
+              "char_4134_cetsyr"
+            ],
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4134_cetsyr",
+      "name": "魔王",
+      "skillName": "“未完的故事”",
+      "elite": 2,
+      "level": 1,
+      "effect": "当与阿米娅一起进驻控制中枢时，自身和阿米娅心情每小时恢复+0.1",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "controlCoassignedOperatorIds": [
+              "char_002_amiya"
+            ]
+          },
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_002_amiya",
+              "char_4134_cetsyr"
+            ],
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.1
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4134_cetsyr",
+      "name": "魔王",
+      "skillName": "期冀之汇",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，会客室线索搜集速度+15%（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "meeting",
+            "product": "all"
+          },
+          "metric": "clueSearch",
+          "bonusPercent": 15
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4146_nymph",
+      "name": "妮芙",
+      "skillName": "巡心",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有宿舍内所有干员的心情每小时恢复+0.05（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "dormitory"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_416_zumama",
+      "name": "森蚺",
+      "skillName": "我寻思能行",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，如果Lancet-2进驻在发电站，发电站额外+2（仅影响设施数量）"
+    },
+    {
+      "operatorId": "char_4166_varkis",
+      "name": "摆渡人",
+      "skillName": "英雄的骄傲·α",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，基建内（不包含副手及活动室使用者）每有1名米诺斯干员，会客室线索搜集速度+4%（最多+20%，同种效果取最高）；当与萨尔贡干员进驻控制中枢一起工作时，自身心情每小时消耗+0.02"
+    },
+    {
+      "operatorId": "char_4166_varkis",
+      "name": "摆渡人",
+      "skillName": "英雄的骄傲·β",
+      "elite": 1,
+      "level": 1,
+      "effect": "进驻控制中枢时，基建内（不包含副手及活动室使用者）每有1名米诺斯干员，会客室线索搜集速度+5%（最多+25%，同种效果取最高）；当与萨尔贡干员进驻控制中枢一起工作时，自身心情每小时消耗+0.02"
+    },
+    {
+      "operatorId": "char_4179_monstr",
+      "name": "Mon3tr",
+      "skillName": "博识生手",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4179_monstr",
+      "name": "Mon3tr",
+      "skillName": "最高权限",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有制造站生产力+2%（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "manufacture",
+            "product": "all"
+          },
+          "metric": "production",
+          "bonusPercent": 2
+        }
+      ],
+      "bufftag": [
+        "manufacture-station"
+      ]
+    },
+    {
+      "operatorId": "char_4182_oblvns",
+      "name": "丰川祥子",
+      "skillName": "丰富工作经验",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有生产贵金属类配方的制造站生产力+0.5%，每有20点热情值，所有生产贵金属类配方的制造站生产力+0.5%",
+      "intermediateProducts": [
+        "passion"
+      ],
+      "bufftag": [
+        "intermediate-passion",
+        "manufacture-station"
+      ]
+    },
+    {
+      "operatorId": "char_4182_oblvns",
+      "name": "丰川祥子",
+      "skillName": "生活的重压",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，热情值处于40点及以上时，自身心情每小时消耗+0.05",
+      "intermediateProducts": [
+        "passion"
+      ],
+      "bufftag": [
+        "intermediate-passion"
+      ]
+    },
+    {
+      "operatorId": "char_4182_oblvns",
+      "name": "丰川祥子",
+      "skillName": "丰富工作经验",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有生产贵金属类配方的制造站生产力+1%，每有20点热情值，所有生产贵金属类配方的制造站生产力+1%",
+      "intermediateProducts": [
+        "passion"
+      ],
+      "bufftag": [
+        "intermediate-passion",
+        "manufacture-station"
+      ]
+    },
+    {
+      "operatorId": "char_4183_mortis",
+      "name": "若叶睦",
+      "skillName": "演技的怪物",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，热情值+20；每有8点热情值，自身心情每小时消耗+0.01，所有贸易站订单效率+1%（同种效果取最高）",
+      "intermediateProducts": [
+        "passion"
+      ],
+      "bufftag": [
+        "intermediate-passion",
+        "trading-station"
+      ]
+    },
+    {
+      "operatorId": "char_4183_mortis",
+      "name": "若叶睦",
+      "skillName": "互为半身",
+      "elite": 2,
+      "level": 1,
+      "effect": "当与丰川祥子一起进驻控制中枢时，消除自身心情消耗的影响"
+    },
+    {
+      "operatorId": "char_4184_dolris",
+      "name": "三角初华",
+      "skillName": "偶像光环",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，宿舍内每有1名干员，热情值+1",
+      "intermediateProducts": [
+        "passion"
+      ],
+      "bufftag": [
+        "intermediate-passion"
+      ]
+    },
+    {
+      "operatorId": "char_4184_dolris",
+      "name": "三角初华",
+      "skillName": "羁绊相生",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有宿舍内所有干员的心情每小时恢复+0.05（同种效果取最高）；当与丰川祥子一起进驻控制中枢时，丰川祥子的心情每小时恢复+0.1"
+    },
+    {
+      "operatorId": "char_4185_amoris",
+      "name": "祐天寺若麦",
+      "skillName": "勤学苦练",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，热情值+10；会客室线索搜集速度提升+5%（同种效果取最高）",
+      "humanVerified": 1,
+      "intermediateProducts": [
+        "passion"
+      ],
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "controlCenterState"
+          },
+          "metric": "resource",
+          "resource": "passion",
+          "value": 10
+        },
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "meeting",
+            "product": "all"
+          },
+          "metric": "clueSearch",
+          "bonusPercent": 5
+        }
+      ],
+      "bufftag": [
+        "intermediate-passion"
+      ]
+    },
+    {
+      "operatorId": "char_4185_amoris",
+      "name": "祐天寺若麦",
+      "skillName": "成效优先",
+      "elite": 2,
+      "level": 1,
+      "effect": "当与丰川祥子一起进驻控制中枢时，丰川祥子心情每小时消耗+0.05，会客室线索搜集速度额外提升+5%（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "controlCoassignedOperatorIds": [
+              "char_4182_oblvns"
+            ]
+          },
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_4182_oblvns"
+            ],
+            "roomType": "control"
+          },
+          "metric": "moraleCost",
+          "perHour": 0.05
+        },
+        {
+          "conditions": {
+            "controlCoassignedOperatorIds": [
+              "char_4182_oblvns"
+            ]
+          },
+          "target": {
+            "scope": "allRooms",
+            "roomType": "meeting",
+            "product": "all"
+          },
+          "metric": "clueSearch",
+          "bonusPercent": 5
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4186_tmoris",
+      "name": "八幡海铃",
+      "skillName": "可靠伙伴",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，热情值+10；人脉资源的联络速度+10%（同种效果取最高）",
+      "humanVerified": 1,
+      "intermediateProducts": [
+        "passion"
+      ],
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "controlCenterState"
+          },
+          "metric": "resource",
+          "resource": "passion",
+          "value": 10
+        },
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "hire",
+            "product": "all"
+          },
+          "metric": "contactSpeed",
+          "bonusPercent": 10
+        }
+      ],
+      "bufftag": [
+        "office",
+        "intermediate-passion"
+      ]
+    },
+    {
+      "operatorId": "char_4186_tmoris",
+      "name": "八幡海铃",
+      "skillName": "家族认可",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，每个进驻在贸易站的叙拉古干员，订单获取效率+5%",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_1038_whitw2",
+              "char_140_whitew",
+              "char_145_prove",
+              "char_190_clour",
+              "char_254_vodfox",
+              "char_291_aglina",
+              "char_346_aosta",
+              "char_349_chiave",
+              "char_356_broca",
+              "char_358_lisa",
+              "char_4014_lunacu",
+              "char_4026_vulpis",
+              "char_4031_liesel",
+              "char_4037_demetr",
+              "char_4065_judge",
+              "char_4155_talr",
+              "char_427_vigil",
+              "char_446_aroma"
+            ],
+            "roomType": "trading",
+            "product": "all"
+          },
+          "metric": "orderEfficiency",
+          "bonusPercent": 5
+        }
+      ],
+      "bufftag": [
+        "trading-operator"
+      ]
+    },
+    {
+      "operatorId": "char_4195_radian",
+      "name": "电弧",
+      "skillName": "点滴关照",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_4195_radian",
+      "name": "电弧",
+      "skillName": "无言的慈爱",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有宿舍内精英干员的心情每小时恢复+0.1（同种效果取最高）",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "eliteOperators",
+            "roomType": "dormitory"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.1
+        }
+      ]
+    },
+    {
+      "operatorId": "char_420_flamtl",
+      "name": "焰尾",
+      "skillName": "小小的领袖",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_420_flamtl",
+      "name": "焰尾",
+      "skillName": "红松的骑士",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，每个进驻在制造站的红松骑士团干员，作战记录类配方的生产力+10%，贵金属类配方的生产力-10%",
+      "humanVerified": 1,
+      "sameTeamWithOperatorIds": [
+        "char_4098_vvana"
+      ],
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_430_fartth",
+              "char_431_ashlok",
+              "char_496_wildmn",
+              "char_4000_jnight"
+            ],
+            "roomType": "manufacture",
+            "product": "experience"
+          },
+          "metric": "production",
+          "bonusPercent": 10
+        },
+        {
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_430_fartth",
+              "char_431_ashlok",
+              "char_496_wildmn",
+              "char_4000_jnight"
+            ],
+            "roomType": "manufacture",
+            "product": "gold"
+          },
+          "metric": "production",
+          "bonusPercent": -10
+        }
+      ],
+      "bufftag": [
+        "manufacture-operator"
+      ]
+    },
+    {
+      "operatorId": "char_4228_closur",
+      "name": "可露希尔",
+      "skillName": "总工程师",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05",
+      "humanVerified": 1,
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allOperators",
+            "roomType": "control"
+          },
+          "metric": "moraleRecovery",
+          "perHour": 0.05
+        }
+      ]
+    },
+    {
+      "operatorId": "char_456_ash",
+      "name": "灰烬",
+      "skillName": "彩虹小队",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每个彩虹小队干员可使控制中枢内所有干员的心情每小时恢复+0.05"
+    },
+    {
+      "operatorId": "char_456_ash",
+      "name": "灰烬",
+      "skillName": "情报储备",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每有1名彩虹小队干员，则情报储备+1",
+      "intermediateProducts": [
+        "intelligenceReserve"
+      ],
+      "bufftag": [
+        "intermediate-intelligenceReserve"
+      ]
+    },
+    {
+      "operatorId": "char_457_blitz",
+      "name": "闪击",
+      "skillName": "彩虹小队",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每个彩虹小队干员可使控制中枢内所有干员的心情每小时恢复+0.05"
+    },
+    {
+      "operatorId": "char_458_rfrost",
+      "name": "霜华",
+      "skillName": "彩虹小队",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每个彩虹小队干员可使控制中枢内所有干员的心情每小时恢复+0.05"
+    },
+    {
+      "operatorId": "char_459_tachak",
+      "name": "战车",
+      "skillName": "彩虹小队",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每个彩虹小队干员可使控制中枢内所有干员的心情每小时恢复+0.05"
+    },
+    {
+      "operatorId": "char_459_tachak",
+      "name": "战车",
+      "skillName": "乌萨斯特饮",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内每有1名乌萨斯学生自治团干员，则乌萨斯特饮+1",
+      "intermediateProducts": [
+        "ursusSpecialDrink"
+      ],
+      "bufftag": [
+        "intermediate-ursusSpecialDrink"
+      ]
+    },
+    {
+      "operatorId": "char_474_glady",
+      "name": "歌蕾蒂娅",
+      "skillName": "潮汐守望",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，每有1个深海猎人干员进驻在宿舍以外的设施，则自身心情每小时消耗+0.5；反之则自身心情每小时恢复+0.5，如果进驻在宿舍内的深海猎人干员为满心情，则额外+0.5"
+    },
+    {
+      "operatorId": "char_474_glady",
+      "name": "歌蕾蒂娅",
+      "skillName": "集群狩猎·α",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05；基建内（不包含副手及活动室使用者）深海猎人干员获得特殊加成（与部分技能有特殊叠加规则）"
+    },
+    {
+      "operatorId": "char_474_glady",
+      "name": "歌蕾蒂娅",
+      "skillName": "集群狩猎·β",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05；基建内（不包含副手及活动室使用者）深海猎人干员获得特殊加成（与部分技能有特殊叠加规则）"
+    },
+    {
+      "operatorId": "char_479_sleach",
+      "name": "琴柳",
+      "skillName": "感染力",
+      "elite": 2,
+      "level": 1,
+      "effect": "进驻控制中枢时，人力办公室联络速度小于30%时（其中包含基础联络速度5%），则联络速度额外+20%（该加成全局效果唯一，不受其它加成影响）",
+      "bufftag": [
+        "office"
+      ]
+    }
+  ]
+}

@@ -2,13 +2,13 @@
 import {translate} from "/src/utils/i18n.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import {operatorTable} from '/src/utils/gameData.js'
+import {operatorTableV2} from '/src/utils/gameData.js'
 
 
 let characterIdAndName = {}
 
-for (const key in operatorTable) {
-  characterIdAndName[operatorTable[key].name] = replaceCharId(key)
+for (const key in operatorTableV2) {
+  characterIdAndName[operatorTableV2[key].name] = replaceCharId(key)
 }
 
 

@@ -57,6 +57,7 @@ let operatorFilterCondition = ref({
             operatorFilterCondition.value.rarity.conditions[index].action = !operatorFilterCondition.value.rarity.conditions[index].action
         },
         conditions: [
+            //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，条件值即星级
             {label: "6★", value: 6, func: filterByRarity, action: true},
             {label: "5★", value: 5, func: filterByRarity, action: false},
             {label: "4★", value: 4, func: filterByRarity, action: false},

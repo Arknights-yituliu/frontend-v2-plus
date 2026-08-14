@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "id": "idle-fill-priority",
+  "skillState": "unlocked",
+  "firstMatchWins": true,
+  "tiers": [
+    {
+      "id": "dormitory-only",
+      "label": "纯宿舍技能",
+      "match": {
+        "activeRoomTypesEqual": [
+          "dormitory"
+        ]
+      },
+      "sortBy": "nameAsc",
+      "tieBreakBy": "charIdAsc"
+    },
+    {
+      "id": "training-only",
+      "label": "纯训练室技能",
+      "match": {
+        "activeRoomTypesEqual": [
+          "training"
+        ]
+      },
+      "sortBy": "nameAsc",
+      "tieBreakBy": "charIdAsc"
+    },
+    {
+      "id": "workshop-only",
+      "label": "纯加工站技能",
+      "match": {
+        "activeRoomTypesEqual": [
+          "workshop"
+        ]
+      },
+      "sortBy": "nameAsc",
+      "tieBreakBy": "charIdAsc"
+    },
+    {
+      "id": "dormitory-training-workshop-mixed",
+      "label": "宿舍、训练室、加工站组合技能",
+      "match": {
+        "allActiveRoomTypesMustBeWithin": [
+          "dormitory",
+          "training",
+          "workshop"
+        ],
+        "minimumDistinctActiveRoomTypeCount": 2
+      },
+      "sortBy": "nameAsc",
+      "tieBreakBy": "charIdAsc"
+    },
+    {
+      "id": "control-only",
+      "label": "纯控制中枢技能",
+      "match": {
+        "activeRoomTypesEqual": [
+          "control"
+        ]
+      },
+      "sortBy": "nameAsc",
+      "tieBreakBy": "charIdAsc"
+    },
+    {
+      "id": "support-room-mixed",
+      "label": "宿舍、训练室、加工站、控制中枢组合技能",
+      "match": {
+        "allActiveRoomTypesMustBeWithin": [
+          "dormitory",
+          "training",
+          "workshop",
+          "control"
+        ],
+        "activeRoomTypesMustInclude": [
+          "control"
+        ],
+        "minimumDistinctActiveRoomTypeCount": 2
+      },
+      "sortBy": "nameAsc",
+      "tieBreakBy": "charIdAsc"
+    },
+    {
+      "id": "other",
+      "label": "其余干员",
+      "match": {
+        "otherwise": true
+      },
+      "sortBy": "nameAsc",
+      "tieBreakBy": "charIdAsc"
+    }
+  ]
+}

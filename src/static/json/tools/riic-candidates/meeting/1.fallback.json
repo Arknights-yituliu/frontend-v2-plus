@@ -1,0 +1,588 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "defaultPercent": 0,
+  "operators": [
+    {
+      "name": "12F",
+      "rates": [
+        {
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "安洁莉娜",
+      "rates": [
+        {
+          "percent": 20,
+          "tags": [
+            "siracusa"
+          ]
+        },
+        {
+          "percent": 28,
+          "elite": 1,
+          "tags": [
+            "siracusa"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "暗索",
+      "rates": [
+        {
+          "percent": 27
+        },
+        {
+          "percent": 35,
+          "elite": 1
+        },
+        {
+          "percent": 43,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "白雪",
+      "rates": [
+        {
+          "percent": 27
+        },
+        {
+          "percent": 35,
+          "elite": 1
+        },
+        {
+          "percent": 43,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "陈",
+      "rates": [
+        {
+          "percent": 51,
+          "elite": 2,
+          "tags": [
+            "lungmen-guard-department"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "赤刃明霄陈",
+      "rates": [
+        {
+          "percent": 46,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "伺夜",
+      "rates": [
+        {
+          "percent": 35,
+          "tags": [
+            "siracusa"
+          ]
+        },
+        {
+          "percent": 43,
+          "elite": 1,
+          "tags": [
+            "siracusa"
+          ]
+        },
+        {
+          "percent": 51,
+          "elite": 2,
+          "tags": [
+            "siracusa"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "断崖",
+      "rates": [
+        {
+          "percent": 19
+        },
+        {
+          "percent": 27,
+          "elite": 1
+        },
+        {
+          "percent": 45,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "风丸",
+      "rates": [
+        {
+          "percent": 24
+        },
+        {
+          "percent": 32,
+          "elite": 1
+        },
+        {
+          "percent": 40,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "芙兰卡",
+      "rates": [
+        {
+          "percent": 19,
+          "tags": [
+            "blacksteel-international"
+          ]
+        },
+        {
+          "percent": 27,
+          "elite": 1,
+          "tags": [
+            "blacksteel-international"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "哈洛德",
+      "rates": [
+        {
+          "percent": 19
+        },
+        {
+          "percent": 27,
+          "elite": 1
+        },
+        {
+          "percent": 35,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "红",
+      "rates": [
+        {
+          "percent": 50,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "见行者",
+      "rates": [
+        {
+          "percent": 19,
+          "tags": [
+            "laterano"
+          ]
+        },
+        {
+          "percent": 27,
+          "elite": 1,
+          "tags": [
+            "laterano"
+          ]
+        },
+        {
+          "percent": 43.64,
+          "elite": 2,
+          "tags": [
+            "laterano"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "杰克",
+      "rates": [
+        {
+          "percent": 35,
+          "elite": 1
+        },
+        {
+          "percent": 43,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "莱欧斯",
+      "rates": [
+        {
+          "percent": 29,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
+        },
+        {
+          "percent": 37,
+          "elite": 1,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
+        },
+        {
+          "percent": 45,
+          "elite": 2,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "凛视",
+      "rates": [
+        {
+          "percent": 19,
+          "tags": [
+            "sami"
+          ]
+        },
+        {
+          "percent": 35,
+          "elite": 2,
+          "tags": [
+            "sami"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "梅",
+      "rates": [
+        {
+          "percent": 27
+        },
+        {
+          "percent": 35,
+          "elite": 1
+        },
+        {
+          "percent": 43,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "谜图",
+      "rates": [
+        {
+          "percent": 19
+        },
+        {
+          "percent": 27,
+          "elite": 1
+        },
+        {
+          "percent": 35,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "莫斯提马",
+      "rates": [
+        {
+          "percent": 20,
+          "tags": [
+            "laterano"
+          ]
+        },
+        {
+          "percent": 28,
+          "elite": 1,
+          "tags": [
+            "laterano"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "忍冬",
+      "rates": [
+        {
+          "percent": 20,
+          "tags": [
+            "siracusa"
+          ]
+        },
+        {
+          "percent": 28,
+          "elite": 1,
+          "tags": [
+            "siracusa"
+          ]
+        },
+        {
+          "percent": 46,
+          "elite": 2,
+          "tags": [
+            "siracusa"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "塞雷娅",
+      "rates": [
+        {
+          "percent": 20,
+          "tags": [
+            "rhine-lab"
+          ]
+        },
+        {
+          "percent": 28,
+          "elite": 1,
+          "tags": [
+            "rhine-lab"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "守林人",
+      "rates": [
+        {
+          "percent": 19
+        },
+        {
+          "percent": 27,
+          "elite": 1
+        },
+        {
+          "percent": 45,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "双月",
+      "rates": [
+        {
+          "percent": 30,
+          "elite": 2,
+          "tags": [
+            "rainbow-squad"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "松桐",
+      "rates": [
+        {
+          "percent": 19
+        },
+        {
+          "percent": 27,
+          "elite": 1
+        },
+        {
+          "percent": 35,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "提丰",
+      "rates": [
+        {
+          "percent": 20,
+          "tags": [
+            "sami"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "微风",
+      "rates": [
+        {
+          "percent": 19
+        },
+        {
+          "percent": 27,
+          "elite": 1
+        }
+      ]
+    },
+    {
+      "name": "晓歌",
+      "rates": [
+        {
+          "percent": 35,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "信仰搅拌机",
+      "rates": [
+        {
+          "percent": 25,
+          "tags": [
+            "laterano"
+          ]
+        },
+        {
+          "percent": 33,
+          "elite": 1,
+          "tags": [
+            "laterano"
+          ]
+        },
+        {
+          "percent": 46,
+          "elite": 2,
+          "tags": [
+            "laterano"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "星极",
+      "rates": [
+        {
+          "percent": 19
+        },
+        {
+          "percent": 27,
+          "elite": 1
+        },
+        {
+          "percent": 50,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "行箸",
+      "rates": [
+        {
+          "percent": 45,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "寻澜",
+      "rates": [
+        {
+          "percent": 19,
+          "tags": [
+            "blacksteel-international"
+          ]
+        },
+        {
+          "percent": 35,
+          "elite": 2,
+          "tags": [
+            "blacksteel-international"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "宴",
+      "rates": [
+        {
+          "percent": 35,
+          "elite": 1
+        },
+        {
+          "percent": 43,
+          "elite": 2
+        }
+      ]
+    },
+    {
+      "name": "耶拉",
+      "rates": [
+        {
+          "percent": 19,
+          "tags": [
+            "kjerag"
+          ]
+        },
+        {
+          "percent": 27,
+          "elite": 1,
+          "tags": [
+            "kjerag"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "因陀罗",
+      "rates": [
+        {
+          "percent": 19,
+          "tags": [
+            "glasgow-gang"
+          ]
+        },
+        {
+          "percent": 27,
+          "elite": 1,
+          "tags": [
+            "glasgow-gang"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "远山",
+      "rates": [
+        {
+          "percent": 40,
+          "elite": 1,
+          "tags": [
+            "sami"
+          ]
+        },
+        {
+          "percent": 48,
+          "elite": 2,
+          "tags": [
+            "sami"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "跃跃",
+      "rates": [
+        {
+          "percent": 17
+        },
+        {
+          "percent": 25,
+          "elite": 1
+        },
+        {
+          "percent": 33,
+          "elite": 2
+        }
+      ]
+    }
+  ]
+}

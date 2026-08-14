@@ -3,7 +3,7 @@ import {onMounted, ref} from "vue";
 import {createMessage} from "/src/utils/message.js";
 import operatorDataAPI from "/src/api/operatorData.js";
 import {operatorRecommend} from "/src/utils/survey/operatorRecommend";
-import {operatorTable} from "/src/utils/gameData.js";
+import {operatorTableV2} from "/src/utils/gameData.js";
 import deepClone from "/src/utils/deepClone.js";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
@@ -37,8 +37,8 @@ async function getOperatorData() {
   }
 
   const result = [];
-  for (const charId in operatorTable) {
-    const formatData = deepClone(operatorTable[charId]);
+  for (const charId in operatorTableV2) {
+    const formatData = deepClone(operatorTableV2[charId]);
     const item = operatorMap[charId] || {
       elite: 0,
       level: 0,

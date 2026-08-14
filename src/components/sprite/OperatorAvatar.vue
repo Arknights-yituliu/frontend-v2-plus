@@ -2,7 +2,6 @@
 
 import {onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce.js";
-import {operatorTableV2} from "/src/utils/gameData.js";
 
 
 const props = defineProps({
@@ -43,10 +42,7 @@ function resolveDisplayRarity() {
     return 6
   }
 
-  if (props.charId && operatorTableV2?.[props.charId] && Number(operatorTableV2[props.charId].rarity) === rarity) {
-    return Math.min(6, Math.max(1, Math.floor(rarity) + 1))
-  }
-
+  // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，调用方传入的即为星级，无需再 +1 转换
   return Math.min(6, Math.max(1, Math.floor(rarity)))
 }
 

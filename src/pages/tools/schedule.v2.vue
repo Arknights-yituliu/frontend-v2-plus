@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from "vue";
 import "/src/assets/css/tool/schedule.v2.css";
 import "/src/assets/css/information/building_skill_font_color.css";
 import SCHEDULE_TEMPLATE from "/src/static/json/build/plans_template.json";
-import { operatorTable } from "/src/utils/gameData.js";
+import { operatorTableV2 } from "/src/utils/gameData.js";
 import SCHEDULE_MENU from "/src/static/json/build/schedule_menu.json";
 import BUILDING_TABLE from "/src/static/json/build/building_table.json";
 import buildingApi from "/src/api/building.js";
@@ -18,6 +18,8 @@ import { saveAs } from "file-saver";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
+  "riic_schedule_generator_to_legacy_editor_v1";
 
 let operatorOwnMap = new Map();
 
@@ -86,8 +88,8 @@ const productTable = {
 
 let characterIdAndName = {};
 
-for (const key in operatorTable) {
-  characterIdAndName[operatorTable[key].name] = replaceCharId(key);
+for (const key in operatorTableV2) {
+  characterIdAndName[operatorTableV2[key].name] = replaceCharId(key);
 }
 
 function replaceCharId(string) {
@@ -647,6 +649,16 @@ let scheduleInfo = ref({
   plans: [],
   scheduleType: {},
 });
+let transferredUnsupportedRoomData = ref({});
+
+function getValidPlanDuration(value) {
+  const duration = Number(value);
+  return Number.isFinite(duration) && duration > 0 ? Math.round(duration) : null;
+}
+
+function cloneRoomList(roomList) {
+  return JSON.parse(JSON.stringify(roomList));
+}
 
 /**
  * 创建排班文件
@@ -672,6 +684,14 @@ function createSchedule() {
         processing: plansTemplate.value[i].rooms.processing,
       },
     };
+    const duration = getValidPlanDuration(plansTemplate.value[i].duration);
+    if (duration !== null) {
+      plan.duration = duration;
+    }
+    const unsupportedRooms = transferredUnsupportedRoomData.value[i];
+    if (unsupportedRooms?.training) {
+      plan.rooms.training = cloneRoomList(unsupportedRooms.training);
+    }
     if (isPeriod.value) {
       plan.period = getPeriod(i);
     }
@@ -679,6 +699,7 @@ function createSchedule() {
   }
 
   // scheduleInfo.value.buildingType = selectedScheduleType.value.label
+  scheduleInfo.value.planTimes = `${scheduleTypeV2.value.planTimes}班`;
   scheduleInfo.value.plans = plans;
   scheduleInfo.value.scheduleType = scheduleTypeV2.value;
 }
@@ -754,13 +775,15 @@ function redirectToMowerPlan(data) {
 /**
  * 导入排班内容
  * @param schedule 排班内容
+ * @param {{ preserveUnsupportedRooms?: boolean }} options 转交兼容选项
  */
-function importSchedule(schedule) {
+function importSchedule(schedule, { preserveUnsupportedRooms = false } = {}) {
   if (isMowerPlanPayload(schedule)) {
     redirectToMowerPlan(schedule);
     return;
   }
 
+  transferredUnsupportedRoomData.value = {};
   scheduleInfo.value.author = schedule.author;
   scheduleInfo.value.description = schedule.description;
   scheduleInfo.value.title = schedule.title;
@@ -791,10 +814,28 @@ function importSchedule(schedule) {
 
   for (const index in plans) {
     const plan = plans[index];
-    const { name, description, description_post, Fiammetta, drones, rooms, period } = plan;
+    const {
+      name,
+      description,
+      description_post,
+      Fiammetta,
+      drones,
+      rooms,
+      period,
+      duration,
+    } = plan;
+    if (!plansTemplate.value[index]) {
+      continue;
+    }
     plansTemplate.value[index].name = name;
     plansTemplate.value[index].description = description;
     plansTemplate.value[index].description_post = description_post;
+    const validDuration = getValidPlanDuration(duration);
+    if (validDuration !== null) {
+      plansTemplate.value[index].duration = validDuration;
+    } else {
+      delete plansTemplate.value[index].duration;
+    }
 
     if (Fiammetta) {
       for (const property in Fiammetta) {
@@ -811,13 +852,24 @@ function importSchedule(schedule) {
     if (rooms) {
       for (const roomType in rooms) {
         const roomList = rooms[roomType];
+        const targetRoomList = plansTemplate.value[index].rooms[roomType];
+        if (!Array.isArray(roomList) || !Array.isArray(targetRoomList)) {
+          continue;
+        }
         for (const roomIndex in roomList) {
-          const room = roomList[roomIndex];
+          if (!targetRoomList[roomIndex] || !roomList[roomIndex]) {
+            continue;
+          }
           for (const property in roomList[roomIndex]) {
-            // console.log(plansTemplate.value[index].rooms[roomType][roomIndex][property])
-            plansTemplate.value[index].rooms[roomType][roomIndex][property] = room[property];
+            targetRoomList[roomIndex][property] = roomList[roomIndex][property];
           }
         }
+      }
+
+      if (preserveUnsupportedRooms && Array.isArray(rooms.training)) {
+        transferredUnsupportedRoomData.value[index] = {
+          training: cloneRoomList(rooms.training),
+        };
       }
     }
 
@@ -864,6 +916,52 @@ function importSchedule(schedule) {
   }
 }
 
+function consumeRiicGeneratorScheduleTransfer() {
+  let rawTransfer = "";
+  try {
+    rawTransfer = sessionStorage.getItem(RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY);
+  } catch (error) {
+    console.error("Failed to read RIIC schedule transfer", error);
+    return;
+  }
+
+  if (!rawTransfer) {
+    return;
+  }
+
+  let transfer;
+  try {
+    transfer = JSON.parse(rawTransfer);
+  } catch (error) {
+    sessionStorage.removeItem(RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY);
+    cMessage("旧版编辑器收到的排班数据无效", "error");
+    return;
+  }
+
+  const schedule = transfer?.schedule;
+  const isValid =
+    transfer?.version === 1 &&
+    transfer?.source === "riic-schedule-generator" &&
+    schedule &&
+    Array.isArray(schedule.plans) &&
+    schedule.plans.length > 0;
+
+  if (!isValid) {
+    sessionStorage.removeItem(RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY);
+    cMessage("旧版编辑器收到的排班数据无效", "error");
+    return;
+  }
+
+  try {
+    importSchedule(schedule, { preserveUnsupportedRooms: true });
+    sessionStorage.removeItem(RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY);
+    cMessage("已导入新排班生成器的排班");
+  } catch (error) {
+    console.error("Failed to import RIIC schedule transfer", error);
+    cMessage("导入新排班生成器的排班失败", "error");
+  }
+}
+
 let guidePopup = ref(false);
 
 function setPosition() {
@@ -888,6 +986,7 @@ onMounted(() => {
   filterOperatorByTag(operatorFilterConditionTable.room.conditions[0], "room");
 
   getOperatorDataByAccount();
+  consumeRiicGeneratorScheduleTransfer();
 });
 
 function useLegacyUI() {

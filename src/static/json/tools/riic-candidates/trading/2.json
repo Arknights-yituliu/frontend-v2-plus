@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "manual-trading-lmd-demetr-e0-vigil-e2-l2",
+      "variantGroupId": "family-demetr-vigil-e0-lmd",
+      "name": "贝洛内 E0 + 伺夜",
+      "members": [
+        {
+          "name": "贝洛内",
+          "elite": 0
+        },
+        {
+          "name": "伺夜",
+          "elite": 2
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "lv3PairComponent": true,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "manual-trading-lmd-demetr-e2-vigil-e2-l2",
+      "variantGroupId": "family-demetr-vigil-e2-lmd",
+      "name": "贝洛内 E2 + 伺夜",
+      "members": [
+        {
+          "name": "贝洛内",
+          "elite": 2
+        },
+        {
+          "name": "伺夜",
+          "elite": 2
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "lv3PairComponent": true,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "template:trading-dela:trading:all:2:2:default",
+      "variantGroupId": "template:trading-dela:trading:all:2:2",
+      "name": "德克萨斯 + 拉普兰德",
+      "members": [
+        {
+          "name": "德克萨斯"
+        },
+        {
+          "name": "拉普兰德"
+        }
+      ],
+      "efficiency": 65,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "template:trading-lemuen-angel:trading:all:2:2:char_103_angel",
+      "variantGroupId": "template:trading-lemuen-angel:trading:all:2:2",
+      "name": "蕾缪安 + 天使",
+      "members": [
+        {
+          "name": "蕾缪安",
+          "elite": 2
+        },
+        {
+          "name": "能天使",
+          "elite": 2
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "quality": "baseOnly",
+      "lv3PairComponent": true,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "template:trading-siege-morgan:trading:all:2:2:default",
+      "variantGroupId": "template:trading-siege-morgan:trading:all:2:2",
+      "name": "推进之王 + 摩根",
+      "members": [
+        {
+          "name": "推进之王"
+        },
+        {
+          "name": "摩根",
+          "elite": 2
+        }
+      ],
+      "efficiency": 75,
+      "sortScore": 0,
+      "quality": "complete",
+      "lv3PairComponent": true,
+      "calculationStatus": "calculated"
+    }
+  ]
+}

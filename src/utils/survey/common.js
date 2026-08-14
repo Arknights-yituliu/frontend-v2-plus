@@ -1,4 +1,4 @@
-import {operatorTable} from "/src/utils/gameData.js";
+
 
 
 let yearDict = [

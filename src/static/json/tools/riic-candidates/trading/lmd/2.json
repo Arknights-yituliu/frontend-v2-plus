@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "manual-trading-lmd-butshu-solo-beta-solo-l2-9fec162f0dc6",
+      "variantGroupId": "family-butshu:solo-beta",
+      "name": "但书 β + 1位补位",
+      "members": [
+        {
+          "name": "但书",
+          "elite": 2
+        }
+      ],
+      "efficiency": 83.33,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-trading-lmd-butshu-solo-alpha-solo-l2-5bffa531a1b5",
+      "variantGroupId": "family-butshu:solo-alpha",
+      "name": "但书 α + 1位补位",
+      "members": [
+        {
+          "name": "但书",
+          "maxElite": 0
+        }
+      ],
+      "efficiency": 41.67,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    }
+  ]
+}

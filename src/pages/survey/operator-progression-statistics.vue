@@ -115,11 +115,12 @@ let operatorsStatisticsDetailDialog = ref(false)
 function openOperatorsStatisticsDetail(operator) {
 
 
-  const {skill, equip, own,sampleSize} = operator
+  //v2 数据中技能字段为 skills(数组元素含 skillName/skillIcon)
+  const {skills, equip, own, sampleSize} = operator
   const data = []
 
   for (let index = 0; index < 3; index++) {
-    const info = skill[index]
+    const info = skills[index]
     if(!info){
       continue
     }
@@ -128,9 +129,9 @@ function openOperatorsStatisticsDetail(operator) {
 
 
     const item = {
-      label: info.name,
+      label: info.skillName,
       type: 'skill',
-      iconId: info.iconId,
+      iconId: info.skillIcon,
       ranks: [
         formatNumber(ranks.rank1 * 100),
         formatNumber(ranks.rank2 * 100),

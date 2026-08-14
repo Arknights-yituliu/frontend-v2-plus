@@ -2,7 +2,7 @@
 import {createMessage} from "/src/utils/message.js";
 import operatorDataAPI from "/src/api/operatorData.js"
 import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
-import {operatorTable} from "/src/utils/gameData.js";
+import {operatorTableV2} from "/src/utils/gameData.js";
 import {exportExcel} from '/src/utils/exportExcel.js'
 
 import "/src/assets/css/survey/operator.scss";
@@ -238,8 +238,9 @@ function createOperatorList(list = []) {
   }
 
   const tmpList = []
-  for (const charId in operatorTable) {
-    let formatData = deepClone(operatorTable[charId])
+  for (const charId in operatorTableV2) {
+    const sourceOperator = operatorTableV2[charId]
+    let formatData = deepClone(sourceOperator)
 
     let item = {}
     if (operatorMap[charId]) {
@@ -305,11 +306,11 @@ const operatorRecommendedSkillSourceMap = computed(() => {
   for (const operator of displayOperatorList.value) {
     const result = operatorProgressionStatisticsMap.get(operator.charId)
 
-    if (!result || !Array.isArray(operator.skill)) {
+    if (!result || !Array.isArray(operator.skills)) {
       continue
     }
 
-    const recommendedSkillIndexes = operator.skill.reduce((indexes, _, index) => {
+    const recommendedSkillIndexes = operator.skills.reduce((indexes, _, index) => {
       const ranks = result[`skill${index + 1}`]
       if (!ranks) {
         return indexes
@@ -516,7 +517,7 @@ function openOperatorsStatisticsDetail(operator) {
   operatorsStatisticsDetailOperator.value = operator
 
   const result = operatorProgressionStatisticsMap.get(charId)
-  const skillList = Array.isArray(result.skill) ? result.skill : []
+  const skillList = Array.isArray(result.skills) ? result.skills : []
   const equipList = Array.isArray(result.equip) ? result.equip : []
   const data = []
 
@@ -531,9 +532,10 @@ function openOperatorsStatisticsDetail(operator) {
       continue
     }
     const item = {
-      label: info.name,
+      //v2 数据中技能字段为 skills(元素含 skillName/skillIcon)
+      label: info.skillName,
       type: 'skill',
-      iconId: info.iconId,
+      iconId: info.skillIcon,
       ranks: [
         {
           highlight: playerSkillRank === 1,
@@ -678,7 +680,9 @@ function exportOperatorExcel() {
   )
   for (const operator of sortedOperatorList) {
     const {name,own,rarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA} = operator
-    list.push([name,own,rarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA])
+    //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，导出时直接使用
+    const starRarity = rarity
+    list.push([name,own,starRarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA])
   }
 
   console.log(list)

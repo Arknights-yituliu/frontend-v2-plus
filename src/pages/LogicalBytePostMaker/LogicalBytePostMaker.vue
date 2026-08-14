@@ -56,6 +56,11 @@ const pageGroups = [
         to: '/lb/return'
       },
       {
+        title: '新材料简报制图',
+        description: '制作隐藏掉率与搓玉指标的材料简报',
+        to: '/lb/new-material'
+      },
+      {
         title: '礼包性价比制图',
         description: '上传头图并将已选在售礼包制作为一张纵向长图',
         to: '/lb/pack-maker'
@@ -64,6 +69,11 @@ const pageGroups = [
         title: '收益速览制图',
         description: '输入干员名称生成精二与专精材料收益速览表',
         to: '/lb/yield-overview'
+      },
+      {
+        title: '收益速览本期清单',
+        description: '整理本期材料、礼包和培养成本分页素材',
+        to: '/lb/yield-ppt'
       },
       {
         title: '卡片生成器',
@@ -100,6 +110,11 @@ const pageGroups = [
         title: '缓存掉率数据对比',
         description: '上传掉率 JSON，与本地 Penguin 缓存矩阵对比',
         to: '/lb/json-cache-compare'
+      },
+      {
+        title: 'OpenAPI 测试',
+        description: '测试第三方 OpenAPI 接口的认证与数据响应',
+        to: '/dev/open-api-test'
       }
     ]
   },

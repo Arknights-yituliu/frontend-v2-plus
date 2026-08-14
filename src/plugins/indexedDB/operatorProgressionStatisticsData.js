@@ -1,6 +1,6 @@
 import myDatabase from "/src/plugins/indexedDB/indexedDB.js";
 import operatorDataAPI from "/src/api/operatorData.js";
-import {operatorTable} from "/src/utils/gameData.js";
+import {operatorTableV2} from "/src/utils/gameData.js";
 import {formatNumber} from "/src/utils/format.js";
 
 function putCache(data) {
@@ -8,7 +8,8 @@ function putCache(data) {
 }
 
 async function getData() {
-    const cacheKey = 'operatorProgressionStatisticsV5'
+    // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，旧缓存(V6)中的统计结果为 0-5 语义，升级版本号使旧缓存失效并强制重新拉取格式化
+    const cacheKey = 'operatorProgressionStatisticsV7'
     let cacheData = await myDatabase.cache_data.get(cacheKey)
 
     // if (cacheData && cacheData.resource.result.length) {
@@ -33,7 +34,7 @@ async function getData() {
     function _formatData(result) {
         let list = []
         for (const item of result) {
-            let charInfo = operatorTable[item.charId]
+            let charInfo = operatorTableV2[item.charId]
             // console.log(item)
             if (charInfo) {
                 const {own,sampleSize, elite, skill1, skill2, skill3, modX, modY, modD, modA,modB} = item
@@ -41,10 +42,12 @@ async function getData() {
                 let vo = {
                     charId:item.charId,
                     name: charInfo.name,
+                    //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，此处存储的即星级（无需转换）
                     rarity: charInfo.rarity,
                     profession: charInfo.profession,
                     itemObtainApproach: charInfo.itemObtainApproach,
-                    skill: charInfo.skill?charInfo.skill:[],
+                    //v2 数据中技能字段为 skills(数组元素含 skillName/skillIcon)
+                    skills: charInfo.skills?charInfo.skills:[],
                     equip: charInfo.equip?charInfo.equip:[],
                     date: charInfo.date,
                     own: own,

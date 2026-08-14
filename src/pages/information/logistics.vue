@@ -5,8 +5,7 @@ import '/src/assets/css/information/logistics.phone.scss'
 import {operatorFilterConditionTable} from "/src/utils/buildingSkillFilter";
 import building_table from '/src/static/json/build/building_table.json'
 import logistics_skill_replace_groups from '/src/static/json/build/logistics_skill_replace_groups.json'
-import operator_item_cost_table from '/src/static/json/operator/operator_item_cost_table.json'
-import operator_table from '/src/static/json/operator/character_table_simple.json'
+import {operatorTableV2} from "/src/utils/gameData.js"; // v2 干员信息与材料消耗数据
 import item_info from '/src/static/json/material/item_info.json'
 import level_cost_table from '/src/static/json/operator/level_cost_table.json'
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
@@ -57,9 +56,12 @@ const operatorEliteCostTable = {
 const unlockCostCache = new Map()
 
 let selectBtnKey = ref('')
+let expandedConditionTypeKey = ref('')
 let filterOperatorList = ref([])
 let sortMode = ref('implementation')
 let detailMode = ref(false)
+
+const contextualConditionTypeKeys = new Set(['manufacture', 'trading', 'control'])
 
 const sortModeOptions = [
   {label: '实装时间顺序', value: 'implementation'},
@@ -93,8 +95,16 @@ function filterOperatorByTag(condition, key) {
   //清空干员列表
   filterOperatorList.value = []
   const btnKey = `${key}+${condition.label}`
+  const isSelected = selectBtnKey.value === btnKey
+
+  if (key === 'room') {
+    expandedConditionTypeKey.value = !isSelected && contextualConditionTypeKeys.has(condition.roomType)
+        ? condition.roomType
+        : ''
+  }
+
   //判断按钮是否已经选中，已经选中则清空暂存的筛选函数和按钮key，撤销选中状态
-  if (selectBtnKey.value === btnKey) {
+  if (isSelected) {
     selectBtnKey.value = ''
     filterCondition.value = ''
   } else {
@@ -105,6 +115,18 @@ function filterOperatorByTag(condition, key) {
 
   //筛选干员
   commonFilterOperator()
+}
+
+function shouldShowConditionType(key, conditionType) {
+  if (!conditionType.display) {
+    return false
+  }
+
+  return !contextualConditionTypeKeys.has(key) || expandedConditionTypeKey.value === key
+}
+
+function shouldShowConditionTypeLabel(key) {
+  return !contextualConditionTypeKeys.has(key)
 }
 
 
@@ -367,8 +389,9 @@ function getUnlockCost(skill) {
 }
 
 function calculateUnlockCost(skill) {
-  const operatorInfo = operator_table[skill.charId]
-  const rarity = operatorInfo?.rarity
+  const operatorInfo = operatorTableV2[skill.charId]
+  // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，无需再 +1 转换
+  const rarity = operatorInfo?.rarity == null ? undefined : operatorInfo.rarity
   const targetPhase = Number(skill.phase) || 0
   const targetLevel = Number(skill.level) || 1
 
@@ -410,8 +433,9 @@ function createEmptyCost() {
 
 function getEliteCost(charId, targetPhase) {
   const elite = getOperatorEliteCostList(charId)
-  const operatorInfo = operator_table[charId]
-  const rarity = operatorInfo?.rarity
+  const operatorInfo = operatorTableV2[charId]
+  // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，无需再 +1 转换
+  const rarity = operatorInfo?.rarity == null ? undefined : operatorInfo.rarity
   let lmdQuantity = 0
   let materials = 0
 
@@ -445,10 +469,10 @@ function hasEliteMaterialData(charId, targetPhase, rarity) {
 
 function getOperatorEliteCostList(charId) {
   if (charId.includes('amiya')) {
-    return operator_item_cost_table.char_002_amiya?.elite
+    return operatorTableV2.char_002_amiya?.elite
   }
 
-  return operator_item_cost_table[charId]?.elite
+  return operatorTableV2[charId]?.elite
 }
 
 function getLevelCostByRarity({rarity, currentElite, currentLevel, targetElite, targetLevel}) {
@@ -589,17 +613,35 @@ onMounted(() => {
   <div class="logistics-page">
     <div class="logistics-filter-checkbox">
       <div class="flex flex-wrap" v-for="(conditionType,key) in operatorFilterConditionTable"
-           v-show="conditionType.display" :key="key">
+           v-show="shouldShowConditionType(key, conditionType)"
+           :class="{'logistics-filter-subgroup': contextualConditionTypeKeys.has(key)}"
+           :key="key">
 
-        <v-btn :color="conditionType.color" variant="text" :text="translate('schedule',conditionType.name)"></v-btn>
-        <v-btn v-for="(condition,index) in conditionType.conditions" :key="index"
-               class="m-2" color="primary" :variant="btnAction(key,condition.label)"
-               @click="filterOperatorByTag(condition,key)" :text="translate('schedule',condition.label)"></v-btn>
+        <span
+            v-if="shouldShowConditionTypeLabel(key)"
+            class="logistics-filter-group-label"
+            :style="{color: conditionType.color}"
+        >
+          {{ translate('schedule', conditionType.name) }}
+        </span>
+        <div
+            v-if="contextualConditionTypeKeys.has(key)"
+            class="logistics-filter-subgroup-card"
+        >
+          <v-btn v-for="(condition,index) in conditionType.conditions" :key="index"
+                 class="m-2" color="primary" :variant="btnAction(key,condition.label)"
+                 @click="filterOperatorByTag(condition,key)" :text="translate('schedule',condition.label)"></v-btn>
+        </div>
+        <template v-else>
+          <v-btn v-for="(condition,index) in conditionType.conditions" :key="index"
+                 class="m-2" color="primary" :variant="btnAction(key,condition.label)"
+                 @click="filterOperatorByTag(condition,key)" :text="translate('schedule',condition.label)"></v-btn>
+        </template>
 
       </div>
     </div>
 
-    <div class="m-0-8">
+    <div class="logistics-search-section">
       <div class="logistics-search-toolbar">
         <v-text-field density="compact"
                       variant="outlined"

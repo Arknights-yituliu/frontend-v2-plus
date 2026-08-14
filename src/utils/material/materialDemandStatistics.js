@@ -1,10 +1,7 @@
 import {dateFormat, formatDateString} from '/src/utils/dateUtil.js'
-import operatorTableSimple from '/src/static/json/operator/character_table_simple.json'
-import OperatorUpdateTime from '/public/json/operator_update_time.json'
-import operatorItemCostTable from '/src/static/json/operator/operator_item_cost_table.json'
 import compositeTableJson from '/src/static/json/material/composite_table.v2.json'
 import itemInfo from '/src/static/json/material/item_info.json'
-import {getEquipUpdateTime} from '/src/utils/gameData.js'
+import {getEquipUpdateTime, operatorTableV2} from '/src/utils/gameData.js'
 
 const MATERIAL_ITEM_ID_REGEX = /^3\d{4}$/
 const DEFAULT_DEMAND_ROUND_STEP = 100
@@ -51,23 +48,19 @@ function buildMaterialDemandStatistics() {
     updateItemCostStatisticsMap(itemId, cost)
   }
 
-  for (const charId in operatorTableSimple) {
-    const operatorTableSimpleElement = operatorTableSimple[charId]
-    const {equip} = operatorTableSimpleElement
-    const operatorItemCostTableElement = operatorItemCostTable[charId]
-    if (!operatorItemCostTableElement) {
-      continue
-    }
-
-    const {skills, allSkill, elite} = operatorItemCostTableElement
-    const operatorUpdateTimeElement = OperatorUpdateTime[charId]
-    let operatorUpdateTime = new Date()
-    let operatorUpdateTimeText = dateFormat(operatorUpdateTime)
-
-    if (operatorUpdateTimeElement) {
-      operatorUpdateTime = new Date(operatorUpdateTimeElement.updateTime)
-      operatorUpdateTimeText = dateFormat(operatorUpdateTime)
-    }
+  for (const charId in operatorTableV2) {
+    //干员信息(v2 数据已合并干员实装时间、材料消耗等信息)
+    const operatorElement = operatorTableV2[charId]
+    const {equip, allSkill, elite} = operatorElement
+    //干员专精消耗(v2 中 skills 为含 skillLevelUpCost 的对象数组, 转换为代码需要的 [{itemId: 数量}] 格式)
+    const skills = (operatorElement.skills || []).map(item => (item.skillLevelUpCost || []).map(rank => {
+      const obj = {}
+      rank.forEach(({count, id}) => { obj[id] = count })
+      return obj
+    }))
+    //干员更新时间(v2 数据中 updateTime 已合并实装时间表的时间戳, 无记录的默认取当前时间)
+    const operatorUpdateTime = new Date(operatorElement.updateTime)
+    const operatorUpdateTimeText = dateFormat(operatorUpdateTime)
 
     let collectByOperator = operatorAndEquipCollectByDate.get(operatorUpdateTimeText)
     if (!collectByOperator) {
@@ -268,6 +261,52 @@ export function getR3MaterialDemandInRange(itemId, startTime, endTime = Date.now
     const itemCost = versionCost.list.find(item => item.itemId === itemId)
     return sum + (itemCost?.count || 0)
   }, 0)
+}
+
+export function getTotalR3MaterialDemand(itemId) {
+  if (!itemId) {
+    return 0
+  }
+
+  const {r3ItemCostList} = getMaterialDemandStatistics()
+  return r3ItemCostList.find(item => item.itemId === itemId)?.count || 0
+}
+
+export function getRecentR3MaterialDemandByMonth(itemId, {months = 24, now = new Date()} = {}) {
+  const endDate = now instanceof Date ? new Date(now) : new Date(now)
+  if (!itemId || Number.isNaN(endDate.getTime())) {
+    return []
+  }
+
+  const monthCount = Math.max(1, Math.floor(Number(months) || 0))
+  const startDate = new Date(endDate.getFullYear(), endDate.getMonth() - monthCount + 1, 1)
+  const startTime = startDate.getTime()
+  const endTime = endDate.getTime()
+  const monthlyDemandMap = new Map()
+
+  for (let index = 0; index < monthCount; index++) {
+    const date = new Date(startDate.getFullYear(), startDate.getMonth() + index, 1)
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+    monthlyDemandMap.set(key, 0)
+  }
+
+  const {r3ItemCostListByDate} = getMaterialDemandStatistics()
+  for (const versionCost of r3ItemCostListByDate) {
+    if (versionCost.updateTime < startTime || versionCost.updateTime > endTime) {
+      continue
+    }
+
+    const itemCost = versionCost.list.find(item => item.itemId === itemId)
+    if (!itemCost?.count) {
+      continue
+    }
+
+    const date = new Date(versionCost.updateTime)
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+    monthlyDemandMap.set(key, (monthlyDemandMap.get(key) || 0) + itemCost.count)
+  }
+
+  return [...monthlyDemandMap].map(([month, count]) => ({month, count}))
 }
 
 export function getRecentR3MaterialDemand(itemId, {years = 2, now = new Date()} = {}) {

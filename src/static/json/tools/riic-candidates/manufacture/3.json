@@ -1,0 +1,1895 @@
+{
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "runtime-manufacture-all-waaifu-e2-l3",
+      "variantGroupId": "family-waaifu-dynamic",
+      "name": "槐琥（按同站队友计算）",
+      "members": [
+        {
+          "name": "槐琥",
+          "elite": 2
+        }
+      ],
+      "efficiency": 0,
+      "sortScore": 0,
+      "calculationStatus": "calculated",
+      "teamCalculation": {
+        "type": "copyOtherManufactureProduction",
+        "sourceMember": "槐琥",
+        "maximumPercent": 40
+      }
+    },
+    {
+      "id": "manual-manufacture-all-bubble-vulcan-bena",
+      "variantGroupId": "family-bubble-vulcan-bena",
+      "name": "泡泡 + 火神 + 贝娜",
+      "members": [
+        {
+          "name": "泡泡",
+          "elite": 1
+        },
+        {
+          "name": "火神",
+          "elite": 2
+        },
+        {
+          "name": "贝娜",
+          "maxElite": 1
+        }
+      ],
+      "efficiency": 93,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-bubble-vulcan-chestnut",
+      "variantGroupId": "family-bubble-vulcan-chestnut",
+      "name": "泡泡 + 火神 + 褐果",
+      "members": [
+        {
+          "name": "泡泡",
+          "elite": 1
+        },
+        {
+          "name": "火神",
+          "elite": 2
+        },
+        {
+          "name": "褐果",
+          "elite": 1
+        }
+      ],
+      "efficiency": 77,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-highmore-dorothy-nasti",
+      "variantGroupId": "family-highmore-dorothy-nasti",
+      "name": "淬羽赫默 + 多萝西 + 娜斯提",
+      "members": [
+        {
+          "name": "淬羽赫默",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "娜斯提",
+          "elite": 0
+        }
+      ],
+      "efficiency": 95,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-ptilopsis-highmore-dorothy",
+      "variantGroupId": "family-ptilopsis-highmore-dorothy",
+      "name": "白面鸮 + 淬羽赫默 + 多萝西",
+      "members": [
+        {
+          "name": "白面鸮",
+          "elite": 2
+        },
+        {
+          "name": "淬羽赫默",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        }
+      ],
+      "efficiency": 95,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-ptilopsis-dorothy-silence",
+      "variantGroupId": "family-ptilopsis-dorothy-silence",
+      "name": "白面鸮 + 多萝西 + 赫默",
+      "members": [
+        {
+          "name": "白面鸮",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "赫默",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-ptilopsis-dorothy-nasti",
+      "variantGroupId": "family-ptilopsis-dorothy-nasti",
+      "name": "白面鸮 + 多萝西 + 娜斯提",
+      "members": [
+        {
+          "name": "白面鸮",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "娜斯提",
+          "elite": 0
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-highmore-dorothy-alt-star",
+      "variantGroupId": "family-highmore-dorothy-alt-star",
+      "name": "淬羽赫默 + 多萝西 + 溯光星源",
+      "members": [
+        {
+          "name": "淬羽赫默",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "溯光星源",
+          "elite": 2
+        }
+      ],
+      "efficiency": 95,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-highmore-dorothy-silence",
+      "variantGroupId": "family-highmore-dorothy-silence",
+      "name": "淬羽赫默 + 多萝西 + 赫默",
+      "members": [
+        {
+          "name": "淬羽赫默",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "赫默",
+          "elite": 2
+        }
+      ],
+      "efficiency": 95,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-dorothy-silence-nasti",
+      "variantGroupId": "family-dorothy-silence-nasti",
+      "name": "多萝西 + 赫默 + 娜斯提",
+      "members": [
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "赫默",
+          "elite": 2
+        },
+        {
+          "name": "娜斯提",
+          "elite": 0
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-ptilopsis-dorothy-star",
+      "variantGroupId": "family-ptilopsis-dorothy-star",
+      "name": "白面鸮 + 多萝西 + 星源",
+      "members": [
+        {
+          "name": "白面鸮",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "星源",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-ptilopsis-dorothy-alt-star",
+      "variantGroupId": "family-ptilopsis-dorothy-alt-star",
+      "name": "白面鸮 + 多萝西 + 溯光星源",
+      "members": [
+        {
+          "name": "白面鸮",
+          "elite": 2
+        },
+        {
+          "name": "多萝西",
+          "elite": 2
+        },
+        {
+          "name": "溯光星源",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-red-pine-fartooth-wildmane-ashlock",
+      "variantGroupId": "family-red-pine-fartooth-wildmane-ashlock",
+      "name": "远牙 + 野鬃 + 灰毫",
+      "members": [
+        {
+          "name": "远牙",
+          "elite": 2
+        },
+        {
+          "name": "野鬃",
+          "elite": 2
+        },
+        {
+          "name": "灰毫",
+          "elite": 2
+        }
+      ],
+      "efficiency": 75,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-steward-l3",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang-steward",
+      "name": "?? + ????? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        },
+        {
+          "name": "????",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-yato-l3",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang-yato",
+      "name": "?? + ????? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        },
+        {
+          "name": "??",
+          "level": 30
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-jessica-l3",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang-jessica",
+      "name": "?? + ????? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        },
+        {
+          "name": "???"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-cement-l3",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang-cement",
+      "name": "?? + ????? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-meteor-l3",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang-meteor",
+      "name": "?? + ????? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-highmore-l3",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang-highmore",
+      "name": "?? + ????? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        },
+        {
+          "name": "??",
+          "elite": 2
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-quartz-l3",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang-quartz",
+      "name": "?? + ????? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-roberta-l3",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang-roberta",
+      "name": "?? + ????? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        },
+        {
+          "name": "????",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-chestnut-l3",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang-chestnut",
+      "name": "?? + ????? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        },
+        {
+          "name": "??",
+          "elite": 1
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-perfumer-l3",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang-perfumer",
+      "name": "?? + ????? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        },
+        {
+          "name": "???",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-sharp-spear-fang-vanilla-l3",
+      "variantGroupId": "family-mizuki-standardized-sharp-spear-fang-vanilla",
+      "name": "?? + ????? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "?????"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-steward-yato-l3",
+      "variantGroupId": "family-mizuki-standardized-steward-yato",
+      "name": "?? + ???? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "??",
+          "level": 30
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-steward-jessica-l3",
+      "variantGroupId": "family-mizuki-standardized-steward-jessica",
+      "name": "?? + ???? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "???"
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-steward-cement-l3",
+      "variantGroupId": "family-mizuki-standardized-steward-cement",
+      "name": "?? + ???? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-steward-meteor-l3",
+      "variantGroupId": "family-mizuki-standardized-steward-meteor",
+      "name": "?? + ???? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-steward-highmore-l3",
+      "variantGroupId": "family-mizuki-standardized-steward-highmore",
+      "name": "?? + ???? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "??",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-steward-quartz-l3",
+      "variantGroupId": "family-mizuki-standardized-steward-quartz",
+      "name": "?? + ???? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-steward-roberta-l3",
+      "variantGroupId": "family-mizuki-standardized-steward-roberta",
+      "name": "?? + ???? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "????",
+          "elite": 1
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-steward-chestnut-l3",
+      "variantGroupId": "family-mizuki-standardized-steward-chestnut",
+      "name": "?? + ???? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "??",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-steward-perfumer-l3",
+      "variantGroupId": "family-mizuki-standardized-steward-perfumer",
+      "name": "?? + ???? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "???",
+          "elite": 1
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-steward-vanilla-l3",
+      "variantGroupId": "family-mizuki-standardized-steward-vanilla",
+      "name": "?? + ???? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-yato-jessica-l3",
+      "variantGroupId": "family-mizuki-standardized-yato-jessica",
+      "name": "?? + ?? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "level": 30
+        },
+        {
+          "name": "???"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-yato-cement-l3",
+      "variantGroupId": "family-mizuki-standardized-yato-cement",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "level": 30
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-yato-meteor-l3",
+      "variantGroupId": "family-mizuki-standardized-yato-meteor",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "level": 30
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-yato-highmore-l3",
+      "variantGroupId": "family-mizuki-standardized-yato-highmore",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "level": 30
+        },
+        {
+          "name": "??",
+          "elite": 2
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-yato-quartz-l3",
+      "variantGroupId": "family-mizuki-standardized-yato-quartz",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "level": 30
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-yato-roberta-l3",
+      "variantGroupId": "family-mizuki-standardized-yato-roberta",
+      "name": "?? + ?? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "level": 30
+        },
+        {
+          "name": "????",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-yato-chestnut-l3",
+      "variantGroupId": "family-mizuki-standardized-yato-chestnut",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "level": 30
+        },
+        {
+          "name": "??",
+          "elite": 1
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-yato-perfumer-l3",
+      "variantGroupId": "family-mizuki-standardized-yato-perfumer",
+      "name": "?? + ?? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "level": 30
+        },
+        {
+          "name": "???",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-yato-vanilla-l3",
+      "variantGroupId": "family-mizuki-standardized-yato-vanilla",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "level": 30
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-jessica-cement-l3",
+      "variantGroupId": "family-mizuki-standardized-jessica-cement",
+      "name": "?? + ??? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-jessica-meteor-l3",
+      "variantGroupId": "family-mizuki-standardized-jessica-meteor",
+      "name": "?? + ??? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-jessica-highmore-l3",
+      "variantGroupId": "family-mizuki-standardized-jessica-highmore",
+      "name": "?? + ??? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???"
+        },
+        {
+          "name": "??",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-jessica-quartz-l3",
+      "variantGroupId": "family-mizuki-standardized-jessica-quartz",
+      "name": "?? + ??? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-jessica-roberta-l3",
+      "variantGroupId": "family-mizuki-standardized-jessica-roberta",
+      "name": "?? + ??? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???"
+        },
+        {
+          "name": "????",
+          "elite": 1
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-jessica-chestnut-l3",
+      "variantGroupId": "family-mizuki-standardized-jessica-chestnut",
+      "name": "?? + ??? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???"
+        },
+        {
+          "name": "??",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-jessica-perfumer-l3",
+      "variantGroupId": "family-mizuki-standardized-jessica-perfumer",
+      "name": "?? + ??? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???"
+        },
+        {
+          "name": "???",
+          "elite": 1
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-jessica-vanilla-l3",
+      "variantGroupId": "family-mizuki-standardized-jessica-vanilla",
+      "name": "?? + ??? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-cement-meteor-l3",
+      "variantGroupId": "family-mizuki-standardized-cement-meteor",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-cement-highmore-l3",
+      "variantGroupId": "family-mizuki-standardized-cement-highmore",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "??",
+          "elite": 2
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-cement-quartz-l3",
+      "variantGroupId": "family-mizuki-standardized-cement-quartz",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-cement-roberta-l3",
+      "variantGroupId": "family-mizuki-standardized-cement-roberta",
+      "name": "?? + ?? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "????",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-cement-chestnut-l3",
+      "variantGroupId": "family-mizuki-standardized-cement-chestnut",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "??",
+          "elite": 1
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-cement-perfumer-l3",
+      "variantGroupId": "family-mizuki-standardized-cement-perfumer",
+      "name": "?? + ?? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "???",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-cement-vanilla-l3",
+      "variantGroupId": "family-mizuki-standardized-cement-vanilla",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-meteor-highmore-l3",
+      "variantGroupId": "family-mizuki-standardized-meteor-highmore",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "??",
+          "elite": 2
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-meteor-quartz-l3",
+      "variantGroupId": "family-mizuki-standardized-meteor-quartz",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-meteor-roberta-l3",
+      "variantGroupId": "family-mizuki-standardized-meteor-roberta",
+      "name": "?? + ?? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "????",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-meteor-chestnut-l3",
+      "variantGroupId": "family-mizuki-standardized-meteor-chestnut",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "??",
+          "elite": 1
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-meteor-perfumer-l3",
+      "variantGroupId": "family-mizuki-standardized-meteor-perfumer",
+      "name": "?? + ?? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "???",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-meteor-vanilla-l3",
+      "variantGroupId": "family-mizuki-standardized-meteor-vanilla",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-quartz-l3",
+      "variantGroupId": "family-mizuki-standardized-highmore-quartz",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-roberta-l3",
+      "variantGroupId": "family-mizuki-standardized-highmore-roberta",
+      "name": "?? + ?? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-chestnut-l3",
+      "variantGroupId": "family-mizuki-standardized-highmore-chestnut",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-perfumer-l3",
+      "variantGroupId": "family-mizuki-standardized-highmore-perfumer",
+      "name": "?? + ?? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???",
+          "elite": 1
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-vanilla-l3",
+      "variantGroupId": "family-mizuki-standardized-highmore-vanilla",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-quartz-roberta-l3",
+      "variantGroupId": "family-mizuki-standardized-quartz-roberta",
+      "name": "?? + ?? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "????",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-quartz-chestnut-l3",
+      "variantGroupId": "family-mizuki-standardized-quartz-chestnut",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "??",
+          "elite": 1
+        }
+      ],
+      "efficiency": 70,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-quartz-perfumer-l3",
+      "variantGroupId": "family-mizuki-standardized-quartz-perfumer",
+      "name": "?? + ?? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "???",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-quartz-vanilla-l3",
+      "variantGroupId": "family-mizuki-standardized-quartz-vanilla",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??"
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-roberta-chestnut-l3",
+      "variantGroupId": "family-mizuki-standardized-roberta-chestnut",
+      "name": "?? + ???? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "??",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-roberta-perfumer-l3",
+      "variantGroupId": "family-mizuki-standardized-roberta-perfumer",
+      "name": "?? + ???? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "???",
+          "elite": 1
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-roberta-vanilla-l3",
+      "variantGroupId": "family-mizuki-standardized-roberta-vanilla",
+      "name": "?? + ???? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 1
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-chestnut-perfumer-l3",
+      "variantGroupId": "family-mizuki-standardized-chestnut-perfumer",
+      "name": "?? + ?? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 1
+        },
+        {
+          "name": "???",
+          "elite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-chestnut-vanilla-l3",
+      "variantGroupId": "family-mizuki-standardized-chestnut-vanilla",
+      "name": "?? + ?? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 1
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-perfumer-vanilla-l3",
+      "variantGroupId": "family-mizuki-standardized-perfumer-vanilla",
+      "name": "?? + ??? + ??",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???",
+          "elite": 1
+        },
+        {
+          "name": "??"
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-silence-alter-e2-l3",
+      "variantGroupId": "family-mizuki-highmore-rhine-silence-alter-e2",
+      "name": "?? + ?? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 2
+        }
+      ],
+      "efficiency": 95,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-astgenne-e2-l3",
+      "variantGroupId": "family-mizuki-highmore-rhine-astgenne-e2",
+      "name": "?? + ?? + ????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "????",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-silence-e0-l3",
+      "variantGroupId": "family-mizuki-highmore-rhine-silence-e0",
+      "name": "?? + ?? + ???????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "maxElite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-silence-e2-l3",
+      "variantGroupId": "family-mizuki-highmore-rhine-silence-e2",
+      "name": "?? + ?? + ????? 2?",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-ptilopsis-e0-l3",
+      "variantGroupId": "family-mizuki-highmore-rhine-ptilopsis-e0",
+      "name": "?? + ?? + ????????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???",
+          "maxElite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-ptilopsis-e2-l3",
+      "variantGroupId": "family-mizuki-highmore-rhine-ptilopsis-e2",
+      "name": "?? + ?? + ?????? 2?",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-astesia-e0-l3",
+      "variantGroupId": "family-mizuki-highmore-rhine-astesia-e0",
+      "name": "?? + ?? + ???????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "maxElite": 1
+        }
+      ],
+      "efficiency": 80,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-astesia-e2-l3",
+      "variantGroupId": "family-mizuki-highmore-rhine-astesia-e2",
+      "name": "?? + ?? + ????? 2?",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-dorothy-e2-l3",
+      "variantGroupId": "family-mizuki-highmore-rhine-dorothy-e2",
+      "name": "?? + ?? + ???",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???",
+          "elite": 2
+        }
+      ],
+      "efficiency": 95,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "manual-manufacture-all-mizuki-highmore-nasti-e0-l3",
+      "variantGroupId": "family-mizuki-highmore-rhine-nasti-e0",
+      "name": "?? + ?? + ????????",
+      "members": [
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "??",
+          "elite": 2
+        },
+        {
+          "name": "???",
+          "maxElite": 1
+        }
+      ],
+      "efficiency": 90,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    }
+  ]
+}

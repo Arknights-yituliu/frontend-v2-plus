@@ -7,10 +7,44 @@
 
 
     .logistics-filter-checkbox {
+        --logistics-filter-label-width: 80px;
         width: 95%;
         margin: auto;
         display: flex;
         flex-wrap: wrap;
+    }
+
+    .logistics-filter-group-label {
+        display: inline-flex;
+        flex: 0 0 var(--logistics-filter-label-width);
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-height: 36px;
+        padding: 0 8px;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: default;
+        user-select: none;
+    }
+
+    .logistics-filter-subgroup {
+        flex: 0 0 100%;
+        box-sizing: border-box;
+        padding-left: var(--logistics-filter-label-width);
+    }
+
+    .logistics-filter-subgroup-card {
+        display: inline-flex;
+        flex-wrap: wrap;
+        width: fit-content;
+        max-width: 100%;
+        margin: 4px 0 8px;
+        padding: 4px;
+        border: 1px solid var(--c-border-color);
+        border-radius: 4px;
+        background-color: var(--c-page-background-color-secondary);
     }
 
     .checkbox-line {
@@ -46,6 +80,11 @@
         display: flex;
         align-items: flex-start;
         gap: 12px;
+    }
+
+    .logistics-search-section {
+        width: 95%;
+        margin: auto;
     }
 
     .logistics-search-input {

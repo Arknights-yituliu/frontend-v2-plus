@@ -2,8 +2,7 @@ import { ref } from 'vue'
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 
 import operatorProgressionStatisticsDataCache from "/src/plugins/indexedDB/operatorProgressionStatisticsData.js";// 练度调查结果
-import {operatorTable} from "/src/utils/gameData.js";
-import operatorMaterialJSON from "/src/static/json/operator/operator_item_cost_table.json"; // 干员精英化、技能消耗材料JSON
+import {operatorTableV2} from "/src/utils/gameData.js";
 import professionDictJSON from "/src/static/json/operator/profession_dict"; // 职业字典JSON
 import { operatorInit } from './formatOperatorData'
 import {getStageConfig} from '/src/utils/user/userConfig.js'
@@ -50,8 +49,30 @@ professionDictJSON.forEach(profession => {
   });
 });
 
-const operatorMap = new Map(Object.entries(operatorTable)) // 干员信息映射
-const operatorMaterialMap = new Map(Object.entries(operatorMaterialJSON)) // 干员精英化、专精技能消耗材料映射
+// 干员信息映射: 使用 v2 新格式数据(含材料消耗)
+// 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，无需再 +1 转换（operatorRarityBaseMaterialMap 键为 4/5/6 星级）
+const operatorMap = new Map(
+  Object.entries(operatorTableV2).map(([charId, charInfo]) => [
+    charId,
+    { ...charInfo, rarity: charInfo.rarity }
+  ])
+)
+// 干员精英化、专精技能消耗材料映射: 从 v2 干员数据构建, 不再依赖 operator_item_cost_table.json
+const operatorMaterialMap = new Map(
+  Object.entries(operatorTableV2).map(([charId, charInfo]) => [
+    charId,
+    {
+      // v2 中 elite 格式为 [{}, {itemId: quantity}, ...], 与代码期望一致
+      elite: charInfo.elite || [],
+      // v2 中 skills[].skillLevelUpCost 格式为 [[{count, id}], ...], 转换为 [{id: count}, ...]
+      skills: (charInfo.skills || []).map(item => (item.skillLevelUpCost || []).map(rank => {
+        const obj = {}
+        rank.forEach(({ count, id }) => { obj[id] = count })
+        return obj
+      }))
+    }
+  ])
+)
 
 // 通用的干员消耗材料信息映射(老干员如银灰虽然不通用, 但这个主要是给新建自定义角色用的, 不影响)
 const createOperatorRarityBaseMaterialMap = () => {

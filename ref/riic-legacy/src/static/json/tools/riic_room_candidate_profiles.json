@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 3,
+  "profiles": [
+    {
+      "id": "generic-manufacture",
+      "layer": "generic",
+      "roomType": "manufacture",
+      "product": "all",
+      "stations": [
+        { "stationLevel": 1, "slotCount": 1 },
+        { "stationLevel": 2, "slotCount": 2 },
+        { "stationLevel": 3, "slotCount": 3 }
+      ],
+      "fallback": {
+        "percent": 25,
+        "label": "基础补位"
+      },
+      "coreMinimumPercent": 31,
+      "scope": {}
+    },
+    {
+      "id": "manufacture-experience",
+      "layer": "product",
+      "roomType": "manufacture",
+      "product": "experience",
+      "stations": [
+        { "stationLevel": 1, "slotCount": 1 },
+        { "stationLevel": 2, "slotCount": 2 },
+        { "stationLevel": 3, "slotCount": 3 }
+      ],
+      "fallback": {
+        "percent": 25,
+        "label": "基础补位"
+      },
+      "coreMinimumPercent": 31,
+      "scope": {}
+    },
+    {
+      "id": "manufacture-gold",
+      "layer": "product",
+      "roomType": "manufacture",
+      "product": "gold",
+      "stations": [
+        { "stationLevel": 1, "slotCount": 1 },
+        { "stationLevel": 2, "slotCount": 2 },
+        { "stationLevel": 3, "slotCount": 3 }
+      ],
+      "fallback": {
+        "percent": 25,
+        "label": "基础补位"
+      },
+      "coreMinimumPercent": 31,
+      "scope": {}
+    },
+    {
+      "id": "manufacture-orundum",
+      "layer": "product",
+      "roomType": "manufacture",
+      "product": "orundum",
+      "stations": [
+        { "stationLevel": 1, "slotCount": 1 },
+        { "stationLevel": 2, "slotCount": 2 },
+        { "stationLevel": 3, "slotCount": 3 }
+      ],
+      "fallback": {
+        "percent": 25,
+        "label": "基础补位"
+      },
+      "coreMinimumPercent": 31,
+      "scope": {}
+    },
+    {
+      "id": "generic-trading",
+      "layer": "generic",
+      "roomType": "trading",
+      "product": "all",
+      "stations": [
+        { "stationLevel": 1, "slotCount": 1 },
+        { "stationLevel": 2, "slotCount": 2 },
+        { "stationLevel": 3, "slotCount": 3 }
+      ],
+      "fallback": {
+        "percent": 30,
+        "label": "基础补位"
+      },
+      "coreMinimumPercent": 31,
+      "scope": {}
+    },
+    {
+      "id": "trading-lmd",
+      "layer": "product",
+      "roomType": "trading",
+      "product": "lmd",
+      "stations": [
+        { "stationLevel": 1, "slotCount": 1 },
+        { "stationLevel": 2, "slotCount": 2 },
+        { "stationLevel": 3, "slotCount": 3 }
+      ],
+      "fallback": {
+        "percent": 30,
+        "label": "基础补位"
+      },
+      "coreMinimumPercent": 31,
+      "scope": {}
+    },
+    {
+      "id": "trading-orundum",
+      "layer": "product",
+      "roomType": "trading",
+      "product": "orundum",
+      "stations": [
+        { "stationLevel": 1, "slotCount": 1 },
+        { "stationLevel": 2, "slotCount": 2 },
+        { "stationLevel": 3, "slotCount": 3 }
+      ],
+      "fallback": {
+        "percent": 30,
+        "label": "基础补位"
+      },
+      "coreMinimumPercent": 31,
+      "scope": {}
+    },
+    {
+      "id": "generic-power",
+      "layer": "generic",
+      "roomType": "power",
+      "product": "all",
+      "stations": [
+        { "stationLevel": 1, "slotCount": 1 }
+      ],
+      "fallback": {
+        "percent": 15,
+        "label": "基础补位"
+      },
+      "scope": {}
+    },
+    {
+      "id": "generic-control",
+      "layer": "generic",
+      "roomType": "control",
+      "product": "all",
+      "stations": [
+        { "stationLevel": 1, "slotCount": 5 }
+      ],
+      "fallback": {
+        "percent": 0,
+        "label": "常规值班"
+      },
+      "scope": {}
+    },
+    {
+      "id": "generic-meeting",
+      "layer": "generic",
+      "roomType": "meeting",
+      "product": "all",
+      "stations": [
+        { "stationLevel": 1, "slotCount": 2 },
+        { "stationLevel": 3, "slotCount": 2 }
+      ],
+      "fallback": {
+        "percent": 0,
+        "label": "常规值班"
+      },
+      "scope": {}
+    },
+    {
+      "id": "generic-hire",
+      "layer": "generic",
+      "roomType": "hire",
+      "product": "all",
+      "stations": [
+        { "stationLevel": 1, "slotCount": 1 }
+      ],
+      "fallback": {
+        "percent": 0,
+        "label": "常规值班"
+      },
+      "scope": {}
+    }
+  ],
+  "templates": []
+}

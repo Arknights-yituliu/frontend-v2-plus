@@ -1,6 +1,6 @@
-import OPERATOR_ITEM_COST_TABLE from "/src/static/json/operator/operator_item_cost_table.json";
+import {operatorTableV2} from "/src/utils/gameData.js";
 import LEVEL_COST_TABLE from "/src/static/json/operator/level_cost_table.json";
-import COMPOSITE_TABLE from "/src/static/json/operator/composite_table.json";
+
 import deepClone from "/src/utils/deepClone.js";
 import {getStageConfig} from "@/utils/user/userConfig.js";
 import itemCache from "@/plugins/indexedDB/itemCache.js";
@@ -10,6 +10,29 @@ import {saveAs} from 'file-saver';
 
 
 const stageConfig = getStageConfig()
+
+// 从 v2 干员数据构建材料消耗表(v2 中 skills 为含 skillLevelUpCost 的对象数组, 转换为代码需要的 [{itemId: 数量}] 格式; 模组消耗按 typeName2(X/Y/D/A/B) 归组)
+const OPERATOR_ITEM_COST_TABLE = (() => {
+    const costTable = {}
+    for (const [charId, operator] of Object.entries(operatorTableV2)) {
+        const modTable = {}
+        for (const equip of operator.equip || []) {
+            modTable[`mod${equip.typeName2}`] = equip.itemCost || []
+        }
+        costTable[charId] = {
+            elite: operator.elite || [],
+            allSkill: operator.allSkill || [],
+            skills: (operator.skills || []).map(item => (item.skillLevelUpCost || []).map(rank => {
+                const obj = {}
+                rank.forEach(({count, id}) => { obj[id] = count })
+                return obj
+            })),
+            ...modTable,
+        }
+    }
+    return costTable
+})()
+
 let compositeTable = {}
 for (const item of compositeTableJson) {
     const {itemId, resolve, pathway, rarity} = item
@@ -114,8 +137,10 @@ function getOperatorItemCost(current, target, itemInfoMap) {
     //解构出通用技能和专精技能的材料消耗
     const {allSkill, skills} = OPERATOR_ITEM_COST_TABLE[charId];
 
-    //计算干员升级消耗
-    const levelApCost = getLevelUpCostByRarityV2({rarity,
+    //干员升级消耗
+    //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，operatorMaxLevelTable 键值即星级，直接使用
+    const starRarity = rarity
+    const levelApCost = getLevelUpCostByRarityV2({rarity: starRarity,
         currentElite: currentElite, currentLevel: currentLevel,
         targetElite: targetElite, targetLevel: targetLevel});
 
@@ -546,6 +571,7 @@ async function statisticsOperatorInfo(operatorList) {
             // 解构干员信息
             _statistics(operator, 0)
 
+            //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，原过滤条件为星级>3(4星及以上), 对应 rarity>3
             if (operator.rarity > 3) {
 
                 _statistics(operator, _checkRarity(operator.rarity))
@@ -616,8 +642,9 @@ async function statisticsOperatorInfo(operatorList) {
             statisticalData.info[index].equip[`rank${modA}`]++
         }
 
+        // 干员星级格式统一化修复: v2 数据 rarity 为 1-6 星级，将星级映射为统计分组索引(1=六星, 2=五星, 3=四星)
         function _checkRarity(rarity) {
-            switch (rarity) {
+            switch (Number(rarity)) {
                 case 6:
                     return 1;
                 case 5:
