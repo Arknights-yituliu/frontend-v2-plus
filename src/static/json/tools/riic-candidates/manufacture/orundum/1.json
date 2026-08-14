@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "baseline:manufacture:orundum:1:1:char_4041_chnut:1-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_4041_chnut",
+      "name": "褐果",
+      "members": [
+        {
+          "name": "褐果",
+          "elite": 1
+        }
+      ],
+      "efficiency": 45,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "baseline:manufacture:orundum:1:1:char_121_lava:1-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_121_lava",
+      "name": "炎熔",
+      "members": [
+        {
+          "name": "炎熔",
+          "elite": 1
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "baseline:manufacture:orundum:1:1:char_180_amgoat:0-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_180_amgoat",
+      "name": "艾雅法拉",
+      "members": [
+        {
+          "name": "艾雅法拉"
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "baseline:manufacture:orundum:1:1:char_183_skgoat:1-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_183_skgoat",
+      "name": "地灵",
+      "members": [
+        {
+          "name": "地灵",
+          "elite": 1
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "baseline:manufacture:orundum:1:1:char_348_ceylon:2-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_348_ceylon",
+      "name": "锡兰",
+      "members": [
+        {
+          "name": "锡兰",
+          "elite": 2
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "baseline:manufacture:orundum:1:1:char_4229_aphris:0-1",
+      "variantGroupId": "baseline:manufacture:orundum:1:1:char_4229_aphris",
+      "name": "谬因",
+      "members": [
+        {
+          "name": "谬因"
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    }
+  ]
+}

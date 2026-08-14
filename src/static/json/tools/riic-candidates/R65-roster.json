@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "tagSets": [
+    {
+      "id": "rhine-lab",
+      "operatorNames": [
+        "赫默",
+        "伊芙利特",
+        "塞雷娅",
+        "白面鸮",
+        "梅尔",
+        "麦哲伦",
+        "多萝西",
+        "星源",
+        "缪尔赛思",
+        "娜斯提"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "nasti-e2-gold-rhine-lab",
+      "owner": {
+        "operatorName": "娜斯提",
+        "eliteAtLeast": 2
+      },
+      "scope": {
+        "roomType": "manufacture",
+        "product": "gold"
+      },
+      "effect": {
+        "type": "perActiveTaggedOperator",
+        "tag": "rhine-lab",
+        "percentPerOperator": 3,
+        "maximumOperatorCount": 5
+      }
+    }
+  ],
+  "selectionPriorityRules": [
+    {
+      "id": "nasti-active-rhine-lab-priority",
+      "trigger": {
+        "operatorName": "娜斯提"
+      },
+      "effect": {
+        "type": "perCandidateTaggedOperator",
+        "tag": "rhine-lab",
+        "roomPriorityPerOperator": 3
+      }
+    }
+  ]
+}

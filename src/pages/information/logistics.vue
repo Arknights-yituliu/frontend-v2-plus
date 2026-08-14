@@ -56,9 +56,12 @@ const operatorEliteCostTable = {
 const unlockCostCache = new Map()
 
 let selectBtnKey = ref('')
+let expandedConditionTypeKey = ref('')
 let filterOperatorList = ref([])
 let sortMode = ref('implementation')
 let detailMode = ref(false)
+
+const contextualConditionTypeKeys = new Set(['manufacture', 'trading', 'control'])
 
 const sortModeOptions = [
   {label: '实装时间顺序', value: 'implementation'},
@@ -92,8 +95,16 @@ function filterOperatorByTag(condition, key) {
   //清空干员列表
   filterOperatorList.value = []
   const btnKey = `${key}+${condition.label}`
+  const isSelected = selectBtnKey.value === btnKey
+
+  if (key === 'room') {
+    expandedConditionTypeKey.value = !isSelected && contextualConditionTypeKeys.has(condition.roomType)
+        ? condition.roomType
+        : ''
+  }
+
   //判断按钮是否已经选中，已经选中则清空暂存的筛选函数和按钮key，撤销选中状态
-  if (selectBtnKey.value === btnKey) {
+  if (isSelected) {
     selectBtnKey.value = ''
     filterCondition.value = ''
   } else {
@@ -104,6 +115,18 @@ function filterOperatorByTag(condition, key) {
 
   //筛选干员
   commonFilterOperator()
+}
+
+function shouldShowConditionType(key, conditionType) {
+  if (!conditionType.display) {
+    return false
+  }
+
+  return !contextualConditionTypeKeys.has(key) || expandedConditionTypeKey.value === key
+}
+
+function shouldShowConditionTypeLabel(key) {
+  return !contextualConditionTypeKeys.has(key)
 }
 
 
@@ -590,17 +613,35 @@ onMounted(() => {
   <div class="logistics-page">
     <div class="logistics-filter-checkbox">
       <div class="flex flex-wrap" v-for="(conditionType,key) in operatorFilterConditionTable"
-           v-show="conditionType.display" :key="key">
+           v-show="shouldShowConditionType(key, conditionType)"
+           :class="{'logistics-filter-subgroup': contextualConditionTypeKeys.has(key)}"
+           :key="key">
 
-        <v-btn :color="conditionType.color" variant="text" :text="translate('schedule',conditionType.name)"></v-btn>
-        <v-btn v-for="(condition,index) in conditionType.conditions" :key="index"
-               class="m-2" color="primary" :variant="btnAction(key,condition.label)"
-               @click="filterOperatorByTag(condition,key)" :text="translate('schedule',condition.label)"></v-btn>
+        <span
+            v-if="shouldShowConditionTypeLabel(key)"
+            class="logistics-filter-group-label"
+            :style="{color: conditionType.color}"
+        >
+          {{ translate('schedule', conditionType.name) }}
+        </span>
+        <div
+            v-if="contextualConditionTypeKeys.has(key)"
+            class="logistics-filter-subgroup-card"
+        >
+          <v-btn v-for="(condition,index) in conditionType.conditions" :key="index"
+                 class="m-2" color="primary" :variant="btnAction(key,condition.label)"
+                 @click="filterOperatorByTag(condition,key)" :text="translate('schedule',condition.label)"></v-btn>
+        </div>
+        <template v-else>
+          <v-btn v-for="(condition,index) in conditionType.conditions" :key="index"
+                 class="m-2" color="primary" :variant="btnAction(key,condition.label)"
+                 @click="filterOperatorByTag(condition,key)" :text="translate('schedule',condition.label)"></v-btn>
+        </template>
 
       </div>
     </div>
 
-    <div class="m-0-8">
+    <div class="logistics-search-section">
       <div class="logistics-search-toolbar">
         <v-text-field density="compact"
                       variant="outlined"

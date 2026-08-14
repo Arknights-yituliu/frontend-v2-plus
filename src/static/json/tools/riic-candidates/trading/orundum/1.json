@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "baseline:trading:orundum:1:1:char_1049_catap2:2-1",
+      "variantGroupId": "baseline:trading:orundum:1:1:char_1049_catap2",
+      "name": "雷狼龙S空爆",
+      "members": [
+        {
+          "name": "雷狼龙S空爆",
+          "elite": 2
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "baseline:trading:orundum:1:1:char_383_snsant:2-1",
+      "variantGroupId": "baseline:trading:orundum:1:1:char_383_snsant",
+      "name": "雪雉",
+      "members": [
+        {
+          "name": "雪雉",
+          "elite": 2
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "baseOnly",
+      "calculationStatus": "estimated"
+    }
+  ]
+}

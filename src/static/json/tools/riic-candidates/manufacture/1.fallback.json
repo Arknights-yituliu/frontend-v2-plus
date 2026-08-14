@@ -1,0 +1,697 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "defaultPercent": 25,
+  "operators": [
+    {
+      "name": "至简",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ]
+    },
+    {
+      "name": "温蒂",
+      "rates": [
+        {
+          "percent": 0,
+          "tags": [
+            "automation"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 0,
+          "tags": [
+            "automation"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "森蚺",
+      "rates": [
+        {
+          "percent": 0,
+          "tags": [
+            "automation"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 0,
+          "tags": [
+            "automation"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "异客",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0,
+          "tags": [
+            "automation"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "掠风",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 0,
+          "tags": [
+            "automation"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "克洛丝",
+      "rates": [
+        {
+          "percent": 22.5,
+          "tags": [
+            "a1-team"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "刻俄柏",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 23.75
+        }
+      ]
+    },
+    {
+      "name": "卡缇",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "历阵锐枪芬",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "史都华德",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 25,
+          "tags": [
+            "standardized-skill"
+          ]
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "多萝西",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "夜刀",
+      "rates": [
+        {
+          "level": 30,
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "娜斯提",
+      "rates": [
+        {
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "导火索",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20,
+          "tags": [
+            "rainbow-squad"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "星源",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "杰西卡",
+      "rates": [
+        {
+          "percent": 25,
+          "tags": [
+            "blacksteel-international",
+            "standardized-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "梅尔",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 30,
+          "tags": [
+            "rhine-lab"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "槐琥",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 40,
+          "tags": [
+            "lee-detective-agency"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "迷迭香",
+      "rates": [
+        {
+          "percent": 0
+        }
+      ],
+      "fillPriority": 20
+    },
+    {
+      "name": "水月",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "standardized-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "泡普卡",
+      "rates": [
+        {
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "泰拉大陆调查团",
+      "rates": [
+        {
+          "level": 30,
+          "percent": 5,
+          "tags": [
+            "monster-hunter-party"
+          ]
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "洋灰",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "流星",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "海沫",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "standardized-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "淬羽赫默",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 30,
+          "tags": [
+            "rhine-tech-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "溯光星源",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "rhine-tech-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "灰毫",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "玛露西尔",
+      "rates": [
+        {
+          "percent": 20,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 30,
+          "tags": [
+            "dungeon-meshi-party"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "白面鸮",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "石棉",
+      "rates": [
+        {
+          "percent": 25
+        },
+        {
+          "elite": 2,
+          "percent": 25
+        }
+      ]
+    },
+    {
+      "name": "石英",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "standardized-skill"
+          ]
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "稀音",
+      "rates": [
+        {
+          "percent": 22.5,
+          "tags": [
+            "sargon"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 22.5,
+          "tags": [
+            "sargon"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "米格鲁",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "a1-team"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "罗比菈塔",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 25,
+          "tags": [
+            "standardized-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "芬",
+      "rates": [
+        {
+          "percent": 23.75,
+          "tags": [
+            "a1-team"
+          ]
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "蛇屠箱",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "裁度",
+      "rates": [
+        {
+          "percent": 20,
+          "tags": [
+            "siracusa"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "siracusa"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "褐果",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "durin",
+            "standardized-skill"
+          ]
+        },
+        {
+          "elite": 1,
+          "percent": 15,
+          "tags": [
+            "durin",
+            "standardized-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "调香师",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 25,
+          "tags": [
+            "standardized-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "豆苗",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 1,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "赫默",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "rhine-lab",
+            "rhine-tech-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "远牙",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "野鬃",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 25,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "red-pine-skill"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "钼铅",
+      "rates": [
+        {
+          "percent": 20,
+          "tags": [
+            "sargon"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 20,
+          "tags": [
+            "sargon"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "阿罗玛",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 11.67,
+          "tags": [
+            "siracusa"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "雪猎",
+      "rates": [
+        {
+          "percent": 20,
+          "tags": [
+            "kjerag"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 30,
+          "tags": [
+            "kjerag"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "香草",
+      "rates": [
+        {
+          "percent": 25,
+          "tags": [
+            "blacksteel-international",
+            "standardized-skill"
+          ]
+        }
+      ],
+      "fillPriority": -1
+    },
+    {
+      "name": "黑角",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ],
+      "fillPriority": -1
+    }
+  ]
+}

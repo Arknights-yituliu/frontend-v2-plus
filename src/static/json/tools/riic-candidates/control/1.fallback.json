@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "scope": {
+    "roomType": "control",
+    "product": "all",
+    "stationLevel": 1,
+    "slotCount": 5
+  },
+  "defaultPercent": 0,
+  "operators": []
+}

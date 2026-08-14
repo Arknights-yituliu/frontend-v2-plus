@@ -1,0 +1,388 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "scope": {
+    "roomType": "power",
+    "product": "all",
+    "stationLevel": 1,
+    "slotCount": 1
+  },
+  "defaultPercent": 15,
+  "operators": [
+    {
+      "name": "Castle-3",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "CONFESS-47",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "laterano",
+            "work-platform"
+          ]
+        },
+        {
+          "level": 30,
+          "percent": 10,
+          "tags": [
+            "laterano",
+            "work-platform"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Friston-3",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
+        },
+        {
+          "level": 30,
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GALLUS²",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
+        },
+        {
+          "level": 30,
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Lancet-2",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "PhonoR-0",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
+        },
+        {
+          "level": 30,
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "THRM-EX",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
+        },
+        {
+          "level": 30,
+          "percent": 10,
+          "tags": [
+            "work-platform"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "伊芙利特",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "rhine-lab"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 15,
+          "tags": [
+            "rhine-lab"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "协律",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 1,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "司霆惊蛰",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "天空盒",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "布丁",
+      "rates": [
+        {
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "异客",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "sargon"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 15,
+          "tags": [
+            "sargon"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "承曦格雷伊",
+      "rates": [
+        {
+          "percent": 23
+        }
+      ]
+    },
+    {
+      "name": "格劳克斯",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 2,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "格雷伊",
+      "rates": [
+        {
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "正义骑士号",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "work-platform"
+          ]
+        },
+        {
+          "level": 30,
+          "percent": 10,
+          "tags": [
+            "knight",
+            "red-pine-knights",
+            "work-platform"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "海霓",
+      "rates": [
+        {
+          "percent": 15
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "深靛",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 1,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "清流",
+      "rates": [
+        {
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "澄闪",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "炎熔",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "a1-team"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "炎狱炎熔",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "烛煌",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20
+        }
+      ]
+    },
+    {
+      "name": "煌",
+      "rates": [
+        {
+          "percent": 10
+        }
+      ]
+    },
+    {
+      "name": "缪尔赛思",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 10,
+          "tags": [
+            "rhine-lab"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "菲莱",
+      "rates": [
+        {
+          "percent": 10,
+          "tags": [
+            "sargon"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 10,
+          "tags": [
+            "sargon"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "阿消",
+      "rates": [
+        {
+          "elite": 1,
+          "percent": 15
+        }
+      ]
+    },
+    {
+      "name": "雷蛇",
+      "rates": [
+        {
+          "percent": 15,
+          "tags": [
+            "blacksteel-international"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 20,
+          "tags": [
+            "blacksteel-international"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "template:manufacture-christine-phatm2:manufacture:experience:2:2:default",
+      "variantGroupId": "template:manufacture-christine-phatm2:manufacture:experience:2:2",
+      "name": "Miss.Christine + 酒神",
+      "members": [
+        {
+          "name": "Miss.Christine",
+          "elite": 2
+        },
+        {
+          "name": "酒神",
+          "elite": 2
+        }
+      ],
+      "efficiency": 65,
+      "sortScore": 2,
+      "quality": "baseOnly",
+      "lv3PairComponent": true,
+      "calculationStatus": "calculated"
+    }
+  ]
+}

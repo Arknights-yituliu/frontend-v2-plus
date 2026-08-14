@@ -597,7 +597,9 @@ function batchGenerationMonthlyPack() {
  * @param index 选择的活动索引
  */
 function updateScheduleOption(index) {
-  const videoPool = videoPoolOptions.find((pool) => pool.scheduleIndex === index && !pool.disabled);
+  const videoPool = enabledVideoPoolOptions.value.find(
+    (pool) => pool.scheduleIndex === index && !pool.disabled
+  );
   if (videoPool && selectedVideoPool.value !== videoPool.id) {
     selectVideoPool(videoPool.id);
     return;
@@ -742,15 +744,13 @@ const previewWorkspaceStyle = computed(() => {
   };
 });
 
-const HIDDEN_VIDEO_POOL_IDS = new Set(["thanksgiving"]);
 const NAVIGATION_NUMBER_STYLE_OPTIONS = [
   { label: "工业黑", value: "industrial" },
   { label: "机读码", value: "terminal" },
   { label: "窄体编号", value: "condensed" },
 ];
-const videoPoolOptions = scheduleOptions
+const allVideoPoolOptions = scheduleOptions
   .map((schedule, scheduleIndex) => ({ schedule, scheduleIndex }))
-  .filter(({ schedule }) => !HIDDEN_VIDEO_POOL_IDS.has(schedule.id))
   .map(({ schedule, scheduleIndex }) => ({
     id: schedule.id,
     scheduleIndex,
@@ -759,6 +759,70 @@ const videoPoolOptions = scheduleOptions
     endDate: schedule.dateString,
     disabled: schedule.disabled,
   }));
+const DEFAULT_ENABLED_VIDEO_POOL_IDS = Object.freeze(["summer", "p3r"]);
+
+function normalizeEnabledVideoPoolIds(poolIds) {
+  const requestedPoolIds = new Set(Array.isArray(poolIds) ? poolIds : []);
+  const enabledPoolIds = allVideoPoolOptions
+    .filter((pool) => requestedPoolIds.has(pool.id) && !pool.disabled)
+    .map((pool) => pool.id);
+
+  if (enabledPoolIds.length) {
+    return enabledPoolIds;
+  }
+
+  const defaultPoolIds = allVideoPoolOptions
+    .filter((pool) => DEFAULT_ENABLED_VIDEO_POOL_IDS.includes(pool.id) && !pool.disabled)
+    .map((pool) => pool.id);
+
+  if (defaultPoolIds.length) {
+    return defaultPoolIds;
+  }
+
+  const fallbackPool = allVideoPoolOptions.find((pool) => !pool.disabled) || allVideoPoolOptions[0];
+  return fallbackPool ? [fallbackPool.id] : [];
+}
+
+const enabledVideoPoolIds = ref(normalizeEnabledVideoPoolIds(DEFAULT_ENABLED_VIDEO_POOL_IDS));
+const enabledVideoPoolOptions = computed(() => {
+  const enabledPoolIdSet = new Set(enabledVideoPoolIds.value);
+  return allVideoPoolOptions.filter((pool) => enabledPoolIdSet.has(pool.id));
+});
+
+function isVideoPoolEnabled(poolId) {
+  return enabledVideoPoolIds.value.includes(poolId);
+}
+
+function setVideoPoolEnabled(poolId, enabled) {
+  const pool = allVideoPoolOptions.find((item) => item.id === poolId);
+  if (!pool || pool.disabled || (!enabled && enabledVideoPoolIds.value.length <= 1)) {
+    return;
+  }
+
+  const nextPoolIds = enabled
+    ? [...enabledVideoPoolIds.value, poolId]
+    : enabledVideoPoolIds.value.filter((enabledPoolId) => enabledPoolId !== poolId);
+  enabledVideoPoolIds.value = normalizeEnabledVideoPoolIds(nextPoolIds);
+
+  const fallbackPool = enabledVideoPoolOptions.value[0];
+  if (!fallbackPool) {
+    return;
+  }
+
+  if (!isVideoPoolEnabled(selectedVideoPool.value)) {
+    cancelVideoPoolTransition();
+    applyVideoPoolSelection(fallbackPool);
+    return;
+  }
+
+  if (!isVideoPoolEnabled(editingVideoPoolId.value)) {
+    editingVideoPoolId.value = fallbackPool.id;
+  }
+  if (!isVideoPoolEnabled(editingVideoRechargePoolId.value)) {
+    editingVideoRechargePoolId.value = fallbackPool.id;
+  }
+}
+
 const DEFAULT_VIDEO_POOL_IMAGE_LAYOUT = Object.freeze({
   scale: 100,
   positionX: 50,
@@ -766,8 +830,8 @@ const DEFAULT_VIDEO_POOL_IMAGE_LAYOUT = Object.freeze({
 });
 const VIDEO_POOL_IMAGE_SCALE_MIN = 100;
 const VIDEO_POOL_IMAGE_SCALE_MAX = 250;
-const selectedVideoPool = ref(videoPoolOptions[0].id);
-const videoPoolImages = ref(Object.fromEntries(videoPoolOptions.map((pool) => [pool.id, ""])));
+const selectedVideoPool = ref(enabledVideoPoolOptions.value[0].id);
+const videoPoolImages = ref(Object.fromEntries(allVideoPoolOptions.map((pool) => [pool.id, ""])));
 const editingVideoPoolId = ref(selectedVideoPool.value);
 const editingVideoRechargePoolId = ref(selectedVideoPool.value);
 const videoPoolImageLayouts = ref(createVideoPoolImageLayouts());
@@ -780,7 +844,7 @@ function normalizeVideoPoolId(poolId) {
 }
 
 function isVideoPoolId(poolId) {
-  return videoPoolOptions.some((pool) => pool.id === poolId);
+  return allVideoPoolOptions.some((pool) => pool.id === poolId);
 }
 
 function normalizeVideoCalculationStartDate(value, fallback = currentTimestamp.value) {
@@ -790,14 +854,14 @@ function normalizeVideoCalculationStartDate(value, fallback = currentTimestamp.v
 
 function createVideoCalculationStartDatesByPool(fallback = currentTimestamp.value) {
   return Object.fromEntries(
-    videoPoolOptions.map((pool) => [pool.id, normalizeVideoCalculationStartDate(fallback, Date.now())])
+    allVideoPoolOptions.map((pool) => [pool.id, normalizeVideoCalculationStartDate(fallback, Date.now())])
   );
 }
 
 function normalizeVideoCalculationStartDatesByPool(startDatesByPool, fallback = currentTimestamp.value) {
   const normalizedDates = createVideoCalculationStartDatesByPool(fallback);
 
-  for (const pool of videoPoolOptions) {
+  for (const pool of allVideoPoolOptions) {
     normalizedDates[pool.id] = normalizeVideoCalculationStartDate(startDatesByPool?.[pool.id], fallback);
   }
 
@@ -856,7 +920,7 @@ function normalizeVideoPoolImageLayout(layout) {
 
 function createVideoPoolImageLayouts() {
   return Object.fromEntries(
-    videoPoolOptions.map((pool) => [pool.id, { ...DEFAULT_VIDEO_POOL_IMAGE_LAYOUT }])
+    allVideoPoolOptions.map((pool) => [pool.id, { ...DEFAULT_VIDEO_POOL_IMAGE_LAYOUT }])
   );
 }
 
@@ -1113,6 +1177,14 @@ function clearStageAssetImage(assetId) {
   }
 }
 
+function cancelVideoPoolTransition() {
+  if (videoPoolTransitionTimer) {
+    clearTimeout(videoPoolTransitionTimer);
+    videoPoolTransitionTimer = 0;
+  }
+  videoPoolTransitionPhase.value = "";
+}
+
 function applyVideoPoolSelection(pool) {
   if (activeCardName.value !== "calculationResult") {
     selectVideoCard("calculationResult");
@@ -1133,7 +1205,7 @@ function applyVideoPoolSelection(pool) {
 }
 
 function selectVideoPool(poolId) {
-  const pool = videoPoolOptions.find((item) => item.id === poolId);
+  const pool = enabledVideoPoolOptions.value.find((item) => item.id === poolId);
   if (
     !pool ||
     pool.disabled ||
@@ -1422,11 +1494,11 @@ const videoOtherResourceRows = computed(() => {
 });
 
 function createVideoRechargePlansByPool() {
-  return Object.fromEntries(videoPoolOptions.map((pool) => [pool.id, []]));
+  return Object.fromEntries(allVideoPoolOptions.map((pool) => [pool.id, []]));
 }
 
 function createVideoRechargePlanSelectionsByPool() {
-  return Object.fromEntries(videoPoolOptions.map((pool) => [pool.id, "no-spend"]));
+  return Object.fromEntries(allVideoPoolOptions.map((pool) => [pool.id, "no-spend"]));
 }
 
 function normalizeVideoRechargePlan(plan, usedIds) {
@@ -1450,7 +1522,7 @@ function normalizeVideoRechargePlan(plan, usedIds) {
 function normalizeVideoRechargePlansByPool(plansByPool) {
   const normalizedPlans = createVideoRechargePlansByPool();
 
-  for (const pool of videoPoolOptions) {
+  for (const pool of allVideoPoolOptions) {
     const sourcePlans = Array.isArray(plansByPool?.[pool.id]) ? plansByPool[pool.id] : [];
     const usedIds = new Set();
     normalizedPlans[pool.id] = sourcePlans.map((plan) => normalizeVideoRechargePlan(plan, usedIds));
@@ -1462,7 +1534,7 @@ function normalizeVideoRechargePlansByPool(plansByPool) {
 function normalizeVideoRechargePlanSelectionsByPool(selectionsByPool, plansByPool) {
   const normalizedSelections = createVideoRechargePlanSelectionsByPool();
 
-  for (const pool of videoPoolOptions) {
+  for (const pool of allVideoPoolOptions) {
     const selectedPlanId = selectionsByPool?.[pool.id];
     const customPlans = plansByPool?.[pool.id] || [];
     const isAvailablePlan =
@@ -1482,7 +1554,10 @@ const videoRechargePlansByPool = ref(createVideoRechargePlansByPool());
 const videoRechargePlanSelectionsByPool = ref(createVideoRechargePlanSelectionsByPool());
 const editingVideoRechargePlans = computed(() => videoRechargePlansByPool.value[editingVideoRechargePoolId.value] || []);
 const currentVideoPool = computed(
-  () => videoPoolOptions.find((pool) => pool.id === selectedVideoPool.value) || videoPoolOptions[0]
+  () =>
+    enabledVideoPoolOptions.value.find((pool) => pool.id === selectedVideoPool.value) ||
+    enabledVideoPoolOptions.value[0] ||
+    allVideoPoolOptions[0]
 );
 const currentVideoRechargeCustomPlans = computed(() => videoRechargePlansByPool.value[selectedVideoPool.value] || []);
 const videoMonthlyCardPlan = computed(() => {
@@ -1828,6 +1903,7 @@ function getVideoGachaDraft() {
       settingsTab: settingsTab.value,
       activeCardName: activeCardName.value,
       dataPanelCardName: dataPanelCardName.value,
+      enabledVideoPoolIds: [...enabledVideoPoolIds.value],
       selectedVideoPool: selectedVideoPool.value,
       editingVideoPoolId: editingVideoPoolId.value,
       editingVideoRechargePoolId: editingVideoRechargePoolId.value,
@@ -2144,7 +2220,7 @@ async function parseVideoGachaSettingsFile(settingsFile) {
     draft: payload.draft,
     poolImages: decodeImageAssetMap(
       assets.poolImages,
-      videoPoolOptions.map((pool) => pool.id),
+      allVideoPoolOptions.map((pool) => pool.id),
       "卡池头图"
     ),
     stageAssets: decodeImageAssetMap(assets.stageAssets, ["background", "logo"], "舞台图片"),
@@ -2338,15 +2414,18 @@ function restoreVideoGachaDraft(draft) {
   if (Object.hasOwn(cardTitles, view.dataPanelCardName)) {
     dataPanelCardName.value = view.dataPanelCardName;
   }
+  enabledVideoPoolIds.value = normalizeEnabledVideoPoolIds(view.enabledVideoPoolIds);
   const restoredPoolId = normalizeVideoPoolId(view.selectedVideoPool);
-  if (isVideoPoolId(restoredPoolId)) {
-    selectedVideoPool.value = restoredPoolId;
-  }
+  selectedVideoPool.value = isVideoPoolEnabled(restoredPoolId)
+    ? restoredPoolId
+    : enabledVideoPoolOptions.value[0].id;
   videoPoolImageLayouts.value = normalizeVideoPoolImageLayouts(view.poolImageLayouts);
   const restoredEditingPoolId = normalizeVideoPoolId(view.editingVideoPoolId);
-  editingVideoPoolId.value = isVideoPoolId(restoredEditingPoolId) ? restoredEditingPoolId : selectedVideoPool.value;
+  editingVideoPoolId.value = isVideoPoolEnabled(restoredEditingPoolId)
+    ? restoredEditingPoolId
+    : selectedVideoPool.value;
   const restoredEditingRechargePoolId = normalizeVideoPoolId(view.editingVideoRechargePoolId);
-  editingVideoRechargePoolId.value = isVideoPoolId(restoredEditingRechargePoolId)
+  editingVideoRechargePoolId.value = isVideoPoolEnabled(restoredEditingRechargePoolId)
     ? restoredEditingRechargePoolId
     : selectedVideoPool.value;
   videoRechargePlansByPool.value = normalizeVideoRechargePlansByPool(view.rechargePlansByPool);
@@ -2386,7 +2465,7 @@ function restoreVideoGachaDraft(draft) {
   }
 
   const poolImages = normalizeVideoPoolImages(draft.poolImages);
-  for (const pool of videoPoolOptions) {
+  for (const pool of allVideoPoolOptions) {
     if (poolImages[pool.id] instanceof Blob) {
       setVideoPoolImage(pool.id, poolImages[pool.id]);
     }
@@ -2459,6 +2538,7 @@ watch(
     settingsTab,
     activeCardName,
     dataPanelCardName,
+    enabledVideoPoolIds,
     selectedVideoPool,
     editingVideoPoolId,
     editingVideoRechargePoolId,
@@ -3177,9 +3257,10 @@ onMounted(async () => {
 
   batchGenerationMonthlyPack();
   const selectedPool =
-    videoPoolOptions.find((pool) => pool.id === selectedVideoPool.value && !pool.disabled) ||
-    videoPoolOptions.find((pool) => !pool.disabled) ||
-    videoPoolOptions[0];
+    enabledVideoPoolOptions.value.find((pool) => pool.id === selectedVideoPool.value && !pool.disabled) ||
+    enabledVideoPoolOptions.value.find((pool) => !pool.disabled) ||
+    enabledVideoPoolOptions.value[0] ||
+    allVideoPoolOptions[0];
   selectedVideoPool.value = selectedPool.id;
   activateVideoPoolCalculationStartDate(selectedPool.id);
   updateScheduleOption(selectedPool.scheduleIndex);
@@ -3529,7 +3610,7 @@ function sharePage() {
           </div>
 
           <div class="gacha-card-setting-section-title">卡池头图</div>
-          <div v-for="pool in videoPoolOptions" :key="pool.id" class="gacha-card-setting-image-upload">
+          <div v-for="pool in enabledVideoPoolOptions" :key="pool.id" class="gacha-card-setting-image-upload">
             <span>{{ pool.label }}</span>
             <el-upload
               accept="image/*"
@@ -3545,7 +3626,7 @@ function sharePage() {
             <div class="gacha-card-setting-crop-target">
               <el-select v-model="editingVideoPoolId" size="small" aria-label="正在编辑的头图">
                 <el-option
-                  v-for="pool in videoPoolOptions"
+                  v-for="pool in enabledVideoPoolOptions"
                   :key="pool.id"
                   :label="pool.disabled ? `${pool.title}（未开放）` : pool.title"
                   :value="pool.id"
@@ -3681,6 +3762,25 @@ function sharePage() {
           </div>
         </el-tab-pane>
         <el-tab-pane label="数据" name="data">
+          <div class="gacha-card-setting-section-title">目标池子</div>
+          <div
+            v-for="pool in allVideoPoolOptions"
+            :key="pool.id"
+            class="gacha-card-setting-row"
+          >
+            <span>{{ pool.title }}</span>
+            <el-switch
+              :model-value="isVideoPoolEnabled(pool.id)"
+              :disabled="
+                pool.disabled ||
+                (isVideoPoolEnabled(pool.id) && enabledVideoPoolIds.length === 1)
+              "
+              active-text="开启"
+              inactive-text="关闭"
+              :aria-label="`${pool.title}目标池子`"
+              @change="(enabled) => setVideoPoolEnabled(pool.id, enabled)"
+            />
+          </div>
           <div class="gacha-card-setting-datetime">
             <span>本池起始</span>
             <el-date-picker
@@ -3736,7 +3836,7 @@ function sharePage() {
         <nav class="gacha-video-navigation" aria-label="视频页导航">
           <div class="gacha-video-pool-selector">
             <button
-              v-for="pool in videoPoolOptions"
+              v-for="pool in enabledVideoPoolOptions"
               :key="pool.id"
               type="button"
               class="gacha-video-pool-button"
@@ -4761,7 +4861,7 @@ function sharePage() {
               <span>编辑卡池</span>
               <el-select v-model="editingVideoRechargePoolId" size="small" aria-label="正在编辑的氪金方案卡池">
                 <el-option
-                  v-for="pool in videoPoolOptions"
+                  v-for="pool in enabledVideoPoolOptions"
                   :key="pool.id"
                   :label="pool.disabled ? `${pool.title}（未开放）` : pool.title"
                   :value="pool.id"

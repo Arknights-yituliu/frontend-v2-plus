@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "manual-manufacture-orundum-bubble-vulcan-chestnut",
+      "variantGroupId": "family-bubble-vulcan-chestnut",
+      "name": "泡泡 + 火神 + 褐果",
+      "members": [
+        {
+          "name": "泡泡",
+          "elite": 1
+        },
+        {
+          "name": "火神",
+          "elite": 2
+        },
+        {
+          "name": "褐果",
+          "elite": 1
+        }
+      ],
+      "efficiency": 107,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    }
+  ]
+}

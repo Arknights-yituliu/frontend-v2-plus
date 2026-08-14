@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 6,
+  "releaseId": "riic-runtime-debug-package-2026-08-05-r2",
+  "candidates": [
+    {
+      "id": "baseline:manufacture:experience:1:1:char_1042_phatm2:2-1",
+      "variantGroupId": "baseline:manufacture:experience:1:1:char_1042_phatm2",
+      "name": "酒神",
+      "members": [
+        {
+          "name": "酒神",
+          "elite": 2
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "baseOnly",
+      "calculationStatus": "estimated"
+    },
+    {
+      "id": "baseline:manufacture:experience:1:1:char_1502_crosly:2-1",
+      "variantGroupId": "baseline:manufacture:experience:1:1:char_1502_crosly",
+      "name": "弑君者",
+      "members": [
+        {
+          "name": "弑君者",
+          "elite": 2
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "baseline:manufacture:experience:1:1:char_159_peacok:1-1",
+      "variantGroupId": "baseline:manufacture:experience:1:1:char_159_peacok",
+      "name": "断罪者",
+      "members": [
+        {
+          "name": "断罪者",
+          "elite": 1
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "baseline:manufacture:experience:1:1:char_241_panda:2-1",
+      "variantGroupId": "baseline:manufacture:experience:1:1:char_241_panda",
+      "name": "食铁兽",
+      "members": [
+        {
+          "name": "食铁兽",
+          "elite": 2
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "complete",
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "baseline:manufacture:experience:1:1:char_4225_tanya:2-1",
+      "variantGroupId": "baseline:manufacture:experience:1:1:char_4225_tanya",
+      "name": "裂响",
+      "members": [
+        {
+          "name": "裂响",
+          "elite": 2
+        }
+      ],
+      "efficiency": 35,
+      "sortScore": 0,
+      "quality": "baseOnly",
+      "calculationStatus": "estimated"
+    }
+  ]
+}
