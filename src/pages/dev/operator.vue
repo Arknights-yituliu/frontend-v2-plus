@@ -191,7 +191,7 @@ async function saveRoster({ notify = true } = {}) {
 
 async function openScheduleGenerator() {
   await saveRoster({ notify: false });
-  router.push("/tools/riic-schedule-generator");
+  router.push("/tools/scheduleV3");
 }
 
 function clearOwnedOperators() {
