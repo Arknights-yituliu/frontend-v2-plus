@@ -78,6 +78,26 @@
       "calculationStatus": "calculated"
     },
     {
+      "id": "template:trading-lemuen-new-angel:trading:all:2:2:char_1041_angel2",
+      "variantGroupId": "template:trading-lemuen-new-angel:trading:all:2:2",
+      "name": "蕾缪安 + 新约能天使",
+      "members": [
+        {
+          "name": "蕾缪安",
+          "elite": 2
+        },
+        {
+          "name": "新约能天使",
+          "elite": 2
+        }
+      ],
+      "efficiency": 60,
+      "sortScore": 1,
+      "quality": "baseOnly",
+      "lv3PairComponent": true,
+      "calculationStatus": "calculated"
+    },
+    {
       "id": "template:trading-siege-morgan:trading:all:2:2:default",
       "variantGroupId": "template:trading-siege-morgan:trading:all:2:2",
       "name": "推进之王 + 摩根",

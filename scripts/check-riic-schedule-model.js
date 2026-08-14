@@ -498,6 +498,7 @@ const orundumSettlementPreview = {
           key: "trading:orundum:1",
           facility: "trading",
           product: "orundum",
+          efficiency: 193,
           operators: createNormalTradingRoomOperators(),
         }),
       ],
@@ -708,6 +709,48 @@ const unsupportedP01TradeSettlement = summarizeRiicActualSchedule({
 assert.equal(
   unsupportedP01TradeSettlement.yield.rooms[0]?.unavailableReason,
   "notSupported",
+);
+
+const unsupportedP01OrundumPreview = {
+  states: [
+    {
+      durationHours: 24,
+      rooms: [
+        createSettlementRoom({
+          key: "trading:orundum:unsupported-p01",
+          facility: "trading",
+          product: "orundum",
+          efficiency: 200,
+          operators: [
+            { charId: "char_1033_swire2" },
+            { charId: "char_502_nblade" },
+            { charId: "char_123_fang" },
+          ],
+        }),
+      ],
+    },
+  ],
+};
+const unsupportedP01OrundumSettlement = summarizeRiicActualSchedule({
+  preview: unsupportedP01OrundumPreview,
+  tradingOperators: [
+    { charId: "char_1033_swire2", elite: 2, level: 1 },
+    ...normalTradingOperators.slice(0, 2),
+  ],
+});
+assert.equal(
+  getYieldResource(unsupportedP01OrundumSettlement.yield, "orundum")
+    .outputPerDay,
+  480,
+);
+assert.equal(
+  getYieldResource(unsupportedP01OrundumSettlement.yield, "originiumShard")
+    .outputPerDay,
+  -48,
+);
+assert.equal(
+  unsupportedP01OrundumSettlement.yield.tradingSettlements[0]?.isCalculated,
+  true,
 );
 
 const jacintaRotationPreview = {

@@ -37,27 +37,27 @@
     ]
   },
   "summary": {
-    "inputRecordCount": 905,
-    "scopedSkillCount": 543,
-    "includedSourceSkillCount": 289,
-    "directRuleCount": 284,
+    "inputRecordCount": 913,
+    "scopedSkillCount": 549,
+    "includedSourceSkillCount": 293,
+    "directRuleCount": 287,
     "baseOnlyRuleCount": 67,
-    "sameRoomRuleCount": 8,
-    "excludedSkillCount": 254,
+    "sameRoomRuleCount": 9,
+    "excludedSkillCount": 256,
     "byRoomType": {
       "control": 10,
-      "meeting": 45,
-      "power": 36,
+      "meeting": 46,
+      "power": 37,
       "trading": 67,
-      "hire": 42,
+      "hire": 43,
       "manufacture": 84
     },
     "byRoomProduct": {
       "control:all": 10,
-      "meeting:all": 45,
-      "power:all": 36,
+      "meeting:all": 46,
+      "power:all": 37,
       "trading:all": 67,
-      "hire:all": 42,
+      "hire:all": 43,
       "manufacture:all": 51,
       "manufacture:experience": 17,
       "manufacture:gold": 8,
@@ -66,11 +66,11 @@
     "byPoolKey": {
       "control:trading:all:7": 4,
       "control:manufacture:all:2": 2,
-      "meeting:all:20": 13,
+      "meeting:all:20": 14,
       "meeting:all:25": 5,
       "power:all:10": 19,
       "trading:all:30": 21,
-      "power:all:20": 7,
+      "power:all:20": 8,
       "trading:all:20": 16,
       "trading:all:35": 4,
       "hire:all:40": 6,
@@ -93,7 +93,7 @@
       "manufacture:all:10": 4,
       "manufacture:all:23.75": 2,
       "manufacture:all:22.5": 2,
-      "hire:all:45": 5,
+      "hire:all:45": 6,
       "trading:all:15": 5,
       "manufacture:gold:35": 1,
       "trading:all:4": 1,
@@ -117,8 +117,8 @@
     },
     "exclusionsByReason": {
       "conditionalOrUnsupported": 184,
-      "missingDirectEffect": 16,
-      "timeDependentOrThreshold": 37,
+      "missingDirectEffect": 17,
+      "timeDependentOrThreshold": 38,
       "sameRoomOverride": 9,
       "specialOrderOrProbability": 8
     }
@@ -281,6 +281,32 @@
       "roomType": "power",
       "unlock": {
         "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      }
+    },
+    {
+      "id": "char_1015_aglna2|meeting|我自己的愿望|2|1",
+      "charId": "char_1015_aglna2",
+      "roomType": "meeting",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      }
+    },
+    {
+      "id": "char_1015_aglna2|meeting|资深信使|0|1",
+      "charId": "char_1015_aglna2",
+      "roomType": "meeting",
+      "unlock": {
+        "phase": 0,
         "level": 1
       },
       "activation": {
@@ -6376,6 +6402,58 @@
       "id": "char_4230_mcnist|manufacture|作战指导录像|0|1",
       "charId": "char_4230_mcnist",
       "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      }
+    },
+    {
+      "id": "char_4235_thumpy|hire|前任金牌接线员|2|1",
+      "charId": "char_4235_thumpy",
+      "roomType": "hire",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      }
+    },
+    {
+      "id": "char_4236_tmslot|power|迟到前六分钟|2|1",
+      "charId": "char_4236_tmslot",
+      "roomType": "power",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      }
+    },
+    {
+      "id": "char_4237_jcinta|meeting|坎贝尔之名|2|1",
+      "charId": "char_4237_jcinta",
+      "roomType": "meeting",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      }
+    },
+    {
+      "id": "char_4237_jcinta|trading|千金的眼光|0|1",
+      "charId": "char_4237_jcinta",
+      "roomType": "trading",
       "unlock": {
         "phase": 0,
         "level": 1
@@ -13853,6 +13931,84 @@
       "rawDescription": "进驻制造站时，作战记录类配方的生产力+30%"
     },
     {
+      "id": "char_4235_thumpy|hire|前任金牌接线员|2|1",
+      "sourceSkillId": "char_4235_thumpy|hire|前任金牌接线员|2|1",
+      "charId": "char_4235_thumpy",
+      "name": "珊比",
+      "buffName": "前任金牌接线员",
+      "roomType": "hire",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effect": {
+        "metric": "contactSpeed",
+        "percent": 45,
+        "product": "all",
+        "coverage": "complete"
+      },
+      "poolKey": "hire:all:45",
+      "confidence": "high",
+      "ignoredMechanics": [],
+      "rawDescription": "进驻人力办公室时，人脉资源的联络速度+45%"
+    },
+    {
+      "id": "char_4236_tmslot|power|迟到前六分钟|2|1",
+      "sourceSkillId": "char_4236_tmslot|power|迟到前六分钟|2|1",
+      "charId": "char_4236_tmslot",
+      "name": "时隙",
+      "buffName": "迟到前六分钟",
+      "roomType": "power",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effect": {
+        "metric": "droneCharge",
+        "percent": 20,
+        "product": "all",
+        "coverage": "complete"
+      },
+      "poolKey": "power:all:20",
+      "confidence": "high",
+      "ignoredMechanics": [],
+      "rawDescription": "进驻发电站时，无人机充能速度+20%"
+    },
+    {
+      "id": "char_4237_jcinta|meeting|坎贝尔之名|2|1",
+      "sourceSkillId": "char_4237_jcinta|meeting|坎贝尔之名|2|1",
+      "charId": "char_4237_jcinta",
+      "name": "嘉辛塔",
+      "buffName": "坎贝尔之名",
+      "roomType": "meeting",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effect": {
+        "metric": "clueSearch",
+        "percent": 20,
+        "product": "all",
+        "coverage": "complete"
+      },
+      "poolKey": "meeting:all:20",
+      "confidence": "high",
+      "ignoredMechanics": [],
+      "rawDescription": "进驻会客室时，线索搜集速度提升20%"
+    },
+    {
       "id": "char_427_vigil|meeting|领袖外交|0|1",
       "sourceSkillId": "char_427_vigil|meeting|领袖外交|0|1",
       "charId": "char_427_vigil",
@@ -14810,6 +14966,51 @@
       "rawDescription": "当与拉普兰德在同一个贸易站时，心情每小时消耗+0.3，订单获取效率+65%"
     },
     {
+      "id": "char_1041_angel2|trading|同城加急单|2|1|same-room|angel2-laterano-trading",
+      "sourceSkillId": "char_1041_angel2|trading|同城加急单|2|1",
+      "charId": "char_1041_angel2",
+      "name": "新约能天使",
+      "buffName": "同城加急单",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "condition": {
+        "type": "sameRoomMemberCount",
+        "charIds": [
+          "char_192_falco",
+          "char_211_adnach",
+          "char_213_mostma",
+          "char_245_cello",
+          "char_271_spikes",
+          "char_279_excu",
+          "char_300_phenxi",
+          "char_302_glaze",
+          "char_332_archet",
+          "char_4015_spuria",
+          "char_4036_forcer",
+          "char_4188_confes",
+          "char_4193_lemuen",
+          "char_4194_rmixer",
+          "char_498_inside"
+        ],
+        "excludeOwner": false
+      },
+      "effect": {
+        "metric": "orderEfficiency",
+        "percent": 15,
+        "product": "all"
+      },
+      "confidence": "reviewed",
+      "ignoredMechanics": [],
+      "rawDescription": "进驻贸易站时，同个贸易站中每有1名拉特兰干员，当前贸易站订单获取效率+15%"
+    },
+    {
       "id": "char_1048_orchd2|trading|队长的自觉|2|1|same-room|orchd2-mh2-trading",
       "sourceSkillId": "char_1048_orchd2|trading|队长的自觉|2|1",
       "charId": "char_1048_orchd2",
@@ -15068,6 +15269,32 @@
       "rawDescription": "进驻控制中枢时，控制中枢内每个异格干员可使控制中枢内所有干员的心情每小时恢复+0.05"
     },
     {
+      "id": "char_1015_aglna2|meeting|我自己的愿望|2|1",
+      "charId": "char_1015_aglna2",
+      "name": "予愿安洁莉娜",
+      "buffName": "我自己的愿望",
+      "roomType": "meeting",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "reason": "conditionalOrUnsupported",
+      "rawDescription": "进驻会客室时，如果会客室内只有自身处于工作状态时，线索搜集速度提升50%，心情每小时消耗+2"
+    },
+    {
+      "id": "char_1015_aglna2|meeting|资深信使|0|1",
+      "charId": "char_1015_aglna2",
+      "name": "予愿安洁莉娜",
+      "buffName": "资深信使",
+      "roomType": "meeting",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "reason": "missingDirectEffect",
+      "rawDescription": "进驻会客室时，更容易获得线索板上尚未拥有的线索"
+    },
+    {
       "id": "char_102_texas|trading|默契|2|1",
       "charId": "char_102_texas",
       "name": "德克萨斯",
@@ -15313,19 +15540,6 @@
       },
       "reason": "missingDirectEffect",
       "rawDescription": "进驻控制中枢时，如训练室有干员在进行技能专精，则该干员的专精技能训练速度+5%（同种效果取最高）"
-    },
-    {
-      "id": "char_1041_angel2|trading|同城加急单|2|1",
-      "charId": "char_1041_angel2",
-      "name": "新约能天使",
-      "buffName": "同城加急单",
-      "roomType": "trading",
-      "unlock": {
-        "phase": 2,
-        "level": 1
-      },
-      "reason": "conditionalOrUnsupported",
-      "rawDescription": "进驻贸易站时，同个贸易站中每有1名拉特兰干员，当前贸易站订单获取效率+15%"
     },
     {
       "id": "char_1044_hsgma2|control|下城人脉|0|1",
@@ -17952,6 +18166,19 @@
       },
       "reason": "timeDependentOrThreshold",
       "rawDescription": "进驻制造站时，若单次工作时长达到12小时，生产力+10%"
+    },
+    {
+      "id": "char_4237_jcinta|trading|千金的眼光|0|1",
+      "charId": "char_4237_jcinta",
+      "name": "嘉辛塔",
+      "buffName": "千金的眼光",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "reason": "timeDependentOrThreshold",
+      "rawDescription": "进驻贸易站时，小幅提升当前贸易站高品质贵金属订单的出现概率（工作时长影响概率），心情每小时消耗-0.25"
     },
     {
       "id": "char_433_windft|manufacture|自动化·α|2|1",

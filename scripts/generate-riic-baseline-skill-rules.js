@@ -133,6 +133,24 @@ const REVIEWED_SAME_ROOM_SYNERGIES = [
     },
   },
   {
+    id: "angel2-laterano-trading",
+    source: {
+      charId: "char_1041_angel2",
+      roomType: "trading",
+      phase: 2,
+      level: 1,
+    },
+    condition: {
+      type: "sameRoomMemberCount",
+      termId: "cc-g-laterano",
+      excludeOwner: false,
+    },
+    effect: {
+      percent: 15,
+      product: "all",
+    },
+  },
+  {
     id: "alanna-warmy-gold",
     source: {
       charId: "char_4178_alanna",

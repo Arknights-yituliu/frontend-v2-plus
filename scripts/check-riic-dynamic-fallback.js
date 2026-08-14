@@ -220,6 +220,74 @@ const automaticFallbackPlan = planRiicAutomaticRoomSelections({
 });
 assert.equal(automaticFallbackPlan.bestPlan.selections.length, 4);
 
+const nightSmokeFallbackCandidate = {
+  key: "night-smoke-fallback",
+  fallback: {
+    count: 1,
+    candidateOperators: [
+      ...Array.from({ length: 5 }, (_, index) => ({
+        charId: `higher-${index + 1}`,
+        name: `Higher ${index + 1}`,
+        percent: 35,
+      })),
+      {
+        charId: "night-smoke",
+        name: "Night Smoke",
+        percent: 30,
+        fillPriority: -1,
+      },
+      ...Array.from({ length: 18 }, (_, index) => ({
+        charId: `lower-${index + 1}`,
+        name: `Lower ${index + 1}`,
+        percent: 20,
+      })),
+    ],
+  },
+};
+const nightSmokeFallbackPlans = createRiicRoomGroupFallbackPlanAlternatives({
+  selectedEntries: [
+    { selectionKey: "night-smoke:main", candidate: nightSmokeFallbackCandidate },
+    {
+      selectionKey: "night-smoke:backup-a",
+      candidate: {
+        key: "night-smoke-backup-a",
+        fallback: {
+          count: 1,
+          candidateOperators: [
+            { charId: "backup-25-a", name: "Backup 25 A", percent: 25 },
+          ],
+        },
+      },
+    },
+    {
+      selectionKey: "night-smoke:backup-b",
+      candidate: {
+        key: "night-smoke-backup-b",
+        fallback: {
+          count: 1,
+          candidateOperators: [
+            { charId: "backup-25-b", name: "Backup 25 B", percent: 25 },
+          ],
+        },
+      },
+    },
+  ],
+  maxPlanCount: 12,
+  ordinaryOperatorLimit: 24,
+});
+const nightSmokeFallbackPlan = nightSmokeFallbackPlans.find((plan) =>
+  plan.selectedOperatorIds.includes("night-smoke"),
+);
+assert.ok(nightSmokeFallbackPlan);
+assert.deepEqual(
+  [...nightSmokeFallbackPlan.selectedOperatorIds].sort(),
+  ["backup-25-a", "backup-25-b", "night-smoke"],
+);
+assert.equal(
+  new Set(nightSmokeFallbackPlan.selectedOperatorIds).size,
+  nightSmokeFallbackPlan.selectedOperatorIds.length,
+);
+
   console.log("RIIC dynamic fallback checks passed.");
 } finally {
   await vite.close();

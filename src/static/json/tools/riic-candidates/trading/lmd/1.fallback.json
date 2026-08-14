@@ -594,6 +594,46 @@
       ]
     },
     {
+      "name": "卡夫卡",
+      "rates": [
+        {
+          "percent": 30,
+          "tags": [
+            "tailor",
+            "tailor-alpha"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 30,
+          "tags": [
+            "tailor",
+            "tailor-beta"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "折光",
+      "rates": [
+        {
+          "percent": 30,
+          "tags": [
+            "tailor",
+            "tailor-alpha"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 30,
+          "tags": [
+            "tailor",
+            "tailor-beta"
+          ]
+        }
+      ]
+    },
+    {
       "name": "柏喙",
       "rates": [
         {

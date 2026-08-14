@@ -478,8 +478,13 @@ export function settleRiicScheduleEfficiency({
     resourceFacts,
   });
 
-  return applyRiicPreviewResourceChainSettlement({
+  const settledPreview = applyRiicPreviewResourceChainSettlement({
     preview: previewWithActiveRosterEffects,
     settlement: perceptionSettlement,
   });
+
+  return {
+    ...settledPreview,
+    perceptionSettlement,
+  };
 }

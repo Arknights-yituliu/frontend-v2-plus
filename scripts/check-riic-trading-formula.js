@@ -75,6 +75,94 @@ const partialNormal = calculateRiicTrading(
 assert.equal(partialNormal.ok, true);
 assert.equal(partialNormal.type, "normal");
 
+const lemuenNewExusiai = calculateRiicTrading(
+  facility(2),
+  [
+    operator("char_4193_lemuen", 2, 1),
+    operator("char_1041_angel2", 2, 1),
+  ],
+);
+assert.equal(lemuenNewExusiai.ok, true);
+assert.equal(lemuenNewExusiai.type, "normal");
+assertClose(lemuenNewExusiai.rate, 162);
+
+const ebenholzContextMissing = calculateRiicTrading(
+  facility(3),
+  [
+    operator("char_4046_ebnhlz", 0, 1),
+    operator("char_502_nblade", 0, 30),
+    operator("char_123_fang", 1, 1),
+  ],
+);
+assert.equal(ebenholzContextMissing.ok, false);
+assert.equal(ebenholzContextMissing.error, "notSupported");
+
+const ebenholzE0 = calculateRiicTrading(
+  {
+    ...facility(3),
+    context: {
+      silentResonance: 0,
+    },
+  },
+  [
+    operator("char_4046_ebnhlz", 0, 1),
+    operator("char_502_nblade", 0, 30),
+    operator("char_123_fang", 1, 1),
+  ],
+);
+assert.equal(ebenholzE0.ok, true);
+assert.equal(ebenholzE0.type, "normal");
+assertClose(ebenholzE0.rate, 163);
+assertClose(ebenholzE0.lmd, 697.19764);
+assertClose(ebenholzE0.gold, -1.394395);
+
+const ebenholzE2 = calculateRiicTrading(
+  {
+    ...facility(3),
+    context: {
+      silentResonance: 15,
+    },
+  },
+  [
+    operator("char_4046_ebnhlz", 2, 1),
+    operator("char_502_nblade", 0, 30),
+    operator("char_123_fang", 1, 1),
+  ],
+);
+assert.equal(ebenholzE2.ok, true);
+assert.equal(ebenholzE2.type, "normal");
+assertClose(ebenholzE2.rate, 170);
+assertClose(ebenholzE2.lmd, 727.138643);
+assertClose(ebenholzE2.gold, -1.454277);
+
+const kichiE0 = calculateRiicTrading(
+  facility(3),
+  [
+    operator("char_4203_kichi", 0, 1),
+    operator("char_502_nblade", 0, 30),
+    operator("char_123_fang", 1, 1),
+  ],
+);
+assert.equal(kichiE0.ok, true);
+assert.equal(kichiE0.type, "normal");
+assertClose(kichiE0.rate, 183);
+assertClose(kichiE0.lmd, 782.743363);
+assertClose(kichiE0.gold, -1.565487);
+
+const kichiE2 = calculateRiicTrading(
+  facility(3),
+  [
+    operator("char_4203_kichi", 2, 1),
+    operator("char_502_nblade", 0, 30),
+    operator("char_123_fang", 1, 1),
+  ],
+);
+assert.equal(kichiE2.ok, true);
+assert.equal(kichiE2.type, "normal");
+assertClose(kichiE2.rate, 203);
+assertClose(kichiE2.lmd, 868.289086);
+assertClose(kichiE2.gold, -1.736578);
+
 const jacintaAlpha = calculateRiicTrading(
   facility(3),
   [
@@ -176,7 +264,7 @@ const shamareButshu = calculateRiicTrading(
 assert.equal(shamareButshu.ok, true);
 assert.equal(shamareButshu.type, "butshu");
 assert.equal(shamareButshu.product, "lmd");
-assertClose(shamareButshu.rate, 312.793103);
+assertClose(shamareButshu.rate, 277.718318);
 assert.ok(shamareButshu.virtualGold > 0);
 assert.equal(shamareButshu.orundumCapacity, 0);
 
@@ -191,7 +279,7 @@ const shamareOverride = calculateRiicTrading(
 assert.equal(shamareOverride.ok, true);
 assert.equal(shamareOverride.type, "normal");
 assert.equal(shamareOverride.product, "lmd");
-assertClose(shamareOverride.rate, 193);
+assertClose(shamareOverride.rate, 194.68913);
 assert.equal(shamareOverride.orundumCapacity, 0);
 
 const shamareButshuArchet = calculateRiicTrading(
@@ -205,7 +293,7 @@ const shamareButshuArchet = calculateRiicTrading(
 assert.equal(shamareButshuArchet.ok, true);
 assert.equal(shamareButshuArchet.type, "butshu");
 assert.equal(shamareButshuArchet.product, "lmd");
-assertClose(shamareButshuArchet.rate, 299.482759);
+assertClose(shamareButshuArchet.rate, 246.224488);
 
 const archetDormitoryBonus = calculateRiicTrading(
   {
@@ -435,7 +523,7 @@ assertClose(orundumShamare.rate, 193);
 assertClose(orundumShamare.orundumCapacity, 19.3);
 assertClose(orundumShamare.shardConsumption, 1.93);
 
-const timeDependentOrderProbability = calculateRiicTrading(
+const butshuShamareAlpha = calculateRiicTrading(
   facility(3),
   [
     operator("char_4032_provs", 2, 1),
@@ -443,18 +531,13 @@ const timeDependentOrderProbability = calculateRiicTrading(
     operator("char_486_takila", 2, 1),
   ],
 );
-assert.deepEqual(timeDependentOrderProbability, {
-  ok: false,
-  type: "butshu",
-  product: "lmd",
-  rate: null,
-  lmd: null,
-  gold: null,
-  virtualGold: null,
-  orundumCapacity: null,
-  shardConsumption: null,
-  error: "timeDependentOrderProbability",
-});
+assert.equal(butshuShamareAlpha.ok, true);
+assert.equal(butshuShamareAlpha.type, "butshu");
+assert.equal(butshuShamareAlpha.product, "lmd");
+assertClose(butshuShamareAlpha.rate, 148.212367);
+assertClose(butshuShamareAlpha.lmd, 562.055838);
+assertClose(butshuShamareAlpha.gold, -1.124112);
+assertClose(butshuShamareAlpha.virtualGold, 0.143782);
 
 const shamareTequilaTailor = calculateRiicTrading(
   facility(3),
@@ -471,6 +554,54 @@ assertClose(shamareTequilaTailor.rate, 239.517832);
 assertClose(shamareTequilaTailor.lmd, 837.214612);
 assertClose(shamareTequilaTailor.gold, -1.674429);
 assertClose(shamareTequilaTailor.virtualGold, 0.374543);
+
+const shamareTequilaTailorAlpha = calculateRiicTrading(
+  facility(3),
+  [
+    operator("char_254_vodfox", 2, 1),
+    operator("char_486_takila", 2, 1),
+    operator("char_252_bibeak", 0, 1),
+  ],
+);
+assert.equal(shamareTequilaTailorAlpha.ok, true);
+assert.equal(shamareTequilaTailorAlpha.type, "butshu");
+assert.equal(shamareTequilaTailorAlpha.product, "lmd");
+assertClose(shamareTequilaTailorAlpha.rate, 231.040063);
+assertClose(shamareTequilaTailorAlpha.lmd, 834.184676);
+assertClose(shamareTequilaTailorAlpha.gold, -1.668369);
+assertClose(shamareTequilaTailorAlpha.virtualGold, 0.30808);
+
+const butshuTequilaTailorAlpha = calculateRiicTrading(
+  facility(3),
+  [
+    operator("char_4032_provs", 2, 1),
+    operator("char_486_takila", 2, 1),
+    operator("char_252_bibeak", 0, 1),
+  ],
+);
+assert.equal(butshuTequilaTailorAlpha.ok, true);
+assert.equal(butshuTequilaTailorAlpha.type, "butshu");
+assert.equal(butshuTequilaTailorAlpha.product, "lmd");
+assertClose(butshuTequilaTailorAlpha.rate, 148.212367);
+assertClose(butshuTequilaTailorAlpha.lmd, 562.055838);
+assertClose(butshuTequilaTailorAlpha.gold, -1.124112);
+assertClose(butshuTequilaTailorAlpha.virtualGold, 0.143782);
+
+const butshuTequilaTailorBeta = calculateRiicTrading(
+  facility(3),
+  [
+    operator("char_4032_provs", 2, 1),
+    operator("char_486_takila", 2, 1),
+    operator("char_252_bibeak", 2, 1),
+  ],
+);
+assert.equal(butshuTequilaTailorBeta.ok, true);
+assert.equal(butshuTequilaTailorBeta.type, "butshu");
+assert.equal(butshuTequilaTailorBeta.product, "lmd");
+assertClose(butshuTequilaTailorBeta.rate, 136.07239);
+assertClose(butshuTequilaTailorBeta.lmd, 482.077626);
+assertClose(butshuTequilaTailorBeta.gold, -0.964155);
+assertClose(butshuTequilaTailorBeta.virtualGold, 0.199886);
 
 const closureLemuenAngel = calculateRiicTrading(
   facility(3),

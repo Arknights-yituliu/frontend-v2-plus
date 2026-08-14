@@ -21,10 +21,12 @@ const ORUNDUM_TRADE_CAPACITY_PER_HOUR = 10;
 const ORUNDUM_PER_ORIGINIUM_SHARD = 10;
 const ORUNDUM_TRADE_STATION_LEVEL = 3;
 const CLOSURE_ID = "char_4228_closur";
+const EBENHOLZ_ID = "char_4046_ebnhlz";
 const BUTSHU_ID = "char_4032_provs";
 const TEQUILA_ID = "char_486_takila";
 const TAILOR_ID = "char_252_bibeak";
 const SHAMARE_ID = "char_254_vodfox";
+const KICHI_ID = "char_4203_kichi";
 const DEEP_ID = "char_4137_udflow";
 const VIGIL_ID = "char_427_vigil";
 const BELLONE_ID = "char_4037_demetr";
@@ -263,12 +265,18 @@ function normalizeFacilityContext(value) {
     rawManufactureProductKindCount >= 0
       ? rawManufactureProductKindCount
       : null;
+  const rawSilentResonance = Number(source?.silentResonance);
+  const silentResonance =
+    Number.isFinite(rawSilentResonance) && rawSilentResonance >= 0
+      ? rawSilentResonance
+      : null;
 
   return {
     baseOperatorIds,
     dormitoryLevels,
     manufactureProductKindCount,
     meetingLevel,
+    silentResonance,
   };
 }
 
@@ -467,7 +475,7 @@ function hasResolvableSameRoomRule(rule, sameRoomRules, product) {
   );
 }
 
-function getExternalOrderBonus(rule, facilityContext, operators) {
+function getLegacyExternalOrderBonus(rule, facilityContext, operators) {
   const skillId = String(rule?.sourceSkillId || rule?.id || "").trim();
 
   if (skillId === VIGNA_BETA_SKILL_ID) {
@@ -525,6 +533,22 @@ function getExternalOrderBonus(rule, facilityContext, operators) {
   }
 
   return null;
+}
+
+function getRuleSourceSkillId(rule) {
+  return String(rule?.sourceSkillId || rule?.id || "").trim();
+}
+
+function getLegacyExclusions(exclusions, directRules, sameRoomRules) {
+  const genericSkillIds = new Set(
+    [...(directRules || []), ...(sameRoomRules || [])]
+      .map(getRuleSourceSkillId)
+      .filter(Boolean),
+  );
+
+  return (exclusions || []).filter(
+    (exclusion) => !genericSkillIds.has(getRuleSourceSkillId(exclusion)),
+  );
 }
 
 function getPositiveOrderLimitIncrease(rule) {
@@ -627,6 +651,11 @@ function createTradingContext(operators, product, facilityContext) {
     );
   }
 
+  const legacyExclusions = getLegacyExclusions(
+    exclusions,
+    directRules,
+    sameRoomRules,
+  );
   const activeOperatorIds = new Set(operators.map((operator) => operator.charId));
   const hasClosure = activeOperatorIds.has(CLOSURE_ID) &&
     activeStatesByOperatorId.get(CLOSURE_ID)?.has(
@@ -634,44 +663,66 @@ function createTradingContext(operators, product, facilityContext) {
     );
   const hasButshu = activeOperatorIds.has(BUTSHU_ID);
   const hasTequila = activeOperatorIds.has(TEQUILA_ID);
-  const hasShamareOverride = activeStatesByOperatorId.get(SHAMARE_ID)?.has(
-    `${SHAMARE_ID}|trading|\u4f4e\u8bed|2|1`,
+  const hasEbenholz = legacyExclusions.some(
+    (rule) => rule.charId === EBENHOLZ_ID,
   );
+  const hasKichi = legacyExclusions.some(
+    (rule) => rule.charId === KICHI_ID,
+  );
+  const hasShamareOverride = legacyExclusions.some(
+    (rule) =>
+      rule.charId === SHAMARE_ID &&
+      rule.id === `${SHAMARE_ID}|trading|\u4f4e\u8bed|2|1`,
+  );
+  const ebenholz = operators.find(
+    (operator) => operator.charId === EBENHOLZ_ID,
+  );
+  const kichi = operators.find((operator) => operator.charId === KICHI_ID);
+
+  if (
+    product === "lmd" &&
+    hasEbenholz &&
+    !Number.isFinite(facilityContext?.silentResonance)
+  ) {
+    return { error: "notSupported" };
+  }
 
   const highQualityOrderSkills =
     product === "lmd"
       ? [
-          ...exclusions.filter(
-            (rule) =>
-              isTimeDependentOrderProbability(rule) &&
-              !(hasShamareOverride && rule.charId === SHAMARE_ID),
+          ...legacyExclusions.filter(
+            (rule) => isTimeDependentOrderProbability(rule),
           ),
           ...unmodeledHighQualityOrderSkills,
         ]
       : [];
   const supportedExclusionIds = new Set([
     ...highQualityOrderSkills.map((rule) => rule.id),
-    ...exclusions
+    ...legacyExclusions
       .filter(
         (rule) =>
-          (product === "orundum" && isLmdOnlyExclusion(rule)) ||
-          rule.charId === BUTSHU_ID ||
-          rule.charId === TEQUILA_ID ||
-          rule.charId === CLOSURE_ID ||
-          rule.charId === SHAMARE_ID ||
-          rule.id === DEGENBRECHER_CHAMPION_SKILL_ID ||
-          isArchetDormitoryOrderExclusion(rule) ||
-          isHarmlessExclusion(rule),
+           (product === "orundum" && isLmdOnlyExclusion(rule)) ||
+           rule.charId === BUTSHU_ID ||
+           rule.charId === TEQUILA_ID ||
+           rule.charId === CLOSURE_ID ||
+           rule.charId === SHAMARE_ID ||
+           (product === "lmd" &&
+             (rule.charId === EBENHOLZ_ID || rule.charId === KICHI_ID)) ||
+           rule.id === DEGENBRECHER_CHAMPION_SKILL_ID ||
+           isArchetDormitoryOrderExclusion(rule) ||
+           isHarmlessExclusion(rule),
       )
       .map((rule) => rule.id),
   ]);
 
-  if (exclusions.some((rule) => !supportedExclusionIds.has(rule.id))) {
+  if (
+    legacyExclusions.some((rule) => !supportedExclusionIds.has(rule.id))
+  ) {
     return { error: "notSupported" };
   }
 
   let conditionalOrderBonus = 0;
-  for (const exclusion of exclusions) {
+  for (const exclusion of legacyExclusions) {
     if (!isArchetDormitoryOrderExclusion(exclusion)) {
       continue;
     }
@@ -726,7 +777,7 @@ function createTradingContext(operators, product, facilityContext) {
       continue;
     }
 
-    const externalBonus = getExternalOrderBonus(
+    const externalBonus = getLegacyExternalOrderBonus(
       rule,
       facilityContext,
       operators,
@@ -744,11 +795,17 @@ function createTradingContext(operators, product, facilityContext) {
     directRules,
     hasButshu,
     hasClosure,
-    hasDegenbrecherChampion: exclusions.some(
+    hasDegenbrecherChampion: legacyExclusions.some(
       (rule) => rule.id === DEGENBRECHER_CHAMPION_SKILL_ID,
     ),
+    ebenholzOrderBonus: hasEbenholz
+      ? Math.floor(
+          facilityContext.silentResonance / (ebenholz?.elite >= 2 ? 2 : 4),
+        )
+      : 0,
     hasShamareOverride,
     hasTequila,
+    kichiTeammateBonus: hasKichi ? (kichi?.elite >= 2 ? 20 : 10) : 0,
     highQualityOrderSkills,
     sameRoomRules,
     externalOrderBonusByRuleId,
@@ -795,6 +852,10 @@ function calculateLocalOrderBonus(context, operators, product) {
   let result =
     Number(context.conditionalOrderBonus || 0) +
     getDegenbrecherChampionBonus(context);
+  result += Number(context.ebenholzOrderBonus || 0);
+  result +=
+    Number(context.kichiTeammateBonus || 0) *
+    Math.max(0, operatorIds.length - 1);
   const maxRules = new Map();
 
   for (const rule of context.directRules) {
@@ -837,18 +898,11 @@ function getOrderDistribution(context, stationLevel) {
     return ORDER_DISTRIBUTION_BY_LEVEL[stationLevel] || null;
   }
 
-  if (context.hasButshu) {
-    return null;
-  }
-
   if (stationLevel !== 3) {
     return null;
   }
 
   const highQualityVariants = highQualitySkills
-    .filter(
-      (rule) => !(context.hasShamareOverride && rule.charId === SHAMARE_ID),
-    )
     .map(getHighQualityOrderProbabilityVariant);
   if (highQualityVariants.some((variant) => variant === null)) {
     return null;
@@ -874,11 +928,10 @@ function getOrderDistribution(context, stationLevel) {
   if (alphaCount === 0) {
     return ORDER_DISTRIBUTION_BY_LEVEL[stationLevel] || null;
   }
-  if (
-    alphaCount > 1 ||
-    context.hasShamareOverride ||
-    (context.hasButshu && context.activeOperatorIds.has(SHAMARE_ID))
-  ) {
+  if (alphaCount > 2) {
+    return null;
+  }
+  if (alphaCount === 2) {
     return Object.freeze([0.13, 0.22, 0.65]);
   }
   return Object.freeze([0.15, 0.3, 0.55]);

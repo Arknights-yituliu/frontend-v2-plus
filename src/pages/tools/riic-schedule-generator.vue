@@ -161,6 +161,10 @@ const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
 const RIIC_SCHEDULE_DRAFT_VERSION = 25;
 const ROOM_STAFFING_CANDIDATE_PAGE_SIZE = 24;
 const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "10";
+const RIIC_SCHEDULING_EXCLUDED_OPERATOR_IDS = new Set([
+  "char_1001_amiya2",
+  "char_1037_amiya3",
+]);
 const RIIC_AUTOMATIC_SEARCH_CONFIGS = Object.freeze({
   fast: {
     selectionBeamLimit: 8,
@@ -1039,19 +1043,26 @@ const riicTrainingMode = computed(() =>
   treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
 );
 const riicMatchingRoster = computed(() => {
-  if (ownedOperators.value.length === 0) {
+  const schedulingOperators = ownedOperators.value.filter(
+    (operator) =>
+      !RIIC_SCHEDULING_EXCLUDED_OPERATOR_IDS.has(
+        String(operator?.charId || "").trim(),
+      ),
+  );
+
+  if (schedulingOperators.length === 0) {
     return null;
   }
 
   if (riicTrainingMode.value === "ideal") {
     return createRiicIdealTrainingRoster(
-      ownedOperators.value,
+      schedulingOperators,
       RIIC_BASELINE_SKILL_RULES,
       idealTrainingRaritySelection.value,
     ).operators;
   }
 
-  return ownedOperators.value;
+  return schedulingOperators;
 });
 const riicLayer3RuleChecks = computed(() => {
   if (!confirmedLayoutPlan.value || !riicMatchingRoster.value) {
