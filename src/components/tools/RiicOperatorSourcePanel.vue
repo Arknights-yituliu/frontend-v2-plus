@@ -6,14 +6,6 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
-  manualOperatorSourceStatus: {
-    type: Object,
-    default: () => ({}),
-  },
-  manualSourceEnabled: {
-    type: Boolean,
-    default: false,
-  },
   customOperatorSourceStatuses: {
     type: Array,
     default: () => [],
@@ -50,7 +42,6 @@ const props = defineProps({
 
 const emit = defineEmits([
   "open-skland",
-  "open-manual",
   "select-source",
   "open-import-panel",
   "select-import-type",
@@ -70,15 +61,6 @@ function handleSklandClick() {
   }
 
   emit("open-skland");
-}
-
-function handleManualClick() {
-  if (props.manualOperatorSourceStatus.available) {
-    emit("select-source", "manual");
-    return;
-  }
-
-  emit("open-manual");
 }
 
 function openMaaUpload() {
@@ -180,39 +162,7 @@ function getCustomSourceTitle(source) {
         </button>
       </div>
 
-      <div
-        v-if="manualSourceEnabled"
-        class="operator-source-choice manual-operator-source-choice"
-      >
-        <button
-          type="button"
-          class="sync-source-action"
-          :class="{ active: manualOperatorSourceStatus.active }"
-          :aria-pressed="manualOperatorSourceStatus.active"
-          :disabled="operatorSourceStates.manual?.loading"
-          @click="handleManualClick"
-        >
-          <span class="operator-source-action-head">
-            <v-icon icon="mdi-account-edit-outline" size="22"></v-icon>
-            <small
-              v-if="manualOperatorSourceStatus.active"
-              class="operator-source-current-tag"
-            >
-              当前数据源
-            </small>
-          </span>
-          <span>{{ manualOperatorSourceStatus.title }}</span>
-          <small>{{ manualOperatorSourceStatus.detail }}</small>
-        </button>
-        <button
-          type="button"
-          class="operator-source-text-action"
-          :disabled="operatorSourceStates.manual?.loading"
-          @click.stop="emit('open-manual')"
-        >
-          编辑
-        </button>
-      </div>
+      <slot name="extra-source-choice"></slot>
 
       <div
         v-for="item in customOperatorSourceStatuses"
@@ -363,10 +313,6 @@ function getCustomSourceTitle(source) {
 }
 
 .skland-operator-source-choice {
-  grid-column: span 3;
-}
-
-.manual-operator-source-choice {
   grid-column: span 3;
 }
 
@@ -611,9 +557,6 @@ function getCustomSourceTitle(source) {
     grid-column: span 2;
   }
 
-  .manual-operator-source-choice {
-    grid-column: span 2;
-  }
 }
 
 @media (max-width: 560px) {
@@ -622,7 +565,6 @@ function getCustomSourceTitle(source) {
   }
 
   .skland-operator-source-choice,
-  .manual-operator-source-choice,
   .operator-source-choice,
   .operator-source-add-card {
     grid-column: span 1;

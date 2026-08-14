@@ -1,6 +1,7 @@
 <script setup>
 import {
   computed,
+  defineAsyncComponent,
   nextTick,
   onBeforeUnmount,
   onMounted,
@@ -386,6 +387,14 @@ const copiedScheduleRoomOperators = ref(null);
 const copiedScheduleShiftOperators = ref(null);
 const scheduleRoomEditorOperatorInput = ref("");
 const manualOperatorEditorEnabled = import.meta.env.DEV;
+const RiicManualOperatorSourceChoice = import.meta.env.DEV
+  ? defineAsyncComponent(
+      () =>
+        import(
+          "/src/components/tools/RiicManualOperatorSourceChoice.vue"
+        ),
+    )
+  : null;
 const {
   yituliuTokenInput,
   yituliuSourceLabelInput,
@@ -7131,8 +7140,6 @@ onBeforeUnmount(() => {
         <section class="schedule-generation-data-source-module">
           <RiicOperatorSourcePanel
             :skland-operator-source-status="sklandOperatorSourceStatus"
-            :manual-operator-source-status="manualOperatorSourceStatus"
-            :manual-source-enabled="manualOperatorEditorEnabled"
             :custom-operator-source-statuses="customOperatorSourceStatuses"
             :operator-source-states="operatorSourceStates"
             :custom-source-import-panel-open="customSourceImportPanelOpen"
@@ -7142,7 +7149,6 @@ onBeforeUnmount(() => {
             :yituliu-source-label="yituliuSourceLabelInput"
             :max-custom-sources="RIIC_MAX_CUSTOM_OPERATOR_SOURCES"
             @open-skland="openSklandImport"
-            @open-manual="router.push('/dev/operator')"
             @select-source="
               setActiveOperatorSource($event, { notify: true })
             "
@@ -7153,7 +7159,23 @@ onBeforeUnmount(() => {
             @delete-source="deleteCustomOperatorSource"
             @update:yituliu-token="yituliuTokenInput = $event"
             @update:yituliu-source-label="yituliuSourceLabelInput = $event"
-          />
+          >
+            <template
+              v-if="manualOperatorEditorEnabled"
+              #extra-source-choice
+            >
+              <RiicManualOperatorSourceChoice
+                :status="manualOperatorSourceStatus"
+                :loading="operatorSourceStates.manual?.loading"
+                @open-editor="router.push('/dev/operator')"
+                @select-source="
+                  setActiveOperatorSource(OPERATOR_SOURCE_KEYS.manual, {
+                    notify: true,
+                  })
+                "
+              />
+            </template>
+          </RiicOperatorSourcePanel>
         </section>
 
         <section
