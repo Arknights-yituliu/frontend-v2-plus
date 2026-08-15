@@ -175,8 +175,8 @@ function getSelectedEntries(group, state, selections) {
   return selectedEntries;
 }
 
-function appendMissingFallbackTeams(groups, candidateStatesByGroupId, selections) {
-  const nextSelections = Object.fromEntries(
+function cloneSelections(selections) {
+  return Object.fromEntries(
     Object.entries(selections || {}).map(([groupId, cohorts]) => [
       groupId,
       Object.fromEntries(
@@ -187,35 +187,6 @@ function appendMissingFallbackTeams(groups, candidateStatesByGroupId, selections
       ),
     ]),
   );
-
-  for (const group of groups || []) {
-    const state = candidateStatesByGroupId?.[group.id];
-    if (state?.status !== "ready") {
-      continue;
-    }
-
-    const groupSelections = { ...(nextSelections[group.id] || {}) };
-    for (const cohort of state.cohorts || []) {
-      const candidateKeys = [...(groupSelections[cohort.id] || [])];
-      const availableFallbackCandidates =
-        cohort.manualFallbackCandidates || [];
-
-      while (candidateKeys.length < Number(cohort.teamCount || 0)) {
-        const fallbackCandidate = availableFallbackCandidates.find(
-          (candidate) => !candidateKeys.includes(candidate.key),
-        );
-        if (!fallbackCandidate) {
-          break;
-        }
-        candidateKeys.push(fallbackCandidate.key);
-      }
-
-      groupSelections[cohort.id] = candidateKeys;
-    }
-    nextSelections[group.id] = groupSelections;
-  }
-
-  return nextSelections;
 }
 
 function getSelectedCoreOperatorIds(
@@ -339,9 +310,9 @@ export function withRiicIdleFillOperators(selectedEntries, idleFillOperators) {
 }
 
 /**
- * L71: Add pure-fallback teams for every unfilled cohort, then preserve the
- * L70 fallback assignments while filling remaining ordinary slots with idle
- * operators. It never changes L70's named-team choices.
+ * L71: Preserve L70's selected teams while filling remaining ordinary slots
+ * with idle operators. Candidate-team selection, including pure fallback
+ * teams, belongs to L70.
  */
 export function buildRiicTailFillResult({
   groups = [],
@@ -354,11 +325,7 @@ export function buildRiicTailFillResult({
   fiammettaControlUsage = null,
 } = {}) {
   const planningGroups = getRiicAutomaticRoomGroupPlanningOrder(groups);
-  const nextSelections = appendMissingFallbackTeams(
-    planningGroups,
-    candidateStatesByGroupId,
-    selections,
-  );
+  const nextSelections = cloneSelections(selections);
   const controlCenterOperatorIdSet = new Set(
     controlCenterOperatorIds || [],
   );

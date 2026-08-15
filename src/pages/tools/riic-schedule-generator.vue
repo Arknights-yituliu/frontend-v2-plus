@@ -160,18 +160,24 @@ const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
   "riic_schedule_generator_to_legacy_editor_v1";
 const RIIC_SCHEDULE_DRAFT_VERSION = 25;
 const ROOM_STAFFING_CANDIDATE_PAGE_SIZE = 24;
-const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "10";
+const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "13";
 const RIIC_SCHEDULING_EXCLUDED_OPERATOR_IDS = new Set([
   "char_1001_amiya2",
   "char_1037_amiya3",
 ]);
 const RIIC_AUTOMATIC_SEARCH_CONFIGS = Object.freeze({
   fast: {
-    selectionBeamLimit: 8,
+    selectionBeamLimit: 6,
+    selectionOptionLimit: 6,
+    selectionRepresentativeLimit: 6,
+    selectionBatchSize: 2,
     fallbackPlanLimit: 12,
   },
   deep: {
-    selectionBeamLimit: 32,
+    selectionBeamLimit: 12,
+    selectionOptionLimit: 12,
+    selectionRepresentativeLimit: 12,
+    selectionBatchSize: 2,
     fallbackPlanLimit: 12,
   },
 });
@@ -2710,6 +2716,9 @@ function createRiicAutomaticScheduleWorkerInput(searchConfig) {
     controlCenterOperatorIds: [...controlCenterSelectedOperatorIds.value],
     controlCenterRuntimeContext: controlCenterRuntimeContext.value,
     selectionBeamLimit: searchConfig.selectionBeamLimit,
+    selectionOptionLimit: searchConfig.selectionOptionLimit,
+    selectionRepresentativeLimit: searchConfig.selectionRepresentativeLimit,
+    selectionBatchSize: searchConfig.selectionBatchSize,
     fallbackPlanLimit: searchConfig.fallbackPlanLimit,
     ownedOperators: riicMatchingRoster.value,
     controlCenterSegments: controlCenterFinalRoleState.value.segments,

@@ -19,6 +19,12 @@ try {
   const {
     planRiicAutomaticRoomSelections,
   } = await vite.ssrLoadModule("/src/utils/riic/l70-selection-planner.js");
+  const {
+    buildRiicAutomaticRoomGroupSelections,
+  } = await vite.ssrLoadModule("/src/utils/riic/l70-automatic-room-selection.js");
+  const {
+    buildRiicTailFillResult,
+  } = await vite.ssrLoadModule("/src/utils/riic/l71-idle-fill.js");
 
 const candidate = {
   key: "candidate-a",
@@ -220,6 +226,266 @@ const automaticFallbackPlan = planRiicAutomaticRoomSelections({
 });
 assert.equal(automaticFallbackPlan.bestPlan.selections.length, 4);
 
+const twoStepLookaheadPlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "two-step-lookahead",
+      cohortId: "two-step-lookahead",
+      cohortKey: "two-step-lookahead",
+      teamCount: 2,
+    },
+  ],
+  beamLimit: 1,
+  optionLimit: 2,
+  selectionBatchSize: 2,
+  collectDebug: true,
+  resolveTeamOptions: ({ selectedCandidateKeys }) => {
+    if (selectedCandidateKeys.length === 0) {
+      return [
+        {
+          key: "first-high",
+          candidateKey: "first-high",
+          claimedOperatorIds: ["first-high"],
+          baseRankingValue: 100,
+        },
+        {
+          key: "first-low",
+          candidateKey: "first-low",
+          claimedOperatorIds: ["first-low"],
+          baseRankingValue: 90,
+        },
+      ];
+    }
+
+    return selectedCandidateKeys.includes("first-low")
+      ? [
+          {
+            key: "second-bonus",
+            candidateKey: "second-bonus",
+            claimedOperatorIds: ["second-bonus"],
+            baseRankingValue: 50,
+          },
+        ]
+      : [
+          {
+            key: "second-flat",
+            candidateKey: "second-flat",
+            claimedOperatorIds: ["second-flat"],
+            baseRankingValue: 0,
+          },
+        ];
+  },
+});
+assert.deepEqual(
+  twoStepLookaheadPlan.bestPlan.selections.map(
+    (selection) => selection.option.candidateKey,
+  ),
+  ["first-low", "second-bonus"],
+);
+assert.deepEqual(
+  twoStepLookaheadPlan.debug?.planningBatches?.[0]?.stages.map(
+    (stage) => [stage.generatedPlanCount, stage.retainedPlanCount],
+  ),
+  [
+    [2, 2],
+    [2, 1],
+  ],
+);
+assert.deepEqual(
+  twoStepLookaheadPlan.debug?.planningBatches?.[0]?.retainedPlans?.[0]
+    ?.selections.map((selection) => selection.candidateKey),
+  ["first-low", "second-bonus"],
+);
+
+const diverseRoutePlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "diverse-route",
+      cohortId: "diverse-route",
+      cohortKey: "diverse-route",
+      teamCount: 1,
+    },
+  ],
+  beamLimit: 3,
+  optionLimit: 3,
+  representativeLimit: 2,
+  collectDebug: true,
+  getOptionDiversityKey: ({ option }) => option.candidateKey,
+  resolveTeamOptions: () => [
+    {
+      key: "card-a:fallback-1",
+      candidateKey: "card-a",
+      claimedOperatorIds: ["a-1"],
+      baseRankingValue: 100,
+    },
+    {
+      key: "card-a:fallback-2",
+      candidateKey: "card-a",
+      claimedOperatorIds: ["a-2"],
+      baseRankingValue: 99,
+    },
+    {
+      key: "card-a:fallback-3",
+      candidateKey: "card-a",
+      claimedOperatorIds: ["a-3"],
+      baseRankingValue: 98,
+    },
+    {
+      key: "card-b:fallback-1",
+      candidateKey: "card-b",
+      claimedOperatorIds: ["b-1"],
+      baseRankingValue: 70,
+    },
+  ],
+});
+assert.deepEqual(
+  diverseRoutePlan.debug?.planningBatches?.[0]?.retainedPlans.map((plan) =>
+    plan.selections[0]?.candidateKey,
+  ),
+  ["card-a", "card-a", "card-b"],
+);
+
+const twoLayerRepresentativePlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "two-layer-representative",
+      cohortId: "two-layer-representative",
+      cohortKey: "two-layer-representative",
+      teamCount: 2,
+    },
+  ],
+  beamLimit: 9,
+  optionLimit: 3,
+  representativeLimit: 3,
+  selectionBatchSize: 2,
+  collectDebug: true,
+  getOptionDiversityKey: ({ option }) => option.candidateKey,
+  resolveTeamOptions: ({ selectedCandidateKeys }) => {
+    const availableCandidates = ["card-a", "card-b", "card-c", "card-d"]
+      .filter((candidateKey) => !selectedCandidateKeys.includes(candidateKey));
+    return availableCandidates.flatMap((candidateKey, index) => {
+      const baseRankingValue = 100 - index * 10;
+      return candidateKey === "card-a"
+        ? [
+            {
+              key: "card-a:fallback-1",
+              candidateKey,
+              claimedOperatorIds: ["a-1"],
+              baseRankingValue,
+            },
+            {
+              key: "card-a:fallback-2",
+              candidateKey,
+              claimedOperatorIds: ["a-2"],
+              baseRankingValue: baseRankingValue - 1,
+            },
+          ]
+        : [
+            {
+              key: `${candidateKey}:fallback-1`,
+              candidateKey,
+              claimedOperatorIds: [`${candidateKey}-1`],
+              baseRankingValue,
+            },
+          ];
+    });
+  },
+});
+assert.deepEqual(
+  twoLayerRepresentativePlan.debug?.planningBatches?.[0]?.stages.map(
+    (stage) => [stage.generatedPlanCount, stage.retainedPlanCount],
+  ),
+  [
+    [3, 3],
+    [9, 9],
+  ],
+);
+
+const orderEquivalentPlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "left",
+      groupId: "same-group",
+      cohortId: "left",
+      cohortKey: "left",
+      teamCount: 1,
+    },
+    {
+      key: "right",
+      groupId: "same-group",
+      cohortId: "right",
+      cohortKey: "right",
+      teamCount: 1,
+    },
+  ],
+  beamLimit: 2,
+  optionLimit: 2,
+  representativeLimit: 2,
+  selectionBatchSize: 2,
+  collectDebug: true,
+  resolveTeamOptions: ({ cohort }) => [
+    {
+      key: `${cohort.key}:option`,
+      candidateKey: `${cohort.key}:card`,
+      claimedOperatorIds: [`${cohort.key}:operator`],
+      baseRankingValue: 10,
+    },
+  ],
+});
+assert.deepEqual(
+  orderEquivalentPlan.debug?.planningBatches?.[0]?.stages.map((stage) => [
+    stage.generatedPlanCount,
+    stage.uniquePlanCount,
+    stage.retainedPlanCount,
+  ]),
+  [
+    [2, 2, 2],
+    [2, 1, 1],
+  ],
+);
+
+const roomGroupOrderedPlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "first-room-group",
+      groupId: "first-room-group",
+      cohortId: "first-room-group",
+      cohortKey: "first-room-group",
+      teamCount: 2,
+    },
+    {
+      key: "second-room-group",
+      groupId: "second-room-group",
+      cohortId: "second-room-group",
+      cohortKey: "second-room-group",
+      teamCount: 1,
+    },
+  ],
+  beamLimit: 1,
+  optionLimit: 2,
+  representativeLimit: 2,
+  selectionBatchSize: 2,
+  resolveTeamOptions: ({ cohort, selectedCandidateKeys }) => {
+    const candidatePrefix =
+      cohort.groupId === "first-room-group" ? "first" : "second";
+    return ["a", "b", "c"]
+      .filter((suffix) => !selectedCandidateKeys.includes(`${candidatePrefix}-${suffix}`))
+      .map((suffix, index) => ({
+        key: `${candidatePrefix}-${suffix}`,
+        candidateKey: `${candidatePrefix}-${suffix}`,
+        claimedOperatorIds: [`${candidatePrefix}-${suffix}`],
+        baseRankingValue:
+          cohort.groupId === "second-room-group" ? 100 - index : 10 - index,
+      }));
+  },
+});
+assert.deepEqual(
+  roomGroupOrderedPlan.bestPlan.selections.map(
+    (selection) => selection.slot.groupId,
+  ),
+  ["first-room-group", "first-room-group", "second-room-group"],
+);
+
 const nightSmokeFallbackCandidate = {
   key: "night-smoke-fallback",
   fallback: {
@@ -286,6 +552,70 @@ assert.deepEqual(
 assert.equal(
   new Set(nightSmokeFallbackPlan.selectedOperatorIds).size,
   nightSmokeFallbackPlan.selectedOperatorIds.length,
+);
+
+const pureFallbackSelectionGroup = {
+  id: "pure-fallback-selection",
+  label: "Pure fallback selection",
+  facility: "trading",
+};
+const regularTeamCandidate = {
+  key: "regular-team",
+  name: "Regular team",
+  operatorIds: ["regular-core"],
+  sourceRoomType: "trading",
+  corePercent: 140,
+  localBonusPercent: 40,
+  fallback: { count: 0, candidateOperators: [] },
+};
+const pureFallbackTeamCandidate = {
+  key: "pure-fallback-team",
+  name: "Pure fallback team",
+  isManualFallbackTeam: true,
+  operatorIds: ["pure-fallback-core"],
+  sourceRoomType: "trading",
+  corePercent: 125,
+  localBonusPercent: 25,
+  fallback: { count: 0, candidateOperators: [] },
+};
+const pureFallbackCandidateStates = {
+  [pureFallbackSelectionGroup.id]: {
+    status: "ready",
+    cohorts: [
+      {
+        id: "trading:0",
+        teamCount: 2,
+        candidates: [regularTeamCandidate, pureFallbackTeamCandidate],
+        manualFallbackCandidates: [pureFallbackTeamCandidate],
+      },
+    ],
+  },
+};
+const pureFallbackAutomaticSelection =
+  buildRiicAutomaticRoomGroupSelections({
+    groups: [pureFallbackSelectionGroup],
+    candidateStatesByGroupId: pureFallbackCandidateStates,
+  });
+assert.deepEqual(
+  [
+    ...pureFallbackAutomaticSelection.selections[
+      pureFallbackSelectionGroup.id
+    ]["trading:0"],
+  ].sort(),
+  ["pure-fallback-team", "regular-team"],
+);
+const pureFallbackTailFill = buildRiicTailFillResult({
+  groups: [pureFallbackSelectionGroup],
+  candidateStatesByGroupId: pureFallbackCandidateStates,
+  selections: {
+    [pureFallbackSelectionGroup.id]: {
+      "trading:0": ["regular-team"],
+    },
+  },
+});
+assert.deepEqual(
+  pureFallbackTailFill.selections[pureFallbackSelectionGroup.id]["trading:0"],
+  ["regular-team"],
 );
 
   console.log("RIIC dynamic fallback checks passed.");

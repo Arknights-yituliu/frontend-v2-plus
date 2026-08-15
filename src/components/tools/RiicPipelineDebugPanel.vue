@@ -1352,6 +1352,74 @@ const droneTableDebug = computed(() => {
             </article>
           </details>
           <details
+            v-if="automaticGenerationDebugState.l70?.batchDiagnostics?.length"
+            class="pipeline-nested"
+          >
+            <summary>L70 两步搜索批次对照</summary>
+            <article
+              v-for="batch in automaticGenerationDebugState.l70
+                ?.batchDiagnostics || []"
+              :key="`l70-batch:${batch.batchIndex}`"
+              class="pipeline-actual-room"
+            >
+              <header>
+                <strong>批次 {{ batch.batchIndex + 1 }}</strong>
+                <span>
+                  连选 {{ batch.selectionCount }} 次，保留
+                  {{ batch.retainedPlans?.length || 0 }} 条路线
+                </span>
+              </header>
+              <p>
+                <span
+                  v-for="stage in batch.stages || []"
+                  :key="`l70-stage:${stage.roundIndex}`"
+                >
+                  第 {{ stage.roundIndex + 1 }} 次：产生
+                  {{ stage.generatedPlanCount }}，去重后
+                  {{ stage.uniquePlanCount }}，保留
+                  {{ stage.retainedPlanCount }}
+                </span>
+              </p>
+              <ul class="pipeline-list">
+                <li
+                  v-for="plan in batch.retainedPlans || []"
+                  :key="plan.key"
+                >
+                  <strong>路线 {{ plan.rank }}</strong>
+                  <span>
+                    总评分 {{ formatNumber(plan.rankingValue) }}，
+                    基础 {{ formatNumber(plan.baseRankingValue) }}
+                  </span>
+                  <span
+                    v-if="plan.priorSelections?.length"
+                    class="pipeline-selection-history"
+                  >
+                    前序：
+                    <span
+                      v-for="selection in plan.priorSelections"
+                      :key="`${plan.key}:prior:${selection.selectionKey}:${selection.candidateKey}`"
+                    >
+                      {{ selection.groupId }} / {{ selection.cohortId }}：
+                      {{ selection.candidateName || selection.candidateKey }}
+                      （{{ getCandidateNames(selection.operatorIds) }}，
+                      补位 {{ formatNumber(selection.fallbackPlanScore) }}）
+                    </span>
+                  </span>
+                  <span>本批：</span>
+                  <span
+                    v-for="selection in plan.selections || []"
+                    :key="`${plan.key}:${selection.selectionKey}:${selection.candidateKey}`"
+                  >
+                    {{ selection.groupId }} / {{ selection.cohortId }}：
+                    {{ selection.candidateName || selection.candidateKey }}
+                    （{{ getCandidateNames(selection.operatorIds) }}，
+                    补位 {{ formatNumber(selection.fallbackPlanScore) }}）
+                  </span>
+                </li>
+              </ul>
+            </article>
+          </details>
+          <details
             v-if="automaticGenerationDebugState.l70?.bestPlan?.activeRosterEffects?.summaries?.length"
             class="pipeline-nested"
           >

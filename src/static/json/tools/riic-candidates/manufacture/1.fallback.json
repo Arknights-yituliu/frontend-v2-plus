@@ -65,7 +65,8 @@
       "rates": [
         {
           "elite": 1,
-          "percent": 0,
+          "slotCount": 3,
+          "percent": 30,
           "tags": [
             "automation"
           ]
