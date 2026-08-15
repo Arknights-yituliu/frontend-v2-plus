@@ -290,6 +290,9 @@ export function buildRiicAutomaticRoomGroupSelections({
   controlCenterOperatorIds = [],
   controlCenterRuntimeContext,
   selectionBeamLimit,
+  selectionOptionLimit,
+  selectionRepresentativeLimit,
+  selectionBatchSize,
   fallbackPlanLimit,
   fiammettaRecovery,
   ownedOperators = [],
@@ -321,6 +324,11 @@ export function buildRiicAutomaticRoomGroupSelections({
       (charId) => charId !== recovery.targetOperatorId,
     ),
     beamLimit: selectionBeamLimit,
+    optionLimit: selectionOptionLimit,
+    representativeLimit: selectionRepresentativeLimit,
+    selectionBatchSize,
+    getOptionDiversityKey: ({ cohort, selectionKey, option }) =>
+      `${cohort.key}:${selectionKey}:${option.candidateKey}`,
     resolveTeamOptions: ({
       cohort,
       selectionKey,
@@ -502,6 +510,9 @@ export function buildRiicAutomaticRoomGroupSelections({
             plannerOptionTraces,
             plannerOptionEvaluations,
           })
+        : [],
+      batchDiagnostics: collectPlanningDebug
+        ? plannerDebug?.planningBatches || []
         : [],
     },
   };

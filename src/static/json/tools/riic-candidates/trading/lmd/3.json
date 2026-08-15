@@ -1469,6 +1469,24 @@
       "calculationStatus": "estimated"
     },
     {
+      "id": "manual-trading-lmd-closure-e2-fallback-l3",
+      "variantGroupId": "family-closure-fallback",
+      "name": "可露希尔 E2 + 2位补位",
+      "members": [
+        {
+          "name": "可露希尔",
+          "elite": 2
+        }
+      ],
+      "teamCalculation": {
+        "type": "closureSpecialOrder",
+        "sourceMember": "可露希尔"
+      },
+      "efficiency": 10,
+      "sortScore": 0,
+      "calculationStatus": "estimated"
+    },
+    {
       "id": "manual-trading-lmd-closure-e2-vigil-e2-fallback-l3",
       "variantGroupId": "family-closure-vigil-fallback",
       "name": "可露希尔 E2 + 伺夜 E2 + 1位补位",
