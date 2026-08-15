@@ -130,10 +130,16 @@ function getReferenceDailyRate(room, meta) {
   }
 
   const facility = String(room?.facility || "").trim();
+  const product = String(room?.product || "").trim();
   const stationLevel = Number(room?.stationLevel);
 
   if (meta.dailyRate !== undefined) {
-    return stationLevel === 3 ||
+    const supportsDailyRate =
+      facility === "trading" &&
+      product === "orundum" &&
+      [1, 2, 3].includes(stationLevel);
+    return supportsDailyRate ||
+      stationLevel === 3 ||
       facility === "hire" ||
       facility === "office"
       ? Number(meta.dailyRate)

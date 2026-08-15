@@ -160,7 +160,7 @@ const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
   "riic_schedule_generator_to_legacy_editor_v1";
 const RIIC_SCHEDULE_DRAFT_VERSION = 25;
 const ROOM_STAFFING_CANDIDATE_PAGE_SIZE = 24;
-const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "13";
+const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "14";
 const RIIC_SCHEDULING_EXCLUDED_OPERATOR_IDS = new Set([
   "char_1001_amiya2",
   "char_1037_amiya3",
@@ -291,11 +291,20 @@ function formatRiicControlCenterRoomEffect(effect) {
     return "";
   }
 
+  const targetOperatorIds = (effect?.target?.operatorIds || [])
+    .map((operatorId) => String(operatorId || "").trim())
+    .filter(Boolean);
+  const targetOperatorName =
+    targetOperatorIds.length === 1
+      ? String(operatorTableV2?.[targetOperatorIds[0]]?.name || "").trim()
+      : "";
   const targetLabel =
     String(effect?.target?.scope || "").trim() === "operators"
-      ? "\u6307\u5b9a\u5e72\u5458 "
+      ? `${targetOperatorName || "\u6307\u5b9a\u5e72\u5458"}\u5728`
       : "";
-  return `${roomLabel} ${targetLabel}${bonusPercent >= 0 ? "+" : ""}${bonusPercent}%`;
+  return `${targetLabel}${roomLabel}${targetLabel ? "\u65f6 " : " "}${
+    bonusPercent >= 0 ? "+" : ""
+  }${bonusPercent}%`;
 }
 
 const operatorNameToCharId = new Map(
@@ -2735,6 +2744,7 @@ function createRiicAutomaticScheduleWorkerInput(searchConfig) {
     candidateStatesByGroupId: roomGroupCandidateStates.value,
     controlCenterOperatorIds: [...controlCenterSelectedOperatorIds.value],
     controlCenterRuntimeContext: controlCenterRuntimeContext.value,
+    layoutFacts: activeLayoutFacilityCounts.value,
     selectionBeamLimit: searchConfig.selectionBeamLimit,
     selectionOptionLimit: searchConfig.selectionOptionLimit,
     selectionRepresentativeLimit: searchConfig.selectionRepresentativeLimit,
@@ -4237,6 +4247,7 @@ const riicSchedulePreview = computed(() =>
     preview: riicSchedulePreviewBase.value,
     ownedOperators: riicMatchingRoster.value || [],
     resourceFacts: riicPerceptionResourceFacts.value,
+    layoutFacts: activeLayoutFacilityCounts.value,
     resolvedSkills: riicResolvedSkills.value,
   }),
 );

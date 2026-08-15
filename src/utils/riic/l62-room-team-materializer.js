@@ -1,4 +1,5 @@
 import {
+  getRiicAutomationOperatorLayer3Bonus,
   recalculateRiicAutomationManufacture,
 } from "./l62-automation-calculation.js";
 import {
@@ -16,6 +17,9 @@ import {
 import {
   getRiicControlCenterRoomAdjustment,
 } from "./l51-control-effects.js";
+import {
+  getRiicLayer3OperatorLocalBonus,
+} from "./l30-rules.js";
 import {
   mergeRiicUpgradeRequirements,
 } from "./P00-upgrade-requirements.js";
@@ -35,7 +39,10 @@ const PERCENT_FIELD_BY_ROOM_TYPE = Object.freeze({
 export function materializeRiicRoomTeamCandidate(
   candidate,
   fallbackOperators,
-  { controlCenterRuntimeContext: runtimeContext } = {},
+  {
+    controlCenterRuntimeContext: runtimeContext,
+    automationRuntimeContext,
+  } = {},
 ) {
   const operators = fallbackOperators || [];
   const ordinaryFallbackOperators = operators.filter(
@@ -57,11 +64,45 @@ export function materializeRiicRoomTeamCandidate(
       []),
     ...operators.map((operator) => operator?.upgradeRequirement),
   ]);
+  const dynamicAutomationCoreLayer3BonusPercent = automationRuntimeContext
+    ? (candidate?.operatorIds || []).reduce((total, operatorId) => {
+        const bonus = getRiicAutomationOperatorLayer3Bonus({
+          operatorId,
+          scope: candidate?.candidateScope,
+          ownedOperators: automationRuntimeContext.ownedOperators,
+          layoutFacts: automationRuntimeContext.layoutFacts,
+          effectivePowerPlantCount:
+            automationRuntimeContext.effectivePowerPlantCount,
+          getLayer3OperatorLocalBonus: getRiicLayer3OperatorLocalBonus,
+        });
+        return total + Number(bonus ?? 0);
+      }, Number(candidate?.layer3CandidateLocalBonusPercent || 0))
+    : Number(candidate?.coreLayer3BonusPercent || 0);
+  const dynamicAutomationFallbackOperators = automationRuntimeContext
+    ? operators.map((operator) => {
+        const layer3Bonus = getRiicAutomationOperatorLayer3Bonus({
+          operatorId: operator?.charId,
+          scope: candidate?.candidateScope,
+          ownedOperators: automationRuntimeContext.ownedOperators,
+          layoutFacts: automationRuntimeContext.layoutFacts,
+          effectivePowerPlantCount:
+            automationRuntimeContext.effectivePowerPlantCount,
+          getLayer3OperatorLocalBonus: getRiicLayer3OperatorLocalBonus,
+        });
+        return layer3Bonus === null
+          ? operator
+          : {
+              ...operator,
+              layer3Bonus,
+            };
+      })
+    : operators;
   const automationResult = recalculateRiicAutomationManufacture({
     scope: candidate?.candidateScope,
     coreBaseBonusPercent: candidate?.coreBaseBonusPercent,
-    coreLayer3BonusPercent: candidate?.coreLayer3BonusPercent,
-    fallbackOperators: operators,
+    coreLayer3BonusPercent: dynamicAutomationCoreLayer3BonusPercent,
+    fallbackOperators: dynamicAutomationFallbackOperators,
+    runtimeContext: automationRuntimeContext,
   });
   const butshuResult = recalculateRiicButshuCandidate({
     candidate,

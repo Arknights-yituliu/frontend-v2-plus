@@ -221,9 +221,6 @@ export function calculateRiicTradingDrone(facility, operators) {
   }
 
   if (product === "orundum") {
-    if (stationLevel !== 3) {
-      return createFailure("unsupportedStationLevel");
-    }
     const orundumOutput = ORUNDUM_PER_HOUR * (DRONE_SECONDS / 3600);
     return createSuccess({
       orundumOutput,

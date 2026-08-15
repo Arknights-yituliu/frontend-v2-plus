@@ -1,4 +1,11 @@
 import {
+  getRiicAutomationOperatorLayer3Bonus,
+  recalculateRiicAutomationManufacture,
+} from "./l62-automation-calculation.js";
+import {
+  getRiicLayer3OperatorLocalBonus,
+} from "./l30-rules.js";
+import {
   recalculateRiicClosureSpecialOrder,
 } from "./l62-closure-calculation.js";
 import {
@@ -20,6 +27,7 @@ const GENERIC_ROOM_TYPES = new Set([
   "hire",
 ]);
 const PRODUCTIVE_ROOM_TYPES = new Set(["manufacture", "trading"]);
+const AUTOMATION_POWER_SUPPORT_OPERATOR_ID = "char_1027_greyy2";
 
 function toFinitePercent(value) {
   if (value === null || value === undefined || value === "") {
@@ -56,6 +64,142 @@ function getStaffingBonusPercent({ facility, operators = [] } = {}) {
   return PRODUCTIVE_ROOM_TYPES.has(normalizeRoomType(facility))
     ? (operators || []).length
     : 0;
+}
+
+function isAutomationCandidate(candidate) {
+  const candidateOperators = [
+    ...(candidate?.operators || []),
+    ...(candidate?.fallback?.operators || []),
+  ];
+  return Boolean(
+    candidate?.automationCalculation ||
+      String(candidate?.variantGroupId || "").includes("automation") ||
+      candidateOperators.some((operator) =>
+        (operator?.tags || []).some(
+          (tag) => String(tag || "").trim() === "automation",
+        ),
+      ),
+  );
+}
+
+function getAutomationSupportState({
+  state,
+  layoutFacts,
+  ownedOperators,
+} = {}) {
+  const powerPlantCount = Number(layoutFacts?.powerPlantCount);
+  if (!Number.isFinite(powerPlantCount)) {
+    return null;
+  }
+
+  const supportOperatorUnlocked = (ownedOperators || []).some(
+    (operator) =>
+      String(operator?.charId || "").trim() ===
+        AUTOMATION_POWER_SUPPORT_OPERATOR_ID &&
+      Number(operator?.elite ?? operator?.evolvePhase ?? 0) >= 2,
+  );
+  const supportOperatorActive =
+    supportOperatorUnlocked &&
+    (state?.rooms || []).some(
+      (room) =>
+        room?.facility === "power" &&
+        (room?.operators || []).some(
+          (operator) =>
+            String(operator?.charId || "").trim() ===
+            AUTOMATION_POWER_SUPPORT_OPERATOR_ID,
+        ),
+    );
+
+  return {
+    layoutFacts: layoutFacts || {},
+    ownedOperators,
+    powerPlantCount,
+    effectivePowerPlantCount:
+      powerPlantCount + (supportOperatorActive ? 1 : 0),
+    supportOperatorId: supportOperatorActive
+      ? AUTOMATION_POWER_SUPPORT_OPERATOR_ID
+      : "",
+  };
+}
+
+function recalculateRiicPreviewAutomationCandidate({
+  candidate,
+  automationRuntimeContext,
+} = {}) {
+  if (!isAutomationCandidate(candidate)) {
+    return null;
+  }
+  if (
+    !automationRuntimeContext?.layoutFacts ||
+    !Array.isArray(automationRuntimeContext?.ownedOperators) ||
+    !Number.isFinite(
+      Number(automationRuntimeContext?.effectivePowerPlantCount),
+    )
+  ) {
+    return null;
+  }
+
+  const scope = candidate?.candidateScope;
+  const fallbackOperatorIds = new Set(
+    [
+      ...(candidate?.fallback?.fallbackOperatorIds || []),
+      ...(candidate?.fallback?.operators || []).map(
+        (operator) => operator?.charId,
+      ),
+    ]
+      .map((operatorId) => String(operatorId || "").trim())
+      .filter(Boolean),
+  );
+  const dynamicCoreLayer3BonusPercent = (
+    candidate?.operatorIds || []
+  )
+    .filter(
+      (operatorId) =>
+        !fallbackOperatorIds.has(String(operatorId || "").trim()),
+    )
+    .reduce(
+      (total, operatorId) =>
+        total +
+        Number(
+          getRiicAutomationOperatorLayer3Bonus({
+            operatorId,
+            scope,
+            ownedOperators: automationRuntimeContext?.ownedOperators,
+            layoutFacts: automationRuntimeContext?.layoutFacts,
+            effectivePowerPlantCount:
+              automationRuntimeContext?.effectivePowerPlantCount,
+            getLayer3OperatorLocalBonus: getRiicLayer3OperatorLocalBonus,
+          }) ?? 0,
+        ),
+      Number(candidate?.layer3CandidateLocalBonusPercent || 0),
+    );
+  const dynamicFallbackOperators = (
+    candidate?.fallback?.operators || []
+  ).map((operator) => {
+    const layer3Bonus = getRiicAutomationOperatorLayer3Bonus({
+      operatorId: operator?.charId,
+      scope,
+      ownedOperators: automationRuntimeContext?.ownedOperators,
+      layoutFacts: automationRuntimeContext?.layoutFacts,
+      effectivePowerPlantCount:
+        automationRuntimeContext?.effectivePowerPlantCount,
+      getLayer3OperatorLocalBonus: getRiicLayer3OperatorLocalBonus,
+    });
+    return layer3Bonus === null
+      ? operator
+      : {
+          ...operator,
+          layer3Bonus,
+        };
+  });
+
+  return recalculateRiicAutomationManufacture({
+    scope,
+    coreBaseBonusPercent: candidate?.coreBaseBonusPercent,
+    coreLayer3BonusPercent: dynamicCoreLayer3BonusPercent,
+    fallbackOperators: dynamicFallbackOperators,
+    runtimeContext: automationRuntimeContext,
+  });
 }
 
 function getCandidateSpecificCalculationReason(candidate) {
@@ -199,6 +343,7 @@ export function settleRiicPreviewRoomEfficiency({
   expectedSlots,
   product,
   resolvedSkills,
+  automationRuntimeContext,
 } = {}) {
   const candidateTotal = toFinitePercent(candidateTotalPercent);
   const estimatedControlCenterOperatorBonus = toFinitePercent(
@@ -250,6 +395,13 @@ export function settleRiicPreviewRoomEfficiency({
           staffingBonusPercent,
         })
       : null;
+  const automationCalculation =
+    status === "calculated" && !usesFinalRosterCalculation
+      ? recalculateRiicPreviewAutomationCandidate({
+          candidate,
+          automationRuntimeContext,
+        })
+      : null;
   const actualValue =
     status === "calculated"
       ? usesFinalRosterCalculation
@@ -257,6 +409,11 @@ export function settleRiicPreviewRoomEfficiency({
         : closureCalculation
         ? Number(closureCalculation.tradeEquivalentTotalPercent || 0) +
           (actualControlCenterFacilityBonus || 0)
+        : automationCalculation
+        ? Number(automationCalculation.totalPercent || 0) +
+          staffingBonusPercent +
+          (actualControlCenterFacilityBonus || 0) +
+          (actualControlCenterOperatorBonus || 0)
         : candidateTotal -
           (estimatedControlCenterOperatorBonus || 0) +
           staffingBonusPercent +
@@ -288,12 +445,21 @@ export function settleRiicPreviewRoomEfficiency({
               closureCalculation,
             }
           : {}),
+        ...(automationCalculation
+          ? {
+              automationCalculation,
+            }
+          : {}),
       },
     },
   };
 }
 
-function applyRiicPreviewBaseRoomEfficiency(preview, resolvedSkills) {
+function applyRiicPreviewBaseRoomEfficiency(
+  preview,
+  resolvedSkills,
+  { layoutFacts, ownedOperators } = {},
+) {
   if (!preview) {
     return preview;
   }
@@ -360,6 +526,11 @@ function applyRiicPreviewBaseRoomEfficiency(preview, resolvedSkills) {
           expectedSlots: room.expectedSlots,
           product: room.product,
           resolvedSkills,
+          automationRuntimeContext: getAutomationSupportState({
+            state,
+            layoutFacts,
+            ownedOperators,
+          }),
         });
 
         return {
@@ -462,11 +633,16 @@ export function settleRiicScheduleEfficiency({
   preview,
   ownedOperators = [],
   resourceFacts = {},
+  layoutFacts,
   resolvedSkills,
 } = {}) {
   const previewWithBaseEfficiency = applyRiicPreviewBaseRoomEfficiency(
     preview,
     resolvedSkills,
+    {
+      layoutFacts,
+      ownedOperators,
+    },
   );
   const previewWithActiveRosterEffects = applyRiicActiveRosterPreviewEffects({
     preview: previewWithBaseEfficiency,

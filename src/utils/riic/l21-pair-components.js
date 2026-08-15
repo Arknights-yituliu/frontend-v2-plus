@@ -31,6 +31,24 @@ function hasTeamCalculation(skeleton) {
   return Boolean(skeleton?.candidate?.teamCalculation);
 }
 
+function isClosureSpecialOrderSingleSkeleton(skeleton) {
+  if (
+    getCandidateMemberCount(skeleton) !== 1 ||
+    String(skeleton?.candidate?.teamCalculation?.type || "").trim() !==
+      "closureSpecialOrder"
+  ) {
+    return false;
+  }
+
+  const memberName = String(
+    skeleton?.candidate?.members?.[0]?.name || "",
+  ).trim();
+  const sourceMember = String(
+    skeleton?.candidate?.teamCalculation?.sourceMember || "",
+  ).trim();
+  return Boolean(memberName && sourceMember && memberName === sourceMember);
+}
+
 function isButshuCandidate(skeleton) {
   return String(skeleton?.candidate?.variantGroupId || "").startsWith(
     "family-butshu:",
@@ -70,16 +88,20 @@ function isSingleComponentPartnerSkeleton(skeleton) {
   return (
     getCandidateMemberCount(skeleton) === 1 &&
     !hasTaggedMembers(skeleton) &&
-    !hasTeamCalculation(skeleton) &&
-    !isButshuCandidate(skeleton)
+    !isButshuCandidate(skeleton) &&
+    (!hasTeamCalculation(skeleton) ||
+      isClosureSpecialOrderSingleSkeleton(skeleton))
   );
 }
 
 /**
  * Builds ordinary fixed 2+1 room candidates for three-slot facilities.
  *
- * Dynamic team calculators deliberately stay out of this path. Butshu has
- * its own composition because its third member changes the order calculation.
+ * Dynamic team calculators deliberately stay out of this path, except for
+ * Closure's single-member special-order candidate. Its calculation remains
+ * attached to the generated candidate and is resolved later by L62.
+ * Butshu has its own composition because its third member changes the order
+ * calculation.
  */
 export function createRiicPairComponentCandidateSkeletons({
   candidateSkeletons = [],
@@ -148,6 +170,13 @@ export function createRiicPairComponentCandidateSkeletons({
               ...(pairCandidate?.members || []),
               ...(singleCandidate?.members || []),
             ],
+            ...(isClosureSpecialOrderSingleSkeleton(singleSkeleton)
+              ? {
+                  teamCalculation: {
+                    ...singleCandidate.teamCalculation,
+                  },
+                }
+              : {}),
             efficiency:
               Number(pairCandidate?.efficiency || 0) +
               Number(singleCandidate?.efficiency || 0),

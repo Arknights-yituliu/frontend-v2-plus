@@ -19,7 +19,6 @@ const ORDER_DISTRIBUTION_BY_LEVEL = Object.freeze({
 const PURE_GOLD_LMD_VALUE = 500;
 const ORUNDUM_TRADE_CAPACITY_PER_HOUR = 10;
 const ORUNDUM_PER_ORIGINIUM_SHARD = 10;
-const ORUNDUM_TRADE_STATION_LEVEL = 3;
 const CLOSURE_ID = "char_4228_closur";
 const EBENHOLZ_ID = "char_4046_ebnhlz";
 const BUTSHU_ID = "char_4032_provs";
@@ -29,6 +28,9 @@ const SHAMARE_ID = "char_254_vodfox";
 const KICHI_ID = "char_4203_kichi";
 const DEEP_ID = "char_4137_udflow";
 const VIGIL_ID = "char_427_vigil";
+const HODRER_ID = "char_4088_hodrer";
+const INES_ID = "char_4087_ines";
+const W_ID = "char_113_cqbw";
 const BELLONE_ID = "char_4037_demetr";
 const ULPIAN_ID = "char_4145_ulpia";
 const ARCHET_ID = "char_332_archet";
@@ -45,6 +47,10 @@ const ARCHET_ALPHA_SKILL_ID =
   `${ARCHET_ID}|trading|\u8654\u8bda\u7b79\u6b3e\u00b7\u03b1|0|1`;
 const ARCHET_BETA_SKILL_ID =
   `${ARCHET_ID}|trading|\u8654\u8bda\u7b79\u6b3e\u00b7\u03b2|2|1`;
+const HODRER_ALPHA_SKILL_ID =
+  `${HODRER_ID}|trading|\u767d\u624b\u8d77\u5bb6\u00b7\u03b1|0|1`;
+const HODRER_BETA_SKILL_ID =
+  `${HODRER_ID}|trading|\u767d\u624b\u8d77\u5bb6\u00b7\u03b2|2|1`;
 const BELLONE_ALPHA_SKILL_ID =
   `${BELLONE_ID}|trading|\u5bb6\u65cf\u7ecf\u8425\u00b7\u03b1|0|1`;
 const BELLONE_BETA_SKILL_ID =
@@ -484,6 +490,23 @@ function getLegacyExternalOrderBonus(rule, facilityContext, operators) {
     )
       ? 10
       : 0;
+  }
+
+  if (
+    skillId === HODRER_ALPHA_SKILL_ID ||
+    skillId === HODRER_BETA_SKILL_ID
+  ) {
+    if (!(facilityContext?.baseOperatorIds instanceof Set)) {
+      return null;
+    }
+
+    const hasInes = facilityContext.baseOperatorIds.has(INES_ID);
+    const hasW = facilityContext.baseOperatorIds.has(W_ID);
+    return skillId === HODRER_BETA_SKILL_ID
+      ? (hasInes ? 5 : 0) + (hasW ? 5 : 0)
+      : hasInes
+        ? 5
+        : 0;
   }
 
   if (
@@ -1161,13 +1184,6 @@ export function calculateRiicTrading(facility, operators, bonus = {}) {
     ![1, 2, 3].includes(stationLevel)
   ) {
     return createFailure(type, product, "invalidFacility");
-  }
-
-  if (
-    product === "orundum" &&
-    stationLevel !== ORUNDUM_TRADE_STATION_LEVEL
-  ) {
-    return createFailure(type, product, "unsupportedStationLevel");
   }
 
   if (!normalizedOperators) {

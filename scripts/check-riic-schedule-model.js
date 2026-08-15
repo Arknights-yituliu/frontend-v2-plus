@@ -711,15 +711,16 @@ assert.equal(
   "notSupported",
 );
 
-const unsupportedP01OrundumPreview = {
+const lowerLevelOrundumPreview = {
   states: [
     {
       durationHours: 24,
       rooms: [
         createSettlementRoom({
-          key: "trading:orundum:unsupported-p01",
+          key: "trading:orundum:level-1",
           facility: "trading",
           product: "orundum",
+          stationLevel: 1,
           efficiency: 200,
           operators: [
             { charId: "char_1033_swire2" },
@@ -731,25 +732,25 @@ const unsupportedP01OrundumPreview = {
     },
   ],
 };
-const unsupportedP01OrundumSettlement = summarizeRiicActualSchedule({
-  preview: unsupportedP01OrundumPreview,
+const lowerLevelOrundumSettlement = summarizeRiicActualSchedule({
+  preview: lowerLevelOrundumPreview,
   tradingOperators: [
     { charId: "char_1033_swire2", elite: 2, level: 1 },
     ...normalTradingOperators.slice(0, 2),
   ],
 });
 assert.equal(
-  getYieldResource(unsupportedP01OrundumSettlement.yield, "orundum")
+  getYieldResource(lowerLevelOrundumSettlement.yield, "orundum")
     .outputPerDay,
   480,
 );
 assert.equal(
-  getYieldResource(unsupportedP01OrundumSettlement.yield, "originiumShard")
+  getYieldResource(lowerLevelOrundumSettlement.yield, "originiumShard")
     .outputPerDay,
   -48,
 );
 assert.equal(
-  unsupportedP01OrundumSettlement.yield.tradingSettlements[0]?.isCalculated,
+  lowerLevelOrundumSettlement.yield.tradingSettlements[0]?.isCalculated,
   true,
 );
 

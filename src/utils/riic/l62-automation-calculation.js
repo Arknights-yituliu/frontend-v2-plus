@@ -9,11 +9,61 @@ function hasAutomationTag(operator) {
   );
 }
 
+/**
+ * Resolves an automation skill bonus against the effective power-plant count.
+ * The count is only an input to automation skill conditions; it is not a
+ * physical facility count and must not be reused for drone charging.
+ */
+export function getRiicAutomationOperatorLayer3Bonus({
+  operatorId,
+  ownedOperators,
+  scope,
+  layoutFacts,
+  effectivePowerPlantCount,
+  getLayer3OperatorLocalBonus,
+} = {}) {
+  const normalizedOperatorId = String(operatorId || "").trim();
+  const normalizedEffectivePowerPlantCount = Number(effectivePowerPlantCount);
+  if (
+    !normalizedOperatorId ||
+    !layoutFacts ||
+    !Array.isArray(ownedOperators) ||
+    !Number.isFinite(normalizedEffectivePowerPlantCount) ||
+    typeof getLayer3OperatorLocalBonus !== "function"
+  ) {
+    return null;
+  }
+
+  const getBonusAtPowerPlantCount = (powerPlantCount) =>
+    getLayer3OperatorLocalBonus({
+      operatorId: normalizedOperatorId,
+      ownedOperators,
+      scope,
+      layoutFacts: {
+        ...layoutFacts,
+        powerPlantCount,
+      },
+    });
+
+  if (normalizedEffectivePowerPlantCount <= 3) {
+    return getBonusAtPowerPlantCount(normalizedEffectivePowerPlantCount);
+  }
+
+  const bonusAtTwo = getBonusAtPowerPlantCount(2);
+  const bonusAtThree = getBonusAtPowerPlantCount(3);
+  return (
+    bonusAtThree +
+    (bonusAtThree - bonusAtTwo) *
+      (normalizedEffectivePowerPlantCount - 3)
+  );
+}
+
 export function recalculateRiicAutomationManufacture({
   scope,
   coreBaseBonusPercent = 0,
   coreLayer3BonusPercent = 0,
   fallbackOperators = [],
+  runtimeContext,
 } = {}) {
   if (String(scope?.roomType || "").trim() !== "manufacture") {
     return null;
@@ -42,5 +92,16 @@ export function recalculateRiicAutomationManufacture({
       .filter((operator) => !hasAutomationTag(operator))
       .map((operator) => String(operator?.charId || "").trim())
       .filter(Boolean),
+    ...(runtimeContext
+      ? {
+          powerPlantCount: Number(runtimeContext.powerPlantCount || 0),
+          effectivePowerPlantCount: Number(
+            runtimeContext.effectivePowerPlantCount || 0,
+          ),
+          supportOperatorId: String(
+            runtimeContext.supportOperatorId || "",
+          ).trim(),
+        }
+      : {}),
   };
 }
