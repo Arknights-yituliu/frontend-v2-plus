@@ -1,4 +1,7 @@
 <script setup>
+import originiumShardIcon from "/src/assets/images/riic-schedule-preview/originium-shard.png";
+import orundumIcon from "/src/assets/images/riic-schedule-preview/orundum.png";
+
 const props = defineProps({
   selectionRows: {
     type: Array,
@@ -16,8 +19,17 @@ const props = defineProps({
 
 const emit = defineEmits(["select-group"]);
 
+const roomGroupImageByKey = Object.freeze({
+  "orundum-trading": orundumIcon,
+  "orundum-manufacture": originiumShardIcon,
+});
+
 function selectGroup(groupId) {
   emit("select-group", groupId);
+}
+
+function getTileIconImage(group) {
+  return roomGroupImageByKey[group?.key] || "";
 }
 
 function getTileStatus(group) {
@@ -55,7 +67,13 @@ function getTileStatus(group) {
             @click="selectGroup(group.id)"
           >
             <span class="room-group-tile-title">
-              <v-icon :icon="group.icon" size="20"></v-icon>
+              <img
+                v-if="getTileIconImage(group)"
+                class="room-group-tile-image"
+                :src="getTileIconImage(group)"
+                alt=""
+              />
+              <v-icon v-else :icon="group.icon" size="20"></v-icon>
               <strong>{{ group.label }}</strong>
               <v-icon
                 v-if="getTileStatus(group).tone !== 'complete'"
@@ -316,6 +334,13 @@ function getTileStatus(group) {
 .room-group-tile-title > .v-icon {
   flex: 0 0 auto;
   color: var(--room-group-color);
+}
+
+.room-group-tile-image {
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
 }
 
 .room-group-tile-title > .room-group-status-icon {

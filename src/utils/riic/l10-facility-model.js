@@ -13,20 +13,38 @@ function station(stationLevel, slotCount = stationLevel) {
   return Object.freeze({ stationLevel, slotCount });
 }
 
+const RIGHT_FULL_STATIC_ROOM_STATIONS = Object.freeze({
+  meeting: [station(3, 2)],
+  dormitory: [station(2, 5), station(1, 5), station(1, 5), station(1, 5)],
+  processing: [station(3, 1)],
+  office: [station(3, 1)],
+  training: [station(3, 2)],
+});
+
+const THREE_POWER_STATIC_ROOM_STATIONS = Object.freeze({
+  meeting: [station(3, 2)],
+  dormitory: [station(1, 5), station(1, 5), station(1, 5), station(1, 5)],
+  processing: [station(3, 1)],
+  office: [station(3, 1)],
+  training: [station(3, 2)],
+});
+
 const PROFILE_ROOM_STATIONS = Object.freeze({
   rightFull: {
+    ...RIGHT_FULL_STATIC_ROOM_STATIONS,
     "lmd-trading": [station(3), station(2)],
     "experience-manufacture": {
-      "252-2-gold": [station(3), station(2), station(2)],
-      "252-3-gold": [station(3), station(2)],
+      "252-2-gold": [station(3), station(3), station(2)],
+      "252-3-gold": [station(3), station(3)],
     },
     "gold-manufacture": {
-      "252-2-gold": [station(3), station(2)],
-      "252-3-gold": [station(3), station(2), station(2)],
+      "252-2-gold": [station(2), station(2)],
+      "252-3-gold": [station(2), station(2), station(2)],
     },
-    power: [station(1), station(1)],
+    power: [station(3, 1), station(3, 1)],
   },
   fullBlood: {
+    ...RIGHT_FULL_STATIC_ROOM_STATIONS,
     "lmd-trading": [station(3), station(2)],
     "experience-manufacture": {
       "252-2-gold": [station(3), station(3), station(3)],
@@ -36,7 +54,7 @@ const PROFILE_ROOM_STATIONS = Object.freeze({
       "252-2-gold": [station(3), station(3)],
       "252-3-gold": [station(3), station(3), station(3)],
     },
-    power: [station(1), station(1)],
+    power: [station(3, 1), station(3, 1)],
   },
 });
 
@@ -62,12 +80,13 @@ const FIXED_LAYOUT_ROOM_STATIONS = Object.freeze({
     power: [station(1), station(1), station(1)],
   },
   "342-orundum": {
-    "lmd-trading": [station(3), station(1)],
-    "orundum-trading": [station(3)],
+    ...THREE_POWER_STATIC_ROOM_STATIONS,
+    "lmd-trading": [station(3), station(3)],
+    "orundum-trading": [station(1)],
     "orundum-manufacture": [station(3)],
     "experience-manufacture": [station(3)],
     "gold-manufacture": [station(2), station(2)],
-    power: [station(1), station(1)],
+    power: [station(3, 1), station(3, 1)],
   },
   333: {
     "lmd-trading": [station(3), station(3), station(3)],
@@ -75,6 +94,7 @@ const FIXED_LAYOUT_ROOM_STATIONS = Object.freeze({
     power: [station(1), station(1), station(1)],
   },
   342: {
+    ...THREE_POWER_STATIC_ROOM_STATIONS,
     "lmd-trading": [station(3), station(3), station(1)],
     "gold-manufacture": [
       station(3),
@@ -82,7 +102,7 @@ const FIXED_LAYOUT_ROOM_STATIONS = Object.freeze({
       station(2),
       station(2),
     ],
-    power: [station(1), station(1)],
+    power: [station(3, 1), station(3, 1)],
   },
 });
 
@@ -170,20 +190,6 @@ export function getRiicRoomStations({
 }) {
   const normalizedRoomKey = roomKey === "hire" ? "office" : roomKey;
 
-  if (normalizedRoomKey === "meeting" && roomCount === 1) {
-    return [
-      {
-        stationLevel: facilityProfile?.id === "fullBlood" ? 1 : 3,
-        slotCount: 2,
-      },
-    ];
-  }
-
-  const staticStations = STATIC_ROOM_STATIONS[normalizedRoomKey];
-  if (Array.isArray(staticStations) && staticStations.length === roomCount) {
-    return copyStations(staticStations);
-  }
-
   const configuredStations =
     facilityProfile?.roomStations?.[normalizedRoomKey];
   const stations = Array.isArray(configuredStations)
@@ -192,6 +198,15 @@ export function getRiicRoomStations({
 
   if (Array.isArray(stations) && stations.length === roomCount) {
     return copyStations(stations);
+  }
+
+  if (normalizedRoomKey === "meeting" && roomCount === 1) {
+    return [station(3, 2)];
+  }
+
+  const staticStations = STATIC_ROOM_STATIONS[normalizedRoomKey];
+  if (Array.isArray(staticStations) && staticStations.length === roomCount) {
+    return copyStations(staticStations);
   }
 
   return Array.from({ length: roomCount }, () => null);

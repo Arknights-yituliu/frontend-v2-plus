@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from "vue";
+import RiicCustomLayoutEditor from "/src/components/tools/RiicCustomLayoutEditor.vue";
 
 const props = defineProps({
   recommendationPanelOpen: {
@@ -58,6 +59,26 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  customLayoutEditorOpen: {
+    type: Boolean,
+    default: false,
+  },
+  customLayoutActive: {
+    type: Boolean,
+    default: false,
+  },
+  customLayoutStations: {
+    type: Array,
+    default: () => [],
+  },
+  roomProductOptions: {
+    type: Object,
+    default: () => ({}),
+  },
+  customLayoutAllowsLevelAdjustment: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits([
@@ -67,6 +88,11 @@ const emit = defineEmits([
   "reset-recommendation-answers",
   "select-layout-shift",
   "select-manual-schedule-option",
+  "toggle-custom-layout-editor",
+  "change-custom-layout-station-level",
+  "change-custom-layout-station-product",
+  "apply-custom-layout",
+  "reset-custom-layout",
 ]);
 
 const visibleLayoutScheduleOptionRows = computed(() => {
@@ -311,6 +337,24 @@ function updateAnswer(key, value) {
           </button>
         </div>
       </div>
+
+      <RiicCustomLayoutEditor
+        v-if="selectedManualScheduleValue"
+        :open="customLayoutEditorOpen"
+        :active="customLayoutActive"
+        :stations="customLayoutStations"
+        :product-options="roomProductOptions"
+        :allow-level-adjustment="customLayoutAllowsLevelAdjustment"
+        @toggle="emit('toggle-custom-layout-editor')"
+        @change-station-level="
+          emit('change-custom-layout-station-level', $event)
+        "
+        @change-station-product="
+          emit('change-custom-layout-station-product', $event)
+        "
+        @apply="emit('apply-custom-layout')"
+        @reset="emit('reset-custom-layout')"
+      ></RiicCustomLayoutEditor>
     </section>
   </section>
 </template>

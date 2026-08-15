@@ -78,7 +78,7 @@ const facilityCases = [
     roomKey: "experience-manufacture",
     expected: [
       { stationLevel: 3, slotCount: 3 },
-      { stationLevel: 2, slotCount: 2 },
+      { stationLevel: 3, slotCount: 3 },
       { stationLevel: 2, slotCount: 2 },
     ],
   },
@@ -87,7 +87,7 @@ const facilityCases = [
     roomKey: "lmd-trading",
     expected: [
       { stationLevel: 3, slotCount: 3 },
-      { stationLevel: 1, slotCount: 1 },
+      { stationLevel: 3, slotCount: 3 },
     ],
   },
   {
@@ -172,7 +172,7 @@ assert.deepEqual(
     roomKey: "meeting",
     roomCount: 1,
   }),
-  [{ stationLevel: 1, slotCount: 2 }],
+  [{ stationLevel: 3, slotCount: 2 }],
 );
 const trainingPreferenceCatalog = {
   scope: {

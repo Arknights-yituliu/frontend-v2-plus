@@ -7,6 +7,7 @@ import droneBackground from "/src/assets/images/riic-schedule-preview/drone.png"
 import goldBackground from "/src/assets/images/riic-schedule-preview/gold.png";
 import highCertificateBackground from "/src/assets/images/riic-schedule-preview/high-certificate.png";
 import lmdBackground from "/src/assets/images/riic-schedule-preview/lmd.png";
+import originiumShardBackground from "/src/assets/images/riic-schedule-preview/originium-shard.png";
 import orundumBackground from "/src/assets/images/riic-schedule-preview/orundum.png";
 
 const props = defineProps({
@@ -246,11 +247,20 @@ function getRoomProductBackground(room) {
     };
   }
 
+  if (room?.product === "orundum") {
+    return {
+      type: "image",
+      value:
+        room?.facility === "manufacture"
+          ? originiumShardBackground
+          : orundumBackground,
+    };
+  }
+
   const imageByProduct = {
     lmd: lmdBackground,
     experience: battleRecordBackground,
     gold: goldBackground,
-    orundum: orundumBackground,
   };
   if (imageByProduct[room?.product]) {
     return {

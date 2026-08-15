@@ -381,20 +381,24 @@ const tradingRotationTraceRows = computed(() => {
 });
 
 function getControlCenterEffectScopeLabel(effect) {
+  const roomType = effect?.roomType;
   const roomLabel =
     {
       trading: "贸易站",
       manufacture: "制造站",
       hire: "办公室",
-    }[effect?.roomType] || effect?.roomType;
+    }[roomType] || roomType;
   const productLabel =
-    {
-      lmd: "龙门币",
-      gold: "赤金",
-      experience: "经验书",
-      orundum: "源石碎片",
-      all: "",
-    }[effect?.product] || "";
+    effect?.product === "orundum"
+      ? roomType === "trading"
+        ? "合成玉"
+        : "源石碎片"
+      : {
+          lmd: "龙门币",
+          gold: "赤金",
+          experience: "经验书",
+          all: "",
+        }[effect?.product] || "";
 
   return [roomLabel, productLabel].filter(Boolean).join(" ");
 }

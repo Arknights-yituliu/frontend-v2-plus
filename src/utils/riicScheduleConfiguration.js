@@ -1,7 +1,7 @@
 export const ROOM_PRODUCT_OPTIONS = Object.freeze({
   trading: [
     { value: "lmd", label: "龙门币" },
-    { value: "orundum", label: "源石碎片" },
+    { value: "orundum", label: "合成玉" },
   ],
   manufacture: [
     { value: "experience", label: "作战记录" },
@@ -438,7 +438,7 @@ export const LAYOUT_CARD_META = [
       {
         key: "orundum-trading",
         count: 1,
-        label: "源石碎片",
+        label: "合成玉",
         facility: "trading",
       },
       {
@@ -588,7 +588,7 @@ export const LAYOUT_CARD_META = [
       {
         key: "orundum-trading",
         count: 1,
-        label: "源石碎片",
+        label: "合成玉",
         facility: "trading",
       },
       {
