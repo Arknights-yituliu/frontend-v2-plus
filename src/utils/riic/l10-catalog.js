@@ -14,6 +14,10 @@ function normalizeProduct(roomType, product) {
     : "all";
 }
 
+function normalizeCatalogStationLevel(roomType, stationLevel) {
+  return ["hire", "power"].includes(roomType) ? 1 : stationLevel;
+}
+
 function isLayeredProduct(roomType, product) {
   return (
     product !== "all" &&
@@ -51,7 +55,10 @@ function getCatalogRequest(
     normalizedRoomType,
     String(product || "").trim(),
   );
-  const normalizedStationLevel = Number(stationLevel);
+  const normalizedStationLevel = normalizeCatalogStationLevel(
+    normalizedRoomType,
+    Number(stationLevel),
+  );
   const normalizedSlotCount = Number(slotCount);
   if (
     !normalizedRoomType ||

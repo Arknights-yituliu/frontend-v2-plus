@@ -24,7 +24,6 @@ const PRODUCT_LABEL_BY_ID = Object.freeze({
   lmd: "龙门币",
   gold: "赤金",
   experience: "经验书",
-  orundum: "源石碎片",
 });
 const FLAMETAIL_OPERATOR_ID = "char_420_flamtl";
 const VIVIANA_OPERATOR_ID = "char_4098_vvana";
@@ -322,7 +321,13 @@ function formatEffectLabel(effect) {
   const product = String(target?.product || "").trim();
   const roomLabel = ROOM_LABEL_BY_TYPE[roomType] || roomType;
   const productLabel =
-    product && product !== "all" ? PRODUCT_LABEL_BY_ID[product] || product : "";
+    product && product !== "all"
+      ? product === "orundum"
+        ? roomType === "trading"
+          ? "合成玉"
+          : "源石碎片"
+        : PRODUCT_LABEL_BY_ID[product] || product
+      : "";
   const bonusPercent = Number(effect?.bonusPercent);
 
   if (!roomLabel || !Number.isFinite(bonusPercent)) {

@@ -326,6 +326,8 @@ const planningMode = ref("manual");
 const selectedLayoutId = ref(DEFAULT_LAYOUT_SELECTION.layoutId);
 const confirmedLayoutPlan = ref(createDefaultConfirmedLayoutPlan());
 const recommendationPanelOpen = ref(false);
+const customLayoutEditorOpen = ref(false);
+const customLayoutDraft = ref(null);
 const twoShiftRotationMode = ref("maa");
 const autoGeneratingSchedule = ref(false);
 const automaticGenerationPhase = ref("");
@@ -803,7 +805,9 @@ const isLayoutPlanningReady = computed(
   () => Boolean(confirmedLayoutPlan.value),
 );
 const is252LayoutPlan = computed(
-  () => confirmedLayoutPlan.value?.layoutId === "252",
+  () =>
+    confirmedLayoutPlan.value?.layoutId === "252" &&
+    !confirmedLayoutPlan.value?.customLayout,
 );
 const activeFacilityRequirement = computed(() =>
   normalizeRiicFacilityRequirement(
@@ -818,8 +822,28 @@ const activeFacilityProfile = computed(() =>
     facilityRequirement: activeFacilityRequirement.value,
   }),
 );
+const customLayoutAllowsLevelAdjustment = computed(() =>
+  isTwoPowerLayoutPlan(confirmedLayoutPlan.value),
+);
+const customLayoutEditorStations = computed(() => {
+  const draft = customLayoutDraft.value;
+  if (!draft) {
+    return [];
+  }
+
+  if (customLayoutAllowsLevelAdjustment.value) {
+    return [
+      ...(draft.stations || []),
+      ...(draft.staticStations || []),
+    ].filter((station) => station.facility !== "power");
+  }
+
+  return (draft.stations || []).filter((station) =>
+    ["trading", "manufacture"].includes(station.facility),
+  );
+});
 const activeLayoutFacilityCounts = computed(() => {
-  const card = getLayoutCardByKey(confirmedLayoutPlan.value?.cardKey);
+  const card = getActiveLayoutCard();
   const countFacility = (facility) =>
     (card?.rooms || []).reduce(
       (total, room) =>
@@ -833,7 +857,7 @@ const activeLayoutFacilityCounts = computed(() => {
       roomKey: room.key,
       roomCount: room.count,
       facilityType: getLayoutRoomFacility(room),
-      product: ROOM_CANDIDATE_PRODUCTS[room.key] || "all",
+      product: getRoomProduct(room) || "all",
     })),
     ...STATIC_SCHEDULE_ROOM_GROUPS.map((group) => ({
       roomKey: group.key,
@@ -844,11 +868,15 @@ const activeLayoutFacilityCounts = computed(() => {
   ];
   const facilities = facilityEntries.flatMap((entry) => {
     const stationCount = Math.max(0, Number(entry.roomCount || 0));
-    const stations = getRiicRoomStations({
-      facilityProfile: activeFacilityProfile.value,
-      roomKey: entry.roomKey,
-      roomCount: stationCount,
-    });
+    const sourceRoom = (card?.rooms || []).find(
+      (room) => room.key === entry.roomKey,
+    );
+    const stations = sourceRoom
+      ? getActiveRoomStations(sourceRoom)
+      : getActiveStaticRoomStations({
+          roomKey: entry.roomKey,
+          roomCount: stationCount,
+        });
 
     return Array.from({ length: stationCount }, (_, index) => ({
       facilityType: entry.facilityType,
@@ -863,7 +891,8 @@ const activeLayoutFacilityCounts = computed(() => {
     tradingStationCount: countFacility("trading"),
     goldManufactureStationCount: (card?.rooms || []).reduce(
       (total, room) =>
-        room?.key === "gold-manufacture"
+        getLayoutRoomFacility(room) === "manufacture" &&
+        getRoomProduct(room) === "gold"
           ? total + Number(room?.count || 0)
           : total,
       0,
@@ -871,9 +900,9 @@ const activeLayoutFacilityCounts = computed(() => {
     manufactureProductKindCount: new Set(
       (card?.rooms || []).flatMap((room) =>
         getLayoutRoomFacility(room) === "manufacture" &&
-        ROOM_CANDIDATE_PRODUCTS[room.key] &&
-        ROOM_CANDIDATE_PRODUCTS[room.key] !== "all"
-          ? [ROOM_CANDIDATE_PRODUCTS[room.key]]
+        getRoomProduct(room) &&
+        getRoomProduct(room) !== "all"
+          ? [getRoomProduct(room)]
           : [],
       ),
     ).size,
@@ -893,7 +922,7 @@ function formatStationLevelSummary(stations) {
     .join(" ");
 }
 const scheduleRoomGroups = computed(() => {
-  const card = getLayoutCardByKey(confirmedLayoutPlan.value?.cardKey);
+  const card = getActiveLayoutCard();
 
   if (!card) {
     return [];
@@ -904,11 +933,8 @@ const scheduleRoomGroups = computed(() => {
     const meta =
       SCHEDULE_ROOM_GROUP_META[facility] ||
       SCHEDULE_ROOM_GROUP_META.manufacture;
-    const stations = getRiicRoomStations({
-      facilityProfile: activeFacilityProfile.value,
-      roomKey: room.key,
-      roomCount: room.count,
-    });
+    const stations = getActiveRoomStations(room);
+    const candidateProduct = getRoomProduct(room) || null;
 
     return {
       id: `${card.key}:${room.key}`,
@@ -934,10 +960,8 @@ const scheduleRoomGroups = computed(() => {
             )
             .join(" / ")
         : "",
-      candidateProduct: ROOM_CANDIDATE_PRODUCTS[room.key] || null,
-      candidateGenerationAvailable: Boolean(
-        ROOM_CANDIDATE_PRODUCTS[room.key],
-      ),
+      candidateProduct,
+      candidateGenerationAvailable: Boolean(candidateProduct),
       rotationRequired: true,
       row: "production",
       width: 1,
@@ -946,11 +970,7 @@ const scheduleRoomGroups = computed(() => {
 });
 const scheduleRoomRows = computed(() => {
   const createStaticGroup = (group) => {
-    const stations = getRiicRoomStations({
-      facilityProfile: activeFacilityProfile.value,
-      roomKey: group.key,
-      roomCount: group.count,
-    });
+    const stations = getActiveStaticRoomStations(group);
     const candidateProduct = ROOM_CANDIDATE_PRODUCTS[group.key] || null;
 
     return {
@@ -2947,6 +2967,7 @@ const automaticGenerationTriggerKey = computed(() => {
     confirmedLayoutPlan.value.cardKey,
     confirmedLayoutPlan.value.shiftMode,
     confirmedLayoutPlan.value.facilityRequirement || "",
+    JSON.stringify(confirmedLayoutPlan.value.customLayout || null),
     twoShiftRotationMode.value,
     treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
     JSON.stringify(idealTrainingRaritySelection.value),
@@ -4010,9 +4031,9 @@ const scheduleTrainingRequirements = computed(() => {
   }
 
   return getRiicScheduleTrainingRecommendations({
-    scheduleCandidates: manualRoomGroupCandidates.value.map(
-      ({ candidate }) => candidate,
-    ),
+    scheduleCandidates: manualRoomGroupCandidates.value
+      .filter(({ group }) => group?.facility !== "meeting")
+      .map(({ candidate }) => candidate),
     ownedOperators: ownedOperators.value,
     matchingOperators: riicMatchingRoster.value,
     operatorNameToCharId,
@@ -5566,6 +5587,20 @@ function formatRiicLayer3OperatorCondition(condition) {
   return `${name} ${requiredText}（${actualText}）`;
 }
 
+function getRiicLayer3ProductLabel(product, roomType) {
+  if (product === "orundum") {
+    return roomType === "trading" ? "合成玉" : "源石碎片";
+  }
+
+  return (
+    {
+      lmd: "龙门币",
+      gold: "赤金",
+      experience: "经验书",
+    }[product] || ""
+  );
+}
+
 function formatRiicLayer3FacilityCondition(condition) {
   const expectedCount = Number(condition?.count);
   const expectedProductKindCount = Number(condition?.productKindCount);
@@ -5594,13 +5629,10 @@ function formatRiicLayer3FacilityCondition(condition) {
         hire: "办公室",
         control: "控制中枢",
       }[condition?.facilityType] || condition?.facilityType || "设施";
-    const productLabel =
-      {
-        lmd: "龙门币",
-        gold: "赤金",
-        experience: "经验书",
-        orundum: "源石碎片",
-      }[condition?.product] || "";
+    const productLabel = getRiicLayer3ProductLabel(
+      condition?.product,
+      condition?.facilityType,
+    );
     const stationLevel = Number(condition?.stationLevel);
     const stationLevelLabel =
       Number.isInteger(stationLevel) && stationLevel >= 1
@@ -5646,13 +5678,10 @@ function formatRiicLayer3RuleEffect(effect) {
       control: "控制中枢",
       dormitory: "宿舍",
     }[effect?.roomType] || "";
-  const productLabel =
-    {
-      lmd: "龙门币",
-      gold: "赤金",
-      experience: "经验书",
-      orundum: "源石碎片",
-    }[effect?.product] || "";
+  const productLabel = getRiicLayer3ProductLabel(
+    effect?.product,
+    effect?.roomType,
+  );
   const target = [
     variantGroupId ? `候选组 ${variantGroupId}` : operatorName,
     roomLabel,
@@ -5990,6 +6019,450 @@ function getLayoutCardByKey(value) {
   return LAYOUT_CARD_META.find((card) => card.key === value) || null;
 }
 
+function isTwoPowerLayoutPlan(plan) {
+  const card = getLayoutCardByKey(plan?.cardKey);
+  return (card?.rooms || []).some(
+    (room) =>
+      getLayoutRoomFacility(room) === "power" &&
+      Number(room?.count || 0) === 2,
+  );
+}
+
+function getRoomProduct(room) {
+  return room?.product || ROOM_CANDIDATE_PRODUCTS[room?.key] || "";
+}
+
+function getCustomLayoutRoomKey(facility, product) {
+  if (facility === "trading") {
+    return product === "orundum" ? "orundum-trading" : "lmd-trading";
+  }
+
+  if (facility === "manufacture") {
+    if (product === "orundum") {
+      return "orundum-manufacture";
+    }
+
+    return product === "gold" ? "gold-manufacture" : "experience-manufacture";
+  }
+
+  return "power";
+}
+
+function getCustomLayoutRoomLabel(facility, product) {
+  const option = (ROOM_PRODUCT_OPTIONS[facility] || []).find(
+    (item) => item.value === product,
+  );
+  return option?.label || SCHEDULE_ROOM_GROUP_META[facility]?.facilityLabel || "";
+}
+
+function getCustomStationMaxLevel(facility) {
+  return facility === "dormitory" ? 5 : 3;
+}
+
+function normalizeCustomStationLevel(value, fallback = 1, facility) {
+  const numeric = Number(value);
+  if (!Number.isInteger(numeric)) {
+    return fallback;
+  }
+
+  return Math.min(
+    getCustomStationMaxLevel(facility),
+    Math.max(1, numeric),
+  );
+}
+
+function getCustomStationSlotCount(facility, stationLevel) {
+  if (facility === "power" || facility === "office" || facility === "processing") {
+    return 1;
+  }
+
+  if (facility === "meeting" || facility === "training") {
+    return 2;
+  }
+
+  if (facility === "dormitory") {
+    return 5;
+  }
+
+  return stationLevel;
+}
+
+function createCustomStaticLayoutStations(facilityProfile) {
+  const stationIndexesByFacility = {};
+
+  return STATIC_SCHEDULE_ROOM_GROUPS.filter(
+    (group) => group.key !== "control",
+  ).flatMap((group) => {
+    const stations = getRiicRoomStations({
+      facilityProfile,
+      roomKey: group.key,
+      roomCount: group.count,
+    });
+
+    return Array.from(
+      { length: Math.max(0, Number(group.count) || 0) },
+      (_, index) => {
+        const facility = group.key;
+        const stationLevel = normalizeCustomStationLevel(
+          stations[index]?.stationLevel,
+          1,
+          facility,
+        );
+        const stationIndex = (stationIndexesByFacility[facility] || 0) + 1;
+        stationIndexesByFacility[facility] = stationIndex;
+
+        return {
+          id: `${facility}-${stationIndex}`,
+          facility,
+          product: ROOM_CANDIDATE_PRODUCTS[group.key] || "all",
+          stationLevel,
+          slotCount: getCustomStationSlotCount(facility, stationLevel),
+        };
+      },
+    );
+  });
+}
+
+function normalizeCustomLayoutStations(
+  baseStations,
+  storedStations,
+  { forceProductionLevelThree = false } = {},
+) {
+  const stationsById = new Map(
+    (storedStations || [])
+      .filter((station) => station?.id)
+      .map((station) => [station.id, station]),
+  );
+
+  return (baseStations || []).map((baseStation, index) => {
+    const storedStation =
+      stationsById.get(baseStation.id) || storedStations?.[index] || {};
+    const shouldForceLevelThree =
+      forceProductionLevelThree &&
+      ["trading", "manufacture"].includes(baseStation.facility);
+    const stationLevel = shouldForceLevelThree
+      ? 3
+      : normalizeCustomStationLevel(
+          storedStation.stationLevel,
+          baseStation.stationLevel,
+          baseStation.facility,
+        );
+    const isProductAllowed = (ROOM_PRODUCT_OPTIONS[baseStation.facility] || [])
+      .some((option) => option.value === storedStation.product);
+
+    return {
+      ...baseStation,
+      product: isProductAllowed ? storedStation.product : baseStation.product,
+      stationLevel,
+      slotCount: getCustomStationSlotCount(
+        baseStation.facility,
+        stationLevel,
+      ),
+    };
+  });
+}
+
+function createCustomLayoutDraftFromPlan(plan) {
+  const card = getLayoutCardByKey(plan?.cardKey);
+  if (!card) {
+    return {
+      baseCardKey: "",
+      stations: [],
+    };
+  }
+
+  const facilityRequirement = normalizeRiicFacilityRequirement(
+    card.layoutId,
+    plan?.facilityRequirement,
+  );
+  const facilityProfile = getRiicFacilityProfile({
+    layoutId: card.layoutId,
+    cardKey: card.key,
+    facilityRequirement,
+  });
+  const stationIndexesByFacility = {};
+
+  return {
+    baseCardKey: card.key,
+    stations: (card.rooms || []).flatMap((room) => {
+      const facility = getLayoutRoomFacility(room);
+      const product = getRoomProduct(room) || "all";
+      const roomStations = getRiicRoomStations({
+        facilityProfile,
+        roomKey: room.key,
+        roomCount: room.count,
+      });
+
+      return Array.from(
+        { length: Math.max(0, Number(room.count) || 0) },
+        (_, index) => {
+          const stationLevel = normalizeCustomStationLevel(
+            roomStations[index]?.stationLevel,
+            1,
+            facility,
+          );
+          const stationIndex = (stationIndexesByFacility[facility] || 0) + 1;
+          stationIndexesByFacility[facility] = stationIndex;
+
+          return {
+            id: `${facility}-${stationIndex}`,
+            facility,
+            product,
+            stationLevel,
+            slotCount: getCustomStationSlotCount(facility, stationLevel),
+          };
+        },
+      );
+    }),
+    staticStations: isTwoPowerLayoutPlan(plan)
+      ? createCustomStaticLayoutStations(facilityProfile)
+      : [],
+  };
+}
+
+function normalizeCustomLayout(plan, value) {
+  if (!Array.isArray(value?.stations)) {
+    return null;
+  }
+
+  const baseLayout = createCustomLayoutDraftFromPlan(plan);
+
+  return {
+    baseCardKey: baseLayout.baseCardKey,
+    stations: normalizeCustomLayoutStations(
+      baseLayout.stations,
+      value.stations,
+      {
+        forceProductionLevelThree: !isTwoPowerLayoutPlan(plan),
+      },
+    ),
+    staticStations: normalizeCustomLayoutStations(
+      baseLayout.staticStations,
+      value.staticStations,
+    ),
+  };
+}
+
+function getCustomLayoutRooms(customLayout) {
+  const rooms = new Map();
+
+  for (const sourceStation of customLayout?.stations || []) {
+    const facility = sourceStation?.facility;
+    if (!["trading", "manufacture", "power"].includes(facility)) {
+      continue;
+    }
+
+    const product =
+      facility === "power" ? "all" : sourceStation?.product || "";
+    const roomKey = getCustomLayoutRoomKey(facility, product);
+    const currentRoom = rooms.get(roomKey) || {
+      key: roomKey,
+      label: getCustomLayoutRoomLabel(facility, product),
+      facility,
+      product,
+      count: 0,
+      stations: [],
+    };
+    const stationLevel = normalizeCustomStationLevel(
+      sourceStation?.stationLevel,
+      1,
+      facility,
+    );
+
+    currentRoom.count += 1;
+    currentRoom.stations.push({
+      stationLevel,
+      slotCount: getCustomStationSlotCount(facility, stationLevel),
+    });
+    rooms.set(roomKey, currentRoom);
+  }
+
+  return [...rooms.values()];
+}
+
+function getActiveLayoutCard() {
+  const card = getLayoutCardByKey(confirmedLayoutPlan.value?.cardKey);
+  const customLayout = confirmedLayoutPlan.value?.customLayout;
+
+  if (!card || !customLayout) {
+    return card;
+  }
+
+  return {
+    ...card,
+    rooms: getCustomLayoutRooms(customLayout),
+  };
+}
+
+function getActiveRoomStations(room) {
+  if (Array.isArray(room?.stations)) {
+    return room.stations.map((station) => {
+      const stationLevel = normalizeCustomStationLevel(
+        station?.stationLevel,
+        1,
+        room?.facility,
+      );
+      return {
+        stationLevel,
+        slotCount: getCustomStationSlotCount(room?.facility, stationLevel),
+      };
+    });
+  }
+
+  return getRiicRoomStations({
+    facilityProfile: activeFacilityProfile.value,
+    roomKey: room?.key,
+    roomCount: room?.count,
+  });
+}
+
+function getActiveStaticRoomStations({ roomKey, roomCount, key, count }) {
+  const resolvedRoomKey = roomKey || key;
+  const resolvedRoomCount = Number(roomCount ?? count) || 0;
+  const staticStations = confirmedLayoutPlan.value?.customLayout?.staticStations;
+  const matchingStations = (staticStations || []).filter(
+    (station) => station.facility === resolvedRoomKey,
+  );
+
+  if (matchingStations.length === resolvedRoomCount) {
+    return matchingStations.map((station) => {
+      const stationLevel = normalizeCustomStationLevel(
+        station.stationLevel,
+        1,
+        resolvedRoomKey,
+      );
+      return {
+        stationLevel,
+        slotCount: getCustomStationSlotCount(resolvedRoomKey, stationLevel),
+      };
+    });
+  }
+
+  return getRiicRoomStations({
+    facilityProfile: activeFacilityProfile.value,
+    roomKey: resolvedRoomKey,
+    roomCount: resolvedRoomCount,
+  });
+}
+
+function toggleCustomLayoutEditor() {
+  if (customLayoutEditorOpen.value) {
+    customLayoutEditorOpen.value = false;
+    return;
+  }
+
+  const plan = confirmedLayoutPlan.value;
+  if (!plan) {
+    return;
+  }
+
+  customLayoutDraft.value =
+    normalizeCustomLayout(plan, plan.customLayout) ||
+    createCustomLayoutDraftFromPlan(plan);
+  customLayoutEditorOpen.value = true;
+}
+
+function updateCustomLayoutStationLevel({ id, level }) {
+  const draft = customLayoutDraft.value;
+  if (
+    !customLayoutAllowsLevelAdjustment.value ||
+    ![...(draft?.stations || []), ...(draft?.staticStations || [])].some(
+      (station) => station.id === id,
+    )
+  ) {
+    return;
+  }
+
+  const stationLevel = normalizeCustomStationLevel(
+    level,
+    1,
+    draft.stations.find((station) => station.id === id)?.facility ||
+      draft.staticStations?.find((station) => station.id === id)?.facility,
+  );
+  customLayoutDraft.value = {
+    ...draft,
+    stations: draft.stations.map((station) =>
+      station.id === id
+        ? {
+            ...station,
+            stationLevel,
+            slotCount: getCustomStationSlotCount(
+              station.facility,
+              stationLevel,
+            ),
+          }
+        : station,
+    ),
+    staticStations: (draft.staticStations || []).map((station) =>
+      station.id === id
+        ? {
+            ...station,
+            stationLevel,
+            slotCount: getCustomStationSlotCount(
+              station.facility,
+              stationLevel,
+            ),
+          }
+        : station,
+    ),
+  };
+}
+
+function updateCustomLayoutStationProduct({ id, product }) {
+  const draft = customLayoutDraft.value;
+  const currentStation = draft?.stations?.find((station) => station.id === id);
+  const isProductAllowed = (ROOM_PRODUCT_OPTIONS[currentStation?.facility] || [])
+    .some((option) => option.value === product);
+
+  if (!currentStation || !isProductAllowed) {
+    return;
+  }
+
+  customLayoutDraft.value = {
+    ...draft,
+    stations: draft.stations.map((station) =>
+      station.id === id
+        ? {
+            ...station,
+            product,
+          }
+        : station,
+    ),
+    staticStations: draft.staticStations || [],
+  };
+}
+
+function applyCustomLayout() {
+  const plan = confirmedLayoutPlan.value;
+  const customLayout = normalizeCustomLayout(plan, customLayoutDraft.value);
+
+  if (!plan || !customLayout?.stations?.length) {
+    return;
+  }
+
+  confirmedLayoutPlan.value = {
+    ...plan,
+    customLayout,
+  };
+  activeScheduleRoomGroupKey.value = "";
+  clearSelectedRoomGroupTeamCandidates();
+  recommendationPanelOpen.value = false;
+}
+
+function resetCustomLayout() {
+  const plan = confirmedLayoutPlan.value;
+  if (!plan) {
+    return;
+  }
+
+  const { customLayout: _customLayout, ...basePlan } = plan;
+  confirmedLayoutPlan.value = basePlan;
+  customLayoutDraft.value = null;
+  customLayoutEditorOpen.value = false;
+  activeScheduleRoomGroupKey.value = "";
+  clearSelectedRoomGroupTeamCandidates();
+}
+
 function createDefaultConfirmedLayoutPlan() {
   return {
     ...DEFAULT_LAYOUT_SELECTION,
@@ -6004,6 +6477,8 @@ function applyDefaultLayoutSelection() {
   planningMode.value = "manual";
   selectedLayoutId.value = DEFAULT_LAYOUT_SELECTION.layoutId;
   confirmedLayoutPlan.value = createDefaultConfirmedLayoutPlan();
+  customLayoutDraft.value = null;
+  customLayoutEditorOpen.value = false;
 }
 
 function normalizeLayoutEntry(value, savedAnswers) {
@@ -6040,6 +6515,14 @@ function normalizeConfirmedLayoutPlan(value) {
     facilityRequirement: normalizeRiicFacilityRequirement(
       card.layoutId,
       value.facilityRequirement,
+    ),
+    customLayout: normalizeCustomLayout(
+      {
+        cardKey: card.key,
+        layoutId: card.layoutId,
+        facilityRequirement: value.facilityRequirement,
+      },
+      value.customLayout,
     ),
   };
 }
@@ -6559,6 +7042,8 @@ function selectLayoutEntry(value) {
   if (value !== "recommend") {
     selectedLayoutId.value = card.layoutId;
     confirmedLayoutPlan.value = null;
+    customLayoutDraft.value = null;
+    customLayoutEditorOpen.value = false;
     clearSelectedRoomGroupTeamCandidates();
   }
 
@@ -6663,7 +7148,8 @@ function selectManualScheduleOption(value) {
 
   if (
     confirmedLayoutPlan.value?.cardKey === cardKey &&
-    confirmedLayoutPlan.value?.shiftMode === shiftMode
+    confirmedLayoutPlan.value?.shiftMode === shiftMode &&
+    !confirmedLayoutPlan.value?.customLayout
   ) {
     selectedLayoutId.value = "";
     confirmedLayoutPlan.value = null;
@@ -6684,6 +7170,8 @@ function selectManualScheduleOption(value) {
     shiftMode,
     facilityRequirement: normalizeRiicFacilityRequirement(card.layoutId),
   };
+  customLayoutDraft.value = null;
+  customLayoutEditorOpen.value = false;
   clearSelectedRoomGroupTeamCandidates();
   recommendationPanelOpen.value = false;
 }
@@ -7074,12 +7562,28 @@ onBeforeUnmount(() => {
           :visible-layout-schedule-options="visibleLayoutScheduleOptions"
           :is-step-complete="isStepComplete"
           :is-layout-recommended="isLayoutRecommended"
+          :custom-layout-editor-open="customLayoutEditorOpen"
+          :custom-layout-active="Boolean(confirmedLayoutPlan?.customLayout)"
+          :custom-layout-stations="customLayoutEditorStations"
+          :custom-layout-allows-level-adjustment="
+            customLayoutAllowsLevelAdjustment
+          "
+          :room-product-options="ROOM_PRODUCT_OPTIONS"
           @toggle-recommendation-panel="toggleRecommendationPanel"
           @select-recommendation-step="selectRecommendationStep"
           @update-answer="selectOption($event.key, $event.value)"
           @reset-recommendation-answers="resetRecommendationAnswers"
           @select-layout-shift="selectLayoutShift"
           @select-manual-schedule-option="selectManualScheduleOption"
+          @toggle-custom-layout-editor="toggleCustomLayoutEditor"
+          @change-custom-layout-station-level="
+            updateCustomLayoutStationLevel($event)
+          "
+          @change-custom-layout-station-product="
+            updateCustomLayoutStationProduct($event)
+          "
+          @apply-custom-layout="applyCustomLayout"
+          @reset-custom-layout="resetCustomLayout"
         ></RiicLayoutChoicePanel>
 
       </section>

@@ -4,6 +4,7 @@ import battleRecordBackground from "/src/assets/images/riic-schedule-preview/bat
 import greenCertificateBackground from "/src/assets/images/riic-schedule-preview/green-certificate.png";
 import goldBackground from "/src/assets/images/riic-schedule-preview/gold.png";
 import lmdBackground from "/src/assets/images/riic-schedule-preview/lmd.png";
+import originiumShardBackground from "/src/assets/images/riic-schedule-preview/originium-shard.png";
 import orundumBackground from "/src/assets/images/riic-schedule-preview/orundum.png";
 import yellowCertificateBackground from "/src/assets/images/riic-schedule-preview/yellow-certificate.png";
 
@@ -76,13 +77,18 @@ function getStationNumber(room, key) {
   return matchedLabelIndex ? Number(matchedLabelIndex[1]) : null;
 }
 
-function getProductIcon(product) {
+function getProductIcon(product, facility) {
+  if (product === "orundum") {
+    return facility === "manufacture"
+      ? originiumShardBackground
+      : orundumBackground;
+  }
+
   return (
     {
       lmd: lmdBackground,
       experience: battleRecordBackground,
       gold: goldBackground,
-      orundum: orundumBackground,
     }[String(product || "")] || null
   );
 }
@@ -211,7 +217,7 @@ const roomColumns = computed(() => {
         facility: String(room?.facility || "").trim(),
         stationNumber: getStationNumber(room, key),
         product: String(room?.product || "").trim(),
-        icon: getProductIcon(room?.product),
+        icon: getProductIcon(room?.product, room?.facility),
         order: Number(room?.index),
         segments: Array.isArray(settlement?.segments)
           ? settlement.segments

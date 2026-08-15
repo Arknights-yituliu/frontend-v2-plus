@@ -45,7 +45,7 @@ const emit = defineEmits([
         @click="emit('export-maa')"
       >
         <v-icon icon="mdi-code-json" size="18"></v-icon>
-        {{ exportingMaa ? "正在导出" : "导出 MAA" }}
+        {{ exportingMaa ? "正在导出" : "导出 MAA 排班表文件" }}
       </button>
     </div>
   </div>
