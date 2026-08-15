@@ -25,6 +25,9 @@ try {
   const {
     buildRiicTailFillResult,
   } = await vite.ssrLoadModule("/src/utils/riic/l71-idle-fill.js");
+  const {
+    materializeRiicRoomTeamCandidate,
+  } = await vite.ssrLoadModule("/src/utils/riic/l62-room-team-materializer.js");
 
 const candidate = {
   key: "candidate-a",
@@ -225,6 +228,155 @@ const automaticFallbackPlan = planRiicAutomaticRoomSelections({
   beamLimit: 32,
 });
 assert.equal(automaticFallbackPlan.bestPlan.selections.length, 4);
+
+const protectedOptionPlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "protected-option",
+      groupId: "protected-option",
+      cohortId: "protected-option",
+      cohortKey: "protected-option",
+      teamCount: 1,
+    },
+  ],
+  beamLimit: 1,
+  optionLimit: 1,
+  representativeLimit: 1,
+  getOptionProtectionKeys: ({ option }) =>
+    option.candidateKey === "greyy-support"
+      ? ["automation-power-support"]
+      : [],
+  resolveTeamOptions: () => [
+    {
+      key: "ordinary-power",
+      candidateKey: "ordinary-power",
+      claimedOperatorIds: ["ordinary-power"],
+      baseRankingValue: 100,
+    },
+    {
+      key: "greyy-support",
+      candidateKey: "greyy-support",
+      claimedOperatorIds: ["greyy-support"],
+      baseRankingValue: 1,
+    },
+  ],
+});
+assert.equal(
+  protectedOptionPlan.bestPlan.selections[0].option.candidateKey,
+  "greyy-support",
+);
+
+const protectedBranchPlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "protected-power",
+      groupId: "protected-power",
+      cohortId: "protected-power",
+      cohortKey: "protected-power",
+      teamCount: 1,
+    },
+    {
+      key: "protected-manufacture",
+      groupId: "protected-manufacture",
+      cohortId: "protected-manufacture",
+      cohortKey: "protected-manufacture",
+      teamCount: 1,
+    },
+  ],
+  beamLimit: 2,
+  optionLimit: 2,
+  representativeLimit: 2,
+  selectionBatchSize: 1,
+  getPlanProtectionKeys: (plan) => [
+    plan.selections.some(
+      (selection) => selection.option.candidateKey === "greyy-support",
+    )
+      ? "automation-with-power-support"
+      : "automation-without-power-support",
+  ],
+  resolveTeamOptions: ({ cohort, plan }) =>
+    cohort.groupId === "protected-power"
+      ? [
+          {
+            key: "ordinary-power",
+            candidateKey: "ordinary-power",
+            claimedOperatorIds: ["ordinary-power"],
+            baseRankingValue: 100,
+          },
+          {
+            key: "greyy-support",
+            candidateKey: "greyy-support",
+            claimedOperatorIds: ["greyy-support"],
+            baseRankingValue: 1,
+          },
+        ]
+      : [
+          {
+            key: "manufacture",
+            candidateKey: "manufacture",
+            claimedOperatorIds: ["manufacture"],
+            baseRankingValue:
+              plan.selections[0]?.option.candidateKey === "greyy-support"
+                ? 200
+                : 0,
+          },
+        ],
+});
+assert.deepEqual(
+  protectedBranchPlan.bestPlan.selections.map(
+    (selection) => selection.option.candidateKey,
+  ),
+  ["greyy-support", "manufacture"],
+);
+
+const automationMaterializeCandidate = {
+  key: "automation-materialize-test",
+  candidateScope: {
+    roomType: "manufacture",
+    product: "experience",
+    stationLevel: 3,
+    slotCount: 3,
+  },
+  coreLayer3BonusPercent: 0,
+  layer3CandidateLocalBonusPercent: 0,
+  fallback: {
+    count: 1,
+    candidateOperators: [],
+  },
+};
+const automationMaterializeOperator = {
+  charId: "char_400_weedy",
+  name: "温蒂",
+  percent: 0,
+  basePercent: 0,
+  layer3Bonus: 30,
+  tags: ["automation"],
+};
+const automationRoster = [
+  { charId: "char_400_weedy", name: "温蒂", elite: 2, level: 1 },
+];
+const automationBaselineMaterialized = materializeRiicRoomTeamCandidate(
+  automationMaterializeCandidate,
+  [automationMaterializeOperator],
+);
+const automationSupportedMaterialized = materializeRiicRoomTeamCandidate(
+  automationMaterializeCandidate,
+  [automationMaterializeOperator],
+  {
+    automationRuntimeContext: {
+      layoutFacts: {
+        powerPlantCount: 2,
+        facilities: [],
+      },
+      ownedOperators: automationRoster,
+      powerPlantCount: 2,
+      effectivePowerPlantCount: 3,
+      supportOperatorId: "char_1027_greyy2",
+    },
+  },
+);
+assert.equal(automationBaselineMaterialized.totalPercent, 130);
+assert.equal(automationSupportedMaterialized.totalPercent, 145);
 
 const twoStepLookaheadPlan = planRiicAutomaticRoomSelections({
   selectionCohorts: [

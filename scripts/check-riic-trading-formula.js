@@ -705,6 +705,68 @@ const vignaWithoutGlasgow = calculateRiicTrading(
 assert.equal(vignaWithoutGlasgow.ok, true);
 assertClose(vignaWithoutGlasgow.rate, 193);
 
+const hodrerWithoutContext = calculateRiicTrading(
+  facility(3),
+  [
+    operator("char_4088_hodrer", 2, 1),
+    operator("char_282_catap", 1, 55),
+    operator("char_185_frncat", 1, 55),
+  ],
+  {
+    context: {},
+  },
+);
+assert.equal(hodrerWithoutContext.ok, false);
+assert.equal(hodrerWithoutContext.error, "notSupported");
+
+const hodrerWithoutPartners = calculateRiicTrading(
+  {
+    ...facility(3),
+    context: {
+      baseOperatorIds: [],
+    },
+  },
+  [
+    operator("char_4088_hodrer", 2, 1),
+    operator("char_282_catap", 1, 55),
+    operator("char_185_frncat", 1, 55),
+  ],
+);
+assert.equal(hodrerWithoutPartners.ok, true);
+assertClose(hodrerWithoutPartners.rate, 193);
+
+const hodrerWithPartners = calculateRiicTrading(
+  {
+    ...facility(3),
+    context: {
+      baseOperatorIds: ["char_4087_ines", "char_113_cqbw"],
+    },
+  },
+  [
+    operator("char_4088_hodrer", 2, 1),
+    operator("char_282_catap", 1, 55),
+    operator("char_185_frncat", 1, 55),
+  ],
+);
+assert.equal(hodrerWithPartners.ok, true);
+assertClose(hodrerWithPartners.rate, 203);
+
+const closureVignaHodrer = calculateRiicTrading(
+  {
+    ...facility(3),
+    context: {
+      baseOperatorIds: [],
+    },
+  },
+  [
+    operator("char_4228_closur", 2, 1),
+    operator("char_1019_siege2", 2, 1),
+    operator("char_4088_hodrer", 2, 1),
+  ],
+);
+assert.equal(closureVignaHodrer.ok, true);
+assert.equal(closureVignaHodrer.type, "closure");
+
 const vignaWithGlasgow = calculateRiicTrading(
   facility(3),
   [
@@ -789,16 +851,17 @@ assert.deepEqual(unsupportedOrundum, {
   error: "notSupported",
 });
 
-const unsupportedOrundumStationLevel = calculateRiicTrading(
+const level2Orundum = calculateRiicTrading(
   facility(2, "orundum"),
   [
     operator("char_502_nblade", 0, 30),
     operator("char_123_fang", 1, 1),
   ],
 );
-assert.equal(unsupportedOrundumStationLevel.ok, false);
-assert.equal(unsupportedOrundumStationLevel.product, "orundum");
-assert.equal(unsupportedOrundumStationLevel.error, "unsupportedStationLevel");
+assert.equal(level2Orundum.ok, true);
+assert.equal(level2Orundum.product, "orundum");
+assertClose(level2Orundum.orundumCapacity, 16.2);
+assertClose(level2Orundum.shardConsumption, 1.62);
 
 const invalidFacility = calculateRiicTrading(
   {

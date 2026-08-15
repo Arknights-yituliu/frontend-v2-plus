@@ -43,9 +43,58 @@ function comparePlans(left, right) {
   return left.key.localeCompare(right.key, "en");
 }
 
-function pruneNextBeamPlans(nextPlans, beamLimit) {
+function normalizeProtectionKeys(value) {
+  return [
+    ...new Set(
+      (Array.isArray(value) ? value : [value])
+        .map((key) => String(key || "").trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
+function pruneNextBeamPlans(nextPlans, beamLimit, getPlanProtectionKeys) {
   const sortedPlans = [...nextPlans].sort(comparePlans);
-  return sortedPlans.slice(0, beamLimit);
+  if (typeof getPlanProtectionKeys !== "function") {
+    return sortedPlans.slice(0, beamLimit);
+  }
+
+  const selectedPlans = [];
+  const selectedPlanKeys = new Set();
+  const protectedPlanByKey = new Map();
+  for (const plan of sortedPlans) {
+    for (const protectionKey of normalizeProtectionKeys(
+      getPlanProtectionKeys(plan),
+    )) {
+      if (!protectedPlanByKey.has(protectionKey)) {
+        protectedPlanByKey.set(protectionKey, plan);
+      }
+    }
+  }
+
+  for (const plan of protectedPlanByKey.values()) {
+    if (
+      selectedPlans.length >= beamLimit ||
+      selectedPlanKeys.has(plan.key)
+    ) {
+      continue;
+    }
+    selectedPlans.push(plan);
+    selectedPlanKeys.add(plan.key);
+  }
+
+  for (const plan of sortedPlans) {
+    if (
+      selectedPlans.length >= beamLimit ||
+      selectedPlanKeys.has(plan.key)
+    ) {
+      continue;
+    }
+    selectedPlans.push(plan);
+    selectedPlanKeys.add(plan.key);
+  }
+
+  return selectedPlans.sort(comparePlans);
 }
 
 function getCanonicalPlanStateKey(plan) {
@@ -137,22 +186,46 @@ function selectParentPlanRoutes(
     representativeLimit ?? optionLimit,
     optionLimit,
   );
+  const protectedRouteByKey = new Map();
   const representativeByKey = new Map();
   for (const route of rankedRoutes) {
+    for (const protectionKey of normalizeProtectionKeys(
+      route.protectionKeys,
+    )) {
+      if (!protectedRouteByKey.has(protectionKey)) {
+        protectedRouteByKey.set(protectionKey, route);
+      }
+    }
     if (!representativeByKey.has(route.diversityKey)) {
       representativeByKey.set(route.diversityKey, route);
     }
   }
 
-  const selectedRoutes = [
-    ...representativeByKey.values(),
-  ].slice(0, normalizedRepresentativeLimit);
-  const selectedRouteKeys = new Set(
-    selectedRoutes.map((route) => route.plan.key),
-  );
-  const selectedDiversityKeys = new Set(
-    selectedRoutes.map((route) => route.diversityKey),
-  );
+  const selectedRoutes = [];
+  const selectedRouteKeys = new Set();
+  const selectedDiversityKeys = new Set();
+  const addRoute = (route) => {
+    if (
+      !route ||
+      selectedRoutes.length >= optionLimit ||
+      selectedRouteKeys.has(route.plan.key)
+    ) {
+      return;
+    }
+    selectedRoutes.push(route);
+    selectedRouteKeys.add(route.plan.key);
+    selectedDiversityKeys.add(route.diversityKey);
+  };
+
+  for (const route of protectedRouteByKey.values()) {
+    addRoute(route);
+  }
+  for (const route of representativeByKey.values()) {
+    if (selectedDiversityKeys.size >= normalizedRepresentativeLimit) {
+      break;
+    }
+    addRoute(route);
+  }
 
   for (const route of rankedRoutes) {
     if (
@@ -197,6 +270,12 @@ function summarizeSelectionForDebug(selection) {
       selection.option?.operatorIds ||
       [],
     fallbackPlanScore: Number(selection.option?.fallbackPlan?.score || 0),
+    automationEffectivePowerPlantCount:
+      selection.option?.materializedCandidate?.automationCalculation
+        ?.effectivePowerPlantCount ?? null,
+    automationSupportOperatorId:
+      selection.option?.materializedCandidate?.automationCalculation
+        ?.supportOperatorId || "",
   };
 }
 
@@ -297,6 +376,8 @@ export function planRiicAutomaticRoomSelections({
   representativeLimit,
   selectionBatchSize = DEFAULT_SELECTION_BATCH_SIZE,
   getOptionDiversityKey,
+  getOptionProtectionKeys,
+  getPlanProtectionKeys,
   resolveTeamOptions,
   evaluatePlan,
   collectDebug = false,
@@ -390,6 +471,7 @@ export function planRiicAutomaticRoomSelections({
                 plan.fiammettaTargetStateIndexes,
               ),
               selectedCandidateKeys,
+              plan,
             }) ||
             cohort.options ||
             [];
@@ -463,6 +545,14 @@ export function planRiicAutomaticRoomSelections({
                     option.candidateKey || option.key || nextPlan.key
                   }`,
               ),
+              protectionKeys: normalizeProtectionKeys(
+                getOptionProtectionKeys?.({
+                  cohort,
+                  selectionKey,
+                  option,
+                  plan: nextPlan,
+                }),
+              ),
             });
             onOptionEvaluated?.({
               roundIndex,
@@ -498,7 +588,11 @@ export function planRiicAutomaticRoomSelections({
       const isFinalSelectionInBatch =
         batchSelectionIndex === batchSelectionCount - 1;
       batchPlans = isFinalSelectionInBatch
-        ? pruneNextBeamPlans(rankedNextPlans, normalizedBeamLimit)
+        ? pruneNextBeamPlans(
+            rankedNextPlans,
+            normalizedBeamLimit,
+            getPlanProtectionKeys,
+          )
         : rankedNextPlans;
       batchStages.push({
         roundIndex,

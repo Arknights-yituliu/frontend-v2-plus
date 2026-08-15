@@ -19,8 +19,72 @@ import {
   getRiicActiveRosterCandidatePriority,
 } from "./l65-active-roster-effects.js";
 
+const AUTOMATION_POWER_SUPPORT_OPERATOR_ID = "char_1027_greyy2";
+
 function getAutomaticRoomGroupPriority(group) {
   return ["meeting", "office"].includes(group?.facility) ? 1 : 0;
+}
+
+function isAutomationCandidate(candidate) {
+  return Boolean(
+    candidate?.automationCalculation ||
+      String(candidate?.variantGroupId || "").includes("automation") ||
+      (candidate?.fallback?.taggedMemberRequirements || []).some((requirement) =>
+        (requirement?.tags || []).includes("automation"),
+      ) ||
+      (candidate?.fallback?.candidateOperators || []).some((operator) =>
+        (operator?.tags || []).includes("automation"),
+      ),
+  );
+}
+
+function hasUnlockedAutomationPowerSupport(ownedOperators = []) {
+  const supportOperator = (ownedOperators || []).find(
+    (operator) =>
+      String(operator?.charId || "").trim() ===
+      AUTOMATION_POWER_SUPPORT_OPERATOR_ID,
+  );
+  return Number(supportOperator?.elite ?? supportOperator?.evolvePhase ?? 0) >= 2;
+}
+
+function hasAutomationCandidateStates(
+  groups = [],
+  candidateStatesByGroupId = {},
+) {
+  return groups.some((group) =>
+    (candidateStatesByGroupId[group.id]?.cohorts || []).some((cohort) =>
+      (cohort?.candidates || []).some(isAutomationCandidate),
+    ),
+  );
+}
+
+function hasSelectedAutomationPowerSupport(plan) {
+  return (plan?.selections || []).some(
+    (selection) =>
+      selection?.slot?.facility === "power" &&
+      (selection?.option?.materializedCandidate?.operatorIds || []).includes(
+        AUTOMATION_POWER_SUPPORT_OPERATOR_ID,
+      ),
+  );
+}
+
+function getAutomationRuntimeContext({
+  plan,
+  layoutFacts,
+  ownedOperators,
+}) {
+  if (!hasSelectedAutomationPowerSupport(plan)) {
+    return null;
+  }
+
+  const powerPlantCount = Number(layoutFacts?.powerPlantCount || 0);
+  return {
+    layoutFacts: layoutFacts || {},
+    ownedOperators,
+    powerPlantCount,
+    effectivePowerPlantCount: powerPlantCount + 1,
+    supportOperatorId: AUTOMATION_POWER_SUPPORT_OPERATOR_ID,
+  };
 }
 
 export function getRiicAutomaticRoomGroupPlanningOrder(groups = []) {
@@ -48,6 +112,7 @@ function getAutomaticRoomTeamOptions({
   ownedOperators,
   selectedCandidateKeys = [],
   teamIndex,
+  automationRuntimeContext,
 }) {
   const recovery = normalizeRiicFiammettaRecovery(fiammettaRecovery);
   const coreOperatorIds = candidate?.operatorIds || [];
@@ -105,7 +170,12 @@ function getAutomaticRoomTeamOptions({
     const materializedCandidate = materializeRiicRoomTeamCandidate(
       candidate,
       fallbackOperators,
-      { controlCenterRuntimeContext },
+      {
+        controlCenterRuntimeContext,
+        automationRuntimeContext: isAutomationCandidate(candidate)
+          ? automationRuntimeContext
+          : null,
+      },
     );
     const materializedOperatorIds = materializedCandidate?.operatorIds || [];
     const claimedOperatorIds = materializedOperatorIds.filter(
@@ -296,10 +366,20 @@ export function buildRiicAutomaticRoomGroupSelections({
   fallbackPlanLimit,
   fiammettaRecovery,
   ownedOperators = [],
+  layoutFacts = {},
   controlCenterSegments = [],
   collectPlanningDebug = false,
 } = {}) {
-  const planningGroups = getRiicAutomaticRoomGroupPlanningOrder(groups);
+  const automationOpportunity =
+    hasUnlockedAutomationPowerSupport(ownedOperators) &&
+    hasAutomationCandidateStates(groups, candidateStatesByGroupId);
+  const basePlanningGroups = getRiicAutomaticRoomGroupPlanningOrder(groups);
+  const planningGroups = automationOpportunity
+    ? [
+        ...basePlanningGroups.filter((group) => group.facility === "power"),
+        ...basePlanningGroups.filter((group) => group.facility !== "power"),
+      ]
+    : basePlanningGroups;
   const groupLabelById = new Map(
     planningGroups.map((group) => [group.id, group.label || group.id]),
   );
@@ -329,12 +409,31 @@ export function buildRiicAutomaticRoomGroupSelections({
     selectionBatchSize,
     getOptionDiversityKey: ({ cohort, selectionKey, option }) =>
       `${cohort.key}:${selectionKey}:${option.candidateKey}`,
+    getOptionProtectionKeys: ({ cohort, option }) =>
+      automationOpportunity &&
+      cohort.facility === "power" &&
+      (option?.materializedCandidate?.operatorIds || []).includes(
+        AUTOMATION_POWER_SUPPORT_OPERATOR_ID,
+      )
+        ? ["automation-power-support"]
+        : [],
+    getPlanProtectionKeys: (plan) => {
+      if (!automationOpportunity || !plan?.selections?.length) {
+        return [];
+      }
+      return [
+        hasSelectedAutomationPowerSupport(plan)
+          ? "automation-with-power-support"
+          : "automation-without-power-support",
+      ];
+    },
     resolveTeamOptions: ({
       cohort,
       selectionKey,
       claimedOperatorIds,
       fiammettaTargetStateIndexes,
       selectedCandidateKeys,
+      plan,
     }) => {
       const teamIndex = Number(
         String(selectionKey || "").split(":").at(-1),
@@ -366,6 +465,11 @@ export function buildRiicAutomaticRoomGroupSelections({
             ownedOperators,
             selectedCandidateKeys,
             teamIndex,
+            automationRuntimeContext: getAutomationRuntimeContext({
+              plan,
+              layoutFacts,
+              ownedOperators,
+            }),
           }),
         )
         .sort(
@@ -500,6 +604,8 @@ export function buildRiicAutomaticRoomGroupSelections({
               fallbackOperatorIds:
                 option.materializedCandidate?.fallback?.fallbackOperatorIds ||
                 [],
+              automationCalculation:
+                option.materializedCandidate?.automationCalculation || null,
             })),
           }
         : null,

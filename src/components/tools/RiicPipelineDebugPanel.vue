@@ -440,6 +440,9 @@ function getFinalEfficiencyTraceMode(row) {
   if (row?.breakdown?.finalRosterCalculation) {
     return "finalRoster";
   }
+  if (row?.breakdown?.automationCalculation) {
+    return "automation";
+  }
   if (Number.isFinite(Number(row?.breakdown?.candidateTotalPercent))) {
     return "candidate";
   }
@@ -451,6 +454,7 @@ function getFinalEfficiencyTraceModeLabel(row) {
     {
       closure: "特别订单换算",
       finalRoster: "最终名单重算",
+      automation: "自动化复核",
       candidate: "候选值回算",
       unavailable: "无可用公式",
     }[getFinalEfficiencyTraceMode(row)] || "无可用公式"
@@ -1407,6 +1411,12 @@ const droneTableDebug = computed(() => {
                       {{ selection.candidateName || selection.candidateKey }}
                       （{{ getCandidateNames(selection.operatorIds) }}，
                       补位 {{ formatNumber(selection.fallbackPlanScore) }}）
+                      <span
+                        v-if="selection.automationEffectivePowerPlantCount"
+                      >
+                        ，自动化等效发电站
+                        {{ selection.automationEffectivePowerPlantCount }}
+                      </span>
                     </span>
                   </span>
                   <span>本批：</span>
@@ -1418,6 +1428,12 @@ const droneTableDebug = computed(() => {
                     {{ selection.candidateName || selection.candidateKey }}
                     （{{ getCandidateNames(selection.operatorIds) }}，
                     补位 {{ formatNumber(selection.fallbackPlanScore) }}）
+                    <span
+                      v-if="selection.automationEffectivePowerPlantCount"
+                    >
+                      ，自动化等效发电站
+                      {{ selection.automationEffectivePowerPlantCount }}
+                    </span>
                   </span>
                 </li>
               </ul>
@@ -1641,7 +1657,60 @@ const droneTableDebug = computed(() => {
                 </template>
               </span>
               <template v-if="row.status === 'calculated'">
-                <span v-if="getFinalEfficiencyTraceMode(row) === 'candidate'">
+                <span v-if="getFinalEfficiencyTraceMode(row) === 'automation'">
+                  自动化技能复核
+                  {{ formatPercent(row.breakdown.automationCalculation.totalPercent) }}
+                  （真实发电站
+                  {{ row.breakdown.automationCalculation.powerPlantCount }}
+                  <template
+                    v-if="
+                      row.breakdown.automationCalculation.supportOperatorId
+                    "
+                  >
+                    + 承曦格雷伊触发的设施条件
+                    {{
+                      formatSignedPercent(
+                        Number(
+                          row.breakdown.automationCalculation
+                            .effectivePowerPlantCount,
+                        ) -
+                          Number(
+                            row.breakdown.automationCalculation.powerPlantCount,
+                          ),
+                      )
+                    }}
+                  </template>
+                  ，有效设施数
+                  {{ row.breakdown.automationCalculation.effectivePowerPlantCount }}）
+                  + 在岗基础
+                  {{ formatSignedPercent(row.breakdown.staffingBonusPercent) }}
+                  + 实际中枢房间
+                  {{
+                    formatSignedPercent(
+                      row.breakdown.actualControlCenterFacilityBonusPercent,
+                    )
+                  }}
+                  + 实际中枢指定干员
+                  {{
+                    formatSignedPercent(
+                      row.breakdown.actualControlCenterOperatorBonusPercent,
+                    )
+                  }}
+                  + L65 当前班组
+                  {{
+                    formatSignedPercent(
+                      row.breakdown.activeRosterBonusPercent || 0,
+                    )
+                  }}
+                  + 资源链额外
+                  {{
+                    formatSignedPercent(
+                      row.breakdown.resourceChainAdditionalBonusPercent || 0,
+                    )
+                  }}
+                  = {{ formatPercent(row.efficiency) }}
+                </span>
+                <span v-else-if="getFinalEfficiencyTraceMode(row) === 'candidate'">
                   候选原始
                   {{ formatPercent(row.breakdown.candidateTotalPercent) }}
                   - 候选期中枢指定干员预估
