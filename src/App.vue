@@ -30,6 +30,16 @@ import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import FeedbackTable from '/src/static/json/about/feedback_table.json'
 import {language} from '/src/utils/i18n.js'
+import {useHead, useSeoMeta} from '@unhead/vue'
+import {
+    SITE_URL,
+    SITE_NAME,
+    DEFAULT_TITLE,
+    DEFAULT_DESCRIPTION,
+    DEFAULT_KEYWORDS,
+    OG_IMAGE,
+    getSeoRoute,
+} from '/src/utils/seo.js'
 
 const themeOverrides = {
   common: {
@@ -75,6 +85,49 @@ function resolvePageTitle(path, fallbackTitle = '') {
 }
 
 let pageTitle = ref(resolvePageTitle(route.path, route.meta?.title));
+
+const seoRoute = computed(() => getSeoRoute(route.path));
+const pageDescription = computed(() => seoRoute.value?.description || DEFAULT_DESCRIPTION);
+const pageKeywords = computed(() => seoRoute.value?.keywords || DEFAULT_KEYWORDS);
+
+const seoTitle = computed(() => {
+    const title = seoRoute.value?.title || route.meta?.title;
+    if (!title) {
+        return DEFAULT_TITLE;
+    }
+    if (title === DEFAULT_TITLE || title.includes(SITE_NAME)) {
+        return title;
+    }
+    return `${title} - ${SITE_NAME}`;
+});
+
+const canonicalUrl = computed(() => {
+    const path = normalizePath(route.path);
+    return SITE_URL + (path === '/' ? '/' : path);
+});
+
+useSeoMeta({
+    title: () => seoTitle.value,
+    description: () => pageDescription.value,
+    keywords: () => pageKeywords.value,
+    ogTitle: () => seoTitle.value,
+    ogDescription: () => pageDescription.value,
+    ogType: 'website',
+    ogUrl: () => canonicalUrl.value,
+    ogImage: OG_IMAGE,
+    ogSiteName: SITE_NAME,
+    ogLocale: 'zh_CN',
+    twitterCard: 'summary_large_image',
+    twitterTitle: () => seoTitle.value,
+    twitterDescription: () => pageDescription.value,
+    twitterImage: OG_IMAGE,
+    twitterUrl: () => canonicalUrl.value,
+});
+
+useHead({
+    htmlAttrs: {lang: 'zh-CN'},
+    link: [{rel: 'canonical', href: () => canonicalUrl.value}],
+});
 
 
 function normalizePath(path) {

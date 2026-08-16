@@ -1,0 +1,36 @@
+# 明日方舟一图流
+
+> 明日方舟一图流 - 提供明日方舟关卡推荐、商店性价比、礼包性价比、物品价值表、攒抽计算器等工具，帮助博士高效规划资源
+
+明日方舟一图流是面向《明日方舟》(Arknights) 玩家的资源规划与数据工具站，提供材料效率计算、关卡刷图推荐、商店与礼包性价比、攒抽计算器、基建排班生成器、干员练度统计等工具。
+
+## 主要工具
+
+- [明日方舟一图流 - 关卡推荐、商店性价比、攒抽计算器](https://ark.yituliu.cn/): 明日方舟一图流 - 提供明日方舟关卡推荐、商店性价比、礼包性价比、物品价值表、攒抽计算器等工具，帮助博士高效规划资源
+- [商店性价比 - 明日方舟一图流](https://ark.yituliu.cn/material/store): 明日方舟商店性价比排行，直观对比各档位商品价值，帮助博士理性氪金、高效规划资源
+- [礼包性价比 - 明日方舟一图流](https://ark.yituliu.cn/material/pack): 明日方舟礼包性价比排行，量化各礼包实际价值，助你理性消费、只买高性价比礼包
+- [物品价值表 - 明日方舟一图流](https://ark.yituliu.cn/material/value): 明日方舟物品价值表，量化源石、合成玉、理智等各类资源价值，统一衡量刷图收益
+- [精英化与专精性价比 - 明日方舟一图流](https://ark.yituliu.cn/material/elite): 明日方舟干员精英化与专精性价比查询，查看材料投入与收益对比
+- [攒抽计算器 - 明日方舟一图流](https://ark.yituliu.cn/tools/gachaCalc): 明日方舟攒抽计算器，规划源石与合成玉收支，估算未来卡池可抽取次数
+- [我能抄什么作业 - 明日方舟一图流](https://ark.yituliu.cn/tools/operator-zoot-matcher): 根据你已拥有的明日方舟干员，智能匹配可抄的作业阵容，快速找到适合自己的打法
+- [基建技能一览 - 明日方舟一图流](https://ark.yituliu.cn/information/logistics): 明日方舟基建技能一览，查询干员基建技能与常用排班配置
+- [排班表生成器 - 明日方舟一图流](https://ark.yituliu.cn/tools/scheduleV3): 一键生成明日方舟基建排班表，自动分配干员，提升基建收益
+- [排班表（MAA） - 明日方舟一图流](https://ark.yituliu.cn/tools/scheduleV2): 明日方舟排班表编辑器，适配 MAA 自动化助手
+- [Mower 排班表生成器 - 明日方舟一图流](https://ark.yituliu.cn/tools/mower-plan): 生成适配 Mower 的明日方舟基建排班表
+- [一图流排班表 - 明日方舟一图流](https://ark.yituliu.cn/tools/schedule-images): 明日方舟一图流排班表参考，快速查看常用排班方案
+- [岁兽残识记录器 - 明日方舟一图流](https://ark.yituliu.cn/tools/sui): 明日方舟岁兽残识记录器，记录与分析岁兽残识相关内容
+- [界园树洞模拟 - 明日方舟一图流](https://ark.yituliu.cn/tools/jie-garden): 明日方舟界园树洞模拟工具，探索集成战略界园玩法
+- [专精时间减半计算器 - 明日方舟一图流](https://ark.yituliu.cn/tools/specializationTimeCalculate): 明日方舟专精时间减半计算器，计算干员专精训练时间与收益
+- [生息演算食材一览 - 明日方舟一图流](https://ark.yituliu.cn/information/sandboxFoods): 明日方舟生息演算食材一览，查询各食材属性与获取方式
+- [集成战略结局一览 - 明日方舟一图流](https://ark.yituliu.cn/information/integratedStrategies): 明日方舟集成战略各主题结局达成条件一览，助你集齐全结局
+- [我的干员 - 明日方舟一图流](https://ark.yituliu.cn/survey/operators): 记录你的明日方舟干员练度，参与干员大数据统计
+- [干员大数据 - 明日方舟一图流](https://ark.yituliu.cn/survey/operator-progression-statistics): 查看明日方舟干员练度大数据统计，了解主流养成趋势
+- [公招 tag 调查 - 明日方舟一图流](https://ark.yituliu.cn/survey/maarecruitdata): 明日方舟公开招募 tag 调查，共享公招数据提升招募效率
+- [友情链接 - 明日方舟一图流](https://ark.yituliu.cn/about/links): 明日方舟一图流友情链接，优质明日方舟相关网站与工具推荐
+- [支持我们 - 明日方舟一图流](https://ark.yituliu.cn/about/donate): 支持明日方舟一图流，赞助服务器与开发成本
+
+## 链接
+
+- 项目组织: https://github.com/Arknights-yituliu
+- 前端仓库: https://github.com/Arknights-yituliu/frontend-v2-plus
+- 文档: https://ark.yituliu.cn/docs.html

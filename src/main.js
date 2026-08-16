@@ -1,4 +1,5 @@
 import {createApp} from 'vue'
+import {createHead} from '@unhead/vue/client'
 
 import ElementPlus from 'element-plus'
 import naive from 'naive-ui'
@@ -15,6 +16,7 @@ import vuetify from "/src/plugins/vuetify/vuetify.js";
 
 
 const app = createApp(App)
+const head = createHead()
 
 // const files = import.meta.glob('/src/custom/*.vue', {eager: true})
 // for (let index in files) {
@@ -27,4 +29,5 @@ app.use(ElementPlus, {locale: zhCn,})
 app.use(naive)
 app.use(router)
 app.use(vuetify)
+app.use(head)
 app.mount('#app')
