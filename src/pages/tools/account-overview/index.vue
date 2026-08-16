@@ -7,7 +7,7 @@ import { createMessage } from "/src/utils/message.js"
 import { operatorTableV2 } from "/src/utils/gameData.js"
 import operatorUpdateTime from '/public/json/operator_update_time.json'
 import operatorDataAPI from '/src/api/operatorData.js'
-import { userInfo } from "/src/utils/user/userInfo.js"
+import { userInfo } from "/src/api/uc/oauth.js"
 
 // 子组件
 import AccountStats from '/src/components/survey/account-overview/AccountStats.vue'

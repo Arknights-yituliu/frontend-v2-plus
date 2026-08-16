@@ -1,9 +1,12 @@
 <template>
   <div class="survey-login-page">
     <div v-show="userInfo.status<0">
-      <router-link to="/account/login">
-        <span style="font-size: 16px;color: white">登录</span>
-      </router-link>
+      <v-btn
+          variant="text"
+          :loading="loginLoading"
+          text="登录"
+          @click="handleOAuthLogin"
+      ></v-btn>
     </div>
 
     <div v-show="userInfo.status>0">
@@ -54,7 +57,8 @@
 
 <script setup>
 import {onMounted, ref, watch} from "vue";
-import {getUserInfo, userInfo} from "/src/utils/user/userInfo.js";
+import {clearOAuthToken, fetchOAuthUserInfo, oauthAuthorize, userInfo} from "/src/api/uc/oauth.js";
+import {logoutUcSession} from "/src/api/uc/uc-api.js";
 import {useRouter} from "vue-router";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 
@@ -62,14 +66,35 @@ const router = useRouter();
 
 let homeMenu = ref(false);
 
+// OAuth 发起授权时的加载状态
+let loginLoading = ref(false);
 
-function getUserInfoByToken() {
-  getUserInfo("User")
+/**
+ * 顶部导航「登录」按钮：触发 OAuth2 授权码登录流程
+ * 调后端 /user/oauth2/login 拿 authorizeUrl 后整页跳转 UC 授权，
+ * 授权完成后由后端 /oauth/callback 换 token 并回跳（frontend-redirect-url 配置的页面）
+ */
+async function handleOAuthLogin() {
+    loginLoading.value = true;
+    try {
+        const authorizeUrl = await oauthAuthorize();
+        window.location.href = authorizeUrl;
+    } catch (e) {
+        // 错误提示已在 oauthAuthorize 内部统一处理
+    } finally {
+        loginLoading.value = false;
+    }
 }
 
-//登出
-function logout() {
-  localStorage.removeItem('USER_TOKEN')
+
+function getUserInfoByToken() {
+  fetchOAuthUserInfo()
+}
+
+//登出：先调用 UC 登出接口使服务端会话失效并清除本地 UC token，再清除 OAuth 会话
+async function logout() {
+  await logoutUcSession()
+  clearOAuthToken()
   setTimeout(() => {
     location.reload()
   }, 1000);

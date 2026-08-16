@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import operatorDataAPI from "/src/api/operatorData.js";
+import { getOAuthToken } from "/src/api/uc/oauth.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import { operatorTableV2 } from "/src/utils/gameData.js";
 import { createMessage } from "/src/utils/message.js";
@@ -232,7 +233,7 @@ async function loadInitialData() {
     return;
   }
 
-  if (!localStorage.getItem("USER_TOKEN")) {
+  if (!getOAuthToken()) {
     return;
   }
 

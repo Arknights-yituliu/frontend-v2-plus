@@ -1,4 +1,5 @@
 import request from "/src/api/request"
+import {getOAuthToken} from "/src/api/uc/oauth.js"
 
 
 export default {
@@ -66,9 +67,9 @@ export default {
      * @returns {*}
      */
     getOperatorData() {
-        const USER_TOKEN = encodeURIComponent(localStorage.getItem("USER_TOKEN"))
+        const token = encodeURIComponent(getOAuthToken())
         return request({
-            url: `/survey/operator/info?token=${USER_TOKEN}`,
+            url: `/survey/operator/info?token=${token}`,
             method: "get"
         })
     },

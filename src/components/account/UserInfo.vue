@@ -3,7 +3,8 @@ import {onMounted, ref} from "vue";
 import {createMessage} from "/src/utils/message";
 import userInfoAPI from "/src/api/userInfo"
 import "/src/assets/css/account/home.scss";
-import {userInfo} from '/src/utils/user/userInfo.js'
+import {userInfo, clearOAuthToken} from '/src/api/uc/oauth.js'
+import {logoutUcSession} from '/src/api/uc/uc-api.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {operatorTableV2} from '/src/utils/gameData.js'
 import {useRouter} from "vue-router";
@@ -138,10 +139,11 @@ function updateOrBindEmail(){
 }
 
 /**
- * 退出登录
+ * 退出登录：先调用 UC 登出接口使服务端会话失效并清除本地 UC token，再清除 OAuth 会话
  */
-function logout() {
-  localStorage.removeItem('USER_TOKEN')
+async function logout() {
+  await logoutUcSession()
+  clearOAuthToken()
   setTimeout(() => {
     location.reload()
   }, 1000);

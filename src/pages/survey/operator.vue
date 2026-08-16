@@ -19,7 +19,7 @@ import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
-import { userInfo } from "/src/utils/user/userInfo.js";
+import { getOAuthToken, userInfo } from "/src/api/uc/oauth.js";
 import { useRoute, useRouter } from "vue-router";
 
 const sectionPanels = ref([])
@@ -178,8 +178,7 @@ const displayOperatorFilterModules = ['profession', 'rarity', 'date', 'itemObtai
 const hasAutoAppliedGuestOwnFilter = ref(false)
 
 function hasStoredUserToken() {
-  const token = localStorage.getItem("USER_TOKEN")
-  return Boolean(token && token !== 'null' && token !== 'undefined')
+  return Boolean(getOAuthToken())
 }
 
 function refreshDisplayOperatorList() {

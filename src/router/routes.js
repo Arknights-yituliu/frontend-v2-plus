@@ -436,6 +436,26 @@ const routes = [
         }
     },
     {
+        path: '/dev/uc-login-test',
+        text: 'UC密码登录测试',
+        name: 'UcLoginTest',
+        display: false,
+        component: () => import('/src/pages/dev/uc-login-test.vue'),
+        meta: {
+            title: 'UC密码登录测试'
+        }
+    },
+    {
+        path: '/dev/oauth-test',
+        text: 'OAuth授权码测试',
+        name: 'OauthTest',
+        display: false,
+        component: () => import('/src/pages/dev/oauth-test.vue'),
+        meta: {
+            title: 'OAuth授权码测试'
+        }
+    },
+    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',

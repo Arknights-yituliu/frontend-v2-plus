@@ -1,250 +1,309 @@
 <script setup>
-import {onMounted, ref, watch} from "vue";
-import userAPI from '/src/api/userInfo.js'
+import {ref} from "vue";
 import '/src/assets/css/account/login.v2.scss'
 import {createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
+import {ucRequest} from "/src/api/uc/uc-api.js";
 
-const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'
-const HYPERGRYPH_TOKEN_API = 'https://web-api.hypergryph.com/account/info/hg'
-const BILIBILI_TOKEN_API = 'https://web-api.hypergryph.com/account/info/ak-b'
-const SKLAND_LINK = 'https://www.skland.com/'
-const CONSOLE_CODE = 'copy(localStorage.getItem(\'SK_OAUTH_CRED_KEY\')+\',\'+localStorage.getItem(\'SK_TOKEN_CACHE_KEY\'))'
+/** 当前步骤：sendCode=账号验证 resetPassword=设置新密码 resetSuccessful=完成 */
+const currentStepper = ref("sendCode")
 
-const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
-const englishNumberRegex = /^[A-Za-z0-9]+$/;
-
-const passwordRules = [
-  value => !!value || '不能为空',
-  value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成'
-]
-
-const confirmPasswordRules = [
-  value => !!value || '不能为空',
-  value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成',
-  value => value === inputContent.value.password || '两次密码输入不一致'
-]
-
-function openLinkOnNewPage(url) {
-  window.open(url)
-}
-
-let currentStepper = ref("sendEmail")
-
-function optionLineClass(type) {
-  if (type === inputContent.value.accountType) {
-    return 'option-line-active'
-  } else {
-    return 'option-line'
-  }
-}
-
-let inputContent = ref({
-  userName: '',
-  password: '',
-  confirmPassword: '',
-  email: '',
-  verificationCode: '',
-  hgToken: '',
-  accountType: 'email',
-  token: ''
+/** 表单：account=邮箱或用户名 code=验证码 password/newPassword=新密码 */
+const inputContent = ref({
+    account: '',
+    code: '',
+    password: '',
+    confirmPassword: '',
 })
 
-function optionBtnColor(type) {
-  if (type === inputContent.value.accountType) {
-    return 'color:#1f88ff'
-  } else {
-    return ''
-  }
-}
+/** 加载状态 */
+const resetLoading = ref(false)
+const sendCodeLoading = ref(false)
 
-function inputTipDisplay(inputValue) {
-  return !inputValue;
-}
-
+/** 发送验证码倒计时（秒） */
+const codeCountdown = ref(0)
 
 const router = useRouter()
 
-function sendVerificationCode() {
-  const data = {
-    mailUsage: 'login',
-    email: inputContent.value.email
-  }
-  userAPI.sendVerificationCodeV2(data).then(response => {
-    createMessage({type: 'success', text: '验证码发送成功'})
-  })
-}
-
-function checkPassword() {
-  if (inputContent.value.confirmPassword.length > 2) {
-    if (inputContent.value.password !== inputContent.value.confirmPassword) {
-      return '两次密码不一致'
+/** 基础非空校验 */
+function checkField(value, label) {
+    if (!value) {
+        createMessage({text: `${label}不能为空`, type: "warning"})
+        return false
     }
-  }
+    return true
 }
 
-let recoveryProgress = ref('left:0px')
-
-function setRecoveryProgress(step) {
-  const width = -document.getElementById("retrieve-form-scroll-item").offsetWidth
-  recoveryProgress.value = `left:${step * width}px`
-
-}
-
-/**
- * 发起重置账号密码的请求，获取一个临时token，该临时token用于验证用户是否可修改密码
- * @param step 当前步骤
- */
-function toRetrieveAuthentication(step) {
-  userAPI.retrieveAuthentication(inputContent.value).then(response => {
-    nextStep(step)
-    inputContent.value.token = response.data.tmpToken
-    inputContent.value.userName = response.data.userName
-    createMessage({type: 'success', text: '请在10分钟内修改您的密码'})
-  })
+/** 校验密码规则（与 UC 一致：6-32 位，数字、字母、@、下划线） */
+function checkPassword(password) {
+    if (!/^[A-Za-z0-9@_]{6,32}$/.test(password)) {
+        createMessage({text: "密码需为 6-32 位，仅允许数字、字母、@、下划线", type: "warning"})
+        return false
+    }
+    return true
 }
 
 /**
- * 重置密码
- * @param step 当前步骤
+ * 发送重设密码验证码（UC POST /auth/reset-code），验证码发到账号绑定的邮箱
  */
-function toResetPassword(step) {
-  console.log(step)
-  userAPI.resetPassword(inputContent.value).then(response => {
-    nextStep(step)
-    localStorage.setItem("USER_TOKEN", response.data.token.toString());
-    setTimeout(() => {
-      router.push({name: "AccountHome"})
-    }, 3000)
-  })
+async function sendVerificationCode() {
+    const account = inputContent.value.account
+    if (!checkField(account, "账号")) {
+        return
+    }
+    sendCodeLoading.value = true
+    try {
+        await ucRequest({
+            method: "POST",
+            url: "/auth/reset-code",
+            data: {account},
+            auth: false,
+        })
+        createMessage({text: "验证码已发送到该账号绑定的邮箱", type: "success"})
+        // 发送成功后开始 60s 倒计时
+        codeCountdown.value = 60
+        const timer = setInterval(() => {
+            codeCountdown.value--
+            if (codeCountdown.value <= 0) {
+                clearInterval(timer)
+            }
+        }, 1000)
+    } catch (e) {
+        // 错误提示已在 ucRequest 内部统一弹出（如 20006 未绑定邮箱）
+    } finally {
+        sendCodeLoading.value = false
+    }
 }
 
-
-watch(() => currentStepper.value, (newValue, oldValue) => {
-  console.log(newValue)
-})
-
-const nextStep = (step) => {
-  currentStepper.value = step;
+/**
+ * 提交新密码（UC POST /auth/reset-password），成功后踢出该账号全部会话，跳转登录页
+ */
+async function toResetPassword() {
+    const form = inputContent.value
+    if (!checkField(form.code, "验证码")) {
+        return
+    }
+    if (!checkField(form.password, "新密码") || !checkPassword(form.password)) {
+        return
+    }
+    if (form.confirmPassword !== form.password) {
+        createMessage({text: "两次密码输入不一致", type: "warning"})
+        return
+    }
+    resetLoading.value = true
+    try {
+        await ucRequest({
+            method: "POST",
+            url: "/auth/reset-password",
+            data: {account: form.account, code: form.code, newPassword: form.password},
+            auth: false,
+        })
+        currentStepper.value = "resetSuccessful"
+    } catch (e) {
+        // 错误提示已在 ucRequest 内部统一弹出
+    } finally {
+        resetLoading.value = false
+    }
 }
 
-onMounted(() => {
-  inputContent.value.accountType = 'email'
-})
-
+/** 完成重置后跳转登录页（重置会踢出全部会话，需重新登录） */
+function backToLogin() {
+    router.push({name: "LOGIN"})
+}
 </script>
 
 <template>
   <div class="login-page">
-    <v-card class="login-card m-a">
-      <v-tabs
-          v-model="inputContent.accountType"
-          bg-color="primary"
-      >
-        <v-tab value="email">通过邮箱找回</v-tab>
-      </v-tabs>
+    <!-- 渐变背景层 -->
+    <div class="login-bg"></div>
+
+    <v-card class="login-card m-a" max-width="440" width="100%">
+      <!-- 标题区 -->
+      <div class="login-header">
+        <div class="login-title">找回密码</div>
+        <div class="login-sub">通过绑定邮箱验证码重置密码</div>
+      </div>
+
       <v-card-text>
-        <v-tabs-window v-model="inputContent.accountType">
-          <v-tabs-window-item value="email">
-            <v-stepper alt-labels v-model="currentStepper">
-              <v-stepper-header>
-                <v-stepper-item
-                    title="邮箱验证"
-                    value="sendEmail"
-                >
-                  <template v-slot:icon>
-                    1
-                  </template>
-                </v-stepper-item>
+        <v-stepper alt-labels v-model="currentStepper" hide-actions>
+          <v-stepper-header>
+            <v-stepper-item title="账号验证" value="sendCode">
+              <template v-slot:icon>1</template>
+            </v-stepper-item>
 
-                <v-divider></v-divider>
+            <v-divider></v-divider>
 
-                <v-stepper-item
-                    title="设置新密码"
-                    value="resetPassword"
-                >
-                  <template v-slot:icon>
-                    2
-                  </template>
-                </v-stepper-item>
+            <v-stepper-item title="设置新密码" value="resetPassword">
+              <template v-slot:icon>2</template>
+            </v-stepper-item>
 
-                <v-divider></v-divider>
+            <v-divider></v-divider>
 
-                <v-stepper-item
-                    title="设置成功"
-                    value="resetSuccessful"
-                >
-                  <template v-slot:icon>
-                    3
-                  </template>
-                </v-stepper-item>
-              </v-stepper-header>
+            <v-stepper-item title="完成" value="resetSuccessful">
+              <template v-slot:icon>3</template>
+            </v-stepper-item>
+          </v-stepper-header>
 
-              <v-stepper-window v-show="currentStepper==='sendEmail'">
-                <div>邮箱</div>
-                <div class="flex">
-                  <v-text-field
-                      v-model="inputContent.email"
+          <v-stepper-window>
+            <!-- 第一步：账号验证 -->
+            <v-stepper-window-item value="sendCode">
+              <div class="m-0-4">账号（邮箱或用户名）</div>
+              <v-text-field
+                  v-model="inputContent.account"
+                  color="primary"
+                  density="compact"
+                  variant="outlined"
+                  placeholder="请输入注册时的邮箱或用户名"
+                  class="m-4"
+              ></v-text-field>
+
+              <div class="m-0-4">邮箱验证码</div>
+              <v-text-field
+                  v-model="inputContent.code"
+                  color="primary"
+                  density="compact"
+                  variant="outlined"
+                  placeholder="请输入 6 位验证码"
+                  class="m-4"
+              >
+                <template v-slot:append>
+                  <v-btn
                       color="primary"
-                      density="compact"
-                      variant="outlined"
-                      class="m-4"
-                  ></v-text-field>
-                  <v-btn color="primary" variant="text" text="发送验证码"
-                         @click="sendVerificationCode"></v-btn>
-                </div>
-                <div>验证码</div>
-                <v-otp-input class="m-4" v-model="inputContent.verificationCode" length="4"></v-otp-input>
-                <div class="flex justify-center">
-                  <v-btn color="primary" variant="outlined" text="下一步"
-                         @click="toRetrieveAuthentication('resetPassword')"></v-btn>
-                </div>
-              </v-stepper-window>
+                      variant="text"
+                      :loading="sendCodeLoading"
+                      :disabled="codeCountdown > 0"
+                      @click="sendVerificationCode"
+                  >{{ codeCountdown > 0 ? `${codeCountdown}s 后重发` : '发送验证码' }}</v-btn>
+                </template>
+              </v-text-field>
 
-              <v-stepper-window v-show="currentStepper==='resetPassword'">
-                <div class="m-0-4">登录密码</div>
-                <v-text-field
-                    density="compact"
-                    :rules="passwordRules"
+              <div class="flex justify-center m-4">
+                <v-btn
                     color="primary"
-                    hint="密码仅可由数字、英文组成"
-                    v-model="inputContent.password"
-                    variant="outlined"
-                    type="password"
-                    hide-details="auto"
-                    class="m-4"
-                ></v-text-field>
-                <div class="m-0-4">确认密码</div>
-                <v-text-field
-                    density="compact"
-                    :rules="confirmPasswordRules"
-                    color="primary"
-                    hint="密码仅可由数字、英文组成"
-                    v-model="inputContent.confirmPassword"
-                    variant="outlined"
-                    type="password"
-                    hide-details="auto"
-                    class="m-4"
-                ></v-text-field>
-                <div class="flex justify-center">
-                  <v-btn color="primary" variant="outlined" text="下一步"
-                         @click="toResetPassword('resetSuccessful')"></v-btn>
-                </div>
-              </v-stepper-window>
+                    variant="flat"
+                    text="下一步"
+                    size="large"
+                    class="step-btn"
+                    @click="currentStepper = 'resetPassword'"
+                ></v-btn>
+              </div>
+            </v-stepper-window-item>
 
-              <v-stepper-window v-show="currentStepper==='resetSuccessful'">
-                <v-alert
-                    text="即将转跳到首页"
-                    title="修改成功"
-                    type="success"
-                ></v-alert>
-              </v-stepper-window>
-            </v-stepper>
-          </v-tabs-window-item>
-        </v-tabs-window>
+            <!-- 第二步：设置新密码 -->
+            <v-stepper-window-item value="resetPassword">
+              <div class="m-0-4">新密码</div>
+              <v-text-field
+                  density="compact"
+                  color="primary"
+                  v-model="inputContent.password"
+                  variant="outlined"
+                  type="password"
+                  placeholder="6-32 位，仅数字、字母、@、下划线"
+                  hide-details="auto"
+                  class="m-4"
+              ></v-text-field>
+
+              <div class="m-0-4">确认新密码</div>
+              <v-text-field
+                  density="compact"
+                  color="primary"
+                  v-model="inputContent.confirmPassword"
+                  variant="outlined"
+                  type="password"
+                  placeholder="再次输入新密码"
+                  hide-details="auto"
+                  class="m-4"
+              ></v-text-field>
+
+              <div class="flex justify-center m-4">
+                <v-btn
+                    color="primary"
+                    variant="flat"
+                    text="确认重置"
+                    size="large"
+                    class="step-btn"
+                    :loading="resetLoading"
+                    @click="toResetPassword"
+                ></v-btn>
+              </div>
+            </v-stepper-window-item>
+
+            <!-- 第三步：完成 -->
+            <v-stepper-window-item value="resetSuccessful">
+              <v-alert
+                  class="m-4"
+                  text="密码已重置，账号全部会话已下线，请使用新密码重新登录"
+                  title="修改成功"
+                  type="success"
+                  variant="tonal"
+              ></v-alert>
+              <div class="flex justify-center m-4">
+                <v-btn
+                    color="primary"
+                    variant="flat"
+                    text="返回登录"
+                    size="large"
+                    class="step-btn"
+                    @click="backToLogin"
+                ></v-btn>
+              </div>
+            </v-stepper-window-item>
+          </v-stepper-window>
+        </v-stepper>
       </v-card-text>
     </v-card>
-
   </div>
 </template>
 
+<style scoped>
+.login-page {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+/* 渐变背景层 */
+.login-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(229, 242, 255, 0.9) 100%);
+    z-index: 0;
+}
+
+[data-theme="dark"] .login-bg {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+}
+
+.login-card {
+    position: relative;
+    z-index: 1;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* 标题区 */
+.login-header {
+    padding: 28px 24px 20px;
+    text-align: center;
+}
+
+.login-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.login-sub {
+    font-size: 13px;
+    opacity: 0.6;
+}
+
+/* 步骤按钮 */
+.step-btn {
+    width: 200px;
+    border-radius: 8px;
+}
+</style>
