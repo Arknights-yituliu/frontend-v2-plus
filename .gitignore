@@ -16,6 +16,7 @@ node_modules
 .DS_Store
 dist
 dist-ssr
+dist-compare
 coverage
 *.local
 
@@ -48,3 +49,6 @@ IFLOW.md
 
 
 DeepSeek
+
+# Custom information
+information_records/
