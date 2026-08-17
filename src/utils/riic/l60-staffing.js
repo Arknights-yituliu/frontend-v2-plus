@@ -8,6 +8,18 @@ function isMaaTwoShiftRotation(shiftMode, twoShiftRotationMode) {
   return shiftMode === "twice" && twoShiftRotationMode === "maa";
 }
 
+function isThreeTeamControlRotation(
+  roomType,
+  shiftMode,
+  twoShiftRotationMode,
+) {
+  return (
+    roomType === "control" &&
+    (shiftMode === "threeTimes" ||
+      (shiftMode === "twice" && twoShiftRotationMode === "manual"))
+  );
+}
+
 function getRotationSegments(shiftMode, twoShiftRotationMode) {
   if (isMaaTwoShiftRotation(shiftMode, twoShiftRotationMode)) {
     return [12, 12];
@@ -124,6 +136,35 @@ function createMaaTwoShiftRotationSegments({
   });
 }
 
+function createThreeTeamControlRotationSegments({
+  stationIndexes,
+  segmentHours,
+}) {
+  const stationCount = stationIndexes.length;
+  const teamCount = stationCount * 3;
+
+  return segmentHours.map((durationHours, segmentIndex) => {
+    const activeTeamIndexes = stationIndexes.map(
+      (_, stationOffset) => segmentIndex * stationCount + stationOffset,
+    );
+    const activeTeamIndexSet = new Set(activeTeamIndexes);
+
+    return {
+      index: segmentIndex,
+      durationHours,
+      activeTeamIndexes,
+      restingTeamIndexes: Array.from(
+        { length: teamCount },
+        (_, teamIndex) => teamIndex,
+      ).filter((teamIndex) => !activeTeamIndexSet.has(teamIndex)),
+      assignments: stationIndexes.map((stationIndex, stationOffset) => ({
+        stationIndex,
+        teamIndex: segmentIndex * stationCount + stationOffset,
+      })),
+    };
+  });
+}
+
 function createCohort({
   stationLevel,
   slotCount,
@@ -133,6 +174,7 @@ function createCohort({
   shiftMode,
   twoShiftRotationMode,
   cohortSuffix = "",
+  useThreeTeamControlRotation = false,
 }) {
   const stationCount = stationIndexes.length;
   const resolvedTeamCount =
@@ -168,20 +210,25 @@ function createCohort({
     operatorCount: resolvedTeamCount * slotCount,
     label: stationLabel,
     teams,
-    rotationSegments: isMaaTwoShiftRotation(
-      shiftMode,
-      twoShiftRotationMode,
-    )
-      ? createMaaTwoShiftRotationSegments({
+    rotationSegments: useThreeTeamControlRotation
+      ? createThreeTeamControlRotationSegments({
           stationIndexes,
           segmentHours,
         })
-      : createRotationSegments({
-          activeTeamCount: stationCount,
-          teamCount: resolvedTeamCount,
-          segmentHours,
-          stationIndexes,
-        }),
+      : isMaaTwoShiftRotation(
+          shiftMode,
+          twoShiftRotationMode,
+        )
+        ? createMaaTwoShiftRotationSegments({
+            stationIndexes,
+            segmentHours,
+          })
+        : createRotationSegments({
+            activeTeamCount: stationCount,
+            teamCount: resolvedTeamCount,
+            segmentHours,
+            stationIndexes,
+          }),
   };
 }
 
@@ -350,10 +397,21 @@ export function getRiicRoomGroupStaffingRequirement({
             .map((stationIndex) => stationIndex + 1)
             .join("-")}`,
           teamCount:
-            shiftMode === "once" ||
-            isMaaTwoShiftRotation(shiftMode, twoShiftRotationMode)
-              ? stationIndexes.length * 2
-              : null,
+            isThreeTeamControlRotation(
+              roomType,
+              shiftMode,
+              twoShiftRotationMode,
+            )
+              ? stationIndexes.length * 3
+              : shiftMode === "once" ||
+                  isMaaTwoShiftRotation(shiftMode, twoShiftRotationMode)
+                ? stationIndexes.length * 2
+                : null,
+          useThreeTeamControlRotation: isThreeTeamControlRotation(
+            roomType,
+            shiftMode,
+            twoShiftRotationMode,
+          ),
         }),
       ),
     )
