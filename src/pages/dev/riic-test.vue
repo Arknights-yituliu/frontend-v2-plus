@@ -54,56 +54,51 @@
 
                 <div class="operator-row-list">
                   <div
-                    v-for="operator in p01OperatorOptions"
-                    :key="operator.charId"
-                    class="drone-operator-row"
-                    :class="{ active: p01OperatorStates[operator.charId].enabled }"
-                    role="button"
-                    tabindex="0"
-                    @click="toggleP01Operator(operator.charId)"
-                    @keydown.enter.prevent="toggleP01Operator(operator.charId)"
-                    @keydown.space.prevent="toggleP01Operator(operator.charId)"
+                    v-for="(slot, index) in p01OperatorSlots"
+                    :key="index"
+                    class="operator-slot-row"
                   >
                     <OperatorAvatar
-                      :char-id="operator.charId"
-                      :rarity="operator.rarity"
+                      v-if="slot.charId"
+                      :char-id="slot.charId"
+                      :rarity="getOperatorRarity(slot.charId)"
                       :size="44"
                       :mobile-size="40"
                       border
                     />
-                    <div class="operator-card-main">
-                      <strong>{{ operator.name }}</strong>
-                      <span>{{ operator.description }}</span>
+                    <div v-else class="operator-slot-avatar" aria-hidden="true">
+                      <v-icon icon="mdi-account-outline" size="22"></v-icon>
                     </div>
-                    <div
-                      class="operator-elite-control"
-                      :class="{ inactive: !p01OperatorStates[operator.charId].enabled }"
-                      @click.stop
+                    <el-select
+                      v-model="slot.charId"
+                      filterable
+                      clearable
+                      placeholder="选择干员"
                     >
-                      <el-radio-group
-                        v-model="p01OperatorStates[operator.charId].elite"
-                        size="small"
-                        :disabled="!p01OperatorStates[operator.charId].enabled"
+                      <el-option
+                        v-for="operator in operatorOptions"
+                        :key="operator.charId"
+                        :label="operator.name"
+                        :value="operator.charId"
                       >
-                        <el-radio-button :label="0">E0</el-radio-button>
-                        <el-radio-button :label="1">E1</el-radio-button>
-                        <el-radio-button :label="2">E2</el-radio-button>
-                      </el-radio-group>
-                    </div>
+                      </el-option>
+                    </el-select>
+                    <el-radio-group v-model="slot.elite" size="small">
+                      <el-radio-button :label="0">E0</el-radio-button>
+                      <el-radio-button :label="1">E1</el-radio-button>
+                      <el-radio-button :label="2">E2</el-radio-button>
+                    </el-radio-group>
                     <el-input-number
-                      v-model="p01OperatorStates[operator.charId].level"
-                      class="operator-level-control"
+                      v-model="slot.level"
+                      class="operator-slot-level"
                       :min="1"
                       :max="90"
                       :step="1"
                       controls-position="right"
-                      :disabled="!p01OperatorStates[operator.charId].enabled"
-                      @click.stop
                     />
                     <el-switch
-                      :model-value="p01OperatorStates[operator.charId].enabled"
-                      @click.stop
-                      @update:model-value="setP01OperatorEnabled(operator.charId, $event)"
+                      v-model="slot.enabled"
+                      :aria-label="`启用第 ${index + 1} 个干员槽位`"
                     />
                   </div>
                 </div>
@@ -121,7 +116,20 @@
                     <em>%</em>
                   </label>
                   <label>
-                    <span>其他干员加成</span>
+                    <span>指定干员加成</span>
+                    <el-select
+                      v-model="p01BonusOperatorId"
+                      clearable
+                      filterable
+                      placeholder="选择干员"
+                    >
+                      <el-option
+                        v-for="operator in p01ActiveOperators"
+                        :key="operator.charId"
+                        :label="getOperatorName(operator.charId)"
+                        :value="operator.charId"
+                      />
+                    </el-select>
                     <el-input-number
                       v-model="p01OperatorBonus"
                       :min="-100"
@@ -130,6 +138,26 @@
                       controls-position="right"
                     />
                     <em>%</em>
+                  </label>
+                </div>
+                <div class="trading-context-controls">
+                  <label>
+                    <span>跨房间加成表（已解析 JSON）</span>
+                    <el-input
+                      v-model="p01ExternalOrderBonusesJson"
+                      type="textarea"
+                      :rows="3"
+                      placeholder='{"char_xxx|trading|技能名|2|1": 10}'
+                    />
+                  </label>
+                  <label>
+                    <span>静默共鸣</span>
+                    <el-input-number
+                      v-model="p01SilentResonance"
+                      :min="0"
+                      :max="999"
+                      :step="1"
+                    />
                   </label>
                 </div>
               </section>
@@ -223,46 +251,51 @@
 
                 <div class="operator-row-list">
                   <div
-                    v-for="operator in p02OperatorOptions"
-                    :key="operator.charId"
-                    class="drone-operator-row"
-                    :class="{ active: p02OperatorStates[operator.charId].enabled }"
-                    role="button"
-                    tabindex="0"
-                    @click="toggleP02Operator(operator.charId)"
-                    @keydown.enter.prevent="toggleP02Operator(operator.charId)"
-                    @keydown.space.prevent="toggleP02Operator(operator.charId)"
+                    v-for="(slot, index) in p02OperatorSlots"
+                    :key="index"
+                    class="operator-slot-row"
                   >
                     <OperatorAvatar
-                      :char-id="operator.charId"
-                      :rarity="operator.rarity"
+                      v-if="slot.charId"
+                      :char-id="slot.charId"
+                      :rarity="getOperatorRarity(slot.charId)"
                       :size="44"
                       :mobile-size="40"
                       border
                     />
-                    <div class="operator-card-main">
-                      <strong>{{ operator.name }}</strong>
-                      <span>{{ operator.description }}</span>
+                    <div v-else class="operator-slot-avatar" aria-hidden="true">
+                      <v-icon icon="mdi-account-outline" size="22"></v-icon>
                     </div>
-                    <div
-                      class="operator-elite-control"
-                      :class="{ inactive: !p02OperatorStates[operator.charId].enabled }"
-                      @click.stop
+                    <el-select
+                      v-model="slot.charId"
+                      filterable
+                      clearable
+                      placeholder="选择干员"
                     >
-                      <el-radio-group
-                        v-model="p02OperatorStates[operator.charId].elite"
-                        size="small"
-                        :disabled="!p02OperatorStates[operator.charId].enabled"
+                      <el-option
+                        v-for="operator in operatorOptions"
+                        :key="operator.charId"
+                        :label="operator.name"
+                        :value="operator.charId"
                       >
-                        <el-radio-button :label="0">E0</el-radio-button>
-                        <el-radio-button :label="1">E1</el-radio-button>
-                        <el-radio-button :label="2">E2</el-radio-button>
-                      </el-radio-group>
-                    </div>
+                      </el-option>
+                    </el-select>
+                    <el-radio-group v-model="slot.elite" size="small">
+                      <el-radio-button :label="0">E0</el-radio-button>
+                      <el-radio-button :label="1">E1</el-radio-button>
+                      <el-radio-button :label="2">E2</el-radio-button>
+                    </el-radio-group>
+                    <el-input-number
+                      v-model="slot.level"
+                      class="operator-slot-level"
+                      :min="1"
+                      :max="90"
+                      :step="1"
+                      controls-position="right"
+                    />
                     <el-switch
-                      :model-value="p02OperatorStates[operator.charId].enabled"
-                      @click.stop
-                      @update:model-value="setP02OperatorEnabled(operator.charId, $event)"
+                      v-model="slot.enabled"
+                      :aria-label="`启用第 ${index + 1} 个干员槽位`"
                     />
                   </div>
                 </div>
@@ -310,113 +343,213 @@
           </section>
         </section>
       </el-tab-pane>
+
+      <el-tab-pane label="P03 普通产出" name="p03">
+        <section class="module-test-panel">
+          <header class="module-test-header">
+            <div>
+              <h2>普通制造产出</h2>
+              <p>验证经验书、赤金、源石碎片按效率换算的产出值</p>
+            </div>
+            <el-tag :type="p03Result.ok ? 'success' : 'danger'" effect="plain">
+              {{ p03Result.ok ? "计算完成" : "无法计算" }}
+            </el-tag>
+          </header>
+
+          <div class="module-test-grid">
+            <label>
+              <span>制造产物</span>
+              <el-select v-model="p03Product">
+                <el-option label="经验书" value="experience" />
+                <el-option label="赤金" value="gold" />
+                <el-option label="源石碎片" value="orundum" />
+              </el-select>
+            </label>
+            <label>
+              <span>制造站等级</span>
+              <el-select v-model="p03StationLevel">
+                <el-option v-for="level in [1, 2, 3]" :key="level" :label="level" :value="level" />
+              </el-select>
+            </label>
+            <label>
+              <span>效率</span>
+              <el-input-number v-model="p03Efficiency" :min="0" :max="500" :step="1" />
+            </label>
+            <label>
+              <span>班段时长（小时）</span>
+              <el-input-number v-model="p03DurationHours" :min="0.1" :max="24" :step="0.5" />
+            </label>
+          </div>
+
+          <div v-if="p03Result.ok" class="module-test-result">
+            <div>
+              <span>本班段产出</span>
+              <strong>{{ formatResultValue(p03Result.outputPerCycle) }}</strong>
+            </div>
+            <div>
+              <span>折算日产出</span>
+              <strong>{{ formatResultValue(p03Result.outputPerDay) }}</strong>
+            </div>
+          </div>
+          <p v-else class="result-error">当前等级或产物没有可用的基础产能</p>
+
+          <el-collapse class="raw-result-collapse">
+            <el-collapse-item title="原始计算结果">
+              <pre class="result-json">{{ p03ResultText }}</pre>
+            </el-collapse-item>
+          </el-collapse>
+        </section>
+      </el-tab-pane>
+
+      <el-tab-pane label="P04 净值汇总" name="p04">
+        <section class="module-test-panel">
+          <header class="module-test-header">
+            <div>
+              <h2>资源净值抵扣</h2>
+              <p>手动输入各类产出和消耗，检查净赤金、净龙门币、净源石碎片</p>
+            </div>
+          </header>
+
+          <div class="module-test-grid">
+            <label>
+              <span>周期（小时）</span>
+              <el-input-number v-model="p04CycleHours" :min="0.1" :max="168" :step="1" />
+            </label>
+            <label>
+              <span>赤金制造（周期）</span>
+              <el-input-number v-model="p04GoldManufacture" :min="0" :step="1" />
+            </label>
+            <label>
+              <span>龙门币贸易（周期）</span>
+              <el-input-number v-model="p04LmdTrade" :min="0" :step="1" />
+            </label>
+            <label>
+              <span>贸易赤金消耗（周期）</span>
+              <el-input-number v-model="p04GoldConsumption" :min="0" :step="1" />
+            </label>
+            <label>
+              <span>虚拟赤金（周期）</span>
+              <el-input-number v-model="p04VirtualGold" :min="0" :step="1" />
+            </label>
+            <label>
+              <span>源石碎片制造（周期）</span>
+              <el-input-number v-model="p04ShardManufacture" :min="0" :step="1" />
+            </label>
+            <label>
+              <span>合成玉贸易消耗（周期）</span>
+              <el-input-number v-model="p04ShardConsumption" :min="0" :step="1" />
+            </label>
+            <label>
+              <span>源石碎片制造耗费龙门币（周期）</span>
+              <el-input-number v-model="p04OrundumLmdConsumption" :min="0" :step="1" />
+            </label>
+          </div>
+
+          <div class="module-test-result-grid">
+            <div v-for="resource in p04ResourceResults" :key="resource.key">
+              <span>{{ resource.name }}</span>
+              <strong>{{ formatResultValue(resource.value) }}</strong>
+              <small>/周期</small>
+            </div>
+          </div>
+
+          <el-collapse class="raw-result-collapse">
+            <el-collapse-item title="原始计算结果">
+              <pre class="result-json">{{ p04ResultText }}</pre>
+            </el-collapse-item>
+          </el-collapse>
+        </section>
+      </el-tab-pane>
     </el-tabs>
   </main>
 </template>
 
 <script setup>
-import { computed, reactive, ref } from "vue";
-import { ElMessage } from "element-plus";
+import { computed, ref } from "vue";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import droneImage from "@/assets/images/riic-schedule-preview/drone.png";
 import goldImage from "@/assets/images/riic-schedule-preview/gold.png";
 import lmdImage from "@/assets/images/riic-schedule-preview/lmd.png";
 import orundumImage from "@/assets/images/riic-schedule-preview/orundum.png";
 import shardImage from "@/assets/images/riic-schedule-preview/originium-shard.png";
+import { operatorTableV2 } from "@/utils/gameData.js";
 import { calculateRiicTrading } from "@/utils/riic/P01-riic-trading.js";
 import { calculateRiicTradingDrone } from "@/utils/riic/P02-riic-trading-drone.js";
+import {
+  calculateRiicDirectProductionOutput,
+} from "@/utils/riic/P03-riic-production.js";
+import {
+  settleRiicNetResources,
+} from "@/utils/riic/P04-riic-resource-netting.js";
 
 const activeModule = ref("p01");
+const operatorOptions = Object.freeze(
+  Object.entries(operatorTableV2)
+    .filter(([, operator]) => operator?.name)
+    .map(([charId, operator]) => ({
+      charId,
+      name: operator.name,
+    }))
+    .sort((left, right) => left.name.localeCompare(right.name, "zh-CN")),
+);
 
 const p01Product = ref("lmd");
 const p01StationLevel = ref(3);
 const p01RoomBonus = ref(0);
 const p01OperatorBonus = ref(0);
-const p01OperatorOptions = Object.freeze([
-  {
-    charId: "char_4228_closur",
-    name: "可露希尔",
-    rarity: 6,
-    description: "精二固定获取特别订单",
-  },
-  {
-    charId: "char_4032_provs",
-    name: "但书",
-    rarity: 5,
-    description: "改变黄金订单交付数",
-  },
-  {
-    charId: "char_486_takila",
-    name: "龙舌兰",
-    rarity: 5,
-    description: "高品质订单额外龙门币",
-  },
-  {
-    charId: "char_252_bibeak",
-    name: "裁缝",
-    rarity: 5,
-    description: "三级站改变订单概率",
-  },
-  {
-    charId: "char_502_nblade",
-    name: "夜刀",
-    rarity: 2,
-    description: "订单获取效率 +30%",
-  },
-  {
-    charId: "char_123_fang",
-    name: "芬",
-    rarity: 3,
-    description: "订单获取效率 +30%",
-  },
-  {
-    charId: "char_282_catap",
-    name: "空爆",
-    rarity: 3,
-    description: "订单获取效率 +30%",
-  },
-  {
-    charId: "char_103_angel",
-    name: "能天使",
-    rarity: 6,
-    description: "订单获取效率 +30%",
-  },
+const p01BonusOperatorId = ref("");
+const p01ExternalOrderBonusesJson = ref("{}");
+const p01SilentResonance = ref(0);
+const p01OperatorSlots = ref([
+  { charId: "char_502_nblade", elite: 0, level: 30, enabled: true },
+  { charId: "char_123_fang", elite: 1, level: 1, enabled: true },
+  { charId: "char_282_catap", elite: 0, level: 1, enabled: true },
 ]);
-const p01OperatorStates = reactive({
-  char_4228_closur: { enabled: false, elite: 2, level: 1 },
-  char_4032_provs: { enabled: false, elite: 2, level: 1 },
-  char_486_takila: { enabled: false, elite: 2, level: 1 },
-  char_252_bibeak: { enabled: false, elite: 2, level: 1 },
-  char_502_nblade: { enabled: true, elite: 0, level: 30 },
-  char_123_fang: { enabled: true, elite: 1, level: 1 },
-  char_282_catap: { enabled: true, elite: 0, level: 1 },
-  char_103_angel: { enabled: false, elite: 2, level: 1 },
-});
 const p01ActiveOperators = computed(() =>
-  p01OperatorOptions
-    .filter((operator) => p01OperatorStates[operator.charId].enabled)
+  p01OperatorSlots.value
+    .filter((operator) => operator.enabled && operator.charId)
     .map((operator) => ({
       charId: operator.charId,
-      elite: p01OperatorStates[operator.charId].elite,
-      level: p01OperatorStates[operator.charId].level,
+      elite: Number(operator.elite),
+      level: Number(operator.level),
     })),
 );
 const p01ActiveOperatorCount = computed(() => p01ActiveOperators.value.length);
+const p01ExternalOrderBonuses = computed(() => {
+  try {
+    const value = JSON.parse(p01ExternalOrderBonusesJson.value || "{}");
+    return value && typeof value === "object" && !Array.isArray(value)
+      ? value
+      : null;
+  } catch {
+    return null;
+  }
+});
 const p01Result = computed(() =>
-  calculateRiicTrading(
-    {
-      type: "trading",
-      product: p01Product.value,
-      level: p01StationLevel.value,
-    },
-    p01ActiveOperators.value,
-    {
-      room: p01RoomBonus.value,
-      operators: p01OperatorBonus.value
-        ? { extra: p01OperatorBonus.value }
-        : {},
-    },
-  ),
+  p01ExternalOrderBonuses.value === null
+    ? {
+        ok: false,
+        error: "invalidExternalContext",
+      }
+    : calculateRiicTrading(
+        {
+          type: "trading",
+          product: p01Product.value,
+          level: p01StationLevel.value,
+          context: {
+            resolvedExternalOrderBonuses: p01ExternalOrderBonuses.value,
+            silentResonance: Number(p01SilentResonance.value),
+          },
+        },
+        p01ActiveOperators.value,
+        {
+          room: p01RoomBonus.value,
+          operators:
+            p01BonusOperatorId.value && p01OperatorBonus.value
+              ? { [p01BonusOperatorId.value]: p01OperatorBonus.value }
+              : {},
+        },
+      ),
 );
 const p01ResultText = computed(() =>
   JSON.stringify(p01Result.value, null, 2),
@@ -430,6 +563,7 @@ const p01ResultStatus = computed(() => {
     invalidFacility: "设施配置无效",
     invalidOperators: "干员配置无效",
     invalidBonus: "加成配置无效",
+    invalidExternalContext: "跨房间加成 JSON 无效",
     notSupported: "当前组合暂不支持计算",
     timeDependentOrderProbability: "订单概率随时间变化，暂不支持计算",
   };
@@ -477,46 +611,18 @@ const p01ResourceResults = computed(() => {
 
 const p02Product = ref("lmd");
 const p02StationLevel = ref(3);
-const p02OperatorOptions = Object.freeze([
-  {
-    charId: "char_4228_closur",
-    name: "可露希尔",
-    rarity: 6,
-    description: "精二启用特殊订单",
-  },
-  {
-    charId: "char_4032_provs",
-    name: "但书",
-    rarity: 5,
-    description: "改变黄金订单消耗",
-  },
-  {
-    charId: "char_486_takila",
-    name: "龙舌兰",
-    rarity: 5,
-    description: "高品质订单额外龙门币",
-  },
-  {
-    charId: "char_252_bibeak",
-    name: "裁缝",
-    rarity: 5,
-    description: "三级站改变订单概率",
-  },
+const p02OperatorSlots = ref([
+  { charId: "char_4032_provs", elite: 2, level: 1, enabled: true },
+  { charId: "char_486_takila", elite: 2, level: 1, enabled: true },
+  { charId: "", elite: 0, level: 1, enabled: false },
 ]);
-const p02OperatorStates = reactive({
-  char_4228_closur: { enabled: false, elite: 2 },
-  char_4032_provs: { enabled: true, elite: 2 },
-  char_486_takila: { enabled: true, elite: 2 },
-  char_252_bibeak: { enabled: false, elite: 2 },
-});
-
 const p02ActiveOperators = computed(() =>
-  p02OperatorOptions
-    .filter((operator) => p02OperatorStates[operator.charId].enabled)
+  p02OperatorSlots.value
+    .filter((operator) => operator.enabled && operator.charId)
     .map((operator) => ({
       charId: operator.charId,
-      elite: p02OperatorStates[operator.charId].elite,
-      level: 1,
+      elite: Number(operator.elite),
+      level: Number(operator.level),
     })),
 );
 const p02ActiveOperatorCount = computed(() => p02ActiveOperators.value.length);
@@ -578,25 +684,143 @@ const p02ResourceResults = computed(() => {
   return resources.filter((resource) => resource.value !== null && resource.value !== 0);
 });
 
+const p03Product = ref("experience");
+const p03StationLevel = ref(3);
+const p03Efficiency = ref(100);
+const p03DurationHours = ref(12);
+const p03Result = computed(() => {
+  const outputPerCycle = calculateRiicDirectProductionOutput({
+    room: {
+      facility: "manufacture",
+      product: p03Product.value,
+      stationLevel: Number(p03StationLevel.value),
+    },
+    efficiency: Number(p03Efficiency.value),
+    durationHours: Number(p03DurationHours.value),
+  });
+  if (outputPerCycle === null) {
+    return {
+      ok: false,
+      outputPerCycle: null,
+      outputPerDay: null,
+    };
+  }
+
+  return {
+    ok: true,
+    outputPerCycle,
+    outputPerDay:
+      Number(p03DurationHours.value) > 0
+        ? outputPerCycle * (24 / Number(p03DurationHours.value))
+        : null,
+  };
+});
+const p03ResultText = computed(() =>
+  JSON.stringify(
+    {
+      input: {
+        facility: "manufacture",
+        product: p03Product.value,
+        level: Number(p03StationLevel.value),
+        efficiency: Number(p03Efficiency.value),
+        durationHours: Number(p03DurationHours.value),
+      },
+      result: p03Result.value,
+    },
+    null,
+    2,
+  ),
+);
+
+const p04CycleHours = ref(24);
+const p04GoldManufacture = ref(0);
+const p04LmdTrade = ref(0);
+const p04GoldConsumption = ref(0);
+const p04VirtualGold = ref(0);
+const p04ShardManufacture = ref(0);
+const p04ShardConsumption = ref(0);
+const p04OrundumLmdConsumption = ref(0);
+const p04Input = computed(() => {
+  const cycleHours = Number(p04CycleHours.value);
+  const dailyMultiplier = cycleHours > 0 ? 24 / cycleHours : 0;
+  const createResource = (resource, outputPerCycle) => ({
+    resource,
+    roomCount: 1,
+    calculatedRoomCount: 1,
+    isCalculated: true,
+    outputPerCycle: Number(outputPerCycle),
+    outputPerDay: Number(outputPerCycle) * dailyMultiplier,
+  });
+
+  return {
+    resourcesByKey: {
+      gold: createResource("gold", p04GoldManufacture.value),
+      lmd: createResource("lmd", p04LmdTrade.value),
+      originiumShard: createResource(
+        "originiumShard",
+        p04ShardManufacture.value,
+      ),
+    },
+    tradingFlowTotals: {
+      isCalculated: true,
+      goldConsumptionPerCycle: Number(p04GoldConsumption.value),
+      virtualGoldOutputPerCycle: Number(p04VirtualGold.value),
+    },
+    orundumTradeFlowTotals: {
+      isCalculated: true,
+      roomCount: 1,
+      calculatedRoomCount: 1,
+      shardConsumptionPerCycle: Number(p04ShardConsumption.value),
+    },
+    orundumManufactureFlowTotals: {
+      isCalculated: true,
+      roomCount: 1,
+      calculatedRoomCount: 1,
+      lmdConsumptionPerCycle: Number(p04OrundumLmdConsumption.value),
+    },
+    cycleHours,
+  };
+});
+const p04Result = computed(() => {
+  const input = p04Input.value;
+  return settleRiicNetResources({
+    ...input,
+    resourcesByKey: new Map(Object.entries(input.resourcesByKey)),
+  });
+});
+const p04ResourceResults = computed(() => [
+  {
+    key: "gold",
+    name: "净赤金",
+    value: p04Result.value.gold.outputPerCycle,
+  },
+  {
+    key: "lmd",
+    name: "净龙门币",
+    value: p04Result.value.lmd.outputPerCycle,
+  },
+  {
+    key: "originiumShard",
+    name: "净源石碎片",
+    value: p04Result.value.originiumShard.outputPerCycle,
+  },
+]);
+const p04ResultText = computed(() =>
+  JSON.stringify(
+    {
+      input: p04Input.value,
+      result: p04Result.value,
+    },
+    null,
+    2,
+  ),
+);
+
 function setP01Product(product) {
   p01Product.value = product;
   if (product === "orundum") {
     p01StationLevel.value = 3;
   }
-}
-
-function setP01OperatorEnabled(charId, enabled) {
-  const state = p01OperatorStates[charId];
-  if (enabled && !state.enabled && p01ActiveOperatorCount.value >= 3) {
-    ElMessage.warning("贸易站最多选择 3 名干员");
-    return;
-  }
-  state.enabled = enabled;
-}
-
-function toggleP01Operator(charId) {
-  const state = p01OperatorStates[charId];
-  setP01OperatorEnabled(charId, !state.enabled);
 }
 
 function setP02Product(product) {
@@ -606,18 +830,12 @@ function setP02Product(product) {
   }
 }
 
-function setP02OperatorEnabled(charId, enabled) {
-  const state = p02OperatorStates[charId];
-  if (enabled && !state.enabled && p02ActiveOperatorCount.value >= 3) {
-    ElMessage.warning("贸易站最多选择 3 名干员");
-    return;
-  }
-  state.enabled = enabled;
+function getOperatorRarity(charId) {
+  return Number(operatorTableV2[charId]?.rarity) || 1;
 }
 
-function toggleP02Operator(charId) {
-  const state = p02OperatorStates[charId];
-  setP02OperatorEnabled(charId, !state.enabled);
+function getOperatorName(charId) {
+  return operatorTableV2[charId]?.name || charId;
 }
 
 function formatResultValue(value) {
@@ -657,6 +875,91 @@ function formatPercent(value) {
 .trading-workbench,
 .trading-drone-workbench {
   max-width: 1040px;
+}
+
+.module-test-panel {
+  max-width: 1040px;
+  padding: 18px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 8px;
+  background: var(--el-bg-color);
+}
+
+.module-test-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.module-test-header h2 {
+  margin: 0;
+  color: var(--el-text-color-primary);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.module-test-header p {
+  margin: 5px 0 0;
+  color: var(--el-text-color-secondary);
+  font-size: 13px;
+}
+
+.module-test-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 18px 0;
+}
+
+.module-test-grid label {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  color: var(--el-text-color-regular);
+  font-size: 12px;
+}
+
+.module-test-result,
+.module-test-result-grid {
+  display: grid;
+  gap: 10px;
+  padding: 16px 0;
+  border-top: 1px solid var(--el-border-color-lighter);
+}
+
+.module-test-result {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.module-test-result-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.module-test-result > div,
+.module-test-result-grid > div {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  border: 1px solid var(--el-border-color-lighter);
+  border-radius: 4px;
+  background: var(--el-fill-color-light);
+}
+
+.module-test-result span,
+.module-test-result-grid span,
+.module-test-result-grid small {
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+}
+
+.module-test-result strong,
+.module-test-result-grid strong {
+  color: var(--el-color-success);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
 }
 
 .trading-workspace-panel,
@@ -765,59 +1068,32 @@ function formatPercent(value) {
   gap: 6px;
 }
 
-.drone-operator-row {
+.operator-slot-row {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
-  gap: 10px;
+  grid-template-columns: 44px minmax(0, 1fr) auto 104px auto;
+  gap: 8px;
   align-items: center;
-  min-height: 58px;
-  padding: 7px 8px;
+  min-height: 52px;
+  padding: 4px 0;
+}
+
+.operator-slot-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--el-border-color);
   border-radius: 4px;
-  cursor: pointer;
-  outline: none;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  color: var(--el-text-color-secondary);
 }
 
-.drone-operator-row:hover,
-.drone-operator-row:focus-visible {
-  border-color: var(--el-color-primary-light-5);
-}
-
-.drone-operator-row.active {
-  border-color: var(--el-color-primary);
-  background: var(--el-color-primary-light-9);
-}
-
-.operator-card-main {
-  display: grid;
+.operator-slot-row :deep(.el-select) {
   min-width: 0;
-  gap: 3px;
 }
 
-.operator-card-main strong {
-  color: var(--el-text-color-primary);
-  font-size: 14px;
-}
-
-.operator-card-main span {
-  font-size: 12px;
-}
-
-.operator-elite-control {
-  white-space: nowrap;
-}
-
-.operator-elite-control.inactive {
-  visibility: hidden;
-}
-
-.operator-level-control {
+.operator-slot-level {
   width: 104px;
-}
-
-.trading-input-panel .drone-operator-row {
-  grid-template-columns: auto minmax(0, 1fr) auto 104px auto;
 }
 
 .bonus-controls {
@@ -831,7 +1107,7 @@ function formatPercent(value) {
 
 .bonus-controls label {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 112px auto;
+  grid-template-columns: minmax(0, 1fr) 112px 112px auto;
   gap: 7px;
   align-items: center;
   min-width: 0;
@@ -843,6 +1119,21 @@ function formatPercent(value) {
   color: var(--el-text-color-secondary);
   font-size: 12px;
   font-style: normal;
+}
+
+.trading-context-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.trading-context-controls label {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  color: var(--el-text-color-regular);
+  font-size: 12px;
 }
 
 .trading-result-panel,
@@ -999,23 +1290,19 @@ function formatPercent(value) {
     border-left: 0;
   }
 
-  .operator-elite-control {
-    grid-column: 2 / 4;
+  .operator-slot-row {
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+  }
+
+  .operator-slot-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .operator-slot-level {
+    grid-column: 2 / -1;
     grid-row: 2;
-  }
-
-  .drone-operator-row {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-  }
-
-  .drone-operator-row :deep(.el-switch) {
-    grid-column: 3;
-    grid-row: 1;
-  }
-
-  .trading-input-panel .operator-elite-control {
-    grid-column: 2;
-    grid-row: 2;
+    width: 100%;
   }
 
   .trading-input-panel .operator-level-control {
@@ -1024,6 +1311,16 @@ function formatPercent(value) {
   }
 
   .bonus-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .trading-context-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .module-test-grid,
+  .module-test-result,
+  .module-test-result-grid {
     grid-template-columns: 1fr;
   }
 }

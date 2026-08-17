@@ -534,12 +534,22 @@ function getDroneTableShiftLabel(shift, index) {
 }
 
 function getDroneTableOrderLabel(shift) {
+  if (shift?.drone?.order === "retain") {
+    return "留给下一班";
+  }
+
   return shift?.drone?.order === "post" ? "换班后" : "换班前";
 }
 
 const droneTableDebug = computed(() => {
   const yieldSummary = props.actualScheduleMetrics?.yield;
   const previewStates = props.schedulePreview?.states || [];
+  const droneUsageByState = new Map(
+    (yieldSummary?.droneUsage?.segments || []).map((segment) => [
+      Number(segment?.stateIndex),
+      segment,
+    ]),
+  );
   const roomsByKey = new Map(
     (yieldSummary?.rooms || []).map((room, index) => [
       String(room?.key || "").trim(),
@@ -588,6 +598,7 @@ const droneTableDebug = computed(() => {
       const shift = props.scheduleShifts[stateIndex] || {};
       const state = previewStates[stateIndex] || {};
       const drone = shift?.drone || {};
+      const droneUsage = droneUsageByState.get(stateIndex);
       const selectedTarget = drone?.disabled === true
         ? ""
         : String(drone?.target || "").trim();
@@ -597,6 +608,8 @@ const droneTableDebug = computed(() => {
         label: getDroneTableShiftLabel(shift, stateIndex),
         durationHours: Number(state?.durationHours || 0),
         droneOrder: getDroneTableOrderLabel(shift),
+        droneCapacityReached: droneUsage?.capacityReached === true,
+        droneStoredOutput: droneUsage?.storedDroneOutput ?? null,
         selectedTarget,
         disabled: drone?.disabled === true,
         cells: columns.map((column) => {
@@ -1087,6 +1100,45 @@ const droneTableDebug = computed(() => {
       <summary><code>L50</code> 中枢角色编制</summary>
       <div class="pipeline-stage-content">
         <p>初始中枢：{{ getStatusLabel(controlState.status) }}</p>
+        <ul
+          v-if="controlState.teams?.length"
+          class="pipeline-list"
+        >
+          <li
+            v-for="team in controlState.teams"
+            :key="`control-team-${team.teamIndex}`"
+          >
+            <strong>中枢班 {{ team.teamIndex + 1 }}</strong>
+            ：房间加成
+            {{
+              getCandidateNames(
+                team.roomEffectOperators?.map((operator) => operator.charId),
+              )
+            }}
+            ；干员加成
+            {{
+              getCandidateNames(
+                team.operatorEffectOperators?.map(
+                  (operator) => operator.charId,
+                ),
+              )
+            }}
+            ；补位
+            {{
+              getCandidateNames(
+                team.fillerOperators?.map((operator) => operator.charId),
+              )
+            }}
+          </li>
+          <li
+            v-for="[operatorId, count] in Object.entries(
+              controlState.usageByOperatorId || {},
+            ).filter(([, count]) => Number(count) > 1)"
+            :key="`control-usage-${operatorId}`"
+          >
+            {{ getOperatorName(operatorId) }}：参与 {{ count }} 班
+          </li>
+        </ul>
         <ul class="pipeline-list">
           <li v-for="role in controlState.roles || []" :key="role.id">
             {{ role.label || role.id }}：
@@ -2137,6 +2189,17 @@ const droneTableDebug = computed(() => {
                     <strong>{{ row.label }}</strong>
                     <span>{{ formatYield(row.durationHours) }}h</span>
                     <small>{{ row.disabled ? "不使用无人机" : row.droneOrder }}</small>
+                    <small v-if="row.droneCapacityReached">
+                      已超出无人机上限
+                    </small>
+                    <small
+                      v-else-if="
+                        row.droneOrder === '留给下一班' &&
+                        row.droneStoredOutput !== null
+                      "
+                    >
+                      留给下一班 {{ formatYield(row.droneStoredOutput) }} 架
+                    </small>
                   </th>
                   <td
                     v-for="cell in row.cells"

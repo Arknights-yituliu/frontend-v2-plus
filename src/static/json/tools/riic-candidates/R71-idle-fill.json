@@ -3,6 +3,23 @@
   "id": "idle-fill-priority",
   "skillState": "unlocked",
   "firstMatchWins": true,
+  "priorityNames": [
+    "战车",
+    "霜华",
+    "闪击",
+    "灰烬",
+    "电弧",
+    "冰酿",
+    "杜宾",
+    "苇草",
+    "灰喉",
+    "暴雨",
+    "玛恩纳",
+    "丰川祥子",
+    "三角初华",
+    "红隼",
+    "琴柳"
+  ],
   "tiers": [
     {
       "id": "dormitory-only",

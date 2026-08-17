@@ -521,7 +521,12 @@ function getTeamMemberProductionProfiles({
   return normalizedOperatorIds.map((charId) => {
     const profile = profilesById.get(charId);
     if (profile) {
-      return { ...profile };
+      const operator = rosterById.get(charId);
+      return {
+        ...profile,
+        elite: operator?.elite,
+        level: operator?.level,
+      };
     }
 
     const operator = rosterById.get(charId);
@@ -687,6 +692,7 @@ function toRuntimeCandidate({
     },
     scope: candidateScope,
     fallbackOperators: fallbackPreviewOperators,
+    controlCenterAdjustment,
   });
   const closureCalculation = recalculateRiicClosureSpecialOrder({
     candidate: {

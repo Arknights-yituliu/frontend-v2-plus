@@ -342,6 +342,52 @@ const REVIEWED_DIRECT_APPROXIMATIONS = [
       coverage: "complete",
     },
   },
+  {
+    id: "spuria-power-technical-exchange-alpha-12h",
+    source: {
+      charId: "char_4015_spuria",
+      roomType: "power",
+      phase: 0,
+      level: 1,
+      buffName: "技术交流·α",
+    },
+    effect: {
+      percent: 13.75,
+      product: "all",
+      coverage: "complete",
+    },
+  },
+  {
+    id: "spuria-power-technical-exchange-beta-12h",
+    source: {
+      charId: "char_4015_spuria",
+      roomType: "power",
+      phase: 2,
+      level: 1,
+      buffName: "技术交流·β",
+    },
+    effect: {
+      percent: 18.75,
+      product: "all",
+      coverage: "complete",
+    },
+  },
+  {
+    id: "totter-manufacture-fuzzy-vision-fixed",
+    source: {
+      charId: "char_4062_totter",
+      roomType: "manufacture",
+      phase: 0,
+      level: 1,
+      buffName: "模糊视线",
+    },
+    effect: {
+      percent: 27.56,
+      product: "all",
+      coverage: "complete",
+    },
+    ignoredMechanics: ["moraleDeltaFixedApproximation"],
+  },
 ];
 
 function getSkillKey({ charId, roomType, buffName, phase, level }) {
@@ -591,8 +637,9 @@ function getReviewedSourceSkill(spec, skills) {
     }
 
     return (
-      !spec.descriptionToken ||
-      stripHtml(skill.description).includes(spec.descriptionToken)
+      (!spec.buffName || skill.buffName === spec.buffName) &&
+      (!spec.descriptionToken ||
+        stripHtml(skill.description).includes(spec.descriptionToken))
     );
   });
 

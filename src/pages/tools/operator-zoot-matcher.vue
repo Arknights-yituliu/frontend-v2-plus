@@ -138,6 +138,7 @@ const activeSearchAction = ref('')
 const resultSortMode = ref('default')
 const resultFilterModes = ref(['ready', 'borrow', 'train'])
 const resultRatingFilterMode = ref(4)
+const jobTitleFilterKeyword = ref('')
 
 let searchTicket = 0
 let stageInfoListPromise
@@ -287,9 +288,11 @@ function getUnownedKnownOperatorCount() {
 
 const filteredJobs = computed(() => {
   const minimumRatingStars = getResultRatingFilterMinStars(resultRatingFilterMode.value)
+  const normalizedTitleKeyword = jobTitleFilterKeyword.value.trim()
   const jobs = resolvedJobs.value.filter((job) => {
     return resultFilterModes.value.includes(getJobFilterMode(job))
       && getRatingStarValue(job.ratingRatio) >= minimumRatingStars
+      && (!normalizedTitleKeyword || String(job.title || '').includes(normalizedTitleKeyword))
   })
   const sortedJobs = [...jobs]
 
@@ -2370,6 +2373,19 @@ onMounted(async () => {
                   </v-btn>
                 </v-btn-toggle>
               </div>
+
+              <div class="search-option-block title-filter-block">
+                <span class="search-option-label">标题筛选</span>
+                <v-text-field
+                  v-model="jobTitleFilterKeyword"
+                  placeholder="输入标题关键词"
+                  variant="outlined"
+                  density="compact"
+                  hide-details
+                  clearable
+                  class="title-filter-input"
+                ></v-text-field>
+              </div>
             </div>
 
             <div class="operator-import-row">
@@ -2890,6 +2906,11 @@ onMounted(async () => {
 .rating-filter-toggle {
   max-width: 100%;
   flex-wrap: wrap;
+}
+
+.title-filter-input {
+  width: 220px;
+  max-width: 100%;
 }
 
 .operator-import-row {

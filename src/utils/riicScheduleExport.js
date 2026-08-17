@@ -28,11 +28,18 @@ function getRoomOperators(room) {
   return (room?.operators || []).map(getOperatorName).filter(Boolean);
 }
 
-function getMaaRoomType(facility) {
+export function getRiicMaaRoomType(facility) {
   return MAA_ROOM_TYPE_BY_FACILITY[String(facility || "").trim()] || null;
 }
 
-function getRoomSortValue(room) {
+function getRoomSortValue(room, roomIndexAssignments = {}) {
+  const maaRoomIndex = Number(
+    roomIndexAssignments?.[String(room?.key || "").trim()],
+  );
+  if (Number.isInteger(maaRoomIndex) && maaRoomIndex >= 1) {
+    return maaRoomIndex - 1;
+  }
+
   const stationIndex = Number(room?.stationIndex);
   return Number.isInteger(stationIndex) && stationIndex >= 0
     ? stationIndex
@@ -119,11 +126,16 @@ function createMaaRoom(room, stateIndex, roomSettingOverrides) {
   };
 }
 
-function createPlanRooms(rooms, stateIndex, roomSettingOverrides) {
+function createPlanRooms(
+  rooms,
+  stateIndex,
+  roomSettingOverrides,
+  roomIndexAssignments,
+) {
   const byType = new Map();
 
   for (const room of rooms || []) {
-    const roomType = getMaaRoomType(room?.facility);
+    const roomType = getRiicMaaRoomType(room?.facility);
     if (!roomType) {
       continue;
     }
@@ -136,7 +148,9 @@ function createPlanRooms(rooms, stateIndex, roomSettingOverrides) {
   const maaRooms = {};
   for (const [roomType, facilityRooms] of byType.entries()) {
     const sortedRooms = [...facilityRooms].sort(
-      (left, right) => getRoomSortValue(left) - getRoomSortValue(right),
+      (left, right) =>
+        getRoomSortValue(left, roomIndexAssignments) -
+        getRoomSortValue(right, roomIndexAssignments),
     );
 
     if (
@@ -160,7 +174,11 @@ function createPlanRooms(rooms, stateIndex, roomSettingOverrides) {
   return maaRooms;
 }
 
-function getDroneSetting(state, drone) {
+function getDroneSetting(state, drone, roomIndexAssignments = {}) {
+  if (drone?.order === "retain") {
+    return null;
+  }
+
   const targetKey = String(drone?.target || "").trim();
   if (!targetKey) {
     return null;
@@ -173,11 +191,19 @@ function getDroneSetting(state, drone) {
     return null;
   }
 
+  const assignedRoomIndex = Number(
+    roomIndexAssignments?.[String(targetRoom.key || "").trim()],
+  );
   const stationIndex = Number(targetRoom.stationIndex);
   return {
     enable: true,
     room: targetRoom.facility,
-    index: Number.isInteger(stationIndex) && stationIndex >= 0 ? stationIndex + 1 : 1,
+    index:
+      Number.isInteger(assignedRoomIndex) && assignedRoomIndex >= 1
+        ? assignedRoomIndex
+        : Number.isInteger(stationIndex) && stationIndex >= 0
+          ? stationIndex + 1
+          : 1,
     rule: "all",
     order: drone?.order === "post" ? "post" : "pre",
   };
@@ -223,6 +249,7 @@ export function buildRiicMaaScheduleFromPreview({
   author = "",
   description = "",
   roomSettingOverrides = {},
+  roomIndexAssignments = {},
   hasFiammetta = false,
 } = {}) {
   const states = Array.isArray(preview?.states) ? preview.states : [];
@@ -239,7 +266,11 @@ export function buildRiicMaaScheduleFromPreview({
     const nextTime = String(nextShift?.time || "").trim();
     const duration = getDurationMinutes(time, nextTime);
     const period = getPeriod(time, nextTime);
-    const drones = getDroneSetting(state, shift?.drone);
+    const drones = getDroneSetting(
+      state,
+      shift?.drone,
+      roomIndexAssignments,
+    );
     const fiammetta = getFiammettaSetting(shift);
     const usesAlternatingDailyPlans = shiftMode === "once" && states.length > 1;
 
@@ -258,7 +289,12 @@ export function buildRiicMaaScheduleFromPreview({
     const plan = {
       name,
       duration: duration || Math.round(Number(state?.durationHours || 0) * 60),
-      rooms: createPlanRooms(state?.rooms, index, roomSettingOverrides),
+      rooms: createPlanRooms(
+        state?.rooms,
+        index,
+        roomSettingOverrides,
+        roomIndexAssignments,
+      ),
     };
 
     const shiftDescription = String(shift?.description || "").trim();

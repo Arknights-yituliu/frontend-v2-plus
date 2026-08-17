@@ -71,6 +71,7 @@ import {
   normalizeRiicFacilityRequirement,
   RIIC_FACILITY_REQUIREMENTS,
 } from "/src/utils/riic/l10-facility-model.js";
+import { summarizeRiicFacilityPower } from "/src/utils/riic/riic-facility-power-model.js";
 import {
   createRiicIdealTrainingRoster,
   resolveRiicBaselineSkills,
@@ -130,7 +131,10 @@ import {
 import {
   getRiicDormitoryOccupantCount,
 } from "/src/utils/riic/l28-perception-baseline.js";
-import { buildRiicMaaScheduleFromPreview } from "/src/utils/riicScheduleExport.js";
+import {
+  buildRiicMaaScheduleFromPreview,
+  getRiicMaaRoomType,
+} from "/src/utils/riicScheduleExport.js";
 import {
   createRiicYieldEngineRunningResult,
 } from "/src/utils/riicYieldEngines/contract.js";
@@ -189,27 +193,21 @@ const FIAMMETTA_RECOVERY_TARGET_NAMES = Object.freeze([
 ]);
 const CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS = Object.freeze([
   {
-    id: "trading",
-    label: "贸易站功能位",
-    targetRoomType: "trading",
-    buffTags: ["trading-station"],
-  },
-  {
-    id: "manufacture",
-    label: "制造站功能位",
-    targetRoomType: "manufacture",
-    buffTags: ["manufacture-station"],
-  },
-  {
-    id: "office",
-    label: "办公室功能位",
-    targetRoomType: "hire",
-    buffTags: ["office"],
+    id: "room",
+    label: "房间产能加成",
+    targetRoomType: "",
+    maxPerTeam: 3,
+    buffTags: [
+      "trading-station",
+      "manufacture-station",
+      "office",
+    ],
   },
   {
     id: "operator",
-    label: "干员加成位",
+    label: "干员加成",
     targetRoomType: "",
+    maxPerTeam: 5,
     buffTags: ["trading-operator", "manufacture-operator"],
   },
 ]);
@@ -290,6 +288,10 @@ function formatRiicControlCenterRoomEffect(effect) {
   if (!roomLabel || !Number.isFinite(bonusPercent)) {
     return "";
   }
+  const metric = String(effect?.metric || "").trim();
+  const metricLabel =
+    metric === "orderLimit" ? " \u8ba2\u5355\u4e0a\u9650" : "";
+  const valueSuffix = metric === "orderLimit" ? "" : "%";
 
   const targetOperatorIds = (effect?.target?.operatorIds || [])
     .map((operatorId) => String(operatorId || "").trim())
@@ -302,9 +304,11 @@ function formatRiicControlCenterRoomEffect(effect) {
     String(effect?.target?.scope || "").trim() === "operators"
       ? `${targetOperatorName || "\u6307\u5b9a\u5e72\u5458"}\u5728`
       : "";
-  return `${targetLabel}${roomLabel}${targetLabel ? "\u65f6 " : " "}${
+  return `${targetLabel}${roomLabel}${metricLabel}${
+    targetLabel ? "\u65f6 " : " "
+  }${
     bonusPercent >= 0 ? "+" : ""
-  }${bonusPercent}%`;
+  }${bonusPercent}${valueSuffix}`;
 }
 
 const operatorNameToCharId = new Map(
@@ -337,6 +341,7 @@ const confirmedLayoutPlan = ref(createDefaultConfirmedLayoutPlan());
 const recommendationPanelOpen = ref(false);
 const customLayoutEditorOpen = ref(false);
 const customLayoutDraft = ref(null);
+const customLayoutResetSnapshot = ref(null);
 const twoShiftRotationMode = ref("maa");
 const autoGeneratingSchedule = ref(false);
 const automaticGenerationPhase = ref("");
@@ -371,6 +376,7 @@ let automaticGenerationAbortController = null;
 let automaticGenerationQueuedOptions = null;
 let automaticGenerationRequestId = 0;
 const lastAutomaticGenerationTriggerKey = ref("");
+const controlCenterPlanningRunId = ref(0);
 const activeScheduleRoomGroupKey = ref("");
 const selectedRoomGroupTeamCandidateKeys = ref({});
 const roomGroupFallbackQueueStates = ref({});
@@ -379,9 +385,10 @@ const controlCenterRoleSettings = ref({
 });
 const controlCenterManualOverrides = ref({
   removedOperatorIds: [],
+  removedOperatorIdsByTeamIndex: {},
   addedOperatorIdsByTeamIndex: {},
 });
-const controlCenterLateFillExcludedOperatorIds = ref([]);
+const controlCenterLateFillExcludedOperatorIdsByTeamIndex = ref({});
 const fiammettaRecoverySettings = ref({
   target: "但书",
   custom: false,
@@ -404,10 +411,13 @@ const scheduleRoomOperatorOverrides = ref({});
 const scheduleRoomProductOverrides = ref({});
 const invalidatedScheduleRoomKeys = ref({});
 const scheduleRoomMaaSettingOverrides = ref({});
+const scheduleRoomMaaIndexAssignments = ref({});
 const copiedScheduleRoomOperators = ref(null);
 const copiedScheduleShiftOperators = ref(null);
 const scheduleRoomEditorOperatorInput = ref("");
-const manualOperatorEditorEnabled = import.meta.env.DEV;
+const manualOperatorEditorEnabled = computed(
+  () => import.meta.env.DEV && showCandidateDebugValues.value,
+);
 const RiicManualOperatorSourceChoice = import.meta.env.DEV
   ? defineAsyncComponent(
       () =>
@@ -594,6 +604,9 @@ function normalizeScheduleDroneSettings(value, fallback = {}) {
   const target = String(
     Object.hasOwn(source, "target") ? source.target : fallbackValue.target || "",
   ).trim();
+  const order = Object.hasOwn(source, "order")
+    ? source.order
+    : fallbackValue.order;
 
   return {
     target: disabled ? "" : target,
@@ -601,11 +614,7 @@ function normalizeScheduleDroneSettings(value, fallback = {}) {
       ? source.pinned === true
       : fallbackValue.pinned === true,
     disabled,
-    order:
-      (Object.hasOwn(source, "order") ? source.order : fallbackValue.order) ===
-      "post"
-        ? "post"
-        : "pre",
+    order: ["post", "retain"].includes(order) ? order : "pre",
   };
 }
 
@@ -733,6 +742,7 @@ function resetScheduleExecutionSettings() {
   scheduleRoomProductOverrides.value = {};
   invalidatedScheduleRoomKeys.value = {};
   scheduleRoomMaaSettingOverrides.value = {};
+  scheduleRoomMaaIndexAssignments.value = {};
   copiedScheduleRoomOperators.value = null;
   copiedScheduleShiftOperators.value = null;
   scheduleRoomEditorOperatorInput.value = "";
@@ -831,26 +841,15 @@ const activeFacilityProfile = computed(() =>
     facilityRequirement: activeFacilityRequirement.value,
   }),
 );
-const customLayoutAllowsLevelAdjustment = computed(() =>
-  isTwoPowerLayoutPlan(confirmedLayoutPlan.value),
-);
 const customLayoutEditorStations = computed(() => {
   const draft = customLayoutDraft.value;
-  if (!draft) {
-    return [];
-  }
-
-  if (customLayoutAllowsLevelAdjustment.value) {
-    return [
-      ...(draft.stations || []),
-      ...(draft.staticStations || []),
-    ].filter((station) => station.facility !== "power");
-  }
-
-  return (draft.stations || []).filter((station) =>
-    ["trading", "manufacture"].includes(station.facility),
-  );
+  return draft
+    ? [...(draft.stations || []), ...(draft.staticStations || [])]
+    : [];
 });
+const customLayoutPowerSummary = computed(() =>
+  summarizeRiicFacilityPower(customLayoutEditorStations.value),
+);
 const activeLayoutFacilityCounts = computed(() => {
   const card = getActiveLayoutCard();
   const countFacility = (facility) =>
@@ -887,11 +886,13 @@ const activeLayoutFacilityCounts = computed(() => {
           roomCount: stationCount,
         });
 
-    return Array.from({ length: stationCount }, (_, index) => ({
-      facilityType: entry.facilityType,
-      product: entry.product,
-      stationLevel: Number(stations[index]?.stationLevel) || null,
-    }));
+    return stations
+      .filter((station) => Number(station?.stationLevel || 0) > 0)
+      .map((station) => ({
+        facilityType: entry.facilityType,
+        product: entry.product,
+        stationLevel: Number(station?.stationLevel) || null,
+      }));
   });
 
   return {
@@ -979,12 +980,15 @@ const scheduleRoomGroups = computed(() => {
 });
 const scheduleRoomRows = computed(() => {
   const createStaticGroup = (group) => {
-    const stations = getActiveStaticRoomStations(group);
+    const stations = getActiveStaticRoomStations(group).filter(
+      (station) => Number(station?.stationLevel || 0) > 0,
+    );
     const candidateProduct = ROOM_CANDIDATE_PRODUCTS[group.key] || null;
 
     return {
       ...group,
       facility: group.key,
+      count: stations.length,
       stations,
       stationLevelSummary: formatStationLevelSummary(stations),
       stationSlotSummary: stations.some((station) => station !== null)
@@ -1413,8 +1417,11 @@ const fiammettaRecoveryStatus = computed(() => {
   }
   return null;
 });
-const controlCenterAutomaticRoleState = computed(() =>
-  buildRiicControlCenterAutomaticRoleState({
+const controlCenterAutomaticRoleState = computed(() => {
+  // Explicit automatic generation must start from a freshly evaluated L50 plan.
+  void controlCenterPlanningRunId.value;
+
+  return buildRiicControlCenterAutomaticRoleState({
     staffingRequirement: controlCenterStaffingRequirement.value,
     roomGroup: controlScheduleRoomGroup.value,
     hasRoster: Boolean(riicMatchingRoster.value),
@@ -1422,66 +1429,17 @@ const controlCenterAutomaticRoleState = computed(() =>
     roleDefinitions: CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS,
     scenarioTrials: riicControlCenterScenarioTrialState.value?.scenarios || [],
     fiammettaRecovery: fiammettaRecoveryConfig.value,
-  }),
-);
-function getControlCenterManualOperatorById(charId) {
-  return (
-    controlCenterCandidateOperators.value.find(
-      (operator) => operator.charId === charId,
-    ) || null
-  );
-}
-
-function getControlCenterSameTeamOperatorIds(charId) {
-  const operatorsById = new Map(
-    controlCenterCandidateOperators.value.map((operator) => [
-      String(operator?.charId || "").trim(),
-      operator,
-    ]),
-  );
-  const normalizedCharId = String(charId || "").trim();
-  if (!normalizedCharId || !operatorsById.has(normalizedCharId)) {
-    return [];
-  }
-
-  const operatorIds = new Set();
-  const pendingOperatorIds = [normalizedCharId];
-  while (pendingOperatorIds.length > 0) {
-    const operatorId = pendingOperatorIds.pop();
-    if (!operatorId || operatorIds.has(operatorId)) {
-      continue;
-    }
-
-    operatorIds.add(operatorId);
-    const operator = operatorsById.get(operatorId);
-    const partnerIds = new Set(
-      operator?.controlCenterSameTeamWithOperatorIds || [],
-    );
-    for (const [candidateId, candidate] of operatorsById) {
-      if (
-        (candidate?.controlCenterSameTeamWithOperatorIds || []).includes(
-          operatorId,
-        )
-      ) {
-        partnerIds.add(candidateId);
-      }
-    }
-    for (const partnerId of partnerIds) {
-      const normalizedPartnerId = String(partnerId || "").trim();
-      if (operatorsById.has(normalizedPartnerId)) {
-        pendingOperatorIds.push(normalizedPartnerId);
-      }
-    }
-  }
-
-  return [...operatorIds];
-}
-
+  });
+});
 const controlCenterRoleState = computed(() => {
   return applyRiicControlCenterManualOverrides({
     automaticState: controlCenterAutomaticRoleState.value,
     manualOverrides: controlCenterManualOverrides.value,
     candidates: controlCenterCandidateOperators.value,
+    roleDefinitions: CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS,
+    scenarioTrials:
+      riicControlCenterScenarioTrialState.value?.scenarios || [],
+    fiammettaRecovery: fiammettaRecoveryConfig.value,
   });
 });
 const controlCenterFiammettaTargetUsage = computed(() => {
@@ -1522,172 +1480,18 @@ function clearScheduleSelectionsAfterControlCenterChange() {
   lastAutomaticGenerationTriggerKey.value = "";
 }
 
-function getControlCenterManualTeamIndexWithCapacity(requiredSlotCount = 1) {
-  const segments = controlCenterRoleState.value.segments || [];
-  const teamIndexes = [
-    ...new Set(
-      segments
-        .map((segment) => Number(segment?.teamIndex))
-        .filter((teamIndex) => Number.isInteger(teamIndex) && teamIndex >= 0),
-    ),
-  ];
-
-  return (
-    teamIndexes.find((teamIndex) => {
-      const teamSegments = segments.filter(
-        (segment) => Number(segment?.teamIndex) === teamIndex,
-      );
-      return (
-        teamSegments.length > 0 &&
-        teamSegments.every(
-          (segment) =>
-            (segment.operatorIds || []).length + requiredSlotCount <=
-            Number(segment.slotCount || 0),
-        )
-      );
-    }) ?? null
+function saveControlCenterAdjustment({
+  manualOverrides,
+  lateFillExcludedOperatorIdsByTeamIndex,
+} = {}) {
+  controlCenterManualOverrides.value = normalizeControlCenterManualOverrides(
+    manualOverrides,
   );
-}
-
-function addControlCenterOperator(charId) {
-  const normalizedCharId = String(charId || "").trim();
-  if (
-    !normalizedCharId ||
-    controlCenterRoleState.value.status !== "ready" ||
-    !getControlCenterManualOperatorById(normalizedCharId)
-  ) {
-    return;
-  }
-
-  if (controlCenterSelectedOperatorIds.value.has(normalizedCharId)) {
-    return;
-  }
-
-  const nextOverrides = normalizeControlCenterManualOverrides(
-    controlCenterManualOverrides.value,
-  );
-  const sameTeamOperatorIds = getControlCenterSameTeamOperatorIds(
-    normalizedCharId,
-  );
-  if (sameTeamOperatorIds.length === 0) {
-    return;
-  }
-  const automaticOperatorIds = new Set(
-    controlCenterAutomaticRoleState.value.operatorIds || [],
-  );
-  nextOverrides.removedOperatorIds = nextOverrides.removedOperatorIds.filter(
-    (operatorId) => !sameTeamOperatorIds.includes(operatorId),
-  );
-
-  if (
-    sameTeamOperatorIds.every((operatorId) =>
-      automaticOperatorIds.has(operatorId),
-    )
-  ) {
-    controlCenterManualOverrides.value = nextOverrides;
-    clearScheduleSelectionsAfterControlCenterChange();
-    return;
-  }
-
-  const teamIndex = getControlCenterManualTeamIndexWithCapacity(
-    sameTeamOperatorIds.length,
-  );
-  if (teamIndex === null) {
-    cMessage("控制中枢没有可用空位", "warn");
-    return;
-  }
-
-  const teamKey = String(teamIndex);
-  const teamOperatorIds =
-    nextOverrides.addedOperatorIdsByTeamIndex[teamKey] || [];
-  if (
-    sameTeamOperatorIds.some(
-      (operatorId) => !teamOperatorIds.includes(operatorId),
-    )
-  ) {
-    nextOverrides.addedOperatorIdsByTeamIndex[teamKey] = [
-      ...teamOperatorIds,
-      ...sameTeamOperatorIds.filter(
-        (operatorId) => !teamOperatorIds.includes(operatorId),
-      ),
-    ];
-  }
-  controlCenterManualOverrides.value = nextOverrides;
+  controlCenterLateFillExcludedOperatorIdsByTeamIndex.value =
+    normalizeOperatorIdsByTeamIndex(lateFillExcludedOperatorIdsByTeamIndex);
+  controlCenterPlanningRunId.value += 1;
   clearScheduleSelectionsAfterControlCenterChange();
-}
-
-function removeControlCenterOperator(charId) {
-  const normalizedCharId = String(charId || "").trim();
-  if (!normalizedCharId) {
-    return;
-  }
-
-  const lateFillOperatorIds = new Set(
-    controlCenterLateFillState.value.operatorIds || [],
-  );
-  const sameTeamOperatorIds = getControlCenterSameTeamOperatorIds(
-    normalizedCharId,
-  );
-  if (sameTeamOperatorIds.length === 0) {
-    return;
-  }
-  const nextOverrides = normalizeControlCenterManualOverrides(
-    controlCenterManualOverrides.value,
-  );
-  let wasManuallyAdded = false;
-  for (const [teamIndex, operatorIds] of Object.entries(
-    nextOverrides.addedOperatorIdsByTeamIndex,
-  )) {
-    const nextOperatorIds = operatorIds.filter(
-      (operatorId) => !sameTeamOperatorIds.includes(operatorId),
-    );
-    wasManuallyAdded =
-      wasManuallyAdded || nextOperatorIds.length !== operatorIds.length;
-    if (nextOperatorIds.length > 0) {
-      nextOverrides.addedOperatorIdsByTeamIndex[teamIndex] = nextOperatorIds;
-    } else {
-      delete nextOverrides.addedOperatorIdsByTeamIndex[teamIndex];
-    }
-  }
-
-  if (
-    !wasManuallyAdded &&
-    sameTeamOperatorIds.some((operatorId) =>
-      (controlCenterAutomaticRoleState.value.operatorIds || []).includes(
-        operatorId,
-      ),
-    )
-  ) {
-    nextOverrides.removedOperatorIds = [
-      ...new Set([
-        ...nextOverrides.removedOperatorIds,
-        ...sameTeamOperatorIds,
-      ]),
-    ];
-  }
-
-  if (
-    !wasManuallyAdded &&
-    !sameTeamOperatorIds.some((operatorId) =>
-      (controlCenterAutomaticRoleState.value.operatorIds || []).includes(
-        operatorId,
-      ),
-    ) &&
-    sameTeamOperatorIds.some((operatorId) =>
-      lateFillOperatorIds.has(operatorId),
-    )
-  ) {
-    controlCenterLateFillExcludedOperatorIds.value = [
-      ...new Set([
-        ...controlCenterLateFillExcludedOperatorIds.value,
-        ...sameTeamOperatorIds,
-      ]),
-    ];
-    return;
-  }
-
-  controlCenterManualOverrides.value = nextOverrides;
-  clearScheduleSelectionsAfterControlCenterChange();
+  cMessage("中枢调整已保存，请重新生成排班", "success");
 }
 
 const controlCenterSelectedOperatorIds = computed(
@@ -2809,6 +2613,9 @@ async function generateAutomaticSchedule({
     return;
   }
 
+  controlCenterPlanningRunId.value += 1;
+  await nextTick();
+
   const generationTriggerKey = automaticGenerationTriggerKey.value;
   const searchConfig =
     RIIC_AUTOMATIC_SEARCH_CONFIGS[strategy] ||
@@ -3475,9 +3282,12 @@ const controlCenterLateFillState = computed(() => {
   return buildRiicControlCenterLateFillState({
     baseState: controlCenterRoleState.value,
     fallbackPlans: roomGroupFallbackPlanStates.value,
-    excludedOperatorIds: controlCenterLateFillExcludedOperatorIds.value,
+    excludedOperatorIdsByTeamIndex:
+      controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
     controlCandidates: controlCenterCandidateOperators.value,
     roster: riicMatchingRoster.value,
+    idleFillOperators: riicIdleFillOperators.value,
+    fiammettaRecovery: fiammettaRecoveryConfig.value,
   });
 });
 
@@ -4191,12 +4001,7 @@ const schedulePreviewStaticRooms = computed(() => {
     .flatMap((group) =>
       Array.from({ length: group.count }, (_, index) => {
         const station = group.stations?.[index] || null;
-        const expectedSlots =
-          group.facility === "dormitory"
-            ? 5
-            : group.facility === "training"
-              ? 2
-              : 1;
+        const expectedSlots = Math.max(0, Number(station?.slotCount) || 0);
         const operatorsByStateIndex = Object.fromEntries(
           Object.entries(
             riicSupportRoomPlacementsBySourceStateIndex.value,
@@ -4333,6 +4138,9 @@ const riicActualScheduleMetrics = computed(() => {
         droneTargetKeysByState: schedulePreviewShifts.value.map(
           (shift) => shift?.drone?.target || "",
         ),
+        droneOrdersByState: schedulePreviewShifts.value.map(
+          (shift) => shift?.drone?.order || "pre",
+        ),
         tradingOperators: riicMatchingRoster.value || [],
         orundumCraftMaterial:
           scheduleExecutionSettings.orundumCraftMaterial,
@@ -4444,6 +4252,7 @@ const generatedMaaExportPreview = computed(() => {
       author: scheduleExecutionSettings.exportInfo.author,
       description: scheduleExecutionSettings.exportInfo.description,
       roomSettingOverrides: scheduleRoomMaaSettingOverrides.value,
+      roomIndexAssignments: resolvedScheduleRoomMaaIndexAssignments.value,
       hasFiammetta: schedulePreviewShifts.value.some(
         (shift) => shift?.fiammetta?.enable === true,
       ),
@@ -4978,6 +4787,144 @@ const activeScheduleRoomMaaSettings = computed(() =>
   ),
 );
 
+function getScheduleRoomMaaIndexEntries(preview = riicSchedulePreview.value) {
+  const entriesByRoomType = new Map();
+  const seenRoomKeys = new Set();
+  let sequence = 0;
+
+  for (const state of preview?.states || []) {
+    for (const room of state?.rooms || []) {
+      const key = String(room?.key || "").trim();
+      const roomType = getRiicMaaRoomType(room?.facility);
+      if (!key || !roomType || seenRoomKeys.has(key)) {
+        continue;
+      }
+
+      seenRoomKeys.add(key);
+      const entries = entriesByRoomType.get(roomType) || [];
+      entries.push({
+        key,
+        stationIndex: Number.isInteger(Number(room?.stationIndex))
+          ? Number(room.stationIndex)
+          : Number.MAX_SAFE_INTEGER,
+        sequence,
+      });
+      entriesByRoomType.set(roomType, entries);
+      sequence += 1;
+    }
+  }
+
+  for (const entries of entriesByRoomType.values()) {
+    entries.sort(
+      (left, right) =>
+        left.stationIndex - right.stationIndex ||
+        left.sequence - right.sequence,
+    );
+  }
+
+  return entriesByRoomType;
+}
+
+function resolveScheduleRoomMaaIndexAssignments(
+  entriesByRoomType = getScheduleRoomMaaIndexEntries(),
+  savedAssignments = scheduleRoomMaaIndexAssignments.value,
+) {
+  const resolved = {};
+
+  for (const entries of entriesByRoomType.values()) {
+    const savedIndexes = entries.map((entry) =>
+      Number(savedAssignments?.[entry.key]),
+    );
+    const hasCompletePermutation =
+      savedIndexes.length === entries.length &&
+      savedIndexes.every(
+        (index) =>
+          Number.isInteger(index) &&
+          index >= 1 &&
+          index <= entries.length,
+      ) &&
+      new Set(savedIndexes).size === entries.length;
+
+    entries.forEach((entry, index) => {
+      resolved[entry.key] = hasCompletePermutation
+        ? savedIndexes[index]
+        : index + 1;
+    });
+  }
+
+  return resolved;
+}
+
+const scheduleRoomMaaIndexEntries = computed(() =>
+  getScheduleRoomMaaIndexEntries(),
+);
+const resolvedScheduleRoomMaaIndexAssignments = computed(() =>
+  resolveScheduleRoomMaaIndexAssignments(
+    scheduleRoomMaaIndexEntries.value,
+  ),
+);
+const activeScheduleRoomMaaIndexOptions = computed(() => {
+  const room = activeSchedulePreviewRoom.value;
+  const roomType = getRiicMaaRoomType(room?.facility);
+  const count = scheduleRoomMaaIndexEntries.value.get(roomType)?.length || 0;
+  return Array.from({ length: count }, (_, index) => index + 1);
+});
+const activeScheduleRoomMaaIndex = computed(() => {
+  const roomKey = String(activeSchedulePreviewRoom.value?.key || "").trim();
+  return Number(
+    resolvedScheduleRoomMaaIndexAssignments.value[roomKey] || 1,
+  );
+});
+const activeScheduleRoomMaaLabel = computed(() => {
+  const room = activeSchedulePreviewRoom.value;
+  const label = String(room?.label || "").trim();
+  const stationIndex = Number(room?.stationIndex);
+  const localNumber =
+    Number.isInteger(stationIndex) && stationIndex >= 0
+      ? stationIndex + 1
+      : null;
+  const suffix = localNumber === null ? "" : ` ${localNumber}`;
+
+  return suffix && label.endsWith(suffix)
+    ? label.slice(0, -suffix.length)
+    : label;
+});
+
+function updateScheduleRoomMaaIndex(value) {
+  const room = activeSchedulePreviewRoom.value;
+  const roomKey = String(room?.key || "").trim();
+  const roomType = getRiicMaaRoomType(room?.facility);
+  const nextIndex = Number(value);
+  const entries = scheduleRoomMaaIndexEntries.value.get(roomType) || [];
+  if (
+    !roomKey ||
+    !Number.isInteger(nextIndex) ||
+    nextIndex < 1 ||
+    nextIndex > entries.length
+  ) {
+    return;
+  }
+
+  const currentAssignments = resolvedScheduleRoomMaaIndexAssignments.value;
+  const currentIndex = Number(currentAssignments[roomKey]);
+  if (currentIndex === nextIndex) {
+    return;
+  }
+
+  const swappedEntry = entries.find(
+    (entry) => Number(currentAssignments[entry.key]) === nextIndex,
+  );
+  const nextAssignments = {
+    ...currentAssignments,
+    [roomKey]: nextIndex,
+  };
+  if (swappedEntry && swappedEntry.key !== roomKey) {
+    nextAssignments[swappedEntry.key] = currentIndex;
+  }
+
+  scheduleRoomMaaIndexAssignments.value = nextAssignments;
+}
+
 function updateScheduleRoomMaaSettings(nextSettings) {
   const room = activeSchedulePreviewRoom.value;
   const stateIndex = activeSchedulePreviewStateIndex.value;
@@ -5363,7 +5310,7 @@ function updateScheduleDroneOrder({ index, order }) {
     index: normalizedIndex,
     drone: {
       ...drone,
-      order: order === "post" ? "post" : "pre",
+      order: ["post", "retain"].includes(order) ? order : "pre",
     },
   });
 }
@@ -6030,15 +5977,6 @@ function getLayoutCardByKey(value) {
   return LAYOUT_CARD_META.find((card) => card.key === value) || null;
 }
 
-function isTwoPowerLayoutPlan(plan) {
-  const card = getLayoutCardByKey(plan?.cardKey);
-  return (card?.rooms || []).some(
-    (room) =>
-      getLayoutRoomFacility(room) === "power" &&
-      Number(room?.count || 0) === 2,
-  );
-}
-
 function getRoomProduct(room) {
   return room?.product || ROOM_CANDIDATE_PRODUCTS[room?.key] || "";
 }
@@ -6078,11 +6016,15 @@ function normalizeCustomStationLevel(value, fallback = 1, facility) {
 
   return Math.min(
     getCustomStationMaxLevel(facility),
-    Math.max(1, numeric),
+    Math.max(0, numeric),
   );
 }
 
 function getCustomStationSlotCount(facility, stationLevel) {
+  if (Number(stationLevel) <= 0) {
+    return 0;
+  }
+
   if (facility === "power" || facility === "office" || facility === "processing") {
     return 1;
   }
@@ -6125,6 +6067,7 @@ function createCustomStaticLayoutStations(facilityProfile) {
         return {
           id: `${facility}-${stationIndex}`,
           facility,
+          stationIndex,
           product: ROOM_CANDIDATE_PRODUCTS[group.key] || "all",
           stationLevel,
           slotCount: getCustomStationSlotCount(facility, stationLevel),
@@ -6137,7 +6080,6 @@ function createCustomStaticLayoutStations(facilityProfile) {
 function normalizeCustomLayoutStations(
   baseStations,
   storedStations,
-  { forceProductionLevelThree = false } = {},
 ) {
   const stationsById = new Map(
     (storedStations || [])
@@ -6148,16 +6090,11 @@ function normalizeCustomLayoutStations(
   return (baseStations || []).map((baseStation, index) => {
     const storedStation =
       stationsById.get(baseStation.id) || storedStations?.[index] || {};
-    const shouldForceLevelThree =
-      forceProductionLevelThree &&
-      ["trading", "manufacture"].includes(baseStation.facility);
-    const stationLevel = shouldForceLevelThree
-      ? 3
-      : normalizeCustomStationLevel(
-          storedStation.stationLevel,
-          baseStation.stationLevel,
-          baseStation.facility,
-        );
+    const stationLevel = normalizeCustomStationLevel(
+      storedStation.stationLevel,
+      baseStation.stationLevel,
+      baseStation.facility,
+    );
     const isProductAllowed = (ROOM_PRODUCT_OPTIONS[baseStation.facility] || [])
       .some((option) => option.value === storedStation.product);
 
@@ -6218,6 +6155,7 @@ function createCustomLayoutDraftFromPlan(plan) {
           return {
             id: `${facility}-${stationIndex}`,
             facility,
+            stationIndex,
             product,
             stationLevel,
             slotCount: getCustomStationSlotCount(facility, stationLevel),
@@ -6225,9 +6163,7 @@ function createCustomLayoutDraftFromPlan(plan) {
         },
       );
     }),
-    staticStations: isTwoPowerLayoutPlan(plan)
-      ? createCustomStaticLayoutStations(facilityProfile)
-      : [],
+    staticStations: createCustomStaticLayoutStations(facilityProfile),
   };
 }
 
@@ -6243,9 +6179,6 @@ function normalizeCustomLayout(plan, value) {
     stations: normalizeCustomLayoutStations(
       baseLayout.stations,
       value.stations,
-      {
-        forceProductionLevelThree: !isTwoPowerLayoutPlan(plan),
-      },
     ),
     staticStations: normalizeCustomLayoutStations(
       baseLayout.staticStations,
@@ -6262,6 +6195,14 @@ function getCustomLayoutRooms(customLayout) {
     if (!["trading", "manufacture", "power"].includes(facility)) {
       continue;
     }
+    const stationLevel = normalizeCustomStationLevel(
+      sourceStation?.stationLevel,
+      0,
+      facility,
+    );
+    if (stationLevel <= 0) {
+      continue;
+    }
 
     const product =
       facility === "power" ? "all" : sourceStation?.product || "";
@@ -6274,12 +6215,6 @@ function getCustomLayoutRooms(customLayout) {
       count: 0,
       stations: [],
     };
-    const stationLevel = normalizeCustomStationLevel(
-      sourceStation?.stationLevel,
-      1,
-      facility,
-    );
-
     currentRoom.count += 1;
     currentRoom.stations.push({
       stationLevel,
@@ -6370,13 +6305,16 @@ function toggleCustomLayoutEditor() {
   customLayoutDraft.value =
     normalizeCustomLayout(plan, plan.customLayout) ||
     createCustomLayoutDraftFromPlan(plan);
+  customLayoutResetSnapshot.value = normalizeCustomLayout(
+    plan,
+    customLayoutDraft.value,
+  );
   customLayoutEditorOpen.value = true;
 }
 
 function updateCustomLayoutStationLevel({ id, level }) {
   const draft = customLayoutDraft.value;
   if (
-    !customLayoutAllowsLevelAdjustment.value ||
     ![...(draft?.stations || []), ...(draft?.staticStations || [])].some(
       (station) => station.id === id,
     )
@@ -6447,7 +6385,11 @@ function applyCustomLayout() {
   const plan = confirmedLayoutPlan.value;
   const customLayout = normalizeCustomLayout(plan, customLayoutDraft.value);
 
-  if (!plan || !customLayout?.stations?.length) {
+  if (
+    !plan ||
+    !customLayout?.stations?.length ||
+    customLayoutPowerSummary.value.overloaded
+  ) {
     return;
   }
 
@@ -6455,6 +6397,7 @@ function applyCustomLayout() {
     ...plan,
     customLayout,
   };
+  customLayoutResetSnapshot.value = normalizeCustomLayout(plan, customLayout);
   activeScheduleRoomGroupKey.value = "";
   clearSelectedRoomGroupTeamCandidates();
   recommendationPanelOpen.value = false;
@@ -6462,16 +6405,14 @@ function applyCustomLayout() {
 
 function resetCustomLayout() {
   const plan = confirmedLayoutPlan.value;
-  if (!plan) {
+  if (!plan || !customLayoutResetSnapshot.value) {
     return;
   }
 
-  const { customLayout: _customLayout, ...basePlan } = plan;
-  confirmedLayoutPlan.value = basePlan;
-  customLayoutDraft.value = null;
-  customLayoutEditorOpen.value = false;
-  activeScheduleRoomGroupKey.value = "";
-  clearSelectedRoomGroupTeamCandidates();
+  customLayoutDraft.value = normalizeCustomLayout(
+    plan,
+    customLayoutResetSnapshot.value,
+  );
 }
 
 function createDefaultConfirmedLayoutPlan() {
@@ -6489,6 +6430,7 @@ function applyDefaultLayoutSelection() {
   selectedLayoutId.value = DEFAULT_LAYOUT_SELECTION.layoutId;
   confirmedLayoutPlan.value = createDefaultConfirmedLayoutPlan();
   customLayoutDraft.value = null;
+  customLayoutResetSnapshot.value = null;
   customLayoutEditorOpen.value = false;
 }
 
@@ -6635,6 +6577,31 @@ function normalizeControlCenterRoleSettings(value) {
   };
 }
 
+function normalizeOperatorIdsByTeamIndex(value) {
+  return Object.fromEntries(
+    Object.entries(value || {}).flatMap(([teamIndex, operatorIds]) => {
+      const normalizedTeamIndex = String(teamIndex || "").trim();
+      if (
+        !/^\d+$/.test(normalizedTeamIndex) ||
+        !Array.isArray(operatorIds)
+      ) {
+        return [];
+      }
+
+      const normalizedOperatorIds = [
+        ...new Set(
+          operatorIds
+            .map((charId) => String(charId || "").trim())
+            .filter(Boolean),
+        ),
+      ];
+      return normalizedOperatorIds.length > 0
+        ? [[normalizedTeamIndex, normalizedOperatorIds]]
+        : [];
+    }),
+  );
+}
+
 function normalizeControlCenterManualOverrides(value) {
   const removedOperatorIds = [
     ...new Set(
@@ -6643,33 +6610,16 @@ function normalizeControlCenterManualOverrides(value) {
         .filter(Boolean),
     ),
   ];
-  const addedOperatorIdsByTeamIndex = Object.fromEntries(
-    Object.entries(value?.addedOperatorIdsByTeamIndex || {}).flatMap(
-      ([teamIndex, operatorIds]) => {
-        const normalizedTeamIndex = String(teamIndex || "").trim();
-        if (
-          !/^\d+$/.test(normalizedTeamIndex) ||
-          !Array.isArray(operatorIds)
-        ) {
-          return [];
-        }
-
-        const normalizedOperatorIds = [
-          ...new Set(
-            operatorIds
-              .map((charId) => String(charId || "").trim())
-              .filter(Boolean),
-          ),
-        ];
-        return normalizedOperatorIds.length > 0
-          ? [[normalizedTeamIndex, normalizedOperatorIds]]
-          : [];
-      },
-    ),
+  const removedOperatorIdsByTeamIndex = normalizeOperatorIdsByTeamIndex(
+    value?.removedOperatorIdsByTeamIndex,
+  );
+  const addedOperatorIdsByTeamIndex = normalizeOperatorIdsByTeamIndex(
+    value?.addedOperatorIdsByTeamIndex,
   );
 
   return {
     removedOperatorIds,
+    removedOperatorIdsByTeamIndex,
     addedOperatorIdsByTeamIndex,
   };
 }
@@ -6805,6 +6755,64 @@ function normalizeSavedScheduleRoomMaaSettingOverrides(value) {
   );
 }
 
+function normalizeSavedScheduleRoomMaaIndexAssignments(value) {
+  return Object.fromEntries(
+    Object.entries(value || {}).flatMap(([roomKey, roomIndex]) => {
+      const normalizedRoomKey = String(roomKey || "").trim();
+      const normalizedRoomIndex = Number(roomIndex);
+      return normalizedRoomKey &&
+        Number.isInteger(normalizedRoomIndex) &&
+        normalizedRoomIndex >= 1
+        ? [[normalizedRoomKey, normalizedRoomIndex]]
+        : [];
+    }),
+  );
+}
+
+function createSetAssessmentScheduleSnapshot() {
+  const preview = riicSchedulePreview.value;
+  if (!Array.isArray(preview?.states) || preview.states.length === 0) {
+    return null;
+  }
+
+  return {
+    version: 1,
+    capturedAt: new Date().toISOString(),
+    states: preview.states.map((state) => ({
+      index: Number(state?.index || 0),
+      name:
+        String(schedulePreviewShifts.value?.[state?.index]?.name || "").trim() ||
+        `班段 ${Number(state?.index || 0) + 1}`,
+      startHour: Number(state?.startHour || 0),
+      durationHours: Number(state?.durationHours || 0),
+      rooms: (state?.rooms || []).map((room) => ({
+        key: String(room?.key || ""),
+        label: String(room?.label || room?.key || ""),
+        facility: String(room?.facility || ""),
+        product: String(room?.product || ""),
+        stationLevel: Number.isInteger(Number(room?.stationLevel))
+          ? Number(room.stationLevel)
+          : null,
+        expectedSlots: Number.isInteger(Number(room?.expectedSlots))
+          ? Number(room.expectedSlots)
+          : null,
+        isStatic: room?.isStatic === true,
+        operators: (room?.operators || []).flatMap((operator) => {
+          const charId = String(operator?.charId || "").trim();
+          return charId
+            ? [
+                {
+                  charId,
+                  name: String(operator?.name || charId).trim(),
+                },
+              ]
+            : [];
+        }),
+      })),
+    })),
+  };
+}
+
 function createWizardStateSnapshot() {
   return {
     version: RIIC_SCHEDULE_DRAFT_VERSION,
@@ -6822,6 +6830,8 @@ function createWizardStateSnapshot() {
     idealTrainingRaritySelection: idealTrainingRaritySelection.value,
     controlCenterRoleSettings: controlCenterRoleSettings.value,
     controlCenterManualOverrides: controlCenterManualOverrides.value,
+    controlCenterLateFillExcludedOperatorIdsByTeamIndex:
+      controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
     fiammettaRecoverySettings: fiammettaRecoverySettings.value,
     selectedRoomGroupTeamCandidateKeys:
       selectedRoomGroupTeamCandidateKeys.value,
@@ -6831,8 +6841,10 @@ function createWizardStateSnapshot() {
     scheduleRoomProductOverrides: scheduleRoomProductOverrides.value,
     invalidatedScheduleRoomKeys: invalidatedScheduleRoomKeys.value,
     scheduleRoomMaaSettingOverrides: scheduleRoomMaaSettingOverrides.value,
+    scheduleRoomMaaIndexAssignments: scheduleRoomMaaIndexAssignments.value,
     lastAutomaticGenerationTriggerKey:
       lastAutomaticGenerationTriggerKey.value,
+    assessmentSchedule: createSetAssessmentScheduleSnapshot(),
     updatedAt: new Date().toISOString(),
   };
 }
@@ -6852,6 +6864,7 @@ function createInitialWorkspaceFromCurrent() {
     scheduleRoomProductOverrides: {},
     invalidatedScheduleRoomKeys: {},
     scheduleRoomMaaSettingOverrides: {},
+    scheduleRoomMaaIndexAssignments: {},
     lastAutomaticGenerationTriggerKey: "",
   };
 }
@@ -6956,6 +6969,10 @@ function applySavedWizardState(parsedDraft) {
     normalizeControlCenterManualOverrides(
       parsedDraft.controlCenterManualOverrides,
     );
+  controlCenterLateFillExcludedOperatorIdsByTeamIndex.value =
+    normalizeOperatorIdsByTeamIndex(
+      parsedDraft.controlCenterLateFillExcludedOperatorIdsByTeamIndex,
+    );
   fiammettaRecoverySettings.value =
     normalizeFiammettaRecoverySettings(parsedDraft.fiammettaRecoverySettings);
   roomGroupFallbackQueueStates.value =
@@ -6986,6 +7003,10 @@ function applySavedWizardState(parsedDraft) {
   scheduleRoomMaaSettingOverrides.value =
     normalizeSavedScheduleRoomMaaSettingOverrides(
       parsedDraft.scheduleRoomMaaSettingOverrides,
+    );
+  scheduleRoomMaaIndexAssignments.value =
+    normalizeSavedScheduleRoomMaaIndexAssignments(
+      parsedDraft.scheduleRoomMaaIndexAssignments,
     );
   lastAutomaticGenerationTriggerKey.value = String(
     parsedDraft.lastAutomaticGenerationTriggerKey || "",
@@ -7021,7 +7042,15 @@ function saveWizardState() {
 
   try {
     const workspaces = readOperatorSourceWorkspaces();
-    workspaces[activeOperatorSource.value] = createWizardStateSnapshot();
+    const previousWorkspace = workspaces[activeOperatorSource.value] || {};
+    const nextWorkspace = createWizardStateSnapshot();
+    workspaces[activeOperatorSource.value] = {
+      ...nextWorkspace,
+      assessmentSchedule:
+        nextWorkspace.assessmentSchedule ||
+        previousWorkspace.assessmentSchedule ||
+        null,
+    };
     saveOperatorSourceWorkspaces(workspaces);
     hasSavedWizardState.value = true;
   } catch {
@@ -7054,6 +7083,7 @@ function selectLayoutEntry(value) {
     selectedLayoutId.value = card.layoutId;
     confirmedLayoutPlan.value = null;
     customLayoutDraft.value = null;
+    customLayoutResetSnapshot.value = null;
     customLayoutEditorOpen.value = false;
     clearSelectedRoomGroupTeamCandidates();
   }
@@ -7182,6 +7212,7 @@ function selectManualScheduleOption(value) {
     facilityRequirement: normalizeRiicFacilityRequirement(card.layoutId),
   };
   customLayoutDraft.value = null;
+  customLayoutResetSnapshot.value = null;
   customLayoutEditorOpen.value = false;
   clearSelectedRoomGroupTeamCandidates();
   recommendationPanelOpen.value = false;
@@ -7236,7 +7267,7 @@ function resetWizard() {
     normalizeRiicIdealTrainingRaritySelection();
   controlCenterRoleSettings.value = { officeEnabled: false };
   controlCenterManualOverrides.value = normalizeControlCenterManualOverrides();
-  controlCenterLateFillExcludedOperatorIds.value = [];
+  controlCenterLateFillExcludedOperatorIdsByTeamIndex.value = {};
   fiammettaRecoverySettings.value = normalizeFiammettaRecoverySettings();
   lastAutomaticGenerationTriggerKey.value = "";
   clearSelectedRoomGroupTeamCandidates();
@@ -7287,7 +7318,7 @@ async function clearSavedWizardState() {
     normalizeRiicIdealTrainingRaritySelection();
   controlCenterRoleSettings.value = { officeEnabled: false };
   controlCenterManualOverrides.value = normalizeControlCenterManualOverrides();
-  controlCenterLateFillExcludedOperatorIds.value = [];
+  controlCenterLateFillExcludedOperatorIdsByTeamIndex.value = {};
   fiammettaRecoverySettings.value = normalizeFiammettaRecoverySettings();
   lastAutomaticGenerationTriggerKey.value = "";
   clearSelectedRoomGroupTeamCandidates();
@@ -7490,6 +7521,7 @@ watch(
     treatUnderleveledOperatorsAsQualified,
     controlCenterRoleSettings,
     controlCenterManualOverrides,
+    controlCenterLateFillExcludedOperatorIdsByTeamIndex,
     fiammettaRecoverySettings,
     lastAutomaticGenerationTriggerKey,
     selectedRoomGroupTeamCandidateKeys,
@@ -7507,9 +7539,16 @@ watch(
     scheduleRoomProductOverrides,
     invalidatedScheduleRoomKeys,
     scheduleRoomMaaSettingOverrides,
+    scheduleRoomMaaIndexAssignments,
   ],
   saveWizardState,
 );
+
+watch(riicSchedulePreview, (preview) => {
+  if (preview?.states?.length) {
+    saveWizardState();
+  }
+});
 
 onMounted(async () => {
   loadOperatorSources();
@@ -7575,10 +7614,9 @@ onBeforeUnmount(() => {
           :is-layout-recommended="isLayoutRecommended"
           :custom-layout-editor-open="customLayoutEditorOpen"
           :custom-layout-active="Boolean(confirmedLayoutPlan?.customLayout)"
+          :custom-layout-resettable="Boolean(customLayoutResetSnapshot)"
           :custom-layout-stations="customLayoutEditorStations"
-          :custom-layout-allows-level-adjustment="
-            customLayoutAllowsLevelAdjustment
-          "
+          :custom-layout-power-summary="customLayoutPowerSummary"
           :room-product-options="ROOM_PRODUCT_OPTIONS"
           @toggle-recommendation-panel="toggleRecommendationPanel"
           @select-recommendation-step="selectRecommendationStep"
@@ -7702,7 +7740,7 @@ onBeforeUnmount(() => {
               <RiicManualOperatorSourceChoice
                 :status="manualOperatorSourceStatus"
                 :loading="operatorSourceStates.manual?.loading"
-                @open-editor="router.push('/dev/operator')"
+                @open-editor="router.push('/riicdev/operator')"
                 @select-source="
                   setActiveOperatorSource(OPERATOR_SOURCE_KEYS.manual, {
                     notify: true,
@@ -7781,10 +7819,18 @@ onBeforeUnmount(() => {
               :room-group="activeScheduleRoomGroup"
               :control-state="controlCenterRoleState"
               :late-fill-state="controlCenterLateFillState"
+              :manual-overrides="controlCenterManualOverrides"
+              :late-fill-excluded-operator-ids-by-team-index="
+                controlCenterLateFillExcludedOperatorIdsByTeamIndex
+              "
               :operators="controlCenterCandidateOperators"
+              :scenario-trials="
+                riicControlCenterScenarioTrialState.scenarios
+              "
               :operator-table="operatorTableV2"
-              @add-operator="addControlCenterOperator"
-              @remove-operator="removeControlCenterOperator"
+              :fiammetta-recovery="fiammettaRecoveryConfig"
+              @save-adjustment="saveControlCenterAdjustment"
+              @save-error="({ message }) => cMessage(message, 'error')"
             />
             <RiicRoomGroupStaffingPanel
               v-else
@@ -8205,6 +8251,9 @@ onBeforeUnmount(() => {
                 :operator-input="scheduleRoomEditorOperatorInput"
                 :input-unmatched="scheduleRoomEditorInputUnmatched"
                 :maa-settings="activeScheduleRoomMaaSettings"
+                :maa-room-label="activeScheduleRoomMaaLabel"
+                :maa-room-index="activeScheduleRoomMaaIndex"
+                :maa-room-index-options="activeScheduleRoomMaaIndexOptions"
                 :can-paste-operators="
                   Array.isArray(copiedScheduleRoomOperators)
                 "
@@ -8212,6 +8261,7 @@ onBeforeUnmount(() => {
                 @reset="resetSchedulePreviewRoom"
                 @change-product="changeScheduleRoomProduct"
                 @update:maa-settings="updateScheduleRoomMaaSettings"
+                @update:maa-room-index="updateScheduleRoomMaaIndex"
                 @update:operator-input="
                   scheduleRoomEditorOperatorInput = $event
                 "

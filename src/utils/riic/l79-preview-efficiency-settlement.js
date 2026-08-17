@@ -9,6 +9,9 @@ import {
   recalculateRiicClosureSpecialOrder,
 } from "./l62-closure-calculation.js";
 import {
+  recalculateRiicRoomTeamCandidate,
+} from "./l62-team-calculation.js";
+import {
   applyRiicActiveRosterPreviewEffects,
 } from "./l65-active-roster-effects.js";
 import {
@@ -64,6 +67,44 @@ function getStaffingBonusPercent({ facility, operators = [] } = {}) {
   return PRODUCTIVE_ROOM_TYPES.has(normalizeRoomType(facility))
     ? (operators || []).length
     : 0;
+}
+
+function getActualControlCenterOperatorEffects(bindings) {
+  return (bindings || []).flatMap((binding) =>
+    (binding?.effects || []).filter(
+      (effect) => String(effect?.scope || "").trim() === "operators",
+    ),
+  );
+}
+
+function getJayeActualTeamCalculation({
+  candidate,
+  actualControlCenterBindings,
+} = {}) {
+  if (
+    String(candidate?.teamCalculation?.type || "").trim() !==
+    "jayeOrderLimit"
+  ) {
+    return null;
+  }
+
+  const result = recalculateRiicRoomTeamCandidate({
+    candidate,
+    scope: candidate?.candidateScope,
+    fallbackOperators: candidate?.fallback?.operators || [],
+    controlCenterAdjustment: {
+      operatorEffects: getActualControlCenterOperatorEffects(
+        actualControlCenterBindings,
+      ),
+    },
+  });
+  return (
+    result || {
+      type: "jayeOrderLimit",
+      coreBonusAdjustmentPercent: 0,
+      usesStaticEstimate: true,
+    }
+  );
 }
 
 function isAutomationCandidate(candidate) {
@@ -339,6 +380,7 @@ export function settleRiicPreviewRoomEfficiency({
   actualControlCenterFacilityBonusPercent = 0,
   actualControlCenterOperatorBonusPercent = 0,
   actualControlCenterOperatorBonuses = [],
+  actualControlCenterBindings = [],
   manuallyEdited = false,
   expectedSlots,
   product,
@@ -402,6 +444,12 @@ export function settleRiicPreviewRoomEfficiency({
           automationRuntimeContext,
         })
       : null;
+  const teamCalculation = status === "calculated" && !usesFinalRosterCalculation
+    ? getJayeActualTeamCalculation({
+      candidate,
+      actualControlCenterBindings,
+    })
+    : null;
   const actualValue =
     status === "calculated"
       ? usesFinalRosterCalculation
@@ -414,6 +462,18 @@ export function settleRiicPreviewRoomEfficiency({
           staffingBonusPercent +
           (actualControlCenterFacilityBonus || 0) +
           (actualControlCenterOperatorBonus || 0)
+        : teamCalculation
+          ? Number(
+              candidate?.teamCalculationBaseCorePercent ??
+                candidate?.corePercent ??
+                candidateTotal ??
+                0,
+            ) +
+            Number(candidate?.fallback?.totalPercent || 0) +
+            Number(teamCalculation.coreBonusAdjustmentPercent || 0) +
+            staffingBonusPercent +
+            (actualControlCenterFacilityBonus || 0) +
+            (actualControlCenterOperatorBonus || 0)
         : candidateTotal -
           (estimatedControlCenterOperatorBonus || 0) +
           staffingBonusPercent +
@@ -448,6 +508,11 @@ export function settleRiicPreviewRoomEfficiency({
         ...(automationCalculation
           ? {
               automationCalculation,
+            }
+          : {}),
+        ...(teamCalculation
+          ? {
+              teamCalculation,
             }
           : {}),
       },
@@ -522,6 +587,7 @@ function applyRiicPreviewBaseRoomEfficiency(
             room.controlCenterOperatorBonusPercent,
           actualControlCenterOperatorBonuses:
             room.controlCenterOperatorBonuses || [],
+          actualControlCenterBindings: room.sameShiftBindings || [],
           manuallyEdited: room.manuallyEdited === true,
           expectedSlots: room.expectedSlots,
           product: room.product,

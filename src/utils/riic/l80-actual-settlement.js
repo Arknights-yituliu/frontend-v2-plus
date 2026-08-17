@@ -1,16 +1,22 @@
-import {
-  RIIC_REFERENCE_DAILY_RATES,
-} from "../riicYield/riicYieldCore.js";
 import { calculateRiicTrading } from "./P01-riic-trading.js";
 import { calculateRiicTradingDrone } from "./P02-riic-trading-drone.js";
+import {
+  calculateRiicDirectProductionOutput,
+  getRiicReferenceDailyRate,
+  getRiicRoomYieldMeta,
+} from "./P03-riic-production.js";
+import { settleRiicNetResources } from "./P04-riic-resource-netting.js";
+import {
+  resolveRiicTradingExternalOrderBonuses,
+} from "./riic-trading-context.js";
 
 const EPSILON = 1e-9;
-const PURE_GOLD_LMD_VALUE = 500;
 const ORUNDUM_PER_ORIGINIUM_SHARD = 10;
 const DRONE_BASE_CHARGE_MINUTES = 6;
 const DRONE_BASE_PER_HOUR = 60 / DRONE_BASE_CHARGE_MINUTES;
 const POWER_OPERATOR_CHARGE_BONUS_PERCENT = 5;
 const DRONE_ACCELERATION_HOURS = 3 / 60;
+const DRONE_STORAGE_LIMIT = 235;
 const ORUNDUM_MANUFACTURE_RECIPES = Object.freeze({
   orirock: Object.freeze({
     material: "orirock",
@@ -31,46 +37,6 @@ const YIELD_FACILITIES = new Set([
   "hire",
   "office",
 ]);
-const PRODUCT_OUTPUT_META = Object.freeze({
-  "manufacture:experience": Object.freeze({
-    resource: "exp",
-    label: "经验书",
-    rateKey: "exp",
-    unit: "经验/天",
-  }),
-  "manufacture:gold": Object.freeze({
-    resource: "gold",
-    label: "赤金",
-    rateKey: "gold",
-    unit: "根/天",
-  }),
-  "manufacture:orundum": Object.freeze({
-    resource: "originiumShard",
-    label: "源石碎片",
-    dailyRate: 24,
-    unit: "枚/天",
-  }),
-  "trading:lmd": Object.freeze({
-    resource: "lmd",
-    label: "龙门币",
-    rateKey: "lmd",
-    unit: "龙门币/天",
-  }),
-  "trading:orundum": Object.freeze({
-    resource: "orundum",
-    label: "合成玉",
-    dailyRate: 240,
-    unit: "合成玉/天",
-  }),
-  "hire:all": Object.freeze({
-    resource: "recruitmentRefresh",
-    label: "公招净刷新",
-    dailyRate: 2,
-    unit: "次/天",
-    isNetBonus: true,
-  }),
-});
-
 const DISPLAY_RESOURCE_ORDER = Object.freeze([
   "lmd",
   "exp",
@@ -112,63 +78,6 @@ function roundPercent(value) {
 
 function roundYield(value) {
   return Math.round(value * 100) / 100;
-}
-
-function getRoomYieldMeta(room) {
-  const sourceFacility = String(room?.facility || "").trim();
-  const facility = sourceFacility === "office" ? "hire" : sourceFacility;
-  const product = String(room?.product || "").trim();
-  return (
-    PRODUCT_OUTPUT_META[`${facility}:${product}`] ||
-    (facility === "hire" ? PRODUCT_OUTPUT_META["hire:all"] : null)
-  );
-}
-
-function getReferenceDailyRate(room, meta) {
-  if (!meta) {
-    return null;
-  }
-
-  const facility = String(room?.facility || "").trim();
-  const product = String(room?.product || "").trim();
-  const stationLevel = Number(room?.stationLevel);
-
-  if (meta.dailyRate !== undefined) {
-    const supportsDailyRate =
-      facility === "trading" &&
-      product === "orundum" &&
-      [1, 2, 3].includes(stationLevel);
-    return supportsDailyRate ||
-      stationLevel === 3 ||
-      facility === "hire" ||
-      facility === "office"
-      ? Number(meta.dailyRate)
-      : null;
-  }
-
-  if (facility === "manufacture" && (stationLevel === 2 || stationLevel === 3)) {
-    const rate = Number(
-      RIIC_REFERENCE_DAILY_RATES?.[facility]?.[meta.rateKey],
-    );
-    if (!Number.isFinite(rate)) {
-      return null;
-    }
-
-    return meta.resource === "gold" ? rate / PURE_GOLD_LMD_VALUE : rate;
-  }
-
-  if (stationLevel !== 3) {
-    return null;
-  }
-
-  const rate = Number(
-    RIIC_REFERENCE_DAILY_RATES?.[facility]?.[meta.rateKey],
-  );
-  if (!Number.isFinite(rate)) {
-    return null;
-  }
-
-  return meta.resource === "gold" ? rate / PURE_GOLD_LMD_VALUE : rate;
 }
 
 function isTradingRoom(room) {
@@ -243,43 +152,6 @@ function getTradingOperators(room, rosterById) {
   });
 }
 
-function getTradingFacilityContext(stateRooms) {
-  const baseOperatorIds = new Set(
-    (stateRooms || []).flatMap((candidate) =>
-      (candidate?.operators || []).map((operator) =>
-        String(operator?.charId || "").trim(),
-      ),
-    ).filter(Boolean),
-  );
-  const meetingLevels = (stateRooms || [])
-    .filter((candidate) => String(candidate?.facility || "").trim() === "meeting")
-    .map((candidate) => Number(candidate?.stationLevel))
-    .filter((level) => Number.isInteger(level) && level >= 0);
-  const dormitoryLevels = (stateRooms || [])
-    .filter(
-      (candidate) =>
-        String(candidate?.facility || "").trim() === "dormitory",
-    )
-    .map((candidate) => Number(candidate?.stationLevel))
-    .filter((level) => Number.isInteger(level) && level >= 0);
-  const manufactureProductKindCount = new Set(
-    (stateRooms || [])
-      .filter(
-        (candidate) =>
-          String(candidate?.facility || "").trim() === "manufacture",
-      )
-      .map((candidate) => String(candidate?.product || "").trim())
-      .filter(Boolean),
-  ).size;
-
-  return {
-    baseOperatorIds: [...baseOperatorIds],
-    dormitoryLevels,
-    manufactureProductKindCount,
-    meetingLevel: meetingLevels.length > 0 ? Math.max(...meetingLevels) : null,
-  };
-}
-
 function getPerceptionState(perceptionSettlement, state) {
   const stateIndex = Number(state?.index);
   if (!Number.isInteger(stateIndex)) {
@@ -309,6 +181,26 @@ function getTradingOperatorBonuses(room) {
   );
 }
 
+function getTradingTeamCalculationBonus(room) {
+  const calculation =
+    room?.efficiencyMetrics?.actual?.breakdown?.teamCalculation;
+  if (
+    String(calculation?.type || "").trim() !== "jayeOrderLimit" ||
+    !Number.isFinite(Number(calculation?.coreBonusPercentBeforeControl))
+  ) {
+    return {};
+  }
+
+  return {
+    localOrderBonusOverride: Number(
+      calculation.coreBonusPercentBeforeControl,
+    ),
+    ignoredUnsupportedOperatorIds: [
+      String(calculation?.sourceMemberId || "").trim(),
+    ].filter(Boolean),
+  };
+}
+
 function calculateTradingRoom({
   room,
   rosterById,
@@ -330,7 +222,8 @@ function calculateTradingRoom({
       product: String(room?.product || "").trim(),
       level: Number(room?.stationLevel),
       context: {
-        ...getTradingFacilityContext(stateRooms),
+        resolvedExternalOrderBonuses:
+          resolveRiicTradingExternalOrderBonuses(stateRooms),
         silentResonance: Number(
           perceptionState?.resources?.silentResonance,
         ),
@@ -340,6 +233,7 @@ function calculateTradingRoom({
     {
       room: roomBonus,
       operators: getTradingOperatorBonuses(room),
+      ...getTradingTeamCalculationBonus(room),
     },
   );
 }
@@ -479,7 +373,7 @@ function createYieldRoomSummary(room) {
     facility: String(room?.facility || "").trim(),
     product: String(room?.product || "").trim(),
     stationLevel: Number(room?.stationLevel) || null,
-    meta: getRoomYieldMeta(room),
+    meta: getRiicRoomYieldMeta(room),
     durationHours: 0,
     calculatedDurationHours: 0,
     outputPerCycle: 0,
@@ -499,8 +393,8 @@ function createYieldSegment({
   const efficiencyCalculated =
     efficiency !== null &&
     room?.efficiencyMetrics?.actual?.status === "calculated";
-  const meta = getRoomYieldMeta(room);
-  const dailyRate = getReferenceDailyRate(room, meta);
+  const meta = getRiicRoomYieldMeta(room);
+  const dailyRate = getRiicReferenceDailyRate(room, meta);
   const isOrundumTrading = isOrundumTradingRoom(room);
   const usesDirectEfficiency = isOrundumTrading || !isTradingRoom(room);
   const tradingCalculation = isTradingRoom(room) && !isOrundumTrading
@@ -526,15 +420,17 @@ function createYieldSegment({
       ? ""
       : tradingCalculation?.error || "tradingCalculationUnavailable";
 
+  const directProductionOutput = calculateRiicDirectProductionOutput({
+    room,
+    efficiency,
+    durationHours,
+    meta,
+  });
   const output = unavailableReason
     ? null
     : calculatedTradingFlow
       ? calculatedTradingFlow.lmdOutput
-      : meta.isNetBonus
-        ? dailyRate *
-          Math.max(0, (efficiency - 100) / 100) *
-          (durationHours / 24)
-        : dailyRate * (efficiency / 100) * (durationHours / 24);
+      : directProductionOutput;
   const tradingFlow = isOrundumTrading && output !== null
     ? createOrundumTradingFlow(output)
     : calculatedTradingFlow;
@@ -959,182 +855,6 @@ function buildOrundumManufactureFlowTotals({
   };
 }
 
-function buildNetGoldResource(resourcesByKey, tradingFlowTotals, cycleHours) {
-  const manufacturedGold = getDirectYieldResource(resourcesByKey, "gold");
-  const lmd = getDirectYieldResource(resourcesByKey, "lmd");
-  const isCalculated =
-    manufacturedGold.isCalculated &&
-    lmd.isCalculated &&
-    tradingFlowTotals.isCalculated;
-  const roomCount = manufacturedGold.roomCount + lmd.roomCount;
-  const calculatedRoomCount =
-    manufacturedGold.calculatedRoomCount + lmd.calculatedRoomCount;
-
-  if (!isCalculated) {
-    return {
-      ...createEmptyYieldResource("gold"),
-      roomCount,
-      calculatedRoomCount,
-      isCalculated: false,
-      outputPerCycle: null,
-      outputPerDay: null,
-      detail: "赤金制造或龙门币贸易存在未计算房间",
-    };
-  }
-
-  const manufacturedPerCycle = Number(manufacturedGold.outputPerCycle || 0);
-  const manufacturedPerDay = Number(manufacturedGold.outputPerDay || 0);
-  const perDayMultiplier = cycleHours > 0 ? 24 / cycleHours : 0;
-  const consumedPerCycle = Number(
-    tradingFlowTotals.goldConsumptionPerCycle || 0,
-  );
-  const consumedPerDay = consumedPerCycle * perDayMultiplier;
-  const virtualGoldOutputPerCycle = Number(
-    tradingFlowTotals.virtualGoldOutputPerCycle || 0,
-  );
-  const virtualGoldOutputPerDay = virtualGoldOutputPerCycle * perDayMultiplier;
-  const grossOutputPerCycle = manufacturedPerCycle + virtualGoldOutputPerCycle;
-  const grossOutputPerDay = manufacturedPerDay + virtualGoldOutputPerDay;
-
-  return {
-    ...createEmptyYieldResource("gold"),
-    roomCount,
-    calculatedRoomCount,
-    outputPerCycle: roundYield(grossOutputPerCycle - consumedPerCycle),
-    outputPerDay: roundYield(grossOutputPerDay - consumedPerDay),
-    detail: `制造 ${roundYield(manufacturedPerDay)}；订单等效 ${roundYield(
-      virtualGoldOutputPerDay,
-    )}；贸易消耗 ${roundYield(consumedPerDay)}`,
-    grossOutputPerCycle: roundYield(grossOutputPerCycle),
-    grossOutputPerDay: roundYield(grossOutputPerDay),
-    tradeConsumptionPerCycle: roundYield(consumedPerCycle),
-    tradeConsumptionPerDay: roundYield(consumedPerDay),
-    virtualGoldOutputPerCycle: roundYield(virtualGoldOutputPerCycle),
-    virtualGoldOutputPerDay: roundYield(virtualGoldOutputPerDay),
-  };
-}
-
-function buildNetLmdResource(
-  resourcesByKey,
-  orundumManufactureFlowTotals,
-  cycleHours,
-) {
-  const tradingLmd = getDirectYieldResource(resourcesByKey, "lmd");
-  const isCalculated =
-    tradingLmd.isCalculated && orundumManufactureFlowTotals.isCalculated;
-  const roomCount =
-    tradingLmd.roomCount +
-    Number(orundumManufactureFlowTotals.roomCount || 0);
-  const calculatedRoomCount =
-    tradingLmd.calculatedRoomCount +
-    Number(orundumManufactureFlowTotals.calculatedRoomCount || 0);
-
-  if (!isCalculated) {
-    return {
-      ...createEmptyYieldResource("lmd"),
-      roomCount,
-      calculatedRoomCount,
-      isCalculated: false,
-      outputPerCycle: null,
-      outputPerDay: null,
-      detail: "龙门币贸易或源石碎片制造存在未计算班段",
-      grossOutputPerCycle: null,
-      grossOutputPerDay: null,
-      orundumManufactureConsumptionPerCycle: null,
-      orundumManufactureConsumptionPerDay: null,
-    };
-  }
-
-  const grossOutputPerCycle = Number(tradingLmd.outputPerCycle || 0);
-  const grossOutputPerDay = Number(tradingLmd.outputPerDay || 0);
-  const perDayMultiplier = cycleHours > 0 ? 24 / cycleHours : 0;
-  const orundumManufactureConsumptionPerCycle = Number(
-    orundumManufactureFlowTotals.lmdConsumptionPerCycle || 0,
-  );
-  const orundumManufactureConsumptionPerDay =
-    orundumManufactureConsumptionPerCycle * perDayMultiplier;
-
-  return {
-    ...createEmptyYieldResource("lmd"),
-    roomCount,
-    calculatedRoomCount,
-    outputPerCycle: roundYield(
-      grossOutputPerCycle - orundumManufactureConsumptionPerCycle,
-    ),
-    outputPerDay: roundYield(
-      grossOutputPerDay - orundumManufactureConsumptionPerDay,
-    ),
-    detail: `贸易产出 ${roundYield(grossOutputPerDay)}；源石碎片制造消耗 ${roundYield(
-      orundumManufactureConsumptionPerDay,
-    )}`,
-    grossOutputPerCycle: roundYield(grossOutputPerCycle),
-    grossOutputPerDay: roundYield(grossOutputPerDay),
-    orundumManufactureConsumptionPerCycle: roundYield(
-      orundumManufactureConsumptionPerCycle,
-    ),
-    orundumManufactureConsumptionPerDay: roundYield(
-      orundumManufactureConsumptionPerDay,
-    ),
-  };
-}
-
-function buildNetOriginiumShardResource(
-  resourcesByKey,
-  orundumTradeFlowTotals,
-  cycleHours,
-) {
-  const manufacturedShards = getDirectYieldResource(
-    resourcesByKey,
-    "originiumShard",
-  );
-  const isCalculated =
-    manufacturedShards.isCalculated && orundumTradeFlowTotals.isCalculated;
-  const roomCount =
-    manufacturedShards.roomCount + orundumTradeFlowTotals.roomCount;
-  const calculatedRoomCount =
-    manufacturedShards.calculatedRoomCount +
-    orundumTradeFlowTotals.calculatedRoomCount;
-
-  if (!isCalculated) {
-    return {
-      ...createEmptyYieldResource("originiumShard"),
-      roomCount,
-      calculatedRoomCount,
-      isCalculated: false,
-      outputPerCycle: null,
-      outputPerDay: null,
-      detail: "源石碎片制造或合成玉贸易存在未计算房间",
-      grossOutputPerCycle: null,
-      grossOutputPerDay: null,
-      tradeConsumptionPerCycle: null,
-      tradeConsumptionPerDay: null,
-    };
-  }
-
-  const manufacturedPerCycle = Number(manufacturedShards.outputPerCycle || 0);
-  const manufacturedPerDay = Number(manufacturedShards.outputPerDay || 0);
-  const perDayMultiplier = cycleHours > 0 ? 24 / cycleHours : 0;
-  const consumedPerCycle = Number(
-    orundumTradeFlowTotals.shardConsumptionPerCycle || 0,
-  );
-  const consumedPerDay = consumedPerCycle * perDayMultiplier;
-
-  return {
-    ...createEmptyYieldResource("originiumShard"),
-    roomCount,
-    calculatedRoomCount,
-    outputPerCycle: roundYield(manufacturedPerCycle - consumedPerCycle),
-    outputPerDay: roundYield(manufacturedPerDay - consumedPerDay),
-    detail: `制造 ${roundYield(manufacturedPerDay)}；合成玉订单消耗 ${roundYield(
-      consumedPerDay,
-    )}`,
-    grossOutputPerCycle: roundYield(manufacturedPerCycle),
-    grossOutputPerDay: roundYield(manufacturedPerDay),
-    tradeConsumptionPerCycle: roundYield(consumedPerCycle),
-    tradeConsumptionPerDay: roundYield(consumedPerDay),
-  };
-}
-
 function buildYieldResourceSettlement({
   directResourcesByKey,
   tradingSettlements,
@@ -1152,21 +872,17 @@ function buildYieldResourceSettlement({
     tradingSettlements,
     droneTargetSettlement,
   });
-  const gold = buildNetGoldResource(
+  const {
+    gold,
+    lmd,
+    originiumShard,
+  } = settleRiicNetResources({
     resourcesByKey,
     tradingFlowTotals,
-    cycleHours,
-  );
-  const lmd = buildNetLmdResource(
-    resourcesByKey,
+    orundumTradeFlowTotals,
     orundumManufactureFlowTotals,
     cycleHours,
-  );
-  const originiumShard = buildNetOriginiumShardResource(
-    resourcesByKey,
-    orundumTradeFlowTotals,
-    cycleHours,
-  );
+  });
 
   resourcesByKey.set("gold", gold);
   resourcesByKey.set("lmd", lmd);
@@ -1574,7 +1290,7 @@ function buildDroneChargeSummary({ states, cycleHours }) {
   let calculatedDurationHours = 0;
   let droneOutputPerCycle = 0;
 
-  for (const state of states) {
+  for (const [stateIndex, state] of states.entries()) {
     const segmentDurationHours = toPositiveHours(state?.durationHours);
     if (segmentDurationHours <= 0) {
       continue;
@@ -1590,6 +1306,7 @@ function buildDroneChargeSummary({ states, cycleHours }) {
       droneOutputPerCycle += segment.droneOutput;
     }
     segments.push({
+      stateIndex,
       ...segment,
       operatorBonusPercent: roundPercent(segment.operatorBonusPercent),
       skillBonusPercent:
@@ -1633,7 +1350,90 @@ function buildDroneChargeSummary({ states, cycleHours }) {
   };
 }
 
-function createDroneTargetBenefitSegment({
+function normalizeDroneOrder(value) {
+  if (value === "retain") {
+    return "retain";
+  }
+
+  return value === "post" ? "post" : "pre";
+}
+
+function buildDroneUsageSummary({ droneCharge, droneOrdersByState }) {
+  const chargeSegments = Array.isArray(droneCharge?.segments)
+    ? droneCharge.segments
+    : [];
+  const segments = chargeSegments.map((chargeSegment) => ({
+    stateIndex: Number(chargeSegment?.stateIndex),
+    order: normalizeDroneOrder(
+      Array.isArray(droneOrdersByState)
+        ? droneOrdersByState[Number(chargeSegment?.stateIndex)]
+        : "",
+    ),
+    generatedDroneOutput: Number.isFinite(Number(chargeSegment?.droneOutput))
+      ? Number(chargeSegment.droneOutput)
+      : null,
+    rawAvailableDroneOutput: null,
+    availableDroneOutput: null,
+    usedDroneOutput: null,
+    storedDroneOutput: null,
+    capacityReached: false,
+  }));
+  const isCalculated =
+    segments.length > 0 &&
+    segments.every((segment) => segment.generatedDroneOutput !== null);
+
+  if (!isCalculated) {
+    return {
+      isCalculated: false,
+      storageLimit: DRONE_STORAGE_LIMIT,
+      capacityReached: false,
+      segments,
+    };
+  }
+
+  const lastUsedIndex = segments.reduce(
+    (lastIndex, segment, index) =>
+      segment.order === "retain" ? lastIndex : index,
+    -1,
+  );
+  const startIndex =
+    lastUsedIndex >= 0 ? (lastUsedIndex + 1) % segments.length : 0;
+  let storedDroneOutput =
+    lastUsedIndex < 0 ? DRONE_STORAGE_LIMIT : 0;
+
+  for (let offset = 0; offset < segments.length; offset += 1) {
+    const index = (startIndex + offset) % segments.length;
+    const segment = segments[index];
+    const rawAvailableDroneOutput =
+      storedDroneOutput + segment.generatedDroneOutput;
+    const availableDroneOutput = Math.min(
+      DRONE_STORAGE_LIMIT,
+      rawAvailableDroneOutput,
+    );
+    const capacityReached = rawAvailableDroneOutput >= DRONE_STORAGE_LIMIT;
+    const retainsDrones = segment.order === "retain";
+
+    segment.rawAvailableDroneOutput = roundYield(rawAvailableDroneOutput);
+    segment.availableDroneOutput = roundYield(availableDroneOutput);
+    segment.usedDroneOutput = retainsDrones
+      ? 0
+      : roundYield(availableDroneOutput);
+    segment.storedDroneOutput = retainsDrones
+      ? roundYield(availableDroneOutput)
+      : 0;
+    segment.capacityReached = capacityReached;
+    storedDroneOutput = retainsDrones ? availableDroneOutput : 0;
+  }
+
+  return {
+    isCalculated: true,
+    storageLimit: DRONE_STORAGE_LIMIT,
+    capacityReached: segments.some((segment) => segment.capacityReached),
+    segments,
+  };
+}
+
+export function createDroneTargetBenefitSegment({
   room,
   droneOutput,
   tradingRosterById,
@@ -1642,7 +1442,7 @@ function createDroneTargetBenefitSegment({
   const facility = String(room?.facility || "").trim();
   const product = String(room?.product || "").trim();
   const droneCount = Number(droneOutput);
-  const meta = getRoomYieldMeta(room);
+  const meta = getRiicRoomYieldMeta(room);
   const acceleratedHours =
     Number.isFinite(droneCount) && droneCount >= 0
       ? droneCount * DRONE_ACCELERATION_HOURS
@@ -1722,6 +1522,7 @@ function buildDroneTargetSettlement({
   states,
   cycleHours,
   droneCharge,
+  droneUsage,
   droneTargetKey,
   droneTargetKeysByState,
   tradingRosterById,
@@ -1772,7 +1573,13 @@ function buildDroneTargetSettlement({
     const room = (state?.rooms || []).find(
       (item) => String(item?.key || "").trim() === stateTargetKey,
     );
-    const droneOutput = droneCharge?.segments?.[droneSegmentIndex]?.droneOutput;
+    const chargeSegment = droneCharge?.segments?.[droneSegmentIndex];
+    const usageSegment = droneUsage?.segments?.[droneSegmentIndex];
+    const droneOutput =
+      usageSegment?.usedDroneOutput === null ||
+      usageSegment?.usedDroneOutput === undefined
+        ? chargeSegment?.droneOutput
+        : usageSegment.usedDroneOutput;
     droneSegmentIndex += 1;
     const benefit = !stateTargetKey
       ? {
@@ -1840,6 +1647,12 @@ function buildDroneTargetSettlement({
         droneOutput === null || droneOutput === undefined
           ? null
           : roundYield(droneOutput),
+      retainedDroneOutput:
+        usageSegment?.storedDroneOutput === null ||
+        usageSegment?.storedDroneOutput === undefined
+          ? null
+          : roundYield(usageSegment.storedDroneOutput),
+      droneStorageLimitReached: usageSegment?.capacityReached === true,
       calculated: benefit.calculated,
       unavailableReason: benefit.unavailableReason,
       acceleratedHours:
@@ -1955,6 +1768,7 @@ function buildYieldSummary({
   cycleHours,
   droneTargetKey,
   droneTargetKeysByState,
+  droneOrdersByState,
   tradingOperators,
   orundumCraftMaterial,
   perceptionSettlement,
@@ -2006,6 +1820,10 @@ function buildYieldSummary({
   );
   const directResourcesByKey = buildDirectYieldResources(rooms);
   const droneCharge = buildDroneChargeSummary({ states, cycleHours });
+  const droneUsage = buildDroneUsageSummary({
+    droneCharge,
+    droneOrdersByState,
+  });
   const tradingSettlements = buildTradingSettlements({
     states,
     cycleHours,
@@ -2016,6 +1834,7 @@ function buildYieldSummary({
     states,
     cycleHours,
     droneCharge,
+    droneUsage,
     droneTargetKey,
     droneTargetKeysByState,
     tradingRosterById,
@@ -2044,6 +1863,7 @@ function buildYieldSummary({
         states,
         cycleHours,
         droneCharge,
+        droneUsage,
         droneTargetKeysByState: states.map((__, index) =>
           index === stateIndex ? targetKey : "",
         ),
@@ -2060,6 +1880,7 @@ function buildYieldSummary({
         states,
         cycleHours,
         droneCharge,
+        droneUsage,
         droneTargetKey: targetKey,
         tradingRosterById,
         orundumCraftMaterial,
@@ -2083,6 +1904,7 @@ function buildYieldSummary({
     rooms,
     tradingSettlements,
     droneCharge,
+    droneUsage,
     droneTargetSettlements,
     droneTargetSettlement: {
       ...droneTargetSettlement,
@@ -2109,6 +1931,7 @@ export function summarizeRiicActualSchedule({
   preview,
   droneTargetKey = "",
   droneTargetKeysByState = null,
+  droneOrdersByState = null,
   tradingOperators = [],
   orundumCraftMaterial = "orirock",
 } = {}) {
@@ -2164,6 +1987,7 @@ export function summarizeRiicActualSchedule({
       cycleHours: resolvedCycleHours,
       droneTargetKey,
       droneTargetKeysByState,
+      droneOrdersByState,
       tradingOperators,
       orundumCraftMaterial,
       perceptionSettlement: preview?.perceptionSettlement,

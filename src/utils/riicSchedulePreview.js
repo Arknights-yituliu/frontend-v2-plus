@@ -116,6 +116,24 @@ function getCandidateOperatorIds(candidate) {
   ]);
 }
 
+function getOperatorSignature(operator) {
+  const charId = String(operator?.charId || "").trim();
+  return charId || `name:${String(operator?.name || "").trim()}`;
+}
+
+function haveSameOperators(leftOperators = [], rightOperators = []) {
+  const left = (leftOperators || [])
+    .map(getOperatorSignature)
+    .filter(Boolean)
+    .sort();
+  const right = (rightOperators || [])
+    .map(getOperatorSignature)
+    .filter(Boolean)
+    .sort();
+
+  return left.length === right.length && left.every((value, index) => value === right[index]);
+}
+
 function createRoomLabel(group, assignment) {
   const facilityLabel = group?.facilityLabel || group?.label || "";
   const shortLabel = String(group?.shortLabel || "").trim();
@@ -140,12 +158,18 @@ function createRoomPreview({
   const overrideKey = `${stateIndex}:${key}`;
   const overriddenOperators = roomOperatorOverrides?.[overrideKey];
   const isInvalidated = invalidatedRoomKeys?.[key] === true;
+  const automaticOperators = Array.isArray(candidate.operators)
+    ? candidate.operators
+    : [];
   const operators = Array.isArray(overriddenOperators)
     ? overriddenOperators
     : isInvalidated
       ? []
-      : candidate.operators || [];
-  const manuallyEdited = Array.isArray(overriddenOperators) || isInvalidated;
+      : automaticOperators;
+  const manuallyEdited =
+    isInvalidated ||
+    (Array.isArray(overriddenOperators) &&
+      !haveSameOperators(overriddenOperators, automaticOperators));
   const controlCenterFacilityBonusPercent = Number.isFinite(
     Number(sameShiftBinding?.facilityBonusPercent),
   )
@@ -168,6 +192,7 @@ function createRoomPreview({
     stationLevel: assignment?.stationLevel || null,
     expectedSlots: assignment?.expectedSlots || null,
     operators,
+    automaticOperators,
     efficiency: null,
     fallbackCount: getFallbackCount(candidate),
     effectMetrics: candidate.effectMetrics || [],
@@ -199,6 +224,14 @@ function createStaticRoomPreview({
   const overriddenOperators = roomOperatorOverrides?.[overrideKey];
   const isInvalidated = invalidatedRoomKeys?.[key] === true;
   const stateOperators = room?.operatorsByStateIndex?.[stateIndex];
+  const automaticOperators = Array.isArray(stateOperators)
+    ? stateOperators
+    : room?.operators || [];
+  const operators = Array.isArray(overriddenOperators)
+    ? overriddenOperators
+    : isInvalidated
+      ? []
+      : automaticOperators;
 
   return {
     key,
@@ -211,18 +244,16 @@ function createStaticRoomPreview({
     stationIndex: Number(room?.stationIndex || 0),
     stationLevel: room?.stationLevel || null,
     expectedSlots: room?.expectedSlots || null,
-    operators: Array.isArray(overriddenOperators)
-      ? overriddenOperators
-      : isInvalidated
-        ? []
-        : Array.isArray(stateOperators)
-          ? stateOperators
-          : room?.operators || [],
+    operators,
+    automaticOperators,
     efficiency: null,
     fallbackCount: 0,
     effectMetrics: [],
     isStatic: true,
-    manuallyEdited: Array.isArray(overriddenOperators) || isInvalidated,
+    manuallyEdited:
+      isInvalidated ||
+      (Array.isArray(overriddenOperators) &&
+        !haveSameOperators(overriddenOperators, automaticOperators)),
   };
 }
 
@@ -235,7 +266,12 @@ function applyRoomOperatorOverride(room, stateIndex, roomOperatorOverrides) {
         ...room,
         operators: overriddenOperators,
         efficiency: null,
-        manuallyEdited: true,
+        manuallyEdited:
+          room.manuallyEdited === true ||
+          !haveSameOperators(
+            overriddenOperators,
+            room.automaticOperators || [],
+          ),
       }
     : room;
 }

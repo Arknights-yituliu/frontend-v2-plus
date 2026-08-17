@@ -706,6 +706,14 @@
         }
       ],
       "fillPriority": -1
+    },
+    {
+      "name": "铅踝",
+      "rates": [
+        {
+          "percent": 27.56
+        }
+      ]
     }
   ]
 }
