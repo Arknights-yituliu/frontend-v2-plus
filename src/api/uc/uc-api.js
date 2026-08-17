@@ -57,6 +57,91 @@ export async function logoutUcSession() {
 }
 
 /**
+ * 获取当前登录用户资料（UC GET /user/profile，文档 3.3 节）
+ * @returns {Promise<{code:number, msg:string, data:{uid:number, email:string|null, nickname:string, avatar:string|null, status:number, registerTime:string, lastLoginTime:string}}>}
+ */
+export function getUserProfile() {
+    return ucRequest({method: "GET", url: "/user/profile"})
+}
+
+/**
+ * 发送邮箱验证码（UC POST /auth/send-code，文档 3.0 节）
+ * 限流：同一 IP 最小间隔 60s，同一邮箱最小间隔 5 分钟
+ * @param {string} email 目标邮箱
+ * @param {string} usage 用途标识：register=注册/邮箱绑定、login=登录
+ * @returns {Promise<{code:number, msg:string, data:any}>}
+ */
+export function sendEmailCode(email, usage = "register") {
+    return ucRequest({
+        method: "POST",
+        url: "/auth/send-code",
+        data: {email, usage},
+        auth: false,
+    })
+}
+
+/**
+ * 发送重设密码验证码（UC POST /auth/reset-code，文档 3.5.1 节），验证码发到账号绑定的邮箱
+ * @param {string} account 邮箱或用户名
+ * @returns {Promise<{code:number, msg:string, data:any}>}
+ */
+export function sendResetCode(account) {
+    return ucRequest({
+        method: "POST",
+        url: "/auth/reset-code",
+        data: {account},
+        auth: false,
+    })
+}
+
+/**
+ * 忘记密码：提交新密码（UC POST /auth/reset-password，文档 3.5.2 节）
+ * 成功后服务端踢出该账号全部会话
+ * @param {string} account 邮箱或用户名（与发送验证码时一致）
+ * @param {string} code 收到的验证码
+ * @param {string} newPassword 新密码（6-32 位，仅数字、字母、@、下划线）
+ * @returns {Promise<{code:number, msg:string, data:any}>}
+ */
+export function resetPassword(account, code, newPassword) {
+    return ucRequest({
+        method: "POST",
+        url: "/auth/reset-password",
+        data: {account, code, newPassword},
+        auth: false,
+    })
+}
+
+/**
+ * 绑定邮箱（UC POST /user/email/bind，文档 3.6.1 节，需登录，仅无邮箱账号可绑）
+ * @param {string} email 新邮箱（全局唯一）
+ * @param {string} code 发到该邮箱的验证码（先调 sendEmailCode，usage=register）
+ * @returns {Promise<{code:number, msg:string, data:any}>}
+ */
+export function bindEmail(email, code) {
+    return ucRequest({
+        method: "POST",
+        url: "/user/email/bind",
+        data: {email, code},
+    })
+}
+
+/**
+ * 换绑邮箱（UC POST /user/email/change，文档 3.6.2 节，需登录，验证旧邮箱与新邮箱）
+ * @param {string} oldEmail 当前绑定邮箱（须与账号一致）
+ * @param {string} oldCode 发到旧邮箱的验证码
+ * @param {string} newEmail 新邮箱（全局唯一）
+ * @param {string} newCode 发到新邮箱的验证码
+ * @returns {Promise<{code:number, msg:string, data:any}>}
+ */
+export function changeEmail(oldEmail, oldCode, newEmail, newCode) {
+    return ucRequest({
+        method: "POST",
+        url: "/user/email/change",
+        data: {oldEmail, oldCode, newEmail, newCode},
+    })
+}
+
+/**
  * UC 接口统一请求封装：
  * - baseUrl 默认使用 UC_BASE_URL，可传 baseUrl 覆盖（dev 环境切换用）
  * - 请求头自动携带 Authorization: Bearer <token>（auth=true 且存在 token 时）

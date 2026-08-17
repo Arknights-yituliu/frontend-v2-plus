@@ -20,7 +20,7 @@
 
         <v-list>
           <v-list-item>
-            <v-btn variant="text" text="个人中心" @click="router.push({name:'AccountHome'})">
+            <v-btn variant="text" text="个人中心" @click="router.push({name:'ACCOUNT_HOME'})">
             </v-btn>
           </v-list-item>
           <v-list-item @click="homeMenu=!homeMenu">

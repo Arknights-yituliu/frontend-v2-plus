@@ -580,6 +580,16 @@ const routes = [
         }
     },
     {
+        path: '/account/email',
+        text: '绑定/换绑邮箱',
+        name: 'BIND_EMAIL',
+        display: false,
+        component: () => import('/src/pages/account/bind-email.vue'),
+        meta: {
+            title: '绑定/换绑邮箱'
+        }
+    },
+    {
         path: '/survey/account/importbyskland',
         text: '导入流程',
         name: 'IMPORT_BY_SKLAND',
@@ -657,7 +667,7 @@ const routes = [
     {
         path: '/account/home',
         text: '个人中心',
-        name: 'User Center',
+        name: 'ACCOUNT_HOME',
         display: true,
         module: 'about',
         icon: "mdi-pencil",

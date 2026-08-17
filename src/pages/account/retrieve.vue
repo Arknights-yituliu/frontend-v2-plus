@@ -3,12 +3,12 @@ import {ref} from "vue";
 import '/src/assets/css/account/login.v2.scss'
 import {createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
-import {ucRequest} from "/src/api/uc/uc-api.js";
+import {sendResetCode, resetPassword} from "/src/api/uc/uc-api.js";
 
 /** 当前步骤：sendCode=账号验证 resetPassword=设置新密码 resetSuccessful=完成 */
 const currentStepper = ref("sendCode")
 
-/** 表单：account=邮箱或用户名 code=验证码 password/newPassword=新密码 */
+/** 表单：account=邮箱或用户名 code=验证码 password/confirmPassword=新密码 */
 const inputContent = ref({
     account: '',
     code: '',
@@ -45,20 +45,16 @@ function checkPassword(password) {
 
 /**
  * 发送重设密码验证码（UC POST /auth/reset-code），验证码发到账号绑定的邮箱
+ * 注意：未绑定邮箱的账号无法走此流程（错误码 20006），需先登录后绑定邮箱
  */
-async function sendVerificationCode() {
+async function toSendCode() {
     const account = inputContent.value.account
     if (!checkField(account, "账号")) {
         return
     }
     sendCodeLoading.value = true
     try {
-        await ucRequest({
-            method: "POST",
-            url: "/auth/reset-code",
-            data: {account},
-            auth: false,
-        })
+        await sendResetCode(account)
         createMessage({text: "验证码已发送到该账号绑定的邮箱", type: "success"})
         // 发送成功后开始 60s 倒计时
         codeCountdown.value = 60
@@ -76,10 +72,13 @@ async function sendVerificationCode() {
 }
 
 /**
- * 提交新密码（UC POST /auth/reset-password），成功后踢出该账号全部会话，跳转登录页
+ * 提交新密码（UC POST /auth/reset-password），成功后踢出该账号全部会话
  */
 async function toResetPassword() {
     const form = inputContent.value
+    if (!checkField(form.account, "账号")) {
+        return
+    }
     if (!checkField(form.code, "验证码")) {
         return
     }
@@ -92,12 +91,7 @@ async function toResetPassword() {
     }
     resetLoading.value = true
     try {
-        await ucRequest({
-            method: "POST",
-            url: "/auth/reset-password",
-            data: {account: form.account, code: form.code, newPassword: form.password},
-            auth: false,
-        })
+        await resetPassword(form.account, form.code, form.password)
         currentStepper.value = "resetSuccessful"
     } catch (e) {
         // 错误提示已在 ucRequest 内部统一弹出
@@ -172,7 +166,7 @@ function backToLogin() {
                       variant="text"
                       :loading="sendCodeLoading"
                       :disabled="codeCountdown > 0"
-                      @click="sendVerificationCode"
+                      @click="toSendCode"
                   >{{ codeCountdown > 0 ? `${codeCountdown}s 后重发` : '发送验证码' }}</v-btn>
                 </template>
               </v-text-field>
@@ -250,6 +244,17 @@ function backToLogin() {
             </v-stepper-window-item>
           </v-stepper-window>
         </v-stepper>
+
+        <v-card title="温馨提示" color="primary" variant="tonal" class="m-12-4">
+          <v-card-text>
+            <p>
+              验证码将发送到账号绑定的邮箱，5 分钟内有效、一次性使用。
+            </p>
+            <p>
+              *若提示「该账号未绑定邮箱」，说明账号尚未绑定邮箱，无法通过此方式找回密码，请先登录后在「绑定/换绑邮箱」页面绑定邮箱。
+            </p>
+          </v-card-text>
+        </v-card>
       </v-card-text>
     </v-card>
   </div>

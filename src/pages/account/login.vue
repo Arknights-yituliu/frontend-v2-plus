@@ -128,7 +128,7 @@ function handleLoginSuccess(data) {
         redirectIfOAuth()
         return
     }
-    if (route.name === 'AccountHome' || route.path === '/account/home') {
+    if (route.name === 'ACCOUNT_HOME' || route.path === '/account/home') {
         createMessage({type: 'success', text: '登录成功'})
         // 站内会话（OAUTH_TOKEN）由 /account/home 解析 OAuth 回调 ?token= 时建立，此处无需处理
         setTimeout(() => {
