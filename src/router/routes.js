@@ -426,13 +426,43 @@ const routes = [
         }
     },
     {
-        path: '/dev/riic-test',
+        path: '/riicdev',
+        text: 'RIIC 测试入口',
+        name: 'RiicDevIndex',
+        display: false,
+        component: () => import('/src/pages/dev/riic/index.vue'),
+        meta: {
+            title: 'RIIC 测试'
+        }
+    },
+    {
+        path: '/riicdev/riic-test',
         text: 'RIIC计算测试',
         name: 'RiicCalculationTest',
         display: false,
         component: () => import('/src/pages/dev/riic-test.vue'),
         meta: {
             title: 'RIIC计算测试'
+        }
+    },
+    {
+        path: '/riicdev/set-assess',
+        text: 'RIIC 班组组合评估',
+        name: 'RiicSetAssessment',
+        display: false,
+        component: () => import('/src/pages/dev/riic/set-assess.vue'),
+        meta: {
+            title: 'RIIC 班组组合评估'
+        }
+    },
+    {
+        path: '/riicdev/drone',
+        text: 'RIIC 无人机测试',
+        name: 'RiicDroneTest',
+        display: false,
+        component: () => import('/src/pages/dev/riic/drone.vue'),
+        meta: {
+            title: 'RIIC 无人机测试'
         }
     },
     {
@@ -814,7 +844,7 @@ const routes = [
 if (import.meta.env.DEV) {
     const catchAllRouteIndex = routes.findIndex((route) => route.path === '/:catchAll(.*)')
     routes.splice(catchAllRouteIndex, 0, {
-        path: '/dev/operator',
+        path: '/riicdev/operator',
         text: '排班干员编辑',
         name: 'DevOperatorRoster',
         display: false,

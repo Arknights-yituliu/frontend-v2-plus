@@ -4,6 +4,12 @@ const VALID_ROOM_TYPES = new Set([
   "meeting",
   "hire",
 ]);
+const OPERATOR_EFFICIENCY_METRIC_BY_ROOM_TYPE = Object.freeze({
+  trading: "orderEfficiency",
+  manufacture: "production",
+  meeting: "clueSearch",
+  hire: "contactSpeed",
+});
 
 function normalizeTeamIndex(value) {
   const number = Number(value);
@@ -299,6 +305,7 @@ function createEmptyRoomAdjustment() {
     facilityBonusPercent: 0,
     operatorBonusPercent: 0,
     operatorBonusById: {},
+    operatorEffects: [],
     sameShiftBindings: [],
     facilityCalculation: {
       totalHours: 0,
@@ -405,19 +412,49 @@ export function getRiicControlCenterRoomAdjustment({
     ];
   });
 
-  const candidateOperatorEffects = getCandidateOperatorEffects(
-    teamIndexes.flatMap((teamIndex) =>
+  const operatorEfficiencyMetric =
+    OPERATOR_EFFICIENCY_METRIC_BY_ROOM_TYPE[
+      normalizeRoomType(scope?.roomType)
+    ] || "";
+  const candidateOperatorEffectsByTeamIndex = {};
+  const operatorBonusByTeamIndex = {};
+  const candidateOperatorEffects = [];
+  for (const teamIndex of teamIndexes) {
+    const teamEffects = getCandidateOperatorEffects(
       getTeamEffectsForScope(context, teamIndex, scope, operatorIds, {
         includeConditional: false,
       }),
-    ),
-  );
+    );
+    candidateOperatorEffectsByTeamIndex[String(teamIndex)] = teamEffects;
+    candidateOperatorEffects.push(...teamEffects);
+
+    const operatorEfficiencyEffects = teamEffects.filter(
+      (effect) => effect.metric === operatorEfficiencyMetric,
+    );
+    const teamBonusById = {};
+    for (const effect of operatorEfficiencyEffects) {
+      for (const operatorId of effect.affectedOperatorIds || []) {
+        teamBonusById[operatorId] =
+          Number(teamBonusById[operatorId] || 0) +
+          Number(effect.bonusPercent || 0);
+      }
+    }
+    operatorBonusByTeamIndex[String(teamIndex)] = teamBonusById;
+  }
+
   const operatorBonusById = {};
-  for (const effect of candidateOperatorEffects) {
-    for (const operatorId of effect.affectedOperatorIds || []) {
-      operatorBonusById[operatorId] =
-        Number(operatorBonusById[operatorId] || 0) +
-        Number(effect.bonusPercent || 0);
+  for (const teamBonusById of Object.values(operatorBonusByTeamIndex)) {
+    for (const [operatorId, bonusPercent] of Object.entries(
+      teamBonusById,
+    )) {
+      if (!Object.hasOwn(operatorBonusById, operatorId)) {
+        operatorBonusById[operatorId] = Number(bonusPercent || 0);
+      } else {
+        operatorBonusById[operatorId] = Math.max(
+          Number(operatorBonusById[operatorId] || 0),
+          Number(bonusPercent || 0),
+        );
+      }
     }
   }
   const operatorBonusPercent = Object.values(operatorBonusById).reduce(
@@ -429,22 +466,12 @@ export function getRiicControlCenterRoomAdjustment({
     totalHours: 0,
     weightedBonusPercent: operatorBonusPercent,
     segments: teamIndexes.map((teamIndex) => {
-      const effects = getTeamEffectsForScope(
-        context,
-        teamIndex,
-        scope,
-        operatorIds,
-        { includeConditional: false },
+      const bonusPercent = Object.values(
+        operatorBonusByTeamIndex[String(teamIndex)] || {},
+      ).reduce(
+        (total, value) => total + Number(value || 0),
+        0,
       );
-      const bonusPercent = effects
-        .filter((effect) => effect.scope === "operators")
-        .reduce(
-          (total, effect) =>
-            total +
-            Number(effect.bonusPercent || 0) *
-              (effect.affectedOperatorIds || []).length,
-          0,
-        );
 
       return {
         index: teamIndex,
@@ -460,6 +487,9 @@ export function getRiicControlCenterRoomAdjustment({
     facilityBonusPercent: 0,
     operatorBonusPercent,
     operatorBonusById,
+    operatorBonusByTeamIndex,
+    operatorEffects: candidateOperatorEffects,
+    operatorEffectsByTeamIndex: candidateOperatorEffectsByTeamIndex,
     sameShiftBindings: bindingTeams,
     facilityCalculation: {
       totalHours: 0,

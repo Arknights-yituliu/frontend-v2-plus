@@ -1,17 +1,13 @@
 import BUILDING_TABLE from "../../static/json/build/building_table.json" with {
   type: "json",
 };
+import {
+  calculateRiicExpectedPerDrone,
+  getRiicTradeOrderDistribution,
+  RIIC_TRADE_ORDER_GOLD,
+} from "./riic-trade-order-model.js";
 
-const ORDER_SECONDS = Object.freeze([8640, 12600, 16560]);
-const ORDER_GOLD = Object.freeze([2, 3, 4]);
-const ORDER_DISTRIBUTION_BY_LEVEL = Object.freeze({
-  1: Object.freeze([1, 0, 0]),
-  2: Object.freeze([0.6, 0.4, 0]),
-  3: Object.freeze([0.3, 0.5, 0.2]),
-});
-const TAILOR_ALPHA_DISTRIBUTION = Object.freeze([0.15, 0.3, 0.55]);
-const TAILOR_BETA_DISTRIBUTION = Object.freeze([0.05, 0.1, 0.85]);
-const TAILOR_ALPHA_PAIR_DISTRIBUTION = Object.freeze([0.13, 0.22, 0.65]);
+const ORDER_GOLD = RIIC_TRADE_ORDER_GOLD;
 const HIGH_QUALITY_ORDER_PATTERN = /高品质贵金属订单/;
 
 const DRONE_SECONDS = 180;
@@ -83,19 +79,6 @@ function normalizeOperators(value) {
   return operators;
 }
 
-function calculateExpectedPerDrone(distribution, values) {
-  const seconds = distribution.reduce(
-    (total, probability, index) =>
-      total + probability * ORDER_SECONDS[index],
-    0,
-  );
-  const amount = distribution.reduce(
-    (total, probability, index) => total + probability * values[index],
-    0,
-  );
-  return (amount * DRONE_SECONDS) / seconds;
-}
-
 function getOperator(operators, charId) {
   return operators.find((operator) => operator.charId === charId) || null;
 }
@@ -126,26 +109,10 @@ function getHighQualityOrderVariant(operator) {
 }
 
 function getOrderDistribution({ stationLevel, highQualityVariants }) {
-  if (highQualityVariants.length === 0) {
-    return ORDER_DISTRIBUTION_BY_LEVEL[stationLevel] || null;
-  }
-  if (stationLevel !== 3) {
-    return null;
-  }
-
-  const betaCount = highQualityVariants.filter(
-    (variant) => variant === "beta",
-  ).length;
-  const alphaCount = highQualityVariants.length - betaCount;
-  if (betaCount > 1 || alphaCount > 2) {
-    return null;
-  }
-  if (betaCount === 1) {
-    return TAILOR_BETA_DISTRIBUTION;
-  }
-  return alphaCount === 2
-    ? TAILOR_ALPHA_PAIR_DISTRIBUTION
-    : TAILOR_ALPHA_DISTRIBUTION;
+  return getRiicTradeOrderDistribution({
+    stationLevel,
+    highQualityVariants,
+  });
 }
 
 function calculateLmdDrone({ stationLevel, operators }) {
@@ -193,8 +160,11 @@ function calculateLmdDrone({ stationLevel, operators }) {
   );
 
   return createSuccess({
-    lmdOutput: calculateExpectedPerDrone(distribution, lmdPerOrder),
-    goldConsumption: calculateExpectedPerDrone(distribution, goldPerOrder),
+    lmdOutput: calculateRiicExpectedPerDrone(distribution, lmdPerOrder),
+    goldConsumption: calculateRiicExpectedPerDrone(
+      distribution,
+      goldPerOrder,
+    ),
   });
 }
 

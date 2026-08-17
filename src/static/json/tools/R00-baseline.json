@@ -39,26 +39,26 @@
   "summary": {
     "inputRecordCount": 913,
     "scopedSkillCount": 549,
-    "includedSourceSkillCount": 293,
-    "directRuleCount": 287,
+    "includedSourceSkillCount": 296,
+    "directRuleCount": 290,
     "baseOnlyRuleCount": 67,
     "sameRoomRuleCount": 9,
-    "excludedSkillCount": 256,
+    "excludedSkillCount": 253,
     "byRoomType": {
       "control": 10,
       "meeting": 46,
-      "power": 37,
+      "power": 39,
       "trading": 67,
       "hire": 43,
-      "manufacture": 84
+      "manufacture": 85
     },
     "byRoomProduct": {
       "control:all": 10,
       "meeting:all": 46,
-      "power:all": 37,
+      "power:all": 39,
       "trading:all": 67,
       "hire:all": 43,
-      "manufacture:all": 51,
+      "manufacture:all": 52,
       "manufacture:experience": 17,
       "manufacture:gold": 8,
       "manufacture:orundum": 8
@@ -99,9 +99,12 @@
       "trading:all:4": 1,
       "manufacture:orundum:30": 3,
       "control:meeting:all:25": 1,
+      "power:all:13.75": 1,
+      "power:all:18.75": 1,
       "meeting:all:15": 2,
       "trading:all:5": 5,
       "meeting:all:35": 1,
+      "manufacture:all:27.56": 1,
       "hire:all:50": 1,
       "manufacture:all:5": 1,
       "manufacture:gold:25": 2,
@@ -118,7 +121,7 @@
     "exclusionsByReason": {
       "conditionalOrUnsupported": 184,
       "missingDirectEffect": 17,
-      "timeDependentOrThreshold": 38,
+      "timeDependentOrThreshold": 35,
       "sameRoomOverride": 9,
       "specialOrderOrProbability": 8
     }
@@ -11420,6 +11423,58 @@
       "rawDescription": "进驻会客室时，线索搜集速度提升10%"
     },
     {
+      "id": "char_4015_spuria|power|技术交流·α|0|1",
+      "sourceSkillId": "char_4015_spuria|power|技术交流·α|0|1",
+      "charId": "char_4015_spuria",
+      "name": "空构",
+      "buffName": "技术交流·α",
+      "roomType": "power",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_4015_spuria|0"
+      },
+      "effect": {
+        "metric": "droneCharge",
+        "percent": 13.75,
+        "product": "all",
+        "coverage": "complete"
+      },
+      "poolKey": "power:all:13.75",
+      "confidence": "reviewed",
+      "ignoredMechanics": [],
+      "rawDescription": "进驻发电站时，无人机充能速度首小时+10%，此后每小时+1%，最终达到+15%"
+    },
+    {
+      "id": "char_4015_spuria|power|技术交流·β|2|1",
+      "sourceSkillId": "char_4015_spuria|power|技术交流·β|2|1",
+      "charId": "char_4015_spuria",
+      "name": "空构",
+      "buffName": "技术交流·β",
+      "roomType": "power",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_4015_spuria|0"
+      },
+      "effect": {
+        "metric": "droneCharge",
+        "percent": 18.75,
+        "product": "all",
+        "coverage": "complete"
+      },
+      "poolKey": "power:all:18.75",
+      "confidence": "reviewed",
+      "ignoredMechanics": [],
+      "rawDescription": "进驻发电站时，无人机充能速度首小时+15%，此后每小时+1%，最终达到+20%"
+    },
+    {
       "id": "char_4016_kazema|meeting|化影|0|1",
       "sourceSkillId": "char_4016_kazema|meeting|化影|0|1",
       "charId": "char_4016_kazema",
@@ -11916,6 +11971,35 @@
       "confidence": "high",
       "ignoredMechanics": [],
       "rawDescription": "进驻会客室时，线索搜集速度提升10%，与其他黑钢国际干员进驻会客室一起工作时，线索搜集速度额外提升20%"
+    },
+    {
+      "id": "char_4062_totter|manufacture|模糊视线|0|1",
+      "sourceSkillId": "char_4062_totter|manufacture|模糊视线|0|1",
+      "charId": "char_4062_totter",
+      "name": "铅踝",
+      "buffName": "模糊视线",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effect": {
+        "metric": "production",
+        "percent": 27.56,
+        "product": "all",
+        "coverage": "complete"
+      },
+      "poolKey": "manufacture:all:27.56",
+      "confidence": "reviewed",
+      "ignoredMechanics": [
+        "morale",
+        "moraleDeltaFixedApproximation"
+      ],
+      "rawDescription": "进驻制造站时，生产力+30%，自身每有4点心情落差，生产力-5%"
     },
     {
       "id": "char_4063_quartz|manufacture|标准化·α|0|1",
@@ -16699,32 +16783,6 @@
       "rawDescription": "进驻发电站时，心情每小时消耗-0.3"
     },
     {
-      "id": "char_4015_spuria|power|技术交流·α|0|1",
-      "charId": "char_4015_spuria",
-      "name": "空构",
-      "buffName": "技术交流·α",
-      "roomType": "power",
-      "unlock": {
-        "phase": 0,
-        "level": 1
-      },
-      "reason": "timeDependentOrThreshold",
-      "rawDescription": "进驻发电站时，无人机充能速度首小时+10%，此后每小时+1%，最终达到+15%"
-    },
-    {
-      "id": "char_4015_spuria|power|技术交流·β|2|1",
-      "charId": "char_4015_spuria",
-      "name": "空构",
-      "buffName": "技术交流·β",
-      "roomType": "power",
-      "unlock": {
-        "phase": 2,
-        "level": 1
-      },
-      "reason": "timeDependentOrThreshold",
-      "rawDescription": "进驻发电站时，无人机充能速度首小时+15%，此后每小时+1%，最终达到+20%"
-    },
-    {
       "id": "char_4016_kazema|meeting|得心应手|2|1",
       "charId": "char_4016_kazema",
       "name": "风丸",
@@ -17087,19 +17145,6 @@
       },
       "reason": "specialOrderOrProbability",
       "rawDescription": "进驻贸易站时，固定获取特别独占订单（不视作违约订单），且该类订单不受任何订单获取效率的影响"
-    },
-    {
-      "id": "char_4062_totter|manufacture|模糊视线|0|1",
-      "charId": "char_4062_totter",
-      "name": "铅踝",
-      "buffName": "模糊视线",
-      "roomType": "manufacture",
-      "unlock": {
-        "phase": 0,
-        "level": 1
-      },
-      "reason": "timeDependentOrThreshold",
-      "rawDescription": "进驻制造站时，生产力+30%，自身每有4点心情落差，生产力-5%"
     },
     {
       "id": "char_4062_totter|manufacture|窗外雪啸|1|1",

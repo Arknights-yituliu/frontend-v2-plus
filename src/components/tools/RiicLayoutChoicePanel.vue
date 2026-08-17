@@ -67,6 +67,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  customLayoutResettable: {
+    type: Boolean,
+    default: false,
+  },
   customLayoutStations: {
     type: Array,
     default: () => [],
@@ -75,9 +79,9 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
-  customLayoutAllowsLevelAdjustment: {
-    type: Boolean,
-    default: false,
+  customLayoutPowerSummary: {
+    type: Object,
+    default: () => ({}),
   },
 });
 
@@ -342,9 +346,10 @@ function updateAnswer(key, value) {
         v-if="selectedManualScheduleValue"
         :open="customLayoutEditorOpen"
         :active="customLayoutActive"
+        :resettable="customLayoutResettable"
         :stations="customLayoutStations"
         :product-options="roomProductOptions"
-        :allow-level-adjustment="customLayoutAllowsLevelAdjustment"
+        :power-summary="customLayoutPowerSummary"
         @toggle="emit('toggle-custom-layout-editor')"
         @change-station-level="
           emit('change-custom-layout-station-level', $event)

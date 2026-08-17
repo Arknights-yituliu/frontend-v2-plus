@@ -634,6 +634,18 @@
       ]
     },
     {
+      "name": "嘉辛塔",
+      "rates": [
+        {
+          "percent": 30,
+          "tags": [
+            "tailor",
+            "tailor-alpha"
+          ]
+        }
+      ]
+    },
+    {
       "name": "柏喙",
       "rates": [
         {

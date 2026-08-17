@@ -12,7 +12,7 @@ const twoTradingStations = getRiicRoomGroupStaffingRequirement({
 });
 assert.equal(twoTradingStations.status, "ready");
 assert.equal(twoTradingStations.cohorts.length, 1);
-assert.equal(twoTradingStations.cohorts[0].id, "level-3-slot-3");
+assert.equal(twoTradingStations.cohorts[0].id, "level-3-slot-3-stations-1-2");
 assert.equal(twoTradingStations.cohorts[0].teamCount, 3);
 assert.equal(twoTradingStations.cohorts[0].operatorCount, 9);
 
@@ -34,14 +34,14 @@ assert.deepEqual(
   })),
   [
     {
-      id: "level-3-slot-3",
+      id: "level-3-slot-3-stations-1",
       stationLevel: 3,
       slotCount: 3,
       stationCount: 1,
       teamCount: 2,
     },
     {
-      id: "level-2-slot-2",
+      id: "level-2-slot-2-stations-2",
       stationLevel: 2,
       slotCount: 2,
       stationCount: 1,
@@ -60,7 +60,7 @@ const sameCapacityDifferentLevel = getRiicRoomGroupStaffingRequirement({
 assert.equal(sameCapacityDifferentLevel.cohorts.length, 2);
 assert.deepEqual(
   sameCapacityDifferentLevel.cohorts.map((cohort) => cohort.id),
-  ["level-3-slot-2", "level-2-slot-2"],
+  ["level-3-slot-2-stations-1", "level-2-slot-2-stations-2"],
 );
 
 const dailyRequirement = getRiicRoomGroupStaffingRequirement({
@@ -82,6 +82,34 @@ assert.deepEqual(
     (segment) => segment.activeTeamIndexes,
   ),
   [[0], [0], [1]],
+);
+
+const manualControlThreeSegmentRequirement =
+  getRiicRoomGroupStaffingRequirement({
+    stations: [{ stationLevel: 1, slotCount: 5 }],
+    shiftMode: "twice",
+    roomType: "control",
+    twoShiftRotationMode: "manual",
+  });
+assert.equal(manualControlThreeSegmentRequirement.cohorts[0].teamCount, 3);
+assert.deepEqual(
+  manualControlThreeSegmentRequirement.cohorts[0].rotationSegments.map(
+    (segment) => segment.activeTeamIndexes,
+  ),
+  [[0], [1], [2]],
+);
+
+const threeTimesControlRequirement = getRiicRoomGroupStaffingRequirement({
+  stations: [{ stationLevel: 1, slotCount: 5 }],
+  shiftMode: "threeTimes",
+  roomType: "control",
+});
+assert.equal(threeTimesControlRequirement.cohorts[0].teamCount, 3);
+assert.deepEqual(
+  threeTimesControlRequirement.cohorts[0].rotationSegments.map(
+    (segment) => segment.activeTeamIndexes,
+  ),
+  [[0], [1], [2]],
 );
 
 const maaTwoTradingStations = getRiicRoomGroupStaffingRequirement({

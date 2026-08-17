@@ -50,6 +50,11 @@ function formatResourceValue(value, unit, { signed = false } = {}) {
   return `${sign}${formatNumber(number)}${unit ? ` ${unit}` : ""}`;
 }
 
+function formatDroneCount(value) {
+  const number = toNumber(value);
+  return number === null ? "--" : `${formatNumber(number)} 架`;
+}
+
 function formatOverviewValue(value, digits = 0) {
   const number = toNumber(value);
   if (number === null) {
@@ -237,6 +242,16 @@ const roomColumns = computed(() => {
     .sort((left, right) => left.order - right.order);
 });
 
+const droneUsageByState = computed(
+  () =>
+    new Map(
+      (props.yield?.droneUsage?.segments || []).map((segment) => [
+        Number(segment?.stateIndex),
+        segment,
+      ]),
+    ),
+);
+
 const shiftRows = computed(() => {
   const stateCount = Math.max(
     props.shifts.length,
@@ -245,14 +260,19 @@ const shiftRows = computed(() => {
 
   return Array.from({ length: stateCount }, (_, index) => {
     const shift = props.shifts[index] || {};
-    const drone = shift?.drone && typeof shift.drone === "object" ? shift.drone : {};
+    const drone =
+      shift?.drone && typeof shift.drone === "object" ? shift.drone : {};
+    const droneUsage = droneUsageByState.value.get(index);
 
     return {
       index,
       name: String(shift?.name || `${String.fromCharCode(65 + index)}班`),
-      time: String(shift?.time || "09:00"),
+      droneAvailableOutput: droneUsage?.availableDroneOutput ?? null,
       droneTarget: drone.disabled === true ? "" : String(drone.target || "").trim(),
-      droneOrder: drone.order === "post" ? "post" : "pre",
+      droneOrder: ["post", "retain"].includes(drone.order)
+        ? drone.order
+        : "pre",
+      droneCapacityReached: droneUsage?.capacityReached === true,
     };
   });
 });
@@ -302,7 +322,7 @@ function selectDroneTarget(row, column) {
 function updateDroneOrder(index, order) {
   emit("update-drone-order", {
     index,
-    order: order === "post" ? "post" : "pre",
+    order: ["post", "retain"].includes(order) ? order : "pre",
   });
 }
 </script>
@@ -385,13 +405,19 @@ function updateDroneOrder(index, order) {
             <th scope="row">
               <div class="schedule-resource-shift-name">
                 <strong>{{ row.name }}</strong>
-                <span>{{ row.time }}</span>
+                <span>{{ formatDroneCount(row.droneAvailableOutput) }}</span>
+                <small
+                  v-if="row.droneCapacityReached"
+                  class="schedule-resource-drone-limit-warning"
+                >
+                  已超出无人机上限
+                </small>
               </div>
               <div class="schedule-resource-drone-order">
                 <button
                   type="button"
-                  :class="{ active: row.droneOrder !== 'post' }"
-                  :aria-pressed="row.droneOrder !== 'post'"
+                  :class="{ active: row.droneOrder === 'pre' }"
+                  :aria-pressed="row.droneOrder === 'pre'"
                   @click="updateDroneOrder(row.index, 'pre')"
                 >
                   换班前
@@ -403,6 +429,14 @@ function updateDroneOrder(index, order) {
                   @click="updateDroneOrder(row.index, 'post')"
                 >
                   换班后
+                </button>
+                <button
+                  type="button"
+                  :class="{ active: row.droneOrder === 'retain' }"
+                  :aria-pressed="row.droneOrder === 'retain'"
+                  @click="updateDroneOrder(row.index, 'retain')"
+                >
+                  留给下一班
                 </button>
               </div>
             </th>
@@ -638,12 +672,10 @@ function updateDroneOrder(index, order) {
 }
 
 .schedule-resource-shift-heading {
-  width: 122px;
   color: var(--riic-muted) !important;
 }
 
 .schedule-resource-table tbody th {
-  width: 122px;
   padding: 6px 8px;
   background: var(--c-page-background-color);
   color: var(--c-text-color);
@@ -702,6 +734,12 @@ function updateDroneOrder(index, order) {
   );
   color: var(--riic-blue);
   font-weight: 700;
+}
+
+.schedule-resource-drone-limit-warning {
+  color: var(--riic-orange);
+  font-size: 10px;
+  line-height: 1.2;
 }
 
 .schedule-resource-table td {

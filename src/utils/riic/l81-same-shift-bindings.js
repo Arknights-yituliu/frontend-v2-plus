@@ -1,4 +1,10 @@
 const EPSILON = 1e-9;
+const OPERATOR_EFFICIENCY_METRIC_BY_ROOM_TYPE = Object.freeze({
+  trading: "orderEfficiency",
+  manufacture: "production",
+  meeting: "clueSearch",
+  hire: "contactSpeed",
+});
 
 function toPositiveHours(value) {
   const hours = Number(value);
@@ -126,6 +132,10 @@ function getCandidateBindings(candidate, group) {
 
 function getBindingBonusBreakdown(binding) {
   const effects = Array.isArray(binding?.effects) ? binding.effects : [];
+  const operatorEfficiencyMetric =
+    OPERATOR_EFFICIENCY_METRIC_BY_ROOM_TYPE[
+      normalizeRoomType(binding?.roomType)
+    ] || "";
   const highestFacilityBonusByMetric = new Map();
   const highestOperatorBonusBySourceMetricAndId = new Map();
 
@@ -147,6 +157,9 @@ function getBindingBonusBreakdown(binding) {
       if (!Number.isFinite(existing) || bonusPercent > existing) {
         highestFacilityBonusByMetric.set(metric, bonusPercent);
       }
+      continue;
+    }
+    if (String(effect?.metric || "").trim() !== operatorEfficiencyMetric) {
       continue;
     }
 

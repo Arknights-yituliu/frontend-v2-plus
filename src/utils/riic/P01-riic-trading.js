@@ -7,14 +7,16 @@ import REPLACE_GROUPS from "../../static/json/build/logistics_skill_replace_grou
 import BASELINE_RULES from "../../static/json/tools/R00-baseline.json" with {
   type: "json",
 };
+import {
+  calculateRiicExpectedPerHour,
+  getRiicTradeOrderDistribution,
+  RIIC_TRADE_ORDER_DISTRIBUTION_BY_LEVEL,
+  RIIC_TRADE_ORDER_GOLD,
+} from "./riic-trade-order-model.js";
 
-const ORDER_SECONDS = Object.freeze([8640, 12600, 16560]);
-const ORDER_GOLD = Object.freeze([2, 3, 4]);
-const ORDER_DISTRIBUTION_BY_LEVEL = Object.freeze({
-  1: Object.freeze([1, 0, 0]),
-  2: Object.freeze([0.6, 0.4, 0]),
-  3: Object.freeze([0.3, 0.5, 0.2]),
-});
+const ORDER_GOLD = RIIC_TRADE_ORDER_GOLD;
+const ORDER_DISTRIBUTION_BY_LEVEL =
+  RIIC_TRADE_ORDER_DISTRIBUTION_BY_LEVEL;
 
 const PURE_GOLD_LMD_VALUE = 500;
 const ORUNDUM_TRADE_CAPACITY_PER_HOUR = 10;
@@ -26,15 +28,7 @@ const TEQUILA_ID = "char_486_takila";
 const TAILOR_ID = "char_252_bibeak";
 const SHAMARE_ID = "char_254_vodfox";
 const KICHI_ID = "char_4203_kichi";
-const DEEP_ID = "char_4137_udflow";
-const VIGIL_ID = "char_427_vigil";
-const HODRER_ID = "char_4088_hodrer";
-const INES_ID = "char_4087_ines";
-const W_ID = "char_113_cqbw";
-const BELLONE_ID = "char_4037_demetr";
-const ULPIAN_ID = "char_4145_ulpia";
 const ARCHET_ID = "char_332_archet";
-const QUARTZ_ID = "char_4063_quartz";
 const VIGNA_ID = "char_1019_siege2";
 const DEGENBRECHER_ID = "char_4116_blkkgt";
 const GLASGOW_OPERATOR_IDS = new Set([
@@ -47,14 +41,6 @@ const ARCHET_ALPHA_SKILL_ID =
   `${ARCHET_ID}|trading|\u8654\u8bda\u7b79\u6b3e\u00b7\u03b1|0|1`;
 const ARCHET_BETA_SKILL_ID =
   `${ARCHET_ID}|trading|\u8654\u8bda\u7b79\u6b3e\u00b7\u03b2|2|1`;
-const HODRER_ALPHA_SKILL_ID =
-  `${HODRER_ID}|trading|\u767d\u624b\u8d77\u5bb6\u00b7\u03b1|0|1`;
-const HODRER_BETA_SKILL_ID =
-  `${HODRER_ID}|trading|\u767d\u624b\u8d77\u5bb6\u00b7\u03b2|2|1`;
-const BELLONE_ALPHA_SKILL_ID =
-  `${BELLONE_ID}|trading|\u5bb6\u65cf\u7ecf\u8425\u00b7\u03b1|0|1`;
-const BELLONE_BETA_SKILL_ID =
-  `${BELLONE_ID}|trading|\u5bb6\u65cf\u7ecf\u8425\u00b7\u03b2|2|1`;
 const VIGNA_BETA_SKILL_ID =
   `${VIGNA_ID}|trading|\u5916\u8d38\u51b3\u8bae\u00b7\u03b2|2|1`;
 const DEGENBRECHER_CHAMPION_SKILL_ID =
@@ -217,6 +203,18 @@ function normalizeOperators(value) {
 
 function normalizeBonus(value, operators) {
   const room = Number(value?.room ?? 0);
+  const hasLocalOrderBonusOverride = Object.hasOwn(
+    value || {},
+    "localOrderBonusOverride",
+  );
+  const localOrderBonusOverride = hasLocalOrderBonusOverride
+    ? Number(value.localOrderBonusOverride)
+    : null;
+  const ignoredUnsupportedOperatorIds = new Set(
+    (value?.ignoredUnsupportedOperatorIds || [])
+      .map((charId) => String(charId || "").trim())
+      .filter(Boolean),
+  );
   const rawOperatorBonuses =
     value?.operators && typeof value.operators === "object"
       ? value.operators
@@ -224,7 +222,17 @@ function normalizeBonus(value, operators) {
   const operatorIds = new Set(operators.map((operator) => operator.charId));
   const operatorsById = {};
 
-  if (!Number.isFinite(room)) {
+  if (
+    !Number.isFinite(room) ||
+    (hasLocalOrderBonusOverride && !Number.isFinite(localOrderBonusOverride))
+  ) {
+    return null;
+  }
+  if (
+    [...ignoredUnsupportedOperatorIds].some(
+      (charId) => !operatorIds.has(charId),
+    )
+  ) {
     return null;
   }
 
@@ -239,6 +247,8 @@ function normalizeBonus(value, operators) {
   return {
     room,
     operators: operatorsById,
+    localOrderBonusOverride,
+    ignoredUnsupportedOperatorIds,
   };
 }
 
@@ -247,42 +257,30 @@ function normalizeFacilityContext(value) {
     value?.context && typeof value.context === "object"
       ? value.context
       : {};
-  const rawMeetingLevel = Number(source?.meetingLevel);
-  const meetingLevel = Number.isInteger(rawMeetingLevel) && rawMeetingLevel >= 0
-    ? rawMeetingLevel
-    : null;
-  const baseOperatorIds = Array.isArray(source?.baseOperatorIds)
-    ? new Set(
-        source.baseOperatorIds
-          .map((charId) => String(charId || "").trim())
-          .filter(Boolean),
-      )
-    : null;
-  const dormitoryLevels = Array.isArray(source?.dormitoryLevels)
-    ? source.dormitoryLevels
-        .map((level) => Number(level))
-        .filter((level) => Number.isInteger(level) && level >= 0)
-    : null;
-  const rawManufactureProductKindCount = Number(
-    source?.manufactureProductKindCount,
-  );
-  const manufactureProductKindCount =
-    Number.isInteger(rawManufactureProductKindCount) &&
-    rawManufactureProductKindCount >= 0
-      ? rawManufactureProductKindCount
-      : null;
   const rawSilentResonance = Number(source?.silentResonance);
   const silentResonance =
     Number.isFinite(rawSilentResonance) && rawSilentResonance >= 0
       ? rawSilentResonance
       : null;
+  const rawResolvedExternalOrderBonuses =
+    source?.resolvedExternalOrderBonuses &&
+    typeof source.resolvedExternalOrderBonuses === "object"
+      ? source.resolvedExternalOrderBonuses
+      : null;
+  const resolvedExternalOrderBonuses = rawResolvedExternalOrderBonuses
+    ? Object.fromEntries(
+        Object.entries(rawResolvedExternalOrderBonuses)
+          .map(([skillId, value]) => [String(skillId || "").trim(), Number(value)])
+          .filter(
+            ([skillId, value]) =>
+              skillId && Number.isFinite(value),
+          ),
+      )
+    : null;
 
   return {
-    baseOperatorIds,
-    dormitoryLevels,
-    manufactureProductKindCount,
-    meetingLevel,
     silentResonance,
+    resolvedExternalOrderBonuses,
   };
 }
 
@@ -492,70 +490,12 @@ function getLegacyExternalOrderBonus(rule, facilityContext, operators) {
       : 0;
   }
 
-  if (
-    skillId === HODRER_ALPHA_SKILL_ID ||
-    skillId === HODRER_BETA_SKILL_ID
-  ) {
-    if (!(facilityContext?.baseOperatorIds instanceof Set)) {
-      return null;
-    }
-
-    const hasInes = facilityContext.baseOperatorIds.has(INES_ID);
-    const hasW = facilityContext.baseOperatorIds.has(W_ID);
-    return skillId === HODRER_BETA_SKILL_ID
-      ? (hasInes ? 5 : 0) + (hasW ? 5 : 0)
-      : hasInes
-        ? 5
-        : 0;
-  }
-
-  if (
-    skillId === BELLONE_ALPHA_SKILL_ID ||
-    skillId === BELLONE_BETA_SKILL_ID
-  ) {
-    if (!(facilityContext?.baseOperatorIds instanceof Set)) {
-      return null;
-    }
-
-    if (!facilityContext.baseOperatorIds.has(VIGIL_ID)) {
-      return 0;
-    }
-
-    return skillId === BELLONE_BETA_SKILL_ID ? 10 : 5;
-  }
-
-  if (
-    skillId === `${DEEP_ID}|trading|\u5bf9\u9646\u63a5\u6d3d\u4ee3\u8868\u00b7\u03b1|0|1` ||
-    skillId === `${DEEP_ID}|trading|\u5bf9\u9646\u63a5\u6d3d\u4ee3\u8868\u00b7\u03b2|2|1`
-  ) {
-    if (!(facilityContext?.baseOperatorIds instanceof Set)) {
-      return null;
-    }
-
-    if (!facilityContext.baseOperatorIds.has(ULPIAN_ID)) {
-      return 0;
-    }
-
-    return skillId.endsWith("|\u03b2|2|1") ? 10 : 5;
-  }
-
-  if (skillId === `${VIGIL_ID}|trading|\u65b0\u57ce\u8d38\u6613|2|1`) {
-    if (!Number.isInteger(facilityContext?.meetingLevel)) {
-      return null;
-    }
-
-    return Math.min(40, facilityContext.meetingLevel * 5);
-  }
-
-  if (skillId === `${QUARTZ_ID}|trading|\u7cbe\u51c6\u6392\u671f|1|1`) {
-    if (!Number.isInteger(facilityContext?.manufactureProductKindCount)) {
-      return null;
-    }
-
-    return facilityContext.manufactureProductKindCount * 2;
-  }
-
-  return null;
+  const resolvedExternalOrderBonuses =
+    facilityContext?.resolvedExternalOrderBonuses;
+  return resolvedExternalOrderBonuses &&
+    Object.hasOwn(resolvedExternalOrderBonuses, skillId)
+    ? resolvedExternalOrderBonuses[skillId]
+    : null;
 }
 
 function getRuleSourceSkillId(rule) {
@@ -610,25 +550,28 @@ function getArchetDormitoryOrderBonus(exclusion, facilityContext) {
     return null;
   }
 
-  if (!Array.isArray(facilityContext?.dormitoryLevels)) {
-    return null;
+  if (facilityContext?.resolvedExternalOrderBonuses) {
+    return Object.hasOwn(
+      facilityContext.resolvedExternalOrderBonuses,
+      skillId,
+    )
+      ? facilityContext.resolvedExternalOrderBonuses[skillId]
+      : null;
   }
 
-  const percentPerDormitoryLevel =
-    skillId === ARCHET_BETA_SKILL_ID ? 2 : 1;
-  return (
-    facilityContext.dormitoryLevels.reduce(
-      (total, level) => total + level,
-      0,
-    ) * percentPerDormitoryLevel
-  );
+  return null;
 }
 
 function isArchetDormitoryOrderExclusion(exclusion) {
   return String(exclusion?.charId || "").trim() === ARCHET_ID;
 }
 
-function createTradingContext(operators, product, facilityContext) {
+function createTradingContext(
+  operators,
+  product,
+  facilityContext,
+  { ignoredUnsupportedOperatorIds = new Set() } = {},
+) {
   const activeStatesByOperatorId = new Map();
   const unmodeledHighQualityOrderSkills = [];
 
@@ -642,7 +585,10 @@ function createTradingContext(operators, product, facilityContext) {
     for (const skill of unmodeledSkills) {
       stateIds.add(skill.id);
     }
-    if (hasUnknownUnlockedTradingSkill(operator, stateIds)) {
+    if (
+      hasUnknownUnlockedTradingSkill(operator, stateIds) &&
+      !ignoredUnsupportedOperatorIds.has(operator.charId)
+    ) {
       return { error: "notSupported" };
     }
 
@@ -729,6 +675,7 @@ function createTradingContext(operators, product, facilityContext) {
            rule.charId === TEQUILA_ID ||
            rule.charId === CLOSURE_ID ||
            rule.charId === SHAMARE_ID ||
+           ignoredUnsupportedOperatorIds.has(rule.charId) ||
            (product === "lmd" &&
              (rule.charId === EBENHOLZ_ID || rule.charId === KICHI_ID)) ||
            rule.id === DEGENBRECHER_CHAMPION_SKILL_ID ||
@@ -932,32 +879,13 @@ function getOrderDistribution(context, stationLevel) {
   }
 
   const activeHighQualityVariants = highQualityVariants.filter(Boolean);
-  const betaCount = activeHighQualityVariants.filter(
-    (variant) => variant === "\u63d0\u5347",
-  ).length;
-  const alphaCount = activeHighQualityVariants.filter(
-    (variant) => variant === "alpha",
-  ).length;
-
-  if (
-    betaCount > 1 ||
-    alphaCount + betaCount !== activeHighQualityVariants.length
-  ) {
-    return null;
-  }
-  if (betaCount === 1) {
-    return Object.freeze([0.05, 0.1, 0.85]);
-  }
-  if (alphaCount === 0) {
-    return ORDER_DISTRIBUTION_BY_LEVEL[stationLevel] || null;
-  }
-  if (alphaCount > 2) {
-    return null;
-  }
-  if (alphaCount === 2) {
-    return Object.freeze([0.13, 0.22, 0.65]);
-  }
-  return Object.freeze([0.15, 0.3, 0.55]);
+  return getRiicTradeOrderDistribution({
+    stationLevel,
+    highQualityVariants: activeHighQualityVariants.map((variant) =>
+      variant === "\u63d0\u5347" ? "beta" : variant,
+    ),
+    allowExtraAlphaWithBeta: true,
+  });
 }
 
 function getButshuGoldByOrder(operators) {
@@ -984,18 +912,6 @@ function getTequilaVirtualGoldByOrder(context, operators) {
     : Object.freeze([0, 0, 0.5]);
 }
 
-function calculateExpectedPerHour(distribution, values) {
-  const seconds = distribution.reduce(
-    (sum, probability, index) => sum + probability * ORDER_SECONDS[index],
-    0,
-  );
-  const amount = distribution.reduce(
-    (sum, probability, index) => sum + probability * values[index],
-    0,
-  );
-  return (amount / seconds) * 3600;
-}
-
 function getStaffingBonusPercent(operators) {
   return operators.length;
 }
@@ -1013,7 +929,9 @@ function calculateNormalOrButshu({
     return createFailure(type, "lmd", "timeDependentOrderProbability");
   }
 
-  const localOrderBonus = calculateLocalOrderBonus(context, operators, "lmd");
+  const localOrderBonus =
+    bonus.localOrderBonusOverride ??
+    calculateLocalOrderBonus(context, operators, "lmd");
   if (localOrderBonus === null) {
     return createFailure(type, "lmd", "notSupported");
   }
@@ -1030,15 +948,15 @@ function calculateNormalOrButshu({
     return createFailure(type, "lmd", "invalidBonus");
   }
 
-  const physicalGoldPerHour = calculateExpectedPerHour(
+  const physicalGoldPerHour = calculateRiicExpectedPerHour(
     distribution,
     getButshuGoldByOrder(operators),
   );
-  const virtualGoldPerHour = calculateExpectedPerHour(
+  const virtualGoldPerHour = calculateRiicExpectedPerHour(
     distribution,
     getTequilaVirtualGoldByOrder(context, operators),
   );
-  const referenceGoldPerHour = calculateExpectedPerHour(
+  const referenceGoldPerHour = calculateRiicExpectedPerHour(
     ORDER_DISTRIBUTION_BY_LEVEL[stationLevel],
     ORDER_GOLD,
   );
@@ -1106,7 +1024,7 @@ function calculateClosure({
   const virtualGold = (1 / 6) * speedMultiplier;
   const gold = -physicalGoldPerHour;
   const lmd = physicalGoldPerHour * PURE_GOLD_LMD_VALUE;
-  const referenceGoldPerHour = calculateExpectedPerHour(
+  const referenceGoldPerHour = calculateRiicExpectedPerHour(
     ORDER_DISTRIBUTION_BY_LEVEL[stationLevel],
     ORDER_GOLD,
   );
@@ -1199,6 +1117,10 @@ export function calculateRiicTrading(facility, operators, bonus = {}) {
     normalizedOperators,
     product,
     normalizeFacilityContext(facility),
+    {
+      ignoredUnsupportedOperatorIds:
+        normalizedBonus.ignoredUnsupportedOperatorIds,
+    },
   );
   if (context.error) {
     return createFailure(type, product, context.error);

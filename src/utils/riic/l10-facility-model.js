@@ -15,7 +15,7 @@ function station(stationLevel, slotCount = stationLevel) {
 
 const RIGHT_FULL_STATIC_ROOM_STATIONS = Object.freeze({
   meeting: [station(3, 2)],
-  dormitory: [station(2, 5), station(1, 5), station(1, 5), station(1, 5)],
+  dormitory: [station(1, 5), station(1, 5), station(1, 5), station(1, 5)],
   processing: [station(3, 1)],
   office: [station(3, 1)],
   training: [station(3, 2)],
@@ -23,7 +23,7 @@ const RIGHT_FULL_STATIC_ROOM_STATIONS = Object.freeze({
 
 const THREE_POWER_STATIC_ROOM_STATIONS = Object.freeze({
   meeting: [station(3, 2)],
-  dormitory: [station(1, 5), station(1, 5), station(1, 5), station(1, 5)],
+  dormitory: [station(5, 5), station(5, 5), station(5, 5), station(5, 5)],
   processing: [station(3, 1)],
   office: [station(3, 1)],
   training: [station(3, 2)],
@@ -60,41 +60,45 @@ const PROFILE_ROOM_STATIONS = Object.freeze({
 
 const FIXED_LAYOUT_ROOM_STATIONS = Object.freeze({
   153: {
+    ...THREE_POWER_STATIC_ROOM_STATIONS,
     "lmd-trading": [station(3)],
     "experience-manufacture": [station(3), station(3), station(3), station(3)],
     "gold-manufacture": [station(3)],
-    power: [station(1), station(1), station(1)],
+    power: [station(3, 1), station(3, 1), station(3, 1)],
   },
   243: {
+    ...THREE_POWER_STATIC_ROOM_STATIONS,
     "lmd-trading": [station(3), station(3)],
     "experience-manufacture": [station(3), station(3)],
     "gold-manufacture": [station(3), station(3)],
-    power: [station(1), station(1), station(1)],
+    power: [station(3, 1), station(3, 1), station(3, 1)],
   },
   "243-orundum": {
+    ...THREE_POWER_STATIC_ROOM_STATIONS,
     "lmd-trading": [station(3)],
     "orundum-trading": [station(3)],
     "experience-manufacture": [station(3)],
     "orundum-manufacture": [station(3)],
     "gold-manufacture": [station(3), station(3)],
-    power: [station(1), station(1), station(1)],
+    power: [station(3, 1), station(3, 1), station(3, 1)],
   },
   "342-orundum": {
-    ...THREE_POWER_STATIC_ROOM_STATIONS,
-    "lmd-trading": [station(3), station(3)],
-    "orundum-trading": [station(1)],
+    ...RIGHT_FULL_STATIC_ROOM_STATIONS,
+    "lmd-trading": [station(3), station(1)],
+    "orundum-trading": [station(3)],
     "orundum-manufacture": [station(3)],
     "experience-manufacture": [station(3)],
     "gold-manufacture": [station(2), station(2)],
     power: [station(3, 1), station(3, 1)],
   },
   333: {
+    ...THREE_POWER_STATIC_ROOM_STATIONS,
     "lmd-trading": [station(3), station(3), station(3)],
     "gold-manufacture": [station(3), station(3), station(3)],
-    power: [station(1), station(1), station(1)],
+    power: [station(3, 1), station(3, 1), station(3, 1)],
   },
   342: {
-    ...THREE_POWER_STATIC_ROOM_STATIONS,
+    ...RIGHT_FULL_STATIC_ROOM_STATIONS,
     "lmd-trading": [station(3), station(3), station(1)],
     "gold-manufacture": [
       station(3),
@@ -107,7 +111,7 @@ const FIXED_LAYOUT_ROOM_STATIONS = Object.freeze({
 });
 
 const STATIC_ROOM_STATIONS = Object.freeze({
-  control: [station(1, 5)],
+  control: [station(5, 5)],
   office: [station(1, 1)],
 });
 

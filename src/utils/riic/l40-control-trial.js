@@ -27,6 +27,10 @@ const PRODUCT_LABEL_BY_ID = Object.freeze({
 });
 const FLAMETAIL_OPERATOR_ID = "char_420_flamtl";
 const VIVIANA_OPERATOR_ID = "char_4098_vvana";
+const GNOSIS_OPERATOR_ID = "char_206_gnosis";
+const JAYE_OPERATOR_ID = "char_272_strong";
+const SILVERASH_OPERATOR_ID = "char_172_svrash";
+const CLIFFHEART_OPERATOR_ID = "char_173_slchan";
 const GRAVEL_OPERATOR_ID = "char_237_gravel";
 const DELPHINE_OPERATOR_ID = "char_4110_delphn";
 const SIEGE_OPERATOR_ID = "char_112_siege";
@@ -394,6 +398,29 @@ function createRosterTrialEntry({ sourceOperatorId, rosterById, skills }) {
     (operatorId) => rosterById.has(operatorId),
   ).length;
 
+  if (sourceOperatorId === GNOSIS_OPERATOR_ID) {
+    const jayeKarlanRosterCount =
+      Number(rosterById.has(JAYE_OPERATOR_ID)) +
+      Number(rosterById.has(SILVERASH_OPERATOR_ID)) +
+      Number(rosterById.has(CLIFFHEART_OPERATOR_ID));
+    const hasJayeKarlanCombination = jayeKarlanRosterCount === 3;
+
+    return {
+      kind: "roster",
+      effectLabel:
+        "\u7075\u77e5\u4e0e\u5b7f\u3001\u94f6\u7070\u3001\u5d16\u5fc3\u6301\u6709\u8bd5\u7b97",
+      baseScore: -10,
+      terms: [
+        {
+          label: "\u5b7f + \u94f6\u7070 + \u5d16\u5fc3",
+          count: hasJayeKarlanCombination ? 1 : 0,
+          scorePerOperator: 20,
+        },
+      ],
+      score: hasJayeKarlanCombination ? 10 : -10,
+    };
+  }
+
   if (sourceOperatorId === FLAMETAIL_OPERATOR_ID) {
     return {
       kind: "roster",
@@ -521,9 +548,18 @@ function evaluateScenario(scenario, layoutFacts, rosterById, skills) {
     .filter(isDeferredTrialEffect)
     .map(formatEffectLabel)
     .filter(Boolean);
+  const roomEffectValue = entries
+    .filter((entry) => entry?.kind !== "roster")
+    .reduce(
+      (total, entry) => total + Number(entry.score || 0),
+      0,
+    );
+  const operatorTrialValue = Number(rosterEntry?.score || 0);
 
   return {
-    contributionScore: entries.reduce((total, entry) => total + entry.score, 0),
+    contributionScore: roomEffectValue + operatorTrialValue,
+    roomEffectValue,
+    operatorTrialValue,
     entries,
     deferredEffectLabels,
   };

@@ -666,6 +666,40 @@
       "elite": 2,
       "level": 1,
       "effect": "进驻控制中枢时，每个进驻在贸易站的谢拉格干员，订单获取效率-15%，订单上限+6",
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_172_svrash",
+              "char_173_slchan",
+              "char_198_blackd",
+              "char_199_yak",
+              "char_4116_blkkgt"
+            ],
+            "roomType": "trading",
+            "product": "all"
+          },
+          "metric": "orderEfficiency",
+          "bonusPercent": -15
+        },
+        {
+          "target": {
+            "scope": "operators",
+            "operatorIds": [
+              "char_172_svrash",
+              "char_173_slchan",
+              "char_198_blackd",
+              "char_199_yak",
+              "char_4116_blkkgt"
+            ],
+            "roomType": "trading",
+            "product": "all"
+          },
+          "metric": "orderLimit",
+          "bonusPercent": 6
+        }
+      ],
       "bufftag": [
         "trading-operator"
       ]

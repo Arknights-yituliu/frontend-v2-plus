@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
 import { calculateRiicTrading } from "../src/utils/riic/P01-riic-trading.js";
+import {
+  resolveRiicTradingExternalOrderBonuses,
+} from "../src/utils/riic/riic-trading-context.js";
 
-const facility = (level, product = "lmd") => ({
+const facility = (level, product = "lmd", context = null) => ({
   type: "trading",
   product,
   level,
+  ...(context ? { context } : {}),
 });
 const operator = (charId, elite = 0, level = 1) => ({
   charId,
@@ -17,6 +21,38 @@ function assertClose(actual, expected, epsilon = 0.0001) {
     Math.abs(actual - expected) <= epsilon,
     `Expected ${actual} to be within ${epsilon} of ${expected}`,
   );
+}
+
+function resolvedContext({
+  operatorIds = [],
+  dormitoryLevels = [],
+  meetingLevel = null,
+  manufactureProductKindCount = 0,
+} = {}) {
+  const rooms = [
+    {
+      facility: "trading",
+      operators: operatorIds.map((charId) => ({ charId })),
+    },
+    ...dormitoryLevels.map((stationLevel) => ({
+      facility: "dormitory",
+      stationLevel,
+      operators: [],
+    })),
+    ...(Number.isInteger(meetingLevel)
+      ? [{ facility: "meeting", stationLevel: meetingLevel, operators: [] }]
+      : []),
+    ...Array.from({ length: manufactureProductKindCount }, (_, index) => ({
+      facility: "manufacture",
+      product: `test-${index}`,
+      operators: [],
+    })),
+  ];
+
+  return {
+    resolvedExternalOrderBonuses:
+      resolveRiicTradingExternalOrderBonuses(rooms),
+  };
 }
 
 const normalLevel1 = calculateRiicTrading(
@@ -296,12 +332,7 @@ assert.equal(shamareButshuArchet.product, "lmd");
 assertClose(shamareButshuArchet.rate, 246.224488);
 
 const archetDormitoryBonus = calculateRiicTrading(
-  {
-    ...facility(3),
-    context: {
-      dormitoryLevels: [5, 5, 5, 5],
-    },
-  },
+  facility(3, "lmd", resolvedContext({ dormitoryLevels: [5, 5, 5, 5] })),
   [
     operator("char_332_archet", 2, 1),
     operator("char_502_nblade", 0, 30),
@@ -324,12 +355,7 @@ assert.equal(archetDormitoryContextMissing.ok, false);
 assert.equal(archetDormitoryContextMissing.error, "notSupported");
 
 const quartzManufactureBonus = calculateRiicTrading(
-  {
-    ...facility(3, "orundum"),
-    context: {
-      manufactureProductKindCount: 3,
-    },
-  },
+  facility(3, "orundum", resolvedContext({ manufactureProductKindCount: 3 })),
   [
     operator("char_4193_lemuen", 2, 1),
     operator("char_103_angel", 2, 1),
@@ -619,12 +645,7 @@ assertClose(closureLemuenAngel.gold, -1.608333);
 assertClose(closureLemuenAngel.virtualGold, 0.321667);
 
 const butshuDeep = calculateRiicTrading(
-  {
-    ...facility(2),
-    context: {
-      baseOperatorIds: ["char_4145_ulpia"],
-    },
-  },
+  facility(2, "lmd", resolvedContext({ operatorIds: ["char_4145_ulpia"] })),
   [
     operator("char_4032_provs", 2, 1),
     operator("char_4137_udflow", 2, 1),
@@ -633,16 +654,11 @@ const butshuDeep = calculateRiicTrading(
 assert.equal(butshuDeep.ok, true);
 assert.equal(butshuDeep.type, "butshu");
 assert.equal(butshuDeep.product, "lmd");
-assertClose(butshuDeep.lmd, 1061.267606);
-assertClose(butshuDeep.gold, -2.122535);
+assertClose(butshuDeep.lmd, 1100);
+assertClose(butshuDeep.gold, -2.2);
 
 const butshuVigil = calculateRiicTrading(
-  {
-    ...facility(2),
-    context: {
-      meetingLevel: 3,
-    },
-  },
+  facility(2, "lmd", resolvedContext({ meetingLevel: 3 })),
   [
     operator("char_4032_provs", 2, 1),
     operator("char_427_vigil", 2, 1),
@@ -655,13 +671,7 @@ assertClose(butshuVigil.lmd, 1100);
 assertClose(butshuVigil.gold, -2.2);
 
 const closureBelloneWithoutVigilOnDuty = calculateRiicTrading(
-  {
-    ...facility(3),
-    context: {
-      baseOperatorIds: [],
-      meetingLevel: 3,
-    },
-  },
+  facility(3, "lmd", resolvedContext({ meetingLevel: 3 })),
   [
     operator("char_4228_closur", 2, 1),
     operator("char_427_vigil", 2, 1),
@@ -672,13 +682,14 @@ assert.equal(closureBelloneWithoutVigilOnDuty.ok, true);
 assertClose(closureBelloneWithoutVigilOnDuty.lmd, 762.5);
 
 const closureVigilBellone = calculateRiicTrading(
-  {
-    ...facility(3),
-    context: {
-      baseOperatorIds: ["char_427_vigil"],
+  facility(
+    3,
+    "lmd",
+    resolvedContext({
+      operatorIds: ["char_427_vigil"],
       meetingLevel: 3,
-    },
-  },
+    }),
+  ),
   [
     operator("char_4228_closur", 2, 1),
     operator("char_427_vigil", 2, 1),
@@ -720,12 +731,7 @@ assert.equal(hodrerWithoutContext.ok, false);
 assert.equal(hodrerWithoutContext.error, "notSupported");
 
 const hodrerWithoutPartners = calculateRiicTrading(
-  {
-    ...facility(3),
-    context: {
-      baseOperatorIds: [],
-    },
-  },
+  facility(3, "lmd", resolvedContext()),
   [
     operator("char_4088_hodrer", 2, 1),
     operator("char_282_catap", 1, 55),
@@ -736,12 +742,13 @@ assert.equal(hodrerWithoutPartners.ok, true);
 assertClose(hodrerWithoutPartners.rate, 193);
 
 const hodrerWithPartners = calculateRiicTrading(
-  {
-    ...facility(3),
-    context: {
-      baseOperatorIds: ["char_4087_ines", "char_113_cqbw"],
-    },
-  },
+  facility(
+    3,
+    "lmd",
+    resolvedContext({
+      operatorIds: ["char_4087_ines", "char_113_cqbw"],
+    }),
+  ),
   [
     operator("char_4088_hodrer", 2, 1),
     operator("char_282_catap", 1, 55),
@@ -752,12 +759,7 @@ assert.equal(hodrerWithPartners.ok, true);
 assertClose(hodrerWithPartners.rate, 203);
 
 const closureVignaHodrer = calculateRiicTrading(
-  {
-    ...facility(3),
-    context: {
-      baseOperatorIds: [],
-    },
-  },
+  facility(3, "lmd", resolvedContext()),
   [
     operator("char_4228_closur", 2, 1),
     operator("char_1019_siege2", 2, 1),

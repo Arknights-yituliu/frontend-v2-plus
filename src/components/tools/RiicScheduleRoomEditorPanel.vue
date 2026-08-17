@@ -39,6 +39,18 @@ const props = defineProps({
       skip: false,
     }),
   },
+  maaRoomLabel: {
+    type: String,
+    default: "",
+  },
+  maaRoomIndex: {
+    type: Number,
+    default: 1,
+  },
+  maaRoomIndexOptions: {
+    type: Array,
+    default: () => [],
+  },
   canPasteOperators: {
     type: Boolean,
     default: false,
@@ -58,6 +70,7 @@ const emit = defineEmits([
   "remove-operator",
   "reorder-operator",
   "update:maa-settings",
+  "update:maa-room-index",
   "copy-operators",
   "paste-operators",
   "copy-shift",
@@ -128,7 +141,23 @@ function toggleMaaSetting(field) {
   <section class="schedule-room-editor-panel">
     <header>
       <div>
-        <strong>{{ room.label }}</strong>
+        <strong>{{ maaRoomLabel || room.label }}</strong>
+        <div
+          v-if="maaRoomIndexOptions.length"
+          class="schedule-room-editor-maa-index"
+        >
+          <button
+            v-for="option in maaRoomIndexOptions"
+            :key="option"
+            type="button"
+            :class="{ active: option === maaRoomIndex }"
+            :aria-pressed="option === maaRoomIndex"
+            :title="`MAA 房间 ${option}`"
+            @click="emit('update:maa-room-index', option)"
+          >
+            {{ option }}
+          </button>
+        </div>
         <span>{{ shiftName }}</span>
       </div>
       <button
@@ -326,6 +355,7 @@ function toggleMaaSetting(field) {
 .schedule-room-editor-reset,
 .schedule-room-editor-add button,
 .schedule-room-editor-maa-settings button,
+.schedule-room-editor-maa-index button,
 .schedule-room-editor-clipboard button,
 .schedule-room-product-options button,
 .schedule-room-editor-matches button {
@@ -344,6 +374,7 @@ function toggleMaaSetting(field) {
 .schedule-room-editor-reset:hover,
 .schedule-room-editor-add button:hover:not(:disabled),
 .schedule-room-editor-maa-settings button:hover,
+.schedule-room-editor-maa-index button:hover,
 .schedule-room-editor-clipboard button:hover:not(:disabled),
 .schedule-room-product-options button:hover,
 .schedule-room-editor-matches button:hover {
@@ -357,6 +388,7 @@ function toggleMaaSetting(field) {
 }
 
 .schedule-room-editor-maa-settings,
+.schedule-room-editor-maa-index,
 .schedule-room-editor-clipboard {
   display: flex;
   align-items: center;
@@ -371,6 +403,15 @@ function toggleMaaSetting(field) {
   font-weight: 700;
 }
 
+.schedule-room-editor-maa-index {
+  gap: 3px;
+}
+
+.schedule-room-editor-maa-index button {
+  min-width: 26px;
+  padding-inline: 6px;
+}
+
 .schedule-room-editor-maa-settings button.active {
   border-color: color-mix(in srgb, var(--riic-green) 48%, var(--c-border-color));
   background: color-mix(
@@ -379,6 +420,17 @@ function toggleMaaSetting(field) {
     var(--c-page-background-color)
   );
   color: var(--riic-green);
+  font-weight: 700;
+}
+
+.schedule-room-editor-maa-index button.active {
+  border-color: color-mix(in srgb, var(--riic-blue) 52%, var(--c-border-color));
+  background: color-mix(
+    in srgb,
+    var(--riic-blue) 14%,
+    var(--c-page-background-color)
+  );
+  color: var(--riic-blue);
   font-weight: 700;
 }
 

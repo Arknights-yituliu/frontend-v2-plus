@@ -1762,6 +1762,10 @@
           "elite": 2
         }
       ],
+      "teamCalculation": {
+        "type": "jayeOrderLimit",
+        "sourceMember": "孑"
+      },
       "efficiency": 43.28,
       "sortScore": 0,
       "calculationStatus": "calculated"

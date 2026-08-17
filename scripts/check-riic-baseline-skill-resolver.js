@@ -104,6 +104,7 @@ const fixedRotationManufactureSkills = resolveRiicBaselineSkills(
     { charId: "char_2013_cerber", name: "Ceobe", elite: 2, level: 1 },
     { charId: "char_336_folivo", name: "Scene", elite: 2, level: 1 },
     { charId: "char_446_aroma", name: "Aroma", elite: 2, level: 1 },
+    { charId: "char_4062_totter", name: "Totter", elite: 2, level: 1 },
     {
       charId: "char_4230_mcnist",
       name: "Mechanist",
@@ -156,11 +157,57 @@ assert.equal(
   35 / 3,
 );
 assert.equal(
+  getSingleOperatorManufactureBonus({ charId: "char_4062_totter" }),
+  27.56,
+);
+
+const totterAtEliteZero = resolveRiicBaselineSkills(
+  [{ charId: "char_4062_totter", name: "Totter", elite: 0, level: 1 }],
+  ruleData,
+);
+assert.equal(
+  calculateRiicRoomEfficiency({
+    resolvedSkills: totterAtEliteZero,
+    roomType: "manufacture",
+    operatorIds: ["char_4062_totter"],
+    expectedSlots: 1,
+  }).bonusPercent,
+  27.56,
+);
+assert.equal(
   getSingleOperatorManufactureBonus({
     charId: "char_4230_mcnist",
     product: "experience",
   }),
   30,
+);
+
+const spuriaAtEliteZero = resolveRiicBaselineSkills(
+  [{ charId: "char_4015_spuria", name: "Spuria", elite: 0, level: 1 }],
+  ruleData,
+);
+assert.equal(
+  calculateRiicRoomEfficiency({
+    resolvedSkills: spuriaAtEliteZero,
+    roomType: "power",
+    operatorIds: ["char_4015_spuria"],
+    expectedSlots: 1,
+  }).bonusPercent,
+  13.75,
+);
+
+const spuriaAtEliteTwo = resolveRiicBaselineSkills(
+  [{ charId: "char_4015_spuria", name: "Spuria", elite: 2, level: 1 }],
+  ruleData,
+);
+assert.equal(
+  calculateRiicRoomEfficiency({
+    resolvedSkills: spuriaAtEliteTwo,
+    roomType: "power",
+    operatorIds: ["char_4015_spuria"],
+    expectedSlots: 1,
+  }).bonusPercent,
+  18.75,
 );
 
 const christAndPhantom = resolveRiicBaselineSkills(

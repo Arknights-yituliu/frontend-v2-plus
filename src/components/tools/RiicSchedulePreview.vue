@@ -9,6 +9,7 @@ import highCertificateBackground from "/src/assets/images/riic-schedule-preview/
 import lmdBackground from "/src/assets/images/riic-schedule-preview/lmd.png";
 import originiumShardBackground from "/src/assets/images/riic-schedule-preview/originium-shard.png";
 import orundumBackground from "/src/assets/images/riic-schedule-preview/orundum.png";
+import { getRiicLayoutCells } from "/src/utils/riic/riic-layout-grid.js";
 
 const props = defineProps({
   preview: {
@@ -166,48 +167,9 @@ function formatShiftTime(totalMinutes) {
   ).padStart(2, "0")}`;
 }
 
-const layoutCells = computed(() => {
-  const rooms = activeState.value?.rooms || [];
-  const roomsByFacility = new Map();
-  for (const room of rooms) {
-    const facilityRooms = roomsByFacility.get(room.facility) || [];
-    facilityRooms.push(room);
-    roomsByFacility.set(room.facility, facilityRooms);
-  }
-
-  for (const facilityRooms of roomsByFacility.values()) {
-    facilityRooms.sort(
-      (left, right) =>
-        Number(left?.stationIndex || 0) - Number(right?.stationIndex || 0),
-    );
-  }
-
-  const productionRooms = rooms.filter(isProductionRoom);
-  const getFacilityRoom = (facility, index = 0) =>
-    (roomsByFacility.get(facility) || [])[index] || null;
-  const cells = Array(25).fill(null);
-
-  cells[3] = getFacilityRoom("control");
-  cells[4] = getFacilityRoom("meeting");
-  cells[5] = productionRooms[0] || null;
-  cells[6] = productionRooms[1] || null;
-  cells[7] = productionRooms[2] || null;
-  cells[8] = getFacilityRoom("dormitory", 0);
-  cells[9] = getFacilityRoom("processing");
-  cells[10] = productionRooms[3] || null;
-  cells[11] = productionRooms[4] || null;
-  cells[12] = productionRooms[5] || null;
-  cells[13] = getFacilityRoom("dormitory", 1);
-  cells[14] = getFacilityRoom("office");
-  cells[15] = productionRooms[6] || null;
-  cells[16] = productionRooms[7] || null;
-  cells[17] = productionRooms[8] || null;
-  cells[18] = getFacilityRoom("dormitory", 2);
-  cells[19] = getFacilityRoom("training");
-  cells[23] = getFacilityRoom("dormitory", 3);
-
-  return cells;
-});
+const layoutCells = computed(() =>
+  getRiicLayoutCells(activeState.value?.rooms || []),
+);
 
 function getRarity(charId) {
   return props.operatorTable?.[charId]?.rarity || 1;

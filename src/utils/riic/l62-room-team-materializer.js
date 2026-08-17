@@ -114,11 +114,6 @@ export function materializeRiicRoomTeamCandidate(
     scope: candidate?.candidateScope,
     fallbackOperators: operators,
   });
-  const teamCalculationResult = recalculateRiicRoomTeamCandidate({
-    candidate,
-    scope: candidate?.candidateScope,
-    fallbackOperators: operators,
-  });
   const expectedControlCenterOperatorBonusPercent = Number(
     candidate?.controlCenterOperatorBonusPercent || 0,
   );
@@ -129,6 +124,12 @@ export function materializeRiicRoomTeamCandidate(
         operatorIds,
       })
     : null;
+  const teamCalculationResult = recalculateRiicRoomTeamCandidate({
+    candidate,
+    scope: candidate?.candidateScope,
+    fallbackOperators: operators,
+    controlCenterAdjustment,
+  });
   const controlCenterOperatorBonusPercent = controlCenterAdjustment
     ? Number(controlCenterAdjustment.operatorBonusPercent || 0)
     : expectedControlCenterOperatorBonusPercent;

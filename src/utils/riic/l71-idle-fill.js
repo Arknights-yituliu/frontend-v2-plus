@@ -266,6 +266,12 @@ export function getRiicIdleFillOperators({
   priorityConfig = IDLE_FILL_PRIORITY,
   unlockAllSkills = false,
 } = {}) {
+  const priorityIndexByName = new Map(
+    (priorityConfig?.priorityNames || [])
+      .map((name, index) => [String(name || "").trim(), index])
+      .filter(([name]) => name),
+  );
+
   return normalizeRoster(roster)
     .map((operator) => {
       const activeRoomTypes = getActiveRoomTypes(operator, unlockAllSkills);
@@ -285,11 +291,14 @@ export function getRiicIdleFillOperators({
         idleFill: true,
         idleFillTier: String(tier?.id || "other"),
         idleFillPriority: tierIndex,
+        idleFillNamedPriority:
+          priorityIndexByName.get(operator.name) ?? Number.POSITIVE_INFINITY,
         activeRoomTypes,
       };
     })
     .sort(
       (left, right) =>
+        left.idleFillNamedPriority - right.idleFillNamedPriority ||
         left.idleFillPriority - right.idleFillPriority ||
         left.name.localeCompare(right.name, "zh-CN") ||
         left.charId.localeCompare(right.charId, "en"),

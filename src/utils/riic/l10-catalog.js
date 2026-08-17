@@ -15,7 +15,7 @@ function normalizeProduct(roomType, product) {
 }
 
 function normalizeCatalogStationLevel(roomType, stationLevel) {
-  return ["hire", "power"].includes(roomType) ? 1 : stationLevel;
+  return ["hire", "meeting", "power"].includes(roomType) ? 1 : stationLevel;
 }
 
 function isLayeredProduct(roomType, product) {
