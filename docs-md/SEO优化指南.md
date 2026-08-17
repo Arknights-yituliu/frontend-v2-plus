@@ -1,240 +1,156 @@
-# 本文档为 AI 生成，仅供参考
+# SEO / GEO 优化指南
 
-# SEO优化指南
+> 本文档基于 2026-08 的 SEO/GEO 优化改动编写，描述的是**当前仓库中实际存在的实现**。
 
-## 已完成的SEO优化
+## 概述
 
-### 1. 基础SEO配置
-- ✅ 添加了完整的meta标签（title, description, keywords）
-- ✅ 设置了正确的语言标识（zh-CN）
-- ✅ 添加了author和robots meta标签
-- ✅ 添加了canonical链接
+本次优化旨在提升「明日方舟一图流」在搜索引擎与 AI 生成式引擎（GEO，Generative Engine Optimization）中的可发现性。核心思路：
 
-### 2. 社交媒体优化
-- ✅ Open Graph标签（Facebook、微信等）
-  - og:title
-  - og:description
-  - og:image
-  - og:url
-  - og:type
-  - og:locale
-  - og:site_name
-- ✅ Twitter Card标签
-  - twitter:card
-  - twitter:title
-  - twitter:description
-  - twitter:image
+1. **单一数据源** — 所有页面的 SEO 配置集中在一个纯数据文件 `src/utils/seo.js` 中。
+2. **每页动态 meta** — 使用 `@unhead/vue` 在路由切换时为每个页面注入独立的 `title`、`description`、OG/Twitter 标签与 `canonical`。
+3. **预渲染（Prerender）** — 构建后使用 Puppeteer 将每个公开路由渲染成静态 HTML，解决原 SPA 对不执行 JS 的爬虫（如 GPTBot、ClaudeBot）"空白页面"的问题。
+4. **结构化数据** — 首页加入 `Organization` JSON-LD 标记。
+5. **站点地图与 llms.txt** — 构建时自动从同一份配置生成 `sitemap.xml` 与 `llms.txt`。
 
-### 3. 结构化数据
-- ✅ JSON-LD格式的结构化数据
-- ✅ WebSite类型标记
-- ✅ 搜索功能标记
+---
 
-### 4. 搜索引擎配置
-- ✅ robots.txt文件
-- ✅ sitemap.xml文件
-- ✅ 自动生成sitemap的脚本
+## 架构总览
 
-### 5. 动态SEO
-- ✅ 路由变化时自动更新meta标签
-- ✅ 每个页面独立的SEO配置
-- ✅ 动态更新结构化数据
+```
+src/utils/seo.js  (单一数据源：SITE_URL / SITE_NAME / DEFAULT_* / OG_IMAGE / SEO_ROUTES)
+        │
+        ├──▶ src/App.vue      useSeoMeta() + useHead()  → 运行时动态 meta（每页独立）
+        │
+        ├──▶ scripts/generate-seo.mjs   → 生成 public/sitemap.xml + public/llms.txt（构建前）
+        │
+        └──▶ scripts/prerender.mjs      → 预渲染每个路由为静态 HTML（构建后，经 vite.config.js 插件调用）
+```
+
+构建命令 `npm run build` 的执行顺序为：
+
+```
+1. node scripts/generate-seo.mjs      # 生成 sitemap.xml + llms.txt 到 public/
+2. vite build                         # 打包，public/ 内容复制进 dist/
+3. (closeBundle 钩子) prerender.mjs   # 用 headless 浏览器逐路由渲染，写回 dist/
+```
+
+---
 
 ## 文件说明
 
-### 核心文件
-- `src/utils/seo.js` - SEO工具函数和配置
-- `src/router/index.js` - 路由中集成SEO更新
-- `index.html` - 包含基础SEO标签
-- `public/robots.txt` - 搜索引擎爬虫规则
-- `public/sitemap.xml` - 网站地图
-- `scripts/generate-sitemap.js` - 自动生成sitemap脚本
+| 文件 | 职责 |
+|---|---|
+| `src/utils/seo.js` | 站点级 SEO 配置的**唯一数据源**（纯 JS，无 Vue 依赖，可被 Node 脚本直接 import） |
+| `src/main.js` | 注册 `@unhead/vue` 的 `createHead()` 插件 |
+| `src/App.vue` | 使用 `useSeoMeta()` / `useHead()` 按路由注入标题、描述、OG/Twitter、canonical |
+| `scripts/generate-seo.mjs` | 从 `SEO_ROUTES` 生成 `public/sitemap.xml` 与 `public/llms.txt` |
+| `scripts/prerender.mjs` | 用 puppeteer-core 将 `SEO_ROUTES` 中的每个路由渲染为 `dist/<route>/index.html` |
+| `vite.config.js` | `prerenderPlugin()` 在 `closeBundle` 阶段调用 `prerender.mjs` |
+| `index.html` | 基础 meta + `Organization` JSON-LD（作为无 JS 时的兜底与结构化数据载体） |
+| `public/robots.txt` | 允许所有爬虫 + 声明 `Sitemap:` |
+| `public/sitemap.xml` | 构建时自动生成（**勿手改**） |
+| `public/llms.txt` | 构建时自动生成（**勿手改**） |
 
-## 使用方法
+---
 
-### 1. 配置网站基础信息
-编辑 `src/utils/seo.js` 文件中的 `siteConfig` 对象：
-```javascript
-export const siteConfig = {
-    siteName: '明日方舟一图流',
-    siteUrl: 'https://www.yituliu.cn', // 替换为实际域名
-    defaultDescription: '...',
-    defaultKeywords: '...',
-    defaultImage: '/logo.png', // 替换为实际图片
-    twitterHandle: '@yituliu', // 替换为实际Twitter账号
+## 核心实现
+
+### 1. `src/utils/seo.js` — 单一数据源
+
+导出以下常量与函数：
+
+- `SITE_URL` / `SITE_NAME` / `DEFAULT_TITLE` / `DEFAULT_DESCRIPTION` / `DEFAULT_KEYWORDS` / `OG_IMAGE`
+- `SEO_ROUTES` — 公开可索引路由数组，每项含 `path` / `title` / `description` / `changefreq` / `priority`
+- `normalizePath(path)` — 归一化路径（去末尾 `/`）
+- `getSeoRoute(path)` — 按路径查找 SEO 配置，找不到返回 `null`
+
+> 该文件**不依赖 Vue**，因此 `scripts/*.mjs` 可被 Node 直接 `import`，无需构建。
+
+### 2. `src/main.js` — 注册 head 插件
+
+```js
+import { createHead } from '@unhead/vue/client'
+const head = createHead()
+app.use(head)
+```
+
+### 3. `src/App.vue` — 每页动态 meta
+
+```js
+const seoRoute = computed(() => getSeoRoute(route.path));
+const pageDescription = computed(() => seoRoute.value?.description || DEFAULT_DESCRIPTION);
+
+useSeoMeta({
+    title: () => seoTitle.value,
+    description: () => pageDescription.value,
+    ogTitle: () => seoTitle.value,
+    ogDescription: () => pageDescription.value,
+    ogUrl: () => canonicalUrl.value,
     // ...
-}
+});
+
+useHead({
+    htmlAttrs: { lang: 'zh-CN' },
+    link: [{ rel: 'canonical', href: () => canonicalUrl.value }],
+});
 ```
 
-### 2. 为新页面添加SEO配置
-在 `src/utils/seo.js` 的 `pageSEO` 对象中添加：
-```javascript
-export const pageSEO = {
-    '/your/new/path': {
-        title: '页面标题 - 明日方舟一图流',
-        description: '页面描述',
-        keywords: '关键词1,关键词2,关键词3'
-    }
-}
-```
+`seoTitle` 的拼接规则：若标题已含站点名则原样返回，否则追加 ` - 明日方舟一图流`。
 
-### 3. 更新sitemap
-运行以下命令自动生成新的sitemap：
-```bash
-node scripts/generate-sitemap.js
-```
+> 原先 `src/router/index.js` 中的 `document.title = ...` 已移除，标题统一交给 `@unhead` 管理。
 
-或在 `package.json` 中添加脚本：
-```json
+### 4. `index.html` — 结构化数据
+
+`<head>` 中加入 `Organization` JSON-LD（含 `sameAs` 指向 GitHub 组织与 Bilibili 主页）。静态的 `canonical` 已移除，避免与 `@unhead` 注入的逐页 canonical 冲突。
+
+---
+
+## 为新页面添加 SEO 配置
+
+在 `src/utils/seo.js` 的 `SEO_ROUTES` 数组中新增一项即可：
+
+```js
 {
-  "scripts": {
-    "generate:sitemap": "node scripts/generate-sitemap.js"
-  }
-}
+    path: '/tools/your-new-tool',
+    title: '你的新工具',
+    description: '一句话描述该工具的功能与价值',
+    changefreq: 'weekly',   // daily / weekly / monthly
+    priority: 0.7,          // 0.0 ~ 1.0
+},
 ```
 
-然后运行：
+完成后该路由会**自动**：
+
+1. 出现在 `sitemap.xml` 中；
+2. 出现在 `llms.txt` 中；
+3. 被 `prerender.mjs` 预渲染为 `dist/tools/your-new-tool/index.html`；
+4. 在运行时获得独立的 `title` / `description` / OG / canonical。
+
+无需改动其他文件。
+
+---
+
+## 常用命令
+
 ```bash
-npm run generate:sitemap
+npm run build      # 生成 SEO 文件 → vite build → 预渲染
+npm run gen:seo    # 仅重新生成 sitemap.xml 与 llms.txt
 ```
 
-### 4. 在路由meta中添加页面标题
-在 `src/router/routes.js` 中为每个路由添加 `meta.title`：
-```javascript
-{
-    path: '/your/path',
-    name: 'YourPage',
-    component: YourComponent,
-    meta: {
-        title: '你的页面标题'
-    }
-}
-```
+---
 
-## SEO最佳实践
+## 部署说明
 
-### 1. 内容优化
-- ✅ 使用语义化的HTML标签（h1, h2, h3, article, nav等）
-- ✅ 图片添加alt属性
-- ✅ 链接使用描述性文本
-- ⚠️ 确保重要内容不依赖JavaScript渲染（考虑SSR）
+- 站点以**静态文件**部署到腾讯云 COS（见 `.github/workflows/build-and-deploy-to-tencent-cos.yml`），`npm run build` 产出 `dist/` 后上传。
+- 预渲染会为每个路由生成独立文件（如 `dist/material/store/index.html`）。**CDN/COS 需将 `/material/store` 这类深层路径映射到对应 `index.html`**，而不是一律回退到首页 `index.html`，否则预渲染文件不会命中。
+- 预渲染依赖本机 Chrome/Edge（`scripts/prerender.mjs` 中的 `CANDIDATE_BROWSERS`）。GitHub `ubuntu-latest` 自带 Chrome，CI 可直接使用；本机若未安装则预渲染会被跳过（仅打印 warning）。
 
-### 2. 性能优化
-- ⚠️ 优化图片大小和格式（使用WebP）
-- ⚠️ 启用GZIP/Brotli压缩
-- ⚠️ 使用CDN加速
-- ⚠️ 实现懒加载
-- ⚠️ 优化首屏加载时间
+---
 
-### 3. 移动端优化
-- ✅ 响应式设计
-- ✅ viewport meta标签
-- ✅ 移动端适配
+## 已知限制 / 待优化
 
-### 4. URL优化
-- ✅ 使用有意义的URL路径
-- ⚠️ 避免URL中的特殊字符
-- ⚠️ 保持URL简短易读
-
-### 5. 内部链接
-- ⚠️ 建立良好的内部链接结构
-- ⚠️ 使用面包屑导航
-- ⚠️ 添加相关内容推荐
-
-## 待优化项目
-
-### 高优先级
-1. **考虑实现SSR（服务端渲染）**
-   - 使用Nuxt.js或手动配置Vue SSR
-   - 提高首屏SEO效果和加载速度
-
-2. **图片优化**
-   - 添加所有图片的alt属性
-   - 使用WebP格式
-   - 实现图片懒加载
-
-3. **性能优化**
-   - 优化打包体积
-   - 代码分割
-   - 启用HTTP/2
-
-### 中优先级
-4. **添加面包屑导航**
-   - 改善用户体验
-   - 提供结构化数据
-
-5. **优化页面加载速度**
-   - 实现骨架屏
-   - 优化首屏渲染
-
-6. **添加404页面SEO**
-   - 自定义404页面
-   - 提供有用的导航链接
-
-### 低优先级
-7. **国际化SEO**
-   - 如需支持多语言，添加hreflang标签
-
-8. **AMP页面**
-   - 考虑为移动端创建AMP版本
-
-## 搜索引擎提交
-
-完成SEO优化后，记得将网站提交到各大搜索引擎：
-
-1. **Google Search Console**
-   - 提交sitemap: https://search.google.com/search-console
-   - 请求索引重要页面
-
-2. **百度站长平台**
-   - 提交sitemap: https://ziyuan.baidu.com/
-   - 使用主动推送API
-
-3. **必应网站管理员工具**
-   - 提交sitemap: https://www.bing.com/webmasters
-
-4. **其他搜索引擎**
-   - 搜狗站长平台
-   - 360站长平台
-
-## 监控和分析
-
-### 推荐工具
-1. **Google Analytics** - 流量分析
-2. **Google Search Console** - 搜索性能
-3. **百度统计** - 国内流量分析
-4. **Lighthouse** - 性能和SEO审计
-5. **GTmetrix** - 性能测试
-
-### 定期检查
-- 检查robots.txt是否正确
-- 验证sitemap是否被索引
-- 监控关键词排名
-- 分析用户行为数据
-- 检查404错误
-- 监控页面加载速度
-
-## 注意事项
-
-1. **URL配置**
-   - 确保将 `siteUrl` 替换为实际的生产域名
-   - 开发环境和生产环境使用不同的配置
-
-2. **图片路径**
-   - 确保社交分享图片使用绝对路径
-   - 图片应该可以被爬虫访问
-
-3. **定期更新**
-   - 定期运行sitemap生成脚本
-   - 保持meta信息更新
-   - 监控SEO表现并调整策略
-
-4. **避免重复内容**
-   - 确保每个页面有唯一的title和description
-   - 使用canonical标签处理重复内容
-
-## 更多资源
-
-- [Google SEO指南](https://developers.google.com/search/docs)
-- [百度搜索引擎优化指南](https://ziyuan.baidu.com/college/courseinfo?id=267)
-- [Web.dev SEO最佳实践](https://web.dev/lighthouse-seo/)
+1. **`og:image` 仍为 `favicon.ico`**（`src/utils/seo.js` 的 `OG_IMAGE`），建议替换为 1200×630 的分享图。
+2. **预渲染为"外壳级"**：`prerender.mjs` 目前使用固定 5 秒等待，仅保证标题、导航、meta 进入静态 HTML；异步加载的数据表格（来自 `backend.yituliu.cn` / IndexedDB）可能未渲染进静态 HTML。如需把真实数据写入静态页面，可改用 `networkidle` 或显式等待。
+3. **CI 静默跳过**：未找到浏览器时 `prerender.mjs` 仅 `console.warn` 并返回 `false`，构建仍会成功。若需严格保证，可在 CI 中让浏览器缺失时报错。
+4. **生成文件会随构建变脏**：`public/sitemap.xml` 与 `public/llms.txt` 每次构建都会重写，会在 git 中显示为改动；如不希望如此，可将其加入 `.gitignore`（不影响 `dist/` 产物）。
+5. 页面 meta 的 `description` 目前为各页面手动维护的中文文案，新增页面时记得补充，否则回退到 `DEFAULT_DESCRIPTION`。

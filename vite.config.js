@@ -20,6 +20,19 @@ function buildTimePlugin() {
     };
 }
 
+// 自定义插件，构建完成后预渲染公开路由为静态 HTML（用于 SEO）
+function prerenderPlugin() {
+    return {
+        name: 'prerender-plugin',
+        apply: 'build',
+        async closeBundle() {
+            const { prerender } = await import('./scripts/prerender.mjs')
+            const outDir = resolve(__dirname, 'dist')
+            await prerender({ outDir })
+        },
+    };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
     resolve: {
@@ -34,7 +47,8 @@ export default defineConfig({
             open:false,
             gzipSize:true,
         }),
-        buildTimePlugin()
+        buildTimePlugin(),
+        prerenderPlugin()
     ],
     server: {
         host: '0.0.0.0',
