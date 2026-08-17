@@ -27,6 +27,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  idleFillOperators: {
+    type: Array,
+    default: () => [],
+  },
   scenarioTrials: {
     type: Array,
     default: () => [],
@@ -45,24 +49,16 @@ const emit = defineEmits(["save-adjustment", "save-error"]);
 
 const CONTROL_CENTER_CANDIDATE_SECTIONS = Object.freeze([
   {
-    id: "operator",
-    label: "干员加成类",
-    matches: (tags) =>
-      tags.includes("trading-operator") ||
-      tags.includes("manufacture-operator"),
-  },
-  {
-    id: "intermediate",
-    label: "中间产物类",
-    matches: (tags) => tags.some((tag) => tag.startsWith("intermediate-")),
-  },
-  {
     id: "room",
-    label: "房间类",
-    matches: (tags) =>
-      tags.includes("office") ||
-      tags.includes("trading-station") ||
-      tags.includes("manufacture-station"),
+    label: "房间产能加成",
+  },
+  {
+    id: "operator",
+    label: "干员加成",
+  },
+  {
+    id: "filler",
+    label: "补位",
   },
 ]);
 
@@ -176,6 +172,19 @@ const scenarioTrialByOperatorId = computed(
 const normalizedSearch = computed(() =>
   operatorSearch.value.trim().toLowerCase(),
 );
+const priorityFillOperators = computed(() =>
+  (props.idleFillOperators || []).filter((operator) =>
+    Number.isFinite(Number(operator?.idleFillNamedPriority)),
+  ),
+);
+const priorityFillOperatorIds = computed(
+  () =>
+    new Set(
+      priorityFillOperators.value
+        .map((operator) => String(operator?.charId || "").trim())
+        .filter(Boolean),
+    ),
+);
 const filteredOperatorSections = computed(() => {
   const search = normalizedSearch.value;
   const matchedOperators = search
@@ -187,7 +196,7 @@ const filteredOperatorSections = computed(() => {
   return CONTROL_CENTER_CANDIDATE_SECTIONS.map((section) => ({
     ...section,
     operators: matchedOperators.filter((operator) =>
-      section.matches(operator.controlCenterBuffTags || []),
+      isOperatorInControlCenterCandidateSection(operator, section.id),
     ),
   }));
 });
@@ -594,68 +603,156 @@ function getTrialLabel(operator) {
   return parts.join(" / ");
 }
 
+function getControlCenterCandidateSectionId(operator) {
+  const tags = operator?.controlCenterBuffTags || [];
+  if (
+    tags.includes("office") ||
+    tags.includes("trading-station") ||
+    tags.includes("manufacture-station")
+  ) {
+    return "room";
+  }
+  if (
+    tags.includes("trading-operator") ||
+    tags.includes("manufacture-operator")
+  ) {
+    return "operator";
+  }
+  if (
+    priorityFillOperatorIds.value.has(
+      String(operator?.charId || "").trim(),
+    )
+  ) {
+    return "filler";
+  }
+  return "";
+}
+
+function isOperatorInControlCenterCandidateSection(operator, sectionId) {
+  const tags = operator?.controlCenterBuffTags || [];
+  if (sectionId === "room") {
+    return (
+      tags.includes("office") ||
+      tags.includes("trading-station") ||
+      tags.includes("manufacture-station")
+    );
+  }
+  if (sectionId === "operator") {
+    return (
+      tags.includes("trading-operator") ||
+      tags.includes("manufacture-operator")
+    );
+  }
+  return (
+    sectionId === "filler" &&
+    priorityFillOperatorIds.value.has(
+      String(operator?.charId || "").trim(),
+    )
+  );
+}
+
+function appendRowOperators(row, operators, source) {
+  const knownIds = new Set(
+    row.operators.map((operator) => String(operator?.charId || "").trim()),
+  );
+  for (const operator of operators || []) {
+    const charId = String(operator?.charId || "").trim();
+    if (!charId || knownIds.has(charId)) {
+      continue;
+    }
+    knownIds.add(charId);
+    row.operators.push({
+      ...operator,
+      source,
+    });
+  }
+}
+
 function getActiveTeamRows() {
   const team = activeTeam.value;
   if (!team) {
     return [];
   }
+  const lateFillOperators = getActiveLateFillOperators();
+  const lateRoomEffectOperators = lateFillOperators.filter(
+    (operator) => operator?.lateFillSource === "room-effect",
+  );
+  const lateOperatorEffectOperators = lateFillOperators.filter(
+    (operator) => operator?.lateFillSource === "operator-effect",
+  );
+  const priorityFillOperators = lateFillOperators.filter(
+    (operator) => operator?.lateFillSource === "priority",
+  );
+  const idleFillOperators = lateFillOperators.filter(
+    (operator) => operator?.lateFillSource === "idle",
+  );
   const operatorsById = new Map(
     props.operators.map((operator) => [
       String(operator?.charId || "").trim(),
       operator,
     ]),
   );
+  const rowsById = new Map(
+    [
+      {
+        id: "room",
+        label: "房间产能加成",
+        operators: [],
+      },
+      {
+        id: "operator",
+        label: "干员加成",
+        operators: [],
+      },
+      {
+        id: "filler",
+        label: "补位",
+        operators: [],
+      },
+    ].map((row) => [row.id, row]),
+  );
+  const appendToRow = (rowId, operators, source) =>
+    appendRowOperators(rowsById.get(rowId), operators, source);
+
+  appendToRow(
+    "room",
+    (team.roomEffectOperators || []).filter(
+      (operator) => !isOperatorRemovedFromCurrentTeam(operator.charId),
+    ),
+    "automatic",
+  );
+  appendToRow("room", lateRoomEffectOperators, "lateFill");
+  appendToRow(
+    "operator",
+    (team.operatorEffectOperators || []).filter(
+      (operator) => !isOperatorRemovedFromCurrentTeam(operator.charId),
+    ),
+    "automatic",
+  );
+  appendToRow("operator", lateOperatorEffectOperators, "lateFill");
+  appendToRow("filler", priorityFillOperators, "lateFill");
+  appendToRow("filler", idleFillOperators, "lateFill");
+
+  for (const operator of (team.fillerOperators || []).filter(
+    (item) => !isOperatorRemovedFromCurrentTeam(item.charId),
+  )) {
+    appendToRow("filler", [operator], "automatic");
+  }
+  for (const operatorId of getActiveTeamManualAddedOperatorIds()) {
+    const operator = operatorsById.get(operatorId);
+    if (operator) {
+      appendToRow(
+        getControlCenterCandidateSectionId(operator) || "filler",
+        [operator],
+        "manual",
+      );
+    }
+  }
 
   return [
-    {
-      id: "room",
-      label: "房间产能加成",
-      operators: (team.roomEffectOperators || [])
-        .filter((operator) => !isOperatorRemovedFromCurrentTeam(operator.charId))
-        .map((operator) => ({
-          ...operator,
-          source: "automatic",
-        })),
-    },
-    {
-      id: "operator",
-      label: "干员加成",
-      operators: (team.operatorEffectOperators || [])
-        .filter((operator) => !isOperatorRemovedFromCurrentTeam(operator.charId))
-        .map((operator) => ({
-          ...operator,
-          source: "automatic",
-        })),
-    },
-    {
-      id: "manual",
-      label: "待保存加入",
-      operators: [...getActiveTeamManualAddedOperatorIds()]
-        .map((operatorId) => operatorsById.get(operatorId))
-        .filter(Boolean)
-        .map((operator) => ({
-          ...operator,
-          source: "manual",
-        })),
-    },
-    {
-      id: "filler",
-      label: "补位",
-      operators: [
-        ...(team.fillerOperators || [])
-          .filter(
-            (operator) => !isOperatorRemovedFromCurrentTeam(operator.charId),
-          )
-          .map((operator) => ({
-            ...operator,
-            source: "automatic",
-          })),
-        ...getActiveLateFillOperators().map((operator) => ({
-          ...operator,
-          source: "lateFill",
-        })),
-      ],
-    },
+    rowsById.get("room"),
+    rowsById.get("operator"),
+    rowsById.get("filler"),
   ];
 }
 
@@ -814,7 +911,10 @@ function saveDraft() {
                 <v-icon icon="mdi-account-outline" size="17"></v-icon>
                 空位
               </span>
-              <span v-if="row.operators.length === 0 && row.id !== 'filler'" class="control-center-row-empty">
+              <span
+                v-if="row.operators.length === 0 && row.id !== 'filler'"
+                class="control-center-row-empty"
+              >
                 暂无
               </span>
             </div>

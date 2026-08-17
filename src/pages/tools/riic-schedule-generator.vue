@@ -1162,13 +1162,21 @@ const controlCenterCandidateOperators = computed(() => {
   const activeTagsByOperatorId = new Map();
   const activeEffectsByOperatorId = new Map();
   const sameTeamPartnerIdsByOperatorId = new Map();
+  const priorityFillOperatorIds = new Set(
+    (riicIdleFillOperators.value || [])
+      .filter((operator) =>
+        Number.isFinite(Number(operator?.idleFillNamedPriority)),
+      )
+      .map((operator) => String(operator?.charId || "").trim())
+      .filter(Boolean),
+  );
   for (const skill of RIIC_CONTROL_CENTER_SKILLS.skills || []) {
     const charId = String(skill?.operatorId || "").trim();
     const operator = rosterById.get(charId);
     const tags = [...new Set(skill?.bufftag || [])].filter(Boolean);
     if (
       !operator ||
-      tags.length === 0 ||
+      (tags.length === 0 && !priorityFillOperatorIds.has(charId)) ||
       !isRiicControlCenterSkillUnlocked(operator, skill, {
         trainingMode: riicTrainingMode.value,
         idealTrainingRaritySelection: idealTrainingRaritySelection.value,
@@ -7824,6 +7832,7 @@ onBeforeUnmount(() => {
                 controlCenterLateFillExcludedOperatorIdsByTeamIndex
               "
               :operators="controlCenterCandidateOperators"
+              :idle-fill-operators="riicIdleFillOperators"
               :scenario-trials="
                 riicControlCenterScenarioTrialState.scenarios
               "
