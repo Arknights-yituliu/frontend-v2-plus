@@ -674,18 +674,6 @@ function getActiveTeamRows() {
     return [];
   }
   const lateFillOperators = getActiveLateFillOperators();
-  const lateRoomEffectOperators = lateFillOperators.filter(
-    (operator) => operator?.lateFillSource === "room-effect",
-  );
-  const lateOperatorEffectOperators = lateFillOperators.filter(
-    (operator) => operator?.lateFillSource === "operator-effect",
-  );
-  const priorityFillOperators = lateFillOperators.filter(
-    (operator) => operator?.lateFillSource === "priority",
-  );
-  const idleFillOperators = lateFillOperators.filter(
-    (operator) => operator?.lateFillSource === "idle",
-  );
   const operatorsById = new Map(
     props.operators.map((operator) => [
       String(operator?.charId || "").trim(),
@@ -721,7 +709,6 @@ function getActiveTeamRows() {
     ),
     "automatic",
   );
-  appendToRow("room", lateRoomEffectOperators, "lateFill");
   appendToRow(
     "operator",
     (team.operatorEffectOperators || []).filter(
@@ -729,9 +716,7 @@ function getActiveTeamRows() {
     ),
     "automatic",
   );
-  appendToRow("operator", lateOperatorEffectOperators, "lateFill");
-  appendToRow("filler", priorityFillOperators, "lateFill");
-  appendToRow("filler", idleFillOperators, "lateFill");
+  appendToRow("filler", lateFillOperators, "lateFill");
 
   for (const operator of (team.fillerOperators || []).filter(
     (item) => !isOperatorRemovedFromCurrentTeam(item.charId),

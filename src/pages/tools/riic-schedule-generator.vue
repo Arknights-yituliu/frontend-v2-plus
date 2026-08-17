@@ -129,9 +129,6 @@ import {
   settleRiicScheduleEfficiency,
 } from "/src/utils/riic/l79-preview-efficiency-settlement.js";
 import {
-  getRiicDormitoryOccupantCount,
-} from "/src/utils/riic/l28-perception-baseline.js";
-import {
   buildRiicMaaScheduleFromPreview,
   getRiicMaaRoomType,
 } from "/src/utils/riicScheduleExport.js";
@@ -728,15 +725,7 @@ function createScheduleExecutionSettingsSnapshot() {
   };
 }
 
-function resetScheduleExecutionSettings() {
-  const nextSettings = createEmptyScheduleExecutionSettings(
-    confirmedLayoutPlan.value?.shiftMode,
-    twoShiftRotationMode.value,
-  );
-  scheduleExecutionSettings.shifts = nextSettings.shifts;
-  scheduleExecutionSettings.orundumCraftMaterial =
-    nextSettings.orundumCraftMaterial;
-  scheduleExecutionSettings.exportInfo = nextSettings.exportInfo;
+function clearSchedulePreviewRoomEdits() {
   selectedSchedulePreviewRoomKey.value = "";
   scheduleRoomOperatorOverrides.value = {};
   scheduleRoomProductOverrides.value = {};
@@ -746,6 +735,18 @@ function resetScheduleExecutionSettings() {
   copiedScheduleRoomOperators.value = null;
   copiedScheduleShiftOperators.value = null;
   scheduleRoomEditorOperatorInput.value = "";
+}
+
+function resetScheduleExecutionSettings() {
+  const nextSettings = createEmptyScheduleExecutionSettings(
+    confirmedLayoutPlan.value?.shiftMode,
+    twoShiftRotationMode.value,
+  );
+  scheduleExecutionSettings.shifts = nextSettings.shifts;
+  scheduleExecutionSettings.orundumCraftMaterial =
+    nextSettings.orundumCraftMaterial;
+  scheduleExecutionSettings.exportInfo = nextSettings.exportInfo;
+  clearSchedulePreviewRoomEdits();
   activeSchedulePreviewStateIndex.value =
     getDefaultSchedulePreviewStateIndex();
 }
@@ -1484,7 +1485,9 @@ const controlCenterFiammettaTargetUsage = computed(() => {
 });
 
 function clearScheduleSelectionsAfterControlCenterChange() {
-  clearSelectedRoomGroupTeamCandidates();
+  clearSelectedRoomGroupTeamCandidates({
+    preserveExecutionSettings: true,
+  });
   lastAutomaticGenerationTriggerKey.value = "";
 }
 
@@ -1512,18 +1515,8 @@ const controlCenterRuntimeContext = computed(() =>
 );
 const riicPerceptionResourceFacts = computed(() => {
   const facilities = activeLayoutFacilityCounts.value?.facilities || [];
-  const powerPlantCount = facilities.filter(
-    (facility) => facility?.facilityType === "power",
-  ).length;
 
   return {
-    dormitoryOccupantCount: getRiicDormitoryOccupantCount({
-      layoutFacts: activeLayoutFacilityCounts.value,
-    }),
-    dormitoryLevel:
-      powerPlantCount === 3 ? 5 : powerPlantCount === 2 ? 3 : null,
-    dormitorySupportOccupantCount: 5,
-    assumeDormitorySupport: true,
     officeExtraRecruitmentSlots: facilities.some(
       (facility) => facility?.facilityType === "hire",
     )
@@ -2797,6 +2790,9 @@ const automaticGenerationTriggerKey = computed(() => {
     treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
     JSON.stringify(idealTrainingRaritySelection.value),
     controlCenterAssignmentSignature.value,
+    JSON.stringify(
+      controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
+    ),
     JSON.stringify(fiammettaRecoverySettings.value),
     rosterSignature,
   ].join("::");
@@ -3018,13 +3014,6 @@ function buildManualRoomGroupRotationCandidate(
                   roomType: group.facility,
                   slotCount: cohort.slotCount,
                 });
-              }
-
-              if (
-                cohort.selectionMode === "individual" &&
-                !sourceCandidate.isManualFallbackTeam
-              ) {
-                return sourceCandidate;
               }
 
               return materializeRiicRoomTeamCandidate(
@@ -3827,6 +3816,7 @@ const assembledScheduleCandidateState = computed(() => {
           claimedOperatorIds: getManualRoomGroupCandidateOperatorIds(candidate),
         })),
         sameShiftBindingSummary: sameShiftAlignment.summary,
+        sameShiftBindingDebug: sameShiftAlignment.debug,
       },
     ],
     blockedGroups: [],
@@ -3902,6 +3892,31 @@ const schedulePreviewStaticRoomKeys = computed(
         ),
     ),
 );
+const riicStaticRoomCapacityByType = computed(() =>
+  scheduleRoomRows.value
+    .flatMap((row) => row.groups)
+    .filter(
+      (group) =>
+        !group.candidateGenerationAvailable && !group.manualControl,
+    )
+    .reduce((capacityByType, group) => {
+      const roomType = String(group?.facility || "").trim();
+      if (!roomType) {
+        return capacityByType;
+      }
+
+      return {
+        ...capacityByType,
+        [roomType]:
+          Number(capacityByType[roomType] || 0) +
+          (group?.stations || []).reduce(
+            (total, station) =>
+              total + Math.max(0, Number(station?.slotCount) || 0),
+            0,
+          ),
+      };
+    }, {}),
+);
 
 function getSchedulePreviewManualStaticOperatorIds(stateIndex) {
   const prefix = `${stateIndex}:`;
@@ -3950,6 +3965,8 @@ const riicSupportRoomPlacementsBySourceStateIndex = computed(() =>
             ownedOperators: riicMatchingRoster.value || [],
             claimedOperatorIds,
             layoutFacts: activeLayoutFacilityCounts.value,
+            idleFillOperators: riicIdleFillOperators.value,
+            roomCapacityByType: riicStaticRoomCapacityByType.value,
           }),
         ];
       },
@@ -7140,9 +7157,16 @@ function selectLayoutChoice(layoutId) {
   selectLayoutEntry(layoutId);
 }
 
-function clearSelectedRoomGroupTeamCandidates() {
+function clearSelectedRoomGroupTeamCandidates({
+  preserveExecutionSettings = false,
+} = {}) {
   selectedRoomGroupTeamCandidateKeys.value = {};
   roomGroupFallbackQueueStates.value = {};
+  if (preserveExecutionSettings) {
+    clearSchedulePreviewRoomEdits();
+    return;
+  }
+
   resetScheduleExecutionSettings();
 }
 
@@ -7921,7 +7945,7 @@ onBeforeUnmount(() => {
           <div class="room-workbench-actions">
             <button
               type="button"
-              class="room-workbench-action"
+              class="room-workbench-action room-workbench-action-large"
               :disabled="autoGeneratingSchedule"
               @click="regenerateSchedule"
             >
@@ -7934,7 +7958,7 @@ onBeforeUnmount(() => {
             </button>
             <button
               type="button"
-              class="room-workbench-action room-workbench-action-deep"
+              class="room-workbench-action room-workbench-action-large room-workbench-action-deep"
               :disabled="autoGeneratingSchedule"
               @click="openDeepScheduleConfirmation"
             >
@@ -8388,6 +8412,9 @@ onBeforeUnmount(() => {
           :fallback-plans-by-group-id="roomGroupFallbackPlanStates"
           :pre-assembly-group-candidates="assembledRoomGroupCandidates"
           :assembled-schedule-candidate="activeAssembledScheduleCandidate"
+          :same-shift-binding-debug="
+            activeAssembledScheduleCandidate?.sameShiftBindingDebug
+          "
           :fiammetta-recovery="fiammettaRecoveryConfig"
           :fiammetta-control-usage="controlCenterFiammettaTargetUsage"
           :automatic-generation-debug-state="
@@ -9391,6 +9418,17 @@ onBeforeUnmount(() => {
   font-weight: 700;
   line-height: 1.3;
   cursor: pointer;
+}
+
+.room-workbench-action-large {
+  min-height: 56px;
+  gap: 10px;
+  padding: 8px 16px;
+  font-size: 24px;
+}
+
+.room-workbench-action-large :deep(.v-icon) {
+  font-size: 32px !important;
 }
 
 .room-workbench-action:hover:not(:disabled) {

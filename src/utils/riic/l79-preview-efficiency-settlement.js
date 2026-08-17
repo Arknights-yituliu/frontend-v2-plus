@@ -337,6 +337,7 @@ export function calculateRiicFinalRoomRosterEfficiency({
       String(operator?.charId || "").trim(),
     ),
     expectedSlots: normalizedExpectedSlots,
+    allowPartialRoster: true,
   });
   if (!calculation.valid) {
     return {

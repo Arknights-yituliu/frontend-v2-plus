@@ -366,6 +366,8 @@ export function getRiicLayer3SupportRoomPlacements({
   ownedOperators,
   claimedOperatorIds,
   layoutFacts,
+  idleFillOperators = [],
+  roomCapacityByType = {},
 }) {
   const rosterById = getRosterById(ownedOperators);
   const assignedOperatorIdsByRoomType = getAssignedOperatorIdsByRoomType(
@@ -377,6 +379,7 @@ export function getRiicLayer3SupportRoomPlacements({
       .filter(Boolean),
   );
   const placementsByRoomType = new Map();
+  const unclaimedFillRequestsByRoomType = new Map();
 
   for (const rule of RIIC_LAYER3_RULES.rules || []) {
     if (!matchesConditions(rule?.conditions, rosterById, layoutFacts)) {
@@ -400,6 +403,19 @@ export function getRiicLayer3SupportRoomPlacements({
       const operatorId = resolveRuleOperatorId(effect);
       const priority = Number(effect?.roomPriority);
       if (
+        roomType &&
+        effect?.fillUnclaimedOperators === true &&
+        Number.isFinite(priority)
+      ) {
+        const current = unclaimedFillRequestsByRoomType.get(roomType);
+        unclaimedFillRequestsByRoomType.set(roomType, {
+          sourceRuleId: String(rule?.id || "").trim(),
+          priority: Math.max(Number(current?.priority || -Infinity), priority),
+          roomOrder:
+            String(effect?.roomOrder || "").trim() === "last" ? "last" : "",
+        });
+      }
+      if (
         !roomType ||
         !operatorId ||
         !Number.isFinite(priority) ||
@@ -418,6 +434,46 @@ export function getRiicLayer3SupportRoomPlacements({
         roomOrder:
           String(effect?.roomOrder || "").trim() === "last" ? "last" : "",
       });
+      placementsByRoomType.set(roomType, placementsByOperatorId);
+    }
+  }
+
+  for (const [roomType, request] of unclaimedFillRequestsByRoomType) {
+    const capacity = Math.max(
+      0,
+      Math.trunc(Number(roomCapacityByType?.[roomType]) || 0),
+    );
+    if (capacity === 0) {
+      continue;
+    }
+
+    const placementsByOperatorId = placementsByRoomType.get(roomType) || new Map();
+    const selectedOperatorIds = new Set([
+      ...claimedIds,
+      ...placementsByOperatorId.keys(),
+    ]);
+
+    for (const operator of idleFillOperators || []) {
+      if (placementsByOperatorId.size >= capacity) {
+        break;
+      }
+
+      const charId = String(operator?.charId || "").trim();
+      if (!charId || selectedOperatorIds.has(charId)) {
+        continue;
+      }
+
+      placementsByOperatorId.set(charId, {
+        charId,
+        name: String(operator?.name || charId).trim() || charId,
+        sourceRuleId: request.sourceRuleId,
+        priority: request.priority,
+        roomOrder: request.roomOrder,
+      });
+      selectedOperatorIds.add(charId);
+    }
+
+    if (placementsByOperatorId.size > 0) {
       placementsByRoomType.set(roomType, placementsByOperatorId);
     }
   }

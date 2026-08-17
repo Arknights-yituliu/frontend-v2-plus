@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import {
   getRiicFacilityProfile,
   getRiicRoomStations,
@@ -34,6 +35,9 @@ import {
   buildRiicControlCenterRuntimeContext,
   getRiicControlCenterRoomAdjustment,
 } from "../src/utils/riic/l51-control-effects.js";
+import {
+  alignRiicScheduleSameShiftBindings,
+} from "../src/utils/riic/l81-same-shift-bindings.js";
 
 const normalTradingOperators = Object.freeze([
   { charId: "char_502_nblade", elite: 0, level: 30 },
@@ -1441,6 +1445,64 @@ const controlCenterCandidates = [
   createControlCenterCandidate("operator-a", "manufacture-operator"),
   createControlCenterCandidate("operator-b", "trading-operator"),
 ];
+const realControlCenterCatalog = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../src/static/json/tools/riic-candidates/R50-control.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+function createRealControlCenterCandidate(operatorId) {
+  const skills = (realControlCenterCatalog.skills || []).filter(
+    (skill) =>
+      String(skill?.operatorId || "").trim() === operatorId &&
+      ((skill?.bufftag || []).length > 0 ||
+        (skill?.resolvedEffects || []).length > 0 ||
+        (skill?.sameTeamWithOperatorIds || []).length > 0),
+  );
+  const source = skills.find((skill) => skill?.name) || {};
+  return {
+    charId: operatorId,
+    name: source.name || operatorId,
+    controlCenterBuffTags: [
+      ...new Set(skills.flatMap((skill) => skill?.bufftag || [])),
+    ],
+    controlCenterResolvedEffects: skills.flatMap(
+      (skill) => skill?.resolvedEffects || [],
+    ),
+    controlCenterSameTeamWithOperatorIds: [
+      ...new Set(
+        skills.flatMap((skill) => skill?.sameTeamWithOperatorIds || []),
+      ),
+    ],
+  };
+}
+const realGnosisCandidate = createRealControlCenterCandidate(
+  "char_206_gnosis",
+);
+const realFlametailCandidate = createRealControlCenterCandidate(
+  "char_420_flamtl",
+);
+const realVivianaCandidate = createRealControlCenterCandidate(
+  "char_4098_vvana",
+);
+assert.ok(
+  realGnosisCandidate.controlCenterBuffTags.includes("trading-operator"),
+);
+assert.ok(
+  realGnosisCandidate.controlCenterResolvedEffects.some(
+    (effect) =>
+      effect?.target?.roomType === "trading" &&
+      (effect?.target?.operatorIds || []).includes("char_199_yak"),
+  ),
+);
+assert.ok(
+  realFlametailCandidate.controlCenterSameTeamWithOperatorIds.includes(
+    "char_4098_vvana",
+  ),
+);
 const controlCenterScenarioTrials = [
   {
     sourceOperatorId: "room-a",
@@ -1699,6 +1761,377 @@ assert.equal(
 assert.equal(
   controlTargetAdjustment.operatorBonusById[controlTargetOperatorId],
   10,
+);
+
+const gnosisBinding = {
+  sourceTeamIndex: 1,
+  roomType: "trading",
+  product: "all",
+  effects: [
+    {
+      scope: "operators",
+      metric: "orderEfficiency",
+      bonusPercent: -15,
+      affectedOperatorIds: [
+        "char_172_svrash",
+        "char_173_slchan",
+      ],
+    },
+    {
+      scope: "operators",
+      metric: "orderLimit",
+      bonusPercent: 6,
+      affectedOperatorIds: [
+        "char_172_svrash",
+        "char_173_slchan",
+      ],
+    },
+  ],
+};
+const alignedGnosisSchedule = alignRiicScheduleSameShiftBindings({
+  groupEntries: [
+    {
+      group: { facility: "control" },
+      candidate: {
+        segments: [
+          {
+            durationHours: 12,
+            stationAssignments: [
+              {
+                candidate: {
+                  controlCenterTeamIndex: 1,
+                  operatorIds: ["char_206_gnosis"],
+                },
+              },
+            ],
+          },
+          {
+            durationHours: 12,
+            stationAssignments: [
+              {
+                candidate: {
+                  controlCenterTeamIndex: 0,
+                  operatorIds: ["control-other"],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      group: { id: "gnosis-trading", facility: "trading" },
+      candidate: {
+        segments: [
+          {
+            durationHours: 12,
+            stationAssignments: [
+              {
+                stationIndex: 0,
+                candidate: {
+                  key: "gnosis-other-shift",
+                  operatorIds: ["trading-a", "trading-b", "trading-c"],
+                  sameShiftBindings: [],
+                },
+              },
+            ],
+          },
+          {
+            durationHours: 12,
+            stationAssignments: [
+              {
+                stationIndex: 0,
+                candidate: {
+                  key: "gnosis-target-shift",
+                  operatorIds: [
+                    "char_172_svrash",
+                    "char_272_strong",
+                    "char_173_slchan",
+                  ],
+                  sameShiftBindings: [gnosisBinding],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+});
+assert.equal(
+  alignedGnosisSchedule.groupEntries[1].candidate.sameShiftBindingOffset,
+  1,
+);
+assert.equal(
+  alignedGnosisSchedule.summary[0].realizedBindingHours,
+  12,
+);
+assert.deepEqual(
+  alignedGnosisSchedule.groupEntries[1].candidate.segments[0]
+    .stationAssignments[0].candidate.operatorIds,
+  ["char_172_svrash", "char_272_strong", "char_173_slchan"],
+);
+const alignedGnosisPreview = buildRiicSchedulePreview({
+  scheduleCandidate: {
+    key: "aligned-gnosis",
+    groups: alignedGnosisSchedule.groupEntries.map(({ group, candidate }) => ({
+      groupId: group.id || group.facility,
+      candidate,
+    })),
+  },
+  roomGroups: [
+    {
+      id: "control",
+      label: "control",
+      facilityLabel: "control",
+      facility: "control",
+      count: 1,
+    },
+    {
+      id: "gnosis-trading",
+      label: "trading",
+      facilityLabel: "trading",
+      facility: "trading",
+      candidateProduct: "lmd",
+      count: 1,
+    },
+  ],
+});
+assert.equal(
+  alignedGnosisPreview.states[0].rooms.find(
+    (room) => room.groupId === "gnosis-trading",
+  )?.sameShiftBindingStatus,
+  "realized",
+);
+
+const redPineCandidates = [
+  {
+    charId: "char_420_flamtl",
+    name: "焰尾",
+    controlCenterBuffTags: ["manufacture-operator"],
+    controlCenterSameTeamWithOperatorIds: ["char_4098_vvana"],
+  },
+  {
+    charId: "char_4098_vvana",
+    name: "薇薇安娜",
+    controlCenterBuffTags: ["manufacture-operator"],
+    controlCenterSameTeamWithOperatorIds: [],
+  },
+];
+const redPineControlState = buildRiicControlCenterAutomaticRoleState({
+  staffingRequirement: createControlCenterStaffingRequirement(2),
+  roomGroup: { stations: [{ slotCount: 5 }] },
+  hasRoster: true,
+  candidates: redPineCandidates,
+  roleDefinitions: controlCenterRoleDefinitions,
+  scenarioTrials: [
+    {
+      sourceOperatorId: "char_420_flamtl",
+      roomEffectValue: 0,
+      operatorTrialValue: 20,
+    },
+    {
+      sourceOperatorId: "char_4098_vvana",
+      roomEffectValue: 0,
+      operatorTrialValue: 10,
+    },
+  ],
+});
+assert.deepEqual(
+  redPineControlState.teams.map((team) =>
+    team.roomEffectOperators
+      .concat(team.operatorEffectOperators, team.fillerOperators)
+      .map((operator) => operator.charId),
+  ),
+  [
+    ["char_420_flamtl", "char_4098_vvana"],
+    [],
+  ],
+);
+
+const realGnosisControlState = buildRiicControlCenterAutomaticRoleState({
+  staffingRequirement: createControlCenterStaffingRequirement(2),
+  roomGroup: { stations: [{ slotCount: 5 }] },
+  hasRoster: true,
+  candidates: [realGnosisCandidate],
+  roleDefinitions: controlCenterRoleDefinitions,
+  scenarioTrials: [
+    {
+      sourceOperatorId: "char_206_gnosis",
+      roomEffectValue: 0,
+      operatorTrialValue: 20,
+    },
+  ],
+});
+assert.ok(
+  realGnosisControlState.teams.some((team) =>
+    team.operatorEffectOperators.some(
+      (operator) => operator.charId === "char_206_gnosis",
+    ),
+  ),
+);
+const realGnosisRuntimeContext = buildRiicControlCenterRuntimeContext({
+  controlState: realGnosisControlState,
+});
+const realGnosisRoomAdjustment = getRiicControlCenterRoomAdjustment({
+  context: realGnosisRuntimeContext,
+  scope: {
+    roomType: "trading",
+    product: "lmd",
+  },
+  operatorIds: [
+    "char_172_svrash",
+    "char_199_yak",
+    "char_272_strong",
+  ],
+});
+assert.equal(realGnosisRoomAdjustment.sameShiftBindings.length, 1);
+assert.deepEqual(
+  realGnosisRoomAdjustment.sameShiftBindings[0].effects
+    .flatMap((effect) => effect.affectedOperatorIds || [])
+    .sort(),
+  [
+    "char_172_svrash",
+    "char_172_svrash",
+    "char_199_yak",
+    "char_199_yak",
+  ],
+);
+assert.ok(
+  realGnosisRoomAdjustment.sameShiftBindings[0].effects.every(
+    (effect) =>
+      !(effect.affectedOperatorIds || []).includes("char_272_strong"),
+  ),
+);
+
+const alignedRealGnosisSchedule = alignRiicScheduleSameShiftBindings({
+  groupEntries: [
+    {
+      group: { facility: "control" },
+      candidate: {
+        segments: realGnosisControlState.segments.map((segment) => ({
+          durationHours: segment.durationHours,
+          stationAssignments: [
+            {
+              stationIndex: 0,
+              candidate: {
+                controlCenterTeamIndex: segment.teamIndex,
+                operatorIds: segment.operatorIds,
+              },
+            },
+          ],
+        })),
+      },
+    },
+    {
+      group: {
+        id: "real-gnosis-trading",
+        facility: "trading",
+        candidateProduct: "lmd",
+      },
+      candidate: {
+        segments: [
+          {
+            durationHours: 12,
+            stationAssignments: [
+              {
+                stationIndex: 0,
+                candidate: {
+                  key: "real-gnosis-other-shift",
+                  candidateScope: {
+                    roomType: "trading",
+                    product: "lmd",
+                  },
+                  operatorIds: ["char_272_strong"],
+                  sameShiftBindings: [],
+                },
+              },
+            ],
+          },
+          {
+            durationHours: 12,
+            stationAssignments: [
+              {
+                stationIndex: 0,
+                candidate: {
+                  key: "real-gnosis-target-shift",
+                  candidateScope: {
+                    roomType: "trading",
+                    product: "lmd",
+                  },
+                  operatorIds: [
+                    "char_172_svrash",
+                    "char_199_yak",
+                    "char_272_strong",
+                  ],
+                  sameShiftBindings:
+                    realGnosisRoomAdjustment.sameShiftBindings,
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+});
+assert.equal(
+  alignedRealGnosisSchedule.groupEntries[1].candidate
+    .sameShiftBindingOffset,
+  1,
+);
+assert.equal(
+  alignedRealGnosisSchedule.summary[0].realizedBindingHours,
+  12,
+);
+
+const noGnosisControlState = buildRiicControlCenterAutomaticRoleState({
+  staffingRequirement: createControlCenterStaffingRequirement(2),
+  roomGroup: { stations: [{ slotCount: 5 }] },
+  hasRoster: true,
+  candidates: [],
+  roleDefinitions: controlCenterRoleDefinitions,
+});
+const noGnosisRuntimeContext = buildRiicControlCenterRuntimeContext({
+  controlState: noGnosisControlState,
+});
+const noGnosisRoomAdjustment = getRiicControlCenterRoomAdjustment({
+  context: noGnosisRuntimeContext,
+  scope: {
+    roomType: "trading",
+    product: "lmd",
+  },
+  operatorIds: ["char_172_svrash", "char_199_yak"],
+});
+assert.equal(noGnosisRoomAdjustment.sameShiftBindings.length, 0);
+assert.equal(noGnosisRoomAdjustment.operatorEffects.length, 0);
+
+const realRedPineCandidates = [
+  realFlametailCandidate,
+  realVivianaCandidate,
+];
+const realRedPineBaseState = buildRiicControlCenterAutomaticRoleState({
+  staffingRequirement: createControlCenterStaffingRequirement(2),
+  roomGroup: { stations: [{ slotCount: 5 }] },
+  hasRoster: true,
+  candidates: [],
+  roleDefinitions: controlCenterRoleDefinitions,
+});
+const realRedPineManualState = applyRiicControlCenterManualOverrides({
+  automaticState: realRedPineBaseState,
+  manualOverrides: {
+    addedOperatorIdsByTeamIndex: {
+      0: ["char_420_flamtl"],
+    },
+  },
+  candidates: realRedPineCandidates,
+  roleDefinitions: controlCenterRoleDefinitions,
+});
+assert.deepEqual(
+  realRedPineManualState.teams[0].operatorEffectOperators.map(
+    (operator) => operator.charId,
+  ),
+  ["char_420_flamtl", "char_4098_vvana"],
 );
 
 console.log("RIIC schedule model checks passed.");

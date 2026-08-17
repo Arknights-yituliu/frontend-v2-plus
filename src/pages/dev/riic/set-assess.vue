@@ -10,6 +10,15 @@ import {
   getRiicSystemPercentRuleCount,
   planRiicSystemPercentAssessment,
 } from "/src/utils/riic/P15-set-assessment.js";
+import RIIC_BASELINE_SKILL_RULES from "/src/static/json/tools/R00-baseline.json";
+import {
+  calculateRiicRoomEfficiency,
+  resolveRiicBaselineSkills,
+} from "/src/utils/riic/l00-baseline-resolver.js";
+import {
+  calculateRiicDirectProductionOutput,
+  getRiicRoomYieldMeta,
+} from "/src/utils/riic/P03-riic-production.js";
 import {
   getRiicSetAssessmentLayout,
   getRiicSetAssessmentManualSource,
@@ -35,9 +44,34 @@ const PRODUCT_LABELS = Object.freeze({
   lmd: "龙门币",
   gold: "赤金",
   exp: "经验书",
+  experience: "经验书",
   orundum: "合成玉",
   all: "不限产物",
 });
+
+const PRODUCTION_METRIC_BY_ROOM = Object.freeze({
+  manufacture: "生产力",
+  trading: "订单效率",
+  hire: "联络速度",
+});
+
+const PRODUCTION_RESOURCE_LABELS = Object.freeze({
+  exp: "经验书",
+  gold: "赤金",
+  originiumShard: "源石碎片",
+  lmd: "龙门币",
+  orundum: "合成玉",
+  recruitmentRefresh: "公招净刷新",
+});
+
+const BASELINE_SUPPORTED_ROOM_TYPES = new Set([
+  "manufacture",
+  "trading",
+  "power",
+  "control",
+  "meeting",
+  "hire",
+]);
 
 // 与明日方舟工具箱描述内可点击术语保持一致，仅供本评估页展示固定成员。
 const TERM_OPERATOR_GROUPS = Object.freeze({
@@ -1318,15 +1352,31 @@ function getSystemStatusClass(status) {
   }[status] || "muted";
 }
 
+const selectedResolvedBaselineSkills = computed(() =>
+  resolveRiicBaselineSkills(
+    selectedSource.value?.operators || [],
+    RIIC_BASELINE_SKILL_RULES,
+    {
+      trainingMode: trainingMode.value,
+      idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+    },
+  ),
+);
 const selectedSystemPercentAssessment = computed(() =>
   planRiicSystemPercentAssessment({
     systemId: selectedSystem.value.ruleSourceId || selectedSystem.value.id,
     ruleIds: selectedSystem.value.ruleIds,
-    operators: selectedSource.value?.operators || [],
+    operators: selectedResolvedBaselineSkills.value.ownedOperators,
     layoutFacts: selectedLayout.value.facts || {},
     groupMembers: TERM_OPERATOR_MEMBERS,
     choices: systemPlacementChoices.value[selectedSystem.value.id] || {},
     getCoreRequirement: getCoreSkillRequirementForRoom,
+  }),
+);
+const selectedSystemProductionAssessment = computed(() =>
+  calculateSystemProductionAssessment({
+    assessment: selectedSystemPercentAssessment.value,
+    resolvedSkills: selectedResolvedBaselineSkills.value,
   }),
 );
 const selectedSystemCoreOperators = computed(() =>
@@ -1336,9 +1386,12 @@ const selectedSystemRelatedOperators = computed(() =>
   getSystemOperatorSummary(selectedSystem.value, "related"),
 );
 const selectedSystemAssessmentRooms = computed(() =>
-  selectedSystemPercentAssessment.value.rooms.filter(
+  selectedSystemProductionAssessment.value.rooms.filter(
     (room) => room.assigned.length > 0 || room.bonusByMetric.length > 0,
   ),
+);
+const selectedSystemDailyOutputs = computed(
+  () => selectedSystemProductionAssessment.value.dailyOutputs,
 );
 const selectedSystemUnregisteredPercentRuleCount = computed(() =>
   Math.max(
@@ -1492,6 +1545,169 @@ function getAssessmentOperator(name) {
     charId: operator?.charId || staticMeta?.charId || "",
     rarity: Number(operator?.rarity || staticMeta?.rarity || 1),
   };
+}
+
+function getAssessmentOperatorIds(room) {
+  return (room?.assigned || [])
+    .map((assignment) => getSourceOperator(assignment.name)?.charId)
+    .filter(Boolean);
+}
+
+function getProductionProduct(room) {
+  return room?.product === "exp" ? "experience" : room?.product || "all";
+}
+
+function getProductionMetric(room) {
+  return PRODUCTION_METRIC_BY_ROOM[room?.facilityType] || "";
+}
+
+function getSystemRoomBonus(room) {
+  const metric = getProductionMetric(room);
+  if (!metric) {
+    return 0;
+  }
+
+  return (room?.bonusByMetric || [])
+    .filter((bonus) => bonus.metric === metric)
+    .reduce((total, bonus) => total + Number(bonus.percent || 0), 0);
+}
+
+function calculateSystemProductionAssessment({ assessment, resolvedSkills }) {
+  const rooms = Array.isArray(assessment?.rooms) ? assessment.rooms : [];
+  const baselineByRoomId = new Map();
+  const downstreamByRoomType = new Map();
+
+  for (const room of rooms) {
+    if (!BASELINE_SUPPORTED_ROOM_TYPES.has(room.facilityType)) {
+      continue;
+    }
+
+    const operatorIds = getAssessmentOperatorIds(room);
+    const fallbackSlotCount = Math.max(
+      0,
+      Number(room.slotCount || 0) - operatorIds.length,
+    );
+    let calculation;
+
+    try {
+      calculation = calculateRiicRoomEfficiency({
+        resolvedSkills,
+        roomType: room.facilityType,
+        product: getProductionProduct(room),
+        operatorIds,
+        expectedSlots: Number(room.slotCount),
+        fallbackSlotCount,
+      });
+    } catch {
+      calculation = null;
+    }
+
+    baselineByRoomId.set(room.id, calculation);
+    for (const [roomType, percent] of Object.entries(
+      calculation?.downstreamBonusPercentByRoom || {},
+    )) {
+      downstreamByRoomType.set(
+        roomType,
+        Number(downstreamByRoomType.get(roomType) || 0) + Number(percent || 0),
+      );
+    }
+  }
+
+  const productionRooms = rooms.map((room) => {
+    const baseline = baselineByRoomId.get(room.id);
+    const facility = room.facilityType;
+    const metric = getProductionMetric(room);
+    const roomBonus = getSystemRoomBonus(room);
+    const downstreamBonus = Number(
+      downstreamByRoomType.get(facility) || 0,
+    );
+    const efficiency =
+      baseline?.valid === true
+        ? Number(baseline.localTotalPercent || 100) +
+          roomBonus +
+          downstreamBonus
+        : null;
+    const outputRoom = {
+      facility,
+      product: getProductionProduct(room),
+      stationLevel: room.stationLevel,
+    };
+    const meta = getRiicRoomYieldMeta(outputRoom);
+    const output =
+      efficiency === null
+        ? null
+        : calculateRiicDirectProductionOutput({
+            room: outputRoom,
+            efficiency,
+            durationHours: 24,
+            meta,
+          });
+
+    let status = "notApplicable";
+    let reason = "";
+    if (meta && output !== null) {
+      status = "calculated";
+    } else if (facility === "meeting") {
+      status = "unsupported";
+      reason = "会客室暂未建立绝对产出公式";
+    } else if (facility === "control" || facility === "power") {
+      status = "notApplicable";
+      reason = "该设施没有直接资源产出";
+    } else if (!meta) {
+      status = "unsupported";
+      reason = "当前产物暂未建立绝对产出公式";
+    } else if (!baseline?.valid) {
+      status = "unavailable";
+      reason = "基础效率无法结算";
+    } else {
+      status = "unsupported";
+      reason = "当前设施等级暂未建立绝对产出公式";
+    }
+
+    return {
+      ...room,
+      finalProduction: {
+        status,
+        reason,
+        resource: meta?.resource || "",
+        label: PRODUCTION_RESOURCE_LABELS[meta?.resource] || meta?.label || "",
+        output,
+        efficiency,
+        roomBonus,
+        downstreamBonus,
+      },
+    };
+  });
+
+  const dailyOutputs = new Map();
+  for (const room of productionRooms) {
+    const finalProduction = room.finalProduction;
+    if (finalProduction.status !== "calculated") {
+      continue;
+    }
+
+    const current = dailyOutputs.get(finalProduction.resource) || {
+      resource: finalProduction.resource,
+      label: finalProduction.label,
+      output: 0,
+    };
+    current.output += Number(finalProduction.output || 0);
+    dailyOutputs.set(finalProduction.resource, current);
+  }
+
+  return {
+    rooms: productionRooms,
+    dailyOutputs: [...dailyOutputs.values()],
+  };
+}
+
+function formatProductionValue(value) {
+  const number = Number(value);
+  return Number.isFinite(number)
+    ? new Intl.NumberFormat("zh-CN", {
+        maximumFractionDigits: 2,
+      }).format(number)
+    : "--";
 }
 
 function updateSystemPlacementChoice(choice, name) {
@@ -1879,7 +2095,7 @@ onMounted(() => {
           <div class="section-heading">
             <div>
               <span class="section-kicker">体系站位</span>
-              <strong>自动分配与可结算加成</strong>
+              <strong>自动分配与最终产出</strong>
             </div>
             <span class="section-count">
               {{ selectedSystemPercentAssessment.activeRuleCount }} 条规则已生效
@@ -1887,8 +2103,22 @@ onMounted(() => {
           </div>
 
           <p class="system-plan-note">
-            当前只结算已登记的明确百分比效果；默认按设施顺序自动占位，超出可用位置时才需要手动选择。
+            最终产出按当前数据源、当前练度和当前布局计算，默认按本体系自动分配的成员连续驻守 24
+            小时换算；未占用的位置按无额外技能处理，不自动补入体系外干员。
           </p>
+
+          <div
+            v-if="selectedSystemDailyOutputs.length"
+            class="system-daily-output-summary"
+          >
+            <strong>最终日产出</strong>
+            <span
+              v-for="output in selectedSystemDailyOutputs"
+              :key="output.resource"
+            >
+              {{ output.label }} {{ formatProductionValue(output.output) }} / 天
+            </span>
+          </div>
 
           <div
             v-if="selectedSystemPercentAssessment.registeredRuleCount"
@@ -1937,6 +2167,19 @@ onMounted(() => {
                 >
                   {{ bonus.metric }} {{ formatSignedPercent(bonus.percent) }}
                 </span>
+              </div>
+
+              <div class="system-plan-production">
+                <span>最终产出</span>
+                <strong
+                  v-if="room.finalProduction.status === 'calculated'"
+                >
+                  {{ room.finalProduction.label }}
+                  {{ formatProductionValue(room.finalProduction.output) }} / 天
+                </strong>
+                <small v-else>
+                  {{ room.finalProduction.reason || "暂无绝对产出结果" }}
+                </small>
               </div>
             </article>
           </div>
@@ -2629,6 +2872,28 @@ h2 {
   line-height: 1.6;
 }
 
+.system-daily-output-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 10px 11px;
+  border-left: 3px solid #d69536;
+  background: #fff8ed;
+}
+
+.system-daily-output-summary strong {
+  color: #8d5e1d;
+  font-size: 12px;
+}
+
+.system-daily-output-summary span {
+  color: #664d2e;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .system-plan-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -2738,6 +3003,35 @@ h2 {
 .system-plan-metric-list span {
   color: #2f657d;
   background: #e9f3f7;
+}
+
+.system-plan-production {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid #e5ebef;
+}
+
+.system-plan-production > span {
+  flex: 0 0 auto;
+  color: #788895;
+  font-size: 11px;
+}
+
+.system-plan-production strong {
+  color: #2f6f4e;
+  font-size: 13px;
+  text-align: right;
+}
+
+.system-plan-production small {
+  color: #89959c;
+  font-size: 11px;
+  line-height: 1.45;
+  text-align: right;
 }
 
 .system-placement-choice-list {

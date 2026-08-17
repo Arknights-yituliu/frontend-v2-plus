@@ -2,6 +2,9 @@ import RIIC_ACTIVE_ROSTER_RULES from "../../static/json/tools/riic-candidates/R6
   type: "json",
 };
 import { operatorTableV2 } from "/src/utils/gameData.js";
+import {
+  getRiicSameShiftBindingBonusBreakdown,
+} from "./l51-control-effects.js";
 
 const OPERATOR_ID_BY_NAME = new Map(
   Object.entries(operatorTableV2 || {}).flatMap(([charId, operator]) => {
@@ -297,17 +300,6 @@ export function applyRiicActiveRosterFallbackOperatorEffects({
   });
 }
 
-function getPlanStateCount(plan, controlCenterSegments) {
-  return Math.max(
-    ...(plan?.selections || []).map(
-      (selection) =>
-        selection?.slot?.staffingCohort?.rotationSegments?.length || 0,
-    ),
-    (controlCenterSegments || []).length,
-    0,
-  );
-}
-
 function getPlanSelectionKey(selection) {
   return [
     String(selection?.slot?.groupId || "").trim(),
@@ -334,9 +326,113 @@ function getPlanSelectionOperatorIds(selection) {
   ];
 }
 
-function getActivePlanSelectionForState(selection, stateIndex) {
-  const segment =
-    selection?.slot?.staffingCohort?.rotationSegments?.[stateIndex] || null;
+function getSegmentCycleHours(segments) {
+  return (segments || []).reduce(
+    (total, segment) =>
+      total + Math.max(0, toFiniteNumber(segment?.durationHours, 0)),
+    0,
+  );
+}
+
+function getSegmentAtHour(segments, hour) {
+  const cycleHours = getSegmentCycleHours(segments);
+  if (cycleHours <= 0) {
+    return null;
+  }
+
+  let cursor = ((Number(hour) % cycleHours) + cycleHours) % cycleHours;
+  for (const segment of segments || []) {
+    const durationHours = Math.max(
+      0,
+      toFiniteNumber(segment?.durationHours, 0),
+    );
+    if (durationHours <= 0) {
+      continue;
+    }
+    if (cursor < durationHours) {
+      return segment;
+    }
+    cursor -= durationHours;
+  }
+
+  return segments?.[segments.length - 1] || null;
+}
+
+function greatestCommonDivisor(left, right) {
+  let a = Math.abs(Math.round(left));
+  let b = Math.abs(Math.round(right));
+  while (b > 0) {
+    [a, b] = [b, a % b];
+  }
+  return a || 1;
+}
+
+function leastCommonMultiple(left, right) {
+  if (left <= 0 || right <= 0) {
+    return 0;
+  }
+  return Math.abs(left * right) / greatestCommonDivisor(left, right);
+}
+
+function getPlanCycleHours(plan, controlCenterSegments) {
+  const cycles = [
+    getSegmentCycleHours(controlCenterSegments),
+    ...(plan?.selections || []).map((selection) =>
+      getSegmentCycleHours(selection?.slot?.staffingCohort?.rotationSegments),
+    ),
+  ].filter((value) => value > 0);
+
+  return cycles.reduce(
+    (cycleHours, currentCycleHours) =>
+      cycleHours > 0
+        ? leastCommonMultiple(cycleHours, currentCycleHours)
+        : currentCycleHours,
+    0,
+  );
+}
+
+function getPlanTimelineBoundaries(plan, controlCenterSegments, cycleHours) {
+  const segmentLists = [
+    controlCenterSegments,
+    ...(plan?.selections || []).map(
+      (selection) => selection?.slot?.staffingCohort?.rotationSegments || [],
+    ),
+  ];
+  const boundaries = new Set([0, cycleHours]);
+
+  for (const segments of segmentLists) {
+    const segmentCycleHours = getSegmentCycleHours(segments);
+    if (segmentCycleHours <= 0) {
+      continue;
+    }
+
+    for (
+      let cycleOffset = 0;
+      cycleOffset < cycleHours;
+      cycleOffset += segmentCycleHours
+    ) {
+      let segmentOffset = cycleOffset;
+      boundaries.add(segmentOffset);
+      for (const segment of segments || []) {
+        segmentOffset += Math.max(
+          0,
+          toFiniteNumber(segment?.durationHours, 0),
+        );
+        if (segmentOffset < cycleHours) {
+          boundaries.add(segmentOffset);
+        }
+      }
+    }
+  }
+
+  return [...boundaries].sort((left, right) => left - right);
+}
+
+function getActivePlanSelectionAtHour(selection, hour) {
+  const segment = getSegmentAtHour(
+    selection?.slot?.staffingCohort?.rotationSegments,
+    hour,
+  );
   const teamIndex = Number(selection?.option?.teamIndex);
   const activeTeamIndexes = segment?.activeTeamIndexes || [];
 
@@ -354,38 +450,58 @@ function getActivePlanSelectionForState(selection, stateIndex) {
     ).trim(),
     scope: getPlanSelectionScope(selection),
     operatorIds: getPlanSelectionOperatorIds(selection),
-    durationHours: toFiniteNumber(segment?.durationHours, 1) || 1,
+    sameShiftBindings:
+      selection?.option?.materializedCandidate?.sameShiftBindings || [],
+    controlCenterExpectedBonusPercent: toFiniteNumber(
+      selection?.option?.materializedCandidate
+        ?.controlCenterExpectedBonusPercent,
+      0,
+    ),
   };
 }
 
 function createPlanRosterStates({ plan, controlCenterSegments }) {
-  const stateCount = getPlanStateCount(plan, controlCenterSegments);
+  const cycleHours = getPlanCycleHours(plan, controlCenterSegments);
+  const boundaries = getPlanTimelineBoundaries(
+    plan,
+    controlCenterSegments,
+    cycleHours,
+  );
 
-  return Array.from({ length: stateCount }, (_, stateIndex) => {
-    const targets = (plan?.selections || [])
-      .map((selection) => getActivePlanSelectionForState(selection, stateIndex))
-      .filter(Boolean);
-    const controlCenterOperatorIds = (
-      controlCenterSegments?.[stateIndex]?.operatorIds || []
-    )
-      .map(normalizeOperatorId)
-      .filter(Boolean);
-    const activeOperatorIds = new Set([
-      ...controlCenterOperatorIds,
-      ...targets.flatMap((target) => target.operatorIds),
-    ]);
-    const durationHours =
-      targets[0]?.durationHours ||
-      toFiniteNumber(controlCenterSegments?.[stateIndex]?.durationHours, 1) ||
-      1;
+  return Array.from(
+    { length: Math.max(0, boundaries.length - 1) },
+    (_, stateIndex) => {
+      const startHour = boundaries[stateIndex];
+      const durationHours = boundaries[stateIndex + 1] - startHour;
+      const controlSegment = getSegmentAtHour(controlCenterSegments, startHour);
+      const targets = (plan?.selections || [])
+        .map((selection) => getActivePlanSelectionAtHour(selection, startHour))
+        .filter(Boolean);
+      const controlCenterOperatorIds = (
+        controlSegment?.operatorIds || []
+      )
+        .map(normalizeOperatorId)
+        .filter(Boolean);
+      const activeOperatorIds = new Set([
+        ...controlCenterOperatorIds,
+        ...targets.flatMap((target) => target.operatorIds),
+      ]);
 
-    return {
-      index: stateIndex,
-      durationHours,
-      activeOperatorIds,
-      targets,
-    };
-  });
+      return {
+        index: stateIndex,
+        startHour,
+        durationHours,
+        controlCenterTeamIndex: Number.isInteger(
+          Number(controlSegment?.teamIndex),
+        )
+          ? Number(controlSegment.teamIndex)
+          : null,
+        activeOperatorIds,
+        controlCenterOperatorIds,
+        targets,
+      };
+    },
+  );
 }
 
 function createPreviewRosterStates(preview) {
@@ -532,6 +648,197 @@ function getActiveRuleApplications({ states, rosterById }) {
   };
 }
 
+function normalizeBindingRoomType(value) {
+  const roomType = String(value || "").trim();
+  return roomType === "office" ? "hire" : roomType;
+}
+
+function normalizeBindingProduct(value) {
+  return String(value || "").trim() || "all";
+}
+
+function getTargetSameShiftBindings(target) {
+  const roomType = normalizeBindingRoomType(target?.scope?.roomType);
+  const product = normalizeBindingProduct(target?.scope?.product);
+
+  return (target?.sameShiftBindings || []).filter((binding) => {
+    const bindingRoomType = normalizeBindingRoomType(binding?.roomType);
+    const bindingProduct = normalizeBindingProduct(binding?.product);
+    return (
+      bindingRoomType === roomType &&
+      (bindingProduct === "all" || bindingProduct === product)
+    );
+  });
+}
+
+function areSameShiftConditionsSatisfied(effect, controlOperatorIds) {
+  const requiredOperatorIds = (
+    effect?.conditions?.controlCoassignedOperatorIds || []
+  )
+    .map(normalizeOperatorId)
+    .filter(Boolean);
+  return requiredOperatorIds.every((operatorId) =>
+    controlOperatorIds.has(operatorId),
+  );
+}
+
+function getActiveSameShiftBindingEffects(binding, controlOperatorIds) {
+  return (binding?.effects || []).filter((effect) => {
+    const sourceOperatorIds = (effect?.sourceOperatorIds || [])
+      .map(normalizeOperatorId)
+      .filter(Boolean);
+    return (
+      (sourceOperatorIds.length === 0 ||
+        sourceOperatorIds.some((operatorId) =>
+          controlOperatorIds.has(operatorId),
+        )) &&
+      areSameShiftConditionsSatisfied(effect, controlOperatorIds)
+    );
+  });
+}
+
+function evaluateRiicPlanSameShiftPriority({ states = [] } = {}) {
+  const summariesByTarget = new Map();
+  const applications = [];
+
+  for (const state of states) {
+    const controlTeamIndex = state?.controlCenterTeamIndex;
+    if (!Number.isInteger(controlTeamIndex)) {
+      continue;
+    }
+
+    const controlOperatorIds = new Set(
+      (state?.controlCenterOperatorIds || [])
+        .map(normalizeOperatorId)
+        .filter(Boolean),
+    );
+    const durationHours = toFiniteNumber(state?.durationHours, 0);
+    if (durationHours <= 0) {
+      continue;
+    }
+
+    for (const target of state?.targets || []) {
+      const bindings = getTargetSameShiftBindings(target);
+      if (bindings.length === 0) {
+        continue;
+      }
+
+      const summary = summariesByTarget.get(target.key) || {
+        targetKey: target.key,
+        groupId: target.groupId,
+        cohortId: target.cohortId,
+        teamIndex: target.teamIndex,
+        candidateName: target.candidateName,
+        expectedBonusPercent: toFiniteNumber(
+          target.controlCenterExpectedBonusPercent,
+          0,
+        ),
+        activeHours: 0,
+        expectedBonusPercentHours: 0,
+        realizedBonusPercentHours: 0,
+        expectedBindingHours: 0,
+        realizedBindingHours: 0,
+        states: [],
+      };
+
+      const matchingBindings = bindings
+        .filter(
+          (binding) =>
+            Number(binding?.sourceTeamIndex) === controlTeamIndex,
+        )
+        .map((binding) => {
+          const activeBinding = {
+            ...binding,
+            effects: getActiveSameShiftBindingEffects(
+              binding,
+              controlOperatorIds,
+            ),
+          };
+          return {
+            binding: activeBinding,
+            ...getRiicSameShiftBindingBonusBreakdown(activeBinding),
+          };
+        })
+        .filter(
+          (binding) =>
+            Math.abs(Number(binding?.bonusPercent || 0)) > 1e-9,
+        );
+      const realizedBonusPercent = matchingBindings.reduce(
+        (total, binding) => total + Number(binding.bonusPercent || 0),
+        0,
+      );
+
+      summary.activeHours += durationHours;
+      summary.expectedBonusPercentHours +=
+        summary.expectedBonusPercent * durationHours;
+      summary.realizedBonusPercentHours +=
+        realizedBonusPercent * durationHours;
+      summary.expectedBindingHours += bindings.length * durationHours;
+      summary.realizedBindingHours +=
+        matchingBindings.length * durationHours;
+      summary.states.push({
+        stateIndex: Number(state?.index || 0),
+        startHour: toFiniteNumber(state?.startHour, 0),
+        durationHours,
+        controlTeamIndex,
+        controlOperatorIds: [...controlOperatorIds],
+        realizedBindingCount: matchingBindings.length,
+        realizedBonusPercent,
+      });
+      summariesByTarget.set(target.key, summary);
+      applications.push({
+        targetKey: target.key,
+        stateIndex: Number(state?.index || 0),
+        startHour: toFiniteNumber(state?.startHour, 0),
+        durationHours,
+        controlTeamIndex,
+        candidateName: target.candidateName,
+        realizedBindingCount: matchingBindings.length,
+        realizedBonusPercent,
+      });
+    }
+  }
+
+  const summaries = [...summariesByTarget.values()]
+    .map((summary) => {
+      const realizedBonusPercent =
+        summary.activeHours > 0
+          ? summary.realizedBonusPercentHours / summary.activeHours
+          : 0;
+      const expectedBonusPercent =
+        summary.activeHours > 0
+          ? summary.expectedBonusPercentHours / summary.activeHours
+          : summary.expectedBonusPercent;
+
+      return {
+        ...summary,
+        realizedBonusPercent,
+        expectedBonusPercent,
+        rankingCorrection:
+          realizedBonusPercent - expectedBonusPercent,
+      };
+    })
+    .sort((left, right) => left.targetKey.localeCompare(right.targetKey, "en"));
+  const rankingCorrection = summaries.reduce(
+    (total, summary) => total + Number(summary.rankingCorrection || 0),
+    0,
+  );
+
+  return {
+    summaries,
+    applications,
+    expectedBindingHours: summaries.reduce(
+      (total, summary) => total + Number(summary.expectedBindingHours || 0),
+      0,
+    ),
+    realizedBindingHours: summaries.reduce(
+      (total, summary) => total + Number(summary.realizedBindingHours || 0),
+      0,
+    ),
+    rankingCorrection,
+  };
+}
+
 /**
  * L65: trial rules whose inputs depend on operators actually active in each
  * schedule state. L70 uses only the returned ranking bonus.
@@ -541,13 +848,15 @@ export function evaluateRiicActiveRosterPlanEffects({
   ownedOperators = [],
   controlCenterSegments = [],
 } = {}) {
+  const states = createPlanRosterStates({
+    plan,
+    controlCenterSegments,
+  });
   const result = getActiveRuleApplications({
-    states: createPlanRosterStates({
-      plan,
-      controlCenterSegments,
-    }),
+    states,
     rosterById: getRosterById(ownedOperators),
   });
+  const sameShiftPriority = evaluateRiicPlanSameShiftPriority({ states });
   const rankingBonus = result.summaries.reduce(
     (total, summary) => total + Number(summary.expectedBonusPercent || 0),
     0,
@@ -556,6 +865,7 @@ export function evaluateRiicActiveRosterPlanEffects({
   return {
     ...result,
     rankingBonus,
+    sameShiftPriority,
   };
 }
 

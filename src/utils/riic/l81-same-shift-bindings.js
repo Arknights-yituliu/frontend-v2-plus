@@ -1,10 +1,8 @@
+import {
+  getRiicSameShiftBindingBonusBreakdown,
+} from "./l51-control-effects.js";
+
 const EPSILON = 1e-9;
-const OPERATOR_EFFICIENCY_METRIC_BY_ROOM_TYPE = Object.freeze({
-  trading: "orderEfficiency",
-  manufacture: "production",
-  meeting: "clueSearch",
-  hire: "contactSpeed",
-});
 
 function toPositiveHours(value) {
   const hours = Number(value);
@@ -130,92 +128,6 @@ function getCandidateBindings(candidate, group) {
   });
 }
 
-function getBindingBonusBreakdown(binding) {
-  const effects = Array.isArray(binding?.effects) ? binding.effects : [];
-  const operatorEfficiencyMetric =
-    OPERATOR_EFFICIENCY_METRIC_BY_ROOM_TYPE[
-      normalizeRoomType(binding?.roomType)
-    ] || "";
-  const highestFacilityBonusByMetric = new Map();
-  const highestOperatorBonusBySourceMetricAndId = new Map();
-
-  for (const effect of effects) {
-    const bonusPercent = Number(effect?.bonusPercent || 0);
-    if (!Number.isFinite(bonusPercent) || bonusPercent === 0) {
-      continue;
-    }
-
-    const affectedOperatorIds = (effect?.affectedOperatorIds || [])
-      .map((operatorId) => String(operatorId || "").trim())
-      .filter(Boolean);
-    const isOperatorEffect =
-      String(effect?.scope || "").trim() === "operators" ||
-      affectedOperatorIds.length > 0;
-    if (!isOperatorEffect) {
-      const metric = String(effect?.metric || "").trim();
-      const existing = highestFacilityBonusByMetric.get(metric);
-      if (!Number.isFinite(existing) || bonusPercent > existing) {
-        highestFacilityBonusByMetric.set(metric, bonusPercent);
-      }
-      continue;
-    }
-    if (String(effect?.metric || "").trim() !== operatorEfficiencyMetric) {
-      continue;
-    }
-
-    for (const operatorId of affectedOperatorIds) {
-      const key = [
-        ...(effect?.sourceOperatorIds || [])
-          .map((sourceOperatorId) => String(sourceOperatorId || "").trim())
-          .filter(Boolean)
-          .sort(),
-        String(effect?.metric || "").trim(),
-        operatorId,
-      ].join(":");
-      const existing = highestOperatorBonusBySourceMetricAndId.get(key);
-      if (!existing || bonusPercent > existing.bonusPercent) {
-        highestOperatorBonusBySourceMetricAndId.set(key, {
-          operatorId,
-          bonusPercent,
-        });
-      }
-    }
-  }
-
-  let facilityBonusPercent = [...highestFacilityBonusByMetric.values()].reduce(
-    (total, bonusPercent) => total + Number(bonusPercent || 0),
-    0,
-  );
-  const operatorBonusById = {};
-  for (const { operatorId, bonusPercent } of highestOperatorBonusBySourceMetricAndId.values()) {
-    operatorBonusById[operatorId] =
-      Number(operatorBonusById[operatorId] || 0) + Number(bonusPercent || 0);
-  }
-  const operatorBonusPercent = Object.values(operatorBonusById).reduce(
-    (total, bonusPercent) => total + Number(bonusPercent || 0),
-    0,
-  );
-
-  if (
-    effects.length === 0 &&
-    Number.isFinite(Number(binding?.bonusPercent))
-  ) {
-    facilityBonusPercent = Number(binding.bonusPercent);
-  }
-
-  return {
-    facilityBonusPercent,
-    operatorBonusPercent,
-    bonusPercent: facilityBonusPercent + operatorBonusPercent,
-    operatorBonuses: Object.entries(operatorBonusById).map(
-      ([operatorId, bonusPercent]) => ({
-        operatorId,
-        bonusPercent,
-      }),
-    ),
-  };
-}
-
 function getControlTeamIndexAtHour(controlCandidate, hour) {
   const segment = getSegmentAtHour(controlCandidate?.segments, hour);
   const assignment = segment?.stationAssignments?.[0];
@@ -253,6 +165,7 @@ function getBindingStatus({
   group,
   controlCandidate,
   startHour,
+  controlOperatorIds,
 }) {
   const candidateBindings = getCandidateBindings(candidate, group);
   if (candidateBindings.length === 0) {
@@ -260,6 +173,9 @@ function getBindingStatus({
       status: "notApplicable",
       bonusPercent: 0,
       bindings: [],
+      controlTeamIndex: null,
+      controlOperatorIds: [],
+      candidateBindingCount: 0,
     };
   }
 
@@ -267,15 +183,24 @@ function getBindingStatus({
     controlCandidate,
     startHour,
   );
-  const controlOperatorIds = getControlTeamOperatorIdsAtHour(
-    controlCandidate,
-    startHour,
-  );
+  const activeControlOperatorIds =
+    controlOperatorIds instanceof Set
+      ? controlOperatorIds
+      : Array.isArray(controlOperatorIds)
+        ? new Set(
+            controlOperatorIds
+              .map((operatorId) => String(operatorId || "").trim())
+              .filter(Boolean),
+          )
+        : getControlTeamOperatorIdsAtHour(controlCandidate, startHour);
   if (controlTeamIndex === null) {
     return {
       status: "unavailable",
       bonusPercent: 0,
       bindings: [],
+      controlTeamIndex: null,
+      controlOperatorIds: [...activeControlOperatorIds],
+      candidateBindingCount: candidateBindings.length,
     };
   }
 
@@ -285,16 +210,28 @@ function getBindingStatus({
         Number(binding?.sourceTeamIndex) === controlTeamIndex,
     )
     .map((binding) => {
-      const effects = (binding.effects || []).filter((effect) =>
-        areBindingConditionsSatisfied(effect, controlOperatorIds),
-      );
+      const effects = (binding.effects || [])
+        .filter((effect) => {
+          const sourceOperatorIds = (effect?.sourceOperatorIds || [])
+            .map((operatorId) => String(operatorId || "").trim())
+            .filter(Boolean);
+          return (
+            sourceOperatorIds.length === 0 ||
+            sourceOperatorIds.some((operatorId) =>
+              activeControlOperatorIds.has(operatorId),
+            )
+          );
+        })
+        .filter((effect) =>
+          areBindingConditionsSatisfied(effect, activeControlOperatorIds),
+        );
       const activeBinding = {
         ...binding,
         effects,
       };
       return {
         ...activeBinding,
-        ...getBindingBonusBreakdown(activeBinding),
+        ...getRiicSameShiftBindingBonusBreakdown(activeBinding),
       };
     })
     .filter((binding) => Math.abs(Number(binding?.bonusPercent || 0)) > EPSILON);
@@ -319,6 +256,9 @@ function getBindingStatus({
       (binding) => binding.operatorBonuses || [],
     ),
     bindings,
+    controlTeamIndex,
+    controlOperatorIds: [...activeControlOperatorIds],
+    candidateBindingCount: candidateBindings.length,
   };
 }
 
@@ -333,6 +273,8 @@ function createStationSummary({
     candidateKey: String(candidate?.key || "").trim(),
     expectedWeightedBonus: 0,
     realizedWeightedBonus: 0,
+    expectedBindingHours: 0,
+    realizedBindingHours: 0,
     durationHours: 0,
     hasApplicableBinding: false,
   };
@@ -341,6 +283,17 @@ function createStationSummary({
 function getStationSummaryStatus(summary) {
   if (!summary?.hasApplicableBinding) {
     return "notApplicable";
+  }
+
+  if (summary.realizedBindingHours <= EPSILON) {
+    return "unrealized";
+  }
+  if (
+    summary.expectedBindingHours > EPSILON &&
+    summary.realizedBindingHours + EPSILON <
+      summary.expectedBindingHours
+  ) {
+    return "partial";
   }
 
   const actualBonusPercent =
@@ -352,7 +305,7 @@ function getStationSummaryStatus(summary) {
       ? summary.expectedWeightedBonus / summary.durationHours
       : 0;
   if (Math.abs(actualBonusPercent) <= EPSILON) {
-    return "unrealized";
+    return "realized";
   }
   if (Math.abs(actualBonusPercent - expectedBonusPercent) <= EPSILON) {
     return "realized";
@@ -376,11 +329,13 @@ function summarizeCandidateBindings({
       cycleHours: 0,
       weightedBonusPercent: 0,
       realizedWeightedBonus: 0,
+      trace: [],
       stations: [],
     };
   }
 
   const stationSummaries = new Map();
+  const trace = [];
   const boundaries = getTimelineBoundaries(
     [controlCandidate, candidate],
     cycleHours,
@@ -413,14 +368,40 @@ function summarizeCandidateBindings({
         controlCandidate,
         startHour,
       });
+      trace.push({
+        startHour,
+        durationHours,
+        stationIndex,
+        candidateKey: String(targetCandidate?.key || "").trim(),
+        operatorIds: [...(targetCandidate?.operatorIds || [])],
+        status: bindingStatus.status,
+        controlTeamIndex: bindingStatus.controlTeamIndex,
+        controlOperatorIds: bindingStatus.controlOperatorIds || [],
+        candidateBindingCount: bindingStatus.candidateBindingCount || 0,
+        realizedBindingCount: bindingStatus.bindings?.length || 0,
+        realizedBonusPercent: Number(bindingStatus.bonusPercent || 0),
+        bindingSources: (bindingStatus.bindings || []).map((binding) => ({
+          sourceTeamIndex: binding?.sourceTeamIndex,
+          roomType: binding?.roomType,
+          product: binding?.product,
+          effectCount: binding?.effects?.length || 0,
+        })),
+      });
       const expectedBonusPercent = candidateBindings.reduce(
         (total, binding) =>
-          total + Number(getBindingBonusBreakdown(binding).bonusPercent || 0),
+          total +
+          Number(
+            getRiicSameShiftBindingBonusBreakdown(binding).bonusPercent || 0,
+          ),
         0,
       );
 
       summary.hasApplicableBinding = true;
       summary.durationHours += durationHours;
+      summary.expectedBindingHours +=
+        candidateBindings.length * durationHours;
+      summary.realizedBindingHours +=
+        (bindingStatus.bindings || []).length * durationHours;
       summary.expectedWeightedBonus += expectedBonusPercent * durationHours;
       summary.realizedWeightedBonus +=
         Number(bindingStatus.bonusPercent || 0) * durationHours;
@@ -457,6 +438,17 @@ function summarizeCandidateBindings({
   return {
     cycleHours,
     durationHours,
+    trace,
+    expectedBindingHours: stations.reduce(
+      (total, station) =>
+        total + Number(station.expectedBindingHours || 0),
+      0,
+    ),
+    realizedBindingHours: stations.reduce(
+      (total, station) =>
+        total + Number(station.realizedBindingHours || 0),
+      0,
+    ),
     realizedWeightedBonus,
     weightedBonusPercent:
       durationHours > 0 ? realizedWeightedBonus / durationHours : 0,
@@ -500,21 +492,56 @@ export function alignRiicScheduleSameShiftBindings({
       groupEntries,
       summary: [],
       signature: "",
+      debug: {
+        status: "missingControlCandidate",
+        control: {
+          groupId: String(controlEntry?.group?.id || "").trim(),
+          operatorIds: [],
+          segments: [],
+        },
+        groups: [],
+      },
     };
   }
 
   const summary = [];
+  const debugGroups = [];
   const alignedEntries = (groupEntries || []).map((entry) => {
     const group = entry?.group;
     const candidate = entry?.candidate;
+    const debug = {
+      groupId: String(group?.id || "").trim(),
+      groupLabel: String(group?.label || group?.id || "").trim(),
+      facility: String(group?.facility || "").trim(),
+      candidateKey: String(candidate?.key || "").trim(),
+      operatorIds: [
+        ...(candidate?.segments || [])
+          .flatMap((segment) => segment?.stationAssignments || [])
+          .flatMap((assignment) => assignment?.candidate?.operatorIds || []),
+      ],
+      segmentCount: candidate?.segments?.length || 0,
+      skipReason: "",
+      initial: null,
+      attempts: [],
+      selectedOffset: 0,
+      selected: null,
+    };
     if (
       !candidate ||
       entry === controlEntry ||
       (candidate?.segments || []).length <= 1
     ) {
+      debug.skipReason = !candidate
+        ? "missingCandidate"
+        : entry === controlEntry
+          ? "controlCenter"
+          : "singleSegment";
+      debugGroups.push(debug);
       return entry;
     }
     if (candidateHasAnyOperator(candidate, lockedOperatorIds)) {
+      debug.skipReason = "lockedOperator";
+      debugGroups.push(debug);
       return {
         ...entry,
         candidate: {
@@ -531,6 +558,8 @@ export function alignRiicScheduleSameShiftBindings({
       ),
     );
     if (!hasBinding) {
+      debug.skipReason = "noCandidateBinding";
+      debugGroups.push(debug);
       return entry;
     }
 
@@ -541,7 +570,22 @@ export function alignRiicScheduleSameShiftBindings({
       group,
       candidate,
     });
-    let selectedScore = selectedSummary.realizedWeightedBonus;
+    debug.initial = {
+      offset: 0,
+      realizedBindingHours: selectedSummary.realizedBindingHours,
+      expectedBindingHours: selectedSummary.expectedBindingHours,
+      realizedWeightedBonus: selectedSummary.realizedWeightedBonus,
+      trace: selectedSummary.trace || [],
+    };
+    debug.attempts.push({
+      offset: 0,
+      realizedBindingHours: selectedSummary.realizedBindingHours,
+      expectedBindingHours: selectedSummary.expectedBindingHours,
+      realizedWeightedBonus: selectedSummary.realizedWeightedBonus,
+      acceptedAtComparison: true,
+      reason: "baseline",
+      trace: selectedSummary.trace || [],
+    });
 
     for (let offset = 1; offset < candidate.segments.length; offset += 1) {
       const rotatedCandidate = rotateCandidateSegments(candidate, offset);
@@ -550,11 +594,38 @@ export function alignRiicScheduleSameShiftBindings({
         group,
         candidate: rotatedCandidate,
       });
-      if (rotatedSummary.realizedWeightedBonus > selectedScore + EPSILON) {
+      const hasMoreBindingHours =
+        rotatedSummary.realizedBindingHours >
+        selectedSummary.realizedBindingHours + EPSILON;
+      const hasSameBindingHours =
+        Math.abs(
+          rotatedSummary.realizedBindingHours -
+            selectedSummary.realizedBindingHours,
+        ) <= EPSILON;
+      const hasMoreWeightedBonus =
+        rotatedSummary.realizedWeightedBonus >
+        selectedSummary.realizedWeightedBonus + EPSILON;
+      const acceptedAtComparison =
+        hasMoreBindingHours || (hasSameBindingHours && hasMoreWeightedBonus);
+      debug.attempts.push({
+        offset,
+        realizedBindingHours: rotatedSummary.realizedBindingHours,
+        expectedBindingHours: rotatedSummary.expectedBindingHours,
+        realizedWeightedBonus: rotatedSummary.realizedWeightedBonus,
+        acceptedAtComparison,
+        reason: hasMoreBindingHours
+          ? "moreBindingHours"
+          : hasSameBindingHours && hasMoreWeightedBonus
+            ? "sameHoursMoreBonus"
+            : hasSameBindingHours
+              ? "sameHoursNotMoreBonus"
+              : "lessBindingHours",
+        trace: rotatedSummary.trace || [],
+      });
+      if (acceptedAtComparison) {
         selectedOffset = offset;
         selectedCandidate = rotatedCandidate;
         selectedSummary = rotatedSummary;
-        selectedScore = rotatedSummary.realizedWeightedBonus;
       }
     }
 
@@ -564,6 +635,17 @@ export function alignRiicScheduleSameShiftBindings({
       rotationOffset: selectedOffset,
     };
     summary.push(resolvedSummary);
+    debug.selectedOffset = selectedOffset;
+    debug.selected = {
+      realizedBindingHours: selectedSummary.realizedBindingHours,
+      expectedBindingHours: selectedSummary.expectedBindingHours,
+      realizedWeightedBonus: selectedSummary.realizedWeightedBonus,
+      trace: selectedSummary.trace || [],
+    };
+    for (const attempt of debug.attempts) {
+      attempt.selected = attempt.offset === selectedOffset;
+    }
+    debugGroups.push(debug);
     return {
       ...entry,
       candidate: {
@@ -580,6 +662,31 @@ export function alignRiicScheduleSameShiftBindings({
     signature: summary
       .map((entry) => `${entry.groupId}:${entry.rotationOffset}`)
       .join("|"),
+    debug: {
+      status: "ready",
+      control: {
+        groupId: String(controlEntry?.group?.id || "").trim(),
+        operatorIds: [
+          ...(controlCandidate?.segments || [])
+            .flatMap((segment) => segment?.stationAssignments || [])
+            .flatMap((assignment) => assignment?.candidate?.operatorIds || []),
+        ],
+        segments: (controlCandidate?.segments || []).map(
+          (segment, index) => ({
+            index,
+            durationHours: Number(segment?.durationHours || 0),
+            teamIndex:
+              segment?.stationAssignments?.[0]?.candidate
+                ?.controlCenterTeamIndex ??
+              segment?.controlCenterTeamIndex ??
+              null,
+            operatorIds:
+              segment?.stationAssignments?.[0]?.candidate?.operatorIds || [],
+          }),
+        ),
+      },
+      groups: debugGroups,
+    },
   };
 }
 
@@ -588,11 +695,13 @@ export function getRiicSameShiftBindingAtHour({
   group,
   candidate,
   startHour = 0,
+  controlOperatorIds,
 } = {}) {
   return getBindingStatus({
     controlCandidate,
     group,
     candidate,
     startHour,
+    controlOperatorIds,
   });
 }

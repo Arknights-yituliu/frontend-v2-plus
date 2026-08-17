@@ -489,7 +489,8 @@ export function buildRiicAutomaticRoomGroupSelections({
 
       return (
         Number(plan.baseRankingValue || 0) +
-        Number(activeRosterEffects.rankingBonus || 0)
+        Number(activeRosterEffects.rankingBonus || 0) +
+        Number(activeRosterEffects.sameShiftPriority?.rankingCorrection || 0)
       );
     },
     collectDebug: collectPlanningDebug,
@@ -594,6 +595,8 @@ export function buildRiicAutomaticRoomGroupSelections({
             baseRankingValue: Number(bestPlan.baseRankingValue || 0),
             rankingValue: Number(bestPlan.rankingValue || 0),
             activeRosterEffects: bestPlan.activeRosterEffects || null,
+            sameShiftPriority:
+              bestPlan.activeRosterEffects?.sameShiftPriority || null,
             selections: bestPlan.selections.map(({ slot, option }) => ({
               groupId: slot.groupId,
               cohortId: slot.cohortId,

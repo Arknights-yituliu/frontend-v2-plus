@@ -867,6 +867,60 @@
       ]
     },
     {
+      "id": "黑键E0+车尔尼E2-贸易进驻-车尔尼宿舍优先+20",
+      "conditions": {
+        "operators": [
+          {
+            "eliteAtLeast": 0,
+            "operatorName": "黑键"
+          },
+          {
+            "eliteAtLeast": 2,
+            "operatorName": "车尔尼"
+          }
+        ],
+        "facilities": []
+      },
+      "activation": {
+        "roomType": "trading",
+        "operatorName": "黑键"
+      },
+      "effects": [
+        {
+          "roomType": "dormitory",
+          "roomPriority": 20,
+          "operatorName": "车尔尼"
+        }
+      ]
+    },
+    {
+      "id": "黑键E0+爱丽丝E2-贸易进驻-爱丽丝宿舍优先+20",
+      "conditions": {
+        "operators": [
+          {
+            "eliteAtLeast": 0,
+            "operatorName": "黑键"
+          },
+          {
+            "eliteAtLeast": 2,
+            "operatorName": "爱丽丝"
+          }
+        ],
+        "facilities": []
+      },
+      "activation": {
+        "roomType": "trading",
+        "operatorName": "黑键"
+      },
+      "effects": [
+        {
+          "roomType": "dormitory",
+          "roomPriority": 20,
+          "operatorName": "爱丽丝"
+        }
+      ]
+    },
+    {
       "id": "真言E2-已进驻精英1-贸易+2",
       "conditions": {
         "operators": [
