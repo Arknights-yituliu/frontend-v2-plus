@@ -10,18 +10,25 @@
     </div>
 
     <div v-show="userInfo.status>0">
-      <v-menu>
+      <!-- offset: Vuetify 默认 4px，设为 8px 使下拉框再下移 4px -->
+      <v-menu :offset="8">
         <template v-slot:activator="{ props }">
-          <OperatorAvatar :char-id="userInfo.avatar" :size="44" :mobile-size="44"
-                          rounded v-bind="props">
-          </OperatorAvatar>
-          <!--        <v-btn  ></v-btn>-->
+          <div class="flex align-center user-nav-activator" v-bind="props">
+            <OperatorAvatar :char-id="userInfo.avatar" :size="44" :mobile-size="44"
+                            rounded>
+            </OperatorAvatar>
+            <span class="user-nav-name">{{ userInfo.userName }}</span>
+          </div>
         </template>
 
         <v-list>
           <v-list-item>
-            <v-btn variant="text" text="个人中心" @click="router.push({name:'ACCOUNT_HOME'})">
+            <v-btn variant="text" prepend-icon="mdi-account" text="个人中心" @click="router.push({name:'ACCOUNT_HOME'})">
             </v-btn>
+          </v-list-item>
+          <!-- 宽度低于 600px 时显示（由 CSS 媒体查询控制），顶栏对应按钮同时隐藏 -->
+          <v-list-item class="theme-toggle-mobile-item">
+            <v-btn variant="text" prepend-icon="mdi-theme-light-dark" text="切换日夜间" @click="emit('changeTheme')"></v-btn>
           </v-list-item>
           <v-list-item @click="homeMenu=!homeMenu">
             <v-dialog max-width="360">
@@ -29,7 +36,8 @@
                 <v-btn
                     v-bind="activatorProps"
                     color="surface-variant"
-                    text=" 退出登录"
+                    prepend-icon="mdi-logout"
+                    text="退出登录"
                     variant="text"
                 ></v-btn>
               </template>
@@ -56,13 +64,16 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import {clearOAuthToken, fetchOAuthUserInfo, oauthAuthorize, userInfo} from "/src/api/uc/oauth.js";
 import {logoutUcSession} from "/src/api/uc/uc-api.js";
 import {useRouter} from "vue-router";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 
 const router = useRouter();
+
+/** 向父组件（App.vue）发出的事件：触发日夜间主题切换 */
+const emit = defineEmits(['changeTheme'])
 
 let homeMenu = ref(false);
 
@@ -116,5 +127,26 @@ onMounted(() => {
 
 .survey-login-page a {
   text-decoration: none;
+}
+
+/* 顶栏头像旁显示的用户名，超 80px 省略号隐藏 */
+.user-nav-name {
+  max-width: 100px;
+  margin-left: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
+/* 日夜间切换（下拉菜单内）：默认隐藏，宽度低于 600px 才显示 */
+.theme-toggle-mobile-item {
+  display: none;
+}
+
+@media (max-width: 599px) {
+  .theme-toggle-mobile-item {
+    display: block;
+  }
 }
 </style>
