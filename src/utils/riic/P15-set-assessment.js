@@ -74,6 +74,28 @@ const SYSTEM_PERCENT_RULES = Object.freeze({
       ],
     },
     {
+      id: "gladiia-abyssal",
+      core: { name: "歌蕾蒂娅", roomType: "control" },
+      helpers: [
+        {
+          id: "abyssal",
+          group: "abyssal",
+          roomType: "manufacture",
+          excludeCore: true,
+        },
+      ],
+      effects: [
+        {
+          type: "perSourceCount",
+          source: "abyssal",
+          target: { scope: "sourceRoom", source: "abyssal" },
+          metric: "生产力",
+          percent: 10,
+          cap: 9,
+        },
+      ],
+    },
+    {
       id: "viviana-knight",
       core: { name: "薇薇安娜", roomType: "control" },
       helpers: [{ id: "knight", group: "knight", roomType: "manufacture" }],
