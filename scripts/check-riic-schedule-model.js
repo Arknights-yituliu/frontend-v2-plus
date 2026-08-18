@@ -256,6 +256,41 @@ const facilityCases = [
     ],
   },
   {
+    input: { layoutId: "333", cardKey: "333-orundum" },
+    roomKey: "lmd-trading",
+    expected: [
+      { stationLevel: 3, slotCount: 3 },
+      { stationLevel: 3, slotCount: 3 },
+    ],
+  },
+  {
+    input: { layoutId: "333", cardKey: "333-orundum" },
+    roomKey: "orundum-trading",
+    expected: [{ stationLevel: 3, slotCount: 3 }],
+  },
+  {
+    input: { layoutId: "333", cardKey: "333-orundum" },
+    roomKey: "gold-manufacture",
+    expected: [
+      { stationLevel: 3, slotCount: 3 },
+      { stationLevel: 3, slotCount: 3 },
+    ],
+  },
+  {
+    input: { layoutId: "333", cardKey: "333-orundum" },
+    roomKey: "orundum-manufacture",
+    expected: [{ stationLevel: 3, slotCount: 3 }],
+  },
+  {
+    input: { layoutId: "333", cardKey: "333-orundum" },
+    roomKey: "power",
+    expected: [
+      { stationLevel: 3, slotCount: 1 },
+      { stationLevel: 3, slotCount: 1 },
+      { stationLevel: 3, slotCount: 1 },
+    ],
+  },
+  {
     input: { layoutId: "243", cardKey: "243" },
     roomKey: "power",
     expected: [

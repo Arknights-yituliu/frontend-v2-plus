@@ -58,22 +58,12 @@ function hasAutomationCandidateStates(
   );
 }
 
-function hasSelectedAutomationPowerSupport(plan) {
-  return (plan?.selections || []).some(
-    (selection) =>
-      selection?.slot?.facility === "power" &&
-      (selection?.option?.materializedCandidate?.operatorIds || []).includes(
-        AUTOMATION_POWER_SUPPORT_OPERATOR_ID,
-      ),
-  );
-}
-
 function getAutomationRuntimeContext({
-  plan,
   layoutFacts,
   ownedOperators,
+  powerSupportReserved = false,
 }) {
-  if (!hasSelectedAutomationPowerSupport(plan)) {
+  if (!powerSupportReserved) {
     return null;
   }
 
@@ -112,10 +102,16 @@ function getAutomaticRoomTeamOptions({
   ownedOperators,
   selectedCandidateKeys = [],
   teamIndex,
+  facility,
   automationRuntimeContext,
+  reservedPowerOperatorId = "",
 }) {
   const recovery = normalizeRiicFiammettaRecovery(fiammettaRecovery);
   const coreOperatorIds = candidate?.operatorIds || [];
+  const reserveOperatorForPower =
+    reservedPowerOperatorId && facility !== "power";
+  const mustUseReservedPowerOperator =
+    reservedPowerOperatorId && facility === "power" && teamIndex === 0;
   const activeSelectionOperatorIds = new Set([
     ...controlCenterOperatorIds,
     ...claimedOperatorIds,
@@ -132,6 +128,8 @@ function getAutomaticRoomTeamOptions({
       ...(candidate?.fallback?.operators || []),
     ].some((operator) => isReusableTarget(operator?.charId));
   if (
+    (reserveOperatorForPower &&
+      coreOperatorIds.includes(reservedPowerOperatorId)) ||
     (selectedCandidateKeys.includes(candidate?.key) &&
       !candidateCanUseReusableTarget) ||
     coreOperatorIds.some(
@@ -143,12 +141,16 @@ function getAutomaticRoomTeamOptions({
     return [];
   }
 
+  const excludedOperatorIds = new Set(coreOperatorIds);
+  if (reserveOperatorForPower) {
+    excludedOperatorIds.add(reservedPowerOperatorId);
+  }
   const fallbackPlans = createRiicRoomGroupFallbackPlanAlternatives({
     selectedEntries: [{ selectionKey, candidate }],
     occupiedOperatorIds: new Set([
       ...activeSelectionOperatorIds,
     ].filter((charId) => !isReusableTarget(charId))),
-    excludedOperatorIds: coreOperatorIds,
+    excludedOperatorIds,
     ownedOperators,
     activeOperatorIds: activeSelectionOperatorIds,
     fiammettaRecovery: {
@@ -229,7 +231,13 @@ function getAutomaticRoomTeamOptions({
           materializedCandidate?.upgradeRequirements || []
         ).length,
       },
-    ];
+    ].filter(
+      (option) =>
+        !mustUseReservedPowerOperator ||
+        option.materializedCandidate.operatorIds.includes(
+          reservedPowerOperatorId,
+        ),
+    );
   });
 }
 
@@ -373,13 +381,10 @@ export function buildRiicAutomaticRoomGroupSelections({
   const automationOpportunity =
     hasUnlockedAutomationPowerSupport(ownedOperators) &&
     hasAutomationCandidateStates(groups, candidateStatesByGroupId);
-  const basePlanningGroups = getRiicAutomaticRoomGroupPlanningOrder(groups);
-  const planningGroups = automationOpportunity
-    ? [
-        ...basePlanningGroups.filter((group) => group.facility === "power"),
-        ...basePlanningGroups.filter((group) => group.facility !== "power"),
-      ]
-    : basePlanningGroups;
+  const planningGroups = getRiicAutomaticRoomGroupPlanningOrder(groups);
+  const reservedPowerOperatorId = automationOpportunity
+    ? AUTOMATION_POWER_SUPPORT_OPERATOR_ID
+    : "";
   const groupLabelById = new Map(
     planningGroups.map((group) => [group.id, group.label || group.id]),
   );
@@ -409,31 +414,12 @@ export function buildRiicAutomaticRoomGroupSelections({
     selectionBatchSize,
     getOptionDiversityKey: ({ cohort, selectionKey, option }) =>
       `${cohort.key}:${selectionKey}:${option.candidateKey}`,
-    getOptionProtectionKeys: ({ cohort, option }) =>
-      automationOpportunity &&
-      cohort.facility === "power" &&
-      (option?.materializedCandidate?.operatorIds || []).includes(
-        AUTOMATION_POWER_SUPPORT_OPERATOR_ID,
-      )
-        ? ["automation-power-support"]
-        : [],
-    getPlanProtectionKeys: (plan) => {
-      if (!automationOpportunity || !plan?.selections?.length) {
-        return [];
-      }
-      return [
-        hasSelectedAutomationPowerSupport(plan)
-          ? "automation-with-power-support"
-          : "automation-without-power-support",
-      ];
-    },
     resolveTeamOptions: ({
       cohort,
       selectionKey,
       claimedOperatorIds,
       fiammettaTargetStateIndexes,
       selectedCandidateKeys,
-      plan,
     }) => {
       const teamIndex = Number(
         String(selectionKey || "").split(":").at(-1),
@@ -465,10 +451,12 @@ export function buildRiicAutomaticRoomGroupSelections({
             ownedOperators,
             selectedCandidateKeys,
             teamIndex,
+            facility: cohort.facility,
+            reservedPowerOperatorId,
             automationRuntimeContext: getAutomationRuntimeContext({
-              plan,
               layoutFacts,
               ownedOperators,
+              powerSupportReserved: Boolean(reservedPowerOperatorId),
             }),
           }),
         )

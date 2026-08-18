@@ -269,9 +269,12 @@ const shiftRows = computed(() => {
       name: String(shift?.name || `${String.fromCharCode(65 + index)}班`),
       droneAvailableOutput: droneUsage?.availableDroneOutput ?? null,
       droneTarget: drone.disabled === true ? "" : String(drone.target || "").trim(),
-      droneOrder: ["post", "retain"].includes(drone.order)
-        ? drone.order
-        : "pre",
+      droneOrder:
+        drone.disabled === true
+          ? "retain"
+          : ["post", "retain"].includes(drone.order)
+            ? drone.order
+            : "pre",
       droneCapacityReached: droneUsage?.capacityReached === true,
     };
   });

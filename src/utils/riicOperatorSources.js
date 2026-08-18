@@ -10,6 +10,8 @@ import {
 } from "/src/utils/riicManualOperatorData.js";
 
 const SKLAND_ACCOUNT_SESSION_STORAGE_KEY = "skland_account_data";
+const RIIC_SKLAND_OPERATOR_SNAPSHOT_STORAGE_KEY =
+  "riic_skland_operator_snapshot_v1";
 const RIIC_MAA_OPERATOR_STORAGE_KEY = "riic_maa_operator_data_v1";
 const RIIC_OPERATOR_SOURCE_STORAGE_KEY = "riic_operator_source_v1";
 const RIIC_OPERATOR_SOURCES_STORAGE_KEY = "riic_operator_sources_v2";
@@ -174,6 +176,47 @@ function readSklandAccountFromSession() {
   } catch (error) {
     console.error("readSklandAccountFromSession failed", error);
     return null;
+  }
+}
+
+function readStoredSklandOperatorSnapshot() {
+  try {
+    const raw = localStorage.getItem(
+      RIIC_SKLAND_OPERATOR_SNAPSHOT_STORAGE_KEY,
+    );
+    if (!raw) {
+      return null;
+    }
+
+    const snapshot = JSON.parse(raw);
+    if (snapshot?.version !== 1 || !Array.isArray(snapshot?.operators)) {
+      return null;
+    }
+
+    const operators = normalizeOwnedOperators(snapshot.operators);
+    return operators.length > 0
+      ? {
+          operators,
+          importedAt: String(snapshot.importedAt || ""),
+        }
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveSklandOperatorSnapshot(operators, importedAt = "") {
+  try {
+    localStorage.setItem(
+      RIIC_SKLAND_OPERATOR_SNAPSHOT_STORAGE_KEY,
+      JSON.stringify({
+        version: 1,
+        importedAt: String(importedAt || ""),
+        operators: normalizeOwnedOperators(operators),
+      }),
+    );
+  } catch {
+    // A current-tab source remains usable when shared storage is unavailable.
   }
 }
 
@@ -577,6 +620,7 @@ async function loadSklandOperatorSource() {
     if (sklandOperators.length > 0) {
       state.operators = sklandOperators;
       state.importedAt = sklandAccountData?.importedAt || "";
+      saveSklandOperatorSnapshot(state.operators, state.importedAt);
       return;
     }
 
@@ -590,15 +634,22 @@ async function loadSklandOperatorSource() {
       if (surveyOperators.length > 0) {
         state.operators = surveyOperators;
         state.importedAt = "";
+        saveSklandOperatorSnapshot(state.operators, state.importedAt);
         return;
       }
     }
 
-    state.operators = [];
-    state.importedAt = "";
+    const storedSnapshot = readStoredSklandOperatorSnapshot();
+    state.operators = storedSnapshot?.operators || [];
+    state.importedAt = storedSnapshot?.importedAt || "";
   } catch (error) {
     console.error("loadSklandOperatorSource failed", error);
-    state.error = "森空岛数据读取失败";
+    const storedSnapshot = readStoredSklandOperatorSnapshot();
+    state.operators = storedSnapshot?.operators || [];
+    state.importedAt = storedSnapshot?.importedAt || "";
+    if (state.operators.length === 0) {
+      state.error = "森空岛数据读取失败";
+    }
   } finally {
     state.loading = false;
   }
@@ -895,6 +946,7 @@ async function deleteCustomOperatorSource(sourceId) {
       try {
         localStorage.removeItem(RIIC_MAA_OPERATOR_STORAGE_KEY);
         localStorage.removeItem(RIIC_MANUAL_OPERATOR_STORAGE_KEY);
+        localStorage.removeItem(RIIC_SKLAND_OPERATOR_SNAPSHOT_STORAGE_KEY);
         localStorage.removeItem(RIIC_OPERATOR_SOURCE_STORAGE_KEY);
         localStorage.removeItem(RIIC_OPERATOR_SOURCES_STORAGE_KEY);
       } catch {

@@ -4189,10 +4189,14 @@ const riicActualScheduleMetrics = computed(() => {
     ? summarizeRiicActualSchedule({
         preview: riicSchedulePreview.value,
         droneTargetKeysByState: schedulePreviewShifts.value.map(
-          (shift) => shift?.drone?.target || "",
+          (shift) =>
+            shift?.drone?.disabled === true ? "" : shift?.drone?.target || "",
         ),
         droneOrdersByState: schedulePreviewShifts.value.map(
-          (shift) => shift?.drone?.order || "pre",
+          (shift) =>
+            shift?.drone?.disabled === true
+              ? "retain"
+              : shift?.drone?.order || "pre",
         ),
         tradingOperators: riicMatchingRoster.value || [],
         orundumCraftMaterial:
@@ -4258,6 +4262,29 @@ const outputPreviewGeneratedDate = computed(() => {
   const now = new Date();
   const pad = (value) => String(value).padStart(2, "0");
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+});
+const outputPreviewDebugValues = computed(() => {
+  const operators = ownedOperators.value || [];
+  const eliteTwoCount = operators.filter(
+    (operator) => Number(operator?.elite) >= 2,
+  ).length;
+  const idealTrainingEnabled =
+    treatUnderleveledOperatorsAsQualified.value === true;
+  const raritySelection = idealTrainingRaritySelection.value || {};
+  const idealTrainingRarities = idealTrainingEnabled
+    ? [
+        raritySelection.fourOrBelow ? "4" : "",
+        raritySelection.five ? "5" : "",
+        raritySelection.six ? "6" : "",
+      ].join("") || "0"
+    : "0";
+  const scheduleStateCount =
+    getSchedulePreviewStateCount(
+      confirmedLayoutPlan.value?.shiftMode,
+      twoShiftRotationMode.value,
+    ) || 0;
+
+  return `${operators.length} ${eliteTwoCount} ${idealTrainingRarities} ${scheduleStateCount}`;
 });
 const outputPreviewHeaderTheme = computed(() => {
   const yields = new Map(
@@ -5336,6 +5363,7 @@ function selectScheduleDroneTarget(payload) {
         target: "",
         pinned: false,
         disabled: true,
+        order: "retain",
       },
     });
     return;
@@ -5348,6 +5376,7 @@ function selectScheduleDroneTarget(payload) {
       target: value,
       pinned: true,
       disabled: false,
+      order: drone.order === "retain" ? "pre" : drone.order,
     },
   });
 }
@@ -8318,6 +8347,9 @@ onBeforeUnmount(() => {
                     </a>
                     <span>Bilibili：逻辑元LogicalByte</span>
                   </div>
+                  <div class="schedule-output-document-debug-info">
+                    {{ outputPreviewDebugValues }}
+                  </div>
                   <img
                     src="/image/website/QR/riic-schedule-generator.png"
                     alt="明日方舟一图流二维码"
@@ -8457,6 +8489,9 @@ onBeforeUnmount(() => {
                     https://ark.yituliu.cn/tools/scheduleV3
                   </a>
                   <span>Bilibili：逻辑元LogicalByte</span>
+                </div>
+                <div class="schedule-output-document-debug-info">
+                  {{ outputPreviewDebugValues }}
                 </div>
                 <img
                   src="/image/website/QR/riic-schedule-generator.png"
@@ -8674,6 +8709,17 @@ onBeforeUnmount(() => {
           :schedule-training-requirements="scheduleTrainingRequirements"
           :operator-table="operatorTableV2"
           :riic-yield-engine-results="riicYieldEngineResults"
+          :actual-schedule-metrics="riicActualScheduleMetrics"
+          :schedule-preview="riicSchedulePreview"
+          :schedule-shifts="schedulePreviewShifts"
+          :operator-source-label="ownedOperatorSource"
+          :layout-label="`${confirmedLayoutPlan?.cardKey || '未选择布局'} · ${
+            {
+              once: '一天一换',
+              twice: '一天两换',
+              threeTimes: '一天三换',
+            }[confirmedLayoutPlan?.shiftMode] || '未设置换班'
+          }`"
           :show-candidate-debug-values="showCandidateDebugValues"
           :format-training-requirement="formatTrainingRequirement"
           :get-riic-yield-engine-status-meta="getRiicYieldEngineStatusMeta"
@@ -9015,12 +9061,23 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
+.schedule-output-document-debug-info {
+  display: block;
+  flex: 0 0 auto;
+  margin-left: auto;
+  align-self: flex-end;
+  color: #7b8793;
+  font-size: 11px;
+  line-height: 1.45;
+  text-align: right;
+  white-space: nowrap;
+}
+
 .schedule-output-document-qr {
   align-self: center;
   flex: 0 0 120px;
   width: 120px;
   height: 120px;
-  margin-left: auto;
   padding: 0;
   background: #fff;
   object-fit: contain;

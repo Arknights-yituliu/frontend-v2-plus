@@ -446,6 +446,16 @@ const routes = [
         }
     },
     {
+        path: '/riicdev/maa-yield',
+        text: 'MAA排班收益核算',
+        name: 'RiicMaaYieldTest',
+        display: false,
+        component: () => import('/src/pages/dev/riic/maa-yield.vue'),
+        meta: {
+            title: 'MAA排班收益核算'
+        }
+    },
+    {
         path: '/riicdev/set-assess',
         text: 'RIIC 班组组合评估',
         name: 'RiicSetAssessment',

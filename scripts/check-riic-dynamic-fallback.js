@@ -378,6 +378,140 @@ const automationSupportedMaterialized = materializeRiicRoomTeamCandidate(
 assert.equal(automationBaselineMaterialized.totalPercent, 130);
 assert.equal(automationSupportedMaterialized.totalPercent, 145);
 
+const automationReservationGroups = [
+  {
+    id: "automation-manufacture",
+    label: "Automation manufacture",
+    facility: "manufacture",
+  },
+  {
+    id: "automation-power",
+    label: "Automation power",
+    facility: "power",
+  },
+];
+const automationReservationCandidateStates = {
+  "automation-manufacture": {
+    status: "ready",
+    cohorts: [
+      {
+        id: "manufacture:0",
+        teamCount: 1,
+        candidates: [
+          {
+            key: "qingliu-automation",
+            name: "清流 + 自动化",
+            variantGroupId: "family-qingliu-automation",
+            candidateScope: {
+              roomType: "manufacture",
+              product: "gold",
+              stationLevel: 3,
+              slotCount: 3,
+            },
+            sourceRoomType: "manufacture",
+            operatorIds: ["qingliu"],
+            corePercent: 215,
+            localBonusPercent: 115,
+            fallback: { count: 0, candidateOperators: [] },
+          },
+        ],
+      },
+    ],
+  },
+  "automation-power": {
+    status: "ready",
+    cohorts: [
+      {
+        id: "power:0",
+        teamCount: 2,
+        candidates: [
+          {
+            key: "power-fallback-a",
+            candidateScope: {
+              roomType: "power",
+              product: "all",
+              stationLevel: 1,
+              slotCount: 1,
+            },
+            sourceRoomType: "power",
+            corePercent: 100,
+            localBonusPercent: 0,
+            fallback: {
+              count: 1,
+              candidateOperators: [
+                {
+                  charId: "char_1027_greyy2",
+                  name: "承曦格雷伊",
+                  percent: 23,
+                },
+                { charId: "qingliu", name: "清流", percent: 15 },
+                { charId: "power-backup", name: "Power Backup", percent: 15 },
+              ],
+            },
+          },
+          {
+            key: "power-fallback-b",
+            candidateScope: {
+              roomType: "power",
+              product: "all",
+              stationLevel: 1,
+              slotCount: 1,
+            },
+            sourceRoomType: "power",
+            corePercent: 100,
+            localBonusPercent: 0,
+            fallback: {
+              count: 1,
+              candidateOperators: [
+                {
+                  charId: "char_1027_greyy2",
+                  name: "承曦格雷伊",
+                  percent: 23,
+                },
+                { charId: "qingliu", name: "清流", percent: 15 },
+                { charId: "power-backup", name: "Power Backup", percent: 15 },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+const automationReservationSelection = buildRiicAutomaticRoomGroupSelections({
+  groups: automationReservationGroups,
+  candidateStatesByGroupId: automationReservationCandidateStates,
+  ownedOperators: [
+    { charId: "char_1027_greyy2", name: "承曦格雷伊", elite: 2 },
+    { charId: "qingliu", name: "清流", elite: 1 },
+  ],
+  layoutFacts: { powerPlantCount: 3 },
+  selectionBeamLimit: 8,
+  selectionOptionLimit: 8,
+  selectionRepresentativeLimit: 8,
+  fallbackPlanLimit: 8,
+});
+assert.deepEqual(
+  automationReservationSelection.debug.planningOrder.map(
+    (group) => group.id,
+  ),
+  ["automation-manufacture", "automation-power"],
+);
+assert.deepEqual(
+  automationReservationSelection.selections["automation-manufacture"][
+    "manufacture:0"
+  ],
+  ["qingliu-automation"],
+);
+const automationReservationPowerOperatorIds =
+  automationReservationSelection.debug.bestPlan.selections
+    .filter((selection) => selection.groupId === "automation-power")
+    .flatMap((selection) => selection.operatorIds);
+assert.ok(
+  automationReservationPowerOperatorIds.includes("char_1027_greyy2"),
+);
+assert.ok(!automationReservationPowerOperatorIds.includes("qingliu"));
+
 const twoStepLookaheadPlan = planRiicAutomaticRoomSelections({
   selectionCohorts: [
     {

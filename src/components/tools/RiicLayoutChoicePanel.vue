@@ -892,7 +892,9 @@ function updateAnswer(key, value) {
 }
 
 .layout-choice.layout-243-orundum,
+.layout-choice.layout-333-orundum,
 .layout-choice.layout-342-orundum {
+  --option-color: #d96b6b;
   --layout-color: #d96b6b;
 }
 

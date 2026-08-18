@@ -1467,7 +1467,11 @@ const selectedSystemAssessmentRooms = computed(() =>
   ),
 );
 const selectedSystemDailyOutputs = computed(
-  () => selectedSystemProductionAssessment.value.dailyOutputs,
+  () =>
+    selectedSystemProductionAssessment.value.dailyOutputs.map((item) => ({
+      ...item,
+      output: getProductionUplift(item.output, item.baselineOutput),
+    })),
 );
 const selectedSystemUnregisteredPercentRuleCount = computed(() =>
   Math.max(
@@ -1614,6 +1618,12 @@ function formatSignedPercent(value) {
   return `${percent >= 0 ? "+" : ""}${percent}%`;
 }
 
+function formatOperatorEfficiency(value) {
+  return Number.isFinite(Number(value))
+    ? formatSignedPercent(value)
+    : "--";
+}
+
 function getAssessmentOperator(name) {
   const operator = getSourceOperator(name);
   const staticMeta = getOperatorStaticMeta(name);
@@ -1631,6 +1641,19 @@ function getAssessmentOperatorIds(room, nameMap = sourceNameMap.value) {
         getSourceOperator(assignment.name)?.charId,
     )
     .filter(Boolean);
+}
+
+function getAssessmentOperatorEfficiency(room, assignment) {
+  const charId =
+    sourceNameMap.value?.[assignment?.name] ||
+    getSourceOperator(assignment?.name)?.charId;
+  if (!charId) {
+    return "--";
+  }
+
+  return formatOperatorEfficiency(
+    room?.finalProduction?.operatorBonusByCharId?.[charId],
+  );
 }
 
 function getProductionProduct(room) {
@@ -1736,6 +1759,19 @@ function calculateSystemProductionAssessment({
             meta,
           })
         : null;
+    const operatorBonusByCharId =
+      baseline?.valid === true
+        ? (baseline.appliedRules || []).reduce((result, rule) => {
+            if (!rule.ownerCharId || rule.targetRoomType) {
+              return result;
+            }
+
+            result[rule.ownerCharId] =
+              Number(result[rule.ownerCharId] || 0) +
+              Number(rule.percent || 0);
+            return result;
+          }, {})
+        : {};
 
     let status = "notApplicable";
     let reason = "";
@@ -1768,6 +1804,11 @@ function calculateSystemProductionAssessment({
         output,
         baselineOutput,
         efficiency,
+        operatorBonusByCharId,
+        localBonus:
+          baseline?.valid === true
+            ? Number(baseline.localTotalPercent || 100) - 100
+            : null,
         roomBonus,
         downstreamBonus,
       },
@@ -1850,6 +1891,7 @@ function addTeamMemberToBestRoom({
   rooms,
   name,
   resolvedSkills,
+  baselineAssessment,
 }) {
   const candidateRoomTypes = getTeamYieldCandidateRoomTypes(
     name,
@@ -1880,7 +1922,7 @@ function addTeamMemberToBestRoom({
     });
     return {
       rooms: nextRooms,
-      score: getTeamYieldScore(assessment, { dailyOutputs: [] }),
+      score: getTeamYieldScore(assessment, baselineAssessment),
     };
   });
 
@@ -1926,8 +1968,7 @@ function evaluateTeamYieldScenario({
       rooms,
       name,
       resolvedSkills,
-      system,
-      selectedNames,
+      baselineAssessment,
     });
     assignedNames.add(name);
   }
@@ -1962,53 +2003,30 @@ function buildTeamYieldAssessment({ system, resolvedSkills }) {
     operatorNameToCharId: sourceNameMap.value,
     allowPartialRoster: true,
   });
-  const rows = [];
-  let selectedNames = [];
-  let previousOutputs = new Map();
-
-  for (let index = 0; index <= memberNames.length; index += 1) {
-    if (index > 0) {
-      const nextName = memberNames[index - 1];
-      if (nextName) {
-        selectedNames = [...selectedNames, nextName];
-      }
-    }
-
-    const scenario = evaluateTeamYieldScenario({
-      system,
-      selectedNames,
-      resolvedSkills,
-      baselineAssessment,
-    });
-    const outputs = new Map(
-      scenario.production.dailyOutputs.map((item) => [
-        item.resource,
-        {
-          resource: item.resource,
-          label: item.label,
-          output: Number(item.output || 0),
-          baselineOutput: Number(item.baselineOutput || 0),
-        },
-      ]),
-    );
-    const marginalOutputs = [...outputs.values()].map((item) => ({
-      ...item,
-      output: item.output - Number(previousOutputs.get(item.resource) || 0),
-    }));
-    rows.push({
-      count: selectedNames.length,
-      names: [...selectedNames],
-      outputs: [...outputs.values()],
-      marginalOutputs,
-      score: scenario.score,
-    });
-    previousOutputs = outputs;
-  }
+  const scenario = evaluateTeamYieldScenario({
+    system,
+    selectedNames: memberNames,
+    resolvedSkills,
+    baselineAssessment,
+  });
+  const outputs = scenario.production.dailyOutputs.map((item) => ({
+    resource: item.resource,
+    label: item.label,
+    output: getProductionUplift(item.output, item.baselineOutput),
+    baselineOutput: Number(item.baselineOutput || 0),
+  }));
 
   return {
     memberNames,
-    rows,
-    baseline: rows[0] || null,
+    rows: [
+      {
+        count: memberNames.length,
+        names: [...memberNames],
+        outputs,
+        score: scenario.score,
+      },
+    ],
+    baseline: null,
   };
 }
 
@@ -2043,14 +2061,26 @@ function formatProductionValue(value) {
     : "--";
 }
 
-function formatProductionIncrease(output, baselineOutput) {
+function getProductionUplift(output, baselineOutput) {
+  return Number(output || 0) - Number(baselineOutput || 0);
+}
+
+function formatSignedProductionValue(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "--";
+  }
+  return `${number >= 0 ? "+" : ""}${formatProductionValue(number)}`;
+}
+
+function formatProductionIncrease(uplift, baselineOutput) {
   const baseline = Number(baselineOutput);
-  const current = Number(output);
-  if (!Number.isFinite(baseline) || baseline <= 0 || !Number.isFinite(current)) {
+  const value = Number(uplift);
+  if (!Number.isFinite(baseline) || baseline <= 0 || !Number.isFinite(value)) {
     return "--";
   }
 
-  const increase = ((current - baseline) / baseline) * 100;
+  const increase = (value / baseline) * 100;
   return `${increase >= 0 ? "+" : ""}${increase.toFixed(1)}%`;
 }
 
@@ -2483,20 +2513,20 @@ onMounted(() => {
           </div>
 
           <p class="system-plan-note">
-            最终产出按当前数据源、当前练度和当前布局计算，默认按本体系自动分配的成员连续驻守 24
-            小时换算；未占用的位置按无额外技能处理，不自动补入体系外干员。
+            只统计本体系带来的额外产出：已扣除相同布局下 100% 效率站点的基础产出。成员自身技能、
+            站内组合和跨房间联动都会计入；未占用的位置不自动补入体系外干员。
           </p>
 
           <div
             v-if="selectedSystemDailyOutputs.length"
             class="system-daily-output-summary"
           >
-            <strong>最终日产出</strong>
+            <strong>班组额外日产出</strong>
             <span
               v-for="output in selectedSystemDailyOutputs"
               :key="output.resource"
             >
-              {{ output.label }} {{ formatProductionValue(output.output) }} / 天
+              {{ output.label }} {{ formatSignedProductionValue(output.output) }} / 天
             </span>
           </div>
 
@@ -2506,9 +2536,9 @@ onMounted(() => {
           >
             <div class="team-yield-heading">
               <div>
-                <strong>班组投入收益曲线</strong>
+                <strong>当前启用成员的班组净增产出</strong>
                 <small>
-                  只计算该班组成员占用的岗位；不补位其他干员，产出按资源分别列出。
+                  已扣除 100% 效率站点基础产出；成员自身技能与班组联动均计入，不补位其他干员。
                 </small>
               </div>
               <span>
@@ -2529,8 +2559,7 @@ onMounted(() => {
               <div class="team-yield-row team-yield-row-header">
                 <span>占用岗位</span>
                 <span>投入成员</span>
-                <span>理论总产出 / 日（相对 100%）</span>
-                <span>本次增加 / 日</span>
+                <span>相对 100% 站点额外产出 / 日</span>
               </div>
               <div
                 v-for="row in selectedSystemTeamYieldAssessment.rows"
@@ -2547,24 +2576,13 @@ onMounted(() => {
                       v-for="output in row.outputs"
                       :key="`team-yield-output:${row.count}:${output.resource}`"
                     >
-                      {{ output.label }} {{ formatProductionValue(output.output) }}
+                      {{ output.label }} {{ formatSignedProductionValue(output.output) }}
                       <small>
                         {{ formatProductionIncrease(output.output, output.baselineOutput) }}
                       </small>
                     </em>
                   </template>
                   <small v-else>暂无可计算的绝对产出</small>
-                </span>
-                <span class="team-yield-values team-yield-marginal">
-                  <template v-if="row.marginalOutputs.length">
-                    <em
-                      v-for="output in row.marginalOutputs"
-                      :key="`team-yield-marginal:${row.count}:${output.resource}`"
-                    >
-                      {{ output.label }} {{ formatProductionValue(output.output) }}
-                    </em>
-                  </template>
-                  <small v-else>--</small>
                 </span>
               </div>
             </div>
@@ -2596,40 +2614,71 @@ onMounted(() => {
                   class="system-plan-operator"
                 >
                   <OperatorAvatar
-                    v-if="getAssessmentOperator(assignment.name).charId"
+                  v-if="getAssessmentOperator(assignment.name).charId"
                     :char-id="getAssessmentOperator(assignment.name).charId"
                     :rarity="getAssessmentOperator(assignment.name).rarity"
-                    :size="34"
+                    :size="30"
                     :border="true"
                   />
                   <span>{{ assignment.name }}</span>
+                  <strong>
+                    {{ getAssessmentOperatorEfficiency(room, assignment) }}
+                  </strong>
                 </div>
               </div>
               <span v-else class="system-plan-empty">本体系未占用该房间</span>
 
-              <div
-                v-if="room.bonusByMetric.length"
-                class="system-plan-bonus-list"
-              >
+              <div class="system-plan-final-result">
                 <span
-                  v-for="bonus in room.bonusByMetric"
-                  :key="`${room.id}:${bonus.metric}`"
+                  v-if="
+                    room.finalProduction.efficiency !== null &&
+                    getProductionMetric(room)
+                  "
+                  class="system-plan-final-efficiency"
                 >
-                  {{ bonus.metric }} {{ formatSignedPercent(bonus.percent) }}
+                  最终{{ getProductionMetric(room) }}
+                  {{
+                    formatSignedPercent(
+                      room.finalProduction.efficiency - 100,
+                    )
+                  }}
                 </span>
-              </div>
-
-              <div class="system-plan-production">
-                <span>最终产出</span>
-                <strong
-                  v-if="room.finalProduction.status === 'calculated'"
-                >
+                <strong v-if="room.finalProduction.status === 'calculated'">
                   {{ room.finalProduction.label }}
-                  {{ formatProductionValue(room.finalProduction.output) }} / 天
+                  {{
+                    formatSignedProductionValue(
+                      getProductionUplift(
+                        room.finalProduction.output,
+                        room.finalProduction.baselineOutput,
+                      ),
+                    )
+                  }}
+                  / 天
                 </strong>
                 <small v-else>
                   {{ room.finalProduction.reason || "暂无绝对产出结果" }}
                 </small>
+              </div>
+
+              <div class="system-plan-calculation">
+                <span class="system-plan-calculation-title">计算过程</span>
+                <span>100% 站点基础产出：已扣除</span>
+                <span
+                  v-if="room.finalProduction.localBonus !== null"
+                >
+                  成员自身 {{ formatSignedPercent(room.finalProduction.localBonus) }}
+                </span>
+                <span
+                  v-for="bonus in room.bonusByMetric"
+                  :key="`${room.id}:calculation:${bonus.metric}`"
+                >
+                  班组联动 {{ bonus.metric }}
+                  {{ formatSignedPercent(bonus.percent) }}
+                </span>
+                <span v-if="room.finalProduction.downstreamBonus">
+                  下游联动
+                  {{ formatSignedPercent(room.finalProduction.downstreamBonus) }}
+                </span>
               </div>
             </article>
           </div>
@@ -3404,8 +3453,8 @@ h2 {
 
 .team-yield-row {
   display: grid;
-  grid-template-columns: 70px minmax(180px, 1.2fr) minmax(190px, 1fr) minmax(190px, 1fr);
-  min-width: 700px;
+  grid-template-columns: 70px minmax(210px, 1.2fr) minmax(280px, 1fr);
+  min-width: 620px;
   border-top: 1px solid #e5edef;
 }
 
@@ -3437,10 +3486,6 @@ h2 {
   color: #3f6978;
   font-style: normal;
   font-weight: 700;
-}
-
-.team-yield-marginal em {
-  color: #8d6a34;
 }
 
 .team-yield-values small {
@@ -3493,26 +3538,35 @@ h2 {
 }
 
 .system-plan-operators {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 8px;
+  display: grid;
+  gap: 5px;
   margin-top: 10px;
 }
 
 .system-plan-operator {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
   min-width: 0;
   align-items: center;
   gap: 5px;
+  padding: 3px 5px;
+  border: 1px solid #e7edef;
+  border-radius: 4px;
   color: #526977;
+  background: #fff;
   font-size: 11px;
 }
 
 .system-plan-operator span {
-  max-width: 74px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.system-plan-operator strong {
+  color: #3f6978;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .system-plan-empty {
@@ -3522,7 +3576,6 @@ h2 {
   font-size: 11px;
 }
 
-.system-plan-bonus-list,
 .system-plan-metric-list,
 .system-plan-footnote {
   display: flex;
@@ -3530,22 +3583,59 @@ h2 {
   gap: 6px;
 }
 
-.system-plan-bonus-list {
+.system-plan-final-result {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
   margin-top: 11px;
-  padding-top: 9px;
-  border-top: 1px dashed #dce5e9;
+  padding: 10px 0 9px;
+  border-top: 1px solid #d5e3d9;
+  border-bottom: 1px solid #d5e3d9;
 }
 
-.system-plan-bonus-list span,
-.system-plan-metric-list span {
+.system-plan-final-efficiency {
+  flex: 0 0 auto;
+  color: #275d3d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.system-plan-final-result strong {
+  color: #1f7547;
+  font-size: 16px;
+  text-align: right;
+}
+
+.system-plan-final-result small {
+  color: #a06b2d;
+  font-size: 11px;
+  text-align: right;
+}
+
+.system-plan-calculation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 8px;
+  margin-top: 9px;
+  color: #87939a;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.system-plan-calculation > span {
   display: inline-flex;
   min-height: 22px;
   align-items: center;
   padding: 0 7px;
   border-radius: 4px;
-  color: #9b5e1e;
-  background: #fff2df;
-  font-size: 11px;
+  background: #f4f6f7;
+}
+
+.system-plan-calculation-title {
+  padding-left: 0 !important;
+  color: #65757e;
+  background: transparent !important;
   font-weight: 700;
 }
 
@@ -3556,35 +3646,6 @@ h2 {
 .system-plan-metric-list span {
   color: #2f657d;
   background: #e9f3f7;
-}
-
-.system-plan-production {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 10px;
-  padding-top: 9px;
-  border-top: 1px solid #e5ebef;
-}
-
-.system-plan-production > span {
-  flex: 0 0 auto;
-  color: #788895;
-  font-size: 11px;
-}
-
-.system-plan-production strong {
-  color: #2f6f4e;
-  font-size: 13px;
-  text-align: right;
-}
-
-.system-plan-production small {
-  color: #89959c;
-  font-size: 11px;
-  line-height: 1.45;
-  text-align: right;
 }
 
 .system-placement-choice-list {

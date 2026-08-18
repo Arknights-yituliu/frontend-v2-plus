@@ -5,6 +5,11 @@ const entries = [
     icon: "mdi-calculator-variant-outline",
     label: "RIIC 计算测试",
   },
+  {
+    to: "/riicdev/maa-yield",
+    icon: "mdi-file-chart-outline",
+    label: "MAA 排班收益核算",
+  },
   ...(import.meta.env.DEV
     ? [
         {
