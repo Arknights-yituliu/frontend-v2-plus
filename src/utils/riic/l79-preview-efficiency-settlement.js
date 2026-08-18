@@ -9,7 +9,7 @@ import {
   recalculateRiicClosureSpecialOrder,
 } from "./l62-closure-calculation.js";
 import {
-  recalculateRiicRoomTeamCandidate,
+  recalculateRiicRoomTeamCandidateForActiveControlBindings,
 } from "./l62-team-calculation.js";
 import {
   applyRiicActiveRosterPreviewEffects,
@@ -69,38 +69,23 @@ function getStaffingBonusPercent({ facility, operators = [] } = {}) {
     : 0;
 }
 
-function getActualControlCenterOperatorEffects(bindings) {
-  return (bindings || []).flatMap((binding) =>
-    (binding?.effects || []).filter(
-      (effect) => String(effect?.scope || "").trim() === "operators",
-    ),
-  );
-}
-
-function getJayeActualTeamCalculation({
+function getActualTeamCalculation({
   candidate,
   actualControlCenterBindings,
 } = {}) {
-  if (
-    String(candidate?.teamCalculation?.type || "").trim() !==
-    "jayeOrderLimit"
-  ) {
+  if (!candidate?.teamCalculation) {
     return null;
   }
 
-  const result = recalculateRiicRoomTeamCandidate({
+  const result = recalculateRiicRoomTeamCandidateForActiveControlBindings({
     candidate,
     scope: candidate?.candidateScope,
     fallbackOperators: candidate?.fallback?.operators || [],
-    controlCenterAdjustment: {
-      operatorEffects: getActualControlCenterOperatorEffects(
-        actualControlCenterBindings,
-      ),
-    },
+    controlBindings: actualControlCenterBindings,
   });
   return (
     result || {
-      type: "jayeOrderLimit",
+      type: String(candidate?.teamCalculation?.type || "").trim(),
       coreBonusAdjustmentPercent: 0,
       usesStaticEstimate: true,
     }
@@ -446,7 +431,7 @@ export function settleRiicPreviewRoomEfficiency({
         })
       : null;
   const teamCalculation = status === "calculated" && !usesFinalRosterCalculation
-    ? getJayeActualTeamCalculation({
+    ? getActualTeamCalculation({
       candidate,
       actualControlCenterBindings,
     })

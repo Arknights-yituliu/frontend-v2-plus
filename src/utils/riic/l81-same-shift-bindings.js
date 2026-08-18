@@ -1,6 +1,9 @@
 import {
   getRiicSameShiftBindingBonusBreakdown,
 } from "./l51-control-effects.js";
+import {
+  recalculateRiicRoomTeamCandidateForActiveControlBindings,
+} from "./l62-team-calculation.js";
 
 const EPSILON = 1e-9;
 
@@ -234,14 +237,38 @@ function getBindingStatus({
         ...getRiicSameShiftBindingBonusBreakdown(activeBinding),
       };
     })
-    .filter((binding) => Math.abs(Number(binding?.bonusPercent || 0)) > EPSILON);
+    .filter(
+      (binding) =>
+        binding?.effects?.length > 0 ||
+        Math.abs(Number(binding?.bonusPercent || 0)) > EPSILON,
+    );
+  const bindingBonusPercent = bindings.reduce(
+    (total, binding) => total + Number(binding.bonusPercent || 0),
+    0,
+  );
+  const teamCalculation = recalculateRiicRoomTeamCandidateForActiveControlBindings({
+    candidate,
+    scope: candidate?.candidateScope || {
+      roomType: group?.facility,
+      product: group?.candidateProduct,
+    },
+    fallbackOperators: candidate?.fallback?.operators || [],
+    controlBindings: bindings,
+  });
+  const teamCalculationBonusPercent = Number(
+    teamCalculation?.coreBonusAdjustmentPercent || 0,
+  );
+  const bonusPercent = bindingBonusPercent + teamCalculationBonusPercent;
 
   return {
-    status: bindings.length > 0 ? "realized" : "unrealized",
-    bonusPercent: bindings.reduce(
-      (total, binding) => total + Number(binding.bonusPercent || 0),
-      0,
-    ),
+    status:
+      bindings.length > 0 || Math.abs(teamCalculationBonusPercent) > EPSILON
+        ? "realized"
+        : "unrealized",
+    bonusPercent,
+    bindingBonusPercent,
+    teamCalculationBonusPercent,
+    teamCalculation,
     facilityBonusPercent: bindings.reduce(
       (total, binding) =>
         total + Number(binding.facilityBonusPercent || 0),
@@ -273,6 +300,7 @@ function createStationSummary({
     candidateKey: String(candidate?.key || "").trim(),
     expectedWeightedBonus: 0,
     realizedWeightedBonus: 0,
+    coreTeamSynergyWeightedBonus: 0,
     expectedBindingHours: 0,
     realizedBindingHours: 0,
     durationHours: 0,
@@ -379,6 +407,12 @@ function summarizeCandidateBindings({
         controlOperatorIds: bindingStatus.controlOperatorIds || [],
         candidateBindingCount: bindingStatus.candidateBindingCount || 0,
         realizedBindingCount: bindingStatus.bindings?.length || 0,
+        bindingBonusPercent: Number(
+          bindingStatus.bindingBonusPercent || 0,
+        ),
+        teamCalculationBonusPercent: Number(
+          bindingStatus.teamCalculationBonusPercent || 0,
+        ),
         realizedBonusPercent: Number(bindingStatus.bonusPercent || 0),
         bindingSources: (bindingStatus.bindings || []).map((binding) => ({
           sourceTeamIndex: binding?.sourceTeamIndex,
@@ -388,11 +422,27 @@ function summarizeCandidateBindings({
         })),
       });
       const expectedBonusPercent = candidateBindings.reduce(
-        (total, binding) =>
-          total +
-          Number(
+        (total, binding) => {
+          const bindingBonusPercent = Number(
             getRiicSameShiftBindingBonusBreakdown(binding).bonusPercent || 0,
-          ),
+          );
+          const teamCalculation =
+            recalculateRiicRoomTeamCandidateForActiveControlBindings({
+              candidate: targetCandidate,
+              scope: targetCandidate?.candidateScope || {
+                roomType: group?.facility,
+                product: group?.candidateProduct,
+              },
+              fallbackOperators:
+                targetCandidate?.fallback?.operators || [],
+              controlBindings: [binding],
+            });
+          return (
+            total +
+            bindingBonusPercent +
+            Number(teamCalculation?.coreBonusAdjustmentPercent || 0)
+          );
+        },
         0,
       );
 
@@ -405,6 +455,11 @@ function summarizeCandidateBindings({
       summary.expectedWeightedBonus += expectedBonusPercent * durationHours;
       summary.realizedWeightedBonus +=
         Number(bindingStatus.bonusPercent || 0) * durationHours;
+      summary.coreTeamSynergyWeightedBonus +=
+        Math.max(
+          0,
+          Number(bindingStatus.teamCalculationBonusPercent || 0),
+        ) * durationHours;
       stationSummaries.set(stationKey, summary);
     }
   }
@@ -434,6 +489,11 @@ function summarizeCandidateBindings({
     (total, station) => total + station.realizedWeightedBonus,
     0,
   );
+  const coreTeamSynergyWeightedBonus = stations.reduce(
+    (total, station) =>
+      total + Number(station.coreTeamSynergyWeightedBonus || 0),
+    0,
+  );
 
   return {
     cycleHours,
@@ -450,6 +510,7 @@ function summarizeCandidateBindings({
       0,
     ),
     realizedWeightedBonus,
+    coreTeamSynergyWeightedBonus,
     weightedBonusPercent:
       durationHours > 0 ? realizedWeightedBonus / durationHours : 0,
     stations,
@@ -572,6 +633,8 @@ export function alignRiicScheduleSameShiftBindings({
     });
     debug.initial = {
       offset: 0,
+      coreTeamSynergyWeightedBonus:
+        selectedSummary.coreTeamSynergyWeightedBonus,
       realizedBindingHours: selectedSummary.realizedBindingHours,
       expectedBindingHours: selectedSummary.expectedBindingHours,
       realizedWeightedBonus: selectedSummary.realizedWeightedBonus,
@@ -579,6 +642,8 @@ export function alignRiicScheduleSameShiftBindings({
     };
     debug.attempts.push({
       offset: 0,
+      coreTeamSynergyWeightedBonus:
+        selectedSummary.coreTeamSynergyWeightedBonus,
       realizedBindingHours: selectedSummary.realizedBindingHours,
       expectedBindingHours: selectedSummary.expectedBindingHours,
       realizedWeightedBonus: selectedSummary.realizedWeightedBonus,
@@ -594,6 +659,14 @@ export function alignRiicScheduleSameShiftBindings({
         group,
         candidate: rotatedCandidate,
       });
+      const hasMoreCoreTeamSynergy =
+        rotatedSummary.coreTeamSynergyWeightedBonus >
+        selectedSummary.coreTeamSynergyWeightedBonus + EPSILON;
+      const hasSameCoreTeamSynergy =
+        Math.abs(
+          rotatedSummary.coreTeamSynergyWeightedBonus -
+            selectedSummary.coreTeamSynergyWeightedBonus,
+        ) <= EPSILON;
       const hasMoreBindingHours =
         rotatedSummary.realizedBindingHours >
         selectedSummary.realizedBindingHours + EPSILON;
@@ -606,20 +679,29 @@ export function alignRiicScheduleSameShiftBindings({
         rotatedSummary.realizedWeightedBonus >
         selectedSummary.realizedWeightedBonus + EPSILON;
       const acceptedAtComparison =
-        hasMoreBindingHours || (hasSameBindingHours && hasMoreWeightedBonus);
+        hasMoreCoreTeamSynergy ||
+        (hasSameCoreTeamSynergy &&
+          (hasMoreBindingHours ||
+            (hasSameBindingHours && hasMoreWeightedBonus)));
       debug.attempts.push({
         offset,
+        coreTeamSynergyWeightedBonus:
+          rotatedSummary.coreTeamSynergyWeightedBonus,
         realizedBindingHours: rotatedSummary.realizedBindingHours,
         expectedBindingHours: rotatedSummary.expectedBindingHours,
         realizedWeightedBonus: rotatedSummary.realizedWeightedBonus,
         acceptedAtComparison,
-        reason: hasMoreBindingHours
-          ? "moreBindingHours"
-          : hasSameBindingHours && hasMoreWeightedBonus
-            ? "sameHoursMoreBonus"
-            : hasSameBindingHours
-              ? "sameHoursNotMoreBonus"
-              : "lessBindingHours",
+        reason: hasMoreCoreTeamSynergy
+          ? "moreCoreTeamSynergy"
+          : !hasSameCoreTeamSynergy
+            ? "lessCoreTeamSynergy"
+            : hasMoreBindingHours
+              ? "moreBindingHours"
+              : hasSameBindingHours && hasMoreWeightedBonus
+                ? "sameHoursMoreBonus"
+                : hasSameBindingHours
+                  ? "sameHoursNotMoreBonus"
+                  : "lessBindingHours",
         trace: rotatedSummary.trace || [],
       });
       if (acceptedAtComparison) {
@@ -637,6 +719,8 @@ export function alignRiicScheduleSameShiftBindings({
     summary.push(resolvedSummary);
     debug.selectedOffset = selectedOffset;
     debug.selected = {
+      coreTeamSynergyWeightedBonus:
+        selectedSummary.coreTeamSynergyWeightedBonus,
       realizedBindingHours: selectedSummary.realizedBindingHours,
       expectedBindingHours: selectedSummary.expectedBindingHours,
       realizedWeightedBonus: selectedSummary.realizedWeightedBonus,

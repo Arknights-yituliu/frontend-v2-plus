@@ -5,6 +5,9 @@ import { operatorTableV2 } from "/src/utils/gameData.js";
 import {
   getRiicSameShiftBindingBonusBreakdown,
 } from "./l51-control-effects.js";
+import {
+  recalculateRiicRoomTeamCandidateForActiveControlBindings,
+} from "./l62-team-calculation.js";
 
 const OPERATOR_ID_BY_NAME = new Map(
   Object.entries(operatorTableV2 || {}).flatMap(([charId, operator]) => {
@@ -313,6 +316,7 @@ function getPlanSelectionScope(selection) {
   return {
     roomType: String(scope?.roomType || "").trim(),
     product: String(scope?.product || "").trim(),
+    stationLevel: Number(scope?.stationLevel),
   };
 }
 
@@ -440,23 +444,29 @@ function getActivePlanSelectionAtHour(selection, hour) {
     return null;
   }
 
+  const candidate = selection?.option?.materializedCandidate || null;
+  const teamCalculationExpectedBonusPercent = toFiniteNumber(
+    candidate?.teamCalculation?.result?.coreBonusAdjustmentPercent ??
+      candidate?.teamCalculation?.preview?.coreBonusAdjustmentPercent,
+    0,
+  );
+
   return {
     key: getPlanSelectionKey(selection),
     groupId: String(selection?.slot?.groupId || "").trim(),
     cohortId: String(selection?.slot?.cohortId || "").trim(),
     teamIndex,
     candidateName: String(
-      selection?.option?.materializedCandidate?.name || "",
+      candidate?.name || "",
     ).trim(),
     scope: getPlanSelectionScope(selection),
     operatorIds: getPlanSelectionOperatorIds(selection),
-    sameShiftBindings:
-      selection?.option?.materializedCandidate?.sameShiftBindings || [],
-    controlCenterExpectedBonusPercent: toFiniteNumber(
-      selection?.option?.materializedCandidate
-        ?.controlCenterExpectedBonusPercent,
-      0,
-    ),
+    candidate,
+    sameShiftBindings: candidate?.sameShiftBindings || [],
+    controlCenterExpectedBonusPercent:
+      toFiniteNumber(candidate?.controlCenterExpectedBonusPercent, 0) +
+      teamCalculationExpectedBonusPercent,
+    teamCalculationExpectedBonusPercent,
   };
 }
 
@@ -761,12 +771,25 @@ function evaluateRiicPlanSameShiftPriority({ states = [] } = {}) {
         })
         .filter(
           (binding) =>
+            binding?.binding?.effects?.length > 0 ||
             Math.abs(Number(binding?.bonusPercent || 0)) > 1e-9,
         );
-      const realizedBonusPercent = matchingBindings.reduce(
+      const bindingBonusPercent = matchingBindings.reduce(
         (total, binding) => total + Number(binding.bonusPercent || 0),
         0,
       );
+      const teamCalculation = recalculateRiicRoomTeamCandidateForActiveControlBindings({
+        candidate: target.candidate,
+        scope: target.scope,
+        fallbackOperators: target?.candidate?.fallback?.operators || [],
+        controlBindings: matchingBindings.map((binding) => binding.binding),
+      });
+      const teamCalculationBonusPercent = toFiniteNumber(
+        teamCalculation?.coreBonusAdjustmentPercent,
+        0,
+      );
+      const realizedBonusPercent =
+        bindingBonusPercent + teamCalculationBonusPercent;
 
       summary.activeHours += durationHours;
       summary.expectedBonusPercentHours +=
@@ -783,6 +806,8 @@ function evaluateRiicPlanSameShiftPriority({ states = [] } = {}) {
         controlTeamIndex,
         controlOperatorIds: [...controlOperatorIds],
         realizedBindingCount: matchingBindings.length,
+        bindingBonusPercent,
+        teamCalculationBonusPercent,
         realizedBonusPercent,
       });
       summariesByTarget.set(target.key, summary);
@@ -794,6 +819,8 @@ function evaluateRiicPlanSameShiftPriority({ states = [] } = {}) {
         controlTeamIndex,
         candidateName: target.candidateName,
         realizedBindingCount: matchingBindings.length,
+        bindingBonusPercent,
+        teamCalculationBonusPercent,
         realizedBonusPercent,
       });
     }

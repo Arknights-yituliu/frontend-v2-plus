@@ -393,7 +393,22 @@ function getRedPineKnightOperatorIds(skills) {
   ];
 }
 
-function createRosterTrialEntry({ sourceOperatorId, rosterById, skills }) {
+function getExperienceManufactureCount(layoutFacts) {
+  return (Array.isArray(layoutFacts?.facilities) ? layoutFacts.facilities : [])
+    .filter(
+      (facility) =>
+        String(facility?.facilityType || "").trim() === "manufacture" &&
+        String(facility?.product || "").trim() === "experience",
+    )
+    .length;
+}
+
+function createRosterTrialEntry({
+  sourceOperatorId,
+  rosterById,
+  skills,
+  layoutFacts,
+}) {
   const redPineKnightCount = getRedPineKnightOperatorIds(skills).filter(
     (operatorId) => rosterById.has(operatorId),
   ).length;
@@ -422,18 +437,30 @@ function createRosterTrialEntry({ sourceOperatorId, rosterById, skills }) {
   }
 
   if (sourceOperatorId === FLAMETAIL_OPERATOR_ID) {
+    const hasExperienceManufacture =
+      getExperienceManufactureCount(layoutFacts) > 0;
     return {
       kind: "roster",
       effectLabel: "红松骑士持有试算",
-      baseScore: -15,
-      terms: [
-        {
-          label: "红松骑士",
-          count: redPineKnightCount,
-          scorePerOperator: 10,
-        },
-      ],
-      score: -15 + redPineKnightCount * 10,
+      baseScore: hasExperienceManufacture ? -15 : -100,
+      terms: hasExperienceManufacture
+        ? [
+            {
+              label: "红松骑士",
+              count: redPineKnightCount,
+              scorePerOperator: 10,
+            },
+          ]
+        : [
+            {
+              label: "\u65e0\u7ecf\u9a8c\u4e66\u5236\u9020\u7ad9",
+              count: 1,
+              scorePerOperator: -100,
+            },
+          ],
+      score: hasExperienceManufacture
+        ? -15 + redPineKnightCount * 10
+        : -100,
     };
   }
 
@@ -540,6 +567,7 @@ function evaluateScenario(scenario, layoutFacts, rosterById, skills) {
     sourceOperatorId: scenario.sourceOperatorId,
     rosterById,
     skills,
+    layoutFacts,
   });
   if (rosterEntry) {
     entries.push(rosterEntry);

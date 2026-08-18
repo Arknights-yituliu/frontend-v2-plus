@@ -193,6 +193,8 @@ function getSameShiftDebugReasonLabel(reason) {
   return (
     {
       baseline: "基准偏移",
+      moreCoreTeamSynergy: "核心组合直接收益更高",
+      lessCoreTeamSynergy: "核心组合直接收益更低",
       moreBindingHours: "有效绑定时长更长",
       sameHoursMoreBonus: "有效时长相同但加成更高",
       sameHoursNotMoreBonus: "有效时长相同且加成未提高",
@@ -403,7 +405,9 @@ const pipelineDebugText = computed(() => {
     );
     for (const attempt of group.attempts || []) {
       lines.push(
-        `  尝试偏移${attempt.offset}: 有效时长=${formatDebugNumber(
+        `  尝试偏移${attempt.offset}: 核心组合=${formatDebugNumber(
+          attempt.coreTeamSynergyWeightedBonus,
+        )}%·h 有效时长=${formatDebugNumber(
           attempt.realizedBindingHours,
         )}/${formatDebugNumber(
           attempt.expectedBindingHours,
@@ -418,7 +422,9 @@ const pipelineDebugText = computed(() => {
     }
     if (group.selected) {
       lines.push(
-        `  最终: 有效时长=${formatDebugNumber(
+        `  最终: 核心组合=${formatDebugNumber(
+          group.selected.coreTeamSynergyWeightedBonus,
+        )}%·h 有效时长=${formatDebugNumber(
           group.selected.realizedBindingHours,
         )}/${formatDebugNumber(
           group.selected.expectedBindingHours,

@@ -15,6 +15,7 @@ import {
 } from "../src/utils/riic/l70-selection-planner.js";
 import {
   recalculateRiicRoomTeamCandidate,
+  recalculateRiicRoomTeamCandidateForActiveControlBindings,
 } from "../src/utils/riic/l62-team-calculation.js";
 import { buildRiicSchedulePreview } from "../src/utils/riicSchedulePreview.js";
 import {
@@ -37,6 +38,7 @@ import {
 } from "../src/utils/riic/l51-control-effects.js";
 import {
   alignRiicScheduleSameShiftBindings,
+  getRiicSameShiftBindingAtHour,
 } from "../src/utils/riic/l81-same-shift-bindings.js";
 
 const normalTradingOperators = Object.freeze([
@@ -1328,7 +1330,7 @@ const jayeStaticCandidate = {
       basePercent: 20,
     },
     {
-      charId: "char_148_aguard",
+      charId: "char_173_slchan",
       name: "崖心",
       elite: 2,
       level: 1,
@@ -1370,7 +1372,7 @@ const jayeStaticPreview = {
             operators: [
               { charId: "char_272_strong" },
               { charId: "char_172_svrash" },
-              { charId: "char_148_aguard" },
+              { charId: "char_173_slchan" },
             ],
           }),
           efficiencyMetrics: {
@@ -1391,7 +1393,7 @@ const jayeStaticSettlement = summarizeRiicActualSchedule({
   tradingOperators: [
     { charId: "char_272_strong", elite: 1, level: 1 },
     { charId: "char_172_svrash", elite: 2, level: 1 },
-    { charId: "char_148_aguard", elite: 2, level: 1 },
+    { charId: "char_173_slchan", elite: 2, level: 1 },
   ],
 });
 const jayeStaticSegment =
@@ -1668,7 +1670,14 @@ const perTeamLateFillState = buildRiicControlCenterLateFillState({
   excludedOperatorIdsByTeamIndex: {
     0: ["idle-a"],
   },
-  roster: [
+  controlCandidates: [
+    {
+      charId: "control-effect-candidate",
+      name: "Control Effect Candidate",
+      controlCenterBuffTags: ["trading-station"],
+    },
+  ],
+  idleFillOperators: [
     { charId: "idle-a", name: "Idle A" },
     { charId: "idle-b", name: "Idle B" },
   ],
@@ -1676,6 +1685,11 @@ const perTeamLateFillState = buildRiicControlCenterLateFillState({
 assert.deepEqual(
   perTeamLateFillState.teamEntries.map((entry) => entry.operatorIds),
   [["idle-b"], ["idle-a"]],
+);
+assert.ok(
+  perTeamLateFillState.teamEntries.every(
+    (entry) => !entry.operatorIds.includes("control-effect-candidate"),
+  ),
 );
 
 const controlTargetOperatorId = "control-target";
@@ -1788,6 +1802,56 @@ const gnosisBinding = {
     },
   ],
 };
+const gnosisJayeCandidate = {
+  ...jayeStaticCandidate,
+  key: "gnosis-jaye",
+  candidateScope: {
+    roomType: "trading",
+    product: "lmd",
+    stationLevel: 3,
+  },
+  operatorIds: [
+    "char_272_strong",
+    "char_172_svrash",
+    "char_173_slchan",
+  ],
+  fallback: {
+    operators: [],
+  },
+  sameShiftBindings: [gnosisBinding],
+};
+const gnosisJayeCalculation =
+  recalculateRiicRoomTeamCandidateForActiveControlBindings({
+    candidate: gnosisJayeCandidate,
+    scope: gnosisJayeCandidate.candidateScope,
+    controlBindings: [gnosisBinding],
+  });
+assert.equal(gnosisJayeCalculation?.coreBonusAdjustmentPercent, 48);
+const gnosisJayeBindingStatus = getRiicSameShiftBindingAtHour({
+  controlCandidate: {
+    segments: [
+      {
+        durationHours: 12,
+        stationAssignments: [
+          {
+            candidate: {
+              controlCenterTeamIndex: 1,
+              operatorIds: ["char_206_gnosis"],
+            },
+          },
+        ],
+      },
+    ],
+  },
+  group: {
+    facility: "trading",
+    candidateProduct: "lmd",
+  },
+  candidate: gnosisJayeCandidate,
+});
+assert.equal(gnosisJayeBindingStatus.bindingBonusPercent, -30);
+assert.equal(gnosisJayeBindingStatus.teamCalculationBonusPercent, 48);
+assert.equal(gnosisJayeBindingStatus.bonusPercent, 18);
 const alignedGnosisSchedule = alignRiicScheduleSameShiftBindings({
   groupEntries: [
     {
@@ -1902,6 +1966,128 @@ assert.equal(
     (room) => room.groupId === "gnosis-trading",
   )?.sameShiftBindingStatus,
   "realized",
+);
+
+function createFlatSameShiftBinding(sourceTeamIndex, bonusPercent) {
+  return {
+    sourceTeamIndex,
+    roomType: "trading",
+    product: "all",
+    effects: [],
+    bonusPercent,
+  };
+}
+
+function createControlSegment(durationHours, teamIndex, operatorIds) {
+  return {
+    durationHours,
+    stationAssignments: [
+      {
+        candidate: {
+          controlCenterTeamIndex: teamIndex,
+          operatorIds,
+        },
+      },
+    ],
+  };
+}
+
+function createTradingSegment(durationHours, candidates) {
+  return {
+    durationHours,
+    stationAssignments: candidates.map((candidate, stationIndex) => ({
+      stationIndex,
+      candidate,
+    })),
+  };
+}
+
+const prioritizedGnosisBindings = [0, 1, 2].map((sourceTeamIndex) =>
+  sourceTeamIndex === 1
+    ? createFlatSameShiftBinding(sourceTeamIndex, 1)
+    : {
+        ...gnosisBinding,
+        sourceTeamIndex,
+      },
+);
+const prioritizedGnosisCandidate = {
+  ...gnosisJayeCandidate,
+  key: "prioritized-gnosis-target",
+  sameShiftBindings: prioritizedGnosisBindings,
+};
+const prioritizedGlobalBonusCandidate = {
+  key: "prioritized-global-bonus-target",
+  candidateScope: {
+    roomType: "trading",
+    product: "lmd",
+  },
+  operatorIds: ["global-bonus"],
+  sameShiftBindings: [
+    createFlatSameShiftBinding(0, 50),
+    createFlatSameShiftBinding(1, 50),
+    createFlatSameShiftBinding(2, 1),
+  ],
+};
+const prioritizedEmptyCandidate = {
+  key: "prioritized-other-target",
+  candidateScope: {
+    roomType: "trading",
+    product: "lmd",
+  },
+  operatorIds: ["other"],
+  sameShiftBindings: [],
+};
+const prioritizedGnosisSchedule = alignRiicScheduleSameShiftBindings({
+  groupEntries: [
+    {
+      group: { facility: "control" },
+      candidate: {
+        segments: [
+          createControlSegment(12, 0, ["char_206_gnosis"]),
+          createControlSegment(6, 1, ["control-other"]),
+          createControlSegment(6, 2, ["char_206_gnosis"]),
+        ],
+      },
+    },
+    {
+      group: { id: "prioritized-gnosis-trading", facility: "trading" },
+      candidate: {
+        segments: [
+          createTradingSegment(12, [
+            prioritizedGnosisCandidate,
+            prioritizedGlobalBonusCandidate,
+          ]),
+          createTradingSegment(6, [
+            prioritizedGnosisCandidate,
+            prioritizedGlobalBonusCandidate,
+          ]),
+          createTradingSegment(6, [
+            prioritizedEmptyCandidate,
+            prioritizedEmptyCandidate,
+          ]),
+        ],
+      },
+    },
+  ],
+});
+const prioritizedGnosisAttempts =
+  prioritizedGnosisSchedule.debug.groups[1].attempts;
+assert.equal(
+  prioritizedGnosisSchedule.groupEntries[1].candidate
+    .sameShiftBindingOffset,
+  1,
+);
+assert.ok(
+  prioritizedGnosisAttempts[0].realizedWeightedBonus >
+    prioritizedGnosisAttempts[1].realizedWeightedBonus,
+);
+assert.ok(
+  prioritizedGnosisAttempts[1].coreTeamSynergyWeightedBonus >
+    prioritizedGnosisAttempts[0].coreTeamSynergyWeightedBonus,
+);
+assert.equal(
+  prioritizedGnosisAttempts[1].reason,
+  "moreCoreTeamSynergy",
 );
 
 const redPineCandidates = [

@@ -215,12 +215,15 @@ function recalculateJayeOrderLimitCandidate({
     (total, member) => total + member.nativeEfficiency,
     0,
   );
-  const coreBonusPercentBeforeControl = jayePercent + teammatePercent;
-  const originalCoreBonusPercent = toFinitePercent(
+  const coreBonusPercentBeforeControl = toFinitePercent(
     candidate?.teamCalculationBaseLocalBonusPercent ??
       candidate?.localBonusPercent ??
       candidate?.efficiency ??
       0,
+  );
+  const controlOrderLimitBonusPercent = teammateDetails.reduce(
+    (total, member) => total + member.controlOrderLimit * 4,
+    0,
   );
 
   return {
@@ -233,8 +236,8 @@ function recalculateJayeOrderLimitCandidate({
     jayePercent,
     teammatePercent,
     coreBonusPercentBeforeControl,
-    coreBonusAdjustmentPercent:
-      coreBonusPercentBeforeControl - originalCoreBonusPercent,
+    controlOrderLimitBonusPercent,
+    coreBonusAdjustmentPercent: controlOrderLimitBonusPercent,
     teammateDetails,
   };
 }
@@ -306,4 +309,30 @@ export function recalculateRiicRoomTeamCandidate({
       percent: getTeamMemberManufacturePercent(member),
     })),
   };
+}
+
+/**
+ * Recalculates a team-dependent room candidate from the control-center
+ * bindings that are active in one concrete schedule segment.
+ */
+export function recalculateRiicRoomTeamCandidateForActiveControlBindings({
+  candidate,
+  scope,
+  fallbackOperators = [],
+  controlBindings = [],
+} = {}) {
+  const operatorEffects = (controlBindings || []).flatMap((binding) =>
+    (binding?.effects || []).filter(
+      (effect) => String(effect?.scope || "").trim() === "operators",
+    ),
+  );
+
+  return recalculateRiicRoomTeamCandidate({
+    candidate,
+    scope,
+    fallbackOperators,
+    controlCenterAdjustment: {
+      operatorEffects,
+    },
+  });
 }

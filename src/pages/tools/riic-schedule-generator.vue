@@ -43,6 +43,7 @@ import {
 } from "/src/utils/riicOperatorSearch.js";
 import RIIC_BASELINE_SKILL_RULES from "/src/static/json/tools/R00-baseline.json";
 import RIIC_CONTROL_CENTER_SKILLS from "/src/static/json/tools/riic-candidates/R50-control.json";
+import RIIC_SCHEDULE_CHANGELOG from "/src/static/json/riic/schedule/changelog.json";
 import {
   createRiicLayoutRecommendation,
   RIIC_LAYOUTS as RIIC_LAYOUT_RECOMMENDATION_LAYOUTS,
@@ -182,6 +183,13 @@ const RIIC_AUTOMATIC_SEARCH_CONFIGS = Object.freeze({
     fallbackPlanLimit: 12,
   },
 });
+const RIIC_SCHEDULE_MODULE_VERSIONS =
+  RIIC_SCHEDULE_CHANGELOG.moduleVersions || {};
+const RIIC_SCHEDULE_CHANGELOG_ENTRIES = Array.isArray(
+  RIIC_SCHEDULE_CHANGELOG.entries,
+)
+  ? RIIC_SCHEDULE_CHANGELOG.entries
+  : [];
 const FIAMMETTA_RECOVERY_TARGET_NAMES = Object.freeze([
   "但书",
   "可露希尔",
@@ -3281,8 +3289,6 @@ const controlCenterLateFillState = computed(() => {
     fallbackPlans: roomGroupFallbackPlanStates.value,
     excludedOperatorIdsByTeamIndex:
       controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
-    controlCandidates: controlCenterCandidateOperators.value,
-    roster: riicMatchingRoster.value,
     idleFillOperators: riicIdleFillOperators.value,
     fiammettaRecovery: fiammettaRecoveryConfig.value,
   });
@@ -7626,6 +7632,10 @@ onBeforeUnmount(() => {
               {{ layoutWorkflowCardState === "complete" ? "已完成" : "进行中" }}
             </span>
           </div>
+          <div class="workflow-card-version">
+            {{ RIIC_SCHEDULE_MODULE_VERSIONS.layout?.label }}
+            {{ RIIC_SCHEDULE_MODULE_VERSIONS.layout?.version }}
+          </div>
         </header>
 
         <RiicLayoutChoicePanel
@@ -7702,6 +7712,16 @@ onBeforeUnmount(() => {
               class="workflow-card-status-note"
             >
               请导入至少一份干员数据            </span>
+          </div>
+          <div class="workflow-card-version">
+            <span>
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.data?.label }}
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.data?.version }}
+            </span>
+            <span>
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.team?.label }}
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.team?.version }}
+            </span>
           </div>
         </div>
         <Transition name="schedule-generation-running-notice">
@@ -8026,6 +8046,16 @@ onBeforeUnmount(() => {
                   ? "可调整"
                   : "待生成"
               }}
+            </span>
+          </div>
+          <div class="workflow-card-version">
+            <span>
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.assembler?.label }}
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.assembler?.version }}
+            </span>
+            <span>
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.yield?.label }}
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.yield?.version }}
             </span>
           </div>
         </div>
@@ -8395,6 +8425,10 @@ onBeforeUnmount(() => {
               }}
             </span>
           </div>
+          <div class="workflow-card-version">
+            {{ RIIC_SCHEDULE_MODULE_VERSIONS.recommendation?.label }}
+            {{ RIIC_SCHEDULE_MODULE_VERSIONS.recommendation?.version }}
+          </div>
         </div>
 
         <RiicPipelineDebugPanel
@@ -8446,6 +8480,43 @@ onBeforeUnmount(() => {
           :get-riic-yield-engine-status-meta="getRiicYieldEngineStatusMeta"
           :format-riic-yield-metric="formatRiicYieldMetric"
         />
+      </section>
+
+      <section class="workflow-stage workflow-card update-log-workflow-stage">
+        <div class="workflow-card-heading">
+          <div class="workflow-card-heading-copy">
+            <h2>更新日志</h2>
+          </div>
+        </div>
+        <div class="schedule-changelog">
+          <article
+            v-for="entry in RIIC_SCHEDULE_CHANGELOG_ENTRIES"
+            :key="`${entry.date}:${entry.version}`"
+            class="schedule-changelog-entry"
+          >
+            <header class="schedule-changelog-entry-heading">
+              <strong>{{ entry.date }}</strong>
+              <span>{{ entry.version }}</span>
+            </header>
+            <ul class="schedule-changelog-item-list">
+              <li
+                v-for="(item, index) in entry.items"
+                :key="`${entry.date}:${item.module}:${index}`"
+                class="schedule-changelog-item"
+              >
+                <span class="schedule-changelog-level">
+                  Lv{{ item.level }}
+                </span>
+                <span class="schedule-changelog-item-module">
+                  {{ item.module }}
+                </span>
+                <span class="schedule-changelog-item-description">
+                  {{ item.description }}
+                </span>
+              </li>
+            </ul>
+          </article>
+        </div>
       </section>
 
       <div class="page-cache-reset">
@@ -8825,6 +8896,77 @@ onBeforeUnmount(() => {
   box-shadow: 0 8px 22px rgb(20 34 48 / 9%);
 }
 
+.schedule-changelog {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.schedule-changelog-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-changelog-entry + .schedule-changelog-entry {
+  padding-top: 18px;
+  border-top: 1px solid var(--c-border-color);
+}
+
+.schedule-changelog-entry-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--c-text-color);
+}
+
+.schedule-changelog-entry-heading strong {
+  font-size: 14px;
+}
+
+.schedule-changelog-entry-heading span {
+  color: var(--riic-muted);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.schedule-changelog-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.schedule-changelog-item {
+  display: grid;
+  grid-template-columns: 36px 92px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  color: var(--c-text-color);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.schedule-changelog-level {
+  color: var(--riic-orange);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.schedule-changelog-item-module {
+  color: var(--riic-blue);
+  font-weight: 600;
+}
+
+.schedule-changelog-item-description {
+  min-width: 0;
+  color: var(--riic-muted);
+}
+
 .wizard-layout.manual-selection {
   grid-template-columns: minmax(0, 1fr);
   max-width: 880px;
@@ -8860,6 +9002,29 @@ onBeforeUnmount(() => {
   align-items: baseline;
   min-width: 0;
   gap: 10px;
+}
+
+.workflow-card-version {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 0;
+  color: color-mix(in srgb, #fff 82%, transparent);
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.45;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.workflow-card-version span {
+  overflow: visible;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-overflow: clip;
+  white-space: nowrap;
 }
 
 .workflow-stage .workflow-card-heading h2 {
@@ -10527,6 +10692,10 @@ onBeforeUnmount(() => {
 
   .workflow-card-heading {
     margin: -18px -18px 18px;
+  }
+
+  .workflow-card-version {
+    font-size: 10px;
   }
 
   .layout-entry-panel {
