@@ -160,6 +160,15 @@ const RIIC_OPERATOR_WORKSPACES_STORAGE_KEY =
   "riic_schedule_generator_workspaces_v1";
 const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
   "riic_schedule_generator_to_legacy_editor_v1";
+const RIIC_WORKFLOW_CARD_COLLAPSE_STORAGE_KEY =
+  "riic_schedule_generator_workflow_card_collapse_v1";
+const RIIC_WORKFLOW_CARD_IDS = Object.freeze([
+  "layout",
+  "generation",
+  "output",
+  "additional",
+  "changelog",
+]);
 const RIIC_SCHEDULE_DRAFT_VERSION = 25;
 const ROOM_STAFFING_CANDIDATE_PAGE_SIZE = 24;
 const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "14";
@@ -190,6 +199,19 @@ const RIIC_SCHEDULE_CHANGELOG_ENTRIES = Array.isArray(
 )
   ? RIIC_SCHEDULE_CHANGELOG.entries
   : [];
+const riicScheduleFrameworkVersion = computed(() => {
+  const versionPattern = /^v\d{8}\.\d{4}$/;
+  const versions = [
+    ...Object.values(RIIC_SCHEDULE_MODULE_VERSIONS).map((module) =>
+      String(module?.version || "").trim(),
+    ),
+    ...RIIC_SCHEDULE_CHANGELOG_ENTRIES.map((entry) =>
+      String(entry?.version || "").trim(),
+    ),
+  ].filter((version) => versionPattern.test(version));
+
+  return versions.sort().pop() || "";
+});
 const FIAMMETTA_RECOVERY_TARGET_NAMES = Object.freeze([
   "但书",
   "可露希尔",
@@ -4473,6 +4495,11 @@ watch(
 const layoutWorkflowCardState = computed(() =>
   isLayoutPlanningReady.value ? "complete" : "pending",
 );
+const workflowCardCollapseStates = ref(
+  Object.fromEntries(
+    RIIC_WORKFLOW_CARD_IDS.map((cardId) => [cardId, false]),
+  ),
+);
 const scheduleGenerationWorkflowCardState = computed(() =>
   assembledScheduleCandidateState.value.status === "ready" &&
   Boolean(riicSchedulePreview.value)
@@ -7089,6 +7116,62 @@ function saveWizardState() {
   }
 }
 
+function resetWorkflowCardCollapseStates() {
+  workflowCardCollapseStates.value = Object.fromEntries(
+    RIIC_WORKFLOW_CARD_IDS.map((cardId) => [cardId, false]),
+  );
+}
+
+function loadWorkflowCardCollapseStates() {
+  try {
+    const raw = localStorage.getItem(RIIC_WORKFLOW_CARD_COLLAPSE_STORAGE_KEY);
+    if (!raw) {
+      return;
+    }
+
+    const savedStates = JSON.parse(raw);
+    if (!savedStates || typeof savedStates !== "object") {
+      return;
+    }
+
+    workflowCardCollapseStates.value = Object.fromEntries(
+      RIIC_WORKFLOW_CARD_IDS.map((cardId) => [
+        cardId,
+        savedStates[cardId] === true,
+      ]),
+    );
+  } catch {
+    resetWorkflowCardCollapseStates();
+  }
+}
+
+function isWorkflowCardCollapsed(cardId) {
+  return workflowCardCollapseStates.value[cardId] === true;
+}
+
+function toggleWorkflowCardCollapse(cardId) {
+  if (!RIIC_WORKFLOW_CARD_IDS.includes(cardId)) {
+    return;
+  }
+
+  const nextStates = {
+    ...workflowCardCollapseStates.value,
+    [cardId]: !workflowCardCollapseStates.value[cardId],
+  };
+  workflowCardCollapseStates.value = nextStates;
+
+  try {
+    localStorage.setItem(
+      RIIC_WORKFLOW_CARD_COLLAPSE_STORAGE_KEY,
+      JSON.stringify(nextStates),
+    );
+  } catch {
+    // The current view can still fold normally when local storage is unavailable.
+  }
+}
+
+loadWorkflowCardCollapseStates();
+
 function selectOption(key, value) {
   if (key === "shiftMode") {
     selectLayoutShift(value);
@@ -7347,6 +7430,13 @@ async function clearSavedWizardState() {
     cleared = false;
   }
 
+  try {
+    localStorage.removeItem(RIIC_WORKFLOW_CARD_COLLAPSE_STORAGE_KEY);
+  } catch {
+    cleared = false;
+  }
+
+  resetWorkflowCardCollapseStates();
   Object.assign(answers, DEFAULT_ANSWERS);
   currentStep.value = 0;
   applyDefaultLayoutSelection();
@@ -7612,10 +7702,29 @@ onBeforeUnmount(() => {
     <div class="workflow-shell">
       <section
         class="workflow-stage workflow-card layout-workflow-stage"
-        :class="`workflow-card-${layoutWorkflowCardState}`"
+        :class="[
+          `workflow-card-${layoutWorkflowCardState}`,
+          { 'is-collapsed': isWorkflowCardCollapsed('layout') },
+        ]"
       >
         <header class="workflow-card-heading">
           <div class="workflow-card-heading-copy">
+            <button
+              type="button"
+              class="workflow-card-collapse-toggle"
+              :aria-expanded="!isWorkflowCardCollapsed('layout')"
+              title="折叠或展开布局规划"
+              @click="toggleWorkflowCardCollapse('layout')"
+            >
+              <v-icon
+                :icon="
+                  isWorkflowCardCollapsed('layout')
+                    ? 'mdi-chevron-right'
+                    : 'mdi-chevron-down'
+                "
+                size="20"
+              ></v-icon>
+            </button>
             <h2>布局规划</h2>
             <span
               class="workflow-card-status"
@@ -7638,53 +7747,81 @@ onBeforeUnmount(() => {
           </div>
         </header>
 
-        <RiicLayoutChoicePanel
-          ref="contentPanel"
-          :recommendation-panel-open="recommendationPanelOpen"
-          :steps="steps"
-          :current-step="currentStep"
-          :active-step="activeStep"
-          :answers="answers"
-          :recommendation="recommendation"
-          :recommendation-card="recommendationCard"
-          :layout-entry="layoutEntry"
-          :selected-layout-shift-mode="selectedLayoutShiftMode"
-          :selected-manual-schedule-value="selectedManualScheduleValue"
-          :layout-shift-options="LAYOUT_SHIFT_OPTIONS"
-          :visible-layout-schedule-options="visibleLayoutScheduleOptions"
-          :is-step-complete="isStepComplete"
-          :is-layout-recommended="isLayoutRecommended"
-          :custom-layout-editor-open="customLayoutEditorOpen"
-          :custom-layout-active="Boolean(confirmedLayoutPlan?.customLayout)"
-          :custom-layout-resettable="Boolean(customLayoutResetSnapshot)"
-          :custom-layout-stations="customLayoutEditorStations"
-          :custom-layout-power-summary="customLayoutPowerSummary"
-          :room-product-options="ROOM_PRODUCT_OPTIONS"
-          @toggle-recommendation-panel="toggleRecommendationPanel"
-          @select-recommendation-step="selectRecommendationStep"
-          @update-answer="selectOption($event.key, $event.value)"
-          @reset-recommendation-answers="resetRecommendationAnswers"
-          @select-layout-shift="selectLayoutShift"
-          @select-manual-schedule-option="selectManualScheduleOption"
-          @toggle-custom-layout-editor="toggleCustomLayoutEditor"
-          @change-custom-layout-station-level="
-            updateCustomLayoutStationLevel($event)
-          "
-          @change-custom-layout-station-product="
-            updateCustomLayoutStationProduct($event)
-          "
-          @apply-custom-layout="applyCustomLayout"
-          @reset-custom-layout="resetCustomLayout"
-        ></RiicLayoutChoicePanel>
+        <Transition name="workflow-card-content">
+          <div
+            v-show="!isWorkflowCardCollapsed('layout')"
+            class="workflow-card-content"
+          >
+            <div class="workflow-card-content-inner">
+              <RiicLayoutChoicePanel
+                ref="contentPanel"
+                :recommendation-panel-open="recommendationPanelOpen"
+                :steps="steps"
+                :current-step="currentStep"
+                :active-step="activeStep"
+                :answers="answers"
+                :recommendation="recommendation"
+                :recommendation-card="recommendationCard"
+                :layout-entry="layoutEntry"
+                :selected-layout-shift-mode="selectedLayoutShiftMode"
+                :selected-manual-schedule-value="selectedManualScheduleValue"
+                :layout-shift-options="LAYOUT_SHIFT_OPTIONS"
+                :visible-layout-schedule-options="visibleLayoutScheduleOptions"
+                :is-step-complete="isStepComplete"
+                :is-layout-recommended="isLayoutRecommended"
+                :custom-layout-editor-open="customLayoutEditorOpen"
+                :custom-layout-active="Boolean(confirmedLayoutPlan?.customLayout)"
+                :custom-layout-resettable="Boolean(customLayoutResetSnapshot)"
+                :custom-layout-stations="customLayoutEditorStations"
+                :custom-layout-power-summary="customLayoutPowerSummary"
+                :room-product-options="ROOM_PRODUCT_OPTIONS"
+                @toggle-recommendation-panel="toggleRecommendationPanel"
+                @select-recommendation-step="selectRecommendationStep"
+                @update-answer="selectOption($event.key, $event.value)"
+                @reset-recommendation-answers="resetRecommendationAnswers"
+                @select-layout-shift="selectLayoutShift"
+                @select-manual-schedule-option="selectManualScheduleOption"
+                @toggle-custom-layout-editor="toggleCustomLayoutEditor"
+                @change-custom-layout-station-level="
+                  updateCustomLayoutStationLevel($event)
+                "
+                @change-custom-layout-station-product="
+                  updateCustomLayoutStationProduct($event)
+                "
+                @apply-custom-layout="applyCustomLayout"
+                @reset-custom-layout="resetCustomLayout"
+              ></RiicLayoutChoicePanel>
+            </div>
+          </div>
+        </Transition>
 
       </section>
 
       <section
         class="workflow-stage workflow-card schedule-generation-stage"
-        :class="`workflow-card-${scheduleGenerationWorkflowCardState}`"
+        :class="[
+          `workflow-card-${scheduleGenerationWorkflowCardState}`,
+          { 'is-collapsed': isWorkflowCardCollapsed('generation') },
+        ]"
       >
         <div class="workflow-card-heading">
           <div class="workflow-card-heading-copy">
+            <button
+              type="button"
+              class="workflow-card-collapse-toggle"
+              :aria-expanded="!isWorkflowCardCollapsed('generation')"
+              title="折叠或展开导入干员与生成排班表"
+              @click="toggleWorkflowCardCollapse('generation')"
+            >
+              <v-icon
+                :icon="
+                  isWorkflowCardCollapsed('generation')
+                    ? 'mdi-chevron-right'
+                    : 'mdi-chevron-down'
+                "
+                size="20"
+              ></v-icon>
+            </button>
             <h2>导入干员与生成排班表</h2>
             <span
               class="workflow-card-status"
@@ -7724,6 +7861,12 @@ onBeforeUnmount(() => {
             </span>
           </div>
         </div>
+        <Transition name="workflow-card-content">
+          <div
+            v-show="!isWorkflowCardCollapsed('generation')"
+            class="workflow-card-content"
+          >
+            <div class="workflow-card-content-inner">
         <Transition name="schedule-generation-running-notice">
           <div
             v-if="scheduleGenerationLoading"
@@ -8020,14 +8163,36 @@ onBeforeUnmount(() => {
         <p v-else class="schedule-generation-empty-state">
           选择布局后即可生成排班表
         </p>
+            </div>
+          </div>
+        </Transition>
       </section>
 
       <section
         class="workflow-stage workflow-card schedule-output-stage"
-        :class="`workflow-card-${scheduleOutputWorkflowCardState}`"
+        :class="[
+          `workflow-card-${scheduleOutputWorkflowCardState}`,
+          { 'is-collapsed': isWorkflowCardCollapsed('output') },
+        ]"
       >
         <div class="workflow-card-heading">
           <div class="workflow-card-heading-copy">
+            <button
+              type="button"
+              class="workflow-card-collapse-toggle"
+              :aria-expanded="!isWorkflowCardCollapsed('output')"
+              title="折叠或展开排班表调整与导出"
+              @click="toggleWorkflowCardCollapse('output')"
+            >
+              <v-icon
+                :icon="
+                  isWorkflowCardCollapsed('output')
+                    ? 'mdi-chevron-right'
+                    : 'mdi-chevron-down'
+                "
+                size="20"
+              ></v-icon>
+            </button>
             <h2>排班表调整与导出</h2>
             <span
               class="workflow-card-status"
@@ -8060,6 +8225,12 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
+        <Transition name="workflow-card-content">
+          <div
+            v-show="!isWorkflowCardCollapsed('output')"
+            class="workflow-card-content"
+          >
+            <div class="workflow-card-content-inner">
         <section
           class="assembled-schedule-panel"
           :class="`state-${assembledScheduleCandidateState.status}`"
@@ -8395,14 +8566,36 @@ onBeforeUnmount(() => {
         <p v-else class="schedule-output-empty">
           选择并生成全部房间组后即可导出结果
         </p>
+            </div>
+          </div>
+        </Transition>
       </section>
 
       <section
         class="workflow-stage workflow-card riic-yield-workflow-stage"
-        :class="`workflow-card-${riicYieldWorkflowCardState}`"
+        :class="[
+          `workflow-card-${riicYieldWorkflowCardState}`,
+          { 'is-collapsed': isWorkflowCardCollapsed('additional') },
+        ]"
       >
         <div class="workflow-card-heading">
           <div class="workflow-card-heading-copy">
+            <button
+              type="button"
+              class="workflow-card-collapse-toggle"
+              :aria-expanded="!isWorkflowCardCollapsed('additional')"
+              title="折叠或展开附加信息"
+              @click="toggleWorkflowCardCollapse('additional')"
+            >
+              <v-icon
+                :icon="
+                  isWorkflowCardCollapsed('additional')
+                    ? 'mdi-chevron-right'
+                    : 'mdi-chevron-down'
+                "
+                size="20"
+              ></v-icon>
+            </button>
             <h2>附加信息</h2>
             <span
               class="workflow-card-status"
@@ -8431,6 +8624,12 @@ onBeforeUnmount(() => {
           </div>
         </div>
 
+        <Transition name="workflow-card-content">
+          <div
+            v-show="!isWorkflowCardCollapsed('additional')"
+            class="workflow-card-content"
+          >
+            <div class="workflow-card-content-inner">
         <RiicPipelineDebugPanel
           v-if="showCandidateDebugValues"
           :groups="candidateEnabledScheduleRoomGroups"
@@ -8480,15 +8679,48 @@ onBeforeUnmount(() => {
           :get-riic-yield-engine-status-meta="getRiicYieldEngineStatusMeta"
           :format-riic-yield-metric="formatRiicYieldMetric"
         />
+            </div>
+          </div>
+        </Transition>
       </section>
 
-      <section class="workflow-stage workflow-card update-log-workflow-stage">
+      <section
+        class="workflow-stage workflow-card update-log-workflow-stage"
+        :class="{ 'is-collapsed': isWorkflowCardCollapsed('changelog') }"
+      >
         <div class="workflow-card-heading">
           <div class="workflow-card-heading-copy">
+            <button
+              type="button"
+              class="workflow-card-collapse-toggle"
+              :aria-expanded="!isWorkflowCardCollapsed('changelog')"
+              title="折叠或展开更新日志"
+              @click="toggleWorkflowCardCollapse('changelog')"
+            >
+              <v-icon
+                :icon="
+                  isWorkflowCardCollapsed('changelog')
+                    ? 'mdi-chevron-right'
+                    : 'mdi-chevron-down'
+                "
+                size="20"
+              ></v-icon>
+            </button>
             <h2>更新日志</h2>
           </div>
+          <div
+            v-if="riicScheduleFrameworkVersion"
+            class="workflow-card-version"
+          >
+            框架版本 {{ riicScheduleFrameworkVersion }}
+          </div>
         </div>
-        <div class="schedule-changelog">
+        <Transition name="workflow-card-content">
+          <div
+            v-show="!isWorkflowCardCollapsed('changelog')"
+            class="workflow-card-content"
+          >
+            <div class="workflow-card-content-inner schedule-changelog">
           <article
             v-for="entry in RIIC_SCHEDULE_CHANGELOG_ENTRIES"
             :key="`${entry.date}:${entry.version}`"
@@ -8516,7 +8748,9 @@ onBeforeUnmount(() => {
               </li>
             </ul>
           </article>
-        </div>
+            </div>
+          </div>
+        </Transition>
       </section>
 
       <div class="page-cache-reset">
@@ -8530,6 +8764,14 @@ onBeforeUnmount(() => {
           rel="noopener noreferrer"
         >
           基建/自动排班交流群：782204269
+        </a>
+        <a
+          class="page-cache-reset-link"
+          href="https://www.bilibili.com/video/BV1scbi6JEGE/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          介绍视频
         </a>
       </div>
     </div>
@@ -8816,7 +9058,11 @@ onBeforeUnmount(() => {
   gap: 0;
 }
 
-.schedule-output-stage > .assembled-schedule-panel + * {
+.schedule-output-stage
+  > .workflow-card-content
+  > .workflow-card-content-inner
+  > .assembled-schedule-panel
+  + * {
   margin-top: 14px;
 }
 
@@ -8992,9 +9238,66 @@ onBeforeUnmount(() => {
   background: var(--riic-green);
 }
 
+.workflow-card.is-collapsed .workflow-card-heading {
+  margin-bottom: -22px;
+}
+
 .workflow-card-heading > * {
   position: relative;
   z-index: 1;
+}
+
+.workflow-card-heading {
+  transition: margin-bottom 240ms ease;
+}
+
+.workflow-card-content {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows 240ms ease,
+    opacity 180ms ease;
+}
+
+.workflow-card-content-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.workflow-card-content-enter-from,
+.workflow-card-content-leave-to {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.workflow-card-collapse-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / 38%);
+  border-radius: 6px;
+  background: rgb(255 255 255 / 16%);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.workflow-card-collapse-toggle:hover {
+  border-color: rgb(255 255 255 / 72%);
+  background: rgb(255 255 255 / 28%);
+}
+
+.workflow-card-collapse-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 .workflow-card-heading-copy {
@@ -9028,10 +9331,14 @@ onBeforeUnmount(() => {
 }
 
 .workflow-stage .workflow-card-heading h2 {
+  min-width: 0;
   margin: 0;
+  overflow: hidden;
   color: #fff;
   font-size: 18px;
   line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .workflow-card-heading span {
@@ -10692,6 +10999,10 @@ onBeforeUnmount(() => {
 
   .workflow-card-heading {
     margin: -18px -18px 18px;
+  }
+
+  .workflow-card.is-collapsed .workflow-card-heading {
+    margin-bottom: -18px;
   }
 
   .workflow-card-version {

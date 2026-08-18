@@ -178,7 +178,7 @@ assert.deepEqual(
   maaRoomIndexExport.schedule.plans[0].rooms.trading.map(
     (room) => room.product,
   ),
-  ["Originium Shard", "LMD"],
+  ["Orundum", "LMD"],
 );
 assert.equal(maaRoomIndexExport.schedule.plans[0].drones.index, 1);
 

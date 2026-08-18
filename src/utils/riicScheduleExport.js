@@ -110,7 +110,10 @@ function createMaaRoom(room, stateIndex, roomSettingOverrides) {
   }
 
   if (ROOM_TYPES_WITH_PRODUCT.has(room?.facility)) {
-    const product = MAA_PRODUCT_BY_PRODUCT[room?.product];
+    const product =
+      room?.facility === "trading" && room?.product === "orundum"
+        ? "Orundum"
+        : MAA_PRODUCT_BY_PRODUCT[room?.product];
     if (product) {
       maaRoom.product = product;
     }

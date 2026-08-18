@@ -1,5 +1,34 @@
 <script setup>
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import OPERATOR_UPGRADE_DATA from "/src/static/json/tools/operatorUpgradeData.json";
+
+function compareTrainingUnlock(left, right) {
+  const eliteDifference = Number(left?.elite || 0) - Number(right?.elite || 0);
+  if (eliteDifference !== 0) {
+    return eliteDifference;
+  }
+
+  return Number(left?.level || 1) - Number(right?.level || 1);
+}
+
+function getTrainingUpgradeEffects(requirement) {
+  const upgrades =
+    OPERATOR_UPGRADE_DATA.operators?.[requirement?.charId]?.upgrades || [];
+  const current = {
+    elite: Number(requirement?.current?.elite || 0),
+    level: Number(requirement?.current?.level || 1),
+  };
+  const required = {
+    elite: Number(requirement?.required?.elite || 0),
+    level: Number(requirement?.required?.level || 1),
+  };
+
+  return upgrades.filter(
+    (upgrade) =>
+      compareTrainingUnlock(upgrade, current) > 0 &&
+      compareTrainingUnlock(upgrade, required) <= 0,
+  );
+}
 
 const props = defineProps({
   scheduleTrainingRequirements: {
@@ -42,23 +71,42 @@ const props = defineProps({
       v-if="scheduleTrainingRequirements.length"
       class="schedule-training-requirements"
     >
-      <span
+      <article
         v-for="requirement in scheduleTrainingRequirements"
         :key="requirement.charId"
+        class="schedule-training-requirement"
       >
         <OperatorAvatar
           :char-id="requirement.charId"
           :rarity="operatorTable?.[requirement.charId]?.rarity || 1"
-          :size="26"
-          :mobile-size="24"
+          :size="36"
+          :mobile-size="32"
           border
         ></OperatorAvatar>
-        <small>{{ requirement.name }}</small>
-        <em>{{ formatTrainingRequirement(requirement) }}</em>
-      </span>
+        <div class="schedule-training-requirement-copy">
+          <div class="schedule-training-requirement-title">
+            <strong>{{ requirement.name }}</strong>
+            <span>{{ formatTrainingRequirement(requirement) }}</span>
+          </div>
+          <ul
+            v-if="getTrainingUpgradeEffects(requirement).length"
+            class="schedule-training-upgrade-effects"
+          >
+            <li
+              v-for="upgrade in getTrainingUpgradeEffects(requirement)"
+              :key="`${upgrade.elite}:${upgrade.level}:${upgrade.skillName}`"
+            >
+              <strong v-if="upgrade.eff" class="schedule-training-upgrade-effect">
+                {{ upgrade.eff }}
+              </strong>
+              <span>{{ upgrade.text }}</span>
+            </li>
+          </ul>
+        </div>
+      </article>
     </div>
     <p v-else class="additional-info-empty">
-      当前排班暂无培养建议
+      如果没有推荐干员，可能是“导入干员与生成排班表”里“干员练度”选项没有打开，或者是你该练的都练了
     </p>
   </section>
 
@@ -193,30 +241,75 @@ const props = defineProps({
 }
 
 .schedule-training-requirements {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 10px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
   min-width: 0;
 }
 
-.schedule-training-requirements > span {
-  display: inline-flex;
+.schedule-training-requirement {
+  display: flex;
   align-items: center;
+  min-height: 58px;
   min-width: 0;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 6px;
+  background: var(--c-page-background-color);
+}
+
+.schedule-training-requirement-copy {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.schedule-training-requirement-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
   gap: 4px;
 }
 
-.schedule-training-requirements small {
+.schedule-training-requirement-title strong {
   color: var(--c-text-color);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.schedule-training-requirement-title span {
+  color: var(--riic-muted);
   font-size: 12px;
   line-height: 1.4;
 }
 
-.schedule-training-requirements em {
-  color: var(--riic-muted);
+.schedule-training-upgrade-effects {
+  display: grid;
+  gap: 3px;
+  margin: 2px 0 0;
+  padding: 0;
   font-size: 11px;
-  font-style: normal;
-  line-height: 1.4;
+  line-height: 1.45;
+  list-style: none;
+}
+
+.schedule-training-upgrade-effects li {
+  display: grid;
+  gap: 1px;
+}
+
+.schedule-training-upgrade-effect {
+  color: var(--riic-orange);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.schedule-training-upgrade-effects li > span {
+  color: var(--riic-muted);
 }
 
 .additional-info-debug {
@@ -390,14 +483,10 @@ const props = defineProps({
 
 @media (max-width: 640px) {
   .schedule-training-requirements {
-    gap: 6px 8px;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .schedule-training-requirements > span {
-    max-width: 100%;
-  }
-
-  .schedule-training-requirements em {
+  .schedule-training-requirement-copy span {
     overflow-wrap: anywhere;
   }
 }

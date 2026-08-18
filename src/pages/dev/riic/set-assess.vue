@@ -136,6 +136,10 @@ const TERM_OPERATOR_GROUPS = Object.freeze({
     label: "黑钢国际",
     members: ["雷蛇", "芙兰卡", "杰西卡", "香草", "杏仁", "寻澜"],
   },
+  abyssal: {
+    label: "深海猎人",
+    members: ["歌蕾蒂娅", "斯卡蒂", "幽灵鲨", "安哲拉", "乌尔比安"],
+  },
   knight: {
     label: "骑士",
     members: [
@@ -284,6 +288,23 @@ const ASSESSMENT_SYSTEMS = Object.freeze([
     relatedOperators: getTermMembers(["blacksteel"], ["涤火杰西卡"]),
     engineStatus: "P15 公式目录待接入",
     engineNote: "只处理涤火杰西卡与黑钢国际成员的制造站联动。",
+  },
+  {
+    id: "gladiia-abyssal",
+    ruleSourceId: "control-cross-room",
+    ruleIds: ["gladiia-abyssal"],
+    category: "中枢联动",
+    title: "歌蕾蒂娅与深海猎人",
+    summary:
+      "歌蕾蒂娅进驻控制中枢后，制造站内的深海猎人数量会共同提高含深海猎人的制造站生产力。",
+    facilities: ["control", "manufacture"],
+    coreOperators: ["歌蕾蒂娅"],
+    participantOperators: ["深海猎人干员（按制造站人数）"],
+    skillRooms: ["control", "manufacture"],
+    relatedOperators: getTermMembers(["abyssal"], ["歌蕾蒂娅"]),
+    engineStatus: "P15 公式目录待接入",
+    engineNote:
+      "精二按每名进驻制造站的深海猎人提供 +10% 生产力，作用于含深海猎人的制造站。",
   },
   {
     id: "knight-control",
@@ -646,6 +667,13 @@ const SYSTEM_CORE_RULES = Object.freeze({
       requirement: "制造站内有黑钢国际干员",
       effect: "每名黑钢国际干员使生产力 +5%",
       relatedGroups: ["blacksteel"],
+    },
+    {
+      id: "gladiia-abyssal",
+      core: "歌蕾蒂娅",
+      requirement: "深海猎人进驻制造站",
+      effect: "每名制造站内深海猎人使含深海猎人的制造站生产力 +10%",
+      relatedGroups: ["abyssal"],
     },
     {
       id: "viviana-knight",
@@ -1022,6 +1050,7 @@ const definitionError = ref("");
 const rawResult = ref(null);
 const rawPanelOpen = ref(false);
 const systemPlacementChoices = ref({});
+const systemMemberEnabledChoices = ref({});
 
 const selectedSource = computed(() =>
   getRiicSetAssessmentSource(snapshot.value, selectedSourceId.value),
@@ -1303,8 +1332,46 @@ function getSystemOperatorSummary(system, role) {
       requirement,
       trainingStatus: getOperatorTrainingStatus(operator, requirement),
       tags: getRelatedTags(system, name),
+      enabled: isSystemMemberEnabled(system, name),
     };
   });
+}
+
+function isSystemMemberEnabled(system, name) {
+  return systemMemberEnabledChoices.value[system?.id]?.[name] !== false;
+}
+
+function getEnabledSystemOperators(system, operators) {
+  return (operators || []).filter((operator) =>
+    isSystemMemberEnabled(system, operator.name),
+  );
+}
+
+function getEnabledSystemGroupMembers(system) {
+  return Object.fromEntries(
+    Object.entries(TERM_OPERATOR_MEMBERS).map(([groupKey, names]) => [
+      groupKey,
+      names.filter((name) => isSystemMemberEnabled(system, name)),
+    ]),
+  );
+}
+
+function updateSystemMemberEnabled(name, enabled) {
+  const systemId = selectedSystem.value.id;
+  const current = {
+    ...(systemMemberEnabledChoices.value[systemId] || {}),
+  };
+
+  if (enabled) {
+    delete current[name];
+  } else {
+    current[name] = false;
+  }
+
+  systemMemberEnabledChoices.value = {
+    ...systemMemberEnabledChoices.value,
+    [systemId]: current,
+  };
 }
 
 function getSystemMemberSummary(system) {
@@ -1366,9 +1433,12 @@ const selectedSystemPercentAssessment = computed(() =>
   planRiicSystemPercentAssessment({
     systemId: selectedSystem.value.ruleSourceId || selectedSystem.value.id,
     ruleIds: selectedSystem.value.ruleIds,
-    operators: selectedResolvedBaselineSkills.value.ownedOperators,
+    operators: getEnabledSystemOperators(
+      selectedSystem.value,
+      selectedResolvedBaselineSkills.value.ownedOperators,
+    ),
     layoutFacts: selectedLayout.value.facts || {},
-    groupMembers: TERM_OPERATOR_MEMBERS,
+    groupMembers: getEnabledSystemGroupMembers(selectedSystem.value),
     choices: systemPlacementChoices.value[selectedSystem.value.id] || {},
     getCoreRequirement: getCoreSkillRequirementForRoom,
   }),
@@ -1376,6 +1446,12 @@ const selectedSystemPercentAssessment = computed(() =>
 const selectedSystemProductionAssessment = computed(() =>
   calculateSystemProductionAssessment({
     assessment: selectedSystemPercentAssessment.value,
+    resolvedSkills: selectedResolvedBaselineSkills.value,
+  }),
+);
+const selectedSystemTeamYieldAssessment = computed(() =>
+  buildTeamYieldAssessment({
+    system: selectedSystem.value,
     resolvedSkills: selectedResolvedBaselineSkills.value,
   }),
 );
@@ -1547,9 +1623,13 @@ function getAssessmentOperator(name) {
   };
 }
 
-function getAssessmentOperatorIds(room) {
+function getAssessmentOperatorIds(room, nameMap = sourceNameMap.value) {
   return (room?.assigned || [])
-    .map((assignment) => getSourceOperator(assignment.name)?.charId)
+    .map(
+      (assignment) =>
+        nameMap?.[assignment.name] ||
+        getSourceOperator(assignment.name)?.charId,
+    )
     .filter(Boolean);
 }
 
@@ -1572,7 +1652,12 @@ function getSystemRoomBonus(room) {
     .reduce((total, bonus) => total + Number(bonus.percent || 0), 0);
 }
 
-function calculateSystemProductionAssessment({ assessment, resolvedSkills }) {
+function calculateSystemProductionAssessment({
+  assessment,
+  resolvedSkills,
+  operatorNameToCharId = sourceNameMap.value,
+  allowPartialRoster = false,
+}) {
   const rooms = Array.isArray(assessment?.rooms) ? assessment.rooms : [];
   const baselineByRoomId = new Map();
   const downstreamByRoomType = new Map();
@@ -1582,11 +1667,10 @@ function calculateSystemProductionAssessment({ assessment, resolvedSkills }) {
       continue;
     }
 
-    const operatorIds = getAssessmentOperatorIds(room);
-    const fallbackSlotCount = Math.max(
-      0,
-      Number(room.slotCount || 0) - operatorIds.length,
-    );
+    const operatorIds = getAssessmentOperatorIds(room, operatorNameToCharId);
+    const fallbackSlotCount = allowPartialRoster
+      ? 0
+      : Math.max(0, Number(room.slotCount || 0) - operatorIds.length);
     let calculation;
 
     try {
@@ -1597,6 +1681,7 @@ function calculateSystemProductionAssessment({ assessment, resolvedSkills }) {
         operatorIds,
         expectedSlots: Number(room.slotCount),
         fallbackSlotCount,
+        allowPartialRoster,
       });
     } catch {
       calculation = null;
@@ -1642,6 +1727,15 @@ function calculateSystemProductionAssessment({ assessment, resolvedSkills }) {
             durationHours: 24,
             meta,
           });
+    const baselineOutput =
+      meta && output !== null
+        ? calculateRiicDirectProductionOutput({
+            room: outputRoom,
+            efficiency: 100,
+            durationHours: 24,
+            meta,
+          })
+        : null;
 
     let status = "notApplicable";
     let reason = "";
@@ -1672,6 +1766,7 @@ function calculateSystemProductionAssessment({ assessment, resolvedSkills }) {
         resource: meta?.resource || "",
         label: PRODUCTION_RESOURCE_LABELS[meta?.resource] || meta?.label || "",
         output,
+        baselineOutput,
         efficiency,
         roomBonus,
         downstreamBonus,
@@ -1690,8 +1785,10 @@ function calculateSystemProductionAssessment({ assessment, resolvedSkills }) {
       resource: finalProduction.resource,
       label: finalProduction.label,
       output: 0,
+      baselineOutput: 0,
     };
     current.output += Number(finalProduction.output || 0);
+    current.baselineOutput += Number(finalProduction.baselineOutput || 0);
     dailyOutputs.set(finalProduction.resource, current);
   }
 
@@ -1701,6 +1798,242 @@ function calculateSystemProductionAssessment({ assessment, resolvedSkills }) {
   };
 }
 
+function getTeamYieldMemberNames(system) {
+  const names = [
+    ...(system?.coreOperators || []),
+    ...(system?.relatedOperators || []),
+  ].filter((name) => isConcreteOperatorName(name));
+
+  return [...new Set(names)].filter(
+    (name) => getSourceOperator(name) && isSystemMemberEnabled(system, name),
+  );
+}
+
+function getTeamYieldCandidateRoomTypes(name, resolvedSkills) {
+  return Object.entries(resolvedSkills?.candidatesByRoom || {})
+    .filter(([, candidates]) =>
+      candidates.some((candidate) => candidate.name === name),
+    )
+    .map(([roomType]) => roomType)
+    .filter((roomType) => BASELINE_SUPPORTED_ROOM_TYPES.has(roomType));
+}
+
+function getTeamYieldScore(productionAssessment, baselineAssessment) {
+  const baselineByResource = new Map(
+    (baselineAssessment?.dailyOutputs || []).map((item) => [
+      item.resource,
+      Number(item.output || 0),
+    ]),
+  );
+
+  return (productionAssessment?.dailyOutputs || []).reduce(
+    (total, item) =>
+      total +
+      Math.max(
+        0,
+        Number(item.output || 0) -
+          Number(baselineByResource.get(item.resource) || 0),
+      ),
+    0,
+  );
+}
+
+function cloneAssessmentRooms(rooms) {
+  return (rooms || []).map((room) => ({
+    ...room,
+    assigned: [...(room.assigned || [])],
+    bonusByMetric: [...(room.bonusByMetric || [])],
+  }));
+}
+
+function addTeamMemberToBestRoom({
+  rooms,
+  name,
+  resolvedSkills,
+}) {
+  const candidateRoomTypes = getTeamYieldCandidateRoomTypes(
+    name,
+    resolvedSkills,
+  );
+  const availableRooms = rooms.filter(
+    (room) =>
+      room.assigned.length < room.slotCount &&
+      candidateRoomTypes.includes(room.facilityType),
+  );
+  if (availableRooms.length === 0) {
+    return rooms;
+  }
+
+  const candidates = availableRooms.map((room) => {
+    const nextRooms = cloneAssessmentRooms(rooms);
+    const target = nextRooms.find((item) => item.id === room.id);
+    target.assigned.push({
+      name,
+      role: "team-yield",
+      ruleIds: [],
+    });
+    const assessment = calculateSystemProductionAssessment({
+      assessment: { rooms: nextRooms },
+      resolvedSkills,
+      operatorNameToCharId: sourceNameMap.value,
+      allowPartialRoster: true,
+    });
+    return {
+      rooms: nextRooms,
+      score: getTeamYieldScore(assessment, { dailyOutputs: [] }),
+    };
+  });
+
+  candidates.sort((left, right) => right.score - left.score);
+  return candidates[0]?.rooms || rooms;
+}
+
+function evaluateTeamYieldScenario({
+  system,
+  selectedNames,
+  resolvedSkills,
+  baselineAssessment,
+}) {
+  const selectedSet = new Set(selectedNames);
+  const selectedOperators = (resolvedSkills?.ownedOperators || []).filter(
+    (operator) => selectedSet.has(operator.name),
+  );
+  const groupMembers = Object.fromEntries(
+    Object.entries(TERM_OPERATOR_MEMBERS).map(([groupKey, names]) => [
+      groupKey,
+      names.filter((name) => selectedSet.has(name)),
+    ]),
+  );
+
+  const assessment = planRiicSystemPercentAssessment({
+    systemId: system.ruleSourceId || system.id,
+    ruleIds: system.ruleIds,
+    operators: selectedOperators,
+    layoutFacts: selectedLayout.value.facts || {},
+    groupMembers,
+    getCoreRequirement: getCoreSkillRequirementForRoom,
+  });
+
+  let rooms = cloneAssessmentRooms(assessment.rooms);
+  const assignedNames = new Set(
+    rooms.flatMap((room) => (room.assigned || []).map((item) => item.name)),
+  );
+  for (const name of selectedNames) {
+    if (assignedNames.has(name)) {
+      continue;
+    }
+    rooms = addTeamMemberToBestRoom({
+      rooms,
+      name,
+      resolvedSkills,
+      system,
+      selectedNames,
+    });
+    assignedNames.add(name);
+  }
+
+  const production = calculateSystemProductionAssessment({
+    assessment: {
+      ...assessment,
+      rooms,
+    },
+    resolvedSkills,
+    operatorNameToCharId: sourceNameMap.value,
+    allowPartialRoster: true,
+  });
+
+  return {
+    assessment: {
+      ...assessment,
+      rooms,
+    },
+    production,
+    score: getTeamYieldScore(production, baselineAssessment),
+  };
+}
+
+function buildTeamYieldAssessment({ system, resolvedSkills }) {
+  const memberNames = getTeamYieldMemberNames(system);
+  const baselineAssessment = calculateSystemProductionAssessment({
+    assessment: {
+      rooms: buildRoomsForTeamYield(selectedLayout.value.facts),
+    },
+    resolvedSkills,
+    operatorNameToCharId: sourceNameMap.value,
+    allowPartialRoster: true,
+  });
+  const rows = [];
+  let selectedNames = [];
+  let previousOutputs = new Map();
+
+  for (let index = 0; index <= memberNames.length; index += 1) {
+    if (index > 0) {
+      const nextName = memberNames[index - 1];
+      if (nextName) {
+        selectedNames = [...selectedNames, nextName];
+      }
+    }
+
+    const scenario = evaluateTeamYieldScenario({
+      system,
+      selectedNames,
+      resolvedSkills,
+      baselineAssessment,
+    });
+    const outputs = new Map(
+      scenario.production.dailyOutputs.map((item) => [
+        item.resource,
+        {
+          resource: item.resource,
+          label: item.label,
+          output: Number(item.output || 0),
+          baselineOutput: Number(item.baselineOutput || 0),
+        },
+      ]),
+    );
+    const marginalOutputs = [...outputs.values()].map((item) => ({
+      ...item,
+      output: item.output - Number(previousOutputs.get(item.resource) || 0),
+    }));
+    rows.push({
+      count: selectedNames.length,
+      names: [...selectedNames],
+      outputs: [...outputs.values()],
+      marginalOutputs,
+      score: scenario.score,
+    });
+    previousOutputs = outputs;
+  }
+
+  return {
+    memberNames,
+    rows,
+    baseline: rows[0] || null,
+  };
+}
+
+function buildRoomsForTeamYield(layoutFacts) {
+  return (layoutFacts?.facilities || []).flatMap((facility, index) => {
+    const facilityType = String(facility?.facilityType || "").trim();
+    const slotCount = Number(facility?.slotCount);
+    if (!facilityType || !Number.isFinite(slotCount) || slotCount < 1) {
+      return [];
+    }
+    return [
+      {
+        id: `${facilityType}:${index + 1}`,
+        facilityType,
+        product: String(facility?.product || "all").trim() || "all",
+        stationLevel: Number(facility?.stationLevel) || null,
+        slotCount,
+        index: index + 1,
+        assigned: [],
+        bonusByMetric: [],
+      },
+    ];
+  });
+}
+
 function formatProductionValue(value) {
   const number = Number(value);
   return Number.isFinite(number)
@@ -1708,6 +2041,17 @@ function formatProductionValue(value) {
         maximumFractionDigits: 2,
       }).format(number)
     : "--";
+}
+
+function formatProductionIncrease(output, baselineOutput) {
+  const baseline = Number(baselineOutput);
+  const current = Number(output);
+  if (!Number.isFinite(baseline) || baseline <= 0 || !Number.isFinite(current)) {
+    return "--";
+  }
+
+  const increase = ((current - baseline) / baseline) * 100;
+  return `${increase >= 0 ? "+" : ""}${increase.toFixed(1)}%`;
 }
 
 function updateSystemPlacementChoice(choice, name) {
@@ -2001,6 +2345,7 @@ onMounted(() => {
                 :class="{
                   owned: operator.owned,
                   'needs-training': operator.trainingStatus === 'needs-training',
+                  'is-disabled': !operator.enabled,
                 }"
               >
                 <OperatorAvatar
@@ -2011,7 +2356,23 @@ onMounted(() => {
                   :border="true"
                 />
                 <div class="operator-fact-content">
-                  <strong>{{ operator.name }}</strong>
+                  <div class="operator-fact-title">
+                    <strong>{{ operator.name }}</strong>
+                    <label class="operator-enabled-toggle">
+                      <input
+                        type="checkbox"
+                        :checked="operator.enabled"
+                        @change="
+                          updateSystemMemberEnabled(
+                            operator.name,
+                            $event.target.checked,
+                          )
+                        "
+                      />
+                      <span aria-hidden="true"></span>
+                      <small>{{ operator.enabled ? "启用" : "停用" }}</small>
+                    </label>
+                  </div>
                   <span
                     class="operator-fact-status"
                     :class="operator.trainingStatus"
@@ -2052,7 +2413,10 @@ onMounted(() => {
                 v-for="operator in selectedSystemRelatedOperators"
                 :key="`related:${operator.name}`"
                 class="operator-fact"
-                :class="{ owned: operator.owned }"
+                :class="{
+                  owned: operator.owned,
+                  'is-disabled': !operator.enabled,
+                }"
               >
                 <OperatorAvatar
                   v-if="operator.charId"
@@ -2062,7 +2426,23 @@ onMounted(() => {
                   :border="true"
                 />
                 <div class="operator-fact-content">
-                  <strong>{{ operator.name }}</strong>
+                  <div class="operator-fact-title">
+                    <strong>{{ operator.name }}</strong>
+                    <label class="operator-enabled-toggle">
+                      <input
+                        type="checkbox"
+                        :checked="operator.enabled"
+                        @change="
+                          updateSystemMemberEnabled(
+                            operator.name,
+                            $event.target.checked,
+                          )
+                        "
+                      />
+                      <span aria-hidden="true"></span>
+                      <small>{{ operator.enabled ? "启用" : "停用" }}</small>
+                    </label>
+                  </div>
                   <span
                     class="operator-fact-status"
                     :class="operator.trainingStatus"
@@ -2118,6 +2498,76 @@ onMounted(() => {
             >
               {{ output.label }} {{ formatProductionValue(output.output) }} / 天
             </span>
+          </div>
+
+          <div
+            v-if="selectedSystemTeamYieldAssessment.memberNames.length"
+            class="team-yield-section"
+          >
+            <div class="team-yield-heading">
+              <div>
+                <strong>班组投入收益曲线</strong>
+                <small>
+                  只计算该班组成员占用的岗位；不补位其他干员，产出按资源分别列出。
+                </small>
+              </div>
+              <span>
+                {{ selectedSystemTeamYieldAssessment.memberNames.length }} 名可评估成员
+              </span>
+            </div>
+
+            <div class="team-yield-members">
+              <span
+                v-for="name in selectedSystemTeamYieldAssessment.memberNames"
+                :key="`team-yield-member:${name}`"
+              >
+                {{ name }}
+              </span>
+            </div>
+
+            <div class="team-yield-table">
+              <div class="team-yield-row team-yield-row-header">
+                <span>占用岗位</span>
+                <span>投入成员</span>
+                <span>理论总产出 / 日（相对 100%）</span>
+                <span>本次增加 / 日</span>
+              </div>
+              <div
+                v-for="row in selectedSystemTeamYieldAssessment.rows"
+                :key="`team-yield-row:${row.count}`"
+                class="team-yield-row"
+              >
+                <strong>{{ row.count }}</strong>
+                <span class="team-yield-row-members">
+                  {{ row.names.length ? row.names.join("、") : "不投入班组成员" }}
+                </span>
+                <span class="team-yield-values">
+                  <template v-if="row.outputs.length">
+                    <em
+                      v-for="output in row.outputs"
+                      :key="`team-yield-output:${row.count}:${output.resource}`"
+                    >
+                      {{ output.label }} {{ formatProductionValue(output.output) }}
+                      <small>
+                        {{ formatProductionIncrease(output.output, output.baselineOutput) }}
+                      </small>
+                    </em>
+                  </template>
+                  <small v-else>暂无可计算的绝对产出</small>
+                </span>
+                <span class="team-yield-values team-yield-marginal">
+                  <template v-if="row.marginalOutputs.length">
+                    <em
+                      v-for="output in row.marginalOutputs"
+                      :key="`team-yield-marginal:${row.count}:${output.resource}`"
+                    >
+                      {{ output.label }} {{ formatProductionValue(output.output) }}
+                    </em>
+                  </template>
+                  <small v-else>--</small>
+                </span>
+              </div>
+            </div>
           </div>
 
           <div
@@ -2894,6 +3344,109 @@ h2 {
   font-weight: 700;
 }
 
+.team-yield-section {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #dfe7eb;
+  border-radius: 6px;
+  background: #f8fbfb;
+}
+
+.team-yield-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.team-yield-heading strong,
+.team-yield-heading small {
+  display: block;
+}
+
+.team-yield-heading strong {
+  color: #31586a;
+  font-size: 13px;
+}
+
+.team-yield-heading small {
+  margin-top: 4px;
+  color: #71818b;
+  font-size: 11px;
+}
+
+.team-yield-heading > span {
+  flex: 0 0 auto;
+  color: #63808a;
+  font-size: 11px;
+}
+
+.team-yield-members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 9px;
+}
+
+.team-yield-members span {
+  padding: 3px 7px;
+  border: 1px solid #c9dadd;
+  border-radius: 4px;
+  color: #4b6872;
+  background: #fff;
+  font-size: 11px;
+}
+
+.team-yield-table {
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+.team-yield-row {
+  display: grid;
+  grid-template-columns: 70px minmax(180px, 1.2fr) minmax(190px, 1fr) minmax(190px, 1fr);
+  min-width: 700px;
+  border-top: 1px solid #e5edef;
+}
+
+.team-yield-row > * {
+  min-width: 0;
+  padding: 8px 7px;
+  color: #526873;
+  font-size: 11px;
+}
+
+.team-yield-row-header > * {
+  color: #82939a;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.team-yield-row-members {
+  line-height: 1.5;
+}
+
+.team-yield-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  align-content: flex-start;
+}
+
+.team-yield-values em {
+  color: #3f6978;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.team-yield-marginal em {
+  color: #8d6a34;
+}
+
+.team-yield-values small {
+  color: #9aa8ad;
+}
+
 .system-plan-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -3148,12 +3701,17 @@ h2 {
   background: #fff9ef;
 }
 
+.operator-fact.is-disabled {
+  border-color: #dce4e8;
+  background: #f5f7f8;
+  opacity: 0.68;
+}
+
 .operator-fact-content {
   min-width: 0;
   flex: 1;
 }
 
-.operator-fact-content > strong,
 .operator-fact-content > span {
   display: block;
   overflow: hidden;
@@ -3161,9 +3719,79 @@ h2 {
   white-space: nowrap;
 }
 
-.operator-fact-content > strong {
+.operator-fact-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.operator-fact-title strong {
+  min-width: 0;
   color: #304757;
   font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.operator-enabled-toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  color: #74848e;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.operator-enabled-toggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.operator-enabled-toggle span {
+  position: relative;
+  width: 25px;
+  height: 14px;
+  border-radius: 8px;
+  background: #a7b4ba;
+  transition: background-color 0.15s ease;
+}
+
+.operator-enabled-toggle span::after {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
+  transition: transform 0.15s ease;
+}
+
+.operator-enabled-toggle input:checked + span {
+  background: #4e9d6b;
+}
+
+.operator-enabled-toggle input:checked + span::after {
+  transform: translateX(11px);
+}
+
+.operator-enabled-toggle input:focus-visible + span {
+  outline: 2px solid #5e9bc2;
+  outline-offset: 2px;
+}
+
+.operator-enabled-toggle small {
+  min-width: 20px;
+  font-size: 10px;
 }
 
 .operator-fact-status,

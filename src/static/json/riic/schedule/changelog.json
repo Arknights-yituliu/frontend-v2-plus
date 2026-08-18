@@ -2,11 +2,11 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20260817.2200"
+      "version": "v20260818.1500"
     },
     "data": {
       "label": "数据模块",
-      "version": "v20260818.1120"
+      "version": "v20260818.1500"
     },
     "team": {
       "label": "班组模块",
@@ -14,7 +14,7 @@
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20260818.1240"
+      "version": "v20260818.1500"
     },
     "yield": {
       "label": "收益计算器",
@@ -22,10 +22,40 @@
     },
     "recommendation": {
       "label": "推荐模块",
-      "version": "v20260818.1240"
+      "version": "v20260818.1500"
     }
   },
   "entries": [
+    {
+      "date": "2026-08-18",
+      "version": "v20260818.1500",
+      "items": [
+        {
+          "module": "布局模块",
+          "type": "update",
+          "level": 2,
+          "description": "排班工作流卡片支持折叠，并记忆展开状态"
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 2,
+          "description": "补充干员培养阶段对应的基建技能说明数据"
+        },
+        {
+          "module": "组装器",
+          "type": "fix",
+          "level": 3,
+          "description": "修正 MAA 导出中合成玉贸易站的产品字段"
+        },
+        {
+          "module": "推荐模块",
+          "type": "feature",
+          "level": 3,
+          "description": "培养建议展示目标练度期间解锁的基建效果，并扩展组合收益评估"
+        }
+      ]
+    },
     {
       "date": "2026-08-18",
       "version": "v20260818.1240",
