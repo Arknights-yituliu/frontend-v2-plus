@@ -1,0 +1,114 @@
+{
+  "moduleVersions": {
+    "layout": {
+      "label": "布局模块",
+      "version": "v20260817.2200"
+    },
+    "data": {
+      "label": "数据模块",
+      "version": "v20260818.1120"
+    },
+    "team": {
+      "label": "班组模块",
+      "version": "v20260818.1240"
+    },
+    "assembler": {
+      "label": "组装器",
+      "version": "v20260818.1240"
+    },
+    "yield": {
+      "label": "收益计算器",
+      "version": "v20260818.1240"
+    },
+    "recommendation": {
+      "label": "推荐模块",
+      "version": "v20260818.1240"
+    }
+  },
+  "entries": [
+    {
+      "date": "2026-08-18",
+      "version": "v20260818.1240",
+      "items": [
+        {
+          "module": "组装器",
+          "type": "update",
+          "level": 5,
+          "description": "同班次中枢联动按实际中枢班次重算班组协同，并优先选择协同收益更高的换班偏移"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 4,
+          "description": "按实际中枢绑定重算班组联动效果，修正预览与最终收益结算"
+        },
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 4,
+          "description": "控制中枢补位改为仅使用闲置干员，避免中枢效果干员重复参与补位"
+        },
+        {
+          "module": "推荐模块",
+          "type": "fix",
+          "level": 3,
+          "description": "红松骑士相关试算仅在布局包含经验书制造站时生效"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-18",
+      "version": "v20260818.1120",
+      "items": [
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 2,
+          "description": "统一模块版本标识，并新增更新日志入口"
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 3,
+          "description": "调整控制中枢与班组计算流程的运行参数"
+        },
+        {
+          "module": "组装器",
+          "type": "update",
+          "level": 2,
+          "description": "统一排班结果组装模块的版本标识"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 3,
+          "description": "同步排班收益结算相关计算模块的版本标识"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-17",
+      "version": "v20260817.2200",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "feature",
+          "level": 5,
+          "description": "重构控制中枢排班逻辑"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 4,
+          "description": "修复排班收益计算不正确的问题"
+        },
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 3,
+          "description": "修复排班生成流程中的已知问题"
+        }
+      ]
+    }
+  ]
+}

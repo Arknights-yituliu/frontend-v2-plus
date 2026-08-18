@@ -332,6 +332,9 @@ export function createRiicEmptyRoomTeamCandidate({
 }
 
 export function mergeRiicIndividualRoomTeamCandidates(candidates) {
+  const sourceCandidate =
+    candidates.find((candidate) => candidate && typeof candidate === "object") ||
+    {};
   const operatorIds = [
     ...new Set(
       candidates.flatMap((candidate) => candidate?.operatorIds || []),
@@ -357,7 +360,34 @@ export function mergeRiicIndividualRoomTeamCandidates(candidates) {
     upgradeRequirements: mergeRiicUpgradeRequirements(
       candidates.flatMap((candidate) => candidate?.upgradeRequirements || []),
     ),
-    sourceRoomType: "meeting",
+    sourceRoomType:
+      sourceCandidate.sourceRoomType ||
+      sourceCandidate.candidateScope?.roomType ||
+      "",
+    candidateScope: sourceCandidate.candidateScope
+      ? { ...sourceCandidate.candidateScope }
+      : undefined,
+    sameShiftBindings: candidates.flatMap((candidate) =>
+      Array.isArray(candidate?.sameShiftBindings)
+        ? candidate.sameShiftBindings
+        : [],
+    ),
+    controlCenterFacilityBonusPercent: Number(
+      sourceCandidate.controlCenterFacilityBonusPercent || 0,
+    ),
+    controlCenterOperatorBonusPercent: Number(
+      sourceCandidate.controlCenterOperatorBonusPercent || 0,
+    ),
+    controlCenterOperatorBonusById: {
+      ...(sourceCandidate.controlCenterOperatorBonusById || {}),
+    },
+    controlCenterExpectedBonusPercent: Number(
+      sourceCandidate.controlCenterExpectedBonusPercent || 0,
+    ),
+    controlCenterFacilityCalculation:
+      sourceCandidate.controlCenterFacilityCalculation,
+    controlCenterOperatorCalculation:
+      sourceCandidate.controlCenterOperatorCalculation,
     corePercent: totalPercent,
     totalPercent,
     bonusPercent: totalPercent - 100,

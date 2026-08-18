@@ -2,24 +2,9 @@ const ROOM_ROLE_ID = "room";
 const OPERATOR_ROLE_ID = "operator";
 const FILLER_ROLE_ID = "other";
 const MON3TR_OPERATOR_ID = "char_4179_monstr";
-const CONTROL_CENTER_ROOM_EFFECT_TAGS = new Set([
-  "trading-station",
-  "manufacture-station",
-  "office",
-]);
-const CONTROL_CENTER_OPERATOR_EFFECT_TAGS = new Set([
-  "trading-operator",
-  "manufacture-operator",
-]);
 
 function normalizeOperatorId(value) {
   return String(value || "").trim();
-}
-
-function hasControlCenterTag(operator, tags) {
-  return (operator?.controlCenterBuffTags || []).some((tag) =>
-    tags.has(tag),
-  );
 }
 
 function getEmptyControlCenterRoleState(status) {
@@ -1020,87 +1005,27 @@ export function applyRiicControlCenterManualOverrides({
 }
 
 function createLateFillQueue({
-  controlCandidates,
-  roster,
   idleFillOperators = [],
   excludedIds,
 }) {
-  const availableControlCandidates = (controlCandidates || []).filter(
-    (operator) => {
-      const charId = normalizeOperatorId(operator?.charId);
-      return charId && !excludedIds.has(charId);
-    },
-  );
-  const roomEffectCandidates = availableControlCandidates
-    .filter((operator) =>
-      hasControlCenterTag(operator, CONTROL_CENTER_ROOM_EFFECT_TAGS),
-    )
-    .map((operator) => ({
-      ...operator,
-      lateFillSource: "room-effect",
-    }));
-  const roomEffectCandidateIds = new Set(
-    roomEffectCandidates.map((operator) =>
-      normalizeOperatorId(operator?.charId),
-    ),
-  );
-  const operatorEffectCandidates = availableControlCandidates
+  return (idleFillOperators || [])
     .filter((operator) => {
       const charId = normalizeOperatorId(operator?.charId);
-      return (
-        charId &&
-        !roomEffectCandidateIds.has(charId) &&
-        hasControlCenterTag(operator, CONTROL_CENTER_OPERATOR_EFFECT_TAGS)
-      );
+      return charId && !excludedIds.has(charId);
     })
-    .map((operator) => ({
-      ...operator,
-      lateFillSource: "operator-effect",
-    }));
-  const orderedIdleOperators =
-    idleFillOperators?.length > 0 ? idleFillOperators : roster;
-  const effectCandidateIds = new Set([
-    ...roomEffectCandidateIds,
-    ...operatorEffectCandidates.map((operator) =>
-      normalizeOperatorId(operator?.charId),
-    ),
-  ]);
-  const priorityCandidates = [];
-  const priorityCandidateIds = new Set();
-  const idleCandidates = [];
-  for (const operator of orderedIdleOperators || []) {
-    const charId = normalizeOperatorId(operator?.charId);
-    if (
-      !charId ||
-      excludedIds.has(charId) ||
-      effectCandidateIds.has(charId) ||
-      priorityCandidateIds.has(charId)
-    ) {
-      continue;
-    }
-    const isPriorityCandidate = Number.isFinite(
-      Number(operator?.idleFillNamedPriority),
-    );
-    const candidate = {
-      ...operator,
-      controlCenterBuffTags: [],
-      controlCenterResolvedEffects: [],
-      controlCenterRoomEffectLabel: "",
-      lateFillSource: isPriorityCandidate ? "priority" : "idle",
-    };
-    if (isPriorityCandidate) {
-      priorityCandidates.push(candidate);
-      priorityCandidateIds.add(charId);
-    } else {
-      idleCandidates.push(candidate);
-    }
-  }
-  return [
-    ...roomEffectCandidates,
-    ...operatorEffectCandidates,
-    ...priorityCandidates,
-    ...idleCandidates,
-  ];
+    .map((operator) => {
+      const isPriorityCandidate = Number.isFinite(
+        Number(operator?.idleFillNamedPriority),
+      );
+
+      return {
+        ...operator,
+        controlCenterBuffTags: [],
+        controlCenterResolvedEffects: [],
+        controlCenterRoomEffectLabel: "",
+        lateFillSource: isPriorityCandidate ? "priority" : "idle",
+      };
+    });
 }
 
 export function buildRiicControlCenterLateFillState({
@@ -1108,8 +1033,6 @@ export function buildRiicControlCenterLateFillState({
   fallbackPlans = {},
   excludedOperatorIds = [],
   excludedOperatorIdsByTeamIndex = {},
-  controlCandidates = [],
-  roster = [],
   idleFillOperators = [],
   fiammettaRecovery = null,
 } = {}) {
@@ -1158,8 +1081,6 @@ export function buildRiicControlCenterLateFillState({
     }
   }
 
-  const { groupByOperatorId } =
-    createOperatorSameTeamGroupResolver(controlCandidates);
   const teamEntries = [];
 
   for (const team of teams) {
@@ -1168,20 +1089,25 @@ export function buildRiicControlCenterLateFillState({
       ...(excludedIdsByTeamIndex.get(Number(team.teamIndex)) || []),
     ]);
     const queue = createLateFillQueue({
-      controlCandidates,
-      roster,
       idleFillOperators,
       excludedIds: excludedIdsForTeam,
     });
-    const queueById = new Map(
-      queue.map((operator) => [
-        normalizeOperatorId(operator?.charId),
-        operator,
-      ]),
-    );
     const fillers = [];
-    const attemptedGroups = new Set();
     for (const operator of queue) {
+      const charId = normalizeOperatorId(operator?.charId);
+      if (
+        !charId ||
+        occupiedByRooms.has(charId) ||
+        getTeamOperatorIds(team).has(charId)
+      ) {
+        continue;
+      }
+
+      const usage = Number(fallbackUsage.get(charId) || 0);
+      if (usage >= getTeamUsageLimit(teamCount, charId, reusableOperatorId)) {
+        continue;
+      }
+
       if (
         getTeamTotalCount(team) + fillers.length >=
         Number(team.slotCount || 0)
@@ -1189,60 +1115,8 @@ export function buildRiicControlCenterLateFillState({
         break;
       }
 
-      const operatorId = normalizeOperatorId(operator?.charId);
-      if (
-        !operatorId ||
-        occupiedByRooms.has(operatorId) ||
-        getTeamOperatorIds(team).has(operatorId)
-      ) {
-        continue;
-      }
-
-      const group = getSameTeamGroup(groupByOperatorId, operatorId);
-      const groupKey = [...group.operatorIds].sort().join(":");
-      if (attemptedGroups.has(groupKey)) {
-        continue;
-      }
-      attemptedGroups.add(groupKey);
-
-      const groupOperators =
-        group.operators.length > 0
-          ? group.operatorIds
-              .map((id) => queueById.get(id))
-              .filter(Boolean)
-          : [operator];
-      if (
-        !group.complete ||
-        groupOperators.length !== group.operatorIds.length
-      ) {
-        continue;
-      }
-
-      const canUseGroup = groupOperators.every((item) => {
-        const id = normalizeOperatorId(item?.charId);
-        const usage = Number(fallbackUsage.get(id) || 0);
-        return (
-          !occupiedByRooms.has(id) &&
-          !getTeamOperatorIds(team).has(id) &&
-          usage <
-            getTeamUsageLimit(teamCount, id, reusableOperatorId)
-        );
-      });
-      if (
-        !canUseGroup ||
-        getTeamTotalCount(team) +
-          fillers.length +
-          groupOperators.length >
-          Number(team.slotCount || 0)
-      ) {
-        continue;
-      }
-
-      fillers.push(...groupOperators);
-      for (const item of groupOperators) {
-        const id = normalizeOperatorId(item?.charId);
-        fallbackUsage.set(id, Number(fallbackUsage.get(id) || 0) + 1);
-      }
+      fillers.push(operator);
+      fallbackUsage.set(charId, usage + 1);
     }
 
     const priorityOperators = fillers.filter(

@@ -649,6 +649,7 @@ export function calculateRiicRoomEfficiency({
   expectedSlots,
   fallbackSlotCount = 0,
   fallbackPercent = 0,
+  allowPartialRoster = false,
 }) {
   if (!ROOM_TYPES.includes(roomType)) {
     throw new Error(`Unknown RIIC room type: ${roomType}`);
@@ -730,8 +731,10 @@ export function calculateRiicRoomEfficiency({
     unscoredOperatorIds,
   };
   const isValid =
-    validation.totalAssignedSlotCount === expectedSlots &&
-    validation.emptySlotIndexes.length === 0 &&
+    (allowPartialRoster
+      ? validation.totalAssignedSlotCount <= expectedSlots
+      : validation.totalAssignedSlotCount === expectedSlots) &&
+    (allowPartialRoster || validation.emptySlotIndexes.length === 0) &&
     validation.duplicateOperatorIds.length === 0 &&
     validation.missingOperatorIds.length === 0;
 

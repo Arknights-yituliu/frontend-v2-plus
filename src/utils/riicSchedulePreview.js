@@ -201,6 +201,7 @@ function createRoomPreview({
     controlCenterOperatorBonuses: sameShiftBinding?.operatorBonuses || [],
     sameShiftBindingStatus: sameShiftBinding?.status || "notApplicable",
     sameShiftBindings: sameShiftBinding?.bindings || [],
+    sameShiftBindingDefinitions: candidate?.sameShiftBindings || [],
     isStatic: false,
     manuallyEdited,
     efficiencySource: {
@@ -274,33 +275,6 @@ function applyRoomOperatorOverride(room, stateIndex, roomOperatorOverrides) {
           ),
       }
     : room;
-}
-
-function invalidateSameShiftBindingsForManualEdits(rooms = []) {
-  const hasEditedControlCenter = rooms.some(
-    (room) => room?.facility === "control" && room?.manuallyEdited,
-  );
-
-  return rooms.map((room) => {
-    const hasSameShiftBinding = (room?.sameShiftBindings || []).length > 0;
-    const requiresReview =
-      hasSameShiftBinding &&
-      room?.facility !== "control" &&
-      (room?.manuallyEdited || hasEditedControlCenter);
-    if (!requiresReview) {
-      return room;
-    }
-
-    return {
-      ...room,
-      controlCenterFacilityBonusPercent: 0,
-      controlCenterOperatorBonusPercent: 0,
-      controlCenterOperatorBonuses: [],
-      sameShiftBindingStatus: "manualReviewRequired",
-      sameShiftBindings: [],
-      sameShiftBindingInvalidatedByManualEdit: true,
-    };
-  });
 }
 
 function findStickyPlacement(groupEntries, stickyOperatorIds) {
@@ -541,16 +515,61 @@ export function buildRiicSchedulePreview({
     rawStates.length,
     stateOrder,
   );
-  const states = sourceIndexes.map((sourceStateIndex, index) => ({
-    ...rawStates[sourceStateIndex],
-    id: `state-${index + 1}`,
-    index,
-    rooms: invalidateSameShiftBindingsForManualEdits(
-      rawStates[sourceStateIndex].rooms.map((room) =>
-        applyRoomOperatorOverride(room, index, roomOperatorOverrides),
-      ),
-    ),
-  }));
+  const states = sourceIndexes.map((sourceStateIndex, index) => {
+    const editedRooms = rawStates[sourceStateIndex].rooms.map((room) =>
+      applyRoomOperatorOverride(room, index, roomOperatorOverrides),
+    );
+    const editedControlRoom = editedRooms.find(
+      (room) => room.facility === "control",
+    );
+    const controlOperatorIds = (editedControlRoom?.operators || [])
+      .map((operator) => String(operator?.charId || "").trim())
+      .filter(Boolean);
+
+    return {
+      ...rawStates[sourceStateIndex],
+      id: `state-${index + 1}`,
+      index,
+      rooms: editedRooms.map((editedRoom) => {
+        if (
+          editedRoom.facility === "control" ||
+          !controlGroupEntry
+        ) {
+          return editedRoom;
+        }
+
+        const sameShiftBinding = getRiicSameShiftBindingAtHour({
+          controlCandidate: controlGroupEntry.candidate,
+          group: {
+            facility: editedRoom.facility,
+            candidateProduct: editedRoom.product,
+          },
+          candidate: {
+            candidateScope: {
+              roomType: editedRoom.facility,
+              product: editedRoom.product,
+            },
+            sameShiftBindings:
+              editedRoom.sameShiftBindingDefinitions ||
+              editedRoom.sameShiftBindings,
+          },
+          controlOperatorIds,
+          startHour: rawStates[sourceStateIndex].startHour,
+        });
+
+        return {
+          ...editedRoom,
+          controlCenterFacilityBonusPercent:
+            sameShiftBinding.facilityBonusPercent || 0,
+          controlCenterOperatorBonusPercent:
+            sameShiftBinding.operatorBonusPercent || 0,
+          controlCenterOperatorBonuses: sameShiftBinding.operatorBonuses || [],
+          sameShiftBindingStatus: sameShiftBinding.status,
+          sameShiftBindings: sameShiftBinding.bindings || [],
+        };
+      }),
+    };
+  });
 
   const sourceKey = `${scheduleCandidate.key || "schedule"}:${cycleHours}:${states.length}:${sourceIndexes.join(",")}`;
 

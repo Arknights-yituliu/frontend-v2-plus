@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps({
   groups: {
@@ -45,6 +45,10 @@ const props = defineProps({
   assembledScheduleCandidate: {
     type: Object,
     default: null,
+  },
+  sameShiftBindingDebug: {
+    type: Object,
+    default: () => ({}),
   },
   fiammettaRecovery: {
     type: Object,
@@ -163,6 +167,316 @@ function formatNumber(value) {
 
 function formatJson(value) {
   return JSON.stringify(value || {}, null, 2);
+}
+
+const copyStatus = ref("");
+
+function formatDebugOperatorIds(operatorIds) {
+  const ids = [
+    ...new Set(
+      (operatorIds || [])
+        .map((operatorId) => String(operatorId || "").trim())
+        .filter(Boolean),
+    ),
+  ];
+  return ids.length
+    ? ids.map((operatorId) => `${getOperatorName(operatorId)}(${operatorId})`).join("、")
+    : "--";
+}
+
+function formatDebugNumber(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? String(number) : "--";
+}
+
+function getSameShiftDebugReasonLabel(reason) {
+  return (
+    {
+      baseline: "基准偏移",
+      moreCoreTeamSynergy: "核心组合直接收益更高",
+      lessCoreTeamSynergy: "核心组合直接收益更低",
+      moreBindingHours: "有效绑定时长更长",
+      sameHoursMoreBonus: "有效时长相同但加成更高",
+      sameHoursNotMoreBonus: "有效时长相同且加成未提高",
+      lessBindingHours: "有效绑定时长更短",
+      missingCandidate: "没有房间候选",
+      controlCenter: "控制中枢本身不参与旋转",
+      singleSegment: "只有一个班段，无法旋转",
+      lockedOperator: "包含资源链锁定干员，禁止旋转",
+      noCandidateBinding: "L61/L62 未携带同班绑定",
+    }[reason] || reason || "--"
+  );
+}
+
+function appendControlState(lines, label, state) {
+  lines.push(`${label}: ${state?.status || "--"}`);
+  for (const team of state?.teams || []) {
+    lines.push(
+      `  中枢班${Number(team?.teamIndex || 0) + 1}: 房间效果=[${formatDebugOperatorIds(
+        (team?.roomEffectOperators || []).map((operator) => operator?.charId),
+      )}] 干员效果=[${formatDebugOperatorIds(
+        (team?.operatorEffectOperators || []).map((operator) => operator?.charId),
+      )}] 补位=[${formatDebugOperatorIds(
+        (team?.fillerOperators || []).map((operator) => operator?.charId),
+      )}]`,
+    );
+  }
+}
+
+function appendRotationLines(lines, label, entry) {
+  lines.push(`${label}: ${entry?.groupLabel || entry?.groupId || "--"}`);
+  if (!entry?.candidate) {
+    lines.push("  无候选");
+    return;
+  }
+  for (const segment of entry.candidate.segments || []) {
+    for (const assignment of segment.stationAssignments || []) {
+      const candidate = assignment?.candidate || {};
+      lines.push(
+        `  班段${Number(segment?.index || 0) + 1}(${formatDebugNumber(
+          segment?.durationHours,
+        )}h) 站点${Number(assignment?.stationIndex || 0) + 1}: ${
+          candidate.name || candidate.key || "--"
+        } 干员=[${formatDebugOperatorIds(candidate.operatorIds)}] 同班绑定=${
+          (candidate.sameShiftBindings || []).length
+        }`,
+      );
+    }
+  }
+}
+
+function appendSameShiftTrace(lines, trace, prefix = "    ") {
+  for (const item of trace || []) {
+    lines.push(
+      `${prefix}时段${formatDebugNumber(item.startHour)}-${formatDebugNumber(
+        Number(item.startHour || 0) + Number(item.durationHours || 0),
+      )}h 目标=[${formatDebugOperatorIds(item.operatorIds)}] ` +
+        `控制班=${item.controlTeamIndex === null ? "--" : Number(item.controlTeamIndex) + 1} ` +
+        `控制干员=[${formatDebugOperatorIds(item.controlOperatorIds)}] ` +
+        `绑定=${item.realizedBindingCount}/${item.candidateBindingCount} ` +
+        `状态=${item.status} 加成=${formatDebugNumber(
+          item.realizedBonusPercent,
+        )}%`,
+    );
+  }
+}
+
+const pipelineDebugText = computed(() => {
+  const lines = [
+    "RIIC 排班计算链路调试信息",
+    `数据源: ${props.operatorSourceLabel || "--"}`,
+    `练度模式: ${props.trainingMode || "--"}`,
+    "",
+    "[L50] 初始控制中枢",
+  ];
+  appendControlState(lines, "L50 初始中枢", props.controlState);
+  appendControlState(lines, "L50 补位后中枢", props.controlFinalState);
+
+  lines.push("", "[L51] 中枢效果");
+  const controlEffects = props.controlOperatorEffectDebugState?.effects || [];
+  if (controlEffects.length === 0) {
+    lines.push("无已计算的中枢定向效果");
+  } else {
+    for (const effect of controlEffects) {
+      lines.push(
+        `中枢班${Number(effect?.teamIndex || 0) + 1} -> ${
+          getOperatorName(effect?.targetOperatorId)
+        } 总加成=${formatDebugNumber(effect?.totalBonusPercent)}%`,
+      );
+      for (const contribution of effect.contributions || []) {
+        lines.push(
+          `  步骤${contribution.step}: 来源=[${formatDebugOperatorIds(
+            contribution.sourceOperatorIds,
+          )}] 加成=${formatDebugNumber(contribution.bonusPercent)}%`,
+        );
+      }
+    }
+  }
+
+  lines.push("", "[L61] 候选绑定");
+  for (const group of props.groups || []) {
+    const state = props.candidateStatesByGroupId?.[group.id] || {};
+    lines.push(`房间组 ${group.label || group.id}: ${state.status || "--"}`);
+    for (const cohort of state.cohorts || []) {
+      const candidates = cohort.debug?.l61?.candidates || cohort.candidates || [];
+      lines.push(`  班组 ${cohort.id}: 候选数=${candidates.length}`);
+      for (const candidate of candidates) {
+        lines.push(
+          `    ${candidate.name || candidate.key || "--"} 干员=[${formatDebugOperatorIds(
+            candidate.operatorIds,
+          )}] 总值=${formatDebugNumber(
+            candidate.totalPercent ?? candidate.corePercent,
+          )}%`,
+        );
+      }
+    }
+  }
+
+  lines.push("", "[L62/L63] 班组物化与补位");
+  for (const entry of props.preAssemblyGroupCandidates || []) {
+    appendRotationLines(lines, "房间组", entry);
+  }
+  for (const [groupId, plan] of Object.entries(props.fallbackPlansByGroupId || {})) {
+    lines.push(
+      `补位 ${groupId}: 已选=[${formatDebugOperatorIds(
+        plan?.selectedOperatorIds,
+      )}]`,
+    );
+    for (const assignment of getFallbackAssignments(plan)) {
+      lines.push(`  ${assignment.slotKey} -> ${getOperatorName(assignment.charId)}`);
+    }
+  }
+
+  lines.push("", "[L70/L71/L72] 自动组装");
+  const automatic = props.automaticGenerationDebugState;
+  if (!automatic) {
+    lines.push("尚未执行自动组装");
+  } else {
+    lines.push(
+      `L70 策略=${automatic.strategy || "--"} 最佳评分=${formatDebugNumber(
+        automatic.l70?.bestPlan?.rankingValue,
+      )}`,
+    );
+    const sameShiftPriority =
+      automatic.l70?.bestPlan?.sameShiftPriority || null;
+    if (sameShiftPriority) {
+      lines.push(
+        `  中枢同班引导: 有效绑定=${formatDebugNumber(
+          sameShiftPriority.realizedBindingHours,
+        )}/${formatDebugNumber(
+          sameShiftPriority.expectedBindingHours,
+        )}h 评分修正=${formatDebugNumber(
+          sameShiftPriority.rankingCorrection,
+        )}%`,
+      );
+      for (const summary of sameShiftPriority.summaries || []) {
+        lines.push(
+          `    ${summary.groupId}/${summary.cohortId}/班${Number(
+            summary.teamIndex || 0,
+          ) + 1} ${summary.candidateName || "--"}：实际=${formatDebugNumber(
+            summary.realizedBonusPercent,
+          )}% 预估=${formatDebugNumber(
+            summary.expectedBonusPercent,
+          )}% 修正=${formatDebugNumber(
+            summary.rankingCorrection,
+          )}% 绑定=${formatDebugNumber(
+            summary.realizedBindingHours,
+          )}/${formatDebugNumber(summary.expectedBindingHours)}h`,
+        );
+      }
+    }
+    for (const selection of automatic.l70?.bestPlan?.selections || []) {
+      lines.push(
+        `  ${selection.groupId}/${selection.cohortId}/${selection.candidateKey} 干员=[${formatDebugOperatorIds(
+          selection.operatorIds,
+        )}]`,
+      );
+    }
+    lines.push(
+      `L72 decision=${automatic.l72?.decision || "--"} 原核心=[${formatDebugOperatorIds(
+        automatic.l72?.selectedCoreOperatorIds,
+      )}] 最终核心=[${formatDebugOperatorIds(
+        automatic.l72?.adoptedCoreOperatorIds,
+      )}]`,
+    );
+  }
+
+  lines.push("", "[L81] 同班绑定对齐");
+  const sameShift = props.sameShiftBindingDebug || {};
+  lines.push(`状态=${sameShift.status || "--"}`);
+  lines.push(
+    `控制中枢班段: ${
+      (sameShift.control?.segments || [])
+        .map(
+          (segment) =>
+            `班${Number(segment?.teamIndex || 0) + 1}(${formatDebugNumber(
+              segment?.durationHours,
+            )}h)=[${formatDebugOperatorIds(segment?.operatorIds)}]`,
+        )
+        .join("；") || "--"
+    }`,
+  );
+  for (const group of sameShift.groups || []) {
+    lines.push(
+      `房间组 ${group.groupLabel || group.groupId}: 候选=${group.candidateKey || "--"} ` +
+        `跳过=${group.skipReason || "否"} 最终偏移=${formatDebugNumber(
+          group.selectedOffset,
+        )}`,
+    );
+    for (const attempt of group.attempts || []) {
+      lines.push(
+        `  尝试偏移${attempt.offset}: 核心组合=${formatDebugNumber(
+          attempt.coreTeamSynergyWeightedBonus,
+        )}%·h 有效时长=${formatDebugNumber(
+          attempt.realizedBindingHours,
+        )}/${formatDebugNumber(
+          attempt.expectedBindingHours,
+        )}h 加成=${formatDebugNumber(
+          attempt.realizedWeightedBonus,
+        )}% 比较=${attempt.acceptedAtComparison ? "临时采用" : "放弃"} ` +
+          `最终=${attempt.selected ? "采用" : "未采用"} 原因=${getSameShiftDebugReasonLabel(
+            attempt.reason,
+          )}`,
+      );
+      appendSameShiftTrace(lines, attempt.trace);
+    }
+    if (group.selected) {
+      lines.push(
+        `  最终: 核心组合=${formatDebugNumber(
+          group.selected.coreTeamSynergyWeightedBonus,
+        )}%·h 有效时长=${formatDebugNumber(
+          group.selected.realizedBindingHours,
+        )}/${formatDebugNumber(
+          group.selected.expectedBindingHours,
+        )}h 加成=${formatDebugNumber(group.selected.realizedWeightedBonus)}%`,
+      );
+      appendSameShiftTrace(lines, group.selected.trace);
+    }
+  }
+
+  lines.push("", "[最终排班]");
+  for (const entry of props.assembledScheduleCandidate?.groups || []) {
+    appendRotationLines(lines, "房间组", {
+      groupId: entry.groupId,
+      groupLabel: entry.groupLabel,
+      candidate: entry.candidate,
+    });
+  }
+  for (const [stateIndex, state] of (props.schedulePreview?.states || []).entries()) {
+    lines.push(
+      `班次${stateIndex + 1} ${state?.startHour || 0}h 起 ${state?.durationHours || 0}h`,
+    );
+    for (const room of state.rooms || []) {
+      lines.push(
+        `  ${room.label || room.groupId || room.key}: [${formatDebugOperatorIds(
+          getCandidateOperatorIds({ operators: room.operators }),
+        )}]`,
+      );
+    }
+  }
+
+  return lines.join("\n");
+});
+
+async function copyPipelineDebugText() {
+  const text = pipelineDebugText.value;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+    copyStatus.value = "已复制";
+  } catch {
+    copyStatus.value = "复制失败，请手动全选文本";
+  }
 }
 
 function formatYield(value) {
@@ -666,6 +980,25 @@ const droneTableDebug = computed(() => {
       </div>
       <span>开发模式</span>
     </header>
+
+    <details class="pipeline-stage pipeline-copy-debug" open>
+      <summary><code>复制调试信息</code> 同班绑定全链路</summary>
+      <div class="pipeline-stage-content">
+        <div class="pipeline-copy-debug-actions">
+          <button type="button" @click="copyPipelineDebugText">
+            复制全部调试信息
+          </button>
+          <small v-if="copyStatus">{{ copyStatus }}</small>
+        </div>
+        <textarea
+          class="pipeline-copy-debug-text"
+          :value="pipelineDebugText"
+          readonly
+          spellcheck="false"
+          @focus="$event.target.select()"
+        ></textarea>
+      </div>
+    </details>
 
     <details class="pipeline-stage">
       <summary>
@@ -2498,6 +2831,44 @@ const droneTableDebug = computed(() => {
   flex-direction: column;
   gap: 10px;
   padding: 2px 0 10px;
+}
+
+.pipeline-copy-debug-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pipeline-copy-debug-actions button {
+  padding: 5px 10px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  color: var(--c-text-color-primary);
+  background: var(--c-page-background-color);
+  cursor: pointer;
+}
+
+.pipeline-copy-debug-actions button:hover {
+  border-color: var(--c-primary-color);
+  color: var(--c-primary-color);
+}
+
+.pipeline-copy-debug-actions small {
+  color: var(--c-text-color-secondary);
+}
+
+.pipeline-copy-debug-text {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 320px;
+  resize: vertical;
+  padding: 10px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  color: var(--c-text-color-primary);
+  background: var(--c-page-background-color-secondary);
+  font: 12px/1.5 Consolas, "Microsoft YaHei", monospace;
+  white-space: pre;
 }
 
 .pipeline-group,

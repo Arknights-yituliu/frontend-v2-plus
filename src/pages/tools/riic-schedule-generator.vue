@@ -43,6 +43,7 @@ import {
 } from "/src/utils/riicOperatorSearch.js";
 import RIIC_BASELINE_SKILL_RULES from "/src/static/json/tools/R00-baseline.json";
 import RIIC_CONTROL_CENTER_SKILLS from "/src/static/json/tools/riic-candidates/R50-control.json";
+import RIIC_SCHEDULE_CHANGELOG from "/src/static/json/riic/schedule/changelog.json";
 import {
   createRiicLayoutRecommendation,
   RIIC_LAYOUTS as RIIC_LAYOUT_RECOMMENDATION_LAYOUTS,
@@ -129,9 +130,6 @@ import {
   settleRiicScheduleEfficiency,
 } from "/src/utils/riic/l79-preview-efficiency-settlement.js";
 import {
-  getRiicDormitoryOccupantCount,
-} from "/src/utils/riic/l28-perception-baseline.js";
-import {
   buildRiicMaaScheduleFromPreview,
   getRiicMaaRoomType,
 } from "/src/utils/riicScheduleExport.js";
@@ -185,6 +183,13 @@ const RIIC_AUTOMATIC_SEARCH_CONFIGS = Object.freeze({
     fallbackPlanLimit: 12,
   },
 });
+const RIIC_SCHEDULE_MODULE_VERSIONS =
+  RIIC_SCHEDULE_CHANGELOG.moduleVersions || {};
+const RIIC_SCHEDULE_CHANGELOG_ENTRIES = Array.isArray(
+  RIIC_SCHEDULE_CHANGELOG.entries,
+)
+  ? RIIC_SCHEDULE_CHANGELOG.entries
+  : [];
 const FIAMMETTA_RECOVERY_TARGET_NAMES = Object.freeze([
   "但书",
   "可露希尔",
@@ -728,15 +733,7 @@ function createScheduleExecutionSettingsSnapshot() {
   };
 }
 
-function resetScheduleExecutionSettings() {
-  const nextSettings = createEmptyScheduleExecutionSettings(
-    confirmedLayoutPlan.value?.shiftMode,
-    twoShiftRotationMode.value,
-  );
-  scheduleExecutionSettings.shifts = nextSettings.shifts;
-  scheduleExecutionSettings.orundumCraftMaterial =
-    nextSettings.orundumCraftMaterial;
-  scheduleExecutionSettings.exportInfo = nextSettings.exportInfo;
+function clearSchedulePreviewRoomEdits() {
   selectedSchedulePreviewRoomKey.value = "";
   scheduleRoomOperatorOverrides.value = {};
   scheduleRoomProductOverrides.value = {};
@@ -746,6 +743,18 @@ function resetScheduleExecutionSettings() {
   copiedScheduleRoomOperators.value = null;
   copiedScheduleShiftOperators.value = null;
   scheduleRoomEditorOperatorInput.value = "";
+}
+
+function resetScheduleExecutionSettings() {
+  const nextSettings = createEmptyScheduleExecutionSettings(
+    confirmedLayoutPlan.value?.shiftMode,
+    twoShiftRotationMode.value,
+  );
+  scheduleExecutionSettings.shifts = nextSettings.shifts;
+  scheduleExecutionSettings.orundumCraftMaterial =
+    nextSettings.orundumCraftMaterial;
+  scheduleExecutionSettings.exportInfo = nextSettings.exportInfo;
+  clearSchedulePreviewRoomEdits();
   activeSchedulePreviewStateIndex.value =
     getDefaultSchedulePreviewStateIndex();
 }
@@ -1484,7 +1493,9 @@ const controlCenterFiammettaTargetUsage = computed(() => {
 });
 
 function clearScheduleSelectionsAfterControlCenterChange() {
-  clearSelectedRoomGroupTeamCandidates();
+  clearSelectedRoomGroupTeamCandidates({
+    preserveExecutionSettings: true,
+  });
   lastAutomaticGenerationTriggerKey.value = "";
 }
 
@@ -1512,18 +1523,8 @@ const controlCenterRuntimeContext = computed(() =>
 );
 const riicPerceptionResourceFacts = computed(() => {
   const facilities = activeLayoutFacilityCounts.value?.facilities || [];
-  const powerPlantCount = facilities.filter(
-    (facility) => facility?.facilityType === "power",
-  ).length;
 
   return {
-    dormitoryOccupantCount: getRiicDormitoryOccupantCount({
-      layoutFacts: activeLayoutFacilityCounts.value,
-    }),
-    dormitoryLevel:
-      powerPlantCount === 3 ? 5 : powerPlantCount === 2 ? 3 : null,
-    dormitorySupportOccupantCount: 5,
-    assumeDormitorySupport: true,
     officeExtraRecruitmentSlots: facilities.some(
       (facility) => facility?.facilityType === "hire",
     )
@@ -2797,6 +2798,9 @@ const automaticGenerationTriggerKey = computed(() => {
     treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
     JSON.stringify(idealTrainingRaritySelection.value),
     controlCenterAssignmentSignature.value,
+    JSON.stringify(
+      controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
+    ),
     JSON.stringify(fiammettaRecoverySettings.value),
     rosterSignature,
   ].join("::");
@@ -3018,13 +3022,6 @@ function buildManualRoomGroupRotationCandidate(
                   roomType: group.facility,
                   slotCount: cohort.slotCount,
                 });
-              }
-
-              if (
-                cohort.selectionMode === "individual" &&
-                !sourceCandidate.isManualFallbackTeam
-              ) {
-                return sourceCandidate;
               }
 
               return materializeRiicRoomTeamCandidate(
@@ -3292,8 +3289,6 @@ const controlCenterLateFillState = computed(() => {
     fallbackPlans: roomGroupFallbackPlanStates.value,
     excludedOperatorIdsByTeamIndex:
       controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
-    controlCandidates: controlCenterCandidateOperators.value,
-    roster: riicMatchingRoster.value,
     idleFillOperators: riicIdleFillOperators.value,
     fiammettaRecovery: fiammettaRecoveryConfig.value,
   });
@@ -3827,6 +3822,7 @@ const assembledScheduleCandidateState = computed(() => {
           claimedOperatorIds: getManualRoomGroupCandidateOperatorIds(candidate),
         })),
         sameShiftBindingSummary: sameShiftAlignment.summary,
+        sameShiftBindingDebug: sameShiftAlignment.debug,
       },
     ],
     blockedGroups: [],
@@ -3902,6 +3898,31 @@ const schedulePreviewStaticRoomKeys = computed(
         ),
     ),
 );
+const riicStaticRoomCapacityByType = computed(() =>
+  scheduleRoomRows.value
+    .flatMap((row) => row.groups)
+    .filter(
+      (group) =>
+        !group.candidateGenerationAvailable && !group.manualControl,
+    )
+    .reduce((capacityByType, group) => {
+      const roomType = String(group?.facility || "").trim();
+      if (!roomType) {
+        return capacityByType;
+      }
+
+      return {
+        ...capacityByType,
+        [roomType]:
+          Number(capacityByType[roomType] || 0) +
+          (group?.stations || []).reduce(
+            (total, station) =>
+              total + Math.max(0, Number(station?.slotCount) || 0),
+            0,
+          ),
+      };
+    }, {}),
+);
 
 function getSchedulePreviewManualStaticOperatorIds(stateIndex) {
   const prefix = `${stateIndex}:`;
@@ -3950,6 +3971,8 @@ const riicSupportRoomPlacementsBySourceStateIndex = computed(() =>
             ownedOperators: riicMatchingRoster.value || [],
             claimedOperatorIds,
             layoutFacts: activeLayoutFacilityCounts.value,
+            idleFillOperators: riicIdleFillOperators.value,
+            roomCapacityByType: riicStaticRoomCapacityByType.value,
           }),
         ];
       },
@@ -7140,9 +7163,16 @@ function selectLayoutChoice(layoutId) {
   selectLayoutEntry(layoutId);
 }
 
-function clearSelectedRoomGroupTeamCandidates() {
+function clearSelectedRoomGroupTeamCandidates({
+  preserveExecutionSettings = false,
+} = {}) {
   selectedRoomGroupTeamCandidateKeys.value = {};
   roomGroupFallbackQueueStates.value = {};
+  if (preserveExecutionSettings) {
+    clearSchedulePreviewRoomEdits();
+    return;
+  }
+
   resetScheduleExecutionSettings();
 }
 
@@ -7602,6 +7632,10 @@ onBeforeUnmount(() => {
               {{ layoutWorkflowCardState === "complete" ? "已完成" : "进行中" }}
             </span>
           </div>
+          <div class="workflow-card-version">
+            {{ RIIC_SCHEDULE_MODULE_VERSIONS.layout?.label }}
+            {{ RIIC_SCHEDULE_MODULE_VERSIONS.layout?.version }}
+          </div>
         </header>
 
         <RiicLayoutChoicePanel
@@ -7678,6 +7712,16 @@ onBeforeUnmount(() => {
               class="workflow-card-status-note"
             >
               请导入至少一份干员数据            </span>
+          </div>
+          <div class="workflow-card-version">
+            <span>
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.data?.label }}
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.data?.version }}
+            </span>
+            <span>
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.team?.label }}
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.team?.version }}
+            </span>
           </div>
         </div>
         <Transition name="schedule-generation-running-notice">
@@ -7921,7 +7965,7 @@ onBeforeUnmount(() => {
           <div class="room-workbench-actions">
             <button
               type="button"
-              class="room-workbench-action"
+              class="room-workbench-action room-workbench-action-large"
               :disabled="autoGeneratingSchedule"
               @click="regenerateSchedule"
             >
@@ -7934,7 +7978,7 @@ onBeforeUnmount(() => {
             </button>
             <button
               type="button"
-              class="room-workbench-action room-workbench-action-deep"
+              class="room-workbench-action room-workbench-action-large room-workbench-action-deep"
               :disabled="autoGeneratingSchedule"
               @click="openDeepScheduleConfirmation"
             >
@@ -8002,6 +8046,16 @@ onBeforeUnmount(() => {
                   ? "可调整"
                   : "待生成"
               }}
+            </span>
+          </div>
+          <div class="workflow-card-version">
+            <span>
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.assembler?.label }}
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.assembler?.version }}
+            </span>
+            <span>
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.yield?.label }}
+              {{ RIIC_SCHEDULE_MODULE_VERSIONS.yield?.version }}
             </span>
           </div>
         </div>
@@ -8371,6 +8425,10 @@ onBeforeUnmount(() => {
               }}
             </span>
           </div>
+          <div class="workflow-card-version">
+            {{ RIIC_SCHEDULE_MODULE_VERSIONS.recommendation?.label }}
+            {{ RIIC_SCHEDULE_MODULE_VERSIONS.recommendation?.version }}
+          </div>
         </div>
 
         <RiicPipelineDebugPanel
@@ -8388,6 +8446,9 @@ onBeforeUnmount(() => {
           :fallback-plans-by-group-id="roomGroupFallbackPlanStates"
           :pre-assembly-group-candidates="assembledRoomGroupCandidates"
           :assembled-schedule-candidate="activeAssembledScheduleCandidate"
+          :same-shift-binding-debug="
+            activeAssembledScheduleCandidate?.sameShiftBindingDebug
+          "
           :fiammetta-recovery="fiammettaRecoveryConfig"
           :fiammetta-control-usage="controlCenterFiammettaTargetUsage"
           :automatic-generation-debug-state="
@@ -8419,6 +8480,43 @@ onBeforeUnmount(() => {
           :get-riic-yield-engine-status-meta="getRiicYieldEngineStatusMeta"
           :format-riic-yield-metric="formatRiicYieldMetric"
         />
+      </section>
+
+      <section class="workflow-stage workflow-card update-log-workflow-stage">
+        <div class="workflow-card-heading">
+          <div class="workflow-card-heading-copy">
+            <h2>更新日志</h2>
+          </div>
+        </div>
+        <div class="schedule-changelog">
+          <article
+            v-for="entry in RIIC_SCHEDULE_CHANGELOG_ENTRIES"
+            :key="`${entry.date}:${entry.version}`"
+            class="schedule-changelog-entry"
+          >
+            <header class="schedule-changelog-entry-heading">
+              <strong>{{ entry.date }}</strong>
+              <span>{{ entry.version }}</span>
+            </header>
+            <ul class="schedule-changelog-item-list">
+              <li
+                v-for="(item, index) in entry.items"
+                :key="`${entry.date}:${item.module}:${index}`"
+                class="schedule-changelog-item"
+              >
+                <span class="schedule-changelog-level">
+                  Lv{{ item.level }}
+                </span>
+                <span class="schedule-changelog-item-module">
+                  {{ item.module }}
+                </span>
+                <span class="schedule-changelog-item-description">
+                  {{ item.description }}
+                </span>
+              </li>
+            </ul>
+          </article>
+        </div>
       </section>
 
       <div class="page-cache-reset">
@@ -8798,6 +8896,77 @@ onBeforeUnmount(() => {
   box-shadow: 0 8px 22px rgb(20 34 48 / 9%);
 }
 
+.schedule-changelog {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.schedule-changelog-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-changelog-entry + .schedule-changelog-entry {
+  padding-top: 18px;
+  border-top: 1px solid var(--c-border-color);
+}
+
+.schedule-changelog-entry-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--c-text-color);
+}
+
+.schedule-changelog-entry-heading strong {
+  font-size: 14px;
+}
+
+.schedule-changelog-entry-heading span {
+  color: var(--riic-muted);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.schedule-changelog-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.schedule-changelog-item {
+  display: grid;
+  grid-template-columns: 36px 92px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  color: var(--c-text-color);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.schedule-changelog-level {
+  color: var(--riic-orange);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.schedule-changelog-item-module {
+  color: var(--riic-blue);
+  font-weight: 600;
+}
+
+.schedule-changelog-item-description {
+  min-width: 0;
+  color: var(--riic-muted);
+}
+
 .wizard-layout.manual-selection {
   grid-template-columns: minmax(0, 1fr);
   max-width: 880px;
@@ -8833,6 +9002,29 @@ onBeforeUnmount(() => {
   align-items: baseline;
   min-width: 0;
   gap: 10px;
+}
+
+.workflow-card-version {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 0;
+  color: color-mix(in srgb, #fff 82%, transparent);
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.45;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.workflow-card-version span {
+  overflow: visible;
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  text-overflow: clip;
+  white-space: nowrap;
 }
 
 .workflow-stage .workflow-card-heading h2 {
@@ -9391,6 +9583,17 @@ onBeforeUnmount(() => {
   font-weight: 700;
   line-height: 1.3;
   cursor: pointer;
+}
+
+.room-workbench-action-large {
+  min-height: 56px;
+  gap: 10px;
+  padding: 8px 16px;
+  font-size: 24px;
+}
+
+.room-workbench-action-large :deep(.v-icon) {
+  font-size: 32px !important;
 }
 
 .room-workbench-action:hover:not(:disabled) {
@@ -10489,6 +10692,10 @@ onBeforeUnmount(() => {
 
   .workflow-card-heading {
     margin: -18px -18px 18px;
+  }
+
+  .workflow-card-version {
+    font-size: 10px;
   }
 
   .layout-entry-panel {

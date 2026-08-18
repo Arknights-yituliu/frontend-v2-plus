@@ -364,6 +364,96 @@ function getCandidateOperatorEffects(effects) {
 }
 
 /**
+ * Reduces a same-shift binding to the effective room and operator bonuses.
+ * L65 uses it while searching; L81 uses the same reduction after assembly.
+ */
+export function getRiicSameShiftBindingBonusBreakdown(binding) {
+  const effects = Array.isArray(binding?.effects) ? binding.effects : [];
+  const operatorEfficiencyMetric =
+    OPERATOR_EFFICIENCY_METRIC_BY_ROOM_TYPE[
+      normalizeRoomType(binding?.roomType)
+    ] || "";
+  const highestFacilityBonusByMetric = new Map();
+  const highestOperatorBonusBySourceMetricAndId = new Map();
+
+  for (const effect of effects) {
+    const bonusPercent = Number(effect?.bonusPercent || 0);
+    if (!Number.isFinite(bonusPercent) || bonusPercent === 0) {
+      continue;
+    }
+
+    const affectedOperatorIds = (effect?.affectedOperatorIds || [])
+      .map((operatorId) => String(operatorId || "").trim())
+      .filter(Boolean);
+    const isOperatorEffect =
+      String(effect?.scope || "").trim() === "operators" ||
+      affectedOperatorIds.length > 0;
+    if (!isOperatorEffect) {
+      const metric = String(effect?.metric || "").trim();
+      const existing = highestFacilityBonusByMetric.get(metric);
+      if (!Number.isFinite(existing) || bonusPercent > existing) {
+        highestFacilityBonusByMetric.set(metric, bonusPercent);
+      }
+      continue;
+    }
+    if (String(effect?.metric || "").trim() !== operatorEfficiencyMetric) {
+      continue;
+    }
+
+    for (const operatorId of affectedOperatorIds) {
+      const key = [
+        ...(effect?.sourceOperatorIds || [])
+          .map((sourceOperatorId) => String(sourceOperatorId || "").trim())
+          .filter(Boolean)
+          .sort(),
+        String(effect?.metric || "").trim(),
+        operatorId,
+      ].join(":");
+      const existing = highestOperatorBonusBySourceMetricAndId.get(key);
+      if (!existing || bonusPercent > existing.bonusPercent) {
+        highestOperatorBonusBySourceMetricAndId.set(key, {
+          operatorId,
+          bonusPercent,
+        });
+      }
+    }
+  }
+
+  let facilityBonusPercent = [...highestFacilityBonusByMetric.values()].reduce(
+    (total, bonusPercent) => total + Number(bonusPercent || 0),
+    0,
+  );
+  const operatorBonusById = {};
+  for (const { operatorId, bonusPercent } of highestOperatorBonusBySourceMetricAndId.values()) {
+    operatorBonusById[operatorId] =
+      Number(operatorBonusById[operatorId] || 0) + Number(bonusPercent || 0);
+  }
+  const operatorBonusPercent = Object.values(operatorBonusById).reduce(
+    (total, bonusPercent) => total + Number(bonusPercent || 0),
+    0,
+  );
+
+  if (
+    effects.length === 0 &&
+    Number.isFinite(Number(binding?.bonusPercent))
+  ) {
+    facilityBonusPercent = Number(binding.bonusPercent);
+  }
+
+  return {
+    facilityBonusPercent,
+    operatorBonusPercent,
+    bonusPercent: facilityBonusPercent + operatorBonusPercent,
+    operatorBonuses: Object.entries(operatorBonusById).map(
+      ([operatorId, bonusPercent]) => ({
+        operatorId,
+        bonusPercent,
+      }),
+    ),
+  };
+}
+
+/**
  * Resolves the current control-center effects for candidate materialization.
  *
  * Candidate generation has no room rotation yet, so it applies the complete
