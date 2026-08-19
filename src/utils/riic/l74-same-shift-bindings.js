@@ -537,7 +537,7 @@ function rotateCandidateSegments(candidate, offset) {
 }
 
 /**
- * Keeps selected teams intact while selecting the room rotation phase that
+ * L74: keeps selected teams intact while selecting the room rotation phase that
  * realizes the most control-center same-shift bonus.
  */
 export function alignRiicScheduleSameShiftBindings({

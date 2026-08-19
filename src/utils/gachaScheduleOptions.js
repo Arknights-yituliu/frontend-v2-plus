@@ -5,18 +5,6 @@
  */
 const scheduleDefinitions = [
   {
-    id: "summer",
-    name: "夏活",
-    startDate: "2026-08-01",         // 卡池开放日期
-    lastDrawDate: "2026-08-14",      // 卡池最后抽卡日期
-    activityType: "夏活限定",         // 活动类型，用于分类奖励
-    disabled: false,                  // 是否禁用（true 时在 UI 中不可选但可见）
-    dailyGiftResources: true,         // 活动期间是否有每日赠送奖励
-    accuracyFlag: true,              // 是否为准确排期（false 表示预测排期）
-    historyStartDate: "2025-08-01",   // 去年同期的礼包售卖起始日，用于筛选往年礼包
-    historyLastDrawDate: "2025-08-14", // 去年同期的礼包售卖结束日
-  },
-  {
     id: "p3r",
     name: "P3R联动",
     startDate: "2026-09-04",
@@ -32,7 +20,7 @@ const scheduleDefinitions = [
     startDate: "2026-11-01",
     lastDrawDate: "2026-11-14",
     activityType: "周年限定",
-    disabled: false,
+    disabled: true,
     dailyGiftResources: true,
     accuracyFlag: false,
     dateString: "敬请期待",            // 自定义日期展示文字，覆盖自动生成的格式

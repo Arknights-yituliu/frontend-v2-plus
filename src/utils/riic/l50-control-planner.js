@@ -1031,6 +1031,7 @@ function createLateFillQueue({
 export function buildRiicControlCenterLateFillState({
   baseState,
   fallbackPlans = {},
+  roomOperatorIds = [],
   excludedOperatorIds = [],
   excludedOperatorIdsByTeamIndex = {},
   idleFillOperators = [],
@@ -1063,6 +1064,15 @@ export function buildRiicControlCenterLateFillState({
   );
   const occupiedByRooms = new Set();
   const fallbackUsage = new Map();
+  for (const charId of roomOperatorIds || []) {
+    const normalizedOperatorId = normalizeOperatorId(charId);
+    if (
+      normalizedOperatorId &&
+      normalizedOperatorId !== reusableOperatorId
+    ) {
+      occupiedByRooms.add(normalizedOperatorId);
+    }
+  }
   for (const plan of Object.values(fallbackPlans || {})) {
     for (const charId of [
       ...(plan?.coreOperatorIds || []),
@@ -1147,6 +1157,60 @@ export function buildRiicControlCenterLateFillState({
     teamEntries,
     operatorIds: teamEntries.flatMap((entry) => entry.operatorIds),
   };
+}
+
+export function removeRiicControlCenterOperators({
+  baseState,
+  removedOperatorIdsByTeamIndex = {},
+} = {}) {
+  if (baseState?.status !== "ready") {
+    return baseState || getEmptyControlCenterRoleState("missingCapacity");
+  }
+
+  const teams = getStateTeams(baseState);
+  const removedIdsByTeamIndex = new Map(
+    Object.entries(removedOperatorIdsByTeamIndex || {}).map(
+      ([teamIndex, operatorIds]) => [
+        Number(teamIndex),
+        new Set((operatorIds || []).map(normalizeOperatorId)),
+      ],
+    ),
+  );
+
+  for (const team of teams) {
+    const removedIds =
+      removedIdsByTeamIndex.get(Number(team.teamIndex)) || new Set();
+    for (const key of ["roomEffectOperators", "operatorEffectOperators"]) {
+      team[key] = team[key].filter(
+        (operator) => !removedIds.has(normalizeOperatorId(operator?.charId)),
+      );
+    }
+  }
+
+  return buildControlStateFromTeams({
+    teams,
+    roleDefinitions: (baseState.roles || []).filter(
+      (role) => role.id !== FILLER_ROLE_ID,
+    ),
+    candidates: (baseState.roles || []).flatMap(
+      (role) => role.candidates || [],
+    ),
+    staffingRequirement: {
+      ...baseState,
+      segmentHours: (baseState.segments || []).map(
+        (segment) => segment.durationHours,
+      ),
+      cohorts: [
+        {
+          teamCount: baseState.teamCount,
+          rotationSegments: (baseState.segments || []).map((segment) => ({
+            activeTeamIndexes: [segment.teamIndex],
+          })),
+        },
+      ],
+    },
+    slotCount: baseState.slotCount,
+  });
 }
 
 export function mergeRiicControlCenterLateFillState({

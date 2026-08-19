@@ -64,6 +64,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  roomIndexAssignments: {
+    type: Object,
+    default: () => ({}),
+  },
 });
 
 const emit = defineEmits([
@@ -175,12 +179,36 @@ function getRarity(charId) {
   return props.operatorTable?.[charId]?.rarity || 1;
 }
 
+function getDisplayRoomLabel(room) {
+  const label = String(room?.label || "").trim();
+  const roomKey = String(room?.key || "").trim();
+  const assignedIndex = Number(props.roomIndexAssignments?.[roomKey]);
+  const stationIndex = Number(room?.stationIndex);
+
+  if (
+    !label ||
+    !Number.isInteger(assignedIndex) ||
+    assignedIndex < 1 ||
+    !Number.isInteger(stationIndex) ||
+    stationIndex < 0
+  ) {
+    return label;
+  }
+
+  const originalIndex = String(stationIndex + 1);
+  const suffixPattern = new RegExp(`(^|\\D)${originalIndex}$`);
+  return suffixPattern.test(label)
+    ? label.replace(suffixPattern, `$1${assignedIndex}`)
+    : label;
+}
+
 function getRoomTitle(room) {
   const names = (room?.operators || [])
     .map((operator) => operator?.name)
     .filter(Boolean)
     .join("、");
-  return names ? `${room.label}：${names}` : room.label;
+  const label = getDisplayRoomLabel(room);
+  return names ? `${label}：${names}` : label;
 }
 
 function isProductionRoom(room) {
@@ -604,7 +632,7 @@ function dropOperator(room, operator) {
            @drop="dropRoom(room, $event)"
         >
           <span class="schedule-preview-room-heading">
-            <strong>{{ room.label }}</strong>
+            <strong>{{ getDisplayRoomLabel(room) }}</strong>
           </span>
           <span
             v-if="room.key === droneTarget"

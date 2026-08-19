@@ -20,6 +20,7 @@ export const RIIC_SET_ASSESSMENT_STORAGE_KEYS = Object.freeze({
   customSources: "riic_operator_sources_v2",
   workspaces: "riic_schedule_generator_workspaces_v1",
   sklandSession: "skland_account_data",
+  sklandSnapshot: "riic_skland_operator_snapshot_v1",
 });
 
 function readJson(storage, key, fallback = null) {
@@ -83,13 +84,29 @@ function readSklandSource() {
     requireOwn: true,
   });
 
-  return operators.length > 0
+  if (operators.length > 0) {
+    return {
+      id: "skland",
+      type: "skland",
+      label: "森空岛",
+      importedAt: account?.updatedAt || "",
+      operators,
+    };
+  }
+
+  const snapshot = readJson(
+    typeof localStorage === "undefined" ? null : localStorage,
+    RIIC_SET_ASSESSMENT_STORAGE_KEYS.sklandSnapshot,
+  );
+  const cachedOperators = normalizeOperators(snapshot?.operators);
+
+  return cachedOperators.length > 0
     ? {
         id: "skland",
         type: "skland",
         label: "森空岛",
-        importedAt: account?.updatedAt || "",
-        operators,
+        importedAt: String(snapshot?.importedAt || ""),
+        operators: cachedOperators,
       }
     : null;
 }

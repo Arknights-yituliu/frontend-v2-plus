@@ -533,21 +533,21 @@ const p01Result = computed(() =>
       }
     : calculateRiicTrading(
         {
-          type: "trading",
-          product: p01Product.value,
-          level: p01StationLevel.value,
-          context: {
-            resolvedExternalOrderBonuses: p01ExternalOrderBonuses.value,
-            silentResonance: Number(p01SilentResonance.value),
+          durationHours: 1,
+          operators: p01ActiveOperators.value,
+          tradingFactors: {
+            product: p01Product.value,
+            stationLevel: Number(p01StationLevel.value),
+            roomBonus: Number(p01RoomBonus.value),
+            operatorBonusesById:
+              p01BonusOperatorId.value && p01OperatorBonus.value
+                ? { [p01BonusOperatorId.value]: p01OperatorBonus.value }
+                : {},
+            crossRoomFactors: {
+              resolvedExternalOrderBonuses: p01ExternalOrderBonuses.value,
+              silentResonance: Number(p01SilentResonance.value),
+            },
           },
-        },
-        p01ActiveOperators.value,
-        {
-          room: p01RoomBonus.value,
-          operators:
-            p01BonusOperatorId.value && p01OperatorBonus.value
-              ? { [p01BonusOperatorId.value]: p01OperatorBonus.value }
-              : {},
         },
       ),
 );
@@ -560,9 +560,10 @@ const p01ResultStatus = computed(() => {
   }
 
   const errorLabels = {
-    invalidFacility: "设施配置无效",
+    invalidDuration: "班段时长无效",
     invalidOperators: "干员配置无效",
-    invalidBonus: "加成配置无效",
+    invalidTradingFactors: "贸易站结算因素无效",
+    invalidBonus: "加成结果无效",
     invalidExternalContext: "跨房间加成 JSON 无效",
     notSupported: "当前组合暂不支持计算",
     timeDependentOrderProbability: "订单概率随时间变化，暂不支持计算",

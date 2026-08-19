@@ -2,7 +2,7 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20260818.1500"
+      "version": "v20260819.0137"
     },
     "data": {
       "label": "数据模块",
@@ -10,22 +10,124 @@
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260818.1240"
+      "version": "v20260819.2022"
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20260818.1500"
+      "version": "v20260819.2022"
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260818.1240"
+      "version": "v20260819.2125"
     },
     "recommendation": {
-      "label": "推荐模块",
-      "version": "v20260818.1500"
+      "label": "调试信息",
+      "version": "v20260819.2125"
     }
   },
   "entries": [
+    {
+      "date": "2026-08-19",
+      "version": "v20260819.2125",
+      "items": [
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 5,
+          "description": "贸易站高品质订单按班段时长计算预热过程，不再仅按稳定态订单概率估算"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 4,
+          "description": "P01 改为班段结算，输出龙门币、赤金消耗与虚拟赤金等资源流，并回填贸易站实际结算结果"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 4,
+          "description": "补充 P01 无效干员和参数诊断，以及班段级贸易订单类型、效率与资源流明细"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "version": "v20260819.2022",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "feature",
+          "level": 5,
+          "description": "自动选房完成后会按同班次实际房间配置复核中枢干员效果，撤下未满足条件的干员并重新补位，避免排班冲突"
+        },
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 3,
+          "description": "一天两换的手动三班轮换按每班 8 小时计算每日资源；空生产房间不再参与在岗联动"
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 2,
+          "description": "自动生成支持中途取消，并会明确提示候选目录加载失败的房间组"
+        },
+        {
+          "module": "组装器",
+          "type": "update",
+          "level": 4,
+          "description": "MAA 导出可写入设施等级，并可按排班预览时长生成计划；排班成图补充每日资源净收支"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 5,
+          "description": "生成器与 MAA 排班试算统一使用 L79 实际效率结算，覆盖中枢、同班联动、自动化与资源链等实际条件"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 4,
+          "description": "贸易站计算同步传递实际在岗干员、房间加成与跨房间条件；无人机仅可投向当前班段有干员且已完成核算的房间"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 4,
+          "description": "扩展 L73 中枢撤换补位、L74 同班冲突与 L79 实际结算入参追踪；计算反馈与 MAA 试算可查看干员解析、资源流和无人机明细"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "version": "v20260819.0137",
+      "items": [
+        {
+          "module": "布局模块",
+          "type": "feature",
+          "level": 3,
+          "description": "新增 333 搓玉布局，并支持在布局推荐与收益试算中识别该布局"
+        },
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 4,
+          "description": "自动候补选人会预留已用于制造站联动的干员，避免后续班组重复占用"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 4,
+          "description": "修正无人机停用与前置投放时的结算班段对应关系"
+        },
+        {
+          "module": "调试信息",
+          "type": "feature",
+          "level": 3,
+          "description": "新增未完成产能核算的班段反馈，并支持复制排班、干员与错误信息"
+        }
+      ]
+    },
     {
       "date": "2026-08-18",
       "version": "v20260818.1500",

@@ -15,6 +15,8 @@ export const RIIC_TRADE_ORDER_DISTRIBUTION_BY_LEVEL = Object.freeze({
 const TAILOR_ALPHA_DISTRIBUTION = Object.freeze([0.15, 0.3, 0.55]);
 const TAILOR_BETA_DISTRIBUTION = Object.freeze([0.05, 0.1, 0.85]);
 const TAILOR_ALPHA_PAIR_DISTRIBUTION = Object.freeze([0.13, 0.22, 0.65]);
+const TAILOR_ALPHA_WARMUP_HOURS = 3;
+const TAILOR_BETA_WARMUP_HOURS = 5;
 
 export function getRiicTradeOrderDistribution({
   stationLevel,
@@ -47,6 +49,55 @@ export function getRiicTradeOrderDistribution({
     return TAILOR_ALPHA_PAIR_DISTRIBUTION;
   }
   return TAILOR_ALPHA_DISTRIBUTION;
+}
+
+function getAverageWarmupProgress(durationHours, warmupHours) {
+  if (durationHours <= 0) {
+    return 0;
+  }
+  if (durationHours <= warmupHours) {
+    return durationHours / (2 * warmupHours);
+  }
+  return 1 - warmupHours / (2 * durationHours);
+}
+
+export function getRiicTradeAverageOrderDistribution({
+  stationLevel,
+  highQualityVariants = [],
+  durationHours,
+  allowExtraAlphaWithBeta = false,
+} = {}) {
+  const peakDistribution = getRiicTradeOrderDistribution({
+    stationLevel,
+    highQualityVariants,
+    allowExtraAlphaWithBeta,
+  });
+  if (!peakDistribution || highQualityVariants.length === 0) {
+    return peakDistribution;
+  }
+
+  const baselineDistribution =
+    RIIC_TRADE_ORDER_DISTRIBUTION_BY_LEVEL[stationLevel];
+  const normalizedDurationHours = Number(durationHours);
+  if (
+    !baselineDistribution ||
+    !Number.isFinite(normalizedDurationHours) ||
+    normalizedDurationHours < 0
+  ) {
+    return null;
+  }
+
+  const warmupHours = highQualityVariants.includes("beta")
+    ? TAILOR_BETA_WARMUP_HOURS
+    : TAILOR_ALPHA_WARMUP_HOURS;
+  const progress = getAverageWarmupProgress(
+    normalizedDurationHours,
+    warmupHours,
+  );
+  return baselineDistribution.map(
+    (baseline, index) =>
+      baseline + (peakDistribution[index] - baseline) * progress,
+  );
 }
 
 export function calculateRiicExpectedPerHour(distribution, values) {

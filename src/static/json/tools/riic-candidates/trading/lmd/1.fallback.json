@@ -668,28 +668,6 @@
       ]
     },
     {
-      "name": "巫恋",
-      "rates": [
-        {
-          "percent": 30,
-          "tags": [
-            "tailor",
-            "tailor-alpha",
-            "siracusa"
-          ]
-        },
-        {
-          "elite": 2,
-          "percent": 30,
-          "tags": [
-            "tailor",
-            "tailor-alpha",
-            "siracusa"
-          ]
-        }
-      ]
-    },
-    {
       "name": "贝娜",
       "rates": [
         {

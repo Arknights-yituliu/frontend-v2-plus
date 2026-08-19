@@ -81,7 +81,7 @@ const emit = defineEmits([
           {{
             twoShiftRotationMode === "maa"
               ? "每座生产站需两套完整班组"
-              : "可用三班交错轮换"
+              : "一天两换·手动三班会以每班8h计算每日资源"
           }}
         </span>
       </section>

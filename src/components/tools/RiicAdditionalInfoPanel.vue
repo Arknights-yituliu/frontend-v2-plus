@@ -1,6 +1,11 @@
 <script setup>
+import { computed, ref } from "vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import OPERATOR_UPGRADE_DATA from "/src/static/json/tools/operatorUpgradeData.json";
+import {
+  buildRiicCalculationFeedback,
+  formatRiicCalculationFeedback,
+} from "/src/utils/riic/riic-calculation-feedback.js";
 
 function compareTrainingUnlock(left, right) {
   const eliteDifference = Number(left?.elite || 0) - Number(right?.elite || 0);
@@ -43,6 +48,26 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  actualScheduleMetrics: {
+    type: Object,
+    default: null,
+  },
+  schedulePreview: {
+    type: Object,
+    default: null,
+  },
+  scheduleShifts: {
+    type: Array,
+    default: () => [],
+  },
+  operatorSourceLabel: {
+    type: String,
+    default: "",
+  },
+  layoutLabel: {
+    type: String,
+    default: "",
+  },
   showCandidateDebugValues: {
     type: Boolean,
     default: false,
@@ -60,6 +85,74 @@ const props = defineProps({
     required: true,
   },
 });
+
+const calculationFeedbackCopyStatus = ref("");
+const calculationFeedback = computed(() =>
+  buildRiicCalculationFeedback({
+    actualScheduleMetrics: props.actualScheduleMetrics,
+    preview: props.schedulePreview,
+    shifts: props.scheduleShifts,
+    operatorTable: props.operatorTable,
+  }),
+);
+const calculationFeedbackText = computed(() =>
+  formatRiicCalculationFeedback({
+    sourceLabel: props.operatorSourceLabel,
+    layoutLabel: props.layoutLabel,
+    feedback: calculationFeedback.value,
+  }),
+);
+
+function formatFeedbackValue(value) {
+  return value === undefined ? "undefined" : value === null ? "null" : String(value);
+}
+
+function formatP01Operators(diagnostic) {
+  return (diagnostic?.p01Operators || [])
+    .map(
+      (operator, index) =>
+        `#${index + 1} { charId: ${formatFeedbackValue(operator?.charId)}, elite: ${formatFeedbackValue(operator?.elite)}, level: ${formatFeedbackValue(operator?.level)} }`,
+    )
+    .join("；");
+}
+
+function formatInvalidOperatorFields(diagnostic) {
+  return (diagnostic?.invalidOperators || [])
+    .map(
+      (operator) =>
+        `#${Number(operator?.index) + 1} [${(operator?.invalidFields || []).join(", ")}]`,
+    )
+    .join("；");
+}
+
+function formatL80OperatorResolution(diagnostic) {
+  return (diagnostic?.l80OperatorResolution || [])
+    .map(
+      (operator) =>
+        `${formatFeedbackValue(operator?.charId)}：档案${operator?.rosterMatched ? "已匹配" : "未匹配"}，精英化=${operator?.eliteSource || "--"}，等级=${operator?.levelSource || "--"}`,
+    )
+    .join("；");
+}
+
+async function copyCalculationFeedback() {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(calculationFeedbackText.value);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = calculationFeedbackText.value;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+    calculationFeedbackCopyStatus.value = "已复制";
+  } catch {
+    calculationFeedbackCopyStatus.value = "复制失败，请手动复制下方内容";
+  }
+}
 </script>
 
 <template>
@@ -108,6 +201,52 @@ const props = defineProps({
     <p v-else class="additional-info-empty">
       如果没有推荐干员，可能是“导入干员与生成排班表”里“干员练度”选项没有打开，或者是你该练的都练了
     </p>
+  </section>
+
+  <section
+    v-if="calculationFeedback.length"
+    class="additional-info-module calculation-feedback-module"
+  >
+    <header class="additional-info-module-heading">
+      <h3>排班计算反馈</h3>
+      <button type="button" @click="copyCalculationFeedback">复制反馈</button>
+      <small v-if="calculationFeedbackCopyStatus">
+        {{ calculationFeedbackCopyStatus }}
+      </small>
+    </header>
+    <p class="calculation-feedback-description">
+      以下班段未完成产能核算，可直接复制反馈内容。
+    </p>
+    <article
+      v-for="entry in calculationFeedback"
+      :key="entry.key"
+      class="calculation-feedback-entry"
+    >
+      <header>
+        <strong>{{ entry.title }}</strong>
+        <code>{{ entry.errorCode }}</code>
+      </header>
+      <p>{{ entry.description }}</p>
+      <ul>
+        <li v-for="segment in entry.segments" :key="segment.key">
+          <strong>{{ segment.shiftLabel }}</strong>
+          <span v-if="segment.durationLabel">{{ segment.durationLabel }}</span>
+          <span>{{ segment.product || "未标记产物" }}</span>
+          <span>在岗：{{ segment.operatorLabel }}</span>
+          <template v-if="segment.diagnostic">
+            <small>
+              P01 实际 operators：{{ formatP01Operators(segment.diagnostic) || "[]" }}
+            </small>
+            <small>
+              P01 校验失败字段：{{ formatInvalidOperatorFields(segment.diagnostic) || "--" }}
+            </small>
+            <small>
+              L80 回填来源：{{ formatL80OperatorResolution(segment.diagnostic) || "--" }}
+            </small>
+          </template>
+        </li>
+      </ul>
+    </article>
   </section>
 
   <details
@@ -233,11 +372,108 @@ const props = defineProps({
   line-height: 1.4;
 }
 
+.additional-info-module-heading button {
+  min-height: 25px;
+  margin-left: auto;
+  padding: 3px 8px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  background: var(--c-page-background-color);
+  color: var(--riic-muted);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.additional-info-module-heading button:hover {
+  border-color: color-mix(in srgb, var(--riic-orange) 48%, var(--c-border-color));
+  color: var(--riic-orange);
+}
+
+.additional-info-module-heading small {
+  color: var(--riic-muted);
+  font-size: 12px;
+}
+
 .additional-info-empty {
   margin: 0;
   color: var(--riic-muted);
   font-size: 12px;
   line-height: 1.5;
+}
+
+.calculation-feedback-module {
+  padding-top: 14px;
+  border-top: 1px solid var(--c-border-color);
+}
+
+.calculation-feedback-description {
+  margin: -4px 0 0;
+  color: var(--riic-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.calculation-feedback-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 9px 11px;
+  border-left: 3px solid var(--riic-orange);
+  background: color-mix(
+    in srgb,
+    var(--riic-orange) 5%,
+    var(--c-page-background-color)
+  );
+}
+
+.calculation-feedback-entry > header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.calculation-feedback-entry > header strong {
+  color: var(--c-text-color);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.calculation-feedback-entry code {
+  flex: 0 0 auto;
+  color: var(--riic-orange);
+  font-size: 12px;
+}
+
+.calculation-feedback-entry > p {
+  margin: 0;
+  color: var(--riic-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.calculation-feedback-entry ul {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.calculation-feedback-entry li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 8px;
+  color: var(--riic-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.calculation-feedback-entry li > strong {
+  color: var(--c-text-color);
+  font-weight: 600;
 }
 
 .schedule-training-requirements {

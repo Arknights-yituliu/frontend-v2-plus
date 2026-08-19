@@ -90,6 +90,10 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  l79Input: {
+    type: Object,
+    default: null,
+  },
   scheduleShifts: {
     type: Array,
     default: () => [],
@@ -187,6 +191,37 @@ function formatDebugOperatorIds(operatorIds) {
 function formatDebugNumber(value) {
   const number = Number(value);
   return Number.isFinite(number) ? String(number) : "--";
+}
+
+function getL73StatusLabel(status) {
+  return (
+    {
+      ready: "已完成",
+      waitingForRoomSelection: "等待房间组选择完成",
+      unavailable: "不可用",
+      missingCapacity: "中枢容量不足",
+    }[status] || status || "未执行"
+  );
+}
+
+function getL73ActionLabel(action) {
+  return (
+    {
+      kept: "保留",
+      removed: "撤下",
+    }[action] || action || "未判断"
+  );
+}
+
+function getL73ReasonLabel(reason) {
+  return (
+    {
+      manual: "手动加入中枢，强制保留",
+      notApplicable: "不属于本次可撤换的指定干员效果",
+      targetRealized: "对应目标已在同班次、对应设施/产物上岗",
+      targetMissing: "对应目标没有在同班次、对应设施/产物上岗",
+    }[reason] || reason || "未记录原因"
+  );
 }
 
 function getSameShiftDebugReasonLabel(reason) {
@@ -327,7 +362,7 @@ const pipelineDebugText = computed(() => {
     }
   }
 
-  lines.push("", "[L70/L71/L72] 自动组装");
+  lines.push("", "[L70/L71/L72/L73] 自动组装");
   const automatic = props.automaticGenerationDebugState;
   if (!automatic) {
     lines.push("尚未执行自动组装");
@@ -379,9 +414,58 @@ const pipelineDebugText = computed(() => {
         automatic.l72?.adoptedCoreOperatorIds,
       )}]`,
     );
+    lines.push("", "[L73] 中枢撤换与补位");
+    const reconciliation = automatic.l73;
+    if (!reconciliation) {
+      lines.push("尚未执行 L73");
+    } else {
+      lines.push(`状态=${getL73StatusLabel(reconciliation.status)}`);
+      if (reconciliation.decisions?.length) {
+        lines.push("判断结果：");
+        for (const decision of reconciliation.decisions) {
+          lines.push(
+            `  班${Number(decision.teamIndex || 0) + 1} ${getOperatorName(
+              decision.operatorId,
+            )}(${decision.operatorId || "--"})：${getL73ActionLabel(
+              decision.action,
+            )}，${getL73ReasonLabel(decision.reason)}`,
+          );
+        }
+      } else {
+        lines.push("没有可记录的中枢干员判断");
+      }
+      const removedEntries = Object.entries(
+        reconciliation.removedOperatorIdsByTeamIndex || {},
+      );
+      if (removedEntries.length) {
+        lines.push("各班撤下：");
+        for (const [teamIndex, operatorIds] of removedEntries) {
+          lines.push(
+            `  班${Number(teamIndex) + 1}=[${formatDebugOperatorIds(
+              operatorIds,
+            )}]`,
+          );
+        }
+      } else {
+        lines.push("各班撤下：无");
+      }
+      const lateFillEntries = reconciliation.lateFillState?.teamEntries || [];
+      if (lateFillEntries.length) {
+        lines.push("撤换后补位：");
+        for (const entry of lateFillEntries) {
+          lines.push(
+            `  班${Number(entry.teamIndex || 0) + 1} 补位=[${formatDebugOperatorIds(
+              entry.operatorIds,
+            )}] 空位=${formatDebugNumber(entry.emptySlotCount)}`,
+          );
+        }
+      } else {
+        lines.push("撤换后补位：无");
+      }
+    }
   }
 
-  lines.push("", "[L81] 同班绑定对齐");
+  lines.push("", "[L74] 同班绑定对齐");
   const sameShift = props.sameShiftBindingDebug || {};
   lines.push(`状态=${sameShift.status || "--"}`);
   lines.push(
@@ -830,6 +914,31 @@ const finalEfficiencyTraceRows = computed(() =>
   ),
 );
 
+const l79InputRoomRows = computed(() =>
+  (props.l79Input?.schedule?.plans || []).flatMap((plan, planIndex) =>
+    Object.entries(plan?.rooms || {}).flatMap(([roomType, rooms]) =>
+      (Array.isArray(rooms) ? rooms : []).map((room, roomIndex) => ({
+        key: `${planIndex}:${roomType}:${roomIndex}`,
+        planIndex,
+        planName: String(plan?.name || "").trim(),
+        durationMinutes: Number(plan?.duration || 0),
+        roomType,
+        roomIndex,
+        level: room?.level,
+        product: String(room?.product || "").trim(),
+        operators: Array.isArray(room?.operators) ? room.operators : [],
+      })),
+    ),
+  ),
+);
+const l79InputOperatorProfileRows = computed(() =>
+  (props.l79Input?.operatorProfiles || []).map((profile) => ({
+    charId: String(profile?.charId || "").trim(),
+    elite: profile?.elite,
+    level: profile?.level,
+  })),
+);
+
 function getDroneTableRoomLabel(room, key) {
   const label = String(room?.label || "").trim();
   if (label) {
@@ -976,7 +1085,7 @@ const droneTableDebug = computed(() => {
     <header class="pipeline-debug-heading">
       <div>
         <h3>排班计算链路</h3>
-        <p>L20-L72 组装前计算；L79-L80 组装后核算</p>
+        <p>L20-L73 组装前计算；L74 同班对齐；L79-L80 组装后核算</p>
       </div>
       <span>开发模式</span>
     </header>
@@ -999,6 +1108,8 @@ const droneTableDebug = computed(() => {
         ></textarea>
       </div>
     </details>
+
+    <div class="pipeline-section-label">输入</div>
 
     <details class="pipeline-stage">
       <summary>
@@ -1036,6 +1147,8 @@ const droneTableDebug = computed(() => {
         </ul>
       </div>
     </details>
+
+    <div class="pipeline-section-label">组装前计算</div>
 
     <details class="pipeline-stage">
       <summary><code>L20</code> 候选核心解析</summary>
@@ -1645,7 +1758,7 @@ const droneTableDebug = computed(() => {
     </details>
 
     <details class="pipeline-stage">
-      <summary><code>L70 / L71</code> 自动搜索与尾部填充</summary>
+      <summary><code>L70 / L71 / L72 / L73</code> 自动搜索、尾部填充、组合试算与中枢撤换</summary>
       <div class="pipeline-stage-content">
         <p v-if="!automaticGenerationDebugState">
           尚未执行自动生成。
@@ -1655,18 +1768,18 @@ const droneTableDebug = computed(() => {
             {{ automaticGenerationDebugState.strategy }} 搜索：
             评分 {{ formatNumber(automaticGenerationDebugState.l70?.bestPlan?.rankingValue) }}。
           </p>
-          <ul class="pipeline-list">
-            <li
-              v-for="selection in automaticGenerationDebugState.l70?.bestPlan?.selections || []"
+           <ul class="pipeline-list">
+             <li
+               v-for="selection in automaticGenerationDebugState.l70?.bestPlan?.selections || []"
               :key="`${selection.groupId}:${selection.cohortId}:${selection.candidateKey}`"
             >
               {{ selection.groupId }} / {{ selection.cohortId }}：
               {{ selection.candidateName }}，
-              {{ getCandidateNames(selection.operatorIds) }}
-            </li>
-          </ul>
-          <details
-            v-if="automaticGenerationDebugState.l70?.selectionDiagnostics?.length"
+               {{ getCandidateNames(selection.operatorIds) }}
+             </li>
+           </ul>
+            <details
+             v-if="automaticGenerationDebugState.l70?.selectionDiagnostics?.length"
             class="pipeline-nested"
           >
             <summary>L70 选中位置候选对照</summary>
@@ -1829,7 +1942,7 @@ const droneTableDebug = computed(() => {
             class="pipeline-nested"
           >
             <summary>
-              L65 在岗关系试算：
+              L65 在岗关系试算（L70 内部数据）：
               +{{
                 formatPercent(
                   automaticGenerationDebugState.l70?.bestPlan?.activeRosterEffects
@@ -1919,20 +2032,181 @@ const droneTableDebug = computed(() => {
             </template>
             <p v-else>尚未执行 L72。</p>
           </details>
+          <details class="pipeline-nested">
+            <summary>L73 中枢撤换与补位</summary>
+            <template v-if="automaticGenerationDebugState.l73">
+              <p>
+                状态：
+                {{
+                  getL73StatusLabel(
+                    automaticGenerationDebugState.l73.status,
+                  )
+                }}
+              </p>
+              <p>判断结果：</p>
+              <ul
+                v-if="automaticGenerationDebugState.l73.decisions?.length"
+                class="pipeline-list"
+              >
+                <li
+                  v-for="decision in automaticGenerationDebugState.l73.decisions"
+                  :key="`${decision.teamIndex}:${decision.operatorId}`"
+                >
+                  班{{ Number(decision.teamIndex || 0) + 1 }}
+                  {{ getOperatorName(decision.operatorId) }}
+                  （{{ decision.operatorId }}）：
+                  {{ getL73ActionLabel(decision.action) }}；
+                  {{ getL73ReasonLabel(decision.reason) }}
+                </li>
+              </ul>
+              <p v-else>没有可记录的中枢干员判断。</p>
+              <p>各班撤下：</p>
+              <ul
+                v-if="
+                  Object.keys(
+                    automaticGenerationDebugState.l73
+                      .removedOperatorIdsByTeamIndex || {},
+                  ).length
+                "
+                class="pipeline-list"
+              >
+                <li
+                  v-for="(operatorIds, teamIndex) in automaticGenerationDebugState
+                    .l73.removedOperatorIdsByTeamIndex"
+                  :key="`l73-removed:${teamIndex}`"
+                >
+                  班{{ Number(teamIndex) + 1 }}：
+                  {{ getCandidateNames(operatorIds) }}
+                </li>
+              </ul>
+              <p v-else>无。</p>
+              <p>撤换后补位：</p>
+              <ul
+                v-if="automaticGenerationDebugState.l73.lateFillState?.teamEntries?.length"
+                class="pipeline-list"
+              >
+                <li
+                  v-for="entry in automaticGenerationDebugState.l73.lateFillState
+                    .teamEntries"
+                  :key="`l73-fill:${entry.teamIndex}`"
+                >
+                  班{{ Number(entry.teamIndex || 0) + 1 }}：
+                  {{ getCandidateNames(entry.operatorIds) }}；
+                  空位 {{ entry.emptySlotCount }}
+                </li>
+              </ul>
+              <p v-else>无。</p>
+            </template>
+            <p v-else>尚未执行 L73。</p>
+          </details>
         </template>
       </div>
     </details>
 
-    <details v-if="actualScheduleMetrics" class="pipeline-stage">
+    <div class="pipeline-section-label">组装后计算</div>
+
+    <details class="pipeline-stage">
+      <summary>
+        <code>L74</code> 同班联动与排班冲突检查
+        <span>{{ duplicateOperatorChecks.length }} 项重复</span>
+      </summary>
+      <div class="pipeline-stage-content">
+        <p v-if="!actualScheduleMetrics">
+          排班尚未完整生成，暂不能检查同班冲突。
+        </p>
+        <template v-else>
+          <p>
+            各房间的同班联动结果已列在 L79 的班段计算中。
+          </p>
+          <p v-if="duplicateOperatorChecks.length === 0">
+            当前排班没有检测到同班跨房间重复干员。
+          </p>
+          <ul v-else class="pipeline-list">
+            <li
+              v-for="item in duplicateOperatorChecks"
+              :key="`${item.stateIndex}:${item.operatorKey}`"
+            >
+              {{ item.shiftName }}：{{ item.operatorName }} 同时位于
+              {{ item.rooms.join("、") }}
+            </li>
+          </ul>
+        </template>
+      </div>
+    </details>
+
+    <details
+      v-if="actualScheduleMetrics || l79Input?.schedule?.plans"
+      class="pipeline-stage"
+    >
       <summary>
         <code>L79</code> 排班实际效率
-        <span>
+        <span v-if="actualScheduleMetrics">
           {{ actualScheduleMetrics.cycleHours }}h 周期，
           {{ actualScheduleMetrics.calculatedRoomCount }} /
           {{ actualScheduleMetrics.roomCount }} 间已计算
         </span>
+        <span v-else>已生成入参，等待实际效率结算</span>
       </summary>
       <div class="pipeline-stage-content">
+        <details v-if="l79Input?.schedule?.plans" class="pipeline-nested">
+          <summary>L79 实际入参</summary>
+          <div class="pipeline-actual-room-list">
+            <article
+              v-for="room in l79InputRoomRows"
+              :key="room.key"
+              class="pipeline-actual-room"
+            >
+              <header>
+                <strong>
+                  班段 {{ room.planIndex + 1 }} / {{ room.roomType }} #{{
+                    room.roomIndex + 1
+                  }}
+                </strong>
+                <span>{{ room.durationMinutes }} 分钟</span>
+              </header>
+              <small>
+                {{ room.planName || "--" }} / Lv.{{ room.level ?? "--" }}
+                <template v-if="room.product"> / {{ room.product }}</template>
+              </small>
+              <small>
+                进驻：
+                <template v-if="room.operators.length">
+                  <span
+                    v-for="operator in room.operators"
+                    :key="`${room.key}:${operator}`"
+                  >
+                    {{ operator }}
+                  </span>
+                </template>
+                <template v-else>无人</template>
+              </small>
+            </article>
+          </div>
+          <details class="pipeline-nested">
+            <summary>
+              operatorProfiles（{{ l79InputOperatorProfileRows.length }} 名）
+            </summary>
+            <ul class="pipeline-roster">
+              <li
+                v-for="profile in l79InputOperatorProfileRows"
+                :key="profile.charId"
+              >
+                <strong>{{ profile.charId || "--" }}</strong>
+                <span>
+                  精 {{ profile.elite ?? "--" }} / Lv.{{
+                    profile.level ?? "--"
+                  }}
+                </span>
+              </li>
+            </ul>
+          </details>
+          <details class="pipeline-nested">
+            <summary>完整 L79 入参 JSON</summary>
+            <pre>{{ formatJson(l79Input) }}</pre>
+          </details>
+        </details>
+
+        <template v-if="actualScheduleMetrics">
         <div class="pipeline-actual-facilities">
           <article
             v-for="facility in actualScheduleMetrics.facilities.filter(
@@ -2296,6 +2570,7 @@ const droneTableDebug = computed(() => {
             </div>
           </details>
         </div>
+        </template>
       </div>
     </details>
 
@@ -2632,37 +2907,10 @@ const droneTableDebug = computed(() => {
       </div>
     </details>
 
-    <details class="pipeline-stage">
-      <summary>
-        <code>L81</code> 同班联动与排班冲突检查
-        <span>{{ duplicateOperatorChecks.length }} 项重复</span>
-      </summary>
-      <div class="pipeline-stage-content">
-        <p v-if="!actualScheduleMetrics">
-          排班尚未完整生成，暂不能检查同班冲突。
-        </p>
-        <template v-else>
-          <p>
-            各房间的同班联动结果已列在 L79 的班段计算中。
-          </p>
-          <p v-if="duplicateOperatorChecks.length === 0">
-            当前排班没有检测到同班跨房间重复干员。
-          </p>
-          <ul v-else class="pipeline-list">
-            <li
-              v-for="item in duplicateOperatorChecks"
-              :key="`${item.stateIndex}:${item.operatorKey}`"
-            >
-              {{ item.shiftName }}：{{ item.operatorName }} 同时位于
-              {{ item.rooms.join("、") }}
-            </li>
-          </ul>
-        </template>
-      </div>
-    </details>
+    <div class="pipeline-section-label">排班追踪</div>
 
     <details class="pipeline-stage">
-      <summary><code>追踪</code> 贸易站轮换</summary>
+      <summary><code>排班追踪</code> 贸易站轮换</summary>
       <div class="pipeline-stage-content">
         <p v-if="tradingRotationTraceRows.length === 0">
           当前布局没有进入排班的贸易站。
@@ -2716,7 +2964,7 @@ const droneTableDebug = computed(() => {
           </details>
 
           <details class="pipeline-actual-room-details">
-            <summary>进入预览前的实际输入（L81 后）</summary>
+            <summary>进入预览前的实际输入（L74 后）</summary>
             <div v-if="row.postAlignment.length">
               <span
                 v-for="(assignment, index) in row.postAlignment"
@@ -2806,6 +3054,13 @@ const droneTableDebug = computed(() => {
 
 .pipeline-debug-heading > span {
   color: var(--riic-blue);
+}
+
+.pipeline-section-label {
+  padding-top: 4px;
+  color: var(--riic-blue);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .pipeline-stage {

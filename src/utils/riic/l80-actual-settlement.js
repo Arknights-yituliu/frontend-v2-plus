@@ -125,31 +125,64 @@ function createOrundumManufactureFlow(output, craftMaterial) {
 }
 
 function createOperatorRosterById(operators) {
-  const rosterById = new Map();
+  return new Map(
+    (operators || []).flatMap((operator) => {
+      const charId = String(operator?.charId || "").trim();
+      return charId ? [[charId, operator]] : [];
+    }),
+  );
+}
 
-  for (const operator of operators || []) {
-    const charId = String(operator?.charId || "").trim();
-    if (!charId) {
-      continue;
+function resolveTradingOperators(room, rosterById) {
+  const resolvedOperators = (room?.operators || []).flatMap((roomOperator) => {
+    const charId = String(roomOperator?.charId || "").trim();
+    if (!charId || roomOperator?.hasUsableProfile === false) {
+      return [];
     }
+    const rosterOperator = rosterById.get(charId) || {};
+    const hasRosterOperator = rosterById.has(charId);
+    const hasRosterElite =
+      rosterOperator?.elite !== null && rosterOperator?.elite !== undefined;
+    const hasRosterLevel =
+      rosterOperator?.level !== null && rosterOperator?.level !== undefined;
+    const hasRoomElite =
+      roomOperator?.elite !== null && roomOperator?.elite !== undefined;
+    const hasRoomLevel =
+      roomOperator?.level !== null && roomOperator?.level !== undefined;
 
-    rosterById.set(charId, operator);
-  }
+    return [
+      {
+        operator: {
+          charId,
+          elite: rosterOperator?.elite ?? roomOperator?.elite,
+          level: rosterOperator?.level ?? roomOperator?.level,
+        },
+        resolution: {
+          charId,
+          rosterMatched: hasRosterOperator,
+          eliteSource: hasRosterElite
+            ? "legacyRoster"
+            : hasRoomElite
+              ? "roomOperator"
+              : "missing",
+          levelSource: hasRosterLevel
+            ? "legacyRoster"
+            : hasRoomLevel
+              ? "roomOperator"
+              : "missing",
+        },
+      },
+    ];
+  });
 
-  return rosterById;
+  return {
+    operators: resolvedOperators.map((entry) => entry.operator),
+    operatorResolution: resolvedOperators.map((entry) => entry.resolution),
+  };
 }
 
 function getTradingOperators(room, rosterById) {
-  return (room?.operators || []).map((roomOperator) => {
-    const charId = String(roomOperator?.charId || "").trim();
-    const rosterOperator = rosterById.get(charId) || {};
-
-    return {
-      charId,
-      elite: rosterOperator?.elite ?? roomOperator?.elite,
-      level: rosterOperator?.level ?? roomOperator?.level,
-    };
-  });
+  return resolveTradingOperators(room, rosterById).operators;
 }
 
 function getPerceptionState(perceptionSettlement, state) {
@@ -165,12 +198,12 @@ function getPerceptionState(perceptionSettlement, state) {
   );
 }
 
-function getTradingOperatorBonuses(room) {
+function getTradingOperatorBonuses(room, operatorIds = new Set()) {
   return (room?.controlCenterOperatorBonuses || []).reduce(
     (bonuses, entry) => {
       const charId = String(entry?.operatorId || "").trim();
       const percent = toFinitePercent(entry?.bonusPercent);
-      if (!charId || percent === null) {
+      if (!charId || !operatorIds.has(charId) || percent === null) {
         return bonuses;
       }
 
@@ -181,12 +214,13 @@ function getTradingOperatorBonuses(room) {
   );
 }
 
-function getTradingTeamCalculationBonus(room) {
+function getTradingTeamCalculationBonus(room, operatorIds = new Set()) {
   const calculation =
     room?.efficiencyMetrics?.actual?.breakdown?.teamCalculation;
   if (
     String(calculation?.type || "").trim() !== "jayeOrderLimit" ||
-    !Number.isFinite(Number(calculation?.coreBonusPercentBeforeControl))
+    !Number.isFinite(Number(calculation?.coreBonusPercentBeforeControl)) ||
+    !operatorIds.has(String(calculation?.sourceMemberId || "").trim())
   ) {
     return {};
   }
@@ -201,41 +235,74 @@ function getTradingTeamCalculationBonus(room) {
   };
 }
 
-function calculateTradingRoom({
-  room,
-  rosterById,
-  stateRooms,
-  perceptionState,
-}) {
-  if (!isTradingRoom(room)) {
-    return null;
-  }
+function createTradingFacilityContext({ stateRooms = [], perceptionState } = {}) {
+  return {
+    resolvedExternalOrderBonuses:
+      resolveRiicTradingExternalOrderBonuses(stateRooms),
+    silentResonance: Number(perceptionState?.resources?.silentResonance),
+  };
+}
 
+function resolveTradingRoomSettlementInput({ room, rosterById } = {}) {
+  const resolvedOperators = resolveTradingOperators(
+    room,
+    rosterById || new Map(),
+  );
+  const operators = resolvedOperators.operators;
+  const operatorIds = new Set(
+    operators
+      .map((operator) => String(operator?.charId || "").trim())
+      .filter(Boolean),
+  );
   const roomBonus =
     Number(toFinitePercent(room?.controlCenterFacilityBonusPercent) || 0) +
     Number(toFinitePercent(room?.activeRosterBonusPercent) || 0) +
     Number(toFinitePercent(room?.resourceChainAdditionalBonusPercent) || 0);
 
-  return calculateRiicTrading(
-    {
-      type: "trading",
+  return {
+    operators,
+    operatorResolution: resolvedOperators.operatorResolution,
+    tradingFactors: {
       product: String(room?.product || "").trim(),
-      level: Number(room?.stationLevel),
-      context: {
-        resolvedExternalOrderBonuses:
-          resolveRiicTradingExternalOrderBonuses(stateRooms),
-        silentResonance: Number(
-          perceptionState?.resources?.silentResonance,
-        ),
-      },
+      stationLevel: Number(room?.stationLevel),
+      roomBonus,
+      operatorBonusesById: getTradingOperatorBonuses(room, operatorIds),
+      orderAdjustment: getTradingTeamCalculationBonus(room, operatorIds),
     },
-    getTradingOperators(room, rosterById || new Map()),
-    {
-      room: roomBonus,
-      operators: getTradingOperatorBonuses(room),
-      ...getTradingTeamCalculationBonus(room),
+  };
+}
+
+function calculateTradingRoom({
+  room,
+  rosterById,
+  tradingContext,
+  durationHours,
+}) {
+  if (!isTradingRoom(room)) {
+    return null;
+  }
+
+  const settlementInput = resolveTradingRoomSettlementInput({
+    room,
+    rosterById,
+  });
+
+  const calculation = calculateRiicTrading({
+    durationHours,
+    operators: settlementInput.operators,
+    tradingFactors: {
+      ...settlementInput.tradingFactors,
+      crossRoomFactors: tradingContext || createTradingFacilityContext(),
     },
-  );
+  });
+
+  return {
+    ...calculation,
+    inputDiagnostics: {
+      p01Operators: settlementInput.operators,
+      l80OperatorResolution: settlementInput.operatorResolution,
+    },
+  };
 }
 
 function calculateTradingDroneRoom({ room, rosterById }) {
@@ -385,8 +452,7 @@ function createYieldSegment({
   room,
   durationHours,
   tradingRosterById,
-  stateRooms,
-  perceptionState,
+  tradingContext,
   orundumCraftMaterial,
 }) {
   const efficiency = toFinitePercent(room?.efficiency);
@@ -401,8 +467,8 @@ function createYieldSegment({
     ? calculateTradingRoom({
       room,
       rosterById: tradingRosterById,
-      stateRooms,
-      perceptionState,
+      tradingContext,
+      durationHours,
     })
     : null;
   const calculatedTradingFlow = tradingCalculation?.ok
@@ -803,7 +869,6 @@ function buildOrundumManufactureFlowTotals({
       const segment = createYieldSegment({
         room,
         durationHours,
-        stateRooms: state?.rooms || [],
         orundumCraftMaterial,
       });
       if (!segment.calculated || !segment.orundumManufactureFlow) {
@@ -1075,11 +1140,15 @@ function buildTradingSettlements({
 }) {
   const summariesByKey = new Map();
 
-  for (const state of states) {
+  for (const [stateIndex, state] of states.entries()) {
     const durationHours = toPositiveHours(state?.durationHours);
     if (durationHours <= 0) {
       continue;
     }
+    const tradingContext = createTradingFacilityContext({
+      stateRooms: state?.rooms || [],
+      perceptionState: getPerceptionState(perceptionSettlement, state),
+    });
 
     for (const room of state?.rooms || []) {
       if (String(room?.facility || "").trim() !== "trading") {
@@ -1090,8 +1159,7 @@ function buildTradingSettlements({
         room,
         durationHours,
         tradingRosterById,
-        stateRooms: state?.rooms || [],
-        perceptionState: getPerceptionState(perceptionSettlement, state),
+        tradingContext,
         orundumCraftMaterial,
       });
       const key = String(room?.key || "").trim();
@@ -1133,11 +1201,17 @@ function buildTradingSettlements({
       }
 
       summary.segments.push({
+        stateIndex,
         durationHours,
         calculated: segment.calculated && Boolean(segment.tradingFlow),
         unavailableReason: segment.unavailableReason,
         type: segment.tradingFlow?.type || "",
         typeLabel: getTradingSettlementTypeLabel(segment.tradingFlow?.type),
+        rate:
+          segment.tradingCalculation?.ok &&
+          Number.isFinite(Number(segment.tradingCalculation.rate))
+            ? segment.tradingCalculation.rate
+            : null,
         operatorIds: (room?.operators || [])
           .map((operator) => String(operator?.charId || "").trim())
           .filter(Boolean),
@@ -1362,22 +1436,32 @@ function buildDroneUsageSummary({ droneCharge, droneOrdersByState }) {
   const chargeSegments = Array.isArray(droneCharge?.segments)
     ? droneCharge.segments
     : [];
-  const segments = chargeSegments.map((chargeSegment) => ({
-    stateIndex: Number(chargeSegment?.stateIndex),
-    order: normalizeDroneOrder(
-      Array.isArray(droneOrdersByState)
-        ? droneOrdersByState[Number(chargeSegment?.stateIndex)]
-        : "",
-    ),
-    generatedDroneOutput: Number.isFinite(Number(chargeSegment?.droneOutput))
-      ? Number(chargeSegment.droneOutput)
-      : null,
-    rawAvailableDroneOutput: null,
-    availableDroneOutput: null,
-    usedDroneOutput: null,
-    storedDroneOutput: null,
-    capacityReached: false,
-  }));
+  // A shift consumes the drones accumulated during the preceding state.
+  const segments = chargeSegments.map((chargeSegment, index) => {
+    const previousChargeSegment =
+      chargeSegments[
+        (index - 1 + chargeSegments.length) % chargeSegments.length
+      ];
+
+    return {
+      stateIndex: Number(chargeSegment?.stateIndex),
+      order: normalizeDroneOrder(
+        Array.isArray(droneOrdersByState)
+          ? droneOrdersByState[Number(chargeSegment?.stateIndex)]
+          : "",
+      ),
+      generatedDroneOutput: Number.isFinite(
+        Number(previousChargeSegment?.droneOutput),
+      )
+        ? Number(previousChargeSegment.droneOutput)
+        : null,
+      rawAvailableDroneOutput: null,
+      availableDroneOutput: null,
+      usedDroneOutput: null,
+      storedDroneOutput: null,
+      capacityReached: false,
+    };
+  });
   const isCalculated =
     segments.length > 0 &&
     segments.every((segment) => segment.generatedDroneOutput !== null);
@@ -1558,7 +1642,32 @@ function buildDroneTargetSettlement({
   let resource = "";
   let resourceLabel = "";
   let unit = "";
-  let droneSegmentIndex = 0;
+  const chargeSegmentsByStateIndex = new Map(
+    (droneCharge?.segments || []).map((segment) => [
+      Number(segment?.stateIndex),
+      segment,
+    ]),
+  );
+  const usageSegmentsByStateIndex = new Map(
+    (droneUsage?.segments || []).map((segment) => [
+      Number(segment?.stateIndex),
+      segment,
+    ]),
+  );
+  const activeStateIndexes = [...usageSegmentsByStateIndex.keys()].filter(
+    (stateIndex) =>
+      Number.isInteger(stateIndex) &&
+      stateIndex >= 0 &&
+      stateIndex < states.length,
+  );
+  const previousStateIndexByStateIndex = new Map(
+    activeStateIndexes.map((stateIndex, index) => [
+      stateIndex,
+      activeStateIndexes[
+        (index - 1 + activeStateIndexes.length) % activeStateIndexes.length
+      ],
+    ]),
+  );
 
   for (const [stateIndex, state] of states.entries()) {
     const segmentDurationHours = toPositiveHours(state?.durationHours);
@@ -1570,17 +1679,21 @@ function buildDroneTargetSettlement({
     const stateTargetKey = usesPerStateTargets
       ? targetsByState[stateIndex] || ""
       : targetKey;
-    const room = (state?.rooms || []).find(
+    const usageSegment = usageSegmentsByStateIndex.get(stateIndex);
+    const chargeSegment = chargeSegmentsByStateIndex.get(stateIndex);
+    const roomStateIndex =
+      usageSegment?.order === "pre"
+        ? previousStateIndexByStateIndex.get(stateIndex)
+        : stateIndex;
+    const roomState = states[roomStateIndex] || state;
+    const room = (roomState?.rooms || []).find(
       (item) => String(item?.key || "").trim() === stateTargetKey,
     );
-    const chargeSegment = droneCharge?.segments?.[droneSegmentIndex];
-    const usageSegment = droneUsage?.segments?.[droneSegmentIndex];
     const droneOutput =
       usageSegment?.usedDroneOutput === null ||
       usageSegment?.usedDroneOutput === undefined
         ? chargeSegment?.droneOutput
         : usageSegment.usedDroneOutput;
-    droneSegmentIndex += 1;
     const benefit = !stateTargetKey
       ? {
           calculated: true,
@@ -1763,17 +1876,76 @@ function getDroneTargetKeys(states) {
   return [...targetKeys];
 }
 
+function hasAssignedDroneTargetOperator(room) {
+  if (!Array.isArray(room?.operators)) {
+    return true;
+  }
+
+  return (room?.operators || []).some((operator) =>
+    String(operator?.charId || operator?.name || "").trim(),
+  );
+}
+
+function resolveDronePlanByState({
+  states,
+  droneTargetKeysByState,
+  droneOrdersByState,
+}) {
+  if (!Array.isArray(droneTargetKeysByState)) {
+    return {
+      droneTargetKeysByState,
+      droneOrdersByState,
+    };
+  }
+
+  const getTargetRoom = (stateIndex) => {
+    const targetKey = String(
+      droneTargetKeysByState[stateIndex] || "",
+    ).trim();
+    if (!targetKey) {
+      return {
+        targetKey,
+        room: null,
+      };
+    }
+
+    return {
+      targetKey,
+      room: (states[stateIndex]?.rooms || []).find(
+      (item) => String(item?.key || "").trim() === targetKey,
+      ),
+    };
+  };
+
+  return {
+    droneTargetKeysByState: states.map((_, stateIndex) => {
+      const { targetKey, room } = getTargetRoom(stateIndex);
+      return !targetKey || (room && hasAssignedDroneTargetOperator(room))
+        ? targetKey
+        : "";
+    }),
+    droneOrdersByState: states.map((_, stateIndex) => {
+      const { targetKey, room } = getTargetRoom(stateIndex);
+      return !targetKey || (room && hasAssignedDroneTargetOperator(room))
+        ? droneOrdersByState?.[stateIndex]
+        : "retain";
+    }),
+  };
+}
+
 function buildYieldSummary({
   states,
   cycleHours,
   droneTargetKey,
   droneTargetKeysByState,
   droneOrdersByState,
-  tradingOperators,
+  legacyTradingOperators,
   orundumCraftMaterial,
   perceptionSettlement,
 }) {
-  const tradingRosterById = createOperatorRosterById(tradingOperators);
+  const tradingRosterById = createOperatorRosterById(
+    legacyTradingOperators,
+  );
   const summariesByKey = new Map();
 
   for (const state of states) {
@@ -1782,6 +1954,10 @@ function buildYieldSummary({
       continue;
     }
     const perceptionState = getPerceptionState(perceptionSettlement, state);
+    const tradingContext = createTradingFacilityContext({
+      stateRooms: state?.rooms || [],
+      perceptionState,
+    });
 
     for (const room of state?.rooms || []) {
       if (!YIELD_FACILITIES.has(String(room?.facility || "").trim())) {
@@ -1799,8 +1975,7 @@ function buildYieldSummary({
         room,
         durationHours,
         tradingRosterById,
-        stateRooms: state?.rooms || [],
-        perceptionState,
+        tradingContext,
         orundumCraftMaterial,
       });
       summary.durationHours += durationHours;
@@ -1820,9 +1995,14 @@ function buildYieldSummary({
   );
   const directResourcesByKey = buildDirectYieldResources(rooms);
   const droneCharge = buildDroneChargeSummary({ states, cycleHours });
+  const resolvedDronePlan = resolveDronePlanByState({
+    states,
+    droneTargetKeysByState,
+    droneOrdersByState,
+  });
   const droneUsage = buildDroneUsageSummary({
     droneCharge,
-    droneOrdersByState,
+    droneOrdersByState: resolvedDronePlan.droneOrdersByState,
   });
   const tradingSettlements = buildTradingSettlements({
     states,
@@ -1836,7 +2016,7 @@ function buildYieldSummary({
     droneCharge,
     droneUsage,
     droneTargetKey,
-    droneTargetKeysByState,
+    droneTargetKeysByState: resolvedDronePlan.droneTargetKeysByState,
     tradingRosterById,
     orundumCraftMaterial,
   });
@@ -1928,6 +2108,7 @@ function buildYieldSummary({
  * it never changes candidates, fallback assignments, or control-center picks.
  */
 export function summarizeRiicActualSchedule({
+  l79,
   preview,
   droneTargetKey = "",
   droneTargetKeysByState = null,
@@ -1935,7 +2116,10 @@ export function summarizeRiicActualSchedule({
   tradingOperators = [],
   orundumCraftMaterial = "orirock",
 } = {}) {
-  const states = Array.isArray(preview?.states) ? preview.states : [];
+  const settledPreview = l79?.preview || preview || {};
+  const states = Array.isArray(settledPreview?.states)
+    ? settledPreview.states
+    : [];
   const roomSummaries = new Map();
   let cycleHours = 0;
 
@@ -1974,7 +2158,8 @@ export function summarizeRiicActualSchedule({
 
   const rooms = [...roomSummaries.values()].map(finalizeRoomSummary);
   const calculatedRoomCount = rooms.filter((room) => room.isCalculated).length;
-  const resolvedCycleHours = cycleHours || toPositiveHours(preview?.cycleHours);
+  const resolvedCycleHours =
+    cycleHours || toPositiveHours(settledPreview?.cycleHours);
 
   return {
     cycleHours: resolvedCycleHours,
@@ -1988,9 +2173,10 @@ export function summarizeRiicActualSchedule({
       droneTargetKey,
       droneTargetKeysByState,
       droneOrdersByState,
-      tradingOperators,
+      legacyTradingOperators: tradingOperators,
       orundumCraftMaterial,
-      perceptionSettlement: preview?.perceptionSettlement,
+      perceptionSettlement: l79?.perceptionSettlement ??
+        settledPreview?.perceptionSettlement,
     }),
   };
 }

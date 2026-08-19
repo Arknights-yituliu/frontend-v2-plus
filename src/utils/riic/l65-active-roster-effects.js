@@ -940,8 +940,16 @@ export function applyRiicActiveRosterPreviewEffects({
             `${stateIndex}:${String(room?.key || "").trim()}`,
           ) || null;
         const bonusPercent = Number(application?.bonusPercent || 0);
+        const isEmptyProductiveRoom =
+          ["manufacture", "trading"].includes(
+            String(room?.facility || "").trim(),
+          ) &&
+          !(room?.operators || []).some((operator) =>
+            String(operator?.charId || operator?.name || "").trim(),
+          );
 
         if (
+          isEmptyProductiveRoom ||
           bonusPercent === 0 ||
           !Number.isFinite(Number(room?.efficiency))
         ) {

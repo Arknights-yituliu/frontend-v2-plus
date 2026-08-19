@@ -95,12 +95,28 @@ function getRoomSettingsOverride(room, stateIndex, roomSettingOverrides) {
   );
 }
 
-function createMaaRoom(room, stateIndex, roomSettingOverrides) {
+function createMaaRoom(
+  room,
+  stateIndex,
+  roomSettingOverrides,
+  includeRiicRoomLevels,
+) {
   const operators = getRoomOperators(room);
   const maaRoom = {
     operators,
     sort: ["control", "manufacture", "trading"].includes(room?.facility),
   };
+  const stationLevel = Number(room?.stationLevel);
+
+  if (includeRiicRoomLevels) {
+    maaRoom.level =
+      room?.stationLevel !== null &&
+      room?.stationLevel !== undefined &&
+      Number.isInteger(stationLevel) &&
+      stationLevel >= 0
+        ? stationLevel
+        : null;
+  }
 
   if (room?.facility === "dormitory") {
     maaRoom.sort = false;
@@ -134,6 +150,7 @@ function createPlanRooms(
   stateIndex,
   roomSettingOverrides,
   roomIndexAssignments,
+  includeRiicRoomLevels,
 ) {
   const byType = new Map();
 
@@ -157,6 +174,7 @@ function createPlanRooms(
     );
 
     if (
+      !includeRiicRoomLevels &&
       roomType !== "dormitory" &&
       sortedRooms.every((room) => getRoomOperators(room).length === 0) &&
       !sortedRooms.some(
@@ -170,7 +188,12 @@ function createPlanRooms(
     }
 
     maaRooms[roomType] = sortedRooms.map((room) =>
-      createMaaRoom(room, stateIndex, roomSettingOverrides),
+      createMaaRoom(
+        room,
+        stateIndex,
+        roomSettingOverrides,
+        includeRiicRoomLevels,
+      ),
     );
   }
 
@@ -254,6 +277,8 @@ export function buildRiicMaaScheduleFromPreview({
   roomSettingOverrides = {},
   roomIndexAssignments = {},
   hasFiammetta = false,
+  includeRiicRoomLevels = false,
+  durationSource = "clock",
 } = {}) {
   const states = Array.isArray(preview?.states) ? preview.states : [];
   if (states.length === 0) {
@@ -268,6 +293,9 @@ export function buildRiicMaaScheduleFromPreview({
     const time = String(shift?.time || "").trim();
     const nextTime = String(nextShift?.time || "").trim();
     const duration = getDurationMinutes(time, nextTime);
+    const previewDuration = Math.round(
+      Number(state?.durationHours || 0) * 60,
+    );
     const period = getPeriod(time, nextTime);
     const drones = getDroneSetting(
       state,
@@ -291,12 +319,16 @@ export function buildRiicMaaScheduleFromPreview({
 
     const plan = {
       name,
-      duration: duration || Math.round(Number(state?.durationHours || 0) * 60),
+      duration:
+        durationSource === "preview"
+          ? previewDuration || duration
+          : duration || previewDuration,
       rooms: createPlanRooms(
         state?.rooms,
         index,
         roomSettingOverrides,
         roomIndexAssignments,
+        includeRiicRoomLevels,
       ),
     };
 

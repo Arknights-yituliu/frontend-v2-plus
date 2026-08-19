@@ -365,7 +365,7 @@ function getCandidateOperatorEffects(effects) {
 
 /**
  * Reduces a same-shift binding to the effective room and operator bonuses.
- * L65 uses it while searching; L81 uses the same reduction after assembly.
+ * L65 uses it while searching; L74 uses the same reduction after assembly.
  */
 export function getRiicSameShiftBindingBonusBreakdown(binding) {
   const effects = Array.isArray(binding?.effects) ? binding.effects : [];

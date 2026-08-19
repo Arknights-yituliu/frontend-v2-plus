@@ -1,27 +1,32 @@
+import { operatorTableV2 } from "/src/utils/gameData.js";
+import RIIC_BASELINE_SKILL_RULES from "../../static/json/tools/R00-baseline.json" with {
+  type: "json",
+};
+import RIIC_CONTROL_CENTER_SKILLS from "../../static/json/tools/riic-candidates/R50-control.json" with {
+  type: "json",
+};
 import {
-  getRiicAutomationOperatorLayer3Bonus,
-  recalculateRiicAutomationManufacture,
-} from "./l62-automation-calculation.js";
+  calculateRiicRoomEfficiency,
+  resolveRiicBaselineSkills,
+} from "./l00-baseline-resolver.js";
 import {
-  getRiicLayer3OperatorLocalBonus,
+  getRiicLayer3ControlCenterEffects,
 } from "./l30-rules.js";
-import {
-  recalculateRiicClosureSpecialOrder,
-} from "./l62-closure-calculation.js";
-import {
-  recalculateRiicRoomTeamCandidateForActiveControlBindings,
-} from "./l62-team-calculation.js";
-import {
-  applyRiicActiveRosterPreviewEffects,
-} from "./l65-active-roster-effects.js";
+import * as RiicLayer3Rules from "./l30-rules.js";
 import {
   settleRiicPerceptionSchedule,
 } from "./l42-perception-settlement.js";
 import {
-  calculateRiicRoomEfficiency,
-} from "./l00-baseline-resolver.js";
+  getRiicSameShiftBindingBonusBreakdown,
+} from "./l51-control-effects.js";
+import {
+  applyRiicActiveRosterPreviewEffects,
+} from "./l65-active-roster-effects.js";
+import {
+  getRiicAutomationOperatorLayer3Bonus,
+} from "./l62-automation-calculation.js";
 
-const GENERIC_ROOM_TYPES = new Set([
+const BASELINE_ROOM_TYPES = new Set([
   "manufacture",
   "trading",
   "power",
@@ -31,296 +36,917 @@ const GENERIC_ROOM_TYPES = new Set([
 ]);
 const PRODUCTIVE_ROOM_TYPES = new Set(["manufacture", "trading"]);
 const AUTOMATION_POWER_SUPPORT_OPERATOR_ID = "char_1027_greyy2";
+const OPERATOR_ID_BY_NAME = new Map(
+  Object.entries(operatorTableV2 || {}).flatMap(([charId, operator]) => {
+    const name = String(operator?.name || "").trim();
+    return name ? [[name, charId]] : [];
+  }),
+);
 
-function toFinitePercent(value) {
-  if (value === null || value === undefined || value === "") {
-    return null;
-  }
-
-  const percent = Number(value);
-  return Number.isFinite(percent) ? percent : null;
-}
-
-function getOperatorBonusById(operatorBonuses) {
-  return (operatorBonuses || []).reduce((bonusesById, bonus) => {
-    const operatorId = String(bonus?.operatorId || "").trim();
-    if (!operatorId) {
-      return bonusesById;
-    }
-
-    const bonusPercent = toFinitePercent(bonus?.bonusPercent);
-    return {
-      ...bonusesById,
-      [operatorId]:
-        Number(bonusesById[operatorId] || 0) +
-        Number(bonusPercent || 0),
-    };
-  }, {});
-}
-
-function normalizeRoomType(facility) {
-  const roomType = String(facility || "").trim();
-  return roomType === "office" ? "hire" : roomType;
-}
-
-function getStaffingBonusPercent({ facility, operators = [] } = {}) {
-  return PRODUCTIVE_ROOM_TYPES.has(normalizeRoomType(facility))
-    ? (operators || []).length
-    : 0;
-}
-
-function getActualTeamCalculation({
-  candidate,
-  actualControlCenterBindings,
-} = {}) {
-  if (!candidate?.teamCalculation) {
-    return null;
-  }
-
-  const result = recalculateRiicRoomTeamCandidateForActiveControlBindings({
-    candidate,
-    scope: candidate?.candidateScope,
-    fallbackOperators: candidate?.fallback?.operators || [],
-    controlBindings: actualControlCenterBindings,
-  });
+function isEmptyProductiveRoom(room) {
   return (
-    result || {
-      type: String(candidate?.teamCalculation?.type || "").trim(),
-      coreBonusAdjustmentPercent: 0,
-      usesStaticEstimate: true,
+    PRODUCTIVE_ROOM_TYPES.has(String(room?.facility || "").trim()) &&
+    !(room?.operators || []).some((operator) =>
+      String(operator?.charId || operator?.name || "").trim(),
+    )
+  );
+}
+
+function toNonNegativeInteger(value, fallback = null) {
+  const number = Number(value);
+  return Number.isInteger(number) && number >= 0 ? number : fallback;
+}
+
+function toPositiveNumber(value, fallback = null) {
+  const number = Number(value);
+  return Number.isFinite(number) && number > 0 ? number : fallback;
+}
+
+function normalizeFacility(value) {
+  const facility = String(value || "").trim();
+  return facility === "office" ? "hire" : facility;
+}
+
+function normalizeMaaProduct(facility, value) {
+  const product = String(value || "").trim().toLowerCase();
+  if (facility === "trading") {
+    if (product === "orundum") {
+      return "orundum";
     }
-  );
-}
-
-function isAutomationCandidate(candidate) {
-  const candidateOperators = [
-    ...(candidate?.operators || []),
-    ...(candidate?.fallback?.operators || []),
-  ];
-  return Boolean(
-    candidate?.automationCalculation ||
-      String(candidate?.variantGroupId || "").includes("automation") ||
-      candidateOperators.some((operator) =>
-        (operator?.tags || []).some(
-          (tag) => String(tag || "").trim() === "automation",
-        ),
-      ),
-  );
-}
-
-function getAutomationSupportState({
-  state,
-  layoutFacts,
-  ownedOperators,
-} = {}) {
-  const powerPlantCount = Number(layoutFacts?.powerPlantCount);
-  if (!Number.isFinite(powerPlantCount)) {
-    return null;
+    return product === "lmd" ? "lmd" : "";
   }
-
-  const supportOperatorUnlocked = (ownedOperators || []).some(
-    (operator) =>
-      String(operator?.charId || "").trim() ===
-        AUTOMATION_POWER_SUPPORT_OPERATOR_ID &&
-      Number(operator?.elite ?? operator?.evolvePhase ?? 0) >= 2,
-  );
-  const supportOperatorActive =
-    supportOperatorUnlocked &&
-    (state?.rooms || []).some(
-      (room) =>
-        room?.facility === "power" &&
-        (room?.operators || []).some(
-          (operator) =>
-            String(operator?.charId || "").trim() ===
-            AUTOMATION_POWER_SUPPORT_OPERATOR_ID,
-        ),
-    );
+  if (facility !== "manufacture") {
+    return "all";
+  }
 
   return {
-    layoutFacts: layoutFacts || {},
-    ownedOperators,
-    powerPlantCount,
-    effectivePowerPlantCount:
-      powerPlantCount + (supportOperatorActive ? 1 : 0),
-    supportOperatorId: supportOperatorActive
-      ? AUTOMATION_POWER_SUPPORT_OPERATOR_ID
-      : "",
+    "battle record": "experience",
+    experience: "experience",
+    "pure gold": "gold",
+    gold: "gold",
+    "originium shard": "orundum",
+    orundum: "orundum",
+  }[product] || "";
+}
+
+function getExpectedSlots(facility, level) {
+  if (facility === "control") {
+    return level === 5 ? 5 : null;
+  }
+  if (["manufacture", "trading"].includes(facility)) {
+    return level >= 1 && level <= 3 ? level : null;
+  }
+  if (facility === "power" || facility === "hire") {
+    return level >= 1 && level <= 3 ? 1 : null;
+  }
+  if (facility === "meeting") {
+    return level >= 1 && level <= 3 ? (level >= 3 ? 2 : 1) : null;
+  }
+  return null;
+}
+
+function createIssue({
+  code,
+  message,
+  planIndex,
+  facility,
+  index,
+  operatorName,
+  operatorId,
+} = {}) {
+  return {
+    code: String(code || "unknown"),
+    message: String(message || ""),
+    ...(Number.isInteger(planIndex) ? { planIndex } : {}),
+    ...(facility ? { facility } : {}),
+    ...(Number.isInteger(index) ? { index } : {}),
+    ...(operatorName ? { operatorName } : {}),
+    ...(operatorId ? { operatorId } : {}),
   };
 }
 
-function recalculateRiicPreviewAutomationCandidate({
-  candidate,
-  automationRuntimeContext,
-} = {}) {
-  if (!isAutomationCandidate(candidate)) {
-    return null;
-  }
-  if (
-    !automationRuntimeContext?.layoutFacts ||
-    !Array.isArray(automationRuntimeContext?.ownedOperators) ||
-    !Number.isFinite(
-      Number(automationRuntimeContext?.effectivePowerPlantCount),
-    )
-  ) {
-    return null;
-  }
-
-  const scope = candidate?.candidateScope;
-  const fallbackOperatorIds = new Set(
-    [
-      ...(candidate?.fallback?.fallbackOperatorIds || []),
-      ...(candidate?.fallback?.operators || []).map(
-        (operator) => operator?.charId,
-      ),
-    ]
-      .map((operatorId) => String(operatorId || "").trim())
-      .filter(Boolean),
-  );
-  const dynamicCoreLayer3BonusPercent = (
-    candidate?.operatorIds || []
-  )
-    .filter(
-      (operatorId) =>
-        !fallbackOperatorIds.has(String(operatorId || "").trim()),
-    )
-    .reduce(
-      (total, operatorId) =>
-        total +
-        Number(
-          getRiicAutomationOperatorLayer3Bonus({
-            operatorId,
-            scope,
-            ownedOperators: automationRuntimeContext?.ownedOperators,
-            layoutFacts: automationRuntimeContext?.layoutFacts,
-            effectivePowerPlantCount:
-              automationRuntimeContext?.effectivePowerPlantCount,
-            getLayer3OperatorLocalBonus: getRiicLayer3OperatorLocalBonus,
-          }) ?? 0,
-        ),
-      Number(candidate?.layer3CandidateLocalBonusPercent || 0),
-    );
-  const dynamicFallbackOperators = (
-    candidate?.fallback?.operators || []
-  ).map((operator) => {
-    const layer3Bonus = getRiicAutomationOperatorLayer3Bonus({
-      operatorId: operator?.charId,
-      scope,
-      ownedOperators: automationRuntimeContext?.ownedOperators,
-      layoutFacts: automationRuntimeContext?.layoutFacts,
-      effectivePowerPlantCount:
-        automationRuntimeContext?.effectivePowerPlantCount,
-      getLayer3OperatorLocalBonus: getRiicLayer3OperatorLocalBonus,
-    });
-    return layer3Bonus === null
-      ? operator
-      : {
-          ...operator,
-          layer3Bonus,
-        };
-  });
-
-  return recalculateRiicAutomationManufacture({
-    scope,
-    coreBaseBonusPercent: candidate?.coreBaseBonusPercent,
-    coreLayer3BonusPercent: dynamicCoreLayer3BonusPercent,
-    fallbackOperators: dynamicFallbackOperators,
-    runtimeContext: automationRuntimeContext,
-  });
+function createRoomKey(facility, index) {
+  return `${normalizeFacility(facility)}:${Number(index || 0)}`;
 }
 
-function getCandidateSpecificCalculationReason(candidate) {
-  const variantGroupId = String(candidate?.variantGroupId || "").trim();
-  const teamCalculationType = String(
-    candidate?.teamCalculation?.type || "",
-  ).trim();
-  const candidateOperators = [
-    ...(candidate?.operators || []),
-    ...(candidate?.fallback?.operators || []),
-  ];
+function normalizeProfiles(operatorProfiles) {
+  const profilesById = new Map();
+  const issues = [];
 
-  if (
-    candidate?.closureCalculation ||
-    teamCalculationType === "closureSpecialOrder"
-  ) {
-    return "closure";
+  for (const source of operatorProfiles || []) {
+    const charId = String(source?.charId || "").trim();
+    if (!charId) {
+      issues.push(
+        createIssue({
+          code: "invalidOperatorProfile",
+          message: "operatorProfiles contains an entry without charId.",
+        }),
+      );
+      continue;
+    }
+
+    const elite = toNonNegativeInteger(source?.elite);
+    const level = toPositiveNumber(source?.level);
+    const current = profilesById.get(charId);
+    const currentRank =
+      Number(current?.elite ?? -1) * 10000 + Number(current?.level ?? -1);
+    const nextRank = Number(elite ?? -1) * 10000 + Number(level ?? -1);
+
+    if (current && nextRank <= currentRank) {
+      continue;
+    }
+    profilesById.set(charId, {
+      charId,
+      elite,
+      level,
+    });
   }
-  if (
-    candidate?.composition?.kind === "butshu-fixed-partner" ||
-    variantGroupId.startsWith("family-butshu:")
-  ) {
-    return "butshu";
-  }
-  if (variantGroupId === "family-shamare:idle-pair") {
-    return "shamare";
-  }
-  if (
-    candidate?.automationCalculation ||
-    variantGroupId.includes("automation") ||
-    candidateOperators.some((operator) =>
-      (operator?.tags || []).some(
-        (tag) => String(tag || "").trim() === "automation",
+
+  return {
+    profiles: [...profilesById.values()],
+    profilesById,
+    issues,
+  };
+}
+
+function resolveRoomOperators({
+  names,
+  profilesById,
+  planIndex,
+  facility,
+  index,
+} = {}) {
+  const issues = [];
+  const operators = (Array.isArray(names) ? names : []).map((value) => {
+    const name = String(value || "").trim();
+    const charId = OPERATOR_ID_BY_NAME.get(name) || "";
+    const profile = profilesById.get(charId);
+    const operatorIssues = [];
+
+    if (!name) {
+      operatorIssues.push(
+        createIssue({
+          code: "invalidOperatorName",
+          message: "The room contains an empty operator name.",
+          planIndex,
+          facility,
+          index,
+        }),
+      );
+    } else if (!charId) {
+      operatorIssues.push(
+        createIssue({
+          code: "unknownOperatorName",
+          message: "The operator name is not available in the local table.",
+          planIndex,
+          facility,
+          index,
+          operatorName: name,
+        }),
+      );
+    } else if (!profile) {
+      operatorIssues.push(
+        createIssue({
+          code: "missingOperatorProfile",
+          message: "The operator has no elite and level profile.",
+          planIndex,
+          facility,
+          index,
+          operatorName: name,
+          operatorId: charId,
+        }),
+      );
+    } else if (profile.elite === null || profile.level === null) {
+      operatorIssues.push(
+        createIssue({
+          code: "incompleteOperatorProfile",
+          message: "The operator profile has no valid elite or level.",
+          planIndex,
+          facility,
+          index,
+          operatorName: name,
+          operatorId: charId,
+        }),
+      );
+    }
+    issues.push(...operatorIssues);
+
+    return {
+      name,
+      charId,
+      elite: profile?.elite ?? null,
+      level: profile?.level ?? null,
+      hasUsableProfile: Boolean(
+        charId &&
+          profile &&
+          profile.elite !== null &&
+          profile.level !== null,
       ),
-    )
-  ) {
-    return "automation";
-  }
-  if (teamCalculationType) {
-    return "teamCalculation";
+      issues: operatorIssues,
+    };
+  });
+
+  return { operators, issues };
+}
+
+function normalizePlan({
+  sourcePlan,
+  planIndex,
+  profilesById,
+} = {}) {
+  const planIssues = [];
+  const durationMinutes = toPositiveNumber(sourcePlan?.duration, 0);
+  if (durationMinutes <= 0) {
+    planIssues.push(
+      createIssue({
+        code: "invalidPlanDuration",
+        message: "The plan duration is invalid; its yield weight is zero.",
+        planIndex,
+      }),
+    );
   }
 
-  return "";
+  const rooms = Object.entries(sourcePlan?.rooms || {}).flatMap(
+    ([sourceFacility, sourceRooms]) =>
+      (Array.isArray(sourceRooms) ? sourceRooms : []).map(
+        (sourceRoom, index) => {
+          const facility = normalizeFacility(sourceFacility);
+          const level = toNonNegativeInteger(sourceRoom?.level);
+          const product = normalizeMaaProduct(facility, sourceRoom?.product);
+          const { operators, issues } = resolveRoomOperators({
+            names: sourceRoom?.operators,
+            profilesById,
+            planIndex,
+            facility,
+            index,
+          });
+          const roomIssues = [...issues];
+
+          if (!facility) {
+            roomIssues.push(
+              createIssue({
+                code: "invalidFacility",
+                message: "The room facility is invalid.",
+                planIndex,
+                index,
+              }),
+            );
+          }
+          if (BASELINE_ROOM_TYPES.has(facility) && level === null) {
+            roomIssues.push(
+              createIssue({
+                code: "missingRoomLevel",
+                message: "The room level is missing or invalid.",
+                planIndex,
+                facility,
+                index,
+              }),
+            );
+          }
+          if (
+            ["manufacture", "trading"].includes(facility) &&
+            !product
+          ) {
+            roomIssues.push(
+              createIssue({
+                code: "unsupportedProduct",
+                message: "The production product is missing or unsupported.",
+                planIndex,
+                facility,
+                index,
+              }),
+            );
+          }
+
+          return {
+            key: createRoomKey(facility, index),
+            facility,
+            index,
+            stationIndex: index,
+            stationLevel: level,
+            product,
+            sourceProduct: String(sourceRoom?.product || "").trim(),
+            operators,
+            skip: sourceRoom?.skip === true,
+            issues: roomIssues,
+          };
+        },
+      ),
+  );
+
+  return {
+    index: planIndex,
+    name: String(sourcePlan?.name || "").trim(),
+    durationMinutes,
+    durationHours: durationMinutes / 60,
+    rooms,
+    issues: planIssues,
+  };
+}
+
+function createLayoutFacts(rooms) {
+  const facilities = (rooms || [])
+    .filter((room) => room.facility)
+    .map((room) => ({
+      facilityType: room.facility,
+      product: room.product || "all",
+      stationLevel: room.stationLevel,
+    }));
+
+  return {
+    facilities,
+    powerPlantCount: facilities.filter(
+      (facility) => facility.facilityType === "power",
+    ).length,
+    manufactureProductKindCount: new Set(
+      facilities
+        .filter((facility) => facility.facilityType === "manufacture")
+        .map((facility) => facility.product)
+        .filter((product) => product && product !== "all"),
+    ).size,
+  };
+}
+
+function isControlCenterSkillUnlocked(profile, skill) {
+  const elite = toNonNegativeInteger(profile?.elite);
+  const level = toPositiveNumber(profile?.level);
+  const requiredElite = toNonNegativeInteger(skill?.elite, 0);
+  const requiredLevel = toPositiveNumber(skill?.level, 1);
+
+  return Boolean(
+    elite !== null &&
+      level !== null &&
+      (elite > requiredElite ||
+        (elite === requiredElite && level >= requiredLevel)),
+  );
+}
+
+function isControlRoomEffect(effect) {
+  const target = effect?.target || {};
+  const scope = String(target?.scope || "").trim();
+  const roomType = normalizeFacility(target?.roomType);
+  return Boolean(
+    ["allRooms", "operators"].includes(scope) &&
+      ["trading", "manufacture", "meeting", "hire"].includes(roomType) &&
+      Number.isFinite(Number(effect?.bonusPercent)),
+  );
+}
+
+function hasControlConditions(effect, controlOperatorIds) {
+  const requiredIds = (effect?.conditions?.controlCoassignedOperatorIds || [])
+    .map((operatorId) => String(operatorId || "").trim())
+    .filter(Boolean);
+
+  return requiredIds.every((operatorId) => controlOperatorIds.has(operatorId));
+}
+
+function getControlEffectKey(effect) {
+  const target = effect?.target || {};
+  return [
+    String(target?.scope || "").trim(),
+    normalizeFacility(target?.roomType),
+    String(target?.product || "").trim(),
+    String(effect?.metric || "").trim(),
+    Number(effect?.bonusPercent || 0),
+    (target?.operatorIds || [])
+      .map((operatorId) => String(operatorId || "").trim())
+      .filter(Boolean)
+      .sort()
+      .join(","),
+    JSON.stringify(effect?.conditions || null),
+  ].join(":");
+}
+
+function collectControlCenterEffects({
+  rooms,
+  profilesById,
+  ownedOperators,
+  layoutFacts,
+  planIndex,
+} = {}) {
+  const controlRoom = (rooms || []).find(
+    (room) => room.facility === "control" && room.index === 0,
+  );
+  const controlOperatorIds = new Set(
+    (controlRoom?.operators || [])
+      .map((operator) => String(operator?.charId || "").trim())
+      .filter(Boolean),
+  );
+  const effectsByKey = new Map();
+  const issues = [];
+
+  for (const operatorId of controlOperatorIds) {
+    const profile = profilesById.get(operatorId);
+    if (!profile || profile.elite === null || profile.level === null) {
+      continue;
+    }
+
+    for (const skill of RIIC_CONTROL_CENTER_SKILLS.skills || []) {
+      if (
+        String(skill?.operatorId || "").trim() !== operatorId ||
+        !isControlCenterSkillUnlocked(profile, skill)
+      ) {
+        continue;
+      }
+
+      for (const sourceEffect of skill?.resolvedEffects || []) {
+        if (
+          !isControlRoomEffect(sourceEffect) ||
+          !hasControlConditions(sourceEffect, controlOperatorIds)
+        ) {
+          continue;
+        }
+        const key = getControlEffectKey(sourceEffect);
+        effectsByKey.set(key, {
+          scope: String(sourceEffect?.target?.scope || "").trim(),
+          roomType: normalizeFacility(sourceEffect?.target?.roomType),
+          product: String(sourceEffect?.target?.product || "").trim() || "all",
+          metric: String(sourceEffect?.metric || "").trim(),
+          bonusPercent: Number(sourceEffect?.bonusPercent || 0),
+          affectedOperatorIds: (sourceEffect?.target?.operatorIds || [])
+            .map((targetId) => String(targetId || "").trim())
+            .filter(Boolean),
+          sourceOperatorIds: [operatorId],
+          conditions: sourceEffect?.conditions || null,
+        });
+      }
+    }
+
+    for (const sourceEffect of getRiicLayer3ControlCenterEffects({
+      operatorId,
+      ownedOperators,
+      layoutFacts,
+    })) {
+      if (
+        !isControlRoomEffect(sourceEffect) ||
+        !hasControlConditions(sourceEffect, controlOperatorIds)
+      ) {
+        continue;
+      }
+      const key = getControlEffectKey(sourceEffect);
+      effectsByKey.set(key, {
+        scope: String(sourceEffect?.target?.scope || "").trim(),
+        roomType: normalizeFacility(sourceEffect?.target?.roomType),
+        product: String(sourceEffect?.target?.product || "").trim() || "all",
+        metric: String(sourceEffect?.metric || "").trim(),
+        bonusPercent: Number(sourceEffect?.bonusPercent || 0),
+        affectedOperatorIds: (sourceEffect?.target?.operatorIds || [])
+          .map((targetId) => String(targetId || "").trim())
+          .filter(Boolean),
+        sourceOperatorIds: [operatorId],
+        conditions: sourceEffect?.conditions || null,
+      });
+    }
+  }
+
+  if (!controlRoom) {
+    issues.push(
+      createIssue({
+        code: "missingControlRoom",
+        message: "No control room was supplied; control-center bonuses are zero.",
+        planIndex,
+      }),
+    );
+  }
+
+  return {
+    controlOperatorIds,
+    effects: [...effectsByKey.values()],
+    issues,
+  };
+}
+
+function getControlCenterBonusForRoom({
+  room,
+  effects,
+} = {}) {
+  const operatorIds = new Set(
+    (room?.operators || [])
+      .map((operator) => String(operator?.charId || "").trim())
+      .filter(Boolean),
+  );
+  const matchingEffects = (effects || []).filter((effect) => {
+    if (
+      effect.roomType !== room.facility ||
+      (effect.product !== "all" && effect.product !== room.product)
+    ) {
+      return false;
+    }
+    return (
+      effect.scope === "allRooms" ||
+      (effect.scope === "operators" &&
+        effect.affectedOperatorIds.some((operatorId) =>
+          operatorIds.has(operatorId),
+        ))
+    );
+  });
+  const breakdown = getRiicSameShiftBindingBonusBreakdown({
+    roomType: room?.facility,
+    effects: matchingEffects,
+  });
+
+  return {
+    facilityBonusPercent: Number(breakdown.facilityBonusPercent || 0),
+    operatorBonusPercent: Number(breakdown.operatorBonusPercent || 0),
+    operatorBonuses: breakdown.operatorBonuses || [],
+    effects: matchingEffects,
+  };
+}
+
+function getAutomationSupportState({ rooms, profilesById } = {}) {
+  const powerPlantCount = (rooms || []).filter(
+    (room) => room.facility === "power",
+  ).length;
+  const supportOperatorActive = (rooms || []).some(
+    (room) =>
+      room.facility === "power" &&
+      room.operators.some(
+        (operator) =>
+          operator.charId === AUTOMATION_POWER_SUPPORT_OPERATOR_ID &&
+          Number(profilesById.get(operator.charId)?.elite) >= 2,
+      ),
+  );
+
+  return {
+    powerPlantCount,
+    effectivePowerPlantCount:
+      powerPlantCount + (supportOperatorActive ? 1 : 0),
+    supportOperatorActive,
+  };
+}
+
+function getLayer3LocalBonuses({
+  room,
+  ownedOperators,
+  layoutFacts,
+  automationSupportState,
+} = {}) {
+  const expectedSlots = getExpectedSlots(room?.facility, room?.stationLevel);
+  if (!expectedSlots) {
+    return [];
+  }
+  const scope = {
+    roomType: room.facility,
+    product: room.product || "all",
+    stationLevel: room.stationLevel,
+    slotCount: expectedSlots,
+  };
+
+  return (room?.operators || [])
+    .filter((operator) => operator.charId && operator.elite !== null)
+    .map((operator) => {
+      const bonus = getRiicAutomationOperatorLayer3Bonus({
+        operatorId: operator.charId,
+        ownedOperators,
+        scope,
+        layoutFacts,
+        effectivePowerPlantCount:
+          automationSupportState.effectivePowerPlantCount,
+        getLayer3OperatorLocalBonus:
+          RiicLayer3Rules.getRiicLayer3OperatorLocalBonus,
+      });
+      return {
+        operatorId: operator.charId,
+        bonusPercent: Number(bonus || 0),
+      };
+    })
+    .filter((entry) => entry.bonusPercent !== 0);
+}
+
+function calculateL79Room({
+  room,
+  planIndex,
+  resolvedSkills,
+  ownedOperators,
+  layoutFacts,
+  controlEffects,
+  automationSupportState,
+} = {}) {
+  const issues = [...(room?.issues || [])];
+  const expectedSlots = getExpectedSlots(room?.facility, room?.stationLevel);
+  const isBaselineRoom = BASELINE_ROOM_TYPES.has(room?.facility);
+
+  if (!isBaselineRoom) {
+    return {
+      ...room,
+      expectedSlots: null,
+      efficiency: null,
+      efficiencyMetrics: {
+        selectedVariant: "actual",
+        actual: {
+          value: null,
+          status: "notApplicable",
+          breakdown: {},
+        },
+      },
+      issues,
+    };
+  }
+  if (!expectedSlots || !room.product) {
+    return {
+      ...room,
+      expectedSlots: expectedSlots || null,
+      efficiency: 0,
+      efficiencyMetrics: {
+        selectedVariant: "actual",
+        actual: {
+          value: 0,
+          status: "invalidRoom",
+          breakdown: {},
+        },
+      },
+      issues,
+    };
+  }
+  if (isEmptyProductiveRoom(room)) {
+    return {
+      ...room,
+      expectedSlots,
+      efficiency: 0,
+      controlCenterFacilityBonusPercent: 0,
+      controlCenterOperatorBonusPercent: 0,
+      controlCenterOperatorBonuses: [],
+      efficiencyMetrics: {
+        selectedVariant: "actual",
+        actual: {
+          value: 0,
+          status: "calculated",
+          breakdown: {
+            emptyRoom: true,
+            staffingBonusPercent: 0,
+            layer3OperatorBonusPercent: 0,
+            controlCenterFacilityBonusPercent: 0,
+            controlCenterOperatorBonusPercent: 0,
+          },
+        },
+      },
+      issues,
+    };
+  }
+
+  const uniqueKnownOperatorIds = [];
+  const seenOperatorIds = new Set();
+  for (const operator of room.operators || []) {
+    if (!operator.charId || operator.elite === null || operator.level === null) {
+      continue;
+    }
+    if (seenOperatorIds.has(operator.charId)) {
+      issues.push(
+        createIssue({
+          code: "duplicateRoomOperator",
+          message: "The repeated operator contributes zero after its first slot.",
+          planIndex,
+          facility: room.facility,
+          index: room.index,
+          operatorName: operator.name,
+          operatorId: operator.charId,
+        }),
+      );
+      continue;
+    }
+    seenOperatorIds.add(operator.charId);
+    uniqueKnownOperatorIds.push(operator.charId);
+  }
+
+  let calculation;
+  try {
+    calculation = calculateRiicRoomEfficiency({
+      resolvedSkills,
+      roomType: room.facility,
+      product: room.product,
+      operatorIds: uniqueKnownOperatorIds,
+      expectedSlots,
+      allowPartialRoster: true,
+    });
+  } catch (error) {
+    issues.push(
+      createIssue({
+        code: "roomCalculationError",
+        message: String(error?.message || error),
+        planIndex,
+        facility: room.facility,
+        index: room.index,
+      }),
+    );
+    calculation = null;
+  }
+
+  if (!calculation?.valid) {
+    return {
+      ...room,
+      expectedSlots,
+      efficiency: 0,
+      efficiencyMetrics: {
+        selectedVariant: "actual",
+        actual: {
+          value: 0,
+          status: "invalidRoom",
+          breakdown: { calculation },
+        },
+      },
+      issues,
+    };
+  }
+
+  const controlCenter = getControlCenterBonusForRoom({
+    room,
+    effects: controlEffects,
+  });
+  const layer3OperatorBonuses = getLayer3LocalBonuses({
+    room,
+    ownedOperators,
+    layoutFacts,
+    automationSupportState,
+  });
+  const layer3OperatorBonusPercent = layer3OperatorBonuses.reduce(
+    (total, entry) => total + entry.bonusPercent,
+    0,
+  );
+  const staffingBonusPercent = PRODUCTIVE_ROOM_TYPES.has(room.facility)
+    ? (room.operators || []).length
+    : 0;
+  const value =
+    Number(calculation.localTotalPercent || 0) +
+    staffingBonusPercent +
+    layer3OperatorBonusPercent +
+    controlCenter.facilityBonusPercent +
+    controlCenter.operatorBonusPercent;
+
+  return {
+    ...room,
+    expectedSlots,
+    efficiency: value,
+    controlCenterFacilityBonusPercent: controlCenter.facilityBonusPercent,
+    controlCenterOperatorBonusPercent: controlCenter.operatorBonusPercent,
+    controlCenterOperatorBonuses: controlCenter.operatorBonuses,
+    efficiencyMetrics: {
+      selectedVariant: "actual",
+      actual: {
+        value,
+        status: "calculated",
+        breakdown: {
+          calculation,
+          staffingBonusPercent,
+          layer3OperatorBonusPercent,
+          layer3OperatorBonuses,
+          controlCenterFacilityBonusPercent:
+            controlCenter.facilityBonusPercent,
+          controlCenterOperatorBonusPercent:
+            controlCenter.operatorBonusPercent,
+          controlCenterEffects: controlCenter.effects,
+        },
+      },
+    },
+    issues,
+  };
+}
+
+function createPerceptionResourceFacts(rooms) {
+  const dormitories = (rooms || []).filter(
+    (room) => room.facility === "dormitory",
+  );
+  const dormitoryLevels = dormitories
+    .map((room) => room.stationLevel)
+    .filter((level) => Number.isInteger(level) && level >= 0);
+
+  return {
+    dormitoryOccupantCount: dormitories.length * 5,
+    dormitoryLevel:
+      dormitoryLevels.length > 0 ? Math.max(...dormitoryLevels) : null,
+    assumeDormitorySupport: true,
+    dormitorySupportOccupantCount: 5,
+    duskMoodAbove12: true,
+    lingMoodAbove12: true,
+  };
+}
+
+function applyResourceChainSettlement({ preview, settlement } = {}) {
+  const bonusesByPlanAndRoom = new Map(
+    (settlement?.states || []).flatMap((state) =>
+      (state?.results || []).map((result) => [
+        `${Number(state?.index || 0)}:${String(result?.roomKey || "")}`,
+        Number(result?.additionalBonusPercent || 0),
+      ]),
+    ),
+  );
+
+  return {
+    ...(preview || {}),
+    states: (preview?.states || []).map((state) => ({
+      ...state,
+      rooms: (state?.rooms || []).map((room) => {
+        const resourceChainAdditionalBonusPercent = Number(
+          bonusesByPlanAndRoom.get(
+            `${Number(state?.index || 0)}:${String(room?.key || "")}`,
+          ) || 0,
+        );
+        if (
+          isEmptyProductiveRoom(room) ||
+          resourceChainAdditionalBonusPercent === 0 ||
+          !Number.isFinite(Number(room?.efficiency))
+        ) {
+          return {
+            ...room,
+            resourceChainAdditionalBonusPercent,
+          };
+        }
+
+        return {
+          ...room,
+          efficiency:
+            Number(room.efficiency) + resourceChainAdditionalBonusPercent,
+          resourceChainAdditionalBonusPercent,
+          efficiencyMetrics: {
+            ...(room.efficiencyMetrics || {}),
+            actual: {
+              ...(room.efficiencyMetrics?.actual || {}),
+              value:
+                Number(room.efficiencyMetrics?.actual?.value || 0) +
+                resourceChainAdditionalBonusPercent,
+              breakdown: {
+                ...(room.efficiencyMetrics?.actual?.breakdown || {}),
+                resourceChainAdditionalBonusPercent,
+              },
+            },
+          },
+        };
+      }),
+    })),
+  };
+}
+
+function summarizeRooms(states) {
+  const summaries = new Map();
+
+  for (const state of states || []) {
+    const durationHours = Number(state?.durationHours || 0);
+    for (const room of state?.rooms || []) {
+      const summary = summaries.get(room.key) || {
+        key: room.key,
+        facility: room.facility,
+        index: room.index,
+        product: room.product,
+        durationHours: 0,
+        efficiencyPercentHours: 0,
+        calculatedDurationHours: 0,
+        issues: [],
+      };
+      summary.durationHours += durationHours;
+      summary.issues.push(...(room.issues || []));
+      if (
+        durationHours > 0 &&
+        room.efficiencyMetrics?.actual?.status === "calculated"
+      ) {
+        summary.calculatedDurationHours += durationHours;
+        summary.efficiencyPercentHours += Number(room.efficiency || 0) * durationHours;
+      }
+      summaries.set(room.key, summary);
+    }
+  }
+
+  return [...summaries.values()].map((summary) => ({
+    ...summary,
+    averageEfficiencyPercent:
+      summary.calculatedDurationHours > 0
+        ? summary.efficiencyPercentHours / summary.calculatedDurationHours
+        : 0,
+    isCalculated:
+      summary.durationHours > 0 &&
+      summary.calculatedDurationHours === summary.durationHours,
+  }));
 }
 
 /**
- * Recalculates a manually edited ordinary room from its final roster. Special
- * candidate formulas remain on their L62 path until they have an equivalent
- * final-roster calculator.
+ * Kept for the standalone MAA yield test page. It calculates one ordinary
+ * room only and deliberately has no candidate, control, or resource-chain
+ * dependency.
  */
 export function calculateRiicFinalRoomRosterEfficiency({
   facility,
   product = "all",
   expectedSlots,
   operators = [],
-  candidate,
   resolvedSkills,
   actualControlCenterFacilityBonusPercent = 0,
   actualControlCenterOperatorBonusPercent = 0,
 } = {}) {
-  const roomType = normalizeRoomType(facility);
-  if (!GENERIC_ROOM_TYPES.has(roomType)) {
-    return {
-      status: "unavailable",
-      reason: "unsupportedRoomType",
-    };
-  }
-
-  const specialCalculationReason =
-    getCandidateSpecificCalculationReason(candidate);
-  if (specialCalculationReason) {
-    return {
-      status: "requiresCandidateSpecificCalculation",
-      reason: specialCalculationReason,
-    };
-  }
-
+  const roomType = normalizeFacility(facility);
   const normalizedExpectedSlots = Number(expectedSlots);
   if (
+    !BASELINE_ROOM_TYPES.has(roomType) ||
     !Number.isInteger(normalizedExpectedSlots) ||
     normalizedExpectedSlots < 1
   ) {
-    return {
-      status: "unavailable",
-      reason: "missingExpectedSlots",
-    };
+    return { status: "unavailable", reason: "unsupportedRoom" };
   }
 
   const calculation = calculateRiicRoomEfficiency({
     resolvedSkills,
     roomType,
     product: String(product || "").trim() || "all",
-    operatorIds: (operators || []).map((operator) =>
-      String(operator?.charId || "").trim(),
-    ),
+    operatorIds: (operators || [])
+      .map((operator) => String(operator?.charId || "").trim())
+      .filter(Boolean),
     expectedSlots: normalizedExpectedSlots,
     allowPartialRoster: true,
   });
@@ -332,20 +958,22 @@ export function calculateRiicFinalRoomRosterEfficiency({
     };
   }
 
-  const controlCenterFacilityBonus =
-    toFinitePercent(actualControlCenterFacilityBonusPercent) || 0;
-  const controlCenterOperatorBonus =
-    toFinitePercent(actualControlCenterOperatorBonusPercent) || 0;
-  const staffingBonusPercent = getStaffingBonusPercent({ facility, operators });
-  const roomPercent =
-    Number(calculation.localTotalPercent || 0) +
-    staffingBonusPercent +
-    controlCenterFacilityBonus +
-    controlCenterOperatorBonus;
-
+  const staffingBonusPercent = PRODUCTIVE_ROOM_TYPES.has(roomType)
+    ? (operators || []).length
+    : 0;
+  const controlCenterFacilityBonus = Number(
+    actualControlCenterFacilityBonusPercent || 0,
+  );
+  const controlCenterOperatorBonus = Number(
+    actualControlCenterOperatorBonusPercent || 0,
+  );
   return {
     status: "calculated",
-    value: roomPercent,
+    value:
+      Number(calculation.localTotalPercent || 0) +
+      staffingBonusPercent +
+      controlCenterFacilityBonus +
+      controlCenterOperatorBonus,
     calculation,
     staffingBonusPercent,
     controlCenterFacilityBonus,
@@ -354,365 +982,120 @@ export function calculateRiicFinalRoomRosterEfficiency({
 }
 
 /**
- * L79: settles a preview-only room efficiency from the assembled assignment.
- * It never feeds a calculated value back into room selection or scheduling.
+ * L79 final settlement. It receives only MAA-style plans plus the approved
+ * operator profiles, then rebuilds all calculation state from that input.
  */
-export function settleRiicPreviewRoomEfficiency({
-  facility,
-  operators = [],
-  candidate,
-  candidateTotalPercent,
-  estimatedControlCenterOperatorBonusPercent = 0,
-  actualControlCenterFacilityBonusPercent = 0,
-  actualControlCenterOperatorBonusPercent = 0,
-  actualControlCenterOperatorBonuses = [],
-  actualControlCenterBindings = [],
-  manuallyEdited = false,
-  expectedSlots,
-  product,
-  resolvedSkills,
-  automationRuntimeContext,
+export function settleRiicMaaScheduleEfficiency({
+  schedule,
+  operatorProfiles = [],
 } = {}) {
-  const candidateTotal = toFinitePercent(candidateTotalPercent);
-  const estimatedControlCenterOperatorBonus = toFinitePercent(
-    estimatedControlCenterOperatorBonusPercent,
-  );
-  const actualControlCenterFacilityBonus = toFinitePercent(
-    actualControlCenterFacilityBonusPercent,
-  );
-  const actualControlCenterOperatorBonus = toFinitePercent(
-    actualControlCenterOperatorBonusPercent,
-  );
-  const staffingBonusPercent = getStaffingBonusPercent({
-    facility,
-    operators,
-  });
-  const finalRosterCalculation =
-    manuallyEdited && resolvedSkills
-      ? calculateRiicFinalRoomRosterEfficiency({
-          facility,
-          product,
-          expectedSlots,
-          operators,
-          candidate,
-          resolvedSkills,
-          actualControlCenterFacilityBonusPercent:
-            actualControlCenterFacilityBonus,
-          actualControlCenterOperatorBonusPercent:
-            actualControlCenterOperatorBonus,
-        })
-      : null;
-  const usesFinalRosterCalculation =
-    finalRosterCalculation?.status === "calculated";
-  const status = usesFinalRosterCalculation
-    ? "calculated"
-    : manuallyEdited
-      ? "manuallyEdited"
-      : candidateTotal === null
-        ? "unavailable"
-        : "calculated";
-  const closureCalculation =
-    status === "calculated" && !usesFinalRosterCalculation
-      ? recalculateRiicClosureSpecialOrder({
-          candidate,
-          scope: candidate?.candidateScope,
-          fallbackOperators: candidate?.fallback?.operators || [],
-          operatorBonusById: getOperatorBonusById(
-            actualControlCenterOperatorBonuses,
-          ),
-          staffingBonusPercent,
-        })
-      : null;
-  const automationCalculation =
-    status === "calculated" && !usesFinalRosterCalculation
-      ? recalculateRiicPreviewAutomationCandidate({
-          candidate,
-          automationRuntimeContext,
-        })
-      : null;
-  const teamCalculation = status === "calculated" && !usesFinalRosterCalculation
-    ? getActualTeamCalculation({
-      candidate,
-      actualControlCenterBindings,
-    })
-    : null;
-  const actualValue =
-    status === "calculated"
-      ? usesFinalRosterCalculation
-        ? finalRosterCalculation.value
-        : closureCalculation
-        ? Number(closureCalculation.tradeEquivalentTotalPercent || 0) +
-          (actualControlCenterFacilityBonus || 0)
-        : automationCalculation
-        ? Number(automationCalculation.totalPercent || 0) +
-          staffingBonusPercent +
-          (actualControlCenterFacilityBonus || 0) +
-          (actualControlCenterOperatorBonus || 0)
-        : teamCalculation
-          ? Number(
-              candidate?.teamCalculationBaseCorePercent ??
-                candidate?.corePercent ??
-                candidateTotal ??
-                0,
-            ) +
-            Number(candidate?.fallback?.totalPercent || 0) +
-            Number(teamCalculation.coreBonusAdjustmentPercent || 0) +
-            staffingBonusPercent +
-            (actualControlCenterFacilityBonus || 0) +
-            (actualControlCenterOperatorBonus || 0)
-        : candidateTotal -
-          (estimatedControlCenterOperatorBonus || 0) +
-          staffingBonusPercent +
-          (actualControlCenterFacilityBonus || 0) +
-          (actualControlCenterOperatorBonus || 0)
-      : null;
-
-  return {
-    selectedVariant: "actual",
-    actual: {
-      value: actualValue,
-      status,
-      breakdown: {
-        candidateTotalPercent: candidateTotal,
-        estimatedControlCenterOperatorBonusPercent:
-          estimatedControlCenterOperatorBonus || 0,
-        staffingBonusPercent,
-        actualControlCenterFacilityBonusPercent:
-          actualControlCenterFacilityBonus || 0,
-        actualControlCenterOperatorBonusPercent:
-          actualControlCenterOperatorBonus || 0,
-        ...(finalRosterCalculation
-          ? {
-              finalRosterCalculation,
-            }
-          : {}),
-        ...(closureCalculation
-          ? {
-              closureCalculation,
-            }
-          : {}),
-        ...(automationCalculation
-          ? {
-              automationCalculation,
-            }
-          : {}),
-        ...(teamCalculation
-          ? {
-              teamCalculation,
-            }
-          : {}),
-      },
-    },
-  };
-}
-
-function applyRiicPreviewBaseRoomEfficiency(
-  preview,
-  resolvedSkills,
-  { layoutFacts, ownedOperators } = {},
-) {
-  if (!preview) {
-    return preview;
-  }
-
-  return {
-    ...preview,
-    states: (preview.states || []).map((state) => ({
-      ...state,
-      rooms: (state?.rooms || []).map((room) => {
-        const source = room?.efficiencySource;
-        if (!source) {
-          if (!room?.isStatic || !resolvedSkills) {
-            return room;
-          }
-
-          const finalRosterCalculation = calculateRiicFinalRoomRosterEfficiency({
-            facility: room.facility,
-            product: room.product,
-            expectedSlots: room.expectedSlots,
-            operators: room.operators || [],
-            resolvedSkills,
-            actualControlCenterFacilityBonusPercent:
-              room.controlCenterFacilityBonusPercent,
-            actualControlCenterOperatorBonusPercent:
-              room.controlCenterOperatorBonusPercent,
-          });
-
-          return {
-            ...room,
-            efficiency:
-              finalRosterCalculation.status === "calculated"
-                ? finalRosterCalculation.value
-                : null,
-            efficiencyMetrics: {
-              selectedVariant: "actual",
-              actual: {
-                value:
-                  finalRosterCalculation.status === "calculated"
-                    ? finalRosterCalculation.value
-                    : null,
-                status: finalRosterCalculation.status,
-                breakdown: {
-                  finalRosterCalculation,
-                },
-              },
-            },
-          };
-        }
-
-        const efficiencyMetrics = settleRiicPreviewRoomEfficiency({
-          facility: room.facility,
-          operators: room.operators || [],
-          candidate: source.candidate,
-          candidateTotalPercent: source.candidateTotalPercent,
-          estimatedControlCenterOperatorBonusPercent:
-            source.estimatedControlCenterOperatorBonusPercent,
-          actualControlCenterFacilityBonusPercent:
-            room.controlCenterFacilityBonusPercent,
-          actualControlCenterOperatorBonusPercent:
-            room.controlCenterOperatorBonusPercent,
-          actualControlCenterOperatorBonuses:
-            room.controlCenterOperatorBonuses || [],
-          actualControlCenterBindings: room.sameShiftBindings || [],
-          manuallyEdited: room.manuallyEdited === true,
-          expectedSlots: room.expectedSlots,
-          product: room.product,
-          resolvedSkills,
-          automationRuntimeContext: getAutomationSupportState({
-            state,
-            layoutFacts,
-            ownedOperators,
-          }),
-        });
-
-        return {
-          ...room,
-          efficiency: efficiencyMetrics.actual.value,
-          efficiencyMetrics,
-        };
+  const profileState = normalizeProfiles(operatorProfiles);
+  const normalizedPlans = (schedule?.plans || []).map(
+    (plan, planIndex) =>
+      normalizePlan({
+        sourcePlan: plan,
+        planIndex,
+        profilesById: profileState.profilesById,
       }),
-    })),
-  };
-}
-
-/**
- * Applies already-settled cross-room resource bonuses to a completed preview.
- * This remains downstream of selection and preserves manual-edit semantics.
- */
-export function applyRiicPreviewResourceChainSettlement({
-  preview,
-  settlement,
-} = {}) {
-  const bonusesByStateAndRoomKey = new Map(
-    (settlement?.states || []).flatMap((state) =>
-      (state?.results || []).map((result) => [
-        `${Number(state?.index || 0)}:${String(result?.roomKey || "")}`,
-        {
-          bonusPercent: Number(result?.bonusPercent || 0),
-          baselineBonusPercent: Number(result?.baselineBonusPercent || 0),
-          additionalBonusPercent: Number(
-            result?.additionalBonusPercent ?? result?.bonusPercent ?? 0,
-          ),
-        },
-      ]),
-    ),
   );
-
-  return {
-    ...(preview || {}),
-    states: (preview?.states || []).map((state) => ({
-      ...state,
-      rooms: (state?.rooms || []).map((room) => {
-        const resourceChainResult =
-          bonusesByStateAndRoomKey.get(
-            `${Number(state?.index || 0)}:${String(room?.key || "")}`,
-          ) || {};
-        const resourceChainBonusPercent = Number(
-          resourceChainResult.bonusPercent || 0,
-        );
-        const resourceChainBaselineBonusPercent = Number(
-          resourceChainResult.baselineBonusPercent || 0,
-        );
-        const resourceChainAdditionalBonusPercent = Number(
-          resourceChainResult.additionalBonusPercent || 0,
-        );
-        if (
-          resourceChainAdditionalBonusPercent === 0 ||
-          !Number.isFinite(Number(room?.efficiency))
-        ) {
-          return {
-            ...room,
-            resourceChainBonusPercent,
-            resourceChainBaselineBonusPercent,
-            resourceChainAdditionalBonusPercent,
-          };
-        }
-
-        return {
-          ...room,
-          efficiency:
-            Number(room.efficiency) + resourceChainAdditionalBonusPercent,
-          resourceChainBonusPercent,
-          resourceChainBaselineBonusPercent,
-          resourceChainAdditionalBonusPercent,
-          efficiencyMetrics: {
-            ...(room.efficiencyMetrics || {}),
-            actual: {
-              ...(room.efficiencyMetrics?.actual || {}),
-              value:
-                Number(room.efficiencyMetrics?.actual?.value || 0) +
-                resourceChainAdditionalBonusPercent,
-              breakdown: {
-                ...(room.efficiencyMetrics?.actual?.breakdown || {}),
-                resourceChainBonusPercent,
-                resourceChainBaselineBonusPercent,
-                resourceChainAdditionalBonusPercent,
-              },
-            },
-          },
-        };
-      }),
-    })),
-  };
-}
-
-/**
- * L79: calculates final display-only efficiency from an assembled schedule.
- * It never feeds values back into candidate selection, fallback planning, or
- * schedule assembly.
- */
-export function settleRiicScheduleEfficiency({
-  preview,
-  ownedOperators = [],
-  resourceFacts = {},
-  layoutFacts,
-  resolvedSkills,
-} = {}) {
-  const previewWithBaseEfficiency = applyRiicPreviewBaseRoomEfficiency(
-    preview,
-    resolvedSkills,
-    {
+  const resolvedSkills = resolveRiicBaselineSkills(
+    profileState.profiles,
+    RIIC_BASELINE_SKILL_RULES,
+  );
+  const states = normalizedPlans.map((plan) => {
+    const layoutFacts = createLayoutFacts(plan.rooms);
+    const automationSupportState = getAutomationSupportState({
+      rooms: plan.rooms,
+      profilesById: profileState.profilesById,
+    });
+    const control = collectControlCenterEffects({
+      rooms: plan.rooms,
+      profilesById: profileState.profilesById,
+      ownedOperators: profileState.profiles,
       layoutFacts,
-      ownedOperators,
-    },
-  );
+      planIndex: plan.index,
+    });
+    const rooms = plan.rooms.map((room) =>
+      calculateL79Room({
+        room,
+        planIndex: plan.index,
+        resolvedSkills,
+        ownedOperators: profileState.profiles,
+        layoutFacts,
+        controlEffects: control.effects,
+        automationSupportState,
+      }),
+    );
+
+    return {
+      index: plan.index,
+      name: plan.name,
+      durationMinutes: plan.durationMinutes,
+      durationHours: plan.durationHours,
+      rooms,
+      issues: [...plan.issues, ...control.issues],
+      assumptions: {
+        effectivePowerPlantCount:
+          automationSupportState.effectivePowerPlantCount,
+        powerPlantCount: automationSupportState.powerPlantCount,
+        automationPowerSupportActive:
+          automationSupportState.supportOperatorActive,
+        ...createPerceptionResourceFacts(plan.rooms),
+      },
+    };
+  });
+  const basePreview = {
+    cycleHours: states.reduce(
+      (total, state) => total + Number(state.durationHours || 0),
+      0,
+    ),
+    states,
+  };
   const previewWithActiveRosterEffects = applyRiicActiveRosterPreviewEffects({
-    preview: previewWithBaseEfficiency,
-    ownedOperators,
+    preview: basePreview,
+    ownedOperators: profileState.profiles,
   });
   const perceptionSettlement = settleRiicPerceptionSchedule({
     preview: previewWithActiveRosterEffects,
-    ownedOperators,
-    resourceFacts,
+    ownedOperators: profileState.profiles,
+    resourceFacts: createPerceptionResourceFacts(
+      states[0]?.rooms || [],
+    ),
   });
-
-  const settledPreview = applyRiicPreviewResourceChainSettlement({
+  const preview = applyResourceChainSettlement({
     preview: previewWithActiveRosterEffects,
     settlement: perceptionSettlement,
   });
+  const issues = [
+    ...profileState.issues,
+    ...preview.states.flatMap((state) => [
+      ...(state.issues || []),
+      ...(state.rooms || []).flatMap((room) => room.issues || []),
+    ]),
+    ...(perceptionSettlement?.states || []).flatMap((state) =>
+      (state?.unavailableSources || []).map((source) =>
+        createIssue({
+          code: String(source?.reason || "perceptionSourceUnavailable"),
+          message: "A perception source could not be applied.",
+          planIndex: Number(state?.index || 0),
+          operatorId: String(source?.operatorId || "").trim(),
+        }),
+      ),
+    ),
+  ];
 
   return {
-    ...settledPreview,
+    cycleHours: preview.cycleHours,
+    status: preview.states.length > 0 ? "calculated" : "empty",
+    plans: preview.states.map((state) => ({
+      durationMinutes: state.durationMinutes,
+      rooms: state.rooms,
+      issues: state.issues,
+    })),
+    states: preview.states,
+    rooms: summarizeRooms(preview.states),
+    issues,
     perceptionSettlement,
+    preview,
   };
 }

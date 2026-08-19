@@ -97,6 +97,14 @@ const FIXED_LAYOUT_ROOM_STATIONS = Object.freeze({
     "gold-manufacture": [station(3), station(3), station(3)],
     power: [station(3, 1), station(3, 1), station(3, 1)],
   },
+  "333-orundum": {
+    ...THREE_POWER_STATIC_ROOM_STATIONS,
+    "lmd-trading": [station(3), station(3)],
+    "orundum-trading": [station(3)],
+    "gold-manufacture": [station(3), station(3)],
+    "orundum-manufacture": [station(3)],
+    power: [station(3, 1), station(3, 1), station(3, 1)],
+  },
   342: {
     ...RIGHT_FULL_STATIC_ROOM_STATIONS,
     "lmd-trading": [station(3), station(3), station(1)],
