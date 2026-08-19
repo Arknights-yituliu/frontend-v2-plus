@@ -324,6 +324,9 @@ function createStateSettlement({
       );
       continue;
     }
+    if (eliteById.get(operatorId) < 2) {
+      continue;
+    }
     if (
       highestDormitoryLevel === null ||
       (!assumeDormitorySupport && placement?.stationLevel === null)

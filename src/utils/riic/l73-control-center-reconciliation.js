@@ -3,9 +3,6 @@ import {
   mergeRiicControlCenterLateFillState,
   removeRiicControlCenterOperators,
 } from "./l50-control-planner.js";
-import {
-  buildRiicControlCenterRuntimeContext,
-} from "./l51-control-effects.js";
 
 function normalizeOperatorId(value) {
   return String(value || "").trim();
@@ -14,21 +11,6 @@ function normalizeOperatorId(value) {
 function normalizeTeamIndex(value) {
   const number = Number(value);
   return Number.isInteger(number) && number >= 0 ? number : null;
-}
-
-function normalizeRoomType(value) {
-  const roomType = String(value || "").trim();
-  return roomType === "office" ? "hire" : roomType;
-}
-
-function normalizeProduct(value) {
-  return String(value || "").trim() || "all";
-}
-
-function isRoomEffectType(value) {
-  return ["trading", "manufacture", "meeting", "hire"].includes(
-    normalizeRoomType(value),
-  );
 }
 
 function hasConditions(effect) {
@@ -50,44 +32,26 @@ function getManualOperatorIdsByTeamIndex(value = {}) {
   );
 }
 
-function getOperatorEffects({
-  effectsByTeamIndex,
-  teamIndex,
-  operatorId,
-}) {
-  return (effectsByTeamIndex?.[String(teamIndex)] || []).filter(
-    (effect) =>
-      effect?.scope === "operators" &&
-      !hasConditions(effect) &&
-      isRoomEffectType(effect?.roomType) &&
-      (effect?.sourceOperatorIds || []).includes(operatorId) &&
-      (effect?.targetOperatorIds || []).length > 0,
+function getCapturedOperatorIds(selectedRoomTeams) {
+  return new Set(
+    (selectedRoomTeams || [])
+      .flatMap((roomTeam) => roomTeam?.operatorIds || [])
+      .map(normalizeOperatorId)
+      .filter(Boolean),
   );
 }
 
-function hasRealizedTarget(effect, selectedRoomTeams, teamIndex) {
-  const effectRoomType = normalizeRoomType(effect?.roomType);
-  const effectProduct = normalizeProduct(effect?.product);
-  const targetOperatorIds = new Set(
-    (effect?.targetOperatorIds || []).map(normalizeOperatorId).filter(Boolean),
+function getOperatorTargetIds(operator) {
+  return new Set(
+    (operator?.controlCenterResolvedEffects || [])
+      .filter(
+        (effect) =>
+          !hasConditions(effect) && effect?.target?.scope === "operators",
+      )
+      .flatMap((effect) => effect?.target?.operatorIds || [])
+      .map(normalizeOperatorId)
+      .filter(Boolean),
   );
-
-  return (selectedRoomTeams || []).some((roomTeam) => {
-    if (normalizeTeamIndex(roomTeam?.teamIndex) !== teamIndex) {
-      return false;
-    }
-    if (normalizeRoomType(roomTeam?.facility) !== effectRoomType) {
-      return false;
-    }
-    const roomProduct = normalizeProduct(roomTeam?.product);
-    if (effectProduct !== "all" && effectProduct !== roomProduct) {
-      return false;
-    }
-
-    return (roomTeam?.operatorIds || []).some((operatorId) =>
-      targetOperatorIds.has(normalizeOperatorId(operatorId)),
-    );
-  });
 }
 
 function getAutomaticEffectOperators(team = {}) {
@@ -95,8 +59,8 @@ function getAutomaticEffectOperators(team = {}) {
 }
 
 /**
- * L73: withdraw automatic control-center operators whose final room targets
- * are absent, then refill only the resulting control-center vacancies.
+ * L73: withdraw automatic control-center operators whose linked operators
+ * were not captured, then refill only the resulting control-center vacancies.
  */
 export function reconcileRiicControlCenterAfterRoomSelection({
   controlState,
@@ -120,12 +84,10 @@ export function reconcileRiicControlCenterAfterRoomSelection({
     };
   }
 
-  const runtimeContext = buildRiicControlCenterRuntimeContext({
-    controlState,
-  });
   const manualIdsByTeamIndex = getManualOperatorIdsByTeamIndex(
     manualOperatorIdsByTeamIndex,
   );
+  const capturedOperatorIds = getCapturedOperatorIds(selectedRoomTeams);
   const removedOperatorIdsByTeamIndex = {};
   const decisions = [];
 
@@ -151,12 +113,8 @@ export function reconcileRiicControlCenterAfterRoomSelection({
         continue;
       }
 
-      const effects = getOperatorEffects({
-        effectsByTeamIndex: runtimeContext.effectsByTeamIndex,
-        teamIndex,
-        operatorId,
-      });
-      if (effects.length === 0) {
+      const targetOperatorIds = getOperatorTargetIds(operator);
+      if (targetOperatorIds.size === 0) {
         decisions.push({
           teamIndex,
           operatorId,
@@ -166,8 +124,8 @@ export function reconcileRiicControlCenterAfterRoomSelection({
         continue;
       }
 
-      const realized = effects.some((effect) =>
-        hasRealizedTarget(effect, selectedRoomTeams, teamIndex),
+      const realized = [...targetOperatorIds].some((targetOperatorId) =>
+        capturedOperatorIds.has(targetOperatorId),
       );
       decisions.push({
         teamIndex,
@@ -206,9 +164,6 @@ export function reconcileRiicControlCenterAfterRoomSelection({
   return {
     status: "ready",
     controlState: finalControlState,
-    runtimeContext: buildRiicControlCenterRuntimeContext({
-      controlState: finalControlState,
-    }),
     lateFillState,
     removedOperatorIdsByTeamIndex,
     decisions,
