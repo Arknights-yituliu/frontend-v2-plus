@@ -10,7 +10,7 @@
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260819.2325"
+      "version": "v20260819.2343"
     },
     "assembler": {
       "label": "组装器",
@@ -18,14 +18,56 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260819.2325"
+      "version": "v20260820.0443"
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260819.2325"
+      "version": "v20260819.2343"
     }
   },
   "entries": [
+    {
+      "date": "2026-08-20",
+      "version": "v20260820.0443",
+      "items": [
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 5,
+          "description": "将活动干员在岗效果从预览层结算拆分为独立规则与身份解析，并统一纳入 L79 最终收益计算"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-20",
+      "version": "v20260820.0443",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 3,
+          "description": "整理活动干员关系与中枢联动规则的识别方式，统一最终排班中的干员身份匹配"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 4,
+          "description": "将活动干员在岗效果纳入 L79 实际效率结算，修正活动干员规则在最终收益中的应用"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 3,
+          "description": "补充活动干员规则结算所需的身份与规则追踪信息，便于核对最终加成来源"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 5,
+          "description": "修正 L79 制造站赤金产出结算，避免自动化制造效果导致赤金效率与最终资源收益不一致"
+        }
+      ]
+    },
     {
       "date": "2026-08-19",
       "version": "v20260819.2325",

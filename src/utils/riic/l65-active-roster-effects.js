@@ -1,20 +1,14 @@
-import RIIC_ACTIVE_ROSTER_RULES from "../../static/json/tools/riic-candidates/R65-roster.json" with {
-  type: "json",
-};
-import { operatorTableV2 } from "/src/utils/gameData.js";
+import {
+  RIIC_ACTIVE_ROSTER_RUNTIME_RULES,
+  RIIC_ACTIVE_ROSTER_SELECTION_PRIORITY_RULES,
+} from "./riic-active-roster-rule-data.js";
+import { getRiicOperatorName as getOperatorName } from "./riic-operator-identity.js";
 import {
   getRiicSameShiftBindingBonusBreakdown,
 } from "./l51-control-effects.js";
 import {
   recalculateRiicRoomTeamCandidateForActiveControlBindings,
 } from "./l62-team-calculation.js";
-
-const OPERATOR_ID_BY_NAME = new Map(
-  Object.entries(operatorTableV2 || {}).flatMap(([charId, operator]) => {
-    const name = String(operator?.name || "").trim();
-    return name ? [[name, charId]] : [];
-  }),
-);
 
 function toFiniteNumber(value, fallback = 0) {
   const number = Number(value);
@@ -28,11 +22,6 @@ function toNonNegativeInteger(value, fallback = 0) {
 
 function normalizeOperatorId(value) {
   return String(value || "").trim();
-}
-
-function getOperatorName(charId) {
-  const operatorId = normalizeOperatorId(charId);
-  return String(operatorTableV2?.[operatorId]?.name || operatorId).trim();
 }
 
 function getRosterById(ownedOperators) {
@@ -63,109 +52,6 @@ function getCandidateScope(candidate) {
   };
 }
 
-function normalizeRuleData(ruleData) {
-  const tagOperatorIdsById = new Map(
-    (ruleData?.tagSets || []).flatMap((tagSet) => {
-      const id = String(tagSet?.id || "").trim();
-      if (!id) {
-        return [];
-      }
-
-      return [
-        [
-          id,
-          new Set(
-            (tagSet?.operatorNames || [])
-              .map((name) => OPERATOR_ID_BY_NAME.get(String(name || "").trim()))
-              .filter(Boolean),
-          ),
-        ],
-      ];
-    }),
-  );
-
-  const rules = (ruleData?.rules || []).flatMap((rule) => {
-    const ownerName = String(rule?.owner?.operatorName || "").trim();
-    const ownerId = OPERATOR_ID_BY_NAME.get(ownerName);
-    const roomType = String(rule?.scope?.roomType || "").trim();
-    const product = String(rule?.scope?.product || "").trim();
-    const effect = rule?.effect || {};
-    const tag = String(effect?.tag || "").trim();
-    const percentPerOperator = toFiniteNumber(effect?.percentPerOperator, NaN);
-    const maximumOperatorCount = toNonNegativeInteger(
-      effect?.maximumOperatorCount,
-      0,
-    );
-
-    if (
-      !String(rule?.id || "").trim() ||
-      !ownerId ||
-      !roomType ||
-      !product ||
-      effect?.type !== "perActiveTaggedOperator" ||
-      !tagOperatorIdsById.has(tag) ||
-      !Number.isFinite(percentPerOperator) ||
-      maximumOperatorCount <= 0
-    ) {
-      return [];
-    }
-
-    return [
-      {
-        id: String(rule.id),
-        ownerId,
-        ownerName,
-        eliteAtLeast: toNonNegativeInteger(rule?.owner?.eliteAtLeast),
-        roomType,
-        product,
-        tag,
-        taggedOperatorIds: tagOperatorIdsById.get(tag),
-        excludeOwner: effect?.excludeOwner === true,
-        percentPerOperator,
-        maximumOperatorCount,
-      },
-    ];
-  });
-
-  const selectionPriorityRules = (ruleData?.selectionPriorityRules || []).flatMap(
-    (rule) => {
-      const triggerName = String(rule?.trigger?.operatorName || "").trim();
-      const triggerOperatorId = OPERATOR_ID_BY_NAME.get(triggerName);
-      const effect = rule?.effect || {};
-      const tag = String(effect?.tag || "").trim();
-      const roomPriorityPerOperator = toFiniteNumber(
-        effect?.roomPriorityPerOperator,
-        NaN,
-      );
-
-      if (
-        !String(rule?.id || "").trim() ||
-        !triggerOperatorId ||
-        effect?.type !== "perCandidateTaggedOperator" ||
-        !tagOperatorIdsById.has(tag) ||
-        !Number.isFinite(roomPriorityPerOperator)
-      ) {
-        return [];
-      }
-
-      return [
-        {
-          id: String(rule.id),
-          triggerOperatorId,
-          triggerName,
-          tag,
-          taggedOperatorIds: tagOperatorIdsById.get(tag),
-          roomPriorityPerOperator,
-        },
-      ];
-    },
-  );
-
-  return { rules, selectionPriorityRules };
-}
-
-const NORMALIZED_RULE_DATA = normalizeRuleData(RIIC_ACTIVE_ROSTER_RULES);
-
 /**
  * L65 runtime selection priority for a candidate considered after earlier
  * selections in the same automatic-scheduling branch.
@@ -185,7 +71,7 @@ export function getRiicActiveRosterCandidatePriority({
   const applications = [];
   let roomPriority = 0;
 
-  for (const rule of NORMALIZED_RULE_DATA.selectionPriorityRules) {
+  for (const rule of RIIC_ACTIVE_ROSTER_SELECTION_PRIORITY_RULES) {
     if (!activeIds.has(rule.triggerOperatorId)) {
       continue;
     }
@@ -248,7 +134,7 @@ export function applyRiicActiveRosterFallbackOperatorEffects({
     const applications = [];
     let activeRosterBonusPercent = 0;
 
-    for (const rule of NORMALIZED_RULE_DATA.rules) {
+    for (const rule of RIIC_ACTIVE_ROSTER_RUNTIME_RULES) {
       if (
         rule.ownerId !== operatorId ||
         rule.roomType !== scope.roomType ||
@@ -514,52 +400,6 @@ function createPlanRosterStates({ plan, controlCenterSegments }) {
   );
 }
 
-function createPreviewRosterStates(preview) {
-  return (preview?.states || []).map((state, stateIndex) => {
-    const targets = (state?.rooms || [])
-      .filter(
-        (room) =>
-          !room?.isStatic &&
-          (!room?.manuallyEdited ||
-            room?.efficiencyMetrics?.actual?.status === "calculated"),
-      )
-      .map((room) => ({
-        key: `${stateIndex}:${String(room?.key || "").trim()}`,
-        roomKey: String(room?.key || "").trim(),
-        groupId: String(room?.groupId || "").trim(),
-        cohortId: "",
-        teamIndex: null,
-        candidateName: String(room?.label || "").trim(),
-        scope: {
-          roomType: String(room?.facility || "").trim(),
-          product: String(room?.product || "").trim(),
-        },
-        operatorIds: [
-          ...new Set(
-            (room?.operators || [])
-              .map((operator) => normalizeOperatorId(operator?.charId))
-              .filter(Boolean),
-          ),
-        ],
-      }))
-      .filter((target) => target.key && target.scope.roomType);
-    const activeOperatorIds = new Set(
-      (state?.rooms || []).flatMap((room) =>
-        (room?.operators || [])
-          .map((operator) => normalizeOperatorId(operator?.charId))
-          .filter(Boolean),
-      ),
-    );
-
-    return {
-      index: stateIndex,
-      durationHours: toFiniteNumber(state?.durationHours, 1) || 1,
-      activeOperatorIds,
-      targets,
-    };
-  });
-}
-
 function getActiveRuleApplications({ states, rosterById }) {
   const summariesByTargetAndRule = new Map();
   const applications = [];
@@ -567,7 +407,7 @@ function getActiveRuleApplications({ states, rosterById }) {
   for (const state of states || []) {
     for (const target of state?.targets || []) {
       const targetOperatorIds = new Set(target?.operatorIds || []);
-      for (const rule of NORMALIZED_RULE_DATA.rules) {
+      for (const rule of RIIC_ACTIVE_ROSTER_RUNTIME_RULES) {
         if (
           target?.scope?.roomType !== rule.roomType ||
           target?.scope?.product !== rule.product ||
@@ -896,87 +736,4 @@ export function evaluateRiicActiveRosterPlanEffects({
   };
 }
 
-/**
- * Applies the same L65 rules to the assembled display schedule. This is the
- * exact per-state value and never changes candidate or fallback selection.
- */
-export function applyRiicActiveRosterPreviewEffects({
-  preview,
-  ownedOperators = [],
-} = {}) {
-  if (!preview) {
-    return preview;
-  }
-
-  const result = getActiveRuleApplications({
-    states: createPreviewRosterStates(preview),
-    rosterById: getRosterById(ownedOperators),
-  });
-  const applicationsByRoomKey = new Map();
-
-  for (const application of result.applications) {
-    if (!application.roomKey) {
-      continue;
-    }
-
-    const key = `${application.stateIndex}:${application.roomKey}`;
-    const current = applicationsByRoomKey.get(key) || {
-      bonusPercent: 0,
-      applications: [],
-    };
-    current.bonusPercent += Number(application.bonusPercent || 0);
-    current.applications.push(application);
-    applicationsByRoomKey.set(key, current);
-  }
-
-  return {
-    ...preview,
-    activeRosterEffects: result,
-    states: (preview.states || []).map((state, stateIndex) => ({
-      ...state,
-      rooms: (state?.rooms || []).map((room) => {
-        const application =
-          applicationsByRoomKey.get(
-            `${stateIndex}:${String(room?.key || "").trim()}`,
-          ) || null;
-        const bonusPercent = Number(application?.bonusPercent || 0);
-        const isEmptyProductiveRoom =
-          ["manufacture", "trading"].includes(
-            String(room?.facility || "").trim(),
-          ) &&
-          !(room?.operators || []).some((operator) =>
-            String(operator?.charId || operator?.name || "").trim(),
-          );
-
-        if (
-          isEmptyProductiveRoom ||
-          bonusPercent === 0 ||
-          !Number.isFinite(Number(room?.efficiency))
-        ) {
-          return room;
-        }
-
-        return {
-          ...room,
-          efficiency: Number(room.efficiency) + bonusPercent,
-          activeRosterBonusPercent: bonusPercent,
-          activeRosterEffects: application.applications,
-          efficiencyMetrics: {
-            ...(room.efficiencyMetrics || {}),
-            actual: {
-              ...(room.efficiencyMetrics?.actual || {}),
-              value:
-                Number(room.efficiencyMetrics?.actual?.value || 0) +
-                bonusPercent,
-              breakdown: {
-                ...(room.efficiencyMetrics?.actual?.breakdown || {}),
-                activeRosterBonusPercent: bonusPercent,
-                activeRosterEffects: application.applications,
-              },
-            },
-          },
-        };
-      }),
-    })),
-  };
-}
+export { applyRiicActiveRosterPreviewEffects } from "./l79-active-roster-settlement.js";
