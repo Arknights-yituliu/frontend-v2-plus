@@ -697,7 +697,7 @@ function getTargetRooms({ target, rooms, sourceStates, coreAssignment }) {
   return [];
 }
 
-function addRoomBonus(room, effect, percent) {
+function addRoomBonus(room, effect, percent, ownerName = "") {
   if (!Number.isFinite(percent) || percent === 0) {
     return;
   }
@@ -712,6 +712,7 @@ function addRoomBonus(room, effect, percent) {
   current.items.push({
     ruleId: effect.ruleId,
     percent,
+    ownerName: String(ownerName || ""),
   });
   room.bonusByMetric.set(metric, current);
 }
@@ -859,13 +860,13 @@ function applyEffect({
     sourceStates,
     coreAssignment,
   });
-  const addBonus = (percent, target = targetRooms) => {
+  const addBonus = (percent, target = targetRooms, ownerName = "") => {
     if (effect.target?.scope === "metric") {
       addMetricBonus(metricBonuses, normalizedEffect, percent);
       return;
     }
     for (const room of target) {
-      addRoomBonus(room, normalizedEffect, percent);
+      addRoomBonus(room, normalizedEffect, percent, ownerName);
     }
   };
 
@@ -875,24 +876,32 @@ function applyEffect({
   }
 
   if (effect.type === "perSource") {
+    let appliedCount = 0;
     for (const assignment of getSourceAssignments(sourceStates, [effect.source])) {
       const sourceRoom = rooms.find((room) => room.id === assignment.roomId);
       if (sourceRoom) {
-        addBonus(Number(effect.percent || 0), [sourceRoom]);
+        addBonus(
+          Number(effect.percent || 0),
+          [sourceRoom],
+          assignment.name,
+        );
+        appliedCount += 1;
       }
     }
-    return true;
+    return appliedCount > 0;
   }
 
   if (effect.type === "perSourceByProduct") {
+    let appliedCount = 0;
     for (const assignment of getSourceAssignments(sourceStates, [effect.source])) {
       const sourceRoom = rooms.find((room) => room.id === assignment.roomId);
       const percent = Number(effect.values?.[sourceRoom?.product] || 0);
       if (sourceRoom && percent) {
-        addBonus(percent, [sourceRoom]);
+        addBonus(percent, [sourceRoom], assignment.name);
+        appliedCount += 1;
       }
     }
-    return true;
+    return appliedCount > 0;
   }
 
   if (effect.type === "perSourceRoomThreshold") {

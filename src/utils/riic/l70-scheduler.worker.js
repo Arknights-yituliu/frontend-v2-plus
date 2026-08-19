@@ -7,6 +7,65 @@ import {
 import {
   reinforceRiicPerceptionResourceSuite,
 } from "./l72-resource-suite-reinforcement.js";
+import {
+  reconcileRiicControlCenterAfterRoomSelection,
+} from "./l73-control-center-reconciliation.js";
+
+function buildRiicFinalSelectedRoomTeams({
+  groups = [],
+  candidateStatesByGroupId = {},
+  tailFillResult,
+} = {}) {
+  return (groups || []).flatMap((group) => {
+    const state = candidateStatesByGroupId?.[group.id];
+    if (state?.status !== "ready") {
+      return [];
+    }
+
+    return (state.cohorts || []).flatMap((cohort) =>
+      (tailFillResult?.selections?.[group.id]?.[cohort.id] || []).flatMap(
+        (candidateKey, teamIndex) => {
+          const candidate = (cohort.candidates || []).find(
+            (item) => item.key === candidateKey,
+          );
+          if (!candidate) {
+            return [];
+          }
+
+          const selectionKey = `${cohort.id}:${teamIndex}`;
+          const fallbackOperators =
+            tailFillResult?.fallbackOperatorsBySelectionKeyByGroup?.[
+              group.id
+            ]?.[selectionKey] || [];
+          return [
+            {
+              groupId: group.id,
+              cohortId: cohort.id,
+              selectionKey,
+              teamIndex,
+              facility:
+                candidate?.candidateScope?.roomType || group.facility || "",
+              product:
+                candidate?.candidateScope?.product ||
+                group.candidateProduct ||
+                "all",
+              operatorIds: [
+                ...new Set(
+                  [
+                    ...(candidate.operatorIds || []),
+                    ...fallbackOperators.map((operator) => operator?.charId),
+                  ]
+                    .map((operatorId) => String(operatorId || "").trim())
+                    .filter(Boolean),
+                ),
+              ],
+            },
+          ];
+        },
+      ),
+    );
+  });
+}
 
 function runRiicAutomaticSchedule(input = {}) {
   const automaticSelection = buildRiicAutomaticRoomGroupSelections({
@@ -47,11 +106,31 @@ function runRiicAutomaticSchedule(input = {}) {
     fiammettaControlUsage: input.fiammettaControlUsage,
     controlCenterRuntimeContext: input.controlCenterRuntimeContext,
   });
+  const finalRoomTeams = buildRiicFinalSelectedRoomTeams({
+    groups: input.groups,
+    candidateStatesByGroupId: input.candidateStatesByGroupId,
+    tailFillResult: resourceSuiteResult.tailFillResult,
+  });
+  const controlCenterReconciliation =
+    reconcileRiicControlCenterAfterRoomSelection({
+      controlState: input.controlCenterState,
+      selectedRoomTeams: finalRoomTeams,
+      selectionReady:
+        automaticSelection.unavailableGroups.length === 0 &&
+        finalRoomTeams.length > 0,
+      manualOperatorIdsByTeamIndex:
+        input.manualControlCenterOperatorIdsByTeamIndex,
+      excludedOperatorIdsByTeamIndex:
+        input.controlCenterLateFillExcludedOperatorIdsByTeamIndex,
+      idleFillOperators: input.idleFillOperators,
+      fiammettaRecovery: input.fiammettaRecovery,
+    });
 
   return {
     automaticSelection,
     tailFillResult,
     resourceSuiteResult,
+    controlCenterReconciliation,
   };
 }
 

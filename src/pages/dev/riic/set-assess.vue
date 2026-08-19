@@ -1559,6 +1559,47 @@ const selectedSystemSkillEntries = computed(() =>
   getSystemSkillEntries(selectedSystem.value),
 );
 
+function getOperatorBuildingSkills(operator) {
+  const seen = new Set();
+  const elite = Number(operator?.elite || 0);
+  const level = Number(operator?.level || 1);
+
+  return (buildingTable || []).flatMap((skill) => {
+    if (skill?.name !== operator?.name) {
+      return [];
+    }
+
+    const description = stripSkillMarkup(skill.description);
+    const key = [
+      skill.buffName,
+      skill.roomType,
+      skill.phase,
+      skill.level,
+      description,
+    ].join("|");
+    if (!description || seen.has(key)) {
+      return [];
+    }
+
+    seen.add(key);
+    const requiredElite = Number(skill.phase || 0);
+    const requiredLevel = Number(skill.level || 1);
+    return [
+      {
+        buffName: String(skill.buffName || "").trim(),
+        roomType: String(skill.roomType || "").trim(),
+        phase: requiredElite,
+        level: requiredLevel,
+        description,
+        active:
+          operator?.owned === true &&
+          (elite > requiredElite ||
+            (elite === requiredElite && level >= requiredLevel)),
+      },
+    ];
+  });
+}
+
 function formatRawStatus(status) {
   return {
     ready: "可直接使用",
@@ -1647,13 +1688,14 @@ function getAssessmentOperatorEfficiency(room, assignment) {
   const charId =
     sourceNameMap.value?.[assignment?.name] ||
     getSourceOperator(assignment?.name)?.charId;
-  if (!charId) {
-    return "--";
-  }
-
-  return formatOperatorEfficiency(
-    room?.finalProduction?.operatorBonusByCharId?.[charId],
+  const localBonus = charId
+    ? Number(room?.finalProduction?.operatorBonusByCharId?.[charId] || 0)
+    : 0;
+  const systemBonus = Number(
+    room?.finalProduction?.operatorBonusByName?.[assignment?.name] || 0,
   );
+
+  return formatOperatorEfficiency(localBonus + systemBonus);
 }
 
 function getProductionProduct(room) {
@@ -1772,6 +1814,19 @@ function calculateSystemProductionAssessment({
             return result;
           }, {})
         : {};
+    const operatorBonusByName = (room?.bonusByMetric || [])
+      .filter((bonus) => bonus.metric === metric)
+      .flatMap((bonus) => bonus.items || [])
+      .reduce((result, item) => {
+        const name = String(item?.ownerName || "").trim();
+        if (!name) {
+          return result;
+        }
+
+        result[name] =
+          Number(result[name] || 0) + Number(item?.percent || 0);
+        return result;
+      }, {});
 
     let status = "notApplicable";
     let reason = "";
@@ -1805,6 +1860,7 @@ function calculateSystemProductionAssessment({
         baselineOutput,
         efficiency,
         operatorBonusByCharId,
+        operatorBonusByName,
         localBonus:
           baseline?.valid === true
             ? Number(baseline.localTotalPercent || 100) - 100
@@ -2425,6 +2481,25 @@ onMounted(() => {
                       {{ tag.label }}
                     </span>
                   </div>
+                  <div
+                    v-if="getOperatorBuildingSkills(operator).length"
+                    class="operator-building-skill-list"
+                  >
+                    <div
+                      v-for="skill in getOperatorBuildingSkills(operator)"
+                      :key="`${operator.name}:${skill.buffName}:${skill.roomType}:${skill.phase}:${skill.level}`"
+                      class="operator-building-skill"
+                      :class="{ active: skill.active }"
+                    >
+                      <small>
+                        {{ ROOM_LABELS[skill.roomType] || skill.roomType }} ·
+                        E{{ skill.phase }} Lv.{{ skill.level }}
+                        {{ skill.active ? "· 当前生效" : "" }}
+                      </small>
+                      <strong>{{ skill.buffName || "未命名技能" }}</strong>
+                      <span>{{ skill.description }}</span>
+                    </div>
+                  </div>
                 </div>
               </article>
             </div>
@@ -2494,6 +2569,25 @@ onMounted(() => {
                     >
                       {{ tag.label }}
                     </span>
+                  </div>
+                  <div
+                    v-if="getOperatorBuildingSkills(operator).length"
+                    class="operator-building-skill-list"
+                  >
+                    <div
+                      v-for="skill in getOperatorBuildingSkills(operator)"
+                      :key="`${operator.name}:${skill.buffName}:${skill.roomType}:${skill.phase}:${skill.level}`"
+                      class="operator-building-skill"
+                      :class="{ active: skill.active }"
+                    >
+                      <small>
+                        {{ ROOM_LABELS[skill.roomType] || skill.roomType }} ·
+                        E{{ skill.phase }} Lv.{{ skill.level }}
+                        {{ skill.active ? "· 当前生效" : "" }}
+                      </small>
+                      <strong>{{ skill.buffName || "未命名技能" }}</strong>
+                      <span>{{ skill.description }}</span>
+                    </div>
                   </div>
                 </div>
               </article>
@@ -3715,8 +3809,8 @@ h2 {
 
 .operator-fact-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 10px;
   margin-top: 12px;
 }
 
@@ -3896,6 +3990,51 @@ h2 {
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.operator-building-skill-list {
+  display: grid;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.operator-building-skill {
+  padding: 5px 6px;
+  border-left: 2px solid #c5d0d6;
+  color: #71808a;
+  background: #fff;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.operator-building-skill.active {
+  border-left-color: #4e9d6b;
+  background: #f7fcf8;
+}
+
+.operator-building-skill small,
+.operator-building-skill strong,
+.operator-building-skill span {
+  display: block;
+}
+
+.operator-building-skill small {
+  color: #87959e;
+  font-size: 9px;
+}
+
+.operator-building-skill.active small {
+  color: #4a8a61;
+}
+
+.operator-building-skill strong {
+  margin-top: 1px;
+  color: #4c6572;
+  font-size: 10px;
+}
+
+.operator-building-skill span {
+  margin-top: 2px;
 }
 
 .state-table {

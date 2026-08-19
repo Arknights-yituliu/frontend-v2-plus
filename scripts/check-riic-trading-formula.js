@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { calculateRiicTrading } from "../src/utils/riic/P01-riic-trading.js";
+import { calculateRiicTrading as calculateRiicTradingP01 } from "../src/utils/riic/P01-riic-trading.js";
 import {
   resolveRiicTradingExternalOrderBonuses,
 } from "../src/utils/riic/riic-trading-context.js";
@@ -15,6 +15,32 @@ const operator = (charId, elite = 0, level = 1) => ({
   elite,
   level,
 });
+const calculateRiicTrading = (legacyFacility, operators, legacyBonus = {}) => {
+  const result = calculateRiicTradingP01({
+    // Existing fixtures assert the former steady-state order probabilities.
+    durationHours: 1_000_000_000,
+    operators,
+    tradingFactors: {
+      product: String(legacyFacility?.product || "").trim(),
+      stationLevel: Number(legacyFacility?.level),
+      roomBonus: Number(legacyBonus?.room || 0),
+      operatorBonusesById: legacyBonus?.operators || {},
+      orderAdjustment: {
+        ...(Object.hasOwn(legacyBonus || {}, "localOrderBonusOverride")
+          ? {
+              localOrderBonusOverride:
+                legacyBonus.localOrderBonusOverride,
+            }
+          : {}),
+        ignoredUnsupportedOperatorIds:
+          legacyBonus?.ignoredUnsupportedOperatorIds || [],
+      },
+      crossRoomFactors: legacyFacility?.context || {},
+    },
+  });
+  const { durationHours, segment, ...legacyResult } = result;
+  return legacyResult;
+};
 
 function assertClose(actual, expected, epsilon = 0.0001) {
   assert.ok(
@@ -220,6 +246,56 @@ assert.equal(jacintaAlpha.type, "normal");
 assertClose(jacintaAlpha.rate, tailorAlpha.rate);
 assertClose(jacintaAlpha.lmd, tailorAlpha.lmd);
 assertClose(jacintaAlpha.gold, tailorAlpha.gold);
+
+const calculateTailorAlphaForHours = (durationHours) =>
+  calculateRiicTradingP01({
+    durationHours,
+    operators: [
+      operator("char_252_bibeak", 0, 1),
+      operator("char_502_nblade", 0, 30),
+      operator("char_123_fang", 1, 1),
+    ],
+    tradingFactors: {
+      product: "lmd",
+      stationLevel: 3,
+      roomBonus: 0,
+      operatorBonusesById: {},
+    },
+  });
+const tailorAlphaOneHour = calculateTailorAlphaForHours(1);
+const tailorAlphaThreeHours = calculateTailorAlphaForHours(3);
+const tailorAlphaSixHours = calculateTailorAlphaForHours(6);
+assert.equal(tailorAlphaOneHour.ok, true);
+assertClose(tailorAlphaOneHour.segment.lmdOutput, 698.348492);
+assertClose(tailorAlphaThreeHours.segment.lmdOutput, 2101.432469);
+assertClose(tailorAlphaSixHours.segment.lmdOutput, 4211.637081);
+assert.ok(tailorAlphaOneHour.rate < tailorAlphaThreeHours.rate);
+assert.ok(tailorAlphaThreeHours.rate < tailorAlphaSixHours.rate);
+
+const calculateTailorBetaForHours = (durationHours) =>
+  calculateRiicTradingP01({
+    durationHours,
+    operators: [
+      operator("char_252_bibeak", 2, 1),
+      operator("char_502_nblade", 0, 30),
+      operator("char_123_fang", 1, 1),
+    ],
+    tradingFactors: {
+      product: "lmd",
+      stationLevel: 3,
+      roomBonus: 0,
+      operatorBonusesById: {},
+    },
+  });
+const tailorBetaOneHour = calculateTailorBetaForHours(1);
+const tailorBetaFiveHours = calculateTailorBetaForHours(5);
+const tailorBetaTenHours = calculateTailorBetaForHours(10);
+assert.equal(tailorBetaOneHour.ok, true);
+assertClose(tailorBetaOneHour.segment.lmdOutput, 698.437948);
+assertClose(tailorBetaFiveHours.segment.lmdOutput, 3513.835264);
+assertClose(tailorBetaTenHours.segment.lmdOutput, 7050.514217);
+assert.ok(tailorBetaOneHour.rate < tailorBetaFiveHours.rate);
+assert.ok(tailorBetaFiveHours.rate < tailorBetaTenHours.rate);
 
 const butshuE0 = calculateRiicTrading(
   facility(3),
@@ -780,6 +856,26 @@ const vignaWithGlasgow = calculateRiicTrading(
 assert.equal(vignaWithGlasgow.ok, true);
 assertClose(vignaWithGlasgow.rate, 173);
 
+const glasgowControlBonus = calculateRiicTradingP01({
+  durationHours: 12,
+  operators: [
+    operator("char_1019_siege2", 2, 1),
+    operator("char_154_morgan", 2, 1),
+  ],
+  tradingFactors: {
+    product: "lmd",
+    stationLevel: 3,
+    roomBonus: 0,
+    operatorBonusesById: {
+      char_1019_siege2: 10,
+      char_154_morgan: 10,
+    },
+  },
+});
+assert.equal(glasgowControlBonus.ok, true);
+assertClose(glasgowControlBonus.rate, 182);
+assertClose(glasgowControlBonus.segment.lmdOutput, 9341.59292);
+
 const degenbrecherWithOrderLimitOperators = calculateRiicTrading(
   facility(3),
   [
@@ -865,11 +961,10 @@ assert.equal(level2Orundum.product, "orundum");
 assertClose(level2Orundum.orundumCapacity, 16.2);
 assertClose(level2Orundum.shardConsumption, 1.62);
 
-const invalidFacility = calculateRiicTrading(
+const invalidTradingFactors = calculateRiicTrading(
   {
-    type: "manufacture",
     product: "lmd",
-    level: 3,
+    level: 4,
   },
   [
     operator("char_502_nblade", 0, 30),
@@ -877,8 +972,8 @@ const invalidFacility = calculateRiicTrading(
     operator("char_282_catap", 0, 1),
   ],
 );
-assert.equal(invalidFacility.ok, false);
-assert.equal(invalidFacility.error, "invalidFacility");
+assert.equal(invalidTradingFactors.ok, false);
+assert.equal(invalidTradingFactors.error, "invalidTradingFactors");
 
 const invalidOperators = calculateRiicTrading(
   facility(3),
@@ -905,6 +1000,6 @@ const invalidBonus = calculateRiicTrading(
   },
 );
 assert.equal(invalidBonus.ok, false);
-assert.equal(invalidBonus.error, "invalidBonus");
+assert.equal(invalidBonus.error, "invalidTradingFactors");
 
 console.log("RIIC P01 trading formula checks passed.");

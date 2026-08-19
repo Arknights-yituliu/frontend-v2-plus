@@ -1,6 +1,6 @@
 const ROTATION_SEGMENTS = Object.freeze({
   once: [24, 24],
-  twice: [12, 12, 12],
+  twice: [8, 8, 8],
   threeTimes: [12, 6, 6],
 });
 

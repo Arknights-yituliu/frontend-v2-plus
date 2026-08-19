@@ -103,6 +103,37 @@ const calculationFeedbackText = computed(() =>
   }),
 );
 
+function formatFeedbackValue(value) {
+  return value === undefined ? "undefined" : value === null ? "null" : String(value);
+}
+
+function formatP01Operators(diagnostic) {
+  return (diagnostic?.p01Operators || [])
+    .map(
+      (operator, index) =>
+        `#${index + 1} { charId: ${formatFeedbackValue(operator?.charId)}, elite: ${formatFeedbackValue(operator?.elite)}, level: ${formatFeedbackValue(operator?.level)} }`,
+    )
+    .join("；");
+}
+
+function formatInvalidOperatorFields(diagnostic) {
+  return (diagnostic?.invalidOperators || [])
+    .map(
+      (operator) =>
+        `#${Number(operator?.index) + 1} [${(operator?.invalidFields || []).join(", ")}]`,
+    )
+    .join("；");
+}
+
+function formatL80OperatorResolution(diagnostic) {
+  return (diagnostic?.l80OperatorResolution || [])
+    .map(
+      (operator) =>
+        `${formatFeedbackValue(operator?.charId)}：档案${operator?.rosterMatched ? "已匹配" : "未匹配"}，精英化=${operator?.eliteSource || "--"}，等级=${operator?.levelSource || "--"}`,
+    )
+    .join("；");
+}
+
 async function copyCalculationFeedback() {
   try {
     if (navigator.clipboard?.writeText) {
@@ -202,6 +233,17 @@ async function copyCalculationFeedback() {
           <span v-if="segment.durationLabel">{{ segment.durationLabel }}</span>
           <span>{{ segment.product || "未标记产物" }}</span>
           <span>在岗：{{ segment.operatorLabel }}</span>
+          <template v-if="segment.diagnostic">
+            <small>
+              P01 实际 operators：{{ formatP01Operators(segment.diagnostic) || "[]" }}
+            </small>
+            <small>
+              P01 校验失败字段：{{ formatInvalidOperatorFields(segment.diagnostic) || "--" }}
+            </small>
+            <small>
+              L80 回填来源：{{ formatL80OperatorResolution(segment.diagnostic) || "--" }}
+            </small>
+          </template>
         </li>
       </ul>
     </article>

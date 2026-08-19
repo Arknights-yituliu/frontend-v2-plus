@@ -4,12 +4,10 @@ import {
   getRiicFacilityProfile,
   getRiicRoomStations,
 } from "./l10-facility-model.js";
-import { resolveRiicBaselineSkills } from "./l00-baseline-resolver.js";
-import { calculateRiicFinalRoomRosterEfficiency } from "./l79-preview-efficiency-settlement.js";
+import {
+  settleRiicMaaScheduleEfficiency,
+} from "./l79-preview-efficiency-settlement.js";
 import { summarizeRiicActualSchedule } from "./l80-actual-settlement.js";
-import RIIC_BASELINE_SKILL_RULES from "../../static/json/tools/R00-baseline.json" with {
-  type: "json",
-};
 import { normalizeMaaRiicSchedule } from "../riicYield/maaScheduleNormalizer.js";
 
 const LOCAL_OPERATOR_SOURCES_KEY = "riic_operator_sources_v2";
@@ -40,6 +38,20 @@ const LAYOUT_LABELS = Object.freeze({
   342: "342",
   "342-orundum": "342 搓玉",
 });
+
+function getMaaYieldSettlementProduct(room) {
+  const product = toText(room?.product);
+  if (room?.facility !== "manufacture") {
+    return product;
+  }
+
+  return (
+    {
+      exp: "experience",
+      originiumShard: "orundum",
+    }[product] || product
+  );
+}
 
 function toText(value) {
   return String(value ?? "").trim();
@@ -142,7 +154,7 @@ function getFacilityProfile(cardKey) {
 
 function getProfileRoomKey(room) {
   const facility = toText(room?.facility);
-  const product = toText(room?.product);
+  const product = getMaaYieldSettlementProduct(room);
   if (facility === "trading") {
     return product === "orundum" ? "orundum-trading" : "lmd-trading";
   }
@@ -261,6 +273,7 @@ function createRosterResolver({
   }
 
   return {
+    scheduleNames,
     effectiveByName,
     allSkillsUnlocked,
     fullMatch,
@@ -270,87 +283,41 @@ function createRosterResolver({
   };
 }
 
-function getPeriodStartHour(plan, fallbackHour) {
-  const start = Number(plan?.periods?.[0]?.start);
-  return Number.isFinite(start) ? start / 60 : fallbackHour;
-}
-
-function getMappedOperators(room, rosterByName) {
-  return (room?.operators || []).map((name) => {
-    const operator = rosterByName.get(name);
-    return (
-      operator || {
-        charId: "",
-        name,
-        elite: 0,
-        level: 0,
-      }
-    );
-  });
-}
-
-function createRoomPreview({
-  plan,
-  room,
-  rosterByName,
-  resolvedSkills,
-  facilityProfile,
-}) {
-  const { stationLevel, expectedSlots } = getRoomStationConfig(
-    plan,
-    room,
-    facilityProfile,
-  );
-  const operators = getMappedOperators(room, rosterByName);
-  const supportsEfficiency = [
-    "manufacture",
-    "trading",
-    "power",
-    "meeting",
-    "hire",
-    "control",
-  ].includes(room?.facility);
-  const finalCalculation = supportsEfficiency
-    ? calculateRiicFinalRoomRosterEfficiency({
-        facility: room.facility,
-        product: room.product || "all",
-        expectedSlots,
-        operators,
-        resolvedSkills,
-      })
-    : null;
-  const efficiency =
-    finalCalculation?.status === "calculated"
-      ? finalCalculation.value
-      : null;
-
+function createL79Schedule({ schedule, facilityProfile } = {}) {
   return {
-    key: `${room.facility}:${room.index}`,
-    label: `${room.facility} ${Number(room.index) + 1}`,
-    facility: room.facility,
-    product: room.product || "",
-    stationIndex: Number(room.index) || 0,
-    stationLevel,
-    expectedSlots,
-    operators,
-    automaticOperators: operators,
-    efficiency,
-    controlCenterFacilityBonusPercent: 0,
-    controlCenterOperatorBonusPercent: 0,
-    controlCenterOperatorBonuses: [],
-    sameShiftBindingStatus: "notApplicable",
-    manuallyEdited: false,
-    isStatic: true,
-    efficiencyMetrics: {
-      selectedVariant: "actual",
-      actual: {
-        value: efficiency,
-        status: finalCalculation?.status || "unavailable",
-        breakdown: finalCalculation
-          ? { finalRosterCalculation: finalCalculation }
-          : {},
-      },
-    },
+    plans: (schedule?.plans || []).map((plan) => {
+      const rooms = {};
+
+      for (const room of plan?.rooms || []) {
+        const facility = toText(room?.facility);
+        const index = Math.max(0, Number(room?.index || 0));
+        if (!facility) {
+          continue;
+        }
+
+        const entries = rooms[facility] || [];
+        while (entries.length <= index) {
+          entries.push({ operators: [] });
+        }
+        const { stationLevel } = getRoomStationConfig(
+          plan,
+          room,
+          facilityProfile,
+        );
+        entries[index] = {
+          level: stationLevel,
+          product: toText(room?.sourceProduct),
+          operators: Array.isArray(room?.operators) ? room.operators : [],
+        };
+        rooms[facility] = entries;
+      }
+
+      return {
+        name: toText(plan?.name),
+        duration: Number(plan?.durationMinutes || 0),
+        rooms,
+      };
+    }),
   };
 }
 
@@ -365,6 +332,44 @@ function getDroneTargetKey(plan, normalizedPlan) {
   const room = (normalizedPlan?.rooms || [])
     .filter((candidate) => candidate?.facility === facility)[index];
   return room ? `${room.facility}:${room.index}` : "";
+}
+
+function createMaaYieldCalculationTrace({ preview, summary } = {}) {
+  const states = Array.isArray(preview?.states) ? preview.states : [];
+  const yieldRooms = summary?.yield?.rooms || [];
+
+  const rooms = yieldRooms.map((room) => ({
+    ...room,
+    segments: (room.segments || []).map((segment, index) => {
+      const state = states[index];
+      const sourceRoom = state?.rooms?.find(
+        (candidate) => candidate.key === room.key,
+      );
+      return {
+        ...segment,
+        stateIndex: state?.index ?? index,
+        startHour: state?.startHour ?? null,
+        facility: sourceRoom?.facility || room.facility,
+        product: sourceRoom?.product || room.product,
+        sourceProduct: sourceRoom?.sourceProduct || "",
+        stationLevel: sourceRoom?.stationLevel ?? room.stationLevel,
+        expectedSlots: sourceRoom?.expectedSlots ?? null,
+        operators: sourceRoom?.operators || [],
+        efficiency: sourceRoom?.efficiency ?? null,
+        efficiencyMetrics: sourceRoom?.efficiencyMetrics || null,
+      };
+    }),
+  }));
+
+  return {
+    rooms,
+    resources: summary?.yield?.resources || [],
+    resourceFlows: summary?.yield?.resourceFlows || {},
+    tradingSettlements: summary?.yield?.tradingSettlements || [],
+    droneCharge: summary?.yield?.droneCharge || null,
+    droneUsage: summary?.yield?.droneUsage || null,
+    droneTargetSettlement: summary?.yield?.droneTargetSettlement || null,
+  };
 }
 
 export function createRiicMaaYieldTestModel({
@@ -400,31 +405,22 @@ export function createRiicMaaYieldTestModel({
     uploadedOperators,
     forceAllSkills,
   });
-  const resolvedSkills = resolveRiicBaselineSkills(
-    rosterResolution.operators,
-    RIIC_BASELINE_SKILL_RULES,
-  );
-  const rosterByName = new Map(
-    [...rosterResolution.effectiveByName.entries()],
-  );
-  let fallbackStartHour = 0;
+  const l79 = settleRiicMaaScheduleEfficiency({
+    schedule: createL79Schedule({
+      schedule,
+      facilityProfile,
+    }),
+    operatorProfiles: rosterResolution.operators.map((operator) => ({
+      charId: operator.charId,
+      elite: operator.elite,
+      level: operator.level,
+    })),
+  });
   const droneTargetKeysByState = [];
   const droneOrdersByState = [];
 
-  const states = schedule.plans.map((plan, index) => {
+  schedule.plans.forEach((plan, index) => {
     const rawPlan = maaSchedule.plans[index] || {};
-    const durationHours = Number(plan.durationMinutes || 0) / 60;
-    const startHour = getPeriodStartHour(plan, fallbackStartHour);
-    fallbackStartHour = startHour + durationHours;
-    const rooms = (plan.rooms || []).map((room) =>
-      createRoomPreview({
-        plan,
-        room,
-        rosterByName,
-        resolvedSkills,
-        facilityProfile,
-      }),
-    );
     droneTargetKeysByState.push(getDroneTargetKey(rawPlan, plan));
     droneOrdersByState.push(
       rawPlan?.drones?.enable === true
@@ -433,36 +429,31 @@ export function createRiicMaaYieldTestModel({
           : "pre"
         : "retain",
     );
-    return {
-      id: `maa-plan-${index + 1}`,
-      index,
-      startHour,
-      durationHours,
-      rooms,
-    };
   });
 
-  const preview = {
-    sourceKey: `maa-yield-test:${Date.now()}`,
-    cycleHours: states.reduce((total, state) => total + state.durationHours, 0),
-    states,
-  };
+  const preview = l79.preview;
   const summary = summarizeRiicActualSchedule({
-    preview,
+    l79,
     droneTargetKeysByState,
     droneOrdersByState,
-    tradingOperators: rosterResolution.operators,
+  });
+  const calculationTrace = createMaaYieldCalculationTrace({
+    preview,
+    summary,
   });
 
   return {
     preview,
     summary,
+    calculationTrace,
     normalized,
     layoutCardKey: cardKey,
     matching: {
       fullMatch: rosterResolution.fullMatch,
       allSkillsUnlocked: rosterResolution.allSkillsUnlocked,
-      matchedCount: scheduleNames.length - rosterResolution.unmatchedNames.length,
+      matchedCount:
+        rosterResolution.scheduleNames.length -
+        rosterResolution.unmatchedNames.length,
       totalCount: new Set(
         schedule.plans.flatMap((plan) =>
           plan.rooms.flatMap((room) => room.operators),

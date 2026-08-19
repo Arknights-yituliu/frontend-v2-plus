@@ -17,6 +17,14 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  droneTargetPreviewKeysByState: {
+    type: Array,
+    default: () => [],
+  },
+  roomIndexAssignments: {
+    type: Object,
+    default: () => ({}),
+  },
 });
 
 const emit = defineEmits(["select-drone-target", "update-drone-order"]);
@@ -68,6 +76,12 @@ function formatOverviewValue(value, digits = 0) {
 }
 
 function getStationNumber(room, key) {
+  const roomKey = String(key || room?.key || "").trim();
+  const assignedIndex = Number(props.roomIndexAssignments?.[roomKey]);
+  if (Number.isInteger(assignedIndex) && assignedIndex >= 1) {
+    return assignedIndex;
+  }
+
   const stationIndex = Number(room?.stationIndex);
   if (Number.isInteger(stationIndex) && stationIndex >= 0) {
     return stationIndex + 1;
@@ -307,18 +321,29 @@ function getEffect(column, stateIndex) {
 }
 
 function isSelected(row, column) {
-  return row.droneTarget === column.key;
+  return row.droneTarget === getPreviewTargetKey(row, column);
+}
+
+function getPreviewTargetKey(row, column) {
+  return String(
+    props.droneTargetPreviewKeysByState?.[row.index]?.[column.key] || "",
+  ).trim();
+}
+
+function canSelectDroneTarget(row, column) {
+  return Boolean(getPreviewTargetKey(row, column)) &&
+    getEffect(column, row.index).isCalculated;
 }
 
 function selectDroneTarget(row, column) {
-  const effect = getEffect(column, row.index);
-  if (!effect.isCalculated) {
+  const target = getPreviewTargetKey(row, column);
+  if (!target || !getEffect(column, row.index).isCalculated) {
     return;
   }
 
   emit("select-drone-target", {
     index: row.index,
-    target: column.key,
+    target,
   });
 }
 
@@ -452,9 +477,9 @@ function updateDroneOrder(index, order) {
                 type="button"
                 :class="{
                   active: isSelected(row, column),
-                  unavailable: !getEffect(column, row.index).isCalculated,
+                  unavailable: !canSelectDroneTarget(row, column),
                 }"
-                :disabled="!getEffect(column, row.index).isCalculated"
+                :disabled="!canSelectDroneTarget(row, column)"
                 :title="`投向${
                   column.facility === 'trading' ? '贸易站' : '制造站'
                 }${column.stationNumber ? ` ${column.stationNumber}` : ''}`"

@@ -39,7 +39,10 @@ import {
 import {
   alignRiicScheduleSameShiftBindings,
   getRiicSameShiftBindingAtHour,
-} from "../src/utils/riic/l81-same-shift-bindings.js";
+} from "../src/utils/riic/l74-same-shift-bindings.js";
+import {
+  reconcileRiicControlCenterAfterRoomSelection,
+} from "../src/utils/riic/l73-control-center-reconciliation.js";
 
 const normalTradingOperators = Object.freeze([
   { charId: "char_502_nblade", elite: 0, level: 30 },
@@ -74,6 +77,104 @@ assert.deepEqual(
 );
 assert.equal(getRiicRotationCycle("twice")?.cycleHours, 24);
 assert.equal(getRiicRotationCycle("unknown"), null);
+
+const automaticSchedulerWorkerSource = fs.readFileSync(
+  new URL("../src/utils/riic/l70-scheduler.worker.js", import.meta.url),
+  "utf8",
+);
+assert.ok(
+  automaticSchedulerWorkerSource.indexOf("const tailFillResult") <
+    automaticSchedulerWorkerSource.indexOf("const resourceSuiteResult") &&
+    automaticSchedulerWorkerSource.indexOf("const resourceSuiteResult") <
+      automaticSchedulerWorkerSource.indexOf(
+        "const controlCenterReconciliation",
+      ),
+);
+assert.ok(
+  automaticSchedulerWorkerSource.includes(
+    "tailFillResult: resourceSuiteResult.tailFillResult",
+  ),
+);
+
+function createL73ControlReconciliationState() {
+  return {
+    status: "ready",
+    teamCount: 1,
+    slotCount: 1,
+    roles: [],
+    candidates: [],
+    teams: [
+      {
+        teamIndex: 0,
+        slotCount: 1,
+        roomEffectOperators: [],
+        operatorEffectOperators: [{ charId: "control-source" }],
+        fillerOperators: [],
+      },
+    ],
+    segments: [
+      {
+        teamIndex: 0,
+        durationHours: 24,
+        operatorIds: ["control-source"],
+        operators: [
+          {
+            charId: "control-source",
+            controlCenterResolvedEffects: [
+              {
+                metric: "production",
+                bonusPercent: 15,
+                target: {
+                  scope: "operators",
+                  roomType: "manufacture",
+                  product: "gold",
+                  operatorIds: ["final-room-target"],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+}
+
+const l73FinalRoomTargetResult =
+  reconcileRiicControlCenterAfterRoomSelection({
+    controlState: createL73ControlReconciliationState(),
+    selectedRoomTeams: [
+      {
+        teamIndex: 0,
+        facility: "manufacture",
+        product: "gold",
+        operatorIds: ["final-room-target"],
+      },
+    ],
+    idleFillOperators: [],
+  });
+assert.deepEqual(l73FinalRoomTargetResult.decisions, [
+  {
+    teamIndex: 0,
+    operatorId: "control-source",
+    action: "kept",
+    reason: "targetRealized",
+  },
+]);
+
+const l73MissingFinalRoomTargetResult =
+  reconcileRiicControlCenterAfterRoomSelection({
+    controlState: createL73ControlReconciliationState(),
+    selectedRoomTeams: [],
+    idleFillOperators: [],
+  });
+assert.deepEqual(l73MissingFinalRoomTargetResult.decisions, [
+  {
+    teamIndex: 0,
+    operatorId: "control-source",
+    action: "removed",
+    reason: "targetMissing",
+  },
+]);
 
 const roundTripSchedulePreview = buildRiicSchedulePreview({
   scheduleCandidate: {
@@ -826,6 +927,7 @@ const orundumSettlementPreview = {
           key: "manufacture:orundum:1",
           facility: "manufacture",
           product: "orundum",
+          operators: [{ charId: "manufacture-operator" }],
         }),
         createSettlementRoom({
           key: "trading:orundum:1",

@@ -60,6 +60,7 @@ export function useRiicOperatorSources(options = {}) {
     loadSavedWizardState,
     applySavedWizardState,
     removeOperatorSourceWorkspace,
+    resetGeneratedScheduleState,
     generateAutomaticSchedule,
     getIsUserLoggedIn,
     getAutomaticGenerationTriggerKey,
@@ -155,6 +156,18 @@ function normalizeOwnedOperators(list = [], requireOwn = false) {
   }
 
   return [...operatorMap.values()];
+}
+
+function getOwnedOperatorSignature(list = []) {
+  return normalizeOwnedOperators(list)
+    .map(
+      (operator) =>
+        `${operator.charId || operator.name}:${operator.elite}:${
+          operator.level ?? ""
+        }:${operator.potential}`,
+    )
+    .sort()
+    .join("|");
 }
 
 function normalizeYituliuStoredOperators(list = []) {
@@ -557,26 +570,33 @@ async function setActiveOperatorSource(
   }
 
   operatorSourceSwitching.value = true;
-  activeOperatorSource.value = source;
-  saveActiveOperatorSource(source);
-  ownedOperators.value = normalizeOwnedOperators(state.operators);
-  ownedOperatorSource.value = getOperatorSourceLabel(source);
-  ownedOperatorMessage.value = `已读取 ${ownedOperators.value.length} 名持有干员`;
-  ownedOperatorLastSyncedAt.value = state.importedAt || "";
-  ownedOperatorError.value = state.error || "";
+  try {
+    activeOperatorSource.value = source;
+    saveActiveOperatorSource(source);
+    ownedOperators.value = normalizeOwnedOperators(state.operators);
+    ownedOperatorSource.value = getOperatorSourceLabel(source);
+    ownedOperatorMessage.value = `已读取 ${ownedOperators.value.length} 名持有干员`;
+    ownedOperatorLastSyncedAt.value = state.importedAt || "";
+    ownedOperatorError.value = state.error || "";
 
-  if (restoreWorkspace && previousSource !== source) {
-    const restored = loadSavedWizardState({
-      sourceId: source,
-      initialWorkspace,
-    });
-    if (!restored && initialWorkspace) {
-      applySavedWizardState(initialWorkspace);
+    if (restoreWorkspace && previousSource !== source) {
+      const restored = loadSavedWizardState({
+        sourceId: source,
+        initialWorkspace,
+      });
+      if (!restored && initialWorkspace) {
+        applySavedWizardState(initialWorkspace);
+      }
     }
-  }
 
-  await nextTick();
-  operatorSourceSwitching.value = false;
+    await nextTick();
+  } catch (error) {
+    console.error("setActiveOperatorSource failed", error);
+    ownedOperatorError.value = "持有干员数据切换失败，请稍后重试";
+    return false;
+  } finally {
+    operatorSourceSwitching.value = false;
+  }
 
   if (
     generate &&
@@ -661,6 +681,9 @@ async function loadOwnedOperators({ notify = false } = {}) {
 
   try {
     const previousSource = activeOperatorSource.value;
+    const previousOperatorSignature = getOwnedOperatorSignature(
+      ownedOperators.value,
+    );
     await loadSklandOperatorSource();
     loadManualOperatorSource();
     loadStoredMaaOperatorSource();
@@ -683,6 +706,25 @@ async function loadOwnedOperators({ notify = false } = {}) {
     );
 
     if (nextSource) {
+      const nextOperatorSignature = getOwnedOperatorSignature(
+        getOperatorSourceState(nextSource)?.operators,
+      );
+      const savedOperatorSignature = String(
+        readOperatorSourceWorkspaces()[nextSource]?.operatorRosterSignature ||
+          "",
+      ).trim();
+      const shouldResetGeneratedSchedule =
+        previousSource === nextSource &&
+        Boolean(nextOperatorSignature) &&
+        ((Boolean(previousOperatorSignature) &&
+          previousOperatorSignature !== nextOperatorSignature) ||
+          (Boolean(savedOperatorSignature) &&
+            savedOperatorSignature !== nextOperatorSignature));
+      if (shouldResetGeneratedSchedule) {
+        resetGeneratedScheduleState?.({
+          suppressCurrentAutomaticGeneration: true,
+        });
+      }
       await setActiveOperatorSource(nextSource, {
         restoreWorkspace: false,
         generate: true,

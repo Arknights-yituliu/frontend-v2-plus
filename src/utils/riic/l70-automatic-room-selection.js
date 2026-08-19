@@ -268,6 +268,7 @@ function createSelectionCohorts({
         cohortKey: `${group.id}:${cohort.id}`,
         teamCount,
         facility: group.facility,
+        candidateProduct: group.candidateProduct || "all",
         candidates: cohort.candidates || [],
         staffingCohort: cohort,
       });
@@ -537,8 +538,9 @@ export function buildRiicAutomaticRoomGroupSelections({
   });
   const selections = {};
   const fallbackOperatorIdBySlotKeyByGroup = {};
+  const selectedRoomTeams = [];
 
-  for (const { slot, option } of bestPlan?.selections || []) {
+  for (const { slot, selectionKey, option } of bestPlan?.selections || []) {
     selections[slot.groupId] = {
       ...selections[slot.groupId],
       [slot.cohortId]: [
@@ -553,11 +555,23 @@ export function buildRiicAutomaticRoomGroupSelections({
         ...operatorIdBySlotKey,
       };
     }
+    selectedRoomTeams.push({
+      groupId: slot.groupId,
+      cohortId: slot.cohortId,
+      selectionKey,
+      teamIndex: Number(String(selectionKey || "").split(":").at(-1)),
+      facility: slot.facility,
+      product: slot.candidateProduct || "all",
+      operatorIds: [
+        ...(option.materializedCandidate?.operatorIds || []),
+      ],
+    });
   }
 
   return {
     selections,
     fallbackOperatorIdBySlotKeyByGroup,
+    selectedRoomTeams,
     unavailableGroups: [
       ...unavailableStateGroupIds,
     ]

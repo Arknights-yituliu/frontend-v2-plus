@@ -52,6 +52,23 @@ function getOperatorNames(room, operatorTable) {
   return [...new Set(names)];
 }
 
+function getTradingOperatorDiagnostics(segment, errorCode) {
+  if (toText(errorCode) !== "invalidOperators") {
+    return null;
+  }
+
+  const calculation = segment?.tradingCalculation;
+  return {
+    p01Operators:
+      calculation?.inputDiagnostics?.p01Operators ||
+      calculation?.diagnostics?.receivedOperators ||
+      [],
+    invalidOperators: calculation?.diagnostics?.invalidOperators || [],
+    l80OperatorResolution:
+      calculation?.inputDiagnostics?.l80OperatorResolution || [],
+  };
+}
+
 function createFeedbackEntry({
   category,
   room,
@@ -61,6 +78,7 @@ function createFeedbackEntry({
   errorCode,
   stateIndex,
   durationHours,
+  diagnostic = null,
   preview,
   shifts,
   operatorTable,
@@ -86,6 +104,7 @@ function createFeedbackEntry({
         durationHours: Number(durationHours) || 0,
         product: resolvedProduct,
         operators: getOperatorNames(resolvedRoom, operatorTable),
+        diagnostic,
       },
     ],
   };
@@ -128,6 +147,7 @@ function buildTradeFeedback({
           errorCode,
           stateIndex,
           durationHours: segment?.durationHours,
+          diagnostic: getTradingOperatorDiagnostics(segment, errorCode),
           preview,
           shifts,
           operatorTable,
@@ -268,6 +288,33 @@ export function formatRiicCalculationFeedback({
       lines.push(
         `- ${segment.shiftLabel}${segment.durationLabel ? `（${segment.durationLabel}）` : ""}｜${segment.product || "未标记产物"}｜在岗：${segment.operatorLabel}`,
       );
+      if (!segment.diagnostic) {
+        continue;
+      }
+
+      const p01Operators = segment.diagnostic.p01Operators
+        .map(
+          (operator, index) =>
+            `#${index + 1} { charId: ${String(operator?.charId)}, elite: ${String(operator?.elite)}, level: ${String(operator?.level)} }`,
+        )
+        .join("；");
+      lines.push(`  P01 实际 operators：${p01Operators || "[]"}`);
+
+      const invalidOperators = segment.diagnostic.invalidOperators
+        .map(
+          (operator) =>
+            `#${Number(operator?.index) + 1} [${(operator?.invalidFields || []).join(", ")}]`,
+        )
+        .join("；");
+      lines.push(`  P01 校验失败字段：${invalidOperators || "--"}`);
+
+      const resolutions = segment.diagnostic.l80OperatorResolution
+        .map(
+          (operator) =>
+            `${String(operator?.charId)}：档案${operator?.rosterMatched ? "已匹配" : "未匹配"}，精英化=${operator?.eliteSource || "--"}，等级=${operator?.levelSource || "--"}`,
+        )
+        .join("；");
+      lines.push(`  L80 回填来源：${resolutions || "--"}`);
     }
   }
 

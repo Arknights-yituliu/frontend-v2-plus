@@ -27,9 +27,12 @@ import RiicSchedulePreview from "/src/components/tools/RiicSchedulePreview.vue";
 import RiicScheduleRoomEditorPanel from "/src/components/tools/RiicScheduleRoomEditorPanel.vue";
 import RiicRoomGroupStaffingPanel from "/src/components/tools/RiicRoomGroupStaffingPanel.vue";
 import RiicScheduleSettingsPanel from "/src/components/tools/RiicScheduleSettingsPanel.vue";
+import ItemImage from "/src/components/sprite/ItemImage.vue";
 import { cMessage } from "/src/utils/message.js";
 import battleRecordImage from "/src/assets/images/riic-schedule-preview/battle-record.png";
+import goldImage from "/src/assets/images/riic-schedule-preview/gold.png";
 import lmdImage from "/src/assets/images/riic-schedule-preview/lmd.png";
+import originiumShardImage from "/src/assets/images/riic-schedule-preview/originium-shard.png";
 import orundumImage from "/src/assets/images/riic-schedule-preview/orundum.png";
 import {
   OPERATOR_SOURCE_KEYS,
@@ -127,7 +130,7 @@ import { evaluateRiicPerceptionResourceTrials } from "/src/utils/riic/l41-percep
 import { buildRiicSchedulePreview } from "/src/utils/riicSchedulePreview.js";
 import { summarizeRiicActualSchedule } from "/src/utils/riic/l80-actual-settlement.js";
 import {
-  settleRiicScheduleEfficiency,
+  settleRiicMaaScheduleEfficiency,
 } from "/src/utils/riic/l79-preview-efficiency-settlement.js";
 import {
   buildRiicMaaScheduleFromPreview,
@@ -145,7 +148,7 @@ import {
   buildRiicControlCenterLateFillState,
   mergeRiicControlCenterLateFillState,
 } from "/src/utils/riic/l50-control-planner.js";
-import { alignRiicScheduleSameShiftBindings } from "/src/utils/riic/l81-same-shift-bindings.js";
+import { alignRiicScheduleSameShiftBindings } from "/src/utils/riic/l74-same-shift-bindings.js";
 import {
   getRiicScheduleTrainingRecommendations,
 } from "/src/utils/riic/l83-training-recommendations.js";
@@ -398,6 +401,7 @@ const scheduleGenerationLoadingPhase = computed(() => {
   return "正在读取当前数据源";
 });
 const riicAutomaticGenerationDebugState = ref(null);
+const automaticControlCenterReconciliationState = ref(null);
 const deepScheduleConfirmationOpen = ref(false);
 let automaticGenerationAbortController = null;
 let automaticGenerationQueuedOptions = null;
@@ -489,6 +493,7 @@ const {
   loadSavedWizardState,
   applySavedWizardState,
   removeOperatorSourceWorkspace,
+  resetGeneratedScheduleState,
   generateAutomaticSchedule,
   getIsUserLoggedIn: () => isUserLoggedIn.value,
   getAutomaticGenerationTriggerKey: () => automaticGenerationTriggerKey.value,
@@ -572,8 +577,8 @@ function createDefaultScheduleShifts(
     ],
     twice: [
       { name: "C班", time: "09:00" },
-      { name: "A班", time: "21:00" },
-      { name: "B班", time: "09:00" },
+      { name: "A班", time: "17:00" },
+      { name: "B班", time: "01:00" },
     ],
     threeTimes: [
       { name: "A班", time: "09:00" },
@@ -703,6 +708,17 @@ function normalizeScheduleExecutionSettings(
     disabled: value?.droneTargetDisabled,
     order: value?.droneOrder,
   });
+  const persistedTimes =
+    sourceShifts.length > 0
+      ? sourceShifts.map((shift) => String(shift?.time || "").trim())
+      : legacyTimes.map((time) => String(time || "").trim());
+  const usesLegacyManualTwiceTimes =
+    shiftMode === "twice" &&
+    normalizeTwoShiftRotationMode(rotationMode) === "manual" &&
+    persistedTimes.length === 3 &&
+    ["09:00", "21:00", "09:00"].every(
+      (time, index) => persistedTimes[index] === time,
+    );
 
   return {
     shifts: emptySettings.shifts.map((defaultShift, index) => {
@@ -711,7 +727,9 @@ function normalizeScheduleExecutionSettings(
         legacyTimes.length > 0
           ? String(legacyTimes[index % legacyTimes.length] || "").trim()
           : "";
-      const time = String(sourceShift?.time || fallbackTime).trim();
+      const time = usesLegacyManualTwiceTimes
+        ? defaultShift.time
+        : String(sourceShift?.time || fallbackTime).trim();
       const name = String(sourceShift?.name || "").trim();
 
       return {
@@ -1112,7 +1130,7 @@ const controlScheduleRoomGroup = computed(
 const riicTrainingMode = computed(() =>
   treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
 );
-const riicMatchingRoster = computed(() => {
+const virtualOperators = computed(() => {
   const schedulingOperators = ownedOperators.value.filter(
     (operator) =>
       !RIIC_SCHEDULING_EXCLUDED_OPERATOR_IDS.has(
@@ -1135,12 +1153,12 @@ const riicMatchingRoster = computed(() => {
   return schedulingOperators;
 });
 const riicLayer3RuleChecks = computed(() => {
-  if (!confirmedLayoutPlan.value || !riicMatchingRoster.value) {
+  if (!confirmedLayoutPlan.value || !virtualOperators.value) {
     return [];
   }
 
   return getRiicLayer3RuleConditionChecks({
-    ownedOperators: riicMatchingRoster.value,
+    ownedOperators: virtualOperators.value,
     layoutFacts: activeLayoutFacilityCounts.value,
   });
 });
@@ -1149,7 +1167,7 @@ const riicLayer3MatchedRuleCount = computed(
 );
 const riicIdleFillOperators = computed(() =>
   getRiicIdleFillOperators({
-    roster: riicMatchingRoster.value || [],
+    roster: virtualOperators.value || [],
     unlockAllSkills: riicTrainingMode.value === "ideal",
   }),
 );
@@ -1170,7 +1188,7 @@ const controlCenterStaffingRequirement = computed(() => {
 const controlCenterCandidateOperators = computed(() => {
   const rosterById = new Map();
 
-  for (const operator of riicMatchingRoster.value || []) {
+  for (const operator of virtualOperators.value || []) {
     const charId = String(operator?.charId || "").trim();
     if (!charId) {
       continue;
@@ -1252,7 +1270,7 @@ const controlCenterCandidateOperators = computed(() => {
       );
       for (const effect of getRiicLayer3ControlCenterEffects({
         operatorId: charId,
-        ownedOperators: riicMatchingRoster.value,
+        ownedOperators: virtualOperators.value,
         layoutFacts: activeLayoutFacilityCounts.value,
       })) {
         if (isRiicControlCenterRoomEffect(effect)) {
@@ -1286,7 +1304,7 @@ const controlCenterCandidateOperators = computed(() => {
     );
 });
 const hasFiammetta = computed(() =>
-  (riicMatchingRoster.value || []).some((operator) => {
+  (virtualOperators.value || []).some((operator) => {
     const charId = String(operator?.charId || "").trim();
     const name = String(
       operator?.name || operatorTableV2?.[charId]?.name || "",
@@ -1308,7 +1326,7 @@ const fiammettaTargetName = computed(() => {
 });
 const fiammettaCustomTargetOptions = computed(() =>
   createRiicOperatorSearchEntries(
-    riicMatchingRoster.value || [],
+    virtualOperators.value || [],
     operatorTableV2,
   ),
 );
@@ -1463,7 +1481,7 @@ const controlCenterAutomaticRoleState = computed(() => {
   return buildRiicControlCenterAutomaticRoleState({
     staffingRequirement: controlCenterStaffingRequirement.value,
     roomGroup: controlScheduleRoomGroup.value,
-    hasRoster: Boolean(riicMatchingRoster.value),
+    hasRoster: Boolean(virtualOperators.value),
     candidates: controlCenterCandidateOperators.value,
     roleDefinitions: CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS,
     scenarioTrials: riicControlCenterScenarioTrialState.value?.scenarios || [],
@@ -1532,7 +1550,10 @@ function saveControlCenterAdjustment({
     normalizeOperatorIdsByTeamIndex(lateFillExcludedOperatorIdsByTeamIndex);
   controlCenterPlanningRunId.value += 1;
   clearScheduleSelectionsAfterControlCenterChange();
-  cMessage("中枢调整已保存，请重新生成排班", "success");
+  lastAutomaticGenerationTriggerKey.value =
+    automaticGenerationTriggerKey.value;
+  cMessage("中枢调整已保存，正在重新生成排班", "success");
+  void generateAutomaticSchedule({ silentSuccess: true });
 }
 
 const controlCenterSelectedOperatorIds = computed(
@@ -1568,7 +1589,7 @@ function formatRiicControlCenterSignedPercent(value) {
 }
 
 const riicControlCenterOperatorEffectDebugState = computed(() => {
-  if (!riicMatchingRoster.value) {
+  if (!virtualOperators.value) {
     return {
       status: "requiresOperators",
       effects: [],
@@ -1584,7 +1605,7 @@ const riicControlCenterOperatorEffectDebugState = computed(() => {
   }
 
   const ownedOperatorIds = new Set(
-    riicMatchingRoster.value
+    virtualOperators.value
       .map((operator) => String(operator?.charId || "").trim())
       .filter(Boolean),
   );
@@ -1702,7 +1723,7 @@ const controlCenterAssignmentSignature = computed(() => {
 
 const riicResolvedSkills = computed(() =>
   resolveRiicBaselineSkills(
-    riicMatchingRoster.value || [],
+    virtualOperators.value || [],
     RIIC_BASELINE_SKILL_RULES,
     {
       trainingMode: riicTrainingMode.value,
@@ -1827,7 +1848,7 @@ const roomGroupCandidateStates = computed(() =>
       group.id,
       createRiicRoomGroupCandidateState({
         group,
-        roster: riicMatchingRoster.value,
+        roster: virtualOperators.value,
         currentOwnedOperators: ownedOperators.value,
         shiftMode: confirmedLayoutPlan.value?.shiftMode,
         twoShiftRotationMode: twoShiftRotationMode.value,
@@ -1853,7 +1874,7 @@ const riicControlCenterScenarioTrialState = computed(() => {
       scenarios: [],
     };
   }
-  if (!riicMatchingRoster.value) {
+  if (!virtualOperators.value) {
     return {
       status: "requiresOperators",
       scenarios: [],
@@ -1864,7 +1885,7 @@ const riicControlCenterScenarioTrialState = computed(() => {
     status: "ready",
     scenarios: evaluateRiicControlCenterScenarios({
       skills: RIIC_CONTROL_CENTER_SKILLS.skills,
-      ownedOperators: riicMatchingRoster.value,
+      ownedOperators: virtualOperators.value,
       layoutFacts: activeLayoutFacilityCounts.value,
       trainingMode: riicTrainingMode.value,
       idealTrainingRaritySelection: idealTrainingRaritySelection.value,
@@ -1878,7 +1899,7 @@ const riicPerceptionResourceTrialState = computed(() => {
       scenarios: [],
     };
   }
-  if (!riicMatchingRoster.value) {
+  if (!virtualOperators.value) {
     return {
       status: "requiresOperators",
       scenarios: [],
@@ -1886,7 +1907,7 @@ const riicPerceptionResourceTrialState = computed(() => {
   }
 
   return evaluateRiicPerceptionResourceTrials({
-    ownedOperators: riicMatchingRoster.value,
+    ownedOperators: virtualOperators.value,
     layoutFacts: activeLayoutFacilityCounts.value,
     controlState: controlCenterRoleState.value,
   });
@@ -2578,6 +2599,7 @@ function createRiicAutomaticScheduleWorkerInput(searchConfig) {
     groups: candidateEnabledScheduleRoomGroups.value,
     candidateStatesByGroupId: roomGroupCandidateStates.value,
     controlCenterOperatorIds: [...controlCenterSelectedOperatorIds.value],
+    controlCenterState: controlCenterRoleState.value,
     controlCenterRuntimeContext: controlCenterRuntimeContext.value,
     layoutFacts: activeLayoutFacilityCounts.value,
     selectionBeamLimit: searchConfig.selectionBeamLimit,
@@ -2585,8 +2607,12 @@ function createRiicAutomaticScheduleWorkerInput(searchConfig) {
     selectionRepresentativeLimit: searchConfig.selectionRepresentativeLimit,
     selectionBatchSize: searchConfig.selectionBatchSize,
     fallbackPlanLimit: searchConfig.fallbackPlanLimit,
-    ownedOperators: riicMatchingRoster.value,
-    controlCenterSegments: controlCenterFinalRoleState.value.segments,
+    ownedOperators: virtualOperators.value,
+    controlCenterSegments: controlCenterRoleState.value.segments,
+    manualControlCenterOperatorIdsByTeamIndex:
+      controlCenterManualOverrides.value.addedOperatorIdsByTeamIndex,
+    controlCenterLateFillExcludedOperatorIdsByTeamIndex:
+      controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
     fiammettaRecovery,
     idleFillOperators: riicIdleFillOperators.value,
     fiammettaControlUsage: controlCenterFiammettaTargetUsage.value,
@@ -2596,7 +2622,7 @@ function createRiicAutomaticScheduleWorkerInput(searchConfig) {
 
 function getRandomAutomaticGenerationNoticeOperators() {
   const operatorsById = new Map(
-    (riicMatchingRoster.value || []).flatMap((operator) => {
+    (virtualOperators.value || []).flatMap((operator) => {
       const charId = String(operator?.charId || "").trim();
       return charId && operatorTableV2?.[charId]
         ? [[charId, { charId }]]
@@ -2639,12 +2665,13 @@ async function generateAutomaticSchedule({
     return;
   }
 
-  if (!riicMatchingRoster.value) {
+  if (!virtualOperators.value) {
     cMessage("请先同步干员数据", "warn");
     return;
   }
 
   controlCenterPlanningRunId.value += 1;
+  automaticControlCenterReconciliationState.value = null;
   await nextTick();
 
   const generationTriggerKey = automaticGenerationTriggerKey.value;
@@ -2658,14 +2685,51 @@ async function generateAutomaticSchedule({
   automaticGenerationNoticeOperators.value =
     getRandomAutomaticGenerationNoticeOperators();
   try {
-    await Promise.all(
-      candidateEnabledScheduleRoomGroups.value.map((group) =>
-        ensureRoomGroupCatalogLoaded(group),
+    await waitForAutomaticScheduleStage(
+      Promise.all(
+        candidateEnabledScheduleRoomGroups.value.map((group) =>
+          ensureRoomGroupCatalogLoaded(group),
+        ),
       ),
+      abortController.signal,
     );
+    if (
+      abortController.signal.aborted ||
+      requestId !== automaticGenerationRequestId
+    ) {
+      return;
+    }
+    const failedCatalogs = candidateEnabledScheduleRoomGroups.value.flatMap(
+      (group) =>
+        getRoomGroupCatalogRequests(group)
+          .map((request) => request.key)
+          .filter(
+            (key) =>
+              riicStaticCatalogLoadStatesByKey.value[key] === "failed",
+          )
+          .map(
+            (key) =>
+              `${group.label || group.id}: ${
+                riicStaticCatalogErrorsByKey.value[key] || key
+              }`,
+          ),
+    );
+    if (failedCatalogs.length > 0) {
+      throw new Error(`候选目录加载失败：${failedCatalogs.join("；")}`);
+    }
     await nextTick();
 
     automaticGenerationPhase.value = "正在后台计算";
+    await waitForAutomaticScheduleStage(
+      new Promise((resolve) => requestAnimationFrame(resolve)),
+      abortController.signal,
+    );
+    if (
+      abortController.signal.aborted ||
+      requestId !== automaticGenerationRequestId
+    ) {
+      return;
+    }
     const workerResult = await runRiicAutomaticScheduleInWorker({
       input: createRiicAutomaticScheduleWorkerInput(searchConfig),
       signal: abortController.signal,
@@ -2678,11 +2742,21 @@ async function generateAutomaticSchedule({
     }
 
     automaticGenerationPhase.value = "正在组装结果";
+    if (!workerResult || typeof workerResult !== "object") {
+      throw new Error("后台排班没有返回结果");
+    }
     const {
       automaticSelection,
+      controlCenterReconciliation,
       tailFillResult,
       resourceSuiteResult,
     } = workerResult;
+    if (!automaticSelection || !tailFillResult) {
+      throw new Error("后台排班结果缺少选人或补位结果");
+    }
+    if (!resourceSuiteResult?.tailFillResult) {
+      throw new Error("后台排班结果缺少资源组合结果");
+    }
     const {
       selections,
       fallbackOperatorIdBySlotKeyByGroup,
@@ -2692,7 +2766,12 @@ async function generateAutomaticSchedule({
       l70: automaticSelection.debug || null,
       l71: tailFillResult,
       l72: resourceSuiteResult.debug,
+      l73: controlCenterReconciliation || null,
     };
+    automaticControlCenterReconciliationState.value =
+      controlCenterReconciliation?.status === "ready"
+        ? controlCenterReconciliation.controlState
+        : null;
     if (automaticSelection.unavailableGroups.length > 0) {
       cMessage(
         `无法自动填满：${automaticSelection.unavailableGroups.join("、")}`,
@@ -2727,15 +2806,14 @@ async function generateAutomaticSchedule({
       return;
     }
 
-    console.error(error);
-    cMessage("自动生成失败，请稍后重试", "error");
+    console.error("RIIC automatic schedule generation failed", error);
+    const message = String(error?.message || "").trim();
+    cMessage(
+      message ? `自动生成失败：${message}` : "自动生成失败，请稍后重试",
+      "error",
+    );
   } finally {
-    if (automaticGenerationAbortController === abortController) {
-      automaticGenerationAbortController = null;
-      autoGeneratingSchedule.value = false;
-      automaticGenerationPhase.value = "";
-      automaticGenerationNoticeOperators.value = [];
-    }
+    clearAutomaticScheduleRunState(abortController);
     if (automaticGenerationQueuedOptions) {
       const queuedOptions = automaticGenerationQueuedOptions;
       automaticGenerationQueuedOptions = null;
@@ -2747,7 +2825,62 @@ async function generateAutomaticSchedule({
 }
 
 function regenerateSchedule() {
+  resetGeneratedScheduleState({
+    suppressCurrentAutomaticGeneration: true,
+  });
   void generateAutomaticSchedule();
+}
+
+function createAutomaticScheduleAbortError() {
+  const error = new Error("自动排班已取消");
+  error.name = "AbortError";
+  return error;
+}
+
+function waitForAutomaticScheduleStage(promise, signal) {
+  if (!signal) {
+    return Promise.resolve(promise);
+  }
+  if (signal.aborted) {
+    return Promise.reject(createAutomaticScheduleAbortError());
+  }
+
+  return new Promise((resolve, reject) => {
+    const settle = (callback, value) => {
+      signal.removeEventListener("abort", abort);
+      callback(value);
+    };
+    const abort = () => settle(reject, createAutomaticScheduleAbortError());
+
+    signal.addEventListener("abort", abort, { once: true });
+    Promise.resolve(promise).then(
+      (value) => settle(resolve, value),
+      (error) => settle(reject, error),
+    );
+  });
+}
+
+function cancelAutomaticSchedule() {
+  automaticGenerationQueuedOptions = null;
+  automaticGenerationRequestId += 1;
+  const abortController = automaticGenerationAbortController;
+  clearAutomaticScheduleRunState(abortController);
+  abortController?.abort();
+}
+
+function clearAutomaticScheduleRunState(abortController = null) {
+  if (
+    abortController &&
+    automaticGenerationAbortController !== abortController
+  ) {
+    return false;
+  }
+
+  automaticGenerationAbortController = null;
+  autoGeneratingSchedule.value = false;
+  automaticGenerationPhase.value = "";
+  automaticGenerationNoticeOperators.value = [];
+  return true;
 }
 
 function openDeepScheduleConfirmation() {
@@ -2800,12 +2933,12 @@ watch(
 const automaticGenerationTriggerKey = computed(() => {
   if (
     !confirmedLayoutPlan.value ||
-    !riicMatchingRoster.value
+    !virtualOperators.value
   ) {
     return "";
   }
 
-  const rosterSignature = (riicMatchingRoster.value || [])
+  const rosterSignature = (virtualOperators.value || [])
     .map((operator) => JSON.stringify(operator))
     .sort()
     .join("|");
@@ -3189,7 +3322,12 @@ const roomGroupFallbackPlanStates = computed(() => {
     }
   }
   const occupiedOperatorIds = new Set(
-    [...controlCenterSelectedOperatorIds.value].filter(
+    [
+      ...(
+        automaticControlCenterReconciliationState.value?.operatorIds ||
+        controlCenterSelectedOperatorIds.value
+      ),
+    ].filter(
       (charId) => charId !== recovery.targetOperatorId,
     ),
   );
@@ -3238,7 +3376,7 @@ const roomGroupFallbackPlanStates = computed(() => {
       selectedEntries,
       occupiedOperatorIds: occupiedIds,
       excludedOperatorIds: coreOperatorIds,
-      ownedOperators: riicMatchingRoster.value,
+      ownedOperators: virtualOperators.value,
       activeOperatorIds: occupiedIds,
       fiammettaRecovery: {
         ...recovery,
@@ -3259,7 +3397,7 @@ const roomGroupFallbackPlanStates = computed(() => {
           selectedEntries,
           occupiedOperatorIds: occupiedIds,
           excludedOperatorIds: coreOperatorIds,
-          ownedOperators: riicMatchingRoster.value,
+          ownedOperators: virtualOperators.value,
           activeOperatorIds: occupiedIds,
           fiammettaRecovery: {
             ...recovery,
@@ -3317,6 +3455,10 @@ const controlCenterLateFillState = computed(() => {
 });
 
 const controlCenterFinalRoleState = computed(() => {
+  if (automaticControlCenterReconciliationState.value?.status === "ready") {
+    return automaticControlCenterReconciliationState.value;
+  }
+
   return mergeRiicControlCenterLateFillState({
     baseState: controlCenterRoleState.value,
     lateFillState: controlCenterLateFillState.value,
@@ -3881,7 +4023,7 @@ const scheduleTrainingRequirements = computed(() => {
       .filter(({ group }) => group?.facility !== "meeting")
       .map(({ candidate }) => candidate),
     ownedOperators: ownedOperators.value,
-    matchingOperators: riicMatchingRoster.value,
+    matchingOperators: virtualOperators.value,
     operatorNameToCharId,
   });
 });
@@ -3990,7 +4132,7 @@ const riicSupportRoomPlacementsBySourceStateIndex = computed(() =>
           sourceStateIndex,
           getRiicLayer3SupportRoomPlacements({
             roomAssignments,
-            ownedOperators: riicMatchingRoster.value || [],
+            ownedOperators: virtualOperators.value || [],
             claimedOperatorIds,
             layoutFacts: activeLayoutFacilityCounts.value,
             idleFillOperators: riicIdleFillOperators.value,
@@ -4100,13 +4242,82 @@ const riicSchedulePreviewBase = computed(() =>
     ].filter(Boolean),
   }),
 );
+function getRiicL79RoomKeyForPreviewRoom(room) {
+  const facility = getRiicMaaRoomType(room?.facility);
+  if (!facility) {
+    return "";
+  }
+
+  const assignedIndex = Number(
+    resolvedScheduleRoomMaaIndexAssignments.value?.[
+      String(room?.key || "").trim()
+    ],
+  );
+  const stationIndex = Number(room?.stationIndex);
+  const index =
+    Number.isInteger(assignedIndex) && assignedIndex >= 1
+      ? assignedIndex - 1
+      : Number.isInteger(stationIndex) && stationIndex >= 0
+        ? stationIndex
+        : 0;
+  return `${facility}:${index}`;
+}
+
+function applyRiicL79EfficiencyToPreview({ preview, settlement } = {}) {
+  if (!preview || !settlement?.states?.length) {
+    return preview;
+  }
+
+  return {
+    ...preview,
+    cycleHours: settlement.cycleHours,
+    perceptionSettlement: settlement.perceptionSettlement,
+    states: (preview.states || []).map((state, stateIndex) => {
+      const l79State = settlement.states[stateIndex];
+      const l79Rooms = new Map(
+        (l79State?.rooms || []).map((room) => [room.key, room]),
+      );
+      return {
+        ...state,
+        rooms: (state.rooms || []).map((room) => {
+          const l79Room = l79Rooms.get(
+            getRiicL79RoomKeyForPreviewRoom(room),
+          );
+          if (!l79Room) {
+            return room;
+          }
+          return {
+            ...room,
+            efficiency: l79Room.efficiency,
+            expectedSlots: l79Room.expectedSlots ?? room.expectedSlots,
+            controlCenterFacilityBonusPercent:
+              l79Room.controlCenterFacilityBonusPercent || 0,
+            controlCenterOperatorBonusPercent:
+              l79Room.controlCenterOperatorBonusPercent || 0,
+            controlCenterOperatorBonuses:
+              l79Room.controlCenterOperatorBonuses || [],
+            activeRosterBonusPercent:
+              l79Room.activeRosterBonusPercent || 0,
+            activeRosterEffects: l79Room.activeRosterEffects || [],
+            resourceChainAdditionalBonusPercent:
+              l79Room.resourceChainAdditionalBonusPercent || 0,
+            efficiencyMetrics: l79Room.efficiencyMetrics,
+            l79Issues: l79Room.issues || [],
+          };
+        }),
+      };
+    }),
+  };
+}
+
+const riicL79Settlement = computed(() => {
+  const input = riicL79InputDebugState.value;
+  return input ? settleRiicMaaScheduleEfficiency(input) : null;
+});
 const riicSchedulePreview = computed(() =>
-  settleRiicScheduleEfficiency({
+  applyRiicL79EfficiencyToPreview({
     preview: riicSchedulePreviewBase.value,
-    ownedOperators: riicMatchingRoster.value || [],
-    resourceFacts: riicPerceptionResourceFacts.value,
-    layoutFacts: activeLayoutFacilityCounts.value,
-    resolvedSkills: riicResolvedSkills.value,
+    settlement: riicL79Settlement.value,
   }),
 );
 function createSchedulePreviewPlaceholderRoom(group, station, stationIndex) {
@@ -4176,34 +4387,147 @@ const riicSchedulePreviewPlaceholder = computed(() => {
     })),
   };
 });
-const displayedRiicSchedulePreview = computed(
-  () => riicSchedulePreview.value || riicSchedulePreviewPlaceholder.value,
-);
-const riicActualScheduleMetrics = computed(() => {
-  const selectionSummary = staffingSelectionSummary.value;
-  const scheduleSettlementReady =
-    assembledScheduleCandidateState.value.status === "ready" &&
-    selectionSummary.selectedTeamCount === selectionSummary.requiredTeamCount;
+function hasScheduleDroneTargetOperators(room) {
+  return (room?.operators || []).some((operator) =>
+    String(operator?.charId || operator?.name || "").trim(),
+  );
+}
 
-  return scheduleSettlementReady && riicSchedulePreview.value
+const scheduleDroneTargetPreviewKeysByState = computed(() =>
+  (riicSchedulePreviewBase.value?.states || []).map((state) =>
+    (state?.rooms || []).reduce((keysByL79RoomKey, room) => {
+      if (
+        !["trading", "manufacture"].includes(room?.facility) ||
+        !hasScheduleDroneTargetOperators(room)
+      ) {
+        return keysByL79RoomKey;
+      }
+
+      const l79RoomKey = getRiicL79RoomKeyForPreviewRoom(room);
+      if (l79RoomKey) {
+        keysByL79RoomKey[l79RoomKey] = room.key;
+      }
+      return keysByL79RoomKey;
+    }, {}),
+  ),
+);
+
+const scheduleDroneSettlementSettingsByState = computed(() =>
+  schedulePreviewShifts.value.map((shift, stateIndex) => {
+    const drone = normalizeScheduleDroneSettings(shift?.drone);
+    const targetKey = drone.disabled ? "" : String(drone.target || "").trim();
+    const sourceRoom = (
+      riicSchedulePreviewBase.value?.states?.[stateIndex]?.rooms || []
+    ).find((room) => room.key === targetKey);
+
+    if (
+      !sourceRoom ||
+      !["trading", "manufacture"].includes(sourceRoom.facility) ||
+      !hasScheduleDroneTargetOperators(sourceRoom)
+    ) {
+      return {
+        targetKey: "",
+        order: "retain",
+      };
+    }
+
+    return {
+      targetKey: getRiicL79RoomKeyForPreviewRoom(sourceRoom),
+      order: drone.order,
+    };
+  }),
+);
+
+const riicActualScheduleMetrics = computed(() => {
+  const l79Settlement = riicL79Settlement.value;
+  const preview = l79Settlement?.preview || null;
+  const hasAssembledSchedule =
+    Array.isArray(preview?.states) && preview.states.length > 0;
+
+  return hasAssembledSchedule
     ? summarizeRiicActualSchedule({
-        preview: riicSchedulePreview.value,
-        droneTargetKeysByState: schedulePreviewShifts.value.map(
-          (shift) =>
-            shift?.drone?.disabled === true ? "" : shift?.drone?.target || "",
+        l79: l79Settlement,
+        droneTargetKeysByState: scheduleDroneSettlementSettingsByState.value.map(
+          (setting) => setting.targetKey,
         ),
-        droneOrdersByState: schedulePreviewShifts.value.map(
-          (shift) =>
-            shift?.drone?.disabled === true
-              ? "retain"
-              : shift?.drone?.order || "pre",
+        droneOrdersByState: scheduleDroneSettlementSettingsByState.value.map(
+          (setting) => setting.order,
         ),
-        tradingOperators: riicMatchingRoster.value || [],
         orundumCraftMaterial:
           scheduleExecutionSettings.orundumCraftMaterial,
       })
     : null;
 });
+function applyRiicTradingSettlementToPreview({
+  preview,
+  tradingSettlements,
+} = {}) {
+  if (!preview || !Array.isArray(tradingSettlements)) {
+    return preview;
+  }
+
+  const rateByStateAndRoomKey = new Map();
+  for (const settlement of tradingSettlements) {
+    const roomKey = String(settlement?.key || "").trim();
+    if (!roomKey) {
+      continue;
+    }
+
+    for (const segment of settlement?.segments || []) {
+      const stateIndex = Number(segment?.stateIndex);
+      const rate = Number(segment?.rate);
+      if (
+        !segment?.calculated ||
+        !Number.isInteger(stateIndex) ||
+        stateIndex < 0 ||
+        !Number.isFinite(rate)
+      ) {
+        continue;
+      }
+      rateByStateAndRoomKey.set(`${stateIndex}:${roomKey}`, rate);
+    }
+  }
+
+  if (rateByStateAndRoomKey.size === 0) {
+    return preview;
+  }
+
+  return {
+    ...preview,
+    states: (preview.states || []).map((state, stateIndex) => ({
+      ...state,
+      rooms: (state.rooms || []).map((room) => {
+        if (
+          room?.facility !== "trading" ||
+          String(room?.product || "").trim() !== "lmd"
+        ) {
+          return room;
+        }
+
+        const rate = rateByStateAndRoomKey.get(
+          `${stateIndex}:${getRiicL79RoomKeyForPreviewRoom(room)}`,
+        );
+        return Number.isFinite(rate)
+          ? {
+              ...room,
+              efficiency: rate,
+            }
+          : room;
+      }),
+    })),
+  };
+}
+const riicScheduleDisplayPreview = computed(() =>
+  applyRiicTradingSettlementToPreview({
+    preview: riicSchedulePreview.value,
+    tradingSettlements: riicActualScheduleMetrics.value?.yield
+      ?.tradingSettlements,
+  }),
+);
+const displayedRiicSchedulePreview = computed(
+  () =>
+    riicScheduleDisplayPreview.value || riicSchedulePreviewPlaceholder.value,
+);
 const outputPreviewTitle = computed(
   () =>
     scheduleExecutionSettings.exportInfo.title ||
@@ -4257,6 +4581,68 @@ const outputPreviewYieldItems = computed(() => {
       };
     })
     .filter((item) => item.isCalculated);
+});
+const outputPreviewResourceNettingItems = computed(() => {
+  const yieldSummary = riicActualScheduleMetrics.value?.yield || {};
+  const resources = new Map(
+    (yieldSummary.resources || []).map((item) => [
+      String(item?.resource || ""),
+      item,
+    ]),
+  );
+  const orundumFlow = yieldSummary.resourceFlows?.orundum || {};
+  const craftMaterial =
+    orundumFlow.craftMaterial ||
+    scheduleExecutionSettings.orundumCraftMaterial ||
+    "orirock";
+  const craftMaterialLabel =
+    String(orundumFlow.craftMaterialLabel || "").trim() ||
+    (craftMaterial === "device" ? "装置" : "固源岩");
+
+  const items = [
+    {
+      key: "gold",
+      label: "赤金",
+      image: goldImage,
+      value: Number(resources.get("gold")?.outputPerDay),
+      unit: "根",
+      isCalculated: resources.get("gold")?.isCalculated === true,
+    },
+    {
+      key: "originiumShard",
+      label: "源石碎片",
+      image: originiumShardImage,
+      value: Number(resources.get("originiumShard")?.outputPerDay),
+      unit: "枚",
+      isCalculated: resources.get("originiumShard")?.isCalculated === true,
+    },
+    {
+      key: `craft:${craftMaterial}`,
+      label: craftMaterialLabel,
+      itemId: craftMaterial === "device" ? "30062" : "30012",
+      value: -Number(orundumFlow.craftMaterialConsumptionPerDay),
+      unit: "个",
+      isCalculated:
+        orundumFlow.isCalculated === true &&
+        Number.isFinite(Number(orundumFlow.craftMaterialConsumptionPerDay)),
+    },
+  ];
+
+  return items.filter((item) => {
+    if (item.key.startsWith("craft:")) {
+      return item.isCalculated && Math.abs(item.value) > 1e-9;
+    }
+
+    if (item.key === "originiumShard") {
+      return (
+        !item.isCalculated ||
+        !Number.isFinite(item.value) ||
+        Math.abs(item.value) > 1e-9
+      );
+    }
+
+    return true;
+  });
 });
 const outputPreviewGeneratedDate = computed(() => {
   const now = new Date();
@@ -4312,6 +4698,70 @@ function formatOutputPreviewYield(value) {
   }).format(value);
 }
 
+function formatOutputPreviewResourceNetting(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "--";
+  }
+
+  return `${number > 0 ? "+" : ""}${new Intl.NumberFormat("zh-CN", {
+    maximumFractionDigits: 1,
+  }).format(number)}`;
+}
+
+function getRiicMaaScheduleBuildOptions(includeRiicRoomLevels = false) {
+  return {
+    preview: riicSchedulePreviewBase.value,
+    shifts: schedulePreviewShifts.value,
+    shiftMode: confirmedLayoutPlan.value?.shiftMode,
+    title:
+      scheduleExecutionSettings.exportInfo.title ||
+      getDefaultGeneratedScheduleTitle(),
+    author: scheduleExecutionSettings.exportInfo.author,
+    description: scheduleExecutionSettings.exportInfo.description,
+    roomSettingOverrides: scheduleRoomMaaSettingOverrides.value,
+    roomIndexAssignments: resolvedScheduleRoomMaaIndexAssignments.value,
+    hasFiammetta: schedulePreviewShifts.value.some(
+      (shift) => shift?.fiammetta?.enable === true,
+    ),
+    includeRiicRoomLevels,
+  };
+}
+
+function createRiicL79OperatorProfiles(operators = []) {
+  return (operators || [])
+    .map((operator) => {
+      const charId = String(operator?.charId || "").trim();
+      const elite = Number(operator?.elite);
+      const level = Number(operator?.level);
+
+      if (!charId) {
+        return null;
+      }
+
+      return {
+        charId,
+        elite: Number.isInteger(elite) && elite >= 0 ? elite : null,
+        level: Number.isInteger(level) && level >= 1 ? level : null,
+      };
+    })
+    .filter(Boolean);
+}
+
+const riicL79OperatorProfiles = computed(() => {
+  const allOwnedOperators = ownedOperators.value || [];
+  const operators =
+    riicTrainingMode.value === "ideal"
+      ? createRiicIdealTrainingRoster(
+          allOwnedOperators,
+          RIIC_BASELINE_SKILL_RULES,
+          idealTrainingRaritySelection.value,
+        ).operators
+      : allOwnedOperators;
+
+  return createRiicL79OperatorProfiles(operators);
+});
+
 const generatedMaaExportPreview = computed(() => {
   if (
     !Array.isArray(riicSchedulePreview.value?.states) ||
@@ -4322,21 +4772,33 @@ const generatedMaaExportPreview = computed(() => {
   }
 
   try {
-    return buildRiicMaaScheduleFromPreview({
-      preview: riicSchedulePreview.value,
-      shifts: schedulePreviewShifts.value,
-      shiftMode: confirmedLayoutPlan.value?.shiftMode,
-      title:
-        scheduleExecutionSettings.exportInfo.title ||
-        getDefaultGeneratedScheduleTitle(),
-      author: scheduleExecutionSettings.exportInfo.author,
-      description: scheduleExecutionSettings.exportInfo.description,
-      roomSettingOverrides: scheduleRoomMaaSettingOverrides.value,
-      roomIndexAssignments: resolvedScheduleRoomMaaIndexAssignments.value,
-      hasFiammetta: schedulePreviewShifts.value.some(
-        (shift) => shift?.fiammetta?.enable === true,
-      ),
-    });
+    return buildRiicMaaScheduleFromPreview(
+      getRiicMaaScheduleBuildOptions(),
+    );
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+});
+const riicL79InputDebugState = computed(() => {
+  if (
+    !Array.isArray(riicSchedulePreviewBase.value?.states) ||
+    riicSchedulePreviewBase.value.states.length === 0
+  ) {
+    return null;
+  }
+
+  try {
+    const { schedule } = buildRiicMaaScheduleFromPreview(
+      {
+        ...getRiicMaaScheduleBuildOptions(true),
+        durationSource: "preview",
+      },
+    );
+    return {
+      schedule,
+      operatorProfiles: riicL79OperatorProfiles.value,
+    };
   } catch (error) {
     console.error(error);
     return null;
@@ -4348,7 +4810,9 @@ function getDefaultGeneratedScheduleTitle() {
   const date = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(
     now.getDate(),
   )}`;
-  const layout = confirmedLayoutPlan.value?.cardKey || "基建";
+  const layoutKey = confirmedLayoutPlan.value?.cardKey || "基建";
+  const layout =
+    layoutKey === "243-orundum" ? "243搓玉" : layoutKey;
   const shift = {
     once: "一换",
     twice: "两换",
@@ -4553,6 +5017,14 @@ const riicYieldWorkflowCardState = computed(() => {
     ? "complete"
     : "pending";
 });
+const scheduleRoomMaaIndexEntries = computed(() =>
+  getScheduleRoomMaaIndexEntries(),
+);
+const resolvedScheduleRoomMaaIndexAssignments = computed(() =>
+  resolveScheduleRoomMaaIndexAssignments(
+    scheduleRoomMaaIndexEntries.value,
+  ),
+);
 const scheduleDroneTargetOptions = computed(() => {
   return getScheduleDroneTargetOptionsForState(
     activeSchedulePreviewStateIndex.value,
@@ -4590,7 +5062,15 @@ function getScheduleDroneTargetOptionsForState(stateIndex) {
       )?.label || "";
     const facilityLabel =
       SCHEDULE_ROOM_GROUP_META[room.facility]?.facilityLabel || room.label;
-    const stationNumber = Math.max(Number(room.stationIndex || 0) + 1, 1);
+    const assignedIndex = Number(
+      resolvedScheduleRoomMaaIndexAssignments.value?.[
+        String(room?.key || "").trim()
+      ],
+    );
+    const stationNumber =
+      Number.isInteger(assignedIndex) && assignedIndex >= 1
+        ? assignedIndex
+        : Math.max(Number(room.stationIndex || 0) + 1, 1);
     optionsByKey.set(room.key, {
       value: room.key,
       label:
@@ -4598,7 +5078,8 @@ function getScheduleDroneTargetOptionsForState(stateIndex) {
           ? `${facilityLabel}${stationNumber}`
           : `${product}${facilityLabel}${stationNumber}`,
       facility: room.facility,
-      disabled: room.facility === "power",
+      disabled:
+        room.facility === "power" || !hasScheduleDroneTargetOperators(room),
     });
   }
 
@@ -4778,6 +5259,10 @@ watch(
     () => scheduleExecutionSettings.shifts.length,
   ],
   () => {
+    if (!riicSchedulePreview.value?.states?.length) {
+      return;
+    }
+
     for (
       let index = 0;
       index < scheduleExecutionSettings.shifts.length;
@@ -4786,13 +5271,14 @@ watch(
       const shift = scheduleExecutionSettings.shifts[index];
       const drone = normalizeScheduleDroneSettings(shift?.drone);
       if (drone.disabled) {
-        if (drone.target || drone.pinned) {
+        if (drone.target || drone.pinned || drone.order !== "retain") {
           updateSchedulePreviewShift({
             index,
             drone: {
               ...drone,
               target: "",
               pinned: false,
+              order: "retain",
             },
           });
         }
@@ -4805,6 +5291,32 @@ watch(
       const availableTargets = new Set(
         availableTargetOptions.map((option) => option.value),
       );
+      if (availableTargetOptions.length === 0) {
+        updateSchedulePreviewShift({
+          index,
+          drone: {
+            ...drone,
+            target: "",
+            pinned: false,
+            disabled: true,
+            order: "retain",
+          },
+        });
+        continue;
+      }
+      if (drone.target && !availableTargets.has(drone.target)) {
+        updateSchedulePreviewShift({
+          index,
+          drone: {
+            ...drone,
+            target: "",
+            pinned: false,
+            disabled: true,
+            order: "retain",
+          },
+        });
+        continue;
+      }
       if (drone.pinned && availableTargets.has(drone.target)) {
         continue;
       }
@@ -4940,14 +5452,6 @@ function resolveScheduleRoomMaaIndexAssignments(
   return resolved;
 }
 
-const scheduleRoomMaaIndexEntries = computed(() =>
-  getScheduleRoomMaaIndexEntries(),
-);
-const resolvedScheduleRoomMaaIndexAssignments = computed(() =>
-  resolveScheduleRoomMaaIndexAssignments(
-    scheduleRoomMaaIndexEntries.value,
-  ),
-);
 const activeScheduleRoomMaaIndexOptions = computed(() => {
   const room = activeSchedulePreviewRoom.value;
   const roomType = getRiicMaaRoomType(room?.facility);
@@ -6903,6 +7407,7 @@ function createSetAssessmentScheduleSnapshot() {
 function createWizardStateSnapshot() {
   return {
     version: RIIC_SCHEDULE_DRAFT_VERSION,
+    operatorRosterSignature: getCurrentOperatorRosterSignature(),
     answers: Object.fromEntries(
       ANSWER_FIELDS.map((field) => [field.key, answers[field.key]]),
     ),
@@ -6936,10 +7441,37 @@ function createWizardStateSnapshot() {
   };
 }
 
+function getCurrentOperatorRosterSignature() {
+  return (ownedOperators.value || [])
+    .map(
+      (operator) =>
+        `${operator?.charId || operator?.name || ""}:${
+          operator?.elite ?? 0
+        }:${operator?.level ?? ""}:${operator?.potential ?? 0}`,
+    )
+    .sort()
+    .join("|");
+}
+
 function createInitialWorkspaceFromCurrent() {
-  const snapshot = createWizardStateSnapshot();
+  const defaultPlan = createDefaultConfirmedLayoutPlan();
   return {
-    ...snapshot,
+    version: RIIC_SCHEDULE_DRAFT_VERSION,
+    operatorRosterSignature: "",
+    answers: { ...DEFAULT_ANSWERS },
+    currentStep: 0,
+    layoutEntry: DEFAULT_LAYOUT_SELECTION.cardKey,
+    planningMode: "manual",
+    selectedLayoutId: DEFAULT_LAYOUT_SELECTION.layoutId,
+    confirmedLayoutPlan: defaultPlan,
+    twoShiftRotationMode: twoShiftRotationMode.value,
+    treatUnderleveledOperatorsAsQualified:
+      treatUnderleveledOperatorsAsQualified.value,
+    idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+    controlCenterRoleSettings: { officeEnabled: false },
+    controlCenterManualOverrides: normalizeControlCenterManualOverrides(),
+    controlCenterLateFillExcludedOperatorIdsByTeamIndex: {},
+    fiammettaRecoverySettings: fiammettaRecoverySettings.value,
     selectedRoomGroupTeamCandidateKeys: {},
     roomGroupFallbackQueueStates: {},
     scheduleExecutionSettings: {
@@ -6953,6 +7485,8 @@ function createInitialWorkspaceFromCurrent() {
     scheduleRoomMaaSettingOverrides: {},
     scheduleRoomMaaIndexAssignments: {},
     lastAutomaticGenerationTriggerKey: "",
+    assessmentSchedule: null,
+    updatedAt: new Date().toISOString(),
   };
 }
 
@@ -7129,15 +7663,8 @@ function saveWizardState() {
 
   try {
     const workspaces = readOperatorSourceWorkspaces();
-    const previousWorkspace = workspaces[activeOperatorSource.value] || {};
     const nextWorkspace = createWizardStateSnapshot();
-    workspaces[activeOperatorSource.value] = {
-      ...nextWorkspace,
-      assessmentSchedule:
-        nextWorkspace.assessmentSchedule ||
-        previousWorkspace.assessmentSchedule ||
-        null,
-    };
+    workspaces[activeOperatorSource.value] = nextWorkspace;
     saveOperatorSourceWorkspaces(workspaces);
     hasSavedWizardState.value = true;
   } catch {
@@ -7280,12 +7807,27 @@ function clearSelectedRoomGroupTeamCandidates({
 } = {}) {
   selectedRoomGroupTeamCandidateKeys.value = {};
   roomGroupFallbackQueueStates.value = {};
+  automaticControlCenterReconciliationState.value = null;
   if (preserveExecutionSettings) {
     clearSchedulePreviewRoomEdits();
     return;
   }
 
   resetScheduleExecutionSettings();
+}
+
+function resetGeneratedScheduleState({
+  suppressCurrentAutomaticGeneration = false,
+} = {}) {
+  controlCenterRoleSettings.value = { officeEnabled: false };
+  controlCenterManualOverrides.value = normalizeControlCenterManualOverrides();
+  controlCenterLateFillExcludedOperatorIdsByTeamIndex.value = {};
+  riicAutomaticGenerationDebugState.value = null;
+  clearSelectedRoomGroupTeamCandidates();
+  lastAutomaticGenerationTriggerKey.value =
+    suppressCurrentAutomaticGeneration
+      ? automaticGenerationTriggerKey.value
+      : "";
 }
 
 function selectTwoShiftRotationMode(value) {
@@ -8138,13 +8680,23 @@ onBeforeUnmount(() => {
             <button
               type="button"
               class="room-workbench-action room-workbench-action-large"
-              :disabled="autoGeneratingSchedule"
-              @click="regenerateSchedule"
+              @click="
+                autoGeneratingSchedule
+                  ? cancelAutomaticSchedule()
+                  : regenerateSchedule()
+              "
             >
-              <v-icon icon="mdi-refresh" size="16"></v-icon>
+              <v-icon
+                :icon="
+                  autoGeneratingSchedule
+                    ? 'mdi-close-circle-outline'
+                    : 'mdi-refresh'
+                "
+                size="16"
+              ></v-icon>
               <span>{{
                 autoGeneratingSchedule
-                  ? automaticGenerationPhase || "正在生成排班"
+                  ? "取消当前计算"
                   : "重新生成排班"
               }}</span>
             </button>
@@ -8291,22 +8843,53 @@ onBeforeUnmount(() => {
                 >
                   {{ outputPreviewScheduleMeta }}
                 </p>
-                <div
-                  v-if="outputPreviewYieldItems.length"
-                  class="schedule-output-document-yield"
-                >
-                  <span>预计日产</span>
+                <div class="schedule-output-document-statistics">
+                  <div
+                    v-if="outputPreviewYieldItems.length"
+                    class="schedule-output-document-yield"
+                  >
+                    <span>预计日产</span>
+                    <strong
+                      v-for="item in outputPreviewYieldItems"
+                      :key="item.resource"
+                    >
+                      <img
+                        :src="item.image"
+                        :alt="item.label"
+                        class="schedule-output-document-yield-icon"
+                      />
+                      {{ formatOutputPreviewYield(item.value) }}
+                    </strong>
+                  </div>
+                  <div
+                    v-if="outputPreviewResourceNettingItems.length"
+                    class="schedule-output-document-resource-netting"
+                  >
+                    <span>资源净值</span>
                   <strong
-                    v-for="item in outputPreviewYieldItems"
-                    :key="item.resource"
+                    v-for="item in outputPreviewResourceNettingItems"
+                    :key="item.key"
+                    :title="item.label"
                   >
                     <img
+                      v-if="item.image"
                       :src="item.image"
                       :alt="item.label"
-                      class="schedule-output-document-yield-icon"
+                      class="schedule-output-document-resource-netting-icon"
                     />
-                    {{ formatOutputPreviewYield(item.value) }}
-                  </strong>
+                    <ItemImage
+                      v-else-if="item.itemId"
+                      :item-id="item.itemId"
+                      :size="26"
+                      :mobile-size="26"
+                    ></ItemImage>
+                      {{
+                        formatOutputPreviewResourceNetting(
+                          item.value,
+                        )
+                      }}
+                    </strong>
+                  </div>
                 </div>
                 <p
                   v-if="scheduleExecutionSettings.exportInfo.description"
@@ -8318,7 +8901,7 @@ onBeforeUnmount(() => {
               <RiicSchedulePreview
                 v-for="stateIndex in orderedSchedulePreviewStateIndexes"
                 :key="`output-preview-${riicSchedulePreview.key}-${stateIndex}`"
-                :preview="riicSchedulePreview"
+                :preview="riicScheduleDisplayPreview"
                 :active-state-index="stateIndex"
                 :operator-table="operatorTableV2"
                 :shifts="schedulePreviewShifts"
@@ -8328,6 +8911,7 @@ onBeforeUnmount(() => {
                 :output-decorated="isOutputPreviewMode"
                 :output-theme="outputPreviewHeaderTheme.tone"
                 :show-room-efficiency="showCandidateDebugValues"
+                :room-index-assignments="resolvedScheduleRoomMaaIndexAssignments"
                 export-static
               ></RiicSchedulePreview>
                 <footer class="schedule-output-document-footer">
@@ -8369,6 +8953,7 @@ onBeforeUnmount(() => {
                 :shifts="schedulePreviewShifts"
                 :drone-target="activeSchedulePreviewDrone.target"
                 :show-room-efficiency="showCandidateDebugValues"
+                :room-index-assignments="resolvedScheduleRoomMaaIndexAssignments"
                 @update:active-state-index="
                   activeSchedulePreviewStateIndex = $event
                 "
@@ -8434,22 +9019,53 @@ onBeforeUnmount(() => {
                 >
                   {{ outputPreviewScheduleMeta }}
                 </p>
-                <div
-                  v-if="outputPreviewYieldItems.length"
-                  class="schedule-output-document-yield"
-                >
-                  <span>预计日产</span>
+                <div class="schedule-output-document-statistics">
+                  <div
+                    v-if="outputPreviewYieldItems.length"
+                    class="schedule-output-document-yield"
+                  >
+                    <span>预计日产</span>
+                    <strong
+                      v-for="item in outputPreviewYieldItems"
+                      :key="item.resource"
+                    >
+                      <img
+                        :src="item.image"
+                        :alt="item.label"
+                        class="schedule-output-document-yield-icon"
+                      />
+                      {{ formatOutputPreviewYield(item.value) }}
+                    </strong>
+                  </div>
+                  <div
+                    v-if="outputPreviewResourceNettingItems.length"
+                    class="schedule-output-document-resource-netting"
+                  >
+                    <span>资源净值</span>
                   <strong
-                    v-for="item in outputPreviewYieldItems"
-                    :key="item.resource"
+                    v-for="item in outputPreviewResourceNettingItems"
+                    :key="item.key"
+                    :title="item.label"
                   >
                     <img
+                      v-if="item.image"
                       :src="item.image"
                       :alt="item.label"
-                      class="schedule-output-document-yield-icon"
+                      class="schedule-output-document-resource-netting-icon"
                     />
-                    {{ formatOutputPreviewYield(item.value) }}
-                  </strong>
+                    <ItemImage
+                      v-else-if="item.itemId"
+                      :item-id="item.itemId"
+                      :size="26"
+                      :mobile-size="26"
+                    ></ItemImage>
+                      {{
+                        formatOutputPreviewResourceNetting(
+                          item.value,
+                        )
+                      }}
+                    </strong>
+                  </div>
                 </div>
                 <p
                   v-if="scheduleExecutionSettings.exportInfo.description"
@@ -8461,7 +9077,7 @@ onBeforeUnmount(() => {
               <RiicSchedulePreview
                 v-for="stateIndex in orderedSchedulePreviewStateIndexes"
                 :key="`export-${riicSchedulePreview.key}-${stateIndex}`"
-                :preview="riicSchedulePreview"
+                :preview="riicScheduleDisplayPreview"
                 :active-state-index="stateIndex"
                 :operator-table="operatorTableV2"
                 :shifts="schedulePreviewShifts"
@@ -8471,6 +9087,7 @@ onBeforeUnmount(() => {
                 output-decorated
                 :output-theme="outputPreviewHeaderTheme.tone"
                 :show-room-efficiency="showCandidateDebugValues"
+                :room-index-assignments="resolvedScheduleRoomMaaIndexAssignments"
                 export-static
               ></RiicSchedulePreview>
               <footer class="schedule-output-document-footer">
@@ -8565,6 +9182,10 @@ onBeforeUnmount(() => {
           "
           :yield="riicActualScheduleMetrics.yield"
           :shifts="schedulePreviewShifts"
+          :drone-target-preview-keys-by-state="
+            scheduleDroneTargetPreviewKeysByState
+          "
+          :room-index-assignments="resolvedScheduleRoomMaaIndexAssignments"
           @select-drone-target="selectScheduleDroneTarget"
           @update-drone-order="updateScheduleDroneOrder"
         ></RiicScheduleResourceSummary>
@@ -8689,12 +9310,13 @@ onBeforeUnmount(() => {
             riicAutomaticGenerationDebugState
           "
           :operator-table="operatorTableV2"
-          :roster="riicMatchingRoster || []"
+          :roster="virtualOperators || []"
           :operator-source-label="ownedOperatorSource"
           :training-mode="riicTrainingMode"
           :ideal-training-rarity-selection="idealTrainingRaritySelection"
           :actual-schedule-metrics="riicActualScheduleMetrics"
           :schedule-preview="riicSchedulePreview"
+          :l79-input="riicL79InputDebugState"
           :schedule-shifts="schedulePreviewShifts"
           :duplicate-operator-checks="riicScheduleDuplicateOperatorChecks"
           :format-layer3-operator-condition="
@@ -8967,6 +9589,13 @@ onBeforeUnmount(() => {
   line-height: 1.45;
 }
 
+.schedule-output-document-statistics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 22px;
+}
+
 .schedule-output-document-yield > span {
   color: #8b6510;
   font-size: 16px;
@@ -8980,6 +9609,38 @@ onBeforeUnmount(() => {
   font-size: 16px;
   font-weight: 600;
   line-height: 1.45;
+}
+
+.schedule-output-document-resource-netting {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  color: #17212b;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.schedule-output-document-resource-netting > span {
+  color: #8b6510;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.schedule-output-document-resource-netting > strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.schedule-output-document-resource-netting-icon {
+  display: block;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
 }
 
 .schedule-output-document-yield-icon {

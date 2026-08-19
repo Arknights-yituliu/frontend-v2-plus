@@ -9,7 +9,7 @@ import BASELINE_RULES from "../../static/json/tools/R00-baseline.json" with {
 };
 import {
   calculateRiicExpectedPerHour,
-  getRiicTradeOrderDistribution,
+  getRiicTradeAverageOrderDistribution,
   RIIC_TRADE_ORDER_DISTRIBUTION_BY_LEVEL,
   RIIC_TRADE_ORDER_GOLD,
 } from "./riic-trade-order-model.js";
@@ -132,24 +132,39 @@ function round(value, digits = 6) {
   return Number(Number(value).toFixed(digits));
 }
 
-function createFailure(type, product, error) {
-  return {
+function createFailure(
+  type,
+  product,
+  error,
+  durationHours = null,
+  diagnostics = null,
+) {
+  const result = {
     ok: false,
     type,
     product,
+    durationHours,
     rate: null,
     lmd: null,
     gold: null,
     virtualGold: null,
     orundumCapacity: null,
     shardConsumption: null,
+    segment: null,
     error,
   };
+
+  if (diagnostics) {
+    result.diagnostics = diagnostics;
+  }
+
+  return result;
 }
 
 function createSuccess({
   type,
   product,
+  durationHours,
   rate,
   lmd,
   gold,
@@ -161,12 +176,20 @@ function createSuccess({
     ok: true,
     type,
     product,
+    durationHours: round(durationHours),
     rate: round(rate),
     lmd: round(lmd),
     gold: round(gold),
     virtualGold: round(virtualGold),
     orundumCapacity: round(orundumCapacity),
     shardConsumption: round(shardConsumption),
+    segment: {
+      lmdOutput: round(lmd * durationHours),
+      goldConsumption: round(Math.max(0, -gold * durationHours)),
+      virtualGoldOutput: round(virtualGold * durationHours),
+      orundumOutput: round(orundumCapacity * durationHours),
+      shardConsumption: round(shardConsumption * durationHours),
+    },
     error: "",
   };
 }
@@ -181,8 +204,12 @@ function normalizeOperators(value) {
 
   for (const source of value) {
     const charId = String(source?.charId || "").trim();
-    const elite = Number(source?.elite);
-    const level = Number(source?.level);
+    const rawElite = Number(source?.elite);
+    const rawLevel = Number(source?.level);
+    const elite =
+      Number.isInteger(rawElite) && rawElite >= 0 ? rawElite : 0;
+    const level =
+      Number.isInteger(rawLevel) && rawLevel >= 1 ? rawLevel : 1;
     if (
       !charId ||
       seen.has(charId) ||
@@ -201,29 +228,99 @@ function normalizeOperators(value) {
   return normalized;
 }
 
-function normalizeBonus(value, operators) {
-  const room = Number(value?.room ?? 0);
+function getInvalidOperatorDiagnostics(value) {
+  if (!Array.isArray(value)) {
+    return {
+      receivedOperators: [],
+      invalidOperators: [
+        {
+          index: null,
+          invalidFields: ["operators"],
+          reason: "notArray",
+        },
+      ],
+    };
+  }
+
+  const seen = new Set();
+  const receivedOperators = value.map((source) => ({
+    charId: source?.charId,
+    elite: source?.elite,
+    level: source?.level,
+  }));
+  const invalidOperators = [];
+
+  for (const [index, source] of value.entries()) {
+    const charId = String(source?.charId || "").trim();
+    const elite = Number(source?.elite);
+    const level = Number(source?.level);
+    const invalidFields = [];
+
+    if (!charId) {
+      invalidFields.push("charId");
+    } else if (seen.has(charId)) {
+      invalidFields.push("charId(duplicate)");
+    }
+    if (!Number.isInteger(elite) || elite < 0) {
+      invalidFields.push("elite");
+    }
+    if (!Number.isInteger(level) || level < 1) {
+      invalidFields.push("level");
+    }
+
+    if (invalidFields.length) {
+      invalidOperators.push({
+        index,
+        charId: source?.charId,
+        elite: source?.elite,
+        level: source?.level,
+        invalidFields,
+      });
+    }
+    if (charId) {
+      seen.add(charId);
+    }
+  }
+
+  return {
+    receivedOperators,
+    invalidOperators,
+  };
+}
+
+function normalizeTradingFactors(value, operators) {
+  if (!value || typeof value !== "object") {
+    return null;
+  }
+
+  const product = String(value?.product || "").trim();
+  const stationLevel = Number(value?.stationLevel);
+  const roomBonus = Number(value?.roomBonus ?? 0);
   const hasLocalOrderBonusOverride = Object.hasOwn(
-    value || {},
+    value?.orderAdjustment || {},
     "localOrderBonusOverride",
   );
   const localOrderBonusOverride = hasLocalOrderBonusOverride
-    ? Number(value.localOrderBonusOverride)
+    ? Number(value.orderAdjustment.localOrderBonusOverride)
     : null;
   const ignoredUnsupportedOperatorIds = new Set(
-    (value?.ignoredUnsupportedOperatorIds || [])
+    (value?.orderAdjustment?.ignoredUnsupportedOperatorIds || [])
       .map((charId) => String(charId || "").trim())
       .filter(Boolean),
   );
   const rawOperatorBonuses =
-    value?.operators && typeof value.operators === "object"
-      ? value.operators
+    value?.operatorBonusesById &&
+    typeof value.operatorBonusesById === "object"
+      ? value.operatorBonusesById
       : {};
   const operatorIds = new Set(operators.map((operator) => operator.charId));
-  const operatorsById = {};
+  const operatorBonusesById = {};
 
   if (
-    !Number.isFinite(room) ||
+    !["lmd", "orundum"].includes(product) ||
+    !Number.isInteger(stationLevel) ||
+    ![1, 2, 3].includes(stationLevel) ||
+    !Number.isFinite(roomBonus) ||
     (hasLocalOrderBonusOverride && !Number.isFinite(localOrderBonusOverride))
   ) {
     return null;
@@ -241,46 +338,44 @@ function normalizeBonus(value, operators) {
     if (!operatorIds.has(charId) || !Number.isFinite(bonus)) {
       return null;
     }
-    operatorsById[charId] = bonus;
+    operatorBonusesById[charId] = bonus;
   }
 
-  return {
-    room,
-    operators: operatorsById,
-    localOrderBonusOverride,
-    ignoredUnsupportedOperatorIds,
-  };
-}
-
-function normalizeFacilityContext(value) {
-  const source =
-    value?.context && typeof value.context === "object"
-      ? value.context
+  const crossRoomFactors =
+    value?.crossRoomFactors && typeof value.crossRoomFactors === "object"
+      ? value.crossRoomFactors
       : {};
-  const rawSilentResonance = Number(source?.silentResonance);
+  const rawSilentResonance = Number(crossRoomFactors?.silentResonance);
   const silentResonance =
     Number.isFinite(rawSilentResonance) && rawSilentResonance >= 0
       ? rawSilentResonance
       : null;
   const rawResolvedExternalOrderBonuses =
-    source?.resolvedExternalOrderBonuses &&
-    typeof source.resolvedExternalOrderBonuses === "object"
-      ? source.resolvedExternalOrderBonuses
+    crossRoomFactors?.resolvedExternalOrderBonuses &&
+    typeof crossRoomFactors.resolvedExternalOrderBonuses === "object"
+      ? crossRoomFactors.resolvedExternalOrderBonuses
       : null;
   const resolvedExternalOrderBonuses = rawResolvedExternalOrderBonuses
     ? Object.fromEntries(
         Object.entries(rawResolvedExternalOrderBonuses)
           .map(([skillId, value]) => [String(skillId || "").trim(), Number(value)])
-          .filter(
-            ([skillId, value]) =>
-              skillId && Number.isFinite(value),
-          ),
+          .filter(([skillId, bonus]) => skillId && Number.isFinite(bonus)),
       )
     : null;
 
   return {
-    silentResonance,
-    resolvedExternalOrderBonuses,
+    product,
+    stationLevel,
+    roomBonus,
+    operatorBonusesById,
+    orderAdjustment: {
+      localOrderBonusOverride,
+      ignoredUnsupportedOperatorIds,
+    },
+    crossRoomFactors: {
+      silentResonance,
+      resolvedExternalOrderBonuses,
+    },
   };
 }
 
@@ -862,7 +957,7 @@ function calculateLocalOrderBonus(context, operators, product) {
   return result + [...maxRules.values()].reduce((sum, percent) => sum + percent, 0);
 }
 
-function getOrderDistribution(context, stationLevel) {
+function getOrderDistribution(context, stationLevel, durationHours) {
   const highQualitySkills = context.highQualityOrderSkills || [];
   if (highQualitySkills.length === 0) {
     return ORDER_DISTRIBUTION_BY_LEVEL[stationLevel] || null;
@@ -879,11 +974,12 @@ function getOrderDistribution(context, stationLevel) {
   }
 
   const activeHighQualityVariants = highQualityVariants.filter(Boolean);
-  return getRiicTradeOrderDistribution({
+  return getRiicTradeAverageOrderDistribution({
     stationLevel,
     highQualityVariants: activeHighQualityVariants.map((variant) =>
       variant === "\u63d0\u5347" ? "beta" : variant,
     ),
+    durationHours,
     allowExtraAlphaWithBeta: true,
   });
 }
@@ -921,31 +1017,49 @@ function calculateNormalOrButshu({
   context,
   operators,
   stationLevel,
-  bonus,
+  tradingFactors,
+  durationHours,
   includeOrdinaryBonuses = true,
 }) {
-  const distribution = getOrderDistribution(context, stationLevel);
+  const distribution = getOrderDistribution(
+    context,
+    stationLevel,
+    durationHours,
+  );
   if (!distribution) {
-    return createFailure(type, "lmd", "timeDependentOrderProbability");
+    return createFailure(
+      type,
+      "lmd",
+      "timeDependentOrderProbability",
+      durationHours,
+    );
   }
 
   const localOrderBonus =
-    bonus.localOrderBonusOverride ??
+    tradingFactors.orderAdjustment.localOrderBonusOverride ??
     calculateLocalOrderBonus(context, operators, "lmd");
   if (localOrderBonus === null) {
-    return createFailure(type, "lmd", "notSupported");
+    return createFailure(type, "lmd", "notSupported", durationHours);
   }
 
   const operatorBonus = includeOrdinaryBonuses
-    ? Object.values(bonus.operators).reduce((sum, value) => sum + value, 0)
+    ? Object.values(tradingFactors.operatorBonusesById).reduce(
+        (sum, value) => sum + value,
+        0,
+      )
     : 0;
   const staffingBonus = includeOrdinaryBonuses
     ? getStaffingBonusPercent(operators)
     : 0;
   const speedMultiplier =
-    1 + (localOrderBonus + staffingBonus + bonus.room + operatorBonus) / 100;
+    1 +
+    (localOrderBonus +
+      staffingBonus +
+      tradingFactors.roomBonus +
+      operatorBonus) /
+      100;
   if (speedMultiplier < 0) {
-    return createFailure(type, "lmd", "invalidBonus");
+    return createFailure(type, "lmd", "invalidBonus", durationHours);
   }
 
   const physicalGoldPerHour = calculateRiicExpectedPerHour(
@@ -969,6 +1083,7 @@ function calculateNormalOrButshu({
   return createSuccess({
     type,
     product: "lmd",
+    durationHours,
     rate,
     lmd,
     gold,
@@ -981,11 +1096,12 @@ function calculateClosure({
   context,
   operators,
   stationLevel,
-  bonus,
+  tradingFactors,
+  durationHours,
   includeOrdinaryBonuses = true,
 }) {
   if (stationLevel !== 3) {
-    return createFailure("closure", "lmd", "notSupported");
+    return createFailure("closure", "lmd", "notSupported", durationHours);
   }
 
   const teammateContext = {
@@ -1003,21 +1119,28 @@ function calculateClosure({
     "lmd",
   );
   if (teammateOrderBonus === null) {
-    return createFailure("closure", "lmd", "notSupported");
+    return createFailure("closure", "lmd", "notSupported", durationHours);
   }
 
   const operatorBonus = includeOrdinaryBonuses
-    ? Object.values(bonus.operators).reduce((sum, value) => sum + value, 0)
+    ? Object.values(tradingFactors.operatorBonusesById).reduce(
+        (sum, value) => sum + value,
+        0,
+      )
     : 0;
   const staffingBonus = includeOrdinaryBonuses
     ? getStaffingBonusPercent(operators)
     : 0;
   const speedMultiplier =
     1 +
-    (10 + teammateOrderBonus + staffingBonus + bonus.room + operatorBonus) /
+    (10 +
+      teammateOrderBonus +
+      staffingBonus +
+      tradingFactors.roomBonus +
+      operatorBonus) /
       100;
   if (speedMultiplier < 0) {
-    return createFailure("closure", "lmd", "invalidBonus");
+    return createFailure("closure", "lmd", "invalidBonus", durationHours);
   }
 
   const physicalGoldPerHour = (5 / 6) * speedMultiplier;
@@ -1034,6 +1157,7 @@ function calculateClosure({
   return createSuccess({
     type: "closure",
     product: "lmd",
+    durationHours,
     rate,
     lmd,
     gold,
@@ -1045,7 +1169,8 @@ function calculateClosure({
 function calculateOrundum({
   context,
   operators,
-  bonus,
+  tradingFactors,
+  durationHours,
   includeOrdinaryBonuses = true,
 }) {
   const localOrderBonus = calculateLocalOrderBonus(
@@ -1054,19 +1179,27 @@ function calculateOrundum({
     "orundum",
   );
   if (localOrderBonus === null) {
-    return createFailure("normal", "orundum", "notSupported");
+    return createFailure("normal", "orundum", "notSupported", durationHours);
   }
 
   const operatorBonus = includeOrdinaryBonuses
-    ? Object.values(bonus.operators).reduce((sum, value) => sum + value, 0)
+    ? Object.values(tradingFactors.operatorBonusesById).reduce(
+        (sum, value) => sum + value,
+        0,
+      )
     : 0;
   const staffingBonus = includeOrdinaryBonuses
     ? getStaffingBonusPercent(operators)
     : 0;
   const speedMultiplier =
-    1 + (localOrderBonus + staffingBonus + bonus.room + operatorBonus) / 100;
+    1 +
+    (localOrderBonus +
+      staffingBonus +
+      tradingFactors.roomBonus +
+      operatorBonus) /
+      100;
   if (speedMultiplier < 0) {
-    return createFailure("normal", "orundum", "invalidBonus");
+    return createFailure("normal", "orundum", "invalidBonus", durationHours);
   }
   const orundumCapacity =
     ORUNDUM_TRADE_CAPACITY_PER_HOUR * speedMultiplier;
@@ -1074,6 +1207,7 @@ function calculateOrundum({
   return createSuccess({
     type: "normal",
     product: "orundum",
+    durationHours,
     rate: speedMultiplier * 100,
     lmd: 0,
     gold: 0,
@@ -1084,53 +1218,80 @@ function calculateOrundum({
 }
 
 /**
- * P01: calculate one trading station from facility and operator data only.
- * LMD values, order consumption, and orundum capacity are per hour.
+ * P01: calculate one trading-station shift from its on-duty operators and
+ * resolved external factors. Per-hour values remain available for callers that
+ * need rates; `segment` carries the same result for `durationHours`.
  * Unsupported active skills return an explicit error instead of a baseline
  * estimate.
  */
-export function calculateRiicTrading(facility, operators, bonus = {}) {
+export function calculateRiicTrading({
+  durationHours,
+  operators,
+  tradingFactors,
+} = {}) {
+  const normalizedDurationHours = Number(durationHours);
   const normalizedOperators = normalizeOperators(operators);
-  const product = String(facility?.product || "").trim();
+  const normalizedTradingFactors = normalizeTradingFactors(
+    tradingFactors,
+    normalizedOperators || [],
+  );
+  const product = String(normalizedTradingFactors?.product || "").trim();
   const type = getSpecialType(normalizedOperators || [], product);
-  const stationLevel = Number(facility?.level);
 
   if (
-    String(facility?.type || "").trim() !== "trading" ||
-    !["lmd", "orundum"].includes(product) ||
-    !Number.isInteger(stationLevel) ||
-    ![1, 2, 3].includes(stationLevel)
+    !Number.isFinite(normalizedDurationHours) ||
+    normalizedDurationHours < 0
   ) {
-    return createFailure(type, product, "invalidFacility");
+    return createFailure(type, product, "invalidDuration");
   }
 
   if (!normalizedOperators) {
-    return createFailure(type, product, "invalidOperators");
+    return createFailure(
+      type,
+      product,
+      "invalidOperators",
+      normalizedDurationHours,
+      getInvalidOperatorDiagnostics(operators),
+    );
   }
 
-  const normalizedBonus = normalizeBonus(bonus, normalizedOperators);
-  if (!normalizedBonus) {
-    return createFailure(type, product, "invalidBonus");
+  if (!normalizedTradingFactors) {
+    return createFailure(type, product, "invalidTradingFactors", normalizedDurationHours);
+  }
+
+  if (normalizedOperators.length === 0) {
+    return createSuccess({
+      type,
+      product,
+      durationHours: normalizedDurationHours,
+      rate: 0,
+      lmd: 0,
+      gold: 0,
+      virtualGold: 0,
+      orundumCapacity: 0,
+      shardConsumption: 0,
+    });
   }
 
   const context = createTradingContext(
     normalizedOperators,
     product,
-    normalizeFacilityContext(facility),
+    normalizedTradingFactors.crossRoomFactors,
     {
       ignoredUnsupportedOperatorIds:
-        normalizedBonus.ignoredUnsupportedOperatorIds,
+        normalizedTradingFactors.orderAdjustment.ignoredUnsupportedOperatorIds,
     },
   );
   if (context.error) {
-    return createFailure(type, product, context.error);
+    return createFailure(type, product, context.error, normalizedDurationHours);
   }
 
   if (product === "orundum") {
     return calculateOrundum({
       context,
       operators: normalizedOperators,
-      bonus: normalizedBonus,
+      tradingFactors: normalizedTradingFactors,
+      durationHours: normalizedDurationHours,
     });
   }
 
@@ -1138,8 +1299,9 @@ export function calculateRiicTrading(facility, operators, bonus = {}) {
     return calculateClosure({
       context,
       operators: normalizedOperators,
-      stationLevel,
-      bonus: normalizedBonus,
+      stationLevel: normalizedTradingFactors.stationLevel,
+      tradingFactors: normalizedTradingFactors,
+      durationHours: normalizedDurationHours,
     });
   }
 
@@ -1150,7 +1312,8 @@ export function calculateRiicTrading(facility, operators, bonus = {}) {
         : "normal",
     context,
     operators: normalizedOperators,
-    stationLevel,
-    bonus: normalizedBonus,
+    stationLevel: normalizedTradingFactors.stationLevel,
+    tradingFactors: normalizedTradingFactors,
+    durationHours: normalizedDurationHours,
   });
 }
