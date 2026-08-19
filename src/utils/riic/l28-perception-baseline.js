@@ -21,13 +21,19 @@ function getDormitoryRoomCount(layoutFacts = {}) {
   return count > 0 ? count : DEFAULT_DORMITORY_ROOM_COUNT;
 }
 
-function hasOwnedOperator(ownedOperators, operatorId) {
+function hasOwnedOperatorAtElite(
+  ownedOperators,
+  operatorId,
+  requiredElite,
+) {
   if (ownedOperators instanceof Map) {
-    return ownedOperators.has(operatorId);
+    return Number(ownedOperators.get(operatorId)?.elite) >= requiredElite;
   }
 
   return (ownedOperators || []).some(
-    (item) => String(item?.charId || "").trim() === operatorId,
+    (item) =>
+      String(item?.charId || "").trim() === operatorId &&
+      Number(item?.elite) >= requiredElite,
   );
 }
 
@@ -108,7 +114,7 @@ export function getRiicPerceptionCoreBaseline({
       ALICE_OPERATOR_ID,
       CZERNY_OPERATOR_ID,
     ]) {
-      if (hasOwnedOperator(ownedOperators, supportOperatorId)) {
+      if (hasOwnedOperatorAtElite(ownedOperators, supportOperatorId, 2)) {
         sources.push({
           operatorId: supportOperatorId,
           resource: "perceptionInformation",

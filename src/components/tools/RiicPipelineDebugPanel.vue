@@ -218,8 +218,8 @@ function getL73ReasonLabel(reason) {
     {
       manual: "手动加入中枢，强制保留",
       notApplicable: "不属于本次可撤换的指定干员效果",
-      targetRealized: "对应目标已在同班次、对应设施/产物上岗",
-      targetMissing: "对应目标没有在同班次、对应设施/产物上岗",
+      targetRealized: "已抓到关联干员",
+      targetMissing: "未抓到关联干员",
     }[reason] || reason || "未记录原因"
   );
 }

@@ -108,7 +108,23 @@ function createL73ControlReconciliationState() {
         teamIndex: 0,
         slotCount: 1,
         roomEffectOperators: [],
-        operatorEffectOperators: [{ charId: "control-source" }],
+        operatorEffectOperators: [
+          {
+            charId: "control-source",
+            controlCenterResolvedEffects: [
+              {
+                metric: "production",
+                bonusPercent: 15,
+                target: {
+                  scope: "operators",
+                  roomType: "manufacture",
+                  product: "gold",
+                  operatorIds: ["final-room-target"],
+                },
+              },
+            ],
+          },
+        ],
         fillerOperators: [],
       },
     ],
@@ -144,9 +160,9 @@ const l73FinalRoomTargetResult =
     controlState: createL73ControlReconciliationState(),
     selectedRoomTeams: [
       {
-        teamIndex: 0,
-        facility: "manufacture",
-        product: "gold",
+        teamIndex: 1,
+        facility: "trading",
+        product: "lmd",
         operatorIds: ["final-room-target"],
       },
     ],
@@ -158,6 +174,49 @@ assert.deepEqual(l73FinalRoomTargetResult.decisions, [
     operatorId: "control-source",
     action: "kept",
     reason: "targetRealized",
+  },
+]);
+
+const l73ManualOperatorResult =
+  reconcileRiicControlCenterAfterRoomSelection({
+    controlState: createL73ControlReconciliationState(),
+    selectedRoomTeams: [],
+    manualOperatorIdsByTeamIndex: {
+      0: ["control-source"],
+    },
+    idleFillOperators: [],
+  });
+assert.deepEqual(l73ManualOperatorResult.decisions, [
+  {
+    teamIndex: 0,
+    operatorId: "control-source",
+    action: "kept",
+    reason: "manual",
+  },
+]);
+
+const l73NotApplicableResult = reconcileRiicControlCenterAfterRoomSelection({
+  controlState: {
+    ...createL73ControlReconciliationState(),
+    teams: [
+      {
+        teamIndex: 0,
+        slotCount: 1,
+        roomEffectOperators: [],
+        operatorEffectOperators: [{ charId: "control-source" }],
+        fillerOperators: [],
+      },
+    ],
+  },
+  selectedRoomTeams: [],
+  idleFillOperators: [],
+});
+assert.deepEqual(l73NotApplicableResult.decisions, [
+  {
+    teamIndex: 0,
+    operatorId: "control-source",
+    action: "kept",
+    reason: "notApplicable",
   },
 ]);
 

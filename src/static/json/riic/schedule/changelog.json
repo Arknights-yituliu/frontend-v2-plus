@@ -10,7 +10,7 @@
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260819.2022"
+      "version": "v20260819.2325"
     },
     "assembler": {
       "label": "组装器",
@@ -18,14 +18,38 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260819.2125"
+      "version": "v20260819.2325"
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260819.2125"
+      "version": "v20260819.2325"
     }
   },
   "entries": [
+    {
+      "date": "2026-08-19",
+      "version": "v20260819.2325",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 4,
+          "description": "中枢效果复核改为检查关联干员是否被最终房间班组使用，避免受房间类型或班次索引限制而误撤换"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 4,
+          "description": "感知信息资源的宿舍支援干员仅在精英二后计入加成"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 2,
+          "description": "中枢复核原因改为直接展示关联干员是否已被最终班组使用"
+        }
+      ]
+    },
     {
       "date": "2026-08-19",
       "version": "v20260819.2125",
