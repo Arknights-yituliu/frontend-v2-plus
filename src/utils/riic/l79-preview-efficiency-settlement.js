@@ -1,4 +1,3 @@
-import { operatorTableV2 } from "/src/utils/gameData.js";
 import RIIC_BASELINE_SKILL_RULES from "../../static/json/tools/R00-baseline.json" with {
   type: "json",
 };
@@ -21,10 +20,8 @@ import {
 } from "./l51-control-effects.js";
 import {
   applyRiicActiveRosterPreviewEffects,
-} from "./l65-active-roster-effects.js";
-import {
-  getRiicAutomationOperatorLayer3Bonus,
-} from "./l62-automation-calculation.js";
+} from "./l79-active-roster-settlement.js";
+import { resolveRiicOperatorIdByName } from "./riic-operator-identity.js";
 
 const BASELINE_ROOM_TYPES = new Set([
   "manufacture",
@@ -36,12 +33,22 @@ const BASELINE_ROOM_TYPES = new Set([
 ]);
 const PRODUCTIVE_ROOM_TYPES = new Set(["manufacture", "trading"]);
 const AUTOMATION_POWER_SUPPORT_OPERATOR_ID = "char_1027_greyy2";
-const OPERATOR_ID_BY_NAME = new Map(
-  Object.entries(operatorTableV2 || {}).flatMap(([charId, operator]) => {
-    const name = String(operator?.name || "").trim();
-    return name ? [[name, charId]] : [];
-  }),
-);
+const L79_AUTOMATION_MANUFACTURE_SKILLS = Object.freeze({
+  char_400_weedy: Object.freeze([
+    Object.freeze({ eliteAtLeast: 2, percentPerPowerPlant: 15 }),
+    Object.freeze({ eliteAtLeast: 0, percentPerPowerPlant: 10 }),
+  ]),
+  char_416_zumama: Object.freeze([
+    Object.freeze({ eliteAtLeast: 2, percentPerPowerPlant: 10 }),
+    Object.freeze({ eliteAtLeast: 0, percentPerPowerPlant: 5 }),
+  ]),
+  char_433_windft: Object.freeze([
+    Object.freeze({ eliteAtLeast: 2, percentPerPowerPlant: 5 }),
+  ]),
+  char_472_pasngr: Object.freeze([
+    Object.freeze({ eliteAtLeast: 2, percentPerPowerPlant: 5 }),
+  ]),
+});
 
 function isEmptyProductiveRoom(room) {
   return (
@@ -179,7 +186,7 @@ function resolveRoomOperators({
   const issues = [];
   const operators = (Array.isArray(names) ? names : []).map((value) => {
     const name = String(value || "").trim();
-    const charId = OPERATOR_ID_BY_NAME.get(name) || "";
+    const charId = resolveRiicOperatorIdByName(name);
     const profile = profilesById.get(charId);
     const operatorIssues = [];
 
@@ -575,11 +582,72 @@ function getAutomationSupportState({ rooms, profilesById } = {}) {
   };
 }
 
+function getL79AutomationManufactureSkill(operator) {
+  const operatorId = String(operator?.charId || "").trim();
+  const elite = toNonNegativeInteger(operator?.elite);
+  if (!operatorId || elite === null) {
+    return null;
+  }
+
+  return (
+    (L79_AUTOMATION_MANUFACTURE_SKILLS[operatorId] || []).find(
+      (skill) => elite >= skill.eliteAtLeast,
+    ) || null
+  );
+}
+
+function getL79AutomationManufactureState({ room, automationSupportState } = {}) {
+  if (room?.facility !== "manufacture") {
+    return null;
+  }
+
+  const operators = (room?.operators || []).flatMap((operator) => {
+    const skill = getL79AutomationManufactureSkill(operator);
+    return skill
+      ? [
+          {
+            operatorId: String(operator.charId || "").trim(),
+            elite: Number(operator.elite),
+            percentPerPowerPlant: skill.percentPerPowerPlant,
+          },
+        ]
+      : [];
+  });
+  if (operators.length === 0) {
+    return null;
+  }
+
+  const physicalPowerPlantCount = Number(
+    automationSupportState?.powerPlantCount || 0,
+  );
+  const effectivePowerPlantCount = Number(
+    automationSupportState?.effectivePowerPlantCount ||
+      physicalPowerPlantCount,
+  );
+
+  return {
+    physicalPowerPlantCount,
+    effectivePowerPlantCount,
+    supportOperatorActive:
+      automationSupportState?.supportOperatorActive === true,
+    operators,
+    operatorIds: new Set(operators.map((operator) => operator.operatorId)),
+    suppressedOperatorIds: (room?.operators || [])
+      .map((operator) => String(operator?.charId || "").trim())
+      .filter(
+        (operatorId) =>
+          operatorId &&
+          !operators.some((operator) => operator.operatorId === operatorId),
+      ),
+  };
+}
+
 function getLayer3LocalBonuses({
   room,
   ownedOperators,
   layoutFacts,
   automationSupportState,
+  automationManufactureState,
 } = {}) {
   const expectedSlots = getExpectedSlots(room?.facility, room?.stationLevel);
   if (!expectedSlots) {
@@ -595,19 +663,50 @@ function getLayer3LocalBonuses({
   return (room?.operators || [])
     .filter((operator) => operator.charId && operator.elite !== null)
     .map((operator) => {
-      const bonus = getRiicAutomationOperatorLayer3Bonus({
-        operatorId: operator.charId,
-        ownedOperators,
-        scope,
-        layoutFacts,
-        effectivePowerPlantCount:
-          automationSupportState.effectivePowerPlantCount,
-        getLayer3OperatorLocalBonus:
-          RiicLayer3Rules.getRiicLayer3OperatorLocalBonus,
-      });
+      const fullBonus = Number(
+        RiicLayer3Rules.getRiicLayer3OperatorLocalBonus({
+          operatorId: operator.charId,
+          ownedOperators,
+          scope,
+          layoutFacts,
+        }) || 0,
+      );
+      const nonFacilityCountBonus = Number(
+        RiicLayer3Rules.getRiicLayer3OperatorLocalBonus({
+          operatorId: operator.charId,
+          ownedOperators,
+          scope,
+          layoutFacts,
+          excludeFacilityCountBonuses: true,
+        }) || 0,
+      );
+      const facilityCountBonus = fullBonus - nonFacilityCountBonus;
+      const automationOperator = automationManufactureState?.operators.find(
+        (entry) => entry.operatorId === operator.charId,
+      );
+      const suppressedByAutomation =
+        Boolean(automationManufactureState) && !automationOperator;
+      const automationVirtualPowerAdjustment = automationOperator
+        ? automationOperator.percentPerPowerPlant *
+          (automationManufactureState.effectivePowerPlantCount -
+            automationManufactureState.physicalPowerPlantCount)
+        : 0;
+      const bonusPercent = suppressedByAutomation
+        ? facilityCountBonus
+        : fullBonus + automationVirtualPowerAdjustment;
+
       return {
         operatorId: operator.charId,
-        bonusPercent: Number(bonus || 0),
+        bonusPercent,
+        ...(automationManufactureState
+          ? {
+              fullBonusPercent: fullBonus,
+              facilityCountBonusPercent: facilityCountBonus,
+              nonFacilityCountBonusPercent: nonFacilityCountBonus,
+              suppressedByAutomation,
+              automationVirtualPowerAdjustment,
+            }
+          : {}),
       };
     })
     .filter((entry) => entry.bonusPercent !== 0);
@@ -752,11 +851,56 @@ function calculateL79Room({
     room,
     effects: controlEffects,
   });
+  const automationManufactureState = getL79AutomationManufactureState({
+    room,
+    automationSupportState,
+  });
+  let settledCalculation = calculation;
+
+  if (automationManufactureState) {
+    try {
+      const automationCalculation = calculateRiicRoomEfficiency({
+        resolvedSkills,
+        roomType: room.facility,
+        product: room.product,
+        operatorIds: uniqueKnownOperatorIds.filter((operatorId) =>
+          automationManufactureState.operatorIds.has(operatorId),
+        ),
+        expectedSlots,
+        allowPartialRoster: true,
+      });
+      if (automationCalculation.valid) {
+        settledCalculation = automationCalculation;
+      } else {
+        issues.push(
+          createIssue({
+            code: "automationRoomCalculationInvalid",
+            message:
+              "The automation room override could not be settled; ordinary production was retained.",
+            planIndex,
+            facility: room.facility,
+            index: room.index,
+          }),
+        );
+      }
+    } catch (error) {
+      issues.push(
+        createIssue({
+          code: "automationRoomCalculationError",
+          message: String(error?.message || error),
+          planIndex,
+          facility: room.facility,
+          index: room.index,
+        }),
+      );
+    }
+  }
   const layer3OperatorBonuses = getLayer3LocalBonuses({
     room,
     ownedOperators,
     layoutFacts,
     automationSupportState,
+    automationManufactureState,
   });
   const layer3OperatorBonusPercent = layer3OperatorBonuses.reduce(
     (total, entry) => total + entry.bonusPercent,
@@ -766,7 +910,7 @@ function calculateL79Room({
     ? (room.operators || []).length
     : 0;
   const value =
-    Number(calculation.localTotalPercent || 0) +
+    Number(settledCalculation.localTotalPercent || 0) +
     staffingBonusPercent +
     layer3OperatorBonusPercent +
     controlCenter.facilityBonusPercent +
@@ -785,7 +929,23 @@ function calculateL79Room({
         value,
         status: "calculated",
         breakdown: {
-          calculation,
+          calculation: settledCalculation,
+          ...(automationManufactureState
+            ? {
+                beforeAutomationCalculation: calculation,
+                automationManufactureSettlement: {
+                  physicalPowerPlantCount:
+                    automationManufactureState.physicalPowerPlantCount,
+                  effectivePowerPlantCount:
+                    automationManufactureState.effectivePowerPlantCount,
+                  supportOperatorActive:
+                    automationManufactureState.supportOperatorActive,
+                  operators: automationManufactureState.operators,
+                  suppressedOperatorIds:
+                    automationManufactureState.suppressedOperatorIds,
+                },
+              }
+            : {}),
           staffingBonusPercent,
           layer3OperatorBonusPercent,
           layer3OperatorBonuses,

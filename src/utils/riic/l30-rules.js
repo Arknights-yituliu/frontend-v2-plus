@@ -1,18 +1,11 @@
 import RIIC_LAYER3_RULES from "../../static/json/tools/riic-candidates/R30-rules.json" with {
   type: "json",
 };
-import { operatorTableV2 } from "/src/utils/gameData.js";
-
-const OPERATOR_ID_BY_NAME = new Map(
-  Object.entries(operatorTableV2 || {}).flatMap(([charId, operator]) => {
-    const name = String(operator?.name || "").trim();
-    return name ? [[name, charId]] : [];
-  }),
-);
+import { resolveRiicOperatorIdByName } from "./riic-operator-identity.js";
 
 function resolveRuleOperatorId(value) {
   const operatorName = String(value?.operatorName || "").trim();
-  return operatorName ? OPERATOR_ID_BY_NAME.get(operatorName) || "" : "";
+  return operatorName ? resolveRiicOperatorIdByName(operatorName) : "";
 }
 
 function normalizeRuleEffects(effects) {
