@@ -1,5 +1,5 @@
 import request from "/src/api/request"
-import {getOAuthToken} from "/src/api/uc/oauth.js"
+import {getOAuthToken} from "/src/api/userInfo.js"
 
 
 export default {

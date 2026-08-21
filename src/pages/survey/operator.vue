@@ -19,7 +19,7 @@ import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
-import { getOAuthToken, userInfo } from "/src/api/uc/oauth.js";
+import { getOAuthToken, userInfo } from "/src/api/userInfo.js";
 import { useRoute, useRouter } from "vue-router";
 
 const sectionPanels = ref([])

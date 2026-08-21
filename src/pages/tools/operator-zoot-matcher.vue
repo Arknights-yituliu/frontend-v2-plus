@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import operatorDataAPI from '/src/api/operatorData.js'
-import { getOAuthToken } from '/src/api/uc/oauth.js'
+import { getOAuthToken } from '/src/api/userInfo.js'
 import { listOperatorZootMatcherStageInfo, searchOperatorZootMatcherJobs } from '/src/api/operatorZootMatcher.js'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
 import { operatorTableV2 } from '/src/utils/gameData.js'

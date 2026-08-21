@@ -18,7 +18,7 @@ import RiicOperatorSourcePanel from "/src/components/tools/RiicOperatorSourcePan
 import RiicPipelineDebugPanel from "/src/components/tools/RiicPipelineDebugPanel.vue";
 import RiicRoomGroupNavigator from "/src/components/tools/RiicRoomGroupNavigator.vue";
 import RiicScheduleExportActions from "/src/components/tools/RiicScheduleExportActions.vue";
-import { getOAuthToken } from "/src/api/uc/oauth.js";
+import { getOAuthToken } from "/src/api/userInfo.js";
 import RiicScheduleExportSettings from "/src/components/tools/RiicScheduleExportSettings.vue";
 import RiicFiammettaRecoverySetting from "/src/components/tools/RiicFiammettaRecoverySetting.vue";
 import RiicScheduleFiammettaSettings from "/src/components/tools/RiicScheduleFiammettaSettings.vue";

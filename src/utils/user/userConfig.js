@@ -1,4 +1,4 @@
-import {getUid} from "@/api/uc/oauth.js";
+import {getUid} from "@/api/userInfo.js";
 import {ref} from "vue";
 
 

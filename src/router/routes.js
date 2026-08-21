@@ -1,9 +1,6 @@
 import Error404 from "/src/components/layout/Error404.vue";
 import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.vue'
 import GACHA_CALCULATOR from '/src/pages/tools/gacha-calc.vue'
-import REGISTER from '/src/pages/account/register.vue'
-import LOGIN from '/src/pages/account/login.vue'
-import RETRIEVE from '/src/pages/account/retrieve.vue'
 import SURVEY_OPERATOR from '/src/pages/survey/operator.vue'
 import STORE from '/src/pages/material/store.vue'
 import PACK from '/src/pages/material/pack.vue'
@@ -436,26 +433,6 @@ const routes = [
         }
     },
     {
-        path: '/dev/uc-login-test',
-        text: 'UC密码登录测试',
-        name: 'UcLoginTest',
-        display: false,
-        component: () => import('/src/pages/dev/uc-login-test.vue'),
-        meta: {
-            title: 'UC密码登录测试'
-        }
-    },
-    {
-        path: '/dev/oauth-test',
-        text: 'OAuth授权码测试',
-        name: 'OauthTest',
-        display: false,
-        component: () => import('/src/pages/dev/oauth-test.vue'),
-        meta: {
-            title: 'OAuth授权码测试'
-        }
-    },
-    {
         path: '/tools/account-overview',
         text: '账号信息一图流',
         name: 'AccountOverview',
@@ -547,46 +524,6 @@ const routes = [
         component: () => import('/src/pages/information/integrated-strategies/integratedStrategies.vue'),
         meta: {
             title: '集成战略结局一览'
-        }
-    },
-    {
-        path: '/account/register',
-        text: '注册账号',
-        name: 'REGISTER',
-        display: true,
-        component: REGISTER,
-        meta: {
-            title: '注册账号'
-        }
-    },
-    {
-        path: '/account/login',
-        text: '登录账号',
-        name: 'LOGIN',
-        display: false,
-        component: LOGIN,
-        meta: {
-            title: '登录账号'
-        }
-    },
-    {
-        path: '/account/retrieve',
-        text: '找回账号',
-        name: 'RETRIEVE',
-        display: false,
-        component: RETRIEVE,
-        meta: {
-            title: '找回账号'
-        }
-    },
-    {
-        path: '/account/email',
-        text: '绑定/换绑邮箱',
-        name: 'BIND_EMAIL',
-        display: false,
-        component: () => import('/src/pages/account/bind-email.vue'),
-        meta: {
-            title: '绑定/换绑邮箱'
         }
     },
     {

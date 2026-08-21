@@ -17,7 +17,7 @@
             <OperatorAvatar :char-id="userInfo.avatar" :size="44" :mobile-size="44"
                             rounded>
             </OperatorAvatar>
-            <span class="user-nav-name">{{ userInfo.userName }}</span>
+            <span class="user-nav-name">{{ userInfo.nickname }}</span>
           </div>
         </template>
 
@@ -65,8 +65,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {clearOAuthToken, fetchOAuthUserInfo, oauthAuthorize, userInfo} from "/src/api/uc/oauth.js";
-import {logoutUcSession} from "/src/api/uc/uc-api.js";
+import {clearOAuthToken, fetchOAuthUserInfo, oauthAuthorize, userInfo} from "/src/api/userInfo.js";
 import {useRouter} from "vue-router";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 
@@ -102,9 +101,8 @@ function getUserInfoByToken() {
   fetchOAuthUserInfo()
 }
 
-//登出：先调用 UC 登出接口使服务端会话失效并清除本地 UC token，再清除 OAuth 会话
+//登出：清除本地 OAuth 会话
 async function logout() {
-  await logoutUcSession()
   clearOAuthToken()
   setTimeout(() => {
     location.reload()

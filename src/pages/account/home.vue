@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import UserInfo from "/src/components/account/UserInfo.vue";
 import OpenApiTokenCard from "/src/components/account/OpenApiTokenCard.vue";
 import StageConfig from "/src/components/account/StageConfig.vue";
-import { fetchOAuthUserInfo, setOAuthToken, userInfo } from "/src/api/uc/oauth.js";
+import { fetchOAuthUserInfo, setOAuthToken, userInfo } from "/src/api/userInfo.js";
 
 const authChecked = ref(false);
 
