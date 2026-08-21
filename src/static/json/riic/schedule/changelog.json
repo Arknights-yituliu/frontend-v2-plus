@@ -14,7 +14,7 @@
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20260821.1543"
+      "version": "v20260821.1814"
     },
     "yield": {
       "label": "收益计算器",
@@ -26,10 +26,17 @@
     }
   },
   "entries": [
+
     {
       "date": "2026-08-21",
       "version": "v20260821.1543",
       "items": [
+        {
+          "module": "组装器",
+          "type": "fix",
+          "level": 4,
+          "description": "修复了一个可能导致排班错误的bug"
+        },
         {
           "module": "调试信息",
           "type": "update",

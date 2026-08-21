@@ -64,6 +64,7 @@ export function useRiicOperatorSources(options = {}) {
     generateAutomaticSchedule,
     getIsUserLoggedIn,
     getAutomaticGenerationTriggerKey,
+    getAutomaticGenerationResultReady,
   } = options;
   const isUserLoggedIn = {
     get value() {
@@ -601,7 +602,11 @@ async function setActiveOperatorSource(
   if (
     generate &&
     automaticGenerationTriggerKey.value &&
-    (!sourceHasSavedWorkspace || initialWorkspace)
+    (
+      !sourceHasSavedWorkspace ||
+      initialWorkspace ||
+      getAutomaticGenerationResultReady?.() !== true
+    )
   ) {
     void generateAutomaticSchedule({ silentSuccess: true });
   }
