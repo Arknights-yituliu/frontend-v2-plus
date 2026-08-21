@@ -11,7 +11,7 @@ export function isRiicAutomaticScheduleAbortError(error) {
 function runRiicWorker({
   input,
   signal,
-  workerUrl,
+  createWorker,
   requestPrefix,
 } = {}) {
   if (typeof Worker !== "function") {
@@ -19,7 +19,7 @@ function runRiicWorker({
   }
 
   return new Promise((resolve, reject) => {
-    const worker = new Worker(workerUrl, { type: "module" });
+    const worker = createWorker();
     const requestId = `${requestPrefix}:${Date.now()}:${Math.random()}`;
     let settled = false;
 
@@ -72,7 +72,10 @@ export function runRiicAutomaticScheduleInWorker({
   return runRiicWorker({
     input,
     signal,
-    workerUrl: new URL("./l70-scheduler.worker.js", import.meta.url),
+    createWorker: () =>
+      new Worker(new URL("./l70-scheduler.worker.js", import.meta.url), {
+        type: "module",
+      }),
     requestPrefix: "riic-schedule",
   });
 }
@@ -84,7 +87,11 @@ export function runRiicTrainingRecommendationInWorker({
   return runRiicWorker({
     input,
     signal,
-    workerUrl: new URL("./l83-training-recommendation.worker.js", import.meta.url),
+    createWorker: () =>
+      new Worker(
+        new URL("./l83-training-recommendation.worker.js", import.meta.url),
+        { type: "module" },
+      ),
     requestPrefix: "riic-training-recommendation",
   });
 }
@@ -93,7 +100,10 @@ export function runRiicTrainingImpactInWorker({ input, signal } = {}) {
   return runRiicWorker({
     input,
     signal,
-    workerUrl: new URL("./l83-training-impact.worker.js", import.meta.url),
+    createWorker: () =>
+      new Worker(new URL("./l83-training-impact.worker.js", import.meta.url), {
+        type: "module",
+      }),
     requestPrefix: "riic-training-impact",
   });
 }
