@@ -453,6 +453,8 @@ const {
   generateAutomaticSchedule,
   getIsUserLoggedIn: () => isUserLoggedIn.value,
   getAutomaticGenerationTriggerKey: () => automaticGenerationTriggerKey.value,
+  getAutomaticGenerationResultReady: () =>
+    isAutomaticGenerationResultReady(),
 });
 
 function normalizeTwoShiftRotationMode(value) {
@@ -2626,6 +2628,16 @@ function cancelTrainingRecommendation() {
   };
 }
 
+function isAutomaticGenerationResultReady() {
+  return Object.values(selectedRoomGroupTeamCandidateKeys.value || {}).some(
+    (cohorts) =>
+      Object.values(cohorts || {}).some(
+        (candidateKeys) =>
+          Array.isArray(candidateKeys) && candidateKeys.length > 0,
+      ),
+  );
+}
+
 async function generateTrainingRecommendation(searchConfig) {
   if (
     riicTrainingMode.value === "ideal" ||
@@ -3165,8 +3177,15 @@ watch(
       return;
     }
 
-    if (lastAutomaticGenerationTriggerKey.value === triggerKey) {
+    if (
+      lastAutomaticGenerationTriggerKey.value === triggerKey &&
+      isAutomaticGenerationResultReady()
+    ) {
       return;
+    }
+
+    if (lastAutomaticGenerationTriggerKey.value === triggerKey) {
+      lastAutomaticGenerationTriggerKey.value = "";
     }
 
     void generateAutomaticSchedule({ silentSuccess: true });
@@ -3184,7 +3203,8 @@ watch(operatorSourceSwitching, (isSwitching, wasSwitching) => {
 
   if (
     lastAutomaticGenerationTriggerKey.value ===
-    automaticGenerationTriggerKey.value
+      automaticGenerationTriggerKey.value &&
+    isAutomaticGenerationResultReady()
   ) {
     return;
   }
