@@ -2629,13 +2629,23 @@ function cancelTrainingRecommendation() {
 }
 
 function isAutomaticGenerationResultReady() {
-  return Object.values(selectedRoomGroupTeamCandidateKeys.value || {}).some(
-    (cohorts) =>
-      Object.values(cohorts || {}).some(
-        (candidateKeys) =>
-          Array.isArray(candidateKeys) && candidateKeys.length > 0,
+  const groupsWithCandidates = candidateEnabledScheduleRoomGroups.value.filter(
+    (group) =>
+      (roomGroupCandidateStates.value[group.id]?.cohorts || []).some(
+        (cohort) => (cohort.candidates || []).length > 0,
       ),
   );
+  if (groupsWithCandidates.length === 0) {
+    return false;
+  }
+
+  return groupsWithCandidates.every((group) => {
+    const state = roomGroupCandidateStates.value[group.id];
+    return (
+      state?.status === "ready" &&
+      getRoomGroupSelectionProgress(group).complete
+    );
+  });
 }
 
 async function generateTrainingRecommendation(searchConfig) {
