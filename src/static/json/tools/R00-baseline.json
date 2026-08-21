@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "source": {
     "buildingTable": "src/static/json/build/building_table.json",
     "replacementGroups": "src/static/json/build/logistics_skill_replace_groups.json",
@@ -28,6 +28,13 @@
       "storage capacity",
       "order limit"
     ],
+    "roomStateMetadata": {
+      "metrics": [
+        "storageCapacity",
+        "orderLimit"
+      ],
+      "appliedByBaselineResolver": false
+    },
     "excludedMechanics": [
       "warmup",
       "threshold",
@@ -124,6 +131,18 @@
       "timeDependentOrThreshold": 35,
       "sameRoomOverride": 9,
       "specialOrderOrProbability": 8
+    },
+    "roomStateRuleCount": 50,
+    "roomStateEffectCount": 50,
+    "roomStateFormulaCount": 3,
+    "roomStateExclusionCount": 13,
+    "roomStateMetrics": {
+      "storageCapacity": 26,
+      "orderLimit": 24
+    },
+    "roomStateExclusionsByReason": {
+      "conditionalOrVariableStateChange": 10,
+      "unparsedStateChange": 3
     }
   },
   "poolDefinitions": [
@@ -18614,6 +18633,1575 @@
       },
       "reason": "timeDependentOrThreshold",
       "rawDescription": "进驻贸易站时，小幅提升当前贸易站高品质贵金属订单的出现概率（工作时长影响概率），心情每小时消耗-0.25"
+    }
+  ],
+  "roomStateRules": [
+    {
+      "id": "char_1032_excu2|manufacture|合理利用|2|1|room-state",
+      "sourceSkillId": "char_1032_excu2|manufacture|合理利用|2|1",
+      "charId": "char_1032_excu2",
+      "name": "圣约送葬人",
+      "buffName": "合理利用",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 4,
+          "product": "experience"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，生产作战记录类配方时，仓库容量上限+4"
+    },
+    {
+      "id": "char_1034_jesca2|trading|订单管理·β|0|1|room-state",
+      "sourceSkillId": "char_1034_jesca2|trading|订单管理·β|0|1",
+      "charId": "char_1034_jesca2",
+      "name": "涤火杰西卡",
+      "buffName": "订单管理·β",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 4,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+10%，且订单上限+4"
+    },
+    {
+      "id": "char_1048_orchd2|trading|队长的自觉|2|1|room-state",
+      "sourceSkillId": "char_1048_orchd2|trading|队长的自觉|2|1",
+      "charId": "char_1048_orchd2",
+      "name": "焰狐龙梓兰",
+      "buffName": "队长的自觉",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 3,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单上限+3，且每有一个泡影国狩猎小队干员进驻贸易站，订单获取效率+20%"
+    },
+    {
+      "id": "char_109_fmout|trading|供应管理|0|1|room-state",
+      "sourceSkillId": "char_109_fmout|trading|供应管理|0|1",
+      "charId": "char_109_fmout",
+      "name": "远山",
+      "buffName": "供应管理",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 1,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+25%，且订单上限+1"
+    },
+    {
+      "id": "char_122_beagle|manufacture|仓库整备·α|0|1|room-state",
+      "sourceSkillId": "char_122_beagle|manufacture|仓库整备·α|0|1",
+      "charId": "char_122_beagle",
+      "name": "米格鲁",
+      "buffName": "仓库整备·α",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 6,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+6，生产力+10%"
+    },
+    {
+      "id": "char_149_scave|manufacture|拾荒者|1|1|room-state",
+      "sourceSkillId": "char_149_scave|manufacture|拾荒者|1|1",
+      "charId": "char_149_scave",
+      "name": "清道夫",
+      "buffName": "拾荒者",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 8,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+8，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_150_snakek|manufacture|仓库整备·β|0|1|room-state",
+      "sourceSkillId": "char_150_snakek|manufacture|仓库整备·β|0|1",
+      "charId": "char_150_snakek",
+      "name": "蛇屠箱",
+      "buffName": "仓库整备·β",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 10,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+10，生产力+10%"
+    },
+    {
+      "id": "char_151_myrtle|trading|谈判|0|1|room-state",
+      "sourceSkillId": "char_151_myrtle|trading|谈判|0|1",
+      "charId": "char_151_myrtle",
+      "name": "桃金娘",
+      "buffName": "谈判",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 5,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单上限+5，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_163_hpsts|manufacture|工匠精神·α|0|1|room-state",
+      "sourceSkillId": "char_163_hpsts|manufacture|工匠精神·α|0|1",
+      "charId": "char_163_hpsts",
+      "name": "火神",
+      "buffName": "工匠精神·α",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_163_hpsts|0"
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 16,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，生产力-5%，仓库容量上限+16，心情每小时消耗-0.15"
+    },
+    {
+      "id": "char_163_hpsts|manufacture|工匠精神·β|2|1|room-state",
+      "sourceSkillId": "char_163_hpsts|manufacture|工匠精神·β|2|1",
+      "charId": "char_163_hpsts",
+      "name": "火神",
+      "buffName": "工匠精神·β",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_163_hpsts|0"
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 19,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，生产力-5%，仓库容量上限+19，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_172_svrash|trading|喀兰之主|2|1|room-state",
+      "sourceSkillId": "char_172_svrash|trading|喀兰之主|2|1",
+      "charId": "char_172_svrash",
+      "name": "银灰",
+      "buffName": "喀兰之主",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_172_svrash|0"
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 4,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+20%，且订单上限+4"
+    },
+    {
+      "id": "char_172_svrash|trading|喀兰贸易·α|0|1|room-state",
+      "sourceSkillId": "char_172_svrash|trading|喀兰贸易·α|0|1",
+      "charId": "char_172_svrash",
+      "name": "银灰",
+      "buffName": "喀兰贸易·α",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_172_svrash|0"
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 2,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+15%，且订单上限+2"
+    },
+    {
+      "id": "char_173_slchan|trading|喀兰贸易·β|2|1|room-state",
+      "sourceSkillId": "char_173_slchan|trading|喀兰贸易·β|2|1",
+      "charId": "char_173_slchan",
+      "name": "崖心",
+      "buffName": "喀兰贸易·β",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 4,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+15%，且订单上限+4"
+    },
+    {
+      "id": "char_190_clour|manufacture|拾荒者|0|1|room-state",
+      "sourceSkillId": "char_190_clour|manufacture|拾荒者|0|1",
+      "charId": "char_190_clour",
+      "name": "红云",
+      "buffName": "拾荒者",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 8,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+8，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_192_falco|trading|订单管理·α|1|1|room-state",
+      "sourceSkillId": "char_192_falco|trading|订单管理·α|1|1",
+      "charId": "char_192_falco",
+      "name": "翎羽",
+      "buffName": "订单管理·α",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 2,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+10%，且订单上限+2"
+    },
+    {
+      "id": "char_198_blackd|trading|喀兰贸易·α|0|1|room-state",
+      "sourceSkillId": "char_198_blackd|trading|喀兰贸易·α|0|1",
+      "charId": "char_198_blackd",
+      "name": "讯使",
+      "buffName": "喀兰贸易·α",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 2,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+15%，且订单上限+2"
+    },
+    {
+      "id": "char_199_yak|trading|喀兰贸易·α|0|1|room-state",
+      "sourceSkillId": "char_199_yak|trading|喀兰贸易·α|0|1",
+      "charId": "char_199_yak",
+      "name": "角峰",
+      "buffName": "喀兰贸易·α",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 2,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+15%，且订单上限+2"
+    },
+    {
+      "id": "char_201_moeshd|trading|使命必达|2|1|room-state",
+      "sourceSkillId": "char_201_moeshd|trading|使命必达|2|1",
+      "charId": "char_201_moeshd",
+      "name": "可颂",
+      "buffName": "使命必达",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_201_moeshd|0"
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 1,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+30%，且订单上限+1"
+    },
+    {
+      "id": "char_2013_cerber|manufacture|“都想要”|0|1|room-state",
+      "sourceSkillId": "char_2013_cerber|manufacture|“都想要”|0|1",
+      "charId": "char_2013_cerber",
+      "name": "刻俄柏",
+      "buffName": "“都想要”",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 8,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+8，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_208_melan|trading|供应管理|0|1|room-state",
+      "sourceSkillId": "char_208_melan|trading|供应管理|0|1",
+      "charId": "char_208_melan",
+      "name": "玫兰莎",
+      "buffName": "供应管理",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 1,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+25%，且订单上限+1"
+    },
+    {
+      "id": "char_209_ardign|manufacture|仓库整备·α|0|1|room-state",
+      "sourceSkillId": "char_209_ardign|manufacture|仓库整备·α|0|1",
+      "charId": "char_209_ardign",
+      "name": "卡缇",
+      "buffName": "仓库整备·α",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 6,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+6，生产力+10%"
+    },
+    {
+      "id": "char_210_stward|trading|谈判|0|1|room-state",
+      "sourceSkillId": "char_210_stward|trading|谈判|0|1",
+      "charId": "char_210_stward",
+      "name": "史都华德",
+      "buffName": "谈判",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 5,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单上限+5，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_236_rope|trading|谈判|1|1|room-state",
+      "sourceSkillId": "char_236_rope|trading|谈判|1|1",
+      "charId": "char_236_rope",
+      "name": "暗索",
+      "buffName": "谈判",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 5,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单上限+5，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_278_orchid|trading|供应管理|1|1|room-state",
+      "sourceSkillId": "char_278_orchid|trading|供应管理|1|1",
+      "charId": "char_278_orchid",
+      "name": "梓兰",
+      "buffName": "供应管理",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 1,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+25%，且订单上限+1"
+    },
+    {
+      "id": "char_281_popka|manufacture|麻烦制造者|0|1|room-state",
+      "sourceSkillId": "char_281_popka|manufacture|麻烦制造者|0|1",
+      "charId": "char_281_popka",
+      "name": "泡普卡",
+      "buffName": "麻烦制造者",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": -12,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，生产力+25%，仓库容量上限-12，心情每小时消耗+0.25"
+    },
+    {
+      "id": "char_325_bison|trading|少当家|2|1|room-state",
+      "sourceSkillId": "char_325_bison|trading|少当家|2|1",
+      "charId": "char_325_bison",
+      "name": "拜松",
+      "buffName": "少当家",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_325_bison|0"
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 1,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+30%，且订单上限+1"
+    },
+    {
+      "id": "char_328_cammou|manufacture|剪辑·β|1|1|room-state",
+      "sourceSkillId": "char_328_cammou|manufacture|剪辑·β|1|1",
+      "charId": "char_328_cammou",
+      "name": "卡达",
+      "buffName": "剪辑·β",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 15,
+          "product": "experience"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，生产作战记录类配方时，仓库容量上限+15"
+    },
+    {
+      "id": "char_336_folivo|manufacture|剪辑·α|2|1|room-state",
+      "sourceSkillId": "char_336_folivo|manufacture|剪辑·α|2|1",
+      "charId": "char_336_folivo",
+      "name": "稀音",
+      "buffName": "剪辑·α",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 12,
+          "product": "experience"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，生产作战记录类配方时，仓库容量上限+12"
+    },
+    {
+      "id": "char_365_aprl|trading|订单管理·α|0|1|room-state",
+      "sourceSkillId": "char_365_aprl|trading|订单管理·α|0|1",
+      "charId": "char_365_aprl",
+      "name": "四月",
+      "buffName": "订单管理·α",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_365_aprl|0"
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 2,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+10%，且订单上限+2"
+    },
+    {
+      "id": "char_365_aprl|trading|订单管理·β|2|1|room-state",
+      "sourceSkillId": "char_365_aprl|trading|订单管理·β|2|1",
+      "charId": "char_365_aprl",
+      "name": "四月",
+      "buffName": "订单管理·β",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_365_aprl|0"
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 4,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+10%，且订单上限+4"
+    },
+    {
+      "id": "char_369_bena|manufacture|“可靠”助手|0|1|room-state",
+      "sourceSkillId": "char_369_bena|manufacture|“可靠”助手|0|1",
+      "charId": "char_369_bena",
+      "name": "贝娜",
+      "buffName": "“可靠”助手",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 17,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，生产力-20%，仓库容量上限+17，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_378_asbest|manufacture|探险者|2|1|room-state",
+      "sourceSkillId": "char_378_asbest|manufacture|探险者|2|1",
+      "charId": "char_378_asbest",
+      "name": "石棉",
+      "buffName": "探险者",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 16,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+16，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_378_asbest|manufacture|特立独行|0|1|room-state",
+      "sourceSkillId": "char_378_asbest|manufacture|特立独行|0|1",
+      "charId": "char_378_asbest",
+      "name": "石棉",
+      "buffName": "特立独行",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": -12,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，生产力+25%，仓库容量上限-12，心情每小时消耗+0.25"
+    },
+    {
+      "id": "char_381_bubble|manufacture|囤积者|0|1|room-state",
+      "sourceSkillId": "char_381_bubble|manufacture|囤积者|0|1",
+      "charId": "char_381_bubble",
+      "name": "泡泡",
+      "buffName": "囤积者",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 10,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+10，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_4077_palico|manufacture|可靠的随从们|0|30|room-state",
+      "sourceSkillId": "char_4077_palico|manufacture|可靠的随从们|0|30",
+      "charId": "char_4077_palico",
+      "name": "泰拉大陆调查团",
+      "buffName": "可靠的随从们",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 30
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 8,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+8，生产力+5%，同时每有1个木天蓼，则生产力+1%"
+    },
+    {
+      "id": "char_4077_palico|trading|可爱的艾露猫|0|1|room-state",
+      "sourceSkillId": "char_4077_palico|trading|可爱的艾露猫|0|1",
+      "charId": "char_4077_palico",
+      "name": "泰拉大陆调查团",
+      "buffName": "可爱的艾露猫",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 2,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+5%，且订单上限+2，同时每有1个木天蓼，则订单获取效率+3%"
+    },
+    {
+      "id": "char_4116_blkkgt|trading|不怒自威|2|1|room-state",
+      "sourceSkillId": "char_4116_blkkgt|trading|不怒自威|2|1",
+      "charId": "char_4116_blkkgt",
+      "name": "锏",
+      "buffName": "不怒自威",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_4116_blkkgt|0"
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": -6,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+25%，且订单上限-6（订单最少为1）"
+    },
+    {
+      "id": "char_4116_blkkgt|trading|威压|0|1|room-state",
+      "sourceSkillId": "char_4116_blkkgt|trading|威压|0|1",
+      "charId": "char_4116_blkkgt",
+      "name": "锏",
+      "buffName": "威压",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_4116_blkkgt|0"
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": -2,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+20%，且订单上限-2（订单最少为1）"
+    },
+    {
+      "id": "char_4138_narant|manufacture|无畏豪情|0|1|room-state",
+      "sourceSkillId": "char_4138_narant|manufacture|无畏豪情|0|1",
+      "charId": "char_4138_narant",
+      "name": "娜仁图亚",
+      "buffName": "无畏豪情",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 10,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+10，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_4140_lasher|trading|大巴扎管理学|2|1|room-state",
+      "sourceSkillId": "char_4140_lasher|trading|大巴扎管理学|2|1",
+      "charId": "char_4140_lasher",
+      "name": "衡沙",
+      "buffName": "大巴扎管理学",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_4140_lasher|0"
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 1,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+30%，且订单上限+1"
+    },
+    {
+      "id": "char_4144_chilc|trading|半身人公会代表|0|1|room-state",
+      "sourceSkillId": "char_4144_chilc|trading|半身人公会代表|0|1",
+      "charId": "char_4144_chilc",
+      "name": "齐尔查克",
+      "buffName": "半身人公会代表",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 1,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+30%，且订单上限+1"
+    },
+    {
+      "id": "char_4155_talr|manufacture|得心应手|2|1|room-state",
+      "sourceSkillId": "char_4155_talr|manufacture|得心应手|2|1",
+      "charId": "char_4155_talr",
+      "name": "裁度",
+      "buffName": "得心应手",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_4155_talr|0"
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 6,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，生产力+25%，仓库容量上限+6"
+    },
+    {
+      "id": "char_4171_wulfen|manufacture|收纳达人|2|1|room-state",
+      "sourceSkillId": "char_4171_wulfen|manufacture|收纳达人|2|1",
+      "charId": "char_4171_wulfen",
+      "name": "钼铅",
+      "buffName": "收纳达人",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 16,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+16，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_4171_wulfen|manufacture|行动派|0|1|room-state",
+      "sourceSkillId": "char_4171_wulfen|manufacture|行动派|0|1",
+      "charId": "char_4171_wulfen",
+      "name": "钼铅",
+      "buffName": "行动派",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": -8,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，生产力+20%，仓库容量上限-8"
+    },
+    {
+      "id": "char_4198_christ|manufacture|午休好去处|0|1|room-state",
+      "sourceSkillId": "char_4198_christ|manufacture|午休好去处|0|1",
+      "charId": "char_4198_christ",
+      "name": "Miss.Christine",
+      "buffName": "午休好去处",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 10,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+10，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_452_bstalk|manufacture|磐蟹·阿盘|1|1|room-state",
+      "sourceSkillId": "char_452_bstalk|manufacture|磐蟹·阿盘|1|1",
+      "charId": "char_452_bstalk",
+      "name": "豆苗",
+      "buffName": "磐蟹·阿盘",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 8,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+8，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_464_cement|manufacture|掘进工程|2|1|room-state",
+      "sourceSkillId": "char_464_cement|manufacture|掘进工程|2|1",
+      "charId": "char_464_cement",
+      "name": "洋灰",
+      "buffName": "掘进工程",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 10,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+10，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_485_pallas|manufacture|智慧之境|0|1|room-state",
+      "sourceSkillId": "char_485_pallas|manufacture|智慧之境|0|1",
+      "charId": "char_485_pallas",
+      "name": "帕拉斯",
+      "buffName": "智慧之境",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 8,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+8，心情每小时消耗-0.25"
+    },
+    {
+      "id": "char_500_noirc|manufacture|仓库整备·β|0|1|room-state",
+      "sourceSkillId": "char_500_noirc|manufacture|仓库整备·β|0|1",
+      "charId": "char_500_noirc",
+      "name": "黑角",
+      "buffName": "仓库整备·β",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "storageCapacity",
+          "amount": 10,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻制造站时，仓库容量上限+10，生产力+10%"
+    },
+    {
+      "id": "char_500_noirc|trading|订单管理·α|0|30|room-state",
+      "sourceSkillId": "char_500_noirc|trading|订单管理·α|0|30",
+      "charId": "char_500_noirc",
+      "name": "黑角",
+      "buffName": "订单管理·α",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 30
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effects": [
+        {
+          "metric": "orderLimit",
+          "amount": 2,
+          "product": "all"
+        }
+      ],
+      "confidence": "parsed",
+      "rawDescription": "进驻贸易站时，订单获取效率+10%，且订单上限+2"
+    }
+  ],
+  "roomStateFormulas": [
+    {
+      "id": "char_190_clour|manufacture|回收利用|1|1|room-state-formula|vermeil-room-storage-capacity",
+      "sourceSkillId": "char_190_clour|manufacture|回收利用|1|1",
+      "charId": "char_190_clour",
+      "name": "红云",
+      "buffName": "回收利用",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "formula": {
+        "type": "roomOperatorStorageCapacityToProduction",
+        "inputScope": "roomOperators",
+        "inputMetric": "storageCapacity",
+        "outputMetric": "production",
+        "percentPerInput": 2
+      },
+      "confidence": "reviewed",
+      "rawDescription": "进驻制造站时，当前制造站内干员提升的每格仓库容量，提供2%生产力"
+    },
+    {
+      "id": "char_272_strong|trading|市井之道|1|1|room-state-formula|jaye-teammate-order-efficiency",
+      "sourceSkillId": "char_272_strong|trading|市井之道|1|1",
+      "charId": "char_272_strong",
+      "name": "孑",
+      "buffName": "市井之道",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "formula": {
+        "type": "teammateOrderEfficiencyToOrderLimitAndCurrentOrderEfficiency",
+        "teammateScope": "otherRoomOperators",
+        "teammateEfficiencyMetric": "orderEfficiency",
+        "teammateEfficiencyPerOrderLimitStep": 10,
+        "orderLimitDeltaPerStep": -1,
+        "minimumOrderLimit": 1,
+        "currentOrderMetric": "currentOrderCount",
+        "outputMetric": "orderEfficiency",
+        "percentPerCurrentOrder": 4
+      },
+      "confidence": "reviewed",
+      "rawDescription": "进驻贸易站时，当前贸易站内其他干员提供的每10%订单获取效率使订单上限-1（订单最少为1），同时每有1笔订单就+4%订单获取效率（与部分技能有特殊叠加规则）"
+    },
+    {
+      "id": "char_272_strong|trading|摊贩经济|0|1|room-state-formula|jaye-current-order-gap",
+      "sourceSkillId": "char_272_strong|trading|摊贩经济|0|1",
+      "charId": "char_272_strong",
+      "name": "孑",
+      "buffName": "摊贩经济",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "formula": {
+        "type": "currentOrderGapToOrderEfficiency",
+        "currentOrderMetric": "currentOrderCount",
+        "limitMetric": "orderLimit",
+        "outputMetric": "orderEfficiency",
+        "percentPerGap": 4
+      },
+      "confidence": "reviewed",
+      "rawDescription": "进驻贸易站时，当前订单数与订单上限每差1笔订单，则订单获取效率+4%"
+    }
+  ],
+  "roomStateExclusions": [
+    {
+      "id": "char_1033_swire2|trading|招商引资|2|1|room-state",
+      "sourceSkillId": "char_1033_swire2|trading|招商引资|2|1",
+      "charId": "char_1033_swire2",
+      "name": "琳琅诗怀雅",
+      "buffName": "招商引资",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "reason": "conditionalOrVariableStateChange",
+      "rawDescription": "进驻贸易站时，当前贸易站内干员提升的每个订单上限，提供4%订单获取效率"
+    },
+    {
+      "id": "char_1035_wisdel|control|同谋·α|0|1|room-state",
+      "sourceSkillId": "char_1035_wisdel|control|同谋·α|0|1",
+      "charId": "char_1035_wisdel",
+      "name": "维什戴尔",
+      "buffName": "同谋·α",
+      "roomType": "control",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_1035_wisdel|0"
+      },
+      "reason": "unparsedStateChange",
+      "rawDescription": "进驻控制中枢时，当伊内丝入驻会客室时，会客室线索搜集速度+5%；当赫德雷入驻贸易站时，赫德雷所在贸易站订单上限+1"
+    },
+    {
+      "id": "char_1035_wisdel|control|同谋·β|2|1|room-state",
+      "sourceSkillId": "char_1035_wisdel|control|同谋·β|2|1",
+      "charId": "char_1035_wisdel",
+      "name": "维什戴尔",
+      "buffName": "同谋·β",
+      "roomType": "control",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_1035_wisdel|0"
+      },
+      "reason": "unparsedStateChange",
+      "rawDescription": "进驻控制中枢时，当伊内丝入驻会客室时，会客室线索搜集速度+5%；当赫德雷入驻贸易站时，赫德雷所在贸易站订单上限+2"
+    },
+    {
+      "id": "char_140_whitew|trading|醉翁之意·α|0|1|room-state",
+      "sourceSkillId": "char_140_whitew|trading|醉翁之意·α|0|1",
+      "charId": "char_140_whitew",
+      "name": "拉普兰德",
+      "buffName": "醉翁之意·α",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_140_whitew|0"
+      },
+      "reason": "conditionalOrVariableStateChange",
+      "rawDescription": "当与德克萨斯在同一个贸易站时，心情每小时消耗-0.1，订单上限+2"
+    },
+    {
+      "id": "char_140_whitew|trading|醉翁之意·β|2|1|room-state",
+      "sourceSkillId": "char_140_whitew|trading|醉翁之意·β|2|1",
+      "charId": "char_140_whitew",
+      "name": "拉普兰德",
+      "buffName": "醉翁之意·β",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_140_whitew|0"
+      },
+      "reason": "conditionalOrVariableStateChange",
+      "rawDescription": "当与德克萨斯在同一个贸易站时，心情每小时消耗-0.1，订单上限+4"
+    },
+    {
+      "id": "char_206_gnosis|control|精密计算|2|1|room-state",
+      "sourceSkillId": "char_206_gnosis|control|精密计算|2|1",
+      "charId": "char_206_gnosis",
+      "name": "灵知",
+      "buffName": "精密计算",
+      "roomType": "control",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "reason": "conditionalOrVariableStateChange",
+      "rawDescription": "进驻控制中枢时，每个进驻在贸易站的谢拉格干员，订单获取效率-15%，订单上限+6"
+    },
+    {
+      "id": "char_4037_demetr|trading|未偿还的债务|0|1|room-state",
+      "sourceSkillId": "char_4037_demetr|trading|未偿还的债务|0|1",
+      "charId": "char_4037_demetr",
+      "name": "贝洛内",
+      "buffName": "未偿还的债务",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "reason": "conditionalOrVariableStateChange",
+      "rawDescription": "当与伺夜在同一个贸易站时，心情每小时消耗-0.1，订单上限+2"
+    },
+    {
+      "id": "char_4058_pepe|trading|多面逢源|0|1|room-state",
+      "sourceSkillId": "char_4058_pepe|trading|多面逢源|0|1",
+      "charId": "char_4058_pepe",
+      "name": "佩佩",
+      "buffName": "多面逢源",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "reason": "conditionalOrVariableStateChange",
+      "rawDescription": "进驻贸易站时，当前贸易站每级+1个订单上限"
+    },
+    {
+      "id": "char_4116_blkkgt|trading|冠军风采|2|1|room-state",
+      "sourceSkillId": "char_4116_blkkgt|trading|冠军风采|2|1",
+      "charId": "char_4116_blkkgt",
+      "name": "锏",
+      "buffName": "冠军风采",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "reason": "unparsedStateChange",
+      "rawDescription": "进驻贸易站时，当前贸易站内干员提升的每5个订单上限，提供25%订单获取效率，最多提供100%效率"
+    },
+    {
+      "id": "char_4126_fuze|manufacture|实干的寡言者|2|1|room-state",
+      "sourceSkillId": "char_4126_fuze|manufacture|实干的寡言者|2|1",
+      "charId": "char_4126_fuze",
+      "name": "导火索",
+      "buffName": "实干的寡言者",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "reason": "conditionalOrVariableStateChange",
+      "rawDescription": "进驻制造站时，生产力+20%，每有1瓶乌萨斯特饮，则仓库容量上限+2"
+    },
+    {
+      "id": "char_4163_rosesa|trading|钱不我待|0|1|room-state",
+      "sourceSkillId": "char_4163_rosesa|trading|钱不我待|0|1",
+      "charId": "char_4163_rosesa",
+      "name": "瑰盐",
+      "buffName": "钱不我待",
+      "roomType": "trading",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "reason": "conditionalOrVariableStateChange",
+      "rawDescription": "进驻贸易站时，当前贸易站每级+1个订单上限"
+    },
+    {
+      "id": "char_4208_wintim|manufacture|流程优化|1|1|room-state",
+      "sourceSkillId": "char_4208_wintim|manufacture|流程优化|1|1",
+      "charId": "char_4208_wintim",
+      "name": "冬时",
+      "buffName": "流程优化",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_4208_wintim|0"
+      },
+      "reason": "conditionalOrVariableStateChange",
+      "rawDescription": "进驻制造站时，当前制造站内其他干员提供的生产力全部归零（不包含根据设施数量提供加成的生产力），每个当前制造站内干员为当前制造站+10%生产力，仓库容量上限+5"
+    },
+    {
+      "id": "char_4208_wintim|manufacture|科学改造|0|1|room-state",
+      "sourceSkillId": "char_4208_wintim|manufacture|科学改造|0|1",
+      "charId": "char_4208_wintim",
+      "name": "冬时",
+      "buffName": "科学改造",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_4208_wintim|0"
+      },
+      "reason": "conditionalOrVariableStateChange",
+      "rawDescription": "进驻制造站时，当前制造站内其他干员提供的生产力全部归零（不包含根据设施数量提供加成的生产力），每个当前制造站内干员为当前制造站仓库容量上限+5"
     }
   ]
 }

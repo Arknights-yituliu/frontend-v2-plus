@@ -6,6 +6,7 @@ import {
   buildRiicCalculationFeedback,
   formatRiicCalculationFeedback,
 } from "/src/utils/riic/riic-calculation-feedback.js";
+import { calculateRiicTrainingCost } from "/src/utils/riic/riic-training-cost.js";
 
 function compareTrainingUnlock(left, right) {
   const eliteDifference = Number(left?.elite || 0) - Number(right?.elite || 0);
@@ -40,6 +41,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  scheduleTrainingRecommendationStatus: {
+    type: String,
+    default: "idle",
+  },
   operatorTable: {
     type: Object,
     default: () => ({}),
@@ -47,6 +52,14 @@ const props = defineProps({
   riicYieldEngineResults: {
     type: Array,
     default: () => [],
+  },
+  trainingImpactResults: {
+    type: Array,
+    default: () => [],
+  },
+  trainingImpactStatus: {
+    type: String,
+    default: "idle",
   },
   actualScheduleMetrics: {
     type: Object,
@@ -85,8 +98,10 @@ const props = defineProps({
     required: true,
   },
 });
+const emit = defineEmits(["calculate-training-impact"]);
 
 const calculationFeedbackCopyStatus = ref("");
+const trainingImpactRequestStatus = ref("");
 const calculationFeedback = computed(() =>
   buildRiicCalculationFeedback({
     actualScheduleMetrics: props.actualScheduleMetrics,
@@ -102,9 +117,40 @@ const calculationFeedbackText = computed(() =>
     feedback: calculationFeedback.value,
   }),
 );
+const trainingCosts = computed(() =>
+  props.scheduleTrainingRequirements.map((requirement) => ({
+    requirement,
+    cost: calculateRiicTrainingCost({
+      requirement,
+      operator: props.operatorTable?.[requirement?.charId],
+    }),
+  })),
+);
+const trainingImpactResultsByCharId = computed(() =>
+  Object.fromEntries(
+    props.trainingImpactResults.map((result) => [String(result?.charId || ""), result]),
+  ),
+);
+
+function requestTrainingImpactCalculation() {
+  if (!props.scheduleTrainingRequirements.length) {
+    return;
+  }
+  trainingImpactRequestStatus.value = "已请求收益试算";
+  emit("calculate-training-impact");
+}
 
 function formatFeedbackValue(value) {
   return value === undefined ? "undefined" : value === null ? "null" : String(value);
+}
+
+function formatCostNumber(value, digits = 0) {
+  return value === null || value === undefined
+    ? "--"
+    : new Intl.NumberFormat("zh-CN", {
+        maximumFractionDigits: digits,
+        minimumFractionDigits: digits,
+      }).format(value);
 }
 
 function formatP01Operators(diagnostic) {
@@ -159,34 +205,61 @@ async function copyCalculationFeedback() {
   <section class="additional-info-module">
     <header class="additional-info-module-heading">
       <h3>干员培养建议</h3>
+      <template v-if="showCandidateDebugValues">
+        <button
+          type="button"
+          :disabled="!scheduleTrainingRequirements.length || trainingImpactStatus === 'running'"
+          @click="requestTrainingImpactCalculation"
+        >
+          {{ trainingImpactStatus === "running" ? "培养收益计算中" : "计算培养后收益" }}
+        </button>
+        <small v-if="trainingImpactRequestStatus && trainingImpactStatus !== 'idle'">
+          {{ trainingImpactRequestStatus }}
+        </small>
+      </template>
     </header>
+    <p v-if="showCandidateDebugValues" class="training-impact-note">
+      收益增量 = 培养后 - 当前；负数表示培养后减少
+    </p>
+    <p
+      v-if="scheduleTrainingRecommendationStatus === 'running'"
+      class="additional-info-empty"
+    >
+      培养建议正在计算中
+    </p>
+    <p
+      v-else-if="['error', 'unavailable', 'requiresOperators'].includes(scheduleTrainingRecommendationStatus)"
+      class="additional-info-empty"
+    >
+      培养建议暂不可用，后台试算未完成
+    </p>
     <div
-      v-if="scheduleTrainingRequirements.length"
+      v-else-if="scheduleTrainingRequirements.length"
       class="schedule-training-requirements"
     >
       <article
-        v-for="requirement in scheduleTrainingRequirements"
-        :key="requirement.charId"
+        v-for="entry in trainingCosts"
+        :key="entry.requirement.charId"
         class="schedule-training-requirement"
       >
         <OperatorAvatar
-          :char-id="requirement.charId"
-          :rarity="operatorTable?.[requirement.charId]?.rarity || 1"
+          :char-id="entry.requirement.charId"
+          :rarity="operatorTable?.[entry.requirement.charId]?.rarity || 1"
           :size="36"
           :mobile-size="32"
           border
         ></OperatorAvatar>
         <div class="schedule-training-requirement-copy">
           <div class="schedule-training-requirement-title">
-            <strong>{{ requirement.name }}</strong>
-            <span>{{ formatTrainingRequirement(requirement) }}</span>
+            <strong>{{ entry.requirement.name }}</strong>
+            <span>{{ formatTrainingRequirement(entry.requirement) }}</span>
           </div>
           <ul
-            v-if="getTrainingUpgradeEffects(requirement).length"
+            v-if="getTrainingUpgradeEffects(entry.requirement).length"
             class="schedule-training-upgrade-effects"
           >
             <li
-              v-for="upgrade in getTrainingUpgradeEffects(requirement)"
+              v-for="upgrade in getTrainingUpgradeEffects(entry.requirement)"
               :key="`${upgrade.elite}:${upgrade.level}:${upgrade.skillName}`"
             >
               <strong v-if="upgrade.eff" class="schedule-training-upgrade-effect">
@@ -195,11 +268,47 @@ async function copyCalculationFeedback() {
               <span>{{ upgrade.text }}</span>
             </li>
           </ul>
+          <div v-if="entry.cost.status !== 'error'" class="schedule-training-cost">
+            <span>培养成本：经验 {{ formatCostNumber(entry.cost.exp) }}，龙门币 {{ formatCostNumber(entry.cost.lmd) }}</span>
+            <span v-if="entry.cost.totalSanity !== null">约 {{ formatCostNumber(entry.cost.totalSanity, 1) }} 理智</span>
+          </div>
+          <div
+            v-if="entry.cost.status === 'partial' || entry.cost.status === 'error'"
+            class="schedule-training-cost-warning"
+          >
+            培养成本部分数据缺失：{{ entry.cost.missing.join("、") }}
+          </div>
+          <div
+            v-if="showCandidateDebugValues && trainingImpactStatus === 'running'"
+            class="training-impact-inline"
+          >
+            培养后收益正在计算中
+          </div>
+          <div
+            v-else-if="showCandidateDebugValues && trainingImpactResultsByCharId[String(entry.requirement.charId || '')]"
+            class="training-impact-inline"
+          >
+            <template
+              v-if="trainingImpactResultsByCharId[String(entry.requirement.charId || '')].status !== 'ready'"
+            >
+              试算失败：{{ trainingImpactResultsByCharId[String(entry.requirement.charId || '')].error || "未知错误" }}
+            </template>
+            <template v-else>
+              收益增量：
+              <span
+                v-for="metric in trainingImpactResultsByCharId[String(entry.requirement.charId || '')].delta || []"
+                :key="metric.key"
+              >
+                {{ metric.label }}
+                {{ metric.value === null ? "--" : `${metric.value >= 0 ? "+" : ""}${formatCostNumber(metric.value, 2)}` }}{{ metric.unit ? ` ${metric.unit}` : "" }}
+              </span>
+            </template>
+          </div>
         </div>
       </article>
     </div>
     <p v-else class="additional-info-empty">
-      如果没有推荐干员，可能是“导入干员与生成排班表”里“干员练度”选项没有打开，或者是你该练的都练了
+      暂无培养建议，可能是当前布局下没有明显收益，或者相关干员已经满足要求
     </p>
   </section>
 
@@ -391,6 +500,11 @@ async function copyCalculationFeedback() {
   color: var(--riic-orange);
 }
 
+.additional-info-module-heading button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
 .additional-info-module-heading small {
   color: var(--riic-muted);
   font-size: 12px;
@@ -401,6 +515,13 @@ async function copyCalculationFeedback() {
   color: var(--riic-muted);
   font-size: 12px;
   line-height: 1.5;
+}
+
+.training-impact-note {
+  margin: -5px 0 0;
+  color: var(--riic-muted);
+  font-size: 11px;
+  line-height: 1.4;
 }
 
 .calculation-feedback-module {
@@ -546,6 +667,37 @@ async function copyCalculationFeedback() {
 
 .schedule-training-upgrade-effects li > span {
   color: var(--riic-muted);
+}
+
+.schedule-training-cost {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 10px;
+  color: var(--c-text-color);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.schedule-training-cost span:last-child {
+  color: var(--riic-orange);
+  font-weight: 600;
+}
+
+.schedule-training-cost-warning {
+  color: var(--riic-orange);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.training-impact-inline {
+  color: var(--riic-orange);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.training-impact-inline > span {
+  display: inline-block;
+  margin-right: 6px;
 }
 
 .additional-info-debug {

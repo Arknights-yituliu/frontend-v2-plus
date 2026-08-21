@@ -1,4 +1,4 @@
-/** Legacy compatibility entry point for P10 perception settlement. */
+/** Perception-resource settlement entry point. */
 export {
   RIIC_PERCEPTION_RESOURCE_CORES,
   settleRiicPerceptionSchedule,

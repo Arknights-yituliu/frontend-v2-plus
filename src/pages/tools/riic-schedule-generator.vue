@@ -81,7 +81,6 @@ import {
   resolveRiicBaselineSkills,
 } from "/src/utils/riic/l00-baseline-resolver.js";
 import {
-  getRiicLayer3ControlCenterEffects,
   getRiicLayer3RuleConditionChecks,
   getRiicLayer3SupportRoomPlacements,
 } from "/src/utils/riic/l30-rules.js";
@@ -103,6 +102,8 @@ import {
 import {
   isRiicAutomaticScheduleAbortError,
   runRiicAutomaticScheduleInWorker,
+  runRiicTrainingRecommendationInWorker,
+  runRiicTrainingImpactInWorker,
 } from "/src/utils/riic/l70-scheduler-runner.js";
 import { getRiicRoomGroupStaffingRequirement } from "/src/utils/riic/l60-staffing.js";
 import {
@@ -120,7 +121,6 @@ import {
 } from "/src/utils/riic/l60-room-group-state.js";
 import {
   normalizeRiicIdealTrainingRaritySelection,
-  isRiicIdealTrainingEnabledForOperator,
 } from "/src/utils/riic/l00-training-policy.js";
 import {
   getRiicRuntimeCandidateContributionBreakdown,
@@ -135,6 +135,7 @@ import {
 import {
   buildRiicMaaScheduleFromPreview,
   getRiicMaaRoomType,
+  prepareRiicMaaScheduleForExport,
 } from "/src/utils/riicScheduleExport.js";
 import {
   createRiicYieldEngineRunningResult,
@@ -148,6 +149,9 @@ import {
   buildRiicControlCenterLateFillState,
   mergeRiicControlCenterLateFillState,
 } from "/src/utils/riic/l50-control-planner.js";
+import {
+  buildRiicControlCenterCandidateOperators,
+} from "/src/utils/riic/l50-control-candidates.js";
 import { alignRiicScheduleSameShiftBindings } from "/src/utils/riic/l74-same-shift-bindings.js";
 import {
   getRiicScheduleTrainingRecommendations,
@@ -241,71 +245,6 @@ const CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS = Object.freeze([
     buffTags: ["trading-operator", "manufacture-operator"],
   },
 ]);
-function toRiicControlCenterUnlockNumber(value, fallback = 0) {
-  const number = Number(value);
-  return Number.isInteger(number) && number >= 0 ? number : fallback;
-}
-
-function isRiicControlCenterSkillUnlocked(
-  operator,
-  skill,
-  { trainingMode = "current", idealTrainingRaritySelection } = {},
-) {
-  if (
-    trainingMode === "ideal" &&
-    isRiicIdealTrainingEnabledForOperator(
-      operator,
-      idealTrainingRaritySelection,
-    )
-  ) {
-    return true;
-  }
-
-  const operatorElite = toRiicControlCenterUnlockNumber(operator?.elite);
-  const requiredElite = toRiicControlCenterUnlockNumber(skill?.elite);
-  if (operatorElite !== requiredElite) {
-    return operatorElite > requiredElite;
-  }
-
-  return (
-    toRiicControlCenterUnlockNumber(operator?.level, 1) >=
-    toRiicControlCenterUnlockNumber(skill?.level, 1)
-  );
-}
-
-function isRiicControlCenterRoomEffect(effect) {
-  const target = effect?.target || {};
-  const scope = String(target?.scope || "").trim();
-  return Boolean(
-    ["allRooms", "operators"].includes(scope) &&
-      ["trading", "manufacture", "meeting", "hire"].includes(
-        String(target?.roomType || "").trim(),
-      ) &&
-      (scope !== "operators" ||
-        (target?.operatorIds || []).some(
-          (operatorId) => String(operatorId || "").trim(),
-        )) &&
-      Number.isFinite(Number(effect?.bonusPercent)),
-  );
-}
-
-function getRiicControlCenterRoomEffectKey(effect) {
-  const target = effect?.target || {};
-  return [
-    String(target?.scope || "").trim(),
-    String(target?.roomType || "").trim(),
-    String(target?.product || "").trim(),
-    String(effect?.metric || "").trim(),
-    Number(effect?.bonusPercent),
-    (target?.operatorIds || [])
-      .map((operatorId) => String(operatorId || "").trim())
-      .filter(Boolean)
-      .sort()
-      .join(","),
-    JSON.stringify(effect?.conditions || null),
-  ].join(":");
-}
-
 function formatRiicControlCenterRoomEffect(effect) {
   const roomLabel =
     {
@@ -402,10 +341,26 @@ const scheduleGenerationLoadingPhase = computed(() => {
 });
 const riicAutomaticGenerationDebugState = ref(null);
 const automaticControlCenterReconciliationState = ref(null);
+const trainingRecommendationState = ref({
+  status: "idle",
+  requirements: [],
+});
+const trainingImpactState = ref({ status: "idle", results: [] });
 const deepScheduleConfirmationOpen = ref(false);
 let automaticGenerationAbortController = null;
 let automaticGenerationQueuedOptions = null;
 let automaticGenerationRequestId = 0;
+let trainingRecommendationAbortController = null;
+let trainingRecommendationRequestId = 0;
+let trainingImpactAbortController = null;
+let trainingImpactRequestId = 0;
+
+function resetTrainingImpactState() {
+  trainingImpactAbortController?.abort();
+  trainingImpactAbortController = null;
+  trainingImpactRequestId += 1;
+  trainingImpactState.value = { status: "idle", results: [] };
+}
 const lastAutomaticGenerationTriggerKey = ref("");
 const controlCenterPlanningRunId = ref(0);
 const activeScheduleRoomGroupKey = ref("");
@@ -428,6 +383,7 @@ const fiammettaRecoverySettings = ref({
 const scheduleExecutionSettings = reactive({
   shifts: [],
   orundumCraftMaterial: "orirock",
+  includeTrainingRoom: false,
   exportInfo: {
     title: "",
     author: "",
@@ -544,6 +500,58 @@ function getDefaultSchedulePreviewStateIndex(
   return shiftMode ? 1 : 0;
 }
 
+function getScheduleClockMinutes(value) {
+  const match = /^(\d{2}):(\d{2})$/.exec(String(value || ""));
+  return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+}
+
+function formatScheduleClockMinutes(value) {
+  const minutes = ((Number(value) % 1440) + 1440) % 1440;
+  return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;
+}
+
+function getScheduleForwardMinutes(from, to) {
+  return (to - from + 1440) % 1440;
+}
+
+function getDefaultScheduleShiftPeriod(shifts, index) {
+  const start = getScheduleClockMinutes(shifts[index]?.time);
+  if (start === null) {
+    return { periodStart: "", periodEnd: "" };
+  }
+
+  const previous = getScheduleClockMinutes(
+    shifts[(index - 1 + shifts.length) % shifts.length]?.time,
+  );
+  const next = getScheduleClockMinutes(
+    shifts[(index + 1) % shifts.length]?.time,
+  );
+  let startOffset = -60;
+  let endOffset = 60;
+  if (
+    previous !== null &&
+    getScheduleForwardMinutes(previous, start) < 120
+  ) {
+    startOffset = -Math.floor(getScheduleForwardMinutes(previous, start) / 2);
+  }
+  if (next !== null && getScheduleForwardMinutes(start, next) < 120) {
+    endOffset = Math.ceil(getScheduleForwardMinutes(start, next) / 2);
+  }
+
+  return {
+    periodStart: formatScheduleClockMinutes(start + startOffset),
+    periodEnd: formatScheduleClockMinutes(start + endOffset),
+  };
+}
+
+function withDefaultScheduleShiftPeriod(shift, shifts, index) {
+  return {
+    ...shift,
+    ...getDefaultScheduleShiftPeriod(shifts, index),
+    periodCustomized: false,
+  };
+}
+
 function createDefaultScheduleShifts(
   shiftMode,
   rotationMode = twoShiftRotationMode.value,
@@ -567,7 +575,9 @@ function createDefaultScheduleShifts(
         disabled: false,
         order: "pre",
       },
-    }));
+    })).map((shift, index, shifts) =>
+      withDefaultScheduleShiftPeriod(shift, shifts, index),
+    );
   }
 
   const defaults = {
@@ -587,7 +597,7 @@ function createDefaultScheduleShifts(
     ],
   }[shiftMode] || [];
 
-  return defaults.map((shift, index) => ({
+  const shifts = defaults.map((shift, index) => ({
     id: `shift-${index + 1}`,
     ...shift,
     description: "",
@@ -604,6 +614,9 @@ function createDefaultScheduleShifts(
       order: "pre",
     },
   }));
+  return shifts.map((shift, index) =>
+    withDefaultScheduleShiftPeriod(shift, shifts, index),
+  );
 }
 
 function normalizeScheduleExportInfo(value) {
@@ -670,6 +683,7 @@ function createEmptyScheduleExecutionSettings(
   return {
     shifts: createDefaultScheduleShifts(shiftMode, rotationMode),
     orundumCraftMaterial: "orirock",
+    includeTrainingRoom: false,
     exportInfo: normalizeScheduleExportInfo(),
   };
 }
@@ -720,8 +734,7 @@ function normalizeScheduleExecutionSettings(
       (time, index) => persistedTimes[index] === time,
     );
 
-  return {
-    shifts: emptySettings.shifts.map((defaultShift, index) => {
+  const shifts = emptySettings.shifts.map((defaultShift, index) => {
       const sourceShift = sourceShifts[index] || {};
       const fallbackTime =
         legacyTimes.length > 0
@@ -732,10 +745,22 @@ function normalizeScheduleExecutionSettings(
         : String(sourceShift?.time || fallbackTime).trim();
       const name = String(sourceShift?.name || "").trim();
 
+      const periodStart = String(sourceShift?.periodStart || "").trim();
+      const periodEnd = String(sourceShift?.periodEnd || "").trim();
       return {
         id: defaultShift.id,
         name: name || defaultShift.name,
         time: /^\d{2}:\d{2}$/.test(time) ? time : defaultShift.time,
+        periodStart: /^\d{2}:\d{2}$/.test(periodStart)
+          ? periodStart
+          : defaultShift.periodStart,
+        periodEnd: /^\d{2}:\d{2}$/.test(periodEnd)
+          ? periodEnd
+          : defaultShift.periodEnd,
+        periodCustomized:
+          sourceShift?.periodCustomized === true ||
+          (/^\d{2}:\d{2}$/.test(periodStart) &&
+            /^\d{2}:\d{2}$/.test(periodEnd)),
         description: String(sourceShift?.description || "").trim(),
         descriptionPost: String(sourceShift?.descriptionPost || "").trim(),
         fiammetta: normalizeScheduleFiammettaSettings(
@@ -743,10 +768,22 @@ function normalizeScheduleExecutionSettings(
         ),
         drone: normalizeScheduleDroneSettings(sourceShift?.drone, legacyDrone),
       };
-    }),
+    });
+  const normalizedShifts = shifts.map((shift, index) =>
+    shift.periodCustomized
+      ? shift
+      : {
+          ...shift,
+          ...getDefaultScheduleShiftPeriod(shifts, index),
+        },
+  );
+
+  return {
+    shifts: normalizedShifts,
     orundumCraftMaterial: normalizeOrundumCraftMaterial(
       value?.orundumCraftMaterial,
     ),
+    includeTrainingRoom: value?.includeTrainingRoom === true,
     exportInfo: normalizeScheduleExportInfo(value?.exportInfo),
   };
 }
@@ -761,6 +798,9 @@ function createScheduleExecutionSettingsSnapshot() {
       id: shift.id,
       name: shift.name,
       time: shift.time,
+      periodStart: shift.periodStart,
+      periodEnd: shift.periodEnd,
+      periodCustomized: shift.periodCustomized === true,
       description: shift.description,
       descriptionPost: shift.descriptionPost,
       fiammetta: normalizeScheduleFiammettaSettings(shift.fiammetta),
@@ -769,6 +809,7 @@ function createScheduleExecutionSettingsSnapshot() {
     orundumCraftMaterial: normalizeOrundumCraftMaterial(
       scheduleExecutionSettings.orundumCraftMaterial,
     ),
+    includeTrainingRoom: scheduleExecutionSettings.includeTrainingRoom === true,
     exportInfo: normalizeScheduleExportInfo(scheduleExecutionSettings.exportInfo),
   };
 }
@@ -793,6 +834,8 @@ function resetScheduleExecutionSettings() {
   scheduleExecutionSettings.shifts = nextSettings.shifts;
   scheduleExecutionSettings.orundumCraftMaterial =
     nextSettings.orundumCraftMaterial;
+  scheduleExecutionSettings.includeTrainingRoom =
+    nextSettings.includeTrainingRoom;
   scheduleExecutionSettings.exportInfo = nextSettings.exportInfo;
   clearSchedulePreviewRoomEdits();
   activeSchedulePreviewStateIndex.value =
@@ -1185,124 +1228,24 @@ const controlCenterStaffingRequirement = computed(() => {
     twoShiftRotationMode: twoShiftRotationMode.value,
   });
 });
-const controlCenterCandidateOperators = computed(() => {
-  const rosterById = new Map();
-
-  for (const operator of virtualOperators.value || []) {
-    const charId = String(operator?.charId || "").trim();
-    if (!charId) {
-      continue;
-    }
-
-    const current = rosterById.get(charId);
-    if (
-      !current ||
-      toRiicControlCenterUnlockNumber(operator?.elite) >
-        toRiicControlCenterUnlockNumber(current?.elite) ||
-      (toRiicControlCenterUnlockNumber(operator?.elite) ===
-        toRiicControlCenterUnlockNumber(current?.elite) &&
-        toRiicControlCenterUnlockNumber(operator?.level, 1) >
-          toRiicControlCenterUnlockNumber(current?.level, 1))
-    ) {
-      rosterById.set(charId, operator);
-    }
-  }
-
-  const activeTagsByOperatorId = new Map();
-  const activeEffectsByOperatorId = new Map();
-  const sameTeamPartnerIdsByOperatorId = new Map();
-  const priorityFillOperatorIds = new Set(
-    (riicIdleFillOperators.value || [])
-      .filter((operator) =>
-        Number.isFinite(Number(operator?.idleFillNamedPriority)),
-      )
-      .map((operator) => String(operator?.charId || "").trim())
-      .filter(Boolean),
-  );
-  for (const skill of RIIC_CONTROL_CENTER_SKILLS.skills || []) {
-    const charId = String(skill?.operatorId || "").trim();
-    const operator = rosterById.get(charId);
-    const tags = [...new Set(skill?.bufftag || [])].filter(Boolean);
-    if (
-      !operator ||
-      (tags.length === 0 && !priorityFillOperatorIds.has(charId)) ||
-      !isRiicControlCenterSkillUnlocked(operator, skill, {
-        trainingMode: riicTrainingMode.value,
-        idealTrainingRaritySelection: idealTrainingRaritySelection.value,
-      })
-    ) {
-      continue;
-    }
-
-    const activeTags = activeTagsByOperatorId.get(charId) || new Set();
-    tags.forEach((tag) => activeTags.add(tag));
-    activeTagsByOperatorId.set(charId, activeTags);
-
-    const activeEffects = activeEffectsByOperatorId.get(charId) || new Map();
-    for (const effect of skill?.resolvedEffects || []) {
-      if (isRiicControlCenterRoomEffect(effect)) {
-        activeEffects.set(getRiicControlCenterRoomEffectKey(effect), effect);
-      }
-    }
-    activeEffectsByOperatorId.set(charId, activeEffects);
-
-    const sameTeamPartnerIds = [
-      ...new Set(
-        (skill?.sameTeamWithOperatorIds || [])
-          .map((operatorId) => String(operatorId || "").trim())
-          .filter((operatorId) => operatorId && operatorId !== charId),
-      ),
-    ];
-    if (sameTeamPartnerIds.length > 0) {
-      const existingPartnerIds =
-        sameTeamPartnerIdsByOperatorId.get(charId) || new Set();
-      sameTeamPartnerIds.forEach((operatorId) =>
-        existingPartnerIds.add(operatorId),
-      );
-      sameTeamPartnerIdsByOperatorId.set(charId, existingPartnerIds);
-    }
-  }
-
-  return [...activeTagsByOperatorId.entries()]
-    .map(([charId, tags]) => {
-      const resolvedEffects = new Map(
-        activeEffectsByOperatorId.get(charId) || [],
-      );
-      for (const effect of getRiicLayer3ControlCenterEffects({
-        operatorId: charId,
-        ownedOperators: virtualOperators.value,
-        layoutFacts: activeLayoutFacilityCounts.value,
-      })) {
-        if (isRiicControlCenterRoomEffect(effect)) {
-          resolvedEffects.set(getRiicControlCenterRoomEffectKey(effect), effect);
-        }
-      }
-
-      return {
-        ...rosterById.get(charId),
-        controlCenterBuffTags: [...tags],
-        controlCenterResolvedEffects: [...resolvedEffects.values()],
-        controlCenterSameTeamWithOperatorIds: [
-          ...(sameTeamPartnerIdsByOperatorId.get(charId) || []),
-        ],
-        controlCenterRoomEffectLabel: [...resolvedEffects.values()]
-          .map(formatRiicControlCenterRoomEffect)
-          .filter(Boolean)
-          .join(" / "),
-      };
-    })
-    .sort(
-      (left, right) =>
-        String(left?.name || "").localeCompare(
-          String(right?.name || ""),
-          "zh-CN",
-        ) ||
-        String(left?.charId || "").localeCompare(
-          String(right?.charId || ""),
-          "en",
-        ),
-    );
-});
+const controlCenterCandidateOperators = computed(() =>
+  buildRiicControlCenterCandidateOperators({
+    roster: virtualOperators.value || [],
+    skills: RIIC_CONTROL_CENTER_SKILLS.skills,
+    layoutFacts: activeLayoutFacilityCounts.value,
+    trainingMode: riicTrainingMode.value,
+    idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+    idleFillOperators: riicIdleFillOperators.value,
+  }).map((operator) => ({
+    ...operator,
+    controlCenterRoomEffectLabel: (
+      operator.controlCenterResolvedEffects || []
+    )
+      .map(formatRiicControlCenterRoomEffect)
+      .filter(Boolean)
+      .join(" / "),
+  })),
+);
 const hasFiammetta = computed(() =>
   (virtualOperators.value || []).some((operator) => {
     const charId = String(operator?.charId || "").trim();
@@ -2620,6 +2563,133 @@ function createRiicAutomaticScheduleWorkerInput(searchConfig) {
   });
 }
 
+function getRiicSchedulingOperators() {
+  return (ownedOperators.value || []).filter(
+    (operator) =>
+      !RIIC_SCHEDULING_EXCLUDED_OPERATOR_IDS.has(
+        String(operator?.charId || "").trim(),
+      ),
+  );
+}
+
+function createRiicTrainingRecommendationWorkerInput(searchConfig) {
+  const catalogsByKey = Object.fromEntries(
+    [
+      ...new Set(
+        candidateEnabledScheduleRoomGroups.value.flatMap((group) =>
+          getRoomGroupCatalogRequests(group)
+            .map((request) => request.key)
+            .filter(Boolean),
+        ),
+      ),
+    ].flatMap((key) =>
+      riicStaticCatalogsByKey.value[key]
+        ? [[key, riicStaticCatalogsByKey.value[key]]]
+        : [],
+    ),
+  );
+
+  return cloneRiicAutomaticScheduleWorkerInput({
+    groups: candidateEnabledScheduleRoomGroups.value,
+    catalogsByKey,
+    schedulingOperators: getRiicSchedulingOperators(),
+    currentOwnedOperators: ownedOperators.value,
+    shiftMode: confirmedLayoutPlan.value?.shiftMode,
+    twoShiftRotationMode: twoShiftRotationMode.value,
+    operatorNameToCharId: Object.fromEntries(operatorNameToCharId),
+    layoutFacts: activeLayoutFacilityCounts.value,
+    idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+    controlRoomGroup: controlScheduleRoomGroup.value,
+    controlCenterStaffingRequirement: controlCenterStaffingRequirement.value,
+    controlCenterRoleDefinitions: CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS,
+    manualControlCenterOverrides: controlCenterManualOverrides.value,
+    manualControlCenterOperatorIdsByTeamIndex:
+      controlCenterManualOverrides.value.addedOperatorIdsByTeamIndex,
+    controlCenterLateFillExcludedOperatorIdsByTeamIndex:
+      controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
+    fiammettaRecovery: fiammettaRecoveryConfig.value,
+    selectionBeamLimit: searchConfig.selectionBeamLimit,
+    selectionOptionLimit: searchConfig.selectionOptionLimit,
+    selectionRepresentativeLimit: searchConfig.selectionRepresentativeLimit,
+    selectionBatchSize: searchConfig.selectionBatchSize,
+    fallbackPlanLimit: searchConfig.fallbackPlanLimit,
+  });
+}
+
+function cancelTrainingRecommendation() {
+  trainingRecommendationRequestId += 1;
+  trainingRecommendationAbortController?.abort();
+  trainingRecommendationAbortController = null;
+  trainingRecommendationState.value = {
+    status: "idle",
+    requirements: [],
+  };
+}
+
+async function generateTrainingRecommendation(searchConfig) {
+  if (
+    riicTrainingMode.value === "ideal" ||
+    !confirmedLayoutPlan.value ||
+    !virtualOperators.value
+  ) {
+    trainingRecommendationState.value = {
+      status: "idle",
+      requirements: [],
+    };
+    return;
+  }
+
+  const requestId = ++trainingRecommendationRequestId;
+  trainingRecommendationAbortController?.abort();
+  const abortController = new AbortController();
+  trainingRecommendationAbortController = abortController;
+  trainingRecommendationState.value = {
+    status: "running",
+    requirements: [],
+  };
+
+  try {
+    const result = await runRiicTrainingRecommendationInWorker({
+      input: createRiicTrainingRecommendationWorkerInput(searchConfig),
+      signal: abortController.signal,
+    });
+    if (
+      abortController.signal.aborted ||
+      requestId !== trainingRecommendationRequestId
+    ) {
+      return;
+    }
+
+    trainingRecommendationState.value = {
+      status:
+        result?.status === "ready"
+          ? "ready"
+          : result?.status || "unavailable",
+      requirements:
+        result?.status === "ready" && Array.isArray(result?.requirements)
+          ? result.requirements
+          : [],
+    };
+  } catch (error) {
+    if (!isRiicAutomaticScheduleAbortError(error)) {
+      console.warn("RIIC training recommendation trial failed", error);
+    }
+    if (
+      !abortController.signal.aborted &&
+      requestId === trainingRecommendationRequestId
+    ) {
+      trainingRecommendationState.value = {
+        status: "error",
+        requirements: [],
+      };
+    }
+  } finally {
+    if (trainingRecommendationAbortController === abortController) {
+      trainingRecommendationAbortController = null;
+    }
+  }
+}
+
 function getRandomAutomaticGenerationNoticeOperators() {
   const operatorsById = new Map(
     (virtualOperators.value || []).flatMap((operator) => {
@@ -2671,7 +2741,9 @@ async function generateAutomaticSchedule({
   }
 
   controlCenterPlanningRunId.value += 1;
+  resetTrainingImpactState();
   automaticControlCenterReconciliationState.value = null;
+  cancelTrainingRecommendation();
   await nextTick();
 
   const generationTriggerKey = automaticGenerationTriggerKey.value;
@@ -2801,6 +2873,7 @@ async function generateAutomaticSchedule({
     if (!silentSuccess) {
       cMessage("已自动生成排班表", "success");
     }
+    void generateTrainingRecommendation(searchConfig);
   } catch (error) {
     if (isRiicAutomaticScheduleAbortError(error)) {
       return;
@@ -2829,6 +2902,80 @@ function regenerateSchedule() {
     suppressCurrentAutomaticGeneration: true,
   });
   void generateAutomaticSchedule();
+}
+
+function requestTrainingImpactCalculation() {
+  const baseline = riicL79InputDebugState.value;
+  if (!baseline?.schedule || !scheduleTrainingRequirements.value.length) {
+    trainingImpactState.value = { status: "error", results: [] };
+    return;
+  }
+
+  trainingImpactAbortController?.abort();
+  const abortController = new AbortController();
+  trainingImpactAbortController = abortController;
+  const requestId = ++trainingImpactRequestId;
+  trainingImpactState.value = { status: "running", results: [] };
+
+  const input = cloneRiicAutomaticScheduleWorkerInput({
+    ...createRiicTrainingRecommendationWorkerInput({
+      selectionBeamLimit: 0,
+      selectionOptionLimit: 0,
+      selectionRepresentativeLimit: 0,
+      selectionBatchSize: 0,
+      fallbackPlanLimit: 0,
+    }),
+    requirements: scheduleTrainingRequirements.value,
+    baselineSchedule: baseline.schedule,
+    baselineOperatorProfiles: riicL79OperatorProfiles.value,
+    droneTargetKeysByState: scheduleDroneSettlementSettingsByState.value.map(
+      (setting) => setting.targetKey,
+    ),
+    droneOrdersByState: scheduleDroneSettlementSettingsByState.value.map(
+      (setting) => setting.order,
+    ),
+    orundumCraftMaterial: scheduleExecutionSettings.orundumCraftMaterial,
+    staticRooms: schedulePreviewStaticRooms.value,
+    stateOrder: getSchedulePreviewStateOrder(
+      confirmedLayoutPlan.value?.shiftMode,
+      twoShiftRotationMode.value,
+    ),
+    shifts: schedulePreviewShifts.value,
+    roomOperatorOverrides: scheduleRoomOperatorOverrides.value,
+    productOverrides: scheduleRoomProductOverrides.value,
+    invalidatedRoomKeys: invalidatedScheduleRoomKeys.value,
+    stickyOperatorIds: [
+      operatorNameToCharId.get("但书"),
+      operatorNameToCharId.get("龙舌兰"),
+    ].filter(Boolean),
+    roomSettingOverrides: scheduleRoomMaaSettingOverrides.value,
+    roomIndexAssignments: resolvedScheduleRoomMaaIndexAssignments.value,
+    hasFiammetta: schedulePreviewShifts.value.some(
+      (shift) => shift?.fiammetta?.enable === true,
+    ),
+  });
+
+  void runRiicTrainingImpactInWorker({ input, signal: abortController.signal })
+    .then((results) => {
+      if (abortController.signal.aborted || requestId !== trainingImpactRequestId) {
+        return;
+      }
+      trainingImpactState.value = {
+        status: "ready",
+        results: Array.isArray(results) ? results : [],
+      };
+    })
+    .catch((error) => {
+      if (!abortController.signal.aborted && requestId === trainingImpactRequestId) {
+        console.warn("RIIC training impact trial failed", error);
+        trainingImpactState.value = { status: "error", results: [] };
+      }
+    })
+    .finally(() => {
+      if (trainingImpactAbortController === abortController) {
+        trainingImpactAbortController = null;
+      }
+    });
 }
 
 function createAutomaticScheduleAbortError() {
@@ -3014,6 +3161,7 @@ watch(
       automaticGenerationQueuedOptions = null;
       automaticGenerationRequestId += 1;
       automaticGenerationAbortController?.abort();
+      cancelTrainingRecommendation();
       return;
     }
 
@@ -4011,10 +4159,11 @@ const assembledFiammettaTargetUsage = computed(() =>
   }),
 );
 const scheduleTrainingRequirements = computed(() => {
-  if (
-    !treatUnderleveledOperatorsAsQualified.value ||
-    assembledScheduleCandidateState.value.status !== "ready"
-  ) {
+  if (riicTrainingMode.value !== "ideal") {
+    return trainingRecommendationState.value.requirements;
+  }
+
+  if (assembledScheduleCandidateState.value.status !== "ready") {
     return [];
   }
 
@@ -4027,6 +4176,11 @@ const scheduleTrainingRequirements = computed(() => {
     operatorNameToCharId,
   });
 });
+const scheduleTrainingRecommendationStatus = computed(() =>
+  riicTrainingMode.value === "ideal"
+    ? "ready"
+    : trainingRecommendationState.value.status,
+);
 const riicSchedulePreviewWithoutSupportRooms = computed(() =>
   buildRiicSchedulePreview({
     scheduleCandidate: activeAssembledScheduleCandidate.value,
@@ -4319,6 +4473,15 @@ const riicSchedulePreview = computed(() =>
     preview: riicSchedulePreviewBase.value,
     settlement: riicL79Settlement.value,
   }),
+);
+const hasOrundumManufactureRoom = computed(() =>
+  (riicSchedulePreview.value?.states || []).some((state) =>
+    (state?.rooms || []).some(
+      (room) =>
+        String(room?.facility || "").trim() === "manufacture" &&
+        String(room?.product || "").trim() === "orundum",
+    ),
+  ),
 );
 function createSchedulePreviewPlaceholderRoom(group, station, stationIndex) {
   const facilityLabel = String(group?.facilityLabel || group?.label || "");
@@ -6001,9 +6164,17 @@ function updateSchedulePreviewShift({ index, ...patch }) {
   }
 
   const currentShift = scheduleExecutionSettings.shifts[index];
-  scheduleExecutionSettings.shifts.splice(index, 1, {
+  const nextShifts = scheduleExecutionSettings.shifts.map((shift) => ({ ...shift }));
+  nextShifts[index] = {
     ...currentShift,
     ...(typeof patch.time === "string" ? { time: patch.time } : {}),
+    ...(typeof patch.periodStart === "string"
+      ? { periodStart: patch.periodStart, periodCustomized: true }
+      : {}),
+    ...(typeof patch.periodEnd === "string"
+      ? { periodEnd: patch.periodEnd, periodCustomized: true }
+      : {}),
+    ...(patch.periodCustomized === true ? { periodCustomized: true } : {}),
     ...(typeof patch.name === "string" ? { name: patch.name } : {}),
     ...(typeof patch.description === "string"
       ? { description: patch.description }
@@ -6017,7 +6188,16 @@ function updateSchedulePreviewShift({ index, ...patch }) {
     ...(patch.drone && typeof patch.drone === "object"
       ? { drone: normalizeScheduleDroneSettings(patch.drone) }
       : {}),
-  });
+  };
+  if (typeof patch.time === "string") {
+    nextShifts.forEach((shift, shiftIndex) => {
+      if (shift.periodCustomized === true) {
+        return;
+      }
+      Object.assign(shift, getDefaultScheduleShiftPeriod(nextShifts, shiftIndex));
+    });
+  }
+  scheduleExecutionSettings.shifts = nextShifts;
 }
 
 function updateScheduleExportInfo(nextExportInfo) {
@@ -6664,8 +6844,8 @@ function createCustomStaticLayoutStations(facilityProfile) {
           slotCount: getCustomStationSlotCount(facility, stationLevel),
         };
       },
-    );
-  });
+      );
+    });
 }
 
 function normalizeCustomLayoutStations(
@@ -7477,6 +7657,7 @@ function createInitialWorkspaceFromCurrent() {
     scheduleExecutionSettings: {
       shifts: [],
       orundumCraftMaterial: "orirock",
+      includeTrainingRoom: false,
       exportInfo: normalizeScheduleExportInfo(),
     },
     scheduleRoomOperatorOverrides: {},
@@ -7608,6 +7789,8 @@ function applySavedWizardState(parsedDraft) {
   scheduleExecutionSettings.shifts = savedExecutionSettings.shifts;
   scheduleExecutionSettings.orundumCraftMaterial =
     savedExecutionSettings.orundumCraftMaterial;
+  scheduleExecutionSettings.includeTrainingRoom =
+    savedExecutionSettings.includeTrainingRoom;
   scheduleExecutionSettings.exportInfo = savedExecutionSettings.exportInfo;
   scheduleRoomOperatorOverrides.value =
     normalizeSavedScheduleRoomOperatorOverrides(
@@ -7749,6 +7932,7 @@ function selectLayoutEntry(value) {
 
   layoutEntry.value = value === "recommend" ? value : card.key;
   planningMode.value = value === "recommend" ? "recommend" : "manual";
+  resetTrainingImpactState();
   if (value !== "recommend") {
     selectedLayoutId.value = card.layoutId;
     confirmedLayoutPlan.value = null;
@@ -7790,6 +7974,7 @@ function selectLayoutShift(value) {
   }
 
   if (confirmedLayoutPlan.value.shiftMode !== value) {
+    resetTrainingImpactState();
     confirmedLayoutPlan.value = {
       ...confirmedLayoutPlan.value,
       shiftMode: value,
@@ -7819,6 +8004,7 @@ function clearSelectedRoomGroupTeamCandidates({
 function resetGeneratedScheduleState({
   suppressCurrentAutomaticGeneration = false,
 } = {}) {
+  resetTrainingImpactState();
   controlCenterRoleSettings.value = { officeEnabled: false };
   controlCenterManualOverrides.value = normalizeControlCenterManualOverrides();
   controlCenterLateFillExcludedOperatorIdsByTeamIndex.value = {};
@@ -8158,8 +8344,14 @@ function exportGeneratedMaaSchedule() {
   exportingMaa.value = true;
 
   try {
+    const schedule = prepareRiicMaaScheduleForExport(
+      generatedMaaExportPreview.value.schedule,
+      {
+        includeTrainingRoom: scheduleExecutionSettings.includeTrainingRoom,
+      },
+    );
     const blob = new Blob(
-      [JSON.stringify(generatedMaaExportPreview.value.schedule, null, 2)],
+      [JSON.stringify(schedule, null, 2)],
       { type: "application/json;charset=utf-8" },
     );
     saveAs(blob, `${getGeneratedScheduleExportFileBase()}-MAA.json`);
@@ -8178,7 +8370,12 @@ function exportGeneratedMaaSchedule() {
 }
 
 function openGeneratedScheduleInLegacyEditor() {
-  const schedule = generatedMaaExportPreview.value?.schedule;
+  const schedule = prepareRiicMaaScheduleForExport(
+    generatedMaaExportPreview.value?.schedule,
+    {
+      includeTrainingRoom: scheduleExecutionSettings.includeTrainingRoom,
+    },
+  );
   if (!schedule) {
     cMessage("当前没有可转交到旧版编辑器的排班", "warn");
     return;
@@ -8234,6 +8431,7 @@ watch(
         .join("||"),
     () => JSON.stringify(scheduleExecutionSettings.exportInfo),
     () => scheduleExecutionSettings.orundumCraftMaterial,
+    () => scheduleExecutionSettings.includeTrainingRoom,
     scheduleRoomOperatorOverrides,
     scheduleRoomProductOverrides,
     invalidatedScheduleRoomKeys,
@@ -8264,6 +8462,7 @@ onBeforeUnmount(() => {
   automaticGenerationQueuedOptions = null;
   automaticGenerationRequestId += 1;
   automaticGenerationAbortController?.abort();
+  trainingRecommendationAbortController?.abort();
   riicYieldEngineAbortController?.abort();
 });
 </script>
@@ -9208,12 +9407,19 @@ onBeforeUnmount(() => {
               :orundum-craft-material="
                 scheduleExecutionSettings.orundumCraftMaterial
               "
+              :include-training-room="
+                scheduleExecutionSettings.includeTrainingRoom
+              "
               :default-title="getDefaultGeneratedScheduleTitle()"
               :shifts="schedulePreviewShifts"
+              :show-orundum-craft-material="hasOrundumManufactureRoom"
               @update:export-info="updateScheduleExportInfo"
               @update:orundum-craft-material="
                 scheduleExecutionSettings.orundumCraftMaterial =
                   normalizeOrundumCraftMaterial($event)
+              "
+              @update:include-training-room="
+                scheduleExecutionSettings.includeTrainingRoom = $event === true
               "
               @update:shift="updateSchedulePreviewShift"
             ></RiicScheduleExportSettings>
@@ -9329,6 +9535,11 @@ onBeforeUnmount(() => {
         />
         <RiicAdditionalInfoPanel
           :schedule-training-requirements="scheduleTrainingRequirements"
+          :training-impact-results="trainingImpactState.results"
+          :training-impact-status="trainingImpactState.status"
+          :schedule-training-recommendation-status="
+            scheduleTrainingRecommendationStatus
+          "
           :operator-table="operatorTableV2"
           :riic-yield-engine-results="riicYieldEngineResults"
           :actual-schedule-metrics="riicActualScheduleMetrics"
@@ -9343,6 +9554,7 @@ onBeforeUnmount(() => {
             }[confirmedLayoutPlan?.shiftMode] || '未设置换班'
           }`"
           :show-candidate-debug-values="showCandidateDebugValues"
+          @calculate-training-impact="requestTrainingImpactCalculation"
           :format-training-requirement="formatTrainingRequirement"
           :get-riic-yield-engine-status-meta="getRiicYieldEngineStatusMeta"
           :format-riic-yield-metric="formatRiicYieldMetric"

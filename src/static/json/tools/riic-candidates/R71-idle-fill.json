@@ -3,6 +3,9 @@
   "id": "idle-fill-priority",
   "skillState": "unlocked",
   "firstMatchWins": true,
+  "excludeNames": [
+    "菲亚梅塔"
+  ],
   "priorityNames": [
     "战车",
     "霜华",

@@ -2,30 +2,114 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20260819.0137"
+      "version": "v20260821.1543"
     },
     "data": {
       "label": "数据模块",
-      "version": "v20260818.1500"
+      "version": "v20260821.1543"
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260819.2343"
+      "version": "v20260821.1543"
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20260819.2022"
+      "version": "v20260821.1543"
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260820.0443"
+      "version": "v20260821.1543"
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260819.2343"
+      "version": "v20260821.1543"
     }
   },
   "entries": [
+    {
+      "date": "2026-08-21",
+      "version": "v20260821.1543",
+      "items": [
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 4,
+          "description": "培养建议面板补充收益试算状态与结果展示"
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 3,
+          "description": "调整闲置补位优先级配置，排除菲亚梅塔并更新候补填充参数"
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 4,
+          "description": "自动选房候补支持使用闲置干员，并按配置排除菲亚梅塔"
+        },
+        {
+          "module": "组装器",
+          "type": "update",
+          "level": 4,
+          "description": "MAA 导出支持自定义换班时间范围、跨日时间段处理和范围重叠提示"
+        },
+        {
+          "module": "布局模块",
+          "type": "update",
+          "level": 3,
+          "description": "排班导出设置支持训练室字段开关，并仅在存在搓玉制造站时显示搓玉原料选项"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 3,
+          "description": "MAA 收益试算补充计划时长、排班预览和资源摘要信息"
+        }
+      ]
+    },
+    {
+      "date": "2026-08-21",
+      "version": "v20260821.0612",
+      "items": [
+        {
+          "module": "布局模块",
+          "type": "update",
+          "level": 4,
+          "description": "排班生成流程接入独立的培养建议试算，并补充训练成本展示、后台计算状态与排班导出设置"
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 4,
+          "description": "基建技能基线升级为 schema 3，补充制造站仓库容量、贸易站订单上限等房间状态规则与公式元数据，并更新候补目录"
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 5,
+          "description": "拆分基建技能、条件匹配、中枢效果与活动干员结算核心，自动排班补位支持闲置干员候补并统一排班上下文"
+        },
+        {
+          "module": "组装器",
+          "type": "update",
+          "level": 4,
+          "description": "MAA 排班导出支持按设置移除训练室字段，排班核心与导出流程改用独立模块"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 5,
+          "description": "统一 L79 房间效率合并与自动化有效电站数量计算，接入新的排班上下文和分层结算核心"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 4,
+          "description": "扩展培养建议、MAA 试算、资源摘要和排班导出状态的诊断信息，并增加基线技能与动态候补校验"
+        }
+      ]
+    },
     {
       "date": "2026-08-20",
       "version": "v20260820.0443",

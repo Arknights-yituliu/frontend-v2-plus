@@ -76,6 +76,16 @@ const TIME_DEPENDENT_PATTERN =
   /\u9996\u5c0f\u65f6|\u6b64\u540e\u6bcf\u5c0f\u65f6|\u751f\u4ea7\u529b\u6bcf\u5c0f\u65f6|\u5de5\u4f5c\u65f6\u957f\u5f71\u54cd|\u5fc3\u60c5\u843d\u5dee|\u5355\u6b21\u5de5\u4f5c\u65f6\u957f/;
 const SPECIAL_ORDER_PATTERN =
   /\u56fa\u5b9a\u83b7\u53d6|\u51fa\u73b0\u6982\u7387|\u8fdd\u7ea6\u8ba2\u5355|\u7279\u522b\u8ba2\u5355|\u72ec\u5360\u8ba2\u5355/;
+const ROOM_STATE_METRICS_BY_ROOM_TYPE = Object.freeze({
+  manufacture: {
+    metric: "storageCapacity",
+    token: "\u4ed3\u5e93\u5bb9\u91cf\u4e0a\u9650",
+  },
+  trading: {
+    metric: "orderLimit",
+    token: "\u8ba2\u5355\u4e0a\u9650",
+  },
+});
 
 const REVIEWED_SAME_ROOM_SYNERGIES = [
   {
@@ -390,6 +400,74 @@ const REVIEWED_DIRECT_APPROXIMATIONS = [
   },
 ];
 
+const REVIEWED_ROOM_STATE_FORMULAS = [
+  {
+    id: "jaye-current-order-gap",
+    source: {
+      charId: "char_272_strong",
+      roomType: "trading",
+      phase: 0,
+      level: 1,
+    },
+    expectedDescriptionTokens: [
+      "\u5f53\u524d\u8ba2\u5355\u6570\u4e0e\u8ba2\u5355\u4e0a\u9650\u6bcf\u5dee",
+      "\u8ba2\u5355\u83b7\u53d6\u6548\u7387+4%",
+    ],
+    formula: {
+      type: "currentOrderGapToOrderEfficiency",
+      currentOrderMetric: "currentOrderCount",
+      limitMetric: "orderLimit",
+      outputMetric: "orderEfficiency",
+      percentPerGap: 4,
+    },
+  },
+  {
+    id: "jaye-teammate-order-efficiency",
+    source: {
+      charId: "char_272_strong",
+      roomType: "trading",
+      phase: 1,
+      level: 1,
+    },
+    expectedDescriptionTokens: [
+      "\u5176\u4ed6\u5e72\u5458\u63d0\u4f9b\u7684\u6bcf10%\u8ba2\u5355\u83b7\u53d6\u6548\u7387\u4f7f\u8ba2\u5355\u4e0a\u9650-1",
+      "\u8ba2\u5355\u6700\u5c11\u4e3a1",
+      "\u6bcf\u67091\u7b14\u8ba2\u5355\u5c31+4%\u8ba2\u5355\u83b7\u53d6\u6548\u7387",
+    ],
+    formula: {
+      type: "teammateOrderEfficiencyToOrderLimitAndCurrentOrderEfficiency",
+      teammateScope: "otherRoomOperators",
+      teammateEfficiencyMetric: "orderEfficiency",
+      teammateEfficiencyPerOrderLimitStep: 10,
+      orderLimitDeltaPerStep: -1,
+      minimumOrderLimit: 1,
+      currentOrderMetric: "currentOrderCount",
+      outputMetric: "orderEfficiency",
+      percentPerCurrentOrder: 4,
+    },
+  },
+  {
+    id: "vermeil-room-storage-capacity",
+    source: {
+      charId: "char_190_clour",
+      roomType: "manufacture",
+      phase: 1,
+      level: 1,
+    },
+    expectedDescriptionTokens: [
+      "\u5f53\u524d\u5236\u9020\u7ad9\u5185\u5e72\u5458\u63d0\u5347\u7684\u6bcf\u683c\u4ed3\u5e93\u5bb9\u91cf",
+      "2%\u751f\u4ea7\u529b",
+    ],
+    formula: {
+      type: "roomOperatorStorageCapacityToProduction",
+      inputScope: "roomOperators",
+      inputMetric: "storageCapacity",
+      outputMetric: "production",
+      percentPerInput: 2,
+    },
+  },
+];
+
 function getSkillKey({ charId, roomType, buffName, phase, level }) {
   return [charId, roomType, buffName, phase, level].join("|");
 }
@@ -512,6 +590,128 @@ function getIgnoredMechanics(description) {
     ignoredMechanics.push("orderLimit");
   }
   return ignoredMechanics;
+}
+
+function getRoomStateDirectDescription(description) {
+  if (
+    TIME_DEPENDENT_PATTERN.test(description) ||
+    SPECIAL_ORDER_PATTERN.test(description)
+  ) {
+    return "";
+  }
+
+  const conditionStart = description.search(CONDITIONAL_START_PATTERN);
+  return conditionStart < 0
+    ? description
+    : description.slice(0, conditionStart).trim();
+}
+
+function getDirectRoomStateEffects(skill, description) {
+  const definition = ROOM_STATE_METRICS_BY_ROOM_TYPE[skill.roomType];
+  if (!definition) {
+    return [];
+  }
+
+  const directDescription = getRoomStateDirectDescription(description);
+  if (!directDescription) {
+    return [];
+  }
+
+  const pattern = new RegExp(
+    `${definition.token}\\s*([+-])\\s*(\\d+(?:\\.\\d+)?)`,
+    "g",
+  );
+  return [...directDescription.matchAll(pattern)].map((match) => ({
+    metric: definition.metric,
+    amount: (match[1] === "-" ? -1 : 1) * Number(match[2]),
+    product: getProductScope(skill.roomType, directDescription),
+  }));
+}
+
+function hasRoomStateMention(description) {
+  return (
+    description.includes("\u4ed3\u5e93\u5bb9\u91cf\u4e0a\u9650") ||
+    description.includes("\u8ba2\u5355\u4e0a\u9650")
+  );
+}
+
+function getRoomStateExclusionReason(description) {
+  if (
+    /\u6bcf\u6709|\u6bcf\u4e2a|\u5f53\u4e0e|\u5f53\u524d\u8d38\u6613\u7ad9\u6bcf\u7ea7/.test(
+      description,
+    )
+  ) {
+    return "conditionalOrVariableStateChange";
+  }
+
+  return "unparsedStateChange";
+}
+
+function createRoomStateRule(skill, effects, replaceGroups) {
+  const sourceSkillId = getSkillKey(skill);
+  return {
+    id: `${sourceSkillId}|room-state`,
+    sourceSkillId,
+    charId: skill.charId,
+    name: skill.name,
+    buffName: skill.buffName,
+    roomType: skill.roomType,
+    unlock: {
+      phase: Number(skill.phase || 0),
+      level: Number(skill.level || 1),
+    },
+    activation: getActivation(skill, replaceGroups),
+    effects,
+    confidence: "parsed",
+    rawDescription: stripHtml(skill.description),
+  };
+}
+
+function createRoomStateFormula(spec, sourceSkill, replaceGroups) {
+  const description = stripHtml(sourceSkill.description);
+  for (const token of spec.expectedDescriptionTokens || []) {
+    if (!description.includes(token)) {
+      throw new Error(
+        `Room-state formula ${spec.id} no longer matches ${sourceSkill.charId}`,
+      );
+    }
+  }
+
+  const sourceSkillId = getSkillKey(sourceSkill);
+  return {
+    id: `${sourceSkillId}|room-state-formula|${spec.id}`,
+    sourceSkillId,
+    charId: sourceSkill.charId,
+    name: sourceSkill.name,
+    buffName: sourceSkill.buffName,
+    roomType: sourceSkill.roomType,
+    unlock: {
+      phase: Number(sourceSkill.phase || 0),
+      level: Number(sourceSkill.level || 1),
+    },
+    activation: getActivation(sourceSkill, replaceGroups),
+    formula: spec.formula,
+    confidence: "reviewed",
+    rawDescription: description,
+  };
+}
+
+function createRoomStateExclusion(skill, replaceGroups) {
+  return {
+    id: `${getSkillKey(skill)}|room-state`,
+    sourceSkillId: getSkillKey(skill),
+    charId: skill.charId,
+    name: skill.name,
+    buffName: skill.buffName,
+    roomType: skill.roomType,
+    unlock: {
+      phase: Number(skill.phase || 0),
+      level: Number(skill.level || 1),
+    },
+    activation: getActivation(skill, replaceGroups),
+    reason: getRoomStateExclusionReason(stripHtml(skill.description)),
+    rawDescription: stripHtml(skill.description),
+  };
 }
 
 function createRule(skill, effect, replaceGroups) {
@@ -750,12 +950,17 @@ function summarize({
   rules,
   sameRoomRules,
   exclusions,
+  roomStateRules,
+  roomStateFormulas,
+  roomStateExclusions,
   inputRecordCount,
 }) {
   const roomTypes = {};
   const roomProducts = {};
   const poolKeys = {};
   const exclusionsByReason = {};
+  const roomStateMetrics = {};
+  const roomStateExclusionsByReason = {};
   const includedSourceIds = new Set([
     ...rules.map((rule) => rule.sourceSkillId),
     ...sameRoomRules.map((rule) => rule.sourceSkillId),
@@ -773,6 +978,14 @@ function summarize({
   for (const exclusion of exclusions) {
     incrementCount(exclusionsByReason, exclusion.reason);
   }
+  for (const rule of roomStateRules) {
+    for (const effect of rule.effects || []) {
+      incrementCount(roomStateMetrics, effect.metric);
+    }
+  }
+  for (const exclusion of roomStateExclusions) {
+    incrementCount(roomStateExclusionsByReason, exclusion.reason);
+  }
 
   return {
     inputRecordCount,
@@ -788,6 +1001,15 @@ function summarize({
     byRoomProduct: roomProducts,
     byPoolKey: poolKeys,
     exclusionsByReason,
+    roomStateRuleCount: roomStateRules.length,
+    roomStateEffectCount: roomStateRules.reduce(
+      (total, rule) => total + (rule.effects || []).length,
+      0,
+    ),
+    roomStateFormulaCount: roomStateFormulas.length,
+    roomStateExclusionCount: roomStateExclusions.length,
+    roomStateMetrics,
+    roomStateExclusionsByReason,
   };
 }
 
@@ -830,6 +1052,35 @@ const sameRoomRules = REVIEWED_SAME_ROOM_SYNERGIES.map((spec) =>
     charIdsByName,
   ),
 );
+const roomStateRules = skills
+  .map((skill) => {
+    const effects = getDirectRoomStateEffects(
+      skill,
+      stripHtml(skill.description),
+    );
+    return effects.length > 0
+      ? createRoomStateRule(skill, effects, replaceGroups)
+      : null;
+  })
+  .filter(Boolean);
+const roomStateFormulas = REVIEWED_ROOM_STATE_FORMULAS.map((spec) =>
+  createRoomStateFormula(
+    spec,
+    getReviewedSourceSkill(spec.source, skills),
+    replaceGroups,
+  ),
+);
+const roomStateSourceIds = new Set([
+  ...roomStateRules.map((rule) => rule.sourceSkillId),
+  ...roomStateFormulas.map((rule) => rule.sourceSkillId),
+]);
+const roomStateExclusions = skills
+  .filter(
+    (skill) =>
+      hasRoomStateMention(stripHtml(skill.description)) &&
+      !roomStateSourceIds.has(getSkillKey(skill)),
+  )
+  .map((skill) => createRoomStateExclusion(skill, replaceGroups));
 const includedSourceIds = new Set([
   ...rules.map((rule) => rule.sourceSkillId),
   ...sameRoomRules.map((rule) => rule.sourceSkillId),
@@ -844,9 +1095,12 @@ skillStates.sort((left, right) => left.id.localeCompare(right.id, "en"));
 rules.sort((left, right) => left.id.localeCompare(right.id, "en"));
 sameRoomRules.sort((left, right) => left.id.localeCompare(right.id, "en"));
 exclusions.sort((left, right) => left.id.localeCompare(right.id, "en"));
+roomStateRules.sort((left, right) => left.id.localeCompare(right.id, "en"));
+roomStateFormulas.sort((left, right) => left.id.localeCompare(right.id, "en"));
+roomStateExclusions.sort((left, right) => left.id.localeCompare(right.id, "en"));
 
 const output = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   source: {
     buildingTable: INPUT_PATH,
     replacementGroups: REPLACE_GROUP_PATH,
@@ -868,6 +1122,10 @@ const output = {
       "storage capacity",
       "order limit",
     ],
+    roomStateMetadata: {
+      metrics: ["storageCapacity", "orderLimit"],
+      appliedByBaselineResolver: false,
+    },
     excludedMechanics: [
       "warmup",
       "threshold",
@@ -881,6 +1139,9 @@ const output = {
     rules,
     sameRoomRules,
     exclusions,
+    roomStateRules,
+    roomStateFormulas,
+    roomStateExclusions,
     inputRecordCount: allSkills.length,
   }),
   poolDefinitions: [
@@ -934,9 +1195,12 @@ const output = {
   rules,
   sameRoomRules,
   exclusions,
+  roomStateRules,
+  roomStateFormulas,
+  roomStateExclusions,
 };
 
 await fs.writeFile(OUTPUT_PATH, `${JSON.stringify(output, null, 2)}\n`);
 console.log(
-  `Generated ${rules.length} direct RIIC rules, ${sameRoomRules.length} same-room rules, and ${exclusions.length} exclusions at ${OUTPUT_PATH}`,
+  `Generated ${rules.length} direct RIIC rules, ${sameRoomRules.length} same-room rules, ${roomStateRules.length} room-state rules, ${roomStateFormulas.length} room-state formulas, and ${exclusions.length} exclusions at ${OUTPUT_PATH}`,
 );

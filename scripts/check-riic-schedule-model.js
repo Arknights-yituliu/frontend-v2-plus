@@ -20,6 +20,7 @@ import {
 import { buildRiicSchedulePreview } from "../src/utils/riicSchedulePreview.js";
 import {
   buildRiicMaaScheduleFromPreview,
+  prepareRiicMaaScheduleForExport,
 } from "../src/utils/riicScheduleExport.js";
 import {
   summarizeRiicActualSchedule,
@@ -78,20 +79,20 @@ assert.deepEqual(
 assert.equal(getRiicRotationCycle("twice")?.cycleHours, 24);
 assert.equal(getRiicRotationCycle("unknown"), null);
 
-const automaticSchedulerWorkerSource = fs.readFileSync(
-  new URL("../src/utils/riic/l70-scheduler.worker.js", import.meta.url),
+const automaticSchedulerCoreSource = fs.readFileSync(
+  new URL("../src/utils/riic/l70-scheduler-core.js", import.meta.url),
   "utf8",
 );
 assert.ok(
-  automaticSchedulerWorkerSource.indexOf("const tailFillResult") <
-    automaticSchedulerWorkerSource.indexOf("const resourceSuiteResult") &&
-    automaticSchedulerWorkerSource.indexOf("const resourceSuiteResult") <
-      automaticSchedulerWorkerSource.indexOf(
+  automaticSchedulerCoreSource.indexOf("const tailFillResult") <
+    automaticSchedulerCoreSource.indexOf("const resourceSuiteResult") &&
+    automaticSchedulerCoreSource.indexOf("const resourceSuiteResult") <
+      automaticSchedulerCoreSource.indexOf(
         "const controlCenterReconciliation",
       ),
 );
 assert.ok(
-  automaticSchedulerWorkerSource.includes(
+  automaticSchedulerCoreSource.includes(
     "tailFillResult: resourceSuiteResult.tailFillResult",
   ),
 );
@@ -341,6 +342,34 @@ assert.deepEqual(
   ["Orundum", "LMD"],
 );
 assert.equal(maaRoomIndexExport.schedule.plans[0].drones.index, 1);
+
+const trainingExportSchedule = {
+  plans: [
+    {
+      rooms: {
+        trading: [{ operators: ["A"] }],
+        training: [{ operators: ["B"] }],
+      },
+    },
+  ],
+};
+const trainingOmittedExport = prepareRiicMaaScheduleForExport(
+  trainingExportSchedule,
+  { includeTrainingRoom: false },
+);
+assert.equal(
+  Object.hasOwn(trainingOmittedExport.plans[0].rooms, "training"),
+  false,
+);
+assert.equal(
+  Object.hasOwn(trainingExportSchedule.plans[0].rooms, "training"),
+  true,
+);
+const trainingIncludedExport = prepareRiicMaaScheduleForExport(
+  trainingExportSchedule,
+  { includeTrainingRoom: true },
+);
+assert.deepEqual(trainingIncludedExport, trainingExportSchedule);
 
 const facilityCases = [
   {

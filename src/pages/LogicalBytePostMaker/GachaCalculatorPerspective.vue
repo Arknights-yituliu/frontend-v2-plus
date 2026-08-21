@@ -757,7 +757,7 @@ const allVideoPoolOptions = scheduleOptions
     label: `${schedule.name}图片`,
     title: schedule.name,
     endDate: schedule.dateString,
-    disabled: schedule.disabled,
+    disabled: false, // 卡片视图允许在数据面板手动开启全局锁定的活动
   }));
 const DEFAULT_ENABLED_VIDEO_POOL_IDS = Object.freeze(["summer", "p3r"]);
 

@@ -14,6 +14,7 @@ const LOCAL_OPERATOR_SOURCES_KEY = "riic_operator_sources_v2";
 const LOCAL_OPERATOR_SOURCE_KEY = "riic_operator_source_v1";
 const LOCAL_SKLAND_SNAPSHOT_KEY = "riic_skland_operator_snapshot_v1";
 const LOCAL_MAA_SNAPSHOT_KEY = "riic_maa_operator_data_v1";
+const DEFAULT_CYCLE_MINUTES = 24 * 60;
 
 const LAYOUT_CARD_KEYS = Object.freeze([
   "153",
@@ -60,6 +61,46 @@ function toText(value) {
 function toInteger(value, fallback = null) {
   const number = Number(value);
   return Number.isInteger(number) ? number : fallback;
+}
+
+function getPositiveDurationMinutes(value) {
+  const duration = toInteger(value);
+  return duration !== null && duration > 0 ? duration : null;
+}
+
+export function getRiicMaaYieldPlanDurations(maaSchedule) {
+  const plans = Array.isArray(maaSchedule?.plans) ? maaSchedule.plans : [];
+  if (plans.length === 0) {
+    return [];
+  }
+
+  const defaultDuration = Math.floor(DEFAULT_CYCLE_MINUTES / plans.length);
+  const remainingMinutes =
+    DEFAULT_CYCLE_MINUTES - defaultDuration * plans.length;
+
+  return plans.map((plan, index) => {
+    const sourceDuration = getPositiveDurationMinutes(plan?.duration);
+    return sourceDuration || defaultDuration + (index < remainingMinutes ? 1 : 0);
+  });
+}
+
+function applyRiicMaaYieldPlanDurations(
+  maaSchedule,
+  planDurations = [],
+) {
+  const plans = Array.isArray(maaSchedule?.plans) ? maaSchedule.plans : [];
+  const defaultDurations = getRiicMaaYieldPlanDurations(maaSchedule);
+
+  return {
+    ...maaSchedule,
+    plans: plans.map((plan, index) => ({
+      ...plan,
+      duration:
+        getPositiveDurationMinutes(planDurations[index]) ||
+        defaultDurations[index] ||
+        1,
+    })),
+  };
 }
 
 function normalizeRoster(list) {
@@ -378,8 +419,13 @@ export function createRiicMaaYieldTestModel({
   uploadedOperators = [],
   forceAllSkills = false,
   layoutCardKey = "",
+  planDurations = [],
 } = {}) {
-  const normalized = normalizeMaaRiicSchedule(maaSchedule, {
+  const scheduleInput = applyRiicMaaYieldPlanDurations(
+    maaSchedule,
+    planDurations,
+  );
+  const normalized = normalizeMaaRiicSchedule(scheduleInput, {
     allowSequentialDuration: true,
   });
   if (!normalized.schedule) {
@@ -447,6 +493,7 @@ export function createRiicMaaYieldTestModel({
     summary,
     calculationTrace,
     normalized,
+    planDurations: getRiicMaaYieldPlanDurations(scheduleInput),
     layoutCardKey: cardKey,
     matching: {
       fullMatch: rosterResolution.fullMatch,

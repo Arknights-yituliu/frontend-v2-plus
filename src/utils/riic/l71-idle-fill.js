@@ -266,6 +266,11 @@ export function getRiicIdleFillOperators({
   priorityConfig = IDLE_FILL_PRIORITY,
   unlockAllSkills = false,
 } = {}) {
+  const excludedNames = new Set(
+    (priorityConfig?.excludeNames || [])
+      .map((name) => String(name || "").trim())
+      .filter(Boolean),
+  );
   const priorityIndexByName = new Map(
     (priorityConfig?.priorityNames || [])
       .map((name, index) => [String(name || "").trim(), index])
@@ -273,6 +278,7 @@ export function getRiicIdleFillOperators({
   );
 
   return normalizeRoster(roster)
+    .filter((operator) => !excludedNames.has(operator.name))
     .map((operator) => {
       const activeRoomTypes = getActiveRoomTypes(operator, unlockAllSkills);
       const tier = getPriorityTier(activeRoomTypes, priorityConfig);

@@ -8,20 +8,19 @@ export function isRiicAutomaticScheduleAbortError(error) {
   return error?.name === "AbortError";
 }
 
-export function runRiicAutomaticScheduleInWorker({
+function runRiicWorker({
   input,
   signal,
+  workerUrl,
+  requestPrefix,
 } = {}) {
   if (typeof Worker !== "function") {
     return Promise.reject(new Error("当前浏览器不支持后台排班"));
   }
 
   return new Promise((resolve, reject) => {
-    const worker = new Worker(
-      new URL("./l70-scheduler.worker.js", import.meta.url),
-      { type: "module" },
-    );
-    const requestId = `riic-schedule:${Date.now()}:${Math.random()}`;
+    const worker = new Worker(workerUrl, { type: "module" });
+    const requestId = `${requestPrefix}:${Date.now()}:${Math.random()}`;
     let settled = false;
 
     const settle = (callback, value) => {
@@ -63,5 +62,38 @@ export function runRiicAutomaticScheduleInWorker({
 
     signal?.addEventListener("abort", abort, { once: true });
     worker.postMessage({ requestId, input });
+  });
+}
+
+export function runRiicAutomaticScheduleInWorker({
+  input,
+  signal,
+} = {}) {
+  return runRiicWorker({
+    input,
+    signal,
+    workerUrl: new URL("./l70-scheduler.worker.js", import.meta.url),
+    requestPrefix: "riic-schedule",
+  });
+}
+
+export function runRiicTrainingRecommendationInWorker({
+  input,
+  signal,
+} = {}) {
+  return runRiicWorker({
+    input,
+    signal,
+    workerUrl: new URL("./l83-training-recommendation.worker.js", import.meta.url),
+    requestPrefix: "riic-training-recommendation",
+  });
+}
+
+export function runRiicTrainingImpactInWorker({ input, signal } = {}) {
+  return runRiicWorker({
+    input,
+    signal,
+    workerUrl: new URL("./l83-training-impact.worker.js", import.meta.url),
+    requestPrefix: "riic-training-impact",
   });
 }

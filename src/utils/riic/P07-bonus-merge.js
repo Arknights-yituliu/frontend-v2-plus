@@ -1,6 +1,6 @@
-/** Legacy compatibility entry point for P07 bonus merging. */
+/** Shared bonus normalization and merge kernel. */
 export {
+  getRiicSameShiftBindingBonusBreakdown,
   buildRiicControlCenterRuntimeContext,
   getRiicControlCenterRoomAdjustment,
-  getRiicSameShiftBindingBonusBreakdown,
 } from "./P07-bonus-merge-core.js";
