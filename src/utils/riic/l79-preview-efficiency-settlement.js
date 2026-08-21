@@ -7,20 +7,23 @@ import RIIC_CONTROL_CENTER_SKILLS from "../../static/json/tools/riic-candidates/
 import {
   calculateRiicRoomEfficiency,
   resolveRiicBaselineSkills,
-} from "./l00-baseline-resolver.js";
+} from "./P05-baseline-skill.js";
 import {
   getRiicLayer3ControlCenterEffects,
-} from "./l30-rules.js";
-import * as RiicLayer3Rules from "./l30-rules.js";
+} from "./P09-control-center.js";
+import * as RiicLayer3Rules from "./P06-condition-match.js";
 import {
   settleRiicPerceptionSchedule,
-} from "./l42-perception-settlement.js";
+} from "./P10-perception-chain.js";
 import {
   getRiicSameShiftBindingBonusBreakdown,
-} from "./l51-control-effects.js";
+} from "./P09-control-center.js";
 import {
   applyRiicActiveRosterPreviewEffects,
-} from "./l79-active-roster-settlement.js";
+} from "./P12-active-roster.js";
+import { sumRiicRoomEfficiency } from "./P08-room-efficiency.js";
+import { getRiicEffectivePowerPlantCount } from "./P11-automation-skill.js";
+import { createRiicScheduleContext } from "./P50-schedule-context.js";
 import { resolveRiicOperatorIdByName } from "./riic-operator-identity.js";
 
 const BASELINE_ROOM_TYPES = new Set([
@@ -576,8 +579,10 @@ function getAutomationSupportState({ rooms, profilesById } = {}) {
 
   return {
     powerPlantCount,
-    effectivePowerPlantCount:
-      powerPlantCount + (supportOperatorActive ? 1 : 0),
+    effectivePowerPlantCount: getRiicEffectivePowerPlantCount({
+      powerPlantCount,
+      supportOperatorActive,
+    }),
     supportOperatorActive,
   };
 }
@@ -909,12 +914,13 @@ function calculateL79Room({
   const staffingBonusPercent = PRODUCTIVE_ROOM_TYPES.has(room.facility)
     ? (room.operators || []).length
     : 0;
-  const value =
-    Number(settledCalculation.localTotalPercent || 0) +
-    staffingBonusPercent +
-    layer3OperatorBonusPercent +
-    controlCenter.facilityBonusPercent +
-    controlCenter.operatorBonusPercent;
+  const value = sumRiicRoomEfficiency({
+    localPercent: settledCalculation.localTotalPercent,
+    staffingPercent: staffingBonusPercent,
+    localBonusPercent: layer3OperatorBonusPercent,
+    controlFacilityPercent: controlCenter.facilityBonusPercent,
+    controlOperatorPercent: controlCenter.operatorBonusPercent,
+  });
 
   return {
     ...room,
@@ -1149,8 +1155,12 @@ export function settleRiicMaaScheduleEfficiency({
   schedule,
   operatorProfiles = [],
 } = {}) {
+  const scheduleContext = createRiicScheduleContext({
+    schedule,
+    operatorProfiles,
+  });
   const profileState = normalizeProfiles(operatorProfiles);
-  const normalizedPlans = (schedule?.plans || []).map(
+  const normalizedPlans = (scheduleContext.schedule?.plans || []).map(
     (plan, planIndex) =>
       normalizePlan({
         sourcePlan: plan,

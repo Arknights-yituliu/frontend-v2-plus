@@ -82,16 +82,17 @@ function collectCandidateRequirements(
       continue;
     }
 
-    const operator = rosterById.get(
-      String(fallbackOperator?.charId || "").trim(),
-    );
-    const matchingOperator = matchingRosterById.get(
-      String(fallbackOperator?.charId || "").trim(),
-    );
-    const requirement = createRiicUpgradeRequirement(
-      operator,
-      matchingOperator,
-    );
+    const charId = String(fallbackOperator?.charId || "").trim();
+    const operator = rosterById.get(charId);
+    const requirement = fallbackOperator?.upgradeRequirement
+      ? createRiicUpgradeRequirement(
+          operator,
+          fallbackOperator.upgradeRequirement.required,
+        )
+      : createRiicUpgradeRequirement(
+          operator,
+          matchingRosterById.get(charId),
+        );
     if (requirement) {
       requirements.push(requirement);
     }

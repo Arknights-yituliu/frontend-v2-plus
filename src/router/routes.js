@@ -248,6 +248,18 @@ const routes = [
         }
     },
     {
+        path: '/tools/riic-efficiency-statistics',
+        text: '基建效率统计与新手指南',
+        name: 'RiicEfficiencyStatistics',
+        display: false,
+        module: 'riic',
+        icon: "mdi-chart-box-outline",
+        component: () => import('/src/pages/tools/riic-efficiency-statistics.vue'),
+        meta: {
+            title: '基建效率统计与新手指南'
+        }
+    },
+    {
         path: '/tools/schedule-images',
         text: '排班表参考',
         name: 'ScheduleImages',

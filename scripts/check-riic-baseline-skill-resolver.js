@@ -20,6 +20,75 @@ function getRulesForOperator(ruleData, charId) {
   return ruleData.rules.filter((rule) => rule.charId === charId);
 }
 
+function getRoomStateRule(ruleData, sourceSkillId) {
+  return ruleData.roomStateRules.find(
+    (rule) => rule.sourceSkillId === sourceSkillId,
+  );
+}
+
+function getRoomStateFormula(ruleData, sourceSkillId) {
+  return ruleData.roomStateFormulas.find(
+    (rule) => rule.sourceSkillId === sourceSkillId,
+  );
+}
+
+assert.equal(ruleData.schemaVersion, 3);
+assert.equal(ruleData.scope.roomStateMetadata.appliedByBaselineResolver, false);
+assert.equal(ruleData.summary.roomStateRuleCount > 0, true);
+assert.equal(ruleData.summary.roomStateFormulaCount, 3);
+
+assert.deepEqual(
+  getRoomStateRule(
+    ruleData,
+    "char_172_svrash|trading|喀兰之主|2|1",
+  ).effects,
+  [{ metric: "orderLimit", amount: 4, product: "all" }],
+);
+assert.deepEqual(
+  getRoomStateRule(
+    ruleData,
+    "char_190_clour|manufacture|拾荒者|0|1",
+  ).effects,
+  [{ metric: "storageCapacity", amount: 8, product: "all" }],
+);
+assert.deepEqual(
+  getRoomStateRule(
+    ruleData,
+    "char_1032_excu2|manufacture|合理利用|2|1",
+  ).effects,
+  [{ metric: "storageCapacity", amount: 4, product: "experience" }],
+);
+assert.deepEqual(
+  getRoomStateFormula(
+    ruleData,
+    "char_190_clour|manufacture|回收利用|1|1",
+  ).formula,
+  {
+    type: "roomOperatorStorageCapacityToProduction",
+    inputScope: "roomOperators",
+    inputMetric: "storageCapacity",
+    outputMetric: "production",
+    percentPerInput: 2,
+  },
+);
+assert.deepEqual(
+  getRoomStateFormula(
+    ruleData,
+    "char_272_strong|trading|市井之道|1|1",
+  ).formula,
+  {
+    type: "teammateOrderEfficiencyToOrderLimitAndCurrentOrderEfficiency",
+    teammateScope: "otherRoomOperators",
+    teammateEfficiencyMetric: "orderEfficiency",
+    teammateEfficiencyPerOrderLimitStep: 10,
+    orderLimitDeltaPerStep: -1,
+    minimumOrderLimit: 1,
+    currentOrderMetric: "currentOrderCount",
+    outputMetric: "orderEfficiency",
+    percentPerCurrentOrder: 4,
+  },
+);
+
 assert.equal(getRulesForOperator(ruleData, "char_4138_narant").length, 0);
 assert.equal(getRulesForOperator(ruleData, "char_1027_greyy2").length, 0);
 assert.equal(getRulesForOperator(ruleData, "char_254_vodfox").length, 0);

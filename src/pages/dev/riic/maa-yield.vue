@@ -3,11 +3,15 @@ import { computed, ref } from "vue";
 import { ElMessage } from "element-plus";
 import {
   createRiicMaaYieldTestModel,
+  getRiicMaaYieldPlanDurations,
   LAYOUT_CARD_KEYS,
   LAYOUT_LABELS,
   parseRiicMaaYieldTestOperatorFile,
   readRiicMaaYieldTestLocalOperators,
 } from "/src/utils/riic/maa-yield-test.js";
+import { operatorTableV2 } from "/src/utils/gameData.js";
+import RiicSchedulePreview from "/src/components/tools/RiicSchedulePreview.vue";
+import RiicScheduleResourceSummary from "/src/components/tools/RiicScheduleResourceSummary.vue";
 
 const scheduleFileName = ref("");
 const operatorFileName = ref("");
@@ -15,6 +19,8 @@ const maaSchedule = ref(null);
 const uploadedOperators = ref([]);
 const forceAllSkills = ref(false);
 const layoutCardKey = ref("");
+const planDurations = ref([]);
+const activeSchedulePreviewStateIndex = ref(0);
 const inputError = ref("");
 const localOperators = ref(readRiicMaaYieldTestLocalOperators());
 
@@ -31,6 +37,7 @@ const calculationState = computed(() => {
         uploadedOperators: uploadedOperators.value,
         forceAllSkills: forceAllSkills.value,
         layoutCardKey: layoutCardKey.value,
+        planDurations: planDurations.value,
       }),
       error: "",
     };
@@ -65,6 +72,51 @@ const droneUsage = computed(
 const droneTargetSettlement = computed(
   () => model.value?.calculationTrace?.droneTargetSettlement || null,
 );
+const scheduleResourceSummaryYield = computed(
+  () => model.value?.summary?.yield || null,
+);
+const scheduleResourceSummaryShifts = computed(() => {
+  const states = model.value?.preview?.states || [];
+  const targetKeys = model.value?.droneTargetKeysByState || [];
+  const orders = model.value?.droneOrdersByState || [];
+  let startMinutes = 0;
+
+  return states.map((state, index) => {
+    const target = String(targetKeys[index] || "").trim();
+    const shift = {
+      name: String(state?.name || `${String.fromCharCode(65 + index)}班`),
+      time: formatClockTime(startMinutes),
+      drone: target
+        ? {
+            target,
+            order: orders[index] === "post" ? "post" : "pre",
+          }
+        : {
+            disabled: true,
+          },
+    };
+    startMinutes += Math.max(0, Number(state?.durationHours || 0) * 60);
+    return shift;
+  });
+});
+const activeSchedulePreviewDroneTarget = computed(
+  () =>
+    String(
+      model.value?.droneTargetKeysByState?.[
+        activeSchedulePreviewStateIndex.value
+      ] || "",
+    ).trim(),
+);
+const scheduleResourceSummaryTargetKeysByState = computed(() => {
+  const targetKeys = (scheduleResourceSummaryYield.value?.droneTargetSettlements || [])
+    .map((settlement) => String(settlement?.key || "").trim())
+    .filter(Boolean);
+  const stateCount = model.value?.preview?.states?.length || 0;
+
+  return Array.from({ length: stateCount }, () =>
+    Object.fromEntries(targetKeys.map((key) => [key, key])),
+  );
+});
 const droneUsedPerDay = computed(() => {
   const cycleHours = Number(model.value?.summary?.cycleHours);
   const usedPerCycle = (droneUsage.value?.segments || []).reduce(
@@ -80,6 +132,12 @@ const effectiveLayoutCardKey = computed(
 );
 const hasCalculation = computed(() => Boolean(model.value?.summary));
 const calculationStates = computed(() => model.value?.preview?.states || []);
+const planDurationTotal = computed(() =>
+  planDurations.value.reduce(
+    (total, duration) => total + Math.max(0, Number(duration) || 0),
+    0,
+  ),
+);
 const operatorDataDescription = computed(() => {
   if (matching.value?.source === "uploaded") {
     return `上传文件 ${operatorFileName.value || "干员数据 JSON"}，共 ${uploadedOperators.value.length} 名`;
@@ -110,12 +168,15 @@ async function handleScheduleFile(event) {
     }
     scheduleFileName.value = file.name;
     maaSchedule.value = payload;
+    planDurations.value = getRiicMaaYieldPlanDurations(payload);
+    activeSchedulePreviewStateIndex.value = 0;
     layoutCardKey.value = "";
     ElMessage.success("MAA 排班已导入");
   } catch (error) {
     inputError.value = error?.message || "排班 JSON 读取失败";
     scheduleFileName.value = "";
     maaSchedule.value = null;
+    planDurations.value = [];
   }
 }
 
@@ -156,6 +217,13 @@ function formatNumber(value) {
         maximumFractionDigits: 2,
       })
     : "--";
+}
+
+function formatClockTime(value) {
+  const minutes = ((Math.round(Number(value) || 0) % 1440) + 1440) % 1440;
+  return `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(
+    minutes % 60,
+  ).padStart(2, "0")}`;
 }
 
 function formatOperator(operator) {
@@ -322,6 +390,30 @@ function formatIssue(issue) {
         </button>
       </div>
 
+      <div v-if="maaSchedule && planDurations.length" class="duration-settings">
+        <div>
+          <strong>班次时长</strong>
+          <p>
+            缺少时间线时默认把 24 小时均分为 {{ planDurations.length }} 班；
+            当前合计 {{ planDurationTotal }} 分钟，可直接调整后重算。
+          </p>
+        </div>
+        <label
+          v-for="(duration, index) in planDurations"
+          :key="index"
+          class="duration-control"
+        >
+          <span>{{ maaSchedule.plans[index]?.name || `第 ${index + 1} 班` }}</span>
+          <input
+            v-model.number="planDurations[index]"
+            type="number"
+            min="1"
+            step="1"
+          />
+          <small>分钟</small>
+        </label>
+      </div>
+
       <p v-if="inputError || calculationError" class="error-message">
         {{ inputError || calculationError }}
       </p>
@@ -388,11 +480,62 @@ function formatIssue(issue) {
             <dd>{{ LAYOUT_LABELS[effectiveLayoutCardKey] || effectiveLayoutCardKey }}</dd>
           </div>
           <div>
+            <dt>时间口径</dt>
+            <dd>
+              {{ planDurations.map((duration) => `${duration} 分钟`).join(" + ") }}
+              （顺序轮换）
+            </dd>
+          </div>
+          <div>
             <dt>技能口径</dt>
             <dd>{{ matching?.allSkillsUnlocked ? "按全技能解锁估算" : "按导入干员精英化与等级解析" }}</dd>
           </div>
         </dl>
       </section>
+
+      <section class="tool-section schedule-preview-section">
+        <div class="section-heading">
+          <div>
+            <h2>基地排班图</h2>
+            <p>按班次查看导入后参与核算的房间、干员、产物和房间效率。</p>
+          </div>
+        </div>
+        <div
+          class="maa-yield-state-tabs"
+          role="tablist"
+          aria-label="核算班次"
+        >
+          <button
+            v-for="(shift, index) in scheduleResourceSummaryShifts"
+            :key="`${shift.name}-${index}`"
+            type="button"
+            :class="{ active: index === activeSchedulePreviewStateIndex }"
+            role="tab"
+            :aria-selected="index === activeSchedulePreviewStateIndex"
+            @click="activeSchedulePreviewStateIndex = index"
+          >
+            <strong>{{ shift.name }}</strong>
+            <span>{{ shift.time }}</span>
+          </button>
+        </div>
+        <RiicSchedulePreview
+          :preview="model.preview"
+          :active-state-index="activeSchedulePreviewStateIndex"
+          :operator-table="operatorTableV2"
+          :shifts="scheduleResourceSummaryShifts"
+          :drone-target="activeSchedulePreviewDroneTarget"
+          :show-room-efficiency="true"
+          export-static
+        />
+      </section>
+
+      <RiicScheduleResourceSummary
+        :yield="scheduleResourceSummaryYield"
+        :shifts="scheduleResourceSummaryShifts"
+        :drone-target-preview-keys-by-state="
+          scheduleResourceSummaryTargetKeysByState
+        "
+      />
 
       <section class="tool-section">
         <div class="section-heading">
@@ -709,6 +852,44 @@ h2 {
   margin-top: 16px;
 }
 
+.duration-settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px 16px;
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid var(--c-border-color);
+}
+
+.duration-settings > div {
+  flex: 1 1 240px;
+}
+
+.duration-settings p {
+  margin: 4px 0 0;
+  color: var(--c-text-color-secondary, #6b7280);
+  font-size: 13px;
+}
+
+.duration-control {
+  display: grid;
+  grid-template-columns: auto 78px auto;
+  align-items: center;
+  gap: 6px;
+  color: var(--c-text-color-secondary, #6b7280);
+  font-size: 13px;
+}
+
+.duration-control input {
+  width: 78px;
+  padding: 6px 8px;
+  border: 1px solid var(--c-border-color);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
 .setting-control,
 .switch-control {
   display: inline-flex;
@@ -777,6 +958,41 @@ select {
 
 .import-summary-section {
   margin-top: 16px;
+}
+
+.schedule-preview-section {
+  margin-top: 16px;
+}
+
+.maa-yield-state-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.maa-yield-state-tabs button {
+  display: grid;
+  min-width: 106px;
+  gap: 3px;
+  padding: 9px 12px;
+  border: 1px solid var(--c-border-color);
+  background: transparent;
+  color: var(--c-text-color);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.maa-yield-state-tabs button.active {
+  border-color: var(--riic-blue, #2878c8);
+  background: rgba(40, 120, 200, 0.1);
+  color: var(--riic-blue, #2878c8);
+}
+
+.maa-yield-state-tabs span {
+  color: var(--c-text-color-secondary, #6b7280);
+  font-size: 12px;
 }
 
 .calculation-facts {
@@ -1030,6 +1246,20 @@ select {
 
   .secondary-button {
     margin-left: 0;
+  }
+
+  .duration-settings {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .maa-yield-state-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .maa-yield-state-tabs button {
+    min-width: 0;
   }
 
   .state-header {

@@ -1,4 +1,4 @@
-/** Legacy compatibility entry point for P12 active-roster settlement. */
+/** Final-roster conditional effect settlement entry point. */
 export {
   applyRiicActiveRosterPreviewEffects,
 } from "./P12-active-roster-core.js";

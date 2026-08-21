@@ -904,6 +904,122 @@ assert.deepEqual(
   ["regular-team"],
 );
 
+const idleFallbackGroups = [
+  {
+    id: "idle-power",
+    label: "Idle power",
+    facility: "power",
+  },
+  {
+    id: "idle-manufacture",
+    label: "Idle manufacture",
+    facility: "manufacture",
+  },
+];
+const idleFallbackCandidateStates = {
+  "idle-power": {
+    status: "ready",
+    cohorts: [
+      {
+        id: "power:0",
+        teamCount: 1,
+        candidates: [
+          {
+            key: "power-team",
+            name: "Power team",
+            operatorIds: ["power-core"],
+            sourceRoomType: "power",
+            corePercent: 100,
+            fallback: {
+              count: 1,
+              candidateOperators: [
+                {
+                  charId: "power-native",
+                  name: "Power native",
+                  percent: 10,
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  },
+  "idle-manufacture": {
+    status: "ready",
+    cohorts: [
+      {
+        id: "manufacture:0",
+        teamCount: 1,
+        candidates: [
+          {
+            key: "manufacture-team",
+            name: "Manufacture team",
+            operatorIds: ["manufacture-core"],
+            sourceRoomType: "manufacture",
+            corePercent: 100,
+            fallback: {
+              count: 1,
+              candidateOperators: [],
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+const idleFallbackOperators = [
+  {
+    charId: "manufacture-idle",
+    name: "Manufacture idle",
+    idleFill: true,
+    idleFillPriority: 0,
+  },
+  {
+    charId: "power-idle",
+    name: "Power idle",
+    idleFill: true,
+    idleFillPriority: 0,
+  },
+];
+const idleFallbackAutomaticSelection =
+  buildRiicAutomaticRoomGroupSelections({
+    groups: idleFallbackGroups,
+    candidateStatesByGroupId: idleFallbackCandidateStates,
+    idleFillOperators: idleFallbackOperators,
+    selectionBeamLimit: 8,
+    selectionOptionLimit: 8,
+    selectionRepresentativeLimit: 8,
+    fallbackPlanLimit: 8,
+  });
+assert.deepEqual(idleFallbackAutomaticSelection.unavailableGroups, []);
+assert.deepEqual(
+  idleFallbackAutomaticSelection.selections["idle-power"]["power:0"],
+  ["power-team"],
+);
+assert.deepEqual(
+  idleFallbackAutomaticSelection.selections["idle-manufacture"][
+    "manufacture:0"
+  ],
+  ["manufacture-team"],
+);
+assert.deepEqual(
+  Object.values(
+    idleFallbackAutomaticSelection.fallbackOperatorIdBySlotKeyByGroup[
+      "idle-power"
+    ],
+  ),
+  ["power-native"],
+);
+assert.deepEqual(
+  Object.values(
+    idleFallbackAutomaticSelection.fallbackOperatorIdBySlotKeyByGroup[
+      "idle-manufacture"
+    ],
+  ),
+  ["manufacture-idle"],
+);
+
   console.log("RIIC dynamic fallback checks passed.");
 } finally {
   await vite.close();

@@ -105,8 +105,19 @@ function getAutomaticRoomTeamOptions({
   facility,
   automationRuntimeContext,
   reservedPowerOperatorId = "",
+  idleFillOperators = [],
 }) {
   const recovery = normalizeRiicFiammettaRecovery(fiammettaRecovery);
+  const candidateWithIdleFallback =
+    (idleFillOperators || []).length > 0
+      ? {
+          ...candidate,
+          fallback: {
+            ...(candidate?.fallback || {}),
+            idleCandidateOperators: idleFillOperators,
+          },
+        }
+      : candidate;
   const coreOperatorIds = candidate?.operatorIds || [];
   const reserveOperatorForPower =
     reservedPowerOperatorId && facility !== "power";
@@ -126,6 +137,7 @@ function getAutomaticRoomTeamOptions({
     [
       ...(candidate?.fallback?.candidateOperators || []),
       ...(candidate?.fallback?.operators || []),
+      ...(candidateWithIdleFallback?.fallback?.idleCandidateOperators || []),
     ].some((operator) => isReusableTarget(operator?.charId));
   if (
     (reserveOperatorForPower &&
@@ -146,7 +158,7 @@ function getAutomaticRoomTeamOptions({
     excludedOperatorIds.add(reservedPowerOperatorId);
   }
   const fallbackPlans = createRiicRoomGroupFallbackPlanAlternatives({
-    selectedEntries: [{ selectionKey, candidate }],
+    selectedEntries: [{ selectionKey, candidate: candidateWithIdleFallback }],
     occupiedOperatorIds: new Set([
       ...activeSelectionOperatorIds,
     ].filter((charId) => !isReusableTarget(charId))),
@@ -378,6 +390,7 @@ export function buildRiicAutomaticRoomGroupSelections({
   layoutFacts = {},
   controlCenterSegments = [],
   collectPlanningDebug = false,
+  idleFillOperators = [],
 } = {}) {
   const automationOpportunity =
     hasUnlockedAutomationPowerSupport(ownedOperators) &&
@@ -453,6 +466,7 @@ export function buildRiicAutomaticRoomGroupSelections({
             selectedCandidateKeys,
             teamIndex,
             facility: cohort.facility,
+            idleFillOperators,
             reservedPowerOperatorId,
             automationRuntimeContext: getAutomationRuntimeContext({
               layoutFacts,

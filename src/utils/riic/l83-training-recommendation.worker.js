@@ -1,4 +1,6 @@
-import { runRiicAutomaticSchedule } from "./l70-scheduler-core.js";
+import {
+  runRiicTrainingRecommendationTrial,
+} from "./l83-training-recommendation-core.js";
 
 self.onmessage = (event) => {
   const { requestId, input } = event?.data || {};
@@ -6,7 +8,7 @@ self.onmessage = (event) => {
   try {
     self.postMessage({
       requestId,
-      result: runRiicAutomaticSchedule(input),
+      result: runRiicTrainingRecommendationTrial(input),
     });
   } catch (error) {
     self.postMessage({
@@ -14,7 +16,7 @@ self.onmessage = (event) => {
       error:
         error instanceof Error
           ? error.message
-          : "后台排班计算失败",
+          : "培养建议后台计算失败",
     });
   }
 };

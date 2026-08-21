@@ -722,7 +722,7 @@ async function loadOwnedOperators({ notify = false } = {}) {
             savedOperatorSignature !== nextOperatorSignature));
       if (shouldResetGeneratedSchedule) {
         resetGeneratedScheduleState?.({
-          suppressCurrentAutomaticGeneration: true,
+          suppressCurrentAutomaticGeneration: false,
         });
       }
       await setActiveOperatorSource(nextSource, {
@@ -763,7 +763,7 @@ async function handleMaaFileChange(file) {
   customSourceImporting.value = true;
 
   try {
-    const payload = JSON.parse(await file.text());
+    const payload = JSON.parse((await file.text()).replace(/^\uFEFF/, ""));
     const parsed = parseRiicMaaOperatorBox(payload, operatorTableV2);
 
     if (parsed.operators.length === 0) {

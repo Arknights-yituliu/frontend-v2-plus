@@ -32,6 +32,43 @@ export function getRiicMaaRoomType(facility) {
   return MAA_ROOM_TYPE_BY_FACILITY[String(facility || "").trim()] || null;
 }
 
+export function prepareRiicMaaScheduleForExport(
+  schedule,
+  { includeTrainingRoom = true } = {},
+) {
+  if (
+    includeTrainingRoom ||
+    !schedule ||
+    typeof schedule !== "object" ||
+    !Array.isArray(schedule.plans)
+  ) {
+    return schedule;
+  }
+
+  let hasTrainingRoom = false;
+  const plans = schedule.plans.map((plan) => {
+    const rooms = plan?.rooms;
+    if (
+      !rooms ||
+      typeof rooms !== "object" ||
+      Array.isArray(rooms) ||
+      !Object.hasOwn(rooms, "training")
+    ) {
+      return plan;
+    }
+
+    hasTrainingRoom = true;
+    const nextRooms = { ...rooms };
+    delete nextRooms.training;
+    return {
+      ...plan,
+      rooms: nextRooms,
+    };
+  });
+
+  return hasTrainingRoom ? { ...schedule, plans } : schedule;
+}
+
 function getRoomSortValue(room, roomIndexAssignments = {}) {
   const maaRoomIndex = Number(
     roomIndexAssignments?.[String(room?.key || "").trim()],
@@ -79,6 +116,27 @@ function getPeriod(startTime, endTime) {
     [startTime, "23:59"],
     ["00:00", endTime],
   ];
+}
+
+function getPeriodSegments(startTime, endTime) {
+  const start = getTimeInMinutes(startTime);
+  const end = getTimeInMinutes(endTime);
+  if (start === null || end === null || start === end) {
+    return [];
+  }
+
+  return start < end
+    ? [[start, end]]
+    : [[start, 24 * 60], [0, end]];
+}
+
+function periodsOverlap(left, right) {
+  return left.some(([leftStart, leftEnd]) =>
+    right.some(
+      ([rightStart, rightEnd]) =>
+        leftStart < rightEnd && rightStart < leftEnd,
+    ),
+  );
 }
 
 function getRoomSettingsOverride(room, stateIndex, roomSettingOverrides) {
@@ -286,6 +344,7 @@ export function buildRiicMaaScheduleFromPreview({
   }
 
   const warnings = new Set();
+  const periodEntries = [];
   const plans = states.map((state, index) => {
     const shift = shifts?.[index] || {};
     const nextShift = shifts?.[(index + 1) % states.length] || {};
@@ -296,7 +355,24 @@ export function buildRiicMaaScheduleFromPreview({
     const previewDuration = Math.round(
       Number(state?.durationHours || 0) * 60,
     );
-    const period = getPeriod(time, nextTime);
+    const periodStart = String(shift?.periodStart || "").trim();
+    const periodEnd = String(shift?.periodEnd || "").trim();
+    const periodConfigured = Boolean(periodStart || periodEnd);
+    const hasCustomPeriod =
+      getTimeInMinutes(periodStart) !== null &&
+      getTimeInMinutes(periodEnd) !== null &&
+      periodStart !== periodEnd;
+    const period = hasCustomPeriod
+      ? getPeriod(periodStart, periodEnd)
+      : getPeriod(time, nextTime);
+    if (hasCustomPeriod) {
+      periodEntries.push({
+        name,
+        segments: getPeriodSegments(periodStart, periodEnd),
+      });
+    } else if (periodConfigured) {
+      warnings.add(`“${name}”的换班时间范围无效，已沿用开始时间生成时间段。`);
+    }
     const drones = getDroneSetting(
       state,
       shift?.drone,
@@ -355,6 +431,22 @@ export function buildRiicMaaScheduleFromPreview({
 
     return plan;
   });
+
+  for (let leftIndex = 0; leftIndex < periodEntries.length; leftIndex += 1) {
+    for (
+      let rightIndex = leftIndex + 1;
+      rightIndex < periodEntries.length;
+      rightIndex += 1
+    ) {
+      const left = periodEntries[leftIndex];
+      const right = periodEntries[rightIndex];
+      if (periodsOverlap(left.segments, right.segments)) {
+        warnings.add(
+          `“${left.name}”与“${right.name}”的换班时间范围存在重叠，仍将继续导出。`,
+        );
+      }
+    }
+  }
 
   const planTimes = plans.length;
   const scheduleType = createLegacyScheduleType(states[0], planTimes);

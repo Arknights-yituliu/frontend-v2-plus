@@ -1,4 +1,4 @@
-/** Legacy compatibility entry point for P05 baseline skills. */
+/** Shared baseline skill and room efficiency kernel. */
 export {
   calculateRiicRoomEfficiency,
   createRiicIdealTrainingRoster,
