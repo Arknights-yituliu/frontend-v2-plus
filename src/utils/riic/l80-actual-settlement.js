@@ -16,7 +16,6 @@ import {
 } from "./riic-trade-order-model.js";
 
 const EPSILON = 1e-9;
-const ORUNDUM_PER_ORIGINIUM_SHARD = 10;
 const DRONE_BASE_CHARGE_MINUTES = 6;
 const DRONE_BASE_PER_HOUR = 60 / DRONE_BASE_CHARGE_MINUTES;
 const POWER_OPERATOR_CHARGE_BONUS_PERCENT = 5;
@@ -89,13 +88,6 @@ function isTradingRoom(room) {
   return (
     String(room?.facility || "").trim() === "trading" &&
     ["lmd", "orundum"].includes(String(room?.product || "").trim())
-  );
-}
-
-function isOrundumTradingRoom(room) {
-  return (
-    isTradingRoom(room) &&
-    String(room?.product || "").trim() === "orundum"
   );
 }
 
@@ -418,22 +410,6 @@ function createMaaFallbackTradingCalculation(room, durationHours) {
   };
 }
 
-function createOrundumTradingFlow(orundumOutput) {
-  const output = Number(orundumOutput);
-  if (!Number.isFinite(output) || output < 0) {
-    return null;
-  }
-
-  return {
-    type: "normal",
-    lmdOutput: 0,
-    orundumOutput: output,
-    goldConsumption: 0,
-    virtualGoldOutput: 0,
-    shardConsumption: output / ORUNDUM_PER_ORIGINIUM_SHARD,
-  };
-}
-
 function createRoomSummary(room) {
   return {
     key: String(room?.key || "").trim(),
@@ -511,10 +487,12 @@ function createYieldSegment({
     efficiency !== null &&
     room?.efficiencyMetrics?.actual?.status === "calculated";
   const meta = getRiicRoomYieldMeta(room);
-  const dailyRate = getRiicReferenceDailyRate(room, meta);
-  const isOrundumTrading = isOrundumTradingRoom(room);
-  const usesDirectEfficiency = isOrundumTrading || !isTradingRoom(room);
-  const tradingCalculation = isTradingRoom(room) && !isOrundumTrading
+  const tradingRoom = isTradingRoom(room);
+  const usesDirectEfficiency = !tradingRoom;
+  const dailyRate = usesDirectEfficiency
+    ? getRiicReferenceDailyRate(room, meta)
+    : null;
+  const tradingCalculation = tradingRoom
     ? calculateTradingRoom({
       room,
       rosterById: tradingRosterById,
@@ -525,8 +503,8 @@ function createYieldSegment({
   const fallbackTradingCalculation =
     allowMaaFallback &&
     tradingCalculation?.error === "notSupported" &&
-    isTradingRoom(room) &&
-    !isOrundumTrading
+    tradingRoom &&
+    String(room?.product || "").trim() === "lmd"
       ? createMaaFallbackTradingCalculation(room, durationHours)
       : null;
   const effectiveTradingCalculation =
@@ -555,11 +533,11 @@ function createYieldSegment({
   const output = unavailableReason
     ? null
     : calculatedTradingFlow
-      ? calculatedTradingFlow.lmdOutput
+      ? tradingCalculation?.product === "orundum"
+        ? calculatedTradingFlow.orundumOutput
+        : calculatedTradingFlow.lmdOutput
       : directProductionOutput;
-  const tradingFlow = isOrundumTrading && output !== null
-    ? createOrundumTradingFlow(output)
-    : calculatedTradingFlow;
+  const tradingFlow = calculatedTradingFlow;
   const orundumManufactureFlow =
     isOrundumManufactureRoom(room) && output !== null
       ? createOrundumManufactureFlow(output, orundumCraftMaterial)

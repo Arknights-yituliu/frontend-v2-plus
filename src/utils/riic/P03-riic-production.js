@@ -67,38 +67,16 @@ export function getRiicReferenceDailyRate(room, meta = getRiicRoomYieldMeta(room
   }
 
   const facility = String(room?.facility || "").trim();
-  const product = String(room?.product || "").trim();
   const stationLevel = Number(room?.stationLevel);
+  if (
+    ["manufacture", "trading"].includes(facility) &&
+    ![1, 2, 3].includes(stationLevel)
+  ) {
+    return null;
+  }
 
   if (meta.dailyRate !== undefined) {
-    const supportsDailyRate =
-      facility === "trading" &&
-      product === "orundum" &&
-      [1, 2, 3].includes(stationLevel);
-    return supportsDailyRate ||
-      stationLevel === 3 ||
-      facility === "hire" ||
-      facility === "office"
-      ? Number(meta.dailyRate)
-      : null;
-  }
-
-  if (
-    facility === "manufacture" &&
-    (stationLevel === 2 || stationLevel === 3)
-  ) {
-    const rate = toFiniteNumber(
-      RIIC_REFERENCE_DAILY_RATES?.[facility]?.[meta.rateKey],
-    );
-    if (rate === null) {
-      return null;
-    }
-
-    return meta.resource === "gold" ? rate / PURE_GOLD_LMD_VALUE : rate;
-  }
-
-  if (stationLevel !== 3) {
-    return null;
+    return toFiniteNumber(meta.dailyRate);
   }
 
   const rate = toFiniteNumber(
