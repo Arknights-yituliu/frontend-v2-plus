@@ -269,7 +269,10 @@ function formatUnavailableReason(reason, segment) {
   return reason || "未知原因";
 }
 
-function getSettlementMethod(room) {
+function getSettlementMethod(room, segment = null) {
+  if (segment?.calculationMethod === "普通贸易订单预置估算") {
+    return "按普通贸易订单预置参数、房间加成与班段时长估算";
+  }
   if (room.facility === "trading" && room.product !== "orundum") {
     return "按贸易订单、干员订单效率与班段时长结算";
   }
@@ -637,8 +640,20 @@ function formatIssue(issue) {
                     }}
                   </p>
                   <p class="settlement-detail">
-                    {{ getSettlementMethod(room) }}；本段产出
+                    {{ getSettlementMethod(room, segment) }}；本段产出
                     {{ formatNumber(segment.output) }} {{ room.unit }}
+                  </p>
+                  <p
+                    v-if="segment.fallbackDiagnostics"
+                    class="settlement-detail settlement-assumption"
+                  >
+                    预置过程：{{ segment.fallbackDiagnostics.stationLevel }} 级贸易站，
+                    {{ segment.fallbackDiagnostics.operatorCount }} 名干员，
+                    房间加成 {{ formatNumber(segment.fallbackDiagnostics.roomBonus) }}%，
+                    订单分布
+                    {{ segment.fallbackDiagnostics.orderDistribution.join(" / ") }}，
+                    订单基础赤金 {{ segment.fallbackDiagnostics.orderGold.join(" / ") }} 根；
+                    速度倍率 {{ formatNumber(segment.fallbackDiagnostics.speedMultiplier * 100) }}%
                   </p>
                 </template>
                 <p v-else class="settlement-detail">

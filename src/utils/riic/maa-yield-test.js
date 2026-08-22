@@ -482,6 +482,7 @@ export function createRiicMaaYieldTestModel({
     l79,
     droneTargetKeysByState,
     droneOrdersByState,
+    allowMaaFallback: true,
   });
   const calculationTrace = createMaaYieldCalculationTrace({
     preview,

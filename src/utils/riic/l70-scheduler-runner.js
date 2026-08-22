@@ -13,6 +13,7 @@ function runRiicWorker({
   signal,
   createWorker,
   requestPrefix,
+  onProgress,
 } = {}) {
   if (typeof Worker !== "function") {
     return Promise.reject(new Error("当前浏览器不支持后台排班"));
@@ -46,6 +47,11 @@ function runRiicWorker({
         return;
       }
 
+      if (message.progress) {
+        onProgress?.(message.progress);
+        return;
+      }
+
       if (message.error) {
         settle(reject, new Error(message.error));
         return;
@@ -68,6 +74,7 @@ function runRiicWorker({
 export function runRiicAutomaticScheduleInWorker({
   input,
   signal,
+  onProgress,
 } = {}) {
   return runRiicWorker({
     input,
@@ -76,6 +83,7 @@ export function runRiicAutomaticScheduleInWorker({
       new Worker(new URL("./l70-scheduler.worker.js", import.meta.url), {
         type: "module",
       }),
+    onProgress,
     requestPrefix: "riic-schedule",
   });
 }
@@ -83,10 +91,12 @@ export function runRiicAutomaticScheduleInWorker({
 export function runRiicTrainingRecommendationInWorker({
   input,
   signal,
+  onProgress,
 } = {}) {
   return runRiicWorker({
     input,
     signal,
+    onProgress,
     createWorker: () =>
       new Worker(
         new URL("./l83-training-recommendation.worker.js", import.meta.url),

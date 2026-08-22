@@ -338,7 +338,9 @@ export function buildRiicTailFillResult({
   idleFillOperators = [],
   fiammettaRecovery = null,
   fiammettaControlUsage = null,
+  onProgress,
 } = {}) {
+  onProgress?.("L71_FILL");
   const planningGroups = getRiicAutomaticRoomGroupPlanningOrder(groups);
   const nextSelections = cloneSelections(selections);
   const controlCenterOperatorIdSet = new Set(

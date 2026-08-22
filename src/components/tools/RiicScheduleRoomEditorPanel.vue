@@ -19,6 +19,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  getOperatorSkillTooltip: {
+    type: Function,
+    default: null,
+  },
   productOptions: {
     type: Array,
     default: () => [],
@@ -245,7 +249,11 @@ function toggleMaaSetting(field) {
         class="schedule-room-editor-operator"
         :class="{ dragging: draggedOperatorIndex === index }"
         draggable="true"
-        :title="`移除 ${operator.name}`"
+        :title="
+          getOperatorSkillTooltip
+            ? getOperatorSkillTooltip(operator)
+            : '暂无已解锁基建技能'
+        "
         @dragstart="startOperatorDrag($event, index)"
         @dragover.prevent
         @drop="dropOperator($event, index)"
