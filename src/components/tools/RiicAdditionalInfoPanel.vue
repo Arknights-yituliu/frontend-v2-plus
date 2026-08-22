@@ -45,6 +45,10 @@ const props = defineProps({
     type: String,
     default: "idle",
   },
+  scheduleTrainingRecommendationPhase: {
+    type: String,
+    default: "",
+  },
   operatorTable: {
     type: Object,
     default: () => ({}),
@@ -223,9 +227,27 @@ async function copyCalculationFeedback() {
     </p>
     <p
       v-if="scheduleTrainingRecommendationStatus === 'running'"
-      class="additional-info-empty"
+      class="additional-info-loading"
     >
-      培养建议正在计算中
+      <v-icon
+        icon="mdi-loading"
+        size="16"
+        class="additional-info-loading-icon"
+        aria-hidden="true"
+      ></v-icon>
+      <span>{{ scheduleTrainingRecommendationPhase || "正在计算培养建议" }}</span>
+    </p>
+    <p
+      v-else-if="scheduleTrainingRecommendationStatus === 'pending'"
+      class="additional-info-loading"
+    >
+      <v-icon
+        icon="mdi-loading"
+        size="16"
+        class="additional-info-loading-icon"
+        aria-hidden="true"
+      ></v-icon>
+      <span>等待排班计算完成后生成培养建议</span>
     </p>
     <p
       v-else-if="['error', 'unavailable', 'requiresOperators'].includes(scheduleTrainingRecommendationStatus)"
@@ -515,6 +537,27 @@ async function copyCalculationFeedback() {
   color: var(--riic-muted);
   font-size: 12px;
   line-height: 1.5;
+}
+
+.additional-info-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--riic-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.additional-info-loading-icon {
+  color: var(--riic-orange);
+  animation: additional-info-loading-spin 1s linear infinite;
+}
+
+@keyframes additional-info-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .training-impact-note {

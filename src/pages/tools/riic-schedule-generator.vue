@@ -40,6 +40,7 @@ import {
 } from "/src/utils/riicOperatorSources.js";
 import { useRiicOperatorSources } from "/src/utils/riicOperatorSources.js";
 import { operatorTableV2 } from "/src/utils/gameData.js";
+import { getRiicOperatorSkillTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
 import {
   createRiicOperatorSearchEntries,
   findRiicOperatorSearchMatches,
@@ -162,6 +163,12 @@ import {
 import {
   runRiicYieldEngines,
 } from "/src/utils/riicYieldEngines/engineRunner.js";
+import {
+  createRiicWorkspaceSnapshot,
+  normalizeRiicWorkspaceSnapshot,
+} from "/src/utils/riic/riic-schedule-workspace.js";
+import { createRiicScheduleResultSnapshot } from "/src/utils/riic/riic-schedule-result-snapshot.js";
+import { createRiicScheduleGenerationWorkflow } from "/src/utils/riic/riic-schedule-generation-workflow.js";
 
 const RIIC_OPERATOR_WORKSPACES_STORAGE_KEY =
   "riic_schedule_generator_workspaces_v1";
@@ -228,7 +235,7 @@ const FIAMMETTA_RECOVERY_TARGET_NAMES = Object.freeze([
 const CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS = Object.freeze([
   {
     id: "room",
-    label: "房间产能加成",
+    label: "设施产能加成类",
     targetRoomType: "",
     maxPerTeam: 3,
     buffTags: [
@@ -239,10 +246,10 @@ const CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS = Object.freeze([
   },
   {
     id: "operator",
-    label: "干员加成",
+    label: "干员相关效果类",
     targetRoomType: "",
     maxPerTeam: 5,
-    buffTags: ["trading-operator", "manufacture-operator"],
+    buffTags: ["trading-operator", "manufacture-operator", "operator-effect"],
   },
 ]);
 function formatRiicControlCenterRoomEffect(effect) {
@@ -339,12 +346,24 @@ const scheduleGenerationLoadingPhase = computed(() => {
 
   return "正在读取当前数据源";
 });
+const automaticGenerationProgressLabels = {
+  L70: "正在分析候选方案",
+  L70_CANDIDATES: "正在读取候选班组",
+  L70_COMBINING: "正在组合候选与补位方案",
+  L70_FALLBACK: "正在计算候选补位",
+  L71: "正在处理普通补位",
+  L71_FILL: "正在分配普通闲置干员",
+  L72: "正在整理资源组合",
+  L73: "正在校准控制中枢",
+};
 const riicAutomaticGenerationDebugState = ref(null);
 const automaticControlCenterReconciliationState = ref(null);
 const trainingRecommendationState = ref({
   status: "idle",
+  phase: "",
   requirements: [],
 });
+let restoredWizardTrainingRecommendationPending = false;
 const trainingImpactState = ref({ status: "idle", results: [] });
 const deepScheduleConfirmationOpen = ref(false);
 let automaticGenerationAbortController = null;
@@ -2376,64 +2395,6 @@ function canAddRoomGroupTeamCandidate(group, cohort, candidate) {
   );
 }
 
-function getRoomGroupCandidateAvailabilityMessage(group, cohort, candidate) {
-  const selectedCount = getSelectedRoomCandidateCount(
-    group,
-    cohort,
-    candidate?.key,
-  );
-  if (selectedCount > 0) {
-    if (
-      candidate?.repeatableTeam &&
-      isFiammettaReusableTeamCandidate(candidate) &&
-      selectedCount < Number(cohort?.teamCount || 0) &&
-      canAddRoomGroupTeamCandidate(group, cohort, candidate)
-    ) {
-      return `已选 ${selectedCount}/${cohort.teamCount} 班，点击再选一班`;
-    }
-
-    return `已选 ${selectedCount}/${cohort.teamCount} 班，点击取消最后一班`;
-  }
-
-  if (canAddRoomGroupTeamCandidate(group, cohort, candidate)) {
-    return (candidate?.operatorIds || []).length === 0
-      ? "使用基础补位补满剩余班组"
-      : "选择班组";
-  }
-
-  if (getSelectedTeamCandidateCount(group, cohort) >= cohort.teamCount) {
-    return "该班组数量已选满";
-  }
-
-  if ((candidate?.operatorIds || []).length === 0) {
-    return "无法继续加入";
-  }
-
-  if (getSelectedRoomCandidateCount(group, cohort, candidate?.key) > 0) {
-    return "具名干员班组不能重复选择";
-  }
-
-  return "包含已在其他房间组使用的干员";
-}
-
-function getRoomGroupCandidateTooltip(group, cohort, candidate) {
-  const members = [String(candidate?.name || "").trim()].filter(Boolean);
-  const metricSummary = getRoomGroupCandidateMetrics(candidate)
-    .map(
-      (metric) =>
-        `${metric.label}${formatRoomGroupBonusPercent(metric.bonus)}`,
-    )
-    .join(" ");
-
-  return [
-    members.join(" + ") || "基础补位",
-    metricSummary,
-    getRoomGroupCandidateAvailabilityMessage(group, cohort, candidate),
-  ]
-    .filter(Boolean)
-    .join(" · ");
-}
-
 function canToggleRoomGroupTeamCandidate(group, cohort, candidate) {
   if (candidate?.repeatableTeam) {
     return canAddRoomGroupTeamCandidate(group, cohort, candidate);
@@ -2565,6 +2526,19 @@ function createRiicAutomaticScheduleWorkerInput(searchConfig) {
   });
 }
 
+function getOperatorSkillTooltip(operator) {
+  const charId = String(operator?.charId || "").trim();
+  const rosterOperator =
+    (virtualOperators.value || []).find(
+      (item) => String(item?.charId || "").trim() === charId,
+    ) ||
+    (ownedOperators.value || []).find(
+      (item) => String(item?.charId || "").trim() === charId,
+    );
+
+  return getRiicOperatorSkillTooltip(operator, rosterOperator);
+}
+
 function getRiicSchedulingOperators() {
   return (ownedOperators.value || []).filter(
     (operator) =>
@@ -2624,6 +2598,7 @@ function cancelTrainingRecommendation() {
   trainingRecommendationAbortController = null;
   trainingRecommendationState.value = {
     status: "idle",
+    phase: "",
     requirements: [],
   };
 }
@@ -2656,6 +2631,7 @@ async function generateTrainingRecommendation(searchConfig) {
   ) {
     trainingRecommendationState.value = {
       status: "idle",
+      phase: "",
       requirements: [],
     };
     return;
@@ -2667,13 +2643,33 @@ async function generateTrainingRecommendation(searchConfig) {
   trainingRecommendationAbortController = abortController;
   trainingRecommendationState.value = {
     status: "running",
+    phase: "正在准备培养建议",
     requirements: [],
   };
 
   try {
+    trainingRecommendationState.value = {
+      status: "running",
+      phase: "正在后台分析候选干员",
+      requirements: [],
+    };
     const result = await runRiicTrainingRecommendationInWorker({
       input: createRiicTrainingRecommendationWorkerInput(searchConfig),
       signal: abortController.signal,
+      onProgress: (phase) => {
+        if (
+          abortController.signal.aborted ||
+          requestId !== trainingRecommendationRequestId
+        ) {
+          return;
+        }
+
+        trainingRecommendationState.value = {
+          status: "running",
+          phase,
+          requirements: [],
+        };
+      },
     });
     if (
       abortController.signal.aborted ||
@@ -2687,6 +2683,7 @@ async function generateTrainingRecommendation(searchConfig) {
         result?.status === "ready"
           ? "ready"
           : result?.status || "unavailable",
+      phase: result?.status === "ready" ? "正在整理培养建议" : "",
       requirements:
         result?.status === "ready" && Array.isArray(result?.requirements)
           ? result.requirements
@@ -2702,6 +2699,7 @@ async function generateTrainingRecommendation(searchConfig) {
     ) {
       trainingRecommendationState.value = {
         status: "error",
+        phase: "",
         requirements: [],
       };
     }
@@ -2710,6 +2708,19 @@ async function generateTrainingRecommendation(searchConfig) {
       trainingRecommendationAbortController = null;
     }
   }
+}
+
+function generateRestoredTrainingRecommendationIfReady() {
+  if (
+    !restoredWizardTrainingRecommendationPending ||
+    assembledScheduleCandidateState.value.status !== "ready" ||
+    riicTrainingMode.value === "ideal"
+  ) {
+    return;
+  }
+
+  restoredWizardTrainingRecommendationPending = false;
+  void generateTrainingRecommendation(RIIC_AUTOMATIC_SEARCH_CONFIGS.fast);
 }
 
 function getRandomAutomaticGenerationNoticeOperators() {
@@ -2740,6 +2751,70 @@ function getRandomAutomaticGenerationNoticeOperators() {
     (_, index) => operators[index % operators.length],
   );
 }
+
+const automaticGenerationWorkflow = createRiicScheduleGenerationWorkflow({
+  loadCatalogs: async ({ signal }) => {
+    await waitForAutomaticScheduleStage(
+      Promise.all(
+        candidateEnabledScheduleRoomGroups.value.map((group) =>
+          ensureRoomGroupCatalogLoaded(group),
+        ),
+      ),
+      signal,
+    );
+    const failedCatalogs = candidateEnabledScheduleRoomGroups.value.flatMap(
+      (group) =>
+        getRoomGroupCatalogRequests(group)
+          .map((request) => request.key)
+          .filter(
+            (key) => riicStaticCatalogLoadStatesByKey.value[key] === "failed",
+          )
+          .map(
+            (key) =>
+              `${group.label || group.id}: ${
+                riicStaticCatalogErrorsByKey.value[key] || key
+              }`,
+          ),
+    );
+    if (failedCatalogs.length > 0) {
+      throw new Error(`候选目录加载失败：${failedCatalogs.join("；")}`);
+    }
+    await nextTick();
+    await waitForAutomaticScheduleStage(
+      new Promise((resolve) => requestAnimationFrame(resolve)),
+      signal,
+    );
+  },
+  buildWorkerInput: (strategy) =>
+    createRiicAutomaticScheduleWorkerInput(
+      RIIC_AUTOMATIC_SEARCH_CONFIGS[strategy] ||
+        RIIC_AUTOMATIC_SEARCH_CONFIGS.fast,
+    ),
+  runWorker: ({ input, signal, onProgress }) =>
+    runRiicAutomaticScheduleInWorker({
+      input,
+      signal,
+      onProgress,
+    }),
+  applyResult: (result) => result,
+  getProgressLabel: (phase) => {
+    if (phase === "catalogs") {
+      return "正在载入候选班组";
+    }
+    if (phase === "worker") {
+      return "正在分析候选与补位";
+    }
+    if (phase === "apply") {
+      return "正在组装排班结果";
+    }
+    return automaticGenerationProgressLabels[phase] || phase;
+  },
+  onPhase: (phase, label) => {
+    automaticGenerationPhase.value = showCandidateDebugValues.value
+      ? `${label} · ${phase}`
+      : label;
+  },
+});
 
 async function generateAutomaticSchedule({
   silentSuccess = false,
@@ -2775,57 +2850,12 @@ async function generateAutomaticSchedule({
   const abortController = new AbortController();
   automaticGenerationAbortController = abortController;
   autoGeneratingSchedule.value = true;
-  automaticGenerationPhase.value = "正在加载候选";
+  automaticGenerationPhase.value = "正在载入候选班组";
   automaticGenerationNoticeOperators.value =
     getRandomAutomaticGenerationNoticeOperators();
   try {
-    await waitForAutomaticScheduleStage(
-      Promise.all(
-        candidateEnabledScheduleRoomGroups.value.map((group) =>
-          ensureRoomGroupCatalogLoaded(group),
-        ),
-      ),
-      abortController.signal,
-    );
-    if (
-      abortController.signal.aborted ||
-      requestId !== automaticGenerationRequestId
-    ) {
-      return;
-    }
-    const failedCatalogs = candidateEnabledScheduleRoomGroups.value.flatMap(
-      (group) =>
-        getRoomGroupCatalogRequests(group)
-          .map((request) => request.key)
-          .filter(
-            (key) =>
-              riicStaticCatalogLoadStatesByKey.value[key] === "failed",
-          )
-          .map(
-            (key) =>
-              `${group.label || group.id}: ${
-                riicStaticCatalogErrorsByKey.value[key] || key
-              }`,
-          ),
-    );
-    if (failedCatalogs.length > 0) {
-      throw new Error(`候选目录加载失败：${failedCatalogs.join("；")}`);
-    }
-    await nextTick();
-
-    automaticGenerationPhase.value = "正在后台计算";
-    await waitForAutomaticScheduleStage(
-      new Promise((resolve) => requestAnimationFrame(resolve)),
-      abortController.signal,
-    );
-    if (
-      abortController.signal.aborted ||
-      requestId !== automaticGenerationRequestId
-    ) {
-      return;
-    }
-    const workerResult = await runRiicAutomaticScheduleInWorker({
-      input: createRiicAutomaticScheduleWorkerInput(searchConfig),
+    const workerResult = await automaticGenerationWorkflow.run({
+      strategy,
       signal: abortController.signal,
     });
     if (
@@ -2835,7 +2865,7 @@ async function generateAutomaticSchedule({
       return;
     }
 
-    automaticGenerationPhase.value = "正在组装结果";
+    automaticGenerationPhase.value = "正在组装排班结果";
     if (!workerResult || typeof workerResult !== "object") {
       throw new Error("后台排班没有返回结果");
     }
@@ -2851,6 +2881,7 @@ async function generateAutomaticSchedule({
     if (!resourceSuiteResult?.tailFillResult) {
       throw new Error("后台排班结果缺少资源组合结果");
     }
+    automaticGenerationPhase.value = "正在整理最终排班";
     const {
       selections,
       fallbackOperatorIdBySlotKeyByGroup,
@@ -4208,8 +4239,18 @@ const scheduleTrainingRequirements = computed(() => {
 });
 const scheduleTrainingRecommendationStatus = computed(() =>
   riicTrainingMode.value === "ideal"
-    ? "ready"
-    : trainingRecommendationState.value.status,
+    ? assembledScheduleCandidateState.value.status === "ready"
+      ? "ready"
+      : "pending"
+    : trainingRecommendationState.value.status === "idle"
+      ? "pending"
+      : trainingRecommendationState.value.status,
+);
+watch(
+  () => assembledScheduleCandidateState.value.status,
+  () => {
+    generateRestoredTrainingRecommendationIfReady();
+  },
 );
 const riicSchedulePreviewWithoutSupportRooms = computed(() =>
   buildRiicSchedulePreview({
@@ -4982,12 +5023,10 @@ const riicL79InputDebugState = computed(() => {
   }
 
   try {
-    const { schedule } = buildRiicMaaScheduleFromPreview(
-      {
-        ...getRiicMaaScheduleBuildOptions(true),
-        durationSource: "preview",
-      },
-    );
+    const { schedule } = buildRiicMaaScheduleFromPreview({
+      ...getRiicMaaScheduleBuildOptions(true),
+      durationSource: "preview",
+    });
     return {
       schedule,
       operatorProfiles: riicL79OperatorProfiles.value,
@@ -4997,6 +5036,17 @@ const riicL79InputDebugState = computed(() => {
     return null;
   }
 });
+const riicScheduleResultSnapshot = computed(() =>
+  createRiicScheduleResultSnapshot({
+    preview: riicSchedulePreview.value,
+    l79: riicL79Settlement.value,
+    actual: riicActualScheduleMetrics.value,
+    displayPreview: riicScheduleDisplayPreview.value,
+    exportPreview: generatedMaaExportPreview.value,
+    l79Input: riicL79InputDebugState.value,
+    diagnostics: riicAutomaticGenerationDebugState.value,
+  }),
+);
 function getDefaultGeneratedScheduleTitle() {
   const now = new Date();
   const pad = (value) => String(value).padStart(2, "0");
@@ -7615,40 +7665,46 @@ function createSetAssessmentScheduleSnapshot() {
 }
 
 function createWizardStateSnapshot() {
-  return {
-    version: RIIC_SCHEDULE_DRAFT_VERSION,
+  return createRiicWorkspaceSnapshot({
     operatorRosterSignature: getCurrentOperatorRosterSignature(),
-    answers: Object.fromEntries(
-      ANSWER_FIELDS.map((field) => [field.key, answers[field.key]]),
-    ),
     currentStep: currentStep.value,
-    layoutEntry: layoutEntry.value,
-    planningMode: planningMode.value,
-    selectedLayoutId: selectedLayoutId.value,
-    confirmedLayoutPlan: confirmedLayoutPlan.value,
-    twoShiftRotationMode: twoShiftRotationMode.value,
-    treatUnderleveledOperatorsAsQualified:
-      treatUnderleveledOperatorsAsQualified.value,
-    idealTrainingRaritySelection: idealTrainingRaritySelection.value,
-    controlCenterRoleSettings: controlCenterRoleSettings.value,
-    controlCenterManualOverrides: controlCenterManualOverrides.value,
-    controlCenterLateFillExcludedOperatorIdsByTeamIndex:
-      controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
-    fiammettaRecoverySettings: fiammettaRecoverySettings.value,
-    selectedRoomGroupTeamCandidateKeys:
-      selectedRoomGroupTeamCandidateKeys.value,
-    roomGroupFallbackQueueStates: roomGroupFallbackQueueStates.value,
-    scheduleExecutionSettings: createScheduleExecutionSettingsSnapshot(),
-    scheduleRoomOperatorOverrides: scheduleRoomOperatorOverrides.value,
-    scheduleRoomProductOverrides: scheduleRoomProductOverrides.value,
-    invalidatedScheduleRoomKeys: invalidatedScheduleRoomKeys.value,
-    scheduleRoomMaaSettingOverrides: scheduleRoomMaaSettingOverrides.value,
-    scheduleRoomMaaIndexAssignments: scheduleRoomMaaIndexAssignments.value,
-    lastAutomaticGenerationTriggerKey:
-      lastAutomaticGenerationTriggerKey.value,
+    sourceConfig: {
+      answers: Object.fromEntries(
+        ANSWER_FIELDS.map((field) => [field.key, answers[field.key]]),
+      ),
+      twoShiftRotationMode: twoShiftRotationMode.value,
+      treatUnderleveledOperatorsAsQualified:
+        treatUnderleveledOperatorsAsQualified.value,
+      idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+      fiammettaRecoverySettings: fiammettaRecoverySettings.value,
+    },
+    layoutConfig: {
+      layoutEntry: layoutEntry.value,
+      planningMode: planningMode.value,
+      selectedLayoutId: selectedLayoutId.value,
+      confirmedLayoutPlan: confirmedLayoutPlan.value,
+      controlCenterRoleSettings: controlCenterRoleSettings.value,
+      controlCenterManualOverrides: controlCenterManualOverrides.value,
+      controlCenterLateFillExcludedOperatorIdsByTeamIndex:
+        controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
+    },
+    generatedState: {
+      selectedRoomGroupTeamCandidateKeys:
+        selectedRoomGroupTeamCandidateKeys.value,
+      roomGroupFallbackQueueStates: roomGroupFallbackQueueStates.value,
+      lastAutomaticGenerationTriggerKey:
+        lastAutomaticGenerationTriggerKey.value,
+    },
+    editState: {
+      scheduleExecutionSettings: createScheduleExecutionSettingsSnapshot(),
+      scheduleRoomOperatorOverrides: scheduleRoomOperatorOverrides.value,
+      scheduleRoomProductOverrides: scheduleRoomProductOverrides.value,
+      invalidatedScheduleRoomKeys: invalidatedScheduleRoomKeys.value,
+      scheduleRoomMaaSettingOverrides: scheduleRoomMaaSettingOverrides.value,
+      scheduleRoomMaaIndexAssignments: scheduleRoomMaaIndexAssignments.value,
+    },
     assessmentSchedule: createSetAssessmentScheduleSnapshot(),
-    updatedAt: new Date().toISOString(),
-  };
+  });
 }
 
 function getCurrentOperatorRosterSignature() {
@@ -7665,40 +7721,33 @@ function getCurrentOperatorRosterSignature() {
 
 function createInitialWorkspaceFromCurrent() {
   const defaultPlan = createDefaultConfirmedLayoutPlan();
-  return {
-    version: RIIC_SCHEDULE_DRAFT_VERSION,
-    operatorRosterSignature: "",
-    answers: { ...DEFAULT_ANSWERS },
-    currentStep: 0,
-    layoutEntry: DEFAULT_LAYOUT_SELECTION.cardKey,
-    planningMode: "manual",
-    selectedLayoutId: DEFAULT_LAYOUT_SELECTION.layoutId,
-    confirmedLayoutPlan: defaultPlan,
-    twoShiftRotationMode: twoShiftRotationMode.value,
-    treatUnderleveledOperatorsAsQualified:
-      treatUnderleveledOperatorsAsQualified.value,
-    idealTrainingRaritySelection: idealTrainingRaritySelection.value,
-    controlCenterRoleSettings: { officeEnabled: false },
-    controlCenterManualOverrides: normalizeControlCenterManualOverrides(),
-    controlCenterLateFillExcludedOperatorIdsByTeamIndex: {},
-    fiammettaRecoverySettings: fiammettaRecoverySettings.value,
-    selectedRoomGroupTeamCandidateKeys: {},
-    roomGroupFallbackQueueStates: {},
-    scheduleExecutionSettings: {
-      shifts: [],
-      orundumCraftMaterial: "orirock",
-      includeTrainingRoom: false,
-      exportInfo: normalizeScheduleExportInfo(),
+  return createRiicWorkspaceSnapshot({
+    sourceConfig: {
+      answers: { ...DEFAULT_ANSWERS },
+      twoShiftRotationMode: twoShiftRotationMode.value,
+      treatUnderleveledOperatorsAsQualified:
+        treatUnderleveledOperatorsAsQualified.value,
+      fiammettaRecoverySettings: fiammettaRecoverySettings.value,
     },
-    scheduleRoomOperatorOverrides: {},
-    scheduleRoomProductOverrides: {},
-    invalidatedScheduleRoomKeys: {},
-    scheduleRoomMaaSettingOverrides: {},
-    scheduleRoomMaaIndexAssignments: {},
-    lastAutomaticGenerationTriggerKey: "",
-    assessmentSchedule: null,
-    updatedAt: new Date().toISOString(),
-  };
+    layoutConfig: {
+      layoutEntry: DEFAULT_LAYOUT_SELECTION.cardKey,
+      planningMode: "manual",
+      selectedLayoutId: DEFAULT_LAYOUT_SELECTION.layoutId,
+      confirmedLayoutPlan: defaultPlan,
+      controlCenterRoleSettings: { officeEnabled: false },
+      controlCenterManualOverrides: normalizeControlCenterManualOverrides(),
+      controlCenterLateFillExcludedOperatorIdsByTeamIndex: {},
+    },
+    generatedState: {},
+    editState: {
+      scheduleExecutionSettings: {
+        shifts: [],
+        orundumCraftMaterial: "orirock",
+        includeTrainingRoom: false,
+        exportInfo: normalizeScheduleExportInfo(),
+      },
+    },
+  });
 }
 
 function readOperatorSourceWorkspaces() {
@@ -7743,17 +7792,24 @@ function removeOperatorSourceWorkspace(sourceId) {
 }
 
 function applySavedWizardState(parsedDraft) {
-  if (
-    parsedDraft?.version !== RIIC_SCHEDULE_DRAFT_VERSION ||
-    !parsedDraft.answers
-  ) {
+  const workspace = normalizeRiicWorkspaceSnapshot(parsedDraft);
+  if (!workspace) {
     return false;
   }
 
-  const savedAnswers = normalizeSavedAnswers(parsedDraft.answers);
+  const sourceConfig = workspace.sourceConfig || {};
+  const layoutConfig = workspace.layoutConfig || {};
+  const generatedState = workspace.generatedState || {};
+  const editState = workspace.editState || {};
+  const savedAnswersValue = sourceConfig.answers;
+  if (!savedAnswersValue) {
+    return false;
+  }
+
+  const savedAnswers = normalizeSavedAnswers(savedAnswersValue);
   const maxAvailableStep = getMaxAvailableStep(savedAnswers);
-  const savedStep = Number.isInteger(parsedDraft.currentStep)
-    ? parsedDraft.currentStep
+  const savedStep = Number.isInteger(workspace.currentStep)
+    ? workspace.currentStep
     : 0;
 
   Object.assign(answers, savedAnswers);
@@ -7762,7 +7818,7 @@ function applySavedWizardState(parsedDraft) {
     Math.min(maxAvailableStep, steps.length - 1),
   );
   layoutEntry.value = normalizeLayoutEntry(
-    parsedDraft.layoutEntry,
+    layoutConfig.layoutEntry,
     savedAnswers,
   );
   planningMode.value =
@@ -7772,47 +7828,47 @@ function applySavedWizardState(parsedDraft) {
       ? "manual"
       : null;
   selectedLayoutId.value = LAYOUT_CARD_META.some(
-    (card) => card.layoutId === parsedDraft.selectedLayoutId,
+    (card) => card.layoutId === layoutConfig.selectedLayoutId,
   )
-    ? parsedDraft.selectedLayoutId
+    ? layoutConfig.selectedLayoutId
     : "";
   if (layoutEntry.value !== "recommend") {
     selectedLayoutId.value =
       getLayoutCardByKey(layoutEntry.value)?.layoutId || "";
   }
   confirmedLayoutPlan.value = normalizeConfirmedLayoutPlan(
-    parsedDraft.confirmedLayoutPlan,
+    layoutConfig.confirmedLayoutPlan,
   );
   twoShiftRotationMode.value =
-    normalizeTwoShiftRotationMode(parsedDraft.twoShiftRotationMode);
+    normalizeTwoShiftRotationMode(sourceConfig.twoShiftRotationMode);
   treatUnderleveledOperatorsAsQualified.value =
-    parsedDraft.treatUnderleveledOperatorsAsQualified === true;
+    sourceConfig.treatUnderleveledOperatorsAsQualified === true;
   idealTrainingRaritySelection.value =
     normalizeRiicIdealTrainingRaritySelection(
-      parsedDraft.idealTrainingRaritySelection,
+      sourceConfig.idealTrainingRaritySelection,
     );
   selectedRoomGroupTeamCandidateKeys.value =
     normalizeSavedRoomGroupTeamCandidateKeys(
-      parsedDraft.selectedRoomGroupTeamCandidateKeys,
+      generatedState.selectedRoomGroupTeamCandidateKeys,
     );
   controlCenterRoleSettings.value =
-    normalizeControlCenterRoleSettings(parsedDraft.controlCenterRoleSettings);
+    normalizeControlCenterRoleSettings(layoutConfig.controlCenterRoleSettings);
   controlCenterManualOverrides.value =
     normalizeControlCenterManualOverrides(
-      parsedDraft.controlCenterManualOverrides,
+      layoutConfig.controlCenterManualOverrides,
     );
   controlCenterLateFillExcludedOperatorIdsByTeamIndex.value =
     normalizeOperatorIdsByTeamIndex(
-      parsedDraft.controlCenterLateFillExcludedOperatorIdsByTeamIndex,
+      layoutConfig.controlCenterLateFillExcludedOperatorIdsByTeamIndex,
     );
   fiammettaRecoverySettings.value =
-    normalizeFiammettaRecoverySettings(parsedDraft.fiammettaRecoverySettings);
+    normalizeFiammettaRecoverySettings(sourceConfig.fiammettaRecoverySettings);
   roomGroupFallbackQueueStates.value =
     normalizeSavedRoomGroupFallbackQueueStates(
-      parsedDraft.roomGroupFallbackQueueStates,
+      generatedState.roomGroupFallbackQueueStates,
     );
   const savedExecutionSettings = normalizeScheduleExecutionSettings(
-    parsedDraft.scheduleExecutionSettings,
+    editState.scheduleExecutionSettings,
     confirmedLayoutPlan.value?.shiftMode,
     twoShiftRotationMode.value,
   );
@@ -7824,26 +7880,26 @@ function applySavedWizardState(parsedDraft) {
   scheduleExecutionSettings.exportInfo = savedExecutionSettings.exportInfo;
   scheduleRoomOperatorOverrides.value =
     normalizeSavedScheduleRoomOperatorOverrides(
-      parsedDraft.scheduleRoomOperatorOverrides,
+      editState.scheduleRoomOperatorOverrides,
     );
   scheduleRoomProductOverrides.value =
     normalizeSavedScheduleRoomProductOverrides(
-      parsedDraft.scheduleRoomProductOverrides,
+      editState.scheduleRoomProductOverrides,
     );
   invalidatedScheduleRoomKeys.value =
     normalizeSavedInvalidatedScheduleRoomKeys(
-      parsedDraft.invalidatedScheduleRoomKeys,
+      editState.invalidatedScheduleRoomKeys,
     );
   scheduleRoomMaaSettingOverrides.value =
     normalizeSavedScheduleRoomMaaSettingOverrides(
-      parsedDraft.scheduleRoomMaaSettingOverrides,
+      editState.scheduleRoomMaaSettingOverrides,
     );
   scheduleRoomMaaIndexAssignments.value =
     normalizeSavedScheduleRoomMaaIndexAssignments(
-      parsedDraft.scheduleRoomMaaIndexAssignments,
+      editState.scheduleRoomMaaIndexAssignments,
     );
   lastAutomaticGenerationTriggerKey.value = String(
-    parsedDraft.lastAutomaticGenerationTriggerKey || "",
+    generatedState.lastAutomaticGenerationTriggerKey || "",
   ).trim();
   hasSavedWizardState.value = true;
   return true;
@@ -8035,6 +8091,7 @@ function resetGeneratedScheduleState({
   suppressCurrentAutomaticGeneration = false,
 } = {}) {
   resetTrainingImpactState();
+  cancelTrainingRecommendation();
   controlCenterRoleSettings.value = { officeEnabled: false };
   controlCenterManualOverrides.value = normalizeControlCenterManualOverrides();
   controlCenterLateFillExcludedOperatorIdsByTeamIndex.value = {};
@@ -8472,7 +8529,7 @@ watch(
 );
 
 watch(riicSchedulePreview, (preview) => {
-  if (preview?.states?.length) {
+  if (storageReady.value) {
     saveWizardState();
   }
 });
@@ -8485,6 +8542,8 @@ onMounted(async () => {
 
   if (hasSavedWizardState.value) {
     saveWizardState();
+    restoredWizardTrainingRecommendationPending = true;
+    generateRestoredTrainingRecommendationIfReady();
   }
 });
 
@@ -8825,6 +8884,7 @@ onBeforeUnmount(() => {
               "
               :operator-table="operatorTableV2"
               :fiammetta-recovery="fiammettaRecoveryConfig"
+              :get-operator-skill-tooltip="getOperatorSkillTooltip"
               @save-adjustment="saveControlCenterAdjustment"
               @save-error="({ message }) => cMessage(message, 'error')"
             />
@@ -8833,6 +8893,7 @@ onBeforeUnmount(() => {
               :room-group="activeScheduleRoomGroup"
               :operator-table="operatorTableV2"
               :candidate-state="activeRoomGroupCandidateState"
+              :get-operator-skill-tooltip="getOperatorSkillTooltip"
               :visible-cohorts="visibleActiveRoomGroupStaffingCohorts"
               :show-debug="showCandidateDebugValues"
               :format-room-group-bonus-percent="formatRoomGroupBonusPercent"
@@ -8845,7 +8906,6 @@ onBeforeUnmount(() => {
               :can-toggle-room-group-team-candidate="
                 canToggleRoomGroupTeamCandidate
               "
-              :get-room-group-candidate-tooltip="getRoomGroupCandidateTooltip"
               :get-room-group-candidate-fallback-queue-operators="
                 getRoomGroupCandidateFallbackQueueOperators
               "
@@ -9133,6 +9193,7 @@ onBeforeUnmount(() => {
                 :preview="riicScheduleDisplayPreview"
                 :active-state-index="stateIndex"
                 :operator-table="operatorTableV2"
+                :get-operator-skill-tooltip="getOperatorSkillTooltip"
                 :shifts="schedulePreviewShifts"
                 :drone-target="
                   schedulePreviewShifts[stateIndex]?.drone?.target || ''
@@ -9176,6 +9237,7 @@ onBeforeUnmount(() => {
                 :placeholder="!riicSchedulePreview"
                 :active-state-index="activeSchedulePreviewStateIndex"
                 :operator-table="operatorTableV2"
+                :get-operator-skill-tooltip="getOperatorSkillTooltip"
                 :selected-room-key="selectedSchedulePreviewRoomKey"
                 :title="scheduleExecutionSettings.exportInfo.title"
                 :default-title="getDefaultGeneratedScheduleTitle()"
@@ -9309,6 +9371,7 @@ onBeforeUnmount(() => {
                 :preview="riicScheduleDisplayPreview"
                 :active-state-index="stateIndex"
                 :operator-table="operatorTableV2"
+                :get-operator-skill-tooltip="getOperatorSkillTooltip"
                 :shifts="schedulePreviewShifts"
                 :drone-target="
                   schedulePreviewShifts[stateIndex]?.drone?.target || ''
@@ -9362,6 +9425,7 @@ onBeforeUnmount(() => {
                 "
                 :operators="scheduleRoomEditorOperators"
                 :operator-matches="scheduleRoomEditorOperatorMatches"
+                :get-operator-skill-tooltip="getOperatorSkillTooltip"
                 :product-options="scheduleRoomEditorProductOptions"
                 :operator-input="scheduleRoomEditorOperatorInput"
                 :input-unmatched="scheduleRoomEditorInputUnmatched"
@@ -9405,11 +9469,11 @@ onBeforeUnmount(() => {
         </section>
 
         <RiicScheduleResourceSummary
-          v-if="
+            v-if="
             assembledScheduleCandidateState.status === 'ready' &&
-            riicActualScheduleMetrics?.yield
+            riicScheduleResultSnapshot.actual?.yield
           "
-          :yield="riicActualScheduleMetrics.yield"
+          :yield="riicScheduleResultSnapshot.actual.yield"
           :shifts="schedulePreviewShifts"
           :drone-target-preview-keys-by-state="
             scheduleDroneTargetPreviewKeysByState
@@ -9422,8 +9486,8 @@ onBeforeUnmount(() => {
         <RiicScheduleExportActions
           v-if="
             assembledScheduleCandidateState.status === 'ready' &&
-            riicSchedulePreview &&
-            generatedMaaExportPreview
+            riicScheduleResultSnapshot.preview &&
+            riicScheduleResultSnapshot.exportPreview
           "
           :exporting-image="exportingImage"
           :exporting-maa="exportingMaa"
@@ -9550,9 +9614,9 @@ onBeforeUnmount(() => {
           :operator-source-label="ownedOperatorSource"
           :training-mode="riicTrainingMode"
           :ideal-training-rarity-selection="idealTrainingRaritySelection"
-          :actual-schedule-metrics="riicActualScheduleMetrics"
-          :schedule-preview="riicSchedulePreview"
-          :l79-input="riicL79InputDebugState"
+          :actual-schedule-metrics="riicScheduleResultSnapshot.actual"
+          :schedule-preview="riicScheduleResultSnapshot.preview"
+          :l79-input="riicScheduleResultSnapshot.l79Input"
           :schedule-shifts="schedulePreviewShifts"
           :duplicate-operator-checks="riicScheduleDuplicateOperatorChecks"
           :format-layer3-operator-condition="
@@ -9570,10 +9634,13 @@ onBeforeUnmount(() => {
           :schedule-training-recommendation-status="
             scheduleTrainingRecommendationStatus
           "
+          :schedule-training-recommendation-phase="
+            trainingRecommendationState.phase
+          "
           :operator-table="operatorTableV2"
           :riic-yield-engine-results="riicYieldEngineResults"
-          :actual-schedule-metrics="riicActualScheduleMetrics"
-          :schedule-preview="riicSchedulePreview"
+          :actual-schedule-metrics="riicScheduleResultSnapshot.actual"
+          :schedule-preview="riicScheduleResultSnapshot.preview"
           :schedule-shifts="schedulePreviewShifts"
           :operator-source-label="ownedOperatorSource"
           :layout-label="`${confirmedLayoutPlan?.cardKey || '未选择布局'} · ${

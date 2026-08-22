@@ -6,7 +6,15 @@ self.onmessage = (event) => {
   try {
     self.postMessage({
       requestId,
-      result: runRiicAutomaticSchedule(input),
+      result: runRiicAutomaticSchedule({
+        ...input,
+        onProgress: (phase) => {
+          self.postMessage({
+            requestId,
+            progress: phase,
+          });
+        },
+      }),
     });
   } catch (error) {
     self.postMessage({

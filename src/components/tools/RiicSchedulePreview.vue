@@ -68,6 +68,10 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  getOperatorSkillTooltip: {
+    type: Function,
+    default: null,
+  },
 });
 
 const emit = defineEmits([
@@ -179,6 +183,12 @@ function getRarity(charId) {
   return props.operatorTable?.[charId]?.rarity || 1;
 }
 
+function getSkillTooltip(operator) {
+  return props.getOperatorSkillTooltip
+    ? props.getOperatorSkillTooltip(operator)
+    : "暂无已解锁基建技能";
+}
+
 function getDisplayRoomLabel(room) {
   const label = String(room?.label || "").trim();
   const roomKey = String(room?.key || "").trim();
@@ -203,12 +213,10 @@ function getDisplayRoomLabel(room) {
 }
 
 function getRoomTitle(room) {
-  const names = (room?.operators || [])
-    .map((operator) => operator?.name)
+  return (room?.operators || [])
+    .map((operator) => getSkillTooltip(operator))
     .filter(Boolean)
-    .join("、");
-  const label = getDisplayRoomLabel(room);
-  return names ? `${label}：${names}` : label;
+    .join("\n") || "暂无已解锁基建技能";
 }
 
 function isProductionRoom(room) {
@@ -578,7 +586,7 @@ function dropOperator(room, operator) {
               outputFiammettaTargetOperator
             "
             class="schedule-preview-fiammetta-card"
-            :title="`菲亚梅塔应用：${outputFiammettaTargetOperator.name}`"
+            :title="getSkillTooltip(outputFiammettaTargetOperator)"
           >
             <div class="schedule-preview-fiammetta-flow">
               <OperatorAvatar
@@ -669,6 +677,7 @@ function dropOperator(room, operator) {
                  'operator-drop-target': canSwapOperatorWith(room, operator),
                }"
                :draggable="!exportStatic && !placeholder"
+               :title="getSkillTooltip(operator)"
                @dragstart.stop="startOperatorDrag($event, room, operator)"
                @dragover.stop="allowOperatorDrop(room, operator, $event)"
                @drop.stop.prevent="dropOperator(room, operator)"
@@ -685,7 +694,6 @@ function dropOperator(room, operator) {
               <span
                 v-else
                 class="schedule-preview-manual-operator"
-                :title="operator.name"
               >
                  {{ operator.name }}
                </span>

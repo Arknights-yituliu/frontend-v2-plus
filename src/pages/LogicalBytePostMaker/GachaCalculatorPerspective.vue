@@ -625,6 +625,9 @@ const cardTitles = {
 const activeCardName = ref("calculationResult");
 const dataPanelCardName = ref("calculationResult");
 const settingsTab = ref("canvas");
+const cardsVisible = ref(true);
+const cardActionDelaySeconds = ref(0);
+let cardActionDelayTimer = 0;
 const previewScalePercent = ref(80);
 const navigationNumberStyle = ref("industrial");
 const navigationGroupHeadingLight = ref(false);
@@ -1147,6 +1150,44 @@ function handleStageCursorClick(event) {
   }, 380);
 }
 
+function handleScrollableListKeydown(event) {
+  if (event.target !== event.currentTarget) {
+    return;
+  }
+
+  const list = event.currentTarget;
+  const step = 120;
+  let top;
+
+  switch (event.key) {
+    case "ArrowDown":
+      top = step;
+      break;
+    case "ArrowUp":
+      top = -step;
+      break;
+    case "PageDown":
+      top = list.clientHeight * 0.85;
+      break;
+    case "PageUp":
+      top = -list.clientHeight * 0.85;
+      break;
+    case "Home":
+      list.scrollTo({ top: 0, behavior: "smooth" });
+      event.preventDefault();
+      return;
+    case "End":
+      list.scrollTo({ top: list.scrollHeight, behavior: "smooth" });
+      event.preventDefault();
+      return;
+    default:
+      return;
+  }
+
+  list.scrollBy({ top, behavior: "smooth" });
+  event.preventDefault();
+}
+
 watch(customStageCursorEnabled, (enabled) => {
   if (!enabled) {
     stageCursorVisible.value = false;
@@ -1264,6 +1305,24 @@ function selectVideoCard(cardName) {
   });
 }
 
+function toggleCardsVisibility() {
+  if (cardActionDelayTimer) {
+    clearTimeout(cardActionDelayTimer);
+  }
+
+  const delay = Math.max(0, Number(cardActionDelaySeconds.value) || 0);
+  if (delay === 0) {
+    cardsVisible.value = !cardsVisible.value;
+    return;
+  }
+
+  const nextVisibility = !cardsVisible.value;
+  cardActionDelayTimer = window.setTimeout(() => {
+    cardsVisible.value = nextVisibility;
+    cardActionDelayTimer = 0;
+  }, delay * 1000);
+}
+
 function updateVideoPoolImage(poolId, uploadFile) {
   if (!uploadFile?.raw) {
     return;
@@ -1291,6 +1350,10 @@ onBeforeUnmount(() => {
   if (videoPoolTransitionTimer) {
     clearTimeout(videoPoolTransitionTimer);
     videoPoolTransitionTimer = 0;
+  }
+  if (cardActionDelayTimer) {
+    clearTimeout(cardActionDelayTimer);
+    cardActionDelayTimer = 0;
   }
   if (gachaVideoDraftRestored) {
     saveVideoGachaSettings();
@@ -1901,6 +1964,8 @@ function getVideoGachaDraft() {
     view: {
       previewScalePercent: previewScalePercent.value,
       settingsTab: settingsTab.value,
+      cardsVisible: cardsVisible.value,
+      cardActionDelaySeconds: cardActionDelaySeconds.value,
       activeCardName: activeCardName.value,
       dataPanelCardName: dataPanelCardName.value,
       enabledVideoPoolIds: [...enabledVideoPoolIds.value],
@@ -2405,8 +2470,15 @@ function restoreVideoGachaDraft(draft) {
   } else if (view.workspaceMode === "display") {
     previewScalePercent.value = 80;
   }
-  if (view.settingsTab === "canvas" || view.settingsTab === "data") {
+  if (view.settingsTab === "canvas" || view.settingsTab === "data" || view.settingsTab === "action") {
     settingsTab.value = view.settingsTab;
+  }
+  if (typeof view.cardsVisible === "boolean") {
+    cardsVisible.value = view.cardsVisible;
+  }
+  const restoredCardActionDelaySeconds = Number(view.cardActionDelaySeconds);
+  if (Number.isFinite(restoredCardActionDelaySeconds)) {
+    cardActionDelaySeconds.value = Math.min(60, Math.max(0, restoredCardActionDelaySeconds));
   }
   if (Object.hasOwn(cardTitles, view.activeCardName)) {
     activeCardName.value = view.activeCardName;
@@ -2536,6 +2608,8 @@ watch(
     rightCardHeight,
     previewScalePercent,
     settingsTab,
+    cardsVisible,
+    cardActionDelaySeconds,
     activeCardName,
     dataPanelCardName,
     enabledVideoPoolIds,
@@ -3381,26 +3455,22 @@ function sharePage() {
         <div class="gacha-card-settings-title-heading">
           <span>参数调整</span>
           <div class="gacha-card-settings-transfer-actions">
-            <el-tooltip content="导入设置" placement="bottom">
-              <el-button
-                :icon="Upload"
-                circle
-                plain
-                :disabled="videoGachaSettingsTransferPending"
-                aria-label="导入设置"
-                @click="openVideoGachaSettingsImport"
-              />
-            </el-tooltip>
-            <el-tooltip content="导出设置" placement="bottom">
-              <el-button
-                :icon="Download"
-                circle
-                plain
-                :disabled="videoGachaSettingsTransferPending"
-                aria-label="导出设置"
-                @click="exportVideoGachaSettings"
-              />
-            </el-tooltip>
+            <el-button
+              :icon="Upload"
+              circle
+              plain
+              :disabled="videoGachaSettingsTransferPending"
+              aria-label="导入设置"
+              @click="openVideoGachaSettingsImport"
+            />
+            <el-button
+              :icon="Download"
+              circle
+              plain
+              :disabled="videoGachaSettingsTransferPending"
+              aria-label="导出设置"
+              @click="exportVideoGachaSettings"
+            />
             <input
               ref="videoGachaSettingsFileInput"
               class="gacha-card-settings-file-input"
@@ -3435,26 +3505,22 @@ function sharePage() {
               >
                 <el-button>上传</el-button>
               </el-upload>
-              <el-tooltip content="恢复默认背景参数" placement="top">
-                <el-button
-                  :icon="RefreshLeft"
-                  circle
-                  plain
-                  :disabled="!stageBackgroundImage"
-                  aria-label="恢复默认背景参数"
-                  @click="resetStageBackgroundImageLayout"
-                />
-              </el-tooltip>
-              <el-tooltip content="移除背景图片" placement="top">
-                <el-button
-                  :icon="Delete"
-                  circle
-                  plain
-                  :disabled="!stageBackgroundImage"
-                  aria-label="移除背景图片"
-                  @click="clearStageAssetImage('background')"
-                />
-              </el-tooltip>
+              <el-button
+                :icon="RefreshLeft"
+                circle
+                plain
+                :disabled="!stageBackgroundImage"
+                aria-label="恢复默认背景参数"
+                @click="resetStageBackgroundImageLayout"
+              />
+              <el-button
+                :icon="Delete"
+                circle
+                plain
+                :disabled="!stageBackgroundImage"
+                aria-label="移除背景图片"
+                @click="clearStageAssetImage('background')"
+              />
             </div>
           </div>
           <div class="gacha-card-setting-range">
@@ -3570,26 +3636,22 @@ function sharePage() {
               >
                 <el-button>上传</el-button>
               </el-upload>
-              <el-tooltip content="恢复默认 Logo 参数" placement="top">
-                <el-button
-                  :icon="RefreshLeft"
-                  circle
-                  plain
-                  :disabled="!stageLogoImage"
-                  aria-label="恢复默认 Logo 参数"
-                  @click="resetStageLogoLayout"
-                />
-              </el-tooltip>
-              <el-tooltip content="移除 Logo" placement="top">
-                <el-button
-                  :icon="Delete"
-                  circle
-                  plain
-                  :disabled="!stageLogoImage"
-                  aria-label="移除 Logo"
-                  @click="clearStageAssetImage('logo')"
-                />
-              </el-tooltip>
+              <el-button
+                :icon="RefreshLeft"
+                circle
+                plain
+                :disabled="!stageLogoImage"
+                aria-label="恢复默认 Logo 参数"
+                @click="resetStageLogoLayout"
+              />
+              <el-button
+                :icon="Delete"
+                circle
+                plain
+                :disabled="!stageLogoImage"
+                aria-label="移除 Logo"
+                @click="clearStageAssetImage('logo')"
+              />
             </div>
           </div>
           <div class="gacha-card-setting-range">
@@ -3632,16 +3694,14 @@ function sharePage() {
                   :value="pool.id"
                 />
               </el-select>
-              <el-tooltip content="恢复默认裁切" placement="top">
-                <el-button
-                  :icon="RefreshLeft"
-                  circle
-                  plain
-                  :disabled="!videoPoolImages[editingVideoPoolId]"
-                  aria-label="恢复默认裁切"
-                  @click="resetVideoPoolImageLayout()"
-                />
-              </el-tooltip>
+              <el-button
+                :icon="RefreshLeft"
+                circle
+                plain
+                :disabled="!videoPoolImages[editingVideoPoolId]"
+                aria-label="恢复默认裁切"
+                @click="resetVideoPoolImageLayout()"
+              />
             </div>
           </div>
           <div class="gacha-card-setting-range">
@@ -3791,12 +3851,31 @@ function sharePage() {
               value-format="YYYY-MM-DD HH:mm:ss"
               @change="handleDateChange"
             />
-            <el-tooltip content="重置为当前时间" placement="top">
-              <el-button :icon="RefreshLeft" circle plain aria-label="重置为当前时间" @click="resetVideoStartTime" />
-            </el-tooltip>
+            <el-button :icon="RefreshLeft" circle plain aria-label="重置为当前时间" @click="resetVideoStartTime" />
           </div>
           <div v-if="activeCardName === 'calculationResult'" class="gacha-video-data-empty">卡池由左上图片切换</div>
           <div id="gacha-video-data-controls" class="gacha-video-data-panel"></div>
+        </el-tab-pane>
+        <el-tab-pane label="动作控制" name="action">
+          <div class="gacha-card-setting-section-title">卡片显示</div>
+          <div class="gacha-card-setting-row">
+            <span>动作延时（秒）</span>
+            <el-input-number
+              v-model="cardActionDelaySeconds"
+              :min="0"
+              :max="60"
+              :step="1"
+              controls-position="right"
+              size="small"
+              aria-label="卡片动作延时秒数"
+            />
+          </div>
+          <div class="gacha-card-setting-row is-stacked">
+            <span>隐藏或显示所有卡片</span>
+            <el-button type="primary" plain @click="toggleCardsVisibility">
+              {{ cardsVisible ? "隐藏卡片" : "显示卡片" }}
+            </el-button>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </aside>
@@ -3811,6 +3890,7 @@ function sharePage() {
           'has-custom-stage-cursor': customStageCursorEnabled,
           'is-pool-switching-out': videoPoolTransitionPhase === 'out',
           'is-pool-switching-in': videoPoolTransitionPhase === 'in',
+          'are-cards-hidden': !cardsVisible,
         },
         `is-navigation-number-${navigationNumberStyle}`,
       ]"
@@ -3842,7 +3922,6 @@ function sharePage() {
               class="gacha-video-pool-button"
               :class="{ 'is-active': selectedVideoPool === pool.id, 'is-disabled': pool.disabled }"
               :disabled="pool.disabled"
-              :title="pool.label"
               @click="selectVideoPool(pool.id)"
             >
               <span class="gacha-video-pool-image">
@@ -3990,7 +4069,12 @@ function sharePage() {
               <span class="gacha-video-hero-icon" aria-label="寻访凭证"><img :src="getVideoResourceImageSrc('抽')" alt="" /></span>
               <small>从今天开始的稳定收入</small>
             </div>
-            <div class="gacha-video-detail-rows">
+            <div
+              class="gacha-video-detail-rows"
+              tabindex="0"
+              aria-label="日常积累资源列表"
+              @keydown="handleScrollableListKeydown"
+            >
               <div v-for="row in videoDailyRows" :key="row.label" class="gacha-video-detail-row">
                 <span>{{ row.label }}</span>
                 <div class="gacha-video-detail-resource-values">
@@ -4044,7 +4128,13 @@ function sharePage() {
               <span class="gacha-video-hero-icon" aria-label="寻访凭证"><img :src="getVideoResourceImageSrc('抽')" alt="" /></span>
               <small>已纳入的活动资源</small>
             </div>
-            <div v-if="videoActivityResourceRows.length" class="gacha-video-detail-rows">
+            <div
+              v-if="videoActivityResourceRows.length"
+              class="gacha-video-detail-rows"
+              tabindex="0"
+              aria-label="活动资源列表"
+              @keydown="handleScrollableListKeydown"
+            >
               <div v-for="row in videoActivityResourceRows" :key="row.label" class="gacha-video-detail-row">
                 <span>{{ row.label }}</span>
                 <div class="gacha-video-detail-resource-values">
@@ -4071,6 +4161,9 @@ function sharePage() {
               v-if="videoOtherResourceRows.length"
               class="gacha-video-detail-rows"
               :class="{ 'is-summer-compact-grid': selectedVideoPool === 'summer' }"
+              tabindex="0"
+              aria-label="其他资源列表"
+              @keydown="handleScrollableListKeydown"
             >
               <div v-for="row in videoOtherResourceRows" :key="row.label" class="gacha-video-detail-row">
                 <span>{{ row.label }}</span>
@@ -4092,7 +4185,12 @@ function sharePage() {
               <strong>高性价比氪金方案</strong>
               <small>理性消费，适度氪金</small>
             </div>
-            <div class="gacha-video-recharge-plan-content">
+            <div
+              class="gacha-video-recharge-plan-content"
+              tabindex="0"
+              aria-label="氪金方案列表"
+              @keydown="handleScrollableListKeydown"
+            >
               <div class="gacha-video-recharge-plan-list">
                 <button
                   v-for="plan in videoRechargePlans"
@@ -4886,20 +4984,16 @@ function sharePage() {
               <el-input-number v-model="plan.price" :min="0" :step="1" :precision="0" controls-position="right" />
               <el-input v-model="plan.title" placeholder="方案名" />
               <el-input-number v-model="plan.draws" :min="0" :step="0.1" :precision="1" controls-position="right" />
-              <el-tooltip content="删除方案" placement="top">
-                <el-button
-                  :icon="Delete"
-                  circle
-                  plain
-                  aria-label="删除方案"
-                  @click="removeVideoRechargePlan(plan.id)"
-                />
-              </el-tooltip>
+              <el-button
+                :icon="Delete"
+                circle
+                plain
+                aria-label="删除方案"
+                @click="removeVideoRechargePlan(plan.id)"
+              />
             </div>
             <div class="gacha-video-recharge-editor-actions">
-              <el-tooltip content="新增方案" placement="top">
-                <el-button :icon="Plus" circle plain aria-label="新增方案" @click="addVideoRechargePlan()" />
-              </el-tooltip>
+              <el-button :icon="Plus" circle plain aria-label="新增方案" @click="addVideoRechargePlan()" />
             </div>
           </div>
         </el-collapse-item>
@@ -5002,12 +5096,15 @@ function sharePage() {
 .gacha-card-editor {
   display: flex;
   width: 100%;
+  height: calc(100vh - 100px);
+  max-height: calc(100vh - 100px);
   min-width: 0;
+  min-height: 0;
   align-items: start;
   gap: 28px;
   padding: 12px;
   box-sizing: border-box;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .gacha-card-stage {
@@ -5020,6 +5117,10 @@ function sharePage() {
   outline: 1px solid var(--c-border-color);
   overflow: hidden;
   box-shadow: 0 8px 24px var(--c-box-shadow-color);
+}
+
+.gacha-card-stage:not(.is-data-controls) {
+  overflow: hidden;
 }
 
 .gacha-card-stage.has-custom-stage-cursor,
@@ -5236,8 +5337,9 @@ function sharePage() {
 
 .gacha-card-settings-video {
   order: 2;
-  height: 1120px;
-  max-height: 1120px;
+  height: 100%;
+  max-height: none;
+  min-height: 0;
   overflow: auto;
 }
 
@@ -5425,6 +5527,18 @@ function sharePage() {
   transform-origin: right center;
   translate: 0 0;
   will-change: transform;
+}
+
+.gacha-card-stage.are-cards-hidden .gacha-video-navigation,
+.gacha-card-stage.are-cards-hidden .gacha-video-detail {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease;
+}
+
+.gacha-card-stage:not(.are-cards-hidden) .gacha-video-navigation,
+.gacha-card-stage:not(.are-cards-hidden) .gacha-video-detail {
+  transition: opacity 1s ease;
 }
 
 .gacha-video-pool-selector {
@@ -6266,6 +6380,12 @@ function sharePage() {
   gap: 16px;
   margin-top: 42px;
   overflow: auto;
+  scrollbar-width: none;
+}
+
+.gacha-video-detail-rows::-webkit-scrollbar,
+.gacha-video-recharge-plan-content::-webkit-scrollbar {
+  display: none;
 }
 
 .gacha-video-detail-rows.is-summer-compact-grid {
@@ -6521,6 +6641,7 @@ function sharePage() {
   margin-top: 18px;
   padding-right: 4px;
   overflow: auto;
+  scrollbar-width: none;
 }
 
 .gacha-video-recharge-plan-list {

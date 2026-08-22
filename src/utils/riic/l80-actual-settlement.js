@@ -9,6 +9,11 @@ import { settleRiicNetResources } from "./P04-riic-resource-netting.js";
 import {
   resolveRiicTradingExternalOrderBonuses,
 } from "./riic-trading-context.js";
+import {
+  calculateRiicExpectedPerHour,
+  RIIC_TRADE_ORDER_DISTRIBUTION_BY_LEVEL,
+  RIIC_TRADE_ORDER_GOLD,
+} from "./riic-trade-order-model.js";
 
 const EPSILON = 1e-9;
 const ORUNDUM_PER_ORIGINIUM_SHARD = 10;
@@ -368,6 +373,51 @@ function createTradingFlow(calculation, durationHours) {
   };
 }
 
+function createMaaFallbackTradingCalculation(room, durationHours) {
+  const stationLevel = Number(room?.stationLevel);
+  const distribution = RIIC_TRADE_ORDER_DISTRIBUTION_BY_LEVEL[stationLevel];
+  if (!distribution || durationHours <= 0) {
+    return null;
+  }
+
+  const roomBonus =
+    Number(room?.controlCenterFacilityBonusPercent || 0) +
+    Number(room?.activeRosterBonusPercent || 0) +
+    Number(room?.resourceChainAdditionalBonusPercent || 0);
+  const operatorCount = Array.isArray(room?.operators)
+    ? room.operators.filter(Boolean).length
+    : 0;
+  const speedMultiplier = 1 + (roomBonus + operatorCount) / 100;
+  const goldPerHour = calculateRiicExpectedPerHour(
+    distribution,
+    RIIC_TRADE_ORDER_GOLD,
+  );
+  const gold = -goldPerHour * speedMultiplier;
+
+  return {
+    ok: true,
+    type: "normal",
+    product: "lmd",
+    durationHours,
+    rate: speedMultiplier * 100,
+    lmd: -gold * 500,
+    gold,
+    virtualGold: 0,
+    orundumCapacity: 0,
+    fallback: true,
+    fallbackReason: "notSupported",
+    fallbackDiagnostics: {
+      method: "普通贸易订单预置估算",
+      stationLevel,
+      orderDistribution: distribution,
+      orderGold: RIIC_TRADE_ORDER_GOLD,
+      operatorCount,
+      roomBonus,
+      speedMultiplier,
+    },
+  };
+}
+
 function createOrundumTradingFlow(orundumOutput) {
   const output = Number(orundumOutput);
   if (!Number.isFinite(output) || output < 0) {
@@ -454,6 +504,7 @@ function createYieldSegment({
   tradingRosterById,
   tradingContext,
   orundumCraftMaterial,
+  allowMaaFallback = false,
 }) {
   const efficiency = toFinitePercent(room?.efficiency);
   const efficiencyCalculated =
@@ -471,8 +522,17 @@ function createYieldSegment({
       durationHours,
     })
     : null;
-  const calculatedTradingFlow = tradingCalculation?.ok
-    ? createTradingFlow(tradingCalculation, durationHours)
+  const fallbackTradingCalculation =
+    allowMaaFallback &&
+    tradingCalculation?.error === "notSupported" &&
+    isTradingRoom(room) &&
+    !isOrundumTrading
+      ? createMaaFallbackTradingCalculation(room, durationHours)
+      : null;
+  const effectiveTradingCalculation =
+    fallbackTradingCalculation || tradingCalculation;
+  const calculatedTradingFlow = effectiveTradingCalculation?.ok
+    ? createTradingFlow(effectiveTradingCalculation, durationHours)
     : null;
   const unavailableReason = usesDirectEfficiency
     ? !efficiencyCalculated
@@ -482,7 +542,7 @@ function createYieldSegment({
         : dailyRate === null
           ? "unsupportedStationLevel"
           : ""
-    : tradingCalculation?.ok
+    : effectiveTradingCalculation?.ok
       ? ""
       : tradingCalculation?.error || "tradingCalculationUnavailable";
 
@@ -511,7 +571,11 @@ function createYieldSegment({
     unavailableReason,
     output,
     tradingFlow,
-    tradingCalculation,
+    tradingCalculation: effectiveTradingCalculation,
+    calculationMethod: fallbackTradingCalculation
+      ? "普通贸易订单预置估算"
+      : "特殊订单公式/常规规则",
+    fallbackDiagnostics: fallbackTradingCalculation?.fallbackDiagnostics || null,
     orundumManufactureFlow,
   };
 }
@@ -1137,6 +1201,7 @@ function buildTradingSettlements({
   tradingRosterById,
   orundumCraftMaterial,
   perceptionSettlement,
+  allowMaaFallback = false,
 }) {
   const summariesByKey = new Map();
 
@@ -1161,6 +1226,7 @@ function buildTradingSettlements({
         tradingRosterById,
         tradingContext,
         orundumCraftMaterial,
+        allowMaaFallback,
       });
       const key = String(room?.key || "").trim();
       if (!key) {
@@ -1233,6 +1299,8 @@ function buildTradingSettlements({
         error: segment.tradingCalculation?.ok
           ? ""
           : segment.tradingCalculation?.error || segment.unavailableReason,
+        calculationMethod: segment.calculationMethod,
+        fallbackDiagnostics: segment.fallbackDiagnostics,
       });
       summariesByKey.set(key, summary);
     }
@@ -1942,6 +2010,7 @@ function buildYieldSummary({
   legacyTradingOperators,
   orundumCraftMaterial,
   perceptionSettlement,
+  allowMaaFallback = false,
 }) {
   const tradingRosterById = createOperatorRosterById(
     legacyTradingOperators,
@@ -1977,6 +2046,7 @@ function buildYieldSummary({
         tradingRosterById,
         tradingContext,
         orundumCraftMaterial,
+        allowMaaFallback,
       });
       summary.durationHours += durationHours;
       if (segment.calculated) {
@@ -2009,6 +2079,7 @@ function buildYieldSummary({
     cycleHours,
     tradingRosterById,
     perceptionSettlement,
+    allowMaaFallback,
   });
   const droneTargetSettlement = buildDroneTargetSettlement({
     states,
@@ -2115,6 +2186,9 @@ export function summarizeRiicActualSchedule({
   droneOrdersByState = null,
   tradingOperators = [],
   orundumCraftMaterial = "orirock",
+  // Only the dedicated MAA compatibility test should set this to true.
+  // The normal schedule page must keep P01 `notSupported` as an error.
+  allowMaaFallback = false,
 } = {}) {
   const settledPreview = l79?.preview || preview || {};
   const states = Array.isArray(settledPreview?.states)
@@ -2177,6 +2251,7 @@ export function summarizeRiicActualSchedule({
       orundumCraftMaterial,
       perceptionSettlement: l79?.perceptionSettlement ??
         settledPreview?.perceptionSettlement,
+      allowMaaFallback,
     }),
   };
 }

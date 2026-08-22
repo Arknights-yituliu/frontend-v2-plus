@@ -38,9 +38,9 @@ const props = defineProps({
     type: Function,
     required: true,
   },
-  getRoomGroupCandidateTooltip: {
+  getOperatorSkillTooltip: {
     type: Function,
-    required: true,
+    default: null,
   },
   getRoomGroupCandidateFallbackQueueOperators: {
     type: Function,
@@ -99,6 +99,23 @@ const emit = defineEmits([
   "remove-fallback-operator",
   "append-fallback-operator",
 ]);
+
+function getSkillTooltip(operator) {
+  return props.getOperatorSkillTooltip
+    ? props.getOperatorSkillTooltip(operator)
+    : "暂无已解锁基建技能";
+}
+
+function getCandidateSkillTooltip(candidate, fallbackOperators = []) {
+  const operatorIds = candidate?.operatorIds || [];
+  const tooltips = [
+    ...operatorIds.map((charId) => getSkillTooltip({ charId })),
+    ...fallbackOperators.map((operator) => getSkillTooltip(operator)),
+  ].filter(Boolean);
+  return tooltips.length > 0
+    ? [...new Set(tooltips)].join("\n")
+    : "暂无已解锁基建技能";
+}
 
 function toggleCandidate(cohort, candidate) {
   emit("toggle-team-candidate", { cohort, candidate });
@@ -250,7 +267,16 @@ function appendFallbackOperator(section, operator) {
                   candidate.key,
                 ) > 0
               "
-              :title="getRoomGroupCandidateTooltip(roomGroup, cohort, candidate)"
+              :title="
+                getCandidateSkillTooltip(
+                  candidate,
+                  getRoomGroupCandidateFallbackQueueOperators(
+                    roomGroup,
+                    cohort,
+                    candidate,
+                  ),
+                )
+              "
               :disabled="
                 !canToggleRoomGroupTeamCandidate(
                   roomGroup,
@@ -264,7 +290,7 @@ function appendFallbackOperator(section, operator) {
                 <div class="room-staffing-candidate-team">
                   <strong
                     class="room-staffing-candidate-name"
-                    :title="candidate.name"
+                    :title="getCandidateSkillTooltip(candidate)"
                   >
                     {{ candidate.name }}
                   </strong>
@@ -700,6 +726,7 @@ function appendFallbackOperator(section, operator) {
                 ]"
                 :aria-label="`移出补位：${slot.assignedOperator.name}`"
                 @click="removeFallbackOperator(slot)"
+                :title="getSkillTooltip(slot.assignedOperator)"
               >
                 <OperatorAvatar
                   :char-id="slot.assignedOperator.charId"
@@ -804,6 +831,7 @@ function appendFallbackOperator(section, operator) {
                   )
                 "
                 @click="appendFallbackOperator(section, operator)"
+                :title="getSkillTooltip(operator)"
               >
                 <OperatorAvatar
                   :char-id="operator.charId"

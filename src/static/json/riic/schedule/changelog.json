@@ -2,7 +2,7 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20260821.1543"
+      "version": "v20260822.2233"
     },
     "data": {
       "label": "数据模块",
@@ -10,11 +10,11 @@
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260821.1543"
+      "version": "v20260822.2233"
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20260821.1814"
+      "version": "v20260822.2233"
     },
     "yield": {
       "label": "收益计算器",
@@ -22,10 +22,41 @@
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260821.1543"
+      "version": "v20260822.2233"
     }
   },
   "entries": [
+
+    {
+      "date": "2026-08-22",
+      "version": "v20260822.2233",
+      "items": [
+        {
+          "module": "布局模块",
+          "type": "update",
+          "level": 4,
+          "description": "自动排班增加候选加载、方案分析、补位计算、资源整理和控制中枢校准等阶段进度展示，并补充候选目录失败提示与生成流程取消处理"
+        },
+        {
+          "module": "布局模块",
+          "type": "update",
+          "level": 4,
+          "description": "升级排班工作区保存结构，分离数据源、布局、生成结果和手动编辑状态，并兼容旧版本地排班草稿"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 3,
+          "description": "排班编辑与预览界面补充干员已解锁基建技能提示，支持查看中枢候选、房间班组和排班干员的技能效果"
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 4,
+          "description": "控制中枢候选分类补充干员相关效果类，完善影响其他干员、控制中枢状态和特殊关系技能的候选识别"
+        }
+      ]
+    },
 
     {
       "date": "2026-08-21",

@@ -110,6 +110,7 @@ export function buildRiicControlCenterCandidateOperators({
   const rosterById = getRosterById(roster);
   const activeTagsByOperatorId = new Map();
   const activeEffectsByOperatorId = new Map();
+  const activeSkillDescriptionsByOperatorId = new Map();
   const sameTeamPartnerIdsByOperatorId = new Map();
   const priorityFillOperatorIds = new Set(
     (idleFillOperators || [])
@@ -124,6 +125,17 @@ export function buildRiicControlCenterCandidateOperators({
     const charId = String(skill?.operatorId || "").trim();
     const operator = rosterById.get(charId);
     const tags = [...new Set(skill?.bufftag || [])].filter(Boolean);
+    const hasOperatorEffect =
+      (skill?.intermediateProducts || []).length > 0 ||
+      (skill?.sameTeamWithOperatorIds || []).some(Boolean) ||
+      (skill?.resolvedEffects || []).some((effect) =>
+        ["operators", "controlCenterState"].includes(
+          String(effect?.target?.scope || "").trim(),
+        ),
+      );
+    if (hasOperatorEffect && !tags.includes("operator-effect")) {
+      tags.push("operator-effect");
+    }
     if (
       !operator ||
       (tags.length === 0 && !priorityFillOperatorIds.has(charId)) ||
@@ -140,6 +152,20 @@ export function buildRiicControlCenterCandidateOperators({
     const activeTags = activeTagsByOperatorId.get(charId) || new Set();
     tags.forEach((tag) => activeTags.add(tag));
     activeTagsByOperatorId.set(charId, activeTags);
+
+    const activeSkillDescriptions =
+      activeSkillDescriptionsByOperatorId.get(charId) || new Set();
+    const skillName = String(skill?.skillName || "").trim();
+    const skillEffect = String(skill?.effect || "").trim();
+    if (skillName) {
+      activeSkillDescriptions.add(
+        skillEffect ? `${skillName}：${skillEffect}` : skillName,
+      );
+    }
+    activeSkillDescriptionsByOperatorId.set(
+      charId,
+      activeSkillDescriptions,
+    );
 
     const activeEffects = activeEffectsByOperatorId.get(charId) || new Map();
     for (const effect of skill?.resolvedEffects || []) {
@@ -184,6 +210,9 @@ export function buildRiicControlCenterCandidateOperators({
       return {
         ...rosterById.get(charId),
         controlCenterBuffTags: [...tags],
+        controlCenterSkillDescriptions: [
+          ...(activeSkillDescriptionsByOperatorId.get(charId) || []),
+        ],
         controlCenterResolvedEffects: [...resolvedEffects.values()],
         controlCenterSameTeamWithOperatorIds: [
           ...(sameTeamPartnerIdsByOperatorId.get(charId) || []),

@@ -106,6 +106,7 @@ function getAutomaticRoomTeamOptions({
   automationRuntimeContext,
   reservedPowerOperatorId = "",
   idleFillOperators = [],
+  reportProgress,
 }) {
   const recovery = normalizeRiicFiammettaRecovery(fiammettaRecovery);
   const candidateWithIdleFallback =
@@ -157,6 +158,7 @@ function getAutomaticRoomTeamOptions({
   if (reserveOperatorForPower) {
     excludedOperatorIds.add(reservedPowerOperatorId);
   }
+  reportProgress?.("L70_FALLBACK");
   const fallbackPlans = createRiicRoomGroupFallbackPlanAlternatives({
     selectedEntries: [{ selectionKey, candidate: candidateWithIdleFallback }],
     occupiedOperatorIds: new Set([
@@ -391,7 +393,17 @@ export function buildRiicAutomaticRoomGroupSelections({
   controlCenterSegments = [],
   collectPlanningDebug = false,
   idleFillOperators = [],
+  onProgress,
 } = {}) {
+  const reportedProgress = new Set();
+  const reportProgress = (phase) => {
+    if (reportedProgress.has(phase)) {
+      return;
+    }
+    reportedProgress.add(phase);
+    onProgress?.(phase);
+  };
+  reportProgress("L70_CANDIDATES");
   const automationOpportunity =
     hasUnlockedAutomationPowerSupport(ownedOperators) &&
     hasAutomationCandidateStates(groups, candidateStatesByGroupId);
@@ -415,6 +427,7 @@ export function buildRiicAutomaticRoomGroupSelections({
       groups: planningGroups,
       candidateStatesByGroupId,
     });
+  reportProgress("L70_COMBINING");
   const plannerOptionTraces = [];
   const plannerOptionEvaluations = [];
   const { bestPlan, debug: plannerDebug } = planRiicAutomaticRoomSelections({
@@ -473,6 +486,7 @@ export function buildRiicAutomaticRoomGroupSelections({
               ownedOperators,
               powerSupportReserved: Boolean(reservedPowerOperatorId),
             }),
+            reportProgress,
           }),
         )
         .sort(

@@ -43,22 +43,33 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  getOperatorSkillTooltip: {
+    type: Function,
+    default: null,
+  },
 });
 
 const emit = defineEmits(["save-adjustment", "save-error"]);
 
+function getSkillTooltip(operator) {
+  return props.getOperatorSkillTooltip
+    ? props.getOperatorSkillTooltip(operator)
+    : (operator?.controlCenterSkillDescriptions || []).join("\n") ||
+        "暂无已解锁基建技能";
+}
+
 const CONTROL_CENTER_CANDIDATE_SECTIONS = Object.freeze([
   {
     id: "room",
-    label: "房间产能加成",
+    label: "设施产能加成类",
   },
   {
     id: "operator",
-    label: "干员加成",
+    label: "干员相关效果类",
   },
   {
     id: "filler",
-    label: "补位",
+    label: "没人上了就上他们补位",
   },
 ]);
 
@@ -575,8 +586,15 @@ function getCandidateStatus(operator) {
     activeCoreOperatorIds.size + missingCount >
     Number(activeTeam.value?.slotCount || 0)
   ) {
+    const skillDescriptions = operator?.controlCenterSkillDescriptions || [];
     return {
       text: "当前班无空位",
+      tooltipText: [
+        "当前班无空位",
+        ...(skillDescriptions.length > 0
+          ? ["基建技能：", ...skillDescriptions]
+          : []),
+      ].join("\n"),
       disabled: true,
     };
   }
@@ -606,17 +624,18 @@ function getTrialLabel(operator) {
 function getControlCenterCandidateSectionId(operator) {
   const tags = operator?.controlCenterBuffTags || [];
   if (
+    tags.includes("trading-operator") ||
+    tags.includes("manufacture-operator") ||
+    tags.includes("operator-effect")
+  ) {
+    return "operator";
+  }
+  if (
     tags.includes("office") ||
     tags.includes("trading-station") ||
     tags.includes("manufacture-station")
   ) {
     return "room";
-  }
-  if (
-    tags.includes("trading-operator") ||
-    tags.includes("manufacture-operator")
-  ) {
-    return "operator";
   }
   if (
     priorityFillOperatorIds.value.has(
@@ -640,7 +659,8 @@ function isOperatorInControlCenterCandidateSection(operator, sectionId) {
   if (sectionId === "operator") {
     return (
       tags.includes("trading-operator") ||
-      tags.includes("manufacture-operator")
+      tags.includes("manufacture-operator") ||
+      tags.includes("operator-effect")
     );
   }
   return (
@@ -684,17 +704,17 @@ function getActiveTeamRows() {
     [
       {
         id: "room",
-        label: "房间产能加成",
+        label: "设施产能加成类",
         operators: [],
       },
       {
         id: "operator",
-        label: "干员加成",
+        label: "干员相关效果类",
         operators: [],
       },
       {
         id: "filler",
-        label: "补位",
+        label: "没人上了就上他们补位",
         operators: [],
       },
     ].map((row) => [row.id, row]),
@@ -853,7 +873,7 @@ function saveDraft() {
                 :key="`${row.id}:${operator.source}:${operator.charId}`"
                 type="button"
                 class="control-center-team-operator"
-                :title="`从中枢班 ${activeTeam.teamIndex + 1} 撤下${operator.name}`"
+                :title="getSkillTooltip(operator)"
                 @click="
                   removeOperatorFromActiveTeam({
                     charId: operator.charId,
@@ -946,7 +966,7 @@ function saveDraft() {
                 type="button"
                 class="control-center-candidate-button"
                 :disabled="getCandidateStatus(operator).disabled"
-                :title="getCandidateStatus(operator).text"
+                :title="getSkillTooltip(operator)"
                 @click="addOperatorToActiveTeam(operator.charId)"
               >
                 <OperatorAvatar
