@@ -5025,7 +5025,6 @@ const riicL79InputDebugState = computed(() => {
   try {
     const { schedule } = buildRiicMaaScheduleFromPreview({
       ...getRiicMaaScheduleBuildOptions(true),
-      durationSource: "preview",
     });
     return {
       schedule,
