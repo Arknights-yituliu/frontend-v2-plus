@@ -20,7 +20,7 @@ const scheduleDefinitions = [
     startDate: "2026-11-01",
     lastDrawDate: "2026-11-14",
     activityType: "周年限定",
-    disabled: true,
+    disabled: false,
     dailyGiftResources: true,
     accuracyFlag: false,
     dateString: "敬请期待",            // 自定义日期展示文字，覆盖自动生成的格式

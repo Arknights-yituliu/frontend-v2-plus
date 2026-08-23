@@ -1245,11 +1245,7 @@ const lowerLevelOrundumPreview = {
           product: "orundum",
           stationLevel: 1,
           efficiency: 200,
-          operators: [
-            { charId: "char_1033_swire2" },
-            { charId: "char_502_nblade" },
-            { charId: "char_123_fang" },
-          ],
+          operators: createNormalTradingRoomOperators(),
         }),
       ],
     },
@@ -1258,24 +1254,54 @@ const lowerLevelOrundumPreview = {
 const lowerLevelOrundumSettlement = summarizeRiicActualSchedule({
   preview: lowerLevelOrundumPreview,
   tradingOperators: [
-    { charId: "char_1033_swire2", elite: 2, level: 1 },
-    ...normalTradingOperators.slice(0, 2),
+    ...normalTradingOperators,
   ],
 });
 assert.equal(
   getYieldResource(lowerLevelOrundumSettlement.yield, "orundum")
     .outputPerDay,
-  480,
+  463.2,
 );
 assert.equal(
   getYieldResource(lowerLevelOrundumSettlement.yield, "originiumShard")
     .outputPerDay,
-  -48,
+  -46.32,
 );
 assert.equal(
   lowerLevelOrundumSettlement.yield.tradingSettlements[0]?.isCalculated,
   true,
 );
+
+for (const stationLevel of [1, 2, 3]) {
+  const levelSettlement = summarizeRiicActualSchedule({
+    preview: {
+      states: [
+        {
+          durationHours: 24,
+          rooms: [
+            createSettlementRoom({
+              key: `trading:orundum:level-${stationLevel}`,
+              facility: "trading",
+              product: "orundum",
+              stationLevel,
+              efficiency: 193,
+              operators: createNormalTradingRoomOperators(),
+            }),
+          ],
+        },
+      ],
+    },
+    tradingOperators: normalTradingOperators,
+  });
+  assert.equal(
+    levelSettlement.yield.tradingSettlements[0]?.isCalculated,
+    true,
+  );
+  assert.equal(
+    getYieldResource(levelSettlement.yield, "orundum").outputPerDay,
+    463.2,
+  );
+}
 
 const jacintaRotationPreview = {
   states: [

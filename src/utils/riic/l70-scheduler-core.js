@@ -68,6 +68,10 @@ export function buildRiicFinalSelectedRoomTeams({
 }
 
 export function runRiicAutomaticSchedule(input = {}) {
+  const reportProgress =
+    typeof input.onProgress === "function" ? input.onProgress : () => {};
+
+  reportProgress("L70");
   const automaticSelection = buildRiicAutomaticRoomGroupSelections({
     groups: input.groups,
     candidateStatesByGroupId: input.candidateStatesByGroupId,
@@ -84,7 +88,10 @@ export function runRiicAutomaticSchedule(input = {}) {
     idleFillOperators: input.idleFillOperators,
     fiammettaRecovery: input.fiammettaRecovery,
     collectPlanningDebug: input.collectPlanningDebug === true,
+    onProgress: input.onProgress,
   });
+
+  reportProgress("L71");
   const tailFillResult = buildRiicTailFillResult({
     groups: input.groups,
     candidateStatesByGroupId: input.candidateStatesByGroupId,
@@ -95,7 +102,10 @@ export function runRiicAutomaticSchedule(input = {}) {
     idleFillOperators: input.idleFillOperators,
     fiammettaRecovery: input.fiammettaRecovery,
     fiammettaControlUsage: input.fiammettaControlUsage,
+    onProgress: input.onProgress,
   });
+
+  reportProgress("L72");
   const resourceSuiteResult = reinforceRiicPerceptionResourceSuite({
     groups: input.groups,
     candidateStatesByGroupId: input.candidateStatesByGroupId,
@@ -106,6 +116,8 @@ export function runRiicAutomaticSchedule(input = {}) {
     fiammettaControlUsage: input.fiammettaControlUsage,
     controlCenterRuntimeContext: input.controlCenterRuntimeContext,
   });
+
+  reportProgress("L73");
   const finalRoomTeams = buildRiicFinalSelectedRoomTeams({
     groups: input.groups,
     candidateStatesByGroupId: input.candidateStatesByGroupId,

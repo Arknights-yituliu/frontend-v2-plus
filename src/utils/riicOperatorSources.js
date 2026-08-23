@@ -734,6 +734,7 @@ async function loadOwnedOperators({ notify = false } = {}) {
         restoreWorkspace: false,
         generate: true,
       });
+      saveWizardState?.();
       if (notify) {
         cMessage(ownedOperatorMessage.value);
       }
