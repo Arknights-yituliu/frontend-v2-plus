@@ -438,6 +438,16 @@ const routes = [
         }
     },
     {
+        path: '/dev/account-auth-card-test',
+        text: '账号卡片测试',
+        name: 'AccountAuthCardTest',
+        display: false,
+        component: () => import('/src/pages/dev/account-auth-card-test.vue'),
+        meta: {
+            title: '账号卡片测试'
+        }
+    },
+    {
         path: '/riicdev',
         text: 'RIIC 测试入口',
         name: 'RiicDevIndex',

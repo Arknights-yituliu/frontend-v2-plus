@@ -25,6 +25,11 @@ import { sumRiicRoomEfficiency } from "./P08-room-efficiency.js";
 import { getRiicEffectivePowerPlantCount } from "./P11-automation-skill.js";
 import { createRiicScheduleContext } from "./P50-schedule-context.js";
 import { resolveRiicOperatorIdByName } from "./riic-operator-identity.js";
+import {
+  calculateRiicTradingRoom,
+  createRiicOperatorRosterById,
+  createRiicTradingFacilityContext,
+} from "./P01-riic-trading.js";
 
 const BASELINE_ROOM_TYPES = new Set([
   "manufacture",
@@ -402,12 +407,51 @@ function isControlRoomEffect(effect) {
   );
 }
 
+function isFacilityStateEffect(effect) {
+  const target = effect?.target || {};
+  return Boolean(
+    String(target?.scope || "").trim() === "facilityState" &&
+      normalizeFacility(target?.roomType) === "power" &&
+      String(effect?.metric || "").trim() === "facilityCount" &&
+      Number.isFinite(Number(effect?.bonusCount)),
+  );
+}
+
 function hasControlConditions(effect, controlOperatorIds) {
   const requiredIds = (effect?.conditions?.controlCoassignedOperatorIds || [])
     .map((operatorId) => String(operatorId || "").trim())
     .filter(Boolean);
 
   return requiredIds.every((operatorId) => controlOperatorIds.has(operatorId));
+}
+
+function hasRoomOperatorRequirements(effect, rooms) {
+  const requirements = Array.isArray(
+    effect?.conditions?.roomOperatorRequirements,
+  )
+    ? effect.conditions.roomOperatorRequirements
+    : [];
+
+  return requirements.every((requirement) => {
+    const facility = normalizeFacility(requirement?.facility);
+    const operatorIds = new Set(
+      (requirement?.operatorIds || [])
+        .map((operatorId) => String(operatorId || "").trim())
+        .filter(Boolean),
+    );
+    const minCount = Number(requirement?.minCount ?? 1);
+    if (!facility || operatorIds.size === 0 || !Number.isFinite(minCount)) {
+      return false;
+    }
+
+    const matchedCount = (rooms || [])
+      .filter((room) => normalizeFacility(room?.facility) === facility)
+      .flatMap((room) => room?.operators || [])
+      .filter((operator) =>
+        operatorIds.has(String(operator?.charId || "").trim()),
+      ).length;
+    return matchedCount >= minCount;
+  });
 }
 
 function getControlEffectKey(effect) {
@@ -563,6 +607,51 @@ function getControlCenterBonusForRoom({
   };
 }
 
+function collectFacilityStateEffects({ rooms, profilesById } = {}) {
+  const controlRoom = (rooms || []).find(
+    (room) => room.facility === "control" && room.index === 0,
+  );
+  const controlOperatorIds = new Set(
+    (controlRoom?.operators || [])
+      .map((operator) => String(operator?.charId || "").trim())
+      .filter(Boolean),
+  );
+  const effects = [];
+
+  for (const operatorId of controlOperatorIds) {
+    const profile = profilesById.get(operatorId);
+    if (!profile || profile.elite === null || profile.level === null) {
+      continue;
+    }
+
+    for (const skill of RIIC_CONTROL_CENTER_SKILLS.skills || []) {
+      if (
+        String(skill?.operatorId || "").trim() !== operatorId ||
+        !isControlCenterSkillUnlocked(profile, skill)
+      ) {
+        continue;
+      }
+
+      for (const sourceEffect of skill?.resolvedEffects || []) {
+        if (
+          !isFacilityStateEffect(sourceEffect) ||
+          !hasRoomOperatorRequirements(sourceEffect, rooms)
+        ) {
+          continue;
+        }
+        effects.push({
+          facilityType: normalizeFacility(sourceEffect?.target?.roomType),
+          bonusCount: Number(sourceEffect?.bonusCount || 0),
+          sourceOperatorId: operatorId,
+          sourceOperatorName: skill?.name || operatorId,
+        });
+      }
+    }
+  }
+
+  return effects;
+}
+
 function getAutomationSupportState({ rooms, profilesById } = {}) {
   const powerPlantCount = (rooms || []).filter(
     (room) => room.facility === "power",
@@ -576,14 +665,28 @@ function getAutomationSupportState({ rooms, profilesById } = {}) {
           Number(profilesById.get(operator.charId)?.elite) >= 2,
       ),
   );
+  const facilityCountAdjustments = [
+    ...(supportOperatorActive
+      ? [
+          {
+            facilityType: "power",
+            bonusCount: 1,
+            sourceOperatorId: AUTOMATION_POWER_SUPPORT_OPERATOR_ID,
+            sourceOperatorName: "承曦格雷伊",
+          },
+        ]
+      : []),
+    ...collectFacilityStateEffects({ rooms, profilesById }),
+  ];
 
   return {
     powerPlantCount,
     effectivePowerPlantCount: getRiicEffectivePowerPlantCount({
       powerPlantCount,
-      supportOperatorActive,
+      countAdjustments: facilityCountAdjustments,
     }),
     supportOperatorActive,
+    facilityCountAdjustments,
   };
 }
 
@@ -1041,6 +1144,100 @@ function applyResourceChainSettlement({ preview, settlement } = {}) {
   };
 }
 
+function getPerceptionState(perceptionSettlement, state) {
+  const stateIndex = Number(state?.index);
+  if (!Number.isInteger(stateIndex)) {
+    return null;
+  }
+
+  return (
+    (perceptionSettlement?.states || []).find(
+      (candidate) => Number(candidate?.index) === stateIndex,
+    ) || null
+  );
+}
+
+function applyTradingSettlement({
+  preview,
+  operatorProfiles,
+  perceptionSettlement,
+} = {}) {
+  const rosterById = createRiicOperatorRosterById(operatorProfiles);
+
+  return {
+    ...(preview || {}),
+    states: (preview?.states || []).map((state) => {
+      const durationHours = Number(state?.durationHours || 0);
+      const tradingContext = createRiicTradingFacilityContext({
+        stateRooms: state?.rooms || [],
+        perceptionState: getPerceptionState(perceptionSettlement, state),
+      });
+
+      return {
+        ...state,
+        rooms: (state?.rooms || []).map((room) => {
+          if (String(room?.facility || "").trim() !== "trading") {
+            return room;
+          }
+
+          const calculation = calculateRiicTradingRoom({
+            room,
+            rosterById,
+            tradingContext,
+            durationHours,
+          });
+          const tradingSettlement = {
+            status: calculation?.ok ? "calculated" : "unavailable",
+            error: calculation?.ok ? "" : calculation?.error || "unknown",
+            calculation,
+          };
+
+          if (!calculation?.ok) {
+            return {
+              ...room,
+              efficiency: null,
+              tradingSettlement,
+              efficiencyMetrics: {
+                ...(room.efficiencyMetrics || {}),
+                selectedVariant: "actual",
+                actual: {
+                  ...(room.efficiencyMetrics?.actual || {}),
+                  value: null,
+                  status: "unavailable",
+                  breakdown: {
+                    ...(room.efficiencyMetrics?.actual?.breakdown || {}),
+                    tradingSettlement,
+                  },
+                },
+              },
+            };
+          }
+
+          const value = Number(calculation.rate);
+          return {
+            ...room,
+            efficiency: value,
+            tradingSettlement,
+            efficiencyMetrics: {
+              ...(room.efficiencyMetrics || {}),
+              selectedVariant: "actual",
+              actual: {
+                ...(room.efficiencyMetrics?.actual || {}),
+                value,
+                status: "calculated",
+                breakdown: {
+                  ...(room.efficiencyMetrics?.actual?.breakdown || {}),
+                  tradingSettlement,
+                },
+              },
+            },
+          };
+        }),
+      };
+    }),
+  };
+}
+
 function summarizeRooms(states) {
   const summaries = new Map();
 
@@ -1210,6 +1407,8 @@ export function settleRiicMaaScheduleEfficiency({
         powerPlantCount: automationSupportState.powerPlantCount,
         automationPowerSupportActive:
           automationSupportState.supportOperatorActive,
+        facilityCountAdjustments:
+          automationSupportState.facilityCountAdjustments,
         ...createPerceptionResourceFacts(plan.rooms),
       },
     };
@@ -1236,9 +1435,14 @@ export function settleRiicMaaScheduleEfficiency({
     preview: previewWithActiveRosterEffects,
     settlement: perceptionSettlement,
   });
+  const settledPreview = applyTradingSettlement({
+    preview,
+    operatorProfiles: profileState.profiles,
+    perceptionSettlement,
+  });
   const issues = [
     ...profileState.issues,
-    ...preview.states.flatMap((state) => [
+    ...settledPreview.states.flatMap((state) => [
       ...(state.issues || []),
       ...(state.rooms || []).flatMap((room) => room.issues || []),
     ]),
@@ -1255,17 +1459,17 @@ export function settleRiicMaaScheduleEfficiency({
   ];
 
   return {
-    cycleHours: preview.cycleHours,
-    status: preview.states.length > 0 ? "calculated" : "empty",
-    plans: preview.states.map((state) => ({
+    cycleHours: settledPreview.cycleHours,
+    status: settledPreview.states.length > 0 ? "calculated" : "empty",
+    plans: settledPreview.states.map((state) => ({
       durationMinutes: state.durationMinutes,
       rooms: state.rooms,
       issues: state.issues,
     })),
-    states: preview.states,
-    rooms: summarizeRooms(preview.states),
+    states: settledPreview.states,
+    rooms: summarizeRooms(settledPreview.states),
     issues,
     perceptionSettlement,
-    preview,
+    preview: settledPreview,
   };
 }

@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import '/src/assets/css/account/login.v2.scss'
-import '/src/assets/css/account/login.v2.phone.scss'
 import userAPI from '/src/api/userInfo.js'
 import {createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
@@ -108,115 +107,153 @@ onMounted(() => {
 
 <template>
   <div class="login-page">
-    <v-card class="login-card m-a">
-      <v-tabs
-          v-model="inputContent.accountType"
-          bg-color="primary"
-      >
-        <v-tab value="password">账号注册</v-tab>
-        <v-tab value="email">邮箱注册</v-tab>
-      </v-tabs>
+    <v-card class="login-card">
+      <v-card-title class="auth-card-header">
+        <div class="auth-card-title">注册账号</div>
+      </v-card-title>
 
-      <v-card-text>
+      <div class="auth-card-mode-switch" role="tablist" aria-label="注册方式">
+        <button
+            class="auth-card-mode-button"
+            :class="{ 'auth-card-mode-button--active': inputContent.accountType === 'password' }"
+            type="button"
+            role="tab"
+            :aria-selected="inputContent.accountType === 'password'"
+            @click="inputContent.accountType = 'password'"
+        >
+          账号注册
+        </button>
+        <button
+            class="auth-card-mode-button"
+            :class="{ 'auth-card-mode-button--active': inputContent.accountType === 'email' }"
+            type="button"
+            role="tab"
+            :aria-selected="inputContent.accountType === 'email'"
+            @click="inputContent.accountType = 'email'"
+        >
+          邮箱注册
+        </button>
+      </div>
+
+      <v-card-text class="auth-card-body">
         <v-tabs-window v-model="inputContent.accountType">
           <v-tabs-window-item value="password">
-            <div class="m-0-4">账号（用户名）</div>
             <v-text-field
+                label="账号"
+                placeholder="请输入账号"
                 :rules="accountRules"
-                density="compact"
+                density="comfortable"
                 v-model="inputContent.userName"
                 hint="账号仅可由汉字、数字、英文组成"
                 color="primary"
-                variant="outlined"
-                class="m-4"
+                variant="solo-filled"
+                hide-details
+                class="auth-field"
             ></v-text-field>
-            <div class="m-0-4">登录密码</div>
             <v-text-field
-                density="compact"
+                label="登录密码"
+                placeholder="请输入密码"
+                density="comfortable"
                 :rules="passwordRules"
                 color="primary"
                 hint="密码仅可由数字、英文组成"
                 v-model="inputContent.password"
-                variant="outlined"
+                variant="solo-filled"
                 type="password"
-                hide-details="auto"
-                class="m-4"
+                hide-details
+                class="auth-field"
             ></v-text-field>
-            <div class="m-0-4">确认密码</div>
             <v-text-field
-                density="compact"
+                label="确认密码"
+                placeholder="请再次输入密码"
+                density="comfortable"
                 :rules="confirmPasswordRules"
                 color="primary"
                 hint="密码仅可由数字、英文组成"
                 v-model="inputContent.confirmPassword"
-                variant="outlined"
+                variant="solo-filled"
                 type="password"
-                hide-details="auto"
-                class="m-4"
+                hide-details
+                class="auth-field"
             ></v-text-field>
-            <div class="m-0-4">绑定邮箱（非必须，但找回账号只能通过邮箱）</div>
             <v-text-field
-                density="compact"
+                label="绑定邮箱（可选）"
+                placeholder="用于找回密码"
+                density="comfortable"
                 color="primary"
-                hint="唯一的找回密码方式"
+                hint="找回密码目前只能通过绑定邮箱"
                 v-model="inputContent.email"
-                variant="outlined"
-                hide-details="auto"
-                class="m-4"
+                variant="solo-filled"
+                hide-details
+                class="auth-field"
             >
-              <template v-slot:append>
-                <v-btn text="发送验证码" variant="text" size="small" density="compact"  @click="sendVerificationCode"></v-btn>
+              <template v-slot:append-inner>
+                <button class="auth-code-button" type="button" @click="sendVerificationCode">
+                  发送验证码
+                </button>
               </template>
             </v-text-field>
-            <div>邮箱验证码（如未填邮箱请忽视）</div>
-            <v-otp-input class="m-4" v-model="inputContent.verificationCode" length="4"></v-otp-input>
+            <v-otp-input
+                aria-label="邮箱验证码"
+                class="auth-otp"
+                v-model="inputContent.verificationCode"
+                length="4"
+            ></v-otp-input>
           </v-tabs-window-item>
 
           <v-tabs-window-item value="email">
-            <div>邮箱</div>
-
-              <v-text-field
-                  v-model="inputContent.email"
-                  color="primary"
-                  density="compact"
-                  variant="outlined"
-                  class="m-4"
-              >
-                <template v-slot:append>
-                  <v-btn color="primary"  variant="text" size="small" density="compact" text="发送验证码"
-                         @click="sendVerificationCode"></v-btn>
-                </template>
-              </v-text-field>
-
-
-            <div>验证码</div>
-            <v-otp-input class="m-4" v-model="inputContent.verificationCode" length="4"></v-otp-input>
+            <v-text-field
+                label="邮箱"
+                placeholder="请输入邮箱"
+                v-model="inputContent.email"
+                color="primary"
+                density="comfortable"
+                variant="solo-filled"
+                class="auth-field"
+            >
+              <template v-slot:append-inner>
+                <button class="auth-code-button" type="button" @click="sendVerificationCode">
+                  发送验证码
+                </button>
+              </template>
+            </v-text-field>
+            <v-otp-input
+                aria-label="邮箱验证码"
+                class="auth-otp"
+                v-model="inputContent.verificationCode"
+                length="4"
+            ></v-otp-input>
           </v-tabs-window-item>
         </v-tabs-window>
 
-        <div class="flex justify-center">
-          <v-btn @click="toRegister" text="注册" color="primary"></v-btn>
+        <div class="auth-actions">
+          <v-btn
+              block
+              size="large"
+              variant="flat"
+              @click="toRegister"
+              text="注册"
+              color="primary"
+              class="auth-primary-action"
+          ></v-btn>
         </div>
-
-        <v-card title="账号须知" color="primary" variant="tonal" class="m-12-4">
-          <v-card-text>
-            <p>
-              使用密码登录时，如果账号绑定了邮箱，也可将邮箱作为账号进行登录。
-            </p>
-            <p>
-              *此账号为一图流账号，与鹰角网络通行证(明日方舟游戏账号)无关，仅为保存您的干员练度数据使用
-            </p>
-            <p>
-              *为了您的账号安全，注册时的密码不要与您其他重要账号的密码相同
-            </p>
-            <p>
-              *请妥善保管好您的官网token和森空岛token
-            </p>
-          </v-card-text>
-        </v-card>
-
-
       </v-card-text>
+
+      <div class="auth-card-bottom">
+        <span>已有账号？</span>
+        <button class="auth-link-button" type="button" @click="router.push({name: 'LOGIN'})">
+          登录账号
+        </button>
+      </div>
+
+      <section class="auth-notice">
+        <div class="auth-notice-title">注册前请注意</div>
+        <ul class="auth-notice-list">
+          <li>这是用于保存一图流个人数据的账号，与鹰角通行证无关。</li>
+          <li>绑定邮箱后才能通过邮箱找回密码。</li>
+          <li>请勿使用与其他重要账号相同的密码。</li>
+        </ul>
+      </section>
     </v-card>
 
 

@@ -101,7 +101,7 @@ function getLayoutFacilities(layoutFacts) {
       const product = String(facility?.product || "").trim();
       const stationLevel = toNonNegativeInteger(facility?.stationLevel);
 
-      return facilityType && product
+      return facilityType
         ? [
             {
               facilityType,
@@ -122,11 +122,13 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
   const productKindCount = toNonNegativeInteger(
     requirement?.productKindCount,
   );
+  const levelTotal = toNonNegativeInteger(requirement?.levelTotal);
   const product = String(requirement?.product || "").trim();
   const stationLevel = toNonNegativeInteger(requirement?.stationLevel);
   const supportedKeys = [
     "facilityType",
     "count",
+    "levelTotal",
     "product",
     "stationLevel",
     "productKindCount",
@@ -136,10 +138,18 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
       typeof requirement === "object" &&
       facilityType &&
       !Object.keys(requirement).some((key) => !supportedKeys.includes(key)) &&
-      ((count !== null && productKindCount === null) ||
+      ((count !== null &&
+        productKindCount === null &&
+        levelTotal === null) ||
         (facilityType === "manufacture" &&
           count === null &&
           productKindCount !== null &&
+          levelTotal === null &&
+          !product &&
+          stationLevel === null) ||
+        (levelTotal !== null &&
+          count === null &&
+          productKindCount === null &&
           !product &&
           stationLevel === null)),
   );
@@ -149,6 +159,7 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
     stationLevel,
     count,
     productKindCount,
+    levelTotal,
     actualValue: null,
     kind: "unsupported",
     matched: false,
@@ -173,6 +184,25 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
       actualValue,
       kind: "manufactureProductKindCount",
       matched: actualValue === productKindCount,
+    };
+  }
+
+  if (levelTotal !== null) {
+    if (!facilities.length) {
+      return base;
+    }
+
+    const actualValue = facilities
+      .filter((facility) => facility.facilityType === facilityType)
+      .reduce(
+        (total, facility) => total + Number(facility.stationLevel || 0),
+        0,
+      );
+    return {
+      ...base,
+      actualValue,
+      kind: "facilityLevelTotal",
+      matched: actualValue === levelTotal,
     };
   }
 
@@ -323,6 +353,28 @@ function hasFacilityCountCondition(conditions) {
         toNonNegativeInteger(requirement?.productKindCount) !== null)
     );
   });
+}
+
+function resolveEffectBonusPercent(effect, layoutFacts) {
+  const dynamicRule = effect?.bonusPercentPerLevelTotal;
+  if (dynamicRule && typeof dynamicRule === "object") {
+    const facilityType = String(dynamicRule.facilityType || "").trim();
+    const multiplier = Number(dynamicRule.multiplier);
+    if (!facilityType || !Number.isFinite(multiplier)) {
+      return null;
+    }
+
+    const levelTotal = getLayoutFacilities(layoutFacts)
+      .filter((facility) => facility.facilityType === facilityType)
+      .reduce(
+        (total, facility) => total + Number(facility.stationLevel || 0),
+        0,
+      );
+    return levelTotal * multiplier;
+  }
+
+  const bonusPercent = Number(effect?.bonusPercent);
+  return Number.isFinite(bonusPercent) ? bonusPercent : null;
 }
 
 export function getRiicLayer3RuleConditionChecks({
@@ -552,10 +604,10 @@ export function getRiicLayer3OperatorLocalBonus({
     }
 
     for (const effect of rule?.effects || []) {
-      const bonusPercent = Number(effect?.bonusPercent);
+      const bonusPercent = resolveEffectBonusPercent(effect, layoutFacts);
       const effectProduct = String(effect?.product || "").trim();
       if (
-        !Number.isFinite(bonusPercent) ||
+        bonusPercent === null ||
         resolveRuleOperatorId(effect) !== normalizedOperatorId ||
         String(effect?.roomType || "").trim() !== normalizedScope.roomType ||
         (effectProduct && effectProduct !== normalizedScope.product)
@@ -653,9 +705,9 @@ export function getRiicLayer3CandidateLocalBonus({
     }
 
     for (const effect of rule?.effects || []) {
-      const bonusPercent = Number(effect?.bonusPercent);
+      const bonusPercent = resolveEffectBonusPercent(effect, layoutFacts);
       if (
-        !Number.isFinite(bonusPercent) ||
+        bonusPercent === null ||
         String(effect?.candidateName || "").trim() !== candidateName ||
         String(effect?.roomType || "").trim() !== normalizedScope.roomType
       ) {

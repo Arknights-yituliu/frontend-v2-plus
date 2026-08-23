@@ -447,7 +447,7 @@
       ]
     },
     {
-      "id": "锡人E0-办公室+20",
+      "id": "锡人E0-宿舍等级总和×1-办公室",
       "conditions": {
         "operators": [
           {
@@ -460,13 +460,16 @@
       "effects": [
         {
           "roomType": "hire",
-          "bonusPercent": 20,
+          "bonusPercentPerLevelTotal": {
+            "facilityType": "dormitory",
+            "multiplier": 1
+          },
           "operatorName": "锡人"
         }
       ]
     },
     {
-      "id": "锡人E2-办公室+20",
+      "id": "锡人E2-宿舍等级总和×2-办公室",
       "conditions": {
         "operators": [
           {
@@ -479,7 +482,10 @@
       "effects": [
         {
           "roomType": "hire",
-          "bonusPercent": 20,
+          "bonusPercentPerLevelTotal": {
+            "facilityType": "dormitory",
+            "multiplier": 2
+          },
           "operatorName": "锡人"
         }
       ]
@@ -1890,7 +1896,7 @@
       ]
     },
     {
-      "id": "空弦E0-发电站2-贸易+6",
+      "id": "空弦E0-宿舍等级总和×1-贸易",
       "conditions": {
         "operators": [
           {
@@ -1898,47 +1904,21 @@
             "eliteAtLeast": 0
           }
         ],
-        "facilities": [
-          {
-            "facilityType": "power",
-            "count": 2
-          }
-        ]
+        "facilities": []
       },
       "effects": [
         {
           "operatorName": "空弦",
           "roomType": "trading",
-          "bonusPercent": 6
+          "bonusPercentPerLevelTotal": {
+            "facilityType": "dormitory",
+            "multiplier": 1
+          }
         }
       ]
     },
     {
-      "id": "空弦E0-发电站3-贸易+20",
-      "conditions": {
-        "operators": [
-          {
-            "operatorName": "空弦",
-            "eliteAtLeast": 0
-          }
-        ],
-        "facilities": [
-          {
-            "facilityType": "power",
-            "count": 3
-          }
-        ]
-      },
-      "effects": [
-        {
-          "operatorName": "空弦",
-          "roomType": "trading",
-          "bonusPercent": 20
-        }
-      ]
-    },
-    {
-      "id": "空弦E2-发电站2-贸易+12",
+      "id": "空弦E2-宿舍等级总和×2-贸易",
       "conditions": {
         "operators": [
           {
@@ -1946,186 +1926,16 @@
             "eliteAtLeast": 2
           }
         ],
-        "facilities": [
-          {
-            "facilityType": "power",
-            "count": 2
-          }
-        ]
+        "facilities": []
       },
       "effects": [
         {
           "operatorName": "空弦",
           "roomType": "trading",
-          "bonusPercent": 12
-        }
-      ]
-    },
-    {
-      "id": "空弦E2-发电站3-贸易+40",
-      "conditions": {
-        "operators": [
-          {
-            "operatorName": "空弦",
-            "eliteAtLeast": 2
+          "bonusPercentPerLevelTotal": {
+            "facilityType": "dormitory",
+            "multiplier": 2
           }
-        ],
-        "facilities": [
-          {
-            "facilityType": "power",
-            "count": 3
-          }
-        ]
-      },
-      "effects": [
-        {
-          "operatorName": "空弦",
-          "roomType": "trading",
-          "bonusPercent": 40
-        }
-      ]
-    },
-    {
-      "id": "但书α伺夜空弦-1电站-效率+25.52",
-      "conditions": {
-        "operators": [],
-        "facilities": [
-          {
-            "facilityType": "power",
-            "count": 1
-          }
-        ]
-      },
-      "effects": [
-        {
-          "candidateName": "但书 α + 伺夜 E2 + 空弦 E2",
-          "roomType": "trading",
-          "product": "lmd",
-          "stationLevel": 3,
-          "bonusPercent": 25.52,
-          "suppressOperatorBonusFor": [
-            "空弦"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "但书α伺夜空弦-2电站-效率+30.62",
-      "conditions": {
-        "operators": [],
-        "facilities": [
-          {
-            "facilityType": "power",
-            "count": 2
-          }
-        ]
-      },
-      "effects": [
-        {
-          "candidateName": "但书 α + 伺夜 E2 + 空弦 E2",
-          "roomType": "trading",
-          "product": "lmd",
-          "stationLevel": 3,
-          "bonusPercent": 30.62,
-          "suppressOperatorBonusFor": [
-            "空弦"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "但书α伺夜空弦-3电站-效率+76.56",
-      "conditions": {
-        "operators": [],
-        "facilities": [
-          {
-            "facilityType": "power",
-            "count": 3
-          }
-        ]
-      },
-      "effects": [
-        {
-          "candidateName": "但书 α + 伺夜 E2 + 空弦 E2",
-          "roomType": "trading",
-          "product": "lmd",
-          "stationLevel": 3,
-          "bonusPercent": 76.56,
-          "suppressOperatorBonusFor": [
-            "空弦"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "但书β伺夜空弦-1电站-效率+31.03",
-      "conditions": {
-        "operators": [],
-        "facilities": [
-          {
-            "facilityType": "power",
-            "count": 1
-          }
-        ]
-      },
-      "effects": [
-        {
-          "candidateName": "但书 β + 伺夜 E2 + 空弦 E2",
-          "roomType": "trading",
-          "product": "lmd",
-          "stationLevel": 3,
-          "bonusPercent": 31.03,
-          "suppressOperatorBonusFor": [
-            "空弦"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "但书β伺夜空弦-2电站-效率+37.24",
-      "conditions": {
-        "operators": [],
-        "facilities": [
-          {
-            "facilityType": "power",
-            "count": 2
-          }
-        ]
-      },
-      "effects": [
-        {
-          "candidateName": "但书 β + 伺夜 E2 + 空弦 E2",
-          "roomType": "trading",
-          "product": "lmd",
-          "stationLevel": 3,
-          "bonusPercent": 37.24,
-          "suppressOperatorBonusFor": [
-            "空弦"
-          ]
-        }
-      ]
-    },
-    {
-      "id": "但书β伺夜空弦-3电站-效率+93.1",
-      "conditions": {
-        "operators": [],
-        "facilities": [
-          {
-            "facilityType": "power",
-            "count": 3
-          }
-        ]
-      },
-      "effects": [
-        {
-          "candidateName": "但书 β + 伺夜 E2 + 空弦 E2",
-          "roomType": "trading",
-          "product": "lmd",
-          "stationLevel": 3,
-          "bonusPercent": 93.1,
-          "suppressOperatorBonusFor": [
-            "空弦"
-          ]
         }
       ]
     },

@@ -13,6 +13,9 @@ import {
   RIIC_TRADE_ORDER_DISTRIBUTION_BY_LEVEL,
   RIIC_TRADE_ORDER_GOLD,
 } from "./riic-trade-order-model.js";
+import {
+  resolveRiicTradingExternalOrderBonuses,
+} from "./riic-trading-context.js";
 
 const ORDER_GOLD = RIIC_TRADE_ORDER_GOLD;
 const ORDER_DISTRIBUTION_BY_LEVEL =
@@ -1010,6 +1013,188 @@ function getTequilaVirtualGoldByOrder(context, operators) {
 
 function getStaffingBonusPercent(operators) {
   return operators.length;
+}
+
+export function createRiicOperatorRosterById(operators = []) {
+  return new Map(
+    (operators || []).flatMap((operator) => {
+      const charId = String(operator?.charId || "").trim();
+      return charId ? [[charId, operator]] : [];
+    }),
+  );
+}
+
+export function resolveRiicTradingOperators(
+  room,
+  rosterById = new Map(),
+) {
+  const resolvedOperators = (room?.operators || []).flatMap((roomOperator) => {
+    const charId = String(roomOperator?.charId || "").trim();
+    if (!charId || roomOperator?.hasUsableProfile === false) {
+      return [];
+    }
+
+    const rosterOperator = rosterById.get(charId) || {};
+    const hasRosterOperator = rosterById.has(charId);
+    const hasRosterElite =
+      rosterOperator?.elite !== null && rosterOperator?.elite !== undefined;
+    const hasRosterLevel =
+      rosterOperator?.level !== null && rosterOperator?.level !== undefined;
+    const hasRoomElite =
+      roomOperator?.elite !== null && roomOperator?.elite !== undefined;
+    const hasRoomLevel =
+      roomOperator?.level !== null && roomOperator?.level !== undefined;
+
+    return [
+      {
+        operator: {
+          charId,
+          elite: rosterOperator?.elite ?? roomOperator?.elite,
+          level: rosterOperator?.level ?? roomOperator?.level,
+        },
+        resolution: {
+          charId,
+          rosterMatched: hasRosterOperator,
+          eliteSource: hasRosterElite
+            ? "legacyRoster"
+            : hasRoomElite
+              ? "roomOperator"
+              : "missing",
+          levelSource: hasRosterLevel
+            ? "legacyRoster"
+            : hasRoomLevel
+              ? "roomOperator"
+              : "missing",
+        },
+      },
+    ];
+  });
+
+  return {
+    operators: resolvedOperators.map((entry) => entry.operator),
+    operatorResolution: resolvedOperators.map((entry) => entry.resolution),
+  };
+}
+
+export function getRiicTradingOperators(room, rosterById = new Map()) {
+  return resolveRiicTradingOperators(room, rosterById).operators;
+}
+
+export function getRiicTradingOperatorBonuses(
+  room,
+  operatorIds = new Set(),
+) {
+  return (room?.controlCenterOperatorBonuses || []).reduce(
+    (bonuses, entry) => {
+      const charId = String(entry?.operatorId || "").trim();
+      const percent = Number(entry?.bonusPercent);
+      if (!charId || !operatorIds.has(charId) || !Number.isFinite(percent)) {
+        return bonuses;
+      }
+
+      bonuses[charId] = Number(bonuses[charId] || 0) + percent;
+      return bonuses;
+    },
+    {},
+  );
+}
+
+export function getRiicTradingTeamCalculationBonus(
+  room,
+  operatorIds = new Set(),
+) {
+  const calculation =
+    room?.efficiencyMetrics?.actual?.breakdown?.teamCalculation;
+  if (
+    String(calculation?.type || "").trim() !== "jayeOrderLimit" ||
+    !Number.isFinite(Number(calculation?.coreBonusPercentBeforeControl)) ||
+    !operatorIds.has(String(calculation?.sourceMemberId || "").trim())
+  ) {
+    return {};
+  }
+
+  return {
+    localOrderBonusOverride: Number(
+      calculation.coreBonusPercentBeforeControl,
+    ),
+    ignoredUnsupportedOperatorIds: [
+      String(calculation?.sourceMemberId || "").trim(),
+    ].filter(Boolean),
+  };
+}
+
+export function createRiicTradingFacilityContext({
+  stateRooms = [],
+  perceptionState,
+} = {}) {
+  return {
+    resolvedExternalOrderBonuses:
+      resolveRiicTradingExternalOrderBonuses(stateRooms),
+    silentResonance: Number(perceptionState?.resources?.silentResonance),
+  };
+}
+
+export function resolveRiicTradingRoomInput({
+  room,
+  rosterById = new Map(),
+} = {}) {
+  const resolvedOperators = resolveRiicTradingOperators(room, rosterById);
+  const operators = resolvedOperators.operators;
+  const operatorIds = new Set(
+    operators
+      .map((operator) => String(operator?.charId || "").trim())
+      .filter(Boolean),
+  );
+
+  return {
+    operators,
+    operatorResolution: resolvedOperators.operatorResolution,
+    tradingFactors: {
+      product: String(room?.product || "").trim(),
+      stationLevel: Number(room?.stationLevel),
+      roomBonus:
+        Number(room?.controlCenterFacilityBonusPercent || 0) +
+        Number(room?.activeRosterBonusPercent || 0) +
+        Number(room?.resourceChainAdditionalBonusPercent || 0),
+      operatorBonusesById: getRiicTradingOperatorBonuses(
+        room,
+        operatorIds,
+      ),
+      orderAdjustment: getRiicTradingTeamCalculationBonus(
+        room,
+        operatorIds,
+      ),
+    },
+  };
+}
+
+export function calculateRiicTradingRoom({
+  room,
+  rosterById = new Map(),
+  tradingContext,
+  durationHours,
+} = {}) {
+  const settlementInput = resolveRiicTradingRoomInput({
+    room,
+    rosterById,
+  });
+  const calculation = calculateRiicTrading({
+    durationHours,
+    operators: settlementInput.operators,
+    tradingFactors: {
+      ...settlementInput.tradingFactors,
+      crossRoomFactors:
+        tradingContext || createRiicTradingFacilityContext(),
+    },
+  });
+
+  return {
+    ...calculation,
+    inputDiagnostics: {
+      p01Operators: settlementInput.operators,
+      l80OperatorResolution: settlementInput.operatorResolution,
+    },
+  };
 }
 
 function calculateNormalOrButshu({

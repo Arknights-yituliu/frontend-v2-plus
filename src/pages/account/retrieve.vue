@@ -114,7 +114,7 @@ function toResetPassword(step) {
     nextStep(step)
     localStorage.setItem("USER_TOKEN", response.data.token.toString());
     setTimeout(() => {
-      router.push({name: "AccountHome"})
+      router.push({name: "User Center"})
     }, 3000)
   })
 }
@@ -136,17 +136,15 @@ onMounted(() => {
 
 <template>
   <div class="login-page">
-    <v-card class="login-card m-a">
-      <v-tabs
-          v-model="inputContent.accountType"
-          bg-color="primary"
-      >
-        <v-tab value="email">通过邮箱找回</v-tab>
-      </v-tabs>
-      <v-card-text>
+    <v-card class="login-card">
+      <v-card-title class="auth-card-header">
+        <div class="auth-card-title">找回账号</div>
+      </v-card-title>
+
+      <v-card-text class="auth-card-body">
         <v-tabs-window v-model="inputContent.accountType">
           <v-tabs-window-item value="email">
-            <v-stepper alt-labels v-model="currentStepper">
+            <v-stepper class="auth-stepper" alt-labels v-model="currentStepper">
               <v-stepper-header>
                 <v-stepper-item
                     title="邮箱验证"
@@ -181,62 +179,88 @@ onMounted(() => {
               </v-stepper-header>
 
               <v-stepper-window v-show="currentStepper==='sendEmail'">
-                <div>邮箱</div>
-                <div class="flex">
+                <div>
                   <v-text-field
+                      label="邮箱"
+                      placeholder="请输入绑定邮箱"
                       v-model="inputContent.email"
                       color="primary"
-                      density="compact"
-                      variant="outlined"
-                      class="m-4"
-                  ></v-text-field>
-                  <v-btn color="primary" variant="text" text="发送验证码"
-                         @click="sendVerificationCode"></v-btn>
+                      density="comfortable"
+                      variant="solo-filled"
+                      class="auth-field"
+                  >
+                    <template #append-inner>
+                      <button class="auth-code-button" type="button" @click="sendVerificationCode">
+                        发送验证码
+                      </button>
+                    </template>
+                  </v-text-field>
                 </div>
-                <div>验证码</div>
-                <v-otp-input class="m-4" v-model="inputContent.verificationCode" length="4"></v-otp-input>
+                <v-otp-input
+                    aria-label="邮箱验证码"
+                    class="auth-otp"
+                    v-model="inputContent.verificationCode"
+                    length="4"
+                ></v-otp-input>
                 <div class="flex justify-center">
-                  <v-btn color="primary" variant="outlined" text="下一步"
-                         @click="toRetrieveAuthentication('resetPassword')"></v-btn>
+                  <v-btn
+                      block
+                      size="large"
+                      variant="flat"
+                      color="primary"
+                      text="下一步"
+                      class="auth-primary-action"
+                      @click="toRetrieveAuthentication('resetPassword')"
+                  ></v-btn>
                 </div>
               </v-stepper-window>
 
               <v-stepper-window v-show="currentStepper==='resetPassword'">
-                <div class="m-0-4">登录密码</div>
                 <v-text-field
-                    density="compact"
+                    label="新密码"
+                    placeholder="请输入新密码"
+                    density="comfortable"
                     :rules="passwordRules"
                     color="primary"
                     hint="密码仅可由数字、英文组成"
                     v-model="inputContent.password"
-                    variant="outlined"
+                    variant="solo-filled"
                     type="password"
-                    hide-details="auto"
-                    class="m-4"
+                    hide-details
+                    class="auth-field"
                 ></v-text-field>
-                <div class="m-0-4">确认密码</div>
                 <v-text-field
-                    density="compact"
+                    label="确认密码"
+                    placeholder="请再次输入密码"
+                    density="comfortable"
                     :rules="confirmPasswordRules"
                     color="primary"
                     hint="密码仅可由数字、英文组成"
                     v-model="inputContent.confirmPassword"
-                    variant="outlined"
+                    variant="solo-filled"
                     type="password"
-                    hide-details="auto"
-                    class="m-4"
+                    hide-details
+                    class="auth-field"
                 ></v-text-field>
                 <div class="flex justify-center">
-                  <v-btn color="primary" variant="outlined" text="下一步"
-                         @click="toResetPassword('resetSuccessful')"></v-btn>
+                  <v-btn
+                      block
+                      size="large"
+                      variant="flat"
+                      color="primary"
+                      text="设置新密码"
+                      class="auth-primary-action"
+                      @click="toResetPassword('resetSuccessful')"
+                  ></v-btn>
                 </div>
               </v-stepper-window>
 
               <v-stepper-window v-show="currentStepper==='resetSuccessful'">
                 <v-alert
-                    text="即将转跳到首页"
+                    text="密码已更新，即将返回个人中心"
                     title="修改成功"
                     type="success"
+                    variant="tonal"
                 ></v-alert>
               </v-stepper-window>
             </v-stepper>

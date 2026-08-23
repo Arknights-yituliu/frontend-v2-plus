@@ -543,7 +543,7 @@ function handleClick() {
         </v-btn>
       </v-btn-group>
       <v-btn color="primary" style="display:none" class="m-0-8" :size="getButtonSize()"
-        @click="router.push({ name: 'AccountHome' })" disabled>自定义一图流
+        @click="router.push({ name: 'User Center' })" disabled>自定义一图流
       </v-btn>
 
       <v-switch hide-details v-model="hiddenPermStageFlag" @change="hiddenPermStage()" color="primary" class="m-0-8"
@@ -670,7 +670,7 @@ function handleClick() {
         </div>
         <img src="/image/website/QR/yituliuQR.png" style="height: 128px; display: inline-block;">
       </div>
-      <div id="retire-card" class="stage-card stage-card-tip" @click="router.push({ name: 'AccountHome' })"
+      <div id="retire-card" class="stage-card stage-card-tip" @click="router.push({ name: 'User Center' })"
         style="flex-direction: column; align-items: center; justify-content: center; flex-grow: 1;">
         <div class="flex justify-center">
           <ItemImage :item-id="'30073'" :size="60" :mobile-size="24"></ItemImage>

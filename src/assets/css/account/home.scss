@@ -1,4 +1,9 @@
 .account-home-page {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+
   .account-user-column {
     width: 600px;
     margin: 8px;
@@ -37,6 +42,22 @@
   .stage-config-card{
     margin: 8px;
     width: 600px;
+  }
+
+  &--guest {
+    display: grid;
+    grid-template-columns: minmax(360px, 400px) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+    width: min(100%, 1040px);
+    margin: 0 auto;
+    padding: 24px 0 32px;
+
+    .stage-config-card {
+      width: 100%;
+      min-width: 0;
+      margin: 0;
+    }
   }
 
   .preset-parameter-card{
@@ -126,6 +147,19 @@
         padding: 4px;
         font-size: 10px;
       }
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .account-home-page--guest {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    width: 100%;
+    padding: 16px 8px 24px;
+
+    .stage-config-card {
+      width: 100%;
     }
   }
 }

@@ -1,4 +1,7 @@
-import { calculateRiicTrading } from "./P01-riic-trading.js";
+import {
+  createRiicOperatorRosterById,
+  getRiicTradingOperators,
+} from "./P01-riic-trading.js";
 import { calculateRiicTradingDrone } from "./P02-riic-trading-drone.js";
 import {
   calculateRiicDirectProductionOutput,
@@ -6,9 +9,6 @@ import {
   getRiicRoomYieldMeta,
 } from "./P03-riic-production.js";
 import { settleRiicNetResources } from "./P04-riic-resource-netting.js";
-import {
-  resolveRiicTradingExternalOrderBonuses,
-} from "./riic-trading-context.js";
 import {
   calculateRiicExpectedPerHour,
   RIIC_TRADE_ORDER_DISTRIBUTION_BY_LEVEL,
@@ -121,199 +121,21 @@ function createOrundumManufactureFlow(output, craftMaterial) {
   };
 }
 
-function createOperatorRosterById(operators) {
-  return new Map(
-    (operators || []).flatMap((operator) => {
-      const charId = String(operator?.charId || "").trim();
-      return charId ? [[charId, operator]] : [];
-    }),
-  );
-}
-
-function resolveTradingOperators(room, rosterById) {
-  const resolvedOperators = (room?.operators || []).flatMap((roomOperator) => {
-    const charId = String(roomOperator?.charId || "").trim();
-    if (!charId || roomOperator?.hasUsableProfile === false) {
-      return [];
-    }
-    const rosterOperator = rosterById.get(charId) || {};
-    const hasRosterOperator = rosterById.has(charId);
-    const hasRosterElite =
-      rosterOperator?.elite !== null && rosterOperator?.elite !== undefined;
-    const hasRosterLevel =
-      rosterOperator?.level !== null && rosterOperator?.level !== undefined;
-    const hasRoomElite =
-      roomOperator?.elite !== null && roomOperator?.elite !== undefined;
-    const hasRoomLevel =
-      roomOperator?.level !== null && roomOperator?.level !== undefined;
-
-    return [
-      {
-        operator: {
-          charId,
-          elite: rosterOperator?.elite ?? roomOperator?.elite,
-          level: rosterOperator?.level ?? roomOperator?.level,
-        },
-        resolution: {
-          charId,
-          rosterMatched: hasRosterOperator,
-          eliteSource: hasRosterElite
-            ? "legacyRoster"
-            : hasRoomElite
-              ? "roomOperator"
-              : "missing",
-          levelSource: hasRosterLevel
-            ? "legacyRoster"
-            : hasRoomLevel
-              ? "roomOperator"
-              : "missing",
-        },
-      },
-    ];
-  });
-
-  return {
-    operators: resolvedOperators.map((entry) => entry.operator),
-    operatorResolution: resolvedOperators.map((entry) => entry.resolution),
-  };
-}
-
-function getTradingOperators(room, rosterById) {
-  return resolveTradingOperators(room, rosterById).operators;
-}
-
-function getPerceptionState(perceptionSettlement, state) {
-  const stateIndex = Number(state?.index);
-  if (!Number.isInteger(stateIndex)) {
-    return null;
-  }
-
-  return (
-    (perceptionSettlement?.states || []).find(
-      (candidate) => Number(candidate?.index) === stateIndex,
-    ) || null
-  );
-}
-
-function getTradingOperatorBonuses(room, operatorIds = new Set()) {
-  return (room?.controlCenterOperatorBonuses || []).reduce(
-    (bonuses, entry) => {
-      const charId = String(entry?.operatorId || "").trim();
-      const percent = toFinitePercent(entry?.bonusPercent);
-      if (!charId || !operatorIds.has(charId) || percent === null) {
-        return bonuses;
-      }
-
-      bonuses[charId] = Number(bonuses[charId] || 0) + percent;
-      return bonuses;
-    },
-    {},
-  );
-}
-
-function getTradingTeamCalculationBonus(room, operatorIds = new Set()) {
-  const calculation =
-    room?.efficiencyMetrics?.actual?.breakdown?.teamCalculation;
-  if (
-    String(calculation?.type || "").trim() !== "jayeOrderLimit" ||
-    !Number.isFinite(Number(calculation?.coreBonusPercentBeforeControl)) ||
-    !operatorIds.has(String(calculation?.sourceMemberId || "").trim())
-  ) {
-    return {};
-  }
-
-  return {
-    localOrderBonusOverride: Number(
-      calculation.coreBonusPercentBeforeControl,
-    ),
-    ignoredUnsupportedOperatorIds: [
-      String(calculation?.sourceMemberId || "").trim(),
-    ].filter(Boolean),
-  };
-}
-
-function createTradingFacilityContext({ stateRooms = [], perceptionState } = {}) {
-  return {
-    resolvedExternalOrderBonuses:
-      resolveRiicTradingExternalOrderBonuses(stateRooms),
-    silentResonance: Number(perceptionState?.resources?.silentResonance),
-  };
-}
-
-function resolveTradingRoomSettlementInput({ room, rosterById } = {}) {
-  const resolvedOperators = resolveTradingOperators(
-    room,
-    rosterById || new Map(),
-  );
-  const operators = resolvedOperators.operators;
-  const operatorIds = new Set(
-    operators
-      .map((operator) => String(operator?.charId || "").trim())
-      .filter(Boolean),
-  );
-  const roomBonus =
-    Number(toFinitePercent(room?.controlCenterFacilityBonusPercent) || 0) +
-    Number(toFinitePercent(room?.activeRosterBonusPercent) || 0) +
-    Number(toFinitePercent(room?.resourceChainAdditionalBonusPercent) || 0);
-
-  return {
-    operators,
-    operatorResolution: resolvedOperators.operatorResolution,
-    tradingFactors: {
-      product: String(room?.product || "").trim(),
-      stationLevel: Number(room?.stationLevel),
-      roomBonus,
-      operatorBonusesById: getTradingOperatorBonuses(room, operatorIds),
-      orderAdjustment: getTradingTeamCalculationBonus(room, operatorIds),
-    },
-  };
-}
-
-function calculateTradingRoom({
-  room,
-  rosterById,
-  tradingContext,
-  durationHours,
-}) {
-  if (!isTradingRoom(room)) {
-    return null;
-  }
-
-  const settlementInput = resolveTradingRoomSettlementInput({
-    room,
-    rosterById,
-  });
-
-  const calculation = calculateRiicTrading({
-    durationHours,
-    operators: settlementInput.operators,
-    tradingFactors: {
-      ...settlementInput.tradingFactors,
-      crossRoomFactors: tradingContext || createTradingFacilityContext(),
-    },
-  });
-
-  return {
-    ...calculation,
-    inputDiagnostics: {
-      p01Operators: settlementInput.operators,
-      l80OperatorResolution: settlementInput.operatorResolution,
-    },
-  };
-}
-
 function calculateTradingDroneRoom({ room, rosterById }) {
   if (!isTradingRoom(room)) {
     return null;
   }
 
+  const operators =
+    room?.tradingSettlement?.calculation?.inputDiagnostics?.p01Operators ||
+    getRiicTradingOperators(room, rosterById || new Map());
   return calculateRiicTradingDrone(
     {
       type: "trading",
       product: String(room?.product || "").trim(),
       level: Number(room?.stationLevel),
     },
-    getTradingOperators(room, rosterById || new Map()),
+    operators,
   );
 }
 
@@ -477,8 +299,6 @@ function createYieldRoomSummary(room) {
 function createYieldSegment({
   room,
   durationHours,
-  tradingRosterById,
-  tradingContext,
   orundumCraftMaterial,
   allowMaaFallback = false,
 }) {
@@ -493,12 +313,7 @@ function createYieldSegment({
     ? getRiicReferenceDailyRate(room, meta)
     : null;
   const tradingCalculation = tradingRoom
-    ? calculateTradingRoom({
-      room,
-      rosterById: tradingRosterById,
-      tradingContext,
-      durationHours,
-    })
+    ? room?.tradingSettlement?.calculation || null
     : null;
   const fallbackTradingCalculation =
     allowMaaFallback &&
@@ -522,7 +337,9 @@ function createYieldSegment({
           : ""
     : effectiveTradingCalculation?.ok
       ? ""
-      : tradingCalculation?.error || "tradingCalculationUnavailable";
+      : tradingCalculation?.error ||
+        room?.tradingSettlement?.error ||
+        "tradingSettlementUnavailable";
 
   const directProductionOutput = calculateRiicDirectProductionOutput({
     room,
@@ -552,7 +369,9 @@ function createYieldSegment({
     tradingCalculation: effectiveTradingCalculation,
     calculationMethod: fallbackTradingCalculation
       ? "普通贸易订单预置估算"
-      : "特殊订单公式/常规规则",
+      : tradingRoom
+        ? "P01贸易站统一结算"
+        : "常规规则",
     fallbackDiagnostics: fallbackTradingCalculation?.fallbackDiagnostics || null,
     orundumManufactureFlow,
   };
@@ -1176,9 +995,7 @@ function getTradingSettlementTypeLabel(type) {
 function buildTradingSettlements({
   states,
   cycleHours,
-  tradingRosterById,
   orundumCraftMaterial,
-  perceptionSettlement,
   allowMaaFallback = false,
 }) {
   const summariesByKey = new Map();
@@ -1188,10 +1005,6 @@ function buildTradingSettlements({
     if (durationHours <= 0) {
       continue;
     }
-    const tradingContext = createTradingFacilityContext({
-      stateRooms: state?.rooms || [],
-      perceptionState: getPerceptionState(perceptionSettlement, state),
-    });
 
     for (const room of state?.rooms || []) {
       if (String(room?.facility || "").trim() !== "trading") {
@@ -1201,8 +1014,6 @@ function buildTradingSettlements({
       const segment = createYieldSegment({
         room,
         durationHours,
-        tradingRosterById,
-        tradingContext,
         orundumCraftMaterial,
         allowMaaFallback,
       });
@@ -1987,10 +1798,9 @@ function buildYieldSummary({
   droneOrdersByState,
   legacyTradingOperators,
   orundumCraftMaterial,
-  perceptionSettlement,
   allowMaaFallback = false,
 }) {
-  const tradingRosterById = createOperatorRosterById(
+  const tradingRosterById = createRiicOperatorRosterById(
     legacyTradingOperators,
   );
   const summariesByKey = new Map();
@@ -2000,11 +1810,6 @@ function buildYieldSummary({
     if (durationHours <= 0) {
       continue;
     }
-    const perceptionState = getPerceptionState(perceptionSettlement, state);
-    const tradingContext = createTradingFacilityContext({
-      stateRooms: state?.rooms || [],
-      perceptionState,
-    });
 
     for (const room of state?.rooms || []) {
       if (!YIELD_FACILITIES.has(String(room?.facility || "").trim())) {
@@ -2021,8 +1826,6 @@ function buildYieldSummary({
       const segment = createYieldSegment({
         room,
         durationHours,
-        tradingRosterById,
-        tradingContext,
         orundumCraftMaterial,
         allowMaaFallback,
       });
@@ -2055,8 +1858,6 @@ function buildYieldSummary({
   const tradingSettlements = buildTradingSettlements({
     states,
     cycleHours,
-    tradingRosterById,
-    perceptionSettlement,
     allowMaaFallback,
   });
   const droneTargetSettlement = buildDroneTargetSettlement({
@@ -2227,8 +2028,6 @@ export function summarizeRiicActualSchedule({
       droneOrdersByState,
       legacyTradingOperators: tradingOperators,
       orundumCraftMaterial,
-      perceptionSettlement: l79?.perceptionSettlement ??
-        settledPreview?.perceptionSettlement,
       allowMaaFallback,
     }),
   };

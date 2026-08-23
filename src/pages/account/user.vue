@@ -1,9 +1,16 @@
 <template>
   <div class="survey-login-page">
     <div v-show="userInfo.status<0">
-      <router-link to="/account/login">
-        <span style="font-size: 16px;color: white">登录</span>
-      </router-link>
+      <v-dialog v-model="loginDialog" max-width="400">
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" variant="text" color="white" text="登录"></v-btn>
+        </template>
+        <Login
+            dialog
+            @success="loginDialog = false"
+            @navigate="handleLoginNavigate"
+        ></Login>
+      </v-dialog>
     </div>
 
     <div v-show="userInfo.status>0">
@@ -17,7 +24,7 @@
 
         <v-list>
           <v-list-item>
-            <v-btn variant="text" text="个人中心" @click="router.push({name:'AccountHome'})">
+            <v-btn variant="text" text="个人中心" @click="router.push({name:'User Center'})">
             </v-btn>
           </v-list-item>
           <v-list-item @click="homeMenu=!homeMenu">
@@ -53,18 +60,25 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import {getUserInfo, userInfo} from "/src/utils/user/userInfo.js";
 import {useRouter} from "vue-router";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import Login from "/src/pages/account/login.vue";
 
 const router = useRouter();
 
 let homeMenu = ref(false);
+const loginDialog = ref(false);
 
 
 function getUserInfoByToken() {
   getUserInfo("User")
+}
+
+function handleLoginNavigate(routeName) {
+  loginDialog.value = false
+  router.push({name: routeName})
 }
 
 //登出

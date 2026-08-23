@@ -1251,7 +1251,28 @@
       "skillName": "我寻思能行",
       "elite": 2,
       "level": 1,
-      "effect": "进驻控制中枢时，如果Lancet-2进驻在发电站，发电站额外+2（仅影响设施数量）"
+      "effect": "进驻控制中枢时，如果Lancet-2进驻在发电站，发电站额外+2（仅影响设施数量）",
+      "resolvedEffects": [
+        {
+          "conditions": {
+            "roomOperatorRequirements": [
+              {
+                "facility": "power",
+                "operatorIds": [
+                  "char_285_medic2"
+                ],
+                "minCount": 1
+              }
+            ]
+          },
+          "target": {
+            "scope": "facilityState",
+            "roomType": "power"
+          },
+          "metric": "facilityCount",
+          "bonusCount": 2
+        }
+      ]
     },
     {
       "operatorId": "char_4166_varkis",
