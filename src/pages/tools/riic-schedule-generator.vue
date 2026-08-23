@@ -4527,6 +4527,7 @@ function applyRiicL79EfficiencyToPreview({ preview, settlement } = {}) {
             resourceChainAdditionalBonusPercent:
               l79Room.resourceChainAdditionalBonusPercent || 0,
             efficiencyMetrics: l79Room.efficiencyMetrics,
+            l79Settlement: l79Room.l79Settlement || null,
             l79Issues: l79Room.issues || [],
           };
         }),
@@ -4537,7 +4538,13 @@ function applyRiicL79EfficiencyToPreview({ preview, settlement } = {}) {
 
 const riicL79Settlement = computed(() => {
   const input = riicL79InputDebugState.value;
-  return input ? settleRiicMaaScheduleEfficiency(input) : null;
+  return input
+    ? settleRiicMaaScheduleEfficiency({
+        ...input,
+        orundumCraftMaterial:
+          scheduleExecutionSettings.orundumCraftMaterial,
+      })
+    : null;
 });
 const riicSchedulePreview = computed(() =>
   applyRiicL79EfficiencyToPreview({
@@ -9616,6 +9623,7 @@ onBeforeUnmount(() => {
           :actual-schedule-metrics="riicScheduleResultSnapshot.actual"
           :schedule-preview="riicScheduleResultSnapshot.preview"
           :l79-input="riicScheduleResultSnapshot.l79Input"
+          :l79-settlement="riicScheduleResultSnapshot.l79"
           :schedule-shifts="schedulePreviewShifts"
           :duplicate-operator-checks="riicScheduleDuplicateOperatorChecks"
           :format-layer3-operator-condition="

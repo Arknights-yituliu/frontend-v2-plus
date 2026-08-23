@@ -4,26 +4,13 @@ import '/src/assets/css/account/login.v2.scss'
 import userAPI from '/src/api/userInfo.js'
 import {createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
-
-
-const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
-const englishNumberRegex = /^[A-Za-z0-9]+$/;
-
-const accountRules = [
-  value => !!value || '不能为空',
-  value => chineseEnglishNumberRegex.test(value) || '账号仅可由汉字、数字、英文组成'
-]
-
-const passwordRules = [
-  value => !!value || '不能为空',
-  value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成'
-]
-
-const confirmPasswordRules = [
-  value => !!value || '不能为空',
-  value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成',
-  value => value===inputContent.value.password || '两次密码输入不一致'
-]
+import {getUserInfo} from "/src/utils/user/userInfo.js";
+import {
+  accountRules,
+  passwordRules,
+  validateAuthSubmission
+} from "/src/utils/user/authValidation.js";
+import {useVerificationCode} from "/src/utils/user/verificationCode.js";
 
 function getParam(method) {
   let param = {
@@ -34,15 +21,16 @@ function getParam(method) {
     param.userName = inputContent.value.userName
     param.password = inputContent.value.password
 
-    if (inputContent.value.email || '' !== inputContent.value.email) {
-      param.email = inputContent.value.email
+    const email = String(inputContent.value.email ?? '').trim()
+    if (email) {
+      param.email = email
       param.verificationCode = inputContent.value.verificationCode
     }
   }
 
   if ('email' === inputContent.value.accountType) {
-    param.email = inputContent.value.email
-    param.verificationCode = inputContent.value.verificationCode
+    param.email = String(inputContent.value.email ?? '').trim()
+    param.verificationCode = String(inputContent.value.verificationCode ?? '').trim()
   }
 
   return param
@@ -57,25 +45,34 @@ let inputContent = ref({
   hgToken: '',
   accountType: '',
 })
-
-
-function checkPassword() {
-  if (inputContent.value.confirmPassword.length > 2) {
-    if (inputContent.value.password !== inputContent.value.confirmPassword) {
-      return '两次密码不一致'
-    }
-  }
-}
-
-
-
 const router = useRouter()
+const isSubmitting = ref(false);
+const {
+  codeCountdown,
+  isSendingCode,
+  sendVerificationCode: sendCode
+} = useVerificationCode();
 
-function toRegister() {
-  const param = getParam()
-  userAPI.registerV3(param).then(response => {
-    localStorage.setItem("USER_TOKEN", response.data.token.toString());
-    createMessage({type:'success',text:'登录成功，即将转跳到我的干员导入流程'})
+async function toRegister() {
+  if (isSubmitting.value) {
+    return;
+  }
+
+  const validationError = validateAuthSubmission(inputContent.value, 'register');
+  if (validationError) {
+    createMessage({type: 'warning', text: validationError});
+    return;
+  }
+
+  isSubmitting.value = true;
+  try {
+    const param = getParam()
+    const response = await userAPI.registerV3(param);
+    const {token} = response.data;
+
+    localStorage.setItem("USER_TOKEN", token.toString());
+    await getUserInfo("Register");
+    createMessage({type:'success',text:'注册成功，即将跳转到我的干员导入流程'})
     setTimeout(() => {
       router.push({
         name: 'OperatorSurvey',
@@ -84,18 +81,17 @@ function toRegister() {
         }
       })
     }, 3000)
-  })
+  } catch (error) {
+    if (!error?.msg && !error?.data?.msg) {
+      createMessage({type: 'error', text: '注册失败，请稍后重试'});
+    }
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 
-function sendVerificationCode() {
-  const data = {
-    mailUsage: 'register',
-    email: inputContent.value.email
-  }
-  userAPI.sendVerificationCodeV2(data).then(response => {
-
-    createMessage({type:'success',text:'验证码发送成功'})
-  })
+function handleSendVerificationCode() {
+  return sendCode(inputContent.value.email, 'register');
 }
 
 
@@ -167,7 +163,6 @@ onMounted(() => {
                 label="确认密码"
                 placeholder="请再次输入密码"
                 density="comfortable"
-                :rules="confirmPasswordRules"
                 color="primary"
                 hint="密码仅可由数字、英文组成"
                 v-model="inputContent.confirmPassword"
@@ -188,8 +183,13 @@ onMounted(() => {
                 class="auth-field"
             >
               <template v-slot:append-inner>
-                <button class="auth-code-button" type="button" @click="sendVerificationCode">
-                  发送验证码
+                <button
+                    class="auth-code-button"
+                    type="button"
+                    :disabled="isSendingCode || codeCountdown > 0"
+                    @click="handleSendVerificationCode"
+                >
+                  {{ codeCountdown > 0 ? `${codeCountdown}s后重试` : isSendingCode ? '发送中...' : '发送验证码' }}
                 </button>
               </template>
             </v-text-field>
@@ -212,8 +212,13 @@ onMounted(() => {
                 class="auth-field"
             >
               <template v-slot:append-inner>
-                <button class="auth-code-button" type="button" @click="sendVerificationCode">
-                  发送验证码
+                <button
+                    class="auth-code-button"
+                    type="button"
+                    :disabled="isSendingCode || codeCountdown > 0"
+                    @click="handleSendVerificationCode"
+                >
+                  {{ codeCountdown > 0 ? `${codeCountdown}s后重试` : isSendingCode ? '发送中...' : '发送验证码' }}
                 </button>
               </template>
             </v-text-field>
@@ -235,6 +240,8 @@ onMounted(() => {
               text="注册"
               color="primary"
               class="auth-primary-action"
+              :loading="isSubmitting"
+              :disabled="isSubmitting"
           ></v-btn>
         </div>
       </v-card-text>

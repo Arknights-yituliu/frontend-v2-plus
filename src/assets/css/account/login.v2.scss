@@ -118,6 +118,12 @@
   text-underline-offset: 3px;
 }
 
+.auth-code-button:disabled {
+  color: rgba(var(--v-theme-on-surface), 0.38);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
 .auth-code-button {
   padding: 0 2px;
   white-space: nowrap;

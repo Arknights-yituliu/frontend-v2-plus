@@ -3,7 +3,7 @@ import {onMounted, ref} from "vue";
 import {createMessage} from "/src/utils/message";
 import userInfoAPI from "/src/api/userInfo"
 import "/src/assets/css/account/home.scss";
-import {userInfo} from '/src/utils/user/userInfo.js'
+import {clearUserSession, userInfo} from '/src/utils/user/userInfo.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {operatorTableV2} from '/src/utils/gameData.js'
 import {useRouter} from "vue-router";
@@ -141,7 +141,7 @@ function updateOrBindEmail(){
  * 退出登录
  */
 function logout() {
-  localStorage.removeItem('USER_TOKEN')
+  clearUserSession()
   setTimeout(() => {
     location.reload()
   }, 1000);

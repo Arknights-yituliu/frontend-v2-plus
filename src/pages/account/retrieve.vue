@@ -4,6 +4,12 @@ import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/account/login.v2.scss'
 import {createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
+import {
+  passwordRules,
+  validatePasswordReset,
+  validateRecoveryVerification
+} from "/src/utils/user/authValidation.js";
+import {useVerificationCode} from "/src/utils/user/verificationCode.js";
 
 const HYPERGRYPH_LINK = 'https://ak.hypergryph.com/user/home'
 const HYPERGRYPH_TOKEN_API = 'https://web-api.hypergryph.com/account/info/hg'
@@ -12,16 +18,9 @@ const SKLAND_LINK = 'https://www.skland.com/'
 const CONSOLE_CODE = 'copy(localStorage.getItem(\'SK_OAUTH_CRED_KEY\')+\',\'+localStorage.getItem(\'SK_TOKEN_CACHE_KEY\'))'
 
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
-const englishNumberRegex = /^[A-Za-z0-9]+$/;
-
-const passwordRules = [
-  value => !!value || '不能为空',
-  value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成'
-]
 
 const confirmPasswordRules = [
-  value => !!value || '不能为空',
-  value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成',
+  ...passwordRules,
   value => value === inputContent.value.password || '两次密码输入不一致'
 ]
 
@@ -30,6 +29,12 @@ function openLinkOnNewPage(url) {
 }
 
 let currentStepper = ref("sendEmail")
+const isSubmitting = ref(false);
+const {
+  codeCountdown,
+  isSendingCode,
+  sendVerificationCode: sendCode
+} = useVerificationCode();
 
 function optionLineClass(type) {
   if (type === inputContent.value.accountType) {
@@ -65,22 +70,8 @@ function inputTipDisplay(inputValue) {
 
 const router = useRouter()
 
-function sendVerificationCode() {
-  const data = {
-    mailUsage: 'login',
-    email: inputContent.value.email
-  }
-  userAPI.sendVerificationCodeV2(data).then(response => {
-    createMessage({type: 'success', text: '验证码发送成功'})
-  })
-}
-
-function checkPassword() {
-  if (inputContent.value.confirmPassword.length > 2) {
-    if (inputContent.value.password !== inputContent.value.confirmPassword) {
-      return '两次密码不一致'
-    }
-  }
+function handleSendVerificationCode() {
+  return sendCode(inputContent.value.email, 'login');
 }
 
 let recoveryProgress = ref('left:0px')
@@ -95,28 +86,63 @@ function setRecoveryProgress(step) {
  * 发起重置账号密码的请求，获取一个临时token，该临时token用于验证用户是否可修改密码
  * @param step 当前步骤
  */
-function toRetrieveAuthentication(step) {
-  userAPI.retrieveAuthentication(inputContent.value).then(response => {
+async function toRetrieveAuthentication(step) {
+  if (isSubmitting.value) {
+    return;
+  }
+
+  const validationError = validateRecoveryVerification(inputContent.value);
+  if (validationError) {
+    createMessage({type: 'warning', text: validationError});
+    return;
+  }
+
+  isSubmitting.value = true;
+  try {
+    const response = await userAPI.retrieveAuthentication(inputContent.value);
     nextStep(step)
     inputContent.value.token = response.data.tmpToken
     inputContent.value.userName = response.data.userName
     createMessage({type: 'success', text: '请在10分钟内修改您的密码'})
-  })
+  } catch (error) {
+    if (!error?.msg && !error?.data?.msg) {
+      createMessage({type: 'error', text: '验证失败，请稍后重试'});
+    }
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 
 /**
  * 重置密码
  * @param step 当前步骤
  */
-function toResetPassword(step) {
-  console.log(step)
-  userAPI.resetPassword(inputContent.value).then(response => {
+async function toResetPassword(step) {
+  if (isSubmitting.value) {
+    return;
+  }
+
+  const validationError = validatePasswordReset(inputContent.value);
+  if (validationError) {
+    createMessage({type: 'warning', text: validationError});
+    return;
+  }
+
+  isSubmitting.value = true;
+  try {
+    const response = await userAPI.resetPassword(inputContent.value);
     nextStep(step)
     localStorage.setItem("USER_TOKEN", response.data.token.toString());
     setTimeout(() => {
       router.push({name: "User Center"})
     }, 3000)
-  })
+  } catch (error) {
+    if (!error?.msg && !error?.data?.msg) {
+      createMessage({type: 'error', text: '密码设置失败，请稍后重试'});
+    }
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 
 
@@ -190,8 +216,13 @@ onMounted(() => {
                       class="auth-field"
                   >
                     <template #append-inner>
-                      <button class="auth-code-button" type="button" @click="sendVerificationCode">
-                        发送验证码
+                      <button
+                          class="auth-code-button"
+                          type="button"
+                          :disabled="isSendingCode || codeCountdown > 0"
+                          @click="handleSendVerificationCode"
+                      >
+                        {{ codeCountdown > 0 ? `${codeCountdown}s后重试` : isSendingCode ? '发送中...' : '发送验证码' }}
                       </button>
                     </template>
                   </v-text-field>
@@ -211,6 +242,8 @@ onMounted(() => {
                       text="下一步"
                       class="auth-primary-action"
                       @click="toRetrieveAuthentication('resetPassword')"
+                      :loading="isSubmitting"
+                      :disabled="isSubmitting"
                   ></v-btn>
                 </div>
               </v-stepper-window>
@@ -251,6 +284,8 @@ onMounted(() => {
                       text="设置新密码"
                       class="auth-primary-action"
                       @click="toResetPassword('resetSuccessful')"
+                      :loading="isSubmitting"
+                      :disabled="isSubmitting"
                   ></v-btn>
                 </div>
               </v-stepper-window>

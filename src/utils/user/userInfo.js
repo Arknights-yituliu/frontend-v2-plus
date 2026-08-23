@@ -30,6 +30,11 @@ async function getUserInfo(page,errorMessage=false) {
     return info
 }
 
+function clearUserSession() {
+    localStorage.removeItem("USER_TOKEN");
+    localStorage.removeItem("UID");
+}
+
 
 function getUid(){
     let uid = localStorage.getItem("UID");
@@ -52,4 +57,4 @@ function getUserTokenV2() {
     return `Authorization${item}`
 }
 
-export {getUserInfo, userInfo,getUid,getUserTokenV2}
+export {getUserInfo, userInfo,getUid,getUserTokenV2,clearUserSession}

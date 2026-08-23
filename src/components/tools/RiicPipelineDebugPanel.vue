@@ -94,6 +94,10 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  l79Settlement: {
+    type: Object,
+    default: null,
+  },
   scheduleShifts: {
     type: Array,
     default: () => [],
@@ -148,6 +152,15 @@ const rosterRows = computed(() =>
     ),
 );
 
+const l79SettlementRoomRows = computed(() =>
+  (props.l79Settlement?.states || []).flatMap((state, stateIndex) =>
+    (state?.rooms || []).map((room) => ({
+      ...room,
+      stateIndex,
+    })),
+  ),
+);
+
 function getOperatorName(charId) {
   const operatorId = String(charId || "").trim();
   return props.operatorTable?.[operatorId]?.name || operatorId || "--";
@@ -167,6 +180,32 @@ function formatNumber(value) {
     return "--";
   }
   return Number.isInteger(number) ? String(number) : number.toFixed(1);
+}
+
+function formatL79Flow(flow) {
+  const labels = {
+    lmd: "龙门币",
+    exp: "经验",
+    gold: "赤金",
+    vgold: "虚拟赤金",
+    orundum: "合成玉",
+    shard: "源石碎片",
+    orirock: "固源岩",
+    device: "装置",
+    recruitmentRefresh: "公招刷新",
+  };
+  return (
+    Object.entries(flow || {})
+      .filter(
+        ([, value]) =>
+          Number.isFinite(Number(value)) && Number(value) !== 0,
+      )
+      .map(
+        ([key, value]) =>
+          `${labels[key] || key} ${formatNumber(value)}`,
+      )
+      .join("；") || "无"
+  );
 }
 
 function formatJson(value) {
@@ -2204,6 +2243,53 @@ const droneTableDebug = computed(() => {
             <summary>完整 L79 入参 JSON</summary>
             <pre>{{ formatJson(l79Input) }}</pre>
           </details>
+        </details>
+
+        <details
+          v-if="l79Settlement?.states?.length"
+          class="pipeline-nested"
+        >
+          <summary>
+            L79 统一资源流与无人机系数
+            <span>状态：{{ l79Settlement.calculationStatus || "--" }}</span>
+          </summary>
+          <div class="pipeline-actual-room-list">
+            <article
+              v-for="room in l79SettlementRoomRows"
+              :key="`${room.stateIndex}:${room.roomId}`"
+              class="pipeline-actual-room"
+              :class="{ unavailable: room.calculationStatus !== 'calculated' }"
+            >
+              <header>
+                <strong>
+                  班段 {{ room.stateIndex + 1 }} /
+                  {{ room.type || "--" }} / {{ room.productionId || "all" }}
+                </strong>
+                <span>{{ room.calculationStatus }}</span>
+              </header>
+              <small>
+                效率：
+                {{
+                  Object.entries(room.efficiency || {})
+                    .filter(([, value]) => value !== null)
+                    .map(([key, value]) => `${key} ${formatPercent(value)}`)
+                    .join("；") || "无"
+                }}
+              </small>
+              <small>
+                每小时：{{ formatL79Flow(room.hourly) }}
+              </small>
+              <small>
+                每架无人机：{{ formatL79Flow(room.perDrone) }}
+              </small>
+              <small v-if="room.operatorIds?.length">
+                在岗：{{ formatDebugOperatorIds(room.operatorIds) }}
+              </small>
+              <small v-for="(message, index) in room.message || []" :key="index">
+                {{ message.level }}：{{ message.text }}
+              </small>
+            </article>
+          </div>
         </details>
 
         <template v-if="actualScheduleMetrics">

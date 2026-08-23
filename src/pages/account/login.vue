@@ -5,6 +5,12 @@ import '/src/assets/css/account/login.v2.scss'
 import { createMessage} from "/src/utils/message.js";
 import {useRoute, useRouter} from "vue-router";
 import {getUserInfo} from "/src/utils/user/userInfo.js";
+import {
+  accountRules,
+  passwordRules,
+  validateAuthSubmission
+} from "/src/utils/user/authValidation.js";
+import {useVerificationCode} from "/src/utils/user/verificationCode.js";
 
 const props = defineProps({
   dialog: {
@@ -18,21 +24,12 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['success', 'navigate'])
-
-const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
-const englishNumberRegex = /^[A-Za-z0-9]+$/;
-
-const accountRules = [
-  value => !!value || '不能为空',
-  value => chineseEnglishNumberRegex.test(value) || '账号仅可由汉字、数字、英文组成'
-]
-
-const passwordRules = [
-  value => !!value || '不能为空',
-  value => englishNumberRegex.test(value) || '密码仅可由数字、英文组成'
-]
-
-
+const isSubmitting = ref(false);
+const {
+  codeCountdown,
+  isSendingCode,
+  sendVerificationCode: sendCode
+} = useVerificationCode();
 
 let inputContent = ref({
   userName: '',
@@ -54,10 +51,22 @@ function toRegister(){
 }
 
 async function toLogin() {
-  const response = await userAPI.loginV3(inputContent.value)
-  const {token,uid} = response.data
-  localStorage.setItem("USER_TOKEN", token);
-  localStorage.setItem("UID",uid);
+  if (isSubmitting.value) {
+    return;
+  }
+
+  const validationError = validateAuthSubmission(inputContent.value, 'login');
+  if (validationError) {
+    createMessage({type: 'warning', text: validationError});
+    return;
+  }
+
+  isSubmitting.value = true;
+  try {
+    const response = await userAPI.loginV3(inputContent.value)
+    const {token,uid} = response.data
+    localStorage.setItem("USER_TOKEN", token);
+    localStorage.setItem("UID",uid);
 
     if (props.dialog) {
       createMessage({type:'success',text:'登录成功'})
@@ -77,6 +86,13 @@ async function toLogin() {
       // router.push({name: 'IMPORT_BY_SKLAND'})
       window.location.href = '/';
     }, 2000)
+  } catch (error) {
+    if (!error?.msg && !error?.data?.msg) {
+      createMessage({type: 'error', text: '登录失败，请稍后重试'});
+    }
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 
 function toRetrieve() {
@@ -91,14 +107,8 @@ function toRetrieve() {
 const router = useRouter()
 const route = useRoute()
 
-function sendVerificationCode() {
-  const data = {
-    mailUsage: 'login',
-    email: inputContent.value.email
-  }
-  userAPI.sendVerificationCodeV2(data).then(response => {
-    createMessage({type:'success',text:'验证码发送成功'})
-  })
+function handleSendVerificationCode() {
+  return sendCode(inputContent.value.email, 'login');
 }
 
 </script>
@@ -192,8 +202,13 @@ function sendVerificationCode() {
                   class="auth-field"
               >
                 <template v-slot:append-inner>
-                  <button class="auth-code-button" type="button" @click="sendVerificationCode">
-                    发送验证码
+                  <button
+                      class="auth-code-button"
+                      type="button"
+                      :disabled="isSendingCode || codeCountdown > 0"
+                      @click="handleSendVerificationCode"
+                  >
+                    {{ codeCountdown > 0 ? `${codeCountdown}s后重试` : isSendingCode ? '发送中...' : '发送验证码' }}
                   </button>
                 </template>
               </v-text-field>
@@ -219,6 +234,8 @@ function sendVerificationCode() {
                 text="登录"
                 color="primary"
                 class="auth-primary-action"
+                :loading="isSubmitting"
+                :disabled="isSubmitting"
             ></v-btn>
           </div>
         </div>

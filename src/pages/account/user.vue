@@ -61,7 +61,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {getUserInfo, userInfo} from "/src/utils/user/userInfo.js";
+import {clearUserSession, getUserInfo, userInfo} from "/src/utils/user/userInfo.js";
 import {useRouter} from "vue-router";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import Login from "/src/pages/account/login.vue";
@@ -83,7 +83,7 @@ function handleLoginNavigate(routeName) {
 
 //登出
 function logout() {
-  localStorage.removeItem('USER_TOKEN')
+  clearUserSession()
   setTimeout(() => {
     location.reload()
   }, 1000);

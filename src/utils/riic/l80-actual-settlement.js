@@ -296,18 +296,156 @@ function createYieldRoomSummary(room) {
   };
 }
 
+function createL79TradingFlow(room, durationHours) {
+  const settlement = room?.l79Settlement;
+  const hourly = settlement?.hourly || {};
+  const calculation = room?.tradingSettlement?.calculation || null;
+  if (settlement?.calculationStatus !== "calculated") {
+    return null;
+  }
+
+  const product = String(room?.product || "").trim();
+  return {
+    type: calculation?.type || "normal",
+    lmdOutput:
+      product === "lmd" ? Number(hourly.lmd || 0) * durationHours : 0,
+    orundumOutput:
+      product === "orundum"
+        ? Number(hourly.orundum || 0) * durationHours
+        : 0,
+    goldConsumption:
+      product === "lmd"
+        ? Math.max(0, -Number(hourly.gold || 0) * durationHours)
+        : 0,
+    virtualGoldOutput:
+      product === "lmd" ? Number(hourly.vgold || 0) * durationHours : 0,
+    shardConsumption:
+      product === "orundum"
+        ? Math.max(0, -Number(hourly.shard || 0) * durationHours)
+        : 0,
+  };
+}
+
+function createL79ManufactureFlow(room, durationHours, orundumCraftMaterial) {
+  const settlement = room?.l79Settlement;
+  const hourly = settlement?.hourly || {};
+  if (
+    settlement?.calculationStatus !== "calculated" ||
+    String(room?.facility || "").trim() !== "manufacture" ||
+    String(room?.product || "").trim() !== "orundum"
+  ) {
+    return null;
+  }
+
+  const craftMaterial =
+    Number(hourly.device || 0) < 0 ? "device" : orundumCraftMaterial;
+  const flow = createOrundumManufactureFlow(
+    Number(hourly.shard || 0) * durationHours,
+    craftMaterial,
+  );
+  if (!flow) {
+    return null;
+  }
+
+  return {
+    ...flow,
+    lmdConsumption: Math.max(
+      0,
+      -Number(hourly.lmd || 0) * durationHours,
+    ),
+  };
+}
+
+function createL79YieldSegment({
+  room,
+  durationHours,
+  orundumCraftMaterial,
+} = {}) {
+  if (!room?.l79Settlement) {
+    return null;
+  }
+
+  const settlement = room.l79Settlement;
+  const facility = String(room?.facility || "").trim();
+  const product = String(room?.product || "").trim();
+  const meta = getRiicRoomYieldMeta(room);
+  const calculated = settlement.calculationStatus === "calculated";
+  const tradingFlow =
+    facility === "trading"
+      ? createL79TradingFlow(room, durationHours)
+      : null;
+  const orundumManufactureFlow = createL79ManufactureFlow(
+    room,
+    durationHours,
+    orundumCraftMaterial,
+  );
+  const directOutput =
+    facility === "trading"
+      ? tradingFlow
+        ? product === "orundum"
+          ? tradingFlow.orundumOutput
+          : tradingFlow.lmdOutput
+        : null
+      : facility === "manufacture"
+        ? product === "orundum"
+          ? Number(settlement.hourly?.shard || 0) * durationHours
+          : product === "experience"
+            ? Number(settlement.hourly?.exp || 0) * durationHours
+            : product === "gold"
+              ? Number(settlement.hourly?.gold || 0) * durationHours
+              : null
+        : facility === "hire"
+          ? Number(settlement.hourly?.recruitmentRefresh || 0) *
+            durationHours
+          : null;
+  const unavailableReason = calculated
+    ? directOutput === null && meta
+      ? "unsupportedProduct"
+      : ""
+    : settlement.message?.[0]?.text || "l79SettlementUnavailable";
+
+  return {
+    durationHours,
+    calculated: calculated && !unavailableReason,
+    unavailableReason,
+    output:
+      calculated && !unavailableReason && Number.isFinite(directOutput)
+        ? directOutput
+        : null,
+    tradingFlow,
+    tradingCalculation: room?.tradingSettlement?.calculation || null,
+    calculationMethod: "L79统一资源流",
+    fallbackDiagnostics: null,
+    orundumManufactureFlow,
+  };
+}
+
 function createYieldSegment({
   room,
   durationHours,
   orundumCraftMaterial,
   allowMaaFallback = false,
 }) {
+  const tradingRoom = isTradingRoom(room);
+  const maaFallbackEligible =
+    allowMaaFallback &&
+    tradingRoom &&
+    String(room?.product || "").trim() === "lmd" &&
+    room?.tradingSettlement?.calculation?.error === "notSupported";
+  const l79Segment = createL79YieldSegment({
+    room,
+    durationHours,
+    orundumCraftMaterial,
+  });
+  if (l79Segment && !maaFallbackEligible) {
+    return l79Segment;
+  }
+
   const efficiency = toFinitePercent(room?.efficiency);
   const efficiencyCalculated =
     efficiency !== null &&
     room?.efficiencyMetrics?.actual?.status === "calculated";
   const meta = getRiicRoomYieldMeta(room);
-  const tradingRoom = isTradingRoom(room);
   const usesDirectEfficiency = !tradingRoom;
   const dailyRate = usesDirectEfficiency
     ? getRiicReferenceDailyRate(room, meta)
@@ -316,10 +454,7 @@ function createYieldSegment({
     ? room?.tradingSettlement?.calculation || null
     : null;
   const fallbackTradingCalculation =
-    allowMaaFallback &&
-    tradingCalculation?.error === "notSupported" &&
-    tradingRoom &&
-    String(room?.product || "").trim() === "lmd"
+    maaFallbackEligible
       ? createMaaFallbackTradingCalculation(room, durationHours)
       : null;
   const effectiveTradingCalculation =
@@ -1380,6 +1515,15 @@ export function createDroneTargetBenefitSegment({
   tradingRosterById,
   orundumCraftMaterial,
 }) {
+  const l79Segment = createL79DroneTargetBenefitSegment({
+    room,
+    droneOutput,
+    orundumCraftMaterial,
+  });
+  if (l79Segment) {
+    return l79Segment;
+  }
+
   const facility = String(room?.facility || "").trim();
   const product = String(room?.product || "").trim();
   const droneCount = Number(droneOutput);
@@ -1787,6 +1931,104 @@ function resolveDronePlanByState({
         ? droneOrdersByState?.[stateIndex]
         : "retain";
     }),
+  };
+}
+
+function createL79DroneTargetBenefitSegment({
+  room,
+  droneOutput,
+  orundumCraftMaterial,
+} = {}) {
+  if (!room?.l79Settlement) {
+    return null;
+  }
+
+  const settlement = room.l79Settlement;
+  const facility = String(room?.facility || "").trim();
+  const product = String(room?.product || "").trim();
+  const droneCount = Number(droneOutput);
+  const meta = getRiicRoomYieldMeta(room);
+  const calculated =
+    settlement.calculationStatus === "calculated" &&
+    Number.isFinite(droneCount) &&
+    droneCount >= 0;
+  const hourly = settlement.perDrone || {};
+  const output =
+    facility === "trading"
+      ? product === "orundum"
+        ? Number(hourly.orundum || 0) * droneCount
+        : product === "lmd"
+          ? Number(hourly.lmd || 0) * droneCount
+          : null
+      : facility === "manufacture"
+        ? product === "orundum"
+          ? Number(hourly.shard || 0) * droneCount
+          : product === "experience"
+            ? Number(hourly.exp || 0) * droneCount
+            : product === "gold"
+              ? Number(hourly.gold || 0) * droneCount
+              : null
+        : null;
+  const tradingFlow =
+    facility === "trading" && calculated
+      ? {
+          type: room?.tradingSettlement?.calculation?.type || "normal",
+          lmdOutput:
+            product === "lmd" ? Number(hourly.lmd || 0) * droneCount : 0,
+          orundumOutput:
+            product === "orundum"
+              ? Number(hourly.orundum || 0) * droneCount
+              : 0,
+          goldConsumption:
+            product === "lmd"
+              ? Math.max(0, -Number(hourly.gold || 0) * droneCount)
+              : 0,
+          virtualGoldOutput:
+            product === "lmd" ? Number(hourly.vgold || 0) * droneCount : 0,
+          shardConsumption:
+            product === "orundum"
+              ? Math.max(0, -Number(hourly.shard || 0) * droneCount)
+              : 0,
+        }
+      : null;
+  const manufactureFlow =
+    facility === "manufacture" &&
+    product === "orundum" &&
+    calculated
+      ? {
+          lmdConsumption: Math.max(
+            0,
+            -Number(hourly.lmd || 0) * droneCount,
+          ),
+          craftMaterial:
+            Number(hourly.device || 0) < 0 ? "device" : orundumCraftMaterial,
+          craftMaterialLabel:
+            Number(hourly.device || 0) < 0 ? "装置" : "固源岩",
+          craftMaterialConsumption: Math.max(
+            0,
+            -(
+              Number(hourly.device || 0) ||
+              Number(hourly.orirock || 0)
+            ) * droneCount,
+          ),
+        }
+      : null;
+  const unavailableReason =
+    !calculated || output === null || !meta
+      ? settlement.message?.[0]?.text || "l79SettlementUnavailable"
+      : "";
+
+  return {
+    calculated: !unavailableReason,
+    unavailableReason,
+    acceleratedHours: calculated ? droneCount * DRONE_ACCELERATION_HOURS : null,
+    resource: meta?.resource || "",
+    resourceLabel: meta?.label || "",
+    unit: meta?.unit || "",
+    output: !unavailableReason ? output : null,
+    tradingFlow,
+    tradingCalculation: room?.tradingSettlement?.calculation || null,
+    orundumManufactureFlow: manufactureFlow,
   };
 }
 
