@@ -31,6 +31,10 @@ const SKLAND_LINK = 'https://www.skland.com/index'
 const CONSOLE_CODE = "copy(localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage.getItem('SK_TOKEN_CACHE_KEY')),console.log('已复制到粘贴板')"
 const SKLAND_ACCOUNT_SESSION_STORAGE_KEY = 'skland_account_data'
 
+// 官网导入相关
+const OFFICIAL_SITE_LINK = 'https://ak.hypergryph.com/#index'
+const HG_ACCOUNT_INFO_URL = 'https://web-api.hypergryph.com/account/info/hg'
+
 const sklandImportDialog = ref(false)
 const sklandInputText = ref('')
 const sklandLoading = ref(false)
@@ -38,6 +42,12 @@ const sklandImportStep = ref(1) // 当前导入步骤
 const sklandCred = ref('')
 const sklandToken = ref('')
 const playBindingList = ref([])
+// 导入方式 Tab：skland-从森空岛导入 / official-官网导入（默认官网导入）
+const sklandImportTab = ref('official')
+// 官网导入：用户粘贴的 account/info/hg 返回内容
+const officialTokenText = ref('')
+// 官网导入步骤：1-登录官网 / 2-输入内容
+const officialImportStep = ref(1)
 
 // 检查用户是否登录
 const isUserLoggedIn = computed(() => {
@@ -65,6 +75,9 @@ function openSklandImportDialog() {
   playBindingList.value = []
   sklandInputText.value = ''
   sklandImportStep.value = 1 // 重置步骤
+  sklandImportTab.value = 'official' // 默认选中官网导入
+  officialTokenText.value = ''
+  officialImportStep.value = 1 // 重置官网导入步骤
 }
 
 function openImportFlowFromRoute() {
@@ -111,6 +124,60 @@ async function getPlayerBindingBySkland() {
     const playBinding = await SklandAPI.getPlayBindingV2('', '', cred, token)
     playBindingList.value = playBinding.bindingList
     
+    if (playBinding.bindingList.length === 0) {
+      createMessage({ type: 'warning', text: '未找到绑定的明日方舟账号' })
+    }
+  } catch (error) {
+    console.error(error)
+    createMessage({ type: 'error', text: '获取账号信息失败' })
+  } finally {
+    sklandLoading.value = false
+  }
+}
+
+/**
+ * 官网导入：解析第二步粘贴的 JSON（account/info/hg 返回内容）提取 token，
+ * 调用后端 /survey/hg/player-binding 换取森空岛 cred/secret，
+ * 再自动拉取绑定的明日方舟账号列表
+ */
+async function getPlayerBindingByOfficialToken() {
+  if (!ensureSklandSyncLogin()) {
+    return
+  }
+
+  if (!officialTokenText.value.trim()) {
+    createMessage({ type: 'error', text: '请输入 account/info/hg 返回的内容' })
+    return
+  }
+
+  // 解析粘贴的 JSON，token 位于 data.content 字段
+  let hgToken = ''
+  try {
+    const parsed = JSON.parse(officialTokenText.value)
+    hgToken = parsed?.data?.content || ''
+  } catch (e) {
+    createMessage({ type: 'error', text: '内容格式不正确，请复制 account/info/hg 返回的完整 JSON' })
+    return
+  }
+
+  if (!hgToken) {
+    createMessage({ type: 'error', text: '未找到 token 字段，请检查复制的内容' })
+    return
+  }
+
+  sklandLoading.value = true
+  try {
+    // 后端用官网 token 换取森空岛凭证，返回 { cred, secret }
+    const result = await operatorDataAPI.getCredByHgToken({ token: hgToken })
+    const { cred, token } = result.data
+    sklandCred.value = cred
+    sklandToken.value = token
+    console.log(result.data)
+    // 用换取的凭证自动拉取账号列表
+    console.log(cred, token)
+    const playBinding = await SklandAPI.getPlayBindingV2('', '', cred, token)
+    playBindingList.value = playBinding.bindingList
+
     if (playBinding.bindingList.length === 0) {
       createMessage({ type: 'warning', text: '未找到绑定的明日方舟账号' })
     }
@@ -992,16 +1059,29 @@ onBeforeUnmount(() => {
       </v-card>
     </v-dialog>
 
-    <!-- 森空岛导入对话框 -->
+    <!-- 干员数据导入对话框（森空岛导入 / 官网导入） -->
     <v-dialog v-model="sklandImportDialog" max-width="800" persistent>
       <v-card>
         <v-card-title class="d-flex justify-space-between align-center">
-          <span>从森空岛导入数据</span>
+          <span>干员数据导入</span>
           <v-btn icon variant="text" @click="sklandImportDialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-card-text>
+          <v-tabs v-model="sklandImportTab" grow>
+            <v-tab value="official">
+              <v-icon start>mdi-web</v-icon>
+              官网导入
+            </v-tab>
+            <v-tab value="skland">
+              <v-icon start>mdi-cloud-download</v-icon>
+              从森空岛导入
+            </v-tab>
+          </v-tabs>
+
+          <v-window v-model="sklandImportTab" class="mt-4">
+            <v-window-item value="skland">
           <v-stepper v-model="sklandImportStep" :items="['登录森空岛', '获取凭证', '选择账号']" alt-labels editable>
             <template v-slot:item.1>
               <v-card flat>
@@ -1101,6 +1181,93 @@ onBeforeUnmount(() => {
               </v-card>
             </template>
           </v-stepper>
+            </v-window-item>
+
+            <!-- 官网导入：两步流程，登录官网获取内容 -> 粘贴内容获取账号列表 -->
+            <v-window-item value="official">
+              <v-stepper v-model="officialImportStep" :items="['登录官网', '输入内容']" alt-labels editable>
+                <template v-slot:item.1>
+                  <v-card flat>
+                    <v-card-text class="text-center">
+                      <v-alert
+                          v-if="!hasStoredUserToken()"
+                          :icon="false"
+                          color="warning"
+                          variant="tonal"
+                          class="mb-4 text-left"
+                          density="compact"
+                      >
+                        当前未登录一图流账号，登录后才能获取账号列表并同步到我的干员。
+                      </v-alert>
+                      <p class="mb-4">首先登录明日方舟官网</p>
+                      <v-btn color="primary" @click="openLinkOnNewPage(OFFICIAL_SITE_LINK)">
+                        <v-icon>mdi-open-in-new</v-icon>
+                        打开明日方舟官网
+                      </v-btn>
+                      <p class="mt-4 mb-2">登录后访问以下地址，将返回的内容全部复制：</p>
+                      <v-alert :icon="false" color="primary" variant="tonal" class="my-4">
+                        <code style="word-break: break-all;">{{ HG_ACCOUNT_INFO_URL }}</code>
+                      </v-alert>
+                      <div class="text-center">
+                        <v-btn color="primary" variant="outlined" @click="copyText(HG_ACCOUNT_INFO_URL)" class="mx-2">
+                          <v-icon>mdi-content-copy</v-icon>
+                          复制访问地址
+                        </v-btn>
+                        <v-btn color="primary" @click="openLinkOnNewPage(HG_ACCOUNT_INFO_URL)" class="mx-2">
+                          <v-icon>mdi-open-in-new</v-icon>
+                          直接访问
+                        </v-btn>
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </template>
+
+                <template v-slot:item.2>
+                  <v-card flat>
+                    <v-card-text>
+                      <p class="mb-4">将复制的内容粘贴到下面的输入框中</p>
+                      <v-text-field
+                          v-model="officialTokenText"
+                          label="粘贴返回内容"
+                          variant="outlined"
+                          density="compact"
+                          hide-details
+                          class="mb-4"
+                      ></v-text-field>
+                      <v-btn
+                          color="primary"
+                          @click="getPlayerBindingByOfficialToken"
+                          :loading="sklandLoading"
+                          block
+                      >
+                        获取账号列表
+                      </v-btn>
+
+                      <div v-if="playBindingList.length > 0" class="mt-4">
+                        <p class="mb-2">选择要导入的账号：</p>
+                        <v-btn
+                            v-for="(binding, index) in playBindingList"
+                            :key="index"
+                            color="success"
+                            variant="tonal"
+                            block
+                            class="mb-2 text-left"
+                            style="height: auto; padding: 12px;"
+                            @click="getPlayerDataAndSync(binding)"
+                            :loading="sklandLoading"
+                        >
+                          <div style="width: 100%;">
+                            <div class="font-weight-bold">{{ binding.nickName }}</div>
+                            <div class="text-caption">区服：{{ binding.channelName }} | UID: {{ binding.uid }}</div>
+                          </div>
+                        </v-btn>
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </template>
+              </v-stepper>
+            </v-window-item>
+          </v-window>
         </v-card-text>
       </v-card>
     </v-dialog>

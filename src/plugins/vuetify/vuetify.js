@@ -3,6 +3,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
+import { zhHans } from 'vuetify/locale'
 
 const myCustomLightTheme = {
     dark: false,
@@ -46,6 +47,11 @@ const myCustomLightTheme = {
 }
 
 const vuetify = createVuetify({
+    locale: {
+        locale: 'zhHans',
+        fallback: 'zhHans',
+        messages: { zhHans },
+    },
     theme: {
         defaultTheme: 'dark',
         themes: {

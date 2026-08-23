@@ -32,6 +32,15 @@ export default {
         })
     },
 
+    getCredByHgToken(data){
+        return request({
+            url: `/survey/hg/cred-token`,
+            method: "post",
+            data: data,
+        })
+    },
+
+    
 
     getPlayBindingListByHgToken(data){
         return request({
