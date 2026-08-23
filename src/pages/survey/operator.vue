@@ -1226,6 +1226,9 @@ onBeforeUnmount(() => {
                   <v-card flat>
                     <v-card-text>
                       <p class="mb-4">将复制的内容粘贴到下面的输入框中</p>
+                      <v-alert :icon="false" color="warning" variant="tonal" class="mb-4" density="compact">
+                        为保障您的账号安全，请在导入后退出明日方舟官网登录
+                      </v-alert>
                       <v-text-field
                           v-model="officialTokenText"
                           label="粘贴返回内容"
