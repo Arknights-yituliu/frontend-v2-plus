@@ -22,7 +22,7 @@ import '/src/assets/css/atomic/atomic.scss'
 
 import Navigation from '/src/components/layout/Navigation.vue'
 import PageTracker from '/src/components/layout/PageTracker.vue'
-import {useTheme} from 'vuetify'
+import {useTheme, useDisplay} from 'vuetify'
 
 import User from '/src/pages/account/user.vue'
 import {computed, onMounted, ref, watch} from "vue";
@@ -52,6 +52,9 @@ const themeOverrides = {
 
 
 const theme = useTheme()
+
+/** 是否移动端（用于隐藏顶栏页面标题等响应式处理） */
+const {mobile} = useDisplay()
 
 let customTheme = ref("")
 let drawer = ref(true)
@@ -152,7 +155,8 @@ function openNewPage(url) {
   window.open(url)
 }
 
-watch(currentPath, (newPath, oldPath) => {  pageTitle.value = resolvePageTitle(newPath, route.meta?.title)
+watch(currentPath, (newPath, oldPath) => {
+  pageTitle.value = resolvePageTitle(newPath, route.meta?.title)
 
   if (route.name === '材料统计') {
     drawer.value = false
@@ -231,13 +235,17 @@ const buildTime = import.meta.env.BUILD_TIME;
           <template v-slot:prepend>
             <v-app-bar-nav-icon @click="drawer=!drawer"></v-app-bar-nav-icon>
           </template>
-          <v-app-bar-title>{{ pageTitle }}
+          <!-- 移动端不显示页面名称 -->
+          <v-app-bar-title v-if="!mobile">{{ pageTitle }}
           </v-app-bar-title>
           <div class="app-bar-content">
             <v-btn text="反馈" variant="text" @click="feedbackPopupVisible=true"></v-btn>
             <div class="app-bar-content-spacer"/>
-            <v-icon icon="mdi-theme-light-dark" @click="changeTheme"></v-icon>
+            <!-- 宽度低于 600px 时隐藏（CSS 媒体查询），此时日夜间切换在用户下拉菜单内 -->
+            <v-icon class="theme-toggle-desktop" icon="mdi-theme-light-dark" @click="changeTheme"></v-icon>
             <div class="app-bar-content-spacer"/>
+            <!-- 中英文切换暂时隐藏，恢复时移除外层 template v-if="false" 即可 -->
+            <template v-if="false">
             <v-menu>
               <template v-slot:activator="{ props }">
                 <!--              <v-icon icon="mdi-translate" size="28" v-bind="props" >-->
@@ -254,8 +262,9 @@ const buildTime = import.meta.env.BUILD_TIME;
                 </v-list-item>
               </v-list>
             </v-menu>
+            </template>
             <div class="app-bar-content-spacer"/>
-            <User></User>
+            <User @change-theme="changeTheme"></User>
 
           </div>
         </v-app-bar>
@@ -317,6 +326,15 @@ const buildTime = import.meta.env.BUILD_TIME;
     </v-responsive>
   </n-config-provider>
 </template>
+
+<style scoped>
+/* 顶栏日夜间切换图标：宽度低于 600px 时隐藏（此时入口在用户下拉菜单内） */
+@media (max-width: 599px) {
+  .theme-toggle-desktop {
+    display: none;
+  }
+}
+</style>
 
 
 

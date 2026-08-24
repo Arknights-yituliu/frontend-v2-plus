@@ -18,6 +18,7 @@ import RiicOperatorSourcePanel from "/src/components/tools/RiicOperatorSourcePan
 import RiicPipelineDebugPanel from "/src/components/tools/RiicPipelineDebugPanel.vue";
 import RiicRoomGroupNavigator from "/src/components/tools/RiicRoomGroupNavigator.vue";
 import RiicScheduleExportActions from "/src/components/tools/RiicScheduleExportActions.vue";
+import { getOAuthToken } from "/src/api/userInfo.js";
 import RiicScheduleExportSettings from "/src/components/tools/RiicScheduleExportSettings.vue";
 import RiicFiammettaRecoverySetting from "/src/components/tools/RiicFiammettaRecoverySetting.vue";
 import RiicScheduleFiammettaSettings from "/src/components/tools/RiicScheduleFiammettaSettings.vue";
@@ -864,10 +865,7 @@ function resetScheduleExecutionSettings() {
 }
 
 const activeStep = computed(() => steps[currentStep.value]);
-const isUserLoggedIn = computed(() => {
-  const token = localStorage.getItem("USER_TOKEN");
-  return Boolean(token && token !== "null" && token !== "undefined");
-});
+const isUserLoggedIn = computed(() => Boolean(getOAuthToken()));
 const isRecommendationComplete = computed(() =>
   steps.every((step) => isStepComplete(step)),
 );

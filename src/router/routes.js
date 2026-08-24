@@ -1,9 +1,6 @@
 import Error404 from "/src/components/layout/Error404.vue";
 import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.vue'
 import GACHA_CALCULATOR from '/src/pages/tools/gacha-calc.vue'
-import REGISTER from '/src/pages/account/register.vue'
-import LOGIN from '/src/pages/account/login.vue'
-import RETRIEVE from '/src/pages/account/retrieve.vue'
 import SURVEY_OPERATOR from '/src/pages/survey/operator.vue'
 import STORE from '/src/pages/material/store.vue'
 import PACK from '/src/pages/material/pack.vue'
@@ -602,36 +599,6 @@ const routes = [
         }
     },
     {
-        path: '/account/register',
-        text: '注册账号',
-        name: 'REGISTER',
-        display: true,
-        component: REGISTER,
-        meta: {
-            title: '注册账号'
-        }
-    },
-    {
-        path: '/account/login',
-        text: '登录账号',
-        name: 'LOGIN',
-        display: false,
-        component: LOGIN,
-        meta: {
-            title: '登录账号'
-        }
-    },
-    {
-        path: '/account/retrieve',
-        text: '找回账号',
-        name: 'RETRIEVE',
-        display: false,
-        component: RETRIEVE,
-        meta: {
-            title: '找回账号'
-        }
-    },
-    {
         path: '/survey/account/importbyskland',
         text: '导入流程',
         name: 'IMPORT_BY_SKLAND',
@@ -709,7 +676,7 @@ const routes = [
     {
         path: '/account/home',
         text: '个人中心',
-        name: 'User Center',
+        name: 'ACCOUNT_HOME',
         display: true,
         module: 'about',
         icon: "mdi-pencil",

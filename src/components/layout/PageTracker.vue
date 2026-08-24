@@ -18,9 +18,9 @@ watch(
       }
 
       await toolApi.accessLog(data)
-      console.log('[PageTracker] 访问记录已上传:', data.url)
+      // console.log('[PageTracker] 访问记录已上传:', data.url)
     } catch (error) {
-      console.error('[PageTracker] 上传访问记录失败:', error)
+      // console.error('[PageTracker] 上传访问记录失败:', error)
     }
   },
   { immediate: true }

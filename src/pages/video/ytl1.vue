@@ -337,7 +337,7 @@ onMounted(() => {
           </v-btn>
         </v-btn-group>
         <v-btn color="primary" style="display:none" class="m-0-8" :size="getButtonSize()"
-               @click="router.push({name:'User Center'})" disabled>自定义一图流
+               @click="router.push({name:'ACCOUNT_HOME'})" disabled>自定义一图流
         </v-btn>
         <v-btn color="secondary" variant="tonal" class="m-0-8" :size="getButtonSize()"
                @click="legendDisplay = !legendDisplay">显示图例

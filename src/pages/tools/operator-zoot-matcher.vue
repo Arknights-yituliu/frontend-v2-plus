@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 import operatorDataAPI from '/src/api/operatorData.js'
+import { getOAuthToken } from '/src/api/userInfo.js'
 import { listOperatorZootMatcherStageInfo, searchOperatorZootMatcherJobs } from '/src/api/operatorZootMatcher.js'
 import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
 import { operatorTableV2 } from '/src/utils/gameData.js'
@@ -889,7 +890,7 @@ async function loadOwnedOperators(options = {}) {
       return
     }
 
-    if (localStorage.getItem('USER_TOKEN')) {
+    if (getOAuthToken()) {
       const response = await operatorDataAPI.getOperatorData()
       const surveyOperators = mapSurveyOperators(response?.data || [])
 

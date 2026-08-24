@@ -38,6 +38,8 @@ coverage
 /frontend-v2-plus.zip
 /public/image/avatar/
 
+### trae ####
+.trae/
 
 /src/test/
 /docs/sklandTest.vue

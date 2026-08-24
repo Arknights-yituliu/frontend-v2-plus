@@ -7,7 +7,7 @@ import userActionOnSeedDB from "/src/plugins/indexedDB/userActionOnSeed.js";
 import userActionOnSeed from "/src/plugins/indexedDB/userActionOnSeed.js";
 import {dateFormat} from "/src/utils/dateUtil.js";
 import {useDisplay} from "vuetify";
-import {getUid} from "/src/utils/user/userInfo.js";
+import {getUid} from "/src/api/userInfo.js";
 import {stringToArray} from "/src/utils/stringUtils.js";
 
 const {mobile} = useDisplay()
