@@ -2,15 +2,15 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20260822.2233"
+      "version": "v20260824.0912"
     },
     "data": {
       "label": "数据模块",
-      "version": "v20260821.1543"
+      "version": "v20260824.0912"
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260822.2233"
+      "version": "v20260824.0912"
     },
     "assembler": {
       "label": "组装器",
@@ -18,14 +18,57 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260821.1543"
+      "version": "v20260824.0912"
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260822.2233"
+      "version": "v20260824.0912"
     }
   },
   "entries": [
+
+    {
+      "date": "2026-08-24",
+      "version": "v20260824.0912",
+      "items": [
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 4,
+          "description": "R30 条件规则支持按宿舍等级总和计算办公室与贸易站效果，并同步更新相关候选规则"
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 4,
+          "description": "补充森蚺控制中枢设施数量效果，并将设施数量调整纳入自动化有效电站数量计算"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 4,
+          "description": "修复非三级制造站收益计算，补齐不同设施等级的产出率处理"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 5,
+          "description": "统一 L79 与 L80 房间结算，接入贸易、制造、办公室资源流及无人机收益，减少预览与最终结算的重复计算"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 4,
+          "description": "补充 L79 房间结算状态、效率、资源流、无人机系数与在岗干员明细，便于核对统一结算结果"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 3,
+          "description": "L79 调试输入改用实际结算时长，避免预览时长影响收益调试结果"
+        }
+      ]
+    },
 
     {
       "date": "2026-08-22",
