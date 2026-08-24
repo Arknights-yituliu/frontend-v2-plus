@@ -3,7 +3,6 @@ import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.vue'
 import GACHA_CALCULATOR from '/src/pages/tools/gacha-calc.vue'
 import REGISTER from '/src/pages/account/register.vue'
 import LOGIN from '/src/pages/account/login.vue'
-import RETRIEVE from '/src/pages/account/retrieve.vue'
 import SURVEY_OPERATOR from '/src/pages/survey/operator.vue'
 import STORE from '/src/pages/material/store.vue'
 import PACK from '/src/pages/material/pack.vue'
@@ -619,16 +618,6 @@ const routes = [
         component: LOGIN,
         meta: {
             title: '登录账号'
-        }
-    },
-    {
-        path: '/account/retrieve',
-        text: '找回账号',
-        name: 'RETRIEVE',
-        display: false,
-        component: RETRIEVE,
-        meta: {
-            title: '找回账号'
         }
     },
     {

@@ -1,6 +1,5 @@
 <script setup>
 import {ref} from "vue";
-import userAPI from '/src/api/userInfo.js'
 import '/src/assets/css/account/login.v2.scss'
 import { createMessage} from "/src/utils/message.js";
 import {useRoute, useRouter} from "vue-router";
@@ -11,6 +10,8 @@ import {
   validateAuthSubmission
 } from "/src/utils/user/authValidation.js";
 import {useVerificationCode} from "/src/utils/user/verificationCode.js";
+import UserApiV2 from '/src/api/UserApiV2.js'
+import {directLogin} from '/src/api/userCenterApi.js'
 
 const props = defineProps({
   dialog: {
@@ -25,21 +26,27 @@ const props = defineProps({
 
 const emit = defineEmits(['success', 'navigate'])
 const isSubmitting = ref(false);
+
+let inputContent = ref({
+  userName: '',          // 账号密码登录的账号（用户名或邮箱）
+  password: '',
+  accountType: 'password', // password=账号密码登录 / email=邮箱验证码登录
+  email: '',             // 邮箱验证码登录的邮箱
+  verificationCode: '',  // 邮箱验证码（6 位）
+})
+
 const {
   codeCountdown,
   isSendingCode,
   sendVerificationCode: sendCode
 } = useVerificationCode();
 
-let inputContent = ref({
-  userName: '',
-  password: '',
-  confirmPassword: '',
-  email: '',
-  verificationCode: '',
-  hgToken: '',
-  accountType: 'password',
-})
+/**
+ * 发送登录邮箱验证码（usage=login）
+ */
+function handleSendVerificationCode() {
+  return sendCode(inputContent.value.email, 'login');
+}
 
 function toRegister(){
   if (props.dialog) {
@@ -50,6 +57,12 @@ function toRegister(){
   router.push({name: 'REGISTER'})
 }
 
+/**
+ * 直连登录流程：
+ * ① 旧系统后端换发起会话凭证 channel；
+ * ② 登录凭证（账号密码或邮箱验证码）直连提交 UC /oauth2/direct-login，换一次性票据 ticket；
+ * ③ 把 ticket 交给旧系统后端 /user/oauth2/complete-login，签发本地会话
+ */
 async function toLogin() {
   if (isSubmitting.value) {
     return;
@@ -63,10 +76,33 @@ async function toLogin() {
 
   isSubmitting.value = true;
   try {
-    const response = await userAPI.loginV3(inputContent.value)
-    const {token,uid} = response.data
+    // ① 后端换 channel（channel 由后端用 client_secret 换取，前端不接触 secret）
+    const channelResp = await UserApiV2.getDirectChannel();
+    const channel = channelResp.data.channel;
+
+    // ② 按登录方式把凭证直接提交 UC，密码/验证码不经旧系统后端
+    let ticketData;
+    if (inputContent.value.accountType === 'email') {
+      ticketData = await directLogin({
+        channel,
+        accountType: 'email',
+        account: String(inputContent.value.email ?? '').trim(),
+        code: String(inputContent.value.verificationCode ?? '').trim(),
+      });
+    } else {
+      ticketData = await directLogin({
+        channel,
+        accountType: 'password',
+        account: inputContent.value.userName,
+        password: inputContent.value.password,
+      });
+    }
+
+    // ③ ticket 交后端兑换用户信息并发自家会话
+    const loginResp = await UserApiV2.completeDirectLogin(ticketData.ticket);
+    const {token, uid} = loginResp.data;
     localStorage.setItem("USER_TOKEN", token);
-    localStorage.setItem("UID",uid);
+    localStorage.setItem("UID", uid);
 
     if (props.dialog) {
       createMessage({type:'success',text:'登录成功'})
@@ -83,33 +119,18 @@ async function toLogin() {
 
     createMessage({type:'success',text:'登录成功，即将转跳到首页'})
     setTimeout(() => {
-      // router.push({name: 'IMPORT_BY_SKLAND'})
       window.location.href = '/';
     }, 2000)
   } catch (error) {
-    if (!error?.msg && !error?.data?.msg) {
-      createMessage({type: 'error', text: '登录失败，请稍后重试'});
-    }
+    // 错误提示已由各请求拦截器（request.js / userCenterApi.js）统一弹出，这里不再重复处理
+    console.error('登录失败', error);
   } finally {
     isSubmitting.value = false;
   }
 }
 
-function toRetrieve() {
-  if (props.dialog) {
-    emit('navigate', 'RETRIEVE')
-    return
-  }
-
-  router.push({name: "RETRIEVE"})
-}
-
 const router = useRouter()
 const route = useRoute()
-
-function handleSendVerificationCode() {
-  return sendCode(inputContent.value.email, 'login');
-}
 
 </script>
 
@@ -150,7 +171,7 @@ function handleSendVerificationCode() {
               :aria-selected="inputContent.accountType === 'email'"
               @click="inputContent.accountType = 'email'"
           >
-            验证码登录
+            邮箱验证码登录
           </button>
         </div>
 
@@ -159,11 +180,11 @@ function handleSendVerificationCode() {
             <v-tabs-window-item value="password">
               <v-text-field
                   label="账号"
-                  placeholder="请输入账号"
+                  placeholder="请输入账号或邮箱"
                   :rules="accountRules"
                   density="comfortable"
                   v-model="inputContent.userName"
-                  hint="账号仅可由汉字、数字、英文组成"
+                  hint="账号可为邮箱或用户名"
                   color="primary"
                   variant="solo-filled"
                   hide-details
@@ -182,12 +203,6 @@ function handleSendVerificationCode() {
                   hide-details
                   class="auth-field"
               ></v-text-field>
-              <div class="auth-inline-action">
-                <span></span>
-                <button class="auth-link-button" type="button" @click="toRetrieve()">
-                  忘记密码？
-                </button>
-              </div>
             </v-tabs-window-item>
 
             <v-tabs-window-item value="email">
@@ -198,7 +213,6 @@ function handleSendVerificationCode() {
                   color="primary"
                   density="comfortable"
                   variant="solo-filled"
-                  hide-details
                   class="auth-field"
               >
                 <template v-slot:append-inner>
@@ -212,16 +226,12 @@ function handleSendVerificationCode() {
                   </button>
                 </template>
               </v-text-field>
-              <v-text-field
-                  label="验证码"
-                  placeholder="请输入验证码"
+              <v-otp-input
+                  aria-label="邮箱验证码"
+                  class="auth-otp"
                   v-model="inputContent.verificationCode"
-                  color="primary"
-                  density="comfortable"
-                  variant="solo-filled"
-                  hide-details
-                  class="auth-field"
-              ></v-text-field>
+                  length="6"
+              ></v-otp-input>
             </v-tabs-window-item>
           </v-tabs-window>
 
@@ -249,7 +259,6 @@ function handleSendVerificationCode() {
 
         <section class="auth-notice">
           <ul class="auth-notice-list">
-            <li>绑定邮箱后，也可以使用邮箱作为账号登录。</li>
             <li>这是用于保存一图流个人数据的账号，与鹰角通行证无关。</li>
             <li>请勿使用与其他重要账号相同的密码。</li>
           </ul>

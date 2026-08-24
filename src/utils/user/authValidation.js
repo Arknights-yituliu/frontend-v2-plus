@@ -1,12 +1,27 @@
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
 const englishNumberRegex = /^[A-Za-z0-9]+$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const verificationCodeRegex = /^\d{6}$/;
 
 const requiredRule = value => String(value ?? '').trim().length > 0 || '不能为空';
 const requiredRules = [requiredRule];
 
+// 账号规则：登录/注册账号既可以是邮箱，也可以是用户名（汉字、数字、英文）
 const accountRules = [
   requiredRule,
-  value => chineseEnglishNumberRegex.test(String(value)) || '账号仅可由汉字、数字、英文组成'
+  value => emailRegex.test(String(value).trim()) || chineseEnglishNumberRegex.test(String(value)) || '账号仅可为邮箱或汉字、数字、英文'
+];
+
+// 邮箱规则：邮箱验证码登录/注册
+const emailRules = [
+  requiredRule,
+  value => emailRegex.test(String(value).trim()) || '邮箱格式不正确'
+];
+
+// 邮箱验证码规则：6 位数字
+const verificationCodeRules = [
+  requiredRule,
+  value => verificationCodeRegex.test(String(value)) || '验证码为 6 位数字'
 ];
 
 const passwordRules = [
@@ -25,33 +40,6 @@ function getFirstRuleError(value, rules) {
   return '';
 }
 
-function validateRecoveryVerification(inputContent) {
-  return getFirstRuleError(inputContent.email, requiredRules)
-    || getFirstRuleError(inputContent.verificationCode, requiredRules)
-    || '';
-}
-
-function validatePasswordReset(inputContent) {
-  const passwordError = getFirstRuleError(inputContent.password, passwordRules);
-  if (passwordError) {
-    return passwordError;
-  }
-
-  const confirmPasswordError = getFirstRuleError(inputContent.confirmPassword, passwordRules);
-  if (confirmPasswordError) {
-    return confirmPasswordError;
-  }
-
-  if (inputContent.confirmPassword !== inputContent.password) {
-    return '两次密码输入不一致';
-  }
-
-  return '';
-}
-
-/**
- * Validate only the fields required by the current auth mode.
- */
 function validateAuthSubmission(inputContent, formType) {
   const {accountType} = inputContent;
   const checks = [];
@@ -67,9 +55,14 @@ function validateAuthSubmission(inputContent, formType) {
     }
   } else if (accountType === 'email') {
     checks.push(
-      ['邮箱', inputContent.email, requiredRules],
-      ['验证码', inputContent.verificationCode, requiredRules]
+      ['邮箱', inputContent.email, emailRules],
+      ['验证码', inputContent.verificationCode, verificationCodeRules]
     );
+
+    // 邮箱验证码注册也必填密码（UC 注册两种方式均需设置密码）
+    if (formType === 'register') {
+      checks.push(['密码', inputContent.password, passwordRules]);
+    }
   } else {
     return '请选择登录或注册方式';
   }
@@ -95,7 +88,7 @@ function validateAuthSubmission(inputContent, formType) {
 export {
   accountRules,
   passwordRules,
-  validatePasswordReset,
-  validateRecoveryVerification,
+  emailRules,
+  verificationCodeRules,
   validateAuthSubmission
 };
