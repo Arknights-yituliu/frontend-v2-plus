@@ -3,8 +3,9 @@ import {onMounted, ref} from "vue";
 import {createMessage} from "/src/utils/message";
 import userInfoAPI from "/src/api/userInfo"
 import "/src/assets/css/account/home.scss";
-import {clearUserSession, userInfo} from '/src/utils/user/userInfo.js'
+import {userInfo} from '/src/utils/user/userInfo.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import LogoutConfirmDialog from "/src/components/account/LogoutConfirmDialog.vue";
 import {operatorTableV2} from '/src/utils/gameData.js'
 import {useRouter} from "vue-router";
 const router = useRouter()
@@ -55,6 +56,7 @@ let displayOrUpdateInfo = ref("online")
 
 //选中的头像id
 let selectedAvatar = ref('')
+const logoutDialog = ref(false)
 
 //选择头像
 function chooseAvatar(avatar) {
@@ -137,16 +139,6 @@ function updateOrBindEmail(){
   }
 }
 
-/**
- * 退出登录
- */
-function logout() {
-  clearUserSession()
-  setTimeout(() => {
-    location.reload()
-  }, 1000);
-}
-
 function toRetrieve() {
   router.push({name: "RETRIEVE"})
 }
@@ -219,7 +211,14 @@ onMounted(() => {
 
       <div class="flex justify-center">
         <v-btn color="primary" variant="outlined" text="修改密码" @click="toRetrieve()" class="m-8"></v-btn>
-        <v-btn color="red" variant="outlined" text="退出登录" @click="logout" class="m-8"></v-btn>
+        <v-btn
+            color="error"
+            variant="text"
+            prepend-icon="mdi-logout"
+            text="退出登录"
+            @click="logoutDialog = true"
+            class="m-8"
+        ></v-btn>
       </div>
     </div>
 
@@ -305,5 +304,6 @@ onMounted(() => {
     </div>
 
  </v-card-text>
+    <LogoutConfirmDialog v-model="logoutDialog"></LogoutConfirmDialog>
   </v-card>
 </template>

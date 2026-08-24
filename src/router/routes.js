@@ -448,6 +448,16 @@ const routes = [
         }
     },
     {
+        path: '/dev/playground',
+        text: 'UI方案对比',
+        name: 'DevPlayground',
+        display: false,
+        component: () => import('/src/pages/dev/playground.vue'),
+        meta: {
+            title: 'UI方案对比'
+        }
+    },
+    {
         path: '/riicdev',
         text: 'RIIC 测试入口',
         name: 'RiicDevIndex',
