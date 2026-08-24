@@ -3,13 +3,13 @@ import {DOMAIN} from '/src/api/BASE_URL.js'
 import {createMessage} from "/src/utils/message.js";
 import axios from "axios";
 
-let userInfo = ref({uid: 0, userName: "未登录",email:'',avatar:'', akUid: "0", status: -100, token: void 0}); //用户信息(用户名，用户id，用户状态)
+let userInfo = ref({uid: 0, nickname: "未登录",email:'',avatar:'', akUid: "0", status: -100, token: void 0}); //用户信息(昵称，用户id，用户状态)
 
 
 async function getUserInfo(page,errorMessage=false) {
 
     const USER_TOKEN = encodeURIComponent(getUserTokenV2())
-    let info = {uid: 0, userName: "未登录", akUid: "0",avatar:'', status: -100, token: void 0}
+    let info = {uid: 0, nickname: "未登录", akUid: "0",avatar:'', status: -100, token: void 0}
 
     await axios.get(`${DOMAIN}user/info?token=${USER_TOKEN}&page=${page}`).then(response=>{
         if (response.data.code === 200) {

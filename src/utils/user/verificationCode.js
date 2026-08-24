@@ -1,12 +1,8 @@
 import {onBeforeUnmount, ref} from "vue";
 import {createMessage} from "/src/utils/message.js";
-import userAPI from "/src/api/userInfo.js";
+import {sendEmailCode} from "/src/api/userCenterApi.js";
 
 const VERIFICATION_CODE_COUNTDOWN = 60;
-
-function getRequestErrorMessage(error) {
-  return error?.data?.msg || error?.msg || error?.message || '';
-}
 
 function useVerificationCode() {
   const isSendingCode = ref(false);
@@ -48,17 +44,14 @@ function useVerificationCode() {
 
     isSendingCode.value = true;
     try {
-      await userAPI.sendVerificationCodeV2({
-        mailUsage,
-        email: normalizedEmail
-      });
+      // 验证码由 UC 直接下发（邮箱验证码注册/登录）
+      await sendEmailCode(normalizedEmail, mailUsage);
       createMessage({type: 'success', text: '验证码发送成功'});
       startCountdown();
       return true;
     } catch (error) {
-      if (!getRequestErrorMessage(error)) {
-        createMessage({type: 'error', text: '验证码发送失败，请稍后重试'});
-      }
+      // 错误提示已由 UC 拦截器（userCenterApi.js）统一弹出，这里仅返回失败状态
+      console.error('验证码发送失败', error);
       return false;
     } finally {
       isSendingCode.value = false;

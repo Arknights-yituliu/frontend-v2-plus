@@ -1,7 +1,6 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import '/src/assets/css/account/login.v2.scss'
-import userAPI from '/src/api/userInfo.js'
 import {createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
 import {getUserInfo} from "/src/utils/user/userInfo.js";
@@ -11,26 +10,27 @@ import {
   validateAuthSubmission
 } from "/src/utils/user/authValidation.js";
 import {useVerificationCode} from "/src/utils/user/verificationCode.js";
+import UserApiV2 from '/src/api/UserApiV2.js'
+import {directRegister} from '/src/api/userCenterApi.js'
 
-function getParam(method) {
+/**
+ * 组装直连注册请求参数（映射到 UC /oauth2/direct-register 表单字段）
+ * password=密码注册 / email=邮箱验证码注册（两者均需密码）
+ */
+function getParam() {
   let param = {
     accountType: inputContent.value.accountType
   }
+
   if ('password' === inputContent.value.accountType) {
-
-    param.userName = inputContent.value.userName
+    param.user_name = inputContent.value.userName
     param.password = inputContent.value.password
-
-    const email = String(inputContent.value.email ?? '').trim()
-    if (email) {
-      param.email = email
-      param.verificationCode = inputContent.value.verificationCode
-    }
   }
 
   if ('email' === inputContent.value.accountType) {
     param.email = String(inputContent.value.email ?? '').trim()
-    param.verificationCode = String(inputContent.value.verificationCode ?? '').trim()
+    param.password = inputContent.value.password
+    param.code = String(inputContent.value.verificationCode ?? '').trim()
   }
 
   return param
@@ -42,7 +42,6 @@ let inputContent = ref({
   confirmPassword: '',
   email: '',
   verificationCode: '',
-  hgToken: '',
   accountType: '',
 })
 const router = useRouter()
@@ -53,6 +52,12 @@ const {
   sendVerificationCode: sendCode
 } = useVerificationCode();
 
+/**
+ * 直连注册流程：
+ * ① 旧系统后端换发起会话凭证 channel；
+ * ② 注册信息（含密码）直连提交 UC /oauth2/direct-register，创建用户并签发一次性票据 ticket；
+ * ③ 把 ticket 交给旧系统后端 /user/oauth2/complete-login，签发本地会话
+ */
 async function toRegister() {
   if (isSubmitting.value) {
     return;
@@ -66,9 +71,25 @@ async function toRegister() {
 
   isSubmitting.value = true;
   try {
-    const param = getParam()
-    const response = await userAPI.registerV3(param);
-    const {token} = response.data;
+    const param = getParam();
+
+    // ① 后端换 channel（channel 由后端用 client_secret 换取，前端不接触 secret）
+    const channelResp = await UserApiV2.getDirectChannel();
+    const channel = channelResp.data.channel;
+
+    // ② 注册信息直接提交 UC，密码/验证码不经旧系统后端
+    const ticketData = await directRegister({
+      channel,
+      registerType: param.accountType === 'email' ? 'email_code' : 'password',
+      email: param.email,
+      userName: param.user_name,
+      password: param.password,
+      code: param.code,
+    });
+
+    // ③ ticket 交后端兑换用户信息并发自家会话
+    const registerResp = await UserApiV2.completeDirectLogin(ticketData.ticket);
+    const {token} = registerResp.data;
 
     localStorage.setItem("USER_TOKEN", token.toString());
     await getUserInfo("Register");
@@ -82,9 +103,8 @@ async function toRegister() {
       })
     }, 3000)
   } catch (error) {
-    if (!error?.msg && !error?.data?.msg) {
-      createMessage({type: 'error', text: '注册失败，请稍后重试'});
-    }
+    // 错误提示已由各请求拦截器（request.js / userCenterApi.js）统一弹出，这里不再重复处理
+    console.error('注册失败', error);
   } finally {
     isSubmitting.value = false;
   }
@@ -171,34 +191,6 @@ onMounted(() => {
                 hide-details
                 class="auth-field"
             ></v-text-field>
-            <v-text-field
-                label="绑定邮箱（可选）"
-                placeholder="用于找回密码"
-                density="comfortable"
-                color="primary"
-                hint="找回密码目前只能通过绑定邮箱"
-                v-model="inputContent.email"
-                variant="solo-filled"
-                hide-details
-                class="auth-field"
-            >
-              <template v-slot:append-inner>
-                <button
-                    class="auth-code-button"
-                    type="button"
-                    :disabled="isSendingCode || codeCountdown > 0"
-                    @click="handleSendVerificationCode"
-                >
-                  {{ codeCountdown > 0 ? `${codeCountdown}s后重试` : isSendingCode ? '发送中...' : '发送验证码' }}
-                </button>
-              </template>
-            </v-text-field>
-            <v-otp-input
-                aria-label="邮箱验证码"
-                class="auth-otp"
-                v-model="inputContent.verificationCode"
-                length="4"
-            ></v-otp-input>
           </v-tabs-window-item>
 
           <v-tabs-window-item value="email">
@@ -222,6 +214,19 @@ onMounted(() => {
                 </button>
               </template>
             </v-text-field>
+            <v-text-field
+                label="登录密码"
+                placeholder="请输入密码"
+                density="comfortable"
+                :rules="passwordRules"
+                color="primary"
+                hint="密码仅可由数字、英文组成"
+                v-model="inputContent.password"
+                variant="solo-filled"
+                type="password"
+                hide-details
+                class="auth-field"
+            ></v-text-field>
             <v-otp-input
                 aria-label="邮箱验证码"
                 class="auth-otp"
@@ -257,7 +262,6 @@ onMounted(() => {
         <div class="auth-notice-title">注册前请注意</div>
         <ul class="auth-notice-list">
           <li>这是用于保存一图流个人数据的账号，与鹰角通行证无关。</li>
-          <li>绑定邮箱后才能通过邮箱找回密码。</li>
           <li>请勿使用与其他重要账号相同的密码。</li>
         </ul>
       </section>
@@ -267,4 +271,3 @@ onMounted(() => {
 
   </div>
 </template>
-
