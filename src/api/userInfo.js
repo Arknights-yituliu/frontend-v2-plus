@@ -5,15 +5,28 @@ import request from "/src/api/request"
 export default {
 
   /**
-   * 更新用户信息
-   * @param data
-   * @returns {*}
+   * 更新当前登录用户的昵称（认证由请求拦截器自动附加 Authorization 头）
+   * @param {string} nickname 新的昵称，不能为空
+   * @returns {*} 更新结果
    */
-  updateUserDataV2(data) {
+  updateNickname(nickname) {
     return request({
-      url: `auth/user/update/v2`,
+      url: `auth/user/nickname`,
       method: "post",
-      data: data,
+      data: { nickname },
+    })
+  },
+
+  /**
+   * 更新当前登录用户的头像（认证由请求拦截器自动附加 Authorization 头）
+   * @param {string} avatar 新的头像地址，不能为空
+   * @returns {*} 更新结果
+   */
+  updateAvatar(avatar) {
+    return request({
+      url: `auth/user/avatar`,
+      method: "post",
+      data: { avatar },
     })
   },
 

@@ -61,16 +61,10 @@ function chooseAvatar(avatar) {
  * 更新头像
  */
 function updateAvatar() {
-  const data = {
-    token: userInfo.value.token,
-    avatar: selectedAvatar.value,
-    property: "avatar"
-  }
-
-  userInfoAPI.updateUserDataV2(data).then(response => {
+  userInfoAPI.updateAvatar(selectedAvatar.value).then(() => {
     createMessage({type:'success',text:'头像更新成功'})
-    userInfo.value.avatar = response.data.avatar
-
+    // 新接口响应 data 为空，头像新值直接取本地选择
+    userInfo.value.avatar = selectedAvatar.value
   })
 }
 
@@ -79,15 +73,10 @@ function updateAvatar() {
  * 更新用户名（昵称）
  */
 function updateUserName() {
-  const data = {
-    token: userInfo.value.token,
-    nickname: formData.value.userName,
-    property: "nickname"
-  }
-  userInfoAPI.updateUserDataV2(data).then(response => {
+  userInfoAPI.updateNickname(formData.value.userName).then(() => {
     createMessage({type:'success',text:'用户名更改成功',duration:4000})
-    userInfo.value.nickname = response.data.nickname
-
+    // 新接口响应 data 为空，昵称新值直接取表单输入
+    userInfo.value.nickname = formData.value.userName
   })
 }
 
