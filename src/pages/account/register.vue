@@ -33,11 +33,14 @@ function getParam() {
     param.code = String(inputContent.value.verificationCode ?? '').trim()
   }
 
+  param.nickname = String(inputContent.value.nickname ?? '').trim()
+
   return param
 }
 
 let inputContent = ref({
   userName: '',
+  nickname: '',
   password: '',
   confirmPassword: '',
   email: '',
@@ -85,6 +88,7 @@ async function toRegister() {
       userName: param.user_name,
       password: param.password,
       code: param.code,
+      nickname: param.nickname,
     });
 
     // ③ ticket 交后端兑换用户信息并发自家会话
@@ -152,6 +156,16 @@ onMounted(() => {
       </div>
 
       <v-card-text class="auth-card-body">
+        <v-text-field
+            label="昵称（选填）"
+            placeholder="请输入昵称"
+            density="comfortable"
+            color="primary"
+            hint="不填时默认使用账号或邮箱作为昵称"
+            v-model="inputContent.nickname"
+            variant="solo-filled"
+            class="auth-field"
+        ></v-text-field>
         <v-tabs-window v-model="inputContent.accountType">
           <v-tabs-window-item value="password">
             <v-text-field
@@ -163,7 +177,6 @@ onMounted(() => {
                 hint="账号仅可由汉字、数字、英文组成"
                 color="primary"
                 variant="solo-filled"
-                hide-details
                 class="auth-field"
             ></v-text-field>
             <v-text-field
@@ -176,7 +189,6 @@ onMounted(() => {
                 v-model="inputContent.password"
                 variant="solo-filled"
                 type="password"
-                hide-details
                 class="auth-field"
             ></v-text-field>
             <v-text-field
@@ -188,7 +200,6 @@ onMounted(() => {
                 v-model="inputContent.confirmPassword"
                 variant="solo-filled"
                 type="password"
-                hide-details
                 class="auth-field"
             ></v-text-field>
           </v-tabs-window-item>
@@ -224,14 +235,13 @@ onMounted(() => {
                 v-model="inputContent.password"
                 variant="solo-filled"
                 type="password"
-                hide-details
                 class="auth-field"
             ></v-text-field>
             <v-otp-input
                 aria-label="邮箱验证码"
                 class="auth-otp"
                 v-model="inputContent.verificationCode"
-                length="4"
+                length="6"
             ></v-otp-input>
           </v-tabs-window-item>
         </v-tabs-window>
