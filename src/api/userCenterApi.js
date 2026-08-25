@@ -17,8 +17,8 @@ ucService.interceptors.response.use(
   (response) => {
     const payload = response.data;
     if (payload.code !== UC_SUCCESS_CODE) {
-      // 业务失败：直接用 UC 返回的 message 作为错误文案，并在此统一弹出提示
-      const error = new Error(payload?.message || "请求失败，请稍后重试");
+      // 业务失败：直接用 UC 返回的 msg 作为错误文案（返回体字段为 msg，不是 message），并在此统一弹出提示
+      const error = new Error(payload?.msg || "请求失败，请稍后重试");
       error.code = payload?.code;
       error.msg = error.message;
       createMessage({type: "error", text: error.msg});
@@ -29,7 +29,7 @@ ucService.interceptors.response.use(
   },
   (error) => {
     // 网络/HTTP 层错误：统一弹出兜底提示后 reject
-    createMessage({type: "error", text: error.response?.data?.message || "网络错误，请稍后重试"});
+    createMessage({type: "error", text: error.response?.data?.msg || "网络错误，请稍后重试"});
     return Promise.reject(error.response || error);
   }
 );
