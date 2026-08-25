@@ -11,7 +11,7 @@ async function getUserInfo(page,errorMessage=false) {
     const USER_TOKEN = encodeURIComponent(getUserTokenV2())
     let info = {uid: 0, nickname: "未登录", akUid: "0",avatar:'', status: -100, token: void 0}
 
-    await axios.get(`${DOMAIN}user/info?token=${USER_TOKEN}&page=${page}`).then(response=>{
+    await axios.get(`${DOMAIN}/user/info?token=${USER_TOKEN}&page=${page}`).then(response=>{
         if (response.data.code === 200) {
             info = response.data.data
             userInfo.value = response.data.data

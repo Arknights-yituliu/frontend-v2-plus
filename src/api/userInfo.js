@@ -11,7 +11,7 @@ export default {
    */
   updateNickname(nickname) {
     return request({
-      url: `auth/user/nickname`,
+      url: `/auth/user/nickname`,
       method: "post",
       data: { nickname },
     })
@@ -24,7 +24,7 @@ export default {
    */
   updateAvatar(avatar) {
     return request({
-      url: `auth/user/avatar`,
+      url: `/auth/user/avatar`,
       method: "post",
       data: { avatar },
     })
@@ -36,7 +36,7 @@ export default {
    */
   getOpenApiPermissions() {
     return request({
-      url: `user/open-api/permissions`,
+      url: `/user/open-api/permissions`,
       method: "get",
     })
   },
@@ -49,7 +49,7 @@ export default {
    */
   generateOpenApiToken(scope, remark) {
     return request({
-      url: `user/open-api/token`,
+      url: `/auth/user/open-api/token`,
       method: "post",
       data: { scope, remark },
     })
@@ -61,7 +61,7 @@ export default {
    */
   getOpenApiTokens() {
     return request({
-      url: `auth/user/open-api/tokens`,
+      url: `/auth/user/open-api/tokens`,
       method: "get",
     })
   },
@@ -73,7 +73,7 @@ export default {
    */
   deleteOpenApiToken(token) {
     return request({
-      url: `auth/user/open-api/token/delete`,
+      url: `/auth/user/open-api/token/delete`,
       method: "post",
       data: { token },
     })

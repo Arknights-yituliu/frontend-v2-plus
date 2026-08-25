@@ -13,7 +13,7 @@ export default {
    */
   getDirectChannel() {
     return request({
-      url: `direct-session`,
+      url: `/direct-session`,
       method: "get",
     })
   },
@@ -25,7 +25,7 @@ export default {
    */
   completeDirectLogin(ticket) {
     return request({
-      url: `complete-login`,
+      url: `/complete-login`,
       method: "post",
       data: {ticket},
     })
