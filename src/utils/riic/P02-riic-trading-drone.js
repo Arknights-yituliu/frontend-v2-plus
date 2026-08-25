@@ -26,12 +26,10 @@ function round(value, digits = 6) {
 
 function createFailure(error) {
   return {
-    ok: false,
-    lmdOutput: null,
-    goldConsumption: null,
-    orundumOutput: null,
-    shardConsumption: null,
-    error,
+    ...createSuccess(),
+    warning: true,
+    warnings: [{ code: error || "calculationWarning" }],
+    error: error || "calculationWarning",
   };
 }
 
@@ -40,7 +38,7 @@ function createSuccess({
   goldConsumption = 0,
   orundumOutput = 0,
   shardConsumption = 0,
-}) {
+} = {}) {
   return {
     ok: true,
     lmdOutput: round(lmdOutput),
@@ -53,7 +51,7 @@ function createSuccess({
 
 function normalizeOperators(value) {
   if (!Array.isArray(value)) {
-    return null;
+    return [];
   }
 
   const seen = new Set();
@@ -64,13 +62,15 @@ function normalizeOperators(value) {
     const level = Number(source?.level);
     if (
       !charId ||
-      seen.has(charId) ||
       !Number.isInteger(elite) ||
       elite < 0 ||
       !Number.isInteger(level) ||
       level < 1
     ) {
-      return null;
+      continue;
+    }
+    if (seen.has(charId)) {
+      continue;
     }
     seen.add(charId);
     operators.push({ charId, elite, level });
@@ -186,10 +186,6 @@ export function calculateRiicTradingDrone(facility, operators) {
   ) {
     return createFailure("invalidFacility");
   }
-  if (!normalizedOperators) {
-    return createFailure("invalidOperators");
-  }
-
   if (product === "orundum") {
     const orundumOutput = ORUNDUM_PER_HOUR * (DRONE_SECONDS / 3600);
     return createSuccess({

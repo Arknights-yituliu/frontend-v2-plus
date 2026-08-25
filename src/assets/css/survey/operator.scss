@@ -606,7 +606,31 @@
 
 .operator-import-flow {
   min-width: 0;
-  margin-top: 24px;
+}
+
+.operator-import-flow > .v-alert + .v-window {
+  margin-top: 12px !important;
+}
+
+.operator-import-credential-row {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.operator-import-credential-input {
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.operator-import-credential-action {
+  min-width: 0;
+  flex: 1 1 0;
+  min-height: 40px;
+  padding: 6px 14px !important;
+  white-space: normal;
+  line-height: 1.35;
 }
 
 .operator-import-progress-comparison {
@@ -747,6 +771,16 @@
     font-size: 0.6875rem;
     line-height: 1.2;
     white-space: normal;
+  }
+
+  .operator-import-credential-row {
+    gap: 8px;
+  }
+
+  .operator-import-credential-action {
+    flex-basis: 0;
+    padding: 6px 8px !important;
+    font-size: 0.75rem;
   }
 
 }

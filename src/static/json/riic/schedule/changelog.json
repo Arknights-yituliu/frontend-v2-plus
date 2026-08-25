@@ -6,11 +6,11 @@
     },
     "data": {
       "label": "数据模块",
-      "version": "v20260824.0912"
+      "version": "v20260825.0326"
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260824.0912"
+      "version": "v20260825.0326"
     },
     "assembler": {
       "label": "组装器",
@@ -18,14 +18,45 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260824.0912"
+      "version": "v20260825.0326"
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260824.0912"
+      "version": "v20260825.0326"
     }
   },
   "entries": [
+
+    {
+      "date": "2026-08-25",
+      "version": "v20260825.0326",
+      "items": [
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 3,
+          "description": "完善中枢选人时的候补来源"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 5,
+          "description": "修复部分情况下不结算的问题，并对缺失上下文、无效输入和未支持规则附加警告。统一资源净结算的缺省值处理"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 4,
+          "description": "新增输出收益计算过程中的中间产物信息"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 4,
+          "description": "补充贸易结算警告、规则跳过原因和资源流降级处理信息"
+        }
+      ]
+    },
 
     {
       "date": "2026-08-24",

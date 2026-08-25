@@ -118,6 +118,11 @@
   text-underline-offset: 3px;
 }
 
+.auth-register-link {
+  color: rgb(var(--v-theme-primary));
+  font-weight: 600;
+}
+
 .auth-code-button:disabled {
   color: rgba(var(--v-theme-on-surface), 0.38);
   cursor: not-allowed;

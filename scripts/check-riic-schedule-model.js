@@ -961,7 +961,7 @@ const experienceEffectWithUnavailableTrade =
   )?.resourceEffectsBySegment[0];
 assert.equal(experienceEffectWithUnavailableTrade?.isCalculated, true);
 assert.equal(experienceEffectWithUnavailableTrade?.primaryOutput, 2100);
-assert.equal(experienceEffectWithUnavailableTrade?.goldConsumption, null);
+assert.equal(experienceEffectWithUnavailableTrade?.goldConsumption, 0);
 const lmdEffectWithUnavailableTrade =
   unrelatedUnavailableTradeSettlement.yield.droneTargetSettlements.find(
     (settlement) => settlement.key === "trading:lmd:1",
@@ -1162,7 +1162,7 @@ assert.equal(
 );
 assert.equal(
   orundumTradeDroneSettlement.resourceEffectsBySegment[0].lmdConsumption,
-  null,
+  0,
 );
 
 const orundumManufactureDroneSettlement = orundumSettlement.yield.droneTargetSettlements.find(
@@ -1178,7 +1178,7 @@ assert.equal(
 );
 assert.equal(
   orundumManufactureDroneSettlement.resourceEffectsBySegment[0].shardConsumption,
-  null,
+  0,
 );
 assert.equal(
   orundumManufactureDroneSettlement.resourceEffectsBySegment[0].lmdConsumption,

@@ -252,7 +252,7 @@ const route = useRoute()
 
         <div class="auth-card-bottom">
           <span>还没有账号？</span>
-          <button class="auth-link-button" type="button" @click="toRegister()">
+          <button class="auth-link-button auth-register-link" type="button" @click="toRegister()">
             注册账号
           </button>
         </div>

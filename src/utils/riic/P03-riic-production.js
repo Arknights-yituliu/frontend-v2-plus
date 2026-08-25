@@ -105,7 +105,7 @@ export function calculateRiicDirectProductionOutput({
     normalizedDurationHours < 0 ||
     dailyRate === null
   ) {
-    return null;
+    return 0;
   }
 
   return meta.isNetBonus

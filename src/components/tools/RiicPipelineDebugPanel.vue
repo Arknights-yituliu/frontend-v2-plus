@@ -2290,6 +2290,32 @@ const droneTableDebug = computed(() => {
               </small>
             </article>
           </div>
+          <details
+            v-if="l79Settlement?.crossFacilityResourceFlow?.length"
+            class="pipeline-nested"
+          >
+            <summary>跨设施资源流</summary>
+            <div class="pipeline-actual-room-list">
+              <article
+                v-for="flow in l79Settlement.crossFacilityResourceFlow"
+                :key="flow.shift"
+                class="pipeline-actual-room"
+              >
+                <header>
+                  <strong>班段 {{ flow.shift }}</strong>
+                </header>
+                <small>
+                  感知信息 {{ formatNumber(flow.perceptionInformation) }}；
+                  无声共鸣 {{ formatNumber(flow.silentResonance) }}；
+                  人间烟火 {{ formatNumber(flow.humanFireworks) }}
+                </small>
+              </article>
+            </div>
+            <details class="pipeline-nested">
+              <summary>跨设施资源流 JSON</summary>
+              <pre>{{ formatJson(l79Settlement.crossFacilityResourceFlow) }}</pre>
+            </details>
+          </details>
         </details>
 
         <template v-if="actualScheduleMetrics">

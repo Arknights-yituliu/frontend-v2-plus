@@ -1162,7 +1162,7 @@ onBeforeUnmount(() => {
     </v-dialog>
 
     <!-- 干员数据导入对话框（官网 Token / 森空岛凭证） -->
-    <v-dialog v-model="sklandImportDialog" max-width="800" persistent>
+    <v-dialog v-model="sklandImportDialog" max-width="720" persistent>
       <v-card
           class="operator-import-dialog-card"
           elevation="0"
@@ -1300,7 +1300,7 @@ onBeforeUnmount(() => {
                   </v-btn>
                 </div>
               </v-alert>
-              <v-window v-model="sklandImportTab" class="mt-4">
+              <v-window v-model="sklandImportTab">
               <v-window-item value="skland">
             <div class="operator-import-progress-comparison">
               <div class="operator-import-progress-variant">
@@ -1367,23 +1367,26 @@ onBeforeUnmount(() => {
             <template v-slot:item.3>
               <v-card flat>
                 <v-card-text>
-                  <p class="mb-4">将获取的字符串粘贴到下面的输入框中</p>
-                  <v-text-field 
-                    v-model="sklandInputText"
-                    label="粘贴凭证字符串"
-                    variant="outlined"
-                    density="compact"
-                    hide-details
-                    class="mb-4"
-                  ></v-text-field>
-                  <v-btn 
-                    color="primary" 
-                    @click="getPlayerBindingBySkland" 
-                    :loading="sklandLoading"
-                    block
-                  >
-                    获取账号列表
-                  </v-btn>
+                  <div class="operator-import-credential-row">
+                    <v-text-field
+                      v-model="sklandInputText"
+                      label="粘贴凭证字符串"
+                      variant="outlined"
+                      density="compact"
+                      hide-details
+                      class="operator-import-credential-input"
+                    ></v-text-field>
+                    <v-btn
+                      color="primary"
+                      @click="getPlayerBindingBySkland"
+                      :loading="sklandLoading"
+                      class="operator-import-credential-action"
+                    >
+                      {{ sklandInputText.trim()
+                          ? '粘贴好了，获取账号列表并导入！'
+                          : '请把获取到的字符串粘贴在左侧' }}
+                    </v-btn>
+                  </div>
                   
                   <div v-if="playBindingList.length > 0" class="mt-4">
                     <p class="mb-2">选择要导入的账号：</p>
@@ -1482,24 +1485,28 @@ onBeforeUnmount(() => {
                     <v-card-text>
                       <p class="mb-4">将获取到的凭证粘贴到下面的输入框中</p>
                       <v-alert :icon="false" color="warning" variant="tonal" class="mb-4" density="compact">
-                        为保障您的账号安全，请在导入后退出明日方舟官网登录
+                        为保障您的账号安全，请在导入后退出明日方舟官网登录，退出登录后Token就会失效了
                       </v-alert>
-                      <v-text-field
-                          v-model="officialTokenText"
-                          label="粘贴返回内容"
-                          variant="outlined"
-                          density="compact"
-                          hide-details
-                          class="mb-4"
-                      ></v-text-field>
-                      <v-btn
-                          color="primary"
-                          @click="getPlayerBindingByOfficialToken"
-                          :loading="sklandLoading"
-                          block
-                      >
-                        获取账号列表
-                      </v-btn>
+                      <div class="operator-import-credential-row">
+                        <v-text-field
+                            v-model="officialTokenText"
+                            label="粘贴返回内容"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                            class="operator-import-credential-input"
+                        ></v-text-field>
+                        <v-btn
+                            color="primary"
+                            @click="getPlayerBindingByOfficialToken"
+                            :loading="sklandLoading"
+                            class="operator-import-credential-action"
+                        >
+                          {{ officialTokenText.trim()
+                              ? '粘贴好了，获取账号列表并导入！'
+                              : '请把获取到的字符串粘贴在左侧' }}
+                        </v-btn>
+                      </div>
 
                       <div v-if="playBindingList.length > 0" class="mt-4">
                         <p class="mb-2">选择要导入的账号：</p>

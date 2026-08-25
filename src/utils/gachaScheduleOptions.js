@@ -23,7 +23,7 @@ const scheduleDefinitions = [
     disabled: false,
     dailyGiftResources: true,
     accuracyFlag: false,
-    dateString: "敬请期待",            // 自定义日期展示文字，覆盖自动生成的格式
+    dateString: "(1101-1114)",            // 自定义日期展示文字，覆盖自动生成的格式
   },
 ]
 

@@ -864,8 +864,10 @@ function calculateL79Room({
         selectedVariant: "actual",
         actual: {
           value: 0,
-          status: "invalidRoom",
-          breakdown: {},
+          status: "calculated",
+          breakdown: {
+            invalidRoom: true,
+          },
         },
       },
       issues,
@@ -953,7 +955,7 @@ function calculateL79Room({
         selectedVariant: "actual",
         actual: {
           value: 0,
-          status: "invalidRoom",
+          status: "calculated",
           breakdown: { calculation },
         },
       },
@@ -1192,34 +1194,22 @@ function applyTradingSettlement({
             tradingContext,
             durationHours,
           });
+          const calculationWarnings = [
+            ...(calculation?.warnings || []),
+            ...(calculation?.error
+              ? [{ code: calculation.error }]
+              : []),
+          ];
           const tradingSettlement = {
-            status: calculation?.ok ? "calculated" : "unavailable",
-            error: calculation?.ok ? "" : calculation?.error || "unknown",
+            status: "calculated",
+            error: calculation?.error || "",
+            warnings: calculationWarnings,
             calculation,
           };
 
-          if (!calculation?.ok) {
-            return {
-              ...room,
-              efficiency: null,
-              tradingSettlement,
-              efficiencyMetrics: {
-                ...(room.efficiencyMetrics || {}),
-                selectedVariant: "actual",
-                actual: {
-                  ...(room.efficiencyMetrics?.actual || {}),
-                  value: null,
-                  status: "unavailable",
-                  breakdown: {
-                    ...(room.efficiencyMetrics?.actual?.breakdown || {}),
-                    tradingSettlement,
-                  },
-                },
-              },
-            };
-          }
-
-          const value = Number(calculation.rate);
+          const value = Number.isFinite(Number(calculation?.rate))
+            ? Number(calculation.rate)
+            : 0;
           return {
             ...room,
             efficiency: value,
@@ -1296,10 +1286,7 @@ function createL79RoomSettlement({
   const perDrone = createL79FlowValues();
   const meta = getRiicRoomYieldMeta(room);
   const messages = [];
-  let calculationStatus =
-    efficiencyStatus === "calculated" || !BASELINE_ROOM_TYPES.has(facility)
-      ? "calculated"
-      : "error";
+  let calculationStatus = "calculated";
 
   const addMessage = (level, text) => {
     if (text) {
@@ -1309,11 +1296,19 @@ function createL79RoomSettlement({
 
   if (facility === "trading") {
     const calculation = room?.tradingSettlement?.calculation;
-    if (!calculation?.ok) {
-      calculationStatus = "error";
+    if (calculation?.warning || calculation?.error) {
       addMessage(
-        "error",
-        `贸易站资源流不可用：${calculation?.error || "unknown"}`,
+        "warning",
+        `贸易站部分规则按0处理：${(calculation.warnings || [])
+          .map((warning) => warning.code)
+          .filter(Boolean)
+          .join(", ") || calculation.error}`,
+      );
+    }
+    if (!calculation?.ok) {
+      addMessage(
+        "warning",
+        `贸易站资源流按0处理：${calculation?.error || "unknown"}`,
       );
     } else if (product === "lmd") {
       hourly.lmd = Number(calculation.lmd || 0);
@@ -1323,7 +1318,6 @@ function createL79RoomSettlement({
       hourly.orundum = Number(calculation.orundumCapacity || 0);
       hourly.shard = -Number(calculation.shardConsumption || 0);
     } else {
-      calculationStatus = "partial";
       addMessage("warning", "贸易站产品不在统一资源流支持范围内。");
     }
 
@@ -1349,7 +1343,10 @@ function createL79RoomSettlement({
     } else {
       addMessage("warning", `贸易站无人机系数不可用：${drone?.error || "unknown"}`);
     }
-  } else if (facility === "manufacture" && efficiencyStatus === "calculated") {
+  } else if (facility === "manufacture") {
+    if (efficiencyStatus !== "calculated") {
+      addMessage("warning", "制造站效率异常，产出按0处理。");
+    }
     const output = calculateRiicDirectProductionOutput({
       room,
       efficiency,
@@ -1373,14 +1370,15 @@ function createL79RoomSettlement({
         perDrone.lmd = -perDrone.shard * recipe.lmdPerShard;
         perDrone[material] = -perDrone.shard * recipe.materialPerShard;
       } else {
-        calculationStatus = "partial";
         addMessage("warning", "制造站产品不在统一资源流支持范围内。");
       }
     } else {
-      calculationStatus = "partial";
       addMessage("warning", "制造站产出无法根据当前效率计算。");
     }
-  } else if (facility === "hire" && efficiencyStatus === "calculated") {
+  } else if (facility === "hire") {
+    if (efficiencyStatus !== "calculated") {
+      addMessage("warning", "办公室效率异常，产出按0处理。");
+    }
     const output = calculateRiicDirectProductionOutput({
       room,
       efficiency,
@@ -1390,18 +1388,8 @@ function createL79RoomSettlement({
     if (Number.isFinite(Number(output))) {
       hourly.recruitmentRefresh = Number(output);
     } else {
-      calculationStatus = "partial";
       addMessage("warning", "办公室产出无法根据当前效率计算。");
     }
-  } else if (
-    ["trading", "manufacture", "hire"].includes(facility) &&
-    efficiencyStatus !== "calculated"
-  ) {
-    calculationStatus = "error";
-  }
-
-  if (calculationStatus === "error" && messages.length === 0) {
-    addMessage("error", "房间效率未完成计算，资源流已排除。");
   }
 
   return {
@@ -1437,22 +1425,9 @@ function attachL79RoomSettlements({
   const roomSettlements = states.flatMap((state) =>
     (state.rooms || []).map((room) => room.l79Settlement),
   );
-  const hasError = roomSettlements.some(
-    (settlement) => settlement?.calculationStatus === "error",
-  );
-  const hasPartial = roomSettlements.some(
-    (settlement) => settlement?.calculationStatus === "partial",
-  );
-  const calculationStatus =
-    states.length === 0
-      ? "empty"
-      : hasError || hasPartial
-        ? "partial"
-        : "calculated";
-
   return {
     ...preview,
-    calculationStatus,
+    calculationStatus: "calculated",
     states,
   };
 }
@@ -1475,10 +1450,7 @@ function summarizeRooms(states) {
       };
       summary.durationHours += durationHours;
       summary.issues.push(...(room.issues || []));
-      if (
-        durationHours > 0 &&
-        room.efficiencyMetrics?.actual?.status === "calculated"
-      ) {
+      if (durationHours > 0) {
         summary.calculatedDurationHours += durationHours;
         summary.efficiencyPercentHours += Number(room.efficiency || 0) * durationHours;
       }
@@ -1492,9 +1464,7 @@ function summarizeRooms(states) {
       summary.calculatedDurationHours > 0
         ? summary.efficiencyPercentHours / summary.calculatedDurationHours
         : 0,
-    isCalculated:
-      summary.durationHours > 0 &&
-      summary.calculatedDurationHours === summary.durationHours,
+    isCalculated: true,
   }));
 }
 
@@ -1619,10 +1589,7 @@ export function settleRiicMaaScheduleEfficiency({
 
   return {
     cycleHours: settledPreviewWithResources.cycleHours,
-    status:
-      settledPreviewWithResources.calculationStatus === "empty"
-        ? "empty"
-        : settledPreviewWithResources.calculationStatus,
+    status: "calculated",
     calculationStatus: settledPreviewWithResources.calculationStatus,
     plans: settledPreviewWithResources.states.map((state) => ({
       durationMinutes: state.durationMinutes,
@@ -1633,6 +1600,16 @@ export function settleRiicMaaScheduleEfficiency({
     rooms: summarizeRooms(settledPreviewWithResources.states),
     issues,
     perceptionSettlement,
+    crossFacilityResourceFlow: (perceptionSettlement?.states || []).map(
+      (state, index) => ({
+        shift: index + 1,
+        perceptionInformation: Number(
+          state?.resources?.perceptionInformation || 0,
+        ),
+        silentResonance: Number(state?.resources?.silentResonance || 0),
+        humanFireworks: Number(state?.resources?.humanFireworks || 0),
+      }),
+    ),
     preview: settledPreviewWithResources,
   };
 }
