@@ -3,14 +3,14 @@ import request from "/src/api/request";
 export default {
     uploadRogueSeed(data) {
         return request({
-            url: `rogue/seed/upload`, method: "post",
+            url: `/rogue/seed/upload`, method: "post",
             data: data
         });
     },
 
     uploadRogueSeedSettlementChart(data) {
         return request({
-            url: `auth/rogue-seed/settlement-chart`,
+            url: `/auth/rogue-seed/settlement-chart`,
             method: "post",
             data: data
         });
@@ -18,7 +18,7 @@ export default {
 
     rogueSeedRating(data) {
         return request({
-            url: `rogue/seed/rating`,
+            url: `/rogue/seed/rating`,
             method: "post",
             data: data
         });
@@ -26,7 +26,7 @@ export default {
 
     getRogueSeedPage(data) {
         return request({
-            url: `rogue/seed/page`,
+            url: `/rogue/seed/page`,
             method: "post",
             data: data
         });
@@ -36,14 +36,14 @@ export default {
 
     getRogueSeedUserRating(uid) {
         return request({
-            url: `rogue/seed/user/rating?uid=${uid}`,
+            url: `/rogue/seed/user/rating?uid=${uid}`,
             method: "get"
         });
     },
 
     rollRogueSeed(data) {
         return request({
-            url: `rogue/seed/roll`,
+            url: `/rogue/seed/roll`,
             method: "post",
             data: data
         });

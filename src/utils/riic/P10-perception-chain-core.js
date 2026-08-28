@@ -196,7 +196,7 @@ function createStateSettlement({
   expectedPlacements,
   officeExtraRecruitmentSlots,
   controlConditionStates,
-  resourceFacts = {},
+  resourceData = {},
 }) {
   const rooms = Array.isArray(state?.rooms) ? state.rooms : [];
   const roomsByFacility = getRoomsByFacility(rooms);
@@ -224,19 +224,19 @@ function createStateSettlement({
     "trading",
   );
   const fixedDormitoryOccupantCount = toNonNegativeNumber(
-    resourceFacts?.dormitoryOccupantCount,
+    resourceData?.dormitoryOccupantCount,
   );
   const fixedDormitoryLevel = toNonNegativeNumber(
-    resourceFacts?.dormitoryLevel,
+    resourceData?.dormitoryLevel,
   );
   const dormitoryOccupantCount =
     fixedDormitoryOccupantCount ?? getDormitoryOccupantCount(roomsByFacility);
   const highestDormitoryLevel =
     fixedDormitoryLevel ?? getHighestDormitoryLevel(roomsByFacility);
   const assumeDormitorySupport =
-    resourceFacts?.assumeDormitorySupport === true;
+    resourceData?.assumeDormitorySupport === true;
   const dormitorySupportOccupantCount =
-    toNonNegativeNumber(resourceFacts?.dormitorySupportOccupantCount) ??
+    toNonNegativeNumber(resourceData?.dormitorySupportOccupantCount) ??
     DEFAULT_DORMITORY_CAPACITY_PER_ROOM;
 
   if (rosmontisPlacement) {
@@ -627,7 +627,7 @@ export function settleRiicPerceptionSchedule({
   expectedPlacements = [],
   officeExtraRecruitmentSlots,
   controlConditionStates = {},
-  resourceFacts = {},
+  resourceData = {},
 } = {}) {
   const states = Array.isArray(preview?.states) ? preview.states : [];
   const eliteById = getRosterEliteById(ownedOperators);
@@ -640,18 +640,18 @@ export function settleRiicPerceptionSchedule({
       ownedOperators,
       expectedPlacements,
       officeExtraRecruitmentSlots:
-        toNonNegativeNumber(resourceFacts?.officeExtraRecruitmentSlots) ??
+        toNonNegativeNumber(resourceData?.officeExtraRecruitmentSlots) ??
         normalizedOfficeExtraRecruitmentSlots,
       controlConditionStates: {
         ...controlConditionStates,
         duskMoodAbove12:
-          resourceFacts?.duskMoodAbove12 ??
+          resourceData?.duskMoodAbove12 ??
           controlConditionStates?.duskMoodAbove12,
         lingMoodAbove12:
-          resourceFacts?.lingMoodAbove12 ??
+          resourceData?.lingMoodAbove12 ??
           controlConditionStates?.lingMoodAbove12,
       },
-      resourceFacts,
+      resourceData,
     }),
   );
   const cycleHours = settledStates.reduce(

@@ -5,105 +5,28 @@ import request from "/src/api/request"
 export default {
 
   /**
-   * 注册
-   * @param userData 账号密码或邮箱验证码
-   * @returns {*} 用户信息
+   * 更新当前登录用户的昵称（认证由请求拦截器自动附加 Authorization 头）
+   * @param {string} nickname 新的昵称，不能为空
+   * @returns {*} 更新结果
    */
-  registerV3(userData) {
+  updateNickname(nickname) {
     return request({
-      url: `user/register/v3`,
+      url: `/auth/user/nickname`,
       method: "post",
-      data: userData,
+      data: { nickname },
     })
   },
 
   /**
-   * 调查站登录
-   * @param userData 账号密码或邮箱验证码
-   * @returns {*} 用户信息
+   * 更新当前登录用户的头像（认证由请求拦截器自动附加 Authorization 头）
+   * @param {string} avatar 新的头像地址，不能为空
+   * @returns {*} 更新结果
    */
-  loginV3(userData) {
+  updateAvatar(avatar) {
     return request({
-      url: `user/login/v3`,
+      url: `/auth/user/avatar`,
       method: "post",
-      data: userData,
-    })
-  },
-
-
-  /**
-   * 发送邮件验证码
-   * @param data  内部数据包括邮件用途，邮箱等
-   * @returns {*}  成功信息
-   */
-  sendVerificationCodeV2(data){
-    return request({
-      url: `user/verificationCode`,
-      method: "post",
-      data: data,
-    })
-  },
-
-  /**
-   * 发送邮件验证码
-   * @param data  内部数据包括邮件用途，邮箱等
-   * @returns {*}  成功信息
-   */
-  sendUpdateEmailVerificationCode(data){
-    return request({
-      url: `auth/user/update-email/verificationCode`,
-      method: "post",
-      data: data,
-    })
-  },
-
-  checkVerificationCode(data) {
-    const {oldEmail,verificationCode} = data
-    return request({
-      url: `auth/user/check/verificationCode?email=${oldEmail}&verificationCode=${verificationCode}`,
-      method: "get"
-    })
-  },
-
-  bindEmail(data) {
-    return request({
-      url: `auth/user/bind-email`,
-      method: "post",
-      data: data,
-    })
-  },
-
-  /**
-   * 更新用户信息
-   * @param data
-   * @returns {*}
-   */
-  updateUserDataV2(data) {
-    return request({
-      url: `auth/user/update/v2`,
-      method: "post",
-      data: data,
-    })
-  },
-
-  /**
-   * 找回用户信息
-   * @param data
-   * @returns {*}
-   */
-  retrieveAuthentication(data) {
-    return request({
-      url: `user/retrieve/auth`,
-      method: "post",
-      data: data,
-    })
-  },
-
-  resetPassword(data) {
-    return request({
-      url: `user/reset/password`,
-      method: "post",
-      data: data,
+      data: { avatar },
     })
   },
 
@@ -113,7 +36,7 @@ export default {
    */
   getOpenApiPermissions() {
     return request({
-      url: `user/open-api/permissions`,
+      url: `/user/open-api/permissions`,
       method: "get",
     })
   },
@@ -126,7 +49,7 @@ export default {
    */
   generateOpenApiToken(scope, remark) {
     return request({
-      url: `user/open-api/token`,
+      url: `/auth/user/open-api/token`,
       method: "post",
       data: { scope, remark },
     })
@@ -138,7 +61,7 @@ export default {
    */
   getOpenApiTokens() {
     return request({
-      url: `auth/user/open-api/tokens`,
+      url: `/auth/user/open-api/tokens`,
       method: "get",
     })
   },
@@ -150,7 +73,7 @@ export default {
    */
   deleteOpenApiToken(token) {
     return request({
-      url: `auth/user/open-api/token/delete`,
+      url: `/auth/user/open-api/token/delete`,
       method: "post",
       data: { token },
     })

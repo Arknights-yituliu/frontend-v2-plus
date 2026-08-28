@@ -32,6 +32,15 @@ export default {
         })
     },
 
+    getCredByHgToken(data){
+        return request({
+            url: `/survey/hg/cred-token`,
+            method: "post",
+            data: data,
+        })
+    },
+
+    
 
     getPlayBindingListByHgToken(data){
         return request({
@@ -68,7 +77,7 @@ export default {
     getOperatorData() {
         const USER_TOKEN = encodeURIComponent(localStorage.getItem("USER_TOKEN"))
         return request({
-            url: `/survey/operator/info?token=${USER_TOKEN}`,
+            url: `/auth/survey/operator/info`,
             method: "get"
         })
     },

@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 4000",
+    "dev": "vite --port 3000",
+    "dev:local": "set VITE_USE_LOCAL=1&& vite --port 3000",
     "build": "node scripts/generate-seo.mjs && vite build",
     "gen:seo": "node scripts/generate-seo.mjs",
     "build:logistics-skill-groups": "node scripts/generate-logistics-skill-groups.js",

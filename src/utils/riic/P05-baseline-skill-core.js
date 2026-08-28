@@ -14,6 +14,10 @@ import {
   normalizeRiicIdealTrainingRaritySelection,
   isRiicIdealTrainingEnabledForOperator,
 } from "./P05-training-policy-core.js";
+import {
+  getRiicSkillTags,
+  withRiicOperatorTags,
+} from "./riic-operator-tags.js";
 
 function toNonNegativeInteger(value, fallback = null) {
   const number = Number(value);
@@ -59,12 +63,16 @@ function normalizeOwnedOperators(ownedOperators) {
           level: current.level || 0,
         })
     ) {
+      const taggedOperator = withRiicOperatorTags(operator);
       operatorMap.set(charId, {
         charId,
         name: String(operator?.name || charId),
         rarity: toNonNegativeInteger(operator?.rarity, null),
         elite,
         level,
+        ...(taggedOperator.tags?.length > 0
+          ? { tags: taggedOperator.tags }
+          : {}),
       });
     }
   }
@@ -402,6 +410,7 @@ function formatActiveRule(rule) {
     unlock: rule.unlock,
     effect: rule.effect,
     poolKey: rule.poolKey,
+    skillTags: getRiicSkillTags(rule.buffName),
     ignoredMechanics: rule.ignoredMechanics || [],
   };
 }
@@ -415,25 +424,54 @@ function formatSameRoomRule(rule) {
     unlock: rule.unlock,
     condition: rule.condition,
     effect: rule.effect,
+    skillTags: getRiicSkillTags(rule.buffName),
     ignoredMechanics: rule.ignoredMechanics || [],
   };
 }
 
 function createCandidate(operator, rules, sameRoomRules) {
+  const effects = rules.map(formatActiveRule);
+  const sameRoomEffects = sameRoomRules.map(formatSameRoomRule);
+  const skillTags = [
+    ...new Set(
+      [...effects, ...sameRoomEffects].flatMap((rule) => rule.skillTags),
+    ),
+  ];
+
   return {
     charId: operator.charId,
     name: operator.name,
     elite: operator.elite,
     level: operator.level,
+    ...(operator.tags?.length > 0 ? { tags: operator.tags } : {}),
+    ...(skillTags.length > 0 ? { skillTags } : {}),
     activeRuleIds: rules.map((rule) => rule.id),
     activeSameRoomRuleIds: sameRoomRules.map((rule) => rule.id),
-    effects: rules.map(formatActiveRule),
-    sameRoomRules: sameRoomRules.map(formatSameRoomRule),
+    effects,
+    sameRoomRules: sameRoomEffects,
   };
 }
 
 function createEmptyRoomCandidates() {
   return Object.fromEntries(ROOM_TYPES.map((roomType) => [roomType, []]));
+}
+
+function hasActiveMiddleDataRule(
+  operator,
+  middleDataRules,
+  activeSourceSkillIds,
+) {
+  return (middleDataRules || []).some((rule) => {
+    if (rule?.operatorId !== operator.charId) {
+      return false;
+    }
+
+    const sourceSkillId = rule?.sourceSkillId;
+    return (
+      sourceSkillId &&
+      activeSourceSkillIds.has(sourceSkillId)
+    );
+  });
 }
 
 function addPoolMember(poolMap, operator, rule) {
@@ -519,6 +557,9 @@ export function resolveRiicBaselineSkills(
     ruleData?.sameRoomRules,
     { isSameRoomRule: true },
   );
+  const middleDataRules = Array.isArray(ruleData?.middleDataRules?.skills)
+    ? ruleData.middleDataRules.skills
+    : [];
   const candidatesByRoom = createEmptyRoomCandidates();
   const poolMap = new Map();
   const operators = [];
@@ -540,15 +581,39 @@ export function resolveRiicBaselineSkills(
       activeSourceSkillIds,
       normalizedSkillStates.statesById,
     );
+    const hasMiddleData = hasActiveMiddleDataRule(
+      operator,
+      middleDataRules,
+      activeSourceSkillIds,
+    );
 
-    if (activeRules.length === 0 && activeSameRoomRules.length === 0) {
+    if (
+      activeRules.length === 0 &&
+      activeSameRoomRules.length === 0 &&
+      !hasMiddleData
+    ) {
       continue;
     }
 
+    const formattedActiveRules = activeRules.map(formatActiveRule);
+    const formattedSameRoomRules =
+      activeSameRoomRules.map(formatSameRoomRule);
+    const skillTags = [
+      ...new Set(
+        [...formattedActiveRules, ...formattedSameRoomRules].flatMap(
+          (rule) => rule.skillTags,
+        ),
+      ),
+    ];
+
     operators.push({
       ...operator,
-      activeRules: activeRules.map(formatActiveRule),
-      activeSameRoomRules: activeSameRoomRules.map(formatSameRoomRule),
+      ...(skillTags.length > 0 ? { skillTags } : {}),
+      activeSkillIds: [...activeSourceSkillIds].sort((left, right) =>
+        left.localeCompare(right, "en"),
+      ),
+      activeRules: formattedActiveRules,
+      activeSameRoomRules: formattedSameRoomRules,
     });
 
     for (const roomType of ROOM_TYPES) {

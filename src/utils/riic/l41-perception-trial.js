@@ -84,21 +84,21 @@ function hasOperatorAtElite(rosterById, operatorId, eliteAtLeast) {
   return elite !== null && elite >= eliteAtLeast;
 }
 
-function getFacilityCount(layoutFacts, facilityType) {
-  return (layoutFacts?.facilities || []).filter(
+function getFacilityCount(layoutData, facilityType) {
+  return (layoutData?.facilities || []).filter(
     (facility) =>
       String(facility?.facilityType || "").trim() === facilityType,
   ).length;
 }
 
-function getOfficeExtraRecruitmentSlots(layoutFacts) {
-  return getFacilityCount(layoutFacts, "hire") > 0
+function getOfficeExtraRecruitmentSlots(layoutData) {
+  return getFacilityCount(layoutData, "hire") > 0
     ? MAX_OFFICE_EXTRA_RECRUITMENT_SLOTS
     : 0;
 }
 
-function getHighestDormitoryLevel(layoutFacts) {
-  return getFacilityCount(layoutFacts, "dormitory") > 0
+function getHighestDormitoryLevel(layoutData) {
+  return getFacilityCount(layoutData, "dormitory") > 0
     ? MAX_DORMITORY_LEVEL
     : 0;
 }
@@ -490,17 +490,17 @@ function createScenario({ id, label, rosmontis, ebenholz }, rosterById) {
 
 export function evaluateRiicPerceptionResourceTrials({
   ownedOperators,
-  layoutFacts,
+  layoutData,
 } = {}) {
   const rosterById = getRosterById(ownedOperators);
   const rosmontis = getCoreOperatorResult(rosterById, OPERATOR.rosmontis);
   const ebenholz = getCoreOperatorResult(rosterById, OPERATOR.ebenholz);
   const dormitoryOccupantCount =
-    getFacilityCount(layoutFacts, "dormitory") *
+    getFacilityCount(layoutData, "dormitory") *
     DORMITORY_CAPACITY_PER_ROOM;
-  const highestDormitoryLevel = getHighestDormitoryLevel(layoutFacts);
+  const highestDormitoryLevel = getHighestDormitoryLevel(layoutData);
   const officeExtraRecruitmentSlots =
-    getOfficeExtraRecruitmentSlots(layoutFacts);
+    getOfficeExtraRecruitmentSlots(layoutData);
   const officePlans = createOfficePlans(
     rosterById,
     officeExtraRecruitmentSlots,

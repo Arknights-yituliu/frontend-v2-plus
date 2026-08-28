@@ -6,6 +6,17 @@ import {
 } from "./l62-team-calculation.js";
 
 const EPSILON = 1e-9;
+const PREFERRED_SAME_SHIFT_PAIRS = Object.freeze([
+  Object.freeze({
+    key: "rosmontis-ebenholz",
+    leftOperatorId: "char_391_rosmon",
+    leftLabel: "迷迭香",
+    leftFacility: "manufacture",
+    rightOperatorId: "char_4046_ebnhlz",
+    rightLabel: "黑键",
+    rightFacility: "trading",
+  }),
+]);
 
 function toPositiveHours(value) {
   const hours = Number(value);
@@ -111,6 +122,79 @@ function candidateHasAnyOperator(candidate, operatorIds) {
     ...(candidate?.operatorIds || []),
     ...(candidate?.operators || []).map((operator) => operator?.charId),
   ].some((operatorId) => expectedOperatorIds.has(String(operatorId || "").trim()));
+}
+
+function getSegmentOperatorIds(segment) {
+  return new Set(
+    [
+      ...(segment?.operatorIds || []),
+      ...(segment?.stationAssignments || []).flatMap((assignment) => [
+        ...(assignment?.operatorIds || []),
+        ...(assignment?.candidate?.operatorIds || []),
+        ...(assignment?.candidate?.operators || []).map(
+          (operator) => operator?.charId,
+        ),
+      ]),
+    ]
+      .map((operatorId) => String(operatorId || "").trim())
+      .filter(Boolean),
+  );
+}
+
+function candidateHasOperator(candidate, operatorId) {
+  const expectedOperatorId = String(operatorId || "").trim();
+  if (!expectedOperatorId) {
+    return false;
+  }
+
+  return (candidate?.segments || []).some((segment) =>
+    getSegmentOperatorIds(segment).has(expectedOperatorId),
+  );
+}
+
+function getCandidateOperatorIdsAtHour(candidate, hour) {
+  return getSegmentOperatorIds(getSegmentAtHour(candidate?.segments, hour));
+}
+
+function getCandidatePairSameShiftHours({
+  leftCandidate,
+  rightCandidate,
+  leftOperatorId,
+  rightOperatorId,
+}) {
+  const leftCycleHours = getSegmentCycleHours(leftCandidate?.segments);
+  const rightCycleHours = getSegmentCycleHours(rightCandidate?.segments);
+  const cycleHours = leastCommonMultiple(leftCycleHours, rightCycleHours);
+  if (cycleHours <= 0) {
+    return 0;
+  }
+
+  const boundaries = getTimelineBoundaries(
+    [leftCandidate, rightCandidate],
+    cycleHours,
+  );
+  let sameShiftHours = 0;
+
+  for (let index = 0; index < boundaries.length - 1; index += 1) {
+    const startHour = boundaries[index];
+    const durationHours = boundaries[index + 1] - startHour;
+    const leftOperatorIds = getCandidateOperatorIdsAtHour(
+      leftCandidate,
+      startHour,
+    );
+    const rightOperatorIds = getCandidateOperatorIdsAtHour(
+      rightCandidate,
+      startHour,
+    );
+    if (
+      leftOperatorIds.has(leftOperatorId) &&
+      rightOperatorIds.has(rightOperatorId)
+    ) {
+      sameShiftHours += durationHours;
+    }
+  }
+
+  return sameShiftHours;
 }
 
 function getCandidateBindings(candidate, group) {
@@ -536,6 +620,166 @@ function rotateCandidateSegments(candidate, offset) {
   };
 }
 
+function rotateEntryCandidate({ entry, offset, controlCandidate }) {
+  const candidate = entry?.candidate || {};
+  const segmentCount = candidate?.segments?.length || 0;
+  const rotatedCandidate = rotateCandidateSegments(candidate, offset);
+  const previousOffset = Number(candidate?.sameShiftBindingOffset);
+  const nextOffset =
+    segmentCount > 0
+      ? ((Number.isInteger(previousOffset) ? previousOffset : 0) + offset) %
+        segmentCount
+      : 0;
+  const summary = summarizeCandidateBindings({
+    controlCandidate,
+    group: entry?.group,
+    candidate: rotatedCandidate,
+  });
+  const nextCandidate = {
+    ...rotatedCandidate,
+    sameShiftBindingOffset: nextOffset,
+  };
+  delete nextCandidate.sameShiftBindingSummary;
+  if (summary.expectedBindingHours > EPSILON) {
+    nextCandidate.sameShiftBindingSummary = {
+      ...summary,
+      groupId: String(entry?.group?.id || "").trim(),
+      rotationOffset: nextOffset,
+    };
+  }
+
+  return {
+    ...entry,
+    candidate: nextCandidate,
+  };
+}
+
+function alignPreferredSameShiftPairs({
+  groupEntries = [],
+  controlCandidate,
+} = {}) {
+  const alignedEntries = [...groupEntries];
+  const debug = [];
+
+  for (const pair of PREFERRED_SAME_SHIFT_PAIRS) {
+    const leftIndex = alignedEntries.findIndex(({ group, candidate }) =>
+      candidateHasOperator(candidate, pair.leftOperatorId) &&
+      String(group?.facility || "") === pair.leftFacility,
+    );
+    const rightIndex = alignedEntries.findIndex(({ group, candidate }) =>
+      candidateHasOperator(candidate, pair.rightOperatorId) &&
+      String(group?.facility || "") === pair.rightFacility,
+    );
+
+    if (leftIndex < 0 || rightIndex < 0) {
+      debug.push({
+        key: pair.key,
+        leftLabel: pair.leftLabel,
+        rightLabel: pair.rightLabel,
+        status: "missingOperator",
+        initialSameShiftHours: 0,
+        finalSameShiftHours: 0,
+        leftOffset: 0,
+        rightOffset: 0,
+      });
+      continue;
+    }
+    if (leftIndex === rightIndex) {
+      debug.push({
+        key: pair.key,
+        leftLabel: pair.leftLabel,
+        rightLabel: pair.rightLabel,
+        status: "sameGroup",
+        initialSameShiftHours: 0,
+        finalSameShiftHours: 0,
+        leftOffset: 0,
+        rightOffset: 0,
+      });
+      continue;
+    }
+
+    const leftCandidate = alignedEntries[leftIndex].candidate;
+    const rightCandidate = alignedEntries[rightIndex].candidate;
+    const initialSameShiftHours = getCandidatePairSameShiftHours({
+      leftCandidate,
+      rightCandidate,
+      leftOperatorId: pair.leftOperatorId,
+      rightOperatorId: pair.rightOperatorId,
+    });
+    let best = {
+      leftOffset: 0,
+      rightOffset: 0,
+      sameShiftHours: initialSameShiftHours,
+      changedEntryCount: 0,
+    };
+    const leftSegmentCount = leftCandidate?.segments?.length || 1;
+    const rightSegmentCount = rightCandidate?.segments?.length || 1;
+
+    for (let leftOffset = 0; leftOffset < leftSegmentCount; leftOffset += 1) {
+      for (
+        let rightOffset = 0;
+        rightOffset < rightSegmentCount;
+        rightOffset += 1
+      ) {
+        const sameShiftHours = getCandidatePairSameShiftHours({
+          leftCandidate: rotateCandidateSegments(leftCandidate, leftOffset),
+          rightCandidate: rotateCandidateSegments(rightCandidate, rightOffset),
+          leftOperatorId: pair.leftOperatorId,
+          rightOperatorId: pair.rightOperatorId,
+        });
+        const changedEntryCount =
+          Number(leftOffset > 0) + Number(rightOffset > 0);
+        const accepted =
+          sameShiftHours > best.sameShiftHours + EPSILON ||
+          (Math.abs(sameShiftHours - best.sameShiftHours) <= EPSILON &&
+            changedEntryCount < best.changedEntryCount);
+        if (accepted) {
+          best = {
+            leftOffset,
+            rightOffset,
+            sameShiftHours,
+            changedEntryCount,
+          };
+        }
+      }
+    }
+
+    if (best.leftOffset > 0) {
+      alignedEntries[leftIndex] = rotateEntryCandidate({
+        entry: alignedEntries[leftIndex],
+        offset: best.leftOffset,
+        controlCandidate,
+      });
+    }
+    if (best.rightOffset > 0) {
+      alignedEntries[rightIndex] = rotateEntryCandidate({
+        entry: alignedEntries[rightIndex],
+        offset: best.rightOffset,
+        controlCandidate,
+      });
+    }
+
+    debug.push({
+      key: pair.key,
+      leftLabel: pair.leftLabel,
+      rightLabel: pair.rightLabel,
+      status:
+        best.sameShiftHours > initialSameShiftHours + EPSILON
+          ? "aligned"
+          : "alreadyBest",
+      initialSameShiftHours,
+      finalSameShiftHours: best.sameShiftHours,
+      leftOffset: best.leftOffset,
+      rightOffset: best.rightOffset,
+    });
+  }
+
+  return {
+    groupEntries: alignedEntries,
+    debug,
+  };
+}
+
 /**
  * L74: keeps selected teams intact while selecting the room rotation phase that
  * realizes the most control-center same-shift bonus.
@@ -740,8 +984,13 @@ export function alignRiicScheduleSameShiftBindings({
     };
   });
 
-  return {
+  const preferredSameShiftAlignment = alignPreferredSameShiftPairs({
     groupEntries: alignedEntries,
+    controlCandidate,
+  });
+
+  return {
+    groupEntries: preferredSameShiftAlignment.groupEntries,
     summary,
     signature: summary
       .map((entry) => `${entry.groupId}:${entry.rotationOffset}`)
@@ -770,6 +1019,7 @@ export function alignRiicScheduleSameShiftBindings({
         ),
       },
       groups: debugGroups,
+      preferredSameShift: preferredSameShiftAlignment.debug,
     },
   };
 }

@@ -2,6 +2,7 @@ import RIIC_ACTIVE_ROSTER_RULES from "../../static/json/tools/riic-candidates/R6
   type: "json",
 };
 import { resolveRiicOperatorIdByName } from "./riic-operator-identity.js";
+import { getRiicOperatorIdsByTag } from "./riic-operator-tags.js";
 
 function toFiniteNumber(value, fallback = 0) {
   const number = Number(value);
@@ -21,14 +22,17 @@ function normalizeActiveRosterRuleData(ruleData) {
         return [];
       }
 
+      const taggedOperatorIds = new Set(getRiicOperatorIdsByTag(id));
+      for (const operatorId of (tagSet?.operatorNames || [])
+        .map(resolveRiicOperatorIdByName)
+        .filter(Boolean)) {
+        taggedOperatorIds.add(operatorId);
+      }
+
       return [
         [
           id,
-          new Set(
-            (tagSet?.operatorNames || [])
-              .map(resolveRiicOperatorIdByName)
-              .filter(Boolean),
-          ),
+          taggedOperatorIds,
         ],
       ];
     }),

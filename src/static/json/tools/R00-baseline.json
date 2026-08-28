@@ -46,18 +46,18 @@
   "summary": {
     "inputRecordCount": 913,
     "scopedSkillCount": 549,
-    "includedSourceSkillCount": 296,
-    "directRuleCount": 290,
+    "includedSourceSkillCount": 299,
+    "directRuleCount": 293,
     "baseOnlyRuleCount": 67,
     "sameRoomRuleCount": 9,
-    "excludedSkillCount": 253,
+    "excludedSkillCount": 252,
     "byRoomType": {
       "control": 10,
       "meeting": 46,
       "power": 39,
       "trading": 67,
       "hire": 43,
-      "manufacture": 85
+      "manufacture": 88
     },
     "byRoomProduct": {
       "control:all": 10,
@@ -65,7 +65,7 @@
       "power:all": 39,
       "trading:all": 67,
       "hire:all": 43,
-      "manufacture:all": 52,
+      "manufacture:all": 55,
       "manufacture:experience": 17,
       "manufacture:gold": 8,
       "manufacture:orundum": 8
@@ -123,10 +123,12 @@
       "hire:all:5": 2,
       "control:meeting:all:5": 1,
       "manufacture:all:11.666666666666666": 1,
-      "manufacture:experience:25": 1
+      "manufacture:experience:25": 1,
+      "manufacture:all:-5": 2,
+      "manufacture:all:-20": 1
     },
     "exclusionsByReason": {
-      "conditionalOrUnsupported": 184,
+      "conditionalOrUnsupported": 183,
       "missingDirectEffect": 17,
       "timeDependentOrThreshold": 35,
       "sameRoomOverride": 9,
@@ -134,7 +136,7 @@
     },
     "roomStateRuleCount": 50,
     "roomStateEffectCount": 50,
-    "roomStateFormulaCount": 3,
+    "roomStateFormulaCount": 8,
     "roomStateExclusionCount": 13,
     "roomStateMetrics": {
       "storageCapacity": 26,
@@ -15032,6 +15034,90 @@
       "confidence": "high",
       "ignoredMechanics": [],
       "rawDescription": "进驻人力办公室时，人脉资源的联络速度+20%"
+    },
+    {
+      "id": "char_163_hpsts|manufacture|工匠精神·α|0|1|direct-production",
+      "sourceSkillId": "char_163_hpsts|manufacture|工匠精神·α|0|1",
+      "charId": "char_163_hpsts",
+      "name": "火神",
+      "buffName": "工匠精神·α",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_163_hpsts|0"
+      },
+      "effect": {
+        "metric": "production",
+        "percent": -5,
+        "product": "all",
+        "coverage": "complete"
+      },
+      "poolKey": "manufacture:all:-5",
+      "confidence": "reviewed",
+      "ignoredMechanics": [
+        "storageCapacity"
+      ],
+      "rawDescription": "进驻制造站时，生产力-5%，仓库容量上限+16"
+    },
+    {
+      "id": "char_163_hpsts|manufacture|工匠精神·β|2|1|direct-production",
+      "sourceSkillId": "char_163_hpsts|manufacture|工匠精神·β|2|1",
+      "charId": "char_163_hpsts",
+      "name": "火神",
+      "buffName": "工匠精神·β",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 2,
+        "level": 1
+      },
+      "activation": {
+        "mode": "replace",
+        "group": "char_163_hpsts|0"
+      },
+      "effect": {
+        "metric": "production",
+        "percent": -5,
+        "product": "all",
+        "coverage": "complete"
+      },
+      "poolKey": "manufacture:all:-5",
+      "confidence": "reviewed",
+      "ignoredMechanics": [
+        "storageCapacity"
+      ],
+      "rawDescription": "进驻制造站时，生产力-5%，仓库容量上限+19"
+    },
+    {
+      "id": "char_369_bena|manufacture|“可靠”助手|0|1|direct-production",
+      "sourceSkillId": "char_369_bena|manufacture|“可靠”助手|0|1",
+      "charId": "char_369_bena",
+      "name": "贝娜",
+      "buffName": "“可靠”助手",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "effect": {
+        "metric": "production",
+        "percent": -20,
+        "product": "all",
+        "coverage": "complete"
+      },
+      "poolKey": "manufacture:all:-20",
+      "confidence": "reviewed",
+      "ignoredMechanics": [
+        "storageCapacity"
+      ],
+      "rawDescription": "进驻制造站时，生产力-20%，仓库容量上限+17"
     }
   ],
   "sameRoomRules": [
@@ -16618,19 +16704,6 @@
       },
       "reason": "conditionalOrUnsupported",
       "rawDescription": "进驻制造站时，仓库容量上限+10，心情每小时消耗-0.25"
-    },
-    {
-      "id": "char_381_bubble|manufacture|大就是好！|1|1",
-      "charId": "char_381_bubble",
-      "name": "泡泡",
-      "buffName": "大就是好！",
-      "roomType": "manufacture",
-      "unlock": {
-        "phase": 1,
-        "level": 1
-      },
-      "reason": "conditionalOrUnsupported",
-      "rawDescription": "进驻制造站时，当前制造站内干员根据自身提升的仓库容量提供一定的生产力。提升16格以下的，每格仓库容量提供1%生产力；提升大于16格的，每格仓库容量提供3%生产力（无法与回收利用叠加，且优先生效）"
     },
     {
       "id": "char_385_finlpp|manufacture|再生能源|1|1",
@@ -19887,6 +19960,185 @@
       "rawDescription": "进驻贸易站时，订单获取效率+10%，且订单上限+2"
     }
   ],
+  "middleDataRules": {
+    "variables": [
+      {
+        "id": "a1TeamCount",
+        "type": "roomOperatorCountByTag",
+        "scope": "room",
+        "roomType": "manufacture",
+        "tag": "a1-team"
+      },
+      {
+        "id": "rhineTechSkillCount",
+        "type": "roomSkillCountByTag",
+        "scope": "room",
+        "roomType": "manufacture",
+        "tag": "rhine-tech-skill"
+      },
+      {
+        "id": "humanFireworks",
+        "type": "resource",
+        "scope": "plan",
+        "resource": "humanFireworks"
+      },
+      {
+        "id": "witchcraftCrystal",
+        "type": "resourceTransform",
+        "scope": "plan",
+        "input": "humanFireworks",
+        "divisor": 5,
+        "round": "floor"
+      },
+      {
+        "id": "justiceKnightWildManeSupport",
+        "type": "facilityOperatorPresence",
+        "scope": "plan",
+        "facility": "power",
+        "operatorIds": [
+          "char_4000_jnight"
+        ],
+        "sourceOperatorId": "char_4000_jnight",
+        "sourceSkillId": "char_4000_jnight|power|“滴滴，启动！”|0|30",
+        "value": 1
+      }
+    ],
+    "skills": [
+      {
+        "id": "char_1036_fang2|manufacture|重聚时光|2|1|middle-data",
+        "operatorId": "char_1036_fang2",
+        "sourceSkillId": "char_1036_fang2|manufacture|重聚时光|2|1",
+        "name": "历阵锐枪芬",
+        "buffName": "重聚时光",
+        "roomType": "manufacture",
+        "middleData": [
+          "a1TeamCount"
+        ],
+        "effects": [
+          {
+            "variable": "a1TeamCount",
+            "scope": "room",
+            "metric": "production",
+            "amountPerUnit": 10
+          }
+        ]
+      },
+      {
+        "id": "char_1047_halo2|manufacture|勘探背包|0|1|middle-data",
+        "operatorId": "char_1047_halo2",
+        "sourceSkillId": "char_1047_halo2|manufacture|勘探背包|0|1",
+        "name": "溯光星源",
+        "buffName": "勘探背包",
+        "roomType": "manufacture",
+        "middleData": [
+          "rhineTechSkillCount"
+        ],
+        "effects": [
+          {
+            "variable": "rhineTechSkillCount",
+            "scope": "room",
+            "metric": "storageCapacity",
+            "amountPerUnit": 5
+          }
+        ]
+      },
+      {
+        "id": "char_2025_shu|manufacture|稻禾厚，顺秋收|2|1|middle-data",
+        "operatorId": "char_2025_shu",
+        "sourceSkillId": "char_2025_shu|manufacture|稻禾厚，顺秋收|2|1",
+        "name": "黍",
+        "buffName": "稻禾厚，顺秋收",
+        "roomType": "manufacture",
+        "middleData": [
+          "humanFireworks"
+        ],
+        "effects": [
+          {
+            "variable": "humanFireworks",
+            "scope": "plan",
+            "metric": "production",
+            "amountPerUnit": 0.3333333333333333
+          }
+        ]
+      },
+      {
+        "id": "char_4078_bdhkgt|manufacture|逐水草|0|1|middle-data",
+        "operatorId": "char_4078_bdhkgt",
+        "sourceSkillId": "char_4078_bdhkgt|manufacture|逐水草|0|1",
+        "name": "截云",
+        "buffName": "逐水草",
+        "roomType": "manufacture",
+        "middleData": [
+          "witchcraftCrystal"
+        ],
+        "effects": [
+          {
+            "variable": "witchcraftCrystal",
+            "scope": "plan",
+            "metric": "production",
+            "amountPerUnit": 1
+          }
+        ]
+      },
+      {
+        "id": "char_4078_bdhkgt|manufacture|问枯荣|2|1|middle-data",
+        "operatorId": "char_4078_bdhkgt",
+        "sourceSkillId": "char_4078_bdhkgt|manufacture|问枯荣|2|1",
+        "name": "截云",
+        "buffName": "问枯荣",
+        "roomType": "manufacture",
+        "middleData": [
+          "witchcraftCrystal"
+        ],
+        "effects": [
+          {
+            "variable": "witchcraftCrystal",
+            "scope": "plan",
+            "metric": "production",
+            "amountPerUnit": 2
+          }
+        ]
+      },
+      {
+        "id": "char_496_wildmn|manufacture|红松骑士团·α|0|1|middle-data",
+        "operatorId": "char_496_wildmn",
+        "sourceSkillId": "char_496_wildmn|manufacture|红松骑士团·α|0|1",
+        "name": "野鬃",
+        "buffName": "红松骑士团·α",
+        "roomType": "manufacture",
+        "middleData": [
+          "justiceKnightWildManeSupport"
+        ],
+        "effects": [
+          {
+            "variable": "justiceKnightWildManeSupport",
+            "scope": "plan",
+            "metric": "production",
+            "amountPerUnit": 5
+          }
+        ]
+      },
+      {
+        "id": "char_496_wildmn|manufacture|红松骑士团·β|2|1|middle-data",
+        "operatorId": "char_496_wildmn",
+        "sourceSkillId": "char_496_wildmn|manufacture|红松骑士团·β|2|1",
+        "name": "野鬃",
+        "buffName": "红松骑士团·β",
+        "roomType": "manufacture",
+        "middleData": [
+          "justiceKnightWildManeSupport"
+        ],
+        "effects": [
+          {
+            "variable": "justiceKnightWildManeSupport",
+            "scope": "plan",
+            "metric": "production",
+            "amountPerUnit": 5
+          }
+        ]
+      }
+    ]
+  },
   "roomStateFormulas": [
     {
       "id": "char_190_clour|manufacture|回收利用|1|1|room-state-formula|vermeil-room-storage-capacity",
@@ -19910,8 +20162,43 @@
         "outputMetric": "production",
         "percentPerInput": 2
       },
+      "precedence": {
+        "group": "manufacture:storageCapacityToProduction",
+        "priority": 10
+      },
       "confidence": "reviewed",
       "rawDescription": "进驻制造站时，当前制造站内干员提升的每格仓库容量，提供2%生产力"
+    },
+    {
+      "id": "char_381_bubble|manufacture|大就是好！|1|1|room-state-formula|bubble-operator-storage-capacity",
+      "sourceSkillId": "char_381_bubble|manufacture|大就是好！|1|1",
+      "charId": "char_381_bubble",
+      "name": "泡泡",
+      "buffName": "大就是好！",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "formula": {
+        "type": "operatorStorageCapacityToProductionByThreshold",
+        "inputScope": "roomOperators",
+        "inputMetric": "storageCapacity",
+        "outputMetric": "production",
+        "threshold": 16,
+        "atOrBelowPercentPerInput": 1,
+        "abovePercentPerInput": 3
+      },
+      "precedence": {
+        "group": "manufacture:storageCapacityToProduction",
+        "priority": 20
+      },
+      "confidence": "reviewed",
+      "rawDescription": "进驻制造站时，当前制造站内干员根据自身提升的仓库容量提供一定的生产力。提升16格以下的，每格仓库容量提供1%生产力；提升大于16格的，每格仓库容量提供3%生产力（无法与回收利用叠加，且优先生效）"
     },
     {
       "id": "char_272_strong|trading|市井之道|1|1|room-state-formula|jaye-teammate-order-efficiency",
@@ -19966,6 +20253,126 @@
       },
       "confidence": "reviewed",
       "rawDescription": "进驻贸易站时，当前订单数与订单上限每差1笔订单，则订单获取效率+4%"
+    },
+    {
+      "id": "char_4208_wintim|manufacture|科学改造|0|1|room-state-formula|operator-storage-capacity",
+      "sourceSkillId": "char_4208_wintim|manufacture|科学改造|0|1",
+      "charId": "char_4208_wintim",
+      "name": "冬时",
+      "buffName": "科学改造",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "formula": {
+        "type": "roomOperatorCountToStorageCapacity",
+        "inputScope": "roomOperators",
+        "inputMetric": "operatorCount",
+        "outputMetric": "storageCapacity",
+        "amountPerOperator": 5
+      },
+      "precedence": {
+        "mode": "stack",
+        "group": "manufacture:storageCapacityProvider"
+      },
+      "confidence": "reviewed",
+      "rawDescription": "进驻制造站时，当前制造站内每名干员为当前制造站仓库容量上限+5"
+    },
+    {
+      "id": "char_4208_wintim|manufacture|科学改造|0|1|room-state-formula|production-override",
+      "sourceSkillId": "char_4208_wintim|manufacture|科学改造|0|1",
+      "charId": "char_4208_wintim",
+      "name": "冬时",
+      "buffName": "科学改造",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 0,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "formula": {
+        "type": "roomOperatorCountToProductionOverride",
+        "inputScope": "roomOperators",
+        "inputMetric": "operatorCount",
+        "outputMetric": "production",
+        "percentPerOperator": 0,
+        "clearTeammateProduction": true,
+        "preserveFacilityCountBonuses": true
+      },
+      "precedence": {
+        "group": "manufacture:productionOverride",
+        "priority": 10
+      },
+      "confidence": "reviewed",
+      "rawDescription": "进驻制造站时，当前制造站内其他干员提供的生产力全部归零（不包含根据设施数量提供加成的生产力）"
+    },
+    {
+      "id": "char_4208_wintim|manufacture|流程优化|1|1|room-state-formula|operator-storage-capacity",
+      "sourceSkillId": "char_4208_wintim|manufacture|流程优化|1|1",
+      "charId": "char_4208_wintim",
+      "name": "冬时",
+      "buffName": "流程优化",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "formula": {
+        "type": "roomOperatorCountToStorageCapacity",
+        "inputScope": "roomOperators",
+        "inputMetric": "operatorCount",
+        "outputMetric": "storageCapacity",
+        "amountPerOperator": 5
+      },
+      "precedence": {
+        "mode": "stack",
+        "group": "manufacture:storageCapacityProvider"
+      },
+      "confidence": "reviewed",
+      "rawDescription": "进驻制造站时，当前制造站内每名干员为当前制造站仓库容量上限+5"
+    },
+    {
+      "id": "char_4208_wintim|manufacture|流程优化|1|1|room-state-formula|production-override",
+      "sourceSkillId": "char_4208_wintim|manufacture|流程优化|1|1",
+      "charId": "char_4208_wintim",
+      "name": "冬时",
+      "buffName": "流程优化",
+      "roomType": "manufacture",
+      "unlock": {
+        "phase": 1,
+        "level": 1
+      },
+      "activation": {
+        "mode": "stack",
+        "group": null
+      },
+      "formula": {
+        "type": "roomOperatorCountToProductionOverride",
+        "inputScope": "roomOperators",
+        "inputMetric": "operatorCount",
+        "outputMetric": "production",
+        "percentPerOperator": 10,
+        "clearTeammateProduction": true,
+        "preserveFacilityCountBonuses": true
+      },
+      "precedence": {
+        "group": "manufacture:productionOverride",
+        "priority": 10
+      },
+      "confidence": "reviewed",
+      "rawDescription": "进驻制造站时，当前制造站内其他干员提供的生产力全部归零（不包含根据设施数量提供加成的生产力），每名当前制造站干员为当前制造站+10%生产力"
     }
   ],
   "roomStateExclusions": [

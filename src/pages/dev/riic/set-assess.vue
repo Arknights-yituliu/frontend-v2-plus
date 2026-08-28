@@ -1153,7 +1153,7 @@ function runRawAssessment() {
     ownedOperators: source?.operators || [],
     currentOwnedOperators: source?.operators || [],
     operatorNameToCharId: sourceNameMap.value,
-    layoutFacts: selectedLayout.value.facts || {},
+    layoutData: selectedLayout.value.layoutData || {},
     trainingMode: trainingMode.value,
     idealTrainingRaritySelection: idealTrainingRaritySelection.value,
   });
@@ -1385,7 +1385,7 @@ function getSystemStatus(system) {
   if (!selectedSource.value) {
     return "missing-source";
   }
-  if (!selectedLayout.value.facts) {
+  if (!selectedLayout.value.layoutData) {
     return "missing-layout";
   }
   if (!selectedSchedule.value) {
@@ -1437,7 +1437,7 @@ const selectedSystemPercentAssessment = computed(() =>
       selectedSystem.value,
       selectedResolvedBaselineSkills.value.ownedOperators,
     ),
-    layoutFacts: selectedLayout.value.facts || {},
+    layoutData: selectedLayout.value.layoutData || {},
     groupMembers: getEnabledSystemGroupMembers(selectedSystem.value),
     choices: systemPlacementChoices.value[selectedSystem.value.id] || {},
     getCoreRequirement: getCoreSkillRequirementForRoom,
@@ -2007,7 +2007,7 @@ function evaluateTeamYieldScenario({
     systemId: system.ruleSourceId || system.id,
     ruleIds: system.ruleIds,
     operators: selectedOperators,
-    layoutFacts: selectedLayout.value.facts || {},
+    layoutData: selectedLayout.value.layoutData || {},
     groupMembers,
     getCoreRequirement: getCoreSkillRequirementForRoom,
   });
@@ -2053,7 +2053,7 @@ function buildTeamYieldAssessment({ system, resolvedSkills }) {
   const memberNames = getTeamYieldMemberNames(system);
   const baselineAssessment = calculateSystemProductionAssessment({
     assessment: {
-      rooms: buildRoomsForTeamYield(selectedLayout.value.facts),
+      rooms: buildRoomsForTeamYield(selectedLayout.value.layoutData),
     },
     resolvedSkills,
     operatorNameToCharId: sourceNameMap.value,
@@ -2086,8 +2086,8 @@ function buildTeamYieldAssessment({ system, resolvedSkills }) {
   };
 }
 
-function buildRoomsForTeamYield(layoutFacts) {
-  return (layoutFacts?.facilities || []).flatMap((facility, index) => {
+function buildRoomsForTeamYield(layoutData) {
+  return (layoutData?.facilities || []).flatMap((facility, index) => {
     const facilityType = String(facility?.facilityType || "").trim();
     const slotCount = Number(facility?.slotCount);
     if (!facilityType || !Number.isFinite(slotCount) || slotCount < 1) {
@@ -2217,8 +2217,8 @@ onMounted(() => {
         <strong>{{ layoutLabel }}</strong>
         <small>
           {{
-            selectedLayout.facts
-              ? `${selectedLayout.facts.facilities.length} 个设施`
+            selectedLayout.layoutData
+              ? `${selectedLayout.layoutData.facilities.length} 个设施`
               : "尚未读取布局事实"
           }}
         </small>

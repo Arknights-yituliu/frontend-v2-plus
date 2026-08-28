@@ -1,4 +1,8 @@
 import { getRiicSameShiftBindingAtHour } from "./riic/l74-same-shift-bindings.js";
+import {
+  normalizeRiicOperator,
+  normalizeRiicOperatorId,
+} from "./riicOperatorIdentity.js";
 
 function toPositiveHours(value) {
   const hours = Number(value);
@@ -109,16 +113,25 @@ function getFallbackCount(candidate) {
   return Math.max(configuredCount, materializedCount);
 }
 
+function normalizePreviewOperators(operators = []) {
+  return (operators || []).map(normalizeRiicOperator);
+}
+
 function getCandidateOperatorIds(candidate) {
   return new Set([
-    ...(candidate?.operatorIds || []),
-    ...(candidate?.operators || []).map((operator) => operator?.charId),
+    ...(candidate?.operatorIds || [])
+      .map((operatorId) => normalizeRiicOperatorId(operatorId))
+      .filter(Boolean),
+    ...(candidate?.operators || []).map((operator) =>
+      normalizeRiicOperatorId(operator?.charId),
+    ).filter(Boolean),
   ]);
 }
 
 function getOperatorSignature(operator) {
-  const charId = String(operator?.charId || "").trim();
-  return charId || `name:${String(operator?.name || "").trim()}`;
+  const normalized = normalizeRiicOperator(operator);
+  const charId = normalizeRiicOperatorId(normalized?.charId);
+  return charId || `name:${normalized?.name || ""}`;
 }
 
 function haveSameOperators(leftOperators = [], rightOperators = []) {
@@ -159,10 +172,10 @@ function createRoomPreview({
   const overriddenOperators = roomOperatorOverrides?.[overrideKey];
   const isInvalidated = invalidatedRoomKeys?.[key] === true;
   const automaticOperators = Array.isArray(candidate.operators)
-    ? candidate.operators
+    ? normalizePreviewOperators(candidate.operators)
     : [];
   const operators = Array.isArray(overriddenOperators)
-    ? overriddenOperators
+    ? normalizePreviewOperators(overriddenOperators)
     : isInvalidated
       ? []
       : automaticOperators;
@@ -226,10 +239,10 @@ function createStaticRoomPreview({
   const isInvalidated = invalidatedRoomKeys?.[key] === true;
   const stateOperators = room?.operatorsByStateIndex?.[stateIndex];
   const automaticOperators = Array.isArray(stateOperators)
-    ? stateOperators
-    : room?.operators || [];
+    ? normalizePreviewOperators(stateOperators)
+    : normalizePreviewOperators(room?.operators || []);
   const operators = Array.isArray(overriddenOperators)
-    ? overriddenOperators
+    ? normalizePreviewOperators(overriddenOperators)
     : isInvalidated
       ? []
       : automaticOperators;
@@ -265,7 +278,7 @@ function applyRoomOperatorOverride(room, stateIndex, roomOperatorOverrides) {
   return Array.isArray(overriddenOperators)
     ? {
         ...room,
-        operators: overriddenOperators,
+        operators: normalizePreviewOperators(overriddenOperators),
         efficiency: null,
         manuallyEdited:
           room.manuallyEdited === true ||
@@ -523,7 +536,7 @@ export function buildRiicSchedulePreview({
       (room) => room.facility === "control",
     );
     const controlOperatorIds = (editedControlRoom?.operators || [])
-      .map((operator) => String(operator?.charId || "").trim())
+      .map((operator) => normalizeRiicOperatorId(operator?.charId))
       .filter(Boolean);
 
     return {

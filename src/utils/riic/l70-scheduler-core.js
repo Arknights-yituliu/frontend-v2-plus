@@ -77,7 +77,7 @@ export function runRiicAutomaticSchedule(input = {}) {
     candidateStatesByGroupId: input.candidateStatesByGroupId,
     controlCenterOperatorIds: input.controlCenterOperatorIds,
     controlCenterRuntimeContext: input.controlCenterRuntimeContext,
-    layoutFacts: input.layoutFacts,
+    layoutData: input.layoutData,
     selectionBeamLimit: input.selectionBeamLimit,
     selectionOptionLimit: input.selectionOptionLimit,
     selectionRepresentativeLimit: input.selectionRepresentativeLimit,

@@ -27,7 +27,7 @@ export default {
 
     collectLog(logInfo){
         request({
-            url:'log/collect',
+            url:'/log/collect',
             method:'post',
             data:logInfo
         })

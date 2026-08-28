@@ -58,9 +58,9 @@ function normalizeNameToCharId(operatorNameToCharId) {
   );
 }
 
-function normalizeFacilities(layoutFacts) {
-  return (Array.isArray(layoutFacts?.facilities)
-    ? layoutFacts.facilities
+function normalizeFacilities(layoutData) {
+  return (Array.isArray(layoutData?.facilities)
+    ? layoutData.facilities
     : []
   ).flatMap((facility) => {
     const facilityType = String(facility?.facilityType || "").trim();
@@ -295,7 +295,7 @@ export function evaluateRiicCrossRoomGroupAvailability({
   ownedOperators = [],
   currentOwnedOperators,
   operatorNameToCharId,
-  layoutFacts,
+  layoutData,
   trainingMode = "current",
   idealTrainingRaritySelection,
 } = {}) {
@@ -307,7 +307,7 @@ export function evaluateRiicCrossRoomGroupAvailability({
     currentOwnedOperators || ownedOperators,
   );
   const nameToCharId = normalizeNameToCharId(operatorNameToCharId);
-  const facilities = normalizeFacilities(layoutFacts);
+  const facilities = normalizeFacilities(layoutData);
 
   const results = (groups || []).map((group, index) => {
     const groupId = String(group?.id || `cross-room-group-${index + 1}`).trim();

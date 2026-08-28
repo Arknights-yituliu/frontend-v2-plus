@@ -263,7 +263,7 @@ function normalizeAssessmentSchedule(value) {
     : null;
 }
 
-function buildFacilityFacts(plan) {
+function buildLayoutData(plan) {
   if (!plan) {
     return null;
   }
@@ -392,7 +392,7 @@ export function getRiicSetAssessmentLayout(snapshot, sourceId) {
   return {
     workspace,
     plan,
-    facts: buildFacilityFacts(plan),
+    layoutData: buildLayoutData(plan),
   };
 }
 

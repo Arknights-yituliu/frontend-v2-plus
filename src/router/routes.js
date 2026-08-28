@@ -3,7 +3,6 @@ import STAGE_RECOMMENDATION_REGISTER from '/src/pages/material/stageV3.vue'
 import GACHA_CALCULATOR from '/src/pages/tools/gacha-calc.vue'
 import REGISTER from '/src/pages/account/register.vue'
 import LOGIN from '/src/pages/account/login.vue'
-import RETRIEVE from '/src/pages/account/retrieve.vue'
 import SURVEY_OPERATOR from '/src/pages/survey/operator.vue'
 import STORE from '/src/pages/material/store.vue'
 import PACK from '/src/pages/material/pack.vue'
@@ -438,6 +437,26 @@ const routes = [
         }
     },
     {
+        path: '/dev/account-auth-card-test',
+        text: '账号卡片测试',
+        name: 'AccountAuthCardTest',
+        display: false,
+        component: () => import('/src/pages/dev/account-auth-card-test.vue'),
+        meta: {
+            title: '账号卡片测试'
+        }
+    },
+    {
+        path: '/dev/playground',
+        text: 'UI方案对比',
+        name: 'DevPlayground',
+        display: false,
+        component: () => import('/src/pages/dev/playground.vue'),
+        meta: {
+            title: 'UI方案对比'
+        }
+    },
+    {
         path: '/riicdev',
         text: 'RIIC 测试入口',
         name: 'RiicDevIndex',
@@ -599,16 +618,6 @@ const routes = [
         component: LOGIN,
         meta: {
             title: '登录账号'
-        }
-    },
-    {
-        path: '/account/retrieve',
-        text: '找回账号',
-        name: 'RETRIEVE',
-        display: false,
-        component: RETRIEVE,
-        meta: {
-            title: '找回账号'
         }
     },
     {

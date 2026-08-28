@@ -156,8 +156,8 @@ const ebenholzContextMissing = calculateRiicTrading(
     operator("char_123_fang", 1, 1),
   ],
 );
-assert.equal(ebenholzContextMissing.ok, false);
-assert.equal(ebenholzContextMissing.error, "notSupported");
+assert.equal(ebenholzContextMissing.ok, true);
+assert.equal(ebenholzContextMissing.warning, true);
 
 const ebenholzE0 = calculateRiicTrading(
   {
@@ -427,8 +427,8 @@ const archetDormitoryContextMissing = calculateRiicTrading(
     operator("char_123_fang", 1, 1),
   ],
 );
-assert.equal(archetDormitoryContextMissing.ok, false);
-assert.equal(archetDormitoryContextMissing.error, "notSupported");
+assert.equal(archetDormitoryContextMissing.ok, true);
+assert.equal(archetDormitoryContextMissing.warning, true);
 
 const quartzManufactureBonus = calculateRiicTrading(
   facility(3, "orundum", resolvedContext({ manufactureProductKindCount: 3 })),
@@ -451,8 +451,8 @@ const quartzManufactureContextMissing = calculateRiicTrading(
     operator("char_4063_quartz", 2, 1),
   ],
 );
-assert.equal(quartzManufactureContextMissing.ok, false);
-assert.equal(quartzManufactureContextMissing.error, "notSupported");
+assert.equal(quartzManufactureContextMissing.ok, true);
+assert.equal(quartzManufactureContextMissing.warning, true);
 
 const closure = calculateRiicTrading(
   facility(3),
@@ -803,8 +803,8 @@ const hodrerWithoutContext = calculateRiicTrading(
     context: {},
   },
 );
-assert.equal(hodrerWithoutContext.ok, false);
-assert.equal(hodrerWithoutContext.error, "notSupported");
+assert.equal(hodrerWithoutContext.ok, true);
+assert.equal(hodrerWithoutContext.warning, true);
 
 const hodrerWithoutPartners = calculateRiicTrading(
   facility(3, "lmd", resolvedContext()),
@@ -894,18 +894,18 @@ const unresolvedDeep = calculateRiicTrading(
     operator("char_4137_udflow", 2, 1),
   ],
 );
-assert.deepEqual(unresolvedDeep, {
-  ok: false,
-  type: "butshu",
-  product: "lmd",
-  rate: null,
-  lmd: null,
-  gold: null,
-  virtualGold: null,
-  orundumCapacity: null,
-  shardConsumption: null,
-  error: "notSupported",
-});
+assert.equal(unresolvedDeep.ok, true);
+assert.equal(unresolvedDeep.warning, true);
+assert.equal(unresolvedDeep.type, "butshu");
+assert.equal(unresolvedDeep.product, "lmd");
+assertClose(unresolvedDeep.rate, 242);
+assertClose(unresolvedDeep.lmd, 1022.535211);
+assertClose(unresolvedDeep.gold, -2.04507);
+assert.ok(
+  unresolvedDeep.warnings.some(
+    (warning) => warning.code === "missingExternalOrderBonus",
+  ),
+);
 
 const unsupported = calculateRiicTrading(
   facility(3),
@@ -915,18 +915,18 @@ const unsupported = calculateRiicTrading(
     operator("char_123_fang", 1, 1),
   ],
 );
-assert.deepEqual(unsupported, {
-  ok: false,
-  type: "normal",
-  product: "lmd",
-  rate: null,
-  lmd: null,
-  gold: null,
-  virtualGold: null,
-  orundumCapacity: null,
-  shardConsumption: null,
-  error: "notSupported",
-});
+assert.equal(unsupported.ok, true);
+assert.equal(unsupported.warning, true);
+assert.equal(unsupported.type, "normal");
+assert.equal(unsupported.product, "lmd");
+assertClose(unsupported.rate, 183);
+assertClose(unsupported.lmd, 782.743363);
+assertClose(unsupported.gold, -1.565487);
+assert.ok(
+  unsupported.warnings.some(
+    (warning) => warning.code === "unsupportedExclusion",
+  ),
+);
 
 const unsupportedOrundum = calculateRiicTrading(
   facility(3, "orundum"),
@@ -936,18 +936,18 @@ const unsupportedOrundum = calculateRiicTrading(
     operator("char_123_fang", 1, 1),
   ],
 );
-assert.deepEqual(unsupportedOrundum, {
-  ok: false,
-  type: "normal",
-  product: "orundum",
-  rate: null,
-  lmd: null,
-  gold: null,
-  virtualGold: null,
-  orundumCapacity: null,
-  shardConsumption: null,
-  error: "notSupported",
-});
+assert.equal(unsupportedOrundum.ok, true);
+assert.equal(unsupportedOrundum.warning, true);
+assert.equal(unsupportedOrundum.type, "normal");
+assert.equal(unsupportedOrundum.product, "orundum");
+assertClose(unsupportedOrundum.rate, 183);
+assertClose(unsupportedOrundum.orundumCapacity, 18.3);
+assertClose(unsupportedOrundum.shardConsumption, 1.83);
+assert.ok(
+  unsupportedOrundum.warnings.some(
+    (warning) => warning.code === "unsupportedExclusion",
+  ),
+);
 
 const level2Orundum = calculateRiicTrading(
   facility(2, "orundum"),
@@ -972,8 +972,8 @@ const invalidTradingFactors = calculateRiicTrading(
     operator("char_282_catap", 0, 1),
   ],
 );
-assert.equal(invalidTradingFactors.ok, false);
-assert.equal(invalidTradingFactors.error, "invalidTradingFactors");
+assert.equal(invalidTradingFactors.ok, true);
+assert.equal(invalidTradingFactors.warning, true);
 
 const invalidOperators = calculateRiicTrading(
   facility(3),
@@ -983,8 +983,8 @@ const invalidOperators = calculateRiicTrading(
     operator("char_282_catap", 0, 1),
   ],
 );
-assert.equal(invalidOperators.ok, false);
-assert.equal(invalidOperators.error, "invalidOperators");
+assert.equal(invalidOperators.ok, true);
+assert.equal(invalidOperators.warning, true);
 
 const invalidBonus = calculateRiicTrading(
   facility(3),
@@ -999,7 +999,7 @@ const invalidBonus = calculateRiicTrading(
     },
   },
 );
-assert.equal(invalidBonus.ok, false);
-assert.equal(invalidBonus.error, "invalidTradingFactors");
+assert.equal(invalidBonus.ok, true);
+assert.equal(invalidBonus.warning, true);
 
 console.log("RIIC P01 trading formula checks passed.");

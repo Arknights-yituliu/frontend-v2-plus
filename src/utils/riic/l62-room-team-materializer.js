@@ -70,7 +70,7 @@ export function materializeRiicRoomTeamCandidate(
           operatorId,
           scope: candidate?.candidateScope,
           ownedOperators: automationRuntimeContext.ownedOperators,
-          layoutFacts: automationRuntimeContext.layoutFacts,
+          layoutData: automationRuntimeContext.layoutData,
           effectivePowerPlantCount:
             automationRuntimeContext.effectivePowerPlantCount,
           getLayer3OperatorLocalBonus: getRiicLayer3OperatorLocalBonus,
@@ -84,7 +84,7 @@ export function materializeRiicRoomTeamCandidate(
           operatorId: operator?.charId,
           scope: candidate?.candidateScope,
           ownedOperators: automationRuntimeContext.ownedOperators,
-          layoutFacts: automationRuntimeContext.layoutFacts,
+          layoutData: automationRuntimeContext.layoutData,
           effectivePowerPlantCount:
             automationRuntimeContext.effectivePowerPlantCount,
           getLayer3OperatorLocalBonus: getRiicLayer3OperatorLocalBonus,

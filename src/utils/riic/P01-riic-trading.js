@@ -13,6 +13,9 @@ import {
   RIIC_TRADE_ORDER_DISTRIBUTION_BY_LEVEL,
   RIIC_TRADE_ORDER_GOLD,
 } from "./riic-trade-order-model.js";
+import {
+  resolveRiicTradingExternalOrderBonuses,
+} from "./riic-trading-context.js";
 
 const ORDER_GOLD = RIIC_TRADE_ORDER_GOLD;
 const ORDER_DISTRIBUTION_BY_LEVEL =
@@ -139,26 +142,45 @@ function createFailure(
   durationHours = null,
   diagnostics = null,
 ) {
-  const result = {
-    ok: false,
+  const normalizedDurationHours =
+    Number.isFinite(Number(durationHours)) && Number(durationHours) >= 0
+      ? Number(durationHours)
+      : 0;
+  const result = createSuccess({
     type,
     product,
-    durationHours,
-    rate: null,
-    lmd: null,
-    gold: null,
-    virtualGold: null,
-    orundumCapacity: null,
-    shardConsumption: null,
-    segment: null,
-    error,
-  };
-
+    durationHours: normalizedDurationHours,
+    rate: 0,
+    lmd: 0,
+    gold: 0,
+    virtualGold: 0,
+    orundumCapacity: 0,
+    shardConsumption: 0,
+  });
+  result.warning = true;
+  result.warnings = [
+    {
+      code: error || "calculationWarning",
+      ...(diagnostics ? { diagnostics } : {}),
+    },
+  ];
+  result.error = error || "calculationWarning";
   if (diagnostics) {
     result.diagnostics = diagnostics;
   }
-
   return result;
+}
+
+function appendCalculationWarnings(result, warnings = []) {
+  if (!result || !Array.isArray(warnings) || warnings.length === 0) {
+    return result;
+  }
+
+  return {
+    ...result,
+    warning: true,
+    warnings: [...(result.warnings || []), ...warnings],
+  };
 }
 
 function createSuccess({
@@ -196,7 +218,7 @@ function createSuccess({
 
 function normalizeOperators(value) {
   if (!Array.isArray(value)) {
-    return null;
+    return [];
   }
 
   const normalized = [];
@@ -212,13 +234,15 @@ function normalizeOperators(value) {
       Number.isInteger(rawLevel) && rawLevel >= 1 ? rawLevel : 1;
     if (
       !charId ||
-      seen.has(charId) ||
       !Number.isInteger(elite) ||
       elite < 0 ||
       !Number.isInteger(level) ||
       level < 1
     ) {
-      return null;
+      continue;
+    }
+    if (seen.has(charId)) {
+      continue;
     }
 
     seen.add(charId);
@@ -669,6 +693,7 @@ function createTradingContext(
 ) {
   const activeStatesByOperatorId = new Map();
   const unmodeledHighQualityOrderSkills = [];
+  const warnings = [];
 
   for (const operator of operators) {
     const states = getActiveStates(operator);
@@ -684,7 +709,10 @@ function createTradingContext(
       hasUnknownUnlockedTradingSkill(operator, stateIds) &&
       !ignoredUnsupportedOperatorIds.has(operator.charId)
     ) {
-      return { error: "notSupported" };
+      warnings.push({
+        code: "unsupportedSkill",
+        operatorId: operator.charId,
+      });
     }
 
     activeStatesByOperatorId.set(operator.charId, stateIds);
@@ -743,12 +771,11 @@ function createTradingContext(
   );
   const kichi = operators.find((operator) => operator.charId === KICHI_ID);
 
-  if (
-    product === "lmd" &&
-    hasEbenholz &&
-    !Number.isFinite(facilityContext?.silentResonance)
-  ) {
-    return { error: "notSupported" };
+  if (hasEbenholz && !Number.isFinite(facilityContext?.silentResonance)) {
+    warnings.push({
+      code: "missingSilentResonance",
+      operatorId: EBENHOLZ_ID,
+    });
   }
 
   const highQualityOrderSkills =
@@ -771,8 +798,8 @@ function createTradingContext(
            rule.charId === CLOSURE_ID ||
            rule.charId === SHAMARE_ID ||
            ignoredUnsupportedOperatorIds.has(rule.charId) ||
-           (product === "lmd" &&
-             (rule.charId === EBENHOLZ_ID || rule.charId === KICHI_ID)) ||
+           rule.charId === EBENHOLZ_ID ||
+           rule.charId === KICHI_ID ||
            rule.id === DEGENBRECHER_CHAMPION_SKILL_ID ||
            isArchetDormitoryOrderExclusion(rule) ||
            isHarmlessExclusion(rule),
@@ -780,10 +807,15 @@ function createTradingContext(
       .map((rule) => rule.id),
   ]);
 
-  if (
-    legacyExclusions.some((rule) => !supportedExclusionIds.has(rule.id))
-  ) {
-    return { error: "notSupported" };
+  const unsupportedExclusions = legacyExclusions.filter(
+    (rule) => !supportedExclusionIds.has(rule.id),
+  );
+  for (const rule of unsupportedExclusions) {
+    warnings.push({
+      code: "unsupportedExclusion",
+      operatorId: rule.charId,
+      ruleId: rule.id,
+    });
   }
 
   let conditionalOrderBonus = 0;
@@ -802,7 +834,11 @@ function createTradingContext(
       facilityContext,
     );
     if (externalBonus === null) {
-      return { error: "notSupported" };
+      warnings.push({
+        code: "missingExternalOrderBonus",
+        ruleId: exclusion.id,
+      });
+      continue;
     }
 
     conditionalOrderBonus += externalBonus;
@@ -819,7 +855,12 @@ function createTradingContext(
         (mechanic) => !ALLOWED_IGNORED_MECHANICS.has(mechanic),
       )
     ) {
-      return { error: "notSupported" };
+      warnings.push({
+        code: "unsupportedIgnoredMechanic",
+        operatorId: rule.charId,
+        ruleId: rule.id,
+      });
+      continue;
     }
 
     if (isCompleteOutputRule(rule)) {
@@ -848,7 +889,13 @@ function createTradingContext(
       operators,
     );
     if (externalBonus === null) {
-      return { error: "notSupported" };
+      warnings.push({
+        code: "missingExternalOrderBonus",
+        operatorId: rule.charId,
+        ruleId: rule.id,
+      });
+      externalOrderBonusByRuleId.set(rule.id, 0);
+      continue;
     }
 
     externalOrderBonusByRuleId.set(rule.id, externalBonus);
@@ -856,6 +903,7 @@ function createTradingContext(
 
   return {
     activeOperatorIds,
+    warnings,
     conditionalOrderBonus,
     directRules,
     hasButshu,
@@ -865,7 +913,10 @@ function createTradingContext(
     ),
     ebenholzOrderBonus: hasEbenholz
       ? Math.floor(
-          facilityContext.silentResonance / (ebenholz?.elite >= 2 ? 2 : 4),
+          (Number.isFinite(facilityContext?.silentResonance)
+            ? facilityContext.silentResonance
+            : 0) /
+            (ebenholz?.elite >= 2 ? 2 : 4),
         )
       : 0,
     hasShamareOverride,
@@ -949,7 +1000,7 @@ function calculateLocalOrderBonus(context, operators, product) {
   for (const rule of context.sameRoomRules) {
     const percent = getSameRoomRulePercent(rule, operatorIds, product);
     if (percent === null) {
-      return null;
+      continue;
     }
     result += percent;
   }
@@ -1010,6 +1061,189 @@ function getTequilaVirtualGoldByOrder(context, operators) {
 
 function getStaffingBonusPercent(operators) {
   return operators.length;
+}
+
+export function createRiicOperatorRosterById(operators = []) {
+  return new Map(
+    (operators || []).flatMap((operator) => {
+      const charId = String(operator?.charId || "").trim();
+      return charId ? [[charId, operator]] : [];
+    }),
+  );
+}
+
+export function resolveRiicTradingOperators(
+  room,
+  rosterById = new Map(),
+) {
+  const resolvedOperators = (room?.operators || []).flatMap((roomOperator) => {
+    const charId = String(roomOperator?.charId || "").trim();
+    if (!charId || roomOperator?.hasUsableProfile === false) {
+      return [];
+    }
+
+    const rosterOperator = rosterById.get(charId) || {};
+    const hasRosterOperator = rosterById.has(charId);
+    const hasRosterElite =
+      rosterOperator?.elite !== null && rosterOperator?.elite !== undefined;
+    const hasRosterLevel =
+      rosterOperator?.level !== null && rosterOperator?.level !== undefined;
+    const hasRoomElite =
+      roomOperator?.elite !== null && roomOperator?.elite !== undefined;
+    const hasRoomLevel =
+      roomOperator?.level !== null && roomOperator?.level !== undefined;
+
+    return [
+      {
+        operator: {
+          charId,
+          elite: rosterOperator?.elite ?? roomOperator?.elite,
+          level: rosterOperator?.level ?? roomOperator?.level,
+        },
+        resolution: {
+          charId,
+          rosterMatched: hasRosterOperator,
+          eliteSource: hasRosterElite
+            ? "legacyRoster"
+            : hasRoomElite
+              ? "roomOperator"
+              : "missing",
+          levelSource: hasRosterLevel
+            ? "legacyRoster"
+            : hasRoomLevel
+              ? "roomOperator"
+              : "missing",
+        },
+      },
+    ];
+  });
+
+  return {
+    operators: resolvedOperators.map((entry) => entry.operator),
+    operatorResolution: resolvedOperators.map((entry) => entry.resolution),
+  };
+}
+
+export function getRiicTradingOperators(room, rosterById = new Map()) {
+  return resolveRiicTradingOperators(room, rosterById).operators;
+}
+
+export function getRiicTradingOperatorBonuses(
+  room,
+  operatorIds = new Set(),
+) {
+  return (room?.controlCenterOperatorBonuses || []).reduce(
+    (bonuses, entry) => {
+      const charId = String(entry?.operatorId || "").trim();
+      const percent = Number(entry?.bonusPercent);
+      if (!charId || !operatorIds.has(charId) || !Number.isFinite(percent)) {
+        return bonuses;
+      }
+
+      bonuses[charId] = Number(bonuses[charId] || 0) + percent;
+      return bonuses;
+    },
+    {},
+  );
+}
+
+export function getRiicTradingTeamCalculationBonus(
+  room,
+  operatorIds = new Set(),
+) {
+  const calculation =
+    room?.efficiencyMetrics?.actual?.breakdown?.teamCalculation;
+  if (
+    String(calculation?.type || "").trim() !== "jayeOrderLimit" ||
+    !Number.isFinite(Number(calculation?.coreBonusPercentBeforeControl)) ||
+    !operatorIds.has(String(calculation?.sourceMemberId || "").trim())
+  ) {
+    return {};
+  }
+
+  return {
+    localOrderBonusOverride: Number(
+      calculation.coreBonusPercentBeforeControl,
+    ),
+    ignoredUnsupportedOperatorIds: [
+      String(calculation?.sourceMemberId || "").trim(),
+    ].filter(Boolean),
+  };
+}
+
+export function createRiicTradingFacilityContext({
+  stateRooms = [],
+  perceptionState,
+} = {}) {
+  return {
+    resolvedExternalOrderBonuses:
+      resolveRiicTradingExternalOrderBonuses(stateRooms),
+    silentResonance: Number(perceptionState?.resources?.silentResonance),
+  };
+}
+
+export function resolveRiicTradingRoomInput({
+  room,
+  rosterById = new Map(),
+} = {}) {
+  const resolvedOperators = resolveRiicTradingOperators(room, rosterById);
+  const operators = resolvedOperators.operators;
+  const operatorIds = new Set(
+    operators
+      .map((operator) => String(operator?.charId || "").trim())
+      .filter(Boolean),
+  );
+
+  return {
+    operators,
+    operatorResolution: resolvedOperators.operatorResolution,
+    tradingFactors: {
+      product: String(room?.product || "").trim(),
+      stationLevel: Number(room?.stationLevel),
+      roomBonus:
+        Number(room?.controlCenterFacilityBonusPercent || 0) +
+        Number(room?.layer3OperatorBonusPercent || 0) +
+        Number(room?.activeRosterBonusPercent || 0) +
+        Number(room?.resourceChainAdditionalBonusPercent || 0),
+      operatorBonusesById: getRiicTradingOperatorBonuses(
+        room,
+        operatorIds,
+      ),
+      orderAdjustment: getRiicTradingTeamCalculationBonus(
+        room,
+        operatorIds,
+      ),
+    },
+  };
+}
+
+export function calculateRiicTradingRoom({
+  room,
+  rosterById = new Map(),
+  tradingContext,
+  durationHours,
+} = {}) {
+  const settlementInput = resolveRiicTradingRoomInput({
+    room,
+    rosterById,
+  });
+  const calculation = calculateRiicTrading({
+    durationHours,
+    operators: settlementInput.operators,
+    tradingFactors: {
+      ...settlementInput.tradingFactors,
+      crossRoomFactors:
+        tradingContext || createRiicTradingFacilityContext(),
+    },
+  });
+
+  return {
+    ...calculation,
+    inputDiagnostics: {
+      p01Operators: settlementInput.operators,
+      l80OperatorResolution: settlementInput.operatorResolution,
+    },
+  };
 }
 
 function calculateNormalOrButshu({
@@ -1230,37 +1464,43 @@ export function calculateRiicTrading({
   tradingFactors,
 } = {}) {
   const normalizedDurationHours = Number(durationHours);
+  const operatorDiagnostics = getInvalidOperatorDiagnostics(operators);
   const normalizedOperators = normalizeOperators(operators);
   const normalizedTradingFactors = normalizeTradingFactors(
     tradingFactors,
-    normalizedOperators || [],
+    normalizedOperators,
   );
   const product = String(normalizedTradingFactors?.product || "").trim();
-  const type = getSpecialType(normalizedOperators || [], product);
+  const type = getSpecialType(normalizedOperators, product);
+  const inputWarnings =
+    operatorDiagnostics.invalidOperators.length > 0
+      ? [
+          {
+            code: "invalidOperators",
+            diagnostics: operatorDiagnostics,
+          },
+        ]
+      : [];
 
   if (
     !Number.isFinite(normalizedDurationHours) ||
     normalizedDurationHours < 0
   ) {
-    return createFailure(type, product, "invalidDuration");
-  }
-
-  if (!normalizedOperators) {
-    return createFailure(
-      type,
-      product,
-      "invalidOperators",
-      normalizedDurationHours,
-      getInvalidOperatorDiagnostics(operators),
+    return appendCalculationWarnings(
+      createFailure(type, product, "invalidDuration"),
+      inputWarnings,
     );
   }
 
   if (!normalizedTradingFactors) {
-    return createFailure(type, product, "invalidTradingFactors", normalizedDurationHours);
+    return appendCalculationWarnings(
+      createFailure(type, product, "invalidTradingFactors", normalizedDurationHours),
+      inputWarnings,
+    );
   }
 
   if (normalizedOperators.length === 0) {
-    return createSuccess({
+    return appendCalculationWarnings(createSuccess({
       type,
       product,
       durationHours: normalizedDurationHours,
@@ -1270,7 +1510,7 @@ export function calculateRiicTrading({
       virtualGold: 0,
       orundumCapacity: 0,
       shardConsumption: 0,
-    });
+    }), inputWarnings);
   }
 
   const context = createTradingContext(
@@ -1283,37 +1523,49 @@ export function calculateRiicTrading({
     },
   );
   if (context.error) {
-    return createFailure(type, product, context.error, normalizedDurationHours);
+    return appendCalculationWarnings(
+      createFailure(type, product, context.error, normalizedDurationHours),
+      inputWarnings,
+    );
   }
 
   if (product === "orundum") {
-    return calculateOrundum({
-      context,
-      operators: normalizedOperators,
-      tradingFactors: normalizedTradingFactors,
-      durationHours: normalizedDurationHours,
-    });
+    return appendCalculationWarnings(
+      calculateOrundum({
+        context,
+        operators: normalizedOperators,
+        tradingFactors: normalizedTradingFactors,
+        durationHours: normalizedDurationHours,
+      }),
+      [...inputWarnings, ...(context.warnings || [])],
+    );
   }
 
   if (context.hasClosure) {
-    return calculateClosure({
+    return appendCalculationWarnings(
+      calculateClosure({
+        context,
+        operators: normalizedOperators,
+        stationLevel: normalizedTradingFactors.stationLevel,
+        tradingFactors: normalizedTradingFactors,
+        durationHours: normalizedDurationHours,
+      }),
+      [...inputWarnings, ...(context.warnings || [])],
+    );
+  }
+
+  return appendCalculationWarnings(
+    calculateNormalOrButshu({
+      type:
+        context.hasButshu || context.hasTequila
+          ? "butshu"
+          : "normal",
       context,
       operators: normalizedOperators,
       stationLevel: normalizedTradingFactors.stationLevel,
       tradingFactors: normalizedTradingFactors,
       durationHours: normalizedDurationHours,
-    });
-  }
-
-  return calculateNormalOrButshu({
-    type:
-      context.hasButshu || context.hasTequila
-        ? "butshu"
-        : "normal",
-    context,
-    operators: normalizedOperators,
-    stationLevel: normalizedTradingFactors.stationLevel,
-    tradingFactors: normalizedTradingFactors,
-    durationHours: normalizedDurationHours,
-  });
+    }),
+    [...inputWarnings, ...(context.warnings || [])],
+  );
 }

@@ -16,14 +16,14 @@ export function matchRiicStaticCandidateRules({
   operatorIds = [],
   ownedOperators,
   scope,
-  layoutFacts,
+  layoutData,
 } = {}) {
   const operatorBonusExclusionIds = new Set(
     getRiicLayer3CandidateOperatorBonusExclusions({
       candidate,
       ownedOperators,
       scope,
-      layoutFacts,
+      layoutData,
     }),
   );
   const operatorBonusPercent = operatorIds.reduce(
@@ -35,7 +35,7 @@ export function matchRiicStaticCandidateRules({
             operatorId,
             ownedOperators,
             scope,
-            layoutFacts,
+            layoutData,
           }),
     0,
   );
@@ -46,13 +46,13 @@ export function matchRiicStaticCandidateRules({
       operatorIds,
       ownedOperators,
       scope,
-      layoutFacts,
+      layoutData,
     }),
     equivalentByProduct: getRiicLayer3CandidateEquivalentByProduct({
       candidate,
       ownedOperators,
       scope,
-      layoutFacts,
+      layoutData,
     }),
     operatorBonusExclusionIds: [...operatorBonusExclusionIds],
     operatorBonusPercent,
@@ -60,7 +60,7 @@ export function matchRiicStaticCandidateRules({
       candidate,
       ownedOperators,
       scope,
-      layoutFacts,
+      layoutData,
     }),
   };
 }
@@ -69,14 +69,14 @@ export function getRiicStaticFallbackOperatorBonus({
   operatorId,
   ownedOperators,
   scope,
-  layoutFacts,
+  layoutData,
   excludeFacilityCountBonuses = false,
 } = {}) {
   return getRiicLayer3OperatorLocalBonus({
     operatorId,
     ownedOperators,
     scope,
-    layoutFacts,
+    layoutData,
     excludeFacilityCountBonuses,
   });
 }

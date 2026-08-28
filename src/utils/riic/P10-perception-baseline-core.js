@@ -10,9 +10,9 @@ function toNonNegativeInteger(value, fallback = 0) {
   return Number.isInteger(number) && number >= 0 ? number : fallback;
 }
 
-function getDormitoryRoomCount(layoutFacts = {}) {
-  const facilities = Array.isArray(layoutFacts?.facilities)
-    ? layoutFacts.facilities
+function getDormitoryRoomCount(layoutData = {}) {
+  const facilities = Array.isArray(layoutData?.facilities)
+    ? layoutData.facilities
     : [];
   const count = facilities.filter(
     (facility) => String(facility?.facilityType || "").trim() === "dormitory",
@@ -38,7 +38,7 @@ function hasOwnedOperatorAtElite(
 }
 
 export function getRiicDormitoryOccupantCount({
-  layoutFacts,
+  layoutData,
   dormitoryOccupantCount,
 } = {}) {
   const explicitCount = Number(dormitoryOccupantCount);
@@ -47,12 +47,12 @@ export function getRiicDormitoryOccupantCount({
   }
 
   return (
-    getDormitoryRoomCount(layoutFacts) * DEFAULT_DORMITORY_CAPACITY_PER_ROOM
+    getDormitoryRoomCount(layoutData) * DEFAULT_DORMITORY_CAPACITY_PER_ROOM
   );
 }
 
 export function getRiicDormitoryLevel({
-  layoutFacts,
+  layoutData,
   dormitoryLevel,
 } = {}) {
   const explicitLevel = Number(dormitoryLevel);
@@ -60,13 +60,13 @@ export function getRiicDormitoryLevel({
     return explicitLevel;
   }
 
-  const facilities = Array.isArray(layoutFacts?.facilities)
-    ? layoutFacts.facilities
+  const facilities = Array.isArray(layoutData?.facilities)
+    ? layoutData.facilities
     : [];
   const powerPlantCount =
     facilities.filter(
       (facility) => String(facility?.facilityType || "").trim() === "power",
-    ).length || toNonNegativeInteger(layoutFacts?.powerPlantCount);
+    ).length || toNonNegativeInteger(layoutData?.powerPlantCount);
 
   return powerPlantCount === 3 ? 5 : powerPlantCount === 2 ? 3 : null;
 }
@@ -75,7 +75,7 @@ export function getRiicPerceptionCoreBaseline({
   operatorId,
   elite,
   ownedOperators,
-  layoutFacts,
+  layoutData,
   dormitoryOccupantCount,
   dormitoryLevel,
 } = {}) {
@@ -92,12 +92,12 @@ export function getRiicPerceptionCoreBaseline({
   }
 
   const occupants = getRiicDormitoryOccupantCount({
-    layoutFacts,
+    layoutData,
     dormitoryOccupantCount,
   });
   const normalizedElite = toNonNegativeInteger(elite);
   const resolvedDormitoryLevel = getRiicDormitoryLevel({
-    layoutFacts,
+    layoutData,
     dormitoryLevel,
   });
 

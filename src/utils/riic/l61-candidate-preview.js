@@ -318,7 +318,7 @@ function createFallbackOperatorProfiles({
   trainingMode,
   idealTrainingRaritySelection,
   scope,
-  layoutFacts,
+  layoutData,
   pool,
 }) {
   if (!pool) {
@@ -340,7 +340,7 @@ function createFallbackOperatorProfiles({
             operatorId: operator.charId,
             ownedOperators: rosterById,
             scope,
-            layoutFacts,
+            layoutData,
           })
         : null;
       const teammateLayer3Bonus =
@@ -349,7 +349,7 @@ function createFallbackOperatorProfiles({
               operatorId: operator.charId,
               ownedOperators: rosterById,
               scope,
-              layoutFacts,
+              layoutData,
               excludeFacilityCountBonuses: true,
             })
           : 0;
@@ -358,7 +358,7 @@ function createFallbackOperatorProfiles({
             operatorId: operator.charId,
             elite: operator.elite,
             ownedOperators: rosterById,
-            layoutFacts,
+            layoutData,
           })
         : null;
       const resourceChainBonus = Number(
@@ -405,7 +405,7 @@ function createFallbackOperatorProfilesByPool({
   trainingMode,
   idealTrainingRaritySelection,
   scope,
-  layoutFacts,
+  layoutData,
 }) {
   return new Map(
     [...fallbackPools.entries()].map(([poolKey, pool]) => [
@@ -417,7 +417,7 @@ function createFallbackOperatorProfilesByPool({
           trainingMode,
           idealTrainingRaritySelection,
           scope,
-          layoutFacts,
+          layoutData,
           pool,
         });
 
@@ -576,7 +576,7 @@ function toRuntimeCandidate({
   rosterById,
   fallbackOperators,
   teamMemberProductionProfiles,
-  layoutFacts,
+  layoutData,
   taggedMemberRequirements = [],
   controlCenterRuntimeContext,
 }) {
@@ -610,7 +610,7 @@ function toRuntimeCandidate({
     operatorIds,
     ownedOperators: rosterById,
     scope: candidateScope,
-    layoutFacts,
+    layoutData,
   });
   const staticRuleApplication = applyRiicStaticCandidateRules({
     publishedCoreBonusPercent,
@@ -906,7 +906,7 @@ export function materializeRiicRoomCandidateSkeletons({
     trainingMode,
     idealTrainingRaritySelection,
     scope,
-    layoutFacts,
+    layoutData,
     candidateSkeletons = [],
     fallbackCandidateSkeleton,
   } = resolution;
@@ -919,7 +919,7 @@ export function materializeRiicRoomCandidateSkeletons({
     trainingMode,
     idealTrainingRaritySelection,
     scope,
-    layoutFacts,
+    layoutData,
   });
   const materializeCandidate = (
     skeleton,
@@ -967,7 +967,7 @@ export function materializeRiicRoomCandidateSkeletons({
         fallbackOperatorProfilesByPool,
         fallbackPoolKey: fallback.poolKey,
       }),
-      layoutFacts,
+      layoutData,
       taggedMemberRequirements: skeleton.taggedMemberRequirements,
       controlCenterRuntimeContext,
     });

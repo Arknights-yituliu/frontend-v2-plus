@@ -20,14 +20,17 @@ onMounted(async () => {
 </script>
 <template>
 
-  <div class="account-home-page flex flex-wrap justify-center">
+  <div
+      class="account-home-page"
+      :class="{ 'account-home-page--guest': authChecked && userInfo.status <= 0 }"
+  >
 
     <div v-if="authChecked && userInfo.status > 0" class="account-user-column">
       <UserInfo></UserInfo>
       <OpenApiTokenCard></OpenApiTokenCard>
     </div>
 
-    <Login v-else-if="authChecked"></Login>
+    <Login v-else-if="authChecked" account-home></Login>
 
     <StageConfig></StageConfig>
   </div>

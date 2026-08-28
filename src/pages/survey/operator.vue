@@ -21,6 +21,7 @@ import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
 import { userInfo } from "/src/utils/user/userInfo.js";
 import { useRoute, useRouter } from "vue-router";
+import Login from "/src/pages/account/login.vue";
 
 const sectionPanels = ref([])
 const route = useRoute()
@@ -31,17 +32,67 @@ const SKLAND_LINK = 'https://www.skland.com/index'
 const CONSOLE_CODE = "copy(localStorage.getItem('SK_OAUTH_CRED_KEY')+','+localStorage.getItem('SK_TOKEN_CACHE_KEY')),console.log('已复制到粘贴板')"
 const SKLAND_ACCOUNT_SESSION_STORAGE_KEY = 'skland_account_data'
 
+// 官网导入相关
+const OFFICIAL_SITE_LINK = 'https://ak.hypergryph.com/user/home'
+const HG_ACCOUNT_INFO_URL = 'https://web-api.hypergryph.com/account/info/hg'
+
 const sklandImportDialog = ref(false)
+const loginDialog = ref(false)
 const sklandInputText = ref('')
 const sklandLoading = ref(false)
 const sklandImportStep = ref(1) // 当前导入步骤
 const sklandCred = ref('')
 const sklandToken = ref('')
 const playBindingList = ref([])
+// 导入方式：先选择并查看说明，再进入正式流程
+const selectedImportMethod = ref('')
+const importFlowStarted = ref(false)
+const sklandImportTab = ref('skland')
+const importViewHeight = ref('auto')
+let importViewAnimationFrame = 0
+// 官网导入：用户粘贴的 account/info/hg 返回内容
+const officialTokenText = ref('')
+// 官网导入步骤：1-登录官网 / 2-获取 Token / 3-输入凭证
+const officialImportStep = ref(1)
+
+const importMethods = [
+  {
+    key: 'skland',
+    title: '使用森空岛凭证',
+    avatar: '/avatar/skland-credential.webp',
+    subtitle: '直接使用森空岛凭证，获取绑定账号的干员数据。',
+    subtitleNote: 'PC端操作方便，移动端略为艰难，安全性较高',
+    purpose: [
+      '可以获取森空岛账号绑定的明日方舟账号列表',
+      '可以获取账号 UID、昵称、区服等信息',
+      '可以获取干员持有情况、等级、精英化、潜能、技能等级、模组等级',
+      '可以获取仓库物资数量',
+    ],
+    purposeNote: '这里明日方舟一图流仅一次性使用该token，以获取干员相关数据。',
+    warning: [
+      '凭证属于敏感信息，泄露后可能被用于读取上述数据。请勿分享给他人或粘贴到无关页面。',
+    ],
+  },
+  {
+    key: 'official',
+    title: '使用官网 Token',
+    avatar: '/avatar/official-token.png',
+    subtitle: '通过官网 Token 获取森空岛凭证，再获取绑定账号的干员数据。',
+    subtitleNote: 'PC端/移动端都比较方便，务必注意Token安全',
+    purpose: [
+      '森空岛Token已经够厉害了，但这玩意可以生成森空岛Token。',
+    ],
+    warning: [
+      '官网Token 属于极度敏感信息，泄露后可能被用于生成包括但不限于森空岛凭证在内的很多信息，分享官网Token给他人的危险程度不亚于公开你的账号密码！',
+      '无论何时何地，使用官网Token前，请务必确认您已1000%信任该工具，使用该途径则视为您已知晓相关风险。',
+      '使用时请确保环境安全，尤其小心会读取剪贴板的程序/APP，复制Token后请尽快使用！',
+    ],
+  },
+]
 
 // 检查用户是否登录
 const isUserLoggedIn = computed(() => {
-  return !!userInfo.value.token
+  return !!userInfo.value.token || hasStoredUserToken()
 })
 
 function openLinkOnNewPage(url) {
@@ -65,6 +116,62 @@ function openSklandImportDialog() {
   playBindingList.value = []
   sklandInputText.value = ''
   sklandImportStep.value = 1 // 重置步骤
+  sklandImportTab.value = 'skland'
+  selectedImportMethod.value = ''
+  importFlowStarted.value = false
+  officialTokenText.value = ''
+  officialImportStep.value = 1 // 重置官网导入步骤
+}
+
+function selectImportMethod(method) {
+  selectedImportMethod.value = selectedImportMethod.value === method ? '' : method
+}
+
+function startImportFlow(method) {
+  selectedImportMethod.value = method
+  importFlowStarted.value = true
+  sklandImportTab.value = method
+}
+
+function returnToImportMethodSelection() {
+  importFlowStarted.value = false
+  playBindingList.value = []
+}
+
+function cancelImportViewAnimationFrame() {
+  if (!importViewAnimationFrame) {
+    return
+  }
+
+  cancelAnimationFrame(importViewAnimationFrame)
+  importViewAnimationFrame = 0
+}
+
+function beforeImportViewLeave(element) {
+  cancelImportViewAnimationFrame()
+  importViewHeight.value = `${element.offsetHeight}px`
+}
+
+function enterImportView(element) {
+  cancelImportViewAnimationFrame()
+  importViewAnimationFrame = requestAnimationFrame(() => {
+    importViewHeight.value = `${element.offsetHeight}px`
+    importViewAnimationFrame = 0
+  })
+}
+
+function afterImportViewEnter() {
+  importViewHeight.value = 'auto'
+}
+
+function requestCloseImportDialog() {
+  if (!sklandImportDialog.value) {
+    return
+  }
+
+  if (window.confirm('确认关闭导入窗口吗？')) {
+    sklandImportDialog.value = false
+  }
 }
 
 function openImportFlowFromRoute() {
@@ -85,11 +192,20 @@ function openImportFlowFromRoute() {
 
 function ensureSklandSyncLogin() {
   if (!hasStoredUserToken()) {
-    createMessage({ type: 'error', text: '请先登录一图流账号，才能同步干员数据' })
+    loginDialog.value = true
     return false
   }
 
   return true
+}
+
+function handleLoginSuccess() {
+  loginDialog.value = false
+}
+
+function handleLoginNavigate(routeName) {
+  loginDialog.value = false
+  router.push({name: routeName})
 }
 
 async function getPlayerBindingBySkland() {
@@ -111,6 +227,61 @@ async function getPlayerBindingBySkland() {
     const playBinding = await SklandAPI.getPlayBindingV2('', '', cred, token)
     playBindingList.value = playBinding.bindingList
     
+    if (playBinding.bindingList.length === 0) {
+      createMessage({ type: 'warning', text: '未找到绑定的明日方舟账号' })
+    }
+  } catch (error) {
+    console.error(error)
+    createMessage({ type: 'error', text: '获取账号信息失败' })
+  } finally {
+    sklandLoading.value = false
+  }
+}
+
+/**
+ * 官网导入：解析第三步粘贴的 JSON（account/info/hg 返回内容）提取 token，
+ * 调用后端 /survey/hg/player-binding 换取森空岛 cred/secret，
+ * 再自动拉取绑定的明日方舟账号列表
+ */
+async function getPlayerBindingByOfficialToken() {
+  if (!ensureSklandSyncLogin()) {
+    return
+  }
+
+  if (!officialTokenText.value.trim()) {
+    createMessage({ type: 'error', text: '请输入 account/info/hg 返回的内容' })
+    return
+  }
+
+  // 解析粘贴的 JSON，token 位于 data.content 字段
+  let hgToken = ''
+  try {
+    const parsed = JSON.parse(officialTokenText.value)
+    hgToken = parsed?.data?.content || ''
+  } catch (e) {
+    createMessage({ type: 'error', text: '内容格式不正确，请复制 account/info/hg 返回的完整 JSON' })
+    return
+  }
+
+  if (!hgToken) {
+    createMessage({ type: 'error', text: '未找到 token 字段，请检查复制的内容' })
+    return
+  }
+
+  copyText('已清除剪贴板内的hgtoken')
+  sklandLoading.value = true
+  try {
+    // 后端用官网 token 换取森空岛凭证，返回 { cred, secret }
+    const result = await operatorDataAPI.getCredByHgToken({ token: hgToken })
+    const { cred, token } = result.data
+    sklandCred.value = cred
+    sklandToken.value = token
+    console.log(result.data)
+    // 用换取的凭证自动拉取账号列表
+    console.log(cred, token)
+    const playBinding = await SklandAPI.getPlayBindingV2('', '', cred, token)
+    playBindingList.value = playBinding.bindingList
+
     if (playBinding.bindingList.length === 0) {
       createMessage({ type: 'warning', text: '未找到绑定的明日方舟账号' })
     }
@@ -752,6 +923,7 @@ watch(() => route.query.openImport, () => {
 })
 
 onBeforeUnmount(() => {
+  cancelImportViewAnimationFrame()
   clearGuestOwnFilterDefault()
 })
 </script>
@@ -768,15 +940,12 @@ onBeforeUnmount(() => {
           </span>
         </v-expansion-panel-title>
         <v-expansion-panel-text>
-          <v-alert :icon="false" color="warning" variant="tonal" density="compact" class="mb-4">
-            导入之前请先登录一图流账号，这样就可以在不同的设备间同步数据
-          </v-alert>
           <div class="operator-import-actions">
             <v-btn class="operator-import-action" color="primary" @click="openSklandImportDialog()">
               <v-icon class="operator-import-action-icon">mdi-cloud-download</v-icon>
               <span class="operator-import-action-copy">
-                <span class="operator-import-action-title">从森空岛导入</span>
-                <span class="operator-import-action-desc">同步当前账号干员数据</span>
+                <span class="operator-import-action-title">导入干员数据</span>
+                <span class="operator-import-action-desc">支持官网 Token（桌面端/移动端）和森空岛凭证</span>
               </span>
             </v-btn>
             <v-btn class="operator-import-action" color="primary" variant="outlined" @click="exportOperatorExcel()">
@@ -992,38 +1161,183 @@ onBeforeUnmount(() => {
       </v-card>
     </v-dialog>
 
-    <!-- 森空岛导入对话框 -->
-    <v-dialog v-model="sklandImportDialog" max-width="800" persistent>
-      <v-card>
-        <v-card-title class="d-flex justify-space-between align-center">
-          <span>从森空岛导入数据</span>
-          <v-btn icon variant="text" @click="sklandImportDialog = false">
+    <!-- 干员数据导入对话框（官网 Token / 森空岛凭证） -->
+    <v-dialog v-model="sklandImportDialog" max-width="720" persistent>
+      <v-card
+          class="operator-import-dialog-card"
+          elevation="0"
+          @keydown.esc.stop.prevent="requestCloseImportDialog"
+      >
+        <div class="operator-import-dialog-header" role="heading" aria-level="2">
+          <v-btn
+              v-if="importFlowStarted"
+              class="operator-import-dialog-back"
+              icon
+              variant="text"
+              density="comfortable"
+              aria-label="返回选择导入方式"
+              title="返回选择导入方式"
+              @click="returnToImportMethodSelection"
+          >
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
+          <span class="operator-import-dialog-title">
+            {{ importFlowStarted
+                ? (selectedImportMethod === 'skland' ? '使用森空岛凭证' : '使用官网 Token')
+                : '选择一个导入方式' }}
+          </span>
+          <v-btn
+              class="operator-import-dialog-close"
+              icon
+              variant="text"
+              density="comfortable"
+              aria-label="关闭导入窗口"
+              title="关闭导入窗口"
+              @click="requestCloseImportDialog"
+          >
             <v-icon>mdi-close</v-icon>
           </v-btn>
-        </v-card-title>
-        <v-card-text>
-          <v-stepper v-model="sklandImportStep" :items="['登录森空岛', '获取凭证', '选择账号']" alt-labels editable>
-            <template v-slot:item.1>
-              <v-card flat>
-                <v-card-text class="text-center">
-                  <p class="mb-4">首先登录森空岛网站</p>
-                  <v-alert
-                      v-if="!hasStoredUserToken()"
-                      :icon="false"
+        </div>
+        <v-card-text class="operator-import-dialog-content">
+          <div
+              class="operator-import-view-shell"
+              :style="{ height: importViewHeight }"
+          >
+          <Transition
+              name="operator-import-view"
+              mode="out-in"
+              @before-leave="beforeImportViewLeave"
+              @enter="enterImportView"
+              @after-enter="afterImportViewEnter"
+          >
+            <div v-if="!importFlowStarted" key="method-selection" class="operator-import-method-list">
+              <div
+                  v-for="method in importMethods"
+                  :key="method.key"
+                  class="operator-import-method-card"
+                  :class="{ 'operator-import-method-card--selected': selectedImportMethod === method.key }"
+              >
+                <button
+                    class="operator-import-method-header"
+                    type="button"
+                    :aria-expanded="selectedImportMethod === method.key"
+                    :aria-controls="`operator-import-${method.key}-details`"
+                    @click="selectImportMethod(method.key)"
+                >
+                  <span class="operator-import-method-copy">
+                    <img
+                        class="operator-import-method-avatar"
+                        :class="{ 'operator-import-method-avatar--official': method.key === 'official' }"
+                        :src="method.avatar"
+                        :alt="method.title"
+                    >
+                    <span class="operator-import-method-text">
+                      <span class="operator-import-method-title">{{ method.title }}</span>
+                      <span class="operator-import-method-subtitle">{{ method.subtitle }}</span>
+                      <span class="operator-import-method-subtitle-note">{{ method.subtitleNote }}</span>
+                    </span>
+                  </span>
+                </button>
+
+                <div
+                    :id="`operator-import-${method.key}-details`"
+                    class="operator-import-method-expansion"
+                    :aria-hidden="selectedImportMethod !== method.key"
+                >
+                  <div class="operator-import-method-expansion-inner">
+                    <div class="operator-import-method-notice operator-import-method-notice--purpose" role="note">
+                      <strong>凭证用途</strong>
+                      <ul class="operator-import-method-purpose-list">
+                        <li v-for="item in method.purpose" :key="item">{{ item }}</li>
+                      </ul>
+                      <p v-if="method.purposeNote" class="operator-import-method-purpose-note">{{ method.purposeNote }}</p>
+                    </div>
+
+                    <div
+                        class="operator-import-method-notice"
+                        :class="{
+                          'operator-import-method-notice--warning': method.key === 'skland',
+                          'operator-import-method-notice--danger': method.key === 'official',
+                        }"
+                        role="note"
+                    >
+                      <strong>安全提示</strong>
+                      <p v-for="paragraph in method.warning" :key="paragraph">{{ paragraph }}</p>
+                    </div>
+
+                    <div class="operator-import-method-actions">
+                      <button
+                          class="operator-import-method-action"
+                          type="button"
+                          @click="startImportFlow(method.key)"
+                      >
+                        <span>开始导入</span>
+                        <v-icon size="16" aria-hidden="true">mdi-arrow-right</v-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else key="import-flow" class="operator-import-flow">
+              <v-alert
+                  v-if="!isUserLoggedIn"
+                  :icon="false"
+                  color="warning"
+                  variant="tonal"
+                  density="compact"
+                  class="text-left"
+              >
+                <div class="d-flex align-center justify-space-between ga-3">
+                  <span>当前未登录一图流账号，登录后才能获取账号列表，并将导入数据保存到“我的干员”。</span>
+                  <v-btn
                       color="warning"
-                      variant="tonal"
-                      class="mb-4 text-left"
-                      density="compact"
+                      variant="flat"
+                      size="small"
+                      @click="loginDialog = true"
                   >
-                    当前未登录一图流账号，可先查看教程；登录后才能获取账号列表并同步到我的干员。
+                    登录
+                  </v-btn>
+                </div>
+              </v-alert>
+              <v-window v-model="sklandImportTab">
+              <v-window-item value="skland">
+            <div class="operator-import-progress-comparison">
+              <div class="operator-import-progress-variant">
+                <v-stepper
+                    v-model="sklandImportStep"
+                    class="operator-import-progress-vuetify"
+                    flat
+                    editable
+                    hide-actions
+                >
+                  <v-stepper-header>
+                    <v-stepper-item title="登录森空岛" :value="1" :complete="sklandImportStep > 1"></v-stepper-item>
+                    <v-divider></v-divider>
+                    <v-stepper-item title="获取凭证" :value="2" :complete="sklandImportStep > 2"></v-stepper-item>
+                    <v-divider></v-divider>
+                    <v-stepper-item title="选择账号" :value="3" :complete="sklandImportStep > 3"></v-stepper-item>
+                  </v-stepper-header>
+                </v-stepper>
+              </div>
+            </div>
+            <v-stepper
+                v-model="sklandImportStep"
+                class="operator-import-progress-content"
+                :items="['登录森空岛', '获取凭证', '选择账号']"
+                alt-labels
+            >
+              <template v-slot:item.1>
+                  <v-card flat>
+                    <v-card-text class="text-center">
+                  <v-alert :icon="false" color="primary" variant="tonal" class="mb-4 text-left">
+                    此导入方式仅适合电脑，Windows系统建议使用Microsoft Edge浏览器，macOS系统建议使用Safari浏览器
                   </v-alert>
+                  <p class="mb-4">首先登录森空岛网页版</p>
                   <v-btn color="primary" @click="openLinkOnNewPage(SKLAND_LINK)">
                     <v-icon>mdi-open-in-new</v-icon>
                     打开森空岛官网
                   </v-btn>
-                  <v-alert :icon="false" color="primary" variant="tonal" class="mt-4">
-                    此导入方式仅适合电脑，Windows系统建议使用Microsoft Edge浏览器，iOS系统建议使用Safari浏览器
-                  </v-alert>
                 </v-card-text>
               </v-card>
             </template>
@@ -1053,23 +1367,26 @@ onBeforeUnmount(() => {
             <template v-slot:item.3>
               <v-card flat>
                 <v-card-text>
-                  <p class="mb-4">将获取的字符串粘贴到下面的输入框中</p>
-                  <v-text-field 
-                    v-model="sklandInputText"
-                    label="粘贴凭证字符串"
-                    variant="outlined"
-                    density="compact"
-                    hide-details
-                    class="mb-4"
-                  ></v-text-field>
-                  <v-btn 
-                    color="primary" 
-                    @click="getPlayerBindingBySkland" 
-                    :loading="sklandLoading"
-                    block
-                  >
-                    获取账号列表
-                  </v-btn>
+                  <div class="operator-import-credential-row">
+                    <v-text-field
+                      v-model="sklandInputText"
+                      label="粘贴凭证字符串"
+                      variant="outlined"
+                      density="compact"
+                      hide-details
+                      class="operator-import-credential-input"
+                    ></v-text-field>
+                    <v-btn
+                      color="primary"
+                      @click="getPlayerBindingBySkland"
+                      :loading="sklandLoading"
+                      class="operator-import-credential-action"
+                    >
+                      {{ sklandInputText.trim()
+                          ? '粘贴好了，获取账号列表并导入！'
+                          : '请把获取到的字符串粘贴在左侧' }}
+                    </v-btn>
+                  </div>
                   
                   <div v-if="playBindingList.length > 0" class="mt-4">
                     <p class="mb-2">选择要导入的账号：</p>
@@ -1100,9 +1417,135 @@ onBeforeUnmount(() => {
                 </v-card-text>
               </v-card>
             </template>
-          </v-stepper>
+            </v-stepper>
+              </v-window-item>
+
+              <!-- 官网导入：登录官网 -> 获取 Token -> 输入凭证 -->
+              <v-window-item value="official">
+              <div class="operator-import-progress-comparison">
+                <div class="operator-import-progress-variant">
+                  <v-stepper
+                      v-model="officialImportStep"
+                      class="operator-import-progress-vuetify"
+                      flat
+                      editable
+                      hide-actions
+                  >
+                    <v-stepper-header>
+                      <v-stepper-item title="登录官网" :value="1" :complete="officialImportStep > 1"></v-stepper-item>
+                      <v-divider></v-divider>
+                      <v-stepper-item title="获取 Token" :value="2" :complete="officialImportStep > 2"></v-stepper-item>
+                      <v-divider></v-divider>
+                      <v-stepper-item title="输入凭证" :value="3" :complete="officialImportStep > 3"></v-stepper-item>
+                    </v-stepper-header>
+                  </v-stepper>
+                </div>
+              </div>
+              <v-stepper
+                  v-model="officialImportStep"
+                  class="operator-import-progress-content"
+                  :items="['登录官网', '获取 Token', '输入凭证']"
+                  alt-labels
+              >
+                <template v-slot:item.1>
+                  <v-card flat>
+                    <v-card-text class="text-center">
+                      <p class="mb-4">首先打开并登录明日方舟官网</p>
+                      <v-btn color="primary" @click="openLinkOnNewPage(OFFICIAL_SITE_LINK)">
+                        <v-icon>mdi-open-in-new</v-icon>
+                        打开明日方舟官网
+                      </v-btn>
+                    </v-card-text>
+                  </v-card>
+                </template>
+
+                <template v-slot:item.2>
+                  <v-card flat>
+                    <v-card-text class="text-center">
+                      <p class="mb-4">登录后访问以下地址，复制全部内容：</p>
+                      <v-alert :icon="false" color="primary" variant="tonal" class="my-4">
+                        <code style="word-break: break-all;">{{ HG_ACCOUNT_INFO_URL }}</code>
+                      </v-alert>
+                      <div class="text-center">
+                        <v-btn color="primary" variant="outlined" @click="copyText(HG_ACCOUNT_INFO_URL)" class="mx-2">
+                          <v-icon>mdi-content-copy</v-icon>
+                          复制地址
+                        </v-btn>
+                        <v-btn color="primary" @click="openLinkOnNewPage(HG_ACCOUNT_INFO_URL)" class="mx-2">
+                          <v-icon>mdi-open-in-new</v-icon>
+                          直接访问
+                        </v-btn>
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </template>
+
+                <template v-slot:item.3>
+                  <v-card flat>
+                    <v-card-text>
+                      <p class="mb-4">将获取到的凭证粘贴到下面的输入框中</p>
+                      <v-alert :icon="false" color="warning" variant="tonal" class="mb-4" density="compact">
+                        为保障您的账号安全，请在导入后退出明日方舟官网登录，退出登录后Token就会失效了
+                      </v-alert>
+                      <div class="operator-import-credential-row">
+                        <v-text-field
+                            v-model="officialTokenText"
+                            label="粘贴返回内容"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                            class="operator-import-credential-input"
+                        ></v-text-field>
+                        <v-btn
+                            color="primary"
+                            @click="getPlayerBindingByOfficialToken"
+                            :loading="sklandLoading"
+                            class="operator-import-credential-action"
+                        >
+                          {{ officialTokenText.trim()
+                              ? '粘贴好了，获取账号列表并导入！'
+                              : '请把获取到的字符串粘贴在左侧' }}
+                        </v-btn>
+                      </div>
+
+                      <div v-if="playBindingList.length > 0" class="mt-4">
+                        <p class="mb-2">选择要导入的账号：</p>
+                        <v-btn
+                            v-for="(binding, index) in playBindingList"
+                            :key="index"
+                            color="success"
+                            variant="tonal"
+                            block
+                            class="mb-2 text-left"
+                            style="height: auto; padding: 12px;"
+                            @click="getPlayerDataAndSync(binding)"
+                            :loading="sklandLoading"
+                        >
+                          <div style="width: 100%;">
+                            <div class="font-weight-bold">{{ binding.nickName }}</div>
+                            <div class="text-caption">区服：{{ binding.channelName }} | UID: {{ binding.uid }}</div>
+                          </div>
+                        </v-btn>
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </template>
+              </v-stepper>
+              </v-window-item>
+              </v-window>
+            </div>
+          </Transition>
+          </div>
         </v-card-text>
       </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="loginDialog" max-width="400">
+      <Login
+          dialog
+          @success="handleLoginSuccess"
+          @navigate="handleLoginNavigate"
+      ></Login>
     </v-dialog>
 
   </div>

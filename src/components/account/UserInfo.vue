@@ -5,9 +5,8 @@ import userInfoAPI from "/src/api/userInfo"
 import "/src/assets/css/account/home.scss";
 import {userInfo} from '/src/utils/user/userInfo.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import LogoutConfirmDialog from "/src/components/account/LogoutConfirmDialog.vue";
 import {operatorTableV2} from '/src/utils/gameData.js'
-import {useRouter} from "vue-router";
-const router = useRouter()
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
 
 const accountRules = [
@@ -32,7 +31,7 @@ avatarList.sort((a, b) => b.rarity - a.rarity)
 
 async function getUserInfoByToken() {
 
-  formData.value.userName = userInfo.value.userName
+  formData.value.userName = userInfo.value.nickname
 
   selectedAvatar.value = userInfo.value.avatar
 
@@ -45,16 +44,13 @@ let formData = ref({
   newPassWord: "",
   confirmPassWord: '',
   oldPassWord: "",
-  email: '',
-  mailUsage:'',
-  verificationCode: '',
-  cred: '',
 })
 
 let displayOrUpdateInfo = ref("online")
 
 //选中的头像id
 let selectedAvatar = ref('')
+const logoutDialog = ref(false)
 
 //选择头像
 function chooseAvatar(avatar) {
@@ -65,91 +61,26 @@ function chooseAvatar(avatar) {
  * 更新头像
  */
 function updateAvatar() {
-  const data = {
-    token: userInfo.value.token,
-    avatar: selectedAvatar.value,
-    property: "avatar"
-  }
-
-  userInfoAPI.updateUserDataV2(data).then(response => {
+  userInfoAPI.updateAvatar(selectedAvatar.value).then(() => {
     createMessage({type:'success',text:'头像更新成功'})
-    userInfo.value.avatar = response.data.avatar
-
+    // 新接口响应 data 为空，头像新值直接取本地选择
+    userInfo.value.avatar = selectedAvatar.value
   })
 }
 
-
-function sendUpdateEmailVerificationCode() {
-  userInfoAPI.sendUpdateEmailVerificationCode(formData.value).then(response => {
-    createMessage({type:'success',text:'验证码已发送',duration:4000})
-  })
-}
-
-function sendVerificationCode() {
-  formData.value.mailUsage = "register"
-  userInfoAPI.sendVerificationCodeV2(formData.value).then(response => {
-    createMessage({type:'success',text:'验证码已发送',duration:4000})
-  })
-}
-
-function checkVerificationCode(){
-  userInfoAPI.checkVerificationCode(formData.value).then(response => {
-    formData.value.cred = response.data
-    formData.value.verificationCode = ''
-    displayOrUpdateInfo.value = 'bindEmail'
-  })
-}
-
-
-function bindEmail() {
-  userInfoAPI.bindEmail(formData.value).then(response => {
-    createMessage({type:'success',text:'邮箱绑定成功',duration:4000})
-    setTimeout(() => {
-      location.reload();
-    }, 2000)
-
-  })
-}
 
 /**
- * 更新用户名
+ * 更新用户名（昵称）
  */
 function updateUserName() {
-  const data = {
-    token: userInfo.value.token,
-    userName: formData.value.userName,
-    property: "userName"
-  }
-  userInfoAPI.updateUserDataV2(data).then(response => {
+  userInfoAPI.updateNickname(formData.value.userName).then(() => {
     createMessage({type:'success',text:'用户名更改成功',duration:4000})
-    userInfo.value.userName = response.data.userName
-
+    // 新接口响应 data 为空，昵称新值直接取表单输入
+    userInfo.value.nickname = formData.value.userName
   })
 }
 
 
-
-function updateOrBindEmail(){
-  if(userInfo.value.hasEmail){
-    displayOrUpdateInfo.value = 'checkEmail'
-  }else {
-    displayOrUpdateInfo.value = 'bindEmail'
-  }
-}
-
-/**
- * 退出登录
- */
-function logout() {
-  localStorage.removeItem('USER_TOKEN')
-  setTimeout(() => {
-    location.reload()
-  }, 1000);
-}
-
-function toRetrieve() {
-  router.push({name: "RETRIEVE"})
-}
 
 let max = 0
 const intervalId =  setInterval(()=>{
@@ -197,18 +128,9 @@ onMounted(() => {
             用户名（账号）
           </v-list-item-title>
           <div class="flex align-center user-card-bar justify-between">
-            <span >{{ userInfo.userName }}</span>
+            <span >{{ userInfo.nickname }}</span>
             <v-btn color="primary" variant="text" text="修改用户名（账号）"
                    @click="displayOrUpdateInfo = 'userName'"></v-btn>
-          </div>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-title>
-            绑定邮箱
-          </v-list-item-title>
-          <div class="flex align-center user-card-bar justify-between">
-            <span >{{ userInfo.email }}</span>
-            <v-btn color="primary" variant="text" :text="userInfo.hasEmail?'修改邮箱':'绑定邮箱'" @click="updateOrBindEmail"></v-btn>
           </div>
         </v-list-item>
       </v-list>
@@ -218,8 +140,14 @@ onMounted(() => {
       </div>
 
       <div class="flex justify-center">
-        <v-btn color="primary" variant="outlined" text="修改密码" @click="toRetrieve()" class="m-8"></v-btn>
-        <v-btn color="red" variant="outlined" text="退出登录" @click="logout" class="m-8"></v-btn>
+        <v-btn
+            color="error"
+            variant="text"
+            prepend-icon="mdi-logout"
+            text="退出登录"
+            @click="logoutDialog = true"
+            class="m-8"
+        ></v-btn>
       </div>
     </div>
 
@@ -264,46 +192,7 @@ onMounted(() => {
       </v-card-text>
     </v-card>
 
-    <div v-show="displayOrUpdateInfo==='checkEmail'">
-
-      <span>为了您的账号安全，本操作需要验证您的邮箱，验证码将会以邮件方式发送到您的邮箱{{userInfo.email}}</span>
-
-      <v-otp-input v-model="formData.verificationCode" length="4" >
-
-      </v-otp-input>
-
-      <div class="flex justify-end">
-        <v-btn text="获取验证码"  density="compact" variant="text" color="primary" @click="sendUpdateEmailVerificationCode()"></v-btn>
-      </div>
-
-
-      <div class="flex justify-center m-20-0">
-        <v-btn text="下一步操作" color="primary" @click="checkVerificationCode()"></v-btn>
-      </div>
-
-    </div>
-
-    <div v-show="displayOrUpdateInfo==='bindEmail'">
-      <div class="m-0-4 opacity-70">输入您的新邮箱</div>
-      <v-text-field
-          v-model="formData.email"
-          color="primary"
-          density="compact"
-          variant="outlined"
-          class="m-4"
-      >
-        <template v-slot:append>
-          <v-btn color="primary" variant="text" text="发送验证码"
-                 @click="sendVerificationCode()"></v-btn>
-        </template>
-      </v-text-field>
-      <v-otp-input class="m-4" v-model="formData.verificationCode" length="4"></v-otp-input>
-      <div class="flex justify-center m-20-0">
-        <v-btn text="更新邮箱" color="primary" @click="bindEmail()"></v-btn>
-      </div>
-
-    </div>
-
  </v-card-text>
+    <LogoutConfirmDialog v-model="logoutDialog"></LogoutConfirmDialog>
   </v-card>
 </template>

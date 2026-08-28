@@ -63,6 +63,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  showDebug: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits([
@@ -72,6 +76,7 @@ const emit = defineEmits([
   "add-operator",
   "select-operator",
   "remove-operator",
+  "toggle-operator-skill-unlock",
   "reorder-operator",
   "update:maa-settings",
   "update:maa-room-index",
@@ -101,6 +106,13 @@ function removeOperator(operator) {
 
 function selectOperator(operator) {
   emit("select-operator", operator);
+}
+
+function toggleOperatorSkillUnlock(operator, event) {
+  emit("toggle-operator-skill-unlock", {
+    operator,
+    enabled: event.target.checked,
+  });
 }
 
 function startOperatorDrag(event, index) {
@@ -138,6 +150,21 @@ function toggleMaaSetting(field) {
     ...props.maaSettings,
     [field]: !props.maaSettings[field],
   });
+}
+
+function formatTraceValue(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) {
+    return "--";
+  }
+  return `${Number.isInteger(number) ? number : number.toFixed(1)}%`;
+}
+
+function formatTraceDetails(details) {
+  if (!details) {
+    return "";
+  }
+  return JSON.stringify(details, null, 2);
 }
 </script>
 
@@ -242,10 +269,9 @@ function toggleMaaSetting(field) {
 
     <div class="schedule-room-editor-operators">
       <span v-if="operators.length === 0">暂未指定干员</span>
-      <button
+      <div
         v-for="(operator, index) in operators"
         :key="operator.charId || operator.name"
-        type="button"
         class="schedule-room-editor-operator"
         :class="{ dragging: draggedOperatorIndex === index }"
         draggable="true"
@@ -271,9 +297,74 @@ function toggleMaaSetting(field) {
         <span v-else class="schedule-room-editor-manual-name">
           {{ operator.name }}
         </span>
-        <v-icon icon="mdi-close" size="13"></v-icon>
-      </button>
+        <label
+          v-if="operator.isUnowned"
+          class="schedule-room-editor-skill-toggle"
+          title="关闭按 E0 计算，开启视为基建技能已解锁"
+          @click.stop
+        >
+          <span>技能</span>
+          <input
+            type="checkbox"
+            :checked="operator.assumeRiicSkillUnlocked === true"
+            @change.stop="toggleOperatorSkillUnlock(operator, $event)"
+          />
+          <span class="schedule-room-editor-skill-slider"></span>
+        </label>
+        <button
+          type="button"
+          class="schedule-room-editor-operator-remove"
+          title="移除干员"
+          @click.stop="removeOperator(operator)"
+        >
+          <v-icon icon="mdi-close" size="13"></v-icon>
+        </button>
+      </div>
     </div>
+
+    <details
+      v-if="showDebug && room.efficiencyMetrics?.actual?.breakdown?.calculationTrace"
+      class="schedule-room-editor-debug"
+    >
+      <summary>
+        计算过程
+        <span>
+          {{
+            formatTraceValue(
+              room.efficiencyMetrics.actual.breakdown.calculationTrace
+                .finalValue,
+            )
+          }}
+        </span>
+      </summary>
+      <p class="schedule-room-editor-debug-note">
+        {{
+          room.efficiencyMetrics.actual.breakdown.calculationTrace.mode ===
+          "additive"
+            ? "以下项目按房间最终结算顺序列出。"
+            : "该房间使用特殊计算，核心结果与叠加项不能简单重复相加。"
+        }}
+      </p>
+      <div class="schedule-room-editor-debug-steps">
+        <article
+          v-for="step in room.efficiencyMetrics.actual.breakdown
+            .calculationTrace.steps"
+          :key="step.key"
+          class="schedule-room-editor-debug-step"
+          :class="`kind-${step.kind}`"
+        >
+          <div>
+            <strong>{{ step.label }}</strong>
+            <span v-if="step.value !== undefined">
+              {{
+                step.kind === "add" ? "+" : ""
+              }}{{ formatTraceValue(step.value) }}
+            </span>
+          </div>
+          <pre v-if="step.details">{{ formatTraceDetails(step.details) }}</pre>
+        </article>
+      </div>
+    </details>
 
     <div class="schedule-room-editor-add">
       <input
@@ -508,9 +599,104 @@ function toggleMaaSetting(field) {
   gap: 6px;
 }
 
+.schedule-room-editor-debug {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 9px 10px;
+  border: 1px solid
+    color-mix(in srgb, var(--riic-blue) 38%, var(--c-border-color));
+  border-radius: 4px;
+  background: color-mix(
+    in srgb,
+    var(--riic-blue) 5%,
+    var(--c-page-background-color)
+  );
+}
+
+.schedule-room-editor-debug summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--riic-blue);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.schedule-room-editor-debug summary span {
+  color: var(--c-text-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.schedule-room-editor-debug-note {
+  margin: 0;
+  color: var(--riic-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.schedule-room-editor-debug-steps {
+  display: grid;
+  gap: 5px;
+}
+
+.schedule-room-editor-debug-step {
+  padding: 6px 7px;
+  border-left: 2px solid var(--c-border-color);
+  background: color-mix(
+    in srgb,
+    var(--c-page-background-color) 82%,
+    var(--riic-blue)
+  );
+}
+
+.schedule-room-editor-debug-step.kind-base {
+  border-left-color: var(--riic-orange);
+}
+
+.schedule-room-editor-debug-step.kind-add {
+  border-left-color: var(--riic-green);
+}
+
+.schedule-room-editor-debug-step.kind-result {
+  border-left-color: var(--riic-blue);
+}
+
+.schedule-room-editor-debug-step > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--c-text-color);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.schedule-room-editor-debug-step > div span {
+  color: var(--riic-blue);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.schedule-room-editor-debug-step pre {
+  max-height: 180px;
+  margin: 5px 0 0;
+  overflow: auto;
+  color: var(--riic-muted);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 10px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .schedule-room-editor-operator {
   position: relative;
   display: inline-flex;
+  align-items: center;
+  gap: 4px;
   padding: 0;
   border: 0;
   border-radius: 2px;
@@ -542,7 +728,7 @@ function toggleMaaSetting(field) {
   white-space: nowrap;
 }
 
-.schedule-room-editor-operator :deep(.v-icon) {
+.schedule-room-editor-operator-remove {
   position: absolute;
   top: -3px;
   right: -3px;
@@ -551,9 +737,65 @@ function toggleMaaSetting(field) {
   justify-content: center;
   width: 15px;
   height: 15px;
+  padding: 0;
+  border: 0;
   border-radius: 50%;
   background: var(--riic-red);
   color: #fff;
+  cursor: pointer;
+}
+
+.schedule-room-editor-skill-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-height: 28px;
+  padding: 2px 4px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 3px;
+  background: var(--c-page-background-color);
+  color: var(--riic-muted);
+  font-size: 10px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.schedule-room-editor-skill-toggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.schedule-room-editor-skill-slider {
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 13px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--riic-muted) 45%, var(--c-border-color));
+  transition: background 0.15s ease;
+}
+
+.schedule-room-editor-skill-slider::after {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
+  transition: transform 0.15s ease;
+}
+
+.schedule-room-editor-skill-toggle input:checked + .schedule-room-editor-skill-slider {
+  background: var(--riic-green);
+}
+
+.schedule-room-editor-skill-toggle input:checked + .schedule-room-editor-skill-slider::after {
+  transform: translateX(11px);
 }
 
 .schedule-room-editor-input-warning {

@@ -26,6 +26,11 @@ import {
   summarizeRiicActualSchedule,
 } from "../src/utils/riic/l80-actual-settlement.js";
 import {
+  calculateRiicTradingRoom,
+  createRiicOperatorRosterById,
+  createRiicTradingFacilityContext,
+} from "../src/utils/riic/P01-riic-trading.js";
+import {
   summarizeRiicFacilityPower,
 } from "../src/utils/riic/riic-facility-power-model.js";
 import {
@@ -738,7 +743,7 @@ assert.equal(
   "test:eyjafjalla",
 );
 
-const droneSettlementPreview = {
+let droneSettlementPreview = {
   states: [
     {
       durationHours: 12,
@@ -812,6 +817,10 @@ const droneSettlementPreview = {
     },
   ],
 };
+droneSettlementPreview = attachP01TradingSettlements(
+  droneSettlementPreview,
+  normalTradingOperators,
+);
 const droneSettlement = summarizeRiicActualSchedule({
   preview: droneSettlementPreview,
   droneTargetKeysByState: ["manufacture:experience:1"],
@@ -952,7 +961,7 @@ const experienceEffectWithUnavailableTrade =
   )?.resourceEffectsBySegment[0];
 assert.equal(experienceEffectWithUnavailableTrade?.isCalculated, true);
 assert.equal(experienceEffectWithUnavailableTrade?.primaryOutput, 2100);
-assert.equal(experienceEffectWithUnavailableTrade?.goldConsumption, null);
+assert.equal(experienceEffectWithUnavailableTrade?.goldConsumption, 0);
 const lmdEffectWithUnavailableTrade =
   unrelatedUnavailableTradeSettlement.yield.droneTargetSettlements.find(
     (settlement) => settlement.key === "trading:lmd:1",
@@ -980,6 +989,7 @@ function createSettlementRoom({
   stationLevel = 3,
   operators = [],
   efficiencyMetrics,
+  tradingSettlement,
 }) {
   return {
     key,
@@ -993,6 +1003,54 @@ function createSettlementRoom({
         actual: { status: "calculated" },
       },
     operators,
+    ...(tradingSettlement ? { tradingSettlement } : {}),
+  };
+}
+
+function attachP01TradingSettlement(
+  room,
+  operatorProfiles,
+  durationHours,
+  tradingContext,
+) {
+  const calculation = calculateRiicTradingRoom({
+    room,
+    rosterById: createRiicOperatorRosterById(operatorProfiles),
+    tradingContext,
+    durationHours,
+  });
+
+  return {
+    ...room,
+    tradingSettlement: {
+      status: calculation?.ok ? "calculated" : "unavailable",
+      error: calculation?.ok ? "" : calculation?.error || "unknown",
+      calculation,
+    },
+  };
+}
+
+function attachP01TradingSettlements(preview, operatorProfiles) {
+  return {
+    ...preview,
+    states: (preview?.states || []).map((state) => {
+      const tradingContext = createRiicTradingFacilityContext({
+        stateRooms: state?.rooms || [],
+      });
+      return {
+        ...state,
+        rooms: (state?.rooms || []).map((room) =>
+          String(room?.facility || "").trim() === "trading"
+            ? attachP01TradingSettlement(
+                room,
+                operatorProfiles,
+                Number(state?.durationHours || 0),
+                tradingContext,
+              )
+            : room,
+        ),
+      };
+    }),
   };
 }
 
@@ -1023,6 +1081,33 @@ const orundumSettlementPreview = {
           product: "orundum",
           efficiency: 193,
           operators: createNormalTradingRoomOperators(),
+          tradingSettlement: {
+            status: "calculated",
+            error: "",
+            calculation: {
+              ok: true,
+              type: "normal",
+              product: "orundum",
+              durationHours: 24,
+              rate: 193,
+              lmd: 0,
+              gold: 0,
+              virtualGold: 0,
+              orundumCapacity: 19.3,
+              shardConsumption: 1.93,
+              segment: {
+                lmdOutput: 0,
+                goldConsumption: 0,
+                virtualGoldOutput: 0,
+                orundumOutput: 463.2,
+                shardConsumption: 46.32,
+              },
+              error: "",
+              inputDiagnostics: {
+                p01Operators: normalTradingOperators,
+              },
+            },
+          },
         }),
       ],
     },
@@ -1077,7 +1162,7 @@ assert.equal(
 );
 assert.equal(
   orundumTradeDroneSettlement.resourceEffectsBySegment[0].lmdConsumption,
-  null,
+  0,
 );
 
 const orundumManufactureDroneSettlement = orundumSettlement.yield.droneTargetSettlements.find(
@@ -1093,7 +1178,7 @@ assert.equal(
 );
 assert.equal(
   orundumManufactureDroneSettlement.resourceEffectsBySegment[0].shardConsumption,
-  null,
+  0,
 );
 assert.equal(
   orundumManufactureDroneSettlement.resourceEffectsBySegment[0].lmdConsumption,
@@ -1186,6 +1271,36 @@ const closureSettlementPreview = {
             { charId: "char_502_nblade" },
             { charId: "char_123_fang" },
           ],
+          tradingSettlement: {
+            status: "calculated",
+            error: "",
+            calculation: {
+              ok: true,
+              type: "closure",
+              product: "lmd",
+              durationHours: 24,
+              rate: 202.231034,
+              lmd: 720.833333,
+              gold: -1.441667,
+              virtualGold: 0.288333,
+              orundumCapacity: 0,
+              shardConsumption: 0,
+              segment: {
+                lmdOutput: 17300,
+                goldConsumption: 34.6,
+                virtualGoldOutput: 6.92,
+                orundumOutput: 0,
+                shardConsumption: 0,
+              },
+              error: "",
+              inputDiagnostics: {
+                p01Operators: [
+                  { charId: "char_4228_closur", elite: 2, level: 1 },
+                  ...normalTradingOperators.slice(0, 2),
+                ],
+              },
+            },
+          },
         }),
       ],
     },
@@ -1199,8 +1314,14 @@ const closureSettlement = summarizeRiicActualSchedule({
   ],
 });
 const closureGold = getYieldResource(closureSettlement.yield, "gold");
-assert.equal(closureGold.grossOutputPerDay, 26.92);
-assert.equal(closureGold.tradeConsumptionPerDay, 34.6);
+assert.equal(
+  closureSettlement.yield.resourceFlows.gold.grossOutputPerDay,
+  26.92,
+);
+assert.equal(
+  closureSettlement.yield.resourceFlows.gold.tradeConsumptionPerDay,
+  34.6,
+);
 assert.equal(closureGold.outputPerDay, -7.68);
 
 const unsupportedP01TradePreview = {
@@ -1217,6 +1338,16 @@ const unsupportedP01TradePreview = {
             { charId: "char_502_nblade" },
             { charId: "char_123_fang" },
           ],
+          tradingSettlement: {
+            status: "unavailable",
+            error: "notSupported",
+            calculation: {
+              ok: false,
+              type: "normal",
+              product: "lmd",
+              error: "notSupported",
+            },
+          },
         }),
       ],
     },
@@ -1234,23 +1365,26 @@ assert.equal(
   "notSupported",
 );
 
-const lowerLevelOrundumPreview = {
-  states: [
-    {
-      durationHours: 24,
-      rooms: [
-        createSettlementRoom({
-          key: "trading:orundum:level-1",
-          facility: "trading",
-          product: "orundum",
-          stationLevel: 1,
-          efficiency: 200,
-          operators: createNormalTradingRoomOperators(),
-        }),
-      ],
-    },
-  ],
-};
+const lowerLevelOrundumPreview = attachP01TradingSettlements(
+  {
+    states: [
+      {
+        durationHours: 24,
+        rooms: [
+          createSettlementRoom({
+            key: "trading:orundum:level-1",
+            facility: "trading",
+            product: "orundum",
+            stationLevel: 1,
+            efficiency: 200,
+            operators: createNormalTradingRoomOperators(),
+          }),
+        ],
+      },
+    ],
+  },
+  normalTradingOperators,
+);
 const lowerLevelOrundumSettlement = summarizeRiicActualSchedule({
   preview: lowerLevelOrundumPreview,
   tradingOperators: [
@@ -1274,23 +1408,26 @@ assert.equal(
 
 for (const stationLevel of [1, 2, 3]) {
   const levelSettlement = summarizeRiicActualSchedule({
-    preview: {
-      states: [
-        {
-          durationHours: 24,
-          rooms: [
-            createSettlementRoom({
-              key: `trading:orundum:level-${stationLevel}`,
-              facility: "trading",
-              product: "orundum",
-              stationLevel,
-              efficiency: 193,
-              operators: createNormalTradingRoomOperators(),
-            }),
-          ],
-        },
-      ],
-    },
+    preview: attachP01TradingSettlements(
+      {
+        states: [
+          {
+            durationHours: 24,
+            rooms: [
+              createSettlementRoom({
+                key: `trading:orundum:level-${stationLevel}`,
+                facility: "trading",
+                product: "orundum",
+                stationLevel,
+                efficiency: 193,
+                operators: createNormalTradingRoomOperators(),
+              }),
+            ],
+          },
+        ],
+      },
+      normalTradingOperators,
+    ),
     tradingOperators: normalTradingOperators,
   });
   assert.equal(
@@ -1303,7 +1440,7 @@ for (const stationLevel of [1, 2, 3]) {
   );
 }
 
-const jacintaRotationPreview = {
+let jacintaRotationPreview = {
   states: [
     {
       durationHours: 6,
@@ -1366,6 +1503,13 @@ const jacintaRotationPreview = {
     },
   ],
 };
+jacintaRotationPreview = attachP01TradingSettlements(
+  jacintaRotationPreview,
+  [
+    { charId: "char_4237_jcinta", elite: 0, level: 1 },
+    ...normalTradingOperators,
+  ],
+);
 const jacintaRotationSettlement = summarizeRiicActualSchedule({
   preview: jacintaRotationPreview,
   tradingOperators: [
@@ -1379,7 +1523,7 @@ for (const room of jacintaRotationSettlement.yield.rooms) {
   assert.equal(room.segments.every((segment) => segment.calculated), true);
 }
 
-const closureVigilBelloneRotationPreview = {
+let closureVigilBelloneRotationPreview = {
   states: [
     {
       durationHours: 6,
@@ -1457,6 +1601,15 @@ const closureVigilBelloneRotationPreview = {
     },
   ],
 };
+closureVigilBelloneRotationPreview = attachP01TradingSettlements(
+  closureVigilBelloneRotationPreview,
+  [
+    { charId: "char_4228_closur", elite: 2, level: 1 },
+    { charId: "char_427_vigil", elite: 2, level: 1 },
+    { charId: "char_4037_demetr", elite: 2, level: 1 },
+    ...normalTradingOperators,
+  ],
+);
 const closureVigilBelloneRotationSettlement = summarizeRiicActualSchedule({
   preview: closureVigilBelloneRotationPreview,
   tradingOperators: [
@@ -1488,7 +1641,7 @@ assert.ok(
   Math.abs(Number(closureVigilBelloneThirdSegment?.output) - 9650) < 0.01,
 );
 
-const belloneRosterOnlyPreview = {
+let belloneRosterOnlyPreview = {
   states: [
     {
       durationHours: 24,
@@ -1512,6 +1665,15 @@ const belloneRosterOnlyPreview = {
     },
   ],
 };
+belloneRosterOnlyPreview = attachP01TradingSettlements(
+  belloneRosterOnlyPreview,
+  [
+    { charId: "char_4228_closur", elite: 2, level: 1 },
+    { charId: "char_4037_demetr", elite: 2, level: 1 },
+    { charId: "char_427_vigil", elite: 2, level: 1 },
+    ...normalTradingOperators.slice(0, 2),
+  ],
+);
 const belloneRosterOnlySettlement = summarizeRiicActualSchedule({
   preview: belloneRosterOnlyPreview,
   tradingOperators: [
@@ -1550,8 +1712,12 @@ tradingBonusPreview.states[0].rooms[0].controlCenterOperatorBonuses = [
     bonusPercent: 3,
   },
 ];
+const tradingBonusPreviewWithP01 = attachP01TradingSettlements(
+  tradingBonusPreview,
+  normalTradingOperators,
+);
 const tradingBonusSettlement = summarizeRiicActualSchedule({
-  preview: tradingBonusPreview,
+  preview: tradingBonusPreviewWithP01,
   tradingOperators: normalTradingOperators,
 });
 assert.equal(
@@ -1639,8 +1805,16 @@ const jayeStaticPreview = {
     },
   ],
 };
+const jayeStaticPreviewWithP01 = attachP01TradingSettlements(
+  jayeStaticPreview,
+  [
+    { charId: "char_272_strong", elite: 1, level: 1 },
+    { charId: "char_172_svrash", elite: 2, level: 1 },
+    { charId: "char_173_slchan", elite: 2, level: 1 },
+  ],
+);
 const jayeStaticSettlement = summarizeRiicActualSchedule({
-  preview: jayeStaticPreview,
+  preview: jayeStaticPreviewWithP01,
   tradingOperators: [
     { charId: "char_272_strong", elite: 1, level: 1 },
     { charId: "char_172_svrash", elite: 2, level: 1 },
