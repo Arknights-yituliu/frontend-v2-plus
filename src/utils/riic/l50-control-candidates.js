@@ -102,7 +102,7 @@ function getRosterById(roster) {
 export function buildRiicControlCenterCandidateOperators({
   roster = [],
   skills = [],
-  layoutFacts = {},
+  layoutData = {},
   trainingMode = "current",
   idealTrainingRaritySelection,
   idleFillOperators = [],
@@ -126,7 +126,7 @@ export function buildRiicControlCenterCandidateOperators({
     const operator = rosterById.get(charId);
     const tags = [...new Set(skill?.bufftag || [])].filter(Boolean);
     const hasOperatorEffect =
-      (skill?.intermediateProducts || []).length > 0 ||
+      (skill?.middleData || []).length > 0 ||
       (skill?.sameTeamWithOperatorIds || []).some(Boolean) ||
       (skill?.resolvedEffects || []).some((effect) =>
         ["operators", "controlCenterState"].includes(
@@ -200,7 +200,7 @@ export function buildRiicControlCenterCandidateOperators({
       for (const effect of getRiicLayer3ControlCenterEffects({
         operatorId: charId,
         ownedOperators: roster,
-        layoutFacts,
+        layoutData,
       })) {
         if (isRoomEffect(effect)) {
           resolvedEffects.set(getEffectKey(effect), effect);

@@ -572,10 +572,10 @@ function normalizeOperators(operators) {
   return byName;
 }
 
-function buildRooms(layoutFacts) {
+function buildRooms(layoutData) {
   const indexByFacility = new Map();
 
-  return (layoutFacts?.facilities || []).flatMap((facility) => {
+  return (layoutData?.facilities || []).flatMap((facility) => {
     const facilityType = String(facility?.facilityType || "").trim();
     const slotCount = Number(facility?.slotCount);
     if (!facilityType || !Number.isFinite(slotCount) || slotCount < 1) {
@@ -993,14 +993,14 @@ export function planRiicSystemPercentAssessment({
   systemId,
   ruleIds,
   operators = [],
-  layoutFacts,
+  layoutData,
   groupMembers = {},
   choices = {},
   getCoreRequirement,
 } = {}) {
   const rules = getSystemPercentRules(systemId, ruleIds);
   const operatorByName = normalizeOperators(operators);
-  const rooms = buildRooms(layoutFacts);
+  const rooms = buildRooms(layoutData);
   const sourceStates = new Map();
   const ruleStates = new Map();
   const fixedTargets = new Map();

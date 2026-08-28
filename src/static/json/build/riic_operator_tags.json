@@ -1,0 +1,622 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "arkntools/arknights-toolbox-data",
+    "file": "assets/locales/cn/term.json",
+    "supplementalFile": "src/static/json/game-data/operator_table.json",
+    "note": "组织、小队和语义标签转换为本项目的干员标签；技能分类不写入干员永久标签。"
+  },
+  "operatorTags": {
+    "char_010_chen": [
+      "lungmen-guard-department"
+    ],
+    "char_017_huang": [
+      "elite"
+    ],
+    "char_1011_lava2": [
+      "alternate"
+    ],
+    "char_1012_skadi2": [
+      "alternate"
+    ],
+    "char_1013_chen2": [
+      "alternate"
+    ],
+    "char_1014_nearl2": [
+      "alternate",
+      "knight"
+    ],
+    "char_1016_agoat2": [
+      "alternate"
+    ],
+    "char_1019_siege2": [
+      "alternate"
+    ],
+    "char_1020_reed2": [
+      "alternate"
+    ],
+    "char_1021_kroos2": [
+      "alternate"
+    ],
+    "char_1023_ghost2": [
+      "alternate"
+    ],
+    "char_1024_hbisc2": [
+      "alternate"
+    ],
+    "char_1026_gvial2": [
+      "alternate",
+      "gavial"
+    ],
+    "char_1027_greyy2": [
+      "alternate"
+    ],
+    "char_1028_texas2": [
+      "alternate"
+    ],
+    "char_1029_yato2": [
+      "alternate",
+      "monster-hunter-party"
+    ],
+    "char_103_angel": [
+      "angel"
+    ],
+    "char_1030_noirc2": [
+      "alternate",
+      "monster-hunter-party"
+    ],
+    "char_1031_slent2": [
+      "alternate"
+    ],
+    "char_1032_excu2": [
+      "alternate"
+    ],
+    "char_1033_swire2": [
+      "alternate"
+    ],
+    "char_1034_jesca2": [
+      "alternate"
+    ],
+    "char_1035_wisdel": [
+      "alternate"
+    ],
+    "char_1036_fang2": [
+      "alternate"
+    ],
+    "char_1038_whitw2": [
+      "alternate",
+      "siracusa"
+    ],
+    "char_1039_thorn2": [
+      "alternate"
+    ],
+    "char_1040_blaze2": [
+      "elite"
+    ],
+    "char_1041_angel2": [
+      "angel"
+    ],
+    "char_1048_orchd2": [
+      "sunbreak-hunter-team"
+    ],
+    "char_1049_catap2": [
+      "sunbreak-hunter-team"
+    ],
+    "char_106_franka": [
+      "blacksteel-international"
+    ],
+    "char_107_liskam": [
+      "blacksteel-international"
+    ],
+    "char_108_silent": [
+      "rhine-lab"
+    ],
+    "char_109_fmout": [
+      "sami"
+    ],
+    "char_112_siege": [
+      "glasgow-gang"
+    ],
+    "char_115_headbr": [
+      "ursus-student-self-government"
+    ],
+    "char_120_hibisc": [
+      "a1-team"
+    ],
+    "char_121_lava": [
+      "a1-team"
+    ],
+    "char_122_beagle": [
+      "a1-team"
+    ],
+    "char_123_fang": [
+      "a1-team"
+    ],
+    "char_124_kroos": [
+      "a1-team"
+    ],
+    "char_127_estell": [
+      "sargon"
+    ],
+    "char_128_plosis": [
+      "rhine-lab"
+    ],
+    "char_134_ifrit": [
+      "rhine-lab"
+    ],
+    "char_135_halo": [
+      "rhine-lab"
+    ],
+    "char_136_hsguma": [
+      "lungmen-guard-department"
+    ],
+    "char_140_whitew": [
+      "siracusa"
+    ],
+    "char_143_ghost": [
+      "abyssal-hunters"
+    ],
+    "char_145_prove": [
+      "siracusa"
+    ],
+    "char_148_nearl": [
+      "knight"
+    ],
+    "char_151_myrtle": [
+      "durin"
+    ],
+    "char_154_morgan": [
+      "glasgow-gang"
+    ],
+    "char_155_tiger": [
+      "glasgow-gang"
+    ],
+    "char_157_dagda": [
+      "glasgow-gang"
+    ],
+    "char_159_peacok": [
+      "minos"
+    ],
+    "char_163_hpsts": [
+      "minos"
+    ],
+    "char_172_svrash": [
+      "kjerag"
+    ],
+    "char_173_slchan": [
+      "kjerag"
+    ],
+    "char_174_slbell": [
+      "kjerag"
+    ],
+    "char_187_ccheal": [
+      "gavial"
+    ],
+    "char_190_clour": [
+      "siracusa"
+    ],
+    "char_192_falco": [
+      "laterano"
+    ],
+    "char_194_leto": [
+      "ursus-student-self-government"
+    ],
+    "char_195_glassb": [
+      "ursus-student-self-government"
+    ],
+    "char_196_sunbr": [
+      "ursus-student-self-government"
+    ],
+    "char_197_poca": [
+      "ursus-student-self-government"
+    ],
+    "char_198_blackd": [
+      "kjerag"
+    ],
+    "char_199_yak": [
+      "kjerag"
+    ],
+    "char_2012_typhon": [
+      "sami"
+    ],
+    "char_2014_nian": [
+      "sui"
+    ],
+    "char_2015_dusk": [
+      "sui"
+    ],
+    "char_202_demkni": [
+      "rhine-lab"
+    ],
+    "char_2023_ling": [
+      "sui"
+    ],
+    "char_2024_chyue": [
+      "sui"
+    ],
+    "char_2025_shu": [
+      "sui"
+    ],
+    "char_2026_yu": [
+      "sui"
+    ],
+    "char_2027_wang": [
+      "sui"
+    ],
+    "char_206_gnosis": [
+      "kjerag"
+    ],
+    "char_211_adnach": [
+      "laterano"
+    ],
+    "char_213_mostma": [
+      "laterano"
+    ],
+    "char_215_mantic": [
+      "sargon"
+    ],
+    "char_218_cuttle": [
+      "abyssal-hunters"
+    ],
+    "char_225_haak": [
+      "lee-detective-agency"
+    ],
+    "char_226_hmau": [
+      "lee-detective-agency"
+    ],
+    "char_235_jesica": [
+      "blacksteel-international"
+    ],
+    "char_237_gravel": [
+      "knight"
+    ],
+    "char_240_wyvern": [
+      "blacksteel-international"
+    ],
+    "char_242_otter": [
+      "rhine-lab"
+    ],
+    "char_243_waaifu": [
+      "lee-detective-agency"
+    ],
+    "char_245_cello": [
+      "laterano"
+    ],
+    "char_248_mgllan": [
+      "rhine-lab"
+    ],
+    "char_249_mlyss": [
+      "rhine-lab"
+    ],
+    "char_252_bibeak": [
+      "sami"
+    ],
+    "char_254_vodfox": [
+      "siracusa"
+    ],
+    "char_263_skadi": [
+      "abyssal-hunters"
+    ],
+    "char_265_sophia": [
+      "knight"
+    ],
+    "char_271_spikes": [
+      "laterano"
+    ],
+    "char_279_excu": [
+      "laterano"
+    ],
+    "char_285_medic2": [
+      "work-platform"
+    ],
+    "char_286_cast3": [
+      "work-platform"
+    ],
+    "char_291_aglina": [
+      "siracusa"
+    ],
+    "char_300_phenxi": [
+      "laterano"
+    ],
+    "char_302_glaze": [
+      "laterano"
+    ],
+    "char_308_swire": [
+      "lungmen-guard-department"
+    ],
+    "char_322_lmlee": [
+      "lee-detective-agency"
+    ],
+    "char_332_archet": [
+      "laterano"
+    ],
+    "char_333_sidero": [
+      "minos"
+    ],
+    "char_336_folivo": [
+      "sargon"
+    ],
+    "char_341_sntlla": [
+      "sami"
+    ],
+    "char_344_beewax": [
+      "sargon"
+    ],
+    "char_346_aosta": [
+      "siracusa"
+    ],
+    "char_349_chiave": [
+      "siracusa"
+    ],
+    "char_356_broca": [
+      "siracusa"
+    ],
+    "char_358_lisa": [
+      "siracusa"
+    ],
+    "char_376_therex": [
+      "work-platform"
+    ],
+    "char_379_sesa": [
+      "sargon"
+    ],
+    "char_381_bubble": [
+      "sargon"
+    ],
+    "char_391_rosmon": [
+      "elite"
+    ],
+    "char_394_hadiya": [
+      "sargon"
+    ],
+    "char_400_weedy": [
+      "automation"
+    ],
+    "char_4000_jnight": [
+      "knight",
+      "red-pine-knights",
+      "work-platform"
+    ],
+    "char_4013_kjera": [
+      "kjerag"
+    ],
+    "char_4014_lunacu": [
+      "siracusa"
+    ],
+    "char_4015_spuria": [
+      "laterano"
+    ],
+    "char_402_tuye": [
+      "sargon"
+    ],
+    "char_4023_rfalcn": [
+      "sargon"
+    ],
+    "char_4026_vulpis": [
+      "siracusa"
+    ],
+    "char_4031_liesel": [
+      "siracusa"
+    ],
+    "char_4036_forcer": [
+      "laterano"
+    ],
+    "char_4037_demetr": [
+      "siracusa"
+    ],
+    "char_4041_chnut": [
+      "durin"
+    ],
+    "char_4043_erato": [
+      "minos"
+    ],
+    "char_4048_doroth": [
+      "rhine-lab"
+    ],
+    "char_405_absin": [
+      "ursus-student-self-government"
+    ],
+    "char_4052_surfer": [
+      "blacksteel-international"
+    ],
+    "char_4054_malist": [
+      "durin",
+      "sargon"
+    ],
+    "char_4056_titi": [
+      "sargon"
+    ],
+    "char_4058_pepe": [
+      "sargon"
+    ],
+    "char_4062_totter": [
+      "sargon"
+    ],
+    "char_4065_judge": [
+      "siracusa"
+    ],
+    "char_4077_palico": [
+      "monster-hunter-party"
+    ],
+    "char_4093_frston": [
+      "work-platform"
+    ],
+    "char_4098_vvana": [
+      "knight"
+    ],
+    "char_4102_threye": [
+      "sami"
+    ],
+    "char_4105_almond": [
+      "blacksteel-international"
+    ],
+    "char_411_tomimi": [
+      "sargon"
+    ],
+    "char_4116_blkkgt": [
+      "kjerag"
+    ],
+    "char_4123_ela": [
+      "rainbow-defense",
+      "rainbow-squad"
+    ],
+    "char_4124_iana": [
+      "rainbow-attack",
+      "rainbow-squad"
+    ],
+    "char_4125_rdoc": [
+      "rainbow-defense",
+      "rainbow-squad"
+    ],
+    "char_4126_fuze": [
+      "rainbow-attack",
+      "rainbow-squad"
+    ],
+    "char_4133_logos": [
+      "elite"
+    ],
+    "char_4136_phonor": [
+      "work-platform"
+    ],
+    "char_4138_narant": [
+      "sargon"
+    ],
+    "char_4139_papyrs": [
+      "sargon"
+    ],
+    "char_4140_lasher": [
+      "sargon"
+    ],
+    "char_4141_marcil": [
+      "dungeon-meshi-party"
+    ],
+    "char_4142_laios": [
+      "dungeon-meshi-party"
+    ],
+    "char_4143_sensi": [
+      "dungeon-meshi-party"
+    ],
+    "char_4144_chilc": [
+      "dungeon-meshi-party"
+    ],
+    "char_4145_ulpia": [
+      "abyssal-hunters"
+    ],
+    "char_4148_philae": [
+      "sargon"
+    ],
+    "char_415_flint": [
+      "sargon"
+    ],
+    "char_4155_talr": [
+      "siracusa"
+    ],
+    "char_416_zumama": [
+      "automation",
+      "sargon"
+    ],
+    "char_4164_tecno": [
+      "durin"
+    ],
+    "char_4166_varkis": [
+      "minos"
+    ],
+    "char_4171_wulfen": [
+      "sargon"
+    ],
+    "char_4188_confes": [
+      "laterano",
+      "work-platform"
+    ],
+    "char_4193_lemuen": [
+      "laterano"
+    ],
+    "char_4194_rmixer": [
+      "laterano"
+    ],
+    "char_4195_radian": [
+      "elite"
+    ],
+    "char_420_flamtl": [
+      "knight",
+      "red-pine-knights"
+    ],
+    "char_4204_mantra": [
+      "elite"
+    ],
+    "char_4211_snhunt": [
+      "kjerag"
+    ],
+    "char_4212_nasti": [
+      "rhine-lab"
+    ],
+    "char_4215_buddy": [
+      "sunbreak-hunter-team"
+    ],
+    "char_422_aurora": [
+      "kjerag"
+    ],
+    "char_4227_gallus": [
+      "work-platform"
+    ],
+    "char_423_blemsh": [
+      "knight"
+    ],
+    "char_4230_mcnist": [
+      "elite"
+    ],
+    "char_427_vigil": [
+      "siracusa"
+    ],
+    "char_430_fartth": [
+      "knight",
+      "red-pine-knights"
+    ],
+    "char_431_ashlok": [
+      "knight",
+      "red-pine-knights"
+    ],
+    "char_446_aroma": [
+      "siracusa"
+    ],
+    "char_456_ash": [
+      "rainbow-attack",
+      "rainbow-squad"
+    ],
+    "char_457_blitz": [
+      "rainbow-attack",
+      "rainbow-squad"
+    ],
+    "char_458_rfrost": [
+      "rainbow-defense",
+      "rainbow-squad"
+    ],
+    "char_459_tachak": [
+      "rainbow-defense",
+      "rainbow-squad"
+    ],
+    "char_466_qanik": [
+      "sami"
+    ],
+    "char_472_pasngr": [
+      "automation",
+      "sargon"
+    ],
+    "char_474_glady": [
+      "abyssal-hunters"
+    ],
+    "char_485_pallas": [
+      "minos"
+    ],
+    "char_496_wildmn": [
+      "knight",
+      "red-pine-knights"
+    ],
+    "char_498_inside": [
+      "laterano"
+    ],
+    "char_501_durin": [
+      "durin"
+    ]
+  }
+}

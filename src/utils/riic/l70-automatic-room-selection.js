@@ -59,7 +59,7 @@ function hasAutomationCandidateStates(
 }
 
 function getAutomationRuntimeContext({
-  layoutFacts,
+  layoutData,
   ownedOperators,
   powerSupportReserved = false,
 }) {
@@ -67,9 +67,9 @@ function getAutomationRuntimeContext({
     return null;
   }
 
-  const powerPlantCount = Number(layoutFacts?.powerPlantCount || 0);
+  const powerPlantCount = Number(layoutData?.powerPlantCount || 0);
   return {
-    layoutFacts: layoutFacts || {},
+    layoutData: layoutData || {},
     ownedOperators,
     powerPlantCount,
     effectivePowerPlantCount: powerPlantCount + 1,
@@ -389,7 +389,7 @@ export function buildRiicAutomaticRoomGroupSelections({
   fallbackPlanLimit,
   fiammettaRecovery,
   ownedOperators = [],
-  layoutFacts = {},
+  layoutData = {},
   controlCenterSegments = [],
   collectPlanningDebug = false,
   idleFillOperators = [],
@@ -482,7 +482,7 @@ export function buildRiicAutomaticRoomGroupSelections({
             idleFillOperators,
             reservedPowerOperatorId,
             automationRuntimeContext: getAutomationRuntimeContext({
-              layoutFacts,
+              layoutData,
               ownedOperators,
               powerSupportReserved: Boolean(reservedPowerOperatorId),
             }),

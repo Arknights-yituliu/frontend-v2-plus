@@ -129,6 +129,11 @@ import {
 import { evaluateRiicControlCenterScenarios } from "/src/utils/riic/l40-control-trial.js";
 import { evaluateRiicPerceptionResourceTrials } from "/src/utils/riic/l41-perception-trial.js";
 import { buildRiicSchedulePreview } from "/src/utils/riicSchedulePreview.js";
+import {
+  normalizeRiicOperator,
+  normalizeRiicOperatorId,
+  normalizeRiicOperatorName,
+} from "/src/utils/riicOperatorIdentity.js";
 import { summarizeRiicActualSchedule } from "/src/utils/riic/l80-actual-settlement.js";
 import {
   settleRiicMaaScheduleEfficiency,
@@ -186,10 +191,6 @@ const RIIC_WORKFLOW_CARD_IDS = Object.freeze([
 const RIIC_SCHEDULE_DRAFT_VERSION = 25;
 const ROOM_STAFFING_CANDIDATE_PAGE_SIZE = 24;
 const RIIC_AUTOMATIC_SELECTION_STRATEGY_VERSION = "14";
-const RIIC_SCHEDULING_EXCLUDED_OPERATOR_IDS = new Set([
-  "char_1001_amiya2",
-  "char_1037_amiya3",
-]);
 const RIIC_AUTOMATIC_SEARCH_CONFIGS = Object.freeze({
   fast: {
     selectionBeamLimit: 6,
@@ -1195,12 +1196,7 @@ const riicTrainingMode = computed(() =>
   treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
 );
 const virtualOperators = computed(() => {
-  const schedulingOperators = ownedOperators.value.filter(
-    (operator) =>
-      !RIIC_SCHEDULING_EXCLUDED_OPERATOR_IDS.has(
-        String(operator?.charId || "").trim(),
-      ),
-  );
+  const schedulingOperators = ownedOperators.value;
 
   if (schedulingOperators.length === 0) {
     return null;
@@ -1223,7 +1219,7 @@ const riicLayer3RuleChecks = computed(() => {
 
   return getRiicLayer3RuleConditionChecks({
     ownedOperators: virtualOperators.value,
-    layoutFacts: activeLayoutFacilityCounts.value,
+    layoutData: activeLayoutFacilityCounts.value,
   });
 });
 const riicLayer3MatchedRuleCount = computed(
@@ -1253,7 +1249,7 @@ const controlCenterCandidateOperators = computed(() =>
   buildRiicControlCenterCandidateOperators({
     roster: virtualOperators.value || [],
     skills: RIIC_CONTROL_CENTER_SKILLS.skills,
-    layoutFacts: activeLayoutFacilityCounts.value,
+    layoutData: activeLayoutFacilityCounts.value,
     trainingMode: riicTrainingMode.value,
     idealTrainingRaritySelection: idealTrainingRaritySelection.value,
     idleFillOperators: riicIdleFillOperators.value,
@@ -1822,7 +1818,7 @@ const roomGroupCandidateStates = computed(() =>
         loadingCatalogKeys: riicStaticCatalogLoadingPromisesByKey,
         operatorNameToCharId,
         publicSkillOperatorIds: riicPublicSkillOperatorIds.value,
-        layoutFacts: activeLayoutFacilityCounts.value,
+        layoutData: activeLayoutFacilityCounts.value,
         trainingMode: riicTrainingMode.value,
         idealTrainingRaritySelection: idealTrainingRaritySelection.value,
         controlCenterRuntimeContext: controlCenterRuntimeContext.value,
@@ -1850,7 +1846,7 @@ const riicControlCenterScenarioTrialState = computed(() => {
     scenarios: evaluateRiicControlCenterScenarios({
       skills: RIIC_CONTROL_CENTER_SKILLS.skills,
       ownedOperators: virtualOperators.value,
-      layoutFacts: activeLayoutFacilityCounts.value,
+      layoutData: activeLayoutFacilityCounts.value,
       trainingMode: riicTrainingMode.value,
       idealTrainingRaritySelection: idealTrainingRaritySelection.value,
     }),
@@ -1872,7 +1868,7 @@ const riicPerceptionResourceTrialState = computed(() => {
 
   return evaluateRiicPerceptionResourceTrials({
     ownedOperators: virtualOperators.value,
-    layoutFacts: activeLayoutFacilityCounts.value,
+    layoutData: activeLayoutFacilityCounts.value,
     controlState: controlCenterRoleState.value,
   });
 });
@@ -2507,7 +2503,7 @@ function createRiicAutomaticScheduleWorkerInput(searchConfig) {
     controlCenterOperatorIds: [...controlCenterSelectedOperatorIds.value],
     controlCenterState: controlCenterRoleState.value,
     controlCenterRuntimeContext: controlCenterRuntimeContext.value,
-    layoutFacts: activeLayoutFacilityCounts.value,
+    layoutData: activeLayoutFacilityCounts.value,
     selectionBeamLimit: searchConfig.selectionBeamLimit,
     selectionOptionLimit: searchConfig.selectionOptionLimit,
     selectionRepresentativeLimit: searchConfig.selectionRepresentativeLimit,
@@ -2540,12 +2536,7 @@ function getOperatorSkillTooltip(operator) {
 }
 
 function getRiicSchedulingOperators() {
-  return (ownedOperators.value || []).filter(
-    (operator) =>
-      !RIIC_SCHEDULING_EXCLUDED_OPERATOR_IDS.has(
-        String(operator?.charId || "").trim(),
-      ),
-  );
+  return ownedOperators.value || [];
 }
 
 function createRiicTrainingRecommendationWorkerInput(searchConfig) {
@@ -2573,7 +2564,7 @@ function createRiicTrainingRecommendationWorkerInput(searchConfig) {
     shiftMode: confirmedLayoutPlan.value?.shiftMode,
     twoShiftRotationMode: twoShiftRotationMode.value,
     operatorNameToCharId: Object.fromEntries(operatorNameToCharId),
-    layoutFacts: activeLayoutFacilityCounts.value,
+    layoutData: activeLayoutFacilityCounts.value,
     idealTrainingRaritySelection: idealTrainingRaritySelection.value,
     controlRoomGroup: controlScheduleRoomGroup.value,
     controlCenterStaffingRequirement: controlCenterStaffingRequirement.value,
@@ -4359,7 +4350,7 @@ const riicSupportRoomPlacementsBySourceStateIndex = computed(() =>
             roomAssignments,
             ownedOperators: virtualOperators.value || [],
             claimedOperatorIds,
-            layoutFacts: activeLayoutFacilityCounts.value,
+            layoutData: activeLayoutFacilityCounts.value,
             idleFillOperators: riicIdleFillOperators.value,
             roomCapacityByType: riicStaticRoomCapacityByType.value,
           }),
@@ -4775,15 +4766,15 @@ const outputPreviewTitle = computed(
     getDefaultGeneratedScheduleTitle(),
 );
 const outputPreviewScheduleMeta = computed(() => {
-  const layoutFacts = activeLayoutFacilityCounts.value;
-  const manufactureStationCount = (layoutFacts?.facilities || []).filter(
+  const layoutData = activeLayoutFacilityCounts.value;
+  const manufactureStationCount = (layoutData?.facilities || []).filter(
     (facility) => facility?.facilityType === "manufacture",
   ).length;
   const layoutSummary = confirmedLayoutPlan.value
     ? [
-        `${layoutFacts?.tradingStationCount || 0}贸易站`,
+        `${layoutData?.tradingStationCount || 0}贸易站`,
         `${manufactureStationCount}制造站`,
-        `${layoutFacts?.powerPlantCount || 0}发电站`,
+        `${layoutData?.powerPlantCount || 0}发电站`,
       ].join(" ")
     : "";
   const shiftMode =
@@ -5000,7 +4991,30 @@ const riicL79OperatorProfiles = computed(() => {
         ).operators
       : allOwnedOperators;
 
-  return createRiicL79OperatorProfiles(operators);
+  const profiles = createRiicL79OperatorProfiles(operators);
+  const ownedOperatorIds = new Set(profiles.map((profile) => profile.charId));
+  const manualProfilesById = new Map();
+
+  for (const operatorsByRoom of Object.values(
+    scheduleRoomOperatorOverrides.value || {},
+  )) {
+    for (const operator of operatorsByRoom || []) {
+      const charId = normalizeRiicOperatorId(operator?.charId);
+      if (!charId || ownedOperatorIds.has(charId)) {
+        continue;
+      }
+
+      manualProfilesById.set(
+        charId,
+        getScheduleRoomAssumedOperatorProfile(operator),
+      );
+    }
+  }
+
+  return [
+    ...profiles,
+    ...createRiicL79OperatorProfiles([...manualProfilesById.values()]),
+  ];
 });
 
 const generatedMaaExportPreview = computed(() => {
@@ -5087,9 +5101,11 @@ const riicScheduleDuplicateOperatorChecks = computed(() => {
     const roomsByOperatorKey = new Map();
     for (const room of state?.rooms || []) {
       for (const operator of room?.operators || []) {
-        const charId = String(operator?.charId || "").trim();
+        const charId = normalizeRiicOperatorId(operator?.charId);
         const name = String(
-          operator?.name || operatorTableV2?.[charId]?.name || "",
+          operatorTableV2?.[charId]?.name ||
+            normalizeRiicOperatorName(operator?.name) ||
+            charId,
         ).trim();
         const key = charId || name;
         if (!key) {
@@ -5349,29 +5365,58 @@ const scheduleRoomEditorOperators = computed(() => {
     return [];
   }
 
+  const ownedOperatorIds = new Set(
+    (ownedOperators.value || [])
+      .map((operator) => normalizeRiicOperatorId(operator?.charId))
+      .filter(Boolean),
+  );
+
   return (room.operators || [])
     .map((operator) => {
-      const charId = String(operator?.charId || "").trim();
+      const charId = normalizeRiicOperatorId(operator?.charId);
       const metadata = operatorTableV2?.[charId] || {};
-      const name = String(metadata.name || operator?.name || charId).trim();
+      const name = String(
+        metadata.name ||
+          normalizeRiicOperatorName(operator?.name) ||
+          charId,
+      ).trim();
       if (!name) {
         return null;
       }
+      const isUnowned = Boolean(
+        charId &&
+          metadata.name &&
+          !ownedOperatorIds.has(charId),
+      );
+      const assumedProfile = isUnowned
+        ? getScheduleRoomAssumedOperatorProfile(operator)
+        : null;
       return {
         charId,
         name,
         rarity: metadata.rarity || 1,
         known: Boolean(charId && metadata.name),
+        isUnowned,
+        assumeRiicSkillUnlocked:
+          operator.assumeRiicSkillUnlocked === true,
+        ...(assumedProfile
+          ? {
+              elite: assumedProfile.elite,
+              level: assumedProfile.level,
+            }
+          : {}),
       };
     })
     .filter(Boolean);
 });
 const riicOperatorSearchEntries = createRiicOperatorSearchEntries(
-  Object.entries(operatorTableV2).map(([charId, operator]) => ({
-    charId,
-    name: operator?.name || charId,
-    rarity: operator?.rarity || 1,
-  })),
+  Object.entries(operatorTableV2)
+    .filter(([charId]) => normalizeRiicOperatorId(charId) === charId)
+    .map(([charId, operator]) => ({
+      charId,
+      name: operator?.name || charId,
+      rarity: operator?.rarity || 1,
+    })),
   operatorTableV2,
 );
 const scheduleRoomEditorOperatorOptions = computed(() => {
@@ -5800,8 +5845,33 @@ function setScheduleRoomOperatorOverride(roomKey, stateIndex, operators) {
   const key = getScheduleRoomOverrideKey(stateIndex, roomKey);
   scheduleRoomOperatorOverrides.value = {
     ...scheduleRoomOperatorOverrides.value,
-    [key]: operators,
+    [key]: normalizeScheduleRoomOperatorList(operators),
   };
+}
+
+function toggleScheduleRoomEditorOperatorSkillUnlock({
+  operator,
+  enabled,
+} = {}) {
+  const room = activeSchedulePreviewRoom.value;
+  const operatorKey = getScheduleRoomEditorOperatorKey(operator);
+  if (!room || !operatorKey || typeof enabled !== "boolean") {
+    return;
+  }
+
+  const nextOperators = (room.operators || []).map((roomOperator) =>
+    getScheduleRoomEditorOperatorKey(roomOperator) === operatorKey
+      ? {
+          ...roomOperator,
+          assumeRiicSkillUnlocked: enabled,
+        }
+      : roomOperator,
+  );
+  setScheduleRoomOperatorOverride(
+    room.key,
+    activeSchedulePreviewStateIndex.value,
+    nextOperators,
+  );
 }
 
 function getSchedulePreviewRoomOperatorKey(operator) {
@@ -5926,9 +5996,9 @@ function moveSchedulePreviewOperator({
   scheduleRoomOperatorOverrides.value = {
     ...scheduleRoomOperatorOverrides.value,
     [getScheduleRoomOverrideKey(stateIndex, sourceRoom.key)]:
-      nextSourceOperators,
+      normalizeScheduleRoomOperatorList(nextSourceOperators),
     [getScheduleRoomOverrideKey(stateIndex, targetRoom.key)]:
-      nextTargetOperators,
+      normalizeScheduleRoomOperatorList(nextTargetOperators),
   };
 }
 
@@ -5952,30 +6022,90 @@ function selectSchedulePreviewRoom({ roomKey, stateIndex }) {
 }
 
 function getScheduleRoomEditorOperatorKey(operator) {
-  const charId = String(operator?.charId || "").trim();
+  const charId = normalizeRiicOperatorId(operator?.charId);
   if (charId) {
     return `id:${charId}`;
   }
 
-  return `name:${String(operator?.name || "").trim()}`;
+  return `name:${normalizeRiicOperatorName(operator?.name)}`;
+}
+
+function normalizeScheduleRoomOperator(operator) {
+  const normalized = normalizeRiicOperator(operator);
+  const charId = normalizeRiicOperatorId(normalized?.charId);
+  const name = String(
+    operatorTableV2?.[charId]?.name ||
+      normalized?.name ||
+      charId,
+  ).trim();
+
+  return name
+    ? {
+        charId,
+        name,
+        ...(normalized.assumeRiicSkillUnlocked === true
+          ? { assumeRiicSkillUnlocked: true }
+          : {}),
+      }
+    : null;
+}
+
+function getScheduleRoomAssumedOperatorProfile(operator) {
+  const charId = normalizeRiicOperatorId(operator?.charId);
+  if (!charId) {
+    return null;
+  }
+
+  const metadata = operatorTableV2?.[charId] || {};
+  const baseProfile = {
+    charId,
+    name: String(metadata.name || operator?.name || charId).trim(),
+    rarity: Number(metadata.rarity || operator?.rarity || 1),
+    elite: 0,
+    level: 1,
+  };
+  if (operator?.assumeRiicSkillUnlocked !== true) {
+    return baseProfile;
+  }
+
+  return (
+    createRiicIdealTrainingRoster(
+      [baseProfile],
+      RIIC_BASELINE_SKILL_RULES,
+      normalizeRiicIdealTrainingRaritySelection(),
+    ).operators[0] || baseProfile
+  );
+}
+
+function normalizeScheduleRoomOperatorList(operators) {
+  const seenKeys = new Set();
+  return (operators || [])
+    .map(normalizeScheduleRoomOperator)
+    .filter((operator) => {
+      if (!operator) {
+        return false;
+      }
+
+      const key = getScheduleRoomEditorOperatorKey(operator);
+      if (!key || seenKeys.has(key)) {
+        return false;
+      }
+      seenKeys.add(key);
+      return true;
+    });
 }
 
 function addScheduleRoomEditorOperator(selectedOperator = null) {
   const room = activeSchedulePreviewRoom.value;
-  const name = String(
-    selectedOperator?.name || scheduleRoomEditorInputName.value,
-  ).trim();
-  if (!room || !name) {
+  const nextOperator = normalizeScheduleRoomOperator({
+    charId:
+      selectedOperator?.charId || scheduleRoomEditorInputCharId.value,
+    name: selectedOperator?.name || scheduleRoomEditorInputName.value,
+  });
+  if (!room || !nextOperator) {
     return;
   }
 
-  const charId = String(
-    selectedOperator?.charId || scheduleRoomEditorInputCharId.value,
-  ).trim();
-  const nextOperator = {
-    charId,
-    name,
-  };
   const operators = [...scheduleRoomEditorOperators.value];
   if (
     operators.some(
@@ -6156,15 +6286,7 @@ function updateScheduleDroneOrder({ index, order }) {
 }
 
 function normalizeScheduleRoomOperatorClipboard(operators, expectedSlots) {
-  const normalized = (operators || [])
-    .map((operator) => {
-      const charId = String(operator?.charId || "").trim();
-      const name = String(
-        operator?.name || operatorTableV2?.[charId]?.name || "",
-      ).trim();
-      return name ? { charId, name } : null;
-    })
-    .filter(Boolean);
+  const normalized = normalizeScheduleRoomOperatorList(operators);
 
   return Number.isInteger(Number(expectedSlots)) && Number(expectedSlots) > 0
     ? normalized.slice(0, Number(expectedSlots))
@@ -7543,22 +7665,7 @@ function normalizeSavedScheduleRoomOperatorOverrides(value) {
         return [];
       }
 
-      const normalizedOperators = operators
-        .map((operator) => {
-          const charId = String(operator?.charId || operator || "").trim();
-          const name = String(
-            operator?.name || operatorTableV2?.[charId]?.name || charId,
-          ).trim();
-          if (!name) {
-            return null;
-          }
-
-          return {
-            charId,
-            name,
-          };
-        })
-        .filter(Boolean);
+      const normalizedOperators = normalizeScheduleRoomOperatorList(operators);
       return [[key, normalizedOperators]];
     }),
   );
@@ -9443,6 +9550,7 @@ onBeforeUnmount(() => {
                   Array.isArray(copiedScheduleRoomOperators)
                 "
                 :can-paste-shift="Boolean(copiedScheduleShiftOperators)"
+                :show-debug="showCandidateDebugValues"
                 @reset="resetSchedulePreviewRoom"
                 @change-product="changeScheduleRoomProduct"
                 @update:maa-settings="updateScheduleRoomMaaSettings"
@@ -9453,6 +9561,9 @@ onBeforeUnmount(() => {
                 @add-operator="addScheduleRoomEditorOperator"
                 @select-operator="addScheduleRoomEditorOperator"
                 @remove-operator="removeScheduleRoomEditorOperator"
+                @toggle-operator-skill-unlock="
+                  toggleScheduleRoomEditorOperatorSkillUnlock
+                "
                 @reorder-operator="reorderScheduleRoomEditorOperator"
                 @copy-operators="copyScheduleRoomEditorOperators"
                 @paste-operators="pasteScheduleRoomEditorOperators"

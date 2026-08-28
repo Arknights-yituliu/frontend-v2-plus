@@ -32,10 +32,22 @@ function getRoomStateFormula(ruleData, sourceSkillId) {
   );
 }
 
+function getRoomStateFormulas(ruleData, sourceSkillId) {
+  return ruleData.roomStateFormulas.filter(
+    (rule) => rule.sourceSkillId === sourceSkillId,
+  );
+}
+
+function getMiddleDataSkill(ruleData, sourceSkillId) {
+  return ruleData.middleDataRules.skills.find(
+    (rule) => rule.sourceSkillId === sourceSkillId,
+  );
+}
+
 assert.equal(ruleData.schemaVersion, 3);
 assert.equal(ruleData.scope.roomStateMetadata.appliedByBaselineResolver, false);
 assert.equal(ruleData.summary.roomStateRuleCount > 0, true);
-assert.equal(ruleData.summary.roomStateFormulaCount, 3);
+assert.equal(ruleData.summary.roomStateFormulaCount, 8);
 
 assert.deepEqual(
   getRoomStateRule(
@@ -70,6 +82,39 @@ assert.deepEqual(
     outputMetric: "production",
     percentPerInput: 2,
   },
+);
+assert.equal(
+  getMiddleDataSkill(
+    ruleData,
+    "char_1047_halo2|manufacture|勘探背包|0|1",
+  ).effects[0].amountPerUnit,
+  5,
+);
+assert.equal(
+  getRoomStateFormulas(
+    ruleData,
+    "char_4208_wintim|manufacture|科学改造|0|1",
+  ).length,
+  2,
+);
+assert.equal(
+  getRoomStateFormula(
+    ruleData,
+    "char_4208_wintim|manufacture|流程优化|1|1",
+  ).formula.type,
+  "roomOperatorCountToStorageCapacity",
+);
+assert.equal(
+  getRulesForOperator(ruleData, "char_163_hpsts").filter(
+    (rule) => rule.effect.percent === -5,
+  ).length,
+  2,
+);
+assert.equal(
+  getRulesForOperator(ruleData, "char_369_bena").some(
+    (rule) => rule.effect.percent === -20,
+  ),
+  true,
 );
 assert.deepEqual(
   getRoomStateFormula(

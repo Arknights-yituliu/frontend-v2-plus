@@ -18,7 +18,7 @@ export function getRiicAutomationOperatorLayer3Bonus({
   operatorId,
   ownedOperators,
   scope,
-  layoutFacts,
+  layoutData,
   effectivePowerPlantCount,
   getLayer3OperatorLocalBonus,
 } = {}) {
@@ -26,7 +26,7 @@ export function getRiicAutomationOperatorLayer3Bonus({
   const normalizedEffectivePowerPlantCount = Number(effectivePowerPlantCount);
   if (
     !normalizedOperatorId ||
-    !layoutFacts ||
+    !layoutData ||
     !Array.isArray(ownedOperators) ||
     !Number.isFinite(normalizedEffectivePowerPlantCount) ||
     typeof getLayer3OperatorLocalBonus !== "function"
@@ -39,8 +39,8 @@ export function getRiicAutomationOperatorLayer3Bonus({
       operatorId: normalizedOperatorId,
       ownedOperators,
       scope,
-      layoutFacts: {
-        ...layoutFacts,
+      layoutData: {
+        ...layoutData,
         powerPlantCount,
       },
     });

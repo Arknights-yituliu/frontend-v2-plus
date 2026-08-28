@@ -168,7 +168,7 @@ export function runRiicTrainingRecommendationTrial(input = {}) {
   const controlCenterCandidates = buildRiicControlCenterCandidateOperators({
     roster: idealOperators,
     skills: RIIC_CONTROL_CENTER_SKILLS.skills,
-    layoutFacts: input.layoutFacts,
+    layoutData: input.layoutData,
     trainingMode: "ideal",
     idealTrainingRaritySelection: input.idealTrainingRaritySelection,
     idleFillOperators,
@@ -176,7 +176,7 @@ export function runRiicTrainingRecommendationTrial(input = {}) {
   const scenarioTrials = evaluateRiicControlCenterScenarios({
     skills: RIIC_CONTROL_CENTER_SKILLS.skills,
     ownedOperators: idealOperators,
-    layoutFacts: input.layoutFacts,
+    layoutData: input.layoutData,
     trainingMode: "ideal",
     idealTrainingRaritySelection: input.idealTrainingRaritySelection,
   });
@@ -216,7 +216,7 @@ export function runRiicTrainingRecommendationTrial(input = {}) {
         catalogsByKey: input.catalogsByKey,
         operatorNameToCharId: input.operatorNameToCharId,
         publicSkillOperatorIds,
-        layoutFacts: input.layoutFacts,
+        layoutData: input.layoutData,
         trainingMode: "ideal",
         idealTrainingRaritySelection: input.idealTrainingRaritySelection,
         controlCenterRuntimeContext,
@@ -245,7 +245,7 @@ export function runRiicTrainingRecommendationTrial(input = {}) {
     controlCenterOperatorIds: controlState.operatorIds,
     controlCenterState: controlState,
     controlCenterRuntimeContext,
-    layoutFacts: input.layoutFacts,
+    layoutData: input.layoutData,
     selectionBeamLimit: input.selectionBeamLimit,
     selectionOptionLimit: input.selectionOptionLimit,
     selectionRepresentativeLimit: input.selectionRepresentativeLimit,

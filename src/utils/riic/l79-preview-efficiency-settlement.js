@@ -21,10 +21,13 @@ import {
 import {
   applyRiicActiveRosterPreviewEffects,
 } from "./P12-active-roster.js";
+import { calculateRiicManufactureRoomState } from "./P13-room-state.js";
+import { calculateRiicMiddleData } from "./P14-middle-data.js";
 import { sumRiicRoomEfficiency } from "./P08-room-efficiency.js";
 import { getRiicEffectivePowerPlantCount } from "./P11-automation-skill.js";
 import { createRiicScheduleContext } from "./P50-schedule-context.js";
 import { resolveRiicOperatorIdByName } from "./riic-operator-identity.js";
+import { getRiicOperatorTags } from "./riic-operator-tags.js";
 import {
   calculateRiicTradingRoom,
   createRiicOperatorRosterById,
@@ -180,6 +183,12 @@ function normalizeProfiles(operatorProfiles) {
       charId,
       elite,
       level,
+      tags: [
+        ...new Set([
+          ...(Array.isArray(source?.tags) ? source.tags : []),
+          ...getRiicOperatorTags(charId),
+        ]),
+      ].filter(Boolean),
     });
   }
 
@@ -257,6 +266,7 @@ function resolveRoomOperators({
       charId,
       elite: profile?.elite ?? null,
       level: profile?.level ?? null,
+      tags: profile?.tags || getRiicOperatorTags(charId),
       hasUsableProfile: Boolean(
         charId &&
           profile &&
@@ -365,29 +375,6 @@ function normalizePlan({
   };
 }
 
-function createLayoutFacts(rooms) {
-  const facilities = (rooms || [])
-    .filter((room) => room.facility)
-    .map((room) => ({
-      facilityType: room.facility,
-      product: room.product || "all",
-      stationLevel: room.stationLevel,
-    }));
-
-  return {
-    facilities,
-    powerPlantCount: facilities.filter(
-      (facility) => facility.facilityType === "power",
-    ).length,
-    manufactureProductKindCount: new Set(
-      facilities
-        .filter((facility) => facility.facilityType === "manufacture")
-        .map((facility) => facility.product)
-        .filter((product) => product && product !== "all"),
-    ).size,
-  };
-}
-
 function isControlCenterSkillUnlocked(profile, skill) {
   const elite = toNonNegativeInteger(profile?.elite);
   const level = toPositiveNumber(profile?.level);
@@ -481,7 +468,8 @@ function collectControlCenterEffects({
   rooms,
   profilesById,
   ownedOperators,
-  layoutFacts,
+  layoutData,
+  staffingData,
   planIndex,
 } = {}) {
   const controlRoom = (rooms || []).find(
@@ -535,7 +523,8 @@ function collectControlCenterEffects({
     for (const sourceEffect of getRiicLayer3ControlCenterEffects({
       operatorId,
       ownedOperators,
-      layoutFacts,
+      layoutData,
+      staffingData,
     })) {
       if (
         !isControlRoomEffect(sourceEffect) ||
@@ -585,20 +574,28 @@ function getControlCenterBonusForRoom({
       .map((operator) => String(operator?.charId || "").trim())
       .filter(Boolean),
   );
-  const matchingEffects = (effects || []).filter((effect) => {
+  const matchingEffects = (effects || []).flatMap((effect) => {
     if (
       effect.roomType !== room.facility ||
       (effect.product !== "all" && effect.product !== room.product)
     ) {
-      return false;
+      return [];
     }
-    return (
-      effect.scope === "allRooms" ||
-      (effect.scope === "operators" &&
-        effect.affectedOperatorIds.some((operatorId) =>
-          operatorIds.has(operatorId),
-        ))
+
+    if (effect.scope === "allRooms") {
+      return [effect];
+    }
+
+    if (effect.scope !== "operators") {
+      return [];
+    }
+
+    const affectedOperatorIds = (effect.affectedOperatorIds || []).filter(
+      (operatorId) => operatorIds.has(operatorId),
     );
+    return affectedOperatorIds.length > 0
+      ? [{ ...effect, affectedOperatorIds }]
+      : [];
   });
   const breakdown = getRiicSameShiftBindingBonusBreakdown({
     roomType: room?.facility,
@@ -610,6 +607,49 @@ function getControlCenterBonusForRoom({
     operatorBonusPercent: Number(breakdown.operatorBonusPercent || 0),
     operatorBonuses: breakdown.operatorBonuses || [],
     effects: matchingEffects,
+  };
+}
+
+function createLayoutData(rooms) {
+  const facilities = (rooms || [])
+    .filter((room) => room.facility)
+    .map((room) => ({
+      facilityType: room.facility,
+      product: room.product || "all",
+      stationLevel: room.stationLevel,
+    }));
+
+  return {
+    facilities,
+    powerPlantCount: facilities.filter(
+      (facility) => facility.facilityType === "power",
+    ).length,
+    tradingStationCount: facilities.filter(
+      (facility) => facility.facilityType === "trading",
+    ).length,
+    goldManufactureStationCount: facilities.filter(
+      (facility) =>
+        facility.facilityType === "manufacture" &&
+        facility.product === "gold",
+    ).length,
+    manufactureProductKindCount: new Set(
+      facilities
+        .filter((facility) => facility.facilityType === "manufacture")
+        .map((facility) => facility.product)
+        .filter((product) => product && product !== "all"),
+    ).size,
+  };
+}
+
+function createStaffingData(rooms) {
+  return {
+    staffedEliteCount: (rooms || []).filter(
+      (room) =>
+        String(room?.facility || "").trim() &&
+        (room?.operators || []).some(
+          (operator) => Number(operator?.elite) >= 1,
+        ),
+    ).length,
   };
 }
 
@@ -710,7 +750,7 @@ function getL79AutomationManufactureSkill(operator) {
   );
 }
 
-function getL79AutomationManufactureState({ room, automationSupportState } = {}) {
+function getL79AutomationManufactureState({ room, automationData } = {}) {
   if (room?.facility !== "manufacture") {
     return null;
   }
@@ -732,10 +772,10 @@ function getL79AutomationManufactureState({ room, automationSupportState } = {})
   }
 
   const physicalPowerPlantCount = Number(
-    automationSupportState?.powerPlantCount || 0,
+    automationData?.powerPlantCount || 0,
   );
   const effectivePowerPlantCount = Number(
-    automationSupportState?.effectivePowerPlantCount ||
+    automationData?.effectivePowerPlantCount ||
       physicalPowerPlantCount,
   );
 
@@ -743,7 +783,7 @@ function getL79AutomationManufactureState({ room, automationSupportState } = {})
     physicalPowerPlantCount,
     effectivePowerPlantCount,
     supportOperatorActive:
-      automationSupportState?.supportOperatorActive === true,
+      automationData?.supportOperatorActive === true,
     operators,
     operatorIds: new Set(operators.map((operator) => operator.operatorId)),
     suppressedOperatorIds: (room?.operators || [])
@@ -759,8 +799,8 @@ function getL79AutomationManufactureState({ room, automationSupportState } = {})
 function getLayer3LocalBonuses({
   room,
   ownedOperators,
-  layoutFacts,
-  automationSupportState,
+  layoutData,
+  staffingData,
   automationManufactureState,
 } = {}) {
   const expectedSlots = getExpectedSlots(room?.facility, room?.stationLevel);
@@ -782,7 +822,8 @@ function getLayer3LocalBonuses({
           operatorId: operator.charId,
           ownedOperators,
           scope,
-          layoutFacts,
+          layoutData,
+          staffingData,
         }) || 0,
       );
       const nonFacilityCountBonus = Number(
@@ -790,7 +831,8 @@ function getLayer3LocalBonuses({
           operatorId: operator.charId,
           ownedOperators,
           scope,
-          layoutFacts,
+          layoutData,
+          staffingData,
           excludeFacilityCountBonuses: true,
         }) || 0,
       );
@@ -826,14 +868,52 @@ function getLayer3LocalBonuses({
     .filter((entry) => entry.bonusPercent !== 0);
 }
 
+function createR30Data({
+  rooms,
+  ownedOperators,
+  layoutData,
+  staffingData,
+  automationData,
+} = {}) {
+  return {
+    rooms: Object.fromEntries(
+      (rooms || [])
+        .filter((room) => String(room?.key || "").trim())
+        .map((room) => {
+          const automationManufactureState =
+            getL79AutomationManufactureState({
+              room,
+              automationData,
+            });
+          return [
+            room.key,
+            {
+              automationManufactureState,
+              operatorBonuses: getLayer3LocalBonuses({
+                room,
+                ownedOperators,
+                layoutData,
+                staffingData,
+                automationManufactureState,
+              }),
+            },
+          ];
+        }),
+    ),
+  };
+}
+
 function calculateL79Room({
   room,
   planIndex,
   resolvedSkills,
   ownedOperators,
-  layoutFacts,
-  controlEffects,
-  automationSupportState,
+  layoutData,
+  staffingData,
+  controlData,
+  automationData,
+  middleData,
+  r30Data,
 } = {}) {
   const issues = [...(room?.issues || [])];
   const expectedSlots = getExpectedSlots(room?.facility, room?.stationLevel);
@@ -965,12 +1045,15 @@ function calculateL79Room({
 
   const controlCenter = getControlCenterBonusForRoom({
     room,
-    effects: controlEffects,
+    effects: controlData?.effects,
   });
-  const automationManufactureState = getL79AutomationManufactureState({
-    room,
-    automationSupportState,
-  });
+  const r30RoomData = r30Data?.rooms?.[String(room?.key || "").trim()] || {};
+  const automationManufactureState =
+    r30RoomData.automationManufactureState ||
+    getL79AutomationManufactureState({
+      room,
+      automationData,
+    });
   let settledCalculation = calculation;
 
   if (automationManufactureState) {
@@ -1011,16 +1094,79 @@ function calculateL79Room({
       );
     }
   }
-  const layer3OperatorBonuses = getLayer3LocalBonuses({
-    room,
-    ownedOperators,
-    layoutFacts,
-    automationSupportState,
-    automationManufactureState,
-  });
+  const layer3OperatorBonuses =
+    r30RoomData.operatorBonuses ||
+    getLayer3LocalBonuses({
+      room,
+      ownedOperators,
+      layoutData,
+      staffingData,
+      automationManufactureState,
+    });
   const layer3OperatorBonusPercent = layer3OperatorBonuses.reduce(
     (total, entry) => total + entry.bonusPercent,
     0,
+  );
+  const middleDataRoom =
+    middleData?.rooms?.[String(room?.key || "").trim()] || {
+      variables: {},
+      operatorBonuses: [],
+      storageContributions: [],
+    };
+  const middleDataOperatorBonuses = (
+    middleDataRoom.operatorBonuses || []
+  ).filter(
+    (entry) =>
+      !automationManufactureState ||
+      automationManufactureState.operatorIds.has(entry.operatorId),
+  );
+  const middleDataBonusPercent = middleDataOperatorBonuses.reduce(
+    (total, entry) => total + Number(entry.bonusPercent || 0),
+    0,
+  );
+  const roomStateCalculation =
+    room.facility === "manufacture"
+      ? calculateRiicManufactureRoomState({
+          roomOperators: room.operators.filter((operator) =>
+            uniqueKnownOperatorIds.includes(operator.charId),
+          ),
+          product: room.product,
+          ruleData: RIIC_BASELINE_SKILL_RULES,
+          middleDataStorageContributions:
+            middleDataRoom.storageContributions,
+        })
+      : null;
+  const manufactureProductionOverride =
+    roomStateCalculation?.productionOverride;
+  if (manufactureProductionOverride?.clearTeammateProduction) {
+    const localBonusPercent = Number(
+      manufactureProductionOverride.localBonusPercent || 0,
+    );
+    settledCalculation = {
+      ...settledCalculation,
+      bonusPercent: localBonusPercent,
+      totalPercent: 100 + localBonusPercent,
+      localBonusPercent,
+      localTotalPercent: 100 + localBonusPercent,
+      downstreamEffects: [],
+      downstreamBonusPercent: 0,
+      downstreamBonusPercentByRoom: {},
+      appliedRules: [
+        {
+          id: manufactureProductionOverride.formulaId,
+          ownerCharId: manufactureProductionOverride.charId,
+          kind: "roomStateOverride",
+          percent: localBonusPercent,
+          operatorCount: manufactureProductionOverride.operatorCount,
+          percentPerOperator:
+            manufactureProductionOverride.percentPerOperator,
+          coverage: "complete",
+        },
+      ],
+    };
+  }
+  const roomStateBonusPercent = Number(
+    roomStateCalculation?.productionBonusPercent || 0,
   );
   const staffingBonusPercent = PRODUCTIVE_ROOM_TYPES.has(room.facility)
     ? (room.operators || []).length
@@ -1028,7 +1174,10 @@ function calculateL79Room({
   const value = sumRiicRoomEfficiency({
     localPercent: settledCalculation.localTotalPercent,
     staffingPercent: staffingBonusPercent,
-    localBonusPercent: layer3OperatorBonusPercent,
+    localBonusPercent:
+      layer3OperatorBonusPercent +
+      roomStateBonusPercent +
+      middleDataBonusPercent,
     controlFacilityPercent: controlCenter.facilityBonusPercent,
     controlOperatorPercent: controlCenter.operatorBonusPercent,
   });
@@ -1066,6 +1215,12 @@ function calculateL79Room({
           staffingBonusPercent,
           layer3OperatorBonusPercent,
           layer3OperatorBonuses,
+          middleDataBonusPercent,
+          middleDataOperatorBonuses,
+          middleDataRoom,
+          middleData,
+          roomStateBonusPercent,
+          roomStateCalculation,
           controlCenterFacilityBonusPercent:
             controlCenter.facilityBonusPercent,
           controlCenterOperatorBonusPercent:
@@ -1078,7 +1233,7 @@ function calculateL79Room({
   };
 }
 
-function createPerceptionResourceFacts(rooms) {
+function createPerceptionResourceData(rooms) {
   const dormitories = (rooms || []).filter(
     (room) => room.facility === "dormitory",
   );
@@ -1408,19 +1563,171 @@ function createL79RoomSettlement({
   };
 }
 
+function createL79CalculationTrace(room) {
+  const breakdown = room?.efficiencyMetrics?.actual?.breakdown || {};
+  const numberOrNull = (value) => {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : null;
+  };
+  const steps = [];
+  const addStep = ({
+    key,
+    label,
+    kind = "detail",
+    value,
+    details = null,
+  }) => {
+    const normalizedValue = numberOrNull(value);
+    if (normalizedValue === null && !details) {
+      return;
+    }
+    steps.push({
+      key,
+      label,
+      kind,
+      ...(normalizedValue === null ? {} : { value: normalizedValue }),
+      ...(details ? { details } : {}),
+    });
+  };
+
+  const tradingCalculation = breakdown.tradingSettlement?.calculation;
+  const finalRosterCalculation = breakdown.finalRosterCalculation;
+  const closureCalculation = breakdown.closureCalculation;
+  const calculation = breakdown.calculation || {};
+  const mode = tradingCalculation
+    ? "trading"
+    : closureCalculation
+      ? "closure"
+      : finalRosterCalculation
+        ? "finalRoster"
+        : breakdown.automationManufactureSettlement
+          ? "automation"
+          : "additive";
+
+  addStep({
+    key: "core",
+    label:
+      mode === "trading"
+        ? "贸易站订单计算"
+        : mode === "closure"
+          ? "特别订单等效计算"
+          : mode === "finalRoster"
+            ? "最终名单计算"
+            : mode === "automation"
+              ? "自动化技能计算"
+              : "房间核心计算",
+    kind: "base",
+    value:
+      tradingCalculation?.rate ??
+      finalRosterCalculation?.value ??
+      closureCalculation?.tradeEquivalentTotalPercent ??
+      calculation.localTotalPercent ??
+      calculation.totalPercent,
+    details:
+      tradingCalculation ||
+      finalRosterCalculation ||
+      closureCalculation ||
+      calculation,
+  });
+  addStep({
+    key: "staffing",
+    label: "在岗基础",
+    kind: "add",
+    value: breakdown.staffingBonusPercent,
+  });
+  addStep({
+    key: "roomState",
+    label: "房间状态",
+    kind: "add",
+    value: breakdown.roomStateBonusPercent,
+    details: breakdown.roomStateCalculation,
+  });
+  addStep({
+    key: "middleData",
+    label: "中间变量",
+    kind: "add",
+    value: breakdown.middleDataBonusPercent,
+    details: {
+      variables: breakdown.middleDataRoom?.variables || {},
+      operatorBonuses: breakdown.middleDataOperatorBonuses || [],
+      storageContributions:
+        breakdown.middleDataRoom?.storageContributions || [],
+    },
+  });
+  addStep({
+    key: "layer3",
+    label: "L3 当前班组",
+    kind: "add",
+    value: breakdown.layer3OperatorBonusPercent,
+    details: breakdown.layer3OperatorBonuses,
+  });
+  addStep({
+    key: "controlFacility",
+    label: "中枢房间加成",
+    kind: "add",
+    value: breakdown.controlCenterFacilityBonusPercent,
+  });
+  addStep({
+    key: "controlOperator",
+    label: "中枢指定干员加成",
+    kind: "add",
+    value: breakdown.controlCenterOperatorBonusPercent,
+    details: breakdown.controlCenterEffects,
+  });
+  addStep({
+    key: "activeRoster",
+    label: "当前班组联动",
+    kind: "add",
+    value: breakdown.activeRosterBonusPercent,
+    details: breakdown.activeRosterEffects,
+  });
+  addStep({
+    key: "resourceChain",
+    label: "资源链额外加成",
+    kind: "add",
+    value: breakdown.resourceChainAdditionalBonusPercent,
+  });
+  addStep({
+    key: "final",
+    label: "最终效率",
+    kind: "result",
+    value: room?.efficiency,
+  });
+
+  return {
+    version: 1,
+    mode,
+    finalValue: numberOrNull(room?.efficiency),
+    steps,
+  };
+}
+
 function attachL79RoomSettlements({
   preview,
   orundumCraftMaterial,
 } = {}) {
   const states = (preview?.states || []).map((state) => ({
     ...state,
-    rooms: (state?.rooms || []).map((room) => ({
-      ...room,
-      l79Settlement: createL79RoomSettlement({
-        room,
-        orundumCraftMaterial,
-      }),
-    })),
+    rooms: (state?.rooms || []).map((room) => {
+      const calculationTrace = createL79CalculationTrace(room);
+      return {
+        ...room,
+        efficiencyMetrics: {
+          ...(room.efficiencyMetrics || {}),
+          actual: {
+            ...(room.efficiencyMetrics?.actual || {}),
+            breakdown: {
+              ...(room.efficiencyMetrics?.actual?.breakdown || {}),
+              calculationTrace,
+            },
+          },
+        },
+        l79Settlement: createL79RoomSettlement({
+          room,
+          orundumCraftMaterial,
+        }),
+      };
+    }),
   }));
   const roomSettlements = states.flatMap((state) =>
     (state.rooms || []).map((room) => room.l79Settlement),
@@ -1494,18 +1801,51 @@ export function settleRiicMaaScheduleEfficiency({
     profileState.profiles,
     RIIC_BASELINE_SKILL_RULES,
   );
+  const preliminaryPreview = {
+    states: normalizedPlans.map((plan) => ({
+      index: plan.index,
+      name: plan.name,
+      durationMinutes: plan.durationMinutes,
+      durationHours: plan.durationHours,
+      rooms: plan.rooms,
+    })),
+  };
+  const layoutData = createLayoutData(normalizedPlans[0]?.rooms || []);
+  const preliminaryPerceptionSettlement = settleRiicPerceptionSchedule({
+    preview: preliminaryPreview,
+    ownedOperators: profileState.profiles,
+    resourceData: createPerceptionResourceData(
+      normalizedPlans[0]?.rooms || [],
+    ),
+  });
   const states = normalizedPlans.map((plan) => {
-    const layoutFacts = createLayoutFacts(plan.rooms);
-    const automationSupportState = getAutomationSupportState({
+    const staffingData = createStaffingData(plan.rooms);
+    const automationData = getAutomationSupportState({
       rooms: plan.rooms,
       profilesById: profileState.profilesById,
     });
-    const control = collectControlCenterEffects({
+    const controlData = collectControlCenterEffects({
       rooms: plan.rooms,
       profilesById: profileState.profilesById,
       ownedOperators: profileState.profiles,
-      layoutFacts,
+      layoutData,
+      staffingData,
       planIndex: plan.index,
+    });
+    const r30Data = createR30Data({
+      rooms: plan.rooms,
+      ownedOperators: profileState.profiles,
+      layoutData,
+      staffingData,
+      automationData,
+    });
+    const middleData = calculateRiicMiddleData({
+      rooms: plan.rooms,
+      ruleData: RIIC_BASELINE_SKILL_RULES,
+      resolvedSkills,
+      resourceValues:
+        getPerceptionState(preliminaryPerceptionSettlement, plan)?.resources ||
+        {},
     });
     const rooms = plan.rooms.map((room) =>
       calculateL79Room({
@@ -1513,9 +1853,12 @@ export function settleRiicMaaScheduleEfficiency({
         planIndex: plan.index,
         resolvedSkills,
         ownedOperators: profileState.profiles,
-        layoutFacts,
-        controlEffects: control.effects,
-        automationSupportState,
+        layoutData,
+        staffingData,
+        controlData,
+        automationData,
+        middleData,
+        r30Data,
       }),
     );
 
@@ -1525,16 +1868,16 @@ export function settleRiicMaaScheduleEfficiency({
       durationMinutes: plan.durationMinutes,
       durationHours: plan.durationHours,
       rooms,
-      issues: [...plan.issues, ...control.issues],
+      middleData,
+      issues: [...plan.issues, ...controlData.issues],
       assumptions: {
-        effectivePowerPlantCount:
-          automationSupportState.effectivePowerPlantCount,
-        powerPlantCount: automationSupportState.powerPlantCount,
+        effectivePowerPlantCount: automationData.effectivePowerPlantCount,
+        powerPlantCount: automationData.powerPlantCount,
         automationPowerSupportActive:
-          automationSupportState.supportOperatorActive,
+          automationData.supportOperatorActive,
         facilityCountAdjustments:
-          automationSupportState.facilityCountAdjustments,
-        ...createPerceptionResourceFacts(plan.rooms),
+          automationData.facilityCountAdjustments,
+        ...createPerceptionResourceData(plan.rooms),
       },
     };
   });
@@ -1552,7 +1895,7 @@ export function settleRiicMaaScheduleEfficiency({
   const perceptionSettlement = settleRiicPerceptionSchedule({
     preview: previewWithActiveRosterEffects,
     ownedOperators: profileState.profiles,
-    resourceFacts: createPerceptionResourceFacts(
+    resourceData: createPerceptionResourceData(
       states[0]?.rooms || [],
     ),
   });

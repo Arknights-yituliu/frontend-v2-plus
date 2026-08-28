@@ -20,8 +20,18 @@ const MAA_PRODUCT_BY_PRODUCT = Object.freeze({
 
 const ROOM_TYPES_WITH_PRODUCT = new Set(["manufacture", "trading"]);
 
+import {
+  normalizeRiicOperatorId,
+  normalizeRiicOperatorName,
+} from "./riicOperatorIdentity.js";
+
 function getOperatorName(operator) {
-  return String(operator?.name || "").trim();
+  const charId = normalizeRiicOperatorId(operator?.charId);
+  if (charId === "char_002_amiya") {
+    return "阿米娅";
+  }
+
+  return normalizeRiicOperatorName(operator?.name);
 }
 
 function getRoomOperators(room) {

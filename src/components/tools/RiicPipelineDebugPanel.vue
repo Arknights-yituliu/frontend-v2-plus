@@ -556,6 +556,18 @@ const pipelineDebugText = computed(() => {
       appendSameShiftTrace(lines, group.selected.trace);
     }
   }
+  for (const pair of sameShift.preferredSameShift || []) {
+    lines.push(
+      `同班偏好 ${pair.leftLabel || "--"} + ${pair.rightLabel || "--"}: ` +
+        `状态=${pair.status || "--"} 初始同班=${formatDebugNumber(
+          pair.initialSameShiftHours,
+        )}h 最终同班=${formatDebugNumber(
+          pair.finalSameShiftHours,
+        )}h 迷迭香偏移=${formatDebugNumber(
+          pair.leftOffset,
+        )} 黑键偏移=${formatDebugNumber(pair.rightOffset)}`,
+    );
+  }
 
   lines.push("", "[最终排班]");
   for (const entry of props.assembledScheduleCandidate?.groups || []) {

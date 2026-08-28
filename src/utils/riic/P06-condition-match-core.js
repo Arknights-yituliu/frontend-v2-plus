@@ -94,8 +94,8 @@ function inspectOperatorRequirement(requirement, rosterById) {
   };
 }
 
-function getLayoutFacilities(layoutFacts) {
-  return (Array.isArray(layoutFacts?.facilities) ? layoutFacts.facilities : [])
+function getLayoutFacilities(layoutData) {
+  return (Array.isArray(layoutData?.facilities) ? layoutData.facilities : [])
     .flatMap((facility) => {
       const facilityType = String(facility?.facilityType || "").trim();
       const product = String(facility?.product || "").trim();
@@ -116,13 +116,20 @@ function getLayoutFacilities(layoutFacts) {
     });
 }
 
-function inspectFacilityRequirement(requirement, layoutFacts) {
+function inspectFacilityRequirement(
+  requirement,
+  layoutData,
+  staffingData = {},
+) {
   const facilityType = String(requirement?.facilityType || "").trim();
   const count = toNonNegativeInteger(requirement?.count);
   const productKindCount = toNonNegativeInteger(
     requirement?.productKindCount,
   );
   const levelTotal = toNonNegativeInteger(requirement?.levelTotal);
+  const staffedEliteCount = toNonNegativeInteger(
+    requirement?.staffedEliteCount,
+  );
   const product = String(requirement?.product || "").trim();
   const stationLevel = toNonNegativeInteger(requirement?.stationLevel);
   const supportedKeys = [
@@ -132,6 +139,7 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
     "product",
     "stationLevel",
     "productKindCount",
+    "staffedEliteCount",
   ];
   const validShape = Boolean(
     requirement &&
@@ -140,16 +148,26 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
       !Object.keys(requirement).some((key) => !supportedKeys.includes(key)) &&
       ((count !== null &&
         productKindCount === null &&
-        levelTotal === null) ||
+        levelTotal === null &&
+        staffedEliteCount === null) ||
         (facilityType === "manufacture" &&
           count === null &&
           productKindCount !== null &&
           levelTotal === null &&
+          staffedEliteCount === null &&
           !product &&
           stationLevel === null) ||
         (levelTotal !== null &&
           count === null &&
           productKindCount === null &&
+          staffedEliteCount === null &&
+          !product &&
+          stationLevel === null) ||
+        (facilityType === "any" &&
+          staffedEliteCount !== null &&
+          count === null &&
+          productKindCount === null &&
+          levelTotal === null &&
           !product &&
           stationLevel === null)),
   );
@@ -160,6 +178,7 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
     count,
     productKindCount,
     levelTotal,
+    staffedEliteCount,
     actualValue: null,
     kind: "unsupported",
     matched: false,
@@ -169,7 +188,19 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
     return base;
   }
 
-  const facilities = getLayoutFacilities(layoutFacts);
+  const facilities = getLayoutFacilities(layoutData);
+  if (staffedEliteCount !== null) {
+    const actualValue = toNonNegativeInteger(
+      staffingData?.staffedEliteCount,
+    );
+    return {
+      ...base,
+      actualValue,
+      kind: "staffedEliteCount",
+      matched: actualValue === staffedEliteCount,
+    };
+  }
+
   if (productKindCount !== null) {
     const actualValue = facilities.length
       ? new Set(
@@ -178,7 +209,7 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
             .map((facility) => facility.product)
             .filter((value) => value && value !== "all"),
         ).size
-      : Number(layoutFacts?.manufactureProductKindCount);
+      : Number(layoutData?.manufactureProductKindCount);
     return {
       ...base,
       actualValue,
@@ -225,7 +256,7 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
     return base;
   }
   if (facilityType === "power" && !product) {
-    const actualValue = Number(layoutFacts?.powerPlantCount);
+    const actualValue = Number(layoutData?.powerPlantCount);
     return {
       ...base,
       actualValue,
@@ -234,7 +265,7 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
     };
   }
   if (facilityType === "trading" && !product) {
-    const actualValue = Number(layoutFacts?.tradingStationCount);
+    const actualValue = Number(layoutData?.tradingStationCount);
     return {
       ...base,
       actualValue,
@@ -243,7 +274,7 @@ function inspectFacilityRequirement(requirement, layoutFacts) {
     };
   }
   if (facilityType === "manufacture" && product === "gold") {
-    const actualValue = Number(layoutFacts?.goldManufactureStationCount);
+    const actualValue = Number(layoutData?.goldManufactureStationCount);
     return {
       ...base,
       actualValue,
@@ -266,7 +297,7 @@ function normalizeFacilityTypeList(value) {
   return facilityTypes.length > 0 ? facilityTypes : null;
 }
 
-function inspectFacilityComparison(requirement, layoutFacts) {
+function inspectFacilityComparison(requirement, layoutData) {
   const leftFacilityTypes = normalizeFacilityTypeList(
     requirement?.leftFacilityTypes,
   );
@@ -275,7 +306,7 @@ function inspectFacilityComparison(requirement, layoutFacts) {
   );
   const operator = String(requirement?.operator || "").trim();
   const validOperator = operator === "gte" || operator === "gt";
-  const facilities = getLayoutFacilities(layoutFacts);
+  const facilities = getLayoutFacilities(layoutData);
   const leftCount = leftFacilityTypes
     ? facilities.filter((facility) =>
         leftFacilityTypes.includes(facility.facilityType),
@@ -306,7 +337,12 @@ function inspectFacilityComparison(requirement, layoutFacts) {
   };
 }
 
-function inspectConditions(conditions, rosterById, layoutFacts) {
+function inspectConditions(
+  conditions,
+  rosterById,
+  layoutData,
+  staffingData = {},
+) {
   const hasOperatorRequirements = Array.isArray(conditions?.operators);
   const hasFacilityRequirements = Array.isArray(conditions?.facilities);
   const hasFacilityComparison = Boolean(conditions?.facilityComparison);
@@ -317,11 +353,11 @@ function inspectConditions(conditions, rosterById, layoutFacts) {
     : [];
   const facilityConditions = hasFacilityRequirements
     ? conditions.facilities.map((requirement) =>
-        inspectFacilityRequirement(requirement, layoutFacts),
+        inspectFacilityRequirement(requirement, layoutData, staffingData),
       )
     : [];
   const facilityComparison = hasFacilityComparison
-    ? inspectFacilityComparison(conditions.facilityComparison, layoutFacts)
+    ? inspectFacilityComparison(conditions.facilityComparison, layoutData)
     : null;
 
   return {
@@ -339,8 +375,18 @@ function inspectConditions(conditions, rosterById, layoutFacts) {
   };
 }
 
-function matchesConditions(conditions, rosterById, layoutFacts) {
-  return inspectConditions(conditions, rosterById, layoutFacts).matched;
+function matchesConditions(
+  conditions,
+  rosterById,
+  layoutData,
+  staffingData = {},
+) {
+  return inspectConditions(
+    conditions,
+    rosterById,
+    layoutData,
+    staffingData,
+  ).matched;
 }
 
 function hasFacilityCountCondition(conditions) {
@@ -355,7 +401,7 @@ function hasFacilityCountCondition(conditions) {
   });
 }
 
-function resolveEffectBonusPercent(effect, layoutFacts) {
+function resolveEffectBonusPercent(effect, layoutData) {
   const dynamicRule = effect?.bonusPercentPerLevelTotal;
   if (dynamicRule && typeof dynamicRule === "object") {
     const facilityType = String(dynamicRule.facilityType || "").trim();
@@ -364,7 +410,7 @@ function resolveEffectBonusPercent(effect, layoutFacts) {
       return null;
     }
 
-    const levelTotal = getLayoutFacilities(layoutFacts)
+    const levelTotal = getLayoutFacilities(layoutData)
       .filter((facility) => facility.facilityType === facilityType)
       .reduce(
         (total, facility) => total + Number(facility.stationLevel || 0),
@@ -379,7 +425,8 @@ function resolveEffectBonusPercent(effect, layoutFacts) {
 
 export function getRiicLayer3RuleConditionChecks({
   ownedOperators,
-  layoutFacts,
+  layoutData,
+  staffingData,
 }) {
   const rosterById = getRosterById(ownedOperators);
 
@@ -387,7 +434,8 @@ export function getRiicLayer3RuleConditionChecks({
     const conditions = inspectConditions(
       rule?.conditions,
       rosterById,
-      layoutFacts,
+      layoutData,
+      staffingData,
     );
 
     return {
@@ -410,7 +458,8 @@ export function getRiicLayer3SupportRoomPlacements({
   roomAssignments,
   ownedOperators,
   claimedOperatorIds,
-  layoutFacts,
+  layoutData,
+  staffingData,
   idleFillOperators = [],
   roomCapacityByType = {},
 }) {
@@ -427,7 +476,14 @@ export function getRiicLayer3SupportRoomPlacements({
   const unclaimedFillRequestsByRoomType = new Map();
 
   for (const rule of RIIC_LAYER3_RULES.rules || []) {
-    if (!matchesConditions(rule?.conditions, rosterById, layoutFacts)) {
+    if (
+      !matchesConditions(
+        rule?.conditions,
+        rosterById,
+        layoutData,
+        staffingData,
+      )
+    ) {
       continue;
     }
 
@@ -541,7 +597,8 @@ export function getRiicLayer3SupportRoomPlacements({
 export function getRiicLayer3ControlCenterEffects({
   operatorId,
   ownedOperators,
-  layoutFacts,
+  layoutData,
+  staffingData,
 }) {
   const normalizedOperatorId = String(operatorId || "").trim();
   const rosterById = getRosterById(ownedOperators);
@@ -551,7 +608,14 @@ export function getRiicLayer3ControlCenterEffects({
 
   const effectsByKey = new Map();
   for (const rule of RIIC_LAYER3_RULES.rules || []) {
-    if (!matchesConditions(rule?.conditions, rosterById, layoutFacts)) {
+    if (
+      !matchesConditions(
+        rule?.conditions,
+        rosterById,
+        layoutData,
+        staffingData,
+      )
+    ) {
       continue;
     }
 
@@ -581,7 +645,8 @@ export function getRiicLayer3OperatorLocalBonus({
   operatorId,
   ownedOperators,
   scope,
-  layoutFacts,
+  layoutData,
+  staffingData,
   excludeFacilityCountBonuses = false,
 }) {
   const normalizedOperatorId = String(operatorId || "").trim();
@@ -593,7 +658,14 @@ export function getRiicLayer3OperatorLocalBonus({
 
   const bonusesByEffect = new Map();
   for (const rule of RIIC_LAYER3_RULES.rules || []) {
-    if (!matchesConditions(rule?.conditions, rosterById, layoutFacts)) {
+    if (
+      !matchesConditions(
+        rule?.conditions,
+        rosterById,
+        layoutData,
+        staffingData,
+      )
+    ) {
       continue;
     }
     if (
@@ -604,7 +676,7 @@ export function getRiicLayer3OperatorLocalBonus({
     }
 
     for (const effect of rule?.effects || []) {
-      const bonusPercent = resolveEffectBonusPercent(effect, layoutFacts);
+      const bonusPercent = resolveEffectBonusPercent(effect, layoutData);
       const effectProduct = String(effect?.product || "").trim();
       if (
         bonusPercent === null ||
@@ -637,7 +709,8 @@ export function getRiicLayer3CandidateEquivalentByProduct({
   candidate,
   ownedOperators,
   scope,
-  layoutFacts,
+  layoutData,
+  staffingData,
 }) {
   const normalizedScope = normalizeScope(scope);
   const candidateName = String(candidate?.name || "").trim();
@@ -648,7 +721,14 @@ export function getRiicLayer3CandidateEquivalentByProduct({
 
   const equivalentByProduct = {};
   for (const rule of RIIC_LAYER3_RULES.rules || []) {
-    if (!matchesConditions(rule?.conditions, rosterById, layoutFacts)) {
+    if (
+      !matchesConditions(
+        rule?.conditions,
+        rosterById,
+        layoutData,
+        staffingData,
+      )
+    ) {
       continue;
     }
 
@@ -689,7 +769,8 @@ export function getRiicLayer3CandidateLocalBonus({
   candidate,
   ownedOperators,
   scope,
-  layoutFacts,
+  layoutData,
+  staffingData,
 }) {
   const normalizedScope = normalizeScope(scope);
   const candidateName = String(candidate?.name || "").trim();
@@ -700,12 +781,19 @@ export function getRiicLayer3CandidateLocalBonus({
 
   let totalBonusPercent = 0;
   for (const rule of RIIC_LAYER3_RULES.rules || []) {
-    if (!matchesConditions(rule?.conditions, rosterById, layoutFacts)) {
+    if (
+      !matchesConditions(
+        rule?.conditions,
+        rosterById,
+        layoutData,
+        staffingData,
+      )
+    ) {
       continue;
     }
 
     for (const effect of rule?.effects || []) {
-      const bonusPercent = resolveEffectBonusPercent(effect, layoutFacts);
+      const bonusPercent = resolveEffectBonusPercent(effect, layoutData);
       if (
         bonusPercent === null ||
         String(effect?.candidateName || "").trim() !== candidateName ||
@@ -735,7 +823,8 @@ export function getRiicLayer3CandidateOperatorBonusExclusions({
   candidate,
   ownedOperators,
   scope,
-  layoutFacts,
+  layoutData,
+  staffingData,
 }) {
   const normalizedScope = normalizeScope(scope);
   const candidateName = String(candidate?.name || "").trim();
@@ -746,7 +835,14 @@ export function getRiicLayer3CandidateOperatorBonusExclusions({
 
   const excludedOperatorIds = new Set();
   for (const rule of RIIC_LAYER3_RULES.rules || []) {
-    if (!matchesConditions(rule?.conditions, rosterById, layoutFacts)) {
+    if (
+      !matchesConditions(
+        rule?.conditions,
+        rosterById,
+        layoutData,
+        staffingData,
+      )
+    ) {
       continue;
     }
 
@@ -780,7 +876,8 @@ export function getRiicLayer3CandidateRoomPriority({
   operatorIds,
   ownedOperators,
   scope,
-  layoutFacts,
+  layoutData,
+  staffingData,
 }) {
   const normalizedScope = normalizeScope(scope);
   if (!normalizedScope) {
@@ -797,7 +894,14 @@ export function getRiicLayer3CandidateRoomPriority({
   let totalPriority = 0;
 
   for (const rule of RIIC_LAYER3_RULES.rules || []) {
-    if (!matchesConditions(rule?.conditions, rosterById, layoutFacts)) {
+    if (
+      !matchesConditions(
+        rule?.conditions,
+        rosterById,
+        layoutData,
+        staffingData,
+      )
+    ) {
       continue;
     }
 

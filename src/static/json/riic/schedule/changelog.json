@@ -2,15 +2,15 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20260824.0912"
+      "version": "v20260828.0856"
     },
     "data": {
       "label": "数据模块",
-      "version": "v20260825.0326"
+      "version": "v20260828.0856"
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260825.0326"
+      "version": "v20260828.0856"
     },
     "assembler": {
       "label": "组装器",
@@ -18,14 +18,75 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260825.0326"
+      "version": "v20260828.0856"
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260825.0326"
+      "version": "v20260828.0856"
     }
   },
   "entries": [
+
+    {
+      "date": "2026-08-28",
+      "version": "v20260828.0856",
+      "items": [
+        {
+          "module": "布局模块",
+          "type": "update",
+          "level": 4,
+          "description": "排班编辑器支持手动添加未拥有干员，并可选择按 E0 计算或假定基建技能已解锁"
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 4,
+          "description": "扩展制造站基线规则，补充火神、贝娜等干员的相关规则"
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 4,
+          "description": "新增中间变量和中间数据规则，并统一中枢候选的 middleData 字段"
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 3,
+          "description": "补充蕾缪安与能天使不同练度组合的贸易站候选"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 5,
+          "description": "新增制造站房间状态结算，支持仓库容量转生产力、阈值规则和生产力覆盖规则"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 5,
+          "description": "L79 接入中间变量与跨房间资源条件，并将相关效果纳入最终生产力和资源链结算"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 5,
+          "description": "重组 L79 多层结算数据链，统一布局、在岗、自动化、中枢和 R30 数据，并补充贸易站 L3 加成"
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 4,
+          "description": "新增迷迭香与黑键的同班偏好优化，自动选择同班时间更长的班次偏移"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 4,
+          "description": "房间编辑器新增计算过程展示，补充核心计算、房间状态、中间变量、班组联动和最终效率明细"
+        }
+      ]
+    },
 
     {
       "date": "2026-08-25",
@@ -48,6 +109,12 @@
           "type": "update",
           "level": 4,
           "description": "新增输出收益计算过程中的中间产物信息"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 4,
+          "description": "更新红云泡泡相关的收益计算"
         },
         {
           "module": "调试信息",

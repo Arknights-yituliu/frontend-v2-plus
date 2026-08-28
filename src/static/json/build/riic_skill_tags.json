@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "file": "src/static/json/tools/R00-baseline.json",
+    "note": "基建技能分类标签；技能标签只描述当前生效技能，不写入干员永久阵营标签。"
+  },
+  "skillTags": {
+    "standardized-skill": {
+      "skillNames": [
+        "标准化·α",
+        "标准化·β"
+      ],
+      "skillNamePrefixes": [
+        "标准化·"
+      ]
+    },
+    "rhine-tech-skill": {
+      "skillNames": [
+        "莱茵科技·α",
+        "莱茵科技·β",
+        "莱茵科技·γ"
+      ],
+      "skillNamePrefixes": [
+        "莱茵科技·"
+      ]
+    },
+    "red-pine-skill": {
+      "skillNames": [
+        "红松骑士团·α",
+        "红松骑士团·β"
+      ],
+      "skillNamePrefixes": [
+        "红松骑士团·"
+      ]
+    },
+    "metalwork": {
+      "skillNames": [
+        "金属工艺·α",
+        "金属工艺·β"
+      ],
+      "skillNamePrefixes": [
+        "金属工艺·"
+      ]
+    }
+  }
+}

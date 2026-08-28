@@ -364,7 +364,7 @@ const automationSupportedMaterialized = materializeRiicRoomTeamCandidate(
   [automationMaterializeOperator],
   {
     automationRuntimeContext: {
-      layoutFacts: {
+      layoutData: {
         powerPlantCount: 2,
         facilities: [],
       },
@@ -485,7 +485,7 @@ const automationReservationSelection = buildRiicAutomaticRoomGroupSelections({
     { charId: "char_1027_greyy2", name: "承曦格雷伊", elite: 2 },
     { charId: "qingliu", name: "清流", elite: 1 },
   ],
-  layoutFacts: { powerPlantCount: 3 },
+  layoutData: { powerPlantCount: 3 },
   selectionBeamLimit: 8,
   selectionOptionLimit: 8,
   selectionRepresentativeLimit: 8,

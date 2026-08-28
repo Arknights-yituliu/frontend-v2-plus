@@ -60,7 +60,7 @@
     {
       "id": "template:trading-lemuen-angel:trading:all:2:2:char_103_angel",
       "variantGroupId": "template:trading-lemuen-angel:trading:all:2:2",
-      "name": "蕾缪安 + 天使",
+      "name": "蕾缪安 + 能天使E2",
       "members": [
         {
           "name": "蕾缪安",
@@ -72,6 +72,26 @@
         }
       ],
       "efficiency": 80,
+      "sortScore": 0,
+      "quality": "baseOnly",
+      "lv3PairComponent": true,
+      "calculationStatus": "calculated"
+    },
+    {
+      "id": "template:trading-lemuen-angel:trading:all:2:2:char_103_angel",
+      "variantGroupId": "template:trading-lemuen-angel:trading:all:2:2",
+      "name": "蕾缪安 + 能天使E0",
+      "members": [
+        {
+          "name": "蕾缪安",
+          "elite": 2
+        },
+        {
+          "name": "能天使",
+          "elite": 0
+        }
+      ],
+      "efficiency": 65,
       "sortScore": 0,
       "quality": "baseOnly",
       "lv3PairComponent": true,

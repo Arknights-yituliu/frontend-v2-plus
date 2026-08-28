@@ -1,4 +1,8 @@
 import RIIC_RUNTIME_INDEX from "/src/static/json/tools/riic-candidates/index.json";
+import {
+  getRiicOperatorTags,
+  withRiicOperatorTags,
+} from "./riic-operator-tags.js";
 
 const CATALOG_LOADERS = import.meta.glob([
   "/src/static/json/tools/riic-candidates/**/*.json",
@@ -187,6 +191,15 @@ function getRateSignature(rate) {
   )}`;
 }
 
+function withCandidateOperatorTags(candidate) {
+  return {
+    ...candidate,
+    members: (candidate?.members || []).map((member) =>
+      withRiicOperatorTags(member),
+    ),
+  };
+}
+
 function mergeFallbackOperators(genericFallback, productFallback) {
   const ratesByName = new Map();
   const fillPriorityByName = new Map();
@@ -203,6 +216,14 @@ function mergeFallbackOperators(genericFallback, productFallback) {
         if (!Number.isFinite(percent)) {
           continue;
         }
+        const tags = [
+          ...new Set([
+            ...getRiicOperatorTags(name),
+            ...(Array.isArray(rate?.tags) ? rate.tags : []),
+          ]),
+        ]
+          .map((tag) => String(tag || "").trim())
+          .filter(Boolean);
         rates.set(getRateSignature(rate), {
           ...(Number(rate?.elite || 0) > 0
             ? { elite: Number(rate.elite) }
@@ -215,15 +236,9 @@ function mergeFallbackOperators(genericFallback, productFallback) {
             : {}),
           percent,
           ...(rate?.skipR30 === true ? { skipR30: true } : {}),
-          ...(Array.isArray(rate?.tags) && rate.tags.length > 0
+          ...(tags.length > 0
             ? {
-                tags: [
-                  ...new Set(
-                    rate.tags
-                      .map((tag) => String(tag || "").trim())
-                      .filter(Boolean),
-                  ),
-                ],
+                tags,
               }
             : {}),
         });
@@ -281,6 +296,9 @@ function buildImplicitMeetingFallbackOperators(candidates, fallbackOperators) {
         ? { level: Number(member.level) }
         : {}),
       percent,
+      ...(getRiicOperatorTags(name).length > 0
+        ? { tags: getRiicOperatorTags(name) }
+        : {}),
     };
     const rates = ratesByName.get(name) || new Map();
     const signature = getRateSignature(rate);
@@ -369,7 +387,10 @@ export async function loadRiicStaticRoomCandidateCatalog({
     ]);
   const candidatesBySignature = new Map();
   const explicitLv3CandidateSignatures = new Set(
-    [...(genericCatalog.candidates || []), ...(productCatalog?.candidates || [])]
+    [
+      ...(genericCatalog.candidates || []).map(withCandidateOperatorTags),
+      ...(productCatalog?.candidates || []).map(withCandidateOperatorTags),
+    ]
       .filter((candidate) => (candidate?.members || []).length < 3)
       .map(getLv3CompatibilitySignature),
   );
@@ -385,7 +406,10 @@ export async function loadRiicStaticRoomCandidateCatalog({
   ]) {
     for (const sourceCandidate of sourceCandidates) {
       const candidate = createLv3CompatibleCandidate(
-        withCandidateSourceFile(sourceCandidate, sourceFile),
+        withCandidateSourceFile(
+          withCandidateOperatorTags(sourceCandidate),
+          sourceFile,
+        ),
       );
       if (
         candidate &&
@@ -399,7 +423,7 @@ export async function loadRiicStaticRoomCandidateCatalog({
   }
   for (const candidate of genericCatalog.candidates || []) {
     const candidateWithSource = withCandidateSourceFile(
-      candidate,
+      withCandidateOperatorTags(candidate),
       request.genericFile,
     );
     candidatesBySignature.set(
@@ -409,7 +433,7 @@ export async function loadRiicStaticRoomCandidateCatalog({
   }
   for (const candidate of productCatalog?.candidates || []) {
     const candidateWithSource = withCandidateSourceFile(
-      candidate,
+      withCandidateOperatorTags(candidate),
       request.productFile,
     );
     const signature = getMemberSignature(candidateWithSource);

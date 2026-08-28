@@ -109,7 +109,7 @@
       "level": 1,
       "effect": "进驻控制中枢时，自身心情每小时消耗+0.5，木天蓼+8",
       "humanVerified": 0,
-      "intermediateProducts": [
+      "middleData": [
         "catnip"
       ],
       "resolvedEffects": [
@@ -173,7 +173,7 @@
       "level": 1,
       "effect": "进驻控制中枢时，控制中枢内每有1名怪物猎人小队干员，则木天蓼+2",
       "humanVerified": 0,
-      "intermediateProducts": [
+      "middleData": [
         "catnip"
       ],
       "resolvedEffects": [
@@ -522,7 +522,7 @@
       "level": 1,
       "effect": "进驻控制中枢时，自身心情每小时消耗+0.5；当自身心情大于12时，感知信息+10",
       "humanVerified": 0,
-      "intermediateProducts": [
+      "middleData": [
         "perceptionInformation"
       ],
       "resolvedEffects": [
@@ -560,7 +560,7 @@
       "level": 1,
       "effect": "进驻控制中枢时，控制中枢内所有干员的心情每小时恢复+0.05；当自身心情处于12以下时，人间烟火+15",
       "humanVerified": 0,
-      "intermediateProducts": [
+      "middleData": [
         "humanFireworks"
       ],
       "resolvedEffects": [
@@ -608,7 +608,7 @@
       "elite": 2,
       "level": 1,
       "effect": "进驻控制中枢时，当自身心情大于12时，人间烟火+15；当自身心情处于12以下时，感知信息+10",
-      "intermediateProducts": [
+      "middleData": [
         "humanFireworks",
         "perceptionInformation"
       ],
@@ -624,7 +624,7 @@
       "elite": 0,
       "level": 1,
       "effect": "进驻控制中枢时，自身心情每小时消耗+0.5；每个岁干员进驻在宿舍和活动室以外的设施则人间烟火+5（最多5名）",
-      "intermediateProducts": [
+      "middleData": [
         "humanFireworks"
       ],
       "bufftag": [
@@ -638,7 +638,7 @@
       "elite": 2,
       "level": 1,
       "effect": "进驻控制中枢时，其他设施内处于工作状态的干员心情每小时恢复+0.05；同时每有20点人间烟火，则额外+0.05，（与控制中枢加成有特殊比较规则）",
-      "intermediateProducts": [
+      "middleData": [
         "humanFireworks"
       ],
       "bufftag": [
@@ -1339,7 +1339,7 @@
       "elite": 0,
       "level": 1,
       "effect": "进驻控制中枢时，所有生产贵金属类配方的制造站生产力+0.5%，每有20点热情值，所有生产贵金属类配方的制造站生产力+0.5%",
-      "intermediateProducts": [
+      "middleData": [
         "passion"
       ],
       "bufftag": [
@@ -1354,7 +1354,7 @@
       "elite": 0,
       "level": 1,
       "effect": "进驻控制中枢时，热情值处于40点及以上时，自身心情每小时消耗+0.05",
-      "intermediateProducts": [
+      "middleData": [
         "passion"
       ],
       "bufftag": [
@@ -1368,7 +1368,7 @@
       "elite": 2,
       "level": 1,
       "effect": "进驻控制中枢时，所有生产贵金属类配方的制造站生产力+1%，每有20点热情值，所有生产贵金属类配方的制造站生产力+1%",
-      "intermediateProducts": [
+      "middleData": [
         "passion"
       ],
       "bufftag": [
@@ -1383,7 +1383,7 @@
       "elite": 0,
       "level": 1,
       "effect": "进驻控制中枢时，热情值+20；每有8点热情值，自身心情每小时消耗+0.01，所有贸易站订单效率+1%（同种效果取最高）",
-      "intermediateProducts": [
+      "middleData": [
         "passion"
       ],
       "bufftag": [
@@ -1409,7 +1409,7 @@
       "elite": 0,
       "level": 1,
       "effect": "进驻控制中枢时，宿舍内每有1名干员，热情值+1",
-      "intermediateProducts": [
+      "middleData": [
         "passion"
       ],
       "bufftag": [
@@ -1435,7 +1435,7 @@
       "level": 1,
       "effect": "进驻控制中枢时，热情值+10；会客室线索搜集速度提升+5%（同种效果取最高）",
       "humanVerified": 1,
-      "intermediateProducts": [
+      "middleData": [
         "passion"
       ],
       "resolvedEffects": [
@@ -1513,7 +1513,7 @@
       "level": 1,
       "effect": "进驻控制中枢时，热情值+10；人脉资源的联络速度+10%（同种效果取最高）",
       "humanVerified": 1,
-      "intermediateProducts": [
+      "middleData": [
         "passion"
       ],
       "resolvedEffects": [
@@ -1724,7 +1724,7 @@
       "elite": 2,
       "level": 1,
       "effect": "进驻控制中枢时，控制中枢内每有1名彩虹小队干员，则情报储备+1",
-      "intermediateProducts": [
+      "middleData": [
         "intelligenceReserve"
       ],
       "bufftag": [
@@ -1771,7 +1771,7 @@
       "elite": 2,
       "level": 1,
       "effect": "进驻控制中枢时，控制中枢内每有1名乌萨斯学生自治团干员，则乌萨斯特饮+1",
-      "intermediateProducts": [
+      "middleData": [
         "ursusSpecialDrink"
       ],
       "bufftag": [

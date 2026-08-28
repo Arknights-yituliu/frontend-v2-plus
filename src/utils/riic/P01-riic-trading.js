@@ -1202,6 +1202,7 @@ export function resolveRiicTradingRoomInput({
       stationLevel: Number(room?.stationLevel),
       roomBonus:
         Number(room?.controlCenterFacilityBonusPercent || 0) +
+        Number(room?.layer3OperatorBonusPercent || 0) +
         Number(room?.activeRosterBonusPercent || 0) +
         Number(room?.resourceChainAdditionalBonusPercent || 0),
       operatorBonusesById: getRiicTradingOperatorBonuses(

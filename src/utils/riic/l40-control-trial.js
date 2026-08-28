@@ -156,7 +156,7 @@ function getScenarioEffects({
   skills,
   rosterById,
   ownedOperators,
-  layoutFacts,
+  layoutData,
   trainingMode,
   idealTrainingRaritySelection,
 }) {
@@ -203,7 +203,7 @@ function getScenarioEffects({
   for (const effect of getRiicLayer3ControlCenterEffects({
     operatorId: sourceOperatorId,
     ownedOperators,
-    layoutFacts,
+    layoutData,
   })) {
     collect(effect);
   }
@@ -236,7 +236,7 @@ function hasActiveFunctionTag(
 function getScenarioDefinitions({
   skills,
   ownedOperators,
-  layoutFacts,
+  layoutData,
   trainingMode,
   idealTrainingRaritySelection,
 }) {
@@ -268,7 +268,7 @@ function getScenarioDefinitions({
       skills,
       rosterById,
       ownedOperators,
-      layoutFacts,
+      layoutData,
       trainingMode,
       idealTrainingRaritySelection,
     });
@@ -303,12 +303,12 @@ function getScenarioDefinitions({
   );
 }
 
-function getEffectFacilityCount(effect, layoutFacts) {
+function getEffectFacilityCount(effect, layoutData) {
   const target = effect?.target || {};
   const targetRoomType = String(target?.roomType || "").trim();
   const targetProduct = String(target?.product || "").trim();
 
-  return (Array.isArray(layoutFacts?.facilities) ? layoutFacts.facilities : [])
+  return (Array.isArray(layoutData?.facilities) ? layoutData.facilities : [])
     .filter(
       (facility) =>
         String(facility?.facilityType || "").trim() === targetRoomType &&
@@ -343,11 +343,11 @@ function formatEffectLabel(effect) {
   }${bonusPercent}%`;
 }
 
-function createTrialEntry(effect, layoutFacts) {
+function createTrialEntry(effect, layoutData) {
   const target = effect?.target || {};
   const roomType = String(target?.roomType || "").trim();
   const bonusPercent = Number(effect?.bonusPercent);
-  const facilityCount = getEffectFacilityCount(effect, layoutFacts);
+  const facilityCount = getEffectFacilityCount(effect, layoutData);
   const roomWeight = Number(FACILITY_WEIGHT_BY_ROOM_TYPE[roomType] || 0);
 
   return {
@@ -393,8 +393,8 @@ function getRedPineKnightOperatorIds(skills) {
   ];
 }
 
-function getExperienceManufactureCount(layoutFacts) {
-  return (Array.isArray(layoutFacts?.facilities) ? layoutFacts.facilities : [])
+function getExperienceManufactureCount(layoutData) {
+  return (Array.isArray(layoutData?.facilities) ? layoutData.facilities : [])
     .filter(
       (facility) =>
         String(facility?.facilityType || "").trim() === "manufacture" &&
@@ -407,7 +407,7 @@ function createRosterTrialEntry({
   sourceOperatorId,
   rosterById,
   skills,
-  layoutFacts,
+  layoutData,
 }) {
   const redPineKnightCount = getRedPineKnightOperatorIds(skills).filter(
     (operatorId) => rosterById.has(operatorId),
@@ -438,7 +438,7 @@ function createRosterTrialEntry({
 
   if (sourceOperatorId === FLAMETAIL_OPERATOR_ID) {
     const hasExperienceManufacture =
-      getExperienceManufactureCount(layoutFacts) > 0;
+      getExperienceManufactureCount(layoutData) > 0;
     return {
       kind: "roster",
       effectLabel: "红松骑士持有试算",
@@ -559,15 +559,15 @@ function createRosterTrialEntry({
   return null;
 }
 
-function evaluateScenario(scenario, layoutFacts, rosterById, skills) {
+function evaluateScenario(scenario, layoutData, rosterById, skills) {
   const entries = scenario.effects
     .filter(isSupportedTrialEffect)
-    .map((effect) => createTrialEntry(effect, layoutFacts));
+    .map((effect) => createTrialEntry(effect, layoutData));
   const rosterEntry = createRosterTrialEntry({
     sourceOperatorId: scenario.sourceOperatorId,
     rosterById,
     skills,
-    layoutFacts,
+    layoutData,
   });
   if (rosterEntry) {
     entries.push(rosterEntry);
@@ -596,14 +596,14 @@ function evaluateScenario(scenario, layoutFacts, rosterById, skills) {
 export function evaluateRiicControlCenterScenarios({
   skills,
   ownedOperators,
-  layoutFacts,
+  layoutData,
   trainingMode = "current",
   idealTrainingRaritySelection,
 }) {
   const scenarios = getScenarioDefinitions({
     skills,
     ownedOperators,
-    layoutFacts,
+    layoutData,
     trainingMode,
     idealTrainingRaritySelection,
   });
@@ -612,7 +612,7 @@ export function evaluateRiicControlCenterScenarios({
   return scenarios
     .map((scenario) => ({
       ...scenario,
-      ...evaluateScenario(scenario, layoutFacts, rosterById, skills),
+      ...evaluateScenario(scenario, layoutData, rosterById, skills),
     }))
     .sort(
       (left, right) =>

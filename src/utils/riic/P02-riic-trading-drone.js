@@ -27,6 +27,7 @@ function round(value, digits = 6) {
 function createFailure(error) {
   return {
     ...createSuccess(),
+    ok: false,
     warning: true,
     warnings: [{ code: error || "calculationWarning" }],
     error: error || "calculationWarning",
@@ -70,7 +71,7 @@ function normalizeOperators(value) {
       continue;
     }
     if (seen.has(charId)) {
-      continue;
+      return null;
     }
     seen.add(charId);
     operators.push({ charId, elite, level });
@@ -175,6 +176,9 @@ function calculateLmdDrone({ stationLevel, operators }) {
  */
 export function calculateRiicTradingDrone(facility, operators) {
   const normalizedOperators = normalizeOperators(operators);
+  if (normalizedOperators === null) {
+    return createFailure("invalidOperators");
+  }
   const product = String(facility?.product || "").trim();
   const stationLevel = Number(facility?.level);
 

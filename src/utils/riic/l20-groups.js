@@ -370,7 +370,7 @@ export function resolveRiicRoomCandidateSkeletons({
     stationLevel: normalizedStationLevel,
     slotCount: normalizedSlotCount,
   };
-  const layoutFacts = {
+  const layoutData = {
     powerPlantCount,
     tradingStationCount,
     goldManufactureStationCount,
@@ -387,7 +387,7 @@ export function resolveRiicRoomCandidateSkeletons({
                 operatorId,
                 elite: rosterById.get(operatorId)?.elite,
                 ownedOperators: rosterById,
-                layoutFacts,
+                layoutData,
               }),
             ],
           ]
@@ -423,7 +423,7 @@ export function resolveRiicRoomCandidateSkeletons({
     trainingMode: normalizedTrainingMode,
     idealTrainingRaritySelection: normalizedRaritySelection,
     scope,
-    layoutFacts,
+    layoutData,
     perceptionCoreBaselinesByOperatorId,
     candidateSkeletons: [
       ...candidateSkeletons,
