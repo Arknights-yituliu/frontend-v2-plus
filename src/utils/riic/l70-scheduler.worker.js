@@ -8,10 +8,11 @@ self.onmessage = (event) => {
       requestId,
       result: runRiicAutomaticSchedule({
         ...input,
-        onProgress: (phase) => {
+        onProgress: (phase, details) => {
           self.postMessage({
             requestId,
             progress: phase,
+            progressDetails: details || null,
           });
         },
       }),

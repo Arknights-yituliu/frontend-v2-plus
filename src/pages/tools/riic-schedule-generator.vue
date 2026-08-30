@@ -351,7 +351,8 @@ const automaticGenerationProgressLabels = {
   L70: "正在分析候选方案",
   L70_CANDIDATES: "正在读取候选班组",
   L70_COMBINING: "正在组合候选与补位方案",
-  L70_FALLBACK: "正在计算候选补位",
+  L70_FALLBACK: "正在计算候选补位（该步骤用时可能较长）",
+  L70_COMPLETE: "L70 已完成",
   L71: "正在处理普通补位",
   L71_FILL: "正在分配普通闲置干员",
   L72: "正在整理资源组合",
@@ -2800,10 +2801,19 @@ const automaticGenerationWorkflow = createRiicScheduleGenerationWorkflow({
     }
     return automaticGenerationProgressLabels[phase] || phase;
   },
-  onPhase: (phase, label) => {
+  onPhase: (phase, label, details) => {
     automaticGenerationPhase.value = showCandidateDebugValues.value
       ? `${label} · ${phase}`
       : label;
+    if (details) {
+      riicAutomaticGenerationDebugState.value = {
+        ...(riicAutomaticGenerationDebugState.value || {}),
+        l70: {
+          ...(riicAutomaticGenerationDebugState.value?.l70 || {}),
+          runtime: details,
+        },
+      };
+    }
   },
 });
 
@@ -2842,6 +2852,14 @@ async function generateAutomaticSchedule({
   automaticGenerationAbortController = abortController;
   autoGeneratingSchedule.value = true;
   automaticGenerationPhase.value = "正在载入候选班组";
+  riicAutomaticGenerationDebugState.value = {
+    strategy,
+    l70: {
+      runtime: {
+        status: "starting",
+      },
+    },
+  };
   automaticGenerationNoticeOperators.value =
     getRandomAutomaticGenerationNoticeOperators();
   try {
@@ -2879,7 +2897,13 @@ async function generateAutomaticSchedule({
     } = resourceSuiteResult.tailFillResult;
     riicAutomaticGenerationDebugState.value = {
       strategy,
-      l70: automaticSelection.debug || null,
+      l70: {
+        ...(automaticSelection.debug || {}),
+        runtime:
+          automaticSelection.debug?.runtime ||
+          riicAutomaticGenerationDebugState.value?.l70?.runtime ||
+          null,
+      },
       l71: tailFillResult,
       l72: resourceSuiteResult.debug,
       l73: controlCenterReconciliation || null,

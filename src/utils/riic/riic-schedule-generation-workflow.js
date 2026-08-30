@@ -34,7 +34,8 @@ export function createRiicScheduleGenerationWorkflow({
       const result = await runWorker?.({
         input: buildWorkerInput?.(strategy),
         signal: controller.signal,
-        onProgress: (phase) => onPhase(phase, getProgressLabel(phase)),
+        onProgress: (phase, details) =>
+          onPhase(phase, getProgressLabel(phase), details),
       });
       if (controller.signal.aborted || currentRequestId !== requestId) {
         return null;

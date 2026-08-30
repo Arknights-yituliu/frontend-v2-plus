@@ -427,7 +427,64 @@ export function buildRiicAutomaticRoomGroupSelections({
       groups: planningGroups,
       candidateStatesByGroupId,
     });
+  const runtimeDebug = collectPlanningDebug
+    ? {
+        status: "running",
+        phase: "L70_CANDIDATES",
+        startedAt: Date.now(),
+        elapsedMs: 0,
+        groupCount: planningGroups.length,
+        cohortCount: selectionCohorts.length,
+        totalCandidateCount: selectionCohorts.reduce(
+          (total, cohort) => total + (cohort.candidates || []).length,
+          0,
+        ),
+        processedCandidateCount: 0,
+        fallbackInvocationCount: 0,
+        fallbackPlanCount: 0,
+        currentGroupIndex: 0,
+        currentGroupId: "",
+        currentGroupLabel: "",
+        currentCohortId: "",
+        currentSelectionKey: "",
+        currentCandidateIndex: 0,
+        currentCandidateCount: 0,
+        currentCandidateKey: "",
+        currentCandidateName: "",
+      }
+    : null;
+  let lastRuntimeDebugReportAt = 0;
+  const reportRuntimeDebug = (
+    phase,
+    {
+      force = false,
+      ...patch
+    } = {},
+  ) => {
+    if (!runtimeDebug) {
+      return;
+    }
+
+    Object.assign(runtimeDebug, patch);
+    runtimeDebug.phase = phase;
+    runtimeDebug.elapsedMs = Math.max(
+      0,
+      Date.now() - Number(runtimeDebug.startedAt || Date.now()),
+    );
+    const now = Date.now();
+    if (
+      !force &&
+      now - lastRuntimeDebugReportAt < 200
+    ) {
+      return;
+    }
+
+    lastRuntimeDebugReportAt = now;
+    onProgress?.(phase, { ...runtimeDebug });
+  };
+  reportRuntimeDebug("L70_CANDIDATES", { force: true });
   reportProgress("L70_COMBINING");
+  reportRuntimeDebug("L70_COMBINING", { force: true });
   const plannerOptionTraces = [];
   const plannerOptionEvaluations = [];
   const { bestPlan, debug: plannerDebug } = planRiicAutomaticRoomSelections({
@@ -456,45 +513,85 @@ export function buildRiicAutomaticRoomGroupSelections({
         teamIndex,
       );
 
-      return (
-      cohort.candidates
-        .flatMap((candidate) =>
-          getAutomaticRoomTeamOptions({
-            candidate,
-            selectionKey,
-            controlCenterOperatorIds: normalizedControlCenterOperatorIds,
-            controlCenterRuntimeContext,
-            fallbackPlanLimit,
-            claimedOperatorIds,
-            fiammettaTargetStateIndexes,
-            fiammettaRecovery: {
-              ...recovery,
-              cohort: cohort.staffingCohort,
-              teamIndex,
-              stateIndexesBySelectionKey: {
-                [selectionKey]: targetStateIndexes,
+      const candidates = cohort.candidates || [];
+      const candidateOptions = candidates
+        .flatMap((candidate, candidateIndex) => {
+          if (runtimeDebug) {
+            runtimeDebug.fallbackInvocationCount += 1;
+          }
+          reportRuntimeDebug("L70_FALLBACK", {
+            currentGroupIndex:
+              planningGroups.findIndex((group) => group.id === cohort.groupId) +
+              1,
+            currentGroupId: cohort.groupId,
+            currentGroupLabel:
+              planningGroups.find((group) => group.id === cohort.groupId)
+                ?.label || cohort.groupId,
+            currentCohortId: cohort.cohortId,
+            currentSelectionKey: selectionKey,
+            currentCandidateIndex: candidateIndex + 1,
+            currentCandidateCount: candidates.length,
+            currentCandidateKey: candidate?.key || "",
+            currentCandidateName:
+              candidate?.name || candidate?.key || "",
+          });
+          const options = getAutomaticRoomTeamOptions({
+              candidate,
+              selectionKey,
+              controlCenterOperatorIds: normalizedControlCenterOperatorIds,
+              controlCenterRuntimeContext,
+              fallbackPlanLimit,
+              claimedOperatorIds,
+              fiammettaTargetStateIndexes,
+              fiammettaRecovery: {
+                ...recovery,
+                cohort: cohort.staffingCohort,
+                teamIndex,
+                stateIndexesBySelectionKey: {
+                  [selectionKey]: targetStateIndexes,
+                },
               },
-            },
-            ownedOperators,
-            selectedCandidateKeys,
-            teamIndex,
-            facility: cohort.facility,
-            idleFillOperators,
-            reservedPowerOperatorId,
-            automationRuntimeContext: getAutomationRuntimeContext({
-              layoutData,
               ownedOperators,
-              powerSupportReserved: Boolean(reservedPowerOperatorId),
-            }),
-            reportProgress,
-          }),
-        )
+              selectedCandidateKeys,
+              teamIndex,
+              facility: cohort.facility,
+              idleFillOperators,
+              reservedPowerOperatorId,
+              automationRuntimeContext: getAutomationRuntimeContext({
+                layoutData,
+                ownedOperators,
+                powerSupportReserved: Boolean(reservedPowerOperatorId),
+              }),
+              reportProgress,
+            });
+          if (runtimeDebug) {
+            runtimeDebug.processedCandidateCount += 1;
+            runtimeDebug.fallbackPlanCount += options.length;
+          }
+          reportRuntimeDebug("L70_FALLBACK", {
+            currentGroupIndex:
+              planningGroups.findIndex((group) => group.id === cohort.groupId) +
+              1,
+            currentGroupId: cohort.groupId,
+            currentGroupLabel:
+              planningGroups.find((group) => group.id === cohort.groupId)
+                ?.label || cohort.groupId,
+            currentCohortId: cohort.cohortId,
+            currentSelectionKey: selectionKey,
+            currentCandidateIndex: candidateIndex + 1,
+            currentCandidateCount: candidates.length,
+            currentCandidateKey: candidate?.key || "",
+            currentCandidateName:
+              candidate?.name || candidate?.key || "",
+          });
+          return options;
+        })
         .sort(
           (left, right) =>
             right.rankingValue - left.rankingValue ||
             left.key.localeCompare(right.key, "en"),
         )
-      );
+      return candidateOptions;
     },
     evaluatePlan: (plan) => {
       const activeRosterEffects = evaluateRiicActiveRosterPlanEffects({
@@ -596,6 +693,20 @@ export function buildRiicAutomaticRoomGroupSelections({
     });
   }
 
+  reportRuntimeDebug("L70_COMPLETE", {
+    force: true,
+    status: "completed",
+    currentGroupIndex: planningGroups.length,
+    currentGroupId: "",
+    currentGroupLabel: "",
+    currentCohortId: "",
+    currentSelectionKey: "",
+    currentCandidateIndex: 0,
+    currentCandidateCount: 0,
+    currentCandidateKey: "",
+    currentCandidateName: "",
+  });
+
   return {
     selections,
     fallbackOperatorIdBySlotKeyByGroup,
@@ -653,6 +764,11 @@ export function buildRiicAutomaticRoomGroupSelections({
       batchDiagnostics: collectPlanningDebug
         ? plannerDebug?.planningBatches || []
         : [],
+      runtime: runtimeDebug
+        ? {
+            ...runtimeDebug,
+          }
+        : null,
     },
   };
 }
