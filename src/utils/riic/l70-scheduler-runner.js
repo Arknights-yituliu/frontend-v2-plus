@@ -48,7 +48,7 @@ function runRiicWorker({
       }
 
       if (message.progress) {
-        onProgress?.(message.progress);
+        onProgress?.(message.progress, message.progressDetails);
         return;
       }
 

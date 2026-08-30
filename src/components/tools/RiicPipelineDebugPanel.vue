@@ -263,6 +263,17 @@ function getL73ReasonLabel(reason) {
   );
 }
 
+function getL70RuntimeStatusLabel(status) {
+  return (
+    {
+      starting: "准备中",
+      running: "运行中",
+      completed: "已完成",
+      error: "异常结束",
+    }[status] || status || "--"
+  );
+}
+
 function getSameShiftDebugReasonLabel(reason) {
   return (
     {
@@ -1819,6 +1830,88 @@ const droneTableDebug = computed(() => {
             {{ automaticGenerationDebugState.strategy }} 搜索：
             评分 {{ formatNumber(automaticGenerationDebugState.l70?.bestPlan?.rankingValue) }}。
           </p>
+          <details
+            v-if="automaticGenerationDebugState.l70?.runtime"
+            class="pipeline-nested"
+          >
+            <summary>L70 运行统计</summary>
+            <p>
+              状态：{{
+                getL70RuntimeStatusLabel(
+                  automaticGenerationDebugState.l70.runtime.status,
+                )
+              }}；
+              阶段：{{ automaticGenerationDebugState.l70.runtime.phase || "--" }}；
+              耗时：{{
+                formatNumber(
+                  Number(automaticGenerationDebugState.l70.runtime.elapsedMs || 0) /
+                    1000,
+                )
+              }} 秒
+            </p>
+            <p>
+              房间组
+              {{
+                automaticGenerationDebugState.l70.runtime.currentGroupIndex || "--"
+              }}/{{
+                automaticGenerationDebugState.l70.runtime.groupCount || "--"
+              }}
+              {{
+                automaticGenerationDebugState.l70.runtime.currentGroupLabel || "--"
+              }}；
+              班组：{{
+                automaticGenerationDebugState.l70.runtime.currentCohortId || "--"
+              }}
+            </p>
+            <p>
+              候选：
+              {{
+                automaticGenerationDebugState.l70.runtime.processedCandidateCount ||
+                  0
+              }}/{{
+                automaticGenerationDebugState.l70.runtime.totalCandidateCount ||
+                  0
+              }}；
+              补位计算：
+              {{
+                automaticGenerationDebugState.l70.runtime
+                  .fallbackInvocationCount || 0
+              }} 次；
+              缓存命中：
+              {{
+                automaticGenerationDebugState.l70.runtime
+                  .fallbackCacheHitCount || 0
+              }} 次；
+              未命中：
+              {{
+                automaticGenerationDebugState.l70.runtime
+                  .fallbackCacheMissCount || 0
+              }} 次；
+              返回方案：
+              {{
+                automaticGenerationDebugState.l70.runtime.fallbackPlanCount || 0
+              }} 条
+            </p>
+            <p>
+              当前候选：
+              {{
+                automaticGenerationDebugState.l70.runtime.currentCandidateIndex ||
+                  0
+              }}/{{
+                automaticGenerationDebugState.l70.runtime.currentCandidateCount ||
+                  0
+              }}
+              {{
+                automaticGenerationDebugState.l70.runtime.currentCandidateName ||
+                  automaticGenerationDebugState.l70.runtime.currentCandidateKey ||
+                  "--"
+              }}；
+              选择键：{{
+                automaticGenerationDebugState.l70.runtime.currentSelectionKey ||
+                  "--"
+              }}
+            </p>
+          </details>
            <ul class="pipeline-list">
              <li
                v-for="selection in automaticGenerationDebugState.l70?.bestPlan?.selections || []"

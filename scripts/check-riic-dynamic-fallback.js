@@ -95,6 +95,34 @@ assert.deepEqual(
   ["basic-20"],
 );
 
+const occupiedLeadingFallbackCandidate = {
+  key: "occupied-leading-fallback",
+  fallback: {
+    count: 1,
+    candidateOperators: Array.from({ length: 30 }, (_, index) => ({
+      charId: `occupied-leading-${index + 1}`,
+      name: `Occupied leading ${index + 1}`,
+      percent: 100 - index,
+    })),
+  },
+};
+const occupiedLeadingFallbackPlan =
+  createRiicRoomGroupFallbackPlanAlternatives({
+    selectedEntries: [
+      {
+        selectionKey: "occupied-leading:0",
+        candidate: occupiedLeadingFallbackCandidate,
+      },
+    ],
+    occupiedOperatorIds: new Set(
+      Array.from({ length: 24 }, (_, index) => `occupied-leading-${index + 1}`),
+    ),
+    maxPlanCount: 1,
+  })[0];
+assert.deepEqual(occupiedLeadingFallbackPlan.selectedOperatorIds, [
+  "occupied-leading-25",
+]);
+
 const oneGapCandidate = {
   ...candidate,
   key: "candidate-with-one-gap",
@@ -825,7 +853,6 @@ const nightSmokeFallbackPlans = createRiicRoomGroupFallbackPlanAlternatives({
     },
   ],
   maxPlanCount: 12,
-  ordinaryOperatorLimit: 24,
 });
 const nightSmokeFallbackPlan = nightSmokeFallbackPlans.find((plan) =>
   plan.selectedOperatorIds.includes("night-smoke"),

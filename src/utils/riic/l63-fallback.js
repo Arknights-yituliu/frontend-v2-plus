@@ -492,7 +492,6 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
   activeOperatorIds = [],
   fiammettaRecovery = null,
   maxPlanCount = 12,
-  ordinaryOperatorLimit = 8,
 }) {
   const occupied = new Set(
     [...(occupiedOperatorIds || [])]
@@ -509,10 +508,6 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
   });
   const slots = getFallbackSlots(selectedEntries);
   const normalizedMaxPlanCount = Math.max(1, Math.trunc(maxPlanCount) || 1);
-  const normalizedOrdinaryOperatorLimit = Math.max(
-    1,
-    Math.trunc(ordinaryOperatorLimit) || 1,
-  );
   const maxEnumeratedPlanCount = Math.max(
     normalizedMaxPlanCount * 32,
     normalizedMaxPlanCount,
@@ -540,13 +535,9 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
       ).filter((operator) =>
         operatorMatchesRequiredTags(operator, slot.requiredTags),
       );
-      const isSpecialSlot = slot.requiredTags.length > 0;
-
       return {
         ...slot,
-        operators: isSpecialSlot
-          ? [...operators].sort(compareFallbackOperators)
-          : operators.slice(0, normalizedOrdinaryOperatorLimit),
+        operators,
       };
     })
     .sort(
