@@ -21,6 +21,78 @@ import {
 
 const AUTOMATION_POWER_SUPPORT_OPERATOR_ID = "char_1027_greyy2";
 
+function normalizeRiicFallbackCacheOperatorIds(operatorIds) {
+  return [
+    ...new Set(
+      [...(operatorIds || [])]
+        .map((operatorId) => String(operatorId || "").trim())
+        .filter(Boolean),
+    ),
+  ].sort((left, right) => left.localeCompare(right, "en"));
+}
+
+function createRiicFallbackPlanCache({ idleFillOperators = [] } = {}) {
+  const cacheByCandidate = new WeakMap();
+  const idleFillOperatorSignature = JSON.stringify(idleFillOperators || []);
+
+  const get = ({
+    candidate,
+    selectionKey,
+    occupiedOperatorIds,
+    excludedOperatorIds,
+    activeOperatorIds,
+    fiammettaRecovery,
+    maxPlanCount,
+    create,
+  } = {}) => {
+    if (
+      !candidate ||
+      typeof candidate !== "object" ||
+      typeof create !== "function"
+    ) {
+      return {
+        plans: typeof create === "function" ? create() : [],
+        hit: false,
+      };
+    }
+
+    const cacheKey = JSON.stringify({
+      idleFillOperators: idleFillOperatorSignature,
+      selectionKey: String(selectionKey || "").trim(),
+      occupiedOperatorIds:
+        normalizeRiicFallbackCacheOperatorIds(occupiedOperatorIds),
+      excludedOperatorIds:
+        normalizeRiicFallbackCacheOperatorIds(excludedOperatorIds),
+      activeOperatorIds:
+        normalizeRiicFallbackCacheOperatorIds(activeOperatorIds),
+      fiammettaRecovery: normalizeRiicFiammettaRecovery(
+        fiammettaRecovery,
+      ),
+      maxPlanCount: Number(maxPlanCount),
+    });
+    let cacheByContext = cacheByCandidate.get(candidate);
+    if (!cacheByContext) {
+      cacheByContext = new Map();
+      cacheByCandidate.set(candidate, cacheByContext);
+    }
+    if (cacheByContext.has(cacheKey)) {
+      return {
+        plans: cacheByContext.get(cacheKey),
+        hit: true,
+      };
+    }
+
+    const plans = create();
+    cacheByContext.set(cacheKey, plans);
+    return {
+      plans,
+      hit: false,
+    };
+  };
+
+  return { get };
+}
+
 function getAutomaticRoomGroupPriority(group) {
   return ["meeting", "office"].includes(group?.facility) ? 1 : 0;
 }
@@ -106,6 +178,8 @@ function getAutomaticRoomTeamOptions({
   automationRuntimeContext,
   reservedPowerOperatorId = "",
   idleFillOperators = [],
+  fallbackPlanCache,
+  onFallbackPlanCache,
   reportProgress,
 }) {
   const recovery = normalizeRiicFiammettaRecovery(fiammettaRecovery);
@@ -159,26 +233,56 @@ function getAutomaticRoomTeamOptions({
     excludedOperatorIds.add(reservedPowerOperatorId);
   }
   reportProgress?.("L70_FALLBACK");
-  const fallbackPlans = createRiicRoomGroupFallbackPlanAlternatives({
-    selectedEntries: [{ selectionKey, candidate: candidateWithIdleFallback }],
-    occupiedOperatorIds: new Set([
-      ...activeSelectionOperatorIds,
-    ].filter((charId) => !isReusableTarget(charId))),
+  const occupiedOperatorIds = new Set(
+    [...activeSelectionOperatorIds].filter(
+      (charId) => !isReusableTarget(charId),
+    ),
+  );
+  const fiammettaRecoveryForFallback = {
+    ...recovery,
+    usedStateIndexes: [
+      ...new Set([
+        ...(recovery.usedStateIndexes || []),
+        ...fiammettaTargetStateIndexes,
+      ]),
+    ],
+  };
+  const fallbackPlanResult = fallbackPlanCache?.get({
+    candidate,
+    selectionKey,
+    occupiedOperatorIds,
     excludedOperatorIds,
-    ownedOperators,
     activeOperatorIds: activeSelectionOperatorIds,
-    fiammettaRecovery: {
-      ...recovery,
-      usedStateIndexes: [
-        ...new Set([
-          ...(recovery.usedStateIndexes || []),
-          ...fiammettaTargetStateIndexes,
-        ]),
-      ],
-    },
+    fiammettaRecovery: fiammettaRecoveryForFallback,
     maxPlanCount: fallbackPlanLimit,
-    ordinaryOperatorLimit: 24,
-  });
+    create: () =>
+      createRiicRoomGroupFallbackPlanAlternatives({
+        selectedEntries: [
+          { selectionKey, candidate: candidateWithIdleFallback },
+        ],
+        occupiedOperatorIds,
+        excludedOperatorIds,
+        ownedOperators,
+        activeOperatorIds: activeSelectionOperatorIds,
+        fiammettaRecovery: fiammettaRecoveryForFallback,
+        maxPlanCount: fallbackPlanLimit,
+      }),
+  }) || {
+    plans: createRiicRoomGroupFallbackPlanAlternatives({
+      selectedEntries: [
+        { selectionKey, candidate: candidateWithIdleFallback },
+      ],
+      occupiedOperatorIds,
+      excludedOperatorIds,
+      ownedOperators,
+      activeOperatorIds: activeSelectionOperatorIds,
+      fiammettaRecovery: fiammettaRecoveryForFallback,
+      maxPlanCount: fallbackPlanLimit,
+    }),
+    hit: false,
+  };
+  onFallbackPlanCache?.(fallbackPlanResult);
+  const fallbackPlans = fallbackPlanResult.plans;
 
   return fallbackPlans.flatMap((fallbackPlan) => {
     const fallbackOperators =
@@ -392,6 +496,7 @@ export function buildRiicAutomaticRoomGroupSelections({
   layoutData = {},
   controlCenterSegments = [],
   collectPlanningDebug = false,
+  collectRuntimeProgress = false,
   idleFillOperators = [],
   onProgress,
 } = {}) {
@@ -427,7 +532,7 @@ export function buildRiicAutomaticRoomGroupSelections({
       groups: planningGroups,
       candidateStatesByGroupId,
     });
-  const runtimeDebug = collectPlanningDebug
+  const runtimeDebug = collectPlanningDebug || collectRuntimeProgress
     ? {
         status: "running",
         phase: "L70_CANDIDATES",
@@ -441,6 +546,8 @@ export function buildRiicAutomaticRoomGroupSelections({
         ),
         processedCandidateCount: 0,
         fallbackInvocationCount: 0,
+        fallbackCacheHitCount: 0,
+        fallbackCacheMissCount: 0,
         fallbackPlanCount: 0,
         currentGroupIndex: 0,
         currentGroupId: "",
@@ -487,6 +594,9 @@ export function buildRiicAutomaticRoomGroupSelections({
   reportRuntimeDebug("L70_COMBINING", { force: true });
   const plannerOptionTraces = [];
   const plannerOptionEvaluations = [];
+  const fallbackPlanCache = createRiicFallbackPlanCache({
+    idleFillOperators,
+  });
   const { bestPlan, debug: plannerDebug } = planRiicAutomaticRoomSelections({
     selectionCohorts,
     initiallyClaimedOperatorIds: [...normalizedControlCenterOperatorIds].filter(
@@ -520,6 +630,7 @@ export function buildRiicAutomaticRoomGroupSelections({
             runtimeDebug.fallbackInvocationCount += 1;
           }
           reportRuntimeDebug("L70_FALLBACK", {
+            force: runtimeDebug?.fallbackInvocationCount === 1,
             currentGroupIndex:
               planningGroups.findIndex((group) => group.id === cohort.groupId) +
               1,
@@ -562,6 +673,17 @@ export function buildRiicAutomaticRoomGroupSelections({
                 ownedOperators,
                 powerSupportReserved: Boolean(reservedPowerOperatorId),
               }),
+              fallbackPlanCache,
+              onFallbackPlanCache: (cacheResult) => {
+                if (!runtimeDebug) {
+                  return;
+                }
+                if (cacheResult?.hit) {
+                  runtimeDebug.fallbackCacheHitCount += 1;
+                } else {
+                  runtimeDebug.fallbackCacheMissCount += 1;
+                }
+              },
               reportProgress,
             });
           if (runtimeDebug) {

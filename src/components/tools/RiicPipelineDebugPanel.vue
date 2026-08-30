@@ -1877,6 +1877,16 @@ const droneTableDebug = computed(() => {
                 automaticGenerationDebugState.l70.runtime
                   .fallbackInvocationCount || 0
               }} 次；
+              缓存命中：
+              {{
+                automaticGenerationDebugState.l70.runtime
+                  .fallbackCacheHitCount || 0
+              }} 次；
+              未命中：
+              {{
+                automaticGenerationDebugState.l70.runtime
+                  .fallbackCacheMissCount || 0
+              }} 次；
               返回方案：
               {{
                 automaticGenerationDebugState.l70.runtime.fallbackPlanCount || 0

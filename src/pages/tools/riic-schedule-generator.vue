@@ -2519,6 +2519,7 @@ function createRiicAutomaticScheduleWorkerInput(searchConfig) {
     fiammettaRecovery,
     idleFillOperators: riicIdleFillOperators.value,
     fiammettaControlUsage: controlCenterFiammettaTargetUsage.value,
+    collectRuntimeProgress: true,
     collectPlanningDebug: showCandidateDebugValues.value,
   });
 }
@@ -2802,9 +2803,20 @@ const automaticGenerationWorkflow = createRiicScheduleGenerationWorkflow({
     return automaticGenerationProgressLabels[phase] || phase;
   },
   onPhase: (phase, label, details) => {
+    const currentGroupLabel = String(
+      details?.currentGroupLabel || "",
+    ).trim();
+    const currentCandidateIndex = Number(details?.currentCandidateIndex || 0);
+    const currentCandidateCount = Number(details?.currentCandidateCount || 0);
+    const currentProgress =
+      currentGroupLabel && currentCandidateCount > 0
+        ? `｜当前：${currentGroupLabel}（候选 ${currentCandidateIndex}/${currentCandidateCount}）`
+        : currentGroupLabel
+          ? `｜当前：${currentGroupLabel}`
+          : "";
     automaticGenerationPhase.value = showCandidateDebugValues.value
-      ? `${label} · ${phase}`
-      : label;
+      ? `${label} · ${phase}${currentProgress}`
+      : `${label}${currentProgress}`;
     if (details) {
       riicAutomaticGenerationDebugState.value = {
         ...(riicAutomaticGenerationDebugState.value || {}),
