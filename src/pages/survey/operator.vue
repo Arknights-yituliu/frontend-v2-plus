@@ -22,6 +22,7 @@ import { copyTextToClipboard } from "/src/utils/copyText.js";
 import { userInfo } from "/src/utils/user/userInfo.js";
 import { useRoute, useRouter } from "vue-router";
 import Login from "/src/pages/account/login.vue";
+import QRCode from 'qrcode';
 
 const sectionPanels = ref([])
 const route = useRoute()
@@ -55,6 +56,12 @@ const officialTokenText = ref('')
 // 官网导入步骤：1-登录官网 / 2-获取 Token / 3-输入凭证
 const officialImportStep = ref(1)
 
+// 森空岛扫码登录：二维码、扫码状态与轮询
+const sklandQrScanId = ref('') // 扫码会话 ID
+const sklandQrImage = ref('') // 渲染出的二维码 data URL
+const sklandQrStatusText = ref('') // 扫码状态提示文案
+let sklandQrPollTimer = null // 轮询定时器
+
 const importMethods = [
   {
     key: 'skland',
@@ -86,6 +93,24 @@ const importMethods = [
       '官网Token 属于极度敏感信息，泄露后可能被用于生成包括但不限于森空岛凭证在内的很多信息，分享官网Token给他人的危险程度不亚于公开你的账号密码！',
       '无论何时何地，使用官网Token前，请务必确认您已1000%信任该工具，使用该途径则视为您已知晓相关风险。',
       '使用时请确保环境安全，尤其小心会读取剪贴板的程序/APP，复制Token后请尽快使用！',
+    ],
+  },
+  {
+    key: 'qr',
+    title: '森空岛扫码登录',
+    avatar: '/avatar/skland-credential.webp',
+    subtitle: '使用森空岛 APP 扫码登录，自动获取凭证并导入干员数据。',
+    subtitleNote: 'PC端/移动端都方便，无需复制粘贴凭证，推荐使用',
+    purpose: [
+      '可以获取森空岛账号绑定的明日方舟账号列表',
+      '可以获取账号 UID、昵称、区服等信息',
+      '可以获取干员持有情况、等级、精英化、潜能、技能等级、模组等级',
+      '可以获取仓库物资数量',
+    ],
+    purposeNote: '这里明日方舟一图流仅一次性使用该token，以获取干员相关数据。',
+    warning: [
+      '请使用手机上的森空岛 APP 扫描二维码并在 APP 内确认授权。',
+      '二维码约 2 分钟有效，过期后点击"重新生成"即可刷新。',
     ],
   },
 ]
@@ -121,6 +146,11 @@ function openSklandImportDialog() {
   importFlowStarted.value = false
   officialTokenText.value = ''
   officialImportStep.value = 1 // 重置官网导入步骤
+  // 重置扫码登录状态并停止轮询
+  stopSklandQrPolling()
+  sklandQrScanId.value = ''
+  sklandQrImage.value = ''
+  sklandQrStatusText.value = ''
 }
 
 function selectImportMethod(method) {
@@ -131,6 +161,10 @@ function startImportFlow(method) {
   selectedImportMethod.value = method
   importFlowStarted.value = true
   sklandImportTab.value = method
+  // 扫码方式：进入流程后自动申请二维码
+  if (method === 'qr') {
+    createSklandQrCode()
+  }
 }
 
 function returnToImportMethodSelection() {
@@ -171,6 +205,7 @@ function requestCloseImportDialog() {
 
   if (window.confirm('确认关闭导入窗口吗？')) {
     sklandImportDialog.value = false
+    stopSklandQrPolling()
   }
 }
 
@@ -293,6 +328,93 @@ async function getPlayerBindingByOfficialToken() {
   }
 }
 
+/**
+ * 森空岛扫码登录：申请二维码并渲染，随后开始轮询扫码状态
+ */
+async function createSklandQrCode() {
+  sklandLoading.value = true
+  sklandQrStatusText.value = '正在生成二维码…'
+  playBindingList.value = []
+  try {
+    const res = await operatorDataAPI.createSklandQrCode()
+    const { scanId, qrContent } = res.data
+    sklandQrScanId.value = scanId
+    // 用 qrContent（deep link）渲染二维码图片
+    sklandQrImage.value = await QRCode.toDataURL(qrContent, {width: 220, margin: 1})
+    sklandQrStatusText.value = '请使用森空岛 APP 扫描二维码'
+    startSklandQrPolling()
+  } catch (error) {
+    console.error(error)
+    sklandQrStatusText.value = ''
+    createMessage({type: 'error', text: '生成二维码失败，请稍后重试'})
+  } finally {
+    sklandLoading.value = false
+  }
+}
+
+/**
+ * 重新生成二维码：停止旧轮询后重新申请
+ */
+function refreshSklandQrCode() {
+  stopSklandQrPolling()
+  sklandQrImage.value = ''
+  createSklandQrCode()
+}
+
+/**
+ * 停止扫码状态轮询
+ */
+function stopSklandQrPolling() {
+  if (sklandQrPollTimer) {
+    clearInterval(sklandQrPollTimer)
+    sklandQrPollTimer = null
+  }
+}
+
+/**
+ * 开始轮询扫码状态（约 2 秒一次，二维码约 2 分钟有效）
+ */
+function startSklandQrPolling() {
+  stopSklandQrPolling()
+  sklandQrPollTimer = setInterval(async () => {
+    try {
+      const res = await operatorDataAPI.checkSklandQrStatus(sklandQrScanId.value)
+      const data = res.data
+      if (data.status === 0) {
+        // 用户已确认：停止轮询，用凭证拉取账号列表
+        stopSklandQrPolling()
+        sklandCred.value = data.cred
+        sklandToken.value = data.token
+        sklandQrStatusText.value = '扫码成功，正在获取账号列表…'
+        const playBinding = await SklandAPI.getPlayBindingV2('', '', data.cred, data.token)
+        playBindingList.value = playBinding.bindingList
+        sklandQrStatusText.value = playBinding.bindingList.length > 0
+            ? '请选择要导入的账号：'
+            : '未找到绑定的明日方舟账号'
+        if (playBinding.bindingList.length === 0) {
+          createMessage({type: 'warning', text: '未找到绑定的明日方舟账号'})
+        }
+      } else if (data.status === 102) {
+        // 二维码过期：停止轮询，提示重新生成
+        stopSklandQrPolling()
+        sklandQrStatusText.value = '二维码已过期，请点击"重新生成"'
+        createMessage({type: 'warning', text: '二维码已过期，请重新生成'})
+      }
+      // status 100/101：未扫码/已扫码待确认，继续轮询
+    } catch (error) {
+      console.error(error)
+      // 单次轮询失败不中断，等待下次；如请求已过期则停止
+      if (!sklandQrScanId.value) {
+        stopSklandQrPolling()
+      }
+    }
+  }, 2000)
+}
+
+/**
+ * 根据选中的绑定账号同步干员数据到一图流
+ * @param {Object} binding 森空岛绑定账号信息（uid/nickName/channelName 等）
+ */
 async function getPlayerDataAndSync(binding) {
   const { uid, nickName, channelName, channelMasterId } = binding
 
@@ -925,6 +1047,7 @@ watch(() => route.query.openImport, () => {
 onBeforeUnmount(() => {
   cancelImportViewAnimationFrame()
   clearGuestOwnFilterDefault()
+  stopSklandQrPolling()
 })
 </script>
 
@@ -1183,7 +1306,7 @@ onBeforeUnmount(() => {
           </v-btn>
           <span class="operator-import-dialog-title">
             {{ importFlowStarted
-                ? (selectedImportMethod === 'skland' ? '使用森空岛凭证' : '使用官网 Token')
+                ? (importMethods.find((method) => method.key === selectedImportMethod)?.title || '导入干员数据')
                 : '选择一个导入方式' }}
           </span>
           <v-btn
@@ -1487,10 +1610,14 @@ onBeforeUnmount(() => {
                       <v-alert :icon="false" color="warning" variant="tonal" class="mb-4" density="compact">
                         为保障您的账号安全，请在导入后退出明日方舟官网登录，退出登录后Token就会失效了
                       </v-alert>
-                      <div class="operator-import-credential-row">
+                      <v-alert :icon="false" color="info" variant="tonal" class="mb-4" density="compact">
+                        如果提示需要设备验证，请打开森空岛APP，进入 设置 → 通行证与账号安全 → 账号安全管理 → 设备管理 → 新设备登录身份验证，关闭"新设备登录身份验证"
+                      </v-alert>
+                      <div class="operator-import-credential-row operator-import-credential-row--column">
                         <v-text-field
                             v-model="officialTokenText"
                             label="粘贴返回内容"
+                            type="password"
                             variant="outlined"
                             density="compact"
                             hide-details
@@ -1504,7 +1631,7 @@ onBeforeUnmount(() => {
                         >
                           {{ officialTokenText.trim()
                               ? '粘贴好了，获取账号列表并导入！'
-                              : '请把获取到的字符串粘贴在左侧' }}
+                              : '请先在上方输入框粘贴返回内容' }}
                         </v-btn>
                       </div>
 
@@ -1531,6 +1658,61 @@ onBeforeUnmount(() => {
                   </v-card>
                 </template>
               </v-stepper>
+              </v-window-item>
+
+              <!-- 森空岛扫码登录：申请二维码 -> 扫码确认 -> 选择账号 -->
+              <v-window-item value="qr">
+                <div class="operator-import-qr">
+                  <template v-if="sklandQrImage">
+                    <div class="text-center">
+                      <img
+                          :src="sklandQrImage"
+                          alt="森空岛扫码登录二维码"
+                          class="operator-import-qr-image"
+                      >
+                      <p class="operator-import-qr-status">{{ sklandQrStatusText }}</p>
+                      <v-btn
+                          color="primary"
+                          variant="tonal"
+                          :loading="sklandLoading"
+                          @click="refreshSklandQrCode"
+                      >
+                        <v-icon>mdi-refresh</v-icon>
+                        重新生成
+                      </v-btn>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <div class="text-center">
+                      <v-icon size="56" color="primary" class="mb-2">mdi-qrcode-scan</v-icon>
+                      <p class="mb-4">请使用森空岛 APP 扫描二维码完成登录</p>
+                      <v-btn color="primary" :loading="sklandLoading" @click="createSklandQrCode">
+                        <v-icon>mdi-qrcode</v-icon>
+                        生成二维码
+                      </v-btn>
+                    </div>
+                  </template>
+
+                  <div v-if="playBindingList.length > 0" class="mt-4">
+                    <p class="mb-2">选择要导入的账号：</p>
+                    <v-btn
+                        v-for="(binding, index) in playBindingList"
+                        :key="index"
+                        color="success"
+                        variant="tonal"
+                        block
+                        class="mb-2 text-left"
+                        style="height: auto; padding: 12px;"
+                        @click="getPlayerDataAndSync(binding)"
+                        :loading="sklandLoading"
+                    >
+                      <div style="width: 100%;">
+                        <div class="font-weight-bold">{{ binding.nickName }}</div>
+                        <div class="text-caption">区服：{{ binding.channelName }} | UID: {{ binding.uid }}</div>
+                      </div>
+                    </v-btn>
+                  </div>
+                </div>
               </v-window-item>
               </v-window>
             </div>

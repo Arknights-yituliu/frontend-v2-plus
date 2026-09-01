@@ -633,6 +633,37 @@
   line-height: 1.35;
 }
 
+// 上下布局变体：输入框与按钮改为纵向排列，按钮不占满整行
+.operator-import-credential-row--column {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.operator-import-credential-row--column .operator-import-credential-action {
+  align-self: center;
+  min-width: auto;
+  flex: none;
+}
+
+// 森空岛扫码登录：二维码与状态提示
+.operator-import-qr {
+  padding: 8px 0 4px;
+}
+
+.operator-import-qr-image {
+  width: 200px;
+  height: 200px;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.15);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.operator-import-qr-status {
+  margin: 12px 0;
+  color: rgba(var(--v-theme-on-surface), 0.65);
+  font-size: 0.875rem;
+}
+
 .operator-import-progress-comparison {
   display: flex;
   min-width: 0;
