@@ -11,6 +11,7 @@ import { getStageConfig } from '/src/utils/user/userConfig.js'
 import {
   loadLogicalByteCharacterData,
   normalizeLogicalByteCharacterData,
+  subscribeLogicalByteCharacterData,
 } from '/src/utils/logicalByte/characterData.js'
 
 const T5_MATERIAL_ID_REGEX = /^\d{4}5$/
@@ -73,6 +74,7 @@ const portraitLoading = ref(false)
 let portraitObjectUrl = ''
 let portraitLoadVersion = 0
 let portraitDbPromise = null
+let stopCharacterDataSubscription = () => {}
 
 watch(
   [operatorName, selectedOperatorId, showSkillT4Materials, layoutSettings],
@@ -80,11 +82,11 @@ watch(
   { deep: true, immediate: true },
 )
 
-const uploadedCharacterData = loadUploadedCharacterData()
-const activeOperatorTable = {
+const uploadedCharacterData = ref(loadUploadedCharacterData())
+const activeOperatorTable = computed(() => ({
   ...operatorTableV2,
-  ...uploadedCharacterData.operatorTable,
-}
+  ...uploadedCharacterData.value.operatorTable,
+}))
 //从 v2 干员数据构建材料消耗表(v2 中 skills 为含 skillLevelUpCost 的对象数组, 转换为代码需要的 [{itemId: 数量}] 格式)
 const v2OperatorCostTable = (() => {
   const costTable = {}
@@ -101,10 +103,10 @@ const v2OperatorCostTable = (() => {
   }
   return costTable
 })()
-const activeOperatorCostTable = {
+const activeOperatorCostTable = computed(() => ({
   ...v2OperatorCostTable,
-  ...uploadedCharacterData.operatorCostTable,
-}
+  ...uploadedCharacterData.value.operatorCostTable,
+}))
 
 const operatorCandidates = computed(() => {
   const keyword = operatorName.value.trim()
@@ -112,9 +114,9 @@ const operatorCandidates = computed(() => {
     return []
   }
 
-  return Object.entries(activeOperatorTable)
+  return Object.entries(activeOperatorTable.value)
     .filter(([charId, operator]) => {
-      if (!activeOperatorCostTable[charId]) {
+      if (!activeOperatorCostTable.value[charId]) {
         return false
       }
 
@@ -158,8 +160,8 @@ const matchedOperator = computed(() => {
 
   return {
     charId,
-    ...(activeOperatorTable[charId] || {}),
-    name: activeOperatorTable[charId]?.name || operatorTableV2[charId]?.name || charId,
+    ...(activeOperatorTable.value[charId] || {}),
+    name: activeOperatorTable.value[charId]?.name || operatorTableV2[charId]?.name || charId,
     rarity: getDisplayRarity(charId),
   }
 })
@@ -499,13 +501,13 @@ function handlePortraitLoadError() {
 }
 
 function getDisplayRarity(charId) {
-  const uploadedRarity = uploadedCharacterData.operatorTable[charId]?.displayRarity
+  const uploadedRarity = uploadedCharacterData.value.operatorTable[charId]?.displayRarity
   if (Number.isFinite(uploadedRarity) && uploadedRarity > 0) {
     return uploadedRarity
   }
 
   //v2 数据中 rarity 为 0-5, 转换为 1-6 星级展示
-  const zeroBasedRarity = activeOperatorTable[charId]?.rarity
+  const zeroBasedRarity = activeOperatorTable.value[charId]?.rarity
   return Number.isFinite(zeroBasedRarity) ? zeroBasedRarity + 1 : 0
 }
 
@@ -523,6 +525,10 @@ function loadUploadedCharacterData() {
     operatorTable: {},
     operatorCostTable: {},
   }
+}
+
+function refreshUploadedCharacterData() {
+  uploadedCharacterData.value = loadUploadedCharacterData()
 }
 
 function isT5Material(itemId) {
@@ -655,7 +661,7 @@ function buildRankingContext(map) {
   const eliteCostsByRarity = new Map()
   const skillCostsByRarity = new Map()
 
-  for (const [charId, operatorCost] of Object.entries(activeOperatorCostTable)) {
+  for (const [charId, operatorCost] of Object.entries(activeOperatorCostTable.value)) {
     const rarity = getDisplayRarity(charId)
     if (!rarity) {
       continue
@@ -705,7 +711,7 @@ function mergeCostObjects(list = []) {
 }
 
 function buildOperatorRows(operator, context, map) {
-  const operatorCost = activeOperatorCostTable[operator.charId]
+  const operatorCost = activeOperatorCostTable.value[operator.charId]
   if (!operatorCost) {
     return []
   }
@@ -725,7 +731,7 @@ function buildOperatorRows(operator, context, map) {
     })
   }
 
-  const skillNameList = activeOperatorTable[operator.charId]?.skills || []
+  const skillNameList = activeOperatorTable.value[operator.charId]?.skills || []
   ;(operatorCost.skills || []).forEach((skillCostList, index) => {
     const mergedCost = mergeCostObjects(skillCostList)
     if (Object.keys(mergedCost).length === 0) {
@@ -828,9 +834,13 @@ async function refreshItemValues() {
 
 onMounted(() => {
   refreshItemValues()
+  stopCharacterDataSubscription = subscribeLogicalByteCharacterData(() => {
+    refreshUploadedCharacterData()
+  })
 })
 
 onBeforeUnmount(() => {
+  stopCharacterDataSubscription()
   clearManualPortraitPreview()
 })
 </script>

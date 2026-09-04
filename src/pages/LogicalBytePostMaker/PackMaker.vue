@@ -31,7 +31,7 @@
                 @error="headerImageFailed = true"
               />
               <div v-else class="pack-maker-header-placeholder">
-                请在右侧上传头图
+                请在右侧设置头图
               </div>
             </section>
 
@@ -74,7 +74,6 @@
             circle
             plain
             :loading="isLoadingPacks"
-            title="刷新在售礼包"
             @click="loadPacks({ notify: true })"
           />
         </header>
@@ -107,14 +106,20 @@
             >
               <el-button :icon="UploadFilled" type="primary">上传头图</el-button>
             </el-upload>
+            <input
+              class="pack-maker-header-paste-input"
+              type="text"
+              placeholder="点击此处后按 Ctrl+V 粘贴头图"
+              aria-label="粘贴头图"
+              @paste="handleHeaderPaste"
+              @keydown.enter.prevent
+            />
             <div v-if="headerImageUrl" class="pack-maker-upload-status">
               <span>{{ headerImageName || '已上传头图' }}</span>
-              <el-tooltip content="移除头图" placement="top">
-                <el-button :icon="Delete" circle text @click="clearHeaderImage" />
-              </el-tooltip>
+              <el-button :icon="Delete" circle text @click="clearHeaderImage" />
             </div>
             <p v-if="headerImageFailed" class="pack-maker-error">
-              头图加载失败，请重新上传。
+              头图加载失败，请重新设置。
             </p>
           </section>
 
@@ -197,27 +202,21 @@
                 <span class="pack-maker-selected-index">{{ index + 1 }}</span>
                 <span class="pack-maker-selected-name">{{ pack.officialName || pack.name }}</span>
                 <div class="pack-maker-selected-actions">
-                  <el-tooltip content="上移" placement="top">
-                    <el-button
-                      :icon="ArrowUp"
-                      circle
-                      text
-                      :disabled="index === 0"
-                      @click="moveSelectedPack(index, -1)"
-                    />
-                  </el-tooltip>
-                  <el-tooltip content="下移" placement="top">
-                    <el-button
-                      :icon="ArrowDown"
-                      circle
-                      text
-                      :disabled="index === selectedPacks.length - 1"
-                      @click="moveSelectedPack(index, 1)"
-                    />
-                  </el-tooltip>
-                  <el-tooltip content="移除" placement="top">
-                    <el-button :icon="Delete" circle text @click="removeSelectedPack(pack.id)" />
-                  </el-tooltip>
+                  <el-button
+                    :icon="ArrowUp"
+                    circle
+                    text
+                    :disabled="index === 0"
+                    @click="moveSelectedPack(index, -1)"
+                  />
+                  <el-button
+                    :icon="ArrowDown"
+                    circle
+                    text
+                    :disabled="index === selectedPacks.length - 1"
+                    @click="moveSelectedPack(index, 1)"
+                  />
+                  <el-button :icon="Delete" circle text @click="removeSelectedPack(pack.id)" />
                 </div>
               </li>
             </ol>
@@ -257,7 +256,7 @@
             >
               下载 PNG
             </el-button>
-            <p>需先上传头图并选择至少一个礼包。</p>
+            <p>需先设置头图并选择至少一个礼包。</p>
           </section>
         </div>
       </aside>
@@ -457,6 +456,30 @@ function handleHeaderFileChange(uploadFile) {
     return
   }
 
+  applyHeaderImageFile(file)
+}
+
+function handleHeaderPaste(event) {
+  const imageItem = Array.from(event.clipboardData?.items || [])
+    .find(item => item.type.startsWith('image/'))
+  if (!imageItem) {
+    return
+  }
+
+  event.preventDefault()
+  const blob = imageItem.getAsFile()
+  if (!blob) {
+    ElMessage.error('读取剪贴板图片失败')
+    return
+  }
+
+  const file = blob instanceof File
+    ? blob
+    : new File([blob], '粘贴头图.png', { type: blob.type || 'image/png' })
+  applyHeaderImageFile(file)
+}
+
+function applyHeaderImageFile(file) {
   if (!file.type.startsWith('image/')) {
     ElMessage.warning('请选择图片文件')
     return
@@ -465,7 +488,7 @@ function handleHeaderFileChange(uploadFile) {
   const reader = new FileReader()
   reader.onload = event => {
     headerImageUrl.value = String(event.target?.result || '')
-    headerImageName.value = file.name
+    headerImageName.value = file.name || '粘贴头图.png'
     headerImageFailed.value = false
   }
   reader.onerror = () => {
@@ -832,6 +855,7 @@ function getErrorMessage(error, fallback) {
   margin-left: 20px;
   padding: 40px 16px 0;
   font-size: 28px;
+  box-shadow: none;
 }
 
 .pack-maker-pack-list :deep(.pack-content-material) {
@@ -960,6 +984,26 @@ function getErrorMessage(error, fallback) {
 
 .pack-maker-header-upload {
   display: inline-flex;
+}
+
+.pack-maker-header-paste-input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 36px;
+  margin-top: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--pack-maker-border);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--pack-maker-text);
+  font: inherit;
+  outline: none;
+}
+
+.pack-maker-header-paste-input:focus {
+  border-color: #3867d6;
+  box-shadow: 0 0 0 2px rgba(56, 103, 214, 0.12);
 }
 
 .pack-maker-upload-status {

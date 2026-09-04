@@ -7,7 +7,7 @@
       </div>
       <div class="canvas-area">
         <!-- 图片预览区域 -->
-        <div class="image-preview">
+        <div ref="imagePreviewRef" class="image-preview">
           <!-- 表头 -->
           <div class="image-section header-section">
             <div v-if="headerImageUrl" class="image-container">
@@ -104,9 +104,19 @@
     <div class="right-panel">
       <div class="panel-header">
         <h2>输入区</h2>
-        <button @click="clearAllData" class="clear-all-btn" title="清除所有数据">
-          🗑️ 清空
-        </button>
+        <div class="panel-actions">
+          <button
+            class="download-preview-btn"
+            :disabled="isExportingPreview"
+            title="下载制图区 PNG 图片"
+            @click="downloadPreviewPng"
+          >
+            {{ isExportingPreview ? '生成中...' : '下载PNG' }}
+          </button>
+          <button @click="clearAllData" class="clear-all-btn" title="清除所有数据">
+            🗑️ 清空
+          </button>
+        </div>
       </div>
       <!-- 链接区 -->
       <div class="link-section">
@@ -338,7 +348,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
 import {operatorTableV2} from '/src/utils/gameData.js'
 import fallbackItemInfo from '/src/static/json/material/item_info.json'
@@ -348,9 +358,12 @@ import {
   loadLogicalByteCharacterData,
   normalizeLogicalByteCharacterData,
   saveLogicalByteCharacterData,
+  subscribeLogicalByteCharacterData,
 } from '/src/utils/logicalByte/characterData.js'
 
-const STORAGE_KEY = 'logicalByte_data'
+const STORAGE_KEY = 'logicalByte_elite_settings_v1'
+const LEGACY_STORAGE_KEY = 'logicalByte_data'
+const LEGACY_MIGRATED_STORAGE_KEY = `${STORAGE_KEY}_legacy_migrated`
 
 const ELITE_LMD_COST_BY_RARITY = {
   3: [10000],
@@ -377,6 +390,8 @@ const headerImageUrl = ref('')
 
 // 文件输入引用
 const fileInput = ref(null)
+const imagePreviewRef = ref(null)
+const isExportingPreview = ref(false)
 
 // 图片加载错误状态
 const imageErrors = ref({
@@ -397,6 +412,9 @@ const showCalculationDetails = ref(false)
 const jsonLoading = ref(false)
 const jsonLoadError = ref('')
 const lastJsonLoadTime = ref('')
+const excelData = ref([])
+const dataText = ref('')
+let stopCharacterDataSubscription = () => {}
 
 const normalizedCharacterData = computed(() =>
   normalizeLogicalByteCharacterData(characterData.value, operatorTableV2)
@@ -456,6 +474,24 @@ const loadJsonFromStorage = () => {
     console.error('从本地恢复JSON数据失败:', error)
   }
   return false
+}
+
+const loadStoredPageData = () => {
+  const saved = localStorage.getItem(STORAGE_KEY)
+  if (saved) {
+    return saved
+  }
+
+  if (localStorage.getItem(LEGACY_MIGRATED_STORAGE_KEY) === '1') {
+    return null
+  }
+
+  const legacySaved = localStorage.getItem(LEGACY_STORAGE_KEY)
+  if (legacySaved) {
+    localStorage.setItem(STORAGE_KEY, legacySaved)
+    localStorage.setItem(LEGACY_MIGRATED_STORAGE_KEY, '1')
+  }
+  return legacySaved
 }
 
 // 加载角色数据
@@ -638,11 +674,17 @@ const hasVisibleSlots = computed(() => {
 // 从 localStorage 加载数据
 const loadFromStorage = () => {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY)
+    const saved = loadStoredPageData()
     if (saved) {
       const data = JSON.parse(saved)
       if (data.headerImageUrl) {
         headerImageUrl.value = data.headerImageUrl
+      }
+      if (typeof data.dataText === 'string') {
+        dataText.value = data.dataText
+      }
+      if (typeof data.showCalculationDetails === 'boolean') {
+        showCalculationDetails.value = data.showCalculationDetails
       }
       if (data.slots && Array.isArray(data.slots) && data.slots.length === 5) {
         // 恢复槽位数据，确保每个槽位结构正确
@@ -674,6 +716,8 @@ const saveToStorage = () => {
   try {
     const data = {
       headerImageUrl: headerImageUrl.value || '',
+      dataText: dataText.value || '',
+      showCalculationDetails: showCalculationDetails.value,
       slots: slots.value || [],
       lastSaved: new Date().toISOString()
     }
@@ -685,7 +729,7 @@ const saveToStorage = () => {
 }
 
 // 监听数据变化并自动保存
-const stopWatch = watch([headerImageUrl, slots], () => {
+const stopWatch = watch([headerImageUrl, dataText, showCalculationDetails, slots], () => {
   // 只在组件挂载时才保存
   if (isMounted.value) {
     try {
@@ -700,6 +744,7 @@ const stopWatch = watch([headerImageUrl, slots], () => {
 onUnmounted(() => {
   isMounted.value = false
   stopWatch()
+  stopCharacterDataSubscription()
 })
 
 // 处理图片加载错误
@@ -851,6 +896,63 @@ const clearSlotAvatar = (index) => {
   }
 }
 
+const waitForImages = async (target) => {
+  const images = Array.from(target?.querySelectorAll('img') || [])
+  await Promise.all(images.map(image => {
+    if (image.complete && image.naturalWidth > 0) {
+      return Promise.resolve()
+    }
+
+    return new Promise((resolve, reject) => {
+      image.addEventListener('load', resolve, { once: true })
+      image.addEventListener('error', () => reject(new Error('导出前图片未加载成功')), { once: true })
+    })
+  }))
+}
+
+const getPreviewExportFileName = () => {
+  const date = new Date()
+  const dateText = [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0'),
+  ].join('')
+
+  return `${dateText}精二性价比.png`
+}
+
+const downloadPreviewPng = async () => {
+  if (!imagePreviewRef.value || isExportingPreview.value) {
+    return
+  }
+
+  try {
+    isExportingPreview.value = true
+    await nextTick()
+    await waitForImages(imagePreviewRef.value)
+
+    const { default: html2canvas } = await import('html2canvas')
+    const canvas = await html2canvas(imagePreviewRef.value, {
+      backgroundColor: null,
+      scale: 1,
+      useCORS: true,
+      allowTaint: false,
+      logging: false,
+    })
+
+    const link = document.createElement('a')
+    link.download = getPreviewExportFileName()
+    link.href = canvas.toDataURL('image/png')
+    link.click()
+    ElMessage.success('PNG 已下载')
+  } catch (error) {
+    console.error('下载精二性价比 PNG 失败:', error)
+    ElMessage.error(error?.message || '下载失败，可能是远程图片不支持跨域')
+  } finally {
+    isExportingPreview.value = false
+  }
+}
+
 // 清除所有数据
 const clearAllData = () => {
   if (confirm('确定要清除所有数据吗？此操作不可恢复！')) {
@@ -914,13 +1016,11 @@ const clearAllData = () => {
       }
     ]
     localStorage.removeItem(STORAGE_KEY)
+    localStorage.setItem(LEGACY_MIGRATED_STORAGE_KEY, '1')
     console.log('所有数据已清除')
   }
 }
 
-
-let excelData = ref([])
-let dataText = ref('')
 
 watch(dataText, (newVal) => {
   excelData.value = parseEliteText(newVal)
@@ -1465,6 +1565,9 @@ onMounted(() => {
   if (!loadJsonFromStorage()) {
     console.log('本地未找到JSON数据，请手动刷新加载')
   }
+  stopCharacterDataSubscription = subscribeLogicalByteCharacterData(() => {
+    loadJsonFromStorage()
+  })
 })
 
 
@@ -1513,18 +1616,44 @@ onMounted(() => {
   font-weight: 600;
 }
 
+.panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.download-preview-btn,
 .clear-all-btn {
   padding: 6px 12px;
-  background-color: #fff;
-  border: 1px solid #ddd;
   border-radius: 4px;
-  color: #666;
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
   align-items: center;
   gap: 4px;
+}
+
+.download-preview-btn {
+  color: #fff;
+  background-color: #409eff;
+  border: 1px solid #409eff;
+}
+
+.download-preview-btn:hover:not(:disabled) {
+  background-color: #337ecc;
+  border-color: #337ecc;
+}
+
+.download-preview-btn:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
+.clear-all-btn {
+  color: #666;
+  background-color: #fff;
+  border: 1px solid #ddd;
 }
 
 .clear-all-btn:hover {
@@ -2522,6 +2651,16 @@ onMounted(() => {
     background-color: #2d2d2d;
     border-color: #555;
     color: #aaa;
+  }
+
+  .download-preview-btn {
+    background-color: #337ecc;
+    border-color: #337ecc;
+  }
+
+  .download-preview-btn:hover:not(:disabled) {
+    background-color: #409eff;
+    border-color: #409eff;
   }
 
   .clear-all-btn:hover {

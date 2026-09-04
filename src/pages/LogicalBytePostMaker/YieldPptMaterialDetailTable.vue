@@ -23,6 +23,10 @@ function formatNumber(value, digits = 1) {
 function replaceZoneName(stage) {
   return String(stage?.zoneName || '').replace('(标准)', '')
 }
+
+function shouldShowZoneName(stage) {
+  return stage?.stageCode !== 'SS平均收益'
+}
 </script>
 
 <template>
@@ -34,9 +38,13 @@ function replaceZoneName(stage) {
       <el-table-column fixed prop="stageCode" label="关卡名" width="120px">
         <template #default="scope">
           <div style="font-size: 18px; line-height: 18px; font-weight: 400; color: #000000; height: 44px;">
-            <span style="font-size: 12px; line-height: 8px; font-weight: 400; color: #000000;">
+            <span
+              v-if="shouldShowZoneName(scope.row)"
+              style="font-size: 12px; line-height: 8px; font-weight: 400; color: #000000;"
+            >
               {{ replaceZoneName(scope.row) }}
-            </span><br>
+            </span>
+            <br>
             {{ scope.row.stageCode }}
           </div>
         </template>

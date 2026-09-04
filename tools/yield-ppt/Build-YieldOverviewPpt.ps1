@@ -160,6 +160,7 @@ function Remove-ShapeIfPresent($Slide, [string]$ShapeName) {
 
 function Add-FittedPicture($Slide, [string]$ImagePath, [single]$Left, [single]$Top, [single]$Width, [single]$Height) {
     $picture = $Slide.Shapes.AddPicture($ImagePath, $msoFalse, $msoTrue, $Left, $Top, -1, -1)
+    $picture.LockAspectRatio = $msoTrue
     $sourceRatio = $picture.Width / $picture.Height
     $frameRatio = $Width / $Height
 
@@ -301,10 +302,41 @@ function Replace-ShapeWithPictureFill($Slide, [string]$ShapeName, [string]$Image
         # Charts and other non-shape slots are replaced with a rectangular picture fill.
     }
 
+    Add-Type -AssemblyName System.Drawing
+    $image = [System.Drawing.Image]::FromFile($ImagePath)
     try {
-        $replacement = $Slide.Shapes.AddShape($autoShapeType, $left, $top, $width, $height)
+        if ($image.Width -le 0 -or $image.Height -le 0) {
+            throw "Image dimensions are invalid: $ImagePath"
+        }
+
+        $sourceRatio = $image.Width / $image.Height
+        $frameRatio = $width / $height
+        if ($sourceRatio -ge $frameRatio) {
+            $pictureWidth = $width
+            $pictureHeight = $width / $sourceRatio
+            $pictureLeft = $left
+            $pictureTop = $top + (($height - $pictureHeight) / 2)
+        } else {
+            $pictureHeight = $height
+            $pictureWidth = $height * $sourceRatio
+            $pictureLeft = $left + (($width - $pictureWidth) / 2)
+            $pictureTop = $top
+        }
+    } finally {
+        $image.Dispose()
+    }
+
+    try {
+        $replacement = $Slide.Shapes.AddShape(
+            $autoShapeType,
+            $pictureLeft,
+            $pictureTop,
+            $pictureWidth,
+            $pictureHeight
+        )
         Copy-ShapeFrameStyle $shape $replacement
         $replacement.Rotation = $rotation
+        $replacement.LockAspectRatio = $msoTrue
         $replacement.Fill.UserPicture($ImagePath)
         $shape.Delete()
         $replacement.Name = $ShapeName
@@ -355,6 +387,7 @@ function Replace-ShapeWithWidthFittedPicture($Slide, [string]$ShapeName, [string
         $replacement = $Slide.Shapes.AddShape($autoShapeType, $left, $top, $width, $height)
         Copy-ShapeFrameStyle $shape $replacement
         $replacement.Rotation = $rotation
+        $replacement.LockAspectRatio = $msoTrue
         $replacement.Fill.UserPicture($ImagePath)
         $shape.Delete()
         $replacement.Name = $ShapeName
@@ -506,7 +539,12 @@ function Update-PackSlides($Presentation, $TemplateIds, $PackPages) {
         $slide = $targetSlides[$index]
         $image = Get-OptionalImageFile (Get-TextValue $page 'image') "Pack page $($index + 1) image"
         if (-not [string]::IsNullOrWhiteSpace($image)) {
-            Replace-ShapeWithPictureFill $slide 'Picture 9' $image "pack page $($index + 1)" | Out-Null
+            $replacement = Replace-ShapeWithPictureFill $slide 'Picture 9' $image "pack page $($index + 1)"
+            try {
+                $replacement.Shadow.Visible = $msoFalse
+            } catch {
+                # The replacement may not expose shadow properties in older PowerPoint versions.
+            }
         }
         Set-ShapeText $slide 'TextBox 3' (Get-TextValue $page 'title') "pack page $($index + 1)"
         Set-ShapeText $slide 'TextBox 10' (Get-TextValue $page 'caption') "pack page $($index + 1)"

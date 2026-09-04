@@ -79,6 +79,7 @@ function changeTheme() {
 
 const route = useRoute();
 const currentPath = computed(() => route.path);
+const isLogicalByteSubPage = computed(() => currentPath.value.startsWith('/lb/'));
 
 function resolvePageTitle(path, fallbackTitle = '') {
   return routeMap.get(normalizePath(path)) || fallbackTitle || '未定义路径'
@@ -233,6 +234,16 @@ const buildTime = import.meta.env.BUILD_TIME;
           </template>
           <v-app-bar-title>{{ pageTitle }}
           </v-app-bar-title>
+          <v-btn
+            v-if="isLogicalByteSubPage"
+            to="/lb"
+            variant="text"
+            size="small"
+            prepend-icon="mdi-arrow-left"
+            title="返回 LogicalByte 制图控制台"
+          >
+            返回 LB
+          </v-btn>
           <div class="app-bar-content">
             <v-btn text="反馈" variant="text" @click="feedbackPopupVisible=true"></v-btn>
             <div class="app-bar-content-spacer"/>

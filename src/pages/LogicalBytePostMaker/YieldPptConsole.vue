@@ -29,6 +29,9 @@ import {
   createYieldOverviewPptCalculator,
 } from '/src/utils/logicalByte/yieldOverviewPptData.js'
 import {
+  subscribeLogicalByteCharacterData,
+} from '/src/utils/logicalByte/characterData.js'
+import {
   getYieldOverviewAutoPortraitUrl,
   getYieldOverviewStoredPortrait,
 } from '/src/utils/logicalByte/yieldOverviewPortraits.js'
@@ -106,6 +109,7 @@ let draftSaveTimer = null
 const cultivationPortraitLoadPromises = new Map()
 const cultivationPortraitObjectUrls = new Map()
 const cultivationPagePortraitObjectUrls = new Map()
+let stopCharacterDataSubscription = () => {}
 
 const isDirectoryApiAvailable = computed(() => typeof window !== 'undefined' && 'showDirectoryPicker' in window)
 const materialLimitReached = computed(() => materials.value.length >= 3)
@@ -250,7 +254,7 @@ const canSave = computed(() => {
 })
 
 watch(
-  [materials, activityStore, packPages, cultivationPages],
+  [materials, activityStore, packPages, cultivationPages, hideCultivationSkillIconColumn],
   () => {
     if (isDraftReady.value) {
       scheduleDraftSave()
@@ -330,6 +334,7 @@ function createPackPage(index) {
   }
   page.id = createDraftKey('pack-page')
   page.selectedPackIds = []
+  page.packColumns = {}
   page.image.storageKey = createDraftKey('pack-image')
   return page
 }
@@ -865,6 +870,10 @@ async function loadPacks({ notify = false } = {}) {
     const validPackIds = new Set(packs.value.map(pack => getPackId(pack.id)))
     for (const page of packPages.value) {
       page.selectedPackIds = page.selectedPackIds.filter(packId => validPackIds.has(packId))
+      page.packColumns = Object.fromEntries(
+        Object.entries(normalizePackColumns(page.packColumns))
+          .filter(([packId]) => validPackIds.has(packId)),
+      )
     }
 
     if (notify) {
@@ -1031,6 +1040,10 @@ async function refreshCultivationData() {
     })
     cultivationDataLoading.value = false
   }
+}
+
+function refreshCultivationCharacterData() {
+  cultivationCalculator.value = createYieldOverviewPptCalculator(cultivationItemInfoMap.value)
 }
 
 function getCultivationOperator(page) {
@@ -1274,6 +1287,47 @@ function getPackId(packId) {
   return String(packId)
 }
 
+function normalizePackColumns(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return {}
+  }
+
+  return Object.entries(value).reduce((columns, [packId, column]) => {
+    if (column === 'left' || column === 'right') {
+      columns[getPackId(packId)] = column
+    }
+    return columns
+  }, {})
+}
+
+function getPackColumn(page, packId) {
+  const normalizedPackId = getPackId(packId)
+  const configuredColumn = page?.packColumns?.[normalizedPackId]
+  if (configuredColumn === 'left' || configuredColumn === 'right') {
+    return configuredColumn
+  }
+
+  const index = (page?.selectedPackIds || [])
+    .findIndex(selectedPackId => getPackId(selectedPackId) === normalizedPackId)
+  return index >= 0 && index % 2 === 1 ? 'right' : 'left'
+}
+
+function getPackColumnMap(page) {
+  return (page?.selectedPackIds || []).reduce((columns, packId) => {
+    columns[getPackId(packId)] = getPackColumn(page, packId)
+    return columns
+  }, {})
+}
+
+function setPackColumn(page, packId, column) {
+  if (!page) {
+    return
+  }
+
+  page.packColumns ||= {}
+  page.packColumns[getPackId(packId)] = column === 'right' ? 'right' : 'left'
+}
+
 function getPackLabel(pack) {
   const name = pack?.officialName || pack?.name || pack?.id || '未命名礼包'
   return `${name}  ￥${pack?.price ?? '-'}`
@@ -1298,7 +1352,11 @@ function movePackInPage(page, index, direction) {
 }
 
 function removePackFromPage(page, packId) {
-  page.selectedPackIds = page.selectedPackIds.filter(id => id !== getPackId(packId))
+  const normalizedPackId = getPackId(packId)
+  page.selectedPackIds = page.selectedPackIds.filter(id => id !== normalizedPackId)
+  if (page.packColumns) {
+    delete page.packColumns[normalizedPackId]
+  }
 }
 
 function setPackCaptureRef(pageId, element) {
@@ -1341,7 +1399,7 @@ async function generatePackPageImage(page, index) {
     const { default: html2canvas } = await import('html2canvas')
     const canvas = await html2canvas(target, {
       backgroundColor: null,
-      scale: 1,
+      scale: 4,
       useCORS: true,
       allowTaint: false,
       logging: false,
@@ -1559,6 +1617,7 @@ function createDraftSnapshot() {
       title: page.title,
       caption: page.caption,
       selectedPackIds: page.selectedPackIds,
+      packColumns: { ...page.packColumns },
       image: createDraftAssetSnapshot(page.image),
     })),
     cultivationPages: cultivationPages.value.map(page => ({
@@ -1638,6 +1697,7 @@ async function restoreDraft() {
         title: typeof page?.title === 'string' ? page.title : createPackPage(index + 1).title,
         caption: typeof page?.caption === 'string' ? page.caption : '',
         selectedPackIds: Array.isArray(page?.selectedPackIds) ? page.selectedPackIds.map(getPackId) : [],
+        packColumns: normalizePackColumns(page?.packColumns),
         image: restoreDraftAsset(page?.image, `${ASSET_FOLDER_NAME}/pack-page-${index + 1}.png`),
       }))
       : []
@@ -1689,6 +1749,14 @@ function scheduleDraftSave() {
     draftSaveTimer = null
     void saveDraft()
   }, 250)
+}
+
+function flushDraftSave() {
+  if (draftSaveTimer) {
+    clearTimeout(draftSaveTimer)
+    draftSaveTimer = null
+  }
+  void saveDraft()
 }
 
 async function saveDraft() {
@@ -1913,6 +1981,7 @@ function copyPackPage(index) {
   copy.title = source.title
   copy.caption = source.caption
   copy.selectedPackIds = [...source.selectedPackIds]
+  copy.packColumns = { ...source.packColumns }
   copy.image.file = source.image.file
   copy.image.saved = source.image.saved
   packPages.value.splice(index + 1, 0, copy)
@@ -2097,6 +2166,7 @@ async function hydrateManifest(manifest) {
       title: String(page?.title || '礼包性价比 - 活动礼包'),
       caption: String(page?.caption || ''),
       selectedPackIds: Array.isArray(page?.selectedPackIds) ? page.selectedPackIds.map(getPackId) : [],
+      packColumns: normalizePackColumns(page?.packColumns),
       image: createSavedAsset(page?.image, `${ASSET_FOLDER_NAME}/pack-page-${index + 1}.png`),
     }))
     : []
@@ -2124,6 +2194,7 @@ async function hydrateManifest(manifest) {
   packPages.value.forEach(page => {
     page.id ||= createDraftKey('pack-page')
     page.selectedPackIds = Array.isArray(page.selectedPackIds) ? page.selectedPackIds.map(getPackId) : []
+    page.packColumns = normalizePackColumns(page.packColumns)
     page.image.storageKey ||= createDraftKey('pack-image')
   })
   cultivationPages.value.forEach(page => {
@@ -2221,6 +2292,7 @@ function buildManifest() {
       caption: page.caption.trim(),
       image: hasAsset(page.image) ? page.image.path : '',
       selectedPackIds: page.selectedPackIds,
+      packColumns: getPackColumnMap(page),
     })),
     cultivationPages: getConfiguredCultivationPages().map(page => ({
       operatorId: page.operatorId,
@@ -2273,6 +2345,10 @@ async function writeTextFile(filename, text) {
 onMounted(async () => {
   await restoreDraft()
   isDraftReady.value = true
+  window.addEventListener('pagehide', flushDraftSave)
+  stopCharacterDataSubscription = subscribeLogicalByteCharacterData(() => {
+    refreshCultivationCharacterData()
+  })
   refreshMaterialStageData()
   loadPacks()
   loadActivityStores()
@@ -2280,9 +2356,9 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
-  if (draftSaveTimer) {
-    clearTimeout(draftSaveTimer)
-  }
+  window.removeEventListener('pagehide', flushDraftSave)
+  stopCharacterDataSubscription()
+  flushDraftSave()
   closeImagePreview()
   releaseCultivationPortraits()
 })
@@ -2293,7 +2369,7 @@ onBeforeUnmount(() => {
     <header class="yield-ppt-header">
       <div>
         <p>LogicalByte</p>
-        <h1>收益速览素材工作台</h1>
+        <h1>收益速览本期清单</h1>
       </div>
       <div class="yield-ppt-directory">
         <strong>{{ issueDirectoryName || '素材包下载或选择本地目录' }}</strong>
@@ -2697,7 +2773,18 @@ onBeforeUnmount(() => {
             <li v-for="(pack, packIndex) in getSelectedPacks(page)" :key="pack.id">
               <span>{{ packIndex + 1 }}</span>
               <strong>{{ pack.officialName || pack.name }}</strong>
-              <div>
+              <div class="yield-ppt-selected-pack-actions">
+                <v-btn-toggle
+                  :model-value="getPackColumn(page, pack.id)"
+                  mandatory
+                  color="primary"
+                  density="compact"
+                  class="yield-ppt-pack-column-toggle"
+                  @update:model-value="setPackColumn(page, pack.id, $event)"
+                >
+                  <v-btn value="left" size="x-small">左栏</v-btn>
+                  <v-btn value="right" size="x-small">右栏</v-btn>
+                </v-btn-toggle>
                 <v-btn
                   icon="mdi-chevron-up"
                   size="x-small"
@@ -2986,9 +3073,13 @@ onBeforeUnmount(() => {
         v-for="page in packPages"
         :key="`pack-capture-${page.id}`"
         :ref="element => setPackCaptureRef(page.id, element)"
-        class="yield-ppt-pack-capture pack-efficiency-page pack-hide-countdown"
+        class="yield-ppt-pack-capture pack-efficiency-page pack-hide-countdown pack-no-shadow"
       >
-        <PackCardGroup :model-value="getSelectedPacks(page)" force-expanded />
+        <PackCardGroup
+          :model-value="getSelectedPacks(page)"
+          :column-by-pack-id="getPackColumnMap(page)"
+          force-expanded
+        />
       </div>
     </div>
 
@@ -3089,8 +3180,12 @@ onBeforeUnmount(() => {
       <v-card v-if="packPreviewPage" class="yield-ppt-pack-preview-dialog">
         <v-card-title>{{ packPreviewPage.title || '礼包分页' }}</v-card-title>
         <v-card-text>
-          <div class="yield-ppt-pack-preview pack-efficiency-page pack-hide-countdown">
-            <PackCardGroup :model-value="getSelectedPacks(packPreviewPage)" force-expanded />
+          <div class="yield-ppt-pack-preview pack-efficiency-page pack-hide-countdown pack-no-shadow">
+            <PackCardGroup
+              :model-value="getSelectedPacks(packPreviewPage)"
+              :column-by-pack-id="getPackColumnMap(packPreviewPage)"
+              force-expanded
+            />
           </div>
         </v-card-text>
       </v-card>
@@ -3436,6 +3531,17 @@ onBeforeUnmount(() => {
 
 .yield-ppt-selected-pack-list li > div {
   display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.yield-ppt-selected-pack-actions {
+  min-width: max-content;
+}
+
+.yield-ppt-pack-column-toggle :deep(.v-btn) {
+  min-width: 40px;
+  padding: 0 8px;
 }
 
 .yield-ppt-row input:focus,
@@ -3702,6 +3808,42 @@ onBeforeUnmount(() => {
   width: 500px;
   margin: 8px;
   max-width: none;
+}
+
+.yield-ppt-pack-capture :deep(.pack-info),
+.yield-ppt-pack-preview :deep(.pack-info) {
+  width: max-content;
+  min-width: 350px;
+}
+
+.yield-ppt-pack-capture :deep(.pack-info-text),
+.yield-ppt-pack-preview :deep(.pack-info-text) {
+  flex: 0 0 auto;
+  width: max-content;
+  min-width: 92px;
+}
+
+.yield-ppt-pack-capture :deep(.pack-info-text span),
+.yield-ppt-pack-preview :deep(.pack-info-text span) {
+  white-space: nowrap;
+}
+
+.yield-ppt-pack-capture :deep(.pack-content),
+.yield-ppt-pack-preview :deep(.pack-content) {
+  margin-top: -24px;
+  background: #ffffff;
+}
+
+.yield-ppt-pack-capture :deep(.pack-content-material),
+.yield-ppt-pack-preview :deep(.pack-content-material) {
+  position: relative;
+  top: -6px;
+}
+
+.yield-ppt-pack-capture :deep(.pack-note),
+.yield-ppt-pack-preview :deep(.pack-note) {
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .yield-ppt-pack-preview-dialog :deep(.v-card-text) {

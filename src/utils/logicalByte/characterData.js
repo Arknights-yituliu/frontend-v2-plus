@@ -1,6 +1,7 @@
 const CHARACTER_DATA_STORAGE_KEY = 'logicalByte_data_characterData'
 const CHARACTER_DATA_UPDATED_AT_STORAGE_KEY = 'logicalByte_data_lastLoadTime'
 const CHARACTER_DATA_STORAGE_VERSION = 2
+const CHARACTER_DATA_UPDATED_EVENT = 'logicalByte-character-data-updated'
 
 function getLocalStorage() {
   return typeof window === 'undefined' ? null : window.localStorage
@@ -129,7 +130,41 @@ export function saveLogicalByteCharacterData(data) {
     ...normalized,
   }))
   storage.setItem(CHARACTER_DATA_UPDATED_AT_STORAGE_KEY, savedAt)
+  window.dispatchEvent(new CustomEvent(CHARACTER_DATA_UPDATED_EVENT, {
+    detail: { savedAt },
+  }))
   return savedAt
+}
+
+export function subscribeLogicalByteCharacterData(callback) {
+  if (typeof window === 'undefined' || typeof callback !== 'function') {
+    return () => {}
+  }
+
+  const handleCustomEvent = event => {
+    callback({
+      savedAt: event.detail?.savedAt || '',
+      source: 'same-window',
+    })
+  }
+  const handleStorageEvent = event => {
+    if (event.key !== CHARACTER_DATA_STORAGE_KEY) {
+      return
+    }
+
+    callback({
+      savedAt: window.localStorage.getItem(CHARACTER_DATA_UPDATED_AT_STORAGE_KEY) || '',
+      source: 'other-window',
+    })
+  }
+
+  window.addEventListener(CHARACTER_DATA_UPDATED_EVENT, handleCustomEvent)
+  window.addEventListener('storage', handleStorageEvent)
+
+  return () => {
+    window.removeEventListener(CHARACTER_DATA_UPDATED_EVENT, handleCustomEvent)
+    window.removeEventListener('storage', handleStorageEvent)
+  }
 }
 
 export function loadLogicalByteCharacterData() {

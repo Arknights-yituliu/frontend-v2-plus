@@ -296,14 +296,14 @@ const routes = [
     },
     {
         path: '/lb',
-        text: 'LogicalByte制图控制台',
+        text: 'LogicalByte 制图控制台',
         name: 'LBConsole',
         module: 'tools',
         icon: "mdi-console",
         display: false,
         component: () => import('/src/pages/LogicalBytePostMaker/LogicalBytePostMaker.vue'),
         meta: {
-            title: 'LogicalByte制图控制台'
+            title: 'LogicalByte 制图控制台'
         }
     },
     {
@@ -358,12 +358,12 @@ const routes = [
     },
     {
         path: '/lb/json-compare',
-        text: 'JSON数据对比',
+        text: '掉率数据对比',
         name: 'LBJsonCompare',
         display: false,
         component: () => import('/src/pages/LogicalBytePostMaker/JsonCompare.vue'),
         meta: {
-            title: 'JSON数据对比'
+            title: '掉率数据对比'
         }
     },
     {
@@ -418,12 +418,12 @@ const routes = [
     },
     {
         path: '/lb/pack-proofread',
-        text: '礼包校队',
+        text: '礼包校对',
         name: 'LBPackProofread',
         display: false,
         component: () => import('/src/pages/LogicalBytePostMaker/PackProofread.vue'),
         meta: {
-            title: '礼包校队'
+            title: '礼包校对'
         }
     },
     {
@@ -813,32 +813,32 @@ const routes = [
     },
     {
         path: '/lb/elite',
-        text: 'elite',
+        text: '精二性价比制图',
         name: 'elite',
         display: false,
         component: () => import('/src/pages/LogicalBytePostMaker/elite.vue'),
         meta: {
-            title: 'LogicalByte'
+            title: '精二性价比制图'
         }
     },
     {
         path: '/lb/return',
-        text: 'LogicalByte',
+        text: '复刻材料简报制图',
         name: 'LogicalByte',
         display: false,
         component: () => import('/src/pages/LogicalBytePostMaker/ReturnBrief.vue'),
         meta: {
-            title: 'LogicalByte'
+            title: '复刻材料简报制图'
         }
     },
     {
         path: '/lb/new-material',
-        text: 'LogicalByte',
+        text: '新材料简报制图',
         name: 'LBNewMaterial',
         display: false,
         component: () => import('/src/pages/LogicalBytePostMaker/NewMaterial.vue'),
         meta: {
-            title: 'LogicalByte'
+            title: '新材料简报制图'
         }
     },
     {
