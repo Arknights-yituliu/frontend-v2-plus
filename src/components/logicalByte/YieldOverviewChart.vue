@@ -274,15 +274,18 @@ defineExpose({
 
 .operator-portrait {
   position: absolute;
-  inset: 14px 4px 0;
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 50%;
   display: block;
   width: calc(100% - 8px);
-  height: calc(100% - 14px);
+  height: auto;
   object-fit: contain;
   object-position: center bottom;
   transform:
     translate(
-      var(--overview-portrait-offset-x),
+      calc(-50% + var(--overview-portrait-offset-x)),
       var(--overview-portrait-offset-y)
     )
     scale(var(--overview-portrait-scale));

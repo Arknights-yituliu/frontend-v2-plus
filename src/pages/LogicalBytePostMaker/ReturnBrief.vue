@@ -425,7 +425,13 @@ const props = defineProps({
 })
 const isNewMaterialPage = computed(() => props.variant === 'new-material')
 
-const STORAGE_KEY = 'logicalByte_data'
+const RETURN_STORAGE_KEY = 'logicalByte_returnBrief_settings_v1'
+const NEW_MATERIAL_STORAGE_KEY = 'logicalByte_newMaterial_settings_v1'
+const LEGACY_STORAGE_KEY = 'logicalByte_data'
+const STORAGE_KEY = computed(() =>
+  isNewMaterialPage.value ? NEW_MATERIAL_STORAGE_KEY : RETURN_STORAGE_KEY
+)
+const LEGACY_MIGRATED_STORAGE_KEY = computed(() => `${STORAGE_KEY.value}_legacy_migrated`)
 const TABLE2_ICON_SCHEMA_VERSION = 2
 const OFFICIAL_NEWS_PROXY_PREFIX = '/official-news-proxy'
 const OFFICIAL_NEWS_ORIGIN = 'https://ak.hypergryph.com'
@@ -682,7 +688,7 @@ const table2IconIds = ref(createEmptyTable2IconIds())
 
 const getTable2DisplayCellText = (row, rowIndex, columnIndex) => {
   if (isNewMaterialPage.value && rowIndex === 0) {
-    return columnIndex === 0 ? '搓玉关卡' : ''
+    return columnIndex === 0 ? '搓玉关卡' : row[columnIndex]
   }
   return row[columnIndex]
 }
@@ -1481,10 +1487,28 @@ const clearActivityMatch = () => {
   matchedExportActivityName.value = ''
 }
 
+const loadStoredPageData = () => {
+  const saved = localStorage.getItem(STORAGE_KEY.value)
+  if (saved) {
+    return saved
+  }
+
+  if (localStorage.getItem(LEGACY_MIGRATED_STORAGE_KEY.value) === '1') {
+    return null
+  }
+
+  const legacySaved = localStorage.getItem(LEGACY_STORAGE_KEY)
+  if (legacySaved) {
+    localStorage.setItem(STORAGE_KEY.value, legacySaved)
+    localStorage.setItem(LEGACY_MIGRATED_STORAGE_KEY.value, '1')
+  }
+  return legacySaved
+}
+
 // 从 localStorage 加载数据
 const loadFromStorage = () => {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY)
+    const saved = loadStoredPageData()
     if (saved) {
       const data = JSON.parse(saved)
       if (data.headerImageUrl) {
@@ -1549,7 +1573,7 @@ const saveToStorage = () => {
       table2IconSchemaVersion: TABLE2_ICON_SCHEMA_VERSION,
       lastSaved: new Date().toISOString()
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+    localStorage.setItem(STORAGE_KEY.value, JSON.stringify(data))
     console.log('数据已自动保存')
   } catch (error) {
     console.error('保存数据失败:', error)
@@ -1685,7 +1709,8 @@ const clearAllData = () => {
     officialNewsInfo.value = ''
     officialNewsError.value = false
     updateReferenceInfo(getLoadedReferenceInfo())
-    localStorage.removeItem(STORAGE_KEY)
+    localStorage.removeItem(STORAGE_KEY.value)
+    localStorage.setItem(LEGACY_MIGRATED_STORAGE_KEY.value, '1')
     console.log('所有数据已清除')
   }
 }

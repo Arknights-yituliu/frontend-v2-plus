@@ -6,7 +6,7 @@
         <span>LB</span>
       </RouterLink>
       <p class="pack-proofread-kicker">LogicalByte Pack Proofread</p>
-      <h1>礼包校队</h1>
+      <h1>礼包校对</h1>
     </header>
 
     <section class="pack-proofread-toolbar">

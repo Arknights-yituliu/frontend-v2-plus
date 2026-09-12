@@ -53,6 +53,23 @@
     max-width: 1600px;
   }
 
+  .pack-card-container-column-layout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .pack-card-group-flat {
+    display: contents;
+  }
+
+  .pack-card-column {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .pack-card {
     margin: 8px;
     width: 500px;

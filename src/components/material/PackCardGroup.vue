@@ -22,6 +22,10 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
+  columnByPackId: {
+    type: Object,
+    default: null
+  },
   displayPackEfficiency: Boolean,
   screenshotMode: Boolean,
   forceExpanded: Boolean,
@@ -30,6 +34,35 @@ const props = defineProps({
     default: 1
   }
 });
+
+const hasColumnLayout = computed(() => {
+  return props.columnByPackId !== null
+    && typeof props.columnByPackId === 'object'
+    && !Array.isArray(props.columnByPackId)
+})
+
+const packCardGroups = computed(() => {
+  if (!hasColumnLayout.value) {
+    return [{
+      key: 'all',
+      className: 'pack-card-group-flat',
+      packs: props.modelValue,
+    }]
+  }
+
+  return [
+    {
+      key: 'left',
+      className: 'pack-card-column',
+      packs: props.modelValue.filter(packInfo => props.columnByPackId[String(packInfo.id)] !== 'right'),
+    },
+    {
+      key: 'right',
+      className: 'pack-card-column',
+      packs: props.modelValue.filter(packInfo => props.columnByPackId[String(packInfo.id)] === 'right'),
+    },
+  ]
+})
 
 function getPackImageLink(link) {
   return `https://cos.yituliu.cn/${link}`
@@ -163,10 +196,22 @@ async function capturePackImage(packInfo) {
 <template>
   <div
     class="pack-card-container"
-    :class="{ 'pack-card-container-scaled': props.displayScale > 1 }"
+    :class="{
+      'pack-card-container-scaled': props.displayScale > 1,
+      'pack-card-container-column-layout': hasColumnLayout,
+    }"
   >
-    <div v-for="(packInfo, index) in props.modelValue" :key="index" class="pack-card">
-      <div :ref="element => setScreenshotTarget(packInfo.id, element)">
+    <div
+      v-for="packGroup in packCardGroups"
+      :key="packGroup.key"
+      :class="packGroup.className"
+    >
+      <div
+        v-for="(packInfo, index) in packGroup.packs"
+        :key="index"
+        class="pack-card"
+      >
+        <div :ref="element => setScreenshotTarget(packInfo.id, element)">
         <!-- 图片部分 -->
         <div class="flex">
           <div class="pack-card-part-left" @click="displayPackContent(packInfo.id)">
@@ -278,6 +323,7 @@ async function capturePackImage(packInfo) {
           截取这个礼包
         </v-btn>
       </div>
+    </div>
     </div>
   </div>
 </template>

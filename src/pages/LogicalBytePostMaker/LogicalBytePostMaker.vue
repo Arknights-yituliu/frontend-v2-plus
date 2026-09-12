@@ -42,7 +42,7 @@ import { RouterLink } from 'vue-router'
 
 const pageGroups = [
   {
-    title: '内容制图',
+    title: '发布制图',
     color: '#3867d6',
     pages: [
       {
@@ -51,8 +51,8 @@ const pageGroups = [
         to: '/lb/elite'
       },
       {
-        title: '简报制图',
-        description: '进入简报条目制图页面',
+        title: '复刻材料简报',
+        description: '制作活动复刻的材料与关卡简报',
         to: '/lb/return'
       },
       {
@@ -66,14 +66,20 @@ const pageGroups = [
         to: '/lb/pack-maker'
       },
       {
-        title: '收益速览制图',
-        description: '输入干员名称生成精二与专精材料收益速览表',
-        to: '/lb/yield-overview'
-      },
-      {
         title: '收益速览本期清单',
         description: '整理本期材料、礼包和培养成本分页素材',
         to: '/lb/yield-ppt'
+      },
+    ]
+  },
+  {
+    title: '通用制图',
+    color: '#7c3aed',
+    pages: [
+      {
+        title: '收益速览制图',
+        description: '输入干员名称生成精二与专精材料收益速览表',
+        to: '/lb/yield-overview'
       },
       {
         title: '卡片生成器',

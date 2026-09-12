@@ -40,6 +40,30 @@ export default {
         })
     },
 
+    /**
+     * 申请森空岛扫码登录二维码
+     * @returns {Promise<{code: number, msg: string, data: {scanId: string, qrContent: string}}>}
+     */
+    createSklandQrCode() {
+        return request({
+            url: `/survey/skland/qr/create`,
+            method: "post",
+        })
+    },
+
+    /**
+     * 查询森空岛扫码状态（轮询，1.5~2 秒一次）
+     * @param {string} scanId 扫码会话 ID
+     * @returns {Promise<{code: number, msg: string, data: {status: number, msg: string, cred: string|null, token: string|null}}>}
+     */
+    checkSklandQrStatus(scanId) {
+        return request({
+            url: `/survey/skland/qr/check`,
+            method: "post",
+            params: {scanId},
+        })
+    },
+
     
 
     getPlayBindingListByHgToken(data){
