@@ -2,8 +2,8 @@
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import data from "@/static/json/riic/schedule/data.json";
 
-const bilibiliPlayerUrl = computed(() => {
-  return `https://player.bilibili.com/player.html?bvid=${data.bvid}&autoplay=1&muted=1&danmaku=0`;
+const bilibiliVideoUrl = computed(() => {
+  return `https://www.bilibili.com/video/${data.bvid}`;
 });
 
 const VIDEO_ID = "video";
@@ -69,15 +69,21 @@ onUnmounted(() => {
     <div class="main-content-area">
       <h1 class="mt-6 mb-4">{{ data.title }}</h1>
 
-      <div id="section-video" class="mx-auto mb-8 video-container">
-        <v-responsive :aspect-ratio="2 / 1">
-          <iframe :src="bilibiliPlayerUrl" allowfullscreen allow="autoplay; encrypted-media" class="video-frame"></iframe>
-        </v-responsive>
-      </div>
+      <v-card id="section-video" class="mx-auto mb-8 video-container" variant="outlined">
+        <v-card-item>
+          <v-card-title>排班表讲解视频</v-card-title>
+          <v-card-subtitle class="text-wrap">{{ bilibiliVideoUrl }}</v-card-subtitle>
+        </v-card-item>
+        <v-card-actions>
+          <v-btn :href="bilibiliVideoUrl" target="_blank" rel="noopener noreferrer" color="primary" append-icon="mdi-open-in-new">
+            打开视频
+          </v-btn>
+        </v-card-actions>
+      </v-card>
 
       <div v-for="(item, index) in data.content" :key="index" :id="`section-${index}`" class="mx-auto content-section">
         <h2 class="mt-6 mb-2">{{ item.name }}</h2>
-        <v-responsive :aspect-ratio="2 / 1">
+        <v-responsive :aspect-ratio="16 / 9">
           <v-img :src="item.imageUrl" width="100%" contain />
         </v-responsive>
       </div>
@@ -153,33 +159,6 @@ onUnmounted(() => {
   padding-bottom: 12px;
   margin-bottom: 16px;
   border-bottom: 1px solid rgba(var(--v-theme-primary), 0.15);
-}
-
-.video-frame {
-  border: none;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.video-container {
-  border-radius: 12px;
-  overflow: hidden;
-  animation: video-breathing-border 1.8s ease-in-out infinite;
-}
-
-@keyframes video-breathing-border {
-  0% {
-    box-shadow: 0 0 0 2px rgba(66, 165, 245, 0.25);
-  }
-  50% {
-    box-shadow: 0 0 0 4px rgba(66, 165, 245, 0.65);
-  }
-  100% {
-    box-shadow: 0 0 0 2px rgba(66, 165, 245, 0.25);
-  }
 }
 
 @media (width < 1280px) {
