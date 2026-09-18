@@ -14,6 +14,7 @@
     "check:riic-calculation-feedback": "node scripts/check-riic-calculation-feedback.js",
     "check:riic-dynamic-fallback": "node scripts/check-riic-dynamic-fallback.js",
     "check:riic-trading-formula": "node scripts/check-riic-trading-formula.js",
+    "check:riic-training-cost": "node scripts/check-riic-training-cost.js",
     "check:riic-schedule-model": "node scripts/check-riic-schedule-model.js",
     "preview": "vite preview",
     "server": "node .\\server.js"
