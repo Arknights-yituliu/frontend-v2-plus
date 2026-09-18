@@ -19977,6 +19977,20 @@
         "tag": "rhine-tech-skill"
       },
       {
+        "id": "metalworkSkillCount",
+        "type": "roomSkillCountByTag",
+        "scope": "room",
+        "roomType": "manufacture",
+        "tag": "metalwork"
+      },
+      {
+        "id": "standardizedSkillCount",
+        "type": "roomSkillCountByTag",
+        "scope": "room",
+        "roomType": "manufacture",
+        "tag": "standardized-skill"
+      },
+      {
         "id": "humanFireworks",
         "type": "resource",
         "scope": "plan",
@@ -20096,6 +20110,44 @@
             "scope": "plan",
             "metric": "production",
             "amountPerUnit": 2
+          }
+        ]
+      },
+      {
+        "id": "char_4106_bryota|manufacture|打工心得|2|1|middle-data",
+        "operatorId": "char_4106_bryota",
+        "sourceSkillId": "char_4106_bryota|manufacture|打工心得|2|1",
+        "name": "苍苔",
+        "buffName": "打工心得",
+        "roomType": "manufacture",
+        "middleData": [
+          "metalworkSkillCount"
+        ],
+        "effects": [
+          {
+            "variable": "metalworkSkillCount",
+            "scope": "room",
+            "metric": "production",
+            "amountPerUnit": 5
+          }
+        ]
+      },
+      {
+        "id": "char_437_mizuki|manufacture|意识协议|0|1|middle-data",
+        "operatorId": "char_437_mizuki",
+        "sourceSkillId": "char_437_mizuki|manufacture|意识协议|0|1",
+        "name": "水月",
+        "buffName": "意识协议",
+        "roomType": "manufacture",
+        "middleData": [
+          "standardizedSkillCount"
+        ],
+        "effects": [
+          {
+            "variable": "standardizedSkillCount",
+            "scope": "room",
+            "metric": "production",
+            "amountPerUnit": 5
           }
         ]
       },
