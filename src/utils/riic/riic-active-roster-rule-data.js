@@ -14,6 +14,22 @@ function toNonNegativeInteger(value, fallback = 0) {
   return Number.isInteger(number) && number >= 0 ? number : fallback;
 }
 
+function normalizeRuleScope(value) {
+  if (!value || typeof value !== "object") {
+    return null;
+  }
+
+  const roomType = String(value.roomType || "").trim();
+  if (!roomType) {
+    return null;
+  }
+
+  return {
+    roomType,
+    product: String(value.product || "").trim() || "all",
+  };
+}
+
 function normalizeActiveRosterRuleData(ruleData) {
   const tagOperatorIdsById = new Map(
     (ruleData?.tagSets || []).flatMap((tagSet) => {
@@ -45,6 +61,7 @@ function normalizeActiveRosterRuleData(ruleData) {
     const product = String(rule?.scope?.product || "").trim();
     const effect = rule?.effect || {};
     const tag = String(effect?.tag || "").trim();
+    const sourceScope = normalizeRuleScope(effect?.sourceScope);
     const percentPerOperator = toFiniteNumber(effect?.percentPerOperator, NaN);
     const maximumOperatorCount = toNonNegativeInteger(
       effect?.maximumOperatorCount,
@@ -75,6 +92,8 @@ function normalizeActiveRosterRuleData(ruleData) {
         tag,
         taggedOperatorIds: tagOperatorIdsById.get(tag),
         excludeOwner: effect?.excludeOwner === true,
+        metric: String(effect?.metric || "").trim(),
+        sourceScope,
         percentPerOperator,
         maximumOperatorCount,
       },
@@ -129,3 +148,42 @@ export const RIIC_ACTIVE_ROSTER_RUNTIME_RULES =
   NORMALIZED_RULE_DATA.runtimeRules;
 export const RIIC_ACTIVE_ROSTER_SELECTION_PRIORITY_RULES =
   NORMALIZED_RULE_DATA.selectionPriorityRules;
+
+export function riicActiveRosterScopeMatches(scope, targetScope) {
+  const roomType = String(scope?.roomType || "").trim();
+  const product = String(scope?.product || "").trim() || "all";
+  const targetRoomType = String(targetScope?.roomType || "").trim();
+  const targetProduct = String(targetScope?.product || "").trim() || "all";
+
+  return (
+    roomType === targetRoomType &&
+    (product === "all" || product === targetProduct)
+  );
+}
+
+export function getRiicActiveRosterMatchingOperatorIds({
+  rule,
+  state,
+} = {}) {
+  const sourceOperatorIds = rule?.sourceScope
+    ? (state?.targets || [])
+        .filter((target) =>
+          riicActiveRosterScopeMatches(rule.sourceScope, target?.scope),
+        )
+        .flatMap((target) => target?.operatorIds || [])
+    : [...(state?.activeOperatorIds || [])];
+
+  return [
+    ...new Set(
+      sourceOperatorIds
+        .map((operatorId) => String(operatorId || "").trim())
+        .filter(Boolean),
+    ),
+  ]
+    .filter(
+      (operatorId) =>
+        rule?.taggedOperatorIds?.has(operatorId) &&
+        (!rule?.excludeOwner || operatorId !== rule.ownerId),
+    )
+    .sort((left, right) => left.localeCompare(right, "en"));
+}
