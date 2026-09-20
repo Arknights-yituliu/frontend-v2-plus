@@ -8,6 +8,7 @@ const SUPPORTED_MANUFACTURE_ROOM_STATE_FORMULA_TYPES = new Set([
   "roomOperatorCountToStorageCapacity",
   "roomSkillCountToStorageCapacity",
   "roomOperatorCountToProductionOverride",
+  "teammateProductionToProduction",
 ]);
 
 function normalizeId(value) {
@@ -360,11 +361,37 @@ function getFormulaStorageContributions(formula, roomOperators, ruleData) {
   return [];
 }
 
-function calculateStorageFormula(formula, contributors) {
+function calculateStorageFormula(
+  formula,
+  contributors,
+  teammateProductionPercent = 0,
+) {
   const config = formula?.formula || {};
   const positiveContributors = (contributors || []).filter(
     (contributor) => contributor.increase > 0,
   );
+
+  if (config.type === "teammateProductionToProduction") {
+    const inputStepPercent = Number(config.inputStepPercent);
+    const outputPercentPerStep = Number(config.outputPercentPerStep);
+    const maximumBonusPercent = Number(config.maximumBonusPercent);
+    if (
+      !Number.isFinite(inputStepPercent) ||
+      inputStepPercent <= 0 ||
+      !Number.isFinite(outputPercentPerStep) ||
+      !Number.isFinite(maximumBonusPercent)
+    ) {
+      return 0;
+    }
+
+    return Math.min(
+      maximumBonusPercent,
+      Math.floor(
+        Math.max(0, Number(teammateProductionPercent) || 0) /
+          inputStepPercent,
+      ) * outputPercentPerStep,
+    );
+  }
 
   if (config.type === "roomOperatorStorageCapacityToProduction") {
     const percentPerInput = Number(config.percentPerInput || 0);
@@ -434,6 +461,7 @@ export function calculateRiicManufactureRoomState({
   product = "all",
   ruleData,
   middleDataStorageContributions = [],
+  teammateProductionPercent = 0,
 } = {}) {
   const storage = collectOperatorStorageContributions({
     roomOperators,
@@ -487,7 +515,12 @@ export function calculateRiicManufactureRoomState({
   };
   const productionBonusPercent = appliedFormulas.reduce(
     (total, formula) =>
-      total + calculateStorageFormula(formula, storageContributors),
+      total +
+        calculateStorageFormula(
+          formula,
+          storageContributors,
+          teammateProductionPercent,
+        ),
     0,
   );
   const productionOverride = calculateProductionOverride(
@@ -520,6 +553,7 @@ export function calculateRiicManufactureRoomState({
       productionBonusPercent: calculateStorageFormula(
         formula,
         storageContributors,
+        teammateProductionPercent,
       ),
       storageCapacityDelta: formulaStorageContributions
         .filter((contributor) =>
