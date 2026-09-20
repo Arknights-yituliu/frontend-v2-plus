@@ -6,11 +6,11 @@
     },
     "data": {
       "label": "数据模块",
-      "version": "v20260828.0856"
+      "version": "v20260920.1733"
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260828.0856"
+      "version": "v20260920.1733"
     },
     "assembler": {
       "label": "组装器",
@@ -18,7 +18,7 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260828.0856"
+      "version": "v20260920.1733"
     },
     "recommendation": {
       "label": "调试信息",
@@ -26,6 +26,43 @@
     }
   },
   "entries": [
+
+    {
+      "date": "2026-09-20",
+      "version": "v20260920.1733",
+      "items": [
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 4,
+          "description": "新增结城理、埃癸斯、岳羽由加莉与虎狼丸的基建技能和排班候选规则"
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 5,
+          "description": "新增结城理制造站与埃癸斯发电站之间的跨设施联动，按同一有效轮班时段结算无人机充能加成"
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 5,
+          "description": "自动排班评分接入跨设施联动和实际轮班时间，支持结城理制造站全产品候选"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 5,
+          "description": "最终结算按实际轮班时间计算结城理与埃癸斯的联动，修正埃癸斯无人机充能加成"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 5,
+          "description": "补齐槐琥动态制造站最高 40% 生产力结算，并避免 active-roster 联动重复叠加"
+        }
+      ]
+    },
 
     {
       "date": "2026-08-28",
