@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "source": "01_reference/runtime-catalog-source-snapshot-2026-08-04/riic_baseline_skill_rules.json",
-  "operatorCount": 65,
-  "skillCount": 96,
+  "operatorCount": 66,
+  "skillCount": 97,
   "skills": [
     {
       "operatorId": "char_002_amiya",
@@ -1820,6 +1820,28 @@
       "effect": "进驻控制中枢时，人力办公室联络速度小于30%时（其中包含基础联络速度5%），则联络速度额外+20%（该加成全局效果唯一，不受其它加成影响）",
       "bufftag": [
         "office"
+      ]
+    },
+    {
+      "operatorId": "char_4217_makoto",
+      "name": "结城理",
+      "skillName": "领袖魅力",
+      "elite": 0,
+      "level": 1,
+      "effect": "进驻控制中枢时，所有制造站生产力+2%（同种效果取最高）",
+      "resolvedEffects": [
+        {
+          "target": {
+            "scope": "allRooms",
+            "roomType": "manufacture",
+            "product": "all"
+          },
+          "metric": "production",
+          "bonusPercent": 2
+        }
+      ],
+      "bufftag": [
+        "manufacture-station"
       ]
     }
   ]
