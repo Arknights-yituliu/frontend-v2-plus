@@ -2,7 +2,7 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20260828.0856"
+      "version": "v20260922.1936"
     },
     "data": {
       "label": "数据模块",
@@ -10,7 +10,7 @@
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260920.1733"
+      "version": "v20260922.1936"
     },
     "assembler": {
       "label": "组装器",
@@ -22,10 +22,41 @@
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260922.0941"
+      "version": "v20260922.1936"
     }
   },
   "entries": [
+
+    {
+      "date": "2026-09-22",
+      "version": "v20260922.1936",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 5,
+          "description": "自动排班优先选择可完整填满所有班组的路线；无完整路线时保留最高分部分路线，并标记未完成班组"
+        },
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 4,
+          "description": "修正自动化发电站保留干员在多班组搜索中的重复约束，避免已占用时阻断完整排班路线"
+        },
+        {
+          "module": "布局模块",
+          "type": "fix",
+          "level": 3,
+          "description": "部分排班生成后改为提示未完整填满，并避免将部分路线提示为成功生成"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 3,
+          "description": "调试面板与复制信息补充自动搜索未完成班组和部分路线状态"
+        }
+      ]
+    },
 
     {
       "date": "2026-09-22",

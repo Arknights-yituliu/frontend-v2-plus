@@ -422,6 +422,18 @@ const pipelineDebugText = computed(() => {
         automatic.l70?.bestPlan?.rankingValue,
       )}`,
     );
+    if (automatic.l70?.bestPlan?.complete === false) {
+      lines.push(
+        `  未找到完整路线，保留部分路线；未完成=${(
+          automatic.l70.bestPlan.incompleteCohorts || []
+        )
+          .map(
+            (cohort) =>
+              `${cohort.groupId}/${cohort.cohortId} ${cohort.selectedCount}/${cohort.teamCount}`,
+          )
+          .join("、") || "--"}`,
+      );
+    }
     const sameShiftPriority =
       automatic.l70?.bestPlan?.sameShiftPriority || null;
     if (sameShiftPriority) {
@@ -1829,6 +1841,23 @@ const droneTableDebug = computed(() => {
           <p>
             {{ automaticGenerationDebugState.strategy }} 搜索：
             评分 {{ formatNumber(automaticGenerationDebugState.l70?.bestPlan?.rankingValue) }}。
+          </p>
+          <p
+            v-if="
+              automaticGenerationDebugState.l70?.bestPlan &&
+              automaticGenerationDebugState.l70.bestPlan.complete === false
+            "
+            class="pipeline-warning"
+          >
+            未找到完整路线，当前保留最高分部分路线。未完成：
+            <span
+              v-for="cohort in automaticGenerationDebugState.l70.bestPlan
+                .incompleteCohorts || []"
+              :key="`${cohort.groupId}:${cohort.cohortId}`"
+            >
+              {{ cohort.groupId }} / {{ cohort.cohortId }}（
+              {{ cohort.selectedCount }}/{{ cohort.teamCount }} 组）
+            </span>
           </p>
           <details
             v-if="automaticGenerationDebugState.l70?.runtime"

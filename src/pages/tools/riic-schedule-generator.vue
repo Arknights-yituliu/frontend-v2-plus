@@ -2924,9 +2924,10 @@ async function generateAutomaticSchedule({
       controlCenterReconciliation?.status === "ready"
         ? controlCenterReconciliation.controlState
         : null;
-    if (automaticSelection.unavailableGroups.length > 0) {
+    const unavailableGroups = automaticSelection.unavailableGroups || [];
+    if (unavailableGroups.length > 0) {
       cMessage(
-        `无法自动填满：${automaticSelection.unavailableGroups.join("、")}`,
+        `自动排班已生成，但未完整填满：${unavailableGroups.join("、")}`,
         "warn",
       );
     }
@@ -2950,7 +2951,7 @@ async function generateAutomaticSchedule({
       assembledFiammettaTargetUsage.value,
     );
     lastAutomaticGenerationTriggerKey.value = generationTriggerKey;
-    if (!silentSuccess) {
+    if (!silentSuccess && unavailableGroups.length === 0) {
       cMessage("已自动生成排班表", "success");
     }
     void generateTrainingRecommendation(searchConfig);
