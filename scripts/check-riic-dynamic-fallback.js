@@ -930,6 +930,115 @@ const automaticFallbackPlan = planRiicAutomaticRoomSelections({
 });
 assert.equal(automaticFallbackPlan.bestPlan.selections.length, 4);
 
+const completeRoutePreferredPlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "complete-preferred-first",
+      groupId: "complete-preferred-group",
+      cohortId: "complete-preferred-first",
+      cohortKey: "complete-preferred-first",
+      teamCount: 1,
+    },
+    {
+      key: "complete-preferred-second",
+      groupId: "complete-preferred-group",
+      cohortId: "complete-preferred-second",
+      cohortKey: "complete-preferred-second",
+      teamCount: 1,
+    },
+    {
+      key: "complete-preferred-last",
+      groupId: "complete-preferred-last",
+      cohortId: "complete-preferred-last",
+      cohortKey: "complete-preferred-last",
+      teamCount: 1,
+    },
+  ],
+  resolveTeamOptions: ({ cohort, plan }) => {
+    if (cohort.cohortId === "complete-preferred-first") {
+      return [
+        {
+          key: "dead-end-high",
+          candidateKey: "dead-end-high",
+          claimedOperatorIds: ["dead-end-high"],
+          baseRankingValue: 100,
+        },
+        {
+          key: "complete-low",
+          candidateKey: "complete-low",
+          claimedOperatorIds: ["complete-low"],
+          baseRankingValue: 50,
+        },
+      ];
+    }
+
+    if (cohort.cohortId === "complete-preferred-second") {
+      return plan.selections[0]?.option?.candidateKey === "complete-low"
+        ? [
+            {
+              key: "complete-middle",
+              candidateKey: "complete-middle",
+              claimedOperatorIds: ["complete-middle"],
+              baseRankingValue: 10,
+            },
+          ]
+        : [];
+    }
+
+    return [
+      {
+        key: "complete-last",
+        candidateKey: "complete-last",
+        claimedOperatorIds: ["complete-last"],
+        baseRankingValue: 10,
+      },
+    ];
+  },
+});
+assert.equal(completeRoutePreferredPlan.complete, true);
+assert.deepEqual(
+  completeRoutePreferredPlan.bestPlan.selections.map(
+    (selection) => selection.option.candidateKey,
+  ),
+  ["complete-low", "complete-middle", "complete-last"],
+);
+
+const partialRouteFallbackPlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "partial-route-only",
+      groupId: "partial-route-only",
+      cohortId: "partial-route-only",
+      cohortKey: "partial-route-only",
+      teamCount: 2,
+    },
+  ],
+  resolveTeamOptions: ({ selectedCandidateKeys }) =>
+    selectedCandidateKeys.length === 0
+      ? [
+          {
+            key: "partial-first",
+            candidateKey: "partial-first",
+            claimedOperatorIds: ["partial-first"],
+            baseRankingValue: 20,
+          },
+        ]
+      : [],
+});
+assert.equal(partialRouteFallbackPlan.complete, false);
+assert.deepEqual(
+  partialRouteFallbackPlan.incompleteCohorts,
+  [
+    {
+      groupId: "partial-route-only",
+      cohortId: "partial-route-only",
+      cohortKey: "partial-route-only",
+      selectedCount: 1,
+      teamCount: 2,
+    },
+  ],
+);
+
 const protectedOptionPlan = planRiicAutomaticRoomSelections({
   selectionCohorts: [
     {
@@ -1124,6 +1233,7 @@ const automationReservationCandidateStates = {
     cohorts: [
       {
         id: "power:0",
+        groupId: "automation-power",
         teamCount: 2,
         candidates: [
           {
@@ -1147,6 +1257,9 @@ const automationReservationCandidateStates = {
                 },
                 { charId: "qingliu", name: "清流", percent: 15 },
                 { charId: "power-backup", name: "Power Backup", percent: 15 },
+                { charId: "power-backup-2", name: "Power Backup 2", percent: 14 },
+                { charId: "power-backup-3", name: "Power Backup 3", percent: 13 },
+                { charId: "power-backup-4", name: "Power Backup 4", percent: 12 },
               ],
             },
           },
@@ -1171,6 +1284,70 @@ const automationReservationCandidateStates = {
                 },
                 { charId: "qingliu", name: "清流", percent: 15 },
                 { charId: "power-backup", name: "Power Backup", percent: 15 },
+                { charId: "power-backup-2", name: "Power Backup 2", percent: 14 },
+                { charId: "power-backup-3", name: "Power Backup 3", percent: 13 },
+                { charId: "power-backup-4", name: "Power Backup 4", percent: 12 },
+              ],
+            },
+          },
+        ],
+      },
+      {
+        id: "power:1",
+        groupId: "automation-power",
+        teamCount: 2,
+        candidates: [
+          {
+            key: "power-fallback-c",
+            candidateScope: {
+              roomType: "power",
+              product: "all",
+              stationLevel: 1,
+              slotCount: 1,
+            },
+            sourceRoomType: "power",
+            corePercent: 100,
+            localBonusPercent: 0,
+            fallback: {
+              count: 1,
+              candidateOperators: [
+                {
+                  charId: "char_1027_greyy2",
+                  name: "承曦格雷伊",
+                  percent: 23,
+                },
+                { charId: "qingliu", name: "清流", percent: 15 },
+                { charId: "power-backup", name: "Power Backup", percent: 15 },
+                { charId: "power-backup-2", name: "Power Backup 2", percent: 14 },
+                { charId: "power-backup-3", name: "Power Backup 3", percent: 13 },
+                { charId: "power-backup-4", name: "Power Backup 4", percent: 12 },
+              ],
+            },
+          },
+          {
+            key: "power-fallback-d",
+            candidateScope: {
+              roomType: "power",
+              product: "all",
+              stationLevel: 1,
+              slotCount: 1,
+            },
+            sourceRoomType: "power",
+            corePercent: 100,
+            localBonusPercent: 0,
+            fallback: {
+              count: 1,
+              candidateOperators: [
+                {
+                  charId: "char_1027_greyy2",
+                  name: "承曦格雷伊",
+                  percent: 23,
+                },
+                { charId: "qingliu", name: "清流", percent: 15 },
+                { charId: "power-backup", name: "Power Backup", percent: 15 },
+                { charId: "power-backup-2", name: "Power Backup 2", percent: 14 },
+                { charId: "power-backup-3", name: "Power Backup 3", percent: 13 },
+                { charId: "power-backup-4", name: "Power Backup 4", percent: 12 },
               ],
             },
           },
@@ -1211,7 +1388,19 @@ const automationReservationPowerOperatorIds =
 assert.ok(
   automationReservationPowerOperatorIds.includes("char_1027_greyy2"),
 );
-assert.ok(!automationReservationPowerOperatorIds.includes("qingliu"));
+assert.equal(
+  automationReservationPowerOperatorIds.filter(
+    (operatorId) => operatorId === "char_1027_greyy2",
+  ).length,
+  1,
+);
+assert.equal(
+  automationReservationSelection.debug.bestPlan.selections.filter(
+    (selection) => selection.groupId === "automation-power",
+  ).length,
+  4,
+);
+assert.equal(automationReservationSelection.debug.bestPlan.complete, true);
 
 const twoStepLookaheadPlan = planRiicAutomaticRoomSelections({
   selectionCohorts: [
