@@ -6,7 +6,7 @@
     },
     "data": {
       "label": "数据模块",
-      "version": "v20260920.1733"
+      "version": "v20260922.0941"
     },
     "team": {
       "label": "班组模块",
@@ -22,10 +22,29 @@
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260828.0856"
+      "version": "v20260922.0941"
     }
   },
   "entries": [
+
+    {
+      "date": "2026-09-22",
+      "version": "v20260922.0941",
+      "items": [
+        {
+          "module": "调试信息",
+          "type": "fix",
+          "level": 4,
+          "description": "修正埃癸斯等补位干员被按异地技能要求培养的问题，培养建议改为按所补设施的实际解锁练度结算"
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 2,
+          "description": "补充结城理、埃癸斯与虎狼丸的培养建议说明"
+        }
+      ]
+    },
 
     {
       "date": "2026-09-20",
