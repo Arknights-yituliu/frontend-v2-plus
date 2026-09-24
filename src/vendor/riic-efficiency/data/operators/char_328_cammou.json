@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 2,
+  "id": "char_328_cammou",
+  "name": "卡达",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "Vlog",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": -0.25,
+              "recipe": "作战记录"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "剪辑·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 15,
+              "recipe": "作战记录"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

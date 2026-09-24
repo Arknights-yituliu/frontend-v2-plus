@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 2,
+  "id": "char_195_glassb",
+  "name": "真理",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "军师",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得线索4",
+              "cluePreference": 4
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

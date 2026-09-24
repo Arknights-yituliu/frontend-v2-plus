@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4125_rdoc",
+  "name": "医生",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "利他主义",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.2,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

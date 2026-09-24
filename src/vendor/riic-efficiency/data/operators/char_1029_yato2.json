@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1029_yato2",
+  "name": "麒麟R夜刀",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "耐力回复",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodCost",
+              "value": 0.5
+            },
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_felyne",
+              "value": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "以身作则",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 2,
+              "stack": "max",
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.tag.mh",
+                "facility": "same",
+                "other": true,
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

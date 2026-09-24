@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "id": "char_446_aroma",
+  "name": "阿罗玛",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "净味香氛",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": 0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 25,
+              "recipe": "贵金属"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "例行清扫",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "curve": {
+                "type": "ramp",
+                "startValue": 0,
+                "startHours": 1,
+                "step": 2,
+                "cap": 20
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

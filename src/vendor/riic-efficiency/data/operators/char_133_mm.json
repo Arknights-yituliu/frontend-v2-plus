@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "char_133_mm",
+  "name": "梅",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "线索搜集·β",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "皇家探员（自称）",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得线索2",
+              "cluePreference": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

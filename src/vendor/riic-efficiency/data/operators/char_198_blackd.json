@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 2,
+  "id": "char_198_blackd",
+  "name": "讯使",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "喀兰贸易·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 15
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "讯使",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得线索6",
+              "cluePreference": 6
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

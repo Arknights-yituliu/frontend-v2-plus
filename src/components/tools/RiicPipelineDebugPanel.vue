@@ -98,6 +98,14 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  riicEfficiencyResult: {
+    type: Object,
+    default: null,
+  },
+  selectedCalculationMode: {
+    type: String,
+    default: "legacy",
+  },
   scheduleShifts: {
     type: Array,
     default: () => [],
@@ -2308,6 +2316,164 @@ const droneTableDebug = computed(() => {
     </details>
 
     <details
+      v-if="riicEfficiencyResult"
+      class="pipeline-stage"
+      open
+    >
+      <summary>
+        <code>L79/L80</code> 计算方式对照
+        <span>
+          当前使用：{{
+            selectedCalculationMode === "riic-efficiency"
+              ? "riic-efficiency"
+              : "旧计算"
+          }}
+        </span>
+      </summary>
+      <div class="pipeline-stage-content">
+        <div class="pipeline-efficiency-comparison">
+          <section>
+            <header>
+              <strong>旧 L79/L80</strong>
+              <span v-if="actualScheduleMetrics">
+                {{ actualScheduleMetrics.cycleHours }}h 周期；
+                {{ actualScheduleMetrics.calculatedRoomCount }} /
+                {{ actualScheduleMetrics.roomCount }} 间已计算
+              </span>
+            </header>
+            <div class="pipeline-efficiency-comparison-values">
+              <article
+                v-for="facility in actualScheduleMetrics?.facilities || []"
+                :key="facility.facility"
+              >
+                <span>{{ getActualScheduleFacilityLabel(facility.facility) }}</span>
+                <strong>
+                  {{ formatActualSchedulePercent(facility.averageEfficiency) }}
+                </strong>
+              </article>
+            </div>
+            <div class="pipeline-efficiency-comparison-values">
+              <article
+                v-for="resource in actualScheduleMetrics?.yield?.resources || []"
+                :key="resource.resource"
+              >
+                <span>{{ resource.label }}</span>
+                <strong>{{ formatYield(resource.outputPerDay) }} / 天</strong>
+              </article>
+            </div>
+          </section>
+          <section>
+            <header>
+              <strong>riic-efficiency</strong>
+              <span v-if="riicEfficiencyResult.result">
+                {{ riicEfficiencyResult.result.dailyHours }}h 周期；
+                {{ riicEfficiencyResult.result.dailyFacilities.length }} 间设施
+              </span>
+              <span v-else>计算失败</span>
+            </header>
+            <p v-if="riicEfficiencyResult.error" class="pipeline-efficiency-error">
+              {{ riicEfficiencyResult.error }}
+            </p>
+            <div class="pipeline-efficiency-comparison-values">
+              <article
+                v-for="facility in riicEfficiencyResult.result?.dailyFacilities || []"
+                :key="facility.facility.id"
+              >
+                <span>
+                  {{ getActualScheduleFacilityLabel(facility.facility.type) }}
+                  #{{ facility.facility.index + 1 }}
+                </span>
+                <strong>{{ formatPercent(facility.efficiency) }}</strong>
+              </article>
+            </div>
+            <div class="pipeline-efficiency-comparison-values">
+              <article
+                v-for="output in riicEfficiencyResult.result?.dailyOutputs || []"
+                :key="`${output.kind}:${output.product}`"
+              >
+                <span>{{ output.product }}（{{ output.kind }}）</span>
+                <strong>{{ formatYield(output.amountPerDay) }} / 天</strong>
+              </article>
+            </div>
+            <ul
+              v-if="riicEfficiencyResult.warnings?.length"
+              class="pipeline-efficiency-warnings"
+            >
+              <li
+                v-for="(warning, index) in riicEfficiencyResult.warnings"
+                :key="index"
+              >
+                {{ warning }}
+              </li>
+            </ul>
+          </section>
+        </div>
+        <details
+          v-if="riicEfficiencyResult.result?.plans?.length"
+          class="pipeline-nested"
+          open
+        >
+          <summary>riic-efficiency 班次 / 房间 / 干员计算明细</summary>
+          <div class="pipeline-efficiency-plan-list">
+            <section
+              v-for="(plan, planIndex) in riicEfficiencyResult.result.plans"
+              :key="`${planIndex}:${plan.name}`"
+              class="pipeline-efficiency-plan"
+            >
+              <header>
+                <strong>班段 {{ planIndex + 1 }} / {{ plan.name }}</strong>
+                <span>{{ plan.durationHours }}h</span>
+              </header>
+              <article
+                v-for="facility in plan.facilities"
+                :key="facility.facility.id"
+                class="pipeline-efficiency-room"
+              >
+                <header>
+                  <strong>
+                    {{ getActualScheduleFacilityLabel(facility.facility.type) }}
+                    #{{ facility.facility.index + 1 }}
+                  </strong>
+                  <span>{{ formatPercent(facility.efficiency) }}</span>
+                </header>
+                <small>
+                  基础 {{ formatPercent(facility.baseEfficiency) }}；
+                  心情 {{ formatPercent(facility.moodEfficiency) }}；
+                  干员 {{ formatPercent(facility.operatorEfficiency) }}；
+                  技能 {{ formatPercent(facility.skillEfficiency) }}
+                </small>
+                <small v-if="facility.production">
+                  产出 {{ facility.production.product }}：
+                  {{ formatYield(facility.production.amountPerHour) }} / h，
+                  {{ formatYield(facility.production.amountPerDay) }} / 天
+                  <template v-if="facility.production.materialPerHour">
+                    ；材料流 {{ formatL79Flow(facility.production.materialPerHour) }} / h
+                  </template>
+                </small>
+                <ul v-if="facility.details?.length">
+                  <li
+                    v-for="(detail, detailIndex) in facility.details"
+                    :key="`${detailIndex}:${detail.operator}:${detail.stat}`"
+                  >
+                    {{ detail.operator }} / {{ detail.skill || "基础属性" }}：
+                    {{ detail.stat }} {{ formatPercent(detail.value) }}
+                    <template v-if="detail.calculation">
+                      / {{ formatJson(detail.calculation) }}
+                    </template>
+                  </li>
+                </ul>
+              </article>
+            </section>
+          </div>
+          <details class="pipeline-nested">
+            <summary>完整 riic-efficiency 结果 JSON</summary>
+            <pre>{{ formatJson(riicEfficiencyResult.result) }}</pre>
+          </details>
+        </details>
+      </div>
+    </details>
+
+    <details
       v-if="actualScheduleMetrics || l79Input?.schedule?.plans"
       class="pipeline-stage"
     >
@@ -3787,6 +3953,131 @@ const droneTableDebug = computed(() => {
   gap: 6px;
 }
 
+.pipeline-efficiency-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pipeline-efficiency-comparison > section {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid var(--c-border-color);
+  background: var(--c-page-background-color);
+}
+
+.pipeline-efficiency-comparison > section > header,
+.pipeline-efficiency-plan > header,
+.pipeline-efficiency-room > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 10px;
+}
+
+.pipeline-efficiency-comparison > section > header strong,
+.pipeline-efficiency-plan > header strong,
+.pipeline-efficiency-room > header strong {
+  color: var(--c-text-color);
+  font-size: 12px;
+}
+
+.pipeline-efficiency-comparison > section > header span,
+.pipeline-efficiency-plan > header span,
+.pipeline-efficiency-room > header span {
+  color: var(--riic-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pipeline-efficiency-comparison-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 7px;
+}
+
+.pipeline-efficiency-comparison-values article {
+  display: grid;
+  gap: 2px;
+  min-width: 100px;
+  padding: 5px 6px;
+  border-left: 2px solid var(--c-border-color);
+  background: var(--c-page-background-color-secondary);
+}
+
+.pipeline-efficiency-comparison-values span,
+.pipeline-efficiency-room > small {
+  color: var(--riic-muted);
+  font-size: 10px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.pipeline-efficiency-comparison-values strong {
+  color: var(--c-text-color);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pipeline-efficiency-error,
+.pipeline-efficiency-warnings {
+  color: var(--riic-orange);
+  font-size: 11px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.pipeline-efficiency-warnings {
+  display: grid;
+  gap: 3px;
+  margin: 7px 0 0;
+  padding-left: 16px;
+}
+
+.pipeline-efficiency-plan-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.pipeline-efficiency-plan {
+  padding: 7px 8px;
+  border-left: 2px solid var(--riic-blue);
+  background: var(--c-page-background-color-secondary);
+}
+
+.pipeline-efficiency-room-list {
+  display: grid;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.pipeline-efficiency-room {
+  min-width: 0;
+  margin-top: 5px;
+  padding: 6px 7px;
+  border: 1px solid var(--c-border-color);
+  background: var(--c-page-background-color);
+}
+
+.pipeline-efficiency-room > small {
+  display: block;
+  margin-top: 3px;
+}
+
+.pipeline-efficiency-room ul {
+  display: grid;
+  gap: 2px;
+  margin: 5px 0 0;
+  padding-left: 15px;
+  color: var(--c-text-color-secondary);
+  font-size: 10px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
 .pipeline-actual-facility {
   display: grid;
   grid-template-columns: auto auto;
@@ -4013,6 +4304,10 @@ const droneTableDebug = computed(() => {
 
 @media (max-width: 760px) {
   .pipeline-rule-row {
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline-efficiency-comparison {
     grid-template-columns: 1fr;
   }
 }

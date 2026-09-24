@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1050_chen3",
+  "name": "赤刃明霄陈",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "萍踪浪迹",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得尚未拥有的线索",
+              "cluePreference": "unowned"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "扶危行侠",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "per": {
+                "per": 10,
+                "value": 1,
+                "source": "basePoint",
+                "term": "cc.bd_b1"
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

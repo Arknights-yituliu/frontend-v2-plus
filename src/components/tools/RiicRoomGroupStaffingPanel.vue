@@ -1,5 +1,6 @@
 <script setup>
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { formatRiicOperatorTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
 
 const props = defineProps({
   roomGroup: {
@@ -104,6 +105,10 @@ function getSkillTooltip(operator) {
   return props.getOperatorSkillTooltip
     ? props.getOperatorSkillTooltip(operator)
     : "暂无已解锁基建技能";
+}
+
+function getOperatorAvatarTooltip(operator) {
+  return formatRiicOperatorTooltip(operator, getSkillTooltip(operator));
 }
 
 function getCandidateSkillTooltip(candidate, fallbackOperators = []) {
@@ -726,7 +731,7 @@ function appendFallbackOperator(section, operator) {
                 ]"
                 :aria-label="`移出补位：${slot.assignedOperator.name}`"
                 @click="removeFallbackOperator(slot)"
-                :title="getSkillTooltip(slot.assignedOperator)"
+                :title="getOperatorAvatarTooltip(slot.assignedOperator)"
               >
                 <OperatorAvatar
                   :char-id="slot.assignedOperator.charId"
@@ -831,7 +836,7 @@ function appendFallbackOperator(section, operator) {
                   )
                 "
                 @click="appendFallbackOperator(section, operator)"
-                :title="getSkillTooltip(operator)"
+                :title="getOperatorAvatarTooltip(operator)"
               >
                 <OperatorAvatar
                   :char-id="operator.charId"

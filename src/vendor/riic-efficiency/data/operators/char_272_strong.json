@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 2,
+  "id": "char_272_strong",
+  "name": "孑",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "摊贩经济",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeGapEff",
+              "value": 4,
+              "excludeFromStat": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "市井之道",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "per": {
+                "per": 10,
+                "value": -1,
+                "source": "stat",
+                "stat": "tradeSpd",
+                "other": true,
+                "statScope": "sameFacility"
+              },
+              "excludeFromStat": true
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 4,
+                "source": "orderCount"
+              },
+              "excludeFromStat": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 2,
+  "id": "char_498_inside",
+  "name": "隐现",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "交游广阔",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "recruitSlots"
+              }
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "甜甜圈派对",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.4,
+              "scope": "self"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.4,
+              "scope": "room",
+              "other": true,
+              "subjects": "single",
+              "stack": "max",
+              "maxGroup": "dormRec-single"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

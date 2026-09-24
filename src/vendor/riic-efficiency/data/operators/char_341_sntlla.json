@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 2,
+  "id": "char_341_sntlla",
+  "name": "寒檀",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "降生于冰寒",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.45,
+              "scope": "room",
+              "subjects": "single",
+              "stack": "max",
+              "maxGroup": "dormRec-single",
+              "scopeGroup": "cc.g.sm"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.55,
+              "scope": "room",
+              "other": true,
+              "subjects": "single",
+              "stack": "max",
+              "maxGroup": "dormRec-single"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

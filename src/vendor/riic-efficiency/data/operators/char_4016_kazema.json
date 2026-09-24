@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4016_kazema",
+  "name": "风丸",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "化影",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "得心应手",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 35,
+              "condition": {
+                "type": "onlySelf"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

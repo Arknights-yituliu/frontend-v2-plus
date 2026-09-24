@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_009_12fce",
+  "name": "12F",
+  "rarity": 2,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "线索搜集·β",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

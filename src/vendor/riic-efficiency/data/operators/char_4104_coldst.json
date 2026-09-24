@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4104_coldst",
+  "name": "冰酿",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "笑靥如春",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "小酌怡情",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.8,
+              "scope": "room",
+              "subjects": "spread",
+              "stack": "max",
+              "maxGroup": "dormRec-spread"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

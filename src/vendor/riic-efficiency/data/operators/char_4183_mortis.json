@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4183_mortis",
+  "name": "若叶睦",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "演技的怪物",
+          "effects": [
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_mujica",
+              "value": 20
+            },
+            {
+              "target": "control",
+              "stat": "moodCost",
+              "per": {
+                "per": 8,
+                "value": 0.01,
+                "source": "basePoint",
+                "term": "cc.bd_mujica"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 8,
+                "value": 1,
+                "source": "basePoint",
+                "term": "cc.bd_mujica"
+              },
+              "stack": "max"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "互为半身",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "zeroOpMood",
+              "self": true,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "丰川祥子",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

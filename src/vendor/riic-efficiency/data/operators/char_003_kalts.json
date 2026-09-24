@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "id": "char_003_kalts",
+  "name": "凯尔希",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "最高权限",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 2,
+              "stack": "max"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

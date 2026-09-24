@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "id": "char_134_ifrit",
+  "name": "伊芙利特",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "热能充能·α",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "高热充能",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 15
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

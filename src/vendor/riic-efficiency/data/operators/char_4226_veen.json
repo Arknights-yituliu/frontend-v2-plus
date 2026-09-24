@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4226_veen",
+  "name": "维伊",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "手艺人",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 10,
+                "cap": 3,
+                "source": "trainLevel"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

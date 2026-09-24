@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4017_puzzle",
+  "name": "谜图",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "线索搜集·α",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "情报分析",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得尚未拥有的线索",
+              "cluePreference": "unowned"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

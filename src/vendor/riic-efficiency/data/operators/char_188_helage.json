@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 2,
+  "id": "char_188_helage",
+  "name": "赫拉格",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "超脱",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.55,
+              "scope": "self"
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "挣脱",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room",
+              "other": true
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "解脱",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.55,
+              "scope": "self"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

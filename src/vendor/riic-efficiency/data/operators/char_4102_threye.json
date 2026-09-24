@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4102_threye",
+  "name": "凛视",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "远见",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            },
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 0.5,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "提丰",
+                "facility": "meeting"
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 15,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "提丰",
+                "facility": "meeting"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "未来之途",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            },
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 0.5,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "提丰",
+                "facility": "meeting"
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得尚未拥有的线索",
+              "cluePreference": "unowned",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "提丰",
+                "facility": "meeting"
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 15,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "提丰",
+                "facility": "meeting"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

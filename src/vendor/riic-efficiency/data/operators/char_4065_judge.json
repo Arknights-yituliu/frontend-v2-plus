@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4065_judge",
+  "name": "斥罪",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "法为正典",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "moodCost",
+              "value": 0.5
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "寻同路人",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "scope": "room",
+              "per": {
+                "per": 1,
+                "value": 0.05,
+                "source": "recruitSlots"
+              },
+              "stack": "max",
+              "maxGroup": "dormRec-room",
+              "baseValue": 0.15
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

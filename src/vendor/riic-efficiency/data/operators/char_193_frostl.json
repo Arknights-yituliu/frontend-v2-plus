@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 2,
+  "id": "char_193_frostl",
+  "name": "霜叶",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "独处",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.7,
+              "scope": "self"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "作战指导录像",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30,
+              "recipe": "作战记录"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

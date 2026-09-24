@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_385_finlpp",
+  "name": "清流",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "清洁能源",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "再生能源",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 20,
+                "source": "facilityCount",
+                "facility": "trading"
+              },
+              "recipe": "贵金属"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

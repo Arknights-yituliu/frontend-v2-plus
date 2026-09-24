@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1049_catap2",
+  "name": "雷狼龙S空爆",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "气氛组",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 35
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

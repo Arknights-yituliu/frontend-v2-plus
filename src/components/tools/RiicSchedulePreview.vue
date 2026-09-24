@@ -10,6 +10,7 @@ import lmdBackground from "/src/assets/images/riic-schedule-preview/lmd.png";
 import originiumShardBackground from "/src/assets/images/riic-schedule-preview/originium-shard.png";
 import orundumBackground from "/src/assets/images/riic-schedule-preview/orundum.png";
 import { getRiicLayoutCells } from "/src/utils/riic/riic-layout-grid.js";
+import { formatRiicOperatorTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
 
 const props = defineProps({
   preview: {
@@ -187,6 +188,10 @@ function getSkillTooltip(operator) {
   return props.getOperatorSkillTooltip
     ? props.getOperatorSkillTooltip(operator)
     : "暂无已解锁基建技能";
+}
+
+function getOperatorAvatarTooltip(operator) {
+  return formatRiicOperatorTooltip(operator, getSkillTooltip(operator));
 }
 
 function getDisplayRoomLabel(room) {
@@ -581,12 +586,22 @@ function dropOperator(room, operator) {
         >
           <div
             v-if="
+              !exportStatic &&
+              index === 24 &&
+              $slots['schedule-analysis']
+            "
+            class="schedule-preview-analysis-slot"
+          >
+            <slot name="schedule-analysis"></slot>
+          </div>
+          <div
+            v-else-if="
               outputDecorated &&
               index === 22 &&
               outputFiammettaTargetOperator
             "
             class="schedule-preview-fiammetta-card"
-            :title="getSkillTooltip(outputFiammettaTargetOperator)"
+            :title="getOperatorAvatarTooltip(outputFiammettaTargetOperator)"
           >
             <div class="schedule-preview-fiammetta-flow">
               <OperatorAvatar
@@ -677,7 +692,7 @@ function dropOperator(room, operator) {
                  'operator-drop-target': canSwapOperatorWith(room, operator),
                }"
                :draggable="!exportStatic && !placeholder"
-               :title="getSkillTooltip(operator)"
+               :title="getOperatorAvatarTooltip(operator)"
                @dragstart.stop="startOperatorDrag($event, room, operator)"
                @dragover.stop="allowOperatorDrop(room, operator, $event)"
                @drop.stop.prevent="dropOperator(room, operator)"
@@ -974,6 +989,14 @@ function dropOperator(room, operator) {
   grid-column: span 2;
   min-width: 0;
   min-height: 88px;
+}
+
+.schedule-preview-analysis-slot {
+  display: flex;
+  min-width: 0;
+  min-height: 88px;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .schedule-preview-fiammetta-card {
@@ -1329,8 +1352,14 @@ function dropOperator(room, operator) {
   }
 
   .schedule-preview-room,
-  .schedule-preview-empty-cell {
+  .schedule-preview-empty-cell,
+  .schedule-preview-analysis-slot {
     min-height: 72px;
+  }
+
+  .schedule-preview-analysis-slot {
+    grid-column: 1 / -1;
+    min-height: 56px;
   }
 
   .schedule-preview-room {

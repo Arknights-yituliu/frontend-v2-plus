@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4185_amoris",
+  "name": "祐天寺若麦",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "勤学苦练",
+          "effects": [
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_mujica",
+              "value": 10
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 5,
+              "stack": "max"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "成效优先",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodCost",
+              "value": 0.05,
+              "scope": "op",
+              "op": "丰川祥子",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "丰川祥子",
+                "facility": "same"
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 5,
+              "stack": "max",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "丰川祥子",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

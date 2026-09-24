@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4071_peper",
+  "name": "明椒",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "朝气蓬勃",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 7,
+              "stack": "max"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "裁缝·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "tailor",
+                "level": "α"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "裁缝·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "tailor",
+                "level": "β"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

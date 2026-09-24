@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4124_iana",
+  "name": "双月",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "情报专家",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "basePoint",
+                "term": "cc.bd_ash"
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 5
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1035_wisdel",
+  "name": "维什戴尔",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "同谋·α",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 5,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "伊内丝",
+                "facility": "meeting"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 1,
+              "condition": {
+                "type": "opInFacilityAndTarget",
+                "op": "赫德雷",
+                "facility": "trading"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "同谋·β",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 5,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "伊内丝",
+                "facility": "meeting"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 2,
+              "condition": {
+                "type": "opInFacilityAndTarget",
+                "op": "赫德雷",
+                "facility": "trading"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "巴别塔之帜",
+          "effects": [
+            {
+              "target": "any",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "facilities": [
+                "power",
+                "manufacture",
+                "trading",
+                "hire",
+                "meeting"
+              ],
+              "stack": "max",
+              "maxGroup": "otherFacRec"
+            },
+            {
+              "target": "any",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "facilities": [
+                "power",
+                "manufacture",
+                "trading",
+                "hire",
+                "meeting"
+              ],
+              "stack": "max",
+              "maxGroup": "otherFacRec",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "魔王",
+                "facility": "control"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

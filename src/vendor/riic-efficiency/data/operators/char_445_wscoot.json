@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 2,
+  "id": "char_445_wscoot",
+  "name": "骋风",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "广交义友",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "recruitSlots"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "眼观六路",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得尚未拥有的线索",
+              "cluePreference": "unowned",
+              "condition": {
+                "type": "clueExchanging"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "id": "char_214_kafka",
+  "name": "卡夫卡",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "手工艺品·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "tailor",
+                "level": "α"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "手工艺品·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "tailor",
+                "level": "β"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1019_siege2",
+  "name": "维娜·维多利亚",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "外贸决议·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 30
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "外贸决议·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 30
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 10,
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.glasgow",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

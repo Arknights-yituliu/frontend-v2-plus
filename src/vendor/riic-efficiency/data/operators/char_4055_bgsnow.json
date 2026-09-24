@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4055_bgsnow",
+  "name": "鸿雪",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "销路宣发",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "basePoint",
+                "term": "cc.t.flow_gold"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "际崖居民",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "basePointGain",
+              "term": "cc.t.flow_gold",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "cap": 4,
+                "source": "opGroupInBase",
+                "group": "cc.tag.durin",
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

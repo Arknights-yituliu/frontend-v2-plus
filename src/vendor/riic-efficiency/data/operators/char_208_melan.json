@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 2,
+  "id": "char_208_melan",
+  "name": "玫兰莎",
+  "rarity": 3,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "供应管理",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 25
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

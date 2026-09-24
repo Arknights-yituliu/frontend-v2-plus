@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 2,
+  "id": "char_201_moeshd",
+  "name": "可颂",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "企鹅物流·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "使命必达",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 30
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
