@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 2,
+  "id": "char_391_rosmon",
+  "name": "迷迭香",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "超感",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "basePointConvert",
+              "from": "cc.bd_a1",
+              "to": "cc.bd_A",
+              "rate": 1
+            },
+            {
+              "target": "manufacture",
+              "stat": "basePointGain",
+              "term": "cc.bd_a1",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "dormOccupants"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "念力",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 2,
+                "value": 1,
+                "source": "basePoint",
+                "term": "cc.bd_A"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "意识实体",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "basePoint",
+                "term": "cc.bd_A"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

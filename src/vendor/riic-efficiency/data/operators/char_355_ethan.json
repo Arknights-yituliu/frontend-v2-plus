@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "char_355_ethan",
+  "name": "伊桑",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "WRITER",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 40
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "隐形的美食家",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.75,
+              "scope": "self"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -4,16 +4,7 @@
  * 供攒抽计算器生成可选择的目标卡池列表
  */
 const scheduleDefinitions = [
-  {
-    id: "p3r",
-    name: "P3R联动",
-    startDate: "2026-09-04",
-    lastDrawDate: "2026-09-17",
-    activityType: "联动限定",
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: false,              // 预测排期，会在 UI 中展示提示
-  },
+
   {
     id: "thanksgiving",
     name: "感谢庆典",
@@ -24,6 +15,17 @@ const scheduleDefinitions = [
     dailyGiftResources: true,
     accuracyFlag: false,
     dateString: "(1101-1114)",            // 自定义日期展示文字，覆盖自动生成的格式
+  },
+  {
+    id: "spring_festival_2027",
+    name: "新春限定",
+    startDate: "2027-01-30",
+    lastDrawDate: "2027-02-12",
+    activityType: "春节限定",
+    disabled: false,
+    dailyGiftResources: true,
+    accuracyFlag: false,
+    dateString: "(0130-0212)",
   },
 ]
 

@@ -224,7 +224,10 @@ function getAutomaticRoomTeamOptions({
   const reserveOperatorForPower =
     reservedPowerOperatorId && facility !== "power";
   const mustUseReservedPowerOperator =
-    reservedPowerOperatorId && facility === "power" && teamIndex === 0;
+    reservedPowerOperatorId &&
+    facility === "power" &&
+    teamIndex === 0 &&
+    !claimedOperatorIds.has(reservedPowerOperatorId);
   const activeSelectionOperatorIds = new Set([
     ...controlCenterOperatorIds,
     ...claimedOperatorIds,
@@ -624,7 +627,14 @@ export function buildRiicAutomaticRoomGroupSelections({
   const fallbackPlanCache = createRiicFallbackPlanCache({
     idleFillOperators,
   });
-  const { bestPlan, debug: plannerDebug } = planRiicAutomaticRoomSelections({
+  const {
+    bestPlan,
+    complete: bestPlanIsComplete,
+    incompleteCohorts,
+    completePlanCount,
+    candidatePlanCount,
+    debug: plannerDebug,
+  } = planRiicAutomaticRoomSelections({
     selectionCohorts,
     initiallyClaimedOperatorIds: [...normalizedControlCenterOperatorIds].filter(
       (charId) => charId !== recovery.targetOperatorId,
@@ -816,6 +826,9 @@ export function buildRiicAutomaticRoomGroupSelections({
   const selections = {};
   const fallbackOperatorIdBySlotKeyByGroup = {};
   const selectedRoomTeams = [];
+  const incompleteGroupIds = (incompleteCohorts || [])
+    .map((cohort) => String(cohort?.groupId || "").trim())
+    .filter(Boolean);
 
   for (const { slot, selectionKey, option } of bestPlan?.selections || []) {
     selections[slot.groupId] = {
@@ -865,6 +878,7 @@ export function buildRiicAutomaticRoomGroupSelections({
     selectedRoomTeams,
     unavailableGroups: [
       ...unavailableStateGroupIds,
+      ...incompleteGroupIds,
     ]
       .map((groupId) => groupLabelById.get(groupId) || groupId)
       .filter(
@@ -885,6 +899,10 @@ export function buildRiicAutomaticRoomGroupSelections({
       })),
       bestPlan: bestPlan
         ? {
+            complete: bestPlanIsComplete,
+            completePlanCount,
+            candidatePlanCount,
+            incompleteCohorts,
             baseRankingValue: Number(bestPlan.baseRankingValue || 0),
             rankingValue: Number(bestPlan.rankingValue || 0),
             activeRosterEffects: bestPlan.activeRosterEffects || null,

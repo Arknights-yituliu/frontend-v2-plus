@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 2,
+  "id": "char_472_pasngr",
+  "name": "异客",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "电磁充能·α",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "聚能",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "自动化·α",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "facilityCount",
+                "facility": "power"
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "zeroOpBonus",
+              "except": [
+                "facilityCount"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

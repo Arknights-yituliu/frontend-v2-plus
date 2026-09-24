@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4116_blkkgt",
+  "name": "锏",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "威压",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 20
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": -2
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "不怒自威",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 25
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": -6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "冠军风采",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 5,
+                "value": 25,
+                "cap": 100,
+                "capUnit": "value",
+                "source": "facCap",
+                "stat": "orderLimit",
+                "floor": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "id": "char_383_snsant",
+  "name": "雪雉",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "天道酬勤·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 5,
+                "value": 5,
+                "cap": 25,
+                "capUnit": "value",
+                "source": "stat",
+                "stat": "tradeSpd",
+                "statScope": "targetFacility"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "天道酬勤·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 5,
+                "value": 5,
+                "cap": 35,
+                "capUnit": "value",
+                "source": "stat",
+                "stat": "tradeSpd",
+                "statScope": "targetFacility"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

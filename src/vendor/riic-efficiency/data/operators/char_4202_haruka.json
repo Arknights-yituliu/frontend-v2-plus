@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4202_haruka",
+  "name": "遥",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "明星效应",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.15,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "节目邀约",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 45
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

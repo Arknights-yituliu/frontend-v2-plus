@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_123_fang",
+  "name": "芬",
+  "rarity": 3,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "急性子",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "curve": {
+                "type": "ramp",
+                "startValue": 20,
+                "startHours": 1,
+                "step": 1,
+                "cap": 25
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "订单分发·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

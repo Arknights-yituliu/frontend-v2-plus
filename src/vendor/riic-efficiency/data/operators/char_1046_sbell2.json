@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1046_sbell2",
+  "name": "圣聆初雪",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "圣女声望",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "雪境归心",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 35
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 10,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "凛御银灰",
+                "facility": "control"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

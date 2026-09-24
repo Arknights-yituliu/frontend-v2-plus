@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4178_alanna",
+  "name": "阿兰娜",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "机械精通·α",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "opGroupInFacility",
+                "group": "cc.tag.op",
+                "facility": "power"
+              },
+              "recipe": "贵金属"
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "机械精通·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 10,
+                "source": "opGroupInFacility",
+                "group": "cc.tag.op",
+                "facility": "power"
+              },
+              "recipe": "贵金属"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "“搭把手！”",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 15,
+              "recipe": "贵金属",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "温米",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

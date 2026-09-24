@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "id": "char_381_bubble",
+  "name": "泡泡",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "囤积者",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "大就是好！",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "capTier",
+                "stat": "storageCap",
+                "tiers": [
+                  {
+                    "cap": 16,
+                    "value": 1
+                  },
+                  {
+                    "cap": null,
+                    "value": 3
+                  }
+                ]
+              },
+              "suppresses": [
+                "回收利用"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

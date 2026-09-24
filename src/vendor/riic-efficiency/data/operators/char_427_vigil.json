@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "id": "char_427_vigil",
+  "name": "伺夜",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "领袖外交",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 25
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "新城贸易",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 25
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "cap": 40,
+                "capUnit": "value",
+                "source": "facilityLevel",
+                "facility": "meeting"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

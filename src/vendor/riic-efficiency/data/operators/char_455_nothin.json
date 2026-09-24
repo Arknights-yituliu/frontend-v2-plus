@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 2,
+  "id": "char_455_nothin",
+  "name": "乌有",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "好事之徒",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "recruitSlots"
+              }
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "“愿者上钩”",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "basePointGain",
+              "term": "cc.bd_b1",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "dormOccupants"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "basePoint",
+                "term": "cc.bd_b1"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -15,6 +15,9 @@ pnpm-lock.yaml
 node_modules
 .DS_Store
 dist
+!src/vendor/riic-efficiency/dist/
+src/vendor/riic-efficiency/dist/*
+!src/vendor/riic-efficiency/dist/index.js
 dist-ssr
 dist-compare
 coverage

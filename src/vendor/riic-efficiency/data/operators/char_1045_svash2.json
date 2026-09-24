@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1045_svash2",
+  "name": "凛御银灰",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "商业版图",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 10,
+              "condition": {
+                "type": "opGroupCountInFacility",
+                "group": "cc.g.karlan",
+                "facility": "trading",
+                "min": 3
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

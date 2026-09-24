@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4218_aigis",
+  "name": "埃癸斯",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "机械工学",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 15
+            },
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 5,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "结城理",
+                "facility": "manufacture"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "跨领域交流",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            },
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得尚未拥有的线索",
+              "cluePreference": "unowned",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "虎狼丸",
+                "facility": "meeting"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

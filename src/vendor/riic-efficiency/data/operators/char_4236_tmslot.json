@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4236_tmslot",
+  "name": "时隙",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "迟到前六分钟",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

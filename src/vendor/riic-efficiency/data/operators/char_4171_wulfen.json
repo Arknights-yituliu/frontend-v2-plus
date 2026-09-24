@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4171_wulfen",
+  "name": "钼铅",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "行动派",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": -8
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "收纳达人",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 16
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
