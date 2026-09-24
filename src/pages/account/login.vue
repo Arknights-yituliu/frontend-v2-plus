@@ -175,11 +175,13 @@ const route = useRoute()
           </button>
         </div>
 
-        <div class="auth-card-body">
+        <form class="auth-card-body" @submit.prevent="toLogin">
           <v-tabs-window v-model="inputContent.accountType">
             <v-tabs-window-item value="password">
               <v-text-field
                   label="账号"
+                  name="username"
+                  autocomplete="username"
                   placeholder="请输入账号或邮箱"
                   :rules="accountRules"
                   density="comfortable"
@@ -192,6 +194,8 @@ const route = useRoute()
               ></v-text-field>
               <v-text-field
                   label="密码"
+                  name="password"
+                  autocomplete="current-password"
                   placeholder="请输入密码"
                   density="comfortable"
                   :rules="passwordRules"
@@ -238,9 +242,9 @@ const route = useRoute()
           <div class="auth-actions">
             <v-btn
                 block
+                type="submit"
                 size="large"
                 variant="flat"
-                @click="toLogin"
                 text="登录"
                 color="primary"
                 class="auth-primary-action"
@@ -248,7 +252,7 @@ const route = useRoute()
                 :disabled="isSubmitting"
             ></v-btn>
           </div>
-        </div>
+        </form>
 
         <div class="auth-card-bottom">
           <span>还没有账号？</span>
