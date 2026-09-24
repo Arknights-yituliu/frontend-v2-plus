@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "id": "char_107_liskam",
+  "name": "雷蛇",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "脉冲电弧·α",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 15
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "脉冲电弧·β",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

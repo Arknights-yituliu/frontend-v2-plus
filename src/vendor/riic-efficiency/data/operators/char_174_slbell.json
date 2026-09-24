@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "id": "char_174_slbell",
+  "name": "初雪",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "喀兰圣女",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.25,
+              "scope": "self"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.5,
+              "scope": "room",
+              "other": true,
+              "subjects": "single",
+              "stack": "max",
+              "maxGroup": "dormRec-single"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

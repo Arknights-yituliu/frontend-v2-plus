@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4166_varkis",
+  "name": "摆渡人",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "英雄的骄傲·α",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "stack": "max",
+              "per": {
+                "per": 1,
+                "value": 4,
+                "cap": 20,
+                "capUnit": "value",
+                "source": "opGroupInBase",
+                "group": "cc.g.minos"
+              }
+            },
+            {
+              "target": "control",
+              "stat": "moodCost",
+              "value": 0.02,
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.sargon",
+                "facility": "same",
+                "other": true
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "英雄的骄傲·β",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "stack": "max",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "cap": 25,
+                "capUnit": "value",
+                "source": "opGroupInBase",
+                "group": "cc.g.minos"
+              }
+            },
+            {
+              "target": "control",
+              "stat": "moodCost",
+              "value": 0.02,
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.sargon",
+                "facility": "same",
+                "other": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 2,
+  "id": "char_243_waaifu",
+  "name": "槐琥",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "团队精神",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "zeroOpMood",
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "配合意识",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 5,
+                "value": 5,
+                "cap": 40,
+                "capUnit": "value",
+                "source": "stat",
+                "stat": "manuProd",
+                "statScope": "sameFacility",
+                "except": [
+                  "facilityCount"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

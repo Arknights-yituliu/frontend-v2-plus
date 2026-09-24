@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "id": "char_304_zebra",
+  "name": "暴雨",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "护卫",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

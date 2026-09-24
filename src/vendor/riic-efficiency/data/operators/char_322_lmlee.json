@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 2,
+  "id": "char_322_lmlee",
+  "name": "老鲤",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "浮生得闲",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.25,
+              "scope": "room",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "阿",
+                "facility": "same",
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "世事洞明",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 25,
+              "stack": "max"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

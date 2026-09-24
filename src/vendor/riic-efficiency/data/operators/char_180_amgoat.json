@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "char_180_amgoat",
+  "name": "艾雅法拉",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "火山学家",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 35,
+              "recipe": "源石碎片"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "天灾信使·β",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 45
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

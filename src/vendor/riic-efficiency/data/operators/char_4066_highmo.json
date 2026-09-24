@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4066_highmo",
+  "name": "海沫",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "意识兼容",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "skillTagConvert",
+              "tagFrom": [
+                "cc.sk.manu2",
+                "cc.sk.manu3"
+              ],
+              "tagTo": "cc.sk.manu1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "标准化·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 25
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

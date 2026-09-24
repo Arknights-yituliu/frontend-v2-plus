@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4032_provs",
+  "name": "但书",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "合同法",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "breach"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "违约索赔·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "breach",
+                "amount": 1,
+                "qty": 500
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "违约索赔·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "breach",
+                "amount": 2,
+                "qty": 1000
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

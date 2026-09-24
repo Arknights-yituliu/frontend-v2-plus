@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4142_laios",
+  "name": "莱欧斯",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "好奇心",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "饱餐的干劲",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "per": {
+                "per": 1,
+                "value": 2,
+                "source": "basePoint",
+                "term": "cc.bd_dungeon"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 2,
+  "id": "char_185_frncat",
+  "name": "慕斯",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "订单分发·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "烘焙",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.3,
+              "scope": "self"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.3,
+              "scope": "room",
+              "other": true,
+              "subjects": "single",
+              "stack": "max",
+              "maxGroup": "dormRec-single"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

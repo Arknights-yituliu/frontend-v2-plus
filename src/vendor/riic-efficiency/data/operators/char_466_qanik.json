@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 2,
+  "id": "char_466_qanik",
+  "name": "雪绒",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "救援队·外界联络",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 30
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "救援队·保证体力",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "moodCost",
+              "per": {
+                "per": 1,
+                "value": -0.1,
+                "source": "recruitSlots"
+              }
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 35
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

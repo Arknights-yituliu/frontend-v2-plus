@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { formatRiicOperatorTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
 
 const props = defineProps({
   room: {
@@ -87,6 +88,13 @@ const emit = defineEmits([
 ]);
 
 const draggedOperatorIndex = ref(-1);
+
+function getOperatorAvatarTooltip(operator) {
+  const skillTooltip = props.getOperatorSkillTooltip
+    ? props.getOperatorSkillTooltip(operator)
+    : "暂无已解锁基建技能";
+  return formatRiicOperatorTooltip(operator, skillTooltip);
+}
 
 function updateOperatorInput(event) {
   emit("update:operator-input", event.target.value);
@@ -275,11 +283,7 @@ function formatTraceDetails(details) {
         class="schedule-room-editor-operator"
         :class="{ dragging: draggedOperatorIndex === index }"
         draggable="true"
-        :title="
-          getOperatorSkillTooltip
-            ? getOperatorSkillTooltip(operator)
-            : '暂无已解锁基建技能'
-        "
+        :title="getOperatorAvatarTooltip(operator)"
         @dragstart="startOperatorDrag($event, index)"
         @dragover.prevent
         @drop="dropOperator($event, index)"

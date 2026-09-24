@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 2,
+  "id": "char_474_glady",
+  "name": "歌蕾蒂娅",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "潮汐守望",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodCost",
+              "per": {
+                "per": 1,
+                "value": 0.5,
+                "source": "opGroupInBase",
+                "group": "cc.g.abyssal",
+                "exclude": [
+                  "dormitory"
+                ]
+              }
+            },
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.5,
+              "condition": {
+                "type": "opGroupCountInBase",
+                "group": "cc.g.abyssal",
+                "exclude": [
+                  "dormitory"
+                ],
+                "other": true,
+                "min": 1,
+                "negate": true
+              }
+            },
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "per": {
+                "per": 1,
+                "value": 0.5,
+                "source": "opGroupInFacility",
+                "group": "cc.g.abyssal",
+                "facility": "dormitory",
+                "fullMood": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "集群狩猎·α",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            },
+            {
+              "target": "manufacture",
+              "stat": "abyssalBoost",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "cap": 45,
+                "capUnit": "value",
+                "source": "abyssalBoost",
+                "group": "cc.g.abyssal"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "集群狩猎·β",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            },
+            {
+              "target": "manufacture",
+              "stat": "abyssalBoost",
+              "per": {
+                "per": 1,
+                "value": 10,
+                "cap": 90,
+                "capUnit": "value",
+                "source": "abyssalBoost",
+                "group": "cc.g.abyssal"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

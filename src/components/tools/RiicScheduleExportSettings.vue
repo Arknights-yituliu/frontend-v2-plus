@@ -31,6 +31,21 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  calculationMode: {
+    type: String,
+    default: "riic-efficiency",
+  },
+  riicEfficiencySettings: {
+    type: Object,
+    default: () => ({
+      clueExchanging: true,
+      dormFullTreat: true,
+      preferMaxJieEfficiency: true,
+      overflowMode: "continue",
+      droneOverflowMode: "zero",
+      firstItemProgress: 0,
+    }),
+  },
 });
 
 const exportSettingsOpen = ref(false);
@@ -50,6 +65,8 @@ const emit = defineEmits([
   "update:orundum-craft-material",
   "update:include-training-room",
   "update:shift",
+  "update-calculation-mode",
+  "update:riic-efficiency-settings",
 ]);
 
 function updateExportInfo(field, event) {
@@ -75,6 +92,27 @@ function updateOrundumCraftMaterial(value) {
 
 function updateIncludeTrainingRoom(event) {
   emit("update:include-training-room", event.target.checked);
+}
+
+function updateCalculationMode(event) {
+  emit(
+    "update-calculation-mode",
+    event.target.checked ? "riic-efficiency" : "legacy",
+  );
+}
+
+function updateRiicEfficiencySetting(key, event, percent = false) {
+  let value = event.target.checked;
+  if (percent) {
+    value = Number(event.target.value) / 100;
+  } else if (key === "overflowMode" || key === "droneOverflowMode") {
+    value = event.target.checked ? "zero" : "continue";
+  }
+
+  emit("update:riic-efficiency-settings", {
+    ...props.riicEfficiencySettings,
+    [key]: value,
+  });
 }
 </script>
 
@@ -235,6 +273,96 @@ function updateIncludeTrainingRoom(event) {
             </label>
             <p class="schedule-export-warning">MAA尚未支持训练室，请勿打开</p>
           </section>
+
+          <section class="schedule-export-module schedule-export-calculation-module">
+            <header class="schedule-export-module-heading">
+              <strong>效率计算</strong>
+            </header>
+            <label class="schedule-export-checkbox">
+              <input
+                type="checkbox"
+                :checked="calculationMode === 'riic-efficiency'"
+                @change="updateCalculationMode"
+              />
+              <span>使用riic-efficiency计算模块（实验版）</span>
+            </label>
+            <div
+              v-if="calculationMode === 'riic-efficiency'"
+              class="schedule-export-efficiency-settings"
+            >
+              <label class="schedule-export-checkbox">
+                <input
+                  type="checkbox"
+                  :checked="riicEfficiencySettings.clueExchanging"
+                  @change="
+                    updateRiicEfficiencySetting('clueExchanging', $event)
+                  "
+                />
+                <span>处于线索交流（影响“跃跃”等干员技能）</span>
+              </label>
+              <label class="schedule-export-checkbox">
+                <input
+                  type="checkbox"
+                  :checked="riicEfficiencySettings.dormFullTreat"
+                  @change="
+                    updateRiicEfficiencySetting('dormFullTreat', $event)
+                  "
+                />
+                <span>宿舍按满员处理（影响“迷迭香”、“塑心”等干员技能）</span>
+              </label>
+              <label class="schedule-export-checkbox">
+                <input
+                  type="checkbox"
+                  :checked="riicEfficiencySettings.preferMaxJieEfficiency"
+                  @change="
+                    updateRiicEfficiencySetting(
+                      'preferMaxJieEfficiency',
+                      $event,
+                    )
+                  "
+                />
+                <span>精0孑按最高效率计算</span>
+              </label>
+              <label class="schedule-export-checkbox">
+                <input
+                  type="checkbox"
+                  :checked="riicEfficiencySettings.overflowMode === 'zero'"
+                  @change="updateRiicEfficiencySetting('overflowMode', $event)"
+                />
+                <span>爆仓后截断计算（不包含无人机使用的爆仓截断）</span>
+              </label>
+              <label class="schedule-export-checkbox">
+                <input
+                  type="checkbox"
+                  :checked="riicEfficiencySettings.droneOverflowMode === 'zero'"
+                  @change="
+                    updateRiicEfficiencySetting('droneOverflowMode', $event)
+                  "
+                />
+                <span>无人机爆仓后截断计算</span>
+              </label>
+              <label class="schedule-export-efficiency-progress">
+                <span>首件进度（影响爆仓时间和精0孑平均效率）</span>
+                <span class="schedule-export-efficiency-progress-control">
+                  <input
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="any"
+                    :value="riicEfficiencySettings.firstItemProgress * 100"
+                    @change="
+                      updateRiicEfficiencySetting(
+                        'firstItemProgress',
+                        $event,
+                        true,
+                      )
+                    "
+                  />
+                  <span>%</span>
+                </span>
+              </label>
+            </div>
+          </section>
         </div>
       </section>
     </section>
@@ -388,7 +516,33 @@ function updateIncludeTrainingRoom(event) {
 }
 
 .schedule-export-checkbox span {
+  min-width: 0;
   color: var(--c-text-color);
+  overflow-wrap: anywhere;
+}
+
+.schedule-export-efficiency-settings {
+  display: grid;
+  gap: 4px;
+  padding-left: 2px;
+}
+
+.schedule-export-efficiency-progress {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(100px, 180px);
+  align-items: center;
+  gap: 8px;
+  max-width: 360px;
+}
+
+.schedule-export-efficiency-progress-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.schedule-export-efficiency-progress-control input {
+  flex: 1;
 }
 
 .schedule-export-warning {

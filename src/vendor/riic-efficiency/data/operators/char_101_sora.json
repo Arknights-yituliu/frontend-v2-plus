@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 2,
+  "id": "char_101_sora",
+  "name": "空",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "偶像",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.15,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "企鹅物流·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

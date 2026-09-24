@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4237_jcinta",
+  "name": "嘉辛塔",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "千金的眼光",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "tailor",
+                "level": "α"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "坎贝尔之名",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

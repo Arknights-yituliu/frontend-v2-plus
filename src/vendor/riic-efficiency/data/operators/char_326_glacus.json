@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "id": "char_326_glacus",
+  "name": "格劳克斯",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "电磁充能·α",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "电磁充能·β",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 15
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -9,7 +9,15 @@ import orundumBackground from "/src/assets/images/riic-schedule-preview/orundum.
 import yellowCertificateBackground from "/src/assets/images/riic-schedule-preview/yellow-certificate.png";
 
 const props = defineProps({
+  calculationMode: {
+    type: String,
+    default: "riic-efficiency",
+  },
   yield: {
+    type: Object,
+    default: null,
+  },
+  droneDisplay: {
     type: Object,
     default: null,
   },
@@ -113,7 +121,10 @@ function getProductIcon(product, facility) {
 }
 
 function getYieldResource(resource) {
-  return (props.yield?.resources || []).find(
+  const resources = Array.isArray(props.yield?.overviewResources)
+    ? props.yield.overviewResources
+    : props.yield?.resources || [];
+  return resources.find(
     (item) => String(item?.resource || "") === resource,
   );
 }
@@ -220,13 +231,12 @@ const comprehensiveResources = computed(() => {
 
 const roomColumns = computed(() => {
   const roomsByKey = new Map(
-    (props.yield?.rooms || []).map((room, index) => [
-      String(room?.key || ""),
-      { ...room, index },
-    ]),
+    (props.droneDisplay?.rooms || props.yield?.rooms || []).map(
+      (room, index) => [String(room?.key || ""), { ...room, index }],
+    ),
   );
 
-  return (props.yield?.droneTargetSettlements || [])
+  return (props.droneDisplay?.droneTargetSettlements || [])
     .map((settlement) => {
       const key = String(settlement?.key || "").trim();
       const room = roomsByKey.get(key);
@@ -259,12 +269,30 @@ const roomColumns = computed(() => {
 const droneUsageByState = computed(
   () =>
     new Map(
-      (props.yield?.droneUsage?.segments || []).map((segment) => [
+      (props.droneDisplay?.droneUsage?.segments || []).map((segment) => [
         Number(segment?.stateIndex),
         segment,
       ]),
     ),
 );
+
+function hasActivePackageDroneSetting(stateIndex) {
+  const shift = props.shifts[stateIndex] || {};
+  const drone = shift?.drone && typeof shift.drone === "object"
+    ? shift.drone
+    : {};
+  const target = String(drone.target || "").trim();
+  const targetKeys = Object.values(
+    props.droneTargetPreviewKeysByState?.[stateIndex] || {},
+  );
+
+  return (
+    drone.disabled !== true &&
+    drone.order !== "retain" &&
+    target &&
+    targetKeys.some((key) => String(key || "").trim() === target)
+  );
+}
 
 const shiftRows = computed(() => {
   const stateCount = Math.max(
@@ -281,7 +309,13 @@ const shiftRows = computed(() => {
     return {
       index,
       name: String(shift?.name || `${String.fromCharCode(65 + index)}班`),
-      droneAvailableOutput: droneUsage?.availableDroneOutput ?? null,
+      availableDroneAmount:
+        props.calculationMode === "riic-efficiency" &&
+        !hasActivePackageDroneSetting(index)
+          ? 0
+          : (droneUsage?.availableDroneAmount ??
+            droneUsage?.availableDroneOutput ??
+            null),
       droneTarget: drone.disabled === true ? "" : String(drone.target || "").trim(),
       droneOrder:
         drone.disabled === true
@@ -295,6 +329,23 @@ const shiftRows = computed(() => {
 });
 
 function getEffect(column, stateIndex) {
+  const candidateTarget = String(
+    props.droneTargetPreviewKeysByState?.[stateIndex]?.[column?.key] || "",
+  ).trim();
+  if (
+    props.calculationMode === "riic-efficiency" &&
+    candidateTarget &&
+    !hasActivePackageDroneSetting(stateIndex)
+  ) {
+    return {
+      isCalculated: true,
+      output: 0,
+      netGold: null,
+      shardConsumption: null,
+      lmdConsumption: null,
+    };
+  }
+
   const segment = column?.segments?.[stateIndex];
   const resourceEffects = column?.resourceEffectsBySegment?.[stateIndex];
   const netGold = toNumber(resourceEffects?.netGold);
@@ -357,10 +408,14 @@ function updateDroneOrder(index, order) {
 
 <template>
   <section
-    v-if="yield && roomColumns.length"
+    v-if="
+      calculationMode === 'legacy'
+        ? yield && roomColumns.length
+        : yield || droneDisplay
+    "
     class="schedule-resource-summary"
   >
-    <div class="schedule-resource-overview">
+    <div v-if="yield" class="schedule-resource-overview">
       <section class="schedule-resource-overview-section">
         <span class="schedule-resource-overview-title">每日综合产出</span>
         <div class="schedule-resource-overview-values">
@@ -399,7 +454,7 @@ function updateDroneOrder(index, order) {
       </section>
     </div>
 
-    <div class="schedule-resource-table-scroll">
+    <div v-if="roomColumns.length" class="schedule-resource-table-scroll">
       <table class="schedule-resource-table">
         <thead>
           <tr>
@@ -433,7 +488,15 @@ function updateDroneOrder(index, order) {
             <th scope="row">
               <div class="schedule-resource-shift-name">
                 <strong>{{ row.name }}</strong>
-                <span>{{ formatDroneCount(row.droneAvailableOutput) }}</span>
+                <span
+                  :title="
+                    calculationMode === 'riic-efficiency'
+                      ? `本班可用于所选无人机加速队列：${formatDroneCount(row.availableDroneAmount)}`
+                      : undefined
+                  "
+                >
+                  {{ formatDroneCount(row.availableDroneAmount) }}
+                </span>
                 <small
                   v-if="row.droneCapacityReached"
                   class="schedule-resource-drone-limit-warning"

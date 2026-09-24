@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 2,
+  "id": "char_254_vodfox",
+  "name": "巫恋",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "裁缝·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "tailor",
+                "level": "α"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "低语",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": 0.25,
+              "scope": "room"
+            },
+            {
+              "target": "trading",
+              "stat": "zeroOpBonus",
+              "except": [
+                "facilityCount"
+              ]
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 45,
+                "source": "opCount",
+                "other": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

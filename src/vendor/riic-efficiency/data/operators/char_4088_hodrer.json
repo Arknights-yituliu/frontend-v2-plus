@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4088_hodrer",
+  "name": "赫德雷",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "白手起家·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 25
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 5,
+              "condition": {
+                "type": "opInBase",
+                "op": "伊内丝",
+                "facilities": [
+                  "power",
+                  "manufacture",
+                  "trading",
+                  "hire",
+                  "meeting",
+                  "control",
+                  "training",
+                  "processing"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "白手起家·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 30
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 5,
+              "condition": {
+                "type": "opInBase",
+                "op": "伊内丝",
+                "facilities": [
+                  "power",
+                  "manufacture",
+                  "trading",
+                  "hire",
+                  "meeting",
+                  "control",
+                  "training",
+                  "processing"
+                ]
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 5,
+              "condition": {
+                "type": "opInBase",
+                "op": "W",
+                "facilities": [
+                  "power",
+                  "manufacture",
+                  "trading",
+                  "hire",
+                  "meeting",
+                  "control",
+                  "training",
+                  "processing"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

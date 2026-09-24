@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "id": "char_400_weedy",
+  "name": "温蒂",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "自动化·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 10,
+                "source": "facilityCount",
+                "facility": "power"
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "zeroOpBonus",
+              "except": [
+                "facilityCount"
+              ]
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "仿生海龙",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 15,
+                "source": "facilityCount",
+                "facility": "power"
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "zeroOpBonus",
+              "except": [
+                "facilityCount"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

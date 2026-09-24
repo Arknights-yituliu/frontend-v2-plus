@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1052_kalts2",
+  "name": "凯尔希·思衡托",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "“泰拉的方舟”",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "per": {
+                "per": 1,
+                "value": 4,
+                "cap": 5,
+                "source": "baseFacilityWithGroup",
+                "group": "cc.g.elite"
+              }
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

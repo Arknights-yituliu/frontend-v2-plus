@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 2,
+  "id": "char_2027_wang",
+  "name": "望",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "权变",
+          "effects": [
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_wang_1",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "facilityCount",
+                "facility": "trading"
+              }
+            },
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_wang_1",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "facilityCount",
+                "facility": "power"
+              }
+            },
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_wang_2",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "facilityCount",
+                "facility": "manufacture"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 7,
+              "stack": "max",
+              "condition": {
+                "type": "termCmp",
+                "a": "cc.bd_wang_1",
+                "b": "cc.bd_wang_2",
+                "op": "ge"
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 2,
+              "stack": "max",
+              "condition": {
+                "type": "termCmp",
+                "a": "cc.bd_wang_1",
+                "b": "cc.bd_wang_2",
+                "op": "lt"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

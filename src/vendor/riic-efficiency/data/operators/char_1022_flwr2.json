@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1022_flwr2",
+  "name": "撷英调香师",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "沉静心灵",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.15,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "净化呼吸",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "scope": "room",
+              "moodBelow": 20,
+              "stack": "max",
+              "maxGroup": "dormRec-mood-below"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

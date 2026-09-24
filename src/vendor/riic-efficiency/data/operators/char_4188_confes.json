@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4188_confes",
+  "name": "CONFESS-47",
+  "rarity": 1,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "充能中",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "level",
+            "value": 30
+          },
+          "name": "维护中",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 5,
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.laterano",
+                "facility": "same",
+                "other": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

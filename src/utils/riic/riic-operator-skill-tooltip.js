@@ -1,6 +1,16 @@
 import BUILDING_TABLE from "../../static/json/build/building_table.json";
+import OPERATOR_TABLE from "../../static/json/operator/character_table_simple.v2.json";
+import PROFESSION_DICT from "../../static/json/operator/profession_dict.json";
 
 const SKILLS_BY_OPERATOR_ID = new Map();
+const PROFESSION_LABELS = new Map();
+
+for (const profession of PROFESSION_DICT || []) {
+  PROFESSION_LABELS.set(profession.value, profession.label);
+  for (const branch of profession.children || []) {
+    PROFESSION_LABELS.set(branch.value, branch.label);
+  }
+}
 
 for (const skill of BUILDING_TABLE || []) {
   const charId = String(skill?.charId || "").trim();
@@ -37,6 +47,25 @@ function stripMarkup(value) {
     .replace(/&amp;/g, "&")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+export function formatRiicOperatorTooltip(operator, skillTooltip) {
+  const charId = String(operator?.charId || "").trim();
+  const metadata = OPERATOR_TABLE?.[charId];
+  if (!metadata) {
+    return String(skillTooltip || "");
+  }
+
+  const name = String(metadata.name || operator?.name || "").trim();
+  const rarity = Number(metadata.rarity);
+  const rarityLabel =
+    Number.isInteger(rarity) && rarity > 0 ? `${rarity}星` : "";
+  const profession = PROFESSION_LABELS.get(metadata.profession);
+  const branch = PROFESSION_LABELS.get(metadata.subProfessionId);
+  const classLabel = [profession, branch].filter(Boolean).join(" · ");
+  const header = [name, rarityLabel, classLabel].filter(Boolean).join("｜");
+
+  return [header, String(skillTooltip || "")].filter(Boolean).join("\n");
 }
 
 export function getRiicOperatorSkillTooltip(operator, fallbackOperator = null) {
