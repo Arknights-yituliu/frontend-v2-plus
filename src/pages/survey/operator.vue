@@ -1,6 +1,7 @@
 <script setup>
 import {createMessage} from "/src/utils/message.js";
 import operatorDataAPI from "/src/api/operatorData.js"
+import {saveAkAccountOperators} from "/src/api/userCenterApi.js"
 import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
 import {operatorTableV2} from "/src/utils/gameData.js";
 import {exportExcel} from '/src/utils/exportExcel.js'
@@ -412,6 +413,54 @@ function startSklandQrPolling() {
 }
 
 /**
+ * 将森空岛同步数据转换为 UC OAuth 游戏数据保存接口的请求体
+ * 字段名按 UC 侧定义对齐：charId→id、elite→evolvePhase、mainSkill→mainSkillLevel、
+ * modX/Y/D/A/B→equipX/Y/D/A/B，potential 与 UC 的 potentialRank 同值传递
+ * @param {Object} warehouseData 森空岛同步数据（含 uid 与已格式化的 operatorDataList）
+ * @returns {Object} UC 保存接口请求体
+ */
+function buildUcOperatorSavePayload(warehouseData) {
+  return {
+    playerInfo: {akUid: String(warehouseData.uid)},
+    operators: (warehouseData.operatorDataList || []).map((operator) => ({
+      id: operator.charId,
+      rarity: operator.rarity,
+      level: operator.level,
+      evolvePhase: operator.elite,
+      mainSkillLevel: operator.mainSkill,
+      skill1: operator.skill1,
+      skill2: operator.skill2,
+      skill3: operator.skill3,
+      equipX: operator.modX,
+      equipY: operator.modY,
+      equipD: operator.modD,
+      equipA: operator.modA,
+      equipB: operator.modB,
+      potentialRank: operator.potential,
+    })),
+  }
+}
+
+/**
+ * 把本次同步的干员数据额外写入 UC 的 OAuth 游戏数据接口
+ * 该调用独立于旧保存接口：失败不抛出，避免中断一图流侧的导入结果与后续流程；
+ * 失败提示由 ucService 响应拦截器统一弹出
+ * @param {Object} warehouseData 森空岛同步数据
+ * @returns {Promise<void>}
+ */
+async function syncOperatorDataToUc(warehouseData) {
+  const payload = buildUcOperatorSavePayload(warehouseData)
+  if (payload.operators.length === 0) {
+    return
+  }
+  try {
+    await saveAkAccountOperators(payload)
+  } catch (error) {
+    console.error("干员数据写入 UC 失败", error)
+  }
+}
+
+/**
  * 根据选中的绑定账号同步干员数据到一图流
  * @param {Object} binding 森空岛绑定账号信息（uid/nickName/channelName 等）
  */
@@ -439,6 +488,8 @@ async function getPlayerDataAndSync(binding) {
     }))
 
     await operatorDataAPI.importSkLandOperatorDataV3(warehouseData)
+    // 旧保存接口上传成功后，把同一份干员数据同步写入 UC 的 OAuth 游戏数据接口
+    await syncOperatorDataToUc(warehouseData)
     createMessage({ type: 'success', text: '干员数据已同步到我的干员！' })
     getOperatorData()
     sklandImportDialog.value = false
