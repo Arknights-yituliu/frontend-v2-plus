@@ -5027,8 +5027,14 @@ const outputPreviewScheduleMeta = computed(() => {
     .join(" · ");
 });
 const outputPreviewYieldItems = computed(() => {
+  const yieldSummary = riicActualScheduleMetrics.value?.yield || {};
   const resources = new Map(
-    (riicActualScheduleMetrics.value?.yield?.resources || []).map(
+    (yieldSummary.resources || []).map(
+      (item) => [String(item?.resource || ""), item],
+    ),
+  );
+  const overviewResources = new Map(
+    (yieldSummary.overviewResources || []).map(
       (item) => [String(item?.resource || ""), item],
     ),
   );
@@ -5041,13 +5047,50 @@ const outputPreviewYieldItems = computed(() => {
     .map(({ resource, label, image }) => {
       const item = resources.get(resource);
       const value = Number(item?.outputPerDay);
+      const overviewItem = overviewResources.get(resource);
+      const overviewNetValue = Number(overviewItem?.outputPerDay);
+      const rawGrossValue = item?.grossOutputPerDay;
+      const directGrossValue =
+        rawGrossValue === null || rawGrossValue === undefined
+          ? null
+          : Number(rawGrossValue);
+      const hasDirectGrossValue =
+        resource === "lmd" && Number.isFinite(directGrossValue);
+      const hasOverviewNetValue =
+        resource === "lmd" &&
+        overviewItem?.isCalculated === true &&
+        Number.isFinite(overviewNetValue);
+      const hasCalculatedValue =
+        (item?.isCalculated === true && Number.isFinite(value)) ||
+        (hasOverviewNetValue && !item);
+      const netValue =
+        hasDirectGrossValue && Number.isFinite(value)
+          ? value
+          : hasOverviewNetValue
+            ? overviewNetValue
+            : value;
+      const grossValue = hasDirectGrossValue
+        ? directGrossValue
+        : hasOverviewNetValue
+          ? item
+            ? value
+            : 0
+          : null;
+      const showNetValue =
+        Number.isFinite(netValue) &&
+        grossValue !== null &&
+        Number.isFinite(grossValue) &&
+        grossValue !== netValue;
       return {
         resource,
         label,
         image,
         value,
+        displayValue: showNetValue ? grossValue : value,
+        netValue,
+        showNetValue,
         isCalculated:
-          item?.isCalculated === true && Number.isFinite(value) && value !== 0,
+          hasCalculatedValue && (value !== 0 || showNetValue),
       };
     })
     .filter((item) => item.isCalculated);
@@ -5162,10 +5205,11 @@ const outputPreviewHeaderTheme = computed(() => {
   return { tone: "lmd", images: [lmdImage] };
 });
 
-function formatOutputPreviewYield(value) {
-  return new Intl.NumberFormat("zh-CN", {
-    maximumFractionDigits: 0,
-  }).format(value);
+function formatOutputPreviewYield(value, netValue = null) {
+  const formattedValue = formatNumber(value);
+  return netValue === null
+    ? formattedValue
+    : `${formattedValue}（${formatNumber(netValue)}）`;
 }
 
 function formatOutputPreviewResourceNetting(value) {
@@ -9511,7 +9555,12 @@ onBeforeUnmount(() => {
                         :alt="item.label"
                         class="schedule-output-document-yield-icon"
                       />
-                      {{ formatOutputPreviewYield(item.value) }}
+                      {{
+                        formatOutputPreviewYield(
+                          item.displayValue,
+                          item.showNetValue ? item.netValue : null,
+                        )
+                      }}
                     </strong>
                   </div>
                   <div
@@ -9728,7 +9777,12 @@ onBeforeUnmount(() => {
                         :alt="item.label"
                         class="schedule-output-document-yield-icon"
                       />
-                      {{ formatOutputPreviewYield(item.value) }}
+                      {{
+                        formatOutputPreviewYield(
+                          item.displayValue,
+                          item.showNetValue ? item.netValue : null,
+                        )
+                      }}
                     </strong>
                   </div>
                   <div
@@ -9884,6 +9938,7 @@ onBeforeUnmount(() => {
           "
           :calculation-mode="scheduleExecutionSettings.calculationMode"
           :yield="riicScheduleResultSnapshot.actual?.yield"
+          show-gross-lmd-output
           :drone-display="
             scheduleExecutionSettings.calculationMode === 'riic-efficiency'
               ? riicScheduleResultSnapshot.riicEfficiency?.yield

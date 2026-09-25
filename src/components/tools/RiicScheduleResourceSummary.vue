@@ -17,6 +17,10 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  showGrossLmdOutput: {
+    type: Boolean,
+    default: false,
+  },
   droneDisplay: {
     type: Object,
     default: null,
@@ -132,12 +136,33 @@ function getYieldResource(resource) {
 function getFinalDailyOutput(resource) {
   const resourceSummary = getYieldResource(resource);
   const output = toNumber(resourceSummary?.outputPerDay);
+  const showGrossLmdOutput =
+    props.showGrossLmdOutput && resource === "lmd";
+  const grossSource =
+    showGrossLmdOutput && Array.isArray(props.yield?.resources)
+      ? props.yield.resources.find(
+          (item) => String(item?.resource || "") === resource,
+        )
+      : null;
+  const fallbackGrossOutput =
+    showGrossLmdOutput && Array.isArray(props.yield?.overviewResources)
+      ? grossSource
+        ? grossSource.outputPerDay
+        : 0
+      : null;
+  const rawGrossOutput = showGrossLmdOutput
+    ? (resourceSummary?.grossOutputPerDay ?? fallbackGrossOutput)
+    : null;
 
   return {
     value:
       resourceSummary?.isCalculated === true && output !== null
         ? output
         : null,
+    grossValue:
+      rawGrossOutput === null || rawGrossOutput === undefined
+        ? null
+        : toNumber(rawGrossOutput),
     isCalculated:
       resourceSummary?.isCalculated === true && output !== null,
   };
@@ -162,7 +187,15 @@ const comprehensiveResources = computed(() => {
       {
         key: "lmd",
         icon: lmdBackground,
-        value: lmd.value,
+        value: props.showGrossLmdOutput
+          ? (lmd.grossValue ?? lmd.value)
+          : lmd.value,
+        netValue: lmd.value,
+        showNetValue:
+          props.showGrossLmdOutput &&
+          lmd.grossValue !== null &&
+          lmd.value !== null &&
+          lmd.grossValue !== lmd.value,
         isCalculated: lmd.isCalculated,
         digits: 0,
         color: "lmd",
@@ -432,6 +465,11 @@ function updateDroneOrder(index, order) {
                   ? formatOverviewValue(resource.value, resource.digits)
                   : "--"
               }}
+              <template v-if="resource.showNetValue">
+                （{{
+                  formatOverviewValue(resource.netValue, resource.digits)
+                }}）
+              </template>
             </strong>
           </div>
           <div
