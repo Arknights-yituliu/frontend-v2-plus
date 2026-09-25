@@ -10,6 +10,11 @@ const entries = [
     icon: "mdi-file-chart-outline",
     label: "MAA 排班收益核算",
   },
+  {
+    to: "/riicdev/efficiency-inspector",
+    icon: "mdi-chart-box-outline",
+    label: "riic-efficiency 明细",
+  },
   ...(import.meta.env.DEV
     ? [
         {

@@ -487,6 +487,16 @@ const routes = [
         }
     },
     {
+        path: '/riicdev/efficiency-inspector',
+        text: 'RIIC 效率明细',
+        name: 'RiicEfficiencyInspector',
+        display: false,
+        component: () => import('/src/pages/dev/riic/efficiency-inspector.vue'),
+        meta: {
+            title: 'RIIC 效率明细'
+        }
+    },
+    {
         path: '/riicdev/set-assess',
         text: 'RIIC 班组组合评估',
         name: 'RiicSetAssessment',
