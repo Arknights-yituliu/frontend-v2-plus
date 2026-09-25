@@ -17,7 +17,11 @@ const props = defineProps({
     type: Object,
     default: null,
   },
-  showGrossLmdOutput: {
+  outputMode: {
+    type: String,
+    default: "net",
+  },
+  showOutputModeToggle: {
     type: Boolean,
     default: false,
   },
@@ -39,7 +43,11 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["select-drone-target", "update-drone-order"]);
+const emit = defineEmits([
+  "select-drone-target",
+  "update-drone-order",
+  "update:outputMode",
+]);
 
 const RECRUITMENT_REFRESH_GREEN_CERTIFICATE_RATE = 2.673946816;
 const RECRUITMENT_REFRESH_YELLOW_CERTIFICATE_RATE = 0.255580301;
@@ -133,44 +141,41 @@ function getYieldResource(resource) {
   );
 }
 
+function getGrossYieldResource(resource) {
+  const resources = Array.isArray(props.yield?.resources)
+    ? props.yield.resources
+    : [];
+  return (
+    resources.find((item) => String(item?.resource || "") === resource) ||
+    getYieldResource(resource)
+  );
+}
+
 function getFinalDailyOutput(resource) {
   const resourceSummary = getYieldResource(resource);
-  const output = toNumber(resourceSummary?.outputPerDay);
-  const showGrossLmdOutput =
-    props.showGrossLmdOutput && resource === "lmd";
-  const grossSource =
-    showGrossLmdOutput && Array.isArray(props.yield?.resources)
-      ? props.yield.resources.find(
-          (item) => String(item?.resource || "") === resource,
-        )
-      : null;
-  const fallbackGrossOutput =
-    showGrossLmdOutput && Array.isArray(props.yield?.overviewResources)
-      ? grossSource
-        ? grossSource.outputPerDay
-        : 0
-      : null;
-  const rawGrossOutput = showGrossLmdOutput
-    ? (resourceSummary?.grossOutputPerDay ?? fallbackGrossOutput)
-    : null;
+  const grossSummary = getGrossYieldResource(resource);
+  const netValue = toNumber(resourceSummary?.outputPerDay);
+  const grossValue = toNumber(grossSummary?.grossOutputPerDay);
 
   return {
-    value:
-      resourceSummary?.isCalculated === true && output !== null
-        ? output
+    netValue:
+      resourceSummary?.isCalculated === true && netValue !== null
+        ? netValue
         : null,
     grossValue:
-      rawGrossOutput === null || rawGrossOutput === undefined
-        ? null
-        : toNumber(rawGrossOutput),
-    isCalculated:
-      resourceSummary?.isCalculated === true && output !== null,
+      (grossSummary?.grossIsCalculated === true ||
+        (grossSummary?.grossIsCalculated !== false &&
+          grossSummary?.isCalculated === true)) &&
+      grossValue !== null
+        ? grossValue
+        : null,
   };
 }
 
 const comprehensiveResources = computed(() => {
   const lmd = getFinalDailyOutput("lmd");
   const exp = getFinalDailyOutput("exp");
+  const gold = getFinalDailyOutput("gold");
   const recruitmentRefresh = getYieldResource("recruitmentRefresh");
   const refreshesPerDay = toNumber(recruitmentRefresh?.outputPerDay);
   const recruitmentCalculated =
@@ -186,30 +191,40 @@ const comprehensiveResources = computed(() => {
     final: [
       {
         key: "lmd",
+        label: "龙门币",
         icon: lmdBackground,
-        value: props.showGrossLmdOutput
-          ? (lmd.grossValue ?? lmd.value)
-          : lmd.value,
-        netValue: lmd.value,
-        showNetValue:
-          props.showGrossLmdOutput &&
-          lmd.grossValue !== null &&
-          lmd.value !== null &&
-          lmd.grossValue !== lmd.value,
-        isCalculated: lmd.isCalculated,
+        value: props.outputMode === "gross" ? lmd.grossValue : lmd.netValue,
+        isCalculated:
+          props.outputMode === "gross"
+            ? lmd.grossValue !== null
+            : lmd.netValue !== null,
         digits: 0,
         color: "lmd",
       },
       {
+        key: "gold",
+        label: props.outputMode === "net" ? "净赤金" : "赤金",
+        icon: goldBackground,
+        value: props.outputMode === "gross" ? gold.grossValue : gold.netValue,
+        isCalculated:
+          props.outputMode === "gross"
+            ? gold.grossValue !== null
+            : gold.netValue !== null,
+        digits: 0,
+        color: "gold",
+      },
+      {
         key: "experience",
+        label: "经验书",
         icon: battleRecordBackground,
-        value: exp.value,
-        isCalculated: exp.isCalculated,
+        value: exp.netValue,
+        isCalculated: exp.netValue !== null,
         digits: 0,
         color: "experience",
       },
       {
         key: "yellowCertificate",
+        label: "黄证",
         icon: yellowCertificateBackground,
         value: recruitmentCalculated
           ? refreshesPerDay * RECRUITMENT_REFRESH_YELLOW_CERTIFICATE_RATE
@@ -220,6 +235,7 @@ const comprehensiveResources = computed(() => {
       },
       {
         key: "greenCertificate",
+        label: "绿证",
         icon: greenCertificateBackground,
         value: recruitmentCalculated
           ? refreshesPerDay * RECRUITMENT_REFRESH_GREEN_CERTIFICATE_RATE
@@ -232,29 +248,31 @@ const comprehensiveResources = computed(() => {
          ? [
              {
                key: "orundum",
+               label: "合成玉",
                icon: orundumBackground,
-               value: orundum.value,
-               isCalculated: orundum.isCalculated,
+               value: orundum.netValue,
+               isCalculated: orundum.netValue !== null,
               digits: 0,
               color: "orundum",
             },
           ]
-        : []),
-    ],
-    reference: [
-      {
-        label: "净赤金",
-        value: getYieldResource("gold")?.outputPerDay,
-        unit: "根/天",
-        isCalculated: getYieldResource("gold")?.isCalculated === true,
-      },
+          : []),
        ...(hasShardOutput
          ? [
              {
-               label: "净源石碎片",
-               value: shards.value,
-               unit: "片/天",
-               isCalculated: shards.isCalculated,
+               key: "originiumShard",
+               label: props.outputMode === "net" ? "净源石碎片" : "源石碎片",
+               icon: originiumShardBackground,
+               value:
+                 props.outputMode === "gross"
+                   ? shards.grossValue
+                   : shards.netValue,
+               isCalculated:
+                 props.outputMode === "gross"
+                   ? shards.grossValue !== null
+                   : shards.netValue !== null,
+               digits: 0,
+               color: "originium-shard",
             },
           ]
         : []),
@@ -457,6 +475,8 @@ function updateDroneOrder(index, order) {
             :key="resource.key"
             class="schedule-resource-overview-value"
             :class="`resource-${resource.color}`"
+            :title="resource.label"
+            :aria-label="resource.label"
           >
             <img :src="resource.icon" alt="" />
             <strong>
@@ -465,29 +485,31 @@ function updateDroneOrder(index, order) {
                   ? formatOverviewValue(resource.value, resource.digits)
                   : "--"
               }}
-              <template v-if="resource.showNetValue">
-                （{{
-                  formatOverviewValue(resource.netValue, resource.digits)
-                }}）
-              </template>
             </strong>
           </div>
-          <div
-            v-for="resource in comprehensiveResources.reference"
-            :key="resource.label"
-            class="schedule-resource-overview-value reference"
+        </div>
+        <div
+          v-if="showOutputModeToggle"
+          class="schedule-resource-output-mode"
+          role="group"
+          aria-label="资源产出模式"
+        >
+          <button
+            type="button"
+            :class="{ active: outputMode === 'gross' }"
+            :aria-pressed="outputMode === 'gross'"
+            @click="emit('update:outputMode', 'gross')"
           >
-            <span>{{ resource.label }}</span>
-            <strong>
-              {{
-                resource.isCalculated
-                  ? formatResourceValue(resource.value, resource.unit, {
-                      signed: true,
-                    })
-                  : "--"
-              }}
-            </strong>
-          </div>
+            总产出
+          </button>
+          <button
+            type="button"
+            :class="{ active: outputMode === 'net' }"
+            :aria-pressed="outputMode === 'net'"
+            @click="emit('update:outputMode', 'net')"
+          >
+            净产出
+          </button>
         </div>
       </section>
     </div>
@@ -663,6 +685,7 @@ function updateDroneOrder(index, order) {
 
 .schedule-resource-overview-section {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   min-width: 0;
   padding: 8px 10px;
@@ -678,10 +701,44 @@ function updateDroneOrder(index, order) {
 
 .schedule-resource-overview-values {
   display: flex;
+  flex: 1 1 500px;
   min-width: 0;
   flex-wrap: wrap;
   align-items: center;
   gap: 5px 12px;
+}
+
+.schedule-resource-output-mode {
+  display: inline-flex;
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 2px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  background: var(--c-page-background-color);
+}
+
+.schedule-resource-output-mode button {
+  min-width: 64px;
+  min-height: 28px;
+  padding: 4px 8px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--c-text-color);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.schedule-resource-output-mode button.active {
+  background: var(--riic-blue);
+  color: #fff;
+}
+
+.schedule-resource-output-mode button:focus-visible {
+  outline: 2px solid var(--riic-blue);
+  outline-offset: 1px;
 }
 
 .schedule-resource-overview-value {
@@ -724,13 +781,12 @@ function updateDroneOrder(index, order) {
   color: #23866c;
 }
 
-.schedule-resource-overview-value.reference {
-  align-items: baseline;
+.schedule-resource-overview-value.resource-gold strong {
+  color: #a87413;
 }
 
-.schedule-resource-overview-value.reference strong {
-  color: var(--riic-muted);
-  font-size: 12px;
+.schedule-resource-overview-value.resource-originium-shard strong {
+  color: #6c5aa7;
 }
 
 .schedule-resource-table-scroll {

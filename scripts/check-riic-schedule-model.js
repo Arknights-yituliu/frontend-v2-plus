@@ -1131,8 +1131,21 @@ assert.equal(
   -38400,
 );
 assert.equal(
+  getYieldResource(orundumSettlement.yield, "lmd").grossOutputPerDay,
+  0,
+);
+assert.equal(
+  getYieldResource(orundumSettlement.yield, "originiumShard")
+    .grossOutputPerDay,
+  24,
+);
+assert.equal(
   orundumSettlement.yield.resourceFlows.orundum.lmdConsumptionPerDay,
   38400,
+);
+assert.equal(
+  orundumSettlement.yield.resourceFlows.orundum.shardConsumptionPerDay,
+  46.32,
 );
 assert.equal(
   orundumSettlement.yield.resourceFlows.orundum.craftMaterial,
@@ -1318,6 +1331,7 @@ assert.equal(
   closureSettlement.yield.resourceFlows.gold.grossOutputPerDay,
   26.92,
 );
+assert.equal(closureGold.grossOutputPerDay, 26.92);
 assert.equal(
   closureSettlement.yield.resourceFlows.gold.tradeConsumptionPerDay,
   34.6,
