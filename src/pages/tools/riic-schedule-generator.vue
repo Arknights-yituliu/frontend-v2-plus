@@ -5144,6 +5144,7 @@ const outputPreviewResourceNettingItems = computed(() => {
       image: goldImage,
       value: goldOutput.value,
       unit: "根",
+      digits: 2,
       isCalculated: goldOutput.isCalculated,
     },
     {
@@ -5153,6 +5154,7 @@ const outputPreviewResourceNettingItems = computed(() => {
       image: originiumShardImage,
       value: shardOutput.value,
       unit: "枚",
+      digits: 2,
       isCalculated: shardOutput.isCalculated,
     },
     {
@@ -5171,6 +5173,7 @@ const outputPreviewResourceNettingItems = computed(() => {
       image: goldImage,
       value: -Number(goldFlow.tradeConsumptionPerDay || 0),
       unit: "根",
+      digits: 2,
       isCalculated:
         goldFlow.isCalculated === true &&
         Number.isFinite(Number(goldFlow.tradeConsumptionPerDay)),
@@ -5181,6 +5184,7 @@ const outputPreviewResourceNettingItems = computed(() => {
       image: originiumShardImage,
       value: -Number(orundumFlow.shardConsumptionPerDay || 0),
       unit: "枚",
+      digits: 2,
       isCalculated:
         orundumFlow.isCalculated === true &&
         Number.isFinite(Number(orundumFlow.shardConsumptionPerDay)),
@@ -5272,7 +5276,7 @@ function formatOutputPreviewYield(value) {
   return formatNumber(value);
 }
 
-function formatOutputPreviewResourceNetting(value) {
+function formatOutputPreviewResourceNetting(value, digits) {
   const number =
     value === null || value === undefined ? NaN : Number(value);
   if (!Number.isFinite(number)) {
@@ -5280,7 +5284,9 @@ function formatOutputPreviewResourceNetting(value) {
   }
 
   return `${number > 0 ? "+" : ""}${new Intl.NumberFormat("zh-CN", {
-    maximumFractionDigits: 1,
+    ...(digits === undefined
+      ? { maximumFractionDigits: 1 }
+      : { minimumFractionDigits: digits, maximumFractionDigits: digits }),
   }).format(number)}`;
 }
 
@@ -9686,6 +9692,7 @@ onBeforeUnmount(() => {
                       {{
                         formatOutputPreviewResourceNetting(
                           item.value,
+                          item.digits,
                         )
                       }}
                     </strong>
@@ -9910,6 +9917,7 @@ onBeforeUnmount(() => {
                       {{
                         formatOutputPreviewResourceNetting(
                           item.value,
+                          item.digits,
                         )
                       }}
                     </strong>

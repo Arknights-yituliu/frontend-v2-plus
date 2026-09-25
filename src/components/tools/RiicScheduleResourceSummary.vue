@@ -210,7 +210,7 @@ const comprehensiveResources = computed(() => {
           props.outputMode === "gross"
             ? gold.grossValue !== null
             : gold.netValue !== null,
-        digits: 0,
+        digits: 2,
         color: "gold",
       },
       {
@@ -271,7 +271,7 @@ const comprehensiveResources = computed(() => {
                  props.outputMode === "gross"
                    ? shards.grossValue !== null
                    : shards.netValue !== null,
-               digits: 0,
+               digits: 2,
                color: "originium-shard",
             },
           ]

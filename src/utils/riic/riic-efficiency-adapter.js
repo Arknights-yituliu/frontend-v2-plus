@@ -330,7 +330,7 @@ function roomProductKey(room) {
 function createResourceRows(
   result,
   schedule,
-  { dailyOverview = false, goldResourceFlow = null } = {},
+  { dailyOverview = false } = {},
 ) {
   const outputProducts = {
     lmd: ["龙门币", dailyOverview ? "net" : "production"],
@@ -368,12 +368,11 @@ function createResourceRows(
     ([resource, [product, kind]]) => {
       const roomCount = roomCounts.get(resource) || 0;
       const calculatedOutputPerDay = resourceAmount(result, product, kind);
-      const grossOutputPerDay =
-        resource === "gold"
-          ? toFiniteNumber(goldResourceFlow?.grossOutputPerDay)
-          : ["lmd", "originiumShard"].includes(resource)
-            ? resourceAmount(result, product, "production")
-            : null;
+      const grossOutputPerDay = ["lmd", "gold", "originiumShard"].includes(
+        resource,
+      )
+        ? resourceAmount(result, product, "production")
+        : null;
       const outputPerDay =
         calculatedOutputPerDay === null
           ? null
@@ -568,12 +567,9 @@ export function createRiicEfficiencyYield(
   );
   return {
     cycleHours: result.dailyHours,
-    resources: createResourceRows(result, result.document, {
-      goldResourceFlow,
-    }),
+    resources: createResourceRows(result, result.document),
     overviewResources: createResourceRows(result, result.document, {
       dailyOverview: true,
-      goldResourceFlow,
     }),
     roomCount: rooms.length,
     calculatedRoomCount: rooms.filter((room) =>
@@ -597,7 +593,8 @@ export function createRiicEfficiencyYield(
         ? {
             gold: {
               isCalculated: true,
-              grossOutputPerDay: goldResourceFlow.grossOutputPerDay ?? 0,
+              grossOutputPerDay:
+                resourceAmount(result, "赤金", "production") ?? 0,
               tradeConsumptionPerDay:
                 goldResourceFlow.tradeConsumptionPerDay ?? 0,
               virtualGoldOutputPerDay:
