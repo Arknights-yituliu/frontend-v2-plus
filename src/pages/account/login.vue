@@ -12,6 +12,7 @@ import {
 import {useVerificationCode} from "/src/utils/user/verificationCode.js";
 import UserApiV2 from '/src/api/UserApiV2.js'
 import {directLogin} from '/src/api/userCenterApi.js'
+import {saveUcToken} from '/src/utils/user/ucToken.js'
 
 const props = defineProps({
   dialog: {
@@ -100,9 +101,11 @@ async function toLogin() {
 
     // ③ ticket 交后端兑换用户信息并发自家会话
     const loginResp = await UserApiV2.completeDirectLogin(ticketData.ticket);
-    const {token, uid} = loginResp.data;
+    const {token, uid, ucAccessToken, ucTokenExpiresIn, ucTokenScope} = loginResp.data;
     localStorage.setItem("USER_TOKEN", token);
     localStorage.setItem("UID", uid);
+    // 后端随登录响应一并回带 UC access_token，存起来供调用 UC 接口（F1/F2）
+    saveUcToken({accessToken: ucAccessToken, expiresIn: ucTokenExpiresIn, scope: ucTokenScope});
 
     if (props.dialog) {
       createMessage({type:'success',text:'登录成功'})

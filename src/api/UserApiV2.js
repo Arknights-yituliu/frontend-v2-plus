@@ -31,4 +31,15 @@ export default {
     })
   },
 
+  /**
+   * 用户登出：后端双撤（撤销 UC 侧授权 + 删除本地会话自签 token）
+   * @returns {Promise<*>} 操作结果
+   */
+  logout() {
+    return request({
+      url: `/auth/user/logout`,
+      method: "post",
+    })
+  },
+
 }

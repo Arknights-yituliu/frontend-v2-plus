@@ -1,6 +1,7 @@
 import {ref} from "vue";
 import {DOMAIN} from '/src/api/BASE_URL.js'
 import {createMessage} from "/src/utils/message.js";
+import {clearUcToken} from "/src/utils/user/ucToken.js";
 import axios from "axios";
 
 let userInfo = ref({uid: 0, nickname: "未登录",email:'',avatar:'', akUid: "0", status: -100, token: void 0}); //用户信息(昵称，用户id，用户状态)
@@ -30,9 +31,13 @@ async function getUserInfo(page,errorMessage=false) {
     return info
 }
 
+/**
+ * 清理本地登录态：自签 token（会话凭据）与 UC access_token 一并清除
+ */
 function clearUserSession() {
     localStorage.removeItem("USER_TOKEN");
     localStorage.removeItem("UID");
+    clearUcToken();
 }
 
 

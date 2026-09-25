@@ -1,5 +1,6 @@
 <script setup>
 import { clearUserSession } from "/src/utils/user/userInfo.js";
+import UserApiV2 from "/src/api/UserApiV2.js";
 
 const props = defineProps({
   modelValue: {
@@ -10,7 +11,17 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"]);
 
-function confirmLogout() {
+/**
+ * 确认退出登录：先请后端双撤（撤销 UC 授权 + 删除本地会话 token），
+ * 再清理本地存储（自签 token + UC access_token），最后刷新页面
+ */
+async function confirmLogout() {
+  try {
+    await UserApiV2.logout();
+  } catch (error) {
+    // 会话可能已失效，登出失败不阻塞前端本地清理
+    console.error('登出失败', error);
+  }
   clearUserSession();
   location.reload();
 }
