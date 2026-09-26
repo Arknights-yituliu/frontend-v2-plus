@@ -12,6 +12,7 @@ import {
 import {useVerificationCode} from "/src/utils/user/verificationCode.js";
 import UserApiV2 from '/src/api/UserApiV2.js'
 import {directLogin} from '/src/api/userCenterApi.js'
+import {saveUcToken} from '/src/utils/user/ucToken.js'
 
 const props = defineProps({
   dialog: {
@@ -100,9 +101,11 @@ async function toLogin() {
 
     // ③ ticket 交后端兑换用户信息并发自家会话
     const loginResp = await UserApiV2.completeDirectLogin(ticketData.ticket);
-    const {token, uid} = loginResp.data;
+    const {token, uid, ucAccessToken, ucTokenExpiresIn, ucTokenScope} = loginResp.data;
     localStorage.setItem("USER_TOKEN", token);
     localStorage.setItem("UID", uid);
+    // 后端随登录响应一并回带 UC access_token，存起来供调用 UC 接口（F1/F2）
+    saveUcToken({accessToken: ucAccessToken, expiresIn: ucTokenExpiresIn, scope: ucTokenScope});
 
     if (props.dialog) {
       createMessage({type:'success',text:'登录成功'})
@@ -175,11 +178,13 @@ const route = useRoute()
           </button>
         </div>
 
-        <div class="auth-card-body">
+        <form class="auth-card-body" @submit.prevent="toLogin">
           <v-tabs-window v-model="inputContent.accountType">
             <v-tabs-window-item value="password">
               <v-text-field
                   label="账号"
+                  name="username"
+                  autocomplete="username"
                   placeholder="请输入账号或邮箱"
                   :rules="accountRules"
                   density="comfortable"
@@ -192,6 +197,8 @@ const route = useRoute()
               ></v-text-field>
               <v-text-field
                   label="密码"
+                  name="password"
+                  autocomplete="current-password"
                   placeholder="请输入密码"
                   density="comfortable"
                   :rules="passwordRules"
@@ -238,9 +245,9 @@ const route = useRoute()
           <div class="auth-actions">
             <v-btn
                 block
+                type="submit"
                 size="large"
                 variant="flat"
-                @click="toLogin"
                 text="登录"
                 color="primary"
                 class="auth-primary-action"
@@ -248,7 +255,7 @@ const route = useRoute()
                 :disabled="isSubmitting"
             ></v-btn>
           </div>
-        </div>
+        </form>
 
         <div class="auth-card-bottom">
           <span>还没有账号？</span>

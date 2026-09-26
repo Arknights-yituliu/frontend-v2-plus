@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 2,
+  "id": "char_338_iris",
+  "name": "爱丽丝",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "睡前故事",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            },
+            {
+              "target": "dormitory",
+              "stat": "basePointGain",
+              "term": "cc.bd_a1_a2",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "ownLevel"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "梦境呓语",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "basePointConvert",
+              "from": "cc.bd_a1_a2",
+              "to": "cc.bd_a1",
+              "rate": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

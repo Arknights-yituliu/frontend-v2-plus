@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 2,
+  "id": "char_249_mlyss",
+  "name": "缪尔赛思",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "天生丽质",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.55,
+              "scope": "self"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "生态科主任",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            },
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "per": {
+                "per": 1,
+                "value": 3,
+                "cap": 5,
+                "source": "opGroupInBase",
+                "group": "cc.g.rh",
+                "other": true,
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import {
   RIIC_ACTIVE_ROSTER_RUNTIME_RULES,
   RIIC_ACTIVE_ROSTER_SELECTION_PRIORITY_RULES,
+  getRiicActiveRosterMatchingOperatorIds,
 } from "./riic-active-roster-rule-data.js";
 import { getRiicOperatorName as getOperatorName } from "./riic-operator-identity.js";
 import {
@@ -138,8 +139,13 @@ export function applyRiicActiveRosterFallbackOperatorEffects({
       if (
         rule.ownerId !== operatorId ||
         rule.roomType !== scope.roomType ||
-        rule.product !== scope.product
+        (rule.product !== "all" && rule.product !== scope.product)
       ) {
+        continue;
+      }
+
+      // Source-scoped effects are settled after room assignments are known.
+      if (rule.sourceScope) {
         continue;
       }
 
@@ -410,7 +416,7 @@ function getActiveRuleApplications({ states, rosterById }) {
       for (const rule of RIIC_ACTIVE_ROSTER_RUNTIME_RULES) {
         if (
           target?.scope?.roomType !== rule.roomType ||
-          target?.scope?.product !== rule.product ||
+          (rule.product !== "all" && target?.scope?.product !== rule.product) ||
           !targetOperatorIds.has(rule.ownerId)
         ) {
           continue;
@@ -421,13 +427,10 @@ function getActiveRuleApplications({ states, rosterById }) {
           continue;
         }
 
-        const matchingOperatorIds = [...state.activeOperatorIds]
-          .filter(
-            (operatorId) =>
-              rule.taggedOperatorIds.has(operatorId) &&
-              (!rule.excludeOwner || operatorId !== rule.ownerId),
-          )
-          .sort((left, right) => left.localeCompare(right, "en"));
+        const matchingOperatorIds = getRiicActiveRosterMatchingOperatorIds({
+          rule,
+          state,
+        });
         const matchingOperatorCount = Math.min(
           matchingOperatorIds.length,
           rule.maximumOperatorCount,
@@ -445,6 +448,8 @@ function getActiveRuleApplications({ states, rosterById }) {
           ownerId: rule.ownerId,
           ownerName: rule.ownerName,
           tag: rule.tag,
+          metric: rule.metric,
+          sourceScope: rule.sourceScope,
           activeHours: 0,
           bonusPercentHours: 0,
           states: [],
@@ -469,6 +474,8 @@ function getActiveRuleApplications({ states, rosterById }) {
           ruleId: rule.id,
           ownerId: rule.ownerId,
           ownerName: rule.ownerName,
+          metric: rule.metric,
+          sourceScope: rule.sourceScope,
           matchingOperatorCount,
           matchingOperatorIds,
           matchingOperatorNames: matchingOperatorIds.map(getOperatorName),

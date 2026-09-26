@@ -2,15 +2,15 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20260828.0856"
+      "version": "v20260924.2314"
     },
     "data": {
       "label": "数据模块",
-      "version": "v20260828.0856"
+      "version": "v20260924.2314"
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260828.0856"
+      "version": "v20260924.2314"
     },
     "assembler": {
       "label": "组装器",
@@ -18,15 +18,158 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260828.0856"
+      "version": "v20260925.1124"
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260828.0856"
+      "version": "v20260924.2314"
     }
   },
   "entries": [
-
+    {
+      "date": "2026-09-25",
+      "version": "v20260925.1124",
+      "items": [
+        {
+          "module": "收益计算器",
+          "type": "feature",
+          "level": 3,
+          "description": "每日综合产出支持总产出与净产出切换，并同步到预计日产和排班导出预览"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 2,
+          "description": "产出摘要改为图标加数值展示"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-24",
+      "version": "v20260924.2314",
+      "items": [
+        {
+          "module": "收益计算器",
+          "type": "feature",
+          "level": 5,
+          "description": "排班收益默认接入 riic-efficiency，支持切换旧计算并结算设施效率、每日资源产出与无人机加速"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 4,
+          "description": "新增线索交流、宿舍状态、孑效率偏好、首件进度及仓库和无人机溢出处理等计算设置，并随排班工作区保存"
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 4,
+          "description": "新增 riic-efficiency 所需的干员技能、术语和基建规则数据"
+        },
+        {
+          "module": "布局模块",
+          "type": "update",
+          "level": 3,
+          "description": "排班预览新增分析报告入口，按提示、警告和错误分组展示计算检查结果"
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 3,
+          "description": "排班预览、房间编辑和班组候选中的干员悬浮提示补充星级、职业分支及基建技能"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 4,
+          "description": "新增新旧结算结果对照，以及 riic-efficiency 班次、设施、干员和资源计算明细"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-22",
+      "version": "v20260922.1936",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 5,
+          "description": "自动排班优先选择可完整填满所有班组的路线；无完整路线时保留最高分部分路线，并标记未完成班组"
+        },
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 4,
+          "description": "修正自动化发电站保留干员在多班组搜索中的重复约束，避免已占用时阻断完整排班路线"
+        },
+        {
+          "module": "布局模块",
+          "type": "fix",
+          "level": 3,
+          "description": "部分排班生成后改为提示未完整填满，并避免将部分路线提示为成功生成"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 3,
+          "description": "调试面板与复制信息补充自动搜索未完成班组和部分路线状态"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-22",
+      "version": "v20260922.0941",
+      "items": [
+        {
+          "module": "调试信息",
+          "type": "fix",
+          "level": 4,
+          "description": "修正埃癸斯等补位干员被按异地技能要求培养的问题，培养建议改为按所补设施的实际解锁练度结算"
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 2,
+          "description": "补充结城理、埃癸斯与虎狼丸的培养建议说明"
+        }
+      ]
+    },
+    {
+      "date": "2026-09-20",
+      "version": "v20260920.1733",
+      "items": [
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 4,
+          "description": "新增结城理、埃癸斯、岳羽由加莉与虎狼丸的基建技能和排班候选规则"
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 5,
+          "description": "新增结城理制造站与埃癸斯发电站之间的跨设施联动，按同一有效轮班时段结算无人机充能加成"
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 5,
+          "description": "自动排班评分接入跨设施联动和实际轮班时间，支持结城理制造站全产品候选"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 5,
+          "description": "最终结算按实际轮班时间计算结城理与埃癸斯的联动，修正埃癸斯无人机充能加成"
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 5,
+          "description": "补齐槐琥动态制造站最高 40% 生产力结算，并避免 active-roster 联动重复叠加"
+        }
+      ]
+    },
     {
       "date": "2026-08-28",
       "version": "v20260828.0856",
@@ -87,7 +230,6 @@
         }
       ]
     },
-
     {
       "date": "2026-08-25",
       "version": "v20260825.0326",
@@ -124,7 +266,6 @@
         }
       ]
     },
-
     {
       "date": "2026-08-24",
       "version": "v20260824.0912",
@@ -167,7 +308,6 @@
         }
       ]
     },
-
     {
       "date": "2026-08-22",
       "version": "v20260822.2233",
@@ -198,7 +338,6 @@
         }
       ]
     },
-
     {
       "date": "2026-08-21",
       "version": "v20260821.1543",

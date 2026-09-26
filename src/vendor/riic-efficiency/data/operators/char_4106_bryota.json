@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4106_bryota",
+  "name": "苍苔",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "金属工艺·α",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30,
+              "recipe": "贵金属"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "打工心得",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "skillTagCount",
+                "tag": "cc.sk.manu4",
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

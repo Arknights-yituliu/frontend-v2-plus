@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4182_oblvns",
+  "name": "丰川祥子",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "丰富工作经验",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "recipe": "贵金属",
+              "per": {
+                "per": 20,
+                "value": 0.5,
+                "source": "basePoint",
+                "term": "cc.bd_mujica"
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "recipe": "贵金属",
+              "value": 0.5
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "丰富工作经验",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "recipe": "贵金属",
+              "per": {
+                "per": 20,
+                "value": 1,
+                "source": "basePoint",
+                "term": "cc.bd_mujica"
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "recipe": "贵金属",
+              "value": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "生活的重压",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodCost",
+              "value": 0.05,
+              "condition": {
+                "type": "termCmp",
+                "a": "cc.bd_mujica",
+                "b": 40,
+                "op": "ge"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

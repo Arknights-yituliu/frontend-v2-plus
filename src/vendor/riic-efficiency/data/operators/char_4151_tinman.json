@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4151_tinman",
+  "name": "锡人",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "梅兰德侦探·α",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "dormLevel"
+              }
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "梅兰德侦探·β",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "per": {
+                "per": 1,
+                "value": 2,
+                "source": "dormLevel"
+              }
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 5
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

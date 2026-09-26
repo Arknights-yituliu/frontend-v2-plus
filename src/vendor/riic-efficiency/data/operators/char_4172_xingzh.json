@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4172_xingzh",
+  "name": "行箸",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "踏坊寻味·α",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "踏坊寻味·β",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "线索搜集·β",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "id": "char_501_durin",
+  "name": "杜林",
+  "rarity": 2,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "慵懒",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": -0.1,
+              "scope": "self"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.2,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "level",
+            "value": 30
+          },
+          "name": "嗜睡",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": -0.1,
+              "scope": "self"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.25,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

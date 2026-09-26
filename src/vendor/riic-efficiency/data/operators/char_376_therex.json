@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "id": "char_376_therex",
+  "name": "THRM-EX",
+  "rarity": 1,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "备用能源",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "level",
+            "value": 30
+          },
+          "name": "热情澎湃",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "moodCost",
+              "value": -0.52
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

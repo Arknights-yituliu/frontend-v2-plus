@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 2,
+  "id": "char_478_kirara",
+  "name": "绮良",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "订单流可视化·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "basePointGain",
+              "term": "cc.t.flow_gold",
+              "per": {
+                "per": 4,
+                "value": 2,
+                "source": "basePoint",
+                "term": "cc.t.flow_gold"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "订单流可视化·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "basePointGain",
+              "term": "cc.t.flow_gold",
+              "per": {
+                "per": 2,
+                "value": 2,
+                "source": "basePoint",
+                "term": "cc.t.flow_gold"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 5
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4047_pianst",
+  "name": "车尔尼",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "慢板行歌",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.65,
+              "scope": "room",
+              "other": true,
+              "subjects": "single",
+              "stack": "max",
+              "maxGroup": "dormRec-single"
+            },
+            {
+              "target": "dormitory",
+              "stat": "basePointGain",
+              "term": "cc.bd_a1_a3",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "ownLevel"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "琴键漫步",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "basePointConvert",
+              "from": "cc.bd_a1_a3",
+              "to": "cc.bd_a1",
+              "rate": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

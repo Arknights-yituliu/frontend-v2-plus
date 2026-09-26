@@ -107,6 +107,68 @@
     "probability": "",
     "defaultStatus": true
   },
+  "9月.P3R联动.Part1": {
+    "originium": 12,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2026/09/04",
+    "end": "2026/09/10 23:59:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "9月.P3R联动.Part2": {
+    "originium": 16,
+    "orundum": 0,
+    "gachaTicket": 0,
+    "tenGachaTicket": 0,
+    "start": "2026/09/11",
+    "end": "2026/09/17 23:59:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "10月·SideStory": {
+    "originium": 28,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2026/10/5",
+    "end": "2026/10/19 23:59:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "12月·SideStory": {
+    "originium": 28,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2026/12/5",
+    "end": "2026/12/19 23:59:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "1月·SideStory": {
+    "originium": 28,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2027/1/8",
+    "end": "2027/1/22 23:59:00",
+    "rewardType": "公共",
+    "rewardModule": "act",
+    "probability": "",
+    "defaultStatus": true
+  },
+
+
   "复刻活动分界线": {
     "doc": "----------------------------------------------------------",
     "originium": 39,
@@ -216,54 +278,7 @@
     "probability": "",
     "defaultStatus": true
   },
-  "9月.P3R联动.Part1": {
-    "originium": 12,
-    "orundum": 0,
-    "gachaTicket": 3,
-    "tenGachaTicket": 0,
-    "start": "2026/09/04",
-    "end": "2026/09/10 23:59:00",
-    "rewardType": "公共",
-    "rewardModule": "act",
-    "probability": "",
-    "defaultStatus": true
-  },
-  "9月.P3R联动.Part2": {
-    "originium": 16,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2026/09/11",
-    "end": "2026/09/17 23:59:00",
-    "rewardType": "公共",
-    "rewardModule": "act",
-    "probability": "",
-    "defaultStatus": true
-  },
-  "10月.主线": {
-    "originium": 39,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2026/10/08",
-    "end": "2026/10/21 23:59:00",
-    "rewardType": "公共",
-    "rewardModule": "act",
-    "probability": "",
-    "defaultStatus": true
-  },
-  "10月.主线H关": {
-    "originium": 4,
-    "orundum": 0,
-    "gachaTicket": 0,
-    "tenGachaTicket": 0,
-    "start": "2026/10/08",
-    "end": "2026/10/21 23:59:00",
-    "rewardType": "公共",
-    "rewardModule": "act",
-    "probability": "",
-    "defaultStatus": true
-  },
+
   "10月.追迹日落以西(源石)": {
     "originium": 28,
     "orundum": 0,
@@ -503,5 +518,77 @@
     "rewardModule": "act",
     "probability": "",
     "defaultStatus": false
+  },
+  "11月.雪山降临(源石)": {
+    "originium": 36,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2026/11/22",
+    "end": "2026/11/29 23:59:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": false
+  },
+  "11月.雪山降临(紫票)": {
+    "originium": 0,
+    "orundum": 2000,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2026/11/22",
+    "end": "2026/11/29 23:59:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "12月.未许之地(源石)": {
+    "originium": 36,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2026/12/19",
+    "end": "2026/12/26 23:59:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": false
+  },
+  "12月.未许之地(紫票)": {
+    "originium": 0,
+    "orundum": 2000,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2026/12/19",
+    "end": "2026/12/26 23:59:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": true
+  },
+  "1月.雅努赛斯复仇记(源石)": {
+    "originium": 36,
+    "orundum": 0,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2027/1/22",
+    "end": "2027/1/29 23:59:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": false
+  },
+  "1月.雅努赛斯复仇记(紫票)": {
+    "originium": 0,
+    "orundum": 2000,
+    "gachaTicket": 3,
+    "tenGachaTicket": 0,
+    "start": "2027/1/22", 
+    "end": "2027/1/29 23:59:00",
+    "rewardType": "公共",
+    "rewardModule": "actRe",
+    "probability": "",
+    "defaultStatus": true
   }
 }

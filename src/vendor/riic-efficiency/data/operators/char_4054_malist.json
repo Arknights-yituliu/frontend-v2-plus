@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4054_malist",
+  "name": "至简",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "绘图设计",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "basePointGain",
+              "term": "cc.bd_malist",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "cap": 64,
+                "source": "facilityLevelTotal"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "机械辅助·α",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 16,
+                "value": 5,
+                "source": "basePoint",
+                "term": "cc.bd_malist"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "机械辅助·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 8,
+                "value": 5,
+                "source": "basePoint",
+                "term": "cc.bd_malist"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

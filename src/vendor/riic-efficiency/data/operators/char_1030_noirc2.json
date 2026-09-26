@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1030_noirc2",
+  "name": "火龙S黑角",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "团队合作",
+          "effects": [
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_felyne",
+              "per": {
+                "per": 1,
+                "value": 2,
+                "source": "opGroupInFacility",
+                "group": "cc.tag.mh",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "秘传交涉术",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 7,
+              "stack": "max",
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.tag.mh",
+                "facility": "same",
+                "other": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

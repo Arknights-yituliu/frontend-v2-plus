@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 2,
+  "rulesetVersion": "arknights-riic-2026-09",
+  "gameDataVersion": "torappu-latest",
+  "generatedAt": "2026-09-23T10:11:23.466Z",
+  "operators": "operators",
+  "terms": "terms.json",
+  "ruleset": "ruleset.json"
+}

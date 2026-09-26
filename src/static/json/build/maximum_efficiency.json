@@ -1,5 +1,19 @@
 [
   {
+    "name": "岳羽由加莉",
+    "profession": "狙击/医疗",
+    "max_efficiency": 0.45,
+    "conditions": {
+      "target_profession": [
+        "狙击",
+        "医疗"
+      ],
+      "skill_name": "合理兼职"
+    },
+    "skill_name": "进驻训练室协助位时，狙击与医疗干员的专精技能训练速度+45%",
+    "charId": "char_4219_yukari"
+  },
+  {
     "name": "佩德洛",
     "profession": "辅助",
     "max_efficiency": 0.75,

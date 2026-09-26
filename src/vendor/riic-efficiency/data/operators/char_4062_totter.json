@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4062_totter",
+  "name": "铅踝",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "模糊视线",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 4,
+                "value": -5,
+                "source": "moodDrop"
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "窗外雪啸",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 6,
+              "condition": {
+                "type": "moodDrop",
+                "value": 12
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 10,
+              "condition": {
+                "type": "moodDrop",
+                "value": 12
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

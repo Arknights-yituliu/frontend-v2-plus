@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 2,
+  "id": "char_140_whitew",
+  "name": "拉普兰德",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "醉翁之意·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": -0.1,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "德克萨斯",
+                "facility": "same"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 2,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "德克萨斯",
+                "facility": "same"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "醉翁之意·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": -0.1,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "德克萨斯",
+                "facility": "same"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 4,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "德克萨斯",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

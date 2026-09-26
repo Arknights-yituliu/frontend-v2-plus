@@ -6,6 +6,10 @@ import {
 import {
   applyRiicActiveRosterFallbackOperatorEffects,
 } from "./l65-active-roster-effects.js";
+import {
+  RIIC_ACTIVE_ROSTER_RUNTIME_RULES,
+  riicActiveRosterScopeMatches,
+} from "./riic-active-roster-rule-data.js";
 
 function normalizeOperatorId(value) {
   return String(value || "").trim();
@@ -716,6 +720,28 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
     )
     .sort(
       (left, right) =>
+        Number(
+          RIIC_ACTIVE_ROSTER_RUNTIME_RULES.some(
+            (rule) =>
+              rule?.ownerId === right.operator.charId &&
+              riicActiveRosterScopeMatches(
+                rule,
+                right.slot.candidate?.candidateScope ||
+                  right.slot.candidate?.scope,
+              ),
+          ),
+        ) -
+          Number(
+            RIIC_ACTIVE_ROSTER_RUNTIME_RULES.some(
+              (rule) =>
+                rule?.ownerId === left.operator.charId &&
+                riicActiveRosterScopeMatches(
+                  rule,
+                  left.slot.candidate?.candidateScope ||
+                    left.slot.candidate?.scope,
+                ),
+            ),
+          ) ||
         compareFallbackOperators(left.operator, right.operator) ||
         left.slot.key.localeCompare(right.slot.key, "en"),
     );
@@ -736,8 +762,8 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
   const candidatesByAssignment = new Map();
 
   for (const variant of [
-    rankedVariants[0],
     ...anchoredVariants,
+    rankedVariants[0],
     ...rankedVariants,
   ].filter(Boolean)) {
     const signature = getFallbackPlanAssignmentSignature(variant);

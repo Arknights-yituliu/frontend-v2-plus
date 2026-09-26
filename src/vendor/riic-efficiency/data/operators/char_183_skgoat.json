@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 2,
+  "id": "char_183_skgoat",
+  "name": "地灵",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "天灾信使·α",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 30
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "准时下班",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "moodCost",
+              "value": 2
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 45
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "地质学·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 35,
+              "recipe": "源石碎片"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

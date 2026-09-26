@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "char_300_phenxi",
+  "name": "菲亚梅塔",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "自律",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 2,
+              "scope": "self",
+              "blockOtherRecovery": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "患难之交",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodSwap"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

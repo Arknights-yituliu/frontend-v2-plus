@@ -592,6 +592,31 @@
           "elite": 2
         }
       ]
+    },
+    {
+      "name": "埃癸斯",
+      "rates": [
+        {
+          "percent": 14,
+          "tags": [
+            "sees"
+          ]
+        },
+        {
+          "elite": 1,
+          "percent": 22,
+          "tags": [
+            "sees"
+          ]
+        },
+        {
+          "elite": 2,
+          "percent": 30,
+          "tags": [
+            "sees"
+          ]
+        }
+      ]
     }
   ]
 }

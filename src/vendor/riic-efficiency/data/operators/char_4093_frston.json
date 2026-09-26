@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4093_frston",
+  "name": "Friston-3",
+  "rarity": 1,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "备用能源",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "level",
+            "value": 30
+          },
+          "name": "“愉快的对谈”",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 5,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "凯尔希",
+                "facility": "control"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

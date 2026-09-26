@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4015_spuria",
+  "name": "空构",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "技术交流·α",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "curve": {
+                "type": "ramp",
+                "startValue": 10,
+                "startHours": 1,
+                "step": 1,
+                "cap": 15
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "技术交流·β",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "curve": {
+                "type": "ramp",
+                "startValue": 15,
+                "startHours": 1,
+                "step": 1,
+                "cap": 20
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "外卖水果挞",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "moodCost",
+              "value": -0.3
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

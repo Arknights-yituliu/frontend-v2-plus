@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "id": "char_308_swire",
+  "name": "诗怀雅",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "大小姐",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 7,
+              "stack": "max"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

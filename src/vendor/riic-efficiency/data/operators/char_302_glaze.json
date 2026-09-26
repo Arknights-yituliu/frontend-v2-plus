@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 2,
+  "id": "char_302_glaze",
+  "name": "安比尔",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "慵懒",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": -0.1,
+              "scope": "self"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.2,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "订单分发·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

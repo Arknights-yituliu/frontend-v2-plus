@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4081_warmy",
+  "name": "温米",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "大锅饭·α",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.15,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "大锅饭·β",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.2,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "金属工艺·α",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30,
+              "recipe": "贵金属"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

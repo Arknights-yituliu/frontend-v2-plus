@@ -28,6 +28,679 @@ try {
   const {
     materializeRiicRoomTeamCandidate,
   } = await vite.ssrLoadModule("/src/utils/riic/l62-room-team-materializer.js");
+  const {
+    applyRiicActiveRosterFallbackOperatorEffects,
+    evaluateRiicActiveRosterPlanEffects,
+  } = await vite.ssrLoadModule("/src/utils/riic/l65-active-roster-effects.js");
+  const {
+    applyRiicActiveRosterPreviewEffects,
+  } = await vite.ssrLoadModule("/src/utils/riic/P12-active-roster-core.js");
+  const {
+    settleRiicMaaScheduleEfficiency,
+  } = await vite.ssrLoadModule(
+    "/src/utils/riic/l79-preview-efficiency-settlement.js",
+  );
+
+  const seesRoster = [
+    { charId: "char_4217_makoto", name: "结城理", elite: 2, level: 1 },
+    { charId: "char_4218_aigis", name: "埃癸斯", elite: 0, level: 1 },
+    { charId: "char_4219_yukari", name: "岳羽由加莉", elite: 0, level: 1 },
+    { charId: "char_4220_kormr", name: "虎狼丸", elite: 0, level: 1 },
+  ];
+  const makotoFallbackCandidate = {
+    candidateScope: { roomType: "manufacture", product: "experience" },
+    operatorIds: [],
+  };
+  for (const product of ["experience", "gold"]) {
+    const [makoto] = applyRiicActiveRosterFallbackOperatorEffects({
+      candidate: {
+        ...makotoFallbackCandidate,
+        candidateScope: { roomType: "manufacture", product },
+      },
+      fallbackOperators: [
+        { charId: "char_4217_makoto", name: "结城理", percent: 20 },
+      ],
+      ownedOperators: seesRoster,
+      activeOperatorIds: seesRoster.map((operator) => operator.charId),
+    });
+    assert.equal(makoto.effectivePercent, 40);
+    assert.equal(makoto.activeRosterBonusPercent, 20);
+  }
+  const [soloMakoto] = applyRiicActiveRosterFallbackOperatorEffects({
+    candidate: makotoFallbackCandidate,
+    fallbackOperators: [
+      { charId: "char_4217_makoto", name: "结城理", percent: 20 },
+    ],
+    ownedOperators: [seesRoster[0]],
+    activeOperatorIds: ["char_4217_makoto"],
+  });
+  assert.equal(soloMakoto.effectivePercent, 25);
+  const previewWithSees = applyRiicActiveRosterPreviewEffects({
+    preview: {
+      states: [
+        {
+          durationHours: 12,
+          rooms: [
+            {
+              key: "manufacture:experience:1",
+              facility: "manufacture",
+              product: "experience",
+              efficiency: 100,
+              efficiencyMetrics: { actual: { status: "calculated" } },
+              operators: [{ charId: "char_4217_makoto" }],
+            },
+            {
+              key: "power:1",
+              facility: "power",
+              product: "all",
+              efficiencyMetrics: { actual: { status: "calculated" } },
+              operators: [{ charId: "char_4218_aigis" }],
+            },
+            {
+              key: "hire:1",
+              facility: "hire",
+              product: "all",
+              efficiencyMetrics: { actual: { status: "calculated" } },
+              operators: [{ charId: "char_4219_yukari" }],
+            },
+            {
+              key: "meeting:1",
+              facility: "meeting",
+              product: "all",
+              efficiencyMetrics: { actual: { status: "calculated" } },
+              operators: [{ charId: "char_4220_kormr" }],
+            },
+          ],
+        },
+      ],
+    },
+    ownedOperators: seesRoster,
+  });
+  assert.equal(
+    previewWithSees.states[0].rooms[0].activeRosterBonusPercent,
+    20,
+  );
+  assert.equal(previewWithSees.states[0].rooms[0].efficiency, 120);
+
+  const powerPreview = (sourceFacility, sourceProduct = "experience") => ({
+    states: [
+      {
+        durationHours: 12,
+        rooms: [
+          {
+            key: "power:0",
+            facility: "power",
+            product: "all",
+            efficiency: 115,
+            efficiencyMetrics: {
+              actual: { status: "calculated", value: 115 },
+            },
+            operators: [{ charId: "char_4218_aigis" }],
+          },
+          ...(sourceFacility
+            ? [
+                {
+                  key: `${sourceFacility}:0`,
+                  facility: sourceFacility,
+                  product: sourceProduct,
+                  efficiency: 100,
+                  efficiencyMetrics: {
+                    actual: { status: "calculated", value: 100 },
+                  },
+                  operators: [{ charId: "char_4217_makoto" }],
+                },
+              ]
+            : []),
+        ],
+      },
+    ],
+  });
+
+  assert.equal(
+    applyRiicActiveRosterPreviewEffects({
+      preview: powerPreview(""),
+      ownedOperators: seesRoster,
+    }).states[0].rooms[0].efficiency,
+    115,
+  );
+  for (const product of ["experience", "gold"]) {
+    const settled = applyRiicActiveRosterPreviewEffects({
+      preview: powerPreview("manufacture", product),
+      ownedOperators: seesRoster,
+    });
+    assert.equal(settled.states[0].rooms[0].efficiency, 120);
+    assert.equal(settled.states[0].rooms[0].activeRosterBonusPercent, 5);
+  }
+  assert.equal(
+    applyRiicActiveRosterPreviewEffects({
+      preview: powerPreview("trading"),
+      ownedOperators: seesRoster,
+    }).states[0].rooms[0].efficiency,
+    115,
+  );
+
+  const offsetPreview = applyRiicActiveRosterPreviewEffects({
+    preview: {
+      states: [
+        powerPreview("manufacture").states[0],
+        powerPreview("trading").states[0],
+      ],
+    },
+    ownedOperators: seesRoster,
+  });
+  assert.deepEqual(
+    offsetPreview.states.map((state) => state.rooms[0].efficiency),
+    [120, 115],
+  );
+
+  const createPlanSelection = ({
+    groupId,
+    roomType,
+    product,
+    operatorIds,
+    activeFirst,
+  }) => ({
+    slot: {
+      groupId,
+      cohortId: `${groupId}:0`,
+      staffingCohort: {
+        rotationSegments: [
+          {
+            durationHours: 12,
+            activeTeamIndexes: activeFirst ? [0] : [1],
+          },
+          {
+            durationHours: 12,
+            activeTeamIndexes: activeFirst ? [1] : [0],
+          },
+        ],
+      },
+    },
+    option: {
+      teamIndex: 0,
+      materializedCandidate: {
+        candidateScope: { roomType, product },
+        operatorIds,
+      },
+    },
+  });
+  const evaluateCrossPlan = ({
+    sourceRoomType = "manufacture",
+    sourceProduct = "experience",
+    sourceActiveFirst = true,
+  } = {}) =>
+    evaluateRiicActiveRosterPlanEffects({
+      plan: {
+        selections: [
+          createPlanSelection({
+            groupId: "makoto-source",
+            roomType: sourceRoomType,
+            product: sourceProduct,
+            operatorIds: ["char_4217_makoto"],
+            activeFirst: sourceActiveFirst,
+          }),
+          createPlanSelection({
+            groupId: "aigis-target",
+            roomType: "power",
+            product: "all",
+            operatorIds: ["char_4218_aigis"],
+            activeFirst: true,
+          }),
+        ],
+      },
+      ownedOperators: seesRoster,
+    });
+  const overlappingPlanEffects = evaluateCrossPlan();
+  const overlappingCrossEffect = overlappingPlanEffects.summaries.find(
+    (summary) => summary.ruleId === "aigis-power-makoto-manufacture",
+  );
+  assert.equal(overlappingCrossEffect?.expectedBonusPercent, 5);
+  assert.equal(overlappingPlanEffects.rankingBonus, 15);
+  assert.equal(
+    evaluateCrossPlan({ sourceProduct: "gold" }).summaries.find(
+      (summary) => summary.ruleId === "aigis-power-makoto-manufacture",
+    )?.expectedBonusPercent,
+    5,
+  );
+  assert.equal(
+    evaluateCrossPlan({ sourceRoomType: "trading" }).summaries.find(
+      (summary) => summary.ruleId === "aigis-power-makoto-manufacture",
+    )?.expectedBonusPercent,
+    0,
+  );
+  assert.equal(
+    evaluateCrossPlan({ sourceRoomType: "control" }).summaries.find(
+      (summary) => summary.ruleId === "aigis-power-makoto-manufacture",
+    )?.expectedBonusPercent,
+    0,
+  );
+  assert.equal(
+    evaluateCrossPlan({ sourceActiveFirst: false }).summaries.find(
+      (summary) => summary.ruleId === "aigis-power-makoto-manufacture",
+    )?.expectedBonusPercent,
+    0,
+  );
+
+  const settlementWithCrossFacilityEffect = settleRiicMaaScheduleEfficiency({
+    schedule: {
+      plans: [
+        {
+          duration: 1440,
+          rooms: {
+            manufacture: [
+              {
+                level: 3,
+                product: "Battle Record",
+                operators: ["结城理"],
+              },
+            ],
+            power: [
+              {
+                level: 3,
+                operators: ["埃癸斯"],
+              },
+            ],
+          },
+        },
+      ],
+    },
+    operatorProfiles: seesRoster,
+  });
+  assert.equal(
+    settlementWithCrossFacilityEffect.states[0].rooms.find(
+      (room) => room.facility === "power",
+    )?.efficiency,
+    120,
+  );
+  const settlementWithOffsetCrossFacilityEffect =
+    settleRiicMaaScheduleEfficiency({
+      schedule: {
+        plans: [
+          {
+            duration: 720,
+            rooms: {
+              manufacture: [
+                {
+                  level: 3,
+                  product: "Battle Record",
+                  operators: ["结城理"],
+                },
+              ],
+              power: [{ level: 3, operators: ["埃癸斯"] }],
+            },
+          },
+          {
+            duration: 720,
+            rooms: {
+              manufacture: [],
+              power: [{ level: 3, operators: ["埃癸斯"] }],
+            },
+          },
+        ],
+      },
+      operatorProfiles: seesRoster,
+    });
+  assert.deepEqual(
+    settlementWithOffsetCrossFacilityEffect.states.map(
+      (state) =>
+        state.rooms.find((room) => room.facility === "power")?.efficiency,
+    ),
+    [120, 115],
+  );
+
+  const settlementWithWaaiFuTeammateProduction =
+    settleRiicMaaScheduleEfficiency({
+      schedule: {
+        plans: [
+          {
+            duration: 1440,
+            rooms: {
+              manufacture: [
+                {
+                  level: 3,
+                  product: "Battle Record",
+                  operators: ["结城理", "罗比菈塔", "槐琥"],
+                },
+              ],
+              power: [{ level: 3, operators: ["埃癸斯"] }],
+            },
+          },
+        ],
+      },
+      operatorProfiles: [
+        ...seesRoster,
+        { charId: "char_484_robrta", elite: 1, level: 60 },
+        { charId: "char_243_waaifu", elite: 2, level: 50 },
+      ],
+    });
+  const waaiFuManufactureRoom =
+    settlementWithWaaiFuTeammateProduction.states[0].rooms.find(
+      (room) => room.facility === "manufacture",
+    );
+  assert.equal(waaiFuManufactureRoom?.activeRosterBonusPercent, 10);
+  assert.equal(
+    waaiFuManufactureRoom?.efficiencyMetrics?.actual?.breakdown
+      ?.roomStateCalculation?.productionBonusPercent,
+    40,
+  );
+  assert.equal(waaiFuManufactureRoom?.efficiency, 198);
+
+  const automaticCrossSelection = buildRiicAutomaticRoomGroupSelections({
+    groups: [
+      {
+        id: "automatic-manufacture",
+        label: "automatic manufacture",
+        facility: "manufacture",
+        candidateProduct: "experience",
+      },
+      {
+        id: "automatic-power",
+        label: "automatic power",
+        facility: "power",
+        candidateProduct: "all",
+      },
+    ],
+    candidateStatesByGroupId: {
+      "automatic-manufacture": {
+        status: "ready",
+        cohorts: [
+          {
+            id: "manufacture:0",
+            teamCount: 1,
+            rotationSegments: [
+              { durationHours: 12, activeTeamIndexes: [0] },
+              { durationHours: 12, activeTeamIndexes: [1] },
+            ],
+            candidates: [
+              {
+                key: "automatic-makoto",
+                candidateScope: {
+                  roomType: "manufacture",
+                  product: "experience",
+                },
+                operatorIds: ["char_4217_makoto"],
+                corePercent: 120,
+                localBonusPercent: 20,
+                fallback: { count: 0, candidateOperators: [] },
+              },
+            ],
+          },
+        ],
+      },
+      "automatic-power": {
+        status: "ready",
+        cohorts: [
+          {
+            id: "power:0",
+            teamCount: 1,
+            rotationSegments: [
+              { durationHours: 12, activeTeamIndexes: [0] },
+              { durationHours: 12, activeTeamIndexes: [1] },
+            ],
+            candidates: [
+              {
+                key: "automatic-aigis",
+                candidateScope: { roomType: "power", product: "all" },
+                operatorIds: ["char_4218_aigis"],
+                corePercent: 115,
+                localBonusPercent: 15,
+                fallback: { count: 0, candidateOperators: [] },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    ownedOperators: seesRoster,
+    selectionBeamLimit: 8,
+    selectionOptionLimit: 8,
+    selectionRepresentativeLimit: 8,
+    fallbackPlanLimit: 4,
+    collectPlanningDebug: true,
+  });
+  assert.deepEqual(automaticCrossSelection.unavailableGroups, []);
+  assert.equal(
+    automaticCrossSelection.debug.bestPlan.activeRosterEffects.rankingBonus,
+    15,
+  );
+
+  const lowRankActiveRosterOwners = createRiicRoomGroupFallbackPlanAlternatives({
+    selectedEntries: [
+      {
+        selectionKey: "active-roster-owner:0",
+        candidate: {
+          key: "active-roster-owner-candidate",
+          candidateScope: { roomType: "manufacture", product: "experience" },
+          fallback: {
+            count: 1,
+            candidateOperators: [
+              ...Array.from({ length: 20 }, (_, index) => ({
+                charId: `ordinary-${index}`,
+                name: `ordinary-${index}`,
+                percent: 50,
+              })),
+              {
+                charId: "char_4217_makoto",
+                name: "结城理",
+                percent: 20,
+              },
+            ],
+          },
+        },
+      },
+    ],
+    ownedOperators: seesRoster,
+    maxPlanCount: 1,
+  });
+  assert.ok(
+    lowRankActiveRosterOwners.some((plan) =>
+      plan.selectedOperatorIds.includes("char_4217_makoto"),
+    ),
+  );
+
+  const automaticFallbackOwnerSelection = buildRiicAutomaticRoomGroupSelections({
+    groups: [
+      {
+        id: "automatic-fallback-manufacture",
+        label: "automatic fallback manufacture",
+        facility: "manufacture",
+        candidateProduct: "experience",
+      },
+      {
+        id: "automatic-fallback-power",
+        label: "automatic fallback power",
+        facility: "power",
+        candidateProduct: "all",
+      },
+    ],
+    candidateStatesByGroupId: {
+      "automatic-fallback-manufacture": {
+        status: "ready",
+        cohorts: [
+          {
+            id: "manufacture:0",
+            teamCount: 1,
+            rotationSegments: [
+              { durationHours: 12, activeTeamIndexes: [0] },
+              { durationHours: 12, activeTeamIndexes: [1] },
+            ],
+            candidates: [
+              {
+                key: "automatic-fallback-makoto",
+                candidateScope: {
+                  roomType: "manufacture",
+                  product: "experience",
+                },
+                operatorIds: [],
+                corePercent: 100,
+                fallback: {
+                  count: 1,
+                  candidateOperators: [
+                    { charId: "ordinary-manufacture", percent: 50 },
+                    {
+                      charId: "char_4217_makoto",
+                      name: "结城理",
+                      percent: 20,
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      },
+      "automatic-fallback-power": {
+        status: "ready",
+        cohorts: [
+          {
+            id: "power:0",
+            teamCount: 1,
+            rotationSegments: [
+              { durationHours: 12, activeTeamIndexes: [0] },
+              { durationHours: 12, activeTeamIndexes: [1] },
+            ],
+            candidates: [
+              {
+                key: "automatic-fallback-aigis",
+                candidateScope: { roomType: "power", product: "all" },
+                operatorIds: [],
+                corePercent: 100,
+                fallback: {
+                  count: 1,
+                  candidateOperators: [
+                    { charId: "ordinary-power", percent: 50 },
+                    {
+                      charId: "char_4218_aigis",
+                      name: "埃癸斯",
+                      percent: 15,
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    ownedOperators: seesRoster,
+    selectionBeamLimit: 4,
+    selectionOptionLimit: 4,
+    selectionRepresentativeLimit: 4,
+    fallbackPlanLimit: 1,
+    collectPlanningDebug: true,
+  });
+  assert.deepEqual(
+    automaticFallbackOwnerSelection.debug.bestPlan.selections.flatMap(
+      (selection) => selection.operatorIds,
+    ),
+    ["char_4217_makoto", "char_4218_aigis"],
+  );
+  assert.equal(
+    automaticFallbackOwnerSelection.debug.bestPlan.activeRosterEffects
+      .rankingBonus,
+    15,
+  );
+
+  const protectedActiveRosterSelection = buildRiicAutomaticRoomGroupSelections({
+    groups: [
+      {
+        id: "protected-manufacture",
+        label: "protected manufacture",
+        facility: "manufacture",
+        candidateProduct: "experience",
+      },
+      {
+        id: "protected-power",
+        label: "protected power",
+        facility: "power",
+        candidateProduct: "all",
+      },
+    ],
+    candidateStatesByGroupId: {
+      "protected-manufacture": {
+        status: "ready",
+        cohorts: [
+          {
+            id: "manufacture:0",
+            teamCount: 1,
+            rotationSegments: [
+              { durationHours: 12, activeTeamIndexes: [0] },
+              { durationHours: 12, activeTeamIndexes: [1] },
+            ],
+            candidates: [
+              {
+                key: "protected-manufacture-candidate",
+                candidateScope: {
+                  roomType: "manufacture",
+                  product: "experience",
+                },
+                operatorIds: [],
+                corePercent: 100,
+                fallback: {
+                  count: 1,
+                  candidateOperators: [
+                    { charId: "ordinary-manufacture", percent: 50 },
+                    { charId: "char_4217_makoto", percent: 20 },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      },
+      "protected-power": {
+        status: "ready",
+        cohorts: [
+          {
+            id: "power:0",
+            teamCount: 1,
+            rotationSegments: [
+              { durationHours: 12, activeTeamIndexes: [0] },
+              { durationHours: 12, activeTeamIndexes: [1] },
+            ],
+            candidates: [
+              {
+                key: "protected-power-candidate",
+                candidateScope: { roomType: "power", product: "all" },
+                operatorIds: [],
+                corePercent: 100,
+                fallback: {
+                  count: 1,
+                  candidateOperators: [
+                    { charId: "ordinary-power", percent: 50 },
+                    { charId: "char_4218_aigis", percent: 15 },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    ownedOperators: seesRoster,
+    selectionBeamLimit: 4,
+    selectionOptionLimit: 4,
+    selectionRepresentativeLimit: 4,
+    fallbackPlanLimit: 12,
+    collectPlanningDebug: true,
+  });
+  const protectedRetainedPlans = protectedActiveRosterSelection.debug.batchDiagnostics
+    .flatMap((batch) => batch.retainedPlans || []);
+  assert.ok(
+    protectedRetainedPlans.some((plan) => {
+      const operatorIds = [
+        ...(plan.priorSelections || []),
+        ...(plan.selections || []),
+      ].flatMap(
+        (selection) => selection.operatorIds || [],
+      );
+      return (
+        operatorIds.includes("char_4217_makoto") &&
+        operatorIds.includes("char_4218_aigis")
+      );
+    }),
+    JSON.stringify(protectedRetainedPlans),
+  );
 
 const candidate = {
   key: "candidate-a",
@@ -257,6 +930,115 @@ const automaticFallbackPlan = planRiicAutomaticRoomSelections({
 });
 assert.equal(automaticFallbackPlan.bestPlan.selections.length, 4);
 
+const completeRoutePreferredPlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "complete-preferred-first",
+      groupId: "complete-preferred-group",
+      cohortId: "complete-preferred-first",
+      cohortKey: "complete-preferred-first",
+      teamCount: 1,
+    },
+    {
+      key: "complete-preferred-second",
+      groupId: "complete-preferred-group",
+      cohortId: "complete-preferred-second",
+      cohortKey: "complete-preferred-second",
+      teamCount: 1,
+    },
+    {
+      key: "complete-preferred-last",
+      groupId: "complete-preferred-last",
+      cohortId: "complete-preferred-last",
+      cohortKey: "complete-preferred-last",
+      teamCount: 1,
+    },
+  ],
+  resolveTeamOptions: ({ cohort, plan }) => {
+    if (cohort.cohortId === "complete-preferred-first") {
+      return [
+        {
+          key: "dead-end-high",
+          candidateKey: "dead-end-high",
+          claimedOperatorIds: ["dead-end-high"],
+          baseRankingValue: 100,
+        },
+        {
+          key: "complete-low",
+          candidateKey: "complete-low",
+          claimedOperatorIds: ["complete-low"],
+          baseRankingValue: 50,
+        },
+      ];
+    }
+
+    if (cohort.cohortId === "complete-preferred-second") {
+      return plan.selections[0]?.option?.candidateKey === "complete-low"
+        ? [
+            {
+              key: "complete-middle",
+              candidateKey: "complete-middle",
+              claimedOperatorIds: ["complete-middle"],
+              baseRankingValue: 10,
+            },
+          ]
+        : [];
+    }
+
+    return [
+      {
+        key: "complete-last",
+        candidateKey: "complete-last",
+        claimedOperatorIds: ["complete-last"],
+        baseRankingValue: 10,
+      },
+    ];
+  },
+});
+assert.equal(completeRoutePreferredPlan.complete, true);
+assert.deepEqual(
+  completeRoutePreferredPlan.bestPlan.selections.map(
+    (selection) => selection.option.candidateKey,
+  ),
+  ["complete-low", "complete-middle", "complete-last"],
+);
+
+const partialRouteFallbackPlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "partial-route-only",
+      groupId: "partial-route-only",
+      cohortId: "partial-route-only",
+      cohortKey: "partial-route-only",
+      teamCount: 2,
+    },
+  ],
+  resolveTeamOptions: ({ selectedCandidateKeys }) =>
+    selectedCandidateKeys.length === 0
+      ? [
+          {
+            key: "partial-first",
+            candidateKey: "partial-first",
+            claimedOperatorIds: ["partial-first"],
+            baseRankingValue: 20,
+          },
+        ]
+      : [],
+});
+assert.equal(partialRouteFallbackPlan.complete, false);
+assert.deepEqual(
+  partialRouteFallbackPlan.incompleteCohorts,
+  [
+    {
+      groupId: "partial-route-only",
+      cohortId: "partial-route-only",
+      cohortKey: "partial-route-only",
+      selectedCount: 1,
+      teamCount: 2,
+    },
+  ],
+);
+
 const protectedOptionPlan = planRiicAutomaticRoomSelections({
   selectionCohorts: [
     {
@@ -451,6 +1233,7 @@ const automationReservationCandidateStates = {
     cohorts: [
       {
         id: "power:0",
+        groupId: "automation-power",
         teamCount: 2,
         candidates: [
           {
@@ -474,6 +1257,9 @@ const automationReservationCandidateStates = {
                 },
                 { charId: "qingliu", name: "清流", percent: 15 },
                 { charId: "power-backup", name: "Power Backup", percent: 15 },
+                { charId: "power-backup-2", name: "Power Backup 2", percent: 14 },
+                { charId: "power-backup-3", name: "Power Backup 3", percent: 13 },
+                { charId: "power-backup-4", name: "Power Backup 4", percent: 12 },
               ],
             },
           },
@@ -498,6 +1284,70 @@ const automationReservationCandidateStates = {
                 },
                 { charId: "qingliu", name: "清流", percent: 15 },
                 { charId: "power-backup", name: "Power Backup", percent: 15 },
+                { charId: "power-backup-2", name: "Power Backup 2", percent: 14 },
+                { charId: "power-backup-3", name: "Power Backup 3", percent: 13 },
+                { charId: "power-backup-4", name: "Power Backup 4", percent: 12 },
+              ],
+            },
+          },
+        ],
+      },
+      {
+        id: "power:1",
+        groupId: "automation-power",
+        teamCount: 2,
+        candidates: [
+          {
+            key: "power-fallback-c",
+            candidateScope: {
+              roomType: "power",
+              product: "all",
+              stationLevel: 1,
+              slotCount: 1,
+            },
+            sourceRoomType: "power",
+            corePercent: 100,
+            localBonusPercent: 0,
+            fallback: {
+              count: 1,
+              candidateOperators: [
+                {
+                  charId: "char_1027_greyy2",
+                  name: "承曦格雷伊",
+                  percent: 23,
+                },
+                { charId: "qingliu", name: "清流", percent: 15 },
+                { charId: "power-backup", name: "Power Backup", percent: 15 },
+                { charId: "power-backup-2", name: "Power Backup 2", percent: 14 },
+                { charId: "power-backup-3", name: "Power Backup 3", percent: 13 },
+                { charId: "power-backup-4", name: "Power Backup 4", percent: 12 },
+              ],
+            },
+          },
+          {
+            key: "power-fallback-d",
+            candidateScope: {
+              roomType: "power",
+              product: "all",
+              stationLevel: 1,
+              slotCount: 1,
+            },
+            sourceRoomType: "power",
+            corePercent: 100,
+            localBonusPercent: 0,
+            fallback: {
+              count: 1,
+              candidateOperators: [
+                {
+                  charId: "char_1027_greyy2",
+                  name: "承曦格雷伊",
+                  percent: 23,
+                },
+                { charId: "qingliu", name: "清流", percent: 15 },
+                { charId: "power-backup", name: "Power Backup", percent: 15 },
+                { charId: "power-backup-2", name: "Power Backup 2", percent: 14 },
+                { charId: "power-backup-3", name: "Power Backup 3", percent: 13 },
+                { charId: "power-backup-4", name: "Power Backup 4", percent: 12 },
               ],
             },
           },
@@ -538,7 +1388,19 @@ const automationReservationPowerOperatorIds =
 assert.ok(
   automationReservationPowerOperatorIds.includes("char_1027_greyy2"),
 );
-assert.ok(!automationReservationPowerOperatorIds.includes("qingliu"));
+assert.equal(
+  automationReservationPowerOperatorIds.filter(
+    (operatorId) => operatorId === "char_1027_greyy2",
+  ).length,
+  1,
+);
+assert.equal(
+  automationReservationSelection.debug.bestPlan.selections.filter(
+    (selection) => selection.groupId === "automation-power",
+  ).length,
+  4,
+);
+assert.equal(automationReservationSelection.debug.bestPlan.complete, true);
 
 const twoStepLookaheadPlan = planRiicAutomaticRoomSelections({
   selectionCohorts: [

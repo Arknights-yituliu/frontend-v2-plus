@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1015_aglna2",
+  "name": "予愿安洁莉娜",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "资深信使",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得尚未拥有的线索",
+              "cluePreference": "unowned"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "我自己的愿望",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 2,
+              "condition": {
+                "type": "onlySelf"
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 50,
+              "condition": {
+                "type": "onlySelf"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

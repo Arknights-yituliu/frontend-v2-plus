@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4087_ines",
+  "name": "伊内丝",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "人事管理·β",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 35
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "聚影",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "curve": {
+                "type": "ramp",
+                "startValue": 20,
+                "startHours": 1,
+                "step": 2,
+                "cap": 30
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

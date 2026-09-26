@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4143_sensi",
+  "name": "森西",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "资深料理人",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.15,
+              "scope": "room",
+              "subjects": "single",
+              "stack": "max",
+              "maxGroup": "dormRec-single",
+              "scopeGroup": "cc.tag.dungeon"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.15,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "森西大食堂",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "basePointGain",
+              "term": "cc.bd_dungeon",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "ownLevel"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

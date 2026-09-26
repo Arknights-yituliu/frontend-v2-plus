@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 2,
+  "id": "char_367_swllow",
+  "name": "灰喉",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "必要责任",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "独处",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.7,
+              "scope": "self"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

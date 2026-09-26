@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4058_pepe",
+  "name": "佩佩",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "多面逢源",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "ownLevel"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "慧眼独到",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "fixed",
+                "orderName": "特别独占订单",
+                "qty": 1000,
+                "material": null,
+                "amount": 0,
+                "time": 4.5,
+                "priority": 1,
+                "ignoreEff": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

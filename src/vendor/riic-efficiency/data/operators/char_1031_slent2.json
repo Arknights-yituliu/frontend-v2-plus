@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1031_slent2",
+  "name": "淬羽赫默",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "不停歇的电话",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 40
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "莱茵科技·γ",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

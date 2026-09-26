@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 2,
+  "id": "char_102_texas",
+  "name": "德克萨斯",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "恩怨",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": 0.3,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "拉普兰德",
+                "facility": "same"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 65,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "拉普兰德",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "默契",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": -0.3,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "能天使",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

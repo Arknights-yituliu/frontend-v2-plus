@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4027_heyak",
+  "name": "霍尔海雅",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "“职业操守”·α",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 1,
+              "condition": {
+                "type": "onlySelf"
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 15,
+              "condition": {
+                "type": "onlySelf"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "“职业操守”·β",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 1,
+              "condition": {
+                "type": "onlySelf"
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 35,
+              "condition": {
+                "type": "onlySelf"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "文献学顾问",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得线索1",
+              "cluePreference": 1,
+              "condition": {
+                "type": "onlySelf"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
