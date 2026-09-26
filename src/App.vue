@@ -22,6 +22,7 @@ import '/src/assets/css/atomic/atomic.scss'
 
 import Navigation from '/src/components/layout/Navigation.vue'
 import PageTracker from '/src/components/layout/PageTracker.vue'
+import MaintenanceNotice from '/src/components/layout/MaintenanceNotice.vue'
 import {useTheme} from 'vuetify'
 
 import User from '/src/pages/account/user.vue'
@@ -229,6 +230,7 @@ const buildTime = import.meta.env.BUILD_TIME;
 
       <v-app class="app" :class="customTheme">
         <PageTracker />
+        <MaintenanceNotice />
         <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
           <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 12px 0 0">
             明日方舟一图流
