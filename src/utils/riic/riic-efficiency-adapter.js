@@ -327,7 +327,11 @@ function roomProductKey(room) {
   return PRODUCT_RESOURCE_KEYS[product] || "";
 }
 
-function createResourceRows(result, schedule, { dailyOverview = false } = {}) {
+function createResourceRows(
+  result,
+  schedule,
+  { dailyOverview = false } = {},
+) {
   const outputProducts = {
     lmd: ["龙门币", dailyOverview ? "net" : "production"],
     exp: ["中级作战记录", "production"],
@@ -364,6 +368,11 @@ function createResourceRows(result, schedule, { dailyOverview = false } = {}) {
     ([resource, [product, kind]]) => {
       const roomCount = roomCounts.get(resource) || 0;
       const calculatedOutputPerDay = resourceAmount(result, product, kind);
+      const grossOutputPerDay = ["lmd", "gold", "originiumShard"].includes(
+        resource,
+      )
+        ? resourceAmount(result, product, "production")
+        : null;
       const outputPerDay =
         calculatedOutputPerDay === null
           ? null
@@ -382,6 +391,19 @@ function createResourceRows(result, schedule, { dailyOverview = false } = {}) {
           unit: RESOURCE_LABELS[resource][1],
           outputPerDay,
           isCalculated: outputPerDay !== null,
+          ...(grossOutputPerDay !== null
+            ? {
+                grossOutputPerDay,
+                grossIsCalculated: true,
+              }
+            : resource === "lmd" ||
+                resource === "gold" ||
+                resource === "originiumShard"
+              ? {
+                  grossOutputPerDay: null,
+                  grossIsCalculated: false,
+                }
+              : {}),
           roomCount,
           calculatedRoomCount: roomCount,
         },
@@ -458,6 +480,7 @@ export function createRiicEfficiencyYield(
   preview,
   droneScenarioResults = {},
   roomIndexAssignments = {},
+  goldResourceFlow = null,
 ) {
   const rooms = createRoomRows(result, preview, roomIndexAssignments);
   const droneTargetSettlements = rooms.map((room) => {
@@ -566,6 +589,19 @@ export function createRiicEfficiencyYield(
         })),
       })),
     resourceFlows: {
+      ...(goldResourceFlow
+        ? {
+            gold: {
+              isCalculated: true,
+              grossOutputPerDay:
+                resourceAmount(result, "赤金", "production") ?? 0,
+              tradeConsumptionPerDay:
+                goldResourceFlow.tradeConsumptionPerDay ?? 0,
+              virtualGoldOutputPerDay:
+                goldResourceFlow.virtualGoldOutputPerDay ?? 0,
+            },
+          }
+        : {}),
       orundum: {
         isCalculated: Boolean(orundumProduction || shardProduction),
         craftMaterial,

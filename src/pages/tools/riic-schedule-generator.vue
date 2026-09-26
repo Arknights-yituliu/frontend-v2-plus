@@ -192,6 +192,8 @@ const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
   "riic_schedule_generator_to_legacy_editor_v1";
 const RIIC_WORKFLOW_CARD_COLLAPSE_STORAGE_KEY =
   "riic_schedule_generator_workflow_card_collapse_v1";
+const RIIC_OUTPUT_MODE_STORAGE_KEY =
+  "riic_schedule_generator_output_mode_v1";
 const RIIC_WORKFLOW_CARD_IDS = Object.freeze([
   "layout",
   "generation",
@@ -320,6 +322,7 @@ const showCandidateDebugValues = computed(() => route.query.mode === "dev");
 const isOutputPreviewMode = computed(() => route.query.mode === "output");
 const hasSavedWizardState = ref(false);
 const storageReady = ref(false);
+const scheduleOutputMode = ref("gross");
 const exportingImage = ref(false);
 const exportingMaa = ref(false);
 const layoutEntry = ref(DEFAULT_LAYOUT_SELECTION.cardKey);
@@ -4600,7 +4603,11 @@ function applyRiicL79EfficiencyToPreview({ preview, settlement } = {}) {
 const riicLegacyL79Settlement = computed(() => {
   if (
     scheduleExecutionSettings.calculationMode !== "legacy" &&
-    !showCandidateDebugValues.value
+    !showCandidateDebugValues.value &&
+    !(
+      scheduleExecutionSettings.calculationMode === "riic-efficiency" &&
+      scheduleOutputMode.value === "gross"
+    )
   ) {
     return null;
   }
@@ -4674,6 +4681,8 @@ const riicEfficiencyCalculation = computed(() => {
       riicSchedulePreviewBase.value,
       droneScenarioResults,
       resolvedScheduleRoomMaaIndexAssignments.value,
+      riicLegacyActualScheduleMetrics.value?.yield?.resourceFlows?.gold ||
+        null,
     );
     return {
       schedule,
@@ -5027,8 +5036,14 @@ const outputPreviewScheduleMeta = computed(() => {
     .join(" · ");
 });
 const outputPreviewYieldItems = computed(() => {
+  const yieldSummary = riicActualScheduleMetrics.value?.yield || {};
   const resources = new Map(
-    (riicActualScheduleMetrics.value?.yield?.resources || []).map(
+    (yieldSummary.resources || []).map(
+      (item) => [String(item?.resource || ""), item],
+    ),
+  );
+  const overviewResources = new Map(
+    (yieldSummary.overviewResources || []).map(
       (item) => [String(item?.resource || ""), item],
     ),
   );
@@ -5040,17 +5055,47 @@ const outputPreviewYieldItems = computed(() => {
   ]
     .map(({ resource, label, image }) => {
       const item = resources.get(resource);
-      const value = Number(item?.outputPerDay);
+      const overviewItem = overviewResources.get(resource);
+      const netSource = overviewItem || item;
+      const rawNetValue = netSource?.outputPerDay;
+      const netValue =
+        rawNetValue === null || rawNetValue === undefined
+          ? null
+          : Number(rawNetValue);
+      const grossSource =
+        item?.grossOutputPerDay !== null &&
+        item?.grossOutputPerDay !== undefined
+          ? item
+          : overviewItem;
+      const rawGrossValue = grossSource?.grossOutputPerDay;
+      const grossValue =
+        rawGrossValue === null || rawGrossValue === undefined
+          ? null
+          : Number(rawGrossValue);
+      const netIsCalculated =
+        netSource?.isCalculated === true && Number.isFinite(netValue);
+      const grossIsCalculated =
+        grossSource?.grossIsCalculated !== false &&
+        (grossSource?.grossIsCalculated === true ||
+          grossSource?.isCalculated === true) &&
+        Number.isFinite(grossValue);
+      const useGrossValue =
+        scheduleOutputMode.value === "gross" && resource === "lmd";
+      const isCalculated =
+        useGrossValue ? grossIsCalculated : netIsCalculated;
       return {
         resource,
         label,
         image,
-        value,
-        isCalculated:
-          item?.isCalculated === true && Number.isFinite(value) && value !== 0,
+        value: useGrossValue ? grossValue : netValue,
+        isCalculated,
+        shouldDisplay:
+          Boolean(item || overviewItem) ||
+          (resource === "lmd" &&
+            (resources.size > 0 || overviewResources.size > 0)),
       };
     })
-    .filter((item) => item.isCalculated);
+    .filter((item) => item.shouldDisplay);
 });
 const outputPreviewResourceNettingItems = computed(() => {
   const yieldSummary = riicActualScheduleMetrics.value?.yield || {};
@@ -5061,6 +5106,7 @@ const outputPreviewResourceNettingItems = computed(() => {
     ]),
   );
   const orundumFlow = yieldSummary.resourceFlows?.orundum || {};
+  const goldFlow = yieldSummary.resourceFlows?.gold || {};
   const craftMaterial =
     orundumFlow.craftMaterial ||
     scheduleExecutionSettings.orundumCraftMaterial ||
@@ -5068,23 +5114,80 @@ const outputPreviewResourceNettingItems = computed(() => {
   const craftMaterialLabel =
     String(orundumFlow.craftMaterialLabel || "").trim() ||
     (craftMaterial === "device" ? "装置" : "固源岩");
+  const getSelectedResourceOutput = (resource) => {
+    const isGross = scheduleOutputMode.value === "gross";
+    const rawValue = isGross
+      ? resource?.grossOutputPerDay
+      : resource?.outputPerDay;
+    const value =
+      rawValue === null || rawValue === undefined ? null : Number(rawValue);
+    return {
+      value,
+      isCalculated:
+        (isGross
+          ? resource?.grossIsCalculated === true ||
+            (resource?.grossIsCalculated !== false &&
+              resource?.isCalculated === true)
+          : resource?.isCalculated === true) &&
+        Number.isFinite(value),
+    };
+  };
+  const goldOutput = getSelectedResourceOutput(resources.get("gold"));
+  const shardOutput = getSelectedResourceOutput(
+    resources.get("originiumShard"),
+  );
 
   const items = [
     {
       key: "gold",
-      label: "赤金",
+      label: scheduleOutputMode.value === "gross" ? "赤金" : "净赤金",
       image: goldImage,
-      value: Number(resources.get("gold")?.outputPerDay),
+      value: goldOutput.value,
       unit: "根",
-      isCalculated: resources.get("gold")?.isCalculated === true,
+      digits: 2,
+      isCalculated: goldOutput.isCalculated,
     },
     {
       key: "originiumShard",
-      label: "源石碎片",
+      label:
+        scheduleOutputMode.value === "gross" ? "源石碎片" : "净源石碎片",
       image: originiumShardImage,
-      value: Number(resources.get("originiumShard")?.outputPerDay),
+      value: shardOutput.value,
       unit: "枚",
-      isCalculated: resources.get("originiumShard")?.isCalculated === true,
+      digits: 2,
+      isCalculated: shardOutput.isCalculated,
+    },
+    {
+      key: "lmd-consumption",
+      label: "龙门币消耗",
+      image: lmdImage,
+      value: -Number(orundumFlow.lmdConsumptionPerDay || 0),
+      unit: "龙门币",
+      isCalculated:
+        orundumFlow.isCalculated === true &&
+        Number.isFinite(Number(orundumFlow.lmdConsumptionPerDay)),
+    },
+    {
+      key: "gold-consumption",
+      label: "赤金消耗",
+      image: goldImage,
+      value: -Number(goldFlow.tradeConsumptionPerDay || 0),
+      unit: "根",
+      digits: 2,
+      isCalculated:
+        goldFlow.isCalculated === true &&
+        Number.isFinite(Number(goldFlow.tradeConsumptionPerDay)),
+    },
+    {
+      key: "shard-consumption",
+      label: "源石碎片消耗",
+      image: originiumShardImage,
+      value: -Number(orundumFlow.shardConsumptionPerDay || 0),
+      unit: "枚",
+      digits: 2,
+      isCalculated:
+        orundumFlow.isCalculated === true &&
+        Number.isFinite(Number(orundumFlow.shardConsumptionPerDay)),
     },
     {
       key: `craft:${craftMaterial}`,
@@ -5099,6 +5202,10 @@ const outputPreviewResourceNettingItems = computed(() => {
   ];
 
   return items.filter((item) => {
+    if (item.key.endsWith("-consumption")) {
+      return item.isCalculated && Math.abs(item.value) > 1e-9;
+    }
+
     if (item.key.startsWith("craft:")) {
       return item.isCalculated && Math.abs(item.value) > 1e-9;
     }
@@ -5163,19 +5270,23 @@ const outputPreviewHeaderTheme = computed(() => {
 });
 
 function formatOutputPreviewYield(value) {
-  return new Intl.NumberFormat("zh-CN", {
-    maximumFractionDigits: 0,
-  }).format(value);
+  if (value === null || value === undefined || !Number.isFinite(Number(value))) {
+    return "--";
+  }
+  return formatNumber(value);
 }
 
-function formatOutputPreviewResourceNetting(value) {
-  const number = Number(value);
+function formatOutputPreviewResourceNetting(value, digits) {
+  const number =
+    value === null || value === undefined ? NaN : Number(value);
   if (!Number.isFinite(number)) {
     return "--";
   }
 
   return `${number > 0 ? "+" : ""}${new Intl.NumberFormat("zh-CN", {
-    maximumFractionDigits: 1,
+    ...(digits === undefined
+      ? { maximumFractionDigits: 1 }
+      : { minimumFractionDigits: digits, maximumFractionDigits: digits }),
   }).format(number)}`;
 }
 
@@ -8357,6 +8468,33 @@ function toggleWorkflowCardCollapse(cardId) {
   }
 }
 
+function normalizeScheduleOutputMode(value) {
+  return value === "net" ? "net" : "gross";
+}
+
+function loadScheduleOutputMode() {
+  try {
+    scheduleOutputMode.value = normalizeScheduleOutputMode(
+      localStorage.getItem(RIIC_OUTPUT_MODE_STORAGE_KEY),
+    );
+  } catch {
+    scheduleOutputMode.value = "gross";
+  }
+}
+
+function setScheduleOutputMode(value) {
+  if (value !== "gross" && value !== "net") {
+    return;
+  }
+
+  scheduleOutputMode.value = value;
+  try {
+    localStorage.setItem(RIIC_OUTPUT_MODE_STORAGE_KEY, value);
+  } catch {
+    // The output mode remains available for the current page session.
+  }
+}
+
 loadWorkflowCardCollapseStates();
 
 function selectOption(key, value) {
@@ -8642,6 +8780,13 @@ async function clearSavedWizardState() {
     cleared = false;
   }
 
+  try {
+    localStorage.removeItem(RIIC_OUTPUT_MODE_STORAGE_KEY);
+  } catch {
+    cleared = false;
+  }
+
+  scheduleOutputMode.value = "gross";
   resetWorkflowCardCollapseStates();
   Object.assign(answers, DEFAULT_ANSWERS);
   currentStep.value = 0;
@@ -8899,6 +9044,7 @@ watch(riicSchedulePreview, (preview) => {
 });
 
 onMounted(async () => {
+  loadScheduleOutputMode();
   loadOperatorSources();
   loadSavedWizardState();
   storageReady.value = true;
@@ -9501,7 +9647,11 @@ onBeforeUnmount(() => {
                     v-if="outputPreviewYieldItems.length"
                     class="schedule-output-document-yield"
                   >
-                    <span>预计日产</span>
+                    <span>
+                      预计日产（{{
+                        scheduleOutputMode === "gross" ? "总产出" : "净产出"
+                      }}）
+                    </span>
                     <strong
                       v-for="item in outputPreviewYieldItems"
                       :key="item.resource"
@@ -9511,14 +9661,16 @@ onBeforeUnmount(() => {
                         :alt="item.label"
                         class="schedule-output-document-yield-icon"
                       />
-                      {{ formatOutputPreviewYield(item.value) }}
+                      {{
+                        formatOutputPreviewYield(item.value)
+                      }}
                     </strong>
                   </div>
                   <div
                     v-if="outputPreviewResourceNettingItems.length"
                     class="schedule-output-document-resource-netting"
                   >
-                    <span>资源净值</span>
+                    <span>资源产出与消耗</span>
                   <strong
                     v-for="item in outputPreviewResourceNettingItems"
                     :key="item.key"
@@ -9536,9 +9688,11 @@ onBeforeUnmount(() => {
                       :size="26"
                       :mobile-size="26"
                     ></ItemImage>
+                    <span>{{ item.label }}</span>
                       {{
                         formatOutputPreviewResourceNetting(
                           item.value,
+                          item.digits,
                         )
                       }}
                     </strong>
@@ -9718,7 +9872,11 @@ onBeforeUnmount(() => {
                     v-if="outputPreviewYieldItems.length"
                     class="schedule-output-document-yield"
                   >
-                    <span>预计日产</span>
+                    <span>
+                      预计日产（{{
+                        scheduleOutputMode === "gross" ? "总产出" : "净产出"
+                      }}）
+                    </span>
                     <strong
                       v-for="item in outputPreviewYieldItems"
                       :key="item.resource"
@@ -9728,14 +9886,16 @@ onBeforeUnmount(() => {
                         :alt="item.label"
                         class="schedule-output-document-yield-icon"
                       />
-                      {{ formatOutputPreviewYield(item.value) }}
+                      {{
+                        formatOutputPreviewYield(item.value)
+                      }}
                     </strong>
                   </div>
                   <div
                     v-if="outputPreviewResourceNettingItems.length"
                     class="schedule-output-document-resource-netting"
                   >
-                    <span>资源净值</span>
+                    <span>资源产出与消耗</span>
                   <strong
                     v-for="item in outputPreviewResourceNettingItems"
                     :key="item.key"
@@ -9753,9 +9913,11 @@ onBeforeUnmount(() => {
                       :size="26"
                       :mobile-size="26"
                     ></ItemImage>
+                    <span>{{ item.label }}</span>
                       {{
                         formatOutputPreviewResourceNetting(
                           item.value,
+                          item.digits,
                         )
                       }}
                     </strong>
@@ -9884,6 +10046,8 @@ onBeforeUnmount(() => {
           "
           :calculation-mode="scheduleExecutionSettings.calculationMode"
           :yield="riicScheduleResultSnapshot.actual?.yield"
+          :output-mode="scheduleOutputMode"
+          show-output-mode-toggle
           :drone-display="
             scheduleExecutionSettings.calculationMode === 'riic-efficiency'
               ? riicScheduleResultSnapshot.riicEfficiency?.yield
@@ -9896,6 +10060,7 @@ onBeforeUnmount(() => {
           :room-index-assignments="resolvedScheduleRoomMaaIndexAssignments"
           @select-drone-target="selectScheduleDroneTarget"
           @update-drone-order="updateScheduleDroneOrder"
+          @update:output-mode="setScheduleOutputMode"
         ></RiicScheduleResourceSummary>
 
         <RiicScheduleExportActions

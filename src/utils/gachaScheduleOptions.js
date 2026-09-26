@@ -18,14 +18,14 @@ const scheduleDefinitions = [
   },
   {
     id: "spring_festival_2027",
-    name: "新春限定",
-    startDate: "2027-01-30",
-    lastDrawDate: "2027-02-12",
+    name: "新年限定",
+    startDate: "2027-02-01",
+    lastDrawDate: "2027-02-14",
     activityType: "春节限定",
     disabled: false,
     dailyGiftResources: true,
     accuracyFlag: false,
-    dateString: "(0130-0212)",
+    dateString: "(0201-0214)",
   },
 ]
 

@@ -22,6 +22,7 @@ import '/src/assets/css/atomic/atomic.scss'
 
 import Navigation from '/src/components/layout/Navigation.vue'
 import PageTracker from '/src/components/layout/PageTracker.vue'
+import MaintenanceNotice from '/src/components/layout/MaintenanceNotice.vue'
 import {useTheme} from 'vuetify'
 
 import User from '/src/pages/account/user.vue'
@@ -30,6 +31,7 @@ import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import FeedbackTable from '/src/static/json/about/feedback_table.json'
 import {language} from '/src/utils/i18n.js'
+import {ensureUcToken, startUcTokenAutoRefresh} from "/src/utils/user/ucToken.js";
 import {useHead, useSeoMeta} from '@unhead/vue'
 import {
     SITE_URL,
@@ -59,6 +61,13 @@ let drawer = ref(true)
 
 let currentTheme = ref('dark')
 let naiveTheme = ref()
+// 应用启动时检查本地 UC access_token：本地无可用令牌才带自签 token 调 BackEndV3 兑换（F3）
+if (localStorage.getItem("USER_TOKEN")) {
+  ensureUcToken()
+}
+
+// 有效期定时检查：每 30 秒检查一次，剩余不足 10 分钟即提前刷新
+startUcTokenAutoRefresh()
 
 function setTheme(value) {
   theme.global.name.value = value
@@ -221,6 +230,7 @@ const buildTime = import.meta.env.BUILD_TIME;
 
       <v-app class="app" :class="customTheme">
         <PageTracker />
+        <MaintenanceNotice />
         <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
           <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 12px 0 0">
             明日方舟一图流

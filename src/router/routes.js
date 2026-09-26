@@ -347,6 +347,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/landscape-to-portrait',
+        text: '横封转竖封',
+        name: 'LandscapeToPortrait',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/LandscapeToPortrait.vue'),
+        meta: {
+            title: '横封转竖封'
+        }
+    },
+    {
         path: '/lb/mapping-table',
         text: '对应关系表',
         name: 'LBMappingTable',
@@ -484,6 +494,16 @@ const routes = [
         component: () => import('/src/pages/dev/riic/maa-yield.vue'),
         meta: {
             title: 'MAA排班收益核算'
+        }
+    },
+    {
+        path: '/riicdev/efficiency-inspector',
+        text: 'RIIC 效率明细',
+        name: 'RiicEfficiencyInspector',
+        display: false,
+        component: () => import('/src/pages/dev/riic/efficiency-inspector.vue'),
+        meta: {
+            title: 'RIIC 效率明细'
         }
     },
     {

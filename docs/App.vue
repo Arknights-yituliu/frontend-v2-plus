@@ -13,6 +13,7 @@ import {useRouter, useRoute} from "vue-router";
 import {menuList, getMenuList} from '/docs/utils/menu.js'
 import {addImageClickEvent,imageDialog,imageUrl} from '/docs/utils/viewLargerImage.js'
 import LinkButton from "@/components/dev/LinkButton.vue";
+import MaintenanceNotice from "/src/components/layout/MaintenanceNotice.vue";
 // import {formatCodeElement} from "/docs/utils/formatCode.js";
 
 const useRouterFunc = useRouter()
@@ -100,6 +101,7 @@ onMounted(() => {
 <template>
 
   <v-app  class="app">
+    <MaintenanceNotice />
     <v-app-bar :elevation="1" >
       <template v-slot:prepend>
         <v-app-bar-nav-icon class="drawer-btn" @click="drawer=!drawer"></v-app-bar-nav-icon>

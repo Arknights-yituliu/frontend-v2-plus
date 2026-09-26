@@ -18,7 +18,7 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260924.2314"
+      "version": "v20260925.1124"
     },
     "recommendation": {
       "label": "调试信息",
@@ -26,6 +26,24 @@
     }
   },
   "entries": [
+    {
+      "date": "2026-09-25",
+      "version": "v20260925.1124",
+      "items": [
+        {
+          "module": "收益计算器",
+          "type": "feature",
+          "level": 3,
+          "description": "每日综合产出支持总产出与净产出切换，并同步到预计日产和排班导出预览"
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 2,
+          "description": "产出摘要改为图标加数值展示"
+        }
+      ]
+    },
     {
       "date": "2026-09-24",
       "version": "v20260924.2314",

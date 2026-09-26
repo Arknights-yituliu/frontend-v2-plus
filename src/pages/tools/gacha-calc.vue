@@ -481,8 +481,9 @@ async function getAndSortPackData() {
 function getHistoryPackInfo() {
   const scheduleStart = currentSchedule.value.start;
   const scheduleEnd = currentSchedule.value.end;
-  const historicalPackStart = currentSchedule.value.historyStartTime;
-  const historicalPackEnd = currentSchedule.value.historyEndTime;
+  const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
+  const historicalPackStart = currentTimestamp.value - oneYearInMs;
+  const historicalPackEnd = scheduleEnd.getTime() - oneYearInMs;
 
   let list = [];
 
