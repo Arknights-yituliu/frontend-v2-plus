@@ -4,6 +4,7 @@ import {createMessage} from "/src/utils/message.js";
 import {getUcAccessToken, refreshUcToken} from "/src/utils/user/ucToken.js";
 
 // UC OAuth 游戏数据接口路径：读写游戏账号与干员数据
+const OAUTH_AK_ACCOUNTS_PATH = "/oauth2/ak-accounts";
 const OAUTH_AK_ACCOUNTS_OPERATOR_SAVE_PATH = "/oauth2/ak-accounts/operators/save";
 
 // UC 统一成功码（UC 与旧系统后端一致，均为 200）
@@ -172,4 +173,30 @@ async function saveAkAccountOperators(data) {
   return ucService.post(OAUTH_AK_ACCOUNTS_OPERATOR_SAVE_PATH, data);
 }
 
-export {directLogin, directRegister, sendEmailCode, saveAkAccountOperators};
+/**
+ * 查询当前用户已绑定的游戏账号列表（UC OAuth 游戏数据接口）
+ *
+ * <p>需要 UC access_token 具备 gama-data.read 授权范围。UC 侧按最近导入时间倒序返回，
+ * 首条即最新导入的账号，前端取首条即可默认展示最新账号的数据。
+ * 失败提示由 ucService 响应拦截器统一弹出。</p>
+ *
+ * @returns {Promise<Array<{akUid: string, createTime: string, updateTime: string}>>} 已绑定游戏账号列表，最近导入的在前
+ */
+async function listAkAccounts() {
+  return ucService.get(OAUTH_AK_ACCOUNTS_PATH);
+}
+
+/**
+ * 按游戏账号 UID 全量拉取干员数据（UC OAuth 游戏数据接口）
+ *
+ * <p>需要 UC access_token 具备 gama-data.read 授权范围，且该 akUid 在当前用户名下；
+ * 该账号无数据时 items 为空数组。失败提示由 ucService 响应拦截器统一弹出。</p>
+ *
+ * @param {string} akUid 游戏账号 UID
+ * @returns {Promise<{akUid: string, items: Array<Object>}>} 该账号的干员全量数据
+ */
+async function getAkAccountOperators(akUid) {
+  return ucService.get(`${OAUTH_AK_ACCOUNTS_PATH}/operators`, {params: {akUid}});
+}
+
+export {directLogin, directRegister, sendEmailCode, saveAkAccountOperators, listAkAccounts, getAkAccountOperators};

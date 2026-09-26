@@ -1,4 +1,6 @@
 import request from "/src/api/request"
+import {getAkAccountOperators, listAkAccounts} from "/src/api/userCenterApi.js"
+import {toOperatorDataList} from "/src/utils/survey/ucOperatorData.js"
 
 
 export default {
@@ -15,14 +17,6 @@ export default {
         })
     },
 
-
-    importSkLandOperatorDataV3(data){
-        return request({
-            url: `/auth/survey/operator/import/skland/v3`,
-            method: "post",
-            data: data,
-        })
-    },
 
     importWarehouseInfo(data){
         return request({
@@ -96,24 +90,22 @@ export default {
 
     /**
      * 找回用户填写的干员数据
-     * @returns {*}
+     *
+     * <p>内部已改为 UC OAuth 游戏数据接口实现：先查绑定账号列表（UC 按最近导入时间倒序），
+     * 取最新的 akUid 再拉该账号的干员数据。返回值仍保持旧接口格式
+     * {@code {code, msg, data}}，调用方无需改动。</p>
+     *
+     * @returns {Promise<{code: number, msg: string, data: Array<Object>}>} 干员数据列表
      */
-    getOperatorData() {
-        const USER_TOKEN = encodeURIComponent(localStorage.getItem("USER_TOKEN"))
-        return request({
-            url: `/auth/survey/operator/info`,
-            method: "get"
-        })
+    async getOperatorData() {
+        const accounts = await listAkAccounts()
+        const latestAccount = accounts?.[0]
+        if (!latestAccount) {
+            return {code: 200, msg: "操作成功", data: []}
+        }
+
+        const operatorList = await getAkAccountOperators(latestAccount.akUid)
+        return {code: 200, msg: "操作成功", data: toOperatorDataList(operatorList?.items)}
     },
-
-    uploadOperatorInfo(characterList) {
-        return request({
-            url: `/auth/survey/operator/upload`,
-            method: "post",
-            data: characterList,
-        })
-    },
-
-
 
 }
