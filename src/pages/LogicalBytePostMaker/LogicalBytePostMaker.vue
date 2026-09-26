@@ -95,6 +95,11 @@ const pageGroups = [
         title: '图片标记器',
         description: '上传底图后，用彩色 tag 和说明条快速做图',
         to: '/lb/image-tagger'
+      },
+      {
+        title: '横封转竖封',
+        description: '将横版图片转为 1080 × 1920 竖版图片',
+        to: '/lb/landscape-to-portrait'
       }
     ]
   },

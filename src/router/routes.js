@@ -347,6 +347,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/landscape-to-portrait',
+        text: '横封转竖封',
+        name: 'LandscapeToPortrait',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/LandscapeToPortrait.vue'),
+        meta: {
+            title: '横封转竖封'
+        }
+    },
+    {
         path: '/lb/mapping-table',
         text: '对应关系表',
         name: 'LBMappingTable',
