@@ -113,20 +113,19 @@ async function directLogin({channel, accountType = "password", account, password
 
 /**
  * 直连注册：注册信息（含密码）由浏览器直接提交到 UC，创建用户后签发一次性票据 ticket
+ * UC 已统一注册形态，旧 register_type 参数服务端不再声明，前端不再携带
  * @param {Object} params 注册参数
  * @param {string} params.channel 发起会话凭证（由旧系统后端签发）
- * @param {string} params.registerType 注册方式：password=密码注册 / email_code=邮箱验证码注册
- * @param {string} [params.email] 邮箱（与用户名至少填一个；填了邮箱需提供验证码）
- * @param {string} [params.userName] 用户名（可选，3-20 位字母数字下划线）
- * @param {string} params.password 密码（必填）
- * @param {string} [params.code] 邮箱验证码（填邮箱时必填）
- * @param {string} [params.nickname] 昵称（缺省时取用户名，再取邮箱）
+ * @param {string} params.email 邮箱（必填，需通过邮箱验证码验证）
+ * @param {string} params.userName 用户名（必填，3-20 位字母、数字、下划线）
+ * @param {string} params.password 密码（必填，6-32 位）
+ * @param {string} params.code 邮箱验证码（必填）
+ * @param {string} [params.nickname] 昵称（选填，缺省时取用户名）
  * @returns {Promise<{ticket: string, expiresIn: number}>} 一次性登录票据及有效期
  */
-async function directRegister({channel, registerType, email, userName, password, code, nickname}) {
+async function directRegister({channel, email, userName, password, code, nickname}) {
   const body = new URLSearchParams();
   body.append("channel", channel);
-  body.append("register_type", registerType);
   if (email) {
     body.append("email", email);
   }
