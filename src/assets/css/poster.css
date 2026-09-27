@@ -8,9 +8,10 @@ a {
 
 #maa_recruit_poster {
   width: 100%;
-  background: url("/image/website/立绘_梓兰_1.png") 0 110% / cover no-repeat, #444444;
+  background: url("/image/website/立绘_梓兰_1.png") 0 110% no-repeat, #444444;
   background-size: 500px;
-  background-attachment: fixed
+  background-attachment: scroll, fixed;
+  line-height: 1.25;
 }
 
 .bg {
@@ -92,11 +93,13 @@ a {
 
 #poster_foot {
   margin-top: -32px;
-  margin-left: 64px;
+  margin-left: auto;
+  margin-right: 0;
   display: flex;
   justify-content: flex-end;
   padding-left: 64px;
   padding-bottom: 16px;
+  line-height: 28px;
 }
 
 .poster_button {
@@ -105,7 +108,7 @@ a {
   font-size: 24px;
   border-radius: 6px;
   margin: 16px;
-  padding: 8px;
+  padding: 4px;
   color: #ffffff;
   height: 64px;
 }
