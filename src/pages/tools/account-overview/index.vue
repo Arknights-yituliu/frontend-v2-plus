@@ -6,7 +6,8 @@ import SklandAPI from '/src/utils/survey/skland.js'
 import { createMessage } from "/src/utils/message.js"
 import { operatorTableV2 } from "/src/utils/gameData.js"
 import operatorUpdateTime from '/public/json/operator_update_time.json'
-import operatorDataAPI from '/src/api/operatorData.js'
+import { saveAkAccountOperators } from "/src/api/userCenterApi.js"
+import { buildUcOperatorSavePayload } from "/src/utils/survey/ucOperatorData.js"
 import { userInfo } from "/src/utils/user/userInfo.js"
 
 // 子组件
@@ -309,11 +310,17 @@ async function uploadToOperatorSurvey() {
     createMessage({ type: 'error', text: '请先登录一图流账号，才能上传干员数据' })
     return
   }
+
+  const payload = buildUcOperatorSavePayload(rawWarehouseData.value)
+  if (payload.operators.length === 0) {
+    createMessage({ type: 'error', text: '没有可上传的干员数据' })
+    return
+  }
   
   uploading.value = true
   
   try {
-    await operatorDataAPI.importSkLandOperatorDataV3(rawWarehouseData.value)
+    await saveAkAccountOperators(payload)
     createMessage({ type: 'success', text: '干员数据已同步到练度调查！' })
   } catch (error) {
     console.error(error)

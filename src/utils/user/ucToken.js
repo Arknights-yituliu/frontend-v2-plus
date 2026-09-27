@@ -25,9 +25,6 @@ const UC_TOKEN_REFRESH_PATH = "/auth/token/refresh";
 /** 提前刷新阈值：剩余有效期不足 10 分钟即刷新 */
 const UC_TOKEN_REFRESH_AHEAD_MS = 10 * 60 * 1000;
 
-/** 有效期检查间隔：30 秒 */
-const UC_TOKEN_CHECK_INTERVAL_MS = 30 * 1000;
-
 /** 内存缓存：undefined=尚未加载，null=无令牌 */
 let ucTokenCache = undefined;
 
@@ -36,9 +33,6 @@ let issuingPromise = null;
 
 /** 进行中的刷新请求：并发调用复用同一 Promise，保证同一时刻只刷新一次（F5） */
 let refreshingPromise = null;
-
-/** 有效期定时检查的句柄：非 null 表示已在运行，避免重复启动叠加定时器 */
-let autoRefreshTimer = null;
 
 /**
  * 读取自签 token 组装 Authorization 头值（与 request.js 拦截器口径一致）
@@ -197,38 +191,31 @@ function refreshUcToken() {
 /**
  * 检查 UC access_token 剩余有效期，不足 10 分钟则提前刷新
  *
+ * 由路由在每次进入页面时调用一次（不再做定时轮询）。
  * 无本地令牌（未登录 / 从未兑换）或无法判断有效期时直接跳过；
- * 刷新失败由 refreshUcToken 清除本地令牌，静默等待下次启动重新兑换自愈（R17）
+ * 刷新失败由 refreshUcToken 清除本地令牌，等待下次进入页面时重新兑换自愈（R17）。
+ * 每次调用都会在控制台打印本次是否触发刷新，便于排查令牌续期问题
  * @returns {Promise<void>}
  */
 async function checkAndRefreshUcToken() {
     const token = loadUcToken();
     if (!token || !token.accessToken || !token.expiresAt) {
+        console.log("[UC令牌] 本次未刷新：本地无可用令牌");
         return;
     }
-    if (token.expiresAt - Date.now() > UC_TOKEN_REFRESH_AHEAD_MS) {
+    const remainMs = token.expiresAt - Date.now();
+    if (remainMs > UC_TOKEN_REFRESH_AHEAD_MS) {
+        console.log(`[UC令牌] 本次未刷新：剩余 ${Math.round(remainMs / 1000)} 秒，未到提前刷新阈值`);
         return;
     }
+    console.log(`[UC令牌] 触发刷新：剩余 ${Math.round(remainMs / 1000)} 秒，已到提前刷新阈值`);
     try {
         // 并发去重由 refreshUcToken 内部保证（F5）
         await refreshUcToken();
+        console.log("[UC令牌] 刷新成功");
     } catch (error) {
-        console.warn("UC access_token 提前刷新失败，等待下次检查", error);
+        console.warn("[UC令牌] 刷新失败，等待下次进入页面重试", error);
     }
 }
 
-/**
- * 启动 UC access_token 有效期定时检查：每 30 秒检查一次，剩余不足 10 分钟即提前刷新
- *
- * 重复调用不会叠加定时器；未登录时不产生任何请求
- * @returns {number} 定时器句柄
- */
-function startUcTokenAutoRefresh() {
-    if (autoRefreshTimer !== null) {
-        return autoRefreshTimer;
-    }
-    autoRefreshTimer = window.setInterval(checkAndRefreshUcToken, UC_TOKEN_CHECK_INTERVAL_MS);
-    return autoRefreshTimer;
-}
-
-export {saveUcToken, getUcAccessToken, clearUcToken, ensureUcToken, refreshUcToken, startUcTokenAutoRefresh};
+export {saveUcToken, getUcAccessToken, clearUcToken, ensureUcToken, refreshUcToken, checkAndRefreshUcToken};
