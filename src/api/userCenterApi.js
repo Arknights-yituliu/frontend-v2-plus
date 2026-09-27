@@ -6,6 +6,8 @@ import {getUcAccessToken, refreshUcToken} from "/src/utils/user/ucToken.js";
 // UC OAuth 游戏数据接口路径：读写游戏账号与干员数据
 const OAUTH_AK_ACCOUNTS_PATH = "/oauth2/ak-accounts";
 const OAUTH_AK_ACCOUNTS_OPERATOR_SAVE_PATH = "/oauth2/ak-accounts/operators/save";
+const OAUTH_GRANT_SCOPES_PATH = "/user/oauth/grants/scopes";
+const CURRENT_OAUTH_CLIENT_ID = "arknights-yituliu-web";
 
 // UC 统一成功码（UC 与旧系统后端一致，均为 200）
 const UC_SUCCESS_CODE = 200;
@@ -198,4 +200,47 @@ async function getAkAccountOperators(akUid) {
   return ucService.get(`${OAUTH_AK_ACCOUNTS_PATH}/operators`, {params: {akUid}});
 }
 
-export {directLogin, directRegister, sendEmailCode, saveAkAccountOperators, listAkAccounts, getAkAccountOperators};
+/**
+ * @returns {Promise<{clientId: string, clientName: string, grantedScopes: Array, selectableScopes: Array}>}
+ */
+async function getCurrentOAuthGrantScopes() {
+  return ucService.get(OAUTH_GRANT_SCOPES_PATH, {
+    params: {client_id: CURRENT_OAUTH_CLIENT_ID},
+  });
+}
+
+/**
+ * 为当前用户对本站应用追加权限
+ * @param {string[]} scopes 要追加的权限标识
+ * @returns {Promise<null>}
+ */
+async function grantCurrentOAuthScopes(scopes) {
+  return ucService.post(`${OAUTH_GRANT_SCOPES_PATH}/grant`, {
+    clientId: CURRENT_OAUTH_CLIENT_ID,
+    scopes,
+  });
+}
+
+/**
+ * 取消当前用户对本站应用的权限
+ * @param {string[]} scopes 要取消的权限标识
+ * @returns {Promise<null>}
+ */
+async function revokeCurrentOAuthScopes(scopes) {
+  return ucService.post(`${OAUTH_GRANT_SCOPES_PATH}/revoke`, {
+    clientId: CURRENT_OAUTH_CLIENT_ID,
+    scopes,
+  });
+}
+
+export {
+  directLogin,
+  directRegister,
+  sendEmailCode,
+  saveAkAccountOperators,
+  listAkAccounts,
+  getAkAccountOperators,
+  getCurrentOAuthGrantScopes,
+  grantCurrentOAuthScopes,
+  revokeCurrentOAuthScopes,
+};
