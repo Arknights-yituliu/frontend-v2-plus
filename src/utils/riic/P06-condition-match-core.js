@@ -8,6 +8,18 @@ function resolveRuleOperatorId(value) {
   return operatorName ? resolveRiicOperatorIdByName(operatorName) : "";
 }
 
+// 按效果所属干员索引规则，练度与布局条件仍逐次判断
+const RULES_BY_EFFECT_OPERATOR_ID = new Map();
+for (const rule of RIIC_LAYER3_RULES.rules || []) {
+  const ownerIds = new Set((rule?.effects || []).map(resolveRuleOperatorId).filter(Boolean));
+  for (const ownerId of ownerIds) {
+    if (!RULES_BY_EFFECT_OPERATOR_ID.has(ownerId)) {
+      RULES_BY_EFFECT_OPERATOR_ID.set(ownerId, []);
+    }
+    RULES_BY_EFFECT_OPERATOR_ID.get(ownerId).push(rule);
+  }
+}
+
 function normalizeRuleEffects(effects) {
   return (effects || []).map((effect) => {
     const operatorId = resolveRuleOperatorId(effect);
@@ -651,13 +663,17 @@ export function getRiicLayer3OperatorLocalBonus({
 }) {
   const normalizedOperatorId = String(operatorId || "").trim();
   const normalizedScope = normalizeScope(scope);
+  const relevantRules = RULES_BY_EFFECT_OPERATOR_ID.get(normalizedOperatorId) || [];
+  if (!normalizedOperatorId || !normalizedScope || relevantRules.length === 0) {
+    return 0;
+  }
   const rosterById = getRosterById(ownedOperators);
-  if (!normalizedOperatorId || !normalizedScope || !rosterById.has(normalizedOperatorId)) {
+  if (!rosterById.has(normalizedOperatorId)) {
     return 0;
   }
 
   const bonusesByEffect = new Map();
-  for (const rule of RIIC_LAYER3_RULES.rules || []) {
+  for (const rule of relevantRules) {
     if (
       !matchesConditions(
         rule?.conditions,

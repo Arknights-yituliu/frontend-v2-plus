@@ -35,9 +35,9 @@ function normalizeRiicFallbackCacheOperatorIds(operatorIds) {
   ].sort((left, right) => left.localeCompare(right, "en"));
 }
 
+// 每次排班新建缓存，补位池在此期间固定，不计入缓存键
 function createRiicFallbackPlanCache({ idleFillOperators = [] } = {}) {
   const cacheByCandidate = new WeakMap();
-  const idleFillOperatorSignature = JSON.stringify(idleFillOperators || []);
 
   const get = ({
     candidate,
@@ -61,7 +61,6 @@ function createRiicFallbackPlanCache({ idleFillOperators = [] } = {}) {
     }
 
     const cacheKey = JSON.stringify({
-      idleFillOperators: idleFillOperatorSignature,
       selectionKey: String(selectionKey || "").trim(),
       occupiedOperatorIds:
         normalizeRiicFallbackCacheOperatorIds(occupiedOperatorIds),
