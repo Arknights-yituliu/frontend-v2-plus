@@ -242,7 +242,7 @@ async function loadInitialData() {
     applyOperatorData(response?.data || []);
   } catch (error) {
     console.error("load account operator data failed", error);
-    createMessage({ type: "warning", text: "未能读取账号干员数据，请手动编辑" });
+    createMessage({ type: "warn", text: "未能读取账号干员数据，请手动编辑" });
   } finally {
     loadingInitialData.value = false;
   }

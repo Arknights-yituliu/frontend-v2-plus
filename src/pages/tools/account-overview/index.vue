@@ -130,7 +130,7 @@ async function getPlayerBindingBySkland() {
     playBindingList.value = playBinding.bindingList
     
     if (playBinding.bindingList.length === 0) {
-      createMessage({ type: 'warning', text: '未找到绑定的明日方舟账号' })
+      createMessage({ type: 'warn', text: '未找到绑定的明日方舟账号' })
     }
   } catch (error) {
     console.error(error)

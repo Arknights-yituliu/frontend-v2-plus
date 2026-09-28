@@ -265,7 +265,7 @@ async function getPlayerBindingBySkland() {
     playBindingList.value = playBinding.bindingList
     
     if (playBinding.bindingList.length === 0) {
-      createMessage({ type: 'warning', text: '未找到绑定的明日方舟账号' })
+      createMessage({ type: 'warn', text: '未找到绑定的明日方舟账号' })
     }
   } catch (error) {
     console.error(error)
@@ -320,7 +320,7 @@ async function getPlayerBindingByOfficialToken() {
     playBindingList.value = playBinding.bindingList
 
     if (playBinding.bindingList.length === 0) {
-      createMessage({ type: 'warning', text: '未找到绑定的明日方舟账号' })
+      createMessage({ type: 'warn', text: '未找到绑定的明日方舟账号' })
     }
   } catch (error) {
     console.error(error)
@@ -394,13 +394,13 @@ function startSklandQrPolling() {
             ? '请选择要导入的账号：'
             : '未找到绑定的明日方舟账号'
         if (playBinding.bindingList.length === 0) {
-          createMessage({type: 'warning', text: '未找到绑定的明日方舟账号'})
+          createMessage({type: 'warn', text: '未找到绑定的明日方舟账号'})
         }
       } else if (data.status === 102) {
         // 二维码过期：停止轮询，提示重新生成
         stopSklandQrPolling()
         sklandQrStatusText.value = '二维码已过期，请点击"重新生成"'
-        createMessage({type: 'warning', text: '二维码已过期，请重新生成'})
+        createMessage({type: 'warn', text: '二维码已过期，请重新生成'})
       }
       // status 100/101：未扫码/已扫码待确认，继续轮询
     } catch (error) {
@@ -442,7 +442,7 @@ async function getPlayerDataAndSync(binding) {
 
     const payload = buildUcOperatorSavePayload(warehouseData)
     if (payload.operators.length === 0) {
-      createMessage({ type: 'warning', text: '未获取到干员数据，无法同步' })
+      createMessage({ type: 'warn', text: '未获取到干员数据，无法同步' })
       return
     }
 

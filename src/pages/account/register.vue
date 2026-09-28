@@ -60,7 +60,7 @@ async function toRegister() {
 
   const validationError = validateAuthSubmission(inputContent.value, 'register');
   if (validationError) {
-    createMessage({type: 'warning', text: validationError});
+    createMessage({type: 'warn', text: validationError});
     return;
   }
 

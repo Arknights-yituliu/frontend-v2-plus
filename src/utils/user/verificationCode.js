@@ -34,7 +34,7 @@ function useVerificationCode() {
     const normalizedEmail = String(email ?? '').trim();
 
     if (!normalizedEmail) {
-      createMessage({type: 'warning', text: '请先输入邮箱'});
+      createMessage({type: 'warn', text: '请先输入邮箱'});
       return false;
     }
 

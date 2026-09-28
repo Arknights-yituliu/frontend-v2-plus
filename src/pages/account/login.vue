@@ -71,7 +71,7 @@ async function toLogin() {
 
   const validationError = validateAuthSubmission(inputContent.value, 'login');
   if (validationError) {
-    createMessage({type: 'warning', text: validationError});
+    createMessage({type: 'warn', text: validationError});
     return;
   }
 
