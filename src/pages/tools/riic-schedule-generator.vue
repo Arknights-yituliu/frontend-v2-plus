@@ -10248,6 +10248,7 @@ onBeforeUnmount(() => {
             }[confirmedLayoutPlan?.shiftMode] || '未设置换班'
           }`"
           :show-candidate-debug-values="showCandidateDebugValues"
+          :get-operator-skill-tooltip="getOperatorSkillTooltip"
           @calculate-training-impact="requestTrainingImpactCalculation"
           :format-training-requirement="formatTrainingRequirement"
           :get-riic-yield-engine-status-meta="getRiicYieldEngineStatusMeta"
