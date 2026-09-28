@@ -18,14 +18,32 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260925.1124"
+      "version": "v20260928.1102"
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260924.2314"
+      "version": "v20260928.1102"
     }
   },
   "entries": [
+    {
+      "date": "2026-09-28",
+      "version": "v20260928.1102",
+      "items": [
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 4,
+          "description": "更新 riic-efficiency 计算引擎，槐琥、雪雉、孑根据其他干员效率变化进行的积分算法"
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 3,
+          "description": "培养建议中的干员头像支持悬浮查看干员信息和当前练度已解锁的基建技能"
+        }
+      ]
+    },
     {
       "date": "2026-09-25",
       "version": "v20260925.1124",
