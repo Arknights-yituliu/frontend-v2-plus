@@ -34,7 +34,6 @@ function getRosterById(ownedOperators) {
             [
               charId,
               {
-                ...operator,
                 charId,
                 elite: toNonNegativeInteger(operator?.elite),
               },
