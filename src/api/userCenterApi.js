@@ -15,6 +15,9 @@ const UC_SUCCESS_CODE = 200;
 // UC 未登录 / 令牌失效业务码：命中时需刷新 UC access_token 后重试一次（F4）
 const UC_NOT_LOGIN_CODE = 80001;
 
+// 酸橙云（UC）接口报错提示的统一前缀：便于用户区分报错来自酸橙云还是本站旧后端
+const UC_ERROR_PREFIX = "来自酸橙云：";
+
 // UC 请求实例：直连 UC，跨域不带 Cookie（凭证仅存于本次请求体中）
 const ucService = axios.create({
   baseURL: UC_DOMAIN,
@@ -47,7 +50,7 @@ async function retryAfterRefresh(config) {
     return ucService.request(config);
   } catch (refreshError) {
     // 刷新失败（UC 授权已失效等）：本地令牌已由 refreshUcToken 清除，下次启动重新兑换自愈（R17）
-    createMessage({type: "error", text: "登录已过期，请重新登录"});
+    createMessage({type: "error", text: `${UC_ERROR_PREFIX}登录已过期，请重新登录`});
     return Promise.reject(refreshError);
   }
 }
@@ -67,7 +70,7 @@ ucService.interceptors.response.use(
       const error = new Error(payload?.msg || "请求失败，请稍后重试");
       error.code = payload?.code;
       error.msg = error.message;
-      createMessage({type: "error", text: error.msg});
+      createMessage({type: "error", text: `${UC_ERROR_PREFIX}${error.msg}`});
       return Promise.reject(error);
     }
     // 成功：直接返回业务数据 data，调用方无需再取 response.data
@@ -81,7 +84,7 @@ ucService.interceptors.response.use(
     }
 
     // 网络/HTTP 层错误：统一弹出兜底提示后 reject
-    createMessage({type: "error", text: error.response?.data?.msg || "网络错误，请稍后重试"});
+    createMessage({type: "error", text: `${UC_ERROR_PREFIX}${error.response?.data?.msg || "网络错误，请稍后重试"}`});
     return Promise.reject(error.response || error);
   }
 );
