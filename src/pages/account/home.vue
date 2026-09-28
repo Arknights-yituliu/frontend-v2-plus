@@ -2,7 +2,8 @@
 import { onMounted, ref } from "vue";
 import UserInfo from "/src/components/account/UserInfo.vue";
 import OpenApiTokenCard from "/src/components/account/OpenApiTokenCard.vue";
-import AuthorizationManagementCard from "/src/components/account/AuthorizationManagementCard.vue";
+// 授权管理（权限编辑）入口暂时隐藏，恢复时取消注释
+// import AuthorizationManagementCard from "/src/components/account/AuthorizationManagementCard.vue";
 import StageConfig from "/src/components/account/StageConfig.vue";
 import Login from "/src/pages/account/login.vue";
 import { getUserInfo, userInfo } from "/src/utils/user/userInfo.js";
@@ -29,7 +30,8 @@ onMounted(async () => {
     <div v-if="authChecked && userInfo.status > 0" class="account-user-column">
       <UserInfo></UserInfo>
       <OpenApiTokenCard></OpenApiTokenCard>
-      <AuthorizationManagementCard></AuthorizationManagementCard>
+      <!-- 授权管理（权限编辑）入口暂时隐藏，恢复时取消注释 -->
+      <!-- <AuthorizationManagementCard></AuthorizationManagementCard> -->
     </div>
 
     <Login v-else-if="authChecked" account-home></Login>
