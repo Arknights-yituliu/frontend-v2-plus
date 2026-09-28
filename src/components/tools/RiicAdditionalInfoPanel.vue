@@ -2,6 +2,7 @@
 import { computed, ref } from "vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import OPERATOR_UPGRADE_DATA from "/src/static/json/tools/operatorUpgradeData.json";
+import { formatRiicOperatorTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
 import {
   buildRiicCalculationFeedback,
   formatRiicCalculationFeedback,
@@ -89,6 +90,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  getOperatorSkillTooltip: {
+    type: Function,
+    default: null,
+  },
   formatTrainingRequirement: {
     type: Function,
     required: true,
@@ -135,6 +140,19 @@ const trainingImpactResultsByCharId = computed(() =>
     props.trainingImpactResults.map((result) => [String(result?.charId || ""), result]),
   ),
 );
+
+function getOperatorAvatarTooltip(requirement) {
+  const operator = {
+    charId: requirement?.charId,
+    elite: requirement?.current?.elite,
+    level: requirement?.current?.level,
+  };
+  const skillTooltip = props.getOperatorSkillTooltip
+    ? props.getOperatorSkillTooltip(operator)
+    : "暂无已解锁基建技能";
+
+  return formatRiicOperatorTooltip(operator, skillTooltip);
+}
 
 function requestTrainingImpactCalculation() {
   if (!props.scheduleTrainingRequirements.length) {
@@ -269,6 +287,7 @@ async function copyCalculationFeedback() {
           :rarity="operatorTable?.[entry.requirement.charId]?.rarity || 1"
           :size="36"
           :mobile-size="32"
+          :title="getOperatorAvatarTooltip(entry.requirement)"
           border
         ></OperatorAvatar>
         <div class="schedule-training-requirement-copy">
