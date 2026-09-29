@@ -5,7 +5,9 @@ import {saveAkAccountOperators} from "/src/api/userCenterApi.js"
 import {buildUcOperatorSavePayload} from "/src/utils/survey/ucOperatorData.js"
 import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
 import {operatorTableV2} from "/src/utils/gameData.js";
+import PROFESSION_DICT from "/src/static/json/operator/profession_dict.json";
 import {exportExcel} from '/src/utils/exportExcel.js'
+import {dateFormat} from "/src/utils/dateUtil.js";
 
 import "/src/assets/css/survey/operator.scss";
 import "/src/assets/css/survey/operator.phone.scss";
@@ -25,6 +27,14 @@ import { userInfo } from "/src/utils/user/userInfo.js";
 import { useRoute, useRouter } from "vue-router";
 import Login from "/src/pages/account/login.vue";
 import QRCode from 'qrcode';
+
+const operatorClassLabelMap = new Map()
+for (const profession of PROFESSION_DICT || []) {
+  operatorClassLabelMap.set(profession.value, profession.label)
+  for (const branch of profession.children || []) {
+    operatorClassLabelMap.set(branch.value, branch.label)
+  }
+}
 
 const sectionPanels = ref([])
 const route = useRoute()
@@ -556,6 +566,9 @@ function createOperatorList(list = []) {
         skill3: 0,
         modX: 0,
         modY: 0,
+        modD: 0,
+        modA: 0,
+        modB: 0,
         own: false
       }
     }
@@ -567,11 +580,12 @@ function createOperatorList(list = []) {
     formatData.skill1 = item.skill1
     formatData.skill2 = item.skill2
     formatData.skill3 = item.skill3
-    formatData.modX = item.modX
-    formatData.modY = item.modY
-    formatData.modD = item.modD
+    formatData.modX = item.modX ?? 0
+    formatData.modY = item.modY ?? 0
+    formatData.modD = item.modD ?? 0
     formatData.own = item.own
-    formatData.modA = item.modA
+    formatData.modA = item.modA ?? 0
+    formatData.modB = item.modB ?? 0
 
     tmpList.push(formatData)
   }
@@ -967,26 +981,150 @@ function toggleRecommendEliteThreshold(threshold) {
 }
 
 
+const operatorExportSettingsDialog = ref(false)
+const operatorExportScope = ref('all')
+const operatorExportScopeOptions = [
+  {title: '导出所有干员', value: 'all'},
+  {title: '导出已持有干员', value: 'owned'},
+  {title: '导出当前筛选的干员', value: 'filtered'},
+]
+const operatorExportModules = [
+  {type: 'X', field: 'modX', label: 'χ'},
+  {type: 'Y', field: 'modY', label: 'γ'},
+  {type: 'D', field: 'modD', label: 'Δ'},
+  {type: 'A', field: 'modA', label: 'α'},
+  {type: 'B', field: 'modB', label: 'β'},
+]
+const operatorExportColumnGroups = [
+  {
+    key: 'profile',
+    fields: [
+      {key: 'name', title: '干员名称', value: (operator) => operator.name},
+      {key: 'rarity', title: '星级', value: (operator) => operator.rarity},
+      {key: 'profession', title: '职业', value: (operator) => operatorClassLabelMap.get(operator.profession) || operator.profession || ''},
+    ],
+    optionalOptions: [
+      {key: 'charId', title: '干员 ID', fields: [{key: 'charId', title: '干员 ID', value: (operator) => operator.charId}]},
+      {key: 'subProfessionId', title: '分支', fields: [{key: 'subProfessionId', title: '分支', value: (operator) => operatorClassLabelMap.get(operator.subProfessionId) || operator.subProfessionId || ''}]},
+      {key: 'date', title: '实装日期', fields: [{key: 'date', title: '实装日期', value: (operator) => operator.date ? dateFormat(operator.date) : ''}]},
+      {key: 'itemObtainApproach', title: '获得方式', fields: [{key: 'itemObtainApproach', title: '获得方式', value: (operator) => operator.itemObtainApproach || ''}]},
+    ],
+  },
+  {
+    key: 'progress',
+    fields: [
+      {key: 'own', title: '是否已招募', value: (operator) => operator.own ? '是' : '否'},
+      {key: 'level', title: '等级', value: (operator) => operator.level},
+      {key: 'elite', title: '精英化等级', value: (operator) => operator.elite},
+      {key: 'potential', title: '潜能等级', value: (operator) => operator.potential ?? 0},
+      {key: 'mainSkill', title: '通用技能等级', value: (operator) => operator.mainSkill ?? 0},
+    ],
+    optionalOptions: [],
+  },
+  {
+    key: 'skills',
+    fields: [],
+    optionalOptions: [{
+      key: 'skills',
+      title: '技能信息',
+      fields: [1, 2, 3].flatMap((skillIndex) => [
+        {
+          key: `skill${skillIndex}Name`,
+          title: `${skillIndex}技能名称`,
+          value: (operator) => operator.skills?.[skillIndex - 1]?.skillName || '',
+        },
+        {
+          key: `skill${skillIndex}Level`,
+          title: `${skillIndex}技能专精等级`,
+          value: (operator) => operator[`skill${skillIndex}`] ?? 0,
+        },
+      ]),
+    }],
+  },
+  {
+    key: 'modules',
+    fields: [],
+    optionalOptions: [{
+      key: 'modules',
+      title: '模组信息',
+      fields: operatorExportModules.flatMap(({type, field, label}) => [
+        {
+          key: `${field}Name`,
+          title: `${label}模组名称`,
+          value: (operator) => operator.equip?.find((item) => item.typeName2 === type)?.uniEquipName || '',
+        },
+        {
+          key: field,
+          title: `${label}模组等级`,
+          value: (operator) => operator[field] ?? 0,
+        },
+      ]),
+    }],
+  },
+]
+const operatorExportOptionalOptions = operatorExportColumnGroups.flatMap((group) => group.optionalOptions)
+const selectedOperatorExportOptions = ref([])
+const draftOperatorExportScope = ref(operatorExportScope.value)
+const draftOperatorExportOptions = ref([])
+
+function openOperatorExportSettings() {
+  draftOperatorExportScope.value = operatorExportScope.value
+  draftOperatorExportOptions.value = [...selectedOperatorExportOptions.value]
+  operatorExportSettingsDialog.value = true
+}
+
+function toggleOperatorExportOption(key) {
+  draftOperatorExportOptions.value = draftOperatorExportOptions.value.includes(key)
+    ? draftOperatorExportOptions.value.filter((option) => option !== key)
+    : [...draftOperatorExportOptions.value, key]
+}
+
+function resetOperatorExportSettings() {
+  draftOperatorExportScope.value = 'all'
+  draftOperatorExportOptions.value = []
+}
+
+function saveOperatorExportSettings() {
+  operatorExportScope.value = draftOperatorExportScope.value
+  selectedOperatorExportOptions.value = [...draftOperatorExportOptions.value]
+  operatorExportSettingsDialog.value = false
+}
+
+function getSelectedOperatorExportFields(selectedOptions) {
+  const selectedKeys = new Set(selectedOptions)
+  return operatorExportColumnGroups.flatMap((group) => [
+    ...group.fields,
+    ...group.optionalOptions
+      .filter((option) => selectedKeys.has(option.key))
+      .flatMap((option) => option.fields),
+  ])
+}
+
 /**
- * 导出评分表的excel
+ * 导出干员信息与练度表
  */
 function exportOperatorExcel() {
-  let list = [[
-    '干员名称', '是否已招募', '星级', '等级', '精英化等级', '潜能等级', '通用技能等级', '1技能专精等级',
-    '2技能专精等级', '3技能专精等级', 'χ分支模组', 'γ分支模组', 'Δ分支模组', 'α分支模组'
-  ]]
-  //按实装倒序排序，时间相同时按星级降序排序
-  const sortedOperatorList = [...operatorList.value].sort((a, b) =>
-    b.updateTime - a.updateTime || b.rarity - a.rarity
-  )
-  for (const operator of sortedOperatorList) {
-    const {name,own,rarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA} = operator
-    //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，导出时直接使用
-    const starRarity = rarity
-    list.push([name,own,starRarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA])
+  let sourceList = operatorList.value
+  if (operatorExportScope.value === 'owned') {
+    sourceList = sourceList.filter((operator) => operator.own)
+  } else if (operatorExportScope.value === 'filtered') {
+    sourceList = visibleOperatorList.value
   }
 
-  console.log(list)
+  if (sourceList.length === 0) {
+    createMessage({type: 'warn', text: '当前范围没有可导出的干员'})
+    return
+  }
+
+  //按实装倒序排序，时间相同时按星级降序排序
+  const selectedFields = getSelectedOperatorExportFields(selectedOperatorExportOptions.value)
+  const sortedOperatorList = [...sourceList].sort((a, b) =>
+    b.updateTime - a.updateTime || b.rarity - a.rarity
+  )
+  const list = [selectedFields.map((field) => field.title)]
+  for (const operator of sortedOperatorList) {
+    list.push(selectedFields.map((field) => field.value(operator)))
+  }
 
   exportExcel('干员练度表', list)
 }
@@ -1079,13 +1217,28 @@ onBeforeUnmount(() => {
                 <span class="operator-import-action-desc">支持官网 Token（桌面端/移动端）和森空岛凭证</span>
               </span>
             </v-btn>
-            <v-btn class="operator-import-action" color="primary" variant="outlined" @click="exportOperatorExcel()">
-              <v-icon class="operator-import-action-icon">mdi-file-excel</v-icon>
-              <span class="operator-import-action-copy">
-                <span class="operator-import-action-title">导出为 Excel</span>
-                <span class="operator-import-action-desc">下载当前干员数据表格</span>
-              </span>
-            </v-btn>
+            <div class="operator-export-button-group">
+              <v-btn
+                class="operator-import-action operator-export-main-button"
+                color="primary"
+                variant="outlined"
+                @click="exportOperatorExcel()"
+              >
+                <v-icon class="operator-import-action-icon">mdi-file-excel</v-icon>
+                <span class="operator-import-action-copy">
+                  <span class="operator-import-action-title">导出为 Excel</span>
+                  <span class="operator-import-action-desc">下载当前干员数据表格</span>
+                </span>
+              </v-btn>
+              <v-btn
+                class="operator-export-settings-button"
+                icon="mdi-tune-variant"
+                color="primary"
+                variant="outlined"
+                aria-label="导出设置"
+                @click="openOperatorExportSettings()"
+              />
+            </div>
           </div>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -1246,6 +1399,67 @@ onBeforeUnmount(() => {
     </div>
 
 
+
+    <v-dialog v-model="operatorExportSettingsDialog" max-width="600">
+      <v-card>
+        <v-card-text>
+          <div class="text-subtitle-2 mb-3">导出范围</div>
+          <v-btn-toggle
+            v-model="draftOperatorExportScope"
+            class="w-100 operator-export-scope"
+            color="primary"
+            mandatory
+            border
+            divided
+            role="group"
+            aria-label="导出范围"
+          >
+            <v-btn
+              v-for="option in operatorExportScopeOptions"
+              :key="option.value"
+              :value="option.value"
+              class="flex-grow-1 px-1"
+            >
+              <span class="text-wrap">{{ option.title }}</span>
+            </v-btn>
+          </v-btn-toggle>
+        </v-card-text>
+        <v-divider />
+        <v-card-text>
+          <div class="text-subtitle-2 mb-3">可选附加导出内容</div>
+          <v-row dense role="group" aria-label="可选附加导出内容">
+            <v-col
+              v-for="option in operatorExportOptionalOptions"
+              :key="option.key"
+              cols="6"
+              sm="4"
+            >
+              <v-btn
+                block
+                class="operator-export-option"
+                :class="{'operator-export-option--selected': draftOperatorExportOptions.includes(option.key)}"
+                :color="draftOperatorExportOptions.includes(option.key) ? 'primary' : undefined"
+                variant="outlined"
+                :aria-pressed="draftOperatorExportOptions.includes(option.key)"
+                @click="toggleOperatorExportOption(option.key)"
+              >
+                <span class="operator-export-option-content">
+                  <v-icon size="16" aria-hidden="true">
+                    {{ draftOperatorExportOptions.includes(option.key) ? 'mdi-circle' : 'mdi-circle-outline' }}
+                  </v-icon>
+                  <span>{{ option.title }}</span>
+                </span>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions class="justify-end">
+          <v-btn variant="text" @click="resetOperatorExportSettings()">恢复默认设置</v-btn>
+          <v-btn variant="text" @click="operatorExportSettingsDialog = false">取消</v-btn>
+          <v-btn color="primary" variant="flat" @click="saveOperatorExportSettings()">保存</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="operatorsStatisticsDetailDialog" max-width="500">
       <v-card>
