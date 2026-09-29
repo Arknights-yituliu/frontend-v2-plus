@@ -10,7 +10,7 @@
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260924.2314"
+      "version": "v20260928.1118"
     },
     "assembler": {
       "label": "组装器",
@@ -28,19 +28,85 @@
   "entries": [
     {
       "date": "2026-09-28",
+      "version": "v20260928.1118",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 2,
+          "description": "移除名单索引中的冗余字段复制",
+          "authors": [
+            "ZiyinLin"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-27",
+      "version": "v20260927.2102",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 4,
+          "description": "减少补位搜索与规则匹配的冗余计算",
+          "authors": [
+            "ZiyinLin"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-19",
+      "version": "v20260919.0556",
+      "items": [
+        {
+          "module": "数据模块",
+          "type": "fix",
+          "level": 3,
+          "description": "补齐苍苔与水月的技能加成",
+          "authors": [
+            "ZiyinLin"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-18",
+      "version": "v20260918.1613",
+      "items": [
+        {
+          "module": "调试信息",
+          "type": "fix",
+          "level": 4,
+          "description": "修复培养理智成本漏算精英化龙门币",
+          "authors": [
+            "sajour"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-09-28",
       "version": "v20260928.1102",
       "items": [
         {
           "module": "收益计算器",
           "type": "update",
           "level": 4,
-          "description": "更新 riic-efficiency 计算引擎，槐琥、雪雉、孑根据其他干员效率变化进行的积分算法"
+          "description": "更新 riic-efficiency 计算引擎，槐琥、雪雉、孑根据其他干员效率变化进行的积分算法",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 3,
-          "description": "培养建议中的干员头像支持悬浮查看干员信息和当前练度已解锁的基建技能"
+          "description": "培养建议中的干员头像支持悬浮查看干员信息和当前练度已解锁的基建技能",
+          "authors": [
+            "Nspace-U"
+          ]
         }
       ]
     },
@@ -52,13 +118,19 @@
           "module": "收益计算器",
           "type": "feature",
           "level": 3,
-          "description": "每日综合产出支持总产出与净产出切换，并同步到预计日产和排班导出预览"
+          "description": "每日综合产出支持总产出与净产出切换，并同步到预计日产和排班导出预览",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 2,
-          "description": "产出摘要改为图标加数值展示"
+          "description": "产出摘要改为图标加数值展示",
+          "authors": [
+            "Nspace-U"
+          ]
         }
       ]
     },
@@ -70,37 +142,55 @@
           "module": "收益计算器",
           "type": "feature",
           "level": 5,
-          "description": "排班收益默认接入 riic-efficiency，支持切换旧计算并结算设施效率、每日资源产出与无人机加速"
+          "description": "排班收益默认接入 riic-efficiency，支持切换旧计算并结算设施效率、每日资源产出与无人机加速",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 4,
-          "description": "新增线索交流、宿舍状态、孑效率偏好、首件进度及仓库和无人机溢出处理等计算设置，并随排班工作区保存"
+          "description": "新增线索交流、宿舍状态、孑效率偏好、首件进度及仓库和无人机溢出处理等计算设置，并随排班工作区保存",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "数据模块",
           "type": "update",
           "level": 4,
-          "description": "新增 riic-efficiency 所需的干员技能、术语和基建规则数据"
+          "description": "新增 riic-efficiency 所需的干员技能、术语和基建规则数据",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "布局模块",
           "type": "update",
           "level": 3,
-          "description": "排班预览新增分析报告入口，按提示、警告和错误分组展示计算检查结果"
+          "description": "排班预览新增分析报告入口，按提示、警告和错误分组展示计算检查结果",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "班组模块",
           "type": "update",
           "level": 3,
-          "description": "排班预览、房间编辑和班组候选中的干员悬浮提示补充星级、职业分支及基建技能"
+          "description": "排班预览、房间编辑和班组候选中的干员悬浮提示补充星级、职业分支及基建技能",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 4,
-          "description": "新增新旧结算结果对照，以及 riic-efficiency 班次、设施、干员和资源计算明细"
+          "description": "新增新旧结算结果对照，以及 riic-efficiency 班次、设施、干员和资源计算明细",
+          "authors": [
+            "Nspace-U"
+          ]
         }
       ]
     },
@@ -112,25 +202,37 @@
           "module": "班组模块",
           "type": "fix",
           "level": 5,
-          "description": "自动排班优先选择可完整填满所有班组的路线；无完整路线时保留最高分部分路线，并标记未完成班组"
+          "description": "自动排班优先选择可完整填满所有班组的路线；无完整路线时保留最高分部分路线，并标记未完成班组",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "班组模块",
           "type": "fix",
           "level": 4,
-          "description": "修正自动化发电站保留干员在多班组搜索中的重复约束，避免已占用时阻断完整排班路线"
+          "description": "修正自动化发电站保留干员在多班组搜索中的重复约束，避免已占用时阻断完整排班路线",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "布局模块",
           "type": "fix",
           "level": 3,
-          "description": "部分排班生成后改为提示未完整填满，并避免将部分路线提示为成功生成"
+          "description": "部分排班生成后改为提示未完整填满，并避免将部分路线提示为成功生成",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 3,
-          "description": "调试面板与复制信息补充自动搜索未完成班组和部分路线状态"
+          "description": "调试面板与复制信息补充自动搜索未完成班组和部分路线状态",
+          "authors": [
+            "Nspace-U"
+          ]
         }
       ]
     },
@@ -142,13 +244,19 @@
           "module": "调试信息",
           "type": "fix",
           "level": 4,
-          "description": "修正埃癸斯等补位干员被按异地技能要求培养的问题，培养建议改为按所补设施的实际解锁练度结算"
+          "description": "修正埃癸斯等补位干员被按异地技能要求培养的问题，培养建议改为按所补设施的实际解锁练度结算",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "数据模块",
           "type": "update",
           "level": 2,
-          "description": "补充结城理、埃癸斯与虎狼丸的培养建议说明"
+          "description": "补充结城理、埃癸斯与虎狼丸的培养建议说明",
+          "authors": [
+            "Nspace-U"
+          ]
         }
       ]
     },
@@ -160,31 +268,46 @@
           "module": "数据模块",
           "type": "update",
           "level": 4,
-          "description": "新增结城理、埃癸斯、岳羽由加莉与虎狼丸的基建技能和排班候选规则"
+          "description": "新增结城理、埃癸斯、岳羽由加莉与虎狼丸的基建技能和排班候选规则",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "数据模块",
           "type": "update",
           "level": 5,
-          "description": "新增结城理制造站与埃癸斯发电站之间的跨设施联动，按同一有效轮班时段结算无人机充能加成"
+          "description": "新增结城理制造站与埃癸斯发电站之间的跨设施联动，按同一有效轮班时段结算无人机充能加成",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "班组模块",
           "type": "update",
           "level": 5,
-          "description": "自动排班评分接入跨设施联动和实际轮班时间，支持结城理制造站全产品候选"
+          "description": "自动排班评分接入跨设施联动和实际轮班时间，支持结城理制造站全产品候选",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "fix",
           "level": 5,
-          "description": "最终结算按实际轮班时间计算结城理与埃癸斯的联动，修正埃癸斯无人机充能加成"
+          "description": "最终结算按实际轮班时间计算结城理与埃癸斯的联动，修正埃癸斯无人机充能加成",
+          "authors": [
+            "Nspace-U"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "fix",
           "level": 5,
-          "description": "补齐槐琥动态制造站最高 40% 生产力结算，并避免 active-roster 联动重复叠加"
+          "description": "补齐槐琥动态制造站最高 40% 生产力结算，并避免 active-roster 联动重复叠加",
+          "authors": [
+            "Nspace-U"
+          ]
         }
       ]
     },
@@ -196,55 +319,82 @@
           "module": "布局模块",
           "type": "update",
           "level": 4,
-          "description": "排班编辑器支持手动添加未拥有干员，并可选择按 E0 计算或假定基建技能已解锁"
+          "description": "排班编辑器支持手动添加未拥有干员，并可选择按 E0 计算或假定基建技能已解锁",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "数据模块",
           "type": "update",
           "level": 4,
-          "description": "扩展制造站基线规则，补充火神、贝娜等干员的相关规则"
+          "description": "扩展制造站基线规则，补充火神、贝娜等干员的相关规则",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "数据模块",
           "type": "update",
           "level": 4,
-          "description": "新增中间变量和中间数据规则，并统一中枢候选的 middleData 字段"
+          "description": "新增中间变量和中间数据规则，并统一中枢候选的 middleData 字段",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "数据模块",
           "type": "update",
           "level": 3,
-          "description": "补充蕾缪安与能天使不同练度组合的贸易站候选"
+          "description": "补充蕾缪安与能天使不同练度组合的贸易站候选",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 5,
-          "description": "新增制造站房间状态结算，支持仓库容量转生产力、阈值规则和生产力覆盖规则"
+          "description": "新增制造站房间状态结算，支持仓库容量转生产力、阈值规则和生产力覆盖规则",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 5,
-          "description": "L79 接入中间变量与跨房间资源条件，并将相关效果纳入最终生产力和资源链结算"
+          "description": "L79 接入中间变量与跨房间资源条件，并将相关效果纳入最终生产力和资源链结算",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 5,
-          "description": "重组 L79 多层结算数据链，统一布局、在岗、自动化、中枢和 R30 数据，并补充贸易站 L3 加成"
+          "description": "重组 L79 多层结算数据链，统一布局、在岗、自动化、中枢和 R30 数据，并补充贸易站 L3 加成",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "班组模块",
           "type": "update",
           "level": 4,
-          "description": "新增迷迭香与黑键的同班偏好优化，自动选择同班时间更长的班次偏移"
+          "description": "新增迷迭香与黑键的同班偏好优化，自动选择同班时间更长的班次偏移",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 4,
-          "description": "房间编辑器新增计算过程展示，补充核心计算、房间状态、中间变量、班组联动和最终效率明细"
+          "description": "房间编辑器新增计算过程展示，补充核心计算、房间状态、中间变量、班组联动和最终效率明细",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -256,31 +406,46 @@
           "module": "数据模块",
           "type": "update",
           "level": 3,
-          "description": "完善中枢选人时的候补来源"
+          "description": "完善中枢选人时的候补来源",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 5,
-          "description": "修复部分情况下不结算的问题，并对缺失上下文、无效输入和未支持规则附加警告。统一资源净结算的缺省值处理"
+          "description": "修复部分情况下不结算的问题，并对缺失上下文、无效输入和未支持规则附加警告。统一资源净结算的缺省值处理",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 4,
-          "description": "新增输出收益计算过程中的中间产物信息"
+          "description": "新增输出收益计算过程中的中间产物信息",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 4,
-          "description": "更新红云泡泡相关的收益计算"
+          "description": "更新红云泡泡相关的收益计算",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 4,
-          "description": "补充贸易结算警告、规则跳过原因和资源流降级处理信息"
+          "description": "补充贸易结算警告、规则跳过原因和资源流降级处理信息",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -292,37 +457,55 @@
           "module": "数据模块",
           "type": "update",
           "level": 4,
-          "description": "R30 条件规则支持按宿舍等级总和计算办公室与贸易站效果，并同步更新相关候选规则"
+          "description": "R30 条件规则支持按宿舍等级总和计算办公室与贸易站效果，并同步更新相关候选规则",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "班组模块",
           "type": "update",
           "level": 4,
-          "description": "补充森蚺控制中枢设施数量效果，并将设施数量调整纳入自动化有效电站数量计算"
+          "description": "补充森蚺控制中枢设施数量效果，并将设施数量调整纳入自动化有效电站数量计算",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "fix",
           "level": 4,
-          "description": "修复非三级制造站收益计算，补齐不同设施等级的产出率处理"
+          "description": "修复非三级制造站收益计算，补齐不同设施等级的产出率处理",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 5,
-          "description": "统一 L79 与 L80 房间结算，接入贸易、制造、办公室资源流及无人机收益，减少预览与最终结算的重复计算"
+          "description": "统一 L79 与 L80 房间结算，接入贸易、制造、办公室资源流及无人机收益，减少预览与最终结算的重复计算",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 4,
-          "description": "补充 L79 房间结算状态、效率、资源流、无人机系数与在岗干员明细，便于核对统一结算结果"
+          "description": "补充 L79 房间结算状态、效率、资源流、无人机系数与在岗干员明细，便于核对统一结算结果",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 3,
-          "description": "L79 调试输入改用实际结算时长，避免预览时长影响收益调试结果"
+          "description": "L79 调试输入改用实际结算时长，避免预览时长影响收益调试结果",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -334,25 +517,37 @@
           "module": "布局模块",
           "type": "update",
           "level": 4,
-          "description": "自动排班增加候选加载、方案分析、补位计算、资源整理和控制中枢校准等阶段进度展示，并补充候选目录失败提示与生成流程取消处理"
+          "description": "自动排班增加候选加载、方案分析、补位计算、资源整理和控制中枢校准等阶段进度展示，并补充候选目录失败提示与生成流程取消处理",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "布局模块",
           "type": "update",
           "level": 4,
-          "description": "升级排班工作区保存结构，分离数据源、布局、生成结果和手动编辑状态，并兼容旧版本地排班草稿"
+          "description": "升级排班工作区保存结构，分离数据源、布局、生成结果和手动编辑状态，并兼容旧版本地排班草稿",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 3,
-          "description": "排班编辑与预览界面补充干员已解锁基建技能提示，支持查看中枢候选、房间班组和排班干员的技能效果"
+          "description": "排班编辑与预览界面补充干员已解锁基建技能提示，支持查看中枢候选、房间班组和排班干员的技能效果",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "班组模块",
           "type": "update",
           "level": 4,
-          "description": "控制中枢候选分类补充干员相关效果类，完善影响其他干员、控制中枢状态和特殊关系技能的候选识别"
+          "description": "控制中枢候选分类补充干员相关效果类，完善影响其他干员、控制中枢状态和特殊关系技能的候选识别",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -364,43 +559,64 @@
           "module": "组装器",
           "type": "fix",
           "level": 4,
-          "description": "修复了一个可能导致排班错误的bug"
+          "description": "修复了一个可能导致排班错误的bug",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 4,
-          "description": "培养建议面板补充收益试算状态与结果展示"
+          "description": "培养建议面板补充收益试算状态与结果展示",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "数据模块",
           "type": "update",
           "level": 3,
-          "description": "调整闲置补位优先级配置，排除菲亚梅塔并更新候补填充参数"
+          "description": "调整闲置补位优先级配置，排除菲亚梅塔并更新候补填充参数",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "班组模块",
           "type": "update",
           "level": 4,
-          "description": "自动选房候补支持使用闲置干员，并按配置排除菲亚梅塔"
+          "description": "自动选房候补支持使用闲置干员，并按配置排除菲亚梅塔",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "组装器",
           "type": "update",
           "level": 4,
-          "description": "MAA 导出支持自定义换班时间范围、跨日时间段处理和范围重叠提示"
+          "description": "MAA 导出支持自定义换班时间范围、跨日时间段处理和范围重叠提示",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "布局模块",
           "type": "update",
           "level": 3,
-          "description": "排班导出设置支持训练室字段开关，并仅在存在搓玉制造站时显示搓玉原料选项"
+          "description": "排班导出设置支持训练室字段开关，并仅在存在搓玉制造站时显示搓玉原料选项",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 3,
-          "description": "MAA 收益试算补充计划时长、排班预览和资源摘要信息"
+          "description": "MAA 收益试算补充计划时长、排班预览和资源摘要信息",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -412,37 +628,55 @@
           "module": "布局模块",
           "type": "update",
           "level": 4,
-          "description": "排班生成流程接入独立的培养建议试算，并补充训练成本展示、后台计算状态与排班导出设置"
+          "description": "排班生成流程接入独立的培养建议试算，并补充训练成本展示、后台计算状态与排班导出设置",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "数据模块",
           "type": "update",
           "level": 4,
-          "description": "基建技能基线升级为 schema 3，补充制造站仓库容量、贸易站订单上限等房间状态规则与公式元数据，并更新候补目录"
+          "description": "基建技能基线升级为 schema 3，补充制造站仓库容量、贸易站订单上限等房间状态规则与公式元数据，并更新候补目录",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "班组模块",
           "type": "update",
           "level": 5,
-          "description": "拆分基建技能、条件匹配、中枢效果与活动干员结算核心，自动排班补位支持闲置干员候补并统一排班上下文"
+          "description": "拆分基建技能、条件匹配、中枢效果与活动干员结算核心，自动排班补位支持闲置干员候补并统一排班上下文",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "组装器",
           "type": "update",
           "level": 4,
-          "description": "MAA 排班导出支持按设置移除训练室字段，排班核心与导出流程改用独立模块"
+          "description": "MAA 排班导出支持按设置移除训练室字段，排班核心与导出流程改用独立模块",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "fix",
           "level": 5,
-          "description": "统一 L79 房间效率合并与自动化有效电站数量计算，接入新的排班上下文和分层结算核心"
+          "description": "统一 L79 房间效率合并与自动化有效电站数量计算，接入新的排班上下文和分层结算核心",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 4,
-          "description": "扩展培养建议、MAA 试算、资源摘要和排班导出状态的诊断信息，并增加基线技能与动态候补校验"
+          "description": "扩展培养建议、MAA 试算、资源摘要和排班导出状态的诊断信息，并增加基线技能与动态候补校验",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -454,7 +688,10 @@
           "module": "收益计算器",
           "type": "fix",
           "level": 5,
-          "description": "将活动干员在岗效果从预览层结算拆分为独立规则与身份解析，并统一纳入 L79 最终收益计算"
+          "description": "将活动干员在岗效果从预览层结算拆分为独立规则与身份解析，并统一纳入 L79 最终收益计算",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -466,25 +703,37 @@
           "module": "班组模块",
           "type": "update",
           "level": 3,
-          "description": "整理活动干员关系与中枢联动规则的识别方式，统一最终排班中的干员身份匹配"
+          "description": "整理活动干员关系与中枢联动规则的识别方式，统一最终排班中的干员身份匹配",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "fix",
           "level": 4,
-          "description": "将活动干员在岗效果纳入 L79 实际效率结算，修正活动干员规则在最终收益中的应用"
+          "description": "将活动干员在岗效果纳入 L79 实际效率结算，修正活动干员规则在最终收益中的应用",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 3,
-          "description": "补充活动干员规则结算所需的身份与规则追踪信息，便于核对最终加成来源"
+          "description": "补充活动干员规则结算所需的身份与规则追踪信息，便于核对最终加成来源",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "fix",
           "level": 5,
-          "description": "修正 L79 制造站赤金产出结算，避免自动化制造效果导致赤金效率与最终资源收益不一致"
+          "description": "修正 L79 制造站赤金产出结算，避免自动化制造效果导致赤金效率与最终资源收益不一致",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -496,19 +745,28 @@
           "module": "班组模块",
           "type": "fix",
           "level": 4,
-          "description": "中枢效果复核改为检查关联干员是否被最终房间班组使用，避免受房间类型或班次索引限制而误撤换"
+          "description": "中枢效果复核改为检查关联干员是否被最终房间班组使用，避免受房间类型或班次索引限制而误撤换",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "fix",
           "level": 4,
-          "description": "感知信息资源的宿舍支援干员仅在精英二后计入加成"
+          "description": "感知信息资源的宿舍支援干员仅在精英二后计入加成",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 2,
-          "description": "中枢复核原因改为直接展示关联干员是否已被最终班组使用"
+          "description": "中枢复核原因改为直接展示关联干员是否已被最终班组使用",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -520,19 +778,28 @@
           "module": "收益计算器",
           "type": "update",
           "level": 5,
-          "description": "贸易站高品质订单按班段时长计算预热过程，不再仅按稳定态订单概率估算"
+          "description": "贸易站高品质订单按班段时长计算预热过程，不再仅按稳定态订单概率估算",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 4,
-          "description": "P01 改为班段结算，输出龙门币、赤金消耗与虚拟赤金等资源流，并回填贸易站实际结算结果"
+          "description": "P01 改为班段结算，输出龙门币、赤金消耗与虚拟赤金等资源流，并回填贸易站实际结算结果",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 4,
-          "description": "补充 P01 无效干员和参数诊断，以及班段级贸易订单类型、效率与资源流明细"
+          "description": "补充 P01 无效干员和参数诊断，以及班段级贸易订单类型、效率与资源流明细",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -544,43 +811,64 @@
           "module": "班组模块",
           "type": "feature",
           "level": 5,
-          "description": "自动选房完成后会按同班次实际房间配置复核中枢干员效果，撤下未满足条件的干员并重新补位，避免排班冲突"
+          "description": "自动选房完成后会按同班次实际房间配置复核中枢干员效果，撤下未满足条件的干员并重新补位，避免排班冲突",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "班组模块",
           "type": "fix",
           "level": 3,
-          "description": "一天两换的手动三班轮换按每班 8 小时计算每日资源；空生产房间不再参与在岗联动"
+          "description": "一天两换的手动三班轮换按每班 8 小时计算每日资源；空生产房间不再参与在岗联动",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "班组模块",
           "type": "update",
           "level": 2,
-          "description": "自动生成支持中途取消，并会明确提示候选目录加载失败的房间组"
+          "description": "自动生成支持中途取消，并会明确提示候选目录加载失败的房间组",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "组装器",
           "type": "update",
           "level": 4,
-          "description": "MAA 导出可写入设施等级，并可按排班预览时长生成计划；排班成图补充每日资源净收支"
+          "description": "MAA 导出可写入设施等级，并可按排班预览时长生成计划；排班成图补充每日资源净收支",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 5,
-          "description": "生成器与 MAA 排班试算统一使用 L79 实际效率结算，覆盖中枢、同班联动、自动化与资源链等实际条件"
+          "description": "生成器与 MAA 排班试算统一使用 L79 实际效率结算，覆盖中枢、同班联动、自动化与资源链等实际条件",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "fix",
           "level": 4,
-          "description": "贸易站计算同步传递实际在岗干员、房间加成与跨房间条件；无人机仅可投向当前班段有干员且已完成核算的房间"
+          "description": "贸易站计算同步传递实际在岗干员、房间加成与跨房间条件；无人机仅可投向当前班段有干员且已完成核算的房间",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "update",
           "level": 4,
-          "description": "扩展 L73 中枢撤换补位、L74 同班冲突与 L79 实际结算入参追踪；计算反馈与 MAA 试算可查看干员解析、资源流和无人机明细"
+          "description": "扩展 L73 中枢撤换补位、L74 同班冲突与 L79 实际结算入参追踪；计算反馈与 MAA 试算可查看干员解析、资源流和无人机明细",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -592,25 +880,37 @@
           "module": "布局模块",
           "type": "feature",
           "level": 3,
-          "description": "新增 333 搓玉布局，并支持在布局推荐与收益试算中识别该布局"
+          "description": "新增 333 搓玉布局，并支持在布局推荐与收益试算中识别该布局",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "班组模块",
           "type": "fix",
           "level": 4,
-          "description": "自动候补选人会预留已用于制造站联动的干员，避免后续班组重复占用"
+          "description": "自动候补选人会预留已用于制造站联动的干员，避免后续班组重复占用",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "fix",
           "level": 4,
-          "description": "修正无人机停用与前置投放时的结算班段对应关系"
+          "description": "修正无人机停用与前置投放时的结算班段对应关系",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "调试信息",
           "type": "feature",
           "level": 3,
-          "description": "新增未完成产能核算的班段反馈，并支持复制排班、干员与错误信息"
+          "description": "新增未完成产能核算的班段反馈，并支持复制排班、干员与错误信息",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -622,25 +922,37 @@
           "module": "布局模块",
           "type": "update",
           "level": 2,
-          "description": "排班工作流卡片支持折叠，并记忆展开状态"
+          "description": "排班工作流卡片支持折叠，并记忆展开状态",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "数据模块",
           "type": "update",
           "level": 2,
-          "description": "补充干员培养阶段对应的基建技能说明数据"
+          "description": "补充干员培养阶段对应的基建技能说明数据",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "组装器",
           "type": "fix",
           "level": 3,
-          "description": "修正 MAA 导出中合成玉贸易站的产品字段"
+          "description": "修正 MAA 导出中合成玉贸易站的产品字段",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "推荐模块",
           "type": "feature",
           "level": 3,
-          "description": "培养建议展示目标练度期间解锁的基建效果，并扩展组合收益评估"
+          "description": "培养建议展示目标练度期间解锁的基建效果，并扩展组合收益评估",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -652,25 +964,37 @@
           "module": "组装器",
           "type": "update",
           "level": 5,
-          "description": "同班次中枢联动按实际中枢班次重算班组协同，并优先选择协同收益更高的换班偏移"
+          "description": "同班次中枢联动按实际中枢班次重算班组协同，并优先选择协同收益更高的换班偏移",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "fix",
           "level": 4,
-          "description": "按实际中枢绑定重算班组联动效果，修正预览与最终收益结算"
+          "description": "按实际中枢绑定重算班组联动效果，修正预览与最终收益结算",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "班组模块",
           "type": "fix",
           "level": 4,
-          "description": "控制中枢补位改为仅使用闲置干员，避免中枢效果干员重复参与补位"
+          "description": "控制中枢补位改为仅使用闲置干员，避免中枢效果干员重复参与补位",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "推荐模块",
           "type": "fix",
           "level": 3,
-          "description": "红松骑士相关试算仅在布局包含经验书制造站时生效"
+          "description": "红松骑士相关试算仅在布局包含经验书制造站时生效",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -682,25 +1006,37 @@
           "module": "数据模块",
           "type": "update",
           "level": 2,
-          "description": "统一模块版本标识，并新增更新日志入口"
+          "description": "统一模块版本标识，并新增更新日志入口",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "班组模块",
           "type": "update",
           "level": 3,
-          "description": "调整控制中枢与班组计算流程的运行参数"
+          "description": "调整控制中枢与班组计算流程的运行参数",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "组装器",
           "type": "update",
           "level": 2,
-          "description": "统一排班结果组装模块的版本标识"
+          "description": "统一排班结果组装模块的版本标识",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "update",
           "level": 3,
-          "description": "同步排班收益结算相关计算模块的版本标识"
+          "description": "同步排班收益结算相关计算模块的版本标识",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     },
@@ -712,19 +1048,28 @@
           "module": "班组模块",
           "type": "feature",
           "level": 5,
-          "description": "重构控制中枢排班逻辑"
+          "description": "重构控制中枢排班逻辑",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "收益计算器",
           "type": "fix",
           "level": 4,
-          "description": "修复排班收益计算不正确的问题"
+          "description": "修复排班收益计算不正确的问题",
+          "authors": [
+            "Zirun-wang"
+          ]
         },
         {
           "module": "班组模块",
           "type": "fix",
           "level": 3,
-          "description": "修复排班生成流程中的已知问题"
+          "description": "修复排班生成流程中的已知问题",
+          "authors": [
+            "Zirun-wang"
+          ]
         }
       ]
     }
