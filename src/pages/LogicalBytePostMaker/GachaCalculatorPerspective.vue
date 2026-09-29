@@ -20,6 +20,8 @@ import { dateDiff, dateFormat } from "/src/utils/dateUtil.js";
 import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
 import { stringToNumber } from "/src/utils/stringUtils.js";
 import { numberFloor } from "/src/utils/format.js";
+import { GACHA_CERTIFICATE_STEPS, getGachaCertificateCost, getGachaCertificateDraws, getGachaCertificateMonths, getNextGachaCertificateLevel, normalizeGachaCertificateSelections } from "/src/utils/gachaCertificateExchange.js";
+import { countPurchasableMonths, countRemainingDays, getEstimatedRechargePacks, getGachaPoolSchedule, getVisibleGachaRechargePlans, normalizeGachaRechargeOverrides, sumGachaRechargePlans } from "/src/utils/gachaRechargePlans.js";
 import {
   createGachaScheduleOptions,
   formatActivityDateRange,
@@ -27,7 +29,7 @@ import {
   getScheduleCalculationEndDate,
   isRewardAvailableOnSelectedDates,
 } from "/src/utils/gachaScheduleOptions.js";
-import { Delete, Download, Plus, RefreshLeft, Upload } from "@element-plus/icons-vue";
+import { Delete, Download, Hide, Plus, RefreshLeft, Upload, View } from "@element-plus/icons-vue";
 import { useRoute } from "vue-router";
 
 const GACHA_VIDEO_DRAFT_ID = "current";
@@ -502,37 +504,10 @@ async function getAndSortPackData() {
 }
 
 function getHistoryPackInfo() {
-  const scheduleStart = currentSchedule.value.start;
-  const scheduleEnd = currentSchedule.value.end;
-  const oneYearInMs = 365 * 24 * 60 * 60 * 1000;
-  const historicalPackStart = currentTimestamp.value - oneYearInMs;
-  const historicalPackEnd = scheduleEnd.getTime() - oneYearInMs;
-
-  let list = [];
-
-  for (let pack of packCacheList.value) {
-    const { officialName, drawEfficiency, start, end, saleType } = pack;
-
-    if ("activity" !== saleType || drawEfficiency < 0.1) {
-      continue;
-    }
-
-    // 打印符合基本条件的礼包信息
-    // console.log('检查礼包:', officialName, '售卖时间:', new Date(start), '到', new Date(end), 'saleType:', saleType, 'drawEfficiency:', drawEfficiency)
-
-    // 判断礼包售卖时间与历史时间范围是否有重叠
-    // 重叠条件：礼包开始时间 < 历史范围结束时间 AND 礼包结束时间 > 历史范围开始时间
-    if (start < historicalPackEnd && end > historicalPackStart) {
-      let item = JSON.parse(JSON.stringify(pack));
-      item.start = scheduleStart.getTime();
-      item.end = scheduleEnd.getTime();
-      list.push(item);
-      // console.log('✅ 加入往年礼包:', officialName, '原售卖时间:', new Date(start), '到', new Date(end))
-    }
-  }
-
-  // console.log('最终筛选出的往年礼包数量:', list.length)
-  packListGroupByHistory.value = list;
+  packListGroupByHistory.value = getEstimatedRechargePacks(
+    packCacheList.value, currentSchedule.value.id, currentTimestamp.value,
+    getScheduleCalculationEndDate(currentSchedule.value, calPoolEnd.value)
+  );
 }
 
 /**
@@ -611,8 +586,8 @@ function updateScheduleOption(index) {
   currentSchedule.value = schedule;
   endDate.value = schedule.end;
   activityType.value = schedule.activityType;
-  gachaResourcesCalculation();
   getHistoryPackInfo();
+  gachaResourcesCalculation();
 }
 
 const cardTitles = {
@@ -620,6 +595,7 @@ const cardTitles = {
   daily: "日常积累",
   custom: "搓玉",
   recharge: "氪金方案",
+  certificate: "黄票换抽",
   activity: "活动获得",
   other: "其他资源",
 };
@@ -633,6 +609,7 @@ const previewScalePercent = ref(80);
 const navigationNumberStyle = ref("industrial");
 const navigationGroupHeadingLight = ref(false);
 const stageFloatIntensity = ref(3);
+const yellowCertificateExchangeVisible = ref(false);
 const navigationFlashCardName = ref("");
 let navigationFlashTimer = 0;
 const videoPoolTransitionPhase = ref("");
@@ -1240,7 +1217,7 @@ function applyVideoPoolSelection(pool) {
   if (startDateChanged) {
     batchGenerationServerMaintenanceRewards();
     batchGenerationMonthlyPack();
-    getAndSortPackData();
+    getAndSortPackData().then(gachaResourcesCalculation);
   }
   calPoolEnd.value = true;
   updateScheduleOption(pool.scheduleIndex);
@@ -1282,12 +1259,6 @@ function selectVideoCard(cardName) {
       gachaResourcesCalculation();
     }
 
-    if (
-      previousCardName === "recharge" &&
-      videoRechargePlanSelectionsByPool.value[selectedVideoPool.value] !== "no-spend"
-    ) {
-      videoRechargePlanSelectionsByPool.value[selectedVideoPool.value] = "no-spend";
-    }
   }
 
   activeCardName.value = cardName;
@@ -1456,7 +1427,7 @@ const standardNavigationItems = computed(() => [
     serial: "01",
     label: "总览",
     tone: "overview",
-    draws: numberFloor(calculationResult.value.totalDraw, 0) + videoRechargeNavigationOverviewDraws.value,
+    draws: numberFloor(calculationResult.value.totalDraw, 0),
   },
   { id: "daily", serial: "02", label: "日常积累", tone: "daily", draws: numberFloor(calculationResult.value.dailyTotalDraw, 0) },
   { id: "activity", serial: "03", label: "活动获得", tone: "activity", draws: numberFloor(calculationResult.value.activityTotalDraw, 0) },
@@ -1562,7 +1533,11 @@ function createVideoRechargePlansByPool() {
 }
 
 function createVideoRechargePlanSelectionsByPool() {
-  return Object.fromEntries(allVideoPoolOptions.map((pool) => [pool.id, "no-spend"]));
+  return Object.fromEntries(allVideoPoolOptions.map((pool) => [pool.id, []]));
+}
+
+function createVideoRechargeOverridesByPool() {
+  return Object.fromEntries(allVideoPoolOptions.map((pool) => [pool.id, {}]));
 }
 
 function normalizeVideoRechargePlan(plan, usedIds) {
@@ -1599,16 +1574,14 @@ function normalizeVideoRechargePlanSelectionsByPool(selectionsByPool, plansByPoo
   const normalizedSelections = createVideoRechargePlanSelectionsByPool();
 
   for (const pool of allVideoPoolOptions) {
-    const selectedPlanId = selectionsByPool?.[pool.id];
+    const savedSelection = selectionsByPool?.[pool.id];
+    const selectedPlanIds = Array.isArray(savedSelection) ? savedSelection : [savedSelection];
     const customPlans = plansByPool?.[pool.id] || [];
-    const isAvailablePlan =
-      selectedPlanId === "no-spend" ||
-      selectedPlanId === "monthly-card" ||
-      customPlans.some((plan) => plan.id === selectedPlanId);
-
-    if (isAvailablePlan) {
-      normalizedSelections[pool.id] = selectedPlanId;
-    }
+    normalizedSelections[pool.id] = [...new Set(selectedPlanIds.filter((planId) =>
+      planId === "monthly-card" || planId === "monthly-pack" ||
+      (typeof planId === "string" && planId.startsWith("history:") && planId.length > 8) ||
+      customPlans.some((plan) => plan.id === planId)
+    ))];
   }
 
   return normalizedSelections;
@@ -1616,6 +1589,7 @@ function normalizeVideoRechargePlanSelectionsByPool(selectionsByPool, plansByPoo
 
 const videoRechargePlansByPool = ref(createVideoRechargePlansByPool());
 const videoRechargePlanSelectionsByPool = ref(createVideoRechargePlanSelectionsByPool());
+const videoRechargeOverridesByPool = ref(createVideoRechargeOverridesByPool());
 const editingVideoRechargePlans = computed(() => videoRechargePlansByPool.value[editingVideoRechargePoolId.value] || []);
 const currentVideoPool = computed(
   () =>
@@ -1624,18 +1598,119 @@ const currentVideoPool = computed(
     allVideoPoolOptions[0]
 );
 const currentVideoRechargeCustomPlans = computed(() => videoRechargePlansByPool.value[selectedVideoPool.value] || []);
-const videoMonthlyCardPlan = computed(() => {
-  const monthlyCard = videoMonthlyCardSummary.value;
+const yellowCertificateSelectionsByPool = ref(normalizeGachaCertificateSelections(
+  undefined, allVideoPoolOptions.map((pool) => pool.id)
+));
+const yellowCertificateMonths = computed(() => {
+  const schedule = getGachaPoolSchedule(selectedVideoPool.value, allVideoPoolOptions, scheduleOptions);
+  if (!schedule) return [];
+  return getGachaCertificateMonths(
+    selectedVideoPool.value,
+    schedule.end,
+    currentTimestamp.value,
+    getScheduleCalculationEndDate(schedule, calPoolEnd.value)
+  );
+});
+const yellowCertificateDraws = computed(() => yellowCertificateExchangeVisible.value
+  ? getGachaCertificateDraws(yellowCertificateMonths.value, yellowCertificateSelectionsByPool.value[selectedVideoPool.value])
+  : 0
+);
+const yellowCertificateCost = computed(() => getGachaCertificateCost(
+  yellowCertificateMonths.value, yellowCertificateSelectionsByPool.value[selectedVideoPool.value]
+));
 
-  return {
+function selectYellowCertificateStep(monthId, level) {
+  if (!yellowCertificateMonths.value.some((month) => month.id === monthId)) return;
+  const selections = yellowCertificateSelectionsByPool.value[selectedVideoPool.value];
+  const nextLevel = getNextGachaCertificateLevel(selections[monthId] || 0, level);
+  if (nextLevel) selections[monthId] = nextLevel;
+  else delete selections[monthId];
+  gachaResourcesCalculation();
+}
+
+watch(yellowCertificateExchangeVisible, (visible) => {
+  if (!visible && activeCardName.value === "certificate") selectVideoCard("calculationResult");
+  if (gachaVideoDraftRestored) gachaResourcesCalculation();
+});
+
+function getVideoRechargeAutoPlansForPool(poolId) {
+  const schedule = getGachaPoolSchedule(poolId, allVideoPoolOptions, scheduleOptions);
+  if (!schedule) return [];
+  const startTimestamp = videoCalculationStartDatesByPool.value[poolId];
+  const calculationEnd = getScheduleCalculationEndDate(schedule, calPoolEnd.value);
+  const days = countRemainingDays(startTimestamp, calculationEnd);
+  const monthlyCardCount = days ? Math.ceil(days / 30) : 0;
+  const monthlyCardOriginium = monthlyCardCount * 6;
+  const months = countPurchasableMonths(startTimestamp, calculationEnd);
+  const monthlyPackOriginium = months * 42;
+  const monthlyCard = {
     id: "monthly-card",
     type: "monthly-card",
-    price: monthlyCard.price,
-    title: `月卡（${monthlyCard.days}天）`,
-    draws: monthlyCard.draws,
-    navDraws: numberFloor(monthlyCard.draws, 0),
+    price: monthlyCardCount * 30,
+    title: `月卡（${days}天）`,
+    draws: days / 3 + (userConfigV2.value.originiumIsUsed ? monthlyCardOriginium * 0.3 : 0),
+    orundum: days * 200,
+    originium: monthlyCardOriginium,
   };
-});
+  const monthlyPack = {
+    id: "monthly-pack",
+    type: "monthly-pack",
+    price: months * 168,
+    title: `大月卡（${months}个月）`,
+    draws: months * 10 + (userConfigV2.value.originiumIsUsed ? monthlyPackOriginium * 0.3 : 0),
+    originium: monthlyPackOriginium,
+    tenGachaTicket: months,
+  };
+  const history = getEstimatedRechargePacks(packCacheList.value, poolId, startTimestamp, calculationEnd)
+    .filter((pack) => isRewardAvailableOnSelectedDates(pack, startTimestamp, calculationEnd) &&
+      (!pack.rewardType || pack.rewardType === "公共" || pack.rewardType === schedule.activityType ||
+        (pack.rewardType === "联动限定" && ["联动限定", "双联动限定"].includes(schedule.activityType))))
+    .map((pack) => ({
+      id: `history:${pack.id}`,
+      type: "history",
+      price: pack.price,
+      title: pack.officialName,
+      draws: (Number(pack.orundum) || 0) / 600 +
+        (userConfigV2.value.originiumIsUsed ? (Number(pack.originium) || 0) * 0.3 : 0) +
+        (Number(pack.gachaTicket) || 0) + (Number(pack.tenGachaTicket) || 0) * 10,
+      orundum: pack.orundum,
+      originium: pack.originium,
+      gachaTicket: pack.gachaTicket,
+      tenGachaTicket: pack.tenGachaTicket,
+    }));
+  return [monthlyCard, ...(months ? [monthlyPack] : []), ...history];
+}
+
+const videoRechargeAutoPlans = computed(() => getVideoRechargeAutoPlansForPool(selectedVideoPool.value));
+const editingVideoRechargeAutoPlans = computed(() => getVideoRechargeAutoPlansForPool(editingVideoRechargePoolId.value));
+const hasEditingVideoRechargeOverrides = computed(() =>
+  Object.keys(videoRechargeOverridesByPool.value[editingVideoRechargePoolId.value] || {}).length > 0
+);
+function getVideoRechargeEditValue(plan, field) {
+  return videoRechargeOverridesByPool.value[editingVideoRechargePoolId.value]?.[plan.id]?.[field] ?? plan[field];
+}
+
+function setVideoRechargeOverride(plan, field, value) {
+  const poolOverrides = videoRechargeOverridesByPool.value[editingVideoRechargePoolId.value];
+  if (!poolOverrides) return;
+  if (field !== "title" && field !== "hidden" &&
+    (value === null || value === undefined || !Number.isFinite(Number(value)))) return;
+  const nextValue = field === "title" ? value : field === "hidden" ? Boolean(value) : Math.max(0, Number(value));
+  const entry = { ...poolOverrides[plan.id] };
+  if (nextValue === (field === "hidden" ? false : plan[field])) delete entry[field];
+  else entry[field] = nextValue;
+  if (Object.keys(entry).length) poolOverrides[plan.id] = entry;
+  else delete poolOverrides[plan.id];
+}
+
+function resetVideoRechargeOverrides() {
+  videoRechargeOverridesByPool.value[editingVideoRechargePoolId.value] = {};
+}
+
+function toggleVideoRechargeAutoPlan(plan) {
+  setVideoRechargeOverride(plan, "hidden", !getVideoRechargeEditValue(plan, "hidden"));
+}
+
 const videoRechargePlans = computed(() => [
   {
     id: "no-spend",
@@ -1644,24 +1719,24 @@ const videoRechargePlans = computed(() => [
     title: "无氪",
     draws: 0,
   },
-  videoMonthlyCardPlan.value,
+  ...getVisibleGachaRechargePlans(
+    videoRechargeAutoPlans.value, videoRechargeOverridesByPool.value[selectedVideoPool.value]
+  ),
   ...currentVideoRechargeCustomPlans.value.map((plan) => ({
     ...plan,
     type: "custom",
     title: plan.title || "未命名方案",
-    navDraws: numberFloor(plan.draws, 0),
   })),
 ]);
-const selectedVideoRechargePlan = computed(() => {
-  const selectedPlanId = videoRechargePlanSelectionsByPool.value[selectedVideoPool.value];
-  return videoRechargePlans.value.find((plan) => plan.id === selectedPlanId) || videoRechargePlans.value[0];
+const selectedVideoRechargePlans = computed(() => {
+  const selectedIds = new Set(videoRechargePlanSelectionsByPool.value[selectedVideoPool.value] || []);
+  return videoRechargePlans.value.filter((plan) => selectedIds.has(plan.id));
 });
-const videoRechargeNavigationOverviewDraws = computed(() =>
-  numberFloor(selectedVideoRechargePlan.value.draws, 0)
+const videoRechargeSummary = computed(() =>
+  sumGachaRechargePlans(selectedVideoRechargePlans.value, userConfigV2.value.originiumIsUsed)
 );
 const selectedVideoRechargePlanMeta = computed(() => {
-  const plan = selectedVideoRechargePlan.value;
-  return plan.type === "no-spend" ? "¥ 0 无氪" : formatVideoRechargePrice(plan.price);
+  return selectedVideoRechargePlans.value.length ? formatVideoRechargePrice(videoRechargeSummary.value.price) : "¥ 0 无氪";
 });
 const personalNavigationItems = computed(() => [
   {
@@ -1681,8 +1756,15 @@ const personalNavigationItems = computed(() => [
     label: "氪金",
     tone: "recharge",
     meta: selectedVideoRechargePlanMeta.value,
-    navDraws: selectedVideoRechargePlan.value.navDraws,
+    navDraws: selectedVideoRechargePlans.value.length ? numberFloor(videoRechargeSummary.value.draws, 0) : undefined,
   },
+  ...(yellowCertificateExchangeVisible.value ? [{
+    id: "certificate",
+    marker: "CERT",
+    label: "黄票换抽",
+    tone: "certificate",
+    draws: yellowCertificateDraws.value,
+  }] : []),
 ]);
 
 function formatVideoRechargePrice(price) {
@@ -1698,7 +1780,13 @@ function selectVideoRechargePlan(planId) {
     return;
   }
 
-  videoRechargePlanSelectionsByPool.value[selectedVideoPool.value] = planId;
+  const selectedIds = videoRechargePlanSelectionsByPool.value[selectedVideoPool.value];
+  videoRechargePlanSelectionsByPool.value[selectedVideoPool.value] = planId === "no-spend"
+    ? []
+    : selectedIds.includes(planId)
+      ? selectedIds.filter((id) => id !== planId)
+      : [...selectedIds, planId];
+  gachaResourcesCalculation();
 }
 
 function addVideoRechargePlan() {
@@ -1724,9 +1812,9 @@ function removeVideoRechargePlan(planId) {
   const planIndex = plans.findIndex((plan) => plan.id === planId);
   if (planIndex >= 0) {
     plans.splice(planIndex, 1);
-    if (videoRechargePlanSelectionsByPool.value[editingVideoRechargePoolId.value] === planId) {
-      videoRechargePlanSelectionsByPool.value[editingVideoRechargePoolId.value] = "no-spend";
-    }
+    videoRechargePlanSelectionsByPool.value[editingVideoRechargePoolId.value] =
+      videoRechargePlanSelectionsByPool.value[editingVideoRechargePoolId.value].filter((id) => id !== planId);
+    gachaResourcesCalculation();
   }
 }
 
@@ -1821,6 +1909,7 @@ let calculationResult = ref({
   monthlyCardAmountOfRecharge: 0,
   //是否选中月卡
   monthlyCardSelected: false,
+  certificateTotalDraw: 0,
   //库存总抽数
   existTotalDraw: 0,
   //日常总抽数
@@ -1955,6 +2044,7 @@ function getVideoGachaDraft() {
       navigationNumberStyle: navigationNumberStyle.value,
       navigationGroupHeadingLight: navigationGroupHeadingLight.value,
       stageFloatIntensity: stageFloatIntensity.value,
+      yellowCertificateExchangeVisible: yellowCertificateExchangeVisible.value,
       stageTopMargin: stageTopMargin.value,
       stageBottomMargin: stageBottomMargin.value,
       stageLeftMargin: stageLeftMargin.value,
@@ -1983,7 +2073,17 @@ function getVideoGachaDraft() {
           plans.map((plan) => ({ ...plan })),
         ])
       ),
-      rechargePlanSelectionsByPool: { ...videoRechargePlanSelectionsByPool.value },
+      rechargePlanSelectionsByPool: Object.fromEntries(
+        Object.entries(videoRechargePlanSelectionsByPool.value).map(([poolId, ids]) => [poolId, [...ids]])
+      ),
+      yellowCertificateSelectionsByPool: Object.fromEntries(
+        Object.entries(yellowCertificateSelectionsByPool.value).map(([poolId, selections]) => [poolId, { ...selections }])
+      ),
+      rechargeOverridesByPool: Object.fromEntries(
+        Object.entries(videoRechargeOverridesByPool.value).map(([poolId, overrides]) => [
+          poolId, Object.fromEntries(Object.entries(overrides).map(([id, fields]) => [id, { ...fields }]))
+        ])
+      ),
     },
     calculation: {
       userConfig: { ...userConfigV2.value },
@@ -2445,6 +2545,9 @@ function restoreVideoGachaDraft(draft) {
     navigationGroupHeadingLight.value = canvas.navigationGroupHeadingLight;
   }
   restoreNumberSetting(stageFloatIntensity, canvas.stageFloatIntensity);
+  if (typeof canvas.yellowCertificateExchangeVisible === "boolean") {
+    yellowCertificateExchangeVisible.value = canvas.yellowCertificateExchangeVisible;
+  }
   restoreNumberSetting(stageTopMargin, canvas.stageTopMargin);
   restoreNumberSetting(stageBottomMargin, canvas.stageBottomMargin);
   restoreNumberSetting(stageLeftMargin, canvas.stageLeftMargin);
@@ -2481,10 +2584,10 @@ function restoreVideoGachaDraft(draft) {
   if (Number.isFinite(restoredCardActionDelaySeconds)) {
     cardActionDelaySeconds.value = Math.min(60, Math.max(0, restoredCardActionDelaySeconds));
   }
-  if (Object.hasOwn(cardTitles, view.activeCardName)) {
+  if (Object.hasOwn(cardTitles, view.activeCardName) && (view.activeCardName !== "certificate" || yellowCertificateExchangeVisible.value)) {
     activeCardName.value = view.activeCardName;
   }
-  if (Object.hasOwn(cardTitles, view.dataPanelCardName)) {
+  if (Object.hasOwn(cardTitles, view.dataPanelCardName) && (view.dataPanelCardName !== "certificate" || yellowCertificateExchangeVisible.value)) {
     dataPanelCardName.value = view.dataPanelCardName;
   }
   enabledVideoPoolIds.value = normalizeEnabledVideoPoolIds(view.enabledVideoPoolIds);
@@ -2505,6 +2608,12 @@ function restoreVideoGachaDraft(draft) {
   videoRechargePlanSelectionsByPool.value = normalizeVideoRechargePlanSelectionsByPool(
     view.rechargePlanSelectionsByPool,
     videoRechargePlansByPool.value
+  );
+  yellowCertificateSelectionsByPool.value = normalizeGachaCertificateSelections(
+    view.yellowCertificateSelectionsByPool, allVideoPoolOptions.map((pool) => pool.id)
+  );
+  videoRechargeOverridesByPool.value = normalizeGachaRechargeOverrides(
+    view.rechargeOverridesByPool, allVideoPoolOptions.map((pool) => pool.id)
   );
 
   const calculation = draft.calculation || {};
@@ -2601,6 +2710,7 @@ watch(
     navigationNumberStyle,
     navigationGroupHeadingLight,
     stageFloatIntensity,
+    yellowCertificateExchangeVisible,
     stageTopMargin,
     stageBottomMargin,
     stageLeftMargin,
@@ -2621,6 +2731,8 @@ watch(
     videoCalculationStartDatesByPool,
     videoRechargePlansByPool,
     videoRechargePlanSelectionsByPool,
+    yellowCertificateSelectionsByPool,
+    videoRechargeOverridesByPool,
     currentTimestamp,
     userConfigV2,
     calPoolEnd,
@@ -2635,6 +2747,18 @@ watch(
   { deep: true }
 );
 
+watch(videoRechargePlansByPool, () => {
+  if (gachaVideoDraftRestored) {
+    gachaResourcesCalculation();
+  }
+}, { deep: true });
+
+watch(videoRechargeOverridesByPool, () => {
+  if (gachaVideoDraftRestored) {
+    gachaResourcesCalculation();
+  }
+}, { deep: true });
+
 watch([stageTopMargin, stageBottomMargin], () => {
   if (rightCardHeight.value > maxRightCardHeight.value) {
     rightCardHeight.value = maxRightCardHeight.value;
@@ -2646,6 +2770,7 @@ watch([stageTopMargin, stageBottomMargin], () => {
  */
 function gachaResourcesCalculation() {
   logs = [];
+  let rechargeCustomDraws = 0;
 
   endDate.value = getScheduleCalculationEndDate(currentSchedule.value, calPoolEnd.value);
 
@@ -2661,12 +2786,39 @@ function gachaResourcesCalculation() {
   calculationResult.value.rechargeTotalDraw = 0;
   calculationResult.value.totalAmountOfRecharge = 0;
   calculationResult.value.monthlyCardAmountOfRecharge = 0;
+  calculationResult.value.certificateTotalDraw = yellowCertificateDraws.value;
 
   clearLastYearOriginiumPackSelection();
   dailyRewardCalculate();
   produceOrundumCalculate();
   honeyCakeCalculate();
   activityCalculate();
+  videoRechargeCalculate();
+  calculationResult.value.gachaTicket += calculationResult.value.certificateTotalDraw;
+  if (calculationResult.value.certificateTotalDraw > 0) {
+    pieChartDataTmp.push({ value: calculationResult.value.certificateTotalDraw, name: "黄票换抽" });
+  }
+
+  function videoRechargeCalculate() {
+    const summary = videoRechargeSummary.value;
+    const originium = userConfigV2.value.originiumIsUsed ? summary.originium : 0;
+    rechargeCustomDraws = summary.customDraws;
+
+    calculationResult.value.orundum += summary.orundum;
+    calculationResult.value.originium += originium;
+    calculationResult.value.gachaTicket += summary.gachaTicket;
+    calculationResult.value.tenGachaTicket += summary.tenGachaTicket;
+    calculationResult.value.totalAmountOfRecharge = summary.price;
+    calculationResult.value.rechargeTotalDraw = summary.draws;
+    calculationResult.value.monthlyCardSelected = selectedVideoRechargePlans.value.some((plan) => plan.id === "monthly-card");
+    calculationResult.value.monthlyCardAmountOfRecharge = selectedVideoRechargePlans.value.find(
+      (plan) => plan.id === "monthly-card"
+    )?.price || 0;
+
+    if (summary.draws > 0) {
+      pieChartDataTmp.push({ value: Math.floor(summary.draws), name: "氪金" });
+    }
+  }
 
   /**
    * 计算从当前到活动结束时间的日常奖励
@@ -3122,7 +3274,8 @@ function gachaResourcesCalculation() {
   }
 
   calculationResult.value.totalDraw = Math.floor(
-    calculationResult.value.orundum / 600 + calculationResult.value.gachaTicket + calculationResult.value.tenGachaTicket * 10
+    calculationResult.value.orundum / 600 + calculationResult.value.gachaTicket +
+    calculationResult.value.tenGachaTicket * 10 + rechargeCustomDraws
   );
 
   singleResourceDraws.value.orundum = Math.floor(calculationResult.value.orundum / 600);
@@ -3142,12 +3295,8 @@ function gachaResourcesCalculation() {
   logs.push({ key: "计算源石后", value: calculationResult.value.totalDraw });
 
   const calculationDays = dailyReward.value.daily;
-  const monthlyAverageBaseRecharge = calculationResult.value.totalAmountOfRecharge - calculationResult.value.monthlyCardAmountOfRecharge;
-  calculationResult.value.monthlyAverageRecharge = calculationDays > 0 ? (monthlyAverageBaseRecharge / calculationDays) * 30 : 0;
-
-  if (userConfigV2.value.monthlyCardSelected) {
-    calculationResult.value.monthlyAverageRecharge += 30;
-  }
+  calculationResult.value.monthlyAverageRecharge = calculationDays > 0
+    ? (calculationResult.value.totalAmountOfRecharge / calculationDays) * 30 : 0;
 
   // console.table(logs)
 
@@ -3359,8 +3508,9 @@ function handleDateChange(date) {
     batchGenerationServerMaintenanceRewards();
     // 重新加载礼包数据和计算攒抽资源
     batchGenerationMonthlyPack();
-    getAndSortPackData();
+    getHistoryPackInfo();
     gachaResourcesCalculation();
+    getAndSortPackData().then(gachaResourcesCalculation);
   }
 }
 
@@ -3821,6 +3971,10 @@ function sharePage() {
             <span>画面漂浮</span>
             <el-slider v-model="stageFloatIntensity" :min="0" :max="8" :step="0.1" show-input input-size="small" />
           </div>
+          <div class="gacha-card-setting-row">
+            <span>黄票换抽</span>
+            <el-switch v-model="yellowCertificateExchangeVisible" aria-label="显示黄票换抽卡片" />
+          </div>
         </el-tab-pane>
         <el-tab-pane label="数据" name="data">
           <div class="gacha-card-setting-section-title">目标池子</div>
@@ -4183,7 +4337,7 @@ function sharePage() {
 
           <template v-else-if="activeCardName === 'recharge'">
             <div class="gacha-video-plan-heading">
-              <strong>高性价比氪金方案</strong>
+              <strong>可购礼包估算</strong>
               <small>理性消费，适度氪金</small>
             </div>
             <div
@@ -4198,8 +4352,8 @@ function sharePage() {
                   :key="plan.id"
                   type="button"
                   class="gacha-video-recharge-plan"
-                  :class="[`is-${plan.type}`, { 'is-selected': selectedVideoRechargePlan.id === plan.id }]"
-                  :aria-pressed="selectedVideoRechargePlan.id === plan.id"
+                  :class="[`is-${plan.type}`, { 'is-selected': plan.type === 'no-spend' ? !selectedVideoRechargePlans.length : selectedVideoRechargePlans.some((selected) => selected.id === plan.id) }]"
+                  :aria-pressed="plan.type === 'no-spend' ? !selectedVideoRechargePlans.length : selectedVideoRechargePlans.some((selected) => selected.id === plan.id)"
                   @click="selectVideoRechargePlan(plan.id)"
                 >
                   <strong class="gacha-video-recharge-price">{{ formatVideoRechargePrice(plan.price) }}</strong>
@@ -4213,9 +4367,34 @@ function sharePage() {
                   <span class="gacha-video-recharge-plan-check" aria-hidden="true">✓</span>
                 </button>
               </div>
-              <p class="gacha-video-recharge-plan-note">
-                仅列出性价比高于每月寻访组合包的条目，其他礼包性价比可参阅一图流礼包性价比模块
-              </p>
+            </div>
+          </template>
+          <template v-else-if="activeCardName === 'certificate' && yellowCertificateExchangeVisible">
+            <div class="gacha-video-orundum-heading">
+              <span>黄票换抽</span>
+              <strong>共 {{ yellowCertificateDraws }} 抽</strong>
+              <small>需 {{ yellowCertificateCost }} 黄票</small>
+            </div>
+            <div class="gacha-video-certificate-content" tabindex="0" aria-label="按月黄票换抽" @keydown="handleScrollableListKeydown">
+              <div v-for="month in yellowCertificateMonths" :key="month.id" class="gacha-video-certificate-month">
+                <strong class="gacha-video-certificate-month-label">{{ month.label }}</strong>
+                <div class="gacha-video-certificate-steps" role="group" :aria-label="`${month.label}黄票兑换档位`">
+                  <button
+                    v-for="(step, index) in GACHA_CERTIFICATE_STEPS"
+                    :key="step.cost"
+                    type="button"
+                    class="gacha-video-certificate-step"
+                    :class="{ 'is-selected': (yellowCertificateSelectionsByPool[selectedVideoPool]?.[month.id] || 0) > index }"
+                    :aria-pressed="(yellowCertificateSelectionsByPool[selectedVideoPool]?.[month.id] || 0) > index"
+                    @click="selectYellowCertificateStep(month.id, index + 1)"
+                  >
+                    <strong>{{ step.cost }} 黄票</strong>
+                    <span>{{ step.draws }} 抽</span>
+                  </button>
+                </div>
+                <span class="gacha-video-certificate-month-draw">{{ getGachaCertificateDraws([month], yellowCertificateSelectionsByPool[selectedVideoPool]) }} / 38 抽</span>
+              </div>
+              <div v-if="!yellowCertificateMonths.length" class="gacha-video-empty-state">计算时间范围内没有可兑换月份</div>
             </div>
           </template>
           </div>
@@ -4966,17 +5145,59 @@ function sharePage() {
                   :value="pool.id"
                 />
               </el-select>
+              <el-button
+                :icon="RefreshLeft"
+                circle
+                plain
+                :disabled="!hasEditingVideoRechargeOverrides"
+                title="重置当前卡池自动方案"
+                aria-label="重置当前卡池自动方案"
+                @click="resetVideoRechargeOverrides"
+              />
             </div>
             <div class="gacha-video-recharge-editor-fixed">
               <span>固定方案</span>
               <p>¥ 0　无氪　不额外购买资源</p>
-              <p>月卡按自定义开始日期至当前卡池结束日期自动计算，与总览加抽一致。</p>
             </div>
+            <div class="collapse-content-subheading"><span></span> 自动方案</div>
             <div class="gacha-video-recharge-editor-labels">
               <span>价格</span>
               <span>方案名</span>
-              <span>资源</span>
+              <span>折合抽数</span>
             </div>
+            <div
+              v-for="plan in editingVideoRechargeAutoPlans"
+              :key="plan.id"
+              class="gacha-video-recharge-editor-row"
+              :class="{ 'is-hidden': getVideoRechargeEditValue(plan, 'hidden') }"
+            >
+              <el-input-number
+                :model-value="getVideoRechargeEditValue(plan, 'price')"
+                :min="0" :step="1" :precision="0" controls-position="right"
+                :aria-label="`${plan.title}价格`"
+                @change="(value) => setVideoRechargeOverride(plan, 'price', value)"
+              />
+              <el-input
+                :model-value="getVideoRechargeEditValue(plan, 'title')"
+                :aria-label="`${plan.title}方案名`"
+                @input="(value) => setVideoRechargeOverride(plan, 'title', value)"
+              />
+              <el-input-number
+                :model-value="getVideoRechargeEditValue(plan, 'draws')"
+                :min="0" :step="0.1" :precision="1" controls-position="right"
+                :aria-label="`${plan.title}折合抽数`"
+                @change="(value) => setVideoRechargeOverride(plan, 'draws', value)"
+              />
+              <el-button
+                :icon="getVideoRechargeEditValue(plan, 'hidden') ? View : Hide"
+                circle
+                plain
+                :title="`${getVideoRechargeEditValue(plan, 'hidden') ? '显示' : '隐藏'}${plan.title}`"
+                :aria-label="`${getVideoRechargeEditValue(plan, 'hidden') ? '显示' : '隐藏'}${plan.title}`"
+                @click="toggleVideoRechargeAutoPlan(plan)"
+              />
+            </div>
+            <div class="collapse-content-subheading"><span></span> 自定义方案</div>
             <div
               v-for="plan in editingVideoRechargePlans"
               :key="plan.id"
@@ -5754,6 +5975,10 @@ function sharePage() {
 
 .gacha-video-nav-item.is-recharge {
   --gacha-nav-tone: #b16b8d;
+}
+
+.gacha-video-nav-item.is-certificate {
+  --gacha-nav-tone: #b49a36;
 }
 
 .gacha-video-nav-item.is-personal-item {
@@ -6688,6 +6913,16 @@ function sharePage() {
   background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #f1e2d2);
 }
 
+.gacha-video-recharge-plan.is-monthly-pack {
+  border-left-color: #b78632;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #f0e9d4);
+}
+
+.gacha-video-recharge-plan.is-history {
+  border-left-color: #4b9a85;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #dcece6);
+}
+
 .gacha-video-recharge-plan.is-custom {
   border-left-color: #4f7fd0;
   background-color: color-mix(in srgb, var(--c-card-background-color) 88%, #dce7f3);
@@ -6775,11 +7010,84 @@ function sharePage() {
   transform: scale(1);
 }
 
-.gacha-video-recharge-plan-note {
-  margin: 10px 4px 0;
-  color: color-mix(in srgb, var(--c-text-color) 64%, transparent);
+.gacha-video-certificate-content {
+  display: grid;
+  min-height: 0;
+  align-content: start;
+  gap: 10px;
+  flex: 1 1 auto;
+  margin-top: 18px;
+  overflow: auto;
+  scrollbar-width: none;
+}
+
+.gacha-video-certificate-content::-webkit-scrollbar {
+  display: none;
+}
+
+.gacha-video-certificate-month {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 68px minmax(0, 1fr) 108px;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--c-border-color);
+  border-left: 5px solid #b49a36;
+  border-radius: 6px;
+  background-color: color-mix(in srgb, var(--gacha-detail-card-background-color) 88%, #efe8c6);
+}
+
+.gacha-video-certificate-month-label {
+  color: var(--c-text-color);
+  font-size: 22px;
+  white-space: nowrap;
+}
+
+.gacha-video-certificate-month-draw {
+  color: color-mix(in srgb, var(--c-text-color) 70%, transparent);
   font-size: 20px;
-  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.gacha-video-certificate-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gacha-video-certificate-step {
+  display: grid;
+  min-width: 0;
+  min-height: 64px;
+  align-content: center;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 5px;
+  background-color: var(--gacha-detail-card-background-color);
+  color: var(--c-text-color);
+  cursor: pointer;
+  font: inherit;
+  font-size: 17px;
+  text-align: center;
+}
+
+.gacha-video-certificate-step strong {
+  font-size: 18px;
+}
+
+.gacha-video-certificate-step.is-selected {
+  border-color: #a78922;
+  background-color: color-mix(in srgb, var(--gacha-detail-card-background-color) 66%, #e2c75f);
+  box-shadow: inset 0 0 0 1px #a78922;
+}
+
+.gacha-video-certificate-step:focus-visible {
+  outline: 3px solid #a78922;
+  outline-offset: 2px;
 }
 
 .gacha-video-empty-state {
@@ -6812,7 +7120,7 @@ function sharePage() {
 
 .gacha-video-recharge-editor-target {
   display: grid;
-  grid-template-columns: 82px minmax(0, 1fr);
+  grid-template-columns: 82px minmax(0, 1fr) 32px;
   align-items: center;
   gap: 12px;
 }
@@ -6840,9 +7148,14 @@ function sharePage() {
 .gacha-video-recharge-editor-labels,
 .gacha-video-recharge-editor-row {
   display: grid;
-  grid-template-columns: 112px minmax(104px, 0.8fr) minmax(150px, 1.35fr) 32px;
+  grid-template-columns: minmax(82px, 0.9fr) minmax(88px, 1fr) minmax(100px, 1.1fr) 32px;
   align-items: center;
   gap: 8px;
+}
+
+.gacha-video-recharge-editor-row.is-hidden {
+  border-style: dashed;
+  background-color: color-mix(in srgb, var(--c-card-background-color) 94%, #d4d8dc);
 }
 
 .gacha-video-recharge-editor-labels {
