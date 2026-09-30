@@ -671,6 +671,9 @@ const stageBottomMargin = ref(0);
 const stageLeftMargin = ref(0);
 const stageRightMargin = ref(0);
 const cardGroupWidth = ref(420);
+const poolHeaderWidth = ref(420);
+const navigationItemHeight = ref(88);
+const navigationItemGap = ref(8);
 const VIDEO_DETAIL_MIN_HEIGHT = 420;
 const VIDEO_STAGE_CONTENT_HEIGHT = 1080;
 const rightCardHeight = ref(VIDEO_STAGE_CONTENT_HEIGHT - stageTopMargin.value - stageBottomMargin.value);
@@ -709,7 +712,11 @@ const displayStageStyle = computed(() => ({
   "--gacha-stage-bottom-margin": `${stageBottomMargin.value}px`,
   "--gacha-stage-left-margin": `${stageLeftMargin.value}px`,
   "--gacha-stage-right-margin": `${stageRightMargin.value}px`,
-  "--gacha-navigation-width": `${cardGroupWidth.value}px`,
+  "--gacha-navigation-width": `${Math.max(cardGroupWidth.value, poolHeaderWidth.value)}px`,
+  "--gacha-pool-header-width": `${poolHeaderWidth.value}px`,
+  "--gacha-nav-list-width": `${cardGroupWidth.value}px`,
+  "--gacha-nav-item-height": `${navigationItemHeight.value}px`,
+  "--gacha-nav-item-gap": `${navigationItemGap.value}px`,
   "--gacha-right-card-height": `${Math.min(rightCardHeight.value, maxRightCardHeight.value)}px`,
 }));
 
@@ -2050,6 +2057,9 @@ function getVideoGachaDraft() {
       stageLeftMargin: stageLeftMargin.value,
       stageRightMargin: stageRightMargin.value,
       cardGroupWidth: cardGroupWidth.value,
+      poolHeaderWidth: poolHeaderWidth.value,
+      navigationItemHeight: navigationItemHeight.value,
+      navigationItemGap: navigationItemGap.value,
       rightCardHeight: rightCardHeight.value,
     },
     view: {
@@ -2553,6 +2563,13 @@ function restoreVideoGachaDraft(draft) {
   restoreNumberSetting(stageLeftMargin, canvas.stageLeftMargin);
   restoreNumberSetting(stageRightMargin, canvas.stageRightMargin);
   restoreNumberSetting(cardGroupWidth, canvas.cardGroupWidth);
+  poolHeaderWidth.value = cardGroupWidth.value;
+  restoreNumberSetting(poolHeaderWidth, canvas.poolHeaderWidth);
+  poolHeaderWidth.value = Math.min(640, Math.max(320, poolHeaderWidth.value));
+  restoreNumberSetting(navigationItemHeight, canvas.navigationItemHeight);
+  navigationItemHeight.value = Math.min(112, Math.max(72, navigationItemHeight.value));
+  restoreNumberSetting(navigationItemGap, canvas.navigationItemGap);
+  navigationItemGap.value = Math.min(24, Math.max(0, navigationItemGap.value));
   restoreNumberSetting(rightCardHeight, canvas.rightCardHeight);
   rightCardHeight.value = Math.min(
     maxRightCardHeight.value,
@@ -2574,7 +2591,7 @@ function restoreVideoGachaDraft(draft) {
   } else if (view.workspaceMode === "display") {
     previewScalePercent.value = 80;
   }
-  if (view.settingsTab === "canvas" || view.settingsTab === "data" || view.settingsTab === "action") {
+  if (["canvas", "layout", "data", "action"].includes(view.settingsTab)) {
     settingsTab.value = view.settingsTab;
   }
   if (typeof view.cardsVisible === "boolean") {
@@ -2716,6 +2733,9 @@ watch(
     stageLeftMargin,
     stageRightMargin,
     cardGroupWidth,
+    poolHeaderWidth,
+    navigationItemHeight,
+    navigationItemGap,
     rightCardHeight,
     previewScalePercent,
     settingsTab,
@@ -3675,42 +3695,6 @@ function sharePage() {
             </div>
           </div>
           <div class="gacha-card-setting-range">
-            <span>背景缩放</span>
-            <el-slider
-              v-model="stageBackgroundImageScale"
-              :min="100"
-              :max="250"
-              :step="1"
-              show-input
-              input-size="small"
-              :disabled="!stageBackgroundImage"
-            />
-          </div>
-          <div class="gacha-card-setting-range">
-            <span>水平位置</span>
-            <el-slider
-              v-model="stageBackgroundImagePositionX"
-              :min="0"
-              :max="100"
-              :step="1"
-              show-input
-              input-size="small"
-              :disabled="!stageBackgroundImage"
-            />
-          </div>
-          <div class="gacha-card-setting-range">
-            <span>垂直位置</span>
-            <el-slider
-              v-model="stageBackgroundImagePositionY"
-              :min="0"
-              :max="100"
-              :step="1"
-              show-input
-              input-size="small"
-              :disabled="!stageBackgroundImage"
-            />
-          </div>
-          <div class="gacha-card-setting-range">
             <span>背景透明</span>
             <el-slider v-model="stageBackgroundImageOpacity" :min="0" :max="100" :step="1" show-input input-size="small" />
           </div>
@@ -3806,6 +3790,98 @@ function sharePage() {
             </div>
           </div>
           <div class="gacha-card-setting-range">
+            <span>Logo 透明</span>
+            <el-slider v-model="stageLogoOpacity" :min="0" :max="100" :step="1" show-input input-size="small" :disabled="!stageLogoImage" />
+          </div>
+
+          <div class="gacha-card-setting-section-title">卡片样式</div>
+          <div class="gacha-card-setting-range">
+            <span>未选中模糊</span>
+            <el-slider v-model="inactivePoolImageBlur" :min="0" :max="12" :step="0.1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>未选中对比度降低</span>
+            <el-slider v-model="inactivePoolImageContrastReduction" :min="0" :max="80" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>左侧透明</span>
+            <el-slider v-model="navigationOpacity" :min="0" :max="100" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>右侧透明</span>
+            <el-slider v-model="detailCardOpacity" :min="0" :max="100" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-row">
+            <span>右侧卡片颜色</span>
+            <el-color-picker v-model="detailCardBackgroundColor" show-alpha />
+          </div>
+          <div class="gacha-card-setting-row is-stacked">
+            <span>导航编号</span>
+            <el-radio-group v-model="navigationNumberStyle" size="small" aria-label="导航编号样式">
+              <el-radio-button v-for="option in NAVIGATION_NUMBER_STYLE_OPTIONS" :key="option.value" :label="option.value">
+                {{ option.label }}
+              </el-radio-button>
+            </el-radio-group>
+          </div>
+          <div class="gacha-card-setting-row">
+            <span>分组标题</span>
+            <el-switch
+              v-model="navigationGroupHeadingLight"
+              active-text="浅色"
+              inactive-text="默认"
+              aria-label="切换固定资源和个人策略标题颜色"
+            />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>画面漂浮</span>
+            <el-slider v-model="stageFloatIntensity" :min="0" :max="8" :step="0.1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-row">
+            <span>黄票换抽</span>
+            <el-switch v-model="yellowCertificateExchangeVisible" aria-label="显示黄票换抽卡片" />
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="布局" name="layout">
+          <div class="gacha-card-setting-section-title">舞台背景图</div>
+          <div class="gacha-card-setting-range">
+            <span>背景缩放</span>
+            <el-slider
+              v-model="stageBackgroundImageScale"
+              :min="100"
+              :max="250"
+              :step="1"
+              show-input
+              input-size="small"
+              :disabled="!stageBackgroundImage"
+            />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>水平位置</span>
+            <el-slider
+              v-model="stageBackgroundImagePositionX"
+              :min="0"
+              :max="100"
+              :step="1"
+              show-input
+              input-size="small"
+              :disabled="!stageBackgroundImage"
+            />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>垂直位置</span>
+            <el-slider
+              v-model="stageBackgroundImagePositionY"
+              :min="0"
+              :max="100"
+              :step="1"
+              show-input
+              input-size="small"
+              :disabled="!stageBackgroundImage"
+            />
+          </div>
+
+          <div class="gacha-card-setting-section-title">左下角 Logo</div>
+          <div class="gacha-card-setting-range">
             <span>Logo 宽度</span>
             <el-slider v-model="stageLogoWidth" :min="60" :max="520" :step="1" show-input input-size="small" :disabled="!stageLogoImage" />
           </div>
@@ -3816,10 +3892,6 @@ function sharePage() {
           <div class="gacha-card-setting-range">
             <span>底部距离</span>
             <el-slider v-model="stageLogoBottom" :min="0" :max="240" :step="1" show-input input-size="small" :disabled="!stageLogoImage" />
-          </div>
-          <div class="gacha-card-setting-range">
-            <span>Logo 透明</span>
-            <el-slider v-model="stageLogoOpacity" :min="0" :max="100" :step="1" show-input input-size="small" :disabled="!stageLogoImage" />
           </div>
 
           <div class="gacha-card-setting-section-title">卡池头图</div>
@@ -3833,6 +3905,10 @@ function sharePage() {
             >
               <el-button>上传</el-button>
             </el-upload>
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>头图区宽度</span>
+            <el-slider v-model="poolHeaderWidth" :min="320" :max="640" :step="1" show-input input-size="small" />
           </div>
           <div class="gacha-card-setting-row">
             <span>头图裁切</span>
@@ -3856,7 +3932,7 @@ function sharePage() {
             </div>
           </div>
           <div class="gacha-card-setting-range">
-            <span>缩放</span>
+            <span>图片缩放</span>
             <el-slider
               v-model="editingVideoPoolImageLayout.scale"
               :min="VIDEO_POOL_IMAGE_SCALE_MIN"
@@ -3891,34 +3967,22 @@ function sharePage() {
               :disabled="!videoPoolImages[editingVideoPoolId]"
             />
           </div>
+
+          <div class="gacha-card-setting-section-title">左侧列表</div>
           <div class="gacha-card-setting-range">
-            <span>未选中模糊</span>
-            <el-slider v-model="inactivePoolImageBlur" :min="0" :max="12" :step="0.1" show-input input-size="small" />
-          </div>
-          <div class="gacha-card-setting-range">
-            <span>未选中对比度降低</span>
-            <el-slider v-model="inactivePoolImageContrastReduction" :min="0" :max="80" :step="1" show-input input-size="small" />
+            <span>列表宽度</span>
+            <el-slider v-model="cardGroupWidth" :min="320" :max="640" :step="1" show-input input-size="small" />
           </div>
           <div class="gacha-card-setting-range">
-            <span>左侧透视</span>
-            <el-slider v-model="leftPerspective" :min="0" :max="30" :step="0.1" show-input input-size="small" />
+            <span>列表项高度</span>
+            <el-slider v-model="navigationItemHeight" :min="72" :max="112" :step="1" show-input input-size="small" />
           </div>
           <div class="gacha-card-setting-range">
-            <span>右侧透视</span>
-            <el-slider v-model="rightPerspective" :min="0" :max="30" :step="0.1" show-input input-size="small" />
+            <span>列表项间距</span>
+            <el-slider v-model="navigationItemGap" :min="0" :max="24" :step="1" show-input input-size="small" />
           </div>
-          <div class="gacha-card-setting-range">
-            <span>左侧透明</span>
-            <el-slider v-model="navigationOpacity" :min="0" :max="100" :step="1" show-input input-size="small" />
-          </div>
-          <div class="gacha-card-setting-range">
-            <span>右侧透明</span>
-            <el-slider v-model="detailCardOpacity" :min="0" :max="100" :step="1" show-input input-size="small" />
-          </div>
-          <div class="gacha-card-setting-row">
-            <span>右侧卡片颜色</span>
-            <el-color-picker v-model="detailCardBackgroundColor" show-alpha />
-          </div>
+
+          <div class="gacha-card-setting-section-title">舞台布局</div>
           <div class="gacha-card-setting-range">
             <span>顶部边距</span>
             <el-slider v-model="stageTopMargin" :min="96" :max="280" :step="1" show-input input-size="small" />
@@ -3926,6 +3990,14 @@ function sharePage() {
           <div class="gacha-card-setting-range">
             <span>底部边距</span>
             <el-slider v-model="stageBottomMargin" :min="0" :max="280" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>左侧边距</span>
+            <el-slider v-model="stageLeftMargin" :min="0" :max="320" :step="1" show-input input-size="small" />
+          </div>
+          <div class="gacha-card-setting-range">
+            <span>右侧边距</span>
+            <el-slider v-model="stageRightMargin" :min="0" :max="320" :step="1" show-input input-size="small" />
           </div>
           <div class="gacha-card-setting-range">
             <span>右侧卡高</span>
@@ -3939,41 +4011,12 @@ function sharePage() {
             />
           </div>
           <div class="gacha-card-setting-range">
-            <span>左侧边距</span>
-            <el-slider v-model="stageLeftMargin" :min="0" :max="320" :step="1" show-input input-size="small" />
+            <span>左侧透视</span>
+            <el-slider v-model="leftPerspective" :min="0" :max="30" :step="0.1" show-input input-size="small" />
           </div>
           <div class="gacha-card-setting-range">
-            <span>右侧边距</span>
-            <el-slider v-model="stageRightMargin" :min="0" :max="320" :step="1" show-input input-size="small" />
-          </div>
-          <div class="gacha-card-setting-range">
-            <span>卡片组宽度</span>
-            <el-slider v-model="cardGroupWidth" :min="320" :max="640" :step="1" show-input input-size="small" />
-          </div>
-          <div class="gacha-card-setting-row is-stacked">
-            <span>导航编号</span>
-            <el-radio-group v-model="navigationNumberStyle" size="small" aria-label="导航编号样式">
-              <el-radio-button v-for="option in NAVIGATION_NUMBER_STYLE_OPTIONS" :key="option.value" :label="option.value">
-                {{ option.label }}
-              </el-radio-button>
-            </el-radio-group>
-          </div>
-          <div class="gacha-card-setting-row">
-            <span>分组标题</span>
-            <el-switch
-              v-model="navigationGroupHeadingLight"
-              active-text="浅色"
-              inactive-text="默认"
-              aria-label="切换固定资源和个人策略标题颜色"
-            />
-          </div>
-          <div class="gacha-card-setting-range">
-            <span>画面漂浮</span>
-            <el-slider v-model="stageFloatIntensity" :min="0" :max="8" :step="0.1" show-input input-size="small" />
-          </div>
-          <div class="gacha-card-setting-row">
-            <span>黄票换抽</span>
-            <el-switch v-model="yellowCertificateExchangeVisible" aria-label="显示黄票换抽卡片" />
+            <span>右侧透视</span>
+            <el-slider v-model="rightPerspective" :min="0" :max="30" :step="0.1" show-input input-size="small" />
           </div>
         </el-tab-pane>
         <el-tab-pane label="数据" name="data">
@@ -5744,11 +5787,17 @@ function sharePage() {
   width: var(--gacha-navigation-width);
   flex-direction: column;
   gap: 14px;
+  overflow-y: auto;
+  scrollbar-width: none;
   opacity: var(--gacha-navigation-opacity);
   transform: perspective(var(--gacha-left-surface-perspective)) rotateY(var(--gacha-left-perspective));
   transform-origin: right center;
   translate: 0 0;
   will-change: transform;
+}
+
+.gacha-video-navigation::-webkit-scrollbar {
+  display: none;
 }
 
 .gacha-card-stage.are-cards-hidden .gacha-video-navigation,
@@ -5765,6 +5814,8 @@ function sharePage() {
 
 .gacha-video-pool-selector {
   display: grid;
+  width: var(--gacha-pool-header-width);
+  flex: 0 0 auto;
   grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
   gap: 12px;
   margin-bottom: 6px;
@@ -5872,11 +5923,14 @@ function sharePage() {
 
 .gacha-video-nav-group {
   display: grid;
-  gap: 8px;
+  width: var(--gacha-nav-list-width);
+  flex: 0 0 auto;
+  gap: var(--gacha-nav-item-gap);
+  container-type: inline-size;
 }
 
 .gacha-video-nav-group.is-personal {
-  gap: 10px;
+  gap: calc(var(--gacha-nav-item-gap) + 2px);
   padding-top: 0;
   border-top: 0;
 }
@@ -5935,7 +5989,8 @@ function sharePage() {
   display: grid;
   grid-template-columns: 58px minmax(0, 1fr) auto;
   align-items: center;
-  min-height: 88px;
+  height: var(--gacha-nav-item-height);
+  min-height: var(--gacha-nav-item-height);
   padding: 0 22px 0 16px;
   border: 1px solid var(--c-border-color);
   border-left: 5px solid var(--gacha-nav-tone);
@@ -5983,8 +6038,31 @@ function sharePage() {
 
 .gacha-video-nav-item.is-personal-item {
   grid-template-columns: 78px minmax(0, 1fr) auto;
-  min-height: 88px;
+  min-height: var(--gacha-nav-item-height);
   background-color: color-mix(in srgb, var(--c-card-background-color) 92%, var(--gacha-nav-tone));
+}
+
+@container (max-width: 380px) {
+  .gacha-video-nav-item,
+  .gacha-video-nav-item.is-personal-item {
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+    padding-right: 12px;
+  }
+
+  .gacha-video-nav-copy {
+    font-size: 24px;
+  }
+
+  .gacha-video-nav-draw-value,
+  .gacha-video-nav-status-draw {
+    font-size: 26px;
+  }
+
+  .gacha-video-nav-draw-value .gacha-video-inline-icon,
+  .gacha-video-nav-status-draw .gacha-video-inline-icon {
+    width: 30px;
+    height: 30px;
+  }
 }
 
 .gacha-video-nav-item:hover {
