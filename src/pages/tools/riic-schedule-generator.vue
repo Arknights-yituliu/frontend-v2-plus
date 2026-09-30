@@ -227,6 +227,98 @@ const RIIC_SCHEDULE_CHANGELOG_ENTRIES = Array.isArray(
 )
   ? RIIC_SCHEDULE_CHANGELOG.entries
   : [];
+const RIIC_SCHEDULE_CHANGELOG_PAGE_SIZE = 20;
+const RIIC_SCHEDULE_CHANGELOG_LEVEL_FILTERS = Object.freeze([
+  null,
+  2,
+  3,
+  4,
+  5,
+]);
+const RIIC_SCHEDULE_CHANGELOG_MODULES = Array.from(
+  new Set(
+    RIIC_SCHEDULE_CHANGELOG_ENTRIES.flatMap((entry) =>
+      (Array.isArray(entry.items) ? entry.items : []).map((item) => item.module),
+    ),
+  ),
+);
+const changelogLevelFilter = ref(null);
+const changelogSelectedModules = ref([...RIIC_SCHEDULE_CHANGELOG_MODULES]);
+const changelogCurrentPage = ref(1);
+const riicScheduleChangelogPages = computed(() => {
+  const dateGroupsByDate = new Map();
+
+  for (const entry of RIIC_SCHEDULE_CHANGELOG_ENTRIES) {
+    const items = (Array.isArray(entry.items) ? entry.items : []).filter(
+      (item) =>
+        changelogSelectedModules.value.includes(item.module) &&
+        (changelogLevelFilter.value === null ||
+          Number(item.level) > changelogLevelFilter.value),
+    );
+
+    if (!items.length) continue;
+
+    let dateGroup = dateGroupsByDate.get(entry.date);
+    if (!dateGroup) {
+      dateGroup = {
+        date: entry.date,
+        entries: [],
+        itemCount: 0,
+      };
+      dateGroupsByDate.set(entry.date, dateGroup);
+    }
+
+    dateGroup.entries.push({ ...entry, items });
+    dateGroup.itemCount += items.length;
+  }
+
+  const dateGroups = Array.from(dateGroupsByDate.values()).sort((a, b) =>
+    b.date.localeCompare(a.date),
+  );
+  const pages = [];
+  let pageEntries = [];
+  let pageItemCount = 0;
+
+  for (const group of dateGroups) {
+    if (pageItemCount >= RIIC_SCHEDULE_CHANGELOG_PAGE_SIZE) {
+      pages.push(pageEntries);
+      pageEntries = [];
+      pageItemCount = 0;
+    }
+
+    pageEntries.push(...group.entries);
+    pageItemCount += group.itemCount;
+  }
+
+  if (pageEntries.length) pages.push(pageEntries);
+  return pages;
+});
+const riicScheduleChangelogCurrentEntries = computed(
+  () =>
+    riicScheduleChangelogPages.value[changelogCurrentPage.value - 1] || [],
+);
+const riicScheduleChangelogPageCount = computed(
+  () => riicScheduleChangelogPages.value.length,
+);
+watch([changelogLevelFilter, changelogSelectedModules], () => {
+  changelogCurrentPage.value = 1;
+});
+function setRiicScheduleChangelogLevelFilter(level) {
+  changelogLevelFilter.value = level;
+}
+function toggleRiicScheduleChangelogModule(module) {
+  changelogSelectedModules.value = changelogSelectedModules.value.includes(
+    module,
+  )
+    ? changelogSelectedModules.value.filter((selected) => selected !== module)
+    : [...changelogSelectedModules.value, module];
+}
+function setRiicScheduleChangelogPage(page) {
+  changelogCurrentPage.value = Math.min(
+    Math.max(page, 1),
+    riicScheduleChangelogPageCount.value || 1,
+  );
+}
 const riicScheduleFrameworkVersion = computed(() => {
   const versionPattern = /^v\d{8}\.\d{4}$/;
   const versions = [
@@ -10297,7 +10389,7 @@ onBeforeUnmount(() => {
           >
             <div class="workflow-card-content-inner schedule-changelog">
           <article
-            v-for="entry in RIIC_SCHEDULE_CHANGELOG_ENTRIES"
+            v-for="entry in riicScheduleChangelogCurrentEntries"
             :key="`${entry.date}:${entry.version}`"
             class="schedule-changelog-entry"
           >
@@ -10318,11 +10410,92 @@ onBeforeUnmount(() => {
                   {{ item.module }}
                 </span>
                 <span class="schedule-changelog-item-description">
-                  {{ item.description }}
+                  {{ item.description }}<span
+                    v-if="item.authors && item.authors.length"
+                    class="schedule-changelog-item-author"
+                  >（<template
+                    v-for="(author, authorIndex) in item.authors"
+                    :key="author"
+                  >
+                    <a
+                      :href="'https://github.com/' + author"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >{{ author }}</a><span
+                      v-if="authorIndex < item.authors.length - 1"
+                    >、</span>
+                  </template>）</span>
                 </span>
               </li>
             </ul>
           </article>
+              <div class="schedule-changelog-controls">
+                <div class="schedule-changelog-filter-groups">
+                  <div
+                    class="schedule-changelog-filter-group"
+                    role="group"
+                    aria-label="等级筛选"
+                  >
+                    <button
+                      v-for="levelFilter in RIIC_SCHEDULE_CHANGELOG_LEVEL_FILTERS"
+                      :key="levelFilter ?? 'all'"
+                      type="button"
+                      class="schedule-changelog-filter-button"
+                      :aria-pressed="changelogLevelFilter === levelFilter"
+                      @click="setRiicScheduleChangelogLevelFilter(levelFilter)"
+                    >
+                      <template v-if="levelFilter === null">全部</template>
+                      <template v-else>Lv{{ levelFilter }}</template>
+                    </button>
+                  </div>
+                  <div
+                    class="schedule-changelog-filter-group"
+                    role="group"
+                    aria-label="模块筛选"
+                  >
+                    <button
+                      v-for="module in RIIC_SCHEDULE_CHANGELOG_MODULES"
+                      :key="module"
+                      type="button"
+                      class="schedule-changelog-filter-button"
+                      :aria-pressed="changelogSelectedModules.includes(module)"
+                      @click="toggleRiicScheduleChangelogModule(module)"
+                    >
+                      {{ module }}
+                    </button>
+                  </div>
+                </div>
+                <nav
+                  class="schedule-changelog-pagination"
+                  aria-label="更新日志分页"
+                >
+                  <button
+                    type="button"
+                    class="schedule-changelog-page-button"
+                    :disabled="changelogCurrentPage <= 1"
+                    aria-label="上一页"
+                    title="上一页"
+                    @click="setRiicScheduleChangelogPage(changelogCurrentPage - 1)"
+                  >
+                    <v-icon icon="mdi-chevron-left" size="18"></v-icon>
+                  </button>
+                  <span class="schedule-changelog-page-status">
+                    {{ riicScheduleChangelogPageCount ? changelogCurrentPage : 0 }}
+                    /
+                    {{ riicScheduleChangelogPageCount }}
+                  </span>
+                  <button
+                    type="button"
+                    class="schedule-changelog-page-button"
+                    :disabled="changelogCurrentPage >= riicScheduleChangelogPageCount"
+                    aria-label="下一页"
+                    title="下一页"
+                    @click="setRiicScheduleChangelogPage(changelogCurrentPage + 1)"
+                  >
+                    <v-icon icon="mdi-chevron-right" size="18"></v-icon>
+                  </button>
+                </nav>
+              </div>
             </div>
           </div>
         </Transition>
@@ -11001,6 +11174,139 @@ onBeforeUnmount(() => {
 .schedule-changelog-item-description {
   min-width: 0;
   color: var(--riic-muted);
+}
+
+.schedule-changelog-item-author {
+  white-space: nowrap;
+}
+
+.schedule-changelog-item-author a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.schedule-changelog-item-author a:hover {
+  text-decoration: underline;
+}
+
+.schedule-changelog-item-author a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.schedule-changelog-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--c-border-color);
+}
+
+.schedule-changelog-filter-groups {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 3px 2px;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.schedule-changelog-filter-group,
+.schedule-changelog-pagination {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.schedule-changelog-filter-group {
+  flex-wrap: nowrap;
+}
+
+.schedule-changelog-filter-button {
+  min-height: 30px;
+  padding: 4px 9px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  background: var(--c-page-background-color);
+  color: var(--riic-muted);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.schedule-changelog-filter-button {
+  border-radius: 0;
+}
+
+.schedule-changelog-filter-button + .schedule-changelog-filter-button {
+  margin-left: -1px;
+}
+
+.schedule-changelog-filter-button:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.schedule-changelog-filter-button:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.schedule-changelog-filter-button[aria-pressed="true"] {
+  position: relative;
+  z-index: 1;
+  border-color: var(--riic-blue);
+  background: color-mix(
+    in srgb,
+    var(--riic-blue) 12%,
+    var(--c-page-background-color)
+  );
+  color: var(--riic-blue);
+  font-weight: 600;
+}
+
+.schedule-changelog-filter-button:focus-visible,
+.schedule-changelog-page-button:focus-visible {
+  position: relative;
+  z-index: 2;
+  outline: 2px solid var(--riic-blue);
+  outline-offset: 2px;
+}
+
+.schedule-changelog-pagination {
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.schedule-changelog-page-button {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  background: var(--c-page-background-color);
+  color: var(--c-text-color);
+  cursor: pointer;
+}
+
+.schedule-changelog-page-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.schedule-changelog-page-status {
+  min-width: 46px;
+  color: var(--c-text-color);
+  text-align: center;
+  white-space: nowrap;
 }
 
 .wizard-layout.manual-selection {
@@ -12797,6 +13103,19 @@ onBeforeUnmount(() => {
 
   .workflow-card-version {
     font-size: 10px;
+  }
+
+  .schedule-changelog-controls {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .schedule-changelog-filter-groups {
+    flex-basis: 100%;
+  }
+
+  .schedule-changelog-pagination {
+    margin-left: auto;
   }
 
   .layout-entry-panel {
