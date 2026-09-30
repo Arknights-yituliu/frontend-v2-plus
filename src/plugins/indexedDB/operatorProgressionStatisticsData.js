@@ -1,5 +1,5 @@
 import myDatabase from "/src/plugins/indexedDB/indexedDB.js";
-import operatorDataAPI from "/src/api/operatorData.js";
+import {getAkOperatorStatisticsResult} from "/src/api/userCenterApi.js";
 import {operatorTableV2} from "/src/utils/gameData.js";
 import {formatNumber} from "/src/utils/format.js";
 
@@ -19,12 +19,11 @@ async function getData() {
     //     }
     // }
 
-    await operatorDataAPI.getOperatorStatisticsResult().then(response => {
+    // 数据源已切换为 UC 干员数据统计接口：其响应直接就是统计结果数组，此处包成旧缓存结构 {result} 供下游消费
+    await getAkOperatorStatisticsResult().then(result => {
         console.log(cacheKey, '返回来自服务器的数据')
-        let data = response.data
-        let {result} = data
 
-        data.result = _formatData(result)
+        const data = {result: _formatData(result)}
         const responseCache = {id: cacheKey, resource: data, version: "automated", createTime: new Date().getTime()}
         putCache(responseCache)
         cacheData = data

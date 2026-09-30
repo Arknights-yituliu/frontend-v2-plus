@@ -9,6 +9,9 @@ const OAUTH_AK_ACCOUNTS_OPERATOR_SAVE_PATH = "/oauth2/ak-accounts/operators/save
 const OAUTH_GRANT_SCOPES_PATH = "/user/oauth/grants/scopes";
 const CURRENT_OAUTH_CLIENT_ID = "arknights-yituliu-web";
 
+// UC 干员养成数据统计结果查询路径：只读统计结果表，无需登录、无需授权范围
+const AK_OPERATOR_STATISTICS_RESULT_PATH = "/open/ak-operator-statistics/result";
+
 // UC 统一成功码（UC 与旧系统后端一致，均为 200）
 const UC_SUCCESS_CODE = 200;
 
@@ -204,6 +207,19 @@ async function getAkAccountOperators(akUid) {
 }
 
 /**
+ * 查询干员养成数据统计结果（UC 干员数据统计接口）
+ *
+ * <p>只读统计结果表，无需登录、无需授权范围，故不携带业务参数；尚未跑过统计时返回空数组。
+ * 各分布字段（elite / skill1~3 / modA、X、Y、D、B）为「取值 → 记录数」的对象，
+ * 与旧接口 {@code Map<Integer, Integer>} 序列化后的形态一致，消费方无需额外转换。</p>
+ *
+ * @returns {Promise<Array<Object>>} 按干员编码升序排列的统计结果
+ */
+async function getAkOperatorStatisticsResult() {
+  return ucService.get(AK_OPERATOR_STATISTICS_RESULT_PATH);
+}
+
+/**
  * @returns {Promise<{clientId: string, clientName: string, grantedScopes: Array, selectableScopes: Array}>}
  */
 async function getCurrentOAuthGrantScopes() {
@@ -243,6 +259,7 @@ export {
   saveAkAccountOperators,
   listAkAccounts,
   getAkAccountOperators,
+  getAkOperatorStatisticsResult,
   getCurrentOAuthGrantScopes,
   grantCurrentOAuthScopes,
   revokeCurrentOAuthScopes,
