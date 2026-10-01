@@ -1,7 +1,8 @@
 <script setup>
 import {createMessage} from "/src/utils/message.js";
-import operatorDataAPI from "/src/api/operatorData.js"
-import {saveAkAccountOperators} from "/src/api/userCenterApi.js"
+import operatorDataAPI from "/src/api/uc/operatorData.js"
+import sklandCredentialAPI from "/src/api/backend/sklandCredential.js"
+import {saveAkAccountOperators} from "/src/api/uc/userCenterApi.js"
 import {buildUcOperatorSavePayload} from "/src/utils/survey/ucOperatorData.js"
 import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
 import {operatorTableV2} from "/src/utils/gameData.js";
@@ -24,7 +25,7 @@ import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
-import { userInfo } from "/src/api/userSession.js";
+import { userInfo } from "/src/api/backend/userSession.js";
 import { useRoute, useRouter } from "vue-router";
 import Login from "/src/pages/account/login.vue";
 import QRCode from 'qrcode';
@@ -320,7 +321,7 @@ async function getPlayerBindingByOfficialToken() {
   sklandLoading.value = true
   try {
     // 后端用官网 token 换取森空岛凭证，返回 { cred, secret }
-    const result = await operatorDataAPI.getCredByHgToken({ token: hgToken })
+    const result = await sklandCredentialAPI.getCredByHgToken({ token: hgToken })
     const { cred, token } = result.data
     sklandCred.value = cred
     sklandToken.value = token
@@ -349,7 +350,7 @@ async function createSklandQrCode() {
   sklandQrStatusText.value = '正在生成二维码…'
   playBindingList.value = []
   try {
-    const res = await operatorDataAPI.createSklandQrCode()
+    const res = await sklandCredentialAPI.createSklandQrCode()
     const { scanId, qrContent } = res.data
     sklandQrScanId.value = scanId
     // 用 qrContent（deep link）渲染二维码图片
@@ -391,7 +392,7 @@ function startSklandQrPolling() {
   stopSklandQrPolling()
   sklandQrPollTimer = setInterval(async () => {
     try {
-      const res = await operatorDataAPI.checkSklandQrStatus(sklandQrScanId.value)
+      const res = await sklandCredentialAPI.checkSklandQrStatus(sklandQrScanId.value)
       const data = res.data
       if (data.status === 0) {
         // 用户已确认：停止轮询，用凭证拉取账号列表

@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from "vue-router";
 import {routes} from "./routes.js";
-import toolApi from "../api/tool.js";
-import {getUserInfo} from "/src/api/userSession.js";
+import toolApi from "../api/backend/tool.js";
+import {getUserInfo} from "/src/api/backend/userSession.js";
 import {checkAndRefreshUcToken, ensureUcToken} from "/src/utils/user/ucToken.js";
 
 const router = createRouter({

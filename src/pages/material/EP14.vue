@@ -215,7 +215,7 @@ import {onMounted, ref} from "vue";
 
 const show_secondary = ref(true);
 
-import materialAPI from '/src/api/material.js'
+import materialAPI from '/src/api/backend/material.js'
 
 onMounted(() => {
   materialAPI.getNewChapterStage().then(response => {

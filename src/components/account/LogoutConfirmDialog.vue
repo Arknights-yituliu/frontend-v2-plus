@@ -1,6 +1,6 @@
 <script setup>
-import { clearUserSession } from "/src/api/userSession.js";
-import UserApiV2 from "/src/api/UserApiV2.js";
+import { clearUserSession } from "/src/api/backend/userSession.js";
+import UserApiV2 from "/src/api/backend/UserApiV2.js";
 
 const props = defineProps({
   modelValue: {

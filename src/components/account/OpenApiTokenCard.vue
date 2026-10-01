@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import userInfoAPI from "/src/api/userInfo";
+import userInfoAPI from "/src/api/backend/userInfo";
 import { createMessage } from "/src/utils/message";
 import { copyTextToClipboard } from "/src/utils/copyText.js";
 

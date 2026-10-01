@@ -1,4 +1,4 @@
-import request from "/src/api/request"
+import request from "/src/api/backend/request"
 
 export default {
 

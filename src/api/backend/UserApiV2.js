@@ -1,4 +1,4 @@
-import request from "/src/api/request";
+import request from "/src/api/backend/request";
 
 /**
  * 旧系统后端直连登录相关 API（V2）

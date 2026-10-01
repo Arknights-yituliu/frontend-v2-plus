@@ -1,5 +1,5 @@
 <script setup>
-import itemAPI from "/src/api/materialV5.js";
+import itemAPI from "/src/api/backend/materialV5.js";
 import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";
 import {ref} from 'vue';
 import PackCardContainer from '/src/components/material/PackCardGroup.vue'

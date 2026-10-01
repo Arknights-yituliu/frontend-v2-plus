@@ -3,7 +3,7 @@ import { computed, onMounted, onUnmounted, provide, ref, watchEffect } from 'vue
 import { createDiscreteApi } from 'naive-ui'
 import hljs from 'highlight.js/lib/core'
 import jsonLang from 'highlight.js/lib/languages/json'
-import buildingApi from '@/api/building.js'
+import buildingApi from '@/api/backend/building.js'
 import { saveAs } from 'file-saver'
 import PlanEditor from './mower-plan/components/PlanEditor.vue'
 import HelpText from './mower-plan/components/HelpText.vue'

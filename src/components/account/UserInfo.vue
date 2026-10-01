@@ -1,9 +1,9 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {createMessage} from "/src/utils/message";
-import userInfoAPI from "/src/api/userInfo"
+import userInfoAPI from "/src/api/backend/userInfo"
 import "/src/assets/css/account/home.scss";
-import {userInfo} from '/src/api/userSession.js'
+import {userInfo} from '/src/api/backend/userSession.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import LogoutConfirmDialog from "/src/components/account/LogoutConfirmDialog.vue";
 import {operatorTableV2} from '/src/utils/gameData.js'

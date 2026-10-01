@@ -2,7 +2,7 @@ import hmacSHA256 from 'crypto-js/hmac-sha256'
 import md5 from 'crypto-js/md5'
 
 import { createMessage} from "/src/utils/message";
-import toolAPI from '/src/api/tool.js'
+import toolAPI from '/src/api/backend/tool.js'
 import {operatorTableV2} from "/src/utils/gameData.js";
 
 import axios from "axios";

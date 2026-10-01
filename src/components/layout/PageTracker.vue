@@ -1,7 +1,7 @@
 <script setup>
 import { watch } from 'vue'
 import { useRoute } from 'vue-router'
-import toolApi from '/src/api/tool.js'
+import toolApi from '/src/api/backend/tool.js'
 
 const route = useRoute()
 

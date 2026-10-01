@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from "vue";
 import itemCache from "@/plugins/indexedDB/itemCache.js";
-import materialAPI from "@/api/material.js";
+import materialAPI from "@/api/backend/material.js";
 import {NDatePicker} from 'naive-ui'
 import {createMessage} from "@/utils/message.js";
 import {formatNumber} from "@/utils/format.js";

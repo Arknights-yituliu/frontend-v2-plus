@@ -6,9 +6,9 @@ import SklandAPI from '/src/utils/survey/skland.js'
 import { createMessage } from "/src/utils/message.js"
 import { operatorTableV2 } from "/src/utils/gameData.js"
 import operatorUpdateTime from '/public/json/operator_update_time.json'
-import { saveAkAccountOperators } from "/src/api/userCenterApi.js"
+import { saveAkAccountOperators } from "/src/api/uc/userCenterApi.js"
 import { buildUcOperatorSavePayload } from "/src/utils/survey/ucOperatorData.js"
-import { userInfo } from "/src/api/userSession.js"
+import { userInfo } from "/src/api/backend/userSession.js"
 
 // 子组件
 import AccountStats from '/src/components/survey/account-overview/AccountStats.vue'

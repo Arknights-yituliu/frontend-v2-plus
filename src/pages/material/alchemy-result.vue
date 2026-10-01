@@ -7,7 +7,7 @@ import {
     buildMHDropResultRecord,
     uploadAlchemyResult,
     uploadMHDropResult,
-} from "/src/api/statHarbor.js";
+} from "/src/api/udu/statHarbor.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import { createMessage } from "/src/utils/message.js";
 import itemInfoList from "/src/static/json/material/item_info.json";

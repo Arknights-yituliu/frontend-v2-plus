@@ -1,5 +1,5 @@
 <script setup>
-import rogueSeedAPI from "/src/api/rogueSeed.js";
+import rogueSeedAPI from "/src/api/backend/rogueSeed.js";
 import {onMounted, ref, watch} from "vue";
 import {copyTextToClipboard} from "/src/utils/copyText.js";
 import {cMessage} from "/src/utils/message.js";
@@ -7,7 +7,7 @@ import userActionOnSeedDB from "/src/plugins/indexedDB/userActionOnSeed.js";
 import userActionOnSeed from "/src/plugins/indexedDB/userActionOnSeed.js";
 import {dateFormat} from "/src/utils/dateUtil.js";
 import {useDisplay} from "vuetify";
-import {getUid} from "/src/api/userSession.js";
+import {getUid} from "/src/api/backend/userSession.js";
 import {stringToArray} from "/src/utils/stringUtils.js";
 
 const {mobile} = useDisplay()

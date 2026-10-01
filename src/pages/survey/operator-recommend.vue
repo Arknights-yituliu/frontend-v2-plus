@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {createMessage} from "/src/utils/message.js";
-import operatorDataAPI from "/src/api/operatorData.js";
+import operatorDataAPI from "/src/api/uc/operatorData.js";
 import {operatorRecommend} from "/src/utils/survey/operatorRecommend";
 import {operatorTableV2} from "/src/utils/gameData.js";
 import deepClone from "/src/utils/deepClone.js";

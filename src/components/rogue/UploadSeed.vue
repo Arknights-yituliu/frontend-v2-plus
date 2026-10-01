@@ -49,7 +49,7 @@
 <script setup>
 
 import {ref} from "vue";
-import rogueSeedAPI from "/src/api/rogueSeed.js";
+import rogueSeedAPI from "/src/api/backend/rogueSeed.js";
 import deepClone from "/src/utils/deepClone.js";
 import {cMessage} from "/src/utils/message.js";
 

@@ -1,6 +1,6 @@
 import {onBeforeUnmount, ref} from "vue";
 import {createMessage} from "/src/utils/message.js";
-import {sendEmailCode} from "/src/api/userCenterApi.js";
+import {sendEmailCode} from "/src/api/uc/userCenterApi.js";
 
 const VERIFICATION_CODE_COUNTDOWN = 60;
 
