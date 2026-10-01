@@ -17,6 +17,7 @@ import OperatorStatisticalTable from "/src/components/survey/OperatorStatistical
 import deepClone from "/src/utils/deepClone.js";
 import EquipIcon from "/src/components/sprite/EquipIcon.vue";
 import OperatorBar from "/src/components/survey/OperatorBar.vue";
+import ImportCommonQuestions from "/src/components/survey/ImportCommonQuestions.vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {formatNumber} from "/src/utils/format.js";
 import SkillIcon from "@/components/sprite/SkillIcon.vue";
@@ -1752,13 +1753,6 @@ onBeforeUnmount(() => {
                       </div>
                     </v-btn>
                   </div>
-
-                  <v-alert :icon="false" color="warning" variant="tonal" class="mt-4" density="compact">
-                    <p class="text-caption mb-1"><b>如果出现报错：请勿修改设备本地时间</b>可能是系统时间不准确导致。Windows 同步方法：</p>
-                    <p class="text-caption mb-1">① 右键任务栏时间 → 调整日期/时间</p>
-                    <p class="text-caption mb-1">② 点击"立即同步"</p>
-                    <p class="text-caption">或 Win+R 输入 <code>timedate.cpl</code> →  Internet 时间 → 更改设置 → 立即更新</p>
-                  </v-alert>
                 </v-card-text>
               </v-card>
             </template>
@@ -1829,12 +1823,6 @@ onBeforeUnmount(() => {
                   <v-card flat>
                     <v-card-text>
                       <p class="mb-4">将获取到的凭证粘贴到下面的输入框中</p>
-                      <v-alert :icon="false" color="warning" variant="tonal" class="mb-4" density="compact">
-                        为保障您的账号安全，请在导入后退出明日方舟官网登录，退出登录后Token就会失效了
-                      </v-alert>
-                      <v-alert :icon="false" color="info" variant="tonal" class="mb-4" density="compact">
-                        如果提示需要设备验证，请打开森空岛APP，进入 设置 → 通行证与账号安全 → 账号安全管理 → 设备管理 → 新设备登录身份验证，关闭"新设备登录身份验证"
-                      </v-alert>
                       <div class="operator-import-credential-row operator-import-credential-row--column">
                         <v-text-field
                             v-model="officialTokenText"
@@ -1937,6 +1925,8 @@ onBeforeUnmount(() => {
                 </div>
               </v-window-item>
               </v-window>
+              <!-- 常见问题：三种导入方式共用，置于最后一步下方 -->
+              <ImportCommonQuestions class="mt-4" />
             </div>
           </Transition>
           </div>
