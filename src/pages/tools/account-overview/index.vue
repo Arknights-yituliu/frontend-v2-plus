@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { copyTextToClipboard } from "/src/utils/copyText.js"
 import SklandAPI from '/src/utils/survey/skland.js'
+import SklandAccountOverviewAPI from '/src/utils/survey/sklandAccountOverview.js'
 import { createMessage } from "/src/utils/message.js"
 import { operatorTableV2 } from "/src/utils/gameData.js"
 import operatorUpdateTime from '/public/json/operator_update_time.json'
@@ -151,7 +152,7 @@ async function getPlayerData(binding) {
     // 保存当前选择的账号信息
     currentBinding.value = binding
     
-    const data = await SklandAPI.getAccountOverviewData(
+    const data = await SklandAccountOverviewAPI.getAccountOverviewData(
       uid,
       nickName,
       channelName,
