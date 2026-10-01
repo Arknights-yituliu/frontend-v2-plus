@@ -1,7 +1,7 @@
 import axios from "axios";
 import {createMessage} from "/src/utils/message.js";
 import {DOMAIN} from "/src/api/BASE_URL";
-import {getUid,getUserTokenV2} from "/src/utils/user/userInfo.js";
+import {getUid,getUserTokenV2} from "/src/api/userSession.js";
 
 // 创建axios实例
 const service = axios.create({

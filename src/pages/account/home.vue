@@ -6,7 +6,7 @@ import OpenApiTokenCard from "/src/components/account/OpenApiTokenCard.vue";
 // import AuthorizationManagementCard from "/src/components/account/AuthorizationManagementCard.vue";
 import StageConfig from "/src/components/account/StageConfig.vue";
 import Login from "/src/pages/account/login.vue";
-import { getUserInfo, userInfo } from "/src/utils/user/userInfo.js";
+import { getUserInfo, userInfo } from "/src/api/userSession.js";
 
 const authChecked = ref(false);
 

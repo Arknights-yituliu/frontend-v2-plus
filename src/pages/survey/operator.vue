@@ -24,7 +24,7 @@ import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
-import { userInfo } from "/src/utils/user/userInfo.js";
+import { userInfo } from "/src/api/userSession.js";
 import { useRoute, useRouter } from "vue-router";
 import Login from "/src/pages/account/login.vue";
 import QRCode from 'qrcode';

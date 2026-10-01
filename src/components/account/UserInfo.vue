@@ -3,7 +3,7 @@ import {onMounted, ref} from "vue";
 import {createMessage} from "/src/utils/message";
 import userInfoAPI from "/src/api/userInfo"
 import "/src/assets/css/account/home.scss";
-import {userInfo} from '/src/utils/user/userInfo.js'
+import {userInfo} from '/src/api/userSession.js'
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import LogoutConfirmDialog from "/src/components/account/LogoutConfirmDialog.vue";
 import {operatorTableV2} from '/src/utils/gameData.js'

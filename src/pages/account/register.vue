@@ -3,7 +3,7 @@ import {ref} from "vue";
 import '/src/assets/css/account/login.v2.scss'
 import {createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
-import {getUserInfo} from "/src/utils/user/userInfo.js";
+import {getUserInfo} from "/src/api/userSession.js";
 import {
   emailRules,
   registerPasswordRules,
@@ -11,7 +11,7 @@ import {
   verificationCodeRules,
   validateAuthSubmission
 } from "/src/utils/user/authValidation.js";
-import {useVerificationCode} from "/src/utils/user/verificationCode.js";
+import {useVerificationCode} from "/src/api/verificationCode.js";
 import UserApiV2 from '/src/api/UserApiV2.js'
 import {directRegister} from '/src/api/userCenterApi.js'
 import {saveUcToken} from "/src/utils/user/ucToken.js"
