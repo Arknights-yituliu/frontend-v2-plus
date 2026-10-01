@@ -10,8 +10,6 @@ import axios from "axios";
 const SKLAND_DOMAIN = "https://zonai.skland.com";
 const PLAYER_INFO_API = '/api/v1/game/player/info'
 const PLAYER_BINDING_URL = '/api/v1/game/player/binding'
-const OAUTH2_URL = "https://as.hypergryph.com/user/oauth2/v2/grant";
-const GENERATE_CRED_BY_CODE_URL = "https://zonai.skland.com/api/v1/user/auth/generate_cred_by_code";
 const CULTIVATE_PLAYER_API = '/api/v1/game/cultivate/player'
 
 
