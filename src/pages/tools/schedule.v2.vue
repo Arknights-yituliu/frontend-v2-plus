@@ -7,7 +7,7 @@ import { operatorTableV2 } from "/src/utils/gameData.js";
 import SCHEDULE_MENU from "/src/static/json/build/schedule_menu.json";
 import BUILDING_TABLE from "/src/static/json/build/building_table.json";
 import buildingApi from "/src/api/backend/building.js";
-import operatorDataAPI from "/src/api/uc/operatorData.js";
+import operatorDataAPI from "/src/api/user-center/operatorData.js";
 import { operatorFilterConditionTable } from "/src/utils/buildingSkillFilter.js";
 import { translate } from "/src/utils/i18n.js";
 import { readFileToString } from "/src/utils/fileUtils.js";

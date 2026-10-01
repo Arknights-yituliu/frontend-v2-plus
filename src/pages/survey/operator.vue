@@ -1,8 +1,8 @@
 <script setup>
 import {createMessage} from "/src/utils/message.js";
-import operatorDataAPI from "/src/api/uc/operatorData.js"
+import operatorDataAPI from "/src/api/user-center/operatorData.js"
 import sklandCredentialAPI from "/src/api/backend/sklandCredential.js"
-import {saveAkAccountOperators} from "/src/api/uc/userCenterApi.js"
+import {saveAkAccountOperators} from "/src/api/user-center/userCenterApi.js"
 import {buildUcOperatorSavePayload} from "/src/utils/survey/ucOperatorData.js"
 import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
 import {operatorTableV2} from "/src/utils/gameData.js";

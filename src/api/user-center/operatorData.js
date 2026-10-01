@@ -1,4 +1,4 @@
-import {getAkAccountOperators, listAkAccounts} from "/src/api/uc/userCenterApi.js"
+import {getAkAccountOperators, listAkAccounts} from "/src/api/user-center/userCenterApi.js"
 import {toOperatorDataList} from "/src/utils/survey/ucOperatorData.js"
 
 

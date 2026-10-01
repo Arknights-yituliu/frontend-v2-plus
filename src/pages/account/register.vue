@@ -11,9 +11,9 @@ import {
   verificationCodeRules,
   validateAuthSubmission
 } from "/src/utils/user/authValidation.js";
-import {useVerificationCode} from "/src/api/uc/verificationCode.js";
+import {useVerificationCode} from "/src/api/user-center/verificationCode.js";
 import UserApiV2 from '/src/api/backend/UserApiV2.js'
-import {directRegister} from '/src/api/uc/userCenterApi.js'
+import {directRegister} from '/src/api/user-center/userCenterApi.js'
 import {saveUcToken} from "/src/utils/user/ucToken.js"
 
 /**
