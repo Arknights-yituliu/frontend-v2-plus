@@ -828,47 +828,6 @@ const SENTINEL_INTERSECT = {
                     <v-btn size="small" variant="text" :disabled="!hasSelection && !q" @click="clearAll">清空筛选</v-btn>
                 </div>
 
-                <div v-if="hasSelection" class="bcf-selected">
-                    <template v-for="id in [...selTags]" :key="'sel-' + id">
-                        <v-tooltip
-                            v-if="tagById.get(id)?.source === 'player'"
-                            location="top"
-                            max-width="380"
-                            content-class="bcf-tt"
-                            open-delay="150"
-                        >
-                            <template #activator="{ props: ttProps }">
-                                <v-chip
-                                    v-bind="ttProps"
-                                    size="small"
-                                    color="primary"
-                                    variant="flat"
-                                    closable
-                                    :class="{ 'bcf-chip--solo': id === 'P12' }"
-                                    @click:close="toggleTag(tagById.get(id))"
-                                >
-                                    {{ tagById.get(id)?.name }}
-                                </v-chip>
-                            </template>
-                            <div class="bcf-tt-body">
-                                <div class="bcf-tt-title">{{ tagById.get(id)?.name }}</div>
-                                <p>{{ tagExplain(tagById.get(id)) || "（暂无说明）" }}</p>
-                                <p v-if="id === 'P12'" class="bcf-tt-note">此 TAG 只能单独选择。</p>
-                            </div>
-                        </v-tooltip>
-                        <v-chip
-                            v-else
-                            size="small"
-                            color="primary"
-                            variant="flat"
-                            closable
-                            @click:close="toggleTag(tagById.get(id))"
-                        >
-                            {{ tagById.get(id)?.name }}
-                        </v-chip>
-                    </template>
-                </div>
-
                 <div class="bcf-group">
                     <button class="bcf-group-head" type="button" @click="openGroups.official = !openGroups.official">
                         <v-icon :icon="openGroups.official ? 'mdi-chevron-down' : 'mdi-chevron-right'" size="18" />
@@ -977,6 +936,47 @@ const SENTINEL_INTERSECT = {
                             </template>
                         </div>
                     </div>
+                </div>
+
+                <div v-if="hasSelection" class="bcf-selected">
+                    <template v-for="id in [...selTags]" :key="'sel-' + id">
+                        <v-tooltip
+                            v-if="tagById.get(id)?.source === 'player'"
+                            location="top"
+                            max-width="380"
+                            content-class="bcf-tt"
+                            open-delay="150"
+                        >
+                            <template #activator="{ props: ttProps }">
+                                <v-chip
+                                    v-bind="ttProps"
+                                    size="small"
+                                    color="primary"
+                                    variant="flat"
+                                    closable
+                                    :class="{ 'bcf-chip--solo': id === 'P12' }"
+                                    @click:close="toggleTag(tagById.get(id))"
+                                >
+                                    {{ tagById.get(id)?.name }}
+                                </v-chip>
+                            </template>
+                            <div class="bcf-tt-body">
+                                <div class="bcf-tt-title">{{ tagById.get(id)?.name }}</div>
+                                <p>{{ tagExplain(tagById.get(id)) || "（暂无说明）" }}</p>
+                                <p v-if="id === 'P12'" class="bcf-tt-note">此 TAG 只能单独选择。</p>
+                            </div>
+                        </v-tooltip>
+                        <v-chip
+                            v-else
+                            size="small"
+                            color="primary"
+                            variant="flat"
+                            closable
+                            @click:close="toggleTag(tagById.get(id))"
+                        >
+                            {{ tagById.get(id)?.name }}
+                        </v-chip>
+                    </template>
                 </div>
             </v-card>
 
