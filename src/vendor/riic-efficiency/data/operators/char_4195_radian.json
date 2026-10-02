@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4195_radian",
+  "name": "电弧",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "点滴关照",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "无言的慈爱",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "scope": "room",
+              "scopeGroup": "cc.g.elite",
+              "stack": "max",
+              "maxGroup": "dormRec-elite"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

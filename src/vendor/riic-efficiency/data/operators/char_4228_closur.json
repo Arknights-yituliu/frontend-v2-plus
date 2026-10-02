@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4228_closur",
+  "name": "可露希尔",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "总工程师",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "特别订单",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "fixed",
+                "orderName": "可露希尔特别订单",
+                "qty": 1200,
+                "material": "赤金",
+                "amount": 2,
+                "time": 2.4,
+                "priority": 2
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

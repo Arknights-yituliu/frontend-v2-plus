@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 2,
+  "id": "char_494_vendla",
+  "name": "刺玫",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "芬芳疗养·α",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.15,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "芬芳疗养·β",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "scope": "room",
+              "moodBelow": 18,
+              "stack": "max",
+              "maxGroup": "dormRec-mood-below"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.15,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

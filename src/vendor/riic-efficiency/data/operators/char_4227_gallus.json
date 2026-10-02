@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4227_gallus",
+  "name": "GALLUS²",
+  "rarity": 1,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "鸡电工程",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "level",
+            "value": 30
+          },
+          "name": "鸡励机制",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 5,
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.tag.op",
+                "facility": "same",
+                "other": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4100_caper",
+  "name": "跃跃",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "线索搜集·α",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "无辜笑脸",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 30,
+              "condition": {
+                "type": "clueExchanging"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -41,8 +41,7 @@
                 有<span class="text_special">{{ maaData.topOperator }}次</span>高级资深干员
               </div>
               <div class="poster_block_p1"></div>
-              <div class="poster_block_p2">你是欧罗巴的贵族，</div>
-              <div class="poster_block_p2">还是乌干达的酋长？</div>
+              <div class="poster_block_p2">你是欧罗巴的贵族，<br/>还是乌干达的酋长？</div>
             </div>
           </div>
           <div class="poster_block">
@@ -86,8 +85,7 @@
                 但其中<span class="text_special">{{ getProbability(maaData.robotChoice, maaData.robot) }}%</span>面临黄票的诱惑
               </div>
               <div class="poster_block_p1"></div>
-              <div class="poster_block_p2">Robot or certificates,</div>
-              <div class="poster_block_p2">that is the question.</div>
+              <div class="poster_block_p2" lang="en">Robot or certificates,<br/>that is the question.</div>
             </div>
           </div>
         </div>
@@ -95,8 +93,8 @@
         <div id="poster_foot">
           <a href="https://maa.plus"
           >
-            <div class="poster_button" style="width: 270px; margin-right: 0px">
-              {{ maaData.maaTagsDataCount }}条数据 来自
+            <div class="poster_button" style="width: max-content; margin-right: 0px">
+              {{ maaData.maaTagsDataCount }}条数据来自<br/>
               <span style="color: orange">MaaAssistantArknights</span>
             </div>
           </a
@@ -111,7 +109,7 @@
 </template>
 
 <script>
-import toolApi from "/src/api/tool";
+import toolApi from "/src/api/backend/tool";
 import "/src/assets/css/poster.css";
 
 export default {

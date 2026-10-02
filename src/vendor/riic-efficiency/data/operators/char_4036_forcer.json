@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4036_forcer",
+  "name": "见行者",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "线索搜集·α",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "逻辑推理",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 2
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 35
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

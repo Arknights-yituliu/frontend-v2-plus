@@ -49,22 +49,15 @@ let send = 1;
 let messageBars = [];
 
 /**
- *
- * @param {{type:string,text:string,duration:number}} config  消息配置
- * @example
- * 传入参数
- * {
- * type:消息类型,
- * text:消息内容,
- * duration:持续时间
- * }
+ * 消息渲染的统一实现：创建元素、套用色板、淡入淡出并在到期后销毁
+ * @param {string} text 消息内容
+ * @param {string} type 消息类型，取 colorStyle 的键：success / warn / error / info
+ * @param {number} duration 持续时间（毫秒），未传或传 0 时取 4000
  */
-function createMessage(config) {
-    let {text, duration, type} = config;
+function showMessage(text, type, duration) {
     if (!duration) {
         duration = 4000;
     }
-
 
     send++;
 
@@ -72,18 +65,14 @@ function createMessage(config) {
     let messageBar = document.createElement("div");
 
     //赋予message元素基础样式
-    for (const property in BaseStyle) {
-        messageBar.style[property] = BaseStyle[property]
-    }
+    Object.assign(messageBar.style, BaseStyle);
 
-    //赋予message元素的特殊样式
-    for (const property in colorStyle[type]) {
-        messageBar.style[property] = colorStyle[type][property]
-    }
+    //赋予message元素的特殊样式（type 非法时 colorStyle[type] 为 undefined，Object.assign 会跳过，与原 for...in 行为一致）
+    Object.assign(messageBar.style, colorStyle[type]);
 
     //赋予message元素独立id
     messageBar.id = "messageBar" + send;
-    messageBars.push("messageBar" + send);
+    messageBars.push(messageBar.id);
 
     // const textElement = document.createTextNode(text);
     // messageBar.appendChild(textElement);
@@ -97,13 +86,19 @@ function createMessage(config) {
     // //将message元素加入根元素
     // componentsContainer.appendChild(messageBar);
 
-
+    //重新计算堆叠位置：已销毁的条目会先从列表移除，这里再兜底判空
+    const relayout = () => {
+        messageBars.forEach((barId, index) => {
+            const bar = document.getElementById(barId);
+            if (bar) {
+                bar.style.top = 20 + index * 50 + "px";
+            }
+        });
+    };
 
     setTimeout( ()=> {
         messageBar.style.opacity = '1'; //淡入
-        for (let i in messageBars) {
-            document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
-        }
+        relayout();
     }, 16);
 
     // 淡出
@@ -114,60 +109,35 @@ function createMessage(config) {
     //在持续时间结束后将message元素销毁，将message列表中未过期的message元素向上移动
     setTimeout(()=>  {
         messageBar.remove();
-        messageBars = messageBars.splice(1);
-        // console.log(messageBars)
-        for (let i in messageBars) {
-            document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
-        }
+        //按自身 id 精确移除，不依赖销毁顺序（各条消息 duration 可不同）
+        messageBars = messageBars.filter((barId) => barId !== messageBar.id);
+        relayout();
     }, duration);
-
-
 }
 
+/**
+ * 对象入参形式的消息提示
+ * @param {{type:string,text:string,duration:number}} config 消息配置
+ * @example
+ * 传入参数
+ * {
+ * type:消息类型,
+ * text:消息内容,
+ * duration:持续时间
+ * }
+ */
+function createMessage(config) {
+    showMessage(config.text, config.type, config.duration);
+}
+
+/**
+ * 位置参数形式的消息提示
+ * @param {string} text 消息内容
+ * @param {string} type 消息类型，取 colorStyle 的键：success / warn / error / info，默认 success
+ * @param {number} duration 持续时间（毫秒），默认 4000
+ */
 function cMessage(text, type = 'success', duration = 4000) {
-    send++;
-    let messageBar = document.createElement("div");
-
-    for (const property in BaseStyle) {
-        // messageBar.style.overflow = 'hidden'
-        messageBar.style[property] = BaseStyle[property]
-    }
-
-
-    messageBar.id = "messageBar" + send;
-    messageBars.push("messageBar" + send);
-
-    // const textElement = document.createTextNode(text);
-    // messageBar.appendChild(textElement);
-    messageBar.textContent = text
-    document.body.appendChild(messageBar);
-
-
-    for (const property in colorStyle[type]) {
-        messageBar.style[property] = colorStyle[type][property]
-    }
-
-    setTimeout(function () {
-        messageBar.style.opacity = '1'; //淡入
-        for (let i in messageBars) {
-            document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
-        }
-    }, 16);
-
-    // 淡出
-    setTimeout(function () {
-        messageBar.style.opacity = '0';
-    }, duration - 300); // 在消息消失前300ms开始淡出，与transition保持一致
-
-    setTimeout(function () {
-        messageBar.remove();
-        messageBars = messageBars.splice(1);
-        // console.log(messageBars)
-        for (let i in messageBars) {
-            document.getElementById(messageBars[i]).style.top = 20 + i * 50 + "px";
-        }
-    }, duration);
-
+    showMessage(text, type, duration);
 }
 
 export {cMessage, createMessage};

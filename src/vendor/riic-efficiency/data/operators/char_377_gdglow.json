@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "id": "char_377_gdglow",
+  "name": "澄闪",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "电磁充能·α",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "电荷释放",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4134_cetsyr",
+  "name": "魔王",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "魔王传承",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "self",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "阿米娅",
+                "facility": "same"
+              }
+            },
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "op",
+              "op": "阿米娅",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "阿米娅",
+                "facility": "same"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "“未完的故事”",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "scope": "self",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "阿米娅",
+                "facility": "same"
+              }
+            },
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "scope": "op",
+              "op": "阿米娅",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "阿米娅",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "期冀之汇",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 15,
+              "stack": "max"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

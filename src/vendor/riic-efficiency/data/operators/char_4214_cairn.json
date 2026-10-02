@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4214_cairn",
+  "name": "响石",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "睡前必听故事",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.15,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "死前必做清单",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "scope": "room",
+              "per": {
+                "per": 1,
+                "value": 0.02,
+                "source": "ownLevel"
+              },
+              "stack": "max",
+              "maxGroup": "dormRec-room",
+              "baseValue": 0.15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "特殊渠道顾问",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 30,
+              "condition": {
+                "type": "clueExchanging"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

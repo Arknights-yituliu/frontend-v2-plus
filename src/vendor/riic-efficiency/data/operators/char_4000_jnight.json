@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4000_jnight",
+  "name": "正义骑士号",
+  "rarity": 1,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "备用能源",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "level",
+            "value": 30
+          },
+          "name": "“滴滴，启动！”",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 5,
+              "condition": {
+                "type": "opInFacilityAndTarget",
+                "op": "野鬃",
+                "facility": "manufacture",
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

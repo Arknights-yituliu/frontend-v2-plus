@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1033_swire2",
+  "name": "琳琅诗怀雅",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "订单分发·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "招商引资",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeNetEff",
+              "per": {
+                "per": 1,
+                "value": 4,
+                "source": "orderLimitNet"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

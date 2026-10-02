@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 2,
+  "id": "char_420_flamtl",
+  "name": "焰尾",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "小小的领袖",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "红松的骑士",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "recipe": "作战记录",
+              "per": {
+                "per": 1,
+                "value": 10,
+                "source": "opGroupInFacility",
+                "group": "cc.g.psk",
+                "facility": "same"
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "recipe": "贵金属",
+              "per": {
+                "per": 1,
+                "value": -10,
+                "source": "opGroupInFacility",
+                "group": "cc.g.psk",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

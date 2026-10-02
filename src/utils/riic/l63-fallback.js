@@ -6,6 +6,10 @@ import {
 import {
   applyRiicActiveRosterFallbackOperatorEffects,
 } from "./l65-active-roster-effects.js";
+import {
+  RIIC_ACTIVE_ROSTER_RUNTIME_RULES,
+  riicActiveRosterScopeMatches,
+} from "./riic-active-roster-rule-data.js";
 
 function normalizeOperatorId(value) {
   return String(value || "").trim();
@@ -684,17 +688,6 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
     }
   };
 
-  visit(0, 0);
-
-  const rankedVariants = variants
-    .sort(
-      (left, right) =>
-        right.score - left.score ||
-        left.selectedOperatorIds.join(",").localeCompare(
-          right.selectedOperatorIds.join(","),
-          "en",
-        ),
-    );
   const anchors = slotOptions
     .filter((slot) => slot.kind === "fallback")
     .flatMap((slot) =>
@@ -716,28 +709,90 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
     )
     .sort(
       (left, right) =>
+        Number(
+          RIIC_ACTIVE_ROSTER_RUNTIME_RULES.some(
+            (rule) =>
+              rule?.ownerId === right.operator.charId &&
+              riicActiveRosterScopeMatches(
+                rule,
+                right.slot.candidate?.candidateScope ||
+                  right.slot.candidate?.scope,
+              ),
+          ),
+        ) -
+          Number(
+            RIIC_ACTIVE_ROSTER_RUNTIME_RULES.some(
+              (rule) =>
+                rule?.ownerId === left.operator.charId &&
+                riicActiveRosterScopeMatches(
+                  rule,
+                  left.slot.candidate?.candidateScope ||
+                    left.slot.candidate?.scope,
+                ),
+            ),
+          ) ||
         compareFallbackOperators(left.operator, right.operator) ||
         left.slot.key.localeCompare(right.slot.key, "en"),
     );
-  const anchoredVariants = prioritizeDistinctFallbackOperatorSets(
-    anchors
-      .map((anchor) =>
-        createAnchoredFallbackPlanVariant({
-          slots,
-          slotOptions,
-          occupied,
-          excluded,
-          fiammettaRecovery: recovery,
-          anchor,
-        }),
-      )
-      .filter(Boolean),
-  );
+  const distinctAnchorVariants = [];
+  const duplicateAnchorVariants = [];
+  const anchorOperatorSetSignatures = new Set();
+  const distinctAssignmentSignatures = new Set();
+  const outputPrefix = [];
+  for (const anchor of anchors) {
+    const variant = createAnchoredFallbackPlanVariant({
+      slots,
+      slotOptions,
+      occupied,
+      excluded,
+      fiammettaRecovery: recovery,
+      anchor,
+    });
+    if (!variant) {
+      continue;
+    }
+    const signature = [...(variant.selectedOperatorIds || [])]
+      .sort((left, right) => left.localeCompare(right, "en"))
+      .join("|");
+    // 人员集合重复的锚点方案排在后面
+    if (anchorOperatorSetSignatures.has(signature)) {
+      duplicateAnchorVariants.push(variant);
+    } else {
+      anchorOperatorSetSignatures.add(signature);
+      distinctAnchorVariants.push(variant);
+      // 沿用原赋值签名
+      const assignmentSignature = getFallbackPlanAssignmentSignature(variant);
+      if (!distinctAssignmentSignatures.has(assignmentSignature)) {
+        distinctAssignmentSignatures.add(assignmentSignature);
+        outputPrefix.push(variant);
+      }
+      // 前 K 项已由锚点确定，跳过剩余枚举
+      if (outputPrefix.length >= normalizedMaxPlanCount) {
+        return outputPrefix;
+      }
+    }
+  }
+  const anchoredVariants = [
+    ...distinctAnchorVariants,
+    ...duplicateAnchorVariants,
+  ];
+
+  visit(0, 0);
+
+  const rankedVariants = variants
+    .sort(
+      (left, right) =>
+        right.score - left.score ||
+        left.selectedOperatorIds.join(",").localeCompare(
+          right.selectedOperatorIds.join(","),
+          "en",
+        ),
+    );
   const candidatesByAssignment = new Map();
 
   for (const variant of [
-    rankedVariants[0],
     ...anchoredVariants,
+    rankedVariants[0],
     ...rankedVariants,
   ].filter(Boolean)) {
     const signature = getFallbackPlanAssignmentSignature(variant);

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1042_phatm2",
+  "name": "酒神",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "镜中影",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 20,
+              "recipe": "作战记录"
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "戏中人",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 35,
+              "recipe": "作战记录"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

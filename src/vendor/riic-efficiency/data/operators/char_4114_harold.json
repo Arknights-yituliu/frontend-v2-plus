@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4114_harold",
+  "name": "哈洛德",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "线索搜集·α",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "交个朋友",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "提升会客室内另一干员所属派系的线索倾向效果（如会客室没有另一干员则不提升）"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

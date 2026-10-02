@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1039_thorn2",
+  "name": "引星棘刺",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "金属工艺·α",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30,
+              "recipe": "贵金属"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "原质塑金副产物",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 3,
+                "source": "facilityCount",
+                "facility": "trading"
+              },
+              "recipe": "贵金属"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

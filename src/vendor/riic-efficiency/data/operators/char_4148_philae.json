@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4148_philae",
+  "name": "菲莱",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "灵河充能·α",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "灵河共鸣",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "per": {
+                "per": 1,
+                "value": 0.5,
+                "source": "dormLevel"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

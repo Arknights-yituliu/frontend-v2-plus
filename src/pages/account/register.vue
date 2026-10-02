@@ -1,51 +1,43 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 import '/src/assets/css/account/login.v2.scss'
 import {createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
-import {getUserInfo} from "/src/utils/user/userInfo.js";
+import {getUserInfo} from "/src/api/backend/userSession.js";
 import {
-  accountRules,
-  passwordRules,
+  emailRules,
+  registerPasswordRules,
+  userNameRules,
+  verificationCodeRules,
   validateAuthSubmission
 } from "/src/utils/user/authValidation.js";
-import {useVerificationCode} from "/src/utils/user/verificationCode.js";
-import UserApiV2 from '/src/api/UserApiV2.js'
-import {directRegister} from '/src/api/userCenterApi.js'
+import {useVerificationCode} from "/src/api/user-center/verificationCode.js";
+import UserApiV2 from '/src/api/backend/UserApiV2.js'
+import {directRegister} from '/src/api/user-center/userCenterApi.js'
+import {saveUcToken} from "/src/utils/user/ucToken.js"
 
 /**
  * 组装直连注册请求参数（映射到 UC /oauth2/direct-register 表单字段）
- * password=密码注册 / email=邮箱验证码注册（两者均需密码）
+ * UC 已统一注册形态：邮箱、验证码、用户名、密码必填，昵称选填
+ * @returns {Object} 注册请求参数
  */
 function getParam() {
-  let param = {
-    accountType: inputContent.value.accountType
+  return {
+    email: String(inputContent.value.email ?? '').trim(),
+    userName: String(inputContent.value.userName ?? '').trim(),
+    password: inputContent.value.password,
+    code: String(inputContent.value.verificationCode ?? '').trim(),
+    nickname: String(inputContent.value.nickname ?? '').trim(),
   }
-
-  if ('password' === inputContent.value.accountType) {
-    param.user_name = inputContent.value.userName
-    param.password = inputContent.value.password
-  }
-
-  if ('email' === inputContent.value.accountType) {
-    param.email = String(inputContent.value.email ?? '').trim()
-    param.password = inputContent.value.password
-    param.code = String(inputContent.value.verificationCode ?? '').trim()
-  }
-
-  param.nickname = String(inputContent.value.nickname ?? '').trim()
-
-  return param
 }
 
 let inputContent = ref({
-  userName: '',
   nickname: '',
-  password: '',
-  confirmPassword: '',
   email: '',
   verificationCode: '',
-  accountType: '',
+  userName: '',
+  password: '',
+  confirmPassword: '',
 })
 const router = useRouter()
 const isSubmitting = ref(false);
@@ -68,7 +60,7 @@ async function toRegister() {
 
   const validationError = validateAuthSubmission(inputContent.value, 'register');
   if (validationError) {
-    createMessage({type: 'warning', text: validationError});
+    createMessage({type: 'warn', text: validationError});
     return;
   }
 
@@ -83,9 +75,8 @@ async function toRegister() {
     // ② 注册信息直接提交 UC，密码/验证码不经旧系统后端
     const ticketData = await directRegister({
       channel,
-      registerType: param.accountType === 'email' ? 'email_code' : 'password',
       email: param.email,
-      userName: param.user_name,
+      userName: param.userName,
       password: param.password,
       code: param.code,
       nickname: param.nickname,
@@ -93,9 +84,11 @@ async function toRegister() {
 
     // ③ ticket 交后端兑换用户信息并发自家会话
     const registerResp = await UserApiV2.completeDirectLogin(ticketData.ticket);
-    const {token} = registerResp.data;
+    const {token, ucAccessToken, ucTokenExpiresIn, ucTokenScope} = registerResp.data;
 
     localStorage.setItem("USER_TOKEN", token.toString());
+    // 后端随登录响应一并回带 UC access_token，存起来供调用 UC 接口（F1/F2）
+    saveUcToken({accessToken: ucAccessToken, expiresIn: ucTokenExpiresIn, scope: ucTokenScope});
     await getUserInfo("Register");
     createMessage({type:'success',text:'注册成功，即将跳转到我的干员导入流程'})
     setTimeout(() => {
@@ -118,11 +111,6 @@ function handleSendVerificationCode() {
   return sendCode(inputContent.value.email, 'register');
 }
 
-
-onMounted(() => {
-  inputContent.value.accountType = 'password'
-})
-
 </script>
 
 <template>
@@ -132,119 +120,78 @@ onMounted(() => {
         <div class="auth-card-title">注册账号</div>
       </v-card-title>
 
-      <div class="auth-card-mode-switch" role="tablist" aria-label="注册方式">
-        <button
-            class="auth-card-mode-button"
-            :class="{ 'auth-card-mode-button--active': inputContent.accountType === 'password' }"
-            type="button"
-            role="tab"
-            :aria-selected="inputContent.accountType === 'password'"
-            @click="inputContent.accountType = 'password'"
-        >
-          账号注册
-        </button>
-        <button
-            class="auth-card-mode-button"
-            :class="{ 'auth-card-mode-button--active': inputContent.accountType === 'email' }"
-            type="button"
-            role="tab"
-            :aria-selected="inputContent.accountType === 'email'"
-            @click="inputContent.accountType = 'email'"
-        >
-          邮箱注册
-        </button>
-      </div>
-
       <v-card-text class="auth-card-body">
         <v-text-field
             label="昵称（选填）"
             placeholder="请输入昵称"
             density="comfortable"
             color="primary"
-            hint="不填时默认使用账号或邮箱作为昵称"
+            hint="不填时默认使用用户名作为昵称"
             v-model="inputContent.nickname"
             variant="solo-filled"
             class="auth-field"
         ></v-text-field>
-        <v-tabs-window v-model="inputContent.accountType">
-          <v-tabs-window-item value="password">
-            <v-text-field
-                label="账号"
-                placeholder="请输入账号"
-                :rules="accountRules"
-                density="comfortable"
-                v-model="inputContent.userName"
-                hint="账号仅可由汉字、数字、英文组成"
-                color="primary"
-                variant="solo-filled"
-                class="auth-field"
-            ></v-text-field>
-            <v-text-field
-                label="登录密码"
-                placeholder="请输入密码"
-                density="comfortable"
-                :rules="passwordRules"
-                color="primary"
-                hint="密码仅可由数字、英文组成"
-                v-model="inputContent.password"
-                variant="solo-filled"
-                type="password"
-                class="auth-field"
-            ></v-text-field>
-            <v-text-field
-                label="确认密码"
-                placeholder="请再次输入密码"
-                density="comfortable"
-                color="primary"
-                hint="密码仅可由数字、英文组成"
-                v-model="inputContent.confirmPassword"
-                variant="solo-filled"
-                type="password"
-                class="auth-field"
-            ></v-text-field>
-          </v-tabs-window-item>
-
-          <v-tabs-window-item value="email">
-            <v-text-field
-                label="邮箱"
-                placeholder="请输入邮箱"
-                v-model="inputContent.email"
-                color="primary"
-                density="comfortable"
-                variant="solo-filled"
-                class="auth-field"
+        <v-text-field
+            label="邮箱"
+            placeholder="请输入邮箱"
+            :rules="emailRules"
+            v-model="inputContent.email"
+            color="primary"
+            density="comfortable"
+            variant="solo-filled"
+            class="auth-field"
+        >
+          <template v-slot:append-inner>
+            <button
+                class="auth-code-button"
+                type="button"
+                :disabled="isSendingCode || codeCountdown > 0"
+                @click="handleSendVerificationCode"
             >
-              <template v-slot:append-inner>
-                <button
-                    class="auth-code-button"
-                    type="button"
-                    :disabled="isSendingCode || codeCountdown > 0"
-                    @click="handleSendVerificationCode"
-                >
-                  {{ codeCountdown > 0 ? `${codeCountdown}s后重试` : isSendingCode ? '发送中...' : '发送验证码' }}
-                </button>
-              </template>
-            </v-text-field>
-            <v-text-field
-                label="登录密码"
-                placeholder="请输入密码"
-                density="comfortable"
-                :rules="passwordRules"
-                color="primary"
-                hint="密码仅可由数字、英文组成"
-                v-model="inputContent.password"
-                variant="solo-filled"
-                type="password"
-                class="auth-field"
-            ></v-text-field>
-            <v-otp-input
-                aria-label="邮箱验证码"
-                class="auth-otp"
-                v-model="inputContent.verificationCode"
-                length="6"
-            ></v-otp-input>
-          </v-tabs-window-item>
-        </v-tabs-window>
+              {{ codeCountdown > 0 ? `${codeCountdown}s后重试` : isSendingCode ? '发送中...' : '发送验证码' }}
+            </button>
+          </template>
+        </v-text-field>
+        <v-otp-input
+            aria-label="邮箱验证码"
+            class="auth-otp"
+            v-model="inputContent.verificationCode"
+            length="6"
+        ></v-otp-input>
+        <v-text-field
+            label="用户名"
+            placeholder="请输入用户名"
+            :rules="userNameRules"
+            v-model="inputContent.userName"
+            hint="3-20 位字母、数字或下划线，可用于登录"
+            color="primary"
+            density="comfortable"
+            variant="solo-filled"
+            class="auth-field"
+        ></v-text-field>
+        <v-text-field
+            label="登录密码"
+            placeholder="请输入密码"
+            density="comfortable"
+            :rules="registerPasswordRules"
+            color="primary"
+            hint="6-32 位数字、字母、@ 或下划线"
+            v-model="inputContent.password"
+            variant="solo-filled"
+            type="password"
+            class="auth-field"
+        ></v-text-field>
+        <v-text-field
+            label="确认密码"
+            placeholder="请再次输入密码"
+            density="comfortable"
+            color="primary"
+            hint="6-32 位数字、字母、@ 或下划线"
+            v-model="inputContent.confirmPassword"
+            variant="solo-filled"
+            type="password"
+            class="auth-field"
+        ></v-text-field>
 
         <div class="auth-actions">
           <v-btn

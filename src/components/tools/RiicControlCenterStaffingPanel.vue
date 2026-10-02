@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { formatRiicOperatorTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
 
 const props = defineProps({
   roomGroup: {
@@ -52,10 +53,11 @@ const props = defineProps({
 const emit = defineEmits(["save-adjustment", "save-error"]);
 
 function getSkillTooltip(operator) {
-  return props.getOperatorSkillTooltip
+  const skillTooltip = props.getOperatorSkillTooltip
     ? props.getOperatorSkillTooltip(operator)
     : (operator?.controlCenterSkillDescriptions || []).join("\n") ||
         "暂无已解锁基建技能";
+  return formatRiicOperatorTooltip(operator, skillTooltip);
 }
 
 const CONTROL_CENTER_CANDIDATE_SECTIONS = Object.freeze([

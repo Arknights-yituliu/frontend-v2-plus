@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4105_almond",
+  "name": "杏仁",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "小奇思",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": 0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 25,
+              "recipe": "贵金属"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "挑大梁",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": -0.15
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 2,
+                "cap": 3,
+                "source": "opGroupInBase",
+                "group": "cc.g.bs",
+                "moodCheck": true
+              },
+              "recipe": "贵金属"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,3 +1,33 @@
+.operator-export-scope.v-btn-group--density-default.v-btn-group {
+  height: auto;
+  min-height: 48px;
+}
+
+.operator-export-scope .v-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  height: auto;
+  min-height: 48px;
+  padding-block: 8px;
+}
+
+.operator-export-option.v-btn {
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.42) !important;
+  justify-content: flex-start;
+  padding-inline: 12px;
+}
+
+.operator-export-option.v-btn.operator-export-option--selected {
+  border-color: rgb(var(--v-theme-primary)) !important;
+  background-color: rgba(var(--v-theme-primary), 0.1);
+}
+
+.operator-export-option-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .survey-operator-page {
   width: 98%;
   margin: auto;
@@ -52,6 +82,30 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 12px;
+  }
+
+  .operator-export-button-group {
+    display: flex;
+    align-items: stretch;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .operator-import-action.operator-export-main-button {
+    flex: 1 1 auto;
+    min-width: 0;
+    border-radius: 4px 0 0 4px !important;
+    border-right-width: 0 !important;
+  }
+
+  .operator-export-settings-button {
+    flex: 0 0 72px;
+    width: 72px;
+    min-width: 72px;
+    height: 72px !important;
+    min-height: 72px !important;
+    padding: 0;
+    border-radius: 0 4px 4px 0 !important;
   }
 
   .operator-import-action {
@@ -926,7 +980,6 @@
   padding: 4px 8px;
   border-radius: 8px;
 }
-
 
 /*干员统计容器样式*/
 .operator-statistical-page {

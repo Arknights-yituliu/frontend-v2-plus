@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_211_adnach",
+  "name": "安德切尔",
+  "rarity": 3,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "订单分发·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

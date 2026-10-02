@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 2,
+  "id": "char_225_haak",
+  "name": "阿",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "神经质",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "提升会客室内干员所属派系的线索倾向效果"
+            },
+            {
+              "target": "control",
+              "stat": "moodCost",
+              "value": 1.5,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4136_phonor",
+  "name": "PhonoR-0",
+  "rarity": 1,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "挽歌充能·α",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "level",
+            "value": 30
+          },
+          "name": "咒文共鸣",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 5,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "逻各斯",
+                "facility": "training",
+                "assist": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

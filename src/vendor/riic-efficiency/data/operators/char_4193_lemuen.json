@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4193_lemuen",
+  "name": "蕾缪安",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "订单分发·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "相伴",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 20
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 25,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "能天使",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

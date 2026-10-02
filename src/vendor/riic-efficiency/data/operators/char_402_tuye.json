@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "id": "char_402_tuye",
+  "name": "图耶",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "物流规划·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 4,
+                "value": 15,
+                "source": "basePoint",
+                "term": "cc.t.flow_gold"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 5
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "物流规划·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 2,
+                "value": 15,
+                "source": "basePoint",
+                "term": "cc.t.flow_gold"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 5
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

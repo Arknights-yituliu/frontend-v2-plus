@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4235_thumpy",
+  "name": "珊比",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "哪里都是兔子洞",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.7,
+              "scope": "self"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "前任金牌接线员",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 45
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

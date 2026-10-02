@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_289_gyuki",
+  "name": "缠丸",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "订单分发·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

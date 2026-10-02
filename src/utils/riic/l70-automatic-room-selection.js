@@ -18,6 +18,10 @@ import {
   evaluateRiicActiveRosterPlanEffects,
   getRiicActiveRosterCandidatePriority,
 } from "./l65-active-roster-effects.js";
+import {
+  RIIC_ACTIVE_ROSTER_RUNTIME_RULES,
+  riicActiveRosterScopeMatches,
+} from "./riic-active-roster-rule-data.js";
 
 const AUTOMATION_POWER_SUPPORT_OPERATOR_ID = "char_1027_greyy2";
 
@@ -31,9 +35,9 @@ function normalizeRiicFallbackCacheOperatorIds(operatorIds) {
   ].sort((left, right) => left.localeCompare(right, "en"));
 }
 
+// 每次排班新建缓存，补位池在此期间固定，不计入缓存键
 function createRiicFallbackPlanCache({ idleFillOperators = [] } = {}) {
   const cacheByCandidate = new WeakMap();
-  const idleFillOperatorSignature = JSON.stringify(idleFillOperators || []);
 
   const get = ({
     candidate,
@@ -57,7 +61,6 @@ function createRiicFallbackPlanCache({ idleFillOperators = [] } = {}) {
     }
 
     const cacheKey = JSON.stringify({
-      idleFillOperators: idleFillOperatorSignature,
       selectionKey: String(selectionKey || "").trim(),
       occupiedOperatorIds:
         normalizeRiicFallbackCacheOperatorIds(occupiedOperatorIds),
@@ -95,6 +98,29 @@ function createRiicFallbackPlanCache({ idleFillOperators = [] } = {}) {
 
 function getAutomaticRoomGroupPriority(group) {
   return ["meeting", "office"].includes(group?.facility) ? 1 : 0;
+}
+
+function getActiveRosterProtectionKeys(candidate) {
+  const scope = candidate?.candidateScope || candidate?.scope;
+  const operatorIds = new Set(candidate?.operatorIds || []);
+
+  return RIIC_ACTIVE_ROSTER_RUNTIME_RULES.filter(
+    (rule) =>
+      operatorIds.has(rule.ownerId) &&
+      riicActiveRosterScopeMatches(rule, scope),
+  ).map((rule) => `active-roster:${rule.id}`);
+}
+
+function getActiveRosterPlanProtectionKeys(plan) {
+  return [
+    ...new Set(
+      (plan?.selections || []).flatMap((selection) =>
+        getActiveRosterProtectionKeys(
+          selection?.option?.materializedCandidate,
+        ),
+      ),
+    ),
+  ];
 }
 
 function isAutomationCandidate(candidate) {
@@ -197,7 +223,10 @@ function getAutomaticRoomTeamOptions({
   const reserveOperatorForPower =
     reservedPowerOperatorId && facility !== "power";
   const mustUseReservedPowerOperator =
-    reservedPowerOperatorId && facility === "power" && teamIndex === 0;
+    reservedPowerOperatorId &&
+    facility === "power" &&
+    teamIndex === 0 &&
+    !claimedOperatorIds.has(reservedPowerOperatorId);
   const activeSelectionOperatorIds = new Set([
     ...controlCenterOperatorIds,
     ...claimedOperatorIds,
@@ -597,7 +626,14 @@ export function buildRiicAutomaticRoomGroupSelections({
   const fallbackPlanCache = createRiicFallbackPlanCache({
     idleFillOperators,
   });
-  const { bestPlan, debug: plannerDebug } = planRiicAutomaticRoomSelections({
+  const {
+    bestPlan,
+    complete: bestPlanIsComplete,
+    incompleteCohorts,
+    completePlanCount,
+    candidatePlanCount,
+    debug: plannerDebug,
+  } = planRiicAutomaticRoomSelections({
     selectionCohorts,
     initiallyClaimedOperatorIds: [...normalizedControlCenterOperatorIds].filter(
       (charId) => charId !== recovery.targetOperatorId,
@@ -608,6 +644,9 @@ export function buildRiicAutomaticRoomGroupSelections({
     selectionBatchSize,
     getOptionDiversityKey: ({ cohort, selectionKey, option }) =>
       `${cohort.key}:${selectionKey}:${option.candidateKey}`,
+    getOptionProtectionKeys: ({ option }) =>
+      getActiveRosterProtectionKeys(option?.materializedCandidate),
+    getPlanProtectionKeys: getActiveRosterPlanProtectionKeys,
     resolveTeamOptions: ({
       cohort,
       selectionKey,
@@ -786,6 +825,9 @@ export function buildRiicAutomaticRoomGroupSelections({
   const selections = {};
   const fallbackOperatorIdBySlotKeyByGroup = {};
   const selectedRoomTeams = [];
+  const incompleteGroupIds = (incompleteCohorts || [])
+    .map((cohort) => String(cohort?.groupId || "").trim())
+    .filter(Boolean);
 
   for (const { slot, selectionKey, option } of bestPlan?.selections || []) {
     selections[slot.groupId] = {
@@ -835,6 +877,7 @@ export function buildRiicAutomaticRoomGroupSelections({
     selectedRoomTeams,
     unavailableGroups: [
       ...unavailableStateGroupIds,
+      ...incompleteGroupIds,
     ]
       .map((groupId) => groupLabelById.get(groupId) || groupId)
       .filter(
@@ -855,6 +898,10 @@ export function buildRiicAutomaticRoomGroupSelections({
       })),
       bestPlan: bestPlan
         ? {
+            complete: bestPlanIsComplete,
+            completePlanCount,
+            candidatePlanCount,
+            incompleteCohorts,
             baseRankingValue: Number(bestPlan.baseRankingValue || 0),
             rankingValue: Number(bestPlan.rankingValue || 0),
             activeRosterEffects: bestPlan.activeRosterEffects || null,

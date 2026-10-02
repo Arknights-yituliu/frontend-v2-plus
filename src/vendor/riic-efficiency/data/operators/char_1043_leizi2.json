@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1043_leizi2",
+  "name": "司霆惊蛰",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "雷法专精",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

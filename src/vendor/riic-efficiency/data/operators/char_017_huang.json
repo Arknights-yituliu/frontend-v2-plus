@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_017_huang",
+  "name": "煌",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "热能充能·α",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

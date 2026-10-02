@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4064_mlynar",
+  "name": "玛恩纳",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "独善其身",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "公事公办",
+          "effects": [
+            {
+              "target": "any",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "facilities": [
+                "power",
+                "hire",
+                "meeting"
+              ],
+              "stack": "max",
+              "maxGroup": "otherFacRec"
+            },
+            {
+              "target": "any",
+              "stat": "moodRecover",
+              "facilities": [
+                "power",
+                "manufacture",
+                "trading",
+                "hire",
+                "meeting"
+              ],
+              "stack": "max",
+              "maxGroup": "otherFacRec",
+              "per": {
+                "per": 1,
+                "value": 0.05,
+                "source": "skillOwners",
+                "term": "cc.c.skill",
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

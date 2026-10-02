@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 2,
+  "id": "char_194_leto",
+  "name": "烈夏",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "患难拍档",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 35,
+              "recipe": "作战记录",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "古米",
+                "facility": "trading"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

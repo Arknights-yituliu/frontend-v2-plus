@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4031_liesel",
+  "name": "复奏",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "专业经理·α",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 1,
+              "condition": {
+                "type": "onlySelf"
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 15,
+              "condition": {
+                "type": "onlySelf"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "专业经理·β",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 1,
+              "condition": {
+                "type": "onlySelf"
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 35,
+              "condition": {
+                "type": "onlySelf"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

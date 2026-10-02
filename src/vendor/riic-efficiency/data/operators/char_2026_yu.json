@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 2,
+  "id": "char_2026_yu",
+  "name": "余",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "调众口",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "scope": "room",
+              "per": {
+                "per": 1,
+                "value": 0.06,
+                "cap": 4,
+                "source": "opGroupInBase",
+                "group": "cc.g.sui"
+              },
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

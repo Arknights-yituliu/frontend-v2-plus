@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4052_surfer",
+  "name": "寻澜",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "人情练达",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            },
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 0.5,
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.bs",
+                "facility": "same",
+                "other": true
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 15,
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.bs",
+                "facility": "same",
+                "other": true
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "情报探查",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 20,
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.bs",
+                "facility": "same",
+                "other": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

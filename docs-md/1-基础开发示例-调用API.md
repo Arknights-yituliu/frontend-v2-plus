@@ -3,9 +3,9 @@
 
 如何获取蓝色品质材料的关卡推荐数据（展示的是封装好的带请求响应错误拦截的调用方式，不限于下面的调用方式，但是URL）
 
-在 src/api路径下新建一个文件stage.js，编写api的请求路径、请求类型、请求参数等
+在 src/api/backend 路径下新建一个文件stage.js，编写api的请求路径、请求类型、请求参数等
 ```
- import request from "/src/api/request";
+ import request from "/src/api/backend/request";
  
   /**
    * 查询蓝色品质材料的推荐关卡
@@ -34,7 +34,7 @@
 
 
 <script>
-import stageApi from '/src/api/stage' //引入封装的API
+import stageApi from '/src/api/backend/stage' //引入封装的API
 
 let stageData = ref([])  //接收API内数据的数组
 

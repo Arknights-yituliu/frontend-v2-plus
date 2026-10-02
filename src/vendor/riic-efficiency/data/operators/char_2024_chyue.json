@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 2,
+  "id": "char_2024_chyue",
+  "name": "重岳",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "知我为我",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodCost",
+              "value": 0.5
+            },
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_b1",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "cap": 5,
+                "source": "opGroupInBase",
+                "group": "cc.g.sui",
+                "exclude": [
+                  "dormitory"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "孤光共照",
+          "effects": [
+            {
+              "target": "any",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "facilities": [
+                "power",
+                "manufacture",
+                "trading",
+                "hire",
+                "meeting"
+              ],
+              "stack": "max",
+              "maxGroup": "otherFacRec"
+            },
+            {
+              "target": "any",
+              "stat": "moodRecover",
+              "per": {
+                "per": 20,
+                "value": 0.05,
+                "source": "basePoint",
+                "term": "cc.bd_b1"
+              },
+              "stack": "max",
+              "maxGroup": "otherFacRec"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

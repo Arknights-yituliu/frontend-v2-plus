@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4132_ascln",
+  "name": "阿斯卡纶",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "S.W.E.E.P.主管",
+          "effects": [
+            {
+              "target": "training",
+              "stat": "facBase",
+              "value": 5,
+              "stack": "max",
+              "condition": {
+                "type": "opCountInFacility",
+                "facility": "training",
+                "min": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "情报主脑",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 7,
+              "stack": "max"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

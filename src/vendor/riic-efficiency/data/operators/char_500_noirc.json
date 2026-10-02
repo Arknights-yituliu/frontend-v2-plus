@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "id": "char_500_noirc",
+  "name": "黑角",
+  "rarity": 2,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "仓库整备·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 10
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "level",
+            "value": 30
+          },
+          "name": "订单管理·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 10
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

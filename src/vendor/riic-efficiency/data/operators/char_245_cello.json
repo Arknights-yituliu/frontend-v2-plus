@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "id": "char_245_cello",
+  "name": "塑心",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "无声共鸣",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "basePointGain",
+              "term": "cc.bd_B",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "dormHere"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "无词颂歌",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "scope": "room",
+              "per": {
+                "per": 5,
+                "value": 0.01,
+                "source": "basePoint",
+                "term": "cc.bd_B"
+              },
+              "stack": "max",
+              "maxGroup": "dormRec-room",
+              "baseValue": 0.2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

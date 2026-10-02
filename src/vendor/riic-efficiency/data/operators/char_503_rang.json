@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_503_rang",
+  "name": "巡林者",
+  "rarity": 2,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "人事管理·α",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

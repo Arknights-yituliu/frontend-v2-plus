@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 2,
+  "id": "char_218_cuttle",
+  "name": "安哲拉",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "独处",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.7,
+              "scope": "self"
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "麻烦回避者",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.85,
+              "scope": "self"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -3,11 +3,13 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { copyTextToClipboard } from "/src/utils/copyText.js"
 import SklandAPI from '/src/utils/survey/skland.js'
+import SklandAccountOverviewAPI from '/src/utils/survey/sklandAccountOverview.js'
 import { createMessage } from "/src/utils/message.js"
 import { operatorTableV2 } from "/src/utils/gameData.js"
 import operatorUpdateTime from '/public/json/operator_update_time.json'
-import operatorDataAPI from '/src/api/operatorData.js'
-import { userInfo } from "/src/utils/user/userInfo.js"
+import { saveAkAccountOperators } from "/src/api/user-center/userCenterApi.js"
+import { buildUcOperatorSavePayload } from "/src/utils/survey/ucOperatorData.js"
+import { userInfo } from "/src/api/backend/userSession.js"
 
 // 子组件
 import AccountStats from '/src/components/survey/account-overview/AccountStats.vue'
@@ -129,7 +131,7 @@ async function getPlayerBindingBySkland() {
     playBindingList.value = playBinding.bindingList
     
     if (playBinding.bindingList.length === 0) {
-      createMessage({ type: 'warning', text: '未找到绑定的明日方舟账号' })
+      createMessage({ type: 'warn', text: '未找到绑定的明日方舟账号' })
     }
   } catch (error) {
     console.error(error)
@@ -150,7 +152,7 @@ async function getPlayerData(binding) {
     // 保存当前选择的账号信息
     currentBinding.value = binding
     
-    const data = await SklandAPI.getAccountOverviewData(
+    const data = await SklandAccountOverviewAPI.getAccountOverviewData(
       uid,
       nickName,
       channelName,
@@ -309,11 +311,17 @@ async function uploadToOperatorSurvey() {
     createMessage({ type: 'error', text: '请先登录一图流账号，才能上传干员数据' })
     return
   }
+
+  const payload = buildUcOperatorSavePayload(rawWarehouseData.value)
+  if (payload.operators.length === 0) {
+    createMessage({ type: 'error', text: '没有可上传的干员数据' })
+    return
+  }
   
   uploading.value = true
   
   try {
-    await operatorDataAPI.importSkLandOperatorDataV3(rawWarehouseData.value)
+    await saveAkAccountOperators(payload)
     createMessage({ type: 'success', text: '干员数据已同步到练度调查！' })
   } catch (error) {
     console.error(error)

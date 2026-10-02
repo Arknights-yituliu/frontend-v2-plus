@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 2,
+  "id": "char_154_morgan",
+  "name": "摩根",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "头号陪练",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.3,
+              "scope": "room",
+              "scopeGroup": "cc.g.glasgow",
+              "subjects": "single",
+              "stack": "max",
+              "maxGroup": "dormRec-single",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "推进之王",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "帮派指南针",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 20,
+                "source": "opGroupInFacility",
+                "group": "cc.g.glasgow",
+                "facility": "same"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 35,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "推进之王",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4198_christ",
+  "name": "Miss.Christine",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "午休好去处",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "盛餐的回报",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30,
+              "recipe": "作战记录",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "酒神",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

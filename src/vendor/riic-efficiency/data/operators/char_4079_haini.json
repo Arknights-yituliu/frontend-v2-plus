@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4079_haini",
+  "name": "海霓",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "穹顶物流管理·α",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 15
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "穹顶物流管理·β",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

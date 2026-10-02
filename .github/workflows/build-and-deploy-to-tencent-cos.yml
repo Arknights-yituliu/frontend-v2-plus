@@ -28,7 +28,7 @@ jobs:
           cache: 'npm'
 
       - name: Cache node_modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules
           key: ${{ runner.os }}-node_modules-${{ hashFiles('package-lock.json') }}
@@ -66,7 +66,7 @@ jobs:
 
       - name: Restore COSCLI from cache
         id: cache-coscli
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ./coscli
           key: coscli-v1.0.7-linux-amd64
@@ -79,7 +79,7 @@ jobs:
 
       - name: Save COSCLI to cache
         if: ${{ steps.cache-coscli.outputs.cache-hit != 'true' }}
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: ./coscli
           key: coscli-v1.0.7-linux-amd64

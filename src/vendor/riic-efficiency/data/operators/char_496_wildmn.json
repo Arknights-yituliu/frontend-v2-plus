@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "id": "char_496_wildmn",
+  "name": "野鬃",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "红松骑士团·α",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 15
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "红松骑士团·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 25
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

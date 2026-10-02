@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_164_nightm",
+  "name": "夜魔",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "心理学",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 40
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

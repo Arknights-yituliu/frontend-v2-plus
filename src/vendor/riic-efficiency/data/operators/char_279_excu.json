@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "id": "char_279_excu",
+  "name": "送葬人",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "清理协议",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -714,6 +714,18 @@
           "percent": 27.56
         }
       ]
+    },
+    {
+      "name": "结城理",
+      "rates": [
+        {
+          "elite": 2,
+          "percent": 20,
+          "tags": [
+            "sees"
+          ]
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 2,
+  "id": "char_2023_ling",
+  "name": "令",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "杯莫停",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "zeroOpMood",
+              "group": "cc.g.sui",
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "“山河远阔”",
+          "effects": [
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_b1",
+              "value": 15,
+              "condition": {
+                "type": "moodCmp",
+                "value": 12,
+                "op": "gt"
+              }
+            },
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_a1",
+              "value": 10,
+              "condition": {
+                "type": "moodCmp",
+                "value": 12,
+                "op": "le"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -144,6 +144,29 @@ function getSelectedCohortTeamCount(plan, cohort) {
   ).length;
 }
 
+function getPlanCompletion(plan, selectionCohorts) {
+  const incompleteCohorts = (selectionCohorts || [])
+    .map((cohort) => {
+      const selectedCount = getSelectedCohortTeamCount(plan, cohort);
+      const teamCount = Math.max(0, Number(cohort?.teamCount || 0));
+      return selectedCount >= teamCount
+        ? null
+        : {
+            groupId: cohort?.groupId || "",
+            cohortId: cohort?.cohortId || "",
+            cohortKey: cohort?.cohortKey || "",
+            selectedCount,
+            teamCount,
+          };
+    })
+    .filter(Boolean);
+
+  return {
+    isComplete: incompleteCohorts.length === 0,
+    incompleteCohorts,
+  };
+}
+
 function getCurrentGroupCohorts(plan, selectionCohorts) {
   let activeGroupKey = "";
   for (let index = 0; index < selectionCohorts.length; index += 1) {
@@ -642,9 +665,31 @@ export function planRiicAutomaticRoomSelections({
     beam = batchPlans;
   }
 
-  const bestPlan = [...completedPlans, ...beam].sort(comparePlans)[0] || null;
+  const candidatePlans = [...completedPlans, ...beam];
+  const completePlans = candidatePlans.filter(
+    (plan) => getPlanCompletion(plan, normalizedSelectionCohorts).isComplete,
+  );
+  const rankedPlans = (completePlans.length > 0 ? completePlans : candidatePlans)
+    .sort(comparePlans);
+  const bestPlan = rankedPlans[0] || null;
+  const completion = bestPlan
+    ? getPlanCompletion(bestPlan, normalizedSelectionCohorts)
+    : {
+        isComplete: false,
+        incompleteCohorts: normalizedSelectionCohorts.map((cohort) => ({
+          groupId: cohort?.groupId || "",
+          cohortId: cohort?.cohortId || "",
+          cohortKey: cohort?.cohortKey || "",
+          selectedCount: 0,
+          teamCount: Math.max(0, Number(cohort?.teamCount || 0)),
+        })),
+      };
   return {
     bestPlan,
+    complete: completion.isComplete,
+    incompleteCohorts: completion.incompleteCohorts,
+    completePlanCount: completePlans.length,
+    candidatePlanCount: candidatePlans.length,
     debug: collectDebug
       ? {
           planningRounds,

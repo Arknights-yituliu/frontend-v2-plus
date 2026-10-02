@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4077_palico",
+  "name": "泰拉大陆调查团",
+  "rarity": 1,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "可爱的艾露猫",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 3,
+                "source": "basePoint",
+                "term": "cc.bd_felyne"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 5
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "level",
+            "value": 30
+          },
+          "name": "可靠的随从们",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "basePoint",
+                "term": "cc.bd_felyne"
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 8
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 5
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

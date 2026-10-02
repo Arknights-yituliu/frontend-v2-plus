@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4004_pudd",
+  "name": "布丁",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "设备维护",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 15
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "超频",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 2,
+              "stack": "max",
+              "condition": {
+                "type": "opGroupCountInFacility",
+                "group": "cc.tag.op",
+                "facility": "power",
+                "min": 2,
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -74,7 +74,7 @@ function getReActImg(url, cut) {
   return `background: url('${safeUrl}') ${cut} / 312% 126%;`;
 }
 
-import stageApi from '/src/api/material'
+import stageApi from '/src/api/backend/material'
 import { onMounted, ref } from "vue";
 import itemSeries from '/src/static/json/material/item_series.json'
 import FixedNav from "/src/components/layout/FixedNav.vue";

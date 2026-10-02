@@ -18,7 +18,7 @@ import { getActivityAverageStage, getStageData } from '/src/utils/item/stageEffi
 import { getStageConfig } from '/src/utils/user/userConfig.js'
 import packInfoCache from '/src/plugins/indexedDB/packInfoCache.js'
 import itemCache from '/src/plugins/indexedDB/itemCache.js'
-import itemAPI from '/src/api/materialV5.js'
+import itemAPI from '/src/api/backend/materialV5.js'
 import { calculatePackEfficiency } from '/src/utils/item/packEfficiency.js'
 import {
   getRecentR3MaterialDemandByMonth,

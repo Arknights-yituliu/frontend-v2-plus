@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 2,
+  "id": "char_336_folivo",
+  "name": "稀音",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "延时摄影",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "curve": {
+                "type": "ramp",
+                "startValue": 15,
+                "startHours": 1,
+                "step": 2,
+                "cap": 25
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "剪辑·α",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 12,
+              "recipe": "作战记录"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

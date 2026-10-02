@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4230_mcnist",
+  "name": "机械师",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "作战指导录像",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30,
+              "recipe": "作战记录"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "“我睡过了”",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 10,
+              "condition": {
+                "type": "workHours",
+                "value": 12
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

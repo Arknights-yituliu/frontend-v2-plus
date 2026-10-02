@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4194_rmixer",
+  "name": "信仰搅拌机",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "泡茶高手",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 15
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "社交达人",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "不泯童心",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10,
+              "condition": {
+                "type": "opAtFacility",
+                "op": "菲亚梅塔",
+                "facility": "dormitory"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 2,
+  "id": "char_473_mberry",
+  "name": "桑葚",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "救援队·珠算",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "救援队·资源清点",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "救援队·灾后普查",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "basePointGain",
+              "term": "cc.bd_b1",
+              "per": {
+                "per": 1,
+                "value": 10,
+                "source": "recruitSlots"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

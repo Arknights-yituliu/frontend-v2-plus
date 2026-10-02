@@ -1134,6 +1134,7 @@ function calculateL79Room({
           ruleData: RIIC_BASELINE_SKILL_RULES,
           middleDataStorageContributions:
             middleDataRoom.storageContributions,
+          teammateProductionPercent: settledCalculation?.localBonusPercent || 0,
         })
       : null;
   const manufactureProductionOverride =

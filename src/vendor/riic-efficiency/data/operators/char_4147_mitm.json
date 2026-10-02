@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4147_mitm",
+  "name": "渡桥",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "懂行",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "tailor",
+                "level": "α"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "天生的顾问",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 15
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "cap": 30,
+                "capUnit": "value",
+                "source": "facilityLevel",
+                "facility": "meeting"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

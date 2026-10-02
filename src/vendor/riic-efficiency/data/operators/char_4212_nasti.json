@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4212_nasti",
+  "name": "娜斯提",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "莱茵科技·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 25
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "造价高昂",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 3,
+                "cap": 5,
+                "source": "opGroupInBase",
+                "group": "cc.g.rh",
+                "moodCheck": true
+              },
+              "recipe": "贵金属"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1047_halo2",
+  "name": "溯光星源",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "勘探背包",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "skillTagCount",
+                "tag": "cc.sk.manu2",
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "莱茵科技·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 25
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

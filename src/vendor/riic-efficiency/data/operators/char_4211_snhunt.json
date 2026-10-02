@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4211_snhunt",
+  "name": "雪猎",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "虔信",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": 0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "独当一面",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": 0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

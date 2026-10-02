@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4080_lin",
+  "name": "林",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "特殊渠道",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "用人唯才",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "per": {
+                "per": 1,
+                "value": 10,
+                "source": "recruitSlots"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

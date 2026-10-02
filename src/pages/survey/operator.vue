@@ -1,9 +1,14 @@
 <script setup>
 import {createMessage} from "/src/utils/message.js";
-import operatorDataAPI from "/src/api/operatorData.js"
+import operatorDataAPI from "/src/api/user-center/operatorData.js"
+import sklandCredentialAPI from "/src/api/backend/sklandCredential.js"
+import {saveAkAccountOperators} from "/src/api/user-center/userCenterApi.js"
+import {buildUcOperatorSavePayload} from "/src/utils/survey/ucOperatorData.js"
 import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
 import {operatorTableV2} from "/src/utils/gameData.js";
+import PROFESSION_DICT from "/src/static/json/operator/profession_dict.json";
 import {exportExcel} from '/src/utils/exportExcel.js'
+import {dateFormat} from "/src/utils/dateUtil.js";
 
 import "/src/assets/css/survey/operator.scss";
 import "/src/assets/css/survey/operator.phone.scss";
@@ -13,16 +18,25 @@ import OperatorStatisticalTable from "/src/components/survey/OperatorStatistical
 import deepClone from "/src/utils/deepClone.js";
 import EquipIcon from "/src/components/sprite/EquipIcon.vue";
 import OperatorBar from "/src/components/survey/OperatorBar.vue";
+import ImportCommonQuestions from "/src/components/survey/ImportCommonQuestions.vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {formatNumber} from "/src/utils/format.js";
 import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
-import { userInfo } from "/src/utils/user/userInfo.js";
+import { userInfo } from "/src/api/backend/userSession.js";
 import { useRoute, useRouter } from "vue-router";
 import Login from "/src/pages/account/login.vue";
 import QRCode from 'qrcode';
+
+const operatorClassLabelMap = new Map()
+for (const profession of PROFESSION_DICT || []) {
+  operatorClassLabelMap.set(profession.value, profession.label)
+  for (const branch of profession.children || []) {
+    operatorClassLabelMap.set(branch.value, branch.label)
+  }
+}
 
 const sectionPanels = ref([])
 const route = useRoute()
@@ -263,7 +277,7 @@ async function getPlayerBindingBySkland() {
     playBindingList.value = playBinding.bindingList
     
     if (playBinding.bindingList.length === 0) {
-      createMessage({ type: 'warning', text: '未找到绑定的明日方舟账号' })
+      createMessage({ type: 'warn', text: '未找到绑定的明日方舟账号' })
     }
   } catch (error) {
     console.error(error)
@@ -307,7 +321,7 @@ async function getPlayerBindingByOfficialToken() {
   sklandLoading.value = true
   try {
     // 后端用官网 token 换取森空岛凭证，返回 { cred, secret }
-    const result = await operatorDataAPI.getCredByHgToken({ token: hgToken })
+    const result = await sklandCredentialAPI.getCredByHgToken({ token: hgToken })
     const { cred, token } = result.data
     sklandCred.value = cred
     sklandToken.value = token
@@ -318,7 +332,7 @@ async function getPlayerBindingByOfficialToken() {
     playBindingList.value = playBinding.bindingList
 
     if (playBinding.bindingList.length === 0) {
-      createMessage({ type: 'warning', text: '未找到绑定的明日方舟账号' })
+      createMessage({ type: 'warn', text: '未找到绑定的明日方舟账号' })
     }
   } catch (error) {
     console.error(error)
@@ -336,7 +350,7 @@ async function createSklandQrCode() {
   sklandQrStatusText.value = '正在生成二维码…'
   playBindingList.value = []
   try {
-    const res = await operatorDataAPI.createSklandQrCode()
+    const res = await sklandCredentialAPI.createSklandQrCode()
     const { scanId, qrContent } = res.data
     sklandQrScanId.value = scanId
     // 用 qrContent（deep link）渲染二维码图片
@@ -378,7 +392,7 @@ function startSklandQrPolling() {
   stopSklandQrPolling()
   sklandQrPollTimer = setInterval(async () => {
     try {
-      const res = await operatorDataAPI.checkSklandQrStatus(sklandQrScanId.value)
+      const res = await sklandCredentialAPI.checkSklandQrStatus(sklandQrScanId.value)
       const data = res.data
       if (data.status === 0) {
         // 用户已确认：停止轮询，用凭证拉取账号列表
@@ -392,13 +406,13 @@ function startSklandQrPolling() {
             ? '请选择要导入的账号：'
             : '未找到绑定的明日方舟账号'
         if (playBinding.bindingList.length === 0) {
-          createMessage({type: 'warning', text: '未找到绑定的明日方舟账号'})
+          createMessage({type: 'warn', text: '未找到绑定的明日方舟账号'})
         }
       } else if (data.status === 102) {
         // 二维码过期：停止轮询，提示重新生成
         stopSklandQrPolling()
         sklandQrStatusText.value = '二维码已过期，请点击"重新生成"'
-        createMessage({type: 'warning', text: '二维码已过期，请重新生成'})
+        createMessage({type: 'warn', text: '二维码已过期，请重新生成'})
       }
       // status 100/101：未扫码/已扫码待确认，继续轮询
     } catch (error) {
@@ -438,7 +452,13 @@ async function getPlayerDataAndSync(binding) {
       importedAt: new Date().toISOString(),
     }))
 
-    await operatorDataAPI.importSkLandOperatorDataV3(warehouseData)
+    const payload = buildUcOperatorSavePayload(warehouseData)
+    if (payload.operators.length === 0) {
+      createMessage({ type: 'warn', text: '未获取到干员数据，无法同步' })
+      return
+    }
+
+    await saveAkAccountOperators(payload)
     createMessage({ type: 'success', text: '干员数据已同步到我的干员！' })
     getOperatorData()
     sklandImportDialog.value = false
@@ -548,6 +568,9 @@ function createOperatorList(list = []) {
         skill3: 0,
         modX: 0,
         modY: 0,
+        modD: 0,
+        modA: 0,
+        modB: 0,
         own: false
       }
     }
@@ -559,11 +582,12 @@ function createOperatorList(list = []) {
     formatData.skill1 = item.skill1
     formatData.skill2 = item.skill2
     formatData.skill3 = item.skill3
-    formatData.modX = item.modX
-    formatData.modY = item.modY
-    formatData.modD = item.modD
+    formatData.modX = item.modX ?? 0
+    formatData.modY = item.modY ?? 0
+    formatData.modD = item.modD ?? 0
     formatData.own = item.own
-    formatData.modA = item.modA
+    formatData.modA = item.modA ?? 0
+    formatData.modB = item.modB ?? 0
 
     tmpList.push(formatData)
   }
@@ -959,26 +983,150 @@ function toggleRecommendEliteThreshold(threshold) {
 }
 
 
+const operatorExportSettingsDialog = ref(false)
+const operatorExportScope = ref('all')
+const operatorExportScopeOptions = [
+  {title: '导出所有干员', value: 'all'},
+  {title: '导出已持有干员', value: 'owned'},
+  {title: '导出当前筛选的干员', value: 'filtered'},
+]
+const operatorExportModules = [
+  {type: 'X', field: 'modX', label: 'χ'},
+  {type: 'Y', field: 'modY', label: 'γ'},
+  {type: 'D', field: 'modD', label: 'Δ'},
+  {type: 'A', field: 'modA', label: 'α'},
+  {type: 'B', field: 'modB', label: 'β'},
+]
+const operatorExportColumnGroups = [
+  {
+    key: 'profile',
+    fields: [
+      {key: 'name', title: '干员名称', value: (operator) => operator.name},
+      {key: 'rarity', title: '星级', value: (operator) => operator.rarity},
+      {key: 'profession', title: '职业', value: (operator) => operatorClassLabelMap.get(operator.profession) || operator.profession || ''},
+    ],
+    optionalOptions: [
+      {key: 'charId', title: '干员 ID', fields: [{key: 'charId', title: '干员 ID', value: (operator) => operator.charId}]},
+      {key: 'subProfessionId', title: '分支', fields: [{key: 'subProfessionId', title: '分支', value: (operator) => operatorClassLabelMap.get(operator.subProfessionId) || operator.subProfessionId || ''}]},
+      {key: 'date', title: '实装日期', fields: [{key: 'date', title: '实装日期', value: (operator) => operator.date ? dateFormat(operator.date) : ''}]},
+      {key: 'itemObtainApproach', title: '获得方式', fields: [{key: 'itemObtainApproach', title: '获得方式', value: (operator) => operator.itemObtainApproach || ''}]},
+    ],
+  },
+  {
+    key: 'progress',
+    fields: [
+      {key: 'own', title: '是否已招募', value: (operator) => operator.own ? '是' : '否'},
+      {key: 'level', title: '等级', value: (operator) => operator.level},
+      {key: 'elite', title: '精英化等级', value: (operator) => operator.elite},
+      {key: 'potential', title: '潜能等级', value: (operator) => operator.potential ?? 0},
+      {key: 'mainSkill', title: '通用技能等级', value: (operator) => operator.mainSkill ?? 0},
+    ],
+    optionalOptions: [],
+  },
+  {
+    key: 'skills',
+    fields: [],
+    optionalOptions: [{
+      key: 'skills',
+      title: '技能信息',
+      fields: [1, 2, 3].flatMap((skillIndex) => [
+        {
+          key: `skill${skillIndex}Name`,
+          title: `${skillIndex}技能名称`,
+          value: (operator) => operator.skills?.[skillIndex - 1]?.skillName || '',
+        },
+        {
+          key: `skill${skillIndex}Level`,
+          title: `${skillIndex}技能专精等级`,
+          value: (operator) => operator[`skill${skillIndex}`] ?? 0,
+        },
+      ]),
+    }],
+  },
+  {
+    key: 'modules',
+    fields: [],
+    optionalOptions: [{
+      key: 'modules',
+      title: '模组信息',
+      fields: operatorExportModules.flatMap(({type, field, label}) => [
+        {
+          key: `${field}Name`,
+          title: `${label}模组名称`,
+          value: (operator) => operator.equip?.find((item) => item.typeName2 === type)?.uniEquipName || '',
+        },
+        {
+          key: field,
+          title: `${label}模组等级`,
+          value: (operator) => operator[field] ?? 0,
+        },
+      ]),
+    }],
+  },
+]
+const operatorExportOptionalOptions = operatorExportColumnGroups.flatMap((group) => group.optionalOptions)
+const selectedOperatorExportOptions = ref([])
+const draftOperatorExportScope = ref(operatorExportScope.value)
+const draftOperatorExportOptions = ref([])
+
+function openOperatorExportSettings() {
+  draftOperatorExportScope.value = operatorExportScope.value
+  draftOperatorExportOptions.value = [...selectedOperatorExportOptions.value]
+  operatorExportSettingsDialog.value = true
+}
+
+function toggleOperatorExportOption(key) {
+  draftOperatorExportOptions.value = draftOperatorExportOptions.value.includes(key)
+    ? draftOperatorExportOptions.value.filter((option) => option !== key)
+    : [...draftOperatorExportOptions.value, key]
+}
+
+function resetOperatorExportSettings() {
+  draftOperatorExportScope.value = 'all'
+  draftOperatorExportOptions.value = []
+}
+
+function saveOperatorExportSettings() {
+  operatorExportScope.value = draftOperatorExportScope.value
+  selectedOperatorExportOptions.value = [...draftOperatorExportOptions.value]
+  operatorExportSettingsDialog.value = false
+}
+
+function getSelectedOperatorExportFields(selectedOptions) {
+  const selectedKeys = new Set(selectedOptions)
+  return operatorExportColumnGroups.flatMap((group) => [
+    ...group.fields,
+    ...group.optionalOptions
+      .filter((option) => selectedKeys.has(option.key))
+      .flatMap((option) => option.fields),
+  ])
+}
+
 /**
- * 导出评分表的excel
+ * 导出干员信息与练度表
  */
 function exportOperatorExcel() {
-  let list = [[
-    '干员名称', '是否已招募', '星级', '等级', '精英化等级', '潜能等级', '通用技能等级', '1技能专精等级',
-    '2技能专精等级', '3技能专精等级', 'χ分支模组', 'γ分支模组', 'Δ分支模组', 'α分支模组'
-  ]]
-  //按实装倒序排序，时间相同时按星级降序排序
-  const sortedOperatorList = [...operatorList.value].sort((a, b) =>
-    b.updateTime - a.updateTime || b.rarity - a.rarity
-  )
-  for (const operator of sortedOperatorList) {
-    const {name,own,rarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA} = operator
-    //干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，导出时直接使用
-    const starRarity = rarity
-    list.push([name,own,starRarity,level,elite,potential,mainSkill,skill1,skill2,skill3,modX,modY,modD,modA])
+  let sourceList = operatorList.value
+  if (operatorExportScope.value === 'owned') {
+    sourceList = sourceList.filter((operator) => operator.own)
+  } else if (operatorExportScope.value === 'filtered') {
+    sourceList = visibleOperatorList.value
   }
 
-  console.log(list)
+  if (sourceList.length === 0) {
+    createMessage({type: 'warn', text: '当前范围没有可导出的干员'})
+    return
+  }
+
+  //按实装倒序排序，时间相同时按星级降序排序
+  const selectedFields = getSelectedOperatorExportFields(selectedOperatorExportOptions.value)
+  const sortedOperatorList = [...sourceList].sort((a, b) =>
+    b.updateTime - a.updateTime || b.rarity - a.rarity
+  )
+  const list = [selectedFields.map((field) => field.title)]
+  for (const operator of sortedOperatorList) {
+    list.push(selectedFields.map((field) => field.value(operator)))
+  }
 
   exportExcel('干员练度表', list)
 }
@@ -1071,13 +1219,28 @@ onBeforeUnmount(() => {
                 <span class="operator-import-action-desc">支持官网 Token（桌面端/移动端）和森空岛凭证</span>
               </span>
             </v-btn>
-            <v-btn class="operator-import-action" color="primary" variant="outlined" @click="exportOperatorExcel()">
-              <v-icon class="operator-import-action-icon">mdi-file-excel</v-icon>
-              <span class="operator-import-action-copy">
-                <span class="operator-import-action-title">导出为 Excel</span>
-                <span class="operator-import-action-desc">下载当前干员数据表格</span>
-              </span>
-            </v-btn>
+            <div class="operator-export-button-group">
+              <v-btn
+                class="operator-import-action operator-export-main-button"
+                color="primary"
+                variant="outlined"
+                @click="exportOperatorExcel()"
+              >
+                <v-icon class="operator-import-action-icon">mdi-file-excel</v-icon>
+                <span class="operator-import-action-copy">
+                  <span class="operator-import-action-title">导出为 Excel</span>
+                  <span class="operator-import-action-desc">下载当前干员数据表格</span>
+                </span>
+              </v-btn>
+              <v-btn
+                class="operator-export-settings-button"
+                icon="mdi-tune-variant"
+                color="primary"
+                variant="outlined"
+                aria-label="导出设置"
+                @click="openOperatorExportSettings()"
+              />
+            </div>
           </div>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -1238,6 +1401,67 @@ onBeforeUnmount(() => {
     </div>
 
 
+
+    <v-dialog v-model="operatorExportSettingsDialog" max-width="600">
+      <v-card>
+        <v-card-text>
+          <div class="text-subtitle-2 mb-3">导出范围</div>
+          <v-btn-toggle
+            v-model="draftOperatorExportScope"
+            class="w-100 operator-export-scope"
+            color="primary"
+            mandatory
+            border
+            divided
+            role="group"
+            aria-label="导出范围"
+          >
+            <v-btn
+              v-for="option in operatorExportScopeOptions"
+              :key="option.value"
+              :value="option.value"
+              class="flex-grow-1 px-1"
+            >
+              <span class="text-wrap">{{ option.title }}</span>
+            </v-btn>
+          </v-btn-toggle>
+        </v-card-text>
+        <v-divider />
+        <v-card-text>
+          <div class="text-subtitle-2 mb-3">可选附加导出内容</div>
+          <v-row dense role="group" aria-label="可选附加导出内容">
+            <v-col
+              v-for="option in operatorExportOptionalOptions"
+              :key="option.key"
+              cols="6"
+              sm="4"
+            >
+              <v-btn
+                block
+                class="operator-export-option"
+                :class="{'operator-export-option--selected': draftOperatorExportOptions.includes(option.key)}"
+                :color="draftOperatorExportOptions.includes(option.key) ? 'primary' : undefined"
+                variant="outlined"
+                :aria-pressed="draftOperatorExportOptions.includes(option.key)"
+                @click="toggleOperatorExportOption(option.key)"
+              >
+                <span class="operator-export-option-content">
+                  <v-icon size="16" aria-hidden="true">
+                    {{ draftOperatorExportOptions.includes(option.key) ? 'mdi-circle' : 'mdi-circle-outline' }}
+                  </v-icon>
+                  <span>{{ option.title }}</span>
+                </span>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-card-text>
+        <v-card-actions class="justify-end">
+          <v-btn variant="text" @click="resetOperatorExportSettings()">恢复默认设置</v-btn>
+          <v-btn variant="text" @click="operatorExportSettingsDialog = false">取消</v-btn>
+          <v-btn color="primary" variant="flat" @click="saveOperatorExportSettings()">保存</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-dialog v-model="operatorsStatisticsDetailDialog" max-width="500">
       <v-card>
@@ -1530,13 +1754,6 @@ onBeforeUnmount(() => {
                       </div>
                     </v-btn>
                   </div>
-
-                  <v-alert :icon="false" color="warning" variant="tonal" class="mt-4" density="compact">
-                    <p class="text-caption mb-1"><b>如果出现报错：请勿修改设备本地时间</b>可能是系统时间不准确导致。Windows 同步方法：</p>
-                    <p class="text-caption mb-1">① 右键任务栏时间 → 调整日期/时间</p>
-                    <p class="text-caption mb-1">② 点击"立即同步"</p>
-                    <p class="text-caption">或 Win+R 输入 <code>timedate.cpl</code> →  Internet 时间 → 更改设置 → 立即更新</p>
-                  </v-alert>
                 </v-card-text>
               </v-card>
             </template>
@@ -1607,12 +1824,6 @@ onBeforeUnmount(() => {
                   <v-card flat>
                     <v-card-text>
                       <p class="mb-4">将获取到的凭证粘贴到下面的输入框中</p>
-                      <v-alert :icon="false" color="warning" variant="tonal" class="mb-4" density="compact">
-                        为保障您的账号安全，请在导入后退出明日方舟官网登录，退出登录后Token就会失效了
-                      </v-alert>
-                      <v-alert :icon="false" color="info" variant="tonal" class="mb-4" density="compact">
-                        如果提示需要设备验证，请打开森空岛APP，进入 设置 → 通行证与账号安全 → 账号安全管理 → 设备管理 → 新设备登录身份验证，关闭"新设备登录身份验证"
-                      </v-alert>
                       <div class="operator-import-credential-row operator-import-credential-row--column">
                         <v-text-field
                             v-model="officialTokenText"
@@ -1715,6 +1926,8 @@ onBeforeUnmount(() => {
                 </div>
               </v-window-item>
               </v-window>
+              <!-- 常见问题：三种导入方式共用，置于最后一步下方 -->
+              <ImportCommonQuestions class="mt-4" />
             </div>
           </Transition>
           </div>

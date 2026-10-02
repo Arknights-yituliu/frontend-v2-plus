@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 2,
+  "id": "char_264_f12yin",
+  "name": "山",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "内幕",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得线索3",
+              "cluePreference": 3
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "哥伦比亚史",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得线索1",
+              "cluePreference": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

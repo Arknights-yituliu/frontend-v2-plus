@@ -53,7 +53,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {getUserInfo, userInfo} from "/src/utils/user/userInfo.js";
+import {getUserInfo, userInfo} from "/src/api/backend/userSession.js";
 import {useRouter} from "vue-router";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import Login from "/src/pages/account/login.vue";

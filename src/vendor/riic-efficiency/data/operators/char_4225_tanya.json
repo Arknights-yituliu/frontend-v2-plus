@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4225_tanya",
+  "name": "裂响",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "难得休憩",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.55,
+              "scope": "self"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "“连轴转”",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": 0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 35,
+              "recipe": "作战记录"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "id": "char_260_durnar",
+  "name": "坚雷",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "零食网络",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

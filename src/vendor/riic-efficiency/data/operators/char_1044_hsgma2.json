@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1044_hsgma2",
+  "name": "斩业星熊",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "下城人脉",
+          "effects": [
+            {
+              "target": "training",
+              "stat": "facBase",
+              "value": 5,
+              "stack": "max",
+              "condition": {
+                "type": "opCountInFacility",
+                "facility": "training",
+                "min": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "共事情谊",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 3,
+              "stack": "max",
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.lgd",
+                "facility": "same",
+                "other": true,
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

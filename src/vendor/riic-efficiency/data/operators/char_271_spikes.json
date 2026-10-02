@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 2,
+  "id": "char_271_spikes",
+  "name": "芳汀",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "“独处”",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "scope": "self",
+              "per": {
+                "per": 1,
+                "value": 0.05,
+                "source": "dormOccupantsOwn",
+                "other": true
+              }
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.7,
+              "scope": "self"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

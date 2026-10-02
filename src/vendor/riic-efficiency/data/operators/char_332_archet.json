@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 2,
+  "id": "char_332_archet",
+  "name": "空弦",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "虔诚筹款·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "dormLevel"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "虔诚筹款·β",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 2,
+                "source": "dormLevel"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

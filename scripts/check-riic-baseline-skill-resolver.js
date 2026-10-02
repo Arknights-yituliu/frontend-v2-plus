@@ -47,7 +47,7 @@ function getMiddleDataSkill(ruleData, sourceSkillId) {
 assert.equal(ruleData.schemaVersion, 3);
 assert.equal(ruleData.scope.roomStateMetadata.appliedByBaselineResolver, false);
 assert.equal(ruleData.summary.roomStateRuleCount > 0, true);
-assert.equal(ruleData.summary.roomStateFormulaCount, 8);
+assert.equal(ruleData.summary.roomStateFormulaCount, 9);
 
 assert.deepEqual(
   getRoomStateRule(
@@ -133,6 +133,20 @@ assert.deepEqual(
     percentPerCurrentOrder: 4,
   },
 );
+assert.deepEqual(
+  getRoomStateFormula(
+    ruleData,
+    "char_243_waaifu|manufacture|配合意识|2|1",
+  ).formula,
+  {
+    type: "teammateProductionToProduction",
+    inputScope: "otherRoomOperators",
+    inputMetric: "production",
+    inputStepPercent: 5,
+    outputPercentPerStep: 5,
+    maximumBonusPercent: 40,
+  },
+);
 
 assert.equal(getRulesForOperator(ruleData, "char_4138_narant").length, 0);
 assert.equal(getRulesForOperator(ruleData, "char_1027_greyy2").length, 0);
@@ -185,6 +199,78 @@ assert.equal(
     .operatorIds[0],
   "char_4041_chnut",
 );
+
+const makotoAtEliteTwo = resolveRiicBaselineSkills(
+  [{ charId: "char_4217_makoto", name: "Makoto", elite: 2, level: 1 }],
+  ruleData,
+);
+assert.equal(
+  calculateRiicRoomEfficiency({
+    resolvedSkills: makotoAtEliteTwo,
+    roomType: "manufacture",
+    product: "experience",
+    operatorIds: ["char_4217_makoto"],
+    expectedSlots: 1,
+  }).bonusPercent,
+  20,
+);
+assert.equal(
+  calculateRiicRoomEfficiency({
+    resolvedSkills: makotoAtEliteTwo,
+    roomType: "manufacture",
+    product: "gold",
+    operatorIds: ["char_4217_makoto"],
+    expectedSlots: 1,
+  }).bonusPercent,
+  20,
+);
+
+const aigisAtEliteZero = resolveRiicBaselineSkills(
+  [{ charId: "char_4218_aigis", name: "Aigis", elite: 0, level: 1 }],
+  ruleData,
+);
+assert.equal(
+  calculateRiicRoomEfficiency({
+    resolvedSkills: aigisAtEliteZero,
+    roomType: "power",
+    product: "all",
+    operatorIds: ["char_4218_aigis"],
+    expectedSlots: 1,
+  }).bonusPercent,
+  15,
+);
+
+for (const product of ["experience", "gold"]) {
+  const ptilopsis = resolveRiicBaselineSkills(
+    [{ charId: "char_128_plosis", name: "Ptilopsis", elite: 2, level: 1 }],
+    ruleData,
+  );
+  assert.equal(
+    calculateRiicRoomEfficiency({
+      resolvedSkills: ptilopsis,
+      roomType: "manufacture",
+      product,
+      operatorIds: ["char_128_plosis"],
+      expectedSlots: 1,
+    }).bonusPercent,
+    25,
+  );
+
+  const vanilla = resolveRiicBaselineSkills(
+    [{ charId: "char_240_wyvern", name: "Vanilla", elite: 0, level: 1 }],
+    ruleData,
+  );
+  assert.equal(
+    calculateRiicRoomEfficiency({
+      resolvedSkills: vanilla,
+      roomType: "manufacture",
+      product,
+      operatorIds: ["char_240_wyvern"],
+      expectedSlots: 1,
+    }).bonusPercent,
+    25,
+  );
+}
 
 const castleBelowLevelThirty = resolveRiicBaselineSkills(
   [{ charId: "char_286_cast3", name: "Castle-3", elite: 0, level: 29 }],

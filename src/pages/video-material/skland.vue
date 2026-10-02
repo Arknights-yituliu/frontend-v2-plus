@@ -1,7 +1,7 @@
 <script setup>
 
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
-import itemAPI from "/src/api/materialV5.js";
+import itemAPI from "/src/api/backend/materialV5.js";
 import {onMounted, ref} from "vue";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
 import ItemImage from "@/components/sprite/ItemImage.vue";

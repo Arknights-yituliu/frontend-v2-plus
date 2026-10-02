@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1027_greyy2",
+  "name": "承曦格雷伊",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "巡线框架",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "per": {
+                "per": 10,
+                "value": 1,
+                "cap": 25,
+                "capUnit": "value",
+                "source": "droneLimit"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "晨曦",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "facilityCount",
+              "value": 1,
+              "condition": {
+                "type": "opGroupNotInFacility",
+                "group": "cc.tag.op",
+                "facility": "power",
+                "other": true,
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

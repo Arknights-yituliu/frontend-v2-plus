@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_242_otter",
+  "name": "梅尔",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "咪波·制造型",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

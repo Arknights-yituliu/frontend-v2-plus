@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4046_ebnhlz",
+  "name": "黑键",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "乐感",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "basePointGain",
+              "term": "cc.bd_a1",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "dormOccupants"
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "basePointConvert",
+              "from": "cc.bd_a1",
+              "to": "cc.bd_B",
+              "rate": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "徘徊旋律",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 4,
+                "value": 1,
+                "source": "basePoint",
+                "term": "cc.bd_B"
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "怅惘和声",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 2,
+                "value": 1,
+                "source": "basePoint",
+                "term": "cc.bd_B"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

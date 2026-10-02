@@ -78,7 +78,7 @@
 <script setup>
 
 import { ref } from "vue";
-import stageApi from "/src/api/material";
+import stageApi from "/src/api/backend/material";
 
 
 import { usePageContext } from "/src/renderer/usePageContext";

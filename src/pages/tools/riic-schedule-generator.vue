@@ -174,6 +174,17 @@ import {
 } from "/src/utils/riic/riic-schedule-workspace.js";
 import { createRiicScheduleResultSnapshot } from "/src/utils/riic/riic-schedule-result-snapshot.js";
 import { createRiicScheduleGenerationWorkflow } from "/src/utils/riic/riic-schedule-generation-workflow.js";
+import {
+  buildEfficiencyNotices,
+  buildRiicEfficiencySchedule,
+  calculateRiicEfficiency,
+  createRiicEfficiencyMetrics,
+  createRiicEfficiencySettlement,
+  createRiicEfficiencyYield,
+  DEFAULT_RIIC_EFFICIENCY_SETTINGS,
+  maaDroneWarningText,
+  normalizeRiicEfficiencySettings,
+} from "/src/utils/riic/riic-efficiency-adapter.js";
 
 const RIIC_OPERATOR_WORKSPACES_STORAGE_KEY =
   "riic_schedule_generator_workspaces_v1";
@@ -181,6 +192,8 @@ const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
   "riic_schedule_generator_to_legacy_editor_v1";
 const RIIC_WORKFLOW_CARD_COLLAPSE_STORAGE_KEY =
   "riic_schedule_generator_workflow_card_collapse_v1";
+const RIIC_OUTPUT_MODE_STORAGE_KEY =
+  "riic_schedule_generator_output_mode_v1";
 const RIIC_WORKFLOW_CARD_IDS = Object.freeze([
   "layout",
   "generation",
@@ -214,6 +227,98 @@ const RIIC_SCHEDULE_CHANGELOG_ENTRIES = Array.isArray(
 )
   ? RIIC_SCHEDULE_CHANGELOG.entries
   : [];
+const RIIC_SCHEDULE_CHANGELOG_PAGE_SIZE = 20;
+const RIIC_SCHEDULE_CHANGELOG_LEVEL_FILTERS = Object.freeze([
+  null,
+  2,
+  3,
+  4,
+  5,
+]);
+const RIIC_SCHEDULE_CHANGELOG_MODULES = Array.from(
+  new Set(
+    RIIC_SCHEDULE_CHANGELOG_ENTRIES.flatMap((entry) =>
+      (Array.isArray(entry.items) ? entry.items : []).map((item) => item.module),
+    ),
+  ),
+);
+const changelogLevelFilter = ref(null);
+const changelogSelectedModules = ref([...RIIC_SCHEDULE_CHANGELOG_MODULES]);
+const changelogCurrentPage = ref(1);
+const riicScheduleChangelogPages = computed(() => {
+  const dateGroupsByDate = new Map();
+
+  for (const entry of RIIC_SCHEDULE_CHANGELOG_ENTRIES) {
+    const items = (Array.isArray(entry.items) ? entry.items : []).filter(
+      (item) =>
+        changelogSelectedModules.value.includes(item.module) &&
+        (changelogLevelFilter.value === null ||
+          Number(item.level) > changelogLevelFilter.value),
+    );
+
+    if (!items.length) continue;
+
+    let dateGroup = dateGroupsByDate.get(entry.date);
+    if (!dateGroup) {
+      dateGroup = {
+        date: entry.date,
+        entries: [],
+        itemCount: 0,
+      };
+      dateGroupsByDate.set(entry.date, dateGroup);
+    }
+
+    dateGroup.entries.push({ ...entry, items });
+    dateGroup.itemCount += items.length;
+  }
+
+  const dateGroups = Array.from(dateGroupsByDate.values()).sort((a, b) =>
+    b.date.localeCompare(a.date),
+  );
+  const pages = [];
+  let pageEntries = [];
+  let pageItemCount = 0;
+
+  for (const group of dateGroups) {
+    if (pageItemCount >= RIIC_SCHEDULE_CHANGELOG_PAGE_SIZE) {
+      pages.push(pageEntries);
+      pageEntries = [];
+      pageItemCount = 0;
+    }
+
+    pageEntries.push(...group.entries);
+    pageItemCount += group.itemCount;
+  }
+
+  if (pageEntries.length) pages.push(pageEntries);
+  return pages;
+});
+const riicScheduleChangelogCurrentEntries = computed(
+  () =>
+    riicScheduleChangelogPages.value[changelogCurrentPage.value - 1] || [],
+);
+const riicScheduleChangelogPageCount = computed(
+  () => riicScheduleChangelogPages.value.length,
+);
+watch([changelogLevelFilter, changelogSelectedModules], () => {
+  changelogCurrentPage.value = 1;
+});
+function setRiicScheduleChangelogLevelFilter(level) {
+  changelogLevelFilter.value = level;
+}
+function toggleRiicScheduleChangelogModule(module) {
+  changelogSelectedModules.value = changelogSelectedModules.value.includes(
+    module,
+  )
+    ? changelogSelectedModules.value.filter((selected) => selected !== module)
+    : [...changelogSelectedModules.value, module];
+}
+function setRiicScheduleChangelogPage(page) {
+  changelogCurrentPage.value = Math.min(
+    Math.max(page, 1),
+    riicScheduleChangelogPageCount.value || 1,
+  );
+}
 const riicScheduleFrameworkVersion = computed(() => {
   const versionPattern = /^v\d{8}\.\d{4}$/;
   const versions = [
@@ -309,6 +414,7 @@ const showCandidateDebugValues = computed(() => route.query.mode === "dev");
 const isOutputPreviewMode = computed(() => route.query.mode === "output");
 const hasSavedWizardState = ref(false);
 const storageReady = ref(false);
+const scheduleOutputMode = ref("gross");
 const exportingImage = ref(false);
 const exportingMaa = ref(false);
 const layoutEntry = ref(DEFAULT_LAYOUT_SELECTION.cardKey);
@@ -368,6 +474,7 @@ const trainingRecommendationState = ref({
 let restoredWizardTrainingRecommendationPending = false;
 const trainingImpactState = ref({ status: "idle", results: [] });
 const deepScheduleConfirmationOpen = ref(false);
+const riicEfficiencyNoticeDialogOpen = ref(false);
 let automaticGenerationAbortController = null;
 let automaticGenerationQueuedOptions = null;
 let automaticGenerationRequestId = 0;
@@ -403,6 +510,8 @@ const fiammettaRecoverySettings = ref({
 });
 const scheduleExecutionSettings = reactive({
   shifts: [],
+  calculationMode: "riic-efficiency",
+  riicEfficiencySettings: { ...DEFAULT_RIIC_EFFICIENCY_SETTINGS },
   orundumCraftMaterial: "orirock",
   includeTrainingRoom: false,
   exportInfo: {
@@ -654,6 +763,10 @@ function normalizeOrundumCraftMaterial(value) {
   return value === "device" ? "device" : "orirock";
 }
 
+function normalizeScheduleCalculationMode(value) {
+  return value === "legacy" ? "legacy" : "riic-efficiency";
+}
+
 function normalizeScheduleFiammettaSettings(value) {
   return {
     enable: value?.enable === true,
@@ -705,6 +818,8 @@ function createEmptyScheduleExecutionSettings(
 ) {
   return {
     shifts: createDefaultScheduleShifts(shiftMode, rotationMode),
+    calculationMode: "riic-efficiency",
+    riicEfficiencySettings: normalizeRiicEfficiencySettings(),
     orundumCraftMaterial: "orirock",
     includeTrainingRoom: false,
     exportInfo: normalizeScheduleExportInfo(),
@@ -803,6 +918,10 @@ function normalizeScheduleExecutionSettings(
 
   return {
     shifts: normalizedShifts,
+    calculationMode: normalizeScheduleCalculationMode(value?.calculationMode),
+    riicEfficiencySettings: normalizeRiicEfficiencySettings(
+      value?.riicEfficiencySettings,
+    ),
     orundumCraftMaterial: normalizeOrundumCraftMaterial(
       value?.orundumCraftMaterial,
     ),
@@ -829,6 +948,12 @@ function createScheduleExecutionSettingsSnapshot() {
       fiammetta: normalizeScheduleFiammettaSettings(shift.fiammetta),
       drone: normalizeScheduleDroneSettings(shift.drone),
     })),
+    calculationMode: normalizeScheduleCalculationMode(
+      scheduleExecutionSettings.calculationMode,
+    ),
+    riicEfficiencySettings: normalizeRiicEfficiencySettings(
+      scheduleExecutionSettings.riicEfficiencySettings,
+    ),
     orundumCraftMaterial: normalizeOrundumCraftMaterial(
       scheduleExecutionSettings.orundumCraftMaterial,
     ),
@@ -855,6 +980,9 @@ function resetScheduleExecutionSettings() {
     twoShiftRotationMode.value,
   );
   scheduleExecutionSettings.shifts = nextSettings.shifts;
+  scheduleExecutionSettings.calculationMode = nextSettings.calculationMode;
+  scheduleExecutionSettings.riicEfficiencySettings =
+    nextSettings.riicEfficiencySettings;
   scheduleExecutionSettings.orundumCraftMaterial =
     nextSettings.orundumCraftMaterial;
   scheduleExecutionSettings.includeTrainingRoom =
@@ -2924,9 +3052,10 @@ async function generateAutomaticSchedule({
       controlCenterReconciliation?.status === "ready"
         ? controlCenterReconciliation.controlState
         : null;
-    if (automaticSelection.unavailableGroups.length > 0) {
+    const unavailableGroups = automaticSelection.unavailableGroups || [];
+    if (unavailableGroups.length > 0) {
       cMessage(
-        `无法自动填满：${automaticSelection.unavailableGroups.join("、")}`,
+        `自动排班已生成，但未完整填满：${unavailableGroups.join("、")}`,
         "warn",
       );
     }
@@ -2950,7 +3079,7 @@ async function generateAutomaticSchedule({
       assembledFiammettaTargetUsage.value,
     );
     lastAutomaticGenerationTriggerKey.value = generationTriggerKey;
-    if (!silentSuccess) {
+    if (!silentSuccess && unavailableGroups.length === 0) {
       cMessage("已自动生成排班表", "success");
     }
     void generateTrainingRecommendation(searchConfig);
@@ -4563,7 +4692,18 @@ function applyRiicL79EfficiencyToPreview({ preview, settlement } = {}) {
   };
 }
 
-const riicL79Settlement = computed(() => {
+const riicLegacyL79Settlement = computed(() => {
+  if (
+    scheduleExecutionSettings.calculationMode !== "legacy" &&
+    !showCandidateDebugValues.value &&
+    !(
+      scheduleExecutionSettings.calculationMode === "riic-efficiency" &&
+      scheduleOutputMode.value === "gross"
+    )
+  ) {
+    return null;
+  }
+
   const input = riicL79InputDebugState.value;
   return input
     ? settleRiicMaaScheduleEfficiency({
@@ -4573,12 +4713,128 @@ const riicL79Settlement = computed(() => {
       })
     : null;
 });
-const riicSchedulePreview = computed(() =>
-  applyRiicL79EfficiencyToPreview({
-    preview: riicSchedulePreviewBase.value,
-    settlement: riicL79Settlement.value,
-  }),
+const riicEfficiencyCalculation = computed(() => {
+  const input = riicL79InputDebugState.value;
+  if (!input?.schedule) {
+    return { result: null, error: "当前没有可计算的排班" };
+  }
+
+  try {
+    const schedule = buildRiicEfficiencySchedule(input.schedule, {
+      operatorProfiles: input.operatorProfiles,
+      operatorTable: operatorTableV2,
+      orundumCraftMaterial:
+        scheduleExecutionSettings.orundumCraftMaterial,
+      efficiencySettings: scheduleExecutionSettings.riicEfficiencySettings,
+    });
+    const result = calculateRiicEfficiency(schedule);
+    const yieldSummary = createRiicEfficiencyYield(
+      result,
+      riicSchedulePreviewBase.value,
+      resolvedScheduleRoomMaaIndexAssignments.value,
+      riicLegacyActualScheduleMetrics.value?.yield?.resourceFlows?.gold ||
+        null,
+    );
+    return {
+      schedule,
+      result,
+      yield: yieldSummary,
+      actual: createRiicEfficiencyMetrics(result, yieldSummary),
+      settlement: createRiicEfficiencySettlement(result),
+      warnings: [
+        ...(result.warnings || []),
+        ...(result.fiammettaWarnings || []),
+        ...(result.maaDroneAcceleration?.warnings || []).map(
+          maaDroneWarningText,
+        ),
+      ],
+      error: "",
+    };
+  } catch (error) {
+    console.error("riic-efficiency schedule settlement failed", error);
+    return {
+      result: null,
+      error: String(error?.message || "riic-efficiency 计算失败"),
+      warnings: [],
+    };
+  }
+});
+const riicEfficiencyNotices = computed(() => {
+  if (scheduleExecutionSettings.calculationMode !== "riic-efficiency") {
+    return [];
+  }
+
+  const calculation = riicEfficiencyCalculation.value;
+  return buildEfficiencyNotices({
+    document: calculation.schedule,
+    result: calculation.result,
+    efficiencyError: calculation.error,
+  }).filter(
+    (notice) =>
+      notice.code !== "schedule-period-gap" &&
+      notice.code !== "mood-inheritance",
+  );
+});
+const riicEfficiencyNoticeCounts = computed(() => {
+  const counts = { info: 0, warning: 0, error: 0 };
+  for (const notice of riicEfficiencyNotices.value) {
+    if (notice.level in counts) {
+      counts[notice.level] += 1;
+    }
+  }
+  return counts;
+});
+const riicEfficiencyNoticeGroups = computed(() =>
+  Object.entries(riicEfficiencyNoticeCounts.value)
+    .map(([level, count]) => ({
+      level,
+      count,
+      notices: riicEfficiencyNotices.value.filter(
+        (notice) => notice.level === level,
+      ),
+    }))
+    .filter((group) => group.count > 0),
 );
+const riicActiveL79Settlement = computed(() =>
+  scheduleExecutionSettings.calculationMode === "riic-efficiency"
+    ? riicEfficiencyCalculation.value.settlement || null
+    : riicLegacyL79Settlement.value,
+);
+const riicLegacySchedulePreview = computed(() =>
+  scheduleExecutionSettings.calculationMode === "legacy" ||
+  showCandidateDebugValues.value
+    ? applyRiicL79EfficiencyToPreview({
+        preview: riicSchedulePreviewBase.value,
+        settlement: riicLegacyL79Settlement.value,
+      })
+    : null,
+);
+const riicSchedulePreview = computed(() => {
+  if (
+    scheduleExecutionSettings.calculationMode === "riic-efficiency" &&
+    !riicEfficiencyCalculation.value.result
+  ) {
+    const preview = riicSchedulePreviewBase.value;
+    return preview
+      ? {
+          ...preview,
+          states: (preview.states || []).map((state) => ({
+            ...state,
+            rooms: (state.rooms || []).map((room) => ({
+              ...room,
+              efficiency: null,
+              efficiencyMetrics: null,
+              l79Settlement: null,
+            })),
+          })),
+        }
+      : null;
+  }
+  return applyRiicL79EfficiencyToPreview({
+    preview: riicSchedulePreviewBase.value,
+    settlement: riicActiveL79Settlement.value,
+  });
+});
 const hasOrundumManufactureRoom = computed(() =>
   (riicSchedulePreview.value?.states || []).some((state) =>
     (state?.rooms || []).some(
@@ -4706,8 +4962,8 @@ const scheduleDroneSettlementSettingsByState = computed(() =>
   }),
 );
 
-const riicActualScheduleMetrics = computed(() => {
-  const l79Settlement = riicL79Settlement.value;
+const riicLegacyActualScheduleMetrics = computed(() => {
+  const l79Settlement = riicLegacyL79Settlement.value;
   const preview = l79Settlement?.preview || null;
   const hasAssembledSchedule =
     Array.isArray(preview?.states) && preview.states.length > 0;
@@ -4726,6 +4982,11 @@ const riicActualScheduleMetrics = computed(() => {
       })
     : null;
 });
+const riicActualScheduleMetrics = computed(() =>
+  scheduleExecutionSettings.calculationMode === "riic-efficiency"
+    ? riicEfficiencyCalculation.value.actual || null
+    : riicLegacyActualScheduleMetrics.value,
+);
 function applyRiicTradingSettlementToPreview({
   preview,
   tradingSettlements,
@@ -4786,11 +5047,13 @@ function applyRiicTradingSettlementToPreview({
   };
 }
 const riicScheduleDisplayPreview = computed(() =>
-  applyRiicTradingSettlementToPreview({
-    preview: riicSchedulePreview.value,
-    tradingSettlements: riicActualScheduleMetrics.value?.yield
-      ?.tradingSettlements,
-  }),
+  scheduleExecutionSettings.calculationMode === "riic-efficiency"
+    ? riicSchedulePreview.value
+    : applyRiicTradingSettlementToPreview({
+        preview: riicSchedulePreview.value,
+        tradingSettlements: riicActualScheduleMetrics.value?.yield
+          ?.tradingSettlements,
+      }),
 );
 const displayedRiicSchedulePreview = computed(
   () =>
@@ -4825,8 +5088,14 @@ const outputPreviewScheduleMeta = computed(() => {
     .join(" · ");
 });
 const outputPreviewYieldItems = computed(() => {
+  const yieldSummary = riicActualScheduleMetrics.value?.yield || {};
   const resources = new Map(
-    (riicActualScheduleMetrics.value?.yield?.resources || []).map(
+    (yieldSummary.resources || []).map(
+      (item) => [String(item?.resource || ""), item],
+    ),
+  );
+  const overviewResources = new Map(
+    (yieldSummary.overviewResources || []).map(
       (item) => [String(item?.resource || ""), item],
     ),
   );
@@ -4838,17 +5107,47 @@ const outputPreviewYieldItems = computed(() => {
   ]
     .map(({ resource, label, image }) => {
       const item = resources.get(resource);
-      const value = Number(item?.outputPerDay);
+      const overviewItem = overviewResources.get(resource);
+      const netSource = overviewItem || item;
+      const rawNetValue = netSource?.outputPerDay;
+      const netValue =
+        rawNetValue === null || rawNetValue === undefined
+          ? null
+          : Number(rawNetValue);
+      const grossSource =
+        item?.grossOutputPerDay !== null &&
+        item?.grossOutputPerDay !== undefined
+          ? item
+          : overviewItem;
+      const rawGrossValue = grossSource?.grossOutputPerDay;
+      const grossValue =
+        rawGrossValue === null || rawGrossValue === undefined
+          ? null
+          : Number(rawGrossValue);
+      const netIsCalculated =
+        netSource?.isCalculated === true && Number.isFinite(netValue);
+      const grossIsCalculated =
+        grossSource?.grossIsCalculated !== false &&
+        (grossSource?.grossIsCalculated === true ||
+          grossSource?.isCalculated === true) &&
+        Number.isFinite(grossValue);
+      const useGrossValue =
+        scheduleOutputMode.value === "gross" && resource === "lmd";
+      const isCalculated =
+        useGrossValue ? grossIsCalculated : netIsCalculated;
       return {
         resource,
         label,
         image,
-        value,
-        isCalculated:
-          item?.isCalculated === true && Number.isFinite(value) && value !== 0,
+        value: useGrossValue ? grossValue : netValue,
+        isCalculated,
+        shouldDisplay:
+          Boolean(item || overviewItem) ||
+          (resource === "lmd" &&
+            (resources.size > 0 || overviewResources.size > 0)),
       };
     })
-    .filter((item) => item.isCalculated);
+    .filter((item) => item.shouldDisplay);
 });
 const outputPreviewResourceNettingItems = computed(() => {
   const yieldSummary = riicActualScheduleMetrics.value?.yield || {};
@@ -4859,6 +5158,7 @@ const outputPreviewResourceNettingItems = computed(() => {
     ]),
   );
   const orundumFlow = yieldSummary.resourceFlows?.orundum || {};
+  const goldFlow = yieldSummary.resourceFlows?.gold || {};
   const craftMaterial =
     orundumFlow.craftMaterial ||
     scheduleExecutionSettings.orundumCraftMaterial ||
@@ -4866,23 +5166,80 @@ const outputPreviewResourceNettingItems = computed(() => {
   const craftMaterialLabel =
     String(orundumFlow.craftMaterialLabel || "").trim() ||
     (craftMaterial === "device" ? "装置" : "固源岩");
+  const getSelectedResourceOutput = (resource) => {
+    const isGross = scheduleOutputMode.value === "gross";
+    const rawValue = isGross
+      ? resource?.grossOutputPerDay
+      : resource?.outputPerDay;
+    const value =
+      rawValue === null || rawValue === undefined ? null : Number(rawValue);
+    return {
+      value,
+      isCalculated:
+        (isGross
+          ? resource?.grossIsCalculated === true ||
+            (resource?.grossIsCalculated !== false &&
+              resource?.isCalculated === true)
+          : resource?.isCalculated === true) &&
+        Number.isFinite(value),
+    };
+  };
+  const goldOutput = getSelectedResourceOutput(resources.get("gold"));
+  const shardOutput = getSelectedResourceOutput(
+    resources.get("originiumShard"),
+  );
 
   const items = [
     {
       key: "gold",
-      label: "赤金",
+      label: scheduleOutputMode.value === "gross" ? "赤金" : "净赤金",
       image: goldImage,
-      value: Number(resources.get("gold")?.outputPerDay),
+      value: goldOutput.value,
       unit: "根",
-      isCalculated: resources.get("gold")?.isCalculated === true,
+      digits: 2,
+      isCalculated: goldOutput.isCalculated,
     },
     {
       key: "originiumShard",
-      label: "源石碎片",
+      label:
+        scheduleOutputMode.value === "gross" ? "源石碎片" : "净源石碎片",
       image: originiumShardImage,
-      value: Number(resources.get("originiumShard")?.outputPerDay),
+      value: shardOutput.value,
       unit: "枚",
-      isCalculated: resources.get("originiumShard")?.isCalculated === true,
+      digits: 2,
+      isCalculated: shardOutput.isCalculated,
+    },
+    {
+      key: "lmd-consumption",
+      label: "龙门币消耗",
+      image: lmdImage,
+      value: -Number(orundumFlow.lmdConsumptionPerDay || 0),
+      unit: "龙门币",
+      isCalculated:
+        orundumFlow.isCalculated === true &&
+        Number.isFinite(Number(orundumFlow.lmdConsumptionPerDay)),
+    },
+    {
+      key: "gold-consumption",
+      label: "赤金消耗",
+      image: goldImage,
+      value: -Number(goldFlow.tradeConsumptionPerDay || 0),
+      unit: "根",
+      digits: 2,
+      isCalculated:
+        goldFlow.isCalculated === true &&
+        Number.isFinite(Number(goldFlow.tradeConsumptionPerDay)),
+    },
+    {
+      key: "shard-consumption",
+      label: "源石碎片消耗",
+      image: originiumShardImage,
+      value: -Number(orundumFlow.shardConsumptionPerDay || 0),
+      unit: "枚",
+      digits: 2,
+      isCalculated:
+        orundumFlow.isCalculated === true &&
+        Number.isFinite(Number(orundumFlow.shardConsumptionPerDay)),
     },
     {
       key: `craft:${craftMaterial}`,
@@ -4897,6 +5254,10 @@ const outputPreviewResourceNettingItems = computed(() => {
   ];
 
   return items.filter((item) => {
+    if (item.key.endsWith("-consumption")) {
+      return item.isCalculated && Math.abs(item.value) > 1e-9;
+    }
+
     if (item.key.startsWith("craft:")) {
       return item.isCalculated && Math.abs(item.value) > 1e-9;
     }
@@ -4961,19 +5322,23 @@ const outputPreviewHeaderTheme = computed(() => {
 });
 
 function formatOutputPreviewYield(value) {
-  return new Intl.NumberFormat("zh-CN", {
-    maximumFractionDigits: 0,
-  }).format(value);
+  if (value === null || value === undefined || !Number.isFinite(Number(value))) {
+    return "--";
+  }
+  return formatNumber(value);
 }
 
-function formatOutputPreviewResourceNetting(value) {
-  const number = Number(value);
+function formatOutputPreviewResourceNetting(value, digits) {
+  const number =
+    value === null || value === undefined ? NaN : Number(value);
   if (!Number.isFinite(number)) {
     return "--";
   }
 
   return `${number > 0 ? "+" : ""}${new Intl.NumberFormat("zh-CN", {
-    maximumFractionDigits: 1,
+    ...(digits === undefined
+      ? { maximumFractionDigits: 1 }
+      : { minimumFractionDigits: digits, maximumFractionDigits: digits }),
   }).format(number)}`;
 }
 
@@ -5095,11 +5460,16 @@ const riicL79InputDebugState = computed(() => {
 const riicScheduleResultSnapshot = computed(() =>
   createRiicScheduleResultSnapshot({
     preview: riicSchedulePreview.value,
-    l79: riicL79Settlement.value,
+    l79: riicActiveL79Settlement.value,
     actual: riicActualScheduleMetrics.value,
     displayPreview: riicScheduleDisplayPreview.value,
     exportPreview: generatedMaaExportPreview.value,
     l79Input: riicL79InputDebugState.value,
+    legacyPreview: riicLegacySchedulePreview.value,
+    legacyL79: riicLegacyL79Settlement.value,
+    legacyActual: riicLegacyActualScheduleMetrics.value,
+    riicEfficiency: riicEfficiencyCalculation.value,
+    calculationMode: scheduleExecutionSettings.calculationMode,
     diagnostics: riicAutomaticGenerationDebugState.value,
   }),
 );
@@ -5319,7 +5689,7 @@ const riicYieldWorkflowCardState = computed(() => {
     : "pending";
 });
 const scheduleRoomMaaIndexEntries = computed(() =>
-  getScheduleRoomMaaIndexEntries(),
+  getScheduleRoomMaaIndexEntries(riicSchedulePreviewBase.value),
 );
 const resolvedScheduleRoomMaaIndexAssignments = computed(() =>
   resolveScheduleRoomMaaIndexAssignments(
@@ -7891,6 +8261,8 @@ function createInitialWorkspaceFromCurrent() {
     editState: {
       scheduleExecutionSettings: {
         shifts: [],
+        calculationMode: "riic-efficiency",
+        riicEfficiencySettings: normalizeRiicEfficiencySettings(),
         orundumCraftMaterial: "orirock",
         includeTrainingRoom: false,
         exportInfo: normalizeScheduleExportInfo(),
@@ -8022,6 +8394,10 @@ function applySavedWizardState(parsedDraft) {
     twoShiftRotationMode.value,
   );
   scheduleExecutionSettings.shifts = savedExecutionSettings.shifts;
+  scheduleExecutionSettings.calculationMode =
+    savedExecutionSettings.calculationMode;
+  scheduleExecutionSettings.riicEfficiencySettings =
+    savedExecutionSettings.riicEfficiencySettings;
   scheduleExecutionSettings.orundumCraftMaterial =
     savedExecutionSettings.orundumCraftMaterial;
   scheduleExecutionSettings.includeTrainingRoom =
@@ -8141,6 +8517,33 @@ function toggleWorkflowCardCollapse(cardId) {
     );
   } catch {
     // The current view can still fold normally when local storage is unavailable.
+  }
+}
+
+function normalizeScheduleOutputMode(value) {
+  return value === "net" ? "net" : "gross";
+}
+
+function loadScheduleOutputMode() {
+  try {
+    scheduleOutputMode.value = normalizeScheduleOutputMode(
+      localStorage.getItem(RIIC_OUTPUT_MODE_STORAGE_KEY),
+    );
+  } catch {
+    scheduleOutputMode.value = "gross";
+  }
+}
+
+function setScheduleOutputMode(value) {
+  if (value !== "gross" && value !== "net") {
+    return;
+  }
+
+  scheduleOutputMode.value = value;
+  try {
+    localStorage.setItem(RIIC_OUTPUT_MODE_STORAGE_KEY, value);
+  } catch {
+    // The output mode remains available for the current page session.
   }
 }
 
@@ -8429,6 +8832,13 @@ async function clearSavedWizardState() {
     cleared = false;
   }
 
+  try {
+    localStorage.removeItem(RIIC_OUTPUT_MODE_STORAGE_KEY);
+  } catch {
+    cleared = false;
+  }
+
+  scheduleOutputMode.value = "gross";
   resetWorkflowCardCollapseStates();
   Object.assign(answers, DEFAULT_ANSWERS);
   currentStep.value = 0;
@@ -8666,6 +9076,8 @@ watch(
         )
         .join("||"),
     () => JSON.stringify(scheduleExecutionSettings.exportInfo),
+    () => scheduleExecutionSettings.calculationMode,
+    () => JSON.stringify(scheduleExecutionSettings.riicEfficiencySettings),
     () => scheduleExecutionSettings.orundumCraftMaterial,
     () => scheduleExecutionSettings.includeTrainingRoom,
     scheduleRoomOperatorOverrides,
@@ -8684,6 +9096,7 @@ watch(riicSchedulePreview, (preview) => {
 });
 
 onMounted(async () => {
+  loadScheduleOutputMode();
   loadOperatorSources();
   loadSavedWizardState();
   storageReady.value = true;
@@ -9286,7 +9699,11 @@ onBeforeUnmount(() => {
                     v-if="outputPreviewYieldItems.length"
                     class="schedule-output-document-yield"
                   >
-                    <span>预计日产</span>
+                    <span>
+                      预计日产（{{
+                        scheduleOutputMode === "gross" ? "总产出" : "净产出"
+                      }}）
+                    </span>
                     <strong
                       v-for="item in outputPreviewYieldItems"
                       :key="item.resource"
@@ -9296,14 +9713,16 @@ onBeforeUnmount(() => {
                         :alt="item.label"
                         class="schedule-output-document-yield-icon"
                       />
-                      {{ formatOutputPreviewYield(item.value) }}
+                      {{
+                        formatOutputPreviewYield(item.value)
+                      }}
                     </strong>
                   </div>
                   <div
                     v-if="outputPreviewResourceNettingItems.length"
                     class="schedule-output-document-resource-netting"
                   >
-                    <span>资源净值</span>
+                    <span>资源产出与消耗</span>
                   <strong
                     v-for="item in outputPreviewResourceNettingItems"
                     :key="item.key"
@@ -9321,9 +9740,11 @@ onBeforeUnmount(() => {
                       :size="26"
                       :mobile-size="26"
                     ></ItemImage>
+                    <span>{{ item.label }}</span>
                       {{
                         formatOutputPreviewResourceNetting(
                           item.value,
+                          item.digits,
                         )
                       }}
                     </strong>
@@ -9431,6 +9852,45 @@ onBeforeUnmount(() => {
                     "
                   ></RiicScheduleFiammettaSettings>
                 </template>
+                <template
+                  v-if="
+                    assembledScheduleCandidateState.status === 'ready' &&
+                    scheduleExecutionSettings.calculationMode ===
+                      'riic-efficiency' &&
+                    riicEfficiencyNotices.length > 0
+                  "
+                  #schedule-analysis
+                >
+                  <button
+                    type="button"
+                    class="riic-efficiency-notice-trigger"
+                    aria-haspopup="dialog"
+                    :aria-label="
+                      '打开排班分析报告：' +
+                      riicEfficiencyNoticeGroups
+                        .map((group) => group.level + ' ' + group.count)
+                        .join('，')
+                    "
+                    @click="riicEfficiencyNoticeDialogOpen = true"
+                  >
+                    <v-icon
+                      icon="mdi-alert-circle-outline"
+                      size="18"
+                      aria-hidden="true"
+                    ></v-icon>
+                    <span class="riic-efficiency-notice-counts">
+                      <span
+                        v-for="group in riicEfficiencyNoticeGroups"
+                        :key="group.level"
+                        class="riic-efficiency-notice-count"
+                        :class="`tone-${group.level}`"
+                      >
+                        {{ group.level }}
+                        <strong>{{ group.count }}</strong>
+                      </span>
+                    </span>
+                  </button>
+                </template>
               </RiicSchedulePreview>
             </div>
             <div
@@ -9464,7 +9924,11 @@ onBeforeUnmount(() => {
                     v-if="outputPreviewYieldItems.length"
                     class="schedule-output-document-yield"
                   >
-                    <span>预计日产</span>
+                    <span>
+                      预计日产（{{
+                        scheduleOutputMode === "gross" ? "总产出" : "净产出"
+                      }}）
+                    </span>
                     <strong
                       v-for="item in outputPreviewYieldItems"
                       :key="item.resource"
@@ -9474,14 +9938,16 @@ onBeforeUnmount(() => {
                         :alt="item.label"
                         class="schedule-output-document-yield-icon"
                       />
-                      {{ formatOutputPreviewYield(item.value) }}
+                      {{
+                        formatOutputPreviewYield(item.value)
+                      }}
                     </strong>
                   </div>
                   <div
                     v-if="outputPreviewResourceNettingItems.length"
                     class="schedule-output-document-resource-netting"
                   >
-                    <span>资源净值</span>
+                    <span>资源产出与消耗</span>
                   <strong
                     v-for="item in outputPreviewResourceNettingItems"
                     :key="item.key"
@@ -9499,9 +9965,11 @@ onBeforeUnmount(() => {
                       :size="26"
                       :mobile-size="26"
                     ></ItemImage>
+                    <span>{{ item.label }}</span>
                       {{
                         formatOutputPreviewResourceNetting(
                           item.value,
+                          item.digits,
                         )
                       }}
                     </strong>
@@ -9622,11 +10090,21 @@ onBeforeUnmount(() => {
         </section>
 
         <RiicScheduleResourceSummary
-            v-if="
+          v-if="
             assembledScheduleCandidateState.status === 'ready' &&
-            riicScheduleResultSnapshot.actual?.yield
+            (riicScheduleResultSnapshot.actual?.yield ||
+              (scheduleExecutionSettings.calculationMode === 'riic-efficiency' &&
+                riicScheduleResultSnapshot.riicEfficiency?.yield))
           "
-          :yield="riicScheduleResultSnapshot.actual.yield"
+          :calculation-mode="scheduleExecutionSettings.calculationMode"
+          :yield="riicScheduleResultSnapshot.actual?.yield"
+          :output-mode="scheduleOutputMode"
+          show-output-mode-toggle
+          :drone-display="
+            scheduleExecutionSettings.calculationMode === 'riic-efficiency'
+              ? riicScheduleResultSnapshot.riicEfficiency?.yield
+              : riicScheduleResultSnapshot.actual?.yield
+          "
           :shifts="schedulePreviewShifts"
           :drone-target-preview-keys-by-state="
             scheduleDroneTargetPreviewKeysByState
@@ -9634,6 +10112,7 @@ onBeforeUnmount(() => {
           :room-index-assignments="resolvedScheduleRoomMaaIndexAssignments"
           @select-drone-target="selectScheduleDroneTarget"
           @update-drone-order="updateScheduleDroneOrder"
+          @update:output-mode="setScheduleOutputMode"
         ></RiicScheduleResourceSummary>
 
         <RiicScheduleExportActions
@@ -9660,6 +10139,10 @@ onBeforeUnmount(() => {
               :default-title="getDefaultGeneratedScheduleTitle()"
               :shifts="schedulePreviewShifts"
               :show-orundum-craft-material="hasOrundumManufactureRoom"
+              :calculation-mode="scheduleExecutionSettings.calculationMode"
+              :riic-efficiency-settings="
+                scheduleExecutionSettings.riicEfficiencySettings
+              "
               @update:export-info="updateScheduleExportInfo"
               @update:orundum-craft-material="
                 scheduleExecutionSettings.orundumCraftMaterial =
@@ -9667,6 +10150,14 @@ onBeforeUnmount(() => {
               "
               @update:include-training-room="
                 scheduleExecutionSettings.includeTrainingRoom = $event === true
+              "
+              @update-calculation-mode="
+                scheduleExecutionSettings.calculationMode =
+                  normalizeScheduleCalculationMode($event)
+              "
+              @update:riic-efficiency-settings="
+                scheduleExecutionSettings.riicEfficiencySettings =
+                  normalizeRiicEfficiencySettings($event)
               "
               @update:shift="updateSchedulePreviewShift"
             ></RiicScheduleExportSettings>
@@ -9767,10 +10258,14 @@ onBeforeUnmount(() => {
           :operator-source-label="ownedOperatorSource"
           :training-mode="riicTrainingMode"
           :ideal-training-rarity-selection="idealTrainingRaritySelection"
-          :actual-schedule-metrics="riicScheduleResultSnapshot.actual"
-          :schedule-preview="riicScheduleResultSnapshot.preview"
+          :actual-schedule-metrics="riicScheduleResultSnapshot.legacyActual"
+          :schedule-preview="riicScheduleResultSnapshot.legacyPreview"
           :l79-input="riicScheduleResultSnapshot.l79Input"
-          :l79-settlement="riicScheduleResultSnapshot.l79"
+          :l79-settlement="riicScheduleResultSnapshot.legacyL79"
+          :riic-efficiency-result="riicScheduleResultSnapshot.riicEfficiency"
+          :selected-calculation-mode="
+            riicScheduleResultSnapshot.calculationMode
+          "
           :schedule-shifts="schedulePreviewShifts"
           :duplicate-operator-checks="riicScheduleDuplicateOperatorChecks"
           :format-layer3-operator-condition="
@@ -9805,6 +10300,7 @@ onBeforeUnmount(() => {
             }[confirmedLayoutPlan?.shiftMode] || '未设置换班'
           }`"
           :show-candidate-debug-values="showCandidateDebugValues"
+          :get-operator-skill-tooltip="getOperatorSkillTooltip"
           @calculate-training-impact="requestTrainingImpactCalculation"
           :format-training-requirement="formatTrainingRequirement"
           :get-riic-yield-engine-status-meta="getRiicYieldEngineStatusMeta"
@@ -9853,7 +10349,7 @@ onBeforeUnmount(() => {
           >
             <div class="workflow-card-content-inner schedule-changelog">
           <article
-            v-for="entry in RIIC_SCHEDULE_CHANGELOG_ENTRIES"
+            v-for="entry in riicScheduleChangelogCurrentEntries"
             :key="`${entry.date}:${entry.version}`"
             class="schedule-changelog-entry"
           >
@@ -9874,11 +10370,92 @@ onBeforeUnmount(() => {
                   {{ item.module }}
                 </span>
                 <span class="schedule-changelog-item-description">
-                  {{ item.description }}
+                  {{ item.description }}<span
+                    v-if="item.authors && item.authors.length"
+                    class="schedule-changelog-item-author"
+                  >（<template
+                    v-for="(author, authorIndex) in item.authors"
+                    :key="author"
+                  >
+                    <a
+                      :href="'https://github.com/' + author"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >{{ author }}</a><span
+                      v-if="authorIndex < item.authors.length - 1"
+                    >、</span>
+                  </template>）</span>
                 </span>
               </li>
             </ul>
           </article>
+              <div class="schedule-changelog-controls">
+                <div class="schedule-changelog-filter-groups">
+                  <div
+                    class="schedule-changelog-filter-group"
+                    role="group"
+                    aria-label="等级筛选"
+                  >
+                    <button
+                      v-for="levelFilter in RIIC_SCHEDULE_CHANGELOG_LEVEL_FILTERS"
+                      :key="levelFilter ?? 'all'"
+                      type="button"
+                      class="schedule-changelog-filter-button"
+                      :aria-pressed="changelogLevelFilter === levelFilter"
+                      @click="setRiicScheduleChangelogLevelFilter(levelFilter)"
+                    >
+                      <template v-if="levelFilter === null">全部</template>
+                      <template v-else>Lv{{ levelFilter }}</template>
+                    </button>
+                  </div>
+                  <div
+                    class="schedule-changelog-filter-group"
+                    role="group"
+                    aria-label="模块筛选"
+                  >
+                    <button
+                      v-for="module in RIIC_SCHEDULE_CHANGELOG_MODULES"
+                      :key="module"
+                      type="button"
+                      class="schedule-changelog-filter-button"
+                      :aria-pressed="changelogSelectedModules.includes(module)"
+                      @click="toggleRiicScheduleChangelogModule(module)"
+                    >
+                      {{ module }}
+                    </button>
+                  </div>
+                </div>
+                <nav
+                  class="schedule-changelog-pagination"
+                  aria-label="更新日志分页"
+                >
+                  <button
+                    type="button"
+                    class="schedule-changelog-page-button"
+                    :disabled="changelogCurrentPage <= 1"
+                    aria-label="上一页"
+                    title="上一页"
+                    @click="setRiicScheduleChangelogPage(changelogCurrentPage - 1)"
+                  >
+                    <v-icon icon="mdi-chevron-left" size="18"></v-icon>
+                  </button>
+                  <span class="schedule-changelog-page-status">
+                    {{ riicScheduleChangelogPageCount ? changelogCurrentPage : 0 }}
+                    /
+                    {{ riicScheduleChangelogPageCount }}
+                  </span>
+                  <button
+                    type="button"
+                    class="schedule-changelog-page-button"
+                    :disabled="changelogCurrentPage >= riicScheduleChangelogPageCount"
+                    aria-label="下一页"
+                    title="下一页"
+                    @click="setRiicScheduleChangelogPage(changelogCurrentPage + 1)"
+                  >
+                    <v-icon icon="mdi-chevron-right" size="18"></v-icon>
+                  </button>
+                </nav>
+              </div>
             </div>
           </div>
         </Transition>
@@ -9906,6 +10483,62 @@ onBeforeUnmount(() => {
         </a>
       </div>
     </div>
+    <v-dialog
+      v-model="riicEfficiencyNoticeDialogOpen"
+      max-width="720"
+      scrollable
+    >
+      <v-card class="riic-efficiency-notice-dialog">
+        <v-card-title>排班分析报告</v-card-title>
+        <v-card-text class="riic-efficiency-notice-groups">
+          <section
+            v-for="group in riicEfficiencyNoticeGroups"
+            :key="group.level"
+            class="riic-efficiency-notice-group"
+          >
+            <h3 :class="`tone-${group.level}`">
+              {{ group.level }} · {{ group.count }}
+            </h3>
+            <v-alert
+              v-for="(notice, index) in group.notices"
+              :key="`${notice.code}:${index}`"
+              :type="group.level"
+              variant="tonal"
+              density="compact"
+              border="start"
+              :title="notice.message"
+            >
+              <ul
+                v-if="notice.details.length"
+                class="riic-efficiency-notice-details"
+              >
+                <li
+                  v-for="(detail, detailIndex) in notice.details"
+                  :key="`${notice.code}:${detailIndex}`"
+                >
+                  {{ detail }}
+                </li>
+              </ul>
+            </v-alert>
+          </section>
+          <p
+            v-if="!riicEfficiencyNotices.length"
+            class="riic-efficiency-notice-empty"
+          >
+            当前没有分析提示
+          </p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            variant="text"
+            @click="riicEfficiencyNoticeDialogOpen = false"
+          >
+            关闭
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </main>
 </template>
 
@@ -9920,6 +10553,115 @@ onBeforeUnmount(() => {
   width: min(1180px, 100%);
   margin: 0 auto;
   color: var(--c-text-color);
+}
+
+.riic-efficiency-notice-trigger {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid
+    color-mix(in srgb, var(--riic-blue) 46%, var(--c-border-color));
+  border-radius: 4px;
+  background: color-mix(
+    in srgb,
+    var(--riic-blue) 8%,
+    var(--c-page-background-color)
+  );
+  color: var(--riic-blue);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.riic-efficiency-notice-trigger:hover {
+  filter: brightness(0.97);
+}
+
+.riic-efficiency-notice-trigger:focus-visible {
+  outline: 2px solid var(--riic-blue);
+  outline-offset: 2px;
+}
+
+.riic-efficiency-notice-counts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.riic-efficiency-notice-count {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: inherit;
+  line-height: inherit;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.riic-efficiency-notice-count strong {
+  font-weight: inherit;
+  font-variant-numeric: tabular-nums;
+}
+
+.tone-info {
+  color: var(--riic-blue);
+}
+
+.tone-warning {
+  color: var(--riic-orange);
+}
+
+.tone-error {
+  color: var(--riic-red);
+}
+
+.riic-efficiency-notice-groups {
+  display: grid;
+  max-height: min(70vh, 640px);
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.riic-efficiency-notice-group {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.riic-efficiency-notice-group h3 {
+  margin: 0;
+  color: #000;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.riic-efficiency-notice-dialog :deep(.v-card-title),
+.riic-efficiency-notice-dialog :deep(.v-alert__content),
+.riic-efficiency-notice-dialog :deep(.v-alert-title) {
+  color: #000;
+}
+
+.riic-efficiency-notice-details {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 18px;
+  overflow-wrap: anywhere;
+}
+
+.riic-efficiency-notice-empty {
+  margin: 0;
+  color: #000;
 }
 
 .schedule-preview-capture {
@@ -10392,6 +11134,139 @@ onBeforeUnmount(() => {
 .schedule-changelog-item-description {
   min-width: 0;
   color: var(--riic-muted);
+}
+
+.schedule-changelog-item-author {
+  white-space: nowrap;
+}
+
+.schedule-changelog-item-author a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.schedule-changelog-item-author a:hover {
+  text-decoration: underline;
+}
+
+.schedule-changelog-item-author a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.schedule-changelog-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--c-border-color);
+}
+
+.schedule-changelog-filter-groups {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 3px 2px;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+}
+
+.schedule-changelog-filter-group,
+.schedule-changelog-pagination {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.schedule-changelog-filter-group {
+  flex-wrap: nowrap;
+}
+
+.schedule-changelog-filter-button {
+  min-height: 30px;
+  padding: 4px 9px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  background: var(--c-page-background-color);
+  color: var(--riic-muted);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.schedule-changelog-filter-button {
+  border-radius: 0;
+}
+
+.schedule-changelog-filter-button + .schedule-changelog-filter-button {
+  margin-left: -1px;
+}
+
+.schedule-changelog-filter-button:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.schedule-changelog-filter-button:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.schedule-changelog-filter-button[aria-pressed="true"] {
+  position: relative;
+  z-index: 1;
+  border-color: var(--riic-blue);
+  background: color-mix(
+    in srgb,
+    var(--riic-blue) 12%,
+    var(--c-page-background-color)
+  );
+  color: var(--riic-blue);
+  font-weight: 600;
+}
+
+.schedule-changelog-filter-button:focus-visible,
+.schedule-changelog-page-button:focus-visible {
+  position: relative;
+  z-index: 2;
+  outline: 2px solid var(--riic-blue);
+  outline-offset: 2px;
+}
+
+.schedule-changelog-pagination {
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.schedule-changelog-page-button {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--c-border-color);
+  border-radius: 4px;
+  background: var(--c-page-background-color);
+  color: var(--c-text-color);
+  cursor: pointer;
+}
+
+.schedule-changelog-page-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.schedule-changelog-page-status {
+  min-width: 46px;
+  color: var(--c-text-color);
+  text-align: center;
+  white-space: nowrap;
 }
 
 .wizard-layout.manual-selection {
@@ -12188,6 +13063,19 @@ onBeforeUnmount(() => {
 
   .workflow-card-version {
     font-size: 10px;
+  }
+
+  .schedule-changelog-controls {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .schedule-changelog-filter-groups {
+    flex-basis: 100%;
+  }
+
+  .schedule-changelog-pagination {
+    margin-left: auto;
   }
 
   .layout-entry-panel {

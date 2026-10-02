@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4042_lumen",
+  "name": "流明",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "柔和微光·α",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "scope": "room",
+              "per": {
+                "per": 1,
+                "value": 0.05,
+                "source": "facilityCount",
+                "facility": "power"
+              },
+              "stack": "max",
+              "maxGroup": "dormRec-room",
+              "baseValue": 0.1
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "柔和微光·β",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "scope": "room",
+              "per": {
+                "per": 1,
+                "value": 0.05,
+                "source": "facilityCount",
+                "facility": "power"
+              },
+              "stack": "max",
+              "maxGroup": "dormRec-room",
+              "baseValue": 0.15
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

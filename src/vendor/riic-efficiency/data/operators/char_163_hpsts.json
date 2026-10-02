@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "id": "char_163_hpsts",
+  "name": "火神",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "工匠精神·α",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": -0.15
+            },
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 16
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": -5
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "工匠精神·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 19
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": -5
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,21 @@
   "schemaVersion": 1,
   "tagSets": [
     {
+      "id": "sees",
+      "operatorNames": [
+        "结城理",
+        "埃癸斯",
+        "岳羽由加莉",
+        "虎狼丸"
+      ]
+    },
+    {
+      "id": "makoto-manufacture",
+      "operatorNames": [
+        "结城理"
+      ]
+    },
+    {
       "id": "rhine-lab",
       "operatorNames": [
         "赫默",
@@ -18,6 +33,45 @@
     }
   ],
   "rules": [
+    {
+      "id": "makoto-e2-manufacture-sees",
+      "owner": {
+        "operatorName": "结城理",
+        "eliteAtLeast": 2
+      },
+      "scope": {
+        "roomType": "manufacture",
+        "product": "all"
+      },
+      "effect": {
+        "type": "perActiveTaggedOperator",
+        "tag": "sees",
+        "percentPerOperator": 5,
+        "maximumOperatorCount": 4
+      }
+    },
+    {
+      "id": "aigis-power-makoto-manufacture",
+      "owner": {
+        "operatorName": "埃癸斯",
+        "eliteAtLeast": 0
+      },
+      "scope": {
+        "roomType": "power",
+        "product": "all"
+      },
+      "effect": {
+        "type": "perActiveTaggedOperator",
+        "tag": "makoto-manufacture",
+        "metric": "droneCharge",
+        "percentPerOperator": 5,
+        "maximumOperatorCount": 1,
+        "sourceScope": {
+          "roomType": "manufacture",
+          "product": "all"
+        }
+      }
+    },
     {
       "id": "nasti-e2-gold-rhine-lab",
       "owner": {
@@ -37,6 +91,17 @@
     }
   ],
   "selectionPriorityRules": [
+    {
+      "id": "makoto-active-sees-priority",
+      "trigger": {
+        "operatorName": "结城理"
+      },
+      "effect": {
+        "type": "perCandidateTaggedOperator",
+        "tag": "sees",
+        "roomPriorityPerOperator": 5
+      }
+    },
     {
       "id": "nasti-active-rhine-lab-priority",
       "trigger": {

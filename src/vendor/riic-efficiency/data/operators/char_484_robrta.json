@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_484_robrta",
+  "name": "罗比菈塔",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "标准化·β",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 25
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

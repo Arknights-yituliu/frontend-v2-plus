@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1020_reed2",
+  "name": "焰影苇草",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "领袖",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-overall"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

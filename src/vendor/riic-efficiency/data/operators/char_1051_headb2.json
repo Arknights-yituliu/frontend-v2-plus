@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1051_headb2",
+  "name": "怒潮凛冬",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "战阵领袖",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30,
+              "recipe": "作战记录"
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "情同手足",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 30,
+              "recipe": "作战记录"
+            },
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 10,
+              "recipe": "作战记录",
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.ussg",
+                "facility": "same",
+                "other": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "“是，团长！”",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodCost",
+              "value": 0.5
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "per": {
+                "per": 1,
+                "value": 10,
+                "source": "opGroupInFacility",
+                "group": "cc.g.ussg",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

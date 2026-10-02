@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 2,
+  "id": "char_010_chen",
+  "name": "陈",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "德才兼备",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "scope": "room",
+              "per": {
+                "per": 1,
+                "value": 0.05,
+                "source": "opGroupInFacility",
+                "group": "cc.g.lgd",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "警司",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 25
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 2,
+  "id": "char_459_tachak",
+  "name": "战车",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "彩虹小队",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "scope": "room",
+              "per": {
+                "per": 1,
+                "value": 0.05,
+                "source": "opGroupInFacility",
+                "group": "cc.g.R6",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "乌萨斯特饮",
+          "effects": [
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_tachanka",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "opGroupInFacility",
+                "group": "cc.g.ussg",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

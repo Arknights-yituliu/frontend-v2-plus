@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "id": "char_348_ceylon",
+  "name": "锡兰",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "源石研究",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 35,
+              "recipe": "源石碎片"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

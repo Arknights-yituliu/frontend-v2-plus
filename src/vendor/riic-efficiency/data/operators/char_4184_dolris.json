@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4184_dolris",
+  "name": "三角初华",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "偶像光环",
+          "effects": [
+            {
+              "target": "any",
+              "stat": "basePointGain",
+              "term": "cc.bd_mujica",
+              "per": {
+                "per": 1,
+                "value": 1,
+                "source": "dormOccupants"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "羁绊相生",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-overall"
+            },
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "scope": "op",
+              "op": "丰川祥子",
+              "condition": {
+                "type": "opAtFacility",
+                "op": "丰川祥子",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

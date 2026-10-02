@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4091_ulika",
+  "name": "U-Official",
+  "rarity": 1,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "天真的谈判者",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeOrder",
+              "order": {
+                "type": "fixValues",
+                "qty": 1000,
+                "amount": 2
+              }
+            },
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "level",
+            "value": 30
+          },
+          "name": "显眼的调查者",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueChance",
+              "text": "更容易获得已经拥有的线索",
+              "cluePreference": "owned"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

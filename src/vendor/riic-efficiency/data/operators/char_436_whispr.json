@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "id": "char_436_whispr",
+  "name": "絮雨",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "巡游",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "basePointGain",
+              "term": "cc.bd_a1_a1",
+              "per": {
+                "per": 1,
+                "value": 10,
+                "source": "recruitSlots"
+              }
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "追忆",
+          "effects": [
+            {
+              "target": "hire",
+              "stat": "basePointConvert",
+              "from": "cc.bd_a1_a1",
+              "to": "cc.bd_a1",
+              "rate": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

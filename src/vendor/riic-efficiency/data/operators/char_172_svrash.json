@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "id": "char_172_svrash",
+  "name": "银灰",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "喀兰贸易·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 15
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "喀兰之主",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 20
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 4
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
-import operatorDataAPI from "/src/api/operatorData.js";
+import operatorDataAPI from "/src/api/user-center/operatorData.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import { operatorTableV2 } from "/src/utils/gameData.js";
 import { createMessage } from "/src/utils/message.js";
@@ -242,7 +242,7 @@ async function loadInitialData() {
     applyOperatorData(response?.data || []);
   } catch (error) {
     console.error("load account operator data failed", error);
-    createMessage({ type: "warning", text: "未能读取账号干员数据，请手动编辑" });
+    createMessage({ type: "warn", text: "未能读取账号干员数据，请手动编辑" });
   } finally {
     loadingInitialData.value = false;
   }

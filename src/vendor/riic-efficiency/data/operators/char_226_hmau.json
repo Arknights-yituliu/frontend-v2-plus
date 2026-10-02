@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 2,
+  "id": "char_226_hmau",
+  "name": "吽",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "坚毅随和",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "scope": "room",
+              "per": {
+                "per": 1,
+                "value": 0.05,
+                "source": "opGroupInFacility",
+                "group": "cc.g.lda",
+                "facility": "same"
+              }
+            },
+            {
+              "target": "any",
+              "stat": "moodRecover",
+              "scopeGroup": "cc.g.lda",
+              "per": {
+                "per": 1,
+                "value": 0.2,
+                "source": "opGroupInFacility",
+                "group": "cc.g.lda",
+                "facility": "same"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

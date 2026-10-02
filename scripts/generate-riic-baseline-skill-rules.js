@@ -27,7 +27,7 @@ const PATTERN_BY_ROOM_TYPE = {
   trading:
     /\u8ba2\u5355\u83b7\u53d6\u6548\u7387[^+]*\+\s*(\d+(?:\.\d+)?)%/,
   power:
-    /\u65e0\u4eba\u673a\u5145\u80fd\u901f\u5ea6[^+]*\+\s*(\d+(?:\.\d+)?)%/,
+    /\u65e0\u4eba\u673a(?:\u6bcf\u5c0f\u65f6)?\u5145\u80fd\u901f\u5ea6[^+]*\+\s*(\d+(?:\.\d+)?)%/,
   meeting:
     /\u7ebf\u7d22\u641c\u96c6\u901f\u5ea6(?:\u989d\u5916)?(?:\u63d0\u5347)?\s*\+?\s*(\d+(?:\.\d+)?)%/,
   hire:
@@ -71,7 +71,7 @@ const PRODUCT_TOKENS = {
   orundum: ["\u6e90\u77f3"],
 };
 const CONDITIONAL_START_PATTERN =
-  /\u82e5|\u5982\u679c|\u5f53(?!\u524d)|\u6bcf(?:\u6709|\u4e2a|\u5c0f\u65f6|\u540d|\u4e00\u540d|\u95f4|\u7ea7|\d+\u540d|\d+(?:\.\d+)?(?:\u67b6|\u70b9|\u540d|\u95f4|\u6761|\u4e2a))|\u540c(?:\u4e00|\u4e2a)|\u57fa\u5efa\u5185|\u5f53\u524d(?:\u5236\u9020\u7ad9|\u8d38\u6613\u7ad9|\u53d1\u7535\u7ad9)\u5185|\u5f52\u96f6|\u5904\u4e8e|\u53ea\u6709\u81ea\u8eab|\u5c0f\u4e8e|\u5927\u4e8e|\u9ad8\u4e8e|\u4f4e\u4e8e/;
+  /\u82e5|\u5982\u679c|\u5f53(?!\u524d)|(?<!\u65e0\u4eba\u673a)\u6bcf\u5c0f\u65f6|\u6bcf(?:\u6709|\u4e2a|\u540d|\u4e00\u540d|\u95f4|\u7ea7|\d+\u540d|\d+(?:\.\d+)?(?:\u67b6|\u70b9|\u540d|\u95f4|\u6761|\u4e2a))|\u540c(?:\u4e00|\u4e2a)|\u57fa\u5efa\u5185|\u5f53\u524d(?:\u5236\u9020\u7ad9|\u8d38\u6613\u7ad9|\u53d1\u7535\u7ad9)\u5185|\u5f52\u96f6|\u5904\u4e8e|\u53ea\u6709\u81ea\u8eab|\u5c0f\u4e8e|\u5927\u4e8e|\u9ad8\u4e8e|\u4f4e\u4e8e/;
 const TIME_DEPENDENT_PATTERN =
   /\u9996\u5c0f\u65f6|\u6b64\u540e\u6bcf\u5c0f\u65f6|\u751f\u4ea7\u529b\u6bcf\u5c0f\u65f6|\u5de5\u4f5c\u65f6\u957f\u5f71\u54cd|\u5fc3\u60c5\u843d\u5dee|\u5355\u6b21\u5de5\u4f5c\u65f6\u957f/;
 const SPECIAL_ORDER_PATTERN =
@@ -464,6 +464,28 @@ const REVIEWED_ROOM_STATE_FORMULAS = [
       inputMetric: "storageCapacity",
       outputMetric: "production",
       percentPerInput: 2,
+    },
+  },
+  {
+    id: "waaifu-teammate-production",
+    source: {
+      charId: "char_243_waaifu",
+      roomType: "manufacture",
+      phase: 2,
+      level: 1,
+    },
+    expectedDescriptionTokens: [
+      "\u5f53\u524d\u5236\u9020\u7ad9\u5185\u5176\u4ed6\u5e72\u5458\u63d0\u4f9b\u7684\u6bcf5%\u751f\u4ea7\u529b",
+      "\u989d\u5916\u63d0\u4f9b5%\u751f\u4ea7\u529b",
+      "\u6700\u591a\u63d0\u4f9b40%\u751f\u4ea7\u529b",
+    ],
+    formula: {
+      type: "teammateProductionToProduction",
+      inputScope: "otherRoomOperators",
+      inputMetric: "production",
+      inputStepPercent: 5,
+      outputPercentPerStep: 5,
+      maximumBonusPercent: 40,
     },
   },
 ];
@@ -1018,6 +1040,21 @@ const [skillText, replaceGroupText, termDescriptionText] = await Promise.all([
   fs.readFile(REPLACE_GROUP_PATH, "utf8"),
   fs.readFile(TERM_DESCRIPTION_PATH, "utf8"),
 ]);
+let preservedMiddleDataRules = null;
+let preservedRoomStateFormulas = [];
+let preservedRules = [];
+try {
+  const existingOutput = JSON.parse(await fs.readFile(OUTPUT_PATH, "utf8"));
+  preservedMiddleDataRules = existingOutput.middleDataRules || null;
+  preservedRules = Array.isArray(existingOutput.rules)
+    ? existingOutput.rules
+    : [];
+  preservedRoomStateFormulas = Array.isArray(existingOutput.roomStateFormulas)
+    ? existingOutput.roomStateFormulas
+    : [];
+} catch {
+  // The generated catalog may not exist on the first build.
+}
 const allSkills = JSON.parse(skillText);
 const replaceGroups = JSON.parse(replaceGroupText);
 const termDescriptions = JSON.parse(termDescriptionText);
@@ -1042,6 +1079,10 @@ for (const spec of REVIEWED_DIRECT_APPROXIMATIONS) {
     ),
   );
 }
+const generatedRuleIds = new Set(rules.map((rule) => rule.id));
+rules.push(
+  ...preservedRules.filter((rule) => !generatedRuleIds.has(rule?.id)),
+);
 
 const sameRoomRules = REVIEWED_SAME_ROOM_SYNERGIES.map((spec) =>
   createSameRoomRule(
@@ -1068,6 +1109,14 @@ const roomStateFormulas = REVIEWED_ROOM_STATE_FORMULAS.map((spec) =>
     spec,
     getReviewedSourceSkill(spec.source, skills),
     replaceGroups,
+  ),
+);
+const generatedRoomStateFormulaIds = new Set(
+  roomStateFormulas.map((formula) => formula.id),
+);
+roomStateFormulas.push(
+  ...preservedRoomStateFormulas.filter(
+    (formula) => !generatedRoomStateFormulaIds.has(formula?.id),
   ),
 );
 const roomStateSourceIds = new Set([
@@ -1195,6 +1244,9 @@ const output = {
   rules,
   sameRoomRules,
   exclusions,
+  ...(preservedMiddleDataRules
+    ? { middleDataRules: preservedMiddleDataRules }
+    : {}),
   roomStateRules,
   roomStateFormulas,
   roomStateExclusions,

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4224_turdus",
+  "name": "乌啾",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "hire",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "“号外！”",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "recruitSlots"
+              }
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 30
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "街头法则",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "recruitSlots"
+              }
+            },
+            {
+              "target": "hire",
+              "stat": "hireSpd",
+              "value": 35
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

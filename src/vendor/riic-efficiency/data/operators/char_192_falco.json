@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 2,
+  "id": "char_192_falco",
+  "name": "翎羽",
+  "rarity": 3,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "订单管理·α",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "value": 10
+            },
+            {
+              "target": "trading",
+              "stat": "orderLimit",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

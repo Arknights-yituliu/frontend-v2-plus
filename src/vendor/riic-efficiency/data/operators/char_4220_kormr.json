@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4220_kormr",
+  "name": "虎狼丸",
+  "rarity": 1,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "毛茸茸的抚慰",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.1,
+              "scope": "room",
+              "stack": "max",
+              "maxGroup": "dormRec-room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "level",
+            "value": 30
+          },
+          "name": "虎狼丸的报恩",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 30,
+              "condition": {
+                "type": "clueExchanging"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

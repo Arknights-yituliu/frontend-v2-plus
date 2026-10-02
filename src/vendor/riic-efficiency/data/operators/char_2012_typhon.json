@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 2,
+  "id": "char_2012_typhon",
+  "name": "提丰",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "冰原游弋",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            },
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 0.5,
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.sm",
+                "facility": "same",
+                "other": true
+              }
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 5,
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.sm",
+                "facility": "same",
+                "other": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

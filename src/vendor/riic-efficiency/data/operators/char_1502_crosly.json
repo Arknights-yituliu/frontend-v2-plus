@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 2,
+  "id": "char_1502_crosly",
+  "name": "弑君者",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "逆境荣光",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "value": 35,
+              "recipe": "作战记录"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

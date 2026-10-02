@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_2025_shu",
+  "name": "黍",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "春雷响，万物长",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": -0.1,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "稻禾厚，顺秋收",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 3,
+                "value": 1,
+                "source": "basePoint",
+                "term": "cc.bd_b1"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

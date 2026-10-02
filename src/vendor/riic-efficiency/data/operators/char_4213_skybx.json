@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4213_skybx",
+  "name": "天空盒",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "合法窃电",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

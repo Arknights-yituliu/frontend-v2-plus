@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4208_wintim",
+  "name": "冬时",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "科学改造",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "per": {
+                "per": 1,
+                "value": 5,
+                "source": "opCount"
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "zeroOpBonus",
+              "except": [
+                "facilityCount"
+              ]
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "流程优化",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "manuProd",
+              "per": {
+                "per": 1,
+                "value": 10,
+                "source": "opCount"
+              }
+            },
+            {
+              "target": "manufacture",
+              "stat": "zeroOpBonus",
+              "except": [
+                "facilityCount"
+              ]
+            },
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 5
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

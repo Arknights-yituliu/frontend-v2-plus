@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 2,
+  "id": "char_340_shwaz",
+  "name": "黑",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "沏茶",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.45,
+              "scope": "room",
+              "subjects": "single",
+              "stack": "max",
+              "maxGroup": "dormRec-single",
+              "op": "锡兰"
+            },
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "value": 0.55,
+              "scope": "room",
+              "other": true,
+              "subjects": "single",
+              "stack": "max",
+              "maxGroup": "dormRec-single"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

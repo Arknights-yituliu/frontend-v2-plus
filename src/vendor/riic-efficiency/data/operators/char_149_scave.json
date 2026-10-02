@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 2,
+  "id": "char_149_scave",
+  "name": "清道夫",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "control",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "S.W.E.E.P.",
+          "effects": [
+            {
+              "target": "control",
+              "stat": "moodRecover",
+              "value": 0.05,
+              "scope": "room"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "manufacture",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 1
+          },
+          "name": "拾荒者",
+          "effects": [
+            {
+              "target": "manufacture",
+              "stat": "moodCost",
+              "value": -0.25
+            },
+            {
+              "target": "manufacture",
+              "stat": "storageCap",
+              "value": 8
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

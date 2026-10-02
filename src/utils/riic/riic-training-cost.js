@@ -123,7 +123,7 @@ export function calculateRiicTrainingCost({ requirement, operator, itemValueTabl
     ...(typeof expValue === "number" ? [] : ["2003"]),
   ])];
   const totalSanity = typeof lmdValue === "number" && typeof expValue === "number"
-    ? levels.lmd * lmdValue + (levels.exp / 1000) * expValue + materials.sanity
+    ? (levels.lmd + elites.lmd) * lmdValue + (levels.exp / 1000) * expValue + materials.sanity
     : null;
   return {
     status: missing.length ? "partial" : "ready",
