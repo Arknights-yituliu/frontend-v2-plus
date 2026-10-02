@@ -260,6 +260,18 @@ const routes = [
         }
     },
     {
+        path: '/tools/mower-income',
+        text: '收益计算（Mower）',
+        name: 'MowerIncome',
+        display: true,
+        module: 'riic',
+        icon: "mdi-calculator-variant-outline",
+        component: () => import('/src/pages/tools/mower-income.vue'),
+        meta: {
+            title: '收益计算（Mower）'
+        }
+    },
+    {
         path: '/tools/riic-efficiency-statistics',
         text: '基建效率统计与新手指南',
         name: 'RiicEfficiencyStatistics',
