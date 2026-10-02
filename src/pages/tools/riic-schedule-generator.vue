@@ -178,11 +178,11 @@ import {
   buildEfficiencyNotices,
   buildRiicEfficiencySchedule,
   calculateRiicEfficiency,
-  createRiicEfficiencyDroneScenario,
   createRiicEfficiencyMetrics,
   createRiicEfficiencySettlement,
   createRiicEfficiencyYield,
   DEFAULT_RIIC_EFFICIENCY_SETTINGS,
+  maaDroneWarningText,
   normalizeRiicEfficiencySettings,
 } from "/src/utils/riic/riic-efficiency-adapter.js";
 
@@ -4728,50 +4728,9 @@ const riicEfficiencyCalculation = computed(() => {
       efficiencySettings: scheduleExecutionSettings.riicEfficiencySettings,
     });
     const result = calculateRiicEfficiency(schedule);
-    const droneDisplaySchedule = {
-      ...schedule,
-      plans: schedule.plans.map((plan, stateIndex) => {
-        const drone = normalizeScheduleDroneSettings(
-          schedulePreviewShifts.value[stateIndex]?.drone,
-        );
-        return !drone.disabled && drone.target && drone.order !== "retain"
-          ? plan
-          : { ...plan, drones: undefined };
-      }),
-    };
-    const droneScenarioResults = {};
-    const droneScenarioWarnings = [];
-    for (const [stateIndex, targetKeys] of
-      scheduleDroneTargetPreviewKeysByState.value.entries()) {
-      const shiftDrone = normalizeScheduleDroneSettings(
-        schedulePreviewShifts.value[stateIndex]?.drone,
-      );
-      const order = shiftDrone.order === "post" ? "post" : "pre";
-      for (const roomKey of Object.keys(targetKeys || {})) {
-        try {
-          const scenarioSchedule = createRiicEfficiencyDroneScenario(
-            droneDisplaySchedule,
-            stateIndex,
-            roomKey,
-            order,
-          );
-          if (scenarioSchedule) {
-            droneScenarioResults[`${stateIndex}:${roomKey}`] =
-              calculateRiicEfficiency(scenarioSchedule);
-          }
-        } catch (error) {
-          droneScenarioWarnings.push(
-            `班段 ${stateIndex + 1} / ${roomKey}：${String(
-              error?.message || error,
-            )}`,
-          );
-        }
-      }
-    }
     const yieldSummary = createRiicEfficiencyYield(
       result,
       riicSchedulePreviewBase.value,
-      droneScenarioResults,
       resolvedScheduleRoomMaaIndexAssignments.value,
       riicLegacyActualScheduleMetrics.value?.yield?.resourceFlows?.gold ||
         null,
@@ -4785,8 +4744,9 @@ const riicEfficiencyCalculation = computed(() => {
       warnings: [
         ...(result.warnings || []),
         ...(result.fiammettaWarnings || []),
-        ...(result.maaDroneAcceleration?.warnings || []),
-        ...droneScenarioWarnings,
+        ...(result.maaDroneAcceleration?.warnings || []).map(
+          maaDroneWarningText,
+        ),
       ],
       error: "",
     };
