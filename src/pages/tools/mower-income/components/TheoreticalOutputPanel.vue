@@ -158,7 +158,7 @@ function downloadResult() {
 
 <template>
   <section class="income-calculation" aria-labelledby="calculation-title">
-    <div class="section-heading"><div><p class="eyebrow">03 / CALCULATION</p><h2 id="calculation-title">计算理论产出</h2></div><span class="calculation-kind">理想跑单 · 82 口径</span></div>
+    <div class="section-heading"><h2 id="calculation-title">计算理论产出</h2><span class="calculation-kind">理想跑单 · 82 口径</span></div>
     <p class="note">使用 R.I.I.C-Calculator 的原始排班模拟算法；预热后统计采样期完成产物，换班、休息与副表切换参与计算。</p>
     <p v-if="inspectionError" role="alert" class="error">{{ inspectionError }}</p>
     <fieldset :disabled="running" class="calculation-settings">
@@ -239,5 +239,450 @@ function downloadResult() {
 </template>
 
 <style scoped>
-.income-calculation{padding:22px;border:1px solid #34414d;background:#151b23;border-radius:9px;color:#e9f2f4}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.eyebrow{color:#42d6c7;font-size:11px;letter-spacing:.16em;font-weight:600;margin:0}.section-heading h2{font-size:19px;margin:5px 0 12px}.calculation-kind{font-size:12px;color:#42d6c7;padding:7px 10px;border:1px solid #3b645f;border-radius:4px}.note{color:#aebfcb;line-height:1.7;font-size:13px}.error{color:#ffb4ab;line-height:1.7}.calculation-settings{border:0;padding:0;margin:0;min-width:0}.inventory-mode{border:1px solid #3a4c59;border-radius:5px;padding:12px 16px;min-width:0;margin:18px 0}.inventory-mode legend{font-size:14px;padding:0 8px}.inventory-mode>label{display:flex;align-items:center;gap:9px;margin:9px 0;font-size:14px}.income-calculation input,.income-calculation select{color:#e9f2f4;background:#10171f;border:1px solid #5b6f7e;border-radius:5px;padding:10px;width:100%;font:inherit;box-sizing:border-box;min-width:0}.income-calculation input[type=checkbox],.income-calculation input[type=radio]{width:auto;accent-color:#42d6c7;flex-shrink:0}.income-calculation input:focus-visible,.income-calculation select:focus-visible,.income-calculation button:focus-visible,.income-calculation summary:focus-visible{outline:2px solid #42d6c7;outline-offset:3px}.income-calculation :disabled{opacity:.5;cursor:default}.controls-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:20px 0}.controls-grid>label{display:grid;gap:7px;font-size:13px}.switches{display:flex;gap:18px;flex-wrap:wrap}.switches label,.check-line{display:flex;align-items:center;gap:8px;font-size:13px}.income-calculation summary{cursor:pointer;font-weight:600;padding:9px 0}.facility-levels{padding:10px 16px;border:1px solid #34414d;border-radius:5px}.level-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}.level-grid label{display:flex;align-items:center;gap:10px;justify-content:space-between;font-size:13px}.level-grid select{width:80px}.check-line{padding:10px 0;color:#42d6c7}.calculation-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:22px 0 8px}.income-calculation button{padding:10px 16px;border-radius:5px;background:#202b34;border:1px solid #516370;color:#e9f2f4;font:inherit;font-size:14px;cursor:pointer;min-height:42px}.income-calculation button.primary{background:#42d6c7;border-color:#42d6c7;color:#0d2425;font-weight:700}.income-calculation button:hover:not(:disabled){background:#30424d;border-color:#42d6c7}.income-calculation button.primary:hover:not(:disabled){background:#62e0d3}.output-report{margin-top:24px;padding-top:22px;border-top:1px solid #40505e}.output-report h3{font-size:20px;margin:0 0 12px}.resource-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}.resource-stat{display:flex;align-items:center;gap:10px;padding:16px;background:#10171f;border:1px solid #34414d;border-radius:6px}.resource-stat img{width:54px;height:54px;object-fit:contain}.resource-stat span,.resource-stat small{display:block;font-size:12px;color:#aebfcb}.resource-stat strong{display:block;font-size:23px;font-variant-numeric:tabular-nums;margin:4px 0;font-weight:600}.score-stat{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px;background:#143632;border:1px solid #3b766d;border-radius:6px}.score-stat span{font-size:14px}.score-stat strong{color:#65e2d1;font-size:30px;line-height:1.3;font-variant-numeric:tabular-nums}.formula{font-size:13px;line-height:1.8;overflow-wrap:anywhere}.order-stat{display:flex;gap:22px;flex-wrap:wrap;margin:20px 0;font-size:13px}.table-scroll{overflow-x:auto}.table-scroll table{border-collapse:collapse;width:100%;font-size:13px}.table-scroll th,.table-scroll td{padding:10px;text-align:right;border-bottom:1px solid #34414d}.table-scroll th:first-child,.table-scroll td:first-child{text-align:left}.diagnostics{margin-top:16px}.diagnostics ul{padding-left:22px;color:#c5d1da;font-size:13px}.diagnostics li{line-height:1.7;margin:7px 0}.provenance{font-size:11px;border-top:1px solid #34414d;padding-top:14px}.assumptions{margin-top:18px;border-top:1px solid #34414d;padding-top:8px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:900px){.resource-grid{grid-template-columns:1fr}.controls-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.level-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.income-calculation{padding:16px}.resource-stat{padding:12px}.resource-stat div{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 24px;width:100%}.resource-stat small{grid-column:2;text-align:right}.resource-stat strong{grid-column:2;grid-row:1/3}}@media(max-width:560px){.income-calculation{padding:14px}.level-grid{grid-template-columns:1fr}.controls-grid{gap:12px}.score-stat{align-items:flex-start;flex-direction:column;gap:8px}.switches{flex-direction:column;gap:12px}.inventory-mode{padding:10px}.facility-levels{padding:10px}.calculation-actions button.primary{flex:1}.resource-stat div{gap:2px 12px}.resource-stat strong{font-size:21px}}
+.income-calculation {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 4px;
+  background: var(--c-card-background-color);
+  color: var(--c-text-color);
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.calculation-kind {
+  color: var(--income-muted-color);
+  font-size: 13px;
+}
+
+.note {
+  color: var(--income-muted-color);
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.error {
+  color: var(--income-error-color);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.calculation-settings {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.inventory-mode {
+  min-width: 0;
+  margin: 18px 0;
+  padding: 12px 16px;
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 4px;
+}
+
+.inventory-mode legend {
+  padding: 0 8px;
+  font-size: 14px;
+}
+
+.inventory-mode > label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 9px 0;
+  font-size: 14px;
+}
+
+.income-calculation input,
+.income-calculation select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--el-border-color);
+  border-radius: 4px;
+  background: var(--c-page-background-color);
+  color: var(--c-text-color);
+  font: inherit;
+}
+
+.income-calculation input[type="checkbox"],
+.income-calculation input[type="radio"] {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  accent-color: rgb(var(--v-theme-primary));
+}
+
+.income-calculation input:focus-visible,
+.income-calculation select:focus-visible,
+.income-calculation button:focus-visible,
+.income-calculation summary:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 3px;
+}
+
+.income-calculation input:disabled,
+.income-calculation select:disabled,
+.income-calculation button:disabled {
+  border-color: var(--el-border-color-light);
+  background: var(--c-page-background-color-secondary);
+  color: var(--income-muted-color);
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.controls-grid > label {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+  font-size: 13px;
+}
+
+.switches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.switches label,
+.check-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.income-calculation summary {
+  padding: 9px 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.facility-levels {
+  min-width: 0;
+  padding: 10px 16px;
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 4px;
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.level-grid label {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.level-grid select {
+  flex-shrink: 0;
+  width: 80px;
+}
+
+.check-line {
+  padding: 10px 0;
+}
+
+.calculation-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 22px 0 8px;
+}
+
+.income-calculation button {
+  min-height: 38px;
+  padding: 8px 16px;
+  border: 1px solid rgb(var(--v-theme-primary));
+  border-radius: 4px;
+  background: transparent;
+  color: rgb(var(--v-theme-primary));
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.income-calculation button.primary:not(:disabled) {
+  border-color: rgb(var(--v-theme-primary));
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+}
+
+.income-calculation button:hover:not(:disabled) {
+  background: rgba(var(--v-theme-primary), 0.08);
+}
+
+.income-calculation button.primary:hover:not(:disabled) {
+  background: rgba(var(--v-theme-primary), 0.9);
+}
+
+.output-report {
+  min-width: 0;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--el-border-color-light);
+}
+
+.output-report h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.resource-stat {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 4px;
+  background: var(--c-page-background-color-secondary);
+}
+
+.resource-stat img {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.resource-stat div {
+  min-width: 0;
+}
+
+.resource-stat span,
+.resource-stat small {
+  display: block;
+  color: var(--income-muted-color);
+  font-size: 12px;
+}
+
+.resource-stat strong {
+  display: block;
+  margin: 4px 0;
+  font-size: 23px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.score-stat {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px;
+  border: 1px solid rgba(var(--v-theme-primary), 0.2);
+  border-radius: 4px;
+  background: rgba(var(--v-theme-primary), 0.05);
+}
+
+.score-stat span {
+  font-size: 14px;
+}
+
+.score-stat strong {
+  color: rgb(var(--v-theme-primary));
+  font-size: 28px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.formula {
+  font-size: 13px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.order-stat {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin: 20px 0;
+  font-size: 13px;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.table-scroll table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table-scroll th,
+.table-scroll td {
+  padding: 10px;
+  border-bottom: 1px solid var(--el-border-color-light);
+  text-align: right;
+}
+
+.table-scroll th:first-child,
+.table-scroll td:first-child {
+  text-align: left;
+}
+
+.diagnostics {
+  margin-top: 16px;
+}
+
+.diagnostics ul {
+  padding-left: 22px;
+  color: var(--c-text-color);
+  font-size: 13px;
+}
+
+.diagnostics li {
+  margin: 7px 0;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.provenance {
+  padding-top: 14px;
+  border-top: 1px solid var(--el-border-color-light);
+  font-size: 12px;
+}
+
+.assumptions {
+  margin-top: 18px;
+  padding-top: 8px;
+  border-top: 1px solid var(--el-border-color-light);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 900px) {
+  .income-calculation {
+    padding: 16px;
+  }
+
+  .controls-grid,
+  .level-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .resource-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resource-stat div {
+    display: grid;
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2px 24px;
+  }
+
+  .resource-stat strong {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+
+  .resource-stat small {
+    grid-column: 2;
+    text-align: right;
+  }
+}
+
+@media (max-width: 560px) {
+  .income-calculation {
+    padding: 14px;
+  }
+
+  .level-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .controls-grid {
+    gap: 12px;
+  }
+
+  .score-stat {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .switches {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .inventory-mode,
+  .facility-levels {
+    padding: 10px;
+  }
+
+  .calculation-actions button.primary {
+    flex: 1;
+  }
+
+  .resource-stat div {
+    display: block;
+  }
+
+  .resource-stat small {
+    text-align: left;
+  }
+
+  .resource-stat strong {
+    font-size: 21px;
+  }
+}
 </style>
