@@ -141,7 +141,7 @@ function getCredAndSecret(text) {
 
 
 
-async function getWarehouseInfo(akUid, cred, token) {
+export async function getWarehouseInfo(akUid, cred, token) {
 
     const params = `uid=${akUid}`
     const headers = getHeaders(CULTIVATE_PLAYER_API, params, cred, token)
