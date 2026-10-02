@@ -261,33 +261,6 @@ export function calculateRiicEfficiency(schedule) {
   return calculateEfficiency(schedule, { catalog, ruleset });
 }
 
-export function createRiicEfficiencyDroneScenario(
-  schedule,
-  planIndex,
-  roomKey,
-  order,
-) {
-  const [room, rawIndex] = String(roomKey || "").split(":");
-  const index = Number(rawIndex);
-  if (
-    !["trading", "manufacture"].includes(room) ||
-    !Number.isInteger(index) ||
-    index < 0 ||
-    !schedule?.plans?.[planIndex]
-  ) {
-    return null;
-  }
-  return {
-    ...schedule,
-    plans: schedule.plans.map((plan, currentIndex) => ({
-      ...plan,
-      ...(currentIndex === planIndex
-        ? { drones: { enable: true, room, index, rule: "all", order } }
-        : {}),
-    })),
-  };
-}
-
 function facilityById(plan, key) {
   return (plan?.facilities || []).find(
     (facility) => facility?.facility?.id === key,
@@ -478,22 +451,20 @@ function createResourceEffect(droneDetail) {
 export function createRiicEfficiencyYield(
   result,
   preview,
-  droneScenarioResults = {},
   roomIndexAssignments = {},
   goldResourceFlow = null,
 ) {
   const rooms = createRoomRows(result, preview, roomIndexAssignments);
+  const droneCandidates = result.maaDroneAcceleration?.candidates || [];
   const droneTargetSettlements = rooms.map((room) => {
-    const facilityKey = `${room.facility}:${room.stationIndex}`;
     const packageFacilityId = facilityId(room.facility, room.stationIndex);
     const effects = room.segments.map((_, stateIndex) => {
-      const scenario = droneScenarioResults[`${stateIndex}:${facilityKey}`] || result;
-      const droneDetail = scenario.maaDroneAcceleration?.details?.find(
-        (detail) =>
-          detail.planIndex === stateIndex &&
-          detail.facilityId === packageFacilityId,
+      const candidate = droneCandidates.find(
+        (item) =>
+          item.planIndex === stateIndex &&
+          item.facilityId === packageFacilityId,
       );
-      return createResourceEffect(droneDetail);
+      return createResourceEffect(candidate);
     });
     return {
       key: room.key,
@@ -505,19 +476,8 @@ export function createRiicEfficiencyYield(
     };
   });
   const droneDetailsByState = new Map();
-  for (const [key, scenario] of Object.entries(droneScenarioResults)) {
-    const stateIndex = Number(key.slice(0, key.indexOf(":")));
-    const detail = scenario?.maaDroneAcceleration?.details?.find(
-      (item) => item.planIndex === stateIndex,
-    );
-    if (Number.isInteger(stateIndex) && detail) {
-      droneDetailsByState.set(stateIndex, detail);
-    }
-  }
   for (const detail of result.maaDroneAcceleration?.details || []) {
-    if (!droneDetailsByState.has(detail.planIndex)) {
-      droneDetailsByState.set(detail.planIndex, detail);
-    }
+    droneDetailsByState.set(detail.planIndex, detail);
   }
   const droneUsageSegments = result.plans.map((_, stateIndex) => {
     const detail = droneDetailsByState.get(stateIndex);
@@ -615,6 +575,14 @@ export function createRiicEfficiencyYield(
   };
 }
 
+export function maaDroneWarningText(warning) {
+  if (typeof warning === "string") {
+    return warning;
+  }
+
+  return String(warning?.message || "");
+}
+
 export function createRiicEfficiencySettlement(result) {
   return {
     cycleHours: result.dailyHours,
@@ -622,7 +590,7 @@ export function createRiicEfficiencySettlement(result) {
     warnings: [
       ...(result.warnings || []),
       ...(result.fiammettaWarnings || []),
-      ...(result.maaDroneAcceleration?.warnings || []),
+      ...(result.maaDroneAcceleration?.warnings || []).map(maaDroneWarningText),
     ],
     states: (result.plans || []).map((plan) => ({
       rooms: (plan.facilities || []).map((facility) => ({

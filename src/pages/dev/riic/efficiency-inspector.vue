@@ -5,7 +5,7 @@ import { operatorTableV2 } from "/src/utils/gameData.js";
 import { parseRiicMaaOperatorBox } from "/src/utils/riicMaaOperatorData.js";
 import { readRiicMaaYieldTestLocalOperators } from "/src/utils/riic/maa-yield-test.js";
 import { getRiicFacilityProfile, getRiicRoomStations } from "/src/utils/riic/l10-facility-model.js";
-import { buildRiicEfficiencySchedule, calculateRiicEfficiency, DEFAULT_RIIC_EFFICIENCY_SETTINGS } from "/src/utils/riic/riic-efficiency-adapter.js";
+import { buildRiicEfficiencySchedule, calculateRiicEfficiency, DEFAULT_RIIC_EFFICIENCY_SETTINGS, maaDroneWarningText } from "/src/utils/riic/riic-efficiency-adapter.js";
 
 const LAYOUT_OPTIONS = [
   { value: "153", label: "153" },
@@ -160,7 +160,9 @@ const calculationError = computed(() => calculationState.value.error);
 const packageWarnings = computed(() => [
   ...(result.value?.warnings || []),
   ...(result.value?.fiammettaWarnings || []),
-  ...(result.value?.maaDroneAcceleration?.warnings || []),
+  ...(result.value?.maaDroneAcceleration?.warnings || []).map(
+    maaDroneWarningText,
+  ),
 ]);
 const rawResultJson = computed(() => (result.value ? JSON.stringify(result.value, null, 2) : ""));
 
