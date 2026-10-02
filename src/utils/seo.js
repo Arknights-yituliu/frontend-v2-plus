@@ -60,6 +60,13 @@ export const SEO_ROUTES = [
         priority: 0.7,
     },
     {
+        path: '/tools/better-combat-operator-filter',
+        title: '更好的作战干员筛选',
+        description: '按官方设定 TAG 与玩家体感 TAG 筛选明日方舟干员：多选取交集、支持子 TAG 细分，查看条件与备注，荐干员带菱彩标识',
+        changefreq: 'weekly',
+        priority: 0.7,
+    },
+    {
         path: '/information/logistics',
         title: '基建技能一览',
         description: '明日方舟基建技能一览，查询干员基建技能与常用排班配置',

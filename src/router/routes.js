@@ -175,6 +175,19 @@ const routes = [
         }
     },
     {
+        path: '/tools/better-combat-operator-filter',
+        pageTitle: '更好的作战干员筛选',
+        text: '更好的作战干员筛选',
+        name: 'BetterCombatOperatorFilter',
+        display: true,
+        module: 'tools',
+        icon: "mdi-shield-search",
+        component: () => import('/src/pages/tools/better-combat-operator-filter.vue'),
+        meta: {
+            title: '更好的作战干员筛选'
+        }
+    },
+    {
         path: '/information/logistics',
         text: '基建技能一览',
         name: 'Logistics',
