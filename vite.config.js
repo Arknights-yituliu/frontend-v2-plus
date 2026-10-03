@@ -39,7 +39,7 @@ export default defineConfig({
         alias: {
             '@': resolve(__dirname, 'src'),
         },
-        extensions: ['', '.js', '.json', '.vue', '.scss', '.css']
+        extensions: ['', '.js', '.ts', '.json', '.vue', '.scss', '.css']
     },
     plugins: [
         vue(),

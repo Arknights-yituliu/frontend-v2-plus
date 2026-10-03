@@ -175,6 +175,19 @@ const routes = [
         }
     },
     {
+        path: '/tools/better-combat-operator-filter',
+        pageTitle: '更好的作战干员筛选',
+        text: '更好的作战干员筛选',
+        name: 'BetterCombatOperatorFilter',
+        display: true,
+        module: 'tools',
+        icon: "mdi-shield-search",
+        component: () => import('/src/pages/tools/better-combat-operator-filter.vue'),
+        meta: {
+            title: '更好的作战干员筛选'
+        }
+    },
+    {
         path: '/information/logistics',
         text: '基建技能一览',
         name: 'Logistics',
@@ -244,6 +257,18 @@ const routes = [
         component: () => import('/src/pages/tools/mower-plan.vue'),
         meta: {
             title: 'Mower排班表生成器'
+        }
+    },
+    {
+        path: '/tools/mower-income',
+        text: '收益计算（Mower）',
+        name: 'MowerIncome',
+        display: true,
+        module: 'riic',
+        icon: "mdi-calculator-variant-outline",
+        component: () => import('/src/pages/tools/mower-income.vue'),
+        meta: {
+            title: '收益计算（Mower）'
         }
     },
     {

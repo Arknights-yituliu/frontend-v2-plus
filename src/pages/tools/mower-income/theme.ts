@@ -1,0 +1,117 @@
+import { darkTheme, type GlobalThemeOverrides } from 'naive-ui'
+
+/**
+ * Rhodes Island dark industrial aesthetic theme overrides for Naive UI.
+ * Unifies all modals, selects, inputs, radios, tabs, and buttons across the application.
+ */
+export const darkThemeOverrides: GlobalThemeOverrides = {
+  common: {
+    primaryColor: '#42d6c7',
+    primaryColorHover: '#62e0d3',
+    primaryColorPressed: '#2db8aa',
+    primaryColorSuppl: '#42d6c7',
+    infoColor: '#2080f0',
+    infoColorHover: '#4098fc',
+    infoColorPressed: '#1060c0',
+    infoColorSuppl: '#2080f0',
+    successColor: '#18a058',
+    successColorHover: '#36ad6a',
+    successColorPressed: '#0c7a43',
+    successColorSuppl: '#18a058',
+    warningColor: '#f0a020',
+    warningColorHover: '#fcb040',
+    warningColorPressed: '#c97c10',
+    warningColorSuppl: '#f0a020',
+    errorColor: '#d03050',
+    errorColorHover: '#de576d',
+    errorColorPressed: '#ab1f3f',
+    errorColorSuppl: '#d03050',
+    bodyColor: '#0d1117',
+    cardColor: '#18181c',
+    modalColor: '#18181c',
+    popoverColor: '#1a1f26',
+    textColorBase: '#e9f2f4',
+    textColor1: '#ffffff',
+    textColor2: 'rgba(255, 255, 255, 0.88)',
+    textColor3: 'rgba(255, 255, 255, 0.65)',
+    textColorDisabled: 'rgba(255, 255, 255, 0.38)',
+    placeholderColor: 'rgba(255, 255, 255, 0.45)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    dividerColor: 'rgba(255, 255, 255, 0.08)',
+    inputColor: 'rgba(255, 255, 255, 0.06)',
+  },
+  Card: {
+    color: '#18181c',
+    colorModal: '#18181c',
+    colorPopover: '#1a1f26',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    titleTextColor: '#ffffff',
+    textColor: 'rgba(255, 255, 255, 0.88)',
+    closeIconColor: 'rgba(255, 255, 255, 0.65)',
+    closeIconColorHover: '#ffffff',
+  },
+  Modal: {
+    color: '#18181c',
+    textColor: 'rgba(255, 255, 255, 0.88)',
+  },
+  Select: {
+    peers: {
+      InternalSelection: {
+        color: 'rgba(255, 255, 255, 0.06)',
+        colorActive: 'rgba(255, 255, 255, 0.1)',
+        textColor: '#e9f2f4',
+        placeholderColor: 'rgba(255, 255, 255, 0.45)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        borderHover: '1px solid #42d6c7',
+        borderActive: '1px solid #42d6c7',
+        borderFocus: '1px solid #42d6c7',
+        boxShadowFocus: '0 0 0 2px rgba(66, 214, 199, 0.2)',
+        arrowColor: 'rgba(255, 255, 255, 0.65)',
+      },
+      InternalSelectMenu: {
+        color: '#1a1f26',
+        optionTextColor: 'rgba(255, 255, 255, 0.88)',
+        optionTextColorActive: '#42d6c7',
+        optionCheckColor: '#42d6c7',
+        optionColorActive: 'rgba(66, 214, 199, 0.15)',
+        optionColorPending: 'rgba(255, 255, 255, 0.08)',
+      },
+    },
+  },
+  Input: {
+    color: 'rgba(255, 255, 255, 0.06)',
+    colorFocus: 'rgba(255, 255, 255, 0.08)',
+    textColor: '#e9f2f4',
+    placeholderColor: 'rgba(255, 255, 255, 0.45)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderHover: '1px solid #42d6c7',
+    borderFocus: '1px solid #42d6c7',
+    boxShadowFocus: '0 0 0 2px rgba(66, 214, 199, 0.2)',
+  },
+  Button: {
+    textColor: 'rgba(255, 255, 255, 0.88)',
+    color: 'rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.18)',
+    colorHover: 'rgba(255, 255, 255, 0.15)',
+    borderHover: '1px solid rgba(255, 255, 255, 0.3)',
+    textColorHover: '#ffffff',
+  },
+  Tabs: {
+    colorSegment: 'rgba(255, 255, 255, 0.06)',
+    tabTextColorSegment: 'rgba(255, 255, 255, 0.65)',
+    tabTextColorActiveSegment: '#ffffff',
+    tabColorSegment: 'rgba(66, 214, 199, 0.2)',
+  },
+  Radio: {
+    dotColorActive: '#42d6c7',
+    buttonColorActive: '#42d6c7',
+    textColor: 'rgba(255, 255, 255, 0.88)',
+  },
+  Tooltip: {
+    color: '#1a1f26',
+    textColor: 'rgba(255, 255, 255, 0.88)',
+    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.4)',
+  },
+}
+
+export { darkTheme }
