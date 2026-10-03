@@ -12,11 +12,10 @@ import type {RuntimeState,RuntimeRates} from '../scheduler/rosterRuntime'
 import {mowerRunOrderContext} from '../scheduler/mowerSourceRuntime'
 import {bridgeMowerNativeIO} from '../scheduler/mowerRunOrderBridge'
 import {executeMowerTradeDrone,type MowerTradeDroneAdjustmentRequest,type MowerTradeDroneAdjustmentObservation} from '../scheduler/mowerRunOrderDroneAdjustment'
-import type {MowerRunOrderFinishingRequest,MowerRunOrderFinishingObservation} from '../scheduler/mowerRunOrderFinishing'
 import type {createProductionTimeline,ProductionFrame} from './productionTimeline'
 import {toMowerMicros} from '../scheduler/mowerTaskQueue'
 type Controller=ReturnType<typeof createProductionTimeline>
-export function createMowerProductionIO(state:RuntimeState,production:Controller,frame:()=>ProductionFrame):Pick<RuntimeRates,'mowerRunOrderIO'|'mowerRunOrderFinishingIO'|'mowerNotificationIO'|'mowerTodoListVisible'|'mowerTodoTaskIO'>{
+export function createMowerProductionIO(state:RuntimeState,production:Controller,frame:()=>ProductionFrame):Pick<RuntimeRates,'mowerRunOrderIO'|'mowerNotificationIO'|'mowerTodoListVisible'|'mowerTodoTaskIO'>{
  const now=()=>toMowerMicros(state.time)
  const ui=state.mowerUI??={scene:'INFRA_MAIN',lastRoom:''}
  let detailPage=false,todoPage=false,receiptBlocked=false
@@ -38,11 +37,11 @@ export function createMowerProductionIO(state:RuntimeState,production:Controller
    }
   }),()=>room)
  }
- function* drone(room:string,adjustTime:boolean,flags:{notCustomize:boolean;notReturn:boolean;skipEnter:boolean}){
+ function* drone(room:string,flags:{notCustomize:boolean;notReturn:boolean;skipEnter:boolean}){
   if(production.nativeHasTrade(room)&&!production.nativeTradeDroneAvailable(room))return null
   const [planning,seam]=mowerRunOrderContext(state)
   let selectedQuantity=0,panelOpen=false
-  const settings=state.config.mowerRunOrderFinishing
+  const droneCountLimit=state.config.mowerDroneCountLimit??100
   function* facilityInterface(request:Extract<MowerTradeDroneAdjustmentRequest,{kind:'wait-interface'|'tap-drone-accelerate'}>){
    const helper=request.kind==='wait-interface'
     ?waitMowerDroneInterface({width:1920,height:1080},{nowMicros:now},{intervalSeconds:request.intervalSeconds,accelerateTemplate:request.accelerateTemplate})
@@ -70,7 +69,7 @@ export function createMowerProductionIO(state:RuntimeState,production:Controller
    }),()=>room)
    return {kind:request.kind,observedAtMicros:now(),value}
   }
-  const generator=executeMowerTradeDrone({planning,room,width:1920,height:1080,...flags,droneCountLimit:settings?.droneCountLimit??100,waitingScenes:settings?.waitingScenes??[]},seam,adjustTime)
+  const generator=executeMowerTradeDrone({planning,room,width:1920,height:1080,...flags,droneCountLimit,waitingScenes:[]},seam)
   return yield* bridgeMowerNativeIO(generator,(request:MowerTradeDroneAdjustmentRequest)=>{
    if(request.kind==='wait-interface'||request.kind==='tap-drone-accelerate')return facilityInterface(request)
    if(request.kind==='accept-order')return (function*(){
@@ -88,7 +87,6 @@ export function createMowerProductionIO(state:RuntimeState,production:Controller
       if(request.action==='all-in'&&production.nativeHasManufacture(room))selectedQuantity=production.nativeManufactureDroneMaximum(room)
       if(request.action==='minus-reserve')selectedQuantity=Math.max(0,selectedQuantity-1)
       if(request.action==='confirm-manufacture'){production.nativeSpendManufacturingDrones(room,selectedQuantity);panelOpen=false}
-      if(request.action==='confirm-one'){production.nativeSpendTradeDrones(room,1,frame());panelOpen=false}
       if(request.action==='confirm-all'){
        panelOpen=false
        const count=Math.min(production.nativeDroneCount(),production.nativeTradeRequiredDrones(room))
@@ -104,7 +102,6 @@ export function createMowerProductionIO(state:RuntimeState,production:Controller
       value=detailPage&&!receiptBlocked&&available?{control:request.name}:null
       break
      case 'read-drone-count':value=production.nativeDroneCount();break
-     case 'read-order':value=absoluteDue(room);break
      case 'scene':value=receiptBlocked?'trade-insufficient-material':'trade-ready';break
      case 'waiting-solver':value=true;break
      case 'return-main':detailPage=false;ui.scene='INFRA_MAIN';receiptBlocked=false;break
@@ -113,40 +110,10 @@ export function createMowerProductionIO(state:RuntimeState,production:Controller
    }
   }},()=>room)
  }
- const finishing=(request:MowerRunOrderFinishingRequest,_state:RuntimeState,selectedRoom:string)=>{
-  const room='room' in request?request.room:selectedRoom
-  if(!room)throw new Error('Native finishing observation lacks the selected trade room')
-  if(request.kind==='accept-order')return (function*(){
-   const value=yield* accept(room)
-   return {kind:request.kind,observedAtMicros:now(),value}
-  })()
-  if(request.kind==='drone')return (function*(){
-   const value=yield* drone(room,false,{notCustomize:request.notCustomize,notReturn:request.notReturn??false,skipEnter:request.skipEnter??false})
-   return {kind:request.kind,observedAtMicros:now(),value}
-  })()
-  return {
-   delayMicros:request.kind==='sleep'?toMowerMicros(request.seconds/3600):request.kind==='back'?toMowerMicros(request.intervalSeconds/3600):0,
-   observe:():MowerRunOrderFinishingObservation=>{
-    let value:unknown=null
-    switch(request.kind){
-     case 'read-remaining':detailPage=true;ui.scene='INFRA_DETAILS';ui.lastRoom=room;value=Math.round(production.nativeRemainingSeconds(room,frame())*10)/10;break
-     case 'read-drone-count':value=production.nativeDroneCount();break
-     case 'scene':value=receiptBlocked?'trade-insufficient-material':'trade-ready';break
-     case 'waiting-solver':value=true;break
-     case 'find-bill-accelerate':value=detailPage&&!receiptBlocked&&production.nativeHasTrade(room)?{control:'bill_accelerate'}:null;break
-     case 'back':detailPage=false;ui.scene='INFRA_MAIN';break
-     case 'turn-on-room-detail':detailPage=true;ui.scene='INFRA_DETAILS';ui.lastRoom=room;break
-     case 'reset-room-time':for(const op of Object.values(getMowerSourceRuntime(state).data.operators))if(op.room===room)op.timeStampMicros=undefined;break
-     case 'restore-room':throw new Error('Native source runtime owns inline room restoration')
-    }
-    return {kind:request.kind,observedAtMicros:now(),value}
-   }
-  }
- }
  return {
   mowerTodoTaskIO:request=>{
    if(request.kind==='drone')return (function*(){
-    const value=yield* drone(request.room,false,{notCustomize:false,notReturn:false,skipEnter:false})
+    const value=yield* drone(request.room,{notCustomize:false,notReturn:false,skipEnter:false})
     return {kind:request.kind,observedAtMicros:now(),value} satisfies MowerTodoTaskObservation
    })()
    throw new Error('Native '+request.kind+' requires its lifecycle observation adapter')
@@ -170,10 +137,6 @@ export function createMowerProductionIO(state:RuntimeState,production:Controller
    }
   }),
   mowerRunOrderIO:request=>{
-   if(request.kind==='drone')return (function*(){
-    const droneResult=yield* drone(request.room,true,{notCustomize:false,notReturn:false,skipEnter:false})
-    return {observedAtMicros:now(),droneResult}
-   })()
    return {
     delayMicros:request.kind==='return-main'?state.config.mowerDeviceTiming?.roomReturnMicros??0:0,
     observe:()=>{
@@ -183,6 +146,5 @@ export function createMowerProductionIO(state:RuntimeState,production:Controller
     }
    }
   },
-  mowerRunOrderFinishingIO:finishing,
  }
 }

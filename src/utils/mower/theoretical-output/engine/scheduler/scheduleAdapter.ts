@@ -162,13 +162,12 @@ export function compiledScheduleToRuntimeConfig(schedule: CompiledSchedule): Run
   const sourceList=(key:string)=>{const raw=(schedule.policies as Record<string,unknown>)[key];return (Array.isArray(raw)?raw:typeof raw==='string'?raw.split(','):[]).map(String).filter(Boolean).map(resolveOperatorCharId)}
   return {
     mowerDroneRoom:schedule.assumptions.droneRoom??null,
-    // Preserve source candidate metadata in both modes; excludedCandidates below blocks ordinary shift use.
-    mowerRunOrderEnabled:schedule.assumptions.runOrderSimulationMode!=='ideal'||schedule.assumptions.idealRunOrderWakeOnly!==false,
-    mowerRunOrderWakeOnly:schedule.assumptions.runOrderSimulationMode==='ideal'&&schedule.assumptions.idealRunOrderWakeOnly!==false,
+    // Preserve ideal runner metadata; excludedCandidates below blocks ordinary shift use.
+    mowerRunOrderEnabled:schedule.assumptions.idealRunOrderWakeOnly!==false,
     mowerServices:{enableParty:false,leifengMode:schedule.assumptions.leifengMode??true,droneIntervalHours:schedule.assumptions.droneIntervalHours??3,reloadRooms:schedule.assumptions.reloadRooms===null?null:schedule.assumptions.reloadRooms??[],maaGapHours:schedule.assumptions.maaGapHours??3},
-    mowerRunOrderFinishing:{bufferSeconds:schedule.assumptions.runOrderGrandet===false?-1:schedule.assumptions.runOrderBufferSeconds??15,droneCountLimit:schedule.assumptions.droneCountLimit??100,waitingScenes:[]},
     mowerDeviceTiming:{roomReturnMicros:500_000},
-    mowerTaskScheduling:{configuredDelayMinutes:schedule.assumptions.runOrderDelayMinutes,enableMastery:schedule.assumptions.enableMastery,grandet:schedule.assumptions.runOrderGrandet},
+    mowerTaskScheduling:{configuredDelayMinutes:3,enableMastery:schedule.assumptions.enableMastery},
+    mowerDroneCountLimit:schedule.assumptions.droneCountLimit??100,
     mowerRunLoopClock:{minimumClockStepMicros:1,notificationSleepMicros:1_000_000},
     mowerSourcePlan:Object.fromEntries(schedule.rooms.filter(r=>r.type!=='gaming'&&r.type!=='').flatMap(r=>{let last=r.slots.length-1;while(last>=0&&!r.slots[last]!.primaryOperatorId&&r.slots[last]!.occupant.kind!=='free')last--;return last<0?[]:[[r.roomId,r.slots.slice(0,last+1).map(slot=>({agent:slot.primaryOperatorId??(slot.occupant.kind==='free'?'Free':'Current'),group:slot.groupId??'',replacement:[...slot.orderedCandidates]}))]]})),
     mowerSourceRules:{workaholic:sourceList('workaholic'),exhaustRequire:sourceList('exhaust_require'),restInFull:sourceList('rest_in_full'),lowPriority:sourceList('resting_priority'),refreshDrained:sourceList('refresh_drained'),refreshTrading:sourceList('refresh_trading'),lingMode:mode,standby:sourceList('resting_standby'),priorityReplacement:sourceList('resting_priority_replacement'),freeRoomExclusions:sourceList('free_room_exclusions')},

@@ -3,7 +3,7 @@
 import {MOWER_TASK_TYPES as T,toMowerMicros,type MowerTask} from './mowerTaskQueue'
 export interface MowerTaskSchedulingOptions {
  runOrderDelayMinutes?:number;executionMinutes?:number;configuredDelayMinutes?:number
- grandet?:boolean;enableMastery?:boolean;experimental?:boolean
+ enableMastery?:boolean;experimental?:boolean
  maintenance?:[startMicros:number,endMicros:number];dormDurations?:Record<string,number[]>
 }
 const minutes=(value:number)=>toMowerMicros(value/60)
@@ -65,7 +65,7 @@ function scheduleOrders(tasks:MowerTask[],now:number,delay:number,execution:numb
   const task=tasks[index]!
   if(task.type.priority===1&&now>task.timeMicros)totalExecution+=(now-task.timeMicros)/60_000_000
   if(task.type.priority===1){
-   if(previous&&(options.grandet??true)&&task.timeMicros-previous.timeMicros<minutes(delay)&&now<previous.timeMicros&&!task.adjusted)return [previous,task]
+   if(previous&&task.timeMicros-previous.timeMicros<minutes(delay)&&now<previous.timeMicros&&!task.adjusted)return [previous,task]
    previous=task;totalExecution=0
   }else{
    let nextIndex=-1

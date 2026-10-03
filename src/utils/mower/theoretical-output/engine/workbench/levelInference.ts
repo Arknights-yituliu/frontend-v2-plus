@@ -1,9 +1,10 @@
 import { MOWER_OUTPUT_ROOM_IDS, type MowerFacility, type MowerRoomId } from './model'
+import { isFacilityBuilt } from './facilityState'
 
 export function inferFacilityLevels(facilities: Record<MowerRoomId, MowerFacility>): void {
   let powerCount = 0
   for (const roomId of MOWER_OUTPUT_ROOM_IDS) {
-    if (facilities[roomId].type === 'power') {
+    if (isFacilityBuilt(facilities[roomId]) && facilities[roomId].type === 'power') {
       powerCount++
     }
   }
@@ -11,29 +12,30 @@ export function inferFacilityLevels(facilities: Record<MowerRoomId, MowerFacilit
   if (powerCount === 3) {
     // 3 Power Plants: all max level
     for (const roomId of MOWER_OUTPUT_ROOM_IDS) {
-      facilities[roomId].level = 3
+      if (isFacilityBuilt(facilities[roomId])) facilities[roomId].level = 3
     }
     for (let i = 1; i <= 4; i++) {
-      facilities[`dormitory_${i}` as MowerRoomId].level = 5
+      const dorm = facilities[`dormitory_${i}` as MowerRoomId]
+      if (isFacilityBuilt(dorm)) dorm.level = 5
     }
-    facilities.meeting.level = 3
-    facilities.contact.level = 3
-    facilities.factory.level = 3
-    facilities.train.level = 3
-    facilities.central.level = 5
+    for (const id of ['meeting', 'contact', 'factory', 'train'] as const) {
+      if (isFacilityBuilt(facilities[id])) facilities[id].level = 3
+    }
+    if (isFacilityBuilt(facilities.central)) facilities.central.level = 5
   } else if (powerCount === 2) {
     // 2 Power Plants: stepped inference
     for (let i = 1; i <= 4; i++) {
-      facilities[`dormitory_${i}` as MowerRoomId].level = 1
+      const dorm = facilities[`dormitory_${i}` as MowerRoomId]
+      if (isFacilityBuilt(dorm)) dorm.level = 1
     }
-    facilities.meeting.level = 3
-    facilities.contact.level = 3
-    facilities.factory.level = 3
-    facilities.train.level = 3
-    facilities.central.level = 5
+    for (const id of ['meeting', 'contact', 'factory', 'train'] as const) {
+      if (isFacilityBuilt(facilities[id])) facilities[id].level = 3
+    }
+    if (isFacilityBuilt(facilities.central)) facilities.central.level = 5
 
     for (const roomId of MOWER_OUTPUT_ROOM_IDS) {
       const facility = facilities[roomId]
+      if (!isFacilityBuilt(facility)) continue
       if (facility.type === 'power') {
         facility.level = 3
       } else if (facility.type === 'manufacture' || facility.type === 'trading') {

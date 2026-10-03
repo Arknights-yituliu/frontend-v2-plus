@@ -1,6 +1,7 @@
 import { OPERATOR_MAP, OPERATORS, type OperatorRecord } from '../../domain/operators'
 import { createDefaultWorkspace } from '../defaults'
 import { inferFacilityLevels } from '../levelInference'
+import { hasDormKeeper } from '../facilityState'
 import {
   MOWER_ROOM_IDS,
   type MowerFacilityType,
@@ -107,16 +108,8 @@ export function importMowerJson(text: string): RosterWorkspace {
   }
 
   const ws = createDefaultWorkspace()
-  // Missing staffing is empty. Right-side facilities keep the source's
-  // inferred physical levels; undeclared left-side production rooms are unbuilt.
-  for (const roomId of MOWER_ROOM_IDS) {
-    const facility = ws.mainPlan.facilities[roomId]
-    facility.slots = []
-    if (roomId.startsWith('room_')) {
-      facility.type = ''
-      facility.product = undefined
-    }
-  }
+  // Imported staffing must come only from the supplied Mower plan.
+  for (const roomId of MOWER_ROOM_IDS) ws.mainPlan.facilities[roomId].slots = []
   ws.compatibility.defaultPlanKey = defaultKey
   ws.compatibility.facilityMetadata = {}
   ws.compatibility.unrecognizedRooms = {}
@@ -221,13 +214,17 @@ export function importMowerJson(text: string): RosterWorkspace {
 
   ws.compatibility.importedPresentRooms = importedPresentRooms
 
-  // Infer facility levels strictly according to existing inference rules
-  inferFacilityLevels(ws.mainPlan.facilities)
   for (const roomId of MOWER_ROOM_IDS) {
-    if (roomId.startsWith('room_') && !importedPresentRooms.includes(roomId)) {
-      ws.mainPlan.facilities[roomId].level = 0
+    const facility = ws.mainPlan.facilities[roomId]
+    if (!importedPresentRooms.includes(roomId) ||
+      (facility.type === 'dormitory' && !hasDormKeeper(facility))) {
+      facility.level = 0
+      facility.slots = []
     }
   }
+
+  // Infer facility levels strictly according to existing inference rules
+  inferFacilityLevels(ws.mainPlan.facilities)
 
   // Parse conf
   const hasConf = parsed.conf !== undefined
@@ -316,6 +313,7 @@ export function exportMowerJson(workspace: RosterWorkspace): string {
 
   for (const roomId of roomIdsToExport) {
     const f = facilities[roomId]
+    if (!f || f.level === 0) continue
     const meta = workspace.compatibility.facilityMetadata?.[roomId]
     const extraMeta: Record<string, unknown> = {}
     if (meta) {
