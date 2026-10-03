@@ -221,7 +221,15 @@
     box-shadow: 0 6px 14px rgba(201, 149, 22, 0.28);
   }
 
+  .operator-recommend-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+  }
+
   .operator-recommend-toggle {
+    flex: 0 0 auto;
     margin: 0;
 
     .v-selection-control {
