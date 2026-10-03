@@ -18,7 +18,7 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20261002.1144"
+      "version": "v20261002.1334"
     },
     "recommendation": {
       "label": "调试信息",
@@ -26,6 +26,21 @@
     }
   },
   "entries": [
+    {
+      "date": "2026-10-02",
+      "version": "v20261002.1334",
+      "items": [
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 3,
+          "description": "排班分析报告改为统一维护隐藏清单，过滤定时换班空档、心情继承、菲亚梅塔恢复与电力不足等包内检查项",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-10-02",
       "version": "v20261002.1144",

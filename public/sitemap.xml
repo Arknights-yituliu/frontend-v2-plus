@@ -96,6 +96,13 @@
     </url>
 
     <url>
+        <loc>https://ark.yituliu.cn/tools/maa-schedule-calculator</loc>
+        <lastmod>2026-10-02</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
         <loc>https://ark.yituliu.cn/tools/sui</loc>
         <lastmod>2026-10-02</lastmod>
         <changefreq>monthly</changefreq>

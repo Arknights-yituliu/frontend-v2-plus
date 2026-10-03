@@ -28,8 +28,9 @@
               }
             },
             {
-              "target": "any",
+              "target": "control",
               "stat": "moodRecover",
+              "scope": "room",
               "scopeGroup": "cc.g.lda",
               "per": {
                 "per": 1,

@@ -20,6 +20,10 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
   "riic_schedule_generator_to_legacy_editor_v1";
+const RIIC_MAA_CALCULATOR_TRANSFER_STORAGE_KEY =
+  "riic_maa_editor_to_efficiency_calculator_v1";
+const RIIC_MAA_CALCULATOR_RETURN_STORAGE_KEY =
+  "riic_maa_calculator_to_editor_v1";
 
 let operatorOwnMap = new Map();
 
@@ -962,6 +966,49 @@ function consumeRiicGeneratorScheduleTransfer() {
   }
 }
 
+function consumeRiicMaaCalculatorReturn() {
+  let rawTransfer = "";
+  try {
+    rawTransfer = sessionStorage.getItem(RIIC_MAA_CALCULATOR_RETURN_STORAGE_KEY);
+  } catch (error) {
+    console.error("Failed to read MAA calculator return schedule", error);
+    return;
+  }
+  if (!rawTransfer) {
+    return;
+  }
+
+  let transfer;
+  try {
+    transfer = JSON.parse(rawTransfer);
+  } catch (error) {
+    sessionStorage.removeItem(RIIC_MAA_CALCULATOR_RETURN_STORAGE_KEY);
+    cMessage("排班表计算器返回的数据无效", "error");
+    return;
+  }
+
+  const schedule = transfer?.schedule;
+  if (
+    transfer?.version !== 1 ||
+    transfer?.source !== "riic-maa-calculator" ||
+    !Array.isArray(schedule?.plans) ||
+    schedule.plans.length === 0
+  ) {
+    sessionStorage.removeItem(RIIC_MAA_CALCULATOR_RETURN_STORAGE_KEY);
+    cMessage("排班表计算器返回的数据无效", "error");
+    return;
+  }
+
+  try {
+    importSchedule(schedule, { preserveUnsupportedRooms: true });
+    sessionStorage.removeItem(RIIC_MAA_CALCULATOR_RETURN_STORAGE_KEY);
+    cMessage("已重新导入原始排班");
+  } catch (error) {
+    console.error("Failed to import original schedule from MAA calculator", error);
+    cMessage(error?.message || "重新导入原始排班失败", "error");
+  }
+}
+
 let guidePopup = ref(false);
 
 function setPosition() {
@@ -987,10 +1034,32 @@ onMounted(() => {
 
   getOperatorDataByAccount();
   consumeRiicGeneratorScheduleTransfer();
+  consumeRiicMaaCalculatorReturn();
 });
 
 function useLegacyUI() {
   router.push({ name: "ScheduleV1" });
+}
+
+function openMaaScheduleCalculator() {
+  createSchedule();
+
+  try {
+    sessionStorage.setItem(
+      RIIC_MAA_CALCULATOR_TRANSFER_STORAGE_KEY,
+      JSON.stringify({
+        version: 1,
+        source: "riic-maa-editor",
+        schedule: scheduleInfo.value,
+      }),
+    );
+  } catch (error) {
+    console.error("Failed to transfer RIIC schedule to calculator", error);
+    cMessage("排班转交失败，请稍后重试", "error");
+    return;
+  }
+
+  router.push({ name: "RiicMaaScheduleCalculator" });
 }
 </script>
 
@@ -1009,6 +1078,11 @@ function useLegacyUI() {
       <!--下载排版文件-->
       <v-btn color="primary" class="m-2" @click="saveAndDownloadScheduleFile()">
         {{ translate("schedule", "schedule.DownloadScheduleFile") }}
+      </v-btn>
+
+      <!--跳转到MAA排班表计算器-->
+      <v-btn color="primary" class="m-2" @click="openMaaScheduleCalculator()">
+        转到 MAA排班表计算器
       </v-btn>
 
       <!--操作指引-->

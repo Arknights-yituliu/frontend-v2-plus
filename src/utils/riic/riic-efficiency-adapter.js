@@ -1,11 +1,28 @@
 import {
   BATTLE_RECORD_EXPERIENCE,
+  buildResultDisplay as buildPackageResultDisplay,
   calculateEfficiency,
   createEfficiencyCatalog,
   facilityId,
 } from "/src/vendor/riic-efficiency/dist/index.js";
 
-export { buildEfficiencyNotices } from "/src/vendor/riic-efficiency/dist/index.js";
+export {
+  buildDailyOutputDisplay,
+  buildEfficiencyNotices,
+  buildFacilityStepCards,
+  buildFacilityStepPanes,
+  calculateSanityValues,
+  completeInferredRooms,
+  DEFAULT_SANITY_SETTINGS,
+  flattenResultDisplay,
+  formatDisplayValue,
+  formatEfficiencyNumber,
+  formatNumber,
+  formatProduction,
+  inferScheduleLayout,
+  resourceLabel,
+  signedNumber,
+} from "/src/vendor/riic-efficiency/dist/index.js";
 
 const operatorModules = import.meta.glob(
   "/src/vendor/riic-efficiency/data/operators/*.json",
@@ -33,6 +50,13 @@ const catalog = {
   ),
   ruleset,
 };
+
+export function buildResultDisplay(result, options = {}) {
+  return buildPackageResultDisplay(result, {
+    basePointLabel: (term) => termsData.terms[term]?.name ?? term,
+    ...options,
+  });
+}
 
 const ROOM_TYPE_ALIASES = Object.freeze({ office: "hire" });
 const PRODUCT_ALIASES = Object.freeze({

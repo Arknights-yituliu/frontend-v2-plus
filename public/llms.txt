@@ -19,6 +19,7 @@
 - [排班表（MAA） - 明日方舟一图流](https://ark.yituliu.cn/tools/scheduleV2): 明日方舟排班表编辑器，适配 MAA 自动化助手
 - [Mower 排班表生成器 - 明日方舟一图流](https://ark.yituliu.cn/tools/mower-plan): 生成适配 Mower 的明日方舟基建排班表
 - [一图流排班表 - 明日方舟一图流](https://ark.yituliu.cn/tools/schedule-images): 明日方舟一图流排班表参考，快速查看常用排班方案
+- [MAA排班表计算器 - 明日方舟一图流](https://ark.yituliu.cn/tools/maa-schedule-calculator): 导入 MAA 排班表，计算每日产出、房间效率、基础价值点与无人机收益
 - [岁兽残识记录器 - 明日方舟一图流](https://ark.yituliu.cn/tools/sui): 明日方舟岁兽残识记录器，记录与分析岁兽残识相关内容
 - [界园树洞模拟 - 明日方舟一图流](https://ark.yituliu.cn/tools/jie-garden): 明日方舟界园树洞模拟工具，探索集成战略界园玩法
 - [专精时间减半计算器 - 明日方舟一图流](https://ark.yituliu.cn/tools/specializationTimeCalculate): 明日方舟专精时间减半计算器，计算干员专精训练时间与收益

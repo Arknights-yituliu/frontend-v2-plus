@@ -4759,6 +4759,18 @@ const riicEfficiencyCalculation = computed(() => {
     };
   }
 });
+// 「排班分析报告」只展示可行动的检查结果，以下几项包内引擎提示在生成器场景下隐藏。
+// 在消费端按 code 过滤，而不是改动 src/vendor 的同步产物，同时让 ?mode=dev
+// 调试面板保留引擎返回的原始 warnings，便于排查。
+//   - schedule-period-gap / mood-inheritance：接入 riic-efficiency 时已隐藏，本次沿用。
+//   - fiammetta-mood：队列心情模型的推断结果，在生成器产出的排班里不作为可行动项。
+//   - negative-power：自定义布局编辑器已拦截电力超载（“当前布局电力超载，无法应用”），报告里重复。
+const HIDDEN_RIIC_EFFICIENCY_NOTICE_CODES = new Set([
+  "schedule-period-gap",
+  "mood-inheritance",
+  "fiammetta-mood",
+  "negative-power",
+]);
 const riicEfficiencyNotices = computed(() => {
   if (scheduleExecutionSettings.calculationMode !== "riic-efficiency") {
     return [];
@@ -4770,9 +4782,7 @@ const riicEfficiencyNotices = computed(() => {
     result: calculation.result,
     efficiencyError: calculation.error,
   }).filter(
-    (notice) =>
-      notice.code !== "schedule-period-gap" &&
-      notice.code !== "mood-inheritance",
+    (notice) => !HIDDEN_RIIC_EFFICIENCY_NOTICE_CODES.has(notice.code),
   );
 });
 const riicEfficiencyNoticeCounts = computed(() => {
