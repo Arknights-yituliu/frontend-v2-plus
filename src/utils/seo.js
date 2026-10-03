@@ -95,6 +95,13 @@ export const SEO_ROUTES = [
         priority: 0.6,
     },
     {
+        path: '/tools/maa-schedule-calculator',
+        title: 'MAA排班表计算器',
+        description: '导入 MAA 排班表，计算每日产出、房间效率、基础价值点与无人机收益',
+        changefreq: 'monthly',
+        priority: 0.7,
+    },
+    {
         path: '/tools/sui',
         title: '岁兽残识记录器',
         description: '明日方舟岁兽残识记录器，记录与分析岁兽残识相关内容',

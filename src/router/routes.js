@@ -271,6 +271,18 @@ const routes = [
         }
     },
     {
+        path: '/tools/maa-schedule-calculator',
+        text: 'MAA排班表计算器',
+        name: 'RiicMaaScheduleCalculator',
+        display: true,
+        module: 'riic',
+        icon: "mdi-calculator-variant-outline",
+        component: () => import('/src/pages/tools/maa-schedule-calculator.vue'),
+        meta: {
+            title: 'MAA排班表计算器'
+        }
+    },
+    {
         path: '/tools/sui',
         text: '岁兽残识记录器',
         name: 'sui1',
@@ -498,12 +510,12 @@ const routes = [
     },
     {
         path: '/riicdev/efficiency-inspector',
-        text: 'RIIC 效率明细',
+        text: 'MAA排班表计算器',
         name: 'RiicEfficiencyInspector',
         display: false,
-        component: () => import('/src/pages/dev/riic/efficiency-inspector.vue'),
+        redirect: { name: 'RiicMaaScheduleCalculator' },
         meta: {
-            title: 'RIIC 效率明细'
+            title: 'MAA排班表计算器'
         }
     },
     {
