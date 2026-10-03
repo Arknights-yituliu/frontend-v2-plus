@@ -77,11 +77,12 @@ export function projectScheduleState(schedule:CompiledSchedule,state:RuntimeStat
  c.facilityOperatorIds.dormitories=dorms.map(r=>occupants(r.roomId).filter(Boolean))
  c.dormitoryOccupantCount=c.facilityOperatorIds.dormitories.reduce((n,ids)=>n+ids.length,0)
  c.controlOperatorIds=schedule.rooms.filter(r=>r.type==='central').flatMap(r=>occupants(r.roomId).filter(Boolean))
+ c.facilities.central=(schedule.rooms.find(r=>r.type==='central')?.level??0) as 0|1|2|3|4|5
  const auxiliary={meeting:'reception',contact:'office',train:'training',factory:'workshop'} as const
  for(const [type,key] of Object.entries(auxiliary)) {
   const room=schedule.rooms.find(r=>r.type===type)
   c.facilityOperatorIds[key]=room?occupants(room.roomId).filter(Boolean):[]
-  if(room)c.facilities[key]=room.level as 1|2|3
+  c.facilities[key]=(room?.level??0) as 0|1|2|3
  }
  c.efficiencyResources.trainingOperatorIds=[...c.facilityOperatorIds.training]
  c.operatorMorale={...state.morale}
@@ -94,17 +95,12 @@ export function projectScheduleState(schedule:CompiledSchedule,state:RuntimeStat
 
 /** Integrates rates over actual joint rosters. This reports efficiency and duty, not order/resource settlement. */
 export function simulateSchedule(schedule:CompiledSchedule,options:ScheduleSimulationOptions={},onProgress?:(progress:ScheduleSimulationProgress)=>void):ScheduleSimulationReport {
- if(options.production)assertRunOrderMode(options.production.runOrderMode)
+ assertRunOrderMode(options.production?.runOrderMode)
+ assertRunOrderMode(schedule.assumptions.runOrderSimulationMode)
  schedule=structuredClone(schedule)
+ schedule.assumptions.runOrderSimulationMode='ideal'
+ schedule.assumptions.idealRunOrderWakeOnly=!options.experimentalDisableIdealWake
  if(options.production){
-  schedule.assumptions.runOrderSimulationMode=options.production.runOrderMode??'ideal'
-  if(options.experimentalDisableIdealWake&&schedule.assumptions.runOrderSimulationMode!=='ideal')throw new Error('No-wake comparison requires ideal run-order mode')
-  schedule.assumptions.idealRunOrderWakeOnly=schedule.assumptions.runOrderSimulationMode==='ideal'&&!options.experimentalDisableIdealWake
-  if(options.production.runOrderMode==='grandet'){
-   if(options.production.runOrderLeadSeconds!==undefined)schedule.assumptions.runOrderDelayMinutes=options.production.runOrderLeadSeconds/60
-   if(options.production.runOrderBufferSeconds!==undefined)schedule.assumptions.runOrderBufferSeconds=options.production.runOrderBufferSeconds
-   schedule.assumptions.runOrderGrandet=true
-  }
   const target=options.production.droneTarget??'gold'
   schedule.assumptions.droneRoom=target==='none'?null:options.production.droneRoomId??(target==='trading'?options.production.droneTradingRoomId??schedule.rooms.find(room=>room.type==='trading')?.roomId:schedule.rooms.find(room=>room.type==='manufacture'&&room.product===target)?.roomId)??null
  }
@@ -329,14 +325,14 @@ export function simulateSchedule(schedule:CompiledSchedule,options:ScheduleSimul
   return {time:state.time+offset,config:c,active,morale,evaluations:evaluations!}
  }
  const efficiencies=(frame:ProductionFrame)=>Object.fromEntries(Object.entries(frame.evaluations).map(([id,r])=>[id,r.efficiencyPercent]))
- const production=options.production?createProductionTimeline(schedule,state,options.production,warmupHours,diagnostic,()=>{refreshSessions();cachedRevision=-1;derivativeRevision=-1},!!state.config.mowerSourcePlan):undefined
+ const production=options.production?createProductionTimeline(schedule,state,options.production,warmupHours,diagnostic,!!state.config.mowerSourcePlan):undefined
  // Real facilities exist before native scheduling first reads a countdown.
  production?.settle(()=>frameAt(0))
  if(production&&state.config.mowerSourcePlan){
   Object.assign(rates,createMowerClueIO(state))
   diagnostic('MOWER_CLUE_OBSERVATION_MODEL','线索交流固定关闭，Party Time 为空，不执行线索待办及交流任务。')
   Object.assign(rates,createMowerProductionIO(state,production,()=>frameAt(0)))
-  diagnostic('MOWER_ORDER_OBSERVATION_MODEL',(options.production?.runOrderMode??'ideal')!=='ideal'?'葛朗台跑单任务按 Mower alpha 执行，倒计时来自同一生产状态的连续秒数；页面成功与识别零耗时为明确模拟输入，点击采用原版显式等待。此输入适配不代表像素识别等价。':'理想跑单在新单开始时锁定佩佩/可露希尔模式，在普通订单完成时转换但书/龙舌兰收益；保留 Mower 订单读取、任务排序与唤醒，不执行临时换人；常规换班、收取及无人机任务仍按 Mower 时间线执行。')
+  diagnostic('MOWER_ORDER_OBSERVATION_MODEL','理想跑单在新单开始时锁定佩佩/可露希尔模式，在普通订单完成时转换但书/龙舌兰收益；保留 Mower 订单读取、任务排序与唤醒，不执行临时换人；常规换班、收取及无人机任务仍按 Mower 时间线执行。')
  }
  settle()
  if(backupFailed)return report
@@ -378,9 +374,9 @@ export function simulateSchedule(schedule:CompiledSchedule,options:ScheduleSimul
  while(state.time<total&&!backupFailed){
   reportProgress()
   if(steps++>=maxEvents){diagnostic('SIMULATION_EVENT_LIMIT',`达到 ${maxEvents} 个积分区间，结果未完成`);break}
-  let action=moraleStep?moraleStep.actionAt-state.time:production?.isRosterLocked()?Infinity:nextRosterActionHours(state,rates)
-  if(action<=(state.config.mowerSourcePlan?0:EPS)){settle();production?.settle(()=>frameAt(0));action=production?.isRosterLocked()?Infinity:nextRosterActionHours(state,rates);if(action<=(state.config.mowerSourcePlan?0:EPS)){diagnostic('SIMULATION_SAME_TIME_ACTION','同刻调度未能稳定，结果未完成');break}}
-  let dt=moraleStep?moraleStep.end-state.time:Math.min(maxStepHours,total-state.time,nextRosterEventHours(state,rates,!production?.isRosterLocked(),derivativeRates()),state.time<warmupHours-EPS?warmupHours-state.time:Infinity)
+  let action=moraleStep?moraleStep.actionAt-state.time:nextRosterActionHours(state,rates)
+  if(action<=(state.config.mowerSourcePlan?0:EPS)){settle();production?.settle(()=>frameAt(0));action=nextRosterActionHours(state,rates);if(action<=(state.config.mowerSourcePlan?0:EPS)){diagnostic('SIMULATION_SAME_TIME_ACTION','同刻调度未能稳定，结果未完成');break}}
+  let dt=moraleStep?moraleStep.end-state.time:Math.min(maxStepHours,total-state.time,nextRosterEventHours(state,rates,true,derivativeRates()),state.time<warmupHours-EPS?warmupHours-state.time:Infinity)
   if(!moraleStep)for(const [id,s] of entered)for(const boundary of getTemporalSkillBoundaries(id,{operatorRecords})){const delay=boundary+s.time-state.time;if(delay>EPS)dt=Math.min(dt,delay)}
   if(independentMoraleClock&&!moraleStep){
    const derivative=derivativeRates()
@@ -440,7 +436,7 @@ export function simulateSchedule(schedule:CompiledSchedule,options:ScheduleSimul
    moraleStep=undefined
   }
   production?.settle(()=>frameAt(0))
-  if((state.config.mowerSourcePlan?nextRosterActionHours(state,rates)===0:Math.abs(dt-action)<=EPS)&&!production?.isRosterLocked()){settle();production?.settle(()=>frameAt(0))}
+  if(state.config.mowerSourcePlan?nextRosterActionHours(state,rates)===0:Math.abs(dt-action)<=EPS){settle();production?.settle(()=>frameAt(0))}
  }
   report.elapsedHours=state.time;report.success=!backupFailed&&Math.abs(state.time-total)<EPS
  report.operators=[...stats.values()].map(s=>({...s,finalMorale:state.morale[s.operatorId]!,workFraction:report.observedHours?s.workHours/report.observedHours:0,workRestRatio:s.restHours>EPS?s.workHours/s.restHours:null}))

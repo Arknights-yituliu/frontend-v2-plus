@@ -642,7 +642,7 @@ export function evaluateOperators(
         } else if (skill.buffId === 'manu_formula_spd&dorm&lv[000]') {
           applied =
             room.product === 'gold'
-              ? config.facilities.dormitories.reduce((sum, level) => sum + level, 0)
+              ? config.facilities.dormitories.reduce<number>((sum, level) => sum + level, 0)
               : 0
           facilityBased = true
         } else if (skill.buffId === 'manu_formula_spd&cost_bd[100]') {
@@ -796,7 +796,7 @@ export function evaluateOperators(
           applied = conditional.value
         } else if (skill.buffId === 'trade_ord_spd&dorm&lv[010]' || skill.buffId === 'trade_ord_spd&dorm&lv[000]') {
           const multiplier = skill.buffId.endsWith('[010]') ? 2 : 1
-          applied = config.facilities.dormitories.reduce((sum, level) => sum + level, 0) * multiplier
+          applied = config.facilities.dormitories.reduce<number>((sum, level) => sum + level, 0) * multiplier
         } else if (skill.buffId === 'trade_ord_spd&meet[010]') {
           applied = Math.min(30, 15 + config.facilities.reception * 5)
         } else if (skill.buffId === 'trade_ord_par&per[001]') {
@@ -926,7 +926,7 @@ export function evaluateOperators(
         if (aigisBonus !== null) {
           applied = aigisBonus
         } else if (skill.buffId === 'power_rec_spd&dorm&lv[000]') {
-          applied = config.facilities.dormitories.reduce((sum, level) => sum + level, 0) * 0.5
+          applied = config.facilities.dormitories.reduce<number>((sum, level) => sum + level, 0) * 0.5
         } else if (skill.buffId === 'power_rec_rhine[000]') {
           const count = globalContext.presentOperators.filter(op => op.charId !== operator.charId && matchesRiicIdentity(op, 'groupId', 'rhine')).length
           applied = 10 + Math.min(5, count) * 3

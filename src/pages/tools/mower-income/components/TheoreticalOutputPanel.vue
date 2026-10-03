@@ -16,6 +16,11 @@ const levelsConfirmed = ref(false)
 const warmupDays = ref(3)
 const sampleDays = ref(7)
 const droneRoomId = ref('none')
+const droneTargets = computed(() => (inspection.value?.droneTargets || []).filter(target =>
+  target.value === 'none' || levels.value[target.value] > 0))
+watch(droneTargets, targets => {
+  if (!targets.some(target => target.value === droneRoomId.value)) droneRoomId.value = 'none'
+}, { flush: 'sync' })
 const restingPercent = ref(65)
 const jayeElite0 = ref(false)
 const fiammettaFool = ref(true)
@@ -174,10 +179,11 @@ function downloadResult() {
 
       <details v-if="inspection" class="facility-levels" open>
         <summary>确认设施等级</summary>
-        <p class="note">Mower JSON 不包含设施等级。下列等级由布局与槽位推断，未导入的配套设施使用默认值；请按你的实际基建调整后确认。宿舍按该等级满氛围计算。</p>
+        <p class="note">Mower JSON 不包含设施等级。已建造设施的等级由布局与槽位推断；缺失房间、没有实际宿管的宿舍按未建造处理。请按实际基建调整后确认，宿舍按该等级满氛围计算。已配置岗位的房间需先修改排班，才能设为未建造。</p>
         <div class="level-grid">
           <label v-for="room in inspection.facilities" :key="room.roomId"><span>{{ room.label }}<small v-if="room.assumed">（未导入）</small></span>
-            <select v-model.number="levels[room.roomId]" @change="levelsConfirmed = false">
+            <select v-model.number="levels[room.roomId]" :disabled="!room.editable" @change="levelsConfirmed = false">
+              <option :value="0" :disabled="!room.canBeUnbuilt">未建造</option>
               <option v-for="level in room.maxLevel" :key="level" :value="level">{{ level }} 级</option>
             </select>
           </label>
@@ -189,7 +195,7 @@ function downloadResult() {
         <label>预热天数<input v-model.number="warmupDays" type="number" min="0" max="14" step="1" /></label>
         <label>采样天数<input v-model.number="sampleDays" type="number" min="1" max="28" step="1" /></label>
         <label>休息阈值（%）<input v-model.number="restingPercent" type="number" min="0" max="100" step="1" /></label>
-        <label>无人机目标<select v-model="droneRoomId"><option value="none">不使用无人机</option><option v-for="item in (inspection?.droneTargets || []).filter(target => target.value !== 'none')" :key="item.value" :value="item.value">{{ item.label }}</option></select></label>
+        <label>无人机目标<select v-model="droneRoomId"><option v-for="item in droneTargets" :key="item.value" :value="item.value">{{ item.label }}</option></select></label>
       </div>
       <div class="switches">
         <label><input v-model="jayeElite0" type="checkbox" :disabled="usingInventory" />孑按精英 0 计算</label>

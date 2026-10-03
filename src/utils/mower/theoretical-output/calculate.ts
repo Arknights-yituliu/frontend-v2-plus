@@ -8,6 +8,7 @@ import { simulateSchedule, type ScheduleSimulationProgress } from './engine/simu
 import { importMowerJson, resolveOperatorCharId } from './engine/workbench/compat/mowerJson'
 import { getOperatorName, getRoomDisplayName } from './engine/workbench/operatorHelpers'
 import { mowerReportMetrics } from './engine/workbench/mowerReportMetrics'
+import { isFacilityBuilt } from './engine/workbench/facilityState'
 import { validateRosterWorkspace } from './engine/workbench/validate'
 import { MOWER_ROOM_IDS, type RosterWorkspace } from './engine/workbench/model'
 
@@ -62,6 +63,12 @@ function readWorkspace(payload: unknown): RosterWorkspace {
             slot.replacement.length > 100 || slot.replacement.some(value => typeof value !== 'string' || !value.trim()))) {
         throw new Error(`${roomId} 岗位 ${index + 1}：格式错误`)
       }
+      // Validate names before import discards placeholders in unbuilt dorms.
+      for (const name of [slot.agent, ...((slot.replacement ?? []) as string[])]) {
+        if (name.trim() && !['free', 'current'].includes(name.trim().toLowerCase()) && !OPERATOR_MAP.has(resolveOperatorCharId(name.trim()))) {
+          throw new Error(`排班引用未知干员：${name}`)
+        }
+      }
     }
   }
   if (raw.backup_plans !== undefined && (!Array.isArray(raw.backup_plans) || raw.backup_plans.length > 100)) {
@@ -77,10 +84,11 @@ function readWorkspace(payload: unknown): RosterWorkspace {
     }
   }
   const workspace = importMowerJson(text)
-  if (!Object.values(workspace.mainPlan.facilities).some(room => room.type === 'manufacture' || room.type === 'trading')) {
+  if (!Object.values(workspace.mainPlan.facilities).some(room => isFacilityBuilt(room) && (room.type === 'manufacture' || room.type === 'trading'))) {
     throw new Error('排班中没有制造站或贸易站，无法计算收益')
   }
   for (const room of Object.values(workspace.mainPlan.facilities)) {
+    if (!isFacilityBuilt(room)) continue
     if (room.type === 'manufacture' && !['gold', 'exp', 'fragment'].includes(room.product ?? '') ||
         room.type === 'trading' && !['money', 'orundum'].includes(room.product ?? '')) {
       throw new Error(`${getRoomDisplayName(room.roomId)}：未配置有效产物`)
@@ -114,7 +122,7 @@ function operatorReferences(workspace: RosterWorkspace) {
     }
     for (const [roomId, raw] of Object.entries((backup.plan ?? {}) as Record<string, unknown>)) {
       const room = workspace.mainPlan.facilities[roomId as keyof typeof workspace.mainPlan.facilities]
-      if (!room || room.type === '' || !record(raw) || !Array.isArray(raw.plans) || raw.plans.length > room.slots.length) throw new Error(`副表房间或岗位格式错误：${roomId}`)
+      if (!isFacilityBuilt(room) || room.type === '' || !record(raw) || !Array.isArray(raw.plans) || raw.plans.length > room.slots.length) throw new Error(`副表房间或岗位格式错误：${roomId}`)
       for (const slot of raw.plans) {
         if (!record(slot) || slot.replacement !== undefined && (!Array.isArray(slot.replacement) || slot.replacement.length > 100)) throw new Error('副表岗位格式错误')
         add(slot.agent)
@@ -123,7 +131,7 @@ function operatorReferences(workspace: RosterWorkspace) {
     }
     for (const [roomId, task] of Object.entries((backup.task ?? {}) as Record<string, unknown>)) {
       const room = workspace.mainPlan.facilities[roomId as keyof typeof workspace.mainPlan.facilities]
-      if (!room || room.type === '' || !Array.isArray(task) || task.length > room.slots.length) throw new Error(`副表任务格式错误：${roomId}`)
+      if (!isFacilityBuilt(room) || room.type === '' || !Array.isArray(task) || task.length > room.slots.length) throw new Error(`副表任务格式错误：${roomId}`)
       task.forEach(value => add(value))
     }
     for (const key of policyLists) {
@@ -151,14 +159,16 @@ function operatorReferences(workspace: RosterWorkspace) {
 export function inspectTheoreticalPlan(payload: unknown) {
   const workspace = readWorkspace(payload)
   const facilities = mowerPlanEntries(workspace.mainPlan.facilities).filter(([, room]) => room.type !== 'gaming' && room.type !== '').map(([roomId, room]) => ({
-    roomId, label: getRoomDisplayName(roomId, room.type), type: room.type,
+    roomId, label: getRoomDisplayName(roomId, isFacilityBuilt(room) ? room.type : undefined), type: room.type,
     product: room.product, level: room.level, maxLevel: maxLevel(room.type),
     assumed: !workspace.compatibility.importedPresentRooms?.includes(roomId),
+    editable: !roomId.startsWith('room_') || !!workspace.compatibility.importedPresentRooms?.includes(roomId),
+    canBeUnbuilt: room.slots.every(slot => slot.occupant.kind === 'empty' && !slot.groupId && !slot.replacements.length),
   }))
   return {
     facilities,
-    droneTargets: [{ label: '不使用无人机', value: 'none' }, ...facilities.filter(room =>
-      room.type === 'trading' || room.type === 'manufacture' && ['gold', 'exp'].includes(room.product ?? ''),
+    droneTargets: [{ label: '不使用无人机', value: 'none' }, ...facilities.filter(room => room.level > 0 && (
+      room.type === 'trading' || room.type === 'manufacture' && ['gold', 'exp'].includes(room.product ?? '')),
     ).map(room => ({ label: room.label, value: room.roomId }))],
     gameDataVersion: GAME_DATA_VERSION,
   }
@@ -180,12 +190,20 @@ export function calculateTheoreticalOutput(payload: unknown, config: Theoretical
     if (!record(config.facilityLevels)) throw new Error('设施等级须为对象')
     for (const [roomId, level] of Object.entries(config.facilityLevels)) {
       const room = workspace.mainPlan.facilities[roomId as keyof typeof workspace.mainPlan.facilities]
-      if (!room || !Number.isInteger(level) || level < 1 || level > maxLevel(room.type)) throw new Error(`${roomId}：无效设施等级`)
+      if (!room || room.type === '' || room.type === 'gaming' || !Number.isInteger(level) || level < 0 || level > maxLevel(room.type)) throw new Error(`${roomId}：无效设施等级`)
+      if (level > 0 && roomId.startsWith('room_') && !workspace.compatibility.importedPresentRooms?.includes(roomId)) {
+        throw new Error(`${getRoomDisplayName(roomId)}：排班未声明设施类型，不能补建，请先修改并重新导入排班`)
+      }
       room.level = level
     }
   }
   const validation = validateRosterWorkspace(workspace)
   if (!validation.isValid) throw new Error(validation.criticalErrors.map(issue => issue.message).join('；'))
+  if (!Object.values(workspace.mainPlan.facilities).some(room => isFacilityBuilt(room) && (room.type === 'manufacture' || room.type === 'trading'))) {
+    throw new Error('排班中没有已建造的制造站或贸易站，无法计算收益')
+  }
+  // Level edits must not disable a facility still used by a backup plan.
+  operatorReferences(workspace)
   diagnostics.push(...validation.warnings.map(issue => ({ code: issue.code, message: issue.message })))
   let inventory: OwnedOperatorInput[] | undefined
   if (config.operatorInventory !== undefined) {
@@ -210,7 +228,7 @@ export function calculateTheoreticalOutput(payload: unknown, config: Theoretical
   }
   const droneRoomId = config.droneRoomId ?? 'none'
   const droneRoom = workspace.mainPlan.facilities[droneRoomId as keyof typeof workspace.mainPlan.facilities]
-  if (droneRoomId !== 'none' && (!droneRoom || !(droneRoom.type === 'trading' ||
+  if (droneRoomId !== 'none' && (!isFacilityBuilt(droneRoom) || !(droneRoom.type === 'trading' ||
       droneRoom.type === 'manufacture' && ['gold', 'exp'].includes(droneRoom.product ?? '')))) throw new Error('请选择可用的无人机目标设施')
   const droneTarget = droneRoomId === 'none' ? 'none' : droneRoom!.type === 'trading' ? 'trading' : droneRoom!.product as 'gold' | 'exp'
   const schedule = compileRosterSchedule(workspace, {

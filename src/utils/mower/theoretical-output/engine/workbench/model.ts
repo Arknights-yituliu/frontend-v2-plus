@@ -60,6 +60,7 @@ export interface MowerSlot {
 export interface MowerFacility {
   roomId: MowerRoomId
   type: MowerFacilityType
+  /** 0 means unbuilt; built facilities use their normal positive level. */
   level: number
   product?: MowerProduct
   slots: MowerSlot[]
