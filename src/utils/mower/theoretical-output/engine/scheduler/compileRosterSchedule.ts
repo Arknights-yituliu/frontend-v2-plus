@@ -8,7 +8,7 @@ import type { CompiledSchedule, CompiledSlot, SimulationAssumptions } from './ty
 
 const LIST_POLICIES = ['exhaust_require', 'rest_in_full', 'resting_priority', 'resting_priority_replacement', 'free_room_exclusions', 'resting_standby', 'free_blacklist', 'workaholic', 'refresh_trading', 'refresh_drained', 'ope_resting_priority'] as const
 const DEFAULTS: SimulationAssumptions = {
-  schemaVersion: 1, initialMorale: 24, enableParty:false, leifengMode:true, droneIntervalHours:3, droneCountLimit:100, reloadRooms:[], maaGapHours:3, runOrderBufferSeconds:15, restingThreshold: 0.65, rescueThreshold: 0.75, freeRoom: false, dormOrder: '', groupRestInFullOnMoodGap: true, groupMoodGapMaxExtraWaitHours: 0, mergeIntervalMinutes: 10, runOrderDelayMinutes: 3, enableMastery: true, runOrderGrandet: true, fiammettaFool: true, fiammettaThreshold: 0.9, operatorMorale: {}, dormAtmosphere: 0,
+  schemaVersion: 1, initialMorale: 24, enableParty:false, leifengMode:true, droneIntervalHours:3, droneCountLimit:100, reloadRooms:[], maaGapHours:3, restingThreshold: 0.65, rescueThreshold: 0.75, freeRoom: false, dormOrder: '', groupRestInFullOnMoodGap: true, groupMoodGapMaxExtraWaitHours: 0, mergeIntervalMinutes: 10, enableMastery: true, fiammettaFool: true, fiammettaThreshold: 0.9, operatorMorale: {}, dormAtmosphere: 0,
   initialGold: 0, initialFragments: 0, initialDrones: 0,
   collectionIntervalHours: 0, operationDurationHours: 0, horizonHours: 24 * 90,
   elitePhase: 2, currentOccupants: {},
@@ -33,12 +33,10 @@ export function compileRosterSchedule(workspace: RosterWorkspace, options: Parti
   assumptions.currentOccupants = safeClone(options.currentOccupants ?? {})
   const diagnostics: CompiledSchedule['diagnostics'] = []
   const invalid = (path: string, message: string) => diagnostics.push({ code: 'INVALID_ASSUMPTION', severity: 'error', path, message })
-  if (!Number.isFinite(assumptions.runOrderDelayMinutes)) invalid('assumptions.runOrderDelayMinutes', 'run_order_delay must be finite')
-  if(assumptions.runOrderSimulationMode!==undefined&&!['ideal','grandet','drone'].includes(assumptions.runOrderSimulationMode))invalid('assumptions.runOrderSimulationMode','Invalid simulation run-order mode')
-  for (const key of ['enableMastery','runOrderGrandet','enableParty','leifengMode'] as const) if (typeof assumptions[key] !== 'boolean') invalid('assumptions.'+key, 'Native scheduling switch must be boolean')
+  if(assumptions.runOrderSimulationMode!==undefined&&assumptions.runOrderSimulationMode!=='ideal')invalid('assumptions.runOrderSimulationMode','Invalid simulation run-order mode')
+  for (const key of ['enableMastery','enableParty','leifengMode'] as const) if (typeof assumptions[key] !== 'boolean') invalid('assumptions.'+key, 'Native scheduling switch must be boolean')
   for(const key of ['droneIntervalHours','maaGapHours'] as const)if(!Number.isFinite(assumptions[key])||assumptions[key]!<0)invalid('assumptions.'+key,'Native service interval must be nonnegative and finite')
   if(!Number.isInteger(assumptions.droneCountLimit)||assumptions.droneCountLimit!<0)invalid('assumptions.droneCountLimit','Native drone reserve must be a nonnegative integer')
-  if(!Number.isFinite(assumptions.runOrderBufferSeconds))invalid('assumptions.runOrderBufferSeconds','Native buffer must be finite')
   if(assumptions.reloadRooms!==null&&(!Array.isArray(assumptions.reloadRooms)||assumptions.reloadRooms.some(room=>typeof room!=='string')))invalid('assumptions.reloadRooms','Native reload room list must be null or an array')
   if (typeof assumptions.groupRestInFullOnMoodGap !== 'boolean') invalid('assumptions.groupRestInFullOnMoodGap', 'group_rest_in_full_on_mood_gap must be boolean')
   if (!Number.isFinite(assumptions.groupMoodGapMaxExtraWaitHours) || assumptions.groupMoodGapMaxExtraWaitHours! < 0 || assumptions.groupMoodGapMaxExtraWaitHours! > 24) invalid('assumptions.groupMoodGapMaxExtraWaitHours', 'group_mood_gap_max_extra_wait_hours must be within 0..24')
@@ -67,7 +65,7 @@ export function compileRosterSchedule(workspace: RosterWorkspace, options: Parti
   const restPools: CompiledSchedule['restPools'] = []
   const fiammettaPolicies: CompiledSchedule['fiammettaPolicies'] = []
   const runOrderPolicies: CompiledSchedule['runOrderPolicies'] = []
-  const rooms = mowerPlanEntries(workspace.mainPlan.facilities).map(([,facility]) => {
+  const rooms = mowerPlanEntries(workspace.mainPlan.facilities).filter(([, facility]) => facility.level > 0).map(([,facility]) => {
     const freeSlotIndices: number[] = []
     const runCandidates: string[] = []
     const slots = facility.slots.map((slot, slotIndex) => {

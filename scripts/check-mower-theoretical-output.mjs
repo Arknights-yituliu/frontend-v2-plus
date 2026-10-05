@@ -21,7 +21,12 @@ const server = await createServer({ configFile: false, root: process.cwd(),
 let sourceServer
 try {
   const { inspectTheoreticalPlan, calculateTheoreticalOutput } = await server.ssrLoadModule('/src/utils/mower/theoretical-output/calculate.ts')
-  const { importMowerJson } = await server.ssrLoadModule('/src/utils/mower/theoretical-output/engine/workbench/compat/mowerJson.ts')
+  const { importMowerJson, resolveOperatorCharId } = await server.ssrLoadModule('/src/utils/mower/theoretical-output/engine/workbench/compat/mowerJson.ts')
+  const { compileRosterSchedule } = await server.ssrLoadModule('/src/utils/mower/theoretical-output/engine/scheduler/compileRosterSchedule.ts')
+  const { compiledScheduleToRuntimeConfig } = await server.ssrLoadModule('/src/utils/mower/theoretical-output/engine/scheduler/scheduleAdapter.ts')
+  const { simulateSchedule } = await server.ssrLoadModule('/src/utils/mower/theoretical-output/engine/simulator/scheduleSimulation.ts')
+  const { validateRosterWorkspace } = await server.ssrLoadModule('/src/utils/mower/theoretical-output/engine/workbench/validate.ts')
+  const { mowerReportMetrics } = await server.ssrLoadModule('/src/utils/mower/theoretical-output/engine/workbench/mowerReportMetrics.ts')
   const { OPERATORS } = await server.ssrLoadModule('/src/utils/mower/theoretical-output/engine/domain/operators.ts')
   const { fullCatalogIdleInventory } = await server.ssrLoadModule('/src/utils/mower/theoretical-output/engine/domain/operatorInventory.ts')
   const slot = (agent, replacement = []) => ({ agent, group: '', replacement })
@@ -39,15 +44,19 @@ try {
   invalid.plan1.room_1_1.plans[0].agent = '未收录的干员'
   fails(() => inspectTheoreticalPlan(invalid), /未知干员/)
   const inspected = inspectTheoreticalPlan(payload)
-  assert.equal(inspected.facilities.filter(room => ['manufacture', 'trading', 'power'].includes(room.type)).length, 4)
+  assert.equal(inspected.facilities.filter(room => room.level > 0 && ['manufacture', 'trading', 'power'].includes(room.type)).length, 4)
   assert.ok(inspected.facilities.find(room => room.roomId === 'train').assumed)
-  assert.equal(inspected.facilities.find(room => room.roomId === 'train').level, 3)
+  assert.equal(inspected.facilities.find(room => room.roomId === 'train').level, 0)
+  assert.equal(inspected.facilities.find(room => room.roomId === 'room_1_2').editable, false)
   const workspace = importMowerJson(JSON.stringify(payload))
-  assert.equal(workspace.mainPlan.facilities.room_1_2.type, '')
-  assert.equal(workspace.mainPlan.facilities.room_1_2.level, 0)
-  assert.deepEqual(workspace.mainPlan.facilities.train.slots, [])
+  for (const [roomId, facility] of Object.entries(workspace.mainPlan.facilities)) {
+    if (Object.hasOwn(payload.plan1, roomId)) continue
+    assert.equal(facility.level, 0, `${roomId}: omitted rooms never become built defaults`)
+    assert.deepEqual(facility.slots, [], `${roomId}: omitted rooms have no staffing`)
+  }
   fails(() => calculateTheoreticalOutput(payload, { sampleDays: 0 }), /采样/)
-  fails(() => calculateTheoreticalOutput(payload, { facilityLevels: { room_1_1: 0 } }), /等级/)
+  fails(() => calculateTheoreticalOutput(payload, { facilityLevels: { room_1_1: 0 } }), /未建造|岗位|干员/)
+  fails(() => calculateTheoreticalOutput(payload, { facilityLevels: { room_1_2: 3 } }), /未声明|未配置|类型|不存在/)
   fails(() => calculateTheoreticalOutput(payload, { droneRoomId: 'room_1_2' }), /无人机/)
   fails(() => calculateTheoreticalOutput(payload, { operatorInventory: [] }), /未持有.*砾/)
   fails(() => calculateTheoreticalOutput(payload, { operatorInventory: [{ operator: '砾', elitePhase: 2, level: 999 }] }), /无效/)
@@ -88,7 +97,94 @@ try {
   const invalidPolicyOnly = structuredClone(withPolicyOnly)
   invalidPolicyOnly.conf.free_blacklist = '不存在的干员'
   fails(() => inspectTheoreticalPlan(invalidPolicyOnly), /未知干员/)
-  console.log('PASS: sparse import, source support-level assumptions, invalid inputs, strict ownership (main/replacements/Fia/backups), real skill stages, progress, detached inputs, unknown idle cards')
+
+  const withEmptyProduction = structuredClone(payload)
+  withEmptyProduction.plan1.room_1_2 = { name: '制造站', product: 'exp3', plans: [] }
+  const disabledProduction = calculateTheoreticalOutput(withEmptyProduction, {
+    ...short, facilityLevels: { room_1_2: 0, train: 0 },
+  })
+  assert.ok(disabledProduction.daily.physicalGold > 0)
+  assert.equal(disabledProduction.metrics.exp, 0, 'a zero-level manufacturing room produces nothing')
+  fails(() => calculateTheoreticalOutput(withEmptyProduction, {
+    ...short, facilityLevels: { room_1_2: 0 }, droneRoomId: 'room_1_2',
+  }), /无人机/)
+  const withoutStaff = structuredClone(payload)
+  withoutStaff.plan1.room_1_1.plans = []
+  fails(() => calculateTheoreticalOutput(withoutStaff, {
+    ...short, facilityLevels: { room_1_1: 0 },
+  }), /制造站|贸易站|产出|收益/)
+
+  // Self-contained 252 layout: three staffed dorms, no fourth dorm or training room.
+  // Distinct catalog IDs specify output-room capacities without copying an account roster.
+  const keepers = new Set(['杜林', '芬', '芙蓉'].map(resolveOperatorCharId))
+  const syntheticStaff = [...new Set(OPERATORS.map(operator => resolveOperatorCharId(operator.charId)))].filter(id => !keepers.has(id))
+  let staffIndex = 0
+  const staffed = count => Array.from({ length: count }, () => slot(syntheticStaff[staffIndex++]))
+  const reduced = { default: 'plan1', plan1: {
+    room_1_1: { name: '制造站', product: 'exp3', plans: staffed(3) },
+    room_1_2: { name: '贸易站', product: 'lmd', plans: staffed(2) },
+    room_1_3: { name: '发电站', plans: [] },
+    room_2_1: { name: '制造站', product: 'gold', plans: staffed(3) },
+    room_2_2: { name: '制造站', product: 'gold', plans: staffed(2) },
+    room_2_3: { name: '制造站', product: 'gold', plans: staffed(3) },
+    room_3_1: { name: '制造站', product: 'exp3', plans: staffed(3) },
+    room_3_2: { name: '贸易站', product: 'lmd', plans: staffed(1) },
+    room_3_3: { name: '发电站', plans: [] },
+    meeting: { name: '', plans: [] }, contact: { name: '', plans: [] }, factory: { name: '', plans: [] },
+    dormitory_1: { name: '', plans: [slot('杜林'), slot('Free'), slot('Free'), slot('Free'), slot('Free')] },
+    dormitory_2: { name: '', plans: [slot('芬'), slot('Free'), slot('Free'), slot('Free'), slot('Free')] },
+    dormitory_3: { name: '', plans: [slot('芙蓉'), slot('Free'), slot('Free'), slot('Free'), slot('Free')] },
+  }, conf: {}, backup_plans: [] }
+  const reducedWorkspace = importMowerJson(JSON.stringify(reduced))
+  const reducedValidation = validateRosterWorkspace(reducedWorkspace)
+  assert.ok(reducedValidation.isValid, JSON.stringify(reducedValidation.criticalErrors))
+  assert.deepEqual(reducedValidation.power, {
+    generation: 540, consumption: 470, margin: 70, sufficient: true,
+  })
+  const reducedSchedule = compileRosterSchedule(reducedWorkspace)
+  assert.equal(reducedSchedule.rooms.filter(room => room.type === 'dormitory').length, 3)
+  assert.equal(reducedSchedule.rooms.some(room => ['train', 'dormitory_4'].includes(room.roomId)), false)
+  const freeOnly = structuredClone(reduced)
+  freeOnly.plan1.dormitory_4 = { name: '', plans: Array.from({ length: 5 }, () => slot('Free')) }
+  const freeOnlyWorkspace = importMowerJson(JSON.stringify(freeOnly))
+  assert.equal(freeOnlyWorkspace.mainPlan.facilities.dormitory_4.level, 0)
+  assert.deepEqual(freeOnlyWorkspace.mainPlan.facilities.dormitory_4.slots, [])
+  const freeOnlySchedule = compileRosterSchedule(freeOnlyWorkspace)
+  assert.equal(freeOnlySchedule.restPools.some(pool => pool.roomId === 'dormitory_4'), false)
+  assert.equal(compiledScheduleToRuntimeConfig(freeOnlySchedule).beds.some(bed => bed.roomId === 'dormitory_4'), false)
+  assert.deepEqual(validateRosterWorkspace(freeOnlyWorkspace).power, validateRosterWorkspace(reducedWorkspace).power)
+  console.log('PASS: missing/Free-only facilities, three-dorm power 540/470, zero-level production and drone guards, strict ownership, real skill stages, progress, detached inputs')
+
+  const ordinaryBackup = { default: 'plan1', plan1: {
+    room_3_1: { name: '贸易站', product: 'lmd', plans: [slot('芬')] },
+    room_1_3: { name: '发电站', plans: [] }, room_2_3: { name: '发电站', plans: [] },
+    room_3_3: { name: '发电站', plans: [] },
+  }, conf: { workaholic: '芬,但书' }, backup_plans: [{
+    name: '普通换班', trigger: 'True', trigger_timing: 'BEGINNING',
+    plan: { room_3_1: { plans: [slot('但书')] } }, task: { room_3_1: ['但书'] },
+  }] }
+  const ordinarySchedule = compileRosterSchedule(importMowerJson(JSON.stringify(ordinaryBackup)))
+  // 5000 is a deliberate bounded regression probe, distinct from the page's 200000 cap.
+  // Ordinary staffing must not retry runner countdown calibration once per second.
+  const ordinaryReport = simulateSchedule(ordinarySchedule, {
+    warmupHours: 0, sampleHours: 8, warmupModel: 'hourly', maxStepHours: .25,
+    maxEvents: 5000, recordSegments: true,
+    production: { outputMode: 'potential', inventoryMode: 'unlimited', runOrderMode: 'ideal', droneTarget: 'none', seed: 42 },
+  })
+  assert.ok(ordinaryReport.success && ordinaryReport.production?.success, JSON.stringify(ordinaryReport.diagnostics))
+  assert.ok(Math.abs(ordinaryReport.observedHours - 8) < 1e-6)
+  const provisoId = resolveOperatorCharId('但书')
+  const firstStaffed = ordinaryReport.segments.find(segment => segment.occupants.room_3_1_0 === provisoId)
+  // Native outer-loop boundaries retain the initial roster for two microseconds.
+  // Ordinary staffing must proceed within a second, without awaiting an order countdown.
+  assert.ok(firstStaffed && firstStaffed.start * 3600 <= 1, 'ordinary backup promptly staffs its resident Proviso')
+  assert.ok(ordinaryReport.segments.filter(segment => segment.start >= firstStaffed.start)
+    .every(segment => segment.occupants.room_3_1_0 === provisoId), 'resident staffing remains in place after the native boundary')
+  assert.ok(ordinaryReport.events.filter(event => event.reason === 'position-correction').length < 5, 'ordinary staffing never floods correction tasks')
+  const ordinaryActual = calculateTheoreticalOutput(ordinaryBackup, short)
+  assert.deepEqual(ordinaryActual.metrics, mowerReportMetrics(ordinaryReport), 'the actual page input path uses the same corrected runtime')
+  assert.ok(ordinaryActual.metrics.orderLmd > 0)
+  console.log('PASS: ordinary Proviso backup staffing, bounded eight-hour simulation, actual page calculation parity')
 
   const args = process.argv.slice(2)
   const sourceIndex = args.indexOf('--source')

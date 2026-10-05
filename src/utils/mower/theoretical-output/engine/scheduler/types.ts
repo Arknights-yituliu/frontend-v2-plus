@@ -19,9 +19,7 @@ export interface SimulationAssumptions {
   groupRestInFullOnMoodGap?: boolean
   groupMoodGapMaxExtraWaitHours?: number
   mergeIntervalMinutes?: number
-  runOrderDelayMinutes?: number
   enableMastery?: boolean
-  runOrderGrandet?: boolean
   enableParty?: boolean
   leifengMode?: boolean
   droneRoom?: string | null
@@ -29,9 +27,8 @@ export interface SimulationAssumptions {
   droneCountLimit?: number
   reloadRooms?: string[] | null
   maaGapHours?: number
-  runOrderBufferSeconds?: number
   /** Simulation-only choice; preserved when backup plans recompile the runtime. */
-  runOrderSimulationMode?: 'ideal' | 'grandet' | 'drone'
+  runOrderSimulationMode?: 'ideal'
   /** Ideal mode retains order task scheduling; false reproduces the old no-wake comparison. */
   idealRunOrderWakeOnly?: boolean
   idleOperators?: string[]

@@ -28,11 +28,13 @@ export interface OutputRoom {
 }
 
 export interface FacilityLevels {
-  reception: 1 | 2 | 3
-  office: 1 | 2 | 3
-  training: 1 | 2 | 3
-  workshop: 1 | 2 | 3
-  dormitories: Array<1 | 2 | 3 | 4 | 5>
+  /** Omitted in legacy configs; defaults to a level-five control center. */
+  central?: 0 | 1 | 2 | 3 | 4 | 5
+  reception: 0 | 1 | 2 | 3
+  office: 0 | 1 | 2 | 3
+  training: 0 | 1 | 2 | 3
+  workshop: 0 | 1 | 2 | 3
+  dormitories: Array<0 | 1 | 2 | 3 | 4 | 5>
 }
 
 export interface OperatorGroup {

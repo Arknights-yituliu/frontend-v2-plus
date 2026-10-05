@@ -41,10 +41,11 @@ export interface MoraleSimulation {
 }
 
 function dormitoryRecoveryPerHour(config: AppConfig) {
-  if (!config.facilities.dormitories.length) return 0
-  return config.facilities.dormitories
-    .reduce((sum, level) => sum + 1.5 + level * 0.5, 0) /
-    config.facilities.dormitories.length
+  const builtDorms = config.facilities.dormitories.filter(level => level > 0)
+  if (!builtDorms.length) return 0
+  return builtDorms
+    .reduce<number>((sum, level) => sum + 1.5 + level * 0.5, 0) /
+    builtDorms.length
 }
 
 function leavesAtZeroMorale(operatorId: string, config: AppConfig) {
@@ -142,7 +143,7 @@ function resources(
   if (activeControlIds.has('char_4184_dolris')) {
     enthusiasm += Math.max(
       0,
-      Math.min(config.facilities.dormitories.length * 5, config.dormitoryOccupantCount),
+      Math.min(config.facilities.dormitories.filter(level => level > 0).length * 5, config.dormitoryOccupantCount),
     )
   }
 

@@ -2,7 +2,6 @@ import type {MowerReloadRequest,MowerReloadObservation} from './mowerReload'
 import type {MowerClueRequest,MowerClueObservation} from './mowerClueLifecycle'
 import type {MowerTodoTaskRequest,MowerTodoTaskObservation} from './mowerTodoTask'
 import type {MowerNotificationRequest,MowerNotificationObservation} from './mowerNotification'
-import type {MowerRunOrderFinishingRequest,MowerRunOrderFinishingObservation} from './mowerRunOrderFinishing'
 import type {RunOrderIORequest,RunOrderIOObservation} from './mowerRunOrderPlanning'
 import type {MowerNativeIOWork} from './mowerRunOrderBridge'
 import type {MowerTaskSchedulingOptions} from './mowerTaskScheduling'
@@ -28,8 +27,7 @@ export interface RuntimeConfig {
   mowerSourcePlan?: Record<string,{agent:string;group:string;replacement:string[]}[]>
   /** Disable order tasks only for the old no-wake comparison. */
   mowerRunOrderEnabled?: boolean
-  /** Retain order task deadlines and planning wakes; skip physical runner arrangements. */
-  mowerRunOrderWakeOnly?: boolean
+  mowerDroneCountLimit?: number
   /** Source device back(0.5); absent for pure, frozen-clock decision fixtures. */
   mowerDeviceTiming?: {roomReturnMicros:number}
   /** Explicit headless outer-clock adapter, never used to alter task timestamps. */
@@ -40,7 +38,6 @@ export interface RuntimeConfig {
   /** Game-owned Free card pool; omitted only by direct source-oracle fixtures. */
   availableIdleOperators?: string[]
   freeBlacklist?: string[]
-  mowerRunOrderFinishing?:{bufferSeconds:number;droneCountLimit:number;waitingScenes:readonly unknown[]}
   mowerDroneRoom?:string|null
   mowerDeviceObservations?:{initialManufactureDroneSelection:number|'max'}
   mowerServices?:{enableParty:boolean;droneIntervalHours:number;reloadRooms:readonly string[]|null;maaGapHours:number;leifengMode:boolean}
@@ -79,7 +76,6 @@ export interface RuntimeRates {
   mowerTodoTaskIO?:(request:MowerTodoTaskRequest,state:RuntimeState)=>MowerNativeIOWork<MowerTodoTaskObservation>
   mowerNotificationIO?:(request:MowerNotificationRequest,state:RuntimeState)=>MowerNativeIOWork<MowerNotificationObservation>
   mowerTodoListVisible?:()=>boolean
-  mowerRunOrderFinishingIO?:(request:MowerRunOrderFinishingRequest,state:RuntimeState,room:string)=>MowerNativeIOWork<MowerRunOrderFinishingObservation>
   /** Real lifecycle observations; host advances time, morale and production. */
   mowerRunOrderIO?:(request:RunOrderIORequest,state:RuntimeState)=>MowerNativeIOWork<RunOrderIOObservation>
   workRate: (operatorId: string, roomId: string, state: RuntimeState) => number

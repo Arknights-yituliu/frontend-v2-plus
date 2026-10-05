@@ -279,13 +279,13 @@ function deriveKiraraGoldProductionLines(
 
 function facilityLevelTotal(config: AppConfig): number {
   return (
-    5 +
+    (config.facilities.central ?? 5) +
     config.rooms.reduce((sum, room) => sum + room.level, 0) +
     config.facilities.reception +
     config.facilities.office +
     config.facilities.training +
     config.facilities.workshop +
-    config.facilities.dormitories.reduce((sum, level) => sum + level, 0)
+    config.facilities.dormitories.reduce<number>((sum, level) => sum + level, 0)
   )
 }
 

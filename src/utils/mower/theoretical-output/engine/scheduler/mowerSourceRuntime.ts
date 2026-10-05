@@ -1,10 +1,8 @@
-import {calibrateMowerRunSelection,MowerMissedSelection} from './mowerRunSelection'
 import {executeMowerReload} from './mowerReload'
 import {MowerExitError,MowerRecognizeError,rethrowMowerInfraFatal} from './mowerNativeErrors'
 import {executeMowerTodoTask,type MowerTodoTaskState} from './mowerTodoTask'
 import {executeMowerClueNew,runMowerClueFlow,setMowerPartyTime,type MowerClueLifecycleState} from './mowerClueLifecycle'
 import {collectMowerInfraNotification,collectMowerTodoList} from './mowerNotification'
-import {finishMowerRunOrderArrangement} from './mowerRunOrderFinishing'
 import {bridgeMowerNativeIO,type MowerNativeIOYield} from './mowerRunOrderBridge'
 import {runDefaultTradeSegment,dispatchDefaultRefreshTime,type RunOrderPlanningState,type RunOrderPlanningSeam} from './mowerRunOrderPlanning'
 // Headless adapter for pinned default Mower task decisions.
@@ -16,7 +14,7 @@ import {scheduleMowerTasks,protectMowerSupportSwaps} from './mowerTaskScheduling
 import {mowerRefreshTradingSpec,refreshMowerRunOrderTime} from './mowerRunOrderRefresh'
 import {MowerArrangementError} from './mowerArrangementError'
 import {OPERATOR_MAP} from '../domain/operators'
-import {isTradeRunOrderOperator,TRADE_RUN_ORDER_NAMES} from '../domain/shiftRunPolicy'
+import {isTradeRunOrderOperator} from '../domain/shiftRunPolicy'
 import type {BackupTiming} from './backupPlans'
 import type {RuntimeState,RuntimeRates,RuntimeConfig} from './rosterRuntime'
 import {MowerOperatorState} from './mowerOperatorState'
@@ -200,7 +198,7 @@ function selectConcreteNames(s:RuntimeState,room:string,names:string[],task:Mowe
  }
  return selected
 }
-function* arrangeRoom(s:RuntimeState,rates:RuntimeRates,room:string,names:string[],getTime:boolean,task:MowerTask,chooseError=0,sharedRestoration:MowerTaskPlan={}):Generator<MowerRoomReturn,MowerTaskPlan|void|MowerMissedSelection,void> {
+function* arrangeRoom(s:RuntimeState,rates:RuntimeRates,room:string,names:string[],getTime:boolean,task:MowerTask,chooseError=0,sharedRestoration:MowerTaskPlan={}):Generator<MowerRoomReturn,MowerTaskPlan|void,void> {
  const {data}=getMowerSourceRuntime(s)
  // refresh_current_room uses cached positions when all requested slots are known.
  const requested=names.flatMap((name,index)=>name==='Current'?[index]:[])
@@ -213,12 +211,9 @@ function* arrangeRoom(s:RuntimeState,rates:RuntimeRates,room:string,names:string
  const seen=new Set<string>()
  for(const [index,name] of resolved.entries())if(name!=='Free'&&name!==''){if(seen.has(name))resolved[index]='Free';else seen.add(name)}
  names.splice(0,names.length,...resolved)
- // Native new_plan captures temporary order staffing before a potential no-op.
+ // Restoration is reserved for Fiammetta; ideal runners never enter a trade room.
  let restoration:MowerTaskPlan|undefined,fiammettaCharge=false
- if(!room.startsWith('dormitory')&&room!=='train'&&resolved.some(id=>TRADE_RUN_ORDER_NAMES.some(name=>(OPERATOR_MAP.get(id)?.name??id).includes(name)&&(name!=='U-Official'||isConfiguredTradeRoom(s.config,room)))))
-  restoration=chooseError>0?sharedRestoration:{[room]:[...current]}
- if(restoration)Object.assign(sharedRestoration,restoration)
- if(room in getMowerSourceRuntime(s).data.runOrderRooms&&!restoration&&task.type!==T.RUN_ORDER&&
+ if(room in getMowerSourceRuntime(s).data.runOrderRooms&&task.type!==T.RUN_ORDER&&
    (resolved.length!==current.length||resolved.some((name,index)=>name!==current[index])))
   refreshMowerRunOrderTime(getMowerSourceRuntime(s).queue,data.nowMicros,room)
  // Native captures both Fia restoration rooms before exact-noop detection (7525-7533).
@@ -237,16 +232,6 @@ function* arrangeRoom(s:RuntimeState,rates:RuntimeRates,room:string,names:string
   fiammettaCharge=true
   restoration=sharedRestoration
 
- }
- const selectionPlan={...sharedRestoration,...restoration}
- if(Object.keys(selectionPlan).length===1&&(s.config.mowerTaskScheduling?.grandet===false?-1:s.config.mowerRunOrderFinishing?.bufferSeconds??15)>0&&chooseError<=0){
-  if(!rates.mowerRunOrderFinishingIO)throw new Error('Native run-order preselection requires countdown observations')
-  const selected=yield* bridgeMowerNativeIO(calibrateMowerRunSelection({
-   task,room,same:false,chooseError,restorationCount:Object.keys(selectionPlan).length,
-   bufferSeconds:s.config.mowerRunOrderFinishing?.bufferSeconds??15,
-   configuredDelayMinutes:s.config.mowerTaskScheduling?.configuredDelayMinutes??3,
-  },{nowMicros:()=>toMowerMicros(s.time)}),request=>rates.mowerRunOrderFinishingIO!(request,s,room),()=>room)
-  if(!selected)return new MowerMissedSelection()
  }
  const readTimes=recoveryOrdered?data.plan[room]!.flatMap((name,index)=>name==='Free'?[index]:[]):mowerArrangementReadIndexes(data,room,resolved,getTime,task)
  // Default get_free_list; the UI chooses eligible idle cards in ascending physical mood.
@@ -287,7 +272,7 @@ function* arrangeRoom(s:RuntimeState,rates:RuntimeRates,room:string,names:string
  return restoration
 }
 /** Actual agent_arrange_room: four attempts, three back(0.5) retry boundaries. */
-function* arrangeRoomSteps(s:RuntimeState,rates:RuntimeRates,room:string,names:string[],getTime:boolean,task:MowerTask,restoration:MowerTaskPlan={}):Generator<MowerRoomReturn,MowerTaskPlan|void|MowerMissedSelection,void>{
+function* arrangeRoomSteps(s:RuntimeState,rates:RuntimeRates,room:string,names:string[],getTime:boolean,task:MowerTask,restoration:MowerTaskPlan={}):Generator<MowerRoomReturn,MowerTaskPlan|void,void>{
  for(let attempt=0;;attempt++){
   try {
    if(attempt){
@@ -357,16 +342,14 @@ export function mowerRunOrderContext(s:RuntimeState):[RunOrderPlanningState,RunO
  const source=getMowerSourceRuntime(s)
  const state:RunOrderPlanningState={
   plan:Object.fromEntries(mowerPlanEntries(s.config.mowerSourcePlan!)),
-  preferSpecialReplacement:true,
   runOrderRooms:Object.keys(source.data.runOrderRooms),queue:source.queue,
   configuredDelayMinutes:s.config.mowerTaskScheduling?.configuredDelayMinutes??3,
   droneRoom:s.config.mowerDroneRoom??null,flags:source.runFlags!,
-  wakeOnly:s.config.mowerRunOrderWakeOnly===true,
  }
  const seam:RunOrderPlanningSeam={
-  nowMicros:()=>toMowerMicros(s.time),nativeName:id=>OPERATOR_MAP.get(id)?.name??id,
+  nowMicros:()=>toMowerMicros(s.time),
   currentDormOccupants:room=>getMowerSourceRuntime(s).data.currentRoom(room),
-  scheduling:{grandet:s.config.mowerTaskScheduling?.grandet,enableMastery:s.config.mowerTaskScheduling?.enableMastery,maintenance:s.config.mowerTaskScheduling?.maintenance},
+  scheduling:{enableMastery:s.config.mowerTaskScheduling?.enableMastery,maintenance:s.config.mowerTaskScheduling?.maintenance},
  }
  return [state,seam]
 }
@@ -465,7 +448,7 @@ export function settleMowerSource(s:RuntimeState,rates:RuntimeRates,onPhase?:(ph
     while(!next.done&&next.value.delayMicros===0)next=steps.next()
     if(!next.done){source.execution={task,steps,wakeMicros:data.nowMicros+next.value.delayMicros,intent:running?.intent??{},data:running?.data??data};break}
     delete source.execution
-   }else if(!running&&task.type===T.RUN_ORDER&&s.config.mowerRunOrderWakeOnly){
+   }else if(!running&&task.type===T.RUN_ORDER){
     // Keep the native pre-order wake, then recheck at the observed completion time.
     // The queued task suppresses repeated reads of this still-pending order.
     if(task.wakeOnlyCompletion)queue.consume(task)
@@ -501,36 +484,6 @@ export function settleMowerSource(s:RuntimeState,rates:RuntimeRates,onPhase?:(ph
      metadata:()=>planMowerMetadata(getMowerSourceRuntime(s).data,queue),
      corrections:()=>{readAgentMood(s,rates);const correction=planMowerCorrection(getMowerSourceRuntime(s).data,queue,true,task,false,skip);return correction?[correction]:[]},
      prepareRelease:current=>prepareMowerRelease(getMowerSourceRuntime(s).data,queue,current),
-     runOrderBufferSeconds:(s.config.mowerTaskScheduling?.grandet===false?-1:s.config.mowerRunOrderFinishing?.bufferSeconds??15),
-     runOrderFinishing:(restoration,lastRoom,current,originalPlan)=>{
-      if(!rates.mowerRunOrderFinishingIO)throw new Error('Native temporary-order finishing requires lifecycle observations')
-      const settings=s.config.mowerRunOrderFinishing
-      const generator=finishMowerRunOrderArrangement({
-       task:current,queue,restoration,lastRoom,originalPlan,
-       activePlan:getMowerSourceRuntime(s).data.plan,
-       runOrderRooms:Object.keys(getMowerSourceRuntime(s).data.runOrderRooms),
-       runOrderBufferSeconds:(s.config.mowerTaskScheduling?.grandet===false?-1:settings?.bufferSeconds??15),
-       configuredDelayMinutes:s.config.mowerTaskScheduling?.configuredDelayMinutes??3,
-       droneRoom:s.config.mowerDroneRoom??null,droneCountLimit:settings?.droneCountLimit??100,
-       waitingScenes:settings?.waitingScenes??[],flags:source.runFlags!,
-      },{nowMicros:()=>toMowerMicros(s.time),nativeName:id=>OPERATOR_MAP.get(id)?.name??id})
-      return bridgeMowerNativeIO(generator,request=>{
-       if(request.kind!=='restore-room')return rates.mowerRunOrderFinishingIO!(request,s,lastRoom)
-       return (function*(){
-        const plan=request.plan
-        for(const [room,names] of Object.entries(plan)){
-         const steps=arrangeRoomSteps(s,rates,room,names,false,current)
-         let step=steps.next()
-         while(!step.done){yield {...step.value,nativeRunOrderIO:true as const};step=steps.next()}
-         if(step.value instanceof MowerMissedSelection)continue
-         delete plan[room]
-         // agent_arrange_room returns a normal primary roster with no new_plan.
-         yield {room,delayMicros:s.config.mowerDeviceTiming?.roomReturnMicros??0,nativeRunOrderIO:true as const,returnsInfraMain:true as const}
-        }
-        return {kind:request.kind,observedAtMicros:toMowerMicros(s.time),value:null,planAfter:plan}
-       })()
-      },request=>'room' in request?request.room:lastRoom)
-     },
      skip
     })
     let lastBoundary=running?.lastBoundary
@@ -610,7 +563,7 @@ export function settleMowerSource(s:RuntimeState,rates:RuntimeRates,onPhase?:(ph
      const todoState:MowerTodoTaskState={
       queue,flags:source.runFlags!,enableParty:settings?.enableParty??true,
       get lastClueMicros(){return source.lastClueMicros??null},set lastClueMicros(value){source.lastClueMicros=value},
-      get droneRoom(){return s.config.mowerDroneRoom??null},get runOrderRooms(){return s.config.mowerRunOrderWakeOnly?[]:Object.keys(getMowerSourceRuntime(s).data.runOrderRooms)},
+      get droneRoom(){return s.config.mowerDroneRoom??null},get runOrderRooms(){return []},
       get droneTimeMicros(){return source.droneTimeMicros??null},set droneTimeMicros(value){source.droneTimeMicros=value},
       droneIntervalHours:settings?.droneIntervalHours??3,reloadRooms:settings?.reloadRooms??null,
       get reloadTimeMicros(){return source.reloadTimeMicros??null},set reloadTimeMicros(value){source.reloadTimeMicros=value},

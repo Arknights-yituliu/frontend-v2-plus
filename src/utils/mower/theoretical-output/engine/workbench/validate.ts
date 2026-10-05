@@ -59,6 +59,7 @@ const VALID_MANUFACTURE_PRODUCTS: readonly MowerProduct[] = ['gold', 'exp', 'fra
 const VALID_TRADING_PRODUCTS: readonly MowerProduct[] = ['money', 'orundum']
 
 function getFacilityCapacity(type: MowerFacilityType, level: number): number {
+  if (level === 0) return 0
   switch (type) {
     case 'manufacture':
     case 'trading':
@@ -92,7 +93,7 @@ export function validateRosterWorkspace(workspace: RosterWorkspace): ValidationR
   // 1. First pass: Collect all active primary operators and check duplicates
   for (const roomId of MOWER_ROOM_IDS) {
     const facility = facilities[roomId]
-    if (!facility) continue
+    if (!facility || facility.level === 0) continue
 
     facility.slots.forEach((slot, slotIndex) => {
       if (slot.occupant.kind === 'operator') {
@@ -122,7 +123,7 @@ export function validateRosterWorkspace(workspace: RosterWorkspace): ValidationR
 
   for (const roomId of MOWER_ROOM_IDS) {
     const facility = facilities[roomId]
-    if (!facility) continue
+    if (!facility || facility.level === 0) continue
 
     // Gaming is strictly excluded from power totals
     if (facility.type === 'gaming' || roomId.startsWith('gaming_')) {
@@ -158,9 +159,15 @@ export function validateRosterWorkspace(workspace: RosterWorkspace): ValidationR
     const facility = facilities[roomId]
     if (!facility) continue
 
+    if (facility.level === 0) {
+      if (facility.slots.some(slot => slot.occupant.kind !== 'empty' || slot.groupId || slot.replacements.length)) {
+        criticalErrors.push({ code: 'INVALID_CONFIG', severity: 'critical', roomId,
+          message: `${getRoomDisplayName(roomId)} 未建造，不能配置干员、休息床位或替补。` })
+      }
+      continue
+    }
+
     const isOutputRoom = (MOWER_OUTPUT_ROOM_IDS as readonly string[]).includes(roomId)
-    // Imported plans may omit unbuilt left-side rooms.
-    if (isOutputRoom && facility.type === '' && facility.level === 0 && facility.slots.length === 0) continue
 
     // Facility Type & Level validation
     if (isOutputRoom) {
