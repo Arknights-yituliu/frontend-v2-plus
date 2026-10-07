@@ -133,6 +133,9 @@ function p12RecHit(name) {
 
 // 干员/组合名 -> 是否出现在任一荐作用域（排序与角标按 recScopesByTag 判定，见下）
 
+// 决战歼灭：子 TAG 排列顺序（范围轴＋伤害轴；与源项目 tools/generate_results.py 的 P01_SUB_ORDER 同步）
+const P01_SUB_ORDER = ["小范围", "大范围", "主物理伤害", "主法术伤害", "主真实伤害", "主弱点伤害", "物法混伤", "物真混伤", "物元混伤", "法元混伤"];
+
 // 子 TAG 选项：tagId -> [{key, group, value, kind}]；阵容组合的子项＝子 TAG 分类（势力/用法）+ 组合名
 const subOptionsByTag = computed(() => {
     const map = new Map();
@@ -161,6 +164,10 @@ const subOptionsByTag = computed(() => {
                     seen.add(key);
                     items.push({ key, group: s.group, value: s.value, kind: "sub" });
                 }
+            }
+            if (t.id === "P01") {
+                // 决战歼灭按固定排列顺序展示（数据侧的成员顺序不保证子 TAG 顺序）
+                items.sort((a, b) => P01_SUB_ORDER.indexOf(a.value) - P01_SUB_ORDER.indexOf(b.value));
             }
         }
         if (items.length) map.set(t.id, items);

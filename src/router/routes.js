@@ -8,6 +8,7 @@ import STORE from '/src/pages/material/store.vue'
 import PACK from '/src/pages/material/pack.vue'
 import ITEM_VALUE from '/src/pages/material/value.vue'
 import INDEX from '/src/pages/index.vue'
+import { LEGACY_ROUTE_REDIRECTS } from './legacyRoutes.js'
 
 // {
 //     path: '/',  访问路径
@@ -188,7 +189,7 @@ const routes = [
         }
     },
     {
-        path: '/information/logistics',
+        path: '/riic/logistics',
         text: '基建技能一览',
         name: 'Logistics',
         display: true,
@@ -308,25 +309,25 @@ const routes = [
         }
     },
     {
-        path: '/tools/sui',
+        path: '/integrated-strategies/sui',
         text: '岁兽残识记录器',
         name: 'sui1',
-        module: 'tools',
+        module: 'integratedStrategies',
         icon: "mdi-application-edit",
         display: true,
-        component: () => import('/src/pages/tools/sui.vue'),
+        component: () => import('/src/pages/integrated-strategies/sui.vue'),
         meta: {
             title: '岁兽残识记录器'
         }
     },
     {
-        path: '/tools/jie-garden',
+        path: '/integrated-strategies/jie-garden',
         text: '界园树洞模拟',
         name: 'JieGarden',
-        module: 'tools',
+        module: 'integratedStrategies',
         icon: "mdi-flower-tulip",
         display: true,
-        component: () => import('/src/pages/tools/jie-garden.vue'),
+        component: () => import('/src/pages/integrated-strategies/jie-garden.vue'),
         meta: {
             title: '界园树洞模拟'
         }
@@ -576,16 +577,6 @@ const routes = [
         }
     },
     {
-        path: '/sui',
-        text: '岁兽残识记录器',
-        name: 'sui2',
-        display: false,
-        component: () => import('/src/pages/tools/sui.vue'),
-        meta: {
-            title: '岁兽残识记录器'
-        }
-    },
-    {
         path: '/tools/schedule',
         text: '排班表编辑器',
         name: 'Schedule',
@@ -634,25 +625,25 @@ const routes = [
         }
     },
     {
-        path: '/information/sandboxFoods',
+        path: '/reclamation/sandbox-foods',
         text: '生息演算食材一览',
         name: 'SandboxFoods',
         display: true,
-        module: 'information',
+        module: 'reclamation',
         icon: "mdi-food-drumstick",
-        component: () => import('/src/pages/information/sandboxFoods.vue'),
+        component: () => import('/src/pages/reclamation/sandboxFoods.vue'),
         meta: {
             title: '生息演算食材一览'
         }
     },
     {
-        path: '/information/integratedStrategies',
+        path: '/integrated-strategies/endings',
         text: '集成战略结局一览',
         name: 'IntegratedStrategies',
         display: true,
-        module: 'information',
+        module: 'integratedStrategies',
         icon: "mdi-routes",
-        component: () => import('/src/pages/information/integrated-strategies/integratedStrategies.vue'),
+        component: () => import('/src/pages/integrated-strategies/endings/integratedStrategies.vue'),
         meta: {
             title: '集成战略结局一览'
         }
@@ -960,6 +951,20 @@ const LinkedTable = {
         icon: 'mdi-toolbox',
         child: []
     },
+    integratedStrategies: {
+        path: '/',
+        text: "集成战略工具",
+        display: true,
+        icon: 'mdi-dice-multiple',
+        child: []
+    },
+    reclamation: {
+        path: '/',
+        text: "生息演算工具",
+        display: true,
+        icon: 'mdi-island',
+        child: []
+    },
     riic: {
         path: '/',
         text: "罗德岛基建",
@@ -972,13 +977,6 @@ const LinkedTable = {
         text: "调查与统计",
         display: true,
         icon: 'mdi-account-box-edit-outline',
-        child: []
-    },
-    information: {
-        path: '/',
-        text: "游戏数据",
-        display: true,
-        icon: 'mdi-format-list-bulleted',
         child: []
     },
     dev: {
@@ -1024,6 +1022,16 @@ for (const route of routes) {
 
     LinkedTable[route.module].child.push(route)
 
+}
+
+// 旧路径重定向放在分组循环之后：这些条目没有 text，混进循环会往 routeMap 里塞 undefined。
+// vue-router 4 按路径评分排序，静态旧路径优先级高于 /:catchAll(.*)，不受 push 顺序影响。
+for (const {from, to} of LEGACY_ROUTE_REDIRECTS) {
+    routes.push({
+        path: from,
+        redirect: to,
+        display: false,
+    })
 }
 
 export {

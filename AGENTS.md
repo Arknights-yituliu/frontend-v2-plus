@@ -83,10 +83,12 @@ src/
 ├── pages/                # Route-level components organized by module
 │   ├── about/            # Site information
 │   ├── material/         # Material efficiency pages
+│   ├── integrated-strategies/  # Integrated Strategies (roguelike) tools
+│   ├── reclamation/      # Reclamation Algorithm tools
 │   ├── tools/            # Utility tools (gacha calc, schedule generator, etc.)
 │   ├── survey/           # Operator survey pages
 │   ├── account/          # User account management
-│   ├── information/      # Game data (logistics, sandbox, integrated strategies)
+│   ├── information/      # 基建技能一览 (logistics.vue, module: riic)
 │   └── dev/              # Development/testing pages
 ├── static/json/          # Static game data
 │   ├── material/         # Material info, synthesis paths
@@ -105,11 +107,12 @@ src/
 
 #### Routing System
 Routes are defined in `src/router/routes.js` with a structured format:
-- Each route has `module` field for grouping (material, tools, survey, information, about, dev)
-- Routes are organized into `LinkedTable` by module for navigation menu
+- Each route has `module` field for grouping (material, tools, integratedStrategies, reclamation, riic, survey, dev, about)
+- Routes are organized into `LinkedTable` by module for navigation menu. `LinkedTable` is also the module registry: a route whose `module` is not a key there throws at import time, and nav order follows the object's key order
 - `display: true` routes appear in navigation
 - Router guard in `index.js` handles special `/docs` path redirection
 - Page titles automatically set via `meta.title`
+- Changing a route's `path` requires three synchronized edits: `src/router/routes.js`, `src/utils/seo.js` (`SEO_ROUTES`), and appending the old path to `src/router/legacyRoutes.js` (the redirect ledger), then `npm run gen:seo`
 
 #### API Layer
 All HTTP requests go through `src/api/request.js`:
