@@ -72,26 +72,32 @@ function cardSections() {
 
 <style scoped>
 .riic-display-card {
-  padding: 12px 14px;
-  border: 1px solid var(--c-border-color);
-  border-radius: 4px;
-  background: var(--c-page-background-color-secondary, #fafafa);
+  padding: 12px;
+  border: 1px solid var(--maa-border, var(--c-border-color));
+  border-radius: 3px;
+  background: var(--maa-soft-panel, var(--c-page-background-color-secondary, #fafafa));
 }
 .riic-display-card-empty,
 .riic-display-card-note {
   margin: 0;
   color: var(--c-text-color-secondary, #6b7280);
   font-size: 13px;
+  line-height: 1.6;
 }
 .riic-display-card-header {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 6px 10px;
+  gap: 4px 8px;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--c-border-color);
+  border-bottom: 1px solid var(--maa-border, var(--c-border-color));
+  line-height: 1.5;
 }
 .riic-display-card > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
   list-style: none;
   cursor: pointer;
 }
@@ -99,6 +105,8 @@ function cardSections() {
   display: none;
 }
 .riic-display-card > summary::after {
+  flex: 0 0 auto;
+  margin-left: 8px;
   content: "+";
   color: var(--c-text-color-secondary, #6b7280);
   font-weight: 400;

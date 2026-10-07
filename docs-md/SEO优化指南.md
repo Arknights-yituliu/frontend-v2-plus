@@ -41,6 +41,7 @@ src/utils/seo.js  (单一数据源：SITE_URL / SITE_NAME / DEFAULT_* / OG_IMAGE
 | 文件 | 职责 |
 |---|---|
 | `src/utils/seo.js` | 站点级 SEO 配置的**唯一数据源**（纯 JS，无 Vue 依赖，可被 Node 脚本直接 import） |
+| `src/router/legacyRoutes.js` | 历史路由变更台账（旧路径 → 新路径），由 `routes.js` 转成客户端重定向 |
 | `src/main.js` | 注册 `@unhead/vue` 的 `createHead()` 插件 |
 | `src/App.vue` | 使用 `useSeoMeta()` / `useHead()` 按路由注入标题、描述、OG/Twitter、canonical |
 | `scripts/generate-seo.mjs` | 从 `SEO_ROUTES` 生成 `public/sitemap.xml` 与 `public/llms.txt` |
@@ -127,6 +128,23 @@ useHead({
 4. 在运行时获得独立的 `title` / `description` / OG / canonical。
 
 无需改动其他文件。
+
+---
+
+## 路由变更流程
+
+改一个已有路由的 `path` 时，必须同步改动三处，否则旧地址会 404、新页面会丢失描述与 canonical：
+
+1. **`src/router/routes.js`** — 修改页面的 `path`（导航分组 `module` 见 `LinkedTable`）。
+2. **`src/utils/seo.js`** — 把 `SEO_ROUTES` 里对应条目的 `path` 改成新路径。`getSeoRoute()` 是**精确匹配**：
+   漏改会让新页面 `description` 退化成 `DEFAULT_DESCRIPTION`、canonical 指向旧地址，并从 sitemap/llms.txt 中消失。
+3. **`src/router/legacyRoutes.js`** — 在 `LEGACY_ROUTE_REDIRECTS` 追加 `{ from: 旧路径, to: 新路径 }`。
+   这是仓库唯一的历史路由变更台账，**只追加、不删除**历史条目（历史条目现已永久失效，删了会让旧外链彻底断掉）。
+   这些条目由 `routes.js` 转成 vue-router 的 `redirect` 路由，也刻意**不**进入 `SEO_ROUTES`——旧地址不该被索引。
+
+最后跑 `npm run gen:seo` 重新生成 `public/sitemap.xml` 与 `public/llms.txt` 并一并提交。
+
+> 旧地址走的是**客户端重定向**，不是 HTTP 301：本项目部署在腾讯云 COS / EdgeOne，仓库里没有声明 301 的配置位。搜索引擎需要执行 JS 才能跟随跳转，要真正的 301 得在网关层另配规则。
 
 ---
 

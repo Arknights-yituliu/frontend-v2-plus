@@ -15,7 +15,7 @@ Creating a new theme requires changes in two files plus creating one new file.
 
 Create the file at:
 ```
-src/pages/information/integrated-strategies/themes/<EnglishPascalCaseName>.vue
+src/pages/integrated-strategies/endings/themes/<EnglishPascalCaseName>.vue
 ```
 
 Template skeleton:
@@ -64,7 +64,7 @@ import BOSS from '@/components/information/BOSS.vue'
 
 ### 1.2 Register the component in the container
 
-Edit `src/pages/information/integrated-strategies/integratedStrategies.vue`:
+Edit `src/pages/integrated-strategies/endings/integratedStrategies.vue`:
 
 1. Add the theme component import in `<script setup>`:
    ```js
@@ -482,7 +482,7 @@ update(集成战略): <主题名><变更简述>
 
 ## Maintainer Notes
 
-- When a new IS season releases, the route in `src/router/routes.js` already exists at `/information/integratedStrategies` — no route change is needed
+- When a new IS season releases, the route in `src/router/routes.js` already exists at `/integrated-strategies/endings` — no route change is needed
 - The `integratedStrategies.scss` file contains all shared styles; do not add local styles to theme files
 - The `integratedStrategies.vue` container uses an image button grid (`.theme-selector`) with PNG theme banners and `<component :is>` for tab switching. Each theme needs both a component file and a banner image at `src/assets/images/information/integrated-strategies/{kebab-case-name}.png` (aspect ratio 1200:385)
 - The container automatically applies **anti-spoiler blur** to all non-first endings via cookie-based persistence. Theme authors do not need to write any spoiler-related code. The system:

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref, watch} from "vue"
+import {onBeforeUnmount, onMounted, ref, watch} from "vue"
 import '/src/assets/css/tool/schedule.v1.scss'
 import '/src/assets/css/information/building_skill_font_color.css'
 import SCHEDULE_TEMPLATE from '/src/static/json/build/plans_template.json'
@@ -17,6 +17,15 @@ import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {useDisplay} from 'vuetify'
 import {useRouter} from 'vue-router';
 import {saveAs} from 'file-saver';
+import {
+  readRiicScheduleEditorDraft,
+  writeRiicScheduleEditorDraft,
+} from "/src/utils/riicScheduleEditorDraft.js";
+import {
+  inferRiicScheduleLayout,
+  reconcileRiicScheduleLayout,
+  resolveRiicScheduleLayout,
+} from "/src/utils/riicScheduleLayout.js";
 
 const router = useRouter();
 
@@ -132,6 +141,7 @@ let scheduleTypeV2 = ref({
   power: 3,
   dormitory: 4,
 })
+let scheduleLayout = ref(null)
 
 /**
  * 获得获得房间内的干员
@@ -702,18 +712,108 @@ let scheduleInfo = ref({
   "description": "文件描述",
   "id": 1702203342688921,
   "title": "文件标题",
-  "buildingType": selectedScheduleType.value.label,
   "planTimes": `${scheduleTypeV2.value.planTimes}班`,
   "plans": [],
-  "scheduleType": {},
 })
+let transferredUnsupportedRoomData = ref({})
+
+function saveScheduleEditorDraft() {
+  createSchedule()
+  writeRiicScheduleEditorDraft({
+    plans: plansTemplate.value,
+    scheduleTypeV2: scheduleTypeV2.value,
+    layout: scheduleLayout.value,
+    scheduleInfo: scheduleInfo.value,
+    selectedPlanIndex: selectedScheduleIndex.value,
+    selectedRoomType: selectedRoomType.value,
+    selectedRoomIndex: selectedRoomIndex.value,
+    isPeriod: isPeriod.value,
+    executionTimeList: executionTimeList.value.map((range) =>
+      range.map((time) =>
+        time instanceof Date && Number.isFinite(time.getTime())
+          ? time.getTime()
+          : null,
+      ),
+    ),
+    unsupportedRoomData: transferredUnsupportedRoomData.value,
+  })
+}
+
+function restoreScheduleEditorDraft() {
+  const draft = readRiicScheduleEditorDraft()
+  if (!draft || !draft.scheduleTypeV2) {
+    return
+  }
+
+  plansTemplate.value = draft.plans
+  scheduleTypeV2.value = {
+    ...scheduleTypeV2.value,
+    ...draft.scheduleTypeV2,
+  }
+  scheduleLayout.value = Array.isArray(draft.layout) ? draft.layout : null
+  scheduleInfo.value = {
+    ...scheduleInfo.value,
+    ...(draft.scheduleInfo || {}),
+  }
+  if (scheduleLayout.value) {
+    scheduleInfo.value.layout = scheduleLayout.value
+  } else {
+    delete scheduleInfo.value.layout
+  }
+  transferredUnsupportedRoomData.value =
+    draft.unsupportedRoomData && typeof draft.unsupportedRoomData === "object"
+      ? draft.unsupportedRoomData
+      : {}
+  isPeriod.value = draft.isPeriod === true
+
+  if (Array.isArray(draft.executionTimeList)) {
+    executionTimeList.value = draft.executionTimeList.map((range, index) => {
+      const fallback = executionTimeList.value[index] || [new Date(), new Date()]
+      return [0, 1].map((timeIndex) =>
+        typeof range?.[timeIndex] === "number" &&
+        Number.isFinite(range[timeIndex])
+          ? new Date(range[timeIndex])
+          : fallback[timeIndex],
+      )
+    })
+  }
+
+  const maxPlanIndex = Math.max(
+    0,
+    Math.min(scheduleTypeV2.value.planTimes, plansTemplate.value.length) - 1,
+  )
+  selectedScheduleIndex.value = Number.isInteger(draft.selectedPlanIndex)
+    ? Math.max(0, Math.min(draft.selectedPlanIndex, maxPlanIndex))
+    : 0
+  if (roomTypeMenu.some((room) => room.value === draft.selectedRoomType)) {
+    selectedRoomType.value = draft.selectedRoomType
+  }
+  selectedRoomIndex.value = Number.isInteger(draft.selectedRoomIndex)
+    ? Math.max(0, draft.selectedRoomIndex)
+    : 0
+  selectedScheduleType.value =
+    SCHEDULE_MENU.find(
+      (menu) =>
+        menu.room?.trading === scheduleTypeV2.value.trading &&
+        menu.room?.manufacture === scheduleTypeV2.value.manufacture &&
+        menu.room?.power === scheduleTypeV2.value.power,
+    ) || {
+      label: "自定义",
+      room: {
+        trading: scheduleTypeV2.value.trading,
+        manufacture: scheduleTypeV2.value.manufacture,
+        power: scheduleTypeV2.value.power,
+      },
+    }
+  createSchedule()
+}
+
+onBeforeUnmount(saveScheduleEditorDraft)
 
 /**
  * 创建排班文件
  */
 function createSchedule() {
-
-  console.log('开始创建')
   let plans = []
   for (let i = 0; i < scheduleTypeV2.value.planTimes; i++) {
     let plan = {
@@ -733,14 +833,36 @@ function createSchedule() {
         processing: plansTemplate.value[i].rooms.processing,
       }
     }
+    const duration = Number(plansTemplate.value[i].duration)
+    if (Number.isFinite(duration) && duration > 0) {
+      plan.duration = Math.round(duration)
+    }
+    const unsupportedRooms = transferredUnsupportedRoomData.value[i]
+    if (Array.isArray(unsupportedRooms?.training)) {
+      plan.rooms.training = deepClone(unsupportedRooms.training)
+    }
     if (isPeriod.value) {
       plan.period = getPeriod(i)
     }
     plans.push(plan)
   }
 
+  const inferredLayout = inferRiicScheduleLayout(plans)
+  scheduleLayout.value = reconcileRiicScheduleLayout(
+    scheduleLayout.value,
+    inferredLayout,
+    {
+      trading: scheduleTypeV2.value.trading,
+      manufacture: scheduleTypeV2.value.manufacture,
+      power: scheduleTypeV2.value.power,
+      dormitory: scheduleTypeV2.value.dormitory,
+    },
+  )
+  scheduleInfo.value.planTimes = `${scheduleTypeV2.value.planTimes}班`
   scheduleInfo.value.plans = plans
+  scheduleInfo.value.layout = scheduleLayout.value
   scheduleInfo.value.scheduleType = scheduleTypeV2.value
+  delete scheduleInfo.value.buildingType
 
 
 }
@@ -776,6 +898,8 @@ function importScheduleById() {
   buildingApi.retrieveSchedule(scheduleImportId.value).then(response => {
 
     importSchedule(response.data.schedule)
+  }).catch(error => {
+    createMessage({type: 'error', text: error?.message || '排班导入失败'})
   })
 }
 
@@ -802,7 +926,11 @@ async function importScheduleByFile() {
     createMessage({type: 'error', text: e.toString()})
     return
   }
-  importSchedule(schedule)
+  try {
+    importSchedule(schedule)
+  } catch (error) {
+    createMessage({type: 'error', text: error?.message || '排班导入失败'})
+  }
 }
 
 /**
@@ -810,40 +938,67 @@ async function importScheduleByFile() {
  * @param schedule 排班内容
  */
 function importSchedule(schedule) {
+  if (!Array.isArray(schedule?.plans) || schedule.plans.length === 0) {
+    throw new Error("排班 JSON 缺少 plans 班次数组")
+  }
 
+  const layout = resolveRiicScheduleLayout({
+    layout: schedule.layout,
+    scheduleType: schedule.scheduleType,
+    plans: schedule.plans,
+  })
+  const getLayoutCount = (type) =>
+    layout.filter((entry) => entry.type === type).length
+  const planTimes = Math.max(
+    1,
+    Math.min(plansTemplate.value.length, schedule.plans.length),
+  )
+
+  transferredUnsupportedRoomData.value = {}
   scheduleInfo.value.author = schedule.author
-  scheduleInfo.value.description = schedule.description;
+  scheduleInfo.value.description = schedule.description
   scheduleInfo.value.title = schedule.title
-
-  // 判断基建类型
-  const buildingType = schedule.buildingType
-  for (const menu of SCHEDULE_MENU) {
-    if (menu.label === buildingType) {
-      chooseScheduleType(menu)
-    }
+  scheduleLayout.value = layout
+  scheduleInfo.value.layout = layout
+  delete scheduleInfo.value.scheduleType
+  delete scheduleInfo.value.buildingType
+  scheduleTypeV2.value = {
+    ...scheduleTypeV2.value,
+    planTimes,
+    trading: getLayoutCount("trading"),
+    manufacture: getLayoutCount("manufacture"),
+    power: getLayoutCount("power"),
+    dormitory: getLayoutCount("dormitory"),
   }
-
-  //排班生成器V2的新字段，记录了基建的类型
-  if (schedule.scheduleType) {
-    const scheduleType = schedule.scheduleType
-    for (const property in scheduleType) {
-      scheduleTypeV2.value[property] = scheduleType[property]
+  selectedScheduleType.value =
+    SCHEDULE_MENU.find(
+      (menu) =>
+        menu.room?.trading === scheduleTypeV2.value.trading &&
+        menu.room?.manufacture === scheduleTypeV2.value.manufacture &&
+        menu.room?.power === scheduleTypeV2.value.power,
+    ) || {
+      label: "自定义",
+      room: {
+        trading: scheduleTypeV2.value.trading,
+        manufacture: scheduleTypeV2.value.manufacture,
+        power: scheduleTypeV2.value.power,
+      },
     }
-  } else {  //兼容旧版排班生成器的基建类型和排班次数
-    const planTimes = schedule.planTimes
-    if (planTimes) {
-      scheduleTypeV2.value.planTimes = parseInt(planTimes.replace('班', ''))
-    }
-  }
 
   const plans = schedule.plans
 
   for (const index in plans) {
     const plan = plans[index]
-    const {name, description, description_post, Fiammetta, drones, rooms, period} = plan
+    const {name, description, description_post, Fiammetta, drones, rooms, period, duration} = plan
     plansTemplate.value[index].name = name
     plansTemplate.value[index].description = description
     plansTemplate.value[index].description_post = description_post
+    const validDuration = Number(duration)
+    if (Number.isFinite(validDuration) && validDuration > 0) {
+      plansTemplate.value[index].duration = Math.round(validDuration)
+    } else {
+      delete plansTemplate.value[index].duration
+    }
 
     if (Fiammetta) {
       for (const property in Fiammetta) {
@@ -860,6 +1015,18 @@ function importSchedule(schedule) {
     if (rooms) {
       for (const roomType in rooms) {
         const roomList = rooms[roomType]
+        if (!Array.isArray(roomList)) {
+          continue
+        }
+        if (roomType === "training" && !Array.isArray(plansTemplate.value[index].rooms.training)) {
+          transferredUnsupportedRoomData.value[index] = {
+            training: deepClone(roomList),
+          }
+          continue
+        }
+        if (!Array.isArray(plansTemplate.value[index].rooms[roomType])) {
+          continue
+        }
         for (const roomIndex in roomList) {
           const room = roomList[roomIndex]
           for (const property in roomList[roomIndex]) {
@@ -920,6 +1087,7 @@ let guidePopup = ref(false)
 onMounted(() => {
   filterOperatorByTag(operatorFilterConditionTable.room.conditions[0], 'room')
 
+  restoreScheduleEditorDraft()
   getOperatorDataByAccount()
 })
 

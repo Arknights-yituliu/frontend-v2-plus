@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import OPERATOR_UPGRADE_DATA from "/src/static/json/tools/operatorUpgradeData.json";
 import { formatRiicOperatorTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
@@ -8,6 +8,15 @@ import {
   formatRiicCalculationFeedback,
 } from "/src/utils/riic/riic-calculation-feedback.js";
 import { calculateRiicTrainingCost } from "/src/utils/riic/riic-training-cost.js";
+import { createMessage } from "/src/utils/message.js";
+import { copyTextToClipboard } from "/src/utils/copyText.js";
+
+// MAA Operator Progression (OperProgress) does not support any of Amiya's three forms
+const MAA_UNSUPPORTED_CHAR_IDS = new Set([
+  "char_002_amiya",
+  "char_1001_amiya2",
+  "char_1037_amiya3",
+]);
 
 function compareTrainingUnlock(left, right) {
   const eliteDifference = Number(left?.elite || 0) - Number(right?.elite || 0);
@@ -141,6 +150,100 @@ const trainingImpactResultsByCharId = computed(() =>
   ),
 );
 
+const maaSelecting = ref(false);
+const maaSelectedCharIds = ref(new Set());
+
+// MAA only promotes elite phases, so a requirement that only raises the level cannot be exported
+function getMaaExportBlocker(requirement) {
+  if (MAA_UNSUPPORTED_CHAR_IDS.has(requirement?.charId)) {
+    return "MAA 暂不支持阿米娅培养";
+  }
+  if (!props.operatorTable?.[requirement?.charId]?.profession) {
+    return "缺少干员数据，无法导出";
+  }
+  if (Number(requirement?.required?.elite || 0) <= Number(requirement?.current?.elite || 0)) {
+    return "仅需提升等级，MAA 暂不支持";
+  }
+  return "";
+}
+
+const maaExportableCharIds = computed(() =>
+  props.scheduleTrainingRequirements
+    .filter((requirement) => !getMaaExportBlocker(requirement))
+    .map((requirement) => requirement.charId),
+);
+const maaSelectedCount = computed(
+  () => maaExportableCharIds.value.filter((charId) => maaSelectedCharIds.value.has(charId)).length,
+);
+
+const trainingRequirementsVisible = computed(
+  () =>
+    props.scheduleTrainingRequirements.length > 0 &&
+    !["running", "pending", "error", "unavailable", "requiresOperators"].includes(
+      props.scheduleTrainingRecommendationStatus,
+    ),
+);
+
+watch(
+  () => props.scheduleTrainingRequirements,
+  () => {
+    maaSelecting.value = false;
+  },
+);
+
+function startMaaSelection() {
+  maaSelectedCharIds.value = new Set(maaExportableCharIds.value);
+  maaSelecting.value = true;
+}
+
+function cancelMaaSelection() {
+  maaSelecting.value = false;
+}
+
+function toggleMaaSelection(requirement) {
+  if (!maaSelecting.value || getMaaExportBlocker(requirement)) {
+    return;
+  }
+  const selected = new Set(maaSelectedCharIds.value);
+  if (!selected.delete(requirement.charId)) {
+    selected.add(requirement.charId);
+  }
+  maaSelectedCharIds.value = selected;
+}
+
+function copyMaaElitePlans() {
+  const requirements = props.scheduleTrainingRequirements.filter(
+    (requirement) =>
+      !getMaaExportBlocker(requirement) && maaSelectedCharIds.value.has(requirement.charId),
+  );
+  // MAA stops at Lv.1 of the new Elite phase, so any higher required level is left to the player
+  const manualLevelCount = requirements.filter(
+    (requirement) => Number(requirement.required.level || 1) > 1,
+  ).length;
+  const plans = requirements.map((requirement) => {
+    const operator = props.operatorTable[requirement.charId];
+    return {
+      role: operator.profession.charAt(0) + operator.profession.slice(1).toLowerCase(),
+      name: operator.name,
+      elite: Number(requirement.required.elite),
+    };
+  });
+  const text = `[\n${plans.map((plan) => `  ${JSON.stringify(plan)}`).join(",\n")}\n]`;
+  copyTextToClipboard(text, (success) => {
+    if (!success) {
+      createMessage({ type: "error", text: "复制失败，请检查浏览器剪贴板权限" });
+      return;
+    }
+    createMessage({
+      type: "success",
+      text: `已复制 ${plans.length} 名干员的精英化培养计划，请在 MAA「干员培养」中点击「从剪贴板读取」${
+        manualLevelCount > 0 ? `（其中 ${manualLevelCount} 名晋升后停在 1 级，还需手动升到建议等级）` : ""
+      }`,
+    });
+    maaSelecting.value = false;
+  });
+}
+
 function getOperatorAvatarTooltip(requirement) {
   const operator = {
     charId: requirement?.charId,
@@ -227,6 +330,23 @@ async function copyCalculationFeedback() {
   <section class="additional-info-module">
     <header class="additional-info-module-heading">
       <h3>干员培养建议</h3>
+      <div v-if="trainingRequirementsVisible" class="training-maa-actions">
+        <button
+          type="button"
+          :class="{ active: maaSelecting }"
+          :disabled="maaSelecting || !maaExportableCharIds.length"
+          title="选择需要提升精英化的干员，复制为 MAA「干员培养」计划"
+          @click="startMaaSelection"
+        >
+          导出到 MAA
+        </button>
+        <template v-if="maaSelecting">
+          <button type="button" :disabled="!maaSelectedCount" @click="copyMaaElitePlans">
+            复制（{{ maaSelectedCount }}）
+          </button>
+          <button type="button" @click="cancelMaaSelection">取消</button>
+        </template>
+      </div>
       <template v-if="showCandidateDebugValues">
         <button
           type="button"
@@ -281,6 +401,19 @@ async function copyCalculationFeedback() {
         v-for="entry in trainingCosts"
         :key="entry.requirement.charId"
         class="schedule-training-requirement"
+        :class="{
+          'maa-selectable': maaSelecting && !getMaaExportBlocker(entry.requirement),
+          'maa-selected': maaSelecting && !getMaaExportBlocker(entry.requirement) && maaSelectedCharIds.has(entry.requirement.charId),
+          'maa-unavailable': maaSelecting && getMaaExportBlocker(entry.requirement),
+        }"
+        :role="maaSelecting ? 'checkbox' : undefined"
+        :tabindex="maaSelecting && !getMaaExportBlocker(entry.requirement) ? 0 : undefined"
+        :aria-checked="maaSelecting ? maaSelectedCharIds.has(entry.requirement.charId) : undefined"
+        :aria-disabled="maaSelecting && getMaaExportBlocker(entry.requirement) ? 'true' : undefined"
+        :title="maaSelecting ? getMaaExportBlocker(entry.requirement) || undefined : undefined"
+        @click="toggleMaaSelection(entry.requirement)"
+        @keydown.space.prevent="toggleMaaSelection(entry.requirement)"
+        @keydown.enter.prevent="toggleMaaSelection(entry.requirement)"
       >
         <OperatorAvatar
           :char-id="entry.requirement.charId"
@@ -546,6 +679,26 @@ async function copyCalculationFeedback() {
   opacity: 0.45;
 }
 
+.training-maa-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.additional-info-module-heading .training-maa-actions button {
+  margin-left: 0;
+}
+
+.additional-info-module-heading .training-maa-actions ~ button {
+  margin-left: 6px;
+}
+
+.additional-info-module-heading .training-maa-actions button.active {
+  border-color: var(--riic-blue);
+  color: var(--riic-blue);
+  opacity: 1;
+}
+
 .additional-info-module-heading small {
   color: var(--riic-muted);
   font-size: 12px;
@@ -676,6 +829,20 @@ async function copyCalculationFeedback() {
   border: 1px solid var(--c-border-color);
   border-radius: 6px;
   background: var(--c-page-background-color);
+}
+
+.schedule-training-requirement.maa-selectable {
+  cursor: pointer;
+}
+
+.schedule-training-requirement.maa-selected {
+  border-color: var(--riic-blue);
+  box-shadow: inset 0 0 0 1px var(--riic-blue);
+}
+
+.schedule-training-requirement.maa-unavailable {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .schedule-training-requirement-copy {
