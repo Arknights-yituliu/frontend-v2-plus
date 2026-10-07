@@ -53,10 +53,14 @@
           v-model="selected"
           :headers="headers"
           :items="tableData"
-          item-value="date"
+          item-value="row_id"
           show-select
           class="elevation-1"
-        ></v-data-table>
+        >
+          <template #item.effective_viewing_time_hours="{ value }">
+            {{ value === null ? '暂无数据' : value }}
+          </template>
+        </v-data-table>
 
         <div class="mt-4">
           <strong>选中总时长(小时)：</strong> {{ totalSelectedDuration }}
@@ -91,18 +95,18 @@ import { ref, computed, onMounted, watch } from 'vue'
 const tableData = ref([])
 
 const headers = ref([
-  { text: '日期', value: 'date' },
-  { text: '标题', value: 'title' },
-  { text: '分区', value: 'area_name' },
-  { text: '开始时间', value: 'start_time' },
-  { text: '结束时间', value: 'end_time' },
-  { text: '时长(小时)', value: 'live_time_hours' },
-  { text: '有效观看(小时)', value: 'effective_viewing_time_hours' },
-  { text: '弹幕数', value: 'danmu_num' },
-  { text: '最高在线', value: 'max_online' },
-  { text: '打赏(RMB)', value: 'hamster_rmb' },
-  { text: '新增关注', value: 'new_attention' },
-  { text: '新增粉丝团', value: 'new_fans_club' },
+  { title: '日期', key: 'date' },
+  { title: '标题', key: 'title' },
+  { title: '分区', key: 'area_name' },
+  { title: '开始时间', key: 'start_time' },
+  { title: '结束时间', key: 'end_time' },
+  { title: '时长(小时)', key: 'live_time_hours' },
+  { title: '有效观看(小时)', key: 'effective_viewing_time_hours' },
+  { title: '弹幕数', key: 'danmu_num' },
+  { title: '最高在线', key: 'max_online' },
+  { title: '打赏(RMB)', key: 'hamster_rmb' },
+  { title: '新增关注', key: 'new_attention' },
+  { title: '新增粉丝团', key: 'new_fans_club' },
 ])
 
 watch([headers, tableData], () => {
@@ -125,6 +129,41 @@ const endTime = ref('')
 const generatedLink = ref('')
 const snackbar = ref(false)
 
+// 保留秒数用于汇总；旧缓存只有小时数时，沿用其已有精度。
+const normalizeRows = (list) => list.map((item, index) => {
+  const rawLiveTime = Number(item.live_time ?? (item.live_time_hours || 0) * 3600)
+  const liveTime = Number.isFinite(rawLiveTime) && rawLiveTime >= 0 ? rawLiveTime : 0
+  const rawEffectiveTime = 'effective_viewing_time' in item
+    ? item.effective_viewing_time
+    : item.effective_viewing_time_hours == null ? null : item.effective_viewing_time_hours * 3600
+  const effectiveTime = rawEffectiveTime != null
+    && Number.isFinite(Number(rawEffectiveTime))
+    && Number(rawEffectiveTime) >= 0
+    ? Number(rawEffectiveTime)
+    : null
+
+  return {
+    // 同一直播可能按分区拆成多条记录，索引也能区分完全相同的行。
+    row_id: JSON.stringify([item.live_id ?? '', item.start_time, item.end_time, item.area_id ?? item.area_name, index]),
+    live_id: item.live_id,
+    area_id: item.area_id,
+    date: item.date,
+    title: item.title,
+    area_name: item.area_name,
+    start_time: item.start_time,
+    end_time: item.end_time,
+    live_time: liveTime,
+    effective_viewing_time: effectiveTime,
+    live_time_hours: Number((liveTime / 3600).toFixed(1)),
+    effective_viewing_time_hours: effectiveTime === null ? null : Number((effectiveTime / 3600).toFixed(1)),
+    danmu_num: item.danmu_num,
+    max_online: item.max_online,
+    hamster_rmb: item.hamster_rmb,
+    new_attention: item.new_attention,
+    new_fans_club: item.new_fans_club,
+  }
+})
+
 // ✅ 默认时间
 onMounted(() => {
   const now = new Date()
@@ -141,7 +180,7 @@ onMounted(() => {
   const saved = localStorage.getItem('session_table_data')
   if (saved) {
     try {
-      tableData.value = JSON.parse(saved)
+      tableData.value = normalizeRows(JSON.parse(saved))
     } catch {}
   }
 })
@@ -156,20 +195,7 @@ const parseJson = () => {
       throw new Error('找不到 data.date_info.date_item_info')
     }
 
-    const rows = list.map(item => ({
-      date: item.date,
-      title: item.title,
-      area_name: item.area_name,
-      start_time: item.start_time,
-      end_time: item.end_time,
-      live_time_hours: Math.floor((item.live_time || 0) / 360) / 10,
-      effective_viewing_time_hours: Math.floor((item.effective_viewing_time || 0) / 360) / 10,
-      danmu_num: item.danmu_num,
-      max_online: item.max_online,
-      hamster_rmb: item.hamster_rmb,
-      new_attention: item.new_attention,
-      new_fans_club: item.new_fans_club,
-    }))
+    const rows = normalizeRows(list)
 
     tableData.value = rows
 
@@ -181,12 +207,19 @@ const parseJson = () => {
 }
 
 // ✅ 多选汇总
+const selectedRows = computed(() => {
+  const selectedIds = new Set(selected.value)
+  return tableData.value.filter(row => selectedIds.has(row.row_id))
+})
+
 const totalSelectedDuration = computed(() => {
-  return selected.value.reduce((sum, row) => sum + (row.live_time_hours || 0), 0).toFixed(1)
+  const totalSeconds = selectedRows.value.reduce((sum, row) => sum + row.live_time, 0)
+  return (totalSeconds / 3600).toFixed(1)
 })
 
 const totalSelectedEffective = computed(() => {
-  return selected.value.reduce((sum, row) => sum + (row.effective_viewing_time_hours || 0), 0).toFixed(1)
+  const totalSeconds = selectedRows.value.reduce((sum, row) => sum + (row.effective_viewing_time ?? 0), 0)
+  return (totalSeconds / 3600).toFixed(1)
 })
 
 // ✅ 链接生成
