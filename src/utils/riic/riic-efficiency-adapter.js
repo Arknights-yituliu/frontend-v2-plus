@@ -1,9 +1,13 @@
 import {
   BATTLE_RECORD_EXPERIENCE,
+  buildDailySanityAmounts,
   buildResultDisplay as buildPackageResultDisplay,
+  calculateDroneAcceleration,
   calculateEfficiency,
   createEfficiencyCatalog,
+  DEFAULT_LMD_DRONE_STRATEGIES,
   facilityId,
+  formatBasePointSource as formatPackageBasePointSource,
 } from "/src/vendor/riic-efficiency/dist/index.js";
 
 export {
@@ -54,8 +58,49 @@ const catalog = {
 export function buildResultDisplay(result, options = {}) {
   return buildPackageResultDisplay(result, {
     basePointLabel: (term) => termsData.terms[term]?.name ?? term,
+    basePointSource: (source) =>
+      formatPackageBasePointSource(source, termsData.terms),
     ...options,
   });
+}
+
+export function calculateRiicDroneAcceleration(result, strategyText = "") {
+  const document = result?.document;
+  if (!document) {
+    return null;
+  }
+
+  const override = String(strategyText ?? "").trim();
+  const droneDocument = {
+    ...document,
+    settings: {
+      ...(document.settings || {}),
+      lmdDroneStrategy: override || undefined,
+    },
+  };
+  const tradingLevels = (document.layout || [])
+    .filter((entry) => entry.type === "trading")
+    .map((entry) => Number(entry.level));
+  const lowestTradingLevel = tradingLevels.length
+    ? Math.min(...tradingLevels)
+    : undefined;
+  const defaultStrategy = [1, 2, 3].includes(lowestTradingLevel)
+    ? DEFAULT_LMD_DRONE_STRATEGIES[lowestTradingLevel]
+    : "";
+
+  return {
+    acceleration: calculateDroneAcceleration(
+      droneDocument,
+      catalog,
+      buildDailySanityAmounts(result),
+      { efficiencyResult: result },
+    ),
+    strategyLabel: override
+      ? `自定义策略：${override}`
+      : defaultStrategy
+        ? `默认策略：${defaultStrategy}`
+        : "当前布局没有可用的贸易站策略",
+  };
 }
 
 const ROOM_TYPE_ALIASES = Object.freeze({ office: "hire" });
@@ -154,7 +199,6 @@ function cloneRoomAssignment(
   roomType,
   operatorStates,
   craftMaterial,
-  initializeMood,
 ) {
   if (!room || typeof room !== "object") {
     return room;
@@ -163,11 +207,12 @@ function cloneRoomAssignment(
   const operators = Array.isArray(room.operators)
     ? room.operators.filter(Boolean)
     : [];
+  const importedStates = room.operatorStates || {};
   const states = Object.fromEntries(
     operators.map((name) => [
       name,
       {
-        ...(initializeMood ? { mood: 24 } : {}),
+        ...(importedStates[name] || {}),
         ...(operatorStates.get(name) || {}),
       },
     ]),
@@ -214,7 +259,7 @@ export function buildRiicEfficiencySchedule(
     operatorTable,
   );
   const craftMaterial = orundumCraftMaterial === "device" ? "装置" : "固源岩";
-  const plans = sourcePlans.map((sourcePlan, planIndex) => {
+  const plans = sourcePlans.map((sourcePlan) => {
     const rooms = Object.fromEntries(
       Object.entries(sourcePlan?.rooms || {}).map(([roomType, assignments]) => [
         normalizeRoomType(roomType),
@@ -225,7 +270,6 @@ export function buildRiicEfficiencySchedule(
                 roomType,
                 operatorStates,
                 craftMaterial,
-                planIndex === 0,
               ),
             )
           : assignments,

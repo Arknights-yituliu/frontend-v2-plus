@@ -102,16 +102,17 @@ function text(value) {
 
 <style scoped>
 .riic-display-section {
-  margin-top: 10px;
+  margin-top: 8px;
+  line-height: 1.5;
 }
 .riic-display-section-nested {
-  margin-left: 12px;
-  padding-left: 10px;
-  border-left: 1px solid var(--c-border-color);
+  margin-left: 8px;
+  padding-left: 8px;
+  border-left: 1px solid var(--maa-border, var(--c-border-color));
 }
 .riic-display-section-label {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   color: var(--c-text-color-secondary, #6b7280);
   font-size: 13px;
   font-weight: 600;
@@ -134,7 +135,7 @@ function text(value) {
 .riic-display-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px 12px;
+  gap: 4px 12px;
   font-size: 13px;
 }
 .riic-display-grid-label {
@@ -147,7 +148,7 @@ function text(value) {
 .riic-display-skill-list,
 .riic-display-candidate-list {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 .riic-display-mood-list {
   display: grid;
@@ -160,7 +161,7 @@ function text(value) {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 4px 12px;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--c-border-color);
+  border-bottom: 1px solid var(--maa-border, var(--c-border-color));
   font-size: 13px;
 }
 .riic-display-skill-title {
@@ -175,7 +176,7 @@ function text(value) {
 .riic-display-skill-calculation {
   grid-column: 1 / -1;
   display: grid;
-  gap: 3px;
+  gap: 4px;
   margin-top: 4px;
 }
 .riic-display-skill-calculation-row {

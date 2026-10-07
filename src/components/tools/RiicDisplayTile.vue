@@ -14,6 +14,7 @@ const props = defineProps({
 
 const ITEM_IMAGE_IDS = Object.freeze({
   理智: "AP_GAMEPLAY",
+  无人机: "base_ap",
   龙门币: "4001",
   中级作战记录: "2003",
   赤金: "3003",
@@ -53,10 +54,10 @@ const productIcon = computed(() => PRODUCT_ICONS[props.tile.product] || "");
   align-items: center;
   gap: 8px;
   min-width: 0;
-  padding: 10px 12px;
-  border: 1px solid var(--c-border-color);
-  border-radius: 4px;
-  background: var(--c-page-background-color-secondary, #fafafa);
+  padding: 12px;
+  border: 1px solid var(--maa-border, var(--c-border-color));
+  border-radius: 3px;
+  background: var(--maa-soft-panel, var(--c-page-background-color-secondary, #fafafa));
 }
 .riic-display-tile-icon {
   display: block;
@@ -72,8 +73,9 @@ const productIcon = computed(() => PRODUCT_ICONS[props.tile.product] || "");
 }
 .riic-display-tile-content {
   display: grid;
-  gap: 2px;
+  gap: 4px;
   min-width: 0;
+  line-height: 1.45;
 }
 .riic-display-tile-main {
   font-size: 16px;
