@@ -776,6 +776,12 @@ const SENTINEL_INTERSECT = {
                 按官方设定 TAG 与玩家体感 TAG 快速筛选干员。多选 TAG 时取「同时满足」的交集；选中 TAG 后还能用子 TAG
                 进一步收窄，子 TAG 多选同样取交集。点击卡片查看该干员在当前 TAG 下的条件与备注，备注中的<strong>蓝色术语</strong>可点击查看解释。
             </p>
+            <div class="bcf-note bcf-note--experimental">
+                <strong>实验性版本</strong>
+                <span>
+                    本功能目前仍为实验性版本，可能会存在各种谬误(｡>.<｡)如果您发现了谬误之处，非常欢迎您向我们提供反馈✧｡٩(ˊωˋ)و✧*——反馈群：662584256。
+                </span>
+            </div>
             <div class="bcf-note">
                 <strong>使用说明</strong>
                 <span>蓝色下划线术语点击可查看术语解释；把光标悬停在玩家体感 TAG 或子 TAG 上，可查看该 TAG 的通俗说明；选中玩家体感 TAG 后，卡片右上角的<em class="bcf-diamond-inline"></em>菱彩标识表示该干员在所选的全部玩家体感 TAG 下均为「荐」。</span>
@@ -1214,6 +1220,10 @@ const SENTINEL_INTERSECT = {
 
 .bcf-note--disclaimer {
     border-left-color: #e0a355;
+}
+
+.bcf-note--experimental {
+    border-left-color: #e05a5a;
 }
 
 .bcf-diamond-inline {
