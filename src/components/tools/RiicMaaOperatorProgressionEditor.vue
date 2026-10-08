@@ -400,7 +400,13 @@ watch(
       <details class="operator-progression-disclosure" @toggle="handleProgressionToggle">
         <summary>
           <div>
-            <h2>干员练度</h2>
+            <h2>
+              <span class="disclosure-chevron" aria-hidden="true">
+                <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+                <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+              </span>
+              干员练度
+            </h2>
             <p>{{ allOperators.length }} 名干员 · {{ profiles.length }} 名已用于计算</p>
           </div>
         </summary>
@@ -532,16 +538,6 @@ watch(
 
 .operator-progression-disclosure > summary::-webkit-details-marker {
   display: none;
-}
-
-.operator-progression-disclosure > summary::after {
-  flex: 0 0 auto;
-  color: var(--c-text-color-secondary, #6b7280);
-  content: "+";
-}
-
-.operator-progression-disclosure[open] > summary::after {
-  content: "-";
 }
 
 .operator-progression-disclosure h2,

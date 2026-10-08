@@ -308,6 +308,8 @@ const efficiencySettings = reactive(readPageEfficiencySettings());
 const resourceAmountDisplayMode = ref(readResourceAmountDisplayMode());
 const lmdDroneStrategyInput = ref("");
 const importedFromMaaEditor = ref(false);
+const maaEditorReturnRoute = ref("ScheduleV2");
+const maaEditorScheduleType = ref(undefined);
 const stepMode = ref("facility");
 const roomDetailGeneration = ref(0);
 const showRawResult = ref(false);
@@ -464,13 +466,14 @@ const droneScenarioRows = computed(() => {
     const extraFlow = Object.entries(scenario.extraFlow || {});
     const materials = extraFlow
       .filter(([resource, amount]) => resource !== "无人机" && resource !== scenario.product && amount < -0.000001)
-      .map(([resource, amount]) => ({
-        resource,
-        amount: -amount,
-        dailyNetTile: acceleratedView?.tiles.find((tile) => tile.product === resource),
-        dailyNetPointLines: (acceleratedView?.tiles.find((tile) => tile.product === resource)?.lines || [])
-          .filter((line) => line.key === "net-points"),
-      }));
+      .map(([resource, amount]) => {
+        const dailyNetTile = acceleratedView?.tiles.find((tile) => tile.product === resource);
+        return {
+          resource,
+          amount: -amount,
+          dailyNetLine: dailyNetTile?.lines?.find((line) => line.key === "net")?.value,
+        };
+      });
 
     return {
       key: scenario.key,
@@ -485,9 +488,6 @@ const droneScenarioRows = computed(() => {
       extraAmount: Number(scenario.extraFlow?.[scenario.product]) || 0,
       extraOutput,
       dailyOutputTile,
-      dailyOutputPointLines: (dailyOutputTile?.lines || []).filter(
-        (line) => line.key === "gross-points",
-      ),
       materials,
     };
   });
@@ -918,7 +918,10 @@ function getInitialPlanDurations(plans) {
   return durations;
 }
 
-function applySchedule(payload, { fileName = "", fromMaaEditor = false } = {}) {
+function applySchedule(
+  payload,
+  { fileName = "", fromMaaEditor = false, returnRoute = "ScheduleV2" } = {},
+) {
   const layoutSource = Array.isArray(payload?.layout)
     ? "document"
     : payload?.scheduleType
@@ -941,6 +944,8 @@ function applySchedule(payload, { fileName = "", fromMaaEditor = false } = {}) {
       : [];
   });
   importedFromMaaEditor.value = fromMaaEditor;
+  maaEditorReturnRoute.value = returnRoute;
+  maaEditorScheduleType.value = fromMaaEditor ? payload.scheduleType : undefined;
 }
 
 async function handleScheduleFile(event) {
@@ -963,12 +968,17 @@ async function handleScheduleFile(event) {
 function openMaaEditor() {
   if (sourceSchedule.value) {
     try {
+      const schedule = { ...sourceSchedule.value };
+      if (maaEditorReturnRoute.value === "ScheduleV1" && maaEditorScheduleType.value !== undefined) {
+        schedule.scheduleType = maaEditorScheduleType.value;
+      }
       sessionStorage.setItem(
         RIIC_MAA_CALCULATOR_RETURN_STORAGE_KEY,
         JSON.stringify({
           version: 1,
           source: "riic-maa-calculator",
-          schedule: sourceSchedule.value,
+          schedule,
+          returnRoute: maaEditorReturnRoute.value,
         }),
       );
     } catch (error) {
@@ -977,7 +987,7 @@ function openMaaEditor() {
       return;
     }
   }
-  router.push({ name: "ScheduleV2" });
+  router.push({ name: maaEditorReturnRoute.value });
 }
 
 function consumeMaaEditorTransfer() {
@@ -1009,7 +1019,11 @@ function consumeMaaEditorTransfer() {
   }
 
   try {
-    applySchedule(schedule, { fileName: "排班表MAA", fromMaaEditor: true });
+    applySchedule(schedule, {
+      fileName: "排班表MAA",
+      fromMaaEditor: true,
+      returnRoute: transfer.returnRoute === "ScheduleV1" ? "ScheduleV1" : "ScheduleV2",
+    });
     sessionStorage.removeItem(RIIC_MAA_EDITOR_TRANSFER_STORAGE_KEY);
     ElMessage.success("已导入排班表MAA的排班");
   } catch (error) {
@@ -1214,7 +1228,15 @@ onMounted(() => {
 
     <details class="tool-section calculation-settings-module">
       <summary class="section-heading calculation-settings-summary">
-        <div><h2>计算设置</h2></div>
+        <div>
+          <h2>
+            <span class="disclosure-chevron" aria-hidden="true">
+              <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+              <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+            </span>
+            计算设置
+          </h2>
+        </div>
       </summary>
 
       <div class="efficiency-settings">
@@ -1331,7 +1353,13 @@ onMounted(() => {
       <div class="section-heading"><div><h2>计算结果</h2></div></div>
       <details v-if="packageNoticeGroups.length" class="package-notices" aria-label="计算提示">
       <summary class="package-notices-summary">
-        <h2>计算提示</h2>
+        <h2>
+          <span class="disclosure-chevron" aria-hidden="true">
+            <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+            <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+          </span>
+          计算提示
+        </h2>
         <span class="summary-meta">提示 · {{ packageNoticeCount }}</span>
       </summary>
       <div class="package-notice-groups">
@@ -1371,7 +1399,13 @@ onMounted(() => {
 
       <details class="result-block" open>
         <summary>
-          <span>每日产出总览</span>
+          <span>
+            <span class="disclosure-chevron" aria-hidden="true">
+              <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+              <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+            </span>
+            每日产出总览
+          </span>
           <span class="summary-meta">{{ dailyOutput?.cycleHours ? formatDisplayValue(dailyOutput.cycleHours) + "周期" : "" }}</span>
         </summary>
         <div class="result-body">
@@ -1399,13 +1433,25 @@ onMounted(() => {
 
       <details class="result-block">
         <summary>
-          <span>{{ hasMaaDroneUsage ? "无人机加速结果" : droneStrategyDisplay?.label || "无人机使用策略" }}</span>
+          <span>
+            <span class="disclosure-chevron" aria-hidden="true">
+              <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+              <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+            </span>
+            {{ hasMaaDroneUsage ? "无人机加速结果" : droneStrategyDisplay?.label || "无人机使用策略" }}
+          </span>
           <span class="summary-meta">{{ hasMaaDroneUsage ? "MAA 无人机加速结果" : `${droneScenarioRows.length} 个加速项目` }}</span>
         </summary>
         <div class="result-body">
           <template v-if="hasMaaDroneUsage">
             <div v-if="hasDroneOutput" class="card-list queue-columns">
-              <RiicDisplayCard v-for="card in dronePane.cards" :key="card.key" :card="card" />
+              <RiicDisplayCard
+                v-for="card in dronePane.cards"
+                :key="card.key"
+                :card="card"
+                collapsible
+                default-open
+              />
             </div>
             <p v-else class="empty-hint">当前排班没有无人机加速结果。</p>
           </template>
@@ -1462,7 +1508,7 @@ onMounted(() => {
                         {{ formatNumber(row.extraAmount) }} 龙门币
                       </template>
                       <template v-else-if="row.extraOutput">
-                        {{ formatDisplayValue(row.extraOutput.main) }} {{ row.extraOutput.mainUnit || row.product }}
+                        {{ formatDisplayValue(row.extraOutput.main) }}<template v-if="row.extraOutput.mainUnit"> {{ row.extraOutput.mainUnit }}</template>
                         <small v-for="line in row.extraOutput.lines || []" :key="line.key">
                           {{ formatDisplayValue(line.value) }}
                         </small>
@@ -1481,23 +1527,16 @@ onMounted(() => {
                       <div v-if="row.dailyOutputTile" class="drone-cell-lines">
                         <span>
                           {{ formatDisplayValue(row.dailyOutputTile.main) }}
-                          {{ row.dailyOutputTile.mainUnit || row.product }}
+                          <template v-if="row.dailyOutputTile.mainUnit">{{ row.dailyOutputTile.mainUnit }}</template>
                         </span>
-                        <small v-for="line in row.dailyOutputPointLines" :key="line.key">
-                          {{ formatDisplayValue(line.value) }}
-                        </small>
                       </div>
                       <span v-else>-</span>
                     </td>
                     <td>
                       <div v-if="row.materials.length" class="drone-cell-lines">
                         <span v-for="material in row.materials" :key="material.resource">
-                          <template v-if="material.dailyNetTile">
-                            {{ formatDisplayValue(material.dailyNetTile.main) }}
-                            {{ material.dailyNetTile.mainUnit || material.resource }}
-                            <small v-for="line in material.dailyNetPointLines" :key="line.key">
-                              {{ formatDisplayValue(line.value) }}
-                            </small>
+                          <template v-if="material.dailyNetLine">
+                            {{ formatDisplayValue(material.dailyNetLine) }}
                           </template>
                           <template v-else>未计算</template>
                         </span>
@@ -1515,7 +1554,13 @@ onMounted(() => {
 
       <details class="result-block">
         <summary>
-          <span>基础价值点</span>
+          <span>
+            <span class="disclosure-chevron" aria-hidden="true">
+              <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+              <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+            </span>
+            基础价值点
+          </span>
           <span class="summary-meta">{{ basePoints?.columns?.length || 0 }} 个班次</span>
         </summary>
         <div class="result-body">
@@ -1548,7 +1593,13 @@ onMounted(() => {
 
       <details v-if="queueCalculationPane" class="result-block queue-calculation-block">
         <summary>
-          <span>{{ queueCalculationPane.label }}</span>
+          <span>
+            <span class="disclosure-chevron" aria-hidden="true">
+              <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+              <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+            </span>
+            {{ queueCalculationPane.label }}
+          </span>
           <span v-if="queueCalculationPane.hint" class="summary-meta">{{ formatDisplayValue(queueCalculationPane.hint) }}</span>
         </summary>
         <div class="result-body">
@@ -1567,7 +1618,13 @@ onMounted(() => {
 
       <details class="result-block room-efficiency-block" @toggle="resetRoomDetailExpansion">
         <summary>
-          <span>房间效率明细</span>
+          <span>
+            <span class="disclosure-chevron" aria-hidden="true">
+              <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+              <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+            </span>
+            房间效率明细
+          </span>
           <span class="summary-meta">{{ facilitySteps?.steps?.length || 0 }} 个房间状态</span>
         </summary>
         <div class="result-body">
@@ -1578,7 +1635,13 @@ onMounted(() => {
           <div v-if="facilityPanes.length" :key="roomDetailGeneration" class="pane-list">
             <details v-for="pane in facilityPanes" :key="pane.key" class="pane">
               <summary class="pane-header">
-                <span class="pane-label">{{ pane.label }}</span>
+                <span class="pane-label">
+                  <span class="disclosure-chevron" aria-hidden="true">
+                    <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+                    <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+                  </span>
+                  {{ pane.label }}
+                </span>
                 <span v-if="pane.badge" class="pane-badge">{{ formatDisplayValue(pane.badge) }}</span>
               </summary>
               <div class="card-list queue-columns">
@@ -1607,7 +1670,13 @@ onMounted(() => {
 
       <details class="result-block" @toggle="showRawResult = $event.target.open">
         <summary>
-          <span>完整 riic-efficiency 结果 JSON</span>
+          <span>
+            <span class="disclosure-chevron" aria-hidden="true">
+              <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+              <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+            </span>
+            完整 riic-efficiency 结果 JSON
+          </span>
         </summary>
         <div class="result-body">
           <pre v-if="showRawResult">{{ rawResultJson }}</pre>
@@ -1694,17 +1763,6 @@ h2 {
 .calculation-settings-summary {
   list-style: none;
   cursor: pointer;
-}
-.calculation-settings-summary::-webkit-details-marker {
-  display: none;
-}
-.calculation-settings-summary::after {
-  margin-left: auto;
-  color: var(--c-text-color-secondary, #6b7280);
-  content: "+";
-}
-.calculation-settings-module[open] > .calculation-settings-summary::after {
-  content: "-";
 }
 .calculation-settings-summary h2 {
   margin: 0;
@@ -1987,6 +2045,9 @@ h2 {
   margin-bottom: 12px;
   color: var(--c-text-color);
 }
+.efficiency-settings-heading strong {
+  font-size: 15px;
+}
 .efficiency-settings-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2156,9 +2217,9 @@ h2 {
 }
 .package-notices {
   display: grid;
-  gap: var(--maa-gap-3);
+  gap: 0;
   margin-top: var(--maa-gap-4);
-  padding: var(--maa-gap-3);
+  padding: 0;
   border: 1px solid var(--maa-border);
   border-radius: 3px;
   background: var(--maa-soft-panel);
@@ -2171,24 +2232,15 @@ h2 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-height: var(--maa-control-height);
+  padding: 0 var(--maa-gap-3);
   list-style: none;
   cursor: pointer;
-}
-.package-notices-summary::-webkit-details-marker {
-  display: none;
-}
-.package-notices-summary::after {
-  margin-left: auto;
-  content: "+";
-  color: var(--c-text-color-secondary, #6b7280);
-  font-weight: 400;
-}
-.package-notices[open] > .package-notices-summary::after {
-  content: "-";
 }
 .package-notice-groups {
   display: grid;
   gap: var(--maa-gap-3);
+  padding: 0 var(--maa-gap-3) var(--maa-gap-3);
 }
 .package-notice-group {
   display: grid;
@@ -2230,7 +2282,7 @@ h2 {
 .tile-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 12px;
+  gap: var(--maa-gap-4);
 }
 .resource-amount-control {
   display: flex;
@@ -2244,17 +2296,19 @@ h2 {
 }
 .segmented-control {
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 .segmented-control button {
   min-height: var(--maa-compact-control-height);
   padding: 0 10px;
   border: 1px solid var(--c-border-color);
-  border-right-width: 0;
   background: transparent;
   color: inherit;
   font: inherit;
   cursor: pointer;
+}
+.segmented-control button + button {
+  margin-left: -1px;
 }
 .segmented-control button:first-child {
   border-radius: 3px 0 0 3px;
@@ -2264,6 +2318,8 @@ h2 {
   border-radius: 0 3px 3px 0;
 }
 .segmented-control button.active {
+  position: relative;
+  z-index: 1;
   border-color: var(--riic-blue, #2878c8);
   background: color-mix(in srgb, var(--riic-blue, #2878c8) 10%, transparent);
   color: var(--riic-blue, #2878c8);
@@ -2366,21 +2422,24 @@ h2 {
   border-left: 0;
 }
 .tile-group + .tile-group {
-  margin-top: 12px;
+  margin-top: var(--maa-gap-4);
 }
 .card-list,
 .pane-list {
   display: grid;
-  gap: 12px;
+  gap: var(--maa-gap-4);
 }
 .queue-columns {
-  grid-auto-columns: minmax(280px, 1fr);
-  grid-auto-flow: column;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: var(--maa-gap-4);
+  min-width: 0;
   overflow-x: auto;
   padding-bottom: var(--maa-gap-2);
 }
 .queue-columns > * {
-  min-width: 280px;
+  flex: 1 0 320px;
+  min-width: 320px;
 }
 .pane {
   display: grid;
@@ -2392,15 +2451,6 @@ h2 {
 }
 .pane > summary::-webkit-details-marker {
   display: none;
-}
-.pane > summary::after {
-  margin-left: auto;
-  content: "+";
-  color: var(--c-text-color-secondary, #6b7280);
-  font-weight: 400;
-}
-.pane[open] > summary::after {
-  content: "-";
 }
 .pane + .pane {
   margin-top: var(--maa-gap-3);
@@ -2434,8 +2484,7 @@ h2 {
   color: var(--riic-blue, #2878c8);
 }
 .base-point-grid {
-  display: grid;
-  gap: 12px;
+  display: flex;
 }
 .base-point-column {
   padding: var(--maa-gap-3);
@@ -2545,6 +2594,33 @@ pre {
 .file-control:focus-within {
   outline: 2px solid var(--riic-blue, #2878c8);
   outline-offset: 2px;
+}
+.maa-calculator-page :deep(.operator-progression-search input:focus-visible) {
+  outline: none;
+  outline-offset: 0;
+}
+.maa-calculator-page :deep(details > summary) {
+  list-style: none;
+}
+.maa-calculator-page :deep(details > summary::-webkit-details-marker) {
+  display: none;
+}
+.maa-calculator-page :deep(details > summary::marker) {
+  content: "";
+}
+.maa-calculator-page :deep(.disclosure-chevron) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.maa-calculator-page :deep(details[open] > summary .disclosure-chevron-down),
+.maa-calculator-page :deep(details:not([open]) > summary .disclosure-chevron-up) {
+  display: none;
 }
 .maa-calculator-page :deep(.layout-editor-room .el-select__wrapper) {
   box-sizing: border-box;
