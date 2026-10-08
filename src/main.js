@@ -3,6 +3,7 @@ import {createHead} from '@unhead/vue/client'
 
 import ElementPlus from 'element-plus'
 import naive from 'naive-ui'
+import { plugin as Slicksort } from 'vue-slicksort'
 import App from './App.vue'
 import router from "/src/router/index.js";
 
@@ -27,6 +28,7 @@ const head = createHead()
 
 app.use(ElementPlus, {locale: zhCn,})
 app.use(naive)
+app.use(Slicksort)
 app.use(router)
 app.use(vuetify)
 app.use(head)
