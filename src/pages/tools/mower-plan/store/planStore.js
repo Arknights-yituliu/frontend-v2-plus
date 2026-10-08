@@ -120,7 +120,7 @@ async function load_plan() {
   hydratePlanData({ plan1: {}, conf: {} });
 }
 async function load_operators() {
-  operators.value = [...new Set(Object.values(operatorTableV2).map((op) => op.name))].map((name) => ({ value: name, label: name }));
+  operators.value = [...new Set(Object.values(operatorTableV2).map((op) => (op.name.startsWith("阿米娅（") ? "阿米娅" : op.name)))].map((name) => ({ value: name, label: name }));
 }
 function mainConf() {
   return {
