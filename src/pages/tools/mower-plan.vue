@@ -53,7 +53,14 @@ const {
 } = mowerPlanStore;
 
 const activePlanName = computed(() => (sub_plan.value === "main" ? "主表" : backup_plans.value[sub_plan.value]?.name || "副表"));
-const filledFacilityCount = computed(() => Object.values(mowerPlanStore.current_plan.value).filter((room) => room.plans.some((slot) => slot.agent)).length);
+const configuredOperatorCount = computed(
+  () =>
+    new Set(
+      Object.values(mowerPlanStore.current_plan.value)
+        .flatMap((room) => room.plans.map((slot) => slot.agent))
+        .filter((name) => name && name !== "Free" && name !== "Current")
+    ).size
+);
 const plan_editor = ref(null);
 const ready = ref(false);
 const localJsonInput = ref(null);
@@ -342,8 +349,8 @@ onUnmounted(() => {
         </div>
         <div class="workspace-stats">
           <div>
-            <strong>{{ filledFacilityCount }}</strong
-            ><span>已配置设施</span>
+            <strong>{{ configuredOperatorCount }}</strong
+            ><span>已配置干员数</span>
           </div>
           <div>
             <strong>{{ backup_plans.length }}</strong
