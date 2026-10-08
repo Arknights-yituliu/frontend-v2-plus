@@ -8,7 +8,7 @@ const id = computed(() => nameToCharId[props.name]);
 <template>
   <div class="plan-avatar" :style="{ width: `${size}px`, minHeight: `${size}px` }" draggable="false">
     <OperatorAvatar v-if="id" :char-id="id" :size="size" :mobile-size="size" />
-    <div v-else class="placeholder" :style="{ height: `${size}px` }">{{ name === "Current" ? "当前" : name === "Free" ? "Free" : name?.slice(0, 2) }}</div>
+    <div v-else class="placeholder" :style="{ height: `${size}px` }">{{ name === "Current" ? "Curr" : name === "Free" ? "Free" : name?.slice(0, 2) }}</div>
   </div>
 </template>
 <style scoped>
