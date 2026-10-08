@@ -15,26 +15,35 @@ export function shouldMowerReadMood(data:MowerSchedulingData,name:string,room:st
  return op.needToRefresh(data.nowMicros,2,room)||firstTask?.type===T.SHIFT_ON||indexes.includes(index)
 }
 /** The native SQLite decorator discards the inner return when update_time is false. */
-export function mowerUpdateDetail(data:MowerSchedulingData,name:string,mood:number,room:string,index:number,updateTime=false,trueExhaustRooms=new Set<string>(),onRoomChanged?:(op:MowerOperatorState)=>void):number|undefined {
+export function mowerUpdateDetail(data:MowerSchedulingData,name:string,mood:number,room:string,index:number,updateTime=false,trueExhaustRooms=new Set<string>(),onRoomChanged?:(op:MowerOperatorState,startedWorking:boolean)=>void):number|undefined {
  const op=data.operators[name]!
+ if(data.alpha&&(updateTime||op.currentRoom!==room||op.currentIndex!==index))data.dormMoodEstimates.delete(name)
+ const previousBed=data.getDormByName(name)?.[1],retained=data.alpha&&previousBed?.name===name&&previousBed.position[0]===room&&previousBed.position[1]===index?previousBed.timeMicros:undefined
+ const returned=data.alpha&&(op.currentRoom!==op.room||op.currentIndex!==op.index)&&room===op.room&&index===op.index
+ const working=!!op.currentRoom&&!op.isResting()
  if(updateTime){
   if(op.timeStampMicros!==undefined&&op.mood>mood){
    const elapsed=data.nowMicros-op.timeStampMicros
    if(elapsed>toMowerMicros(29/60))op.depletionRate=(op.mood-mood)/fromMowerMicros(elapsed)
   }
   op.timeStampMicros=data.nowMicros
+  if(data.alpha){op.moodIsPrediction=false;op.idleRestCheck=undefined}
  }
  if(op.isResting()&&!room.startsWith('dorm'))op.depletionRate=0
  if(op.isResting()){const previous=data.getDormByName(name)?.[1];if(previous?.name===name)previous.reset()}
  if(!trueExhaustRooms.has(room))op.exhaustTimeMicros=undefined
- if(op.currentRoom!==room){op.currentRoom=room;onRoomChanged?.(op)}
+ if(op.currentRoom!==room){op.currentRoom=room;onRoomChanged?.(op,!working&&!!room&&!room.startsWith('dorm'))}
  op.currentIndex=index;op.mood=mood
+ if(data.alpha){
+  if(updateTime){if(room===op.dormMoodFallback&&mood>=0&&mood<=24)for(const [name,stamp] of Object.entries(op.dormMoodPeers)){const peer=data.operators[name];if(peer&&!peer.currentRoom&&peer.timeStampMicros===stamp&&mood>=peer.upperLimit)peer.idleRestCheck=[peer.upperLimit,peer.mood,peer.timeStampMicros]}op.dormMoodPeers={}}
+  if(updateTime&&mood>=0&&mood<op.upperLimit)op.dormMoodFallback='';data.updateStandbyLowPriority(op,returned)
+ }
  if(room==='train'&&index===0)op.restingFromTrain=true
  else if(room&&!room.startsWith('dorm')||mood>=24)op.restingFromTrain=false
  if(mood>=24)op.clearDormRecovery()
  if(room.startsWith('dorm')){
   const bed=data.getDormByName(name)?.[1]
-  if(bed){bed.name=name;if(bed.timeMicros===undefined)return updateTime?index:undefined}
+  if(bed){bed.name=name;if(data.alpha)bed.timeMicros=retained;if(bed.timeMicros===undefined)return updateTime?index:undefined}
  }
  if(op.nativeName==='菲亚梅塔'&&(op.timeStampMicros===undefined||op.timeStampMicros<data.nowMicros))return updateTime?index:undefined
  return undefined
@@ -43,6 +52,7 @@ export function mowerRefreshDormTime(data:MowerSchedulingData,room:string,index:
  const op=data.operators[name];if(!op)return
  const bed=data.dorms.find(b=>b.position[0]===room&&b.position[1]===index&&data.recoveryDorm(b,name))
  if(bed){
+  if(data.alpha&&bed.name===name&&bed.timeMicros!==undefined)return
   bed.name=name
   bed.timeMicros=op.mood!==24&&op.timeStampMicros!==undefined?op.timeStampMicros+roundMowerMicros((op.upperLimit-op.mood)*(timeMicros-op.timeStampMicros)/(24-op.mood)):timeMicros
  }
@@ -52,7 +62,7 @@ export function mowerCorrectDorm(data:MowerSchedulingData):void {
  for(const bed of data.dorms){
   const op=data.operators[bed.name];if(!bed.name||!op)continue
   if(!data.recoveryDorm(bed,bed.name)||op.currentRoom!==bed.position[0]||op.currentIndex!==bed.position[1])bed.reset()
-  else if(bed.timeMicros!==undefined&&bed.timeMicros<data.nowMicros){op.mood=op.upperLimit;op.timeStampMicros=bed.timeMicros;op.depletionRate=0}
+  else if(bed.timeMicros!==undefined&&bed.timeMicros<data.nowMicros){if(data.alpha&&op.timeStampMicros!==undefined&&op.mood>=op.upperLimit){op.depletionRate=0;continue}op.mood=op.upperLimit;op.timeStampMicros=bed.timeMicros;op.depletionRate=0;if(data.alpha)op.moodIsPrediction=true}
  }
 }
 export function projectMowerArrangements(data:MowerSchedulingData,plans:MowerTaskPlan[]):MowerSchedulingData {
@@ -60,11 +70,12 @@ export function projectMowerArrangements(data:MowerSchedulingData,plans:MowerTas
  for(const plan of plans){
   const changed=new Set(Object.entries(plan).flatMap(([room,names])=>names.flatMap((name,index)=>name!=='Current'?[room+'\0'+index]:[])))
   const timers=new Map(projected.dorms.filter(b=>b.name).map(b=>[b.name,{position:b.position,time:b.timeMicros}]))
-  for(const op of Object.values(projected.operators))if(changed.has(op.currentRoom+'\0'+op.currentIndex)){op.currentRoom='';op.currentIndex=-1}
-  for(const [room,names] of Object.entries(plan))for(const [index,name] of names.entries()){const op=projected.operators[name];if(op){op.currentRoom=room;op.currentIndex=index}}
+  for(const op of Object.values(projected.operators))if(changed.has(op.currentRoom+'\0'+op.currentIndex)){if(data.alpha)op.setProjectedPosition('',-1);else{op.currentRoom='';op.currentIndex=-1}}
+  for(const [room,names] of Object.entries(plan))for(const [index,name] of names.entries()){const op=projected.operators[name];if(op){if(data.alpha){op.setProjectedPosition(room,index);op.restMoodReleaseLimit=undefined}else{op.currentRoom=room;op.currentIndex=index}}}
+  if(data.alpha)for(const op of Object.values(projected.operators))if(!op.isResting())op.temporaryDormFill=false
   for(const bed of projected.dorms){
    const op=projected.currentOperator(...bed.position)
-   if(op&&projected.recoveryDorm(bed,op.name)){bed.name=op.name;bed.timeMicros=timers.get(op.name)?.time}else bed.reset()
+   if(op&&projected.recoveryDorm(bed,op.name)){bed.name=op.name;const timer=timers.get(op.name);bed.timeMicros=!data.alpha||timer?.position[0]===bed.position[0]&&timer.position[1]===bed.position[1]?timer?.time:undefined}else bed.reset()
   }
  }
  return projected

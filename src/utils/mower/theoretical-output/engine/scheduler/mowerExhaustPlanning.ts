@@ -6,7 +6,9 @@ import {projectMowerArrangements} from './mowerObservations'
 import {mowerGetRestingPlan,type MowerRestingOptions} from './mowerOrdinaryPlanning'
 import {mowerIsDormReplacement} from './mowerCorrection'
 import type {MowerTaskPlan} from './mowerTaskQueue'
+import {planMowerAlphaExhaustSupport} from './mowerAlphaExhaustSupport'
 export function planMowerExhaustSupport(original:MowerSchedulingData,candidates:string[],options:MowerRestingOptions={}):MowerTaskPlan|undefined {
+ if(original.alpha)return planMowerAlphaExhaustSupport(original,candidates,options)
  const protectedNames=original.busyRestingNames,required=new Set(candidates)
  const coverNames=new Set(candidates.flatMap(n=>original.operators[n]!.replacement.filter(n=>n!=='Free')))
  let plan:MowerTaskPlan={},data=projectMowerArrangements(original,[])

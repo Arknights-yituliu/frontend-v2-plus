@@ -64,6 +64,7 @@ export interface FacilityOperatorAssignments {
 }
 
 export interface AppConfig {
+  productionWeights?: import('./productionWeights').ProductionWeights
   /** Ephemeral, actual unlocked skill snapshots for this calculation only. */
   operatorRecords?: Readonly<Record<string, import('./operators').OperatorRecord>>
   /** Force Jaye (孑) to Elite 0 state (first skill only, under shift-run / empty queue). */
@@ -162,6 +163,7 @@ export interface CalculationReport {
     netGoldCount: number
     netGoldValue: number
     totalScore82: number
+    scoreBreakdown?: import('../optimizer/productionObjective').ProductionScore
     totalEquivalentLmd: number
   } | null
 }

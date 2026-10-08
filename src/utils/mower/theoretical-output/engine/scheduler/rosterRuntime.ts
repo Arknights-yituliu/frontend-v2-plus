@@ -8,6 +8,8 @@ import type {MowerTaskSchedulingOptions} from './mowerTaskScheduling'
 import type { BackupTiming } from './backupPlans'
 import {settleMowerSource,nextMowerSourceActionHours,type MowerSourceRuntime} from './mowerSourceRuntime'
 import type {MowerTask} from './mowerTaskQueue'
+import type {MowerShiftModel} from './mowerShiftCycle'
+import type {MowerMoodLimitConfig} from './mowerMoodLimits'
 import type {MowerBackupContext} from './mowerSourceRuntime'
 import { mowerReturnDelay, mowerRescueDelay } from './mowerTiming'
 import { applyFiammetta, type FiammettaPolicy } from './fiammettaPolicy'
@@ -23,6 +25,9 @@ export interface RuntimePosition {
 }
 export interface RuntimeBed { id: string; roomId: string; vip: boolean; managedRecovery?: boolean }
 export interface RuntimeConfig {
+ /** The application simulation selects the October 3 source contract. */
+ mowerAlpha?:boolean;mowerDormOrder?:string[]
+ mowerMoodLimits?:MowerMoodLimitConfig
   positions: RuntimePosition[]; beds: RuntimeBed[]; initialMorale?: Record<string, number>
   mowerSourcePlan?: Record<string,{agent:string;group:string;replacement:string[]}[]>
   /** Disable order tasks only for the old no-wake comparison. */
@@ -55,6 +60,7 @@ export interface RuntimeState {
   /** Explicit stable scene input shared by headless facility adapters. */
   mowerUI?:{scene:string;lastRoom:string}
   mowerSource?:MowerSourceRuntime; mowerBackupContext?:MowerBackupContext; mowerBackupGenerated?:MowerTask[]
+  mowerShiftModel?:MowerShiftModel
   config: RuntimeConfig; time: number; occupants: Record<string, string>; morale: Record<string, number>
   bedOccupants: Record<string, string>; events: RuntimeEvent[]
   backupBedOccupants?: Set<string>
@@ -643,7 +649,7 @@ function moraleRateSnapshot(s:RuntimeState,rates:RuntimeRates):{derivatives:Reco
 export function currentMoraleDerivatives(s:RuntimeState,rates:RuntimeRates):Record<string,number>{return moraleRateSnapshot(s,rates).derivatives}
 /** Planning events only. Skill boundaries and a substitute reaching 24 do not run Mower's planner. */
 export function nextRosterActionHours(s: RuntimeState, rates: RuntimeRates): number {
-  if(s.config.mowerSourcePlan)return nextMowerSourceActionHours(s)
+  if(s.config.mowerSourcePlan)return nextMowerSourceActionHours(s,rates)
   if (!s.config.mowerPolicy) return nextRosterEventHours(s,rates)
   updateMowerReturnDeadlines(s,rates)
   const deadlines=[s.nextPlanningTime ?? Infinity,s.nextFiammettaCheckTime ?? Infinity,...Object.values(s.returnDeadlines ?? {})]

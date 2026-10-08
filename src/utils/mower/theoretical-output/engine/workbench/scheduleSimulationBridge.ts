@@ -3,6 +3,7 @@ import type { SimulationAssumptions } from '../scheduler/types'
 import { simulateSchedule, type ScheduleSimulationOptions, type ScheduleSimulationReport, type ScheduleSimulationProgress } from '../simulator/scheduleSimulation'
 import type { RosterWorkspace } from './model'
 import { validateRosterWorkspace } from './validate'
+import { normalizeProductionWeights } from '../domain/productionWeights'
 
 export function runScheduleSimulationBridge(
   workspace: RosterWorkspace,
@@ -23,6 +24,7 @@ export function runScheduleSimulationBridge(
   }
 
   try {
+    cleanOptions.productionWeights = normalizeProductionWeights(options.productionWeights ?? workspace.productionWeights)
     const report = simulateSchedule(compileRosterSchedule(cleanWorkspace, cleanAssumptions), cleanOptions, onProgress)
     return { report }
   } catch (error) {

@@ -4,6 +4,7 @@ import {MOWER_TASK_TYPES as T,MowerTask,toMowerMicros,type MowerTaskQueue,type M
 import {hasRestingMood} from './mowerOperatorState'
 import type {MowerSchedulingData,MowerDormState} from './mowerSchedulingData'
 import {generateMowerDormTasks,type MowerDormBatch,type MowerReturnTargets} from './mowerDormTasks'
+import {planMowerAlphaMetadata} from './mowerAlphaMetadata'
 
 export const mowerRestUnitKey=(op:{group:string;name:string})=>op.group?'group:'+op.group:'operator:'+op.name
 const recentlyReturned=(data:MowerSchedulingData,key:string)=>{
@@ -39,6 +40,8 @@ export function planMowerMoodLimitReleases(data:MowerSchedulingData):MowerTask[]
  return result
 }
 export function planMowerMetadata(data:MowerSchedulingData,queue:MowerTaskQueue):void {
+ if(queue.tasks.some(task=>task.backupShiftActive))return
+ if(data.alpha){planMowerAlphaMetadata(data,queue,planMowerMoodLimitReleases(data));return}
  if(data.policy.experimentalDormLogic)throw new Error('Experimental product locks and dorm projection require their source port')
  const existingTargets:MowerReturnTargets={}
  if(data.planConditions.some(Boolean))for(const task of queue.tasks)if(task.type===T.SHIFT_ON)for(const [room,names] of Object.entries(task.plan))for(const [index,name] of names.entries())if(!['Current','Free',''].includes(name))existingTargets[name]=[room,index]
