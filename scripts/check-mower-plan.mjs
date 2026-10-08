@@ -218,6 +218,35 @@ try {
     backup_plans: [],
   };
   const cloneValid = () => structuredClone(valid);
+  const { MOWER_INCOME_STORAGE_KEY, saveMowerRosterForIncome, parseMowerRosterText } = await server.ssrLoadModule("/src/utils/mower/theoretical-output/rosterInput.js");
+  store.hydratePlanData({
+    ...cloneValid(),
+    title: "收益跳转排班",
+    conf: { resting_priority: "杜林" },
+    advanced_settings: { product_switching: { enable: true }, drone_threshold: 175 },
+    backup_plans: [{ name: "测试副表", plan: { room_1_1: { name: "制造站", product: "exp3", plans: [slot("Current")] } }, conf: {}, task: {}, trigger: { left: "True", operator: "==", right: "True" } }],
+  });
+  const incomePayload = store.build_plan();
+  const incomeBefore = JSON.stringify(incomePayload);
+  const incomeCache = new Map([[MOWER_INCOME_STORAGE_KEY, "原有收益排班"]]);
+  const incomeStorage = { setItem: (key, value) => incomeCache.set(key, value) };
+  await saveMowerRosterForIncome(incomePayload, store.plan_title.value, incomeStorage);
+  const incomeSaved = JSON.parse(incomeCache.get(MOWER_INCOME_STORAGE_KEY));
+  const incomeRestored = await parseMowerRosterText(JSON.stringify(incomeSaved.payload));
+  check("收益跳转传入完整主副表与高级设置，收益页载入后内容一致", () => {
+    assert.deepEqual(incomeRestored, incomePayload);
+    assert.equal(incomeSaved.fileName, "收益跳转排班");
+    assert.equal(JSON.stringify(incomePayload), incomeBefore);
+  });
+  const incomeSavedBefore = incomeCache.get(MOWER_INCOME_STORAGE_KEY);
+  await assert.rejects(saveMowerRosterForIncome({ default: "plan1", plan1: {} }, "空表", incomeStorage), /为空/);
+  check("无法计算的排班不覆盖收益页原有排班", () => {
+    assert.equal(incomeCache.get(MOWER_INCOME_STORAGE_KEY), incomeSavedBefore);
+  });
+  await assert.rejects(saveMowerRosterForIncome(incomePayload, "存储失败", { setItem: () => { throw new Error("浏览器存储不可用"); } }), /浏览器无法保存排班/);
+  check("收益跳转存储失败时返回错误，保留编辑器内容", () => {
+    assert.equal(JSON.stringify(store.build_plan()), incomeBefore);
+  });
   check("浏览器校验允许正常排班且不修改传入文件", () => {
     const before = JSON.stringify(valid);
     assert.deepEqual(validatePlan(valid).errors, []);

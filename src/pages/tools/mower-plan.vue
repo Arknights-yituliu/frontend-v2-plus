@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, provide, ref, watch, nextTick } from "vue";
 import { createDiscreteApi } from "naive-ui";
+import { useRouter } from "vue-router";
 import hljs from "highlight.js/lib/core";
 import jsonLang from "highlight.js/lib/languages/json";
 import buildingApi from "@/api/backend/building.js";
@@ -20,6 +21,7 @@ import { renderOperatorOption, renderOperatorLabel } from "@/utils/mower/opSelec
 import { exportPlanImage, importPlanImage } from "@/utils/mower/plan_image.js";
 import { mowerPlanStore } from "./mower-plan/store/planStore.js";
 import { validatePlan } from "@/utils/mower/plan_validation.js";
+import { saveMowerRosterForIncome } from "@/utils/mower/theoretical-output/rosterInput.js";
 import { swap } from "@/utils/mower/common.js";
 import { useTheme } from "vuetify";
 
@@ -63,6 +65,8 @@ const configuredOperatorCount = computed(
 );
 const plan_editor = ref(null);
 const ready = ref(false);
+const router = useRouter();
+const opening_income = ref(false);
 const localJsonInput = ref(null);
 const cloudScheduleId = ref("");
 const scheduleIdInput = ref("");
@@ -233,6 +237,19 @@ function export_json() {
   }
 }
 
+async function openMowerIncome() {
+  if (opening_income.value) return;
+  opening_income.value = true;
+  try {
+    await saveMowerRosterForIncome(build_plan(), plan_title.value || "当前编辑的排班", localStorage);
+    await router.push({ name: "MowerIncome" });
+  } catch (error) {
+    message.error(error.message || "排班转交失败，请稍后重试");
+  } finally {
+    opening_income.value = false;
+  }
+}
+
 function triggerLocalJsonImport() {
   localJsonInput.value?.click();
 }
@@ -389,6 +406,7 @@ onUnmounted(() => {
             <n-button secondary @click="importScheduleById">载入</n-button>
           </div>
           <div class="file-actions">
+            <n-button secondary type="primary" :disabled="!ready" :loading="opening_income" @click="openMowerIncome">转到 收益计算（Mower）</n-button>
             <n-button secondary @click="triggerLocalJsonImport">导入文件</n-button>
             <n-button secondary @click="export_json">导出 JSON</n-button>
             <n-button secondary :loading="generating_image" @click="saveImage">导出图片</n-button>
