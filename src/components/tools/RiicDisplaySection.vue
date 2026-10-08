@@ -49,7 +49,13 @@ function text(value) {
       :is="props.collapsible && props.section.label ? 'summary' : 'span'"
       v-if="props.section.label"
       class="riic-display-section-label"
-    >{{ props.section.label }}</component>
+    >
+      <span v-if="props.collapsible" class="disclosure-chevron" aria-hidden="true">
+        <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+        <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+      </span>
+      {{ props.section.label }}
+    </component>
 
     <div v-if="sectionLayout() === 'grid'" class="riic-display-grid">
       <template v-for="row in props.section.rows || []" :key="row.key">
@@ -123,14 +129,6 @@ function text(value) {
 }
 .riic-display-section > summary.riic-display-section-label::-webkit-details-marker {
   display: none;
-}
-.riic-display-section > summary.riic-display-section-label::after {
-  float: right;
-  content: "+";
-  font-weight: 400;
-}
-.riic-display-section[open] > summary.riic-display-section-label::after {
-  content: "-";
 }
 .riic-display-grid {
   display: grid;
