@@ -36,9 +36,10 @@ export function getOrderDistribution(level: number, quality: QualityRule = 'norm
   }
   if (mode === 'closure') return [{ ...gold(1, 2, 1200, 144), mode }]
   if (mode === 'pepe') return [{ ...gold(1, 0, 1000, 270), efficiencyAffected: false, mode }]
-  if (level < 3 && quality !== 'normal') throw new Error('Low-level quality distribution is unverified')
-  if (level === 1) return [gold(1, 2, 1000, 144)]
-  if (level === 2) return [gold(0.6, 2, 1000, 144), gold(0.4, 3, 1500, 210)]
+  // Fixed quality model: the user requests the L3 alpha/beta probabilities at
+  // L1/L2 too. PRTS only verifies these values for L3; this is a model extension.
+  if (quality === 'normal' && level === 1) return [gold(1, 2, 1000, 144)]
+  if (quality === 'normal' && level === 2) return [gold(0.6, 2, 1000, 144), gold(0.4, 3, 1500, 210)]
   const p = quality === 'alpha' ? [0.15, 0.3, 0.55] : quality === 'beta' ? [0.05, 0.1, 0.85] : [0.3, 0.5, 0.2]
   return [gold(p[0]!, 2, 1000, 144), gold(p[1]!, 3, 1500, 210), gold(p[2]!, 4, 2000, 276)]
 }

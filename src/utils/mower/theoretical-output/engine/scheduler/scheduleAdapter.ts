@@ -1,4 +1,5 @@
 import {orderMowerRecoveryBeds} from './mowerGlobalDormOrder'
+import {readMowerMoodLimits} from './mowerMoodLimits'
 import { isTradeRunOrderOperator } from '../domain/shiftRunPolicy'
 import { OPERATOR_MAP } from '../domain/operators'
 import { resolveOperatorCharId } from '../workbench/compat/mowerJson'
@@ -161,6 +162,7 @@ export function compiledScheduleToRuntimeConfig(schedule: CompiledSchedule): Run
 
   const sourceList=(key:string)=>{const raw=(schedule.policies as Record<string,unknown>)[key];return (Array.isArray(raw)?raw:typeof raw==='string'?raw.split(','):[]).map(String).filter(Boolean).map(resolveOperatorCharId)}
   return {
+    mowerMoodLimits:readMowerMoodLimits(schedule.rawConf,resolveOperatorCharId),
     mowerDroneRoom:schedule.assumptions.droneRoom??null,
     // Preserve ideal runner metadata; excludedCandidates below blocks ordinary shift use.
     mowerRunOrderEnabled:schedule.assumptions.idealRunOrderWakeOnly!==false,

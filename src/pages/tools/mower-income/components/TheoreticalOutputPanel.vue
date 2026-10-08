@@ -85,6 +85,7 @@ const progressPercent = computed(() => {
 const progressLabel = computed(() => progress.value?.phase === 'warmup' ? '预热' : '采样')
 const number = value => typeof value === 'number' && Number.isFinite(value) ? value.toLocaleString('zh-CN', { maximumFractionDigits: 2 }) : '—'
 const metrics = computed(() => result.value?.metrics)
+const outputWarning = computed(() => result.value?.diagnostics?.find(item => item.code === 'SHIFT_DEFERRAL_UNCONFIRMED')?.message)
 const displayResources = computed(() => metrics.value ? [
   { label: '作战记录经验', value: metrics.value.exp, unit: 'EXP / 日', image: 'exp3' },
   { label: '制造赤金', value: metrics.value.goldValue / 500, unit: '件 / 日', image: 'gold' },
@@ -111,6 +112,7 @@ async function calculate() {
   running.value = true
   status.value = '正在模拟主替班与产出…'
   const config = {
+    seed: -1,
     warmupDays: warmupDays.value, sampleDays: sampleDays.value,
     droneRoomId: droneRoomId.value,
     restingThreshold: restingPercent.value / 100,
@@ -137,7 +139,7 @@ async function calculate() {
       fiammettaFool: config.fiammettaFool,
       freeRoom: config.freeRoom,
       droneRoomId: config.droneRoomId,
-      runOrderMode: 'ideal', warmupModel: 'hourly', seed: 42,
+      runOrderMode: 'ideal', warmupModel: 'hourly', requestedSeed: config.seed, seed: report.seed,
       calculatedAt: new Date().toLocaleString('zh-CN'),
       drone: inspection.value.droneTargets.find(item => item.value === config.droneRoomId)?.label || '不使用无人机',
     }
@@ -217,8 +219,10 @@ function downloadResult() {
     <p v-if="error" role="alert" class="error">{{ error }}</p>
 
     <section v-if="metrics" class="output-report" aria-labelledby="output-report-title">
-      <h3 id="output-report-title">每日理论产出</h3>
+      <h3 id="output-report-title">采样期日均理论产出</h3>
       <p class="note">{{ resultBasis.inventory }} · 预热 {{ resultBasis.warmupDays }} 天 · 实际采样 {{ number(result.observedHours / 24) }} 天 · {{ resultBasis.drone }}</p>
+      <p class="note">随机种子：-1（每次随机）；本次实际种子：{{ result.seed }}</p>
+      <p v-if="outputWarning" class="output-warning" role="alert">{{ outputWarning }}</p>
       <div class="resource-grid">
         <article v-for="resource in displayResources" :key="resource.label" class="resource-stat">
           <img :src="`/mower-income/product/${resource.image}.png`" alt="" />
@@ -238,7 +242,7 @@ function downloadResult() {
 
     <details class="assumptions"><summary>理论产出的计算条件</summary>
       <p class="note">统计采样期的完成产物，预热不计分。材料库存按无限处理，不扣赤金交易成本；设施容量、无人机与 Mower 自动收取会影响模拟。初始心情为 24，宿舍按所选等级满氛围，线索交流关闭。</p>
-      <p class="note">采用理想跑单：替补位中的跑单干员参与对应订单效果；普通换班、心情恢复、绑组、主替班顺序和副表触发均由原算法处理。暖机按整小时增长，订单随机种子固定为 42。休息阈值默认 65%，急救阈值 75%，菲亚梅塔阈值 90%；不开启加工、专精、维护停服等外部任务。</p>
+      <p class="note">采用理想跑单：替补位中的跑单干员参与对应订单效果；普通换班、心情恢复、绑组、主替班顺序和副表触发均由原算法处理。暖机按整小时增长，随机种子为 -1，每次计算随机生成并记录实际种子。休息阈值默认 65%，急救阈值 75%，菲亚梅塔阈值 90%；不开启加工、专精、维护停服等外部任务。</p>
       <p class="note">结果是所选条件下的理论测算。首次导入请检查设施等级、实际练度和诊断；更改排班、干员库或任何设置后，旧结果会失效。</p>
     </details>
   </section>
@@ -282,6 +286,16 @@ function downloadResult() {
 
 .error {
   color: var(--income-error-color);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.output-warning {
+  padding: 12px 16px;
+  border-left: 3px solid var(--el-color-warning);
+  background: var(--el-color-warning-light-9);
+  color: var(--c-text-color);
+  font-size: 13px;
   line-height: 1.7;
   overflow-wrap: anywhere;
 }

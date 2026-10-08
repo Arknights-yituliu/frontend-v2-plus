@@ -99,6 +99,8 @@ export interface MowerCompatibilityEnvelope {
 }
 
 export interface RosterWorkspace {
+  /** Local calculator preference; never emitted as a native Mower configuration field. */
+  productionWeights?: import('../domain/productionWeights').ProductionWeights
   schemaVersion: 8
   name: string
   mainPlan: MowerMainPlan

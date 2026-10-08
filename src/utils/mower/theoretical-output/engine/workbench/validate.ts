@@ -11,6 +11,7 @@ import {
   getRoomDisplayName,
   isFiammetta,
 } from './operatorHelpers'
+import { isTradeRunOrderOperator } from '../domain/shiftRunPolicy'
 
 export type ValidationSeverity = 'critical' | 'warning' | 'info'
 
@@ -320,7 +321,7 @@ export function validateRosterWorkspace(workspace: RosterWorkspace): ValidationR
           }
 
           // Check replacement conflicting with an active primary operator
-          if (primaryOperators.has(repId)) {
+          if (primaryOperators.has(repId) && !(facility.type === 'trading' && isTradeRunOrderOperator(repId))) {
             criticalErrors.push({
               code: 'CONFLICTING_REPLACEMENT',
               severity: 'critical',
