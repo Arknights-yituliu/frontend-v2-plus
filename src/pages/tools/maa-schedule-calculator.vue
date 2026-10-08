@@ -198,7 +198,7 @@ const sanitySourceGroups = computed(() => {
   if (!useYituliuSanityValues.value) {
     return [{
       key: "package",
-      label: "riic-efficiency package",
+      label: "riic-efficiency package（信用、公招价值来自Bilibili@Bio-Hazard）",
       items: sanityDefinitions.map(createSanitySourceItem),
     }];
   }
@@ -212,7 +212,7 @@ const sanitySourceGroups = computed(() => {
     },
     {
       key: "package",
-      label: "package 默认值（网页无对应项）",
+      label: "package 默认值（信用、公招价值来自Bilibili@Bio-Hazard）",
       items: sanityDefinitions
         .filter((item) => !PROJECT_SANITY_RESOURCES.has(item.resource))
         .map(createSanitySourceItem),
@@ -1240,6 +1240,7 @@ onMounted(() => {
       </summary>
 
       <div class="efficiency-settings">
+        <p class="efficiency-settings-note">修改设置后会自动重算</p>
         <header class="efficiency-settings-heading">
           <strong>计算选项</strong>
           <button type="button" class="secondary-button" @click="restoreDefaultEfficiencySettings">
@@ -2035,6 +2036,10 @@ h2 {
   margin-top: var(--maa-gap-4);
   color: var(--c-text-color-secondary, #6b7280);
   font-size: 13px;
+}
+.efficiency-settings-note {
+  margin: 0 0 var(--maa-gap-2);
+  line-height: 1.5;
 }
 .efficiency-settings-heading {
   display: flex;
