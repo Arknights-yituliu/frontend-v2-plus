@@ -20,7 +20,8 @@
     "check:riic-schedule-model": "node scripts/check-riic-schedule-model.js",
     "preview": "vite preview",
     "server": "node .\\server.js",
-    "check:mower-income": "node scripts/check-mower-theoretical-output.mjs && node scripts/check-mower-site-inventory.mjs && node scripts/check-mower-output-worker.mjs"
+    "check:mower-income": "node scripts/check-mower-theoretical-output.mjs && node scripts/check-mower-site-inventory.mjs && node scripts/check-mower-output-worker.mjs",
+    "check:mower-plan": "node scripts/check-mower-plan.mjs"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
@@ -33,6 +34,7 @@
     "element-plus": "^2.11.7",
     "express": "^4.22.1",
     "file-saver": "^2.0.5",
+    "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
     "jsqr": "^1.4.0",
     "jszip": "^3.10.1",
@@ -44,6 +46,7 @@
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "^3.5.23",
     "vue-router": "^4.6.3",
+    "vue-slicksort": "^2.0.5",
     "vuetify": "^3.7.5"
   },
   "devDependencies": {

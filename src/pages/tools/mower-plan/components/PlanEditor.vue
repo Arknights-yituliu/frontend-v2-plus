@@ -1,307 +1,246 @@
 <script setup>
-import { ref, computed, nextTick, watch, inject } from 'vue'
-import { mowerPlanStore } from '../store/planStore.js'
-import { swap } from '@/utils/mower/common.js'
-import OperatorMultiSelect from './OperatorMultiSelect.vue'
-import HelpText from './HelpText.vue'
-import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
-import { operatorTableV2 } from '@/utils/gameData.js'
+import { mowerProductImage } from "@/utils/mower/productAssets.js";
+import PlanAvatar from "./PlanAvatar.vue";
+import HelpText from "./HelpText.vue";
+import SlickOperatorSelect from "./SlickOperatorSelect.vue";
+import { mowerConfigStore } from "../store/configStore.js";
+import { mowerPlanStore } from "../store/planStore.js";
+import { planBindings, addPlanBinding, removePlanBinding, bindingColorStyle } from "@/utils/mower/plan_bindings.js";
+import { swapPlanFacilities } from "@/utils/mower/plan_edit.js";
+import { plan_facility_type_options } from "@/utils/mower/base_facilities.js";
+import { ref, computed, watch, inject, h } from "vue";
+const config_store = mowerConfigStore;
+const plan_store = mowerPlanStore;
+const { operators, groups, group_colors, current_plan, plan, workaholic, sub_plan, backup_plans } = plan_store;
+const { facility_operator_limit } = plan_store;
+const { right_side_room_order } = config_store;
+const theme = inject("mowerTheme", ref("light"));
+const right_room_names = { contact: "办公室", train: "训练室", recycle: "回收站" };
+const right_room_drag_type = "application/x-mower-right-room";
 
-const {
-  operators,
-  groups,
-  current_plan,
-  plan,
-  workaholic,
-  sub_plan,
-  backup_plans,
-  facility_operator_limit
-} = mowerPlanStore
-const nameToCharId = {}
-for (const key in operatorTableV2) {
-  nameToCharId[operatorTableV2[key].name] = normalizeCharId(key)
-}
+const outer = ref(null);
 
-function normalizeCharId(id) {
-  if (id === 'char_1001_amiya2') {
-    return 'char_002_amiya'
-  }
-  return id
-}
+const facility_types = plan_facility_type_options;
 
-function getCharId(name) {
-  return nameToCharId[name]
-}
-
-function getAvatarUrl(name) {
-  if (!name) return ''
-  return `/avatar/${name}.webp`
-}
-
-const theme = inject('mowerTheme') ?? ref('light')
-
-const outer = ref(null)
-
-const facility_types = [
-  { label: '贸易站', value: '贸易站' },
-  { label: '制造站', value: '制造站' },
-  { label: '发电站', value: '发电站' }
-]
-
-const facility = inject('facility')
+const facility = inject("facility");
+const edit_locked = inject("planEditLocked", ref(false));
 
 const button_type = {
-  贸易站: 'info',
-  制造站: 'warning',
-  发电站: 'primary'
-}
+  贸易站: "info",
+  制造站: "warning",
+  发电站: "primary",
+};
 
 const operator_limit = computed(() => {
-  if (facility.value.startsWith('room') && current_plan.value[facility.value].name == '发电站') {
-    return 1
+  if (facility.value.startsWith("room") && current_plan.value[facility.value].name == "发电站") {
+    return 1;
   }
-  return facility_operator_limit[facility.value] || 0
-})
+  return facility_operator_limit[facility.value] || 0;
+});
 
 function clear() {
-  current_plan.value[facility.value].name = ''
-  nextTick(() => {
-    const plans = []
-    for (let i = 0; i < operator_limit.value; ++i) {
-      plans.push({
-        agent: '',
-        group: '',
-        replacement: []
-      })
-    }
-    current_plan.value[facility.value].plans = plans
-  })
+  if (edit_locked.value) return;
+  const room = current_plan.value[facility.value];
+  room.name = "";
+  room.plans = Array.from({ length: operator_limit.value }, () => ({
+    agent: "",
+    group: "",
+    replacement: [],
+  }));
 }
 
 watch(
-  () => {
-    if (facility.value.startsWith('room')) {
-      return current_plan.value[facility.value].name
-    }
-    return ''
-  },
-  (new_name, old_name) => {
-    if (new_name == '发电站') {
-      const plans = current_plan.value[facility.value].plans
+  () => [facility.value, facility.value.startsWith("room") ? current_plan.value[facility.value].name : ""],
+  ([room, new_name], [old_room, old_name]) => {
+    // Browsing another room must never reflow its operator slots.
+    if (edit_locked.value || room !== old_room || !room.startsWith("room")) return;
+    if (new_name == "发电站") {
+      const plans = current_plan.value[facility.value].plans;
       while (plans.length > operator_limit.value) {
-        plans.pop()
+        plans.pop();
       }
-    } else if (old_name == '发电站') {
-      const plans = current_plan.value[facility.value].plans
+    } else if (old_name == "发电站") {
+      const plans = current_plan.value[facility.value].plans;
       while (plans.length < operator_limit.value) {
-        plans.push({ agent: '', group: '', replacement: [] })
+        plans.push({ agent: "", group: "", replacement: [] });
       }
     }
   }
-)
+);
 
 const operators_with_none = computed(() => {
-  return [{ value: '', label: '（无）' }].concat(operators.value)
-})
+  return [{ value: "", label: "（无）" }].concat(operators.value);
+});
 
 const operators_with_free = computed(() => {
-  return [{ value: 'Free', label: 'Free' }].concat(operators.value)
-})
+  return [{ value: "Free", label: "Free" }].concat(operators.value);
+});
 
 const operators_with_none_free = computed(() => {
-  return [{ value: 'Free', label: 'Free' }].concat(operators_with_none.value)
-})
+  return [{ value: "Free", label: "Free" }].concat(operators_with_none.value);
+});
 
 const operators_with_none_current = computed(() => {
-  return [{ value: 'Current', label: 'Current' }].concat(operators_with_none.value)
-})
+  return [{ value: "Current", label: "Current" }].concat(operators_with_none.value);
+});
 
 const operators_with_none_free_current = computed(() => {
-  return [{ value: 'Current', label: 'Current' }].concat(operators_with_none_free.value)
-})
+  return [{ value: "Current", label: "Current" }].concat(operators_with_none_free.value);
+});
 
 function operator_options(facility) {
-  if (sub_plan.value == 'main') {
-    return facility.startsWith('dorm') ? operators_with_none_free.value : operators_with_none.value
+  if (sub_plan.value == "main") {
+    return facility.startsWith("dorm") ? operators_with_none_free.value : operators_with_none.value;
   } else {
-    return facility.startsWith('dorm')
-      ? operators_with_none_free_current.value
-      : operators_with_none_current.value
+    return facility.startsWith("dorm") ? operators_with_none_free_current.value : operators_with_none_current.value;
   }
 }
 
 const right_side_facility_name = computed(() => {
-  if (facility.value.startsWith('dormitory')) {
-    return '宿舍'
-  } else if (facility.value == 'central') {
-    return '控制中枢'
-  } else if (facility.value == 'contact') {
-    return '办公室'
-  } else if (facility.value == 'meeting') {
-    return '会客室'
-  } else if (facility.value == 'factory') {
-    return '加工站'
-  } else if (facility.value == 'train') {
-    return '训练室（仅可安排协助位）'
-  } else if (facility.value.startsWith('gaming')) {
-    return '活动室'
+  if (facility.value.startsWith("dormitory")) {
+    return "宿舍";
+  } else if (facility.value == "central") {
+    return "控制中枢";
+  } else if (facility.value == "contact") {
+    return "办公室";
+  } else if (facility.value == "meeting") {
+    return "会客室";
+  } else if (facility.value == "factory") {
+    return "加工站";
+  } else if (facility.value == "train") {
+    return "训练室";
+  } else if (facility.value == "recycle") {
+    return "回收站";
+  } else if (facility.value.startsWith("gaming")) {
+    return "活动室";
   } else {
-    return '未知'
+    return "未知";
   }
-})
+});
 
 const facility_empty = computed(() => {
-  let empty = true
+  let empty = true;
   for (const i of current_plan.value[facility.value].plans) {
     if (i.agent) {
-      empty = false
-      break
+      empty = false;
+      break;
     }
   }
-  return empty
-})
-
-const color_map = computed(() => {
-  const count = groups.value.length
-  const result = {}
-  for (let i = 0; i < count; ++i) {
-    result[groups.value[i]] = `5px solid hsl(${(360 / count) * i}, 80%, 45%)`
-  }
-  result[''] = 'none'
-  return result
-})
+  return empty;
+});
 
 function drag_facility(room, event) {
-  event.dataTransfer.setData('text/plain', room)
-  event.dataTransfer.dropEffect = 'move'
-}
-
-function updateTrigger(trigger, source, target) {
-  for (const key in trigger) {
-    if (key === 'left' || key === 'right') {
-      if (typeof trigger[key] === 'string') {
-        trigger[key] = swapSubstrings(trigger[key], source, target)
-      } else if (typeof trigger[key] === 'object' && trigger[key] !== null) {
-        updateTrigger(trigger[key], source, target)
-      }
-    }
+  if (edit_locked.value) {
+    event.preventDefault();
+    return;
   }
-}
-
-function swapSubstrings(str, source, target) {
-  const placeholder = '__PLACEHOLDER__'
-  let newStr = str.replace(new RegExp(source, 'g'), placeholder)
-  newStr = newStr.replace(new RegExp(target, 'g'), source)
-  newStr = newStr.replace(new RegExp(placeholder, 'g'), target)
-  return newStr
-}
-
-function swapTask(tasks, source, target) {
-  if (tasks) {
-    const placeholder = '__PLACEHOLDER__'
-    if (tasks.hasOwnProperty(source)) {
-      tasks[placeholder] = tasks[source]
-      delete tasks[source]
-    }
-    if (tasks.hasOwnProperty(target)) {
-      tasks[source] = tasks[target]
-      delete tasks[target]
-    }
-    if (tasks.hasOwnProperty(placeholder)) {
-      tasks[target] = tasks[placeholder]
-      delete tasks[placeholder]
-    }
-  }
+  event.dataTransfer.setData("text/plain", room);
+  event.dataTransfer.dropEffect = "move";
 }
 
 function drop_facility(target, event) {
-  const source = event.dataTransfer.getData('text/plain')
+  event.preventDefault();
+  if (edit_locked.value) return;
+  const source = event.dataTransfer.getData("text/plain");
+  if (!/^room_[1-3]_[1-3]$/.test(source)) return;
 
-  // 1. 更新当前 current_plan 表
-  swap(source, target, current_plan.value)
+  swapPlanFacilities(plan.value, backup_plans.value, sub_plan.value, source, target);
+}
 
-  // 2. 更新所有副表和主表（除当前表以外）
-  const allPlans = ['main', ...backup_plans.value]
+function drag_right_facility(room, event) {
+  if (edit_locked.value) {
+    event.preventDefault();
+    return;
+  }
+  event.dataTransfer.setData(right_room_drag_type, room);
+  event.dataTransfer.effectAllowed = "move";
+}
 
-  allPlans.forEach((item, index) => {
-    if ((sub_plan.value === 'main' && item === 'main') || sub_plan.value + 1 === index) {
-      return
-    }
-    // 执行更新操作
-    if (item !== 'main') {
-      swap(source, target, item.plan)
-      // 副表才需要更新trigger 和 task
-      swapTask(item.task, source, target)
-      updateTrigger(item.trigger, source, target)
-    } else {
-      // plan 是主表
-      swap(source, target, plan.value)
-    }
-  })
-
-  event.preventDefault()
+function drop_right_facility(target, event) {
+  event.preventDefault();
+  if (edit_locked.value) return;
+  config_store.swap_right_side_facilities(event.dataTransfer.getData(right_room_drag_type), target);
 }
 
 const avatar_bg = computed(() => {
-  return theme.value == 'light' ? 'lightgrey' : 'grey'
-})
+  return theme.value == "light" ? "lightgrey" : "grey";
+});
 
 defineExpose({
-  outer
-})
+  outer,
+});
 
-import { renderOperatorLabel, renderOperatorTag } from '@/utils/mower/opSelect.js'
+import { renderOperatorOption, renderOperatorLabel, renderOperatorTag } from "@/utils/mower/opSelect.js";
+import { pinyin_match } from "@/utils/mower/common.js";
+import { factory_product_options } from "@/utils/mower/base_products.js";
 
 function fill_with_free() {
+  if (edit_locked.value) return;
   for (let i = 0; i < operator_limit.value; ++i) {
-    if (current_plan.value[facility.value].plans[i].agent == '') {
-      current_plan.value[facility.value].plans[i].agent = 'Free'
+    if (current_plan.value[facility.value].plans[i].agent == "") {
+      current_plan.value[facility.value].plans[i].agent = "Free";
     }
   }
 }
 
 const trading_products = [
-  { label: '赤金订单', value: 'lmd' },
-  { label: '合成玉订单', value: 'orundum' }
-]
+  { label: "赤金订单", value: "lmd" },
+  { label: "合成玉订单", value: "orundum" },
+];
 
-const factory_products = [
-  { label: '赤金', value: 'gold' },
-  { label: '中级作战记录', value: 'exp3' },
-  { label: '源石碎片', value: 'orirock' }
-]
+const factory_products = factory_product_options;
 
-const render_product = (option) => option.label
+import { NAvatar } from "naive-ui";
+
+const render_product = (option) => {
+  return h(
+    "div",
+    {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+      },
+    },
+    [
+      h(NAvatar, {
+        src: mowerProductImage(option.icon || option.value),
+        round: true,
+        size: "small",
+        style: { flexShrink: 0 },
+      }),
+      option.label,
+    ]
+  );
+};
 
 const product_bg_opacity = computed(() => {
-  return theme.value == 'light' ? 0.6 : 0.7
-})
+  return theme.value == "light" ? 0.6 : 0.7;
+});
 
 const fia_list = computed(() => {
   for (let i = 1; i <= 4; ++i) {
-    const dorm = current_plan.value[`dormitory_${i}`]
-    if (!dorm?.plans) continue
-    for (let j = 0; j < dorm.plans.length; ++j) {
-      if (dorm.plans[j].agent === '菲亚梅塔') {
-        return dorm.plans[j].replacement
+    for (let j = 0; j < 5; ++j) {
+      if (current_plan.value[`dormitory_${i}`].plans[j].agent == "菲亚梅塔") {
+        return current_plan.value[`dormitory_${i}`].plans[j].replacement;
       }
     }
   }
-  return []
-})
+  return [];
+});
 
 function set_facility(e) {
   if (facility.value == e) {
-    facility.value = ''
+    facility.value = "";
   } else {
-    facility.value = e
+    facility.value = e;
   }
 }
 </script>
 
 <template>
   <div class="plan-container" ref="outer">
-    <div class="outer">
+    <div class="outer" data-no-update-drop>
       <!-- 左 -->
       <div class="left_box">
         <div class="left_contain" v-for="row in 3">
@@ -309,18 +248,18 @@ function set_facility(e) {
             v-for="r in [`room_${row}_1`, `room_${row}_2`, `room_${row}_3`]"
             :key="r"
             @click="set_facility(r)"
-            :class="[button_type[current_plan[r]?.name], r === facility ? 'true' : 'false']"
+            :class="[button_type[current_plan[r].name], r === facility ? 'true' : 'false']"
           >
             <div
               class="product-bg"
-              v-if="['制造站', '贸易站'].includes(current_plan[r]?.name)"
+              v-if="['制造站', '贸易站'].includes(current_plan[r].name)"
               :style="{
-                'background-image': current_plan[r]?.product ? `url(/product/${current_plan[r].product}.png)` : 'none'
+                'background-image': `url(${mowerProductImage(current_plan[r].product)})`,
               }"
             ></div>
             <div
-              v-show="current_plan[r]?.name"
-              draggable="true"
+              v-show="current_plan[r].name"
+              :draggable="!edit_locked"
               @dragstart="drag_facility(r, $event)"
               @dragover.prevent
               @dragenter.prevent
@@ -328,35 +267,18 @@ function set_facility(e) {
               class="draggable"
             >
               <div class="facility-name">
-                {{ current_plan[r]?.name }}
+                {{ current_plan[r].name }}
               </div>
               <div class="avatars">
-                <template v-for="(i, idx) in current_plan[r]?.plans ?? []" :key="idx">
-                  <div class="avatar-wrapper" v-if="i?.agent">
-                    <div class="avatar-inner" :style="{ 'border-bottom': color_map[i.group] }">
-                      <operator-avatar
-                        v-if="getCharId(i.agent)"
-                        :char-id="getCharId(i.agent)"
-                        :size="45"
-                        class="operator-avatar"
-                      />
-                      <img
-                        v-else
-                        :src="getAvatarUrl(i.agent)"
-                        width="45"
-                        height="45"
-                        draggable="false"
-                      />
-                    </div>
-                    <div
-                      class="workaholic"
-                      v-if="workaholic.includes(i.agent) && !fia_list.includes(i.agent)"
-                    ></div>
+                <template v-for="i in current_plan[r].plans">
+                  <div class="avatar-wrapper" v-if="i.agent">
+                    <plan-avatar :name="i.agent" :size="45" :style="bindingColorStyle(i, group_colors)" draggable="false" />
+                    <div class="workaholic" v-if="workaholic.includes(i.agent) && !fia_list.includes(i.agent)"></div>
                   </div>
                 </template>
               </div>
             </div>
-            <div v-show="!current_plan[r]?.name" class="waiting">
+            <div v-show="!current_plan[r].name" class="waiting">
               <div>待建造</div>
             </div>
           </div>
@@ -365,131 +287,51 @@ function set_facility(e) {
       <!-- 中 -->
       <div class="mid_box">
         <div class="mid_contain">
-          <n-button
-            :secondary="facility != 'central'"
-            class="facility-5"
-            @click="set_facility('central')"
-         >
+          <n-button :secondary="facility != 'central'" class="facility-5" @click="set_facility('central')">
             <div>
               <div class="facility-name">控制中枢</div>
               <div class="avatars">
-                <template v-for="(i, idx) in current_plan.central?.plans ?? []" :key="idx">
-                  <div class="avatar-wrapper" v-if="i?.agent">
-                    <div class="avatar-inner" :style="{ 'border-bottom': color_map[i.group] }">
-                      <operator-avatar
-                        v-if="getCharId(i.agent)"
-                        :char-id="getCharId(i.agent)"
-                        :size="45"
-                        class="operator-avatar"
-                      />
-                      <img v-else :src="getAvatarUrl(i.agent)" width="45" height="45" draggable="false" />
-                    </div>
-                  </div>
-                </template>
+                <plan-avatar v-for="i in current_plan.central.plans" :name="i.agent" :size="45" :style="bindingColorStyle(i, group_colors)" />
               </div>
             </div>
           </n-button>
         </div>
         <div class="mid_contain">
-          <n-button
-            :secondary="facility != 'dormitory_1'"
-            class="facility-5"
-            @click="set_facility('dormitory_1')"
-          >
+          <n-button :secondary="facility != 'dormitory_1'" class="facility-5" @click="set_facility('dormitory_1')">
             <div>
               <div class="facility-name">宿舍1</div>
               <div class="avatars">
-                <template v-for="(i, idx) in current_plan.dormitory_1?.plans ?? []" :key="idx">
-                  <div class="avatar-wrapper" v-if="i?.agent">
-                    <div class="avatar-inner" :style="{ 'border-bottom': color_map[i.group] }">
-                      <operator-avatar
-                        v-if="getCharId(i.agent)"
-                        :char-id="getCharId(i.agent)"
-                        :size="45"
-                        class="operator-avatar"
-                      />
-                      <img v-else :src="getAvatarUrl(i.agent)" width="45" height="45" draggable="false" />
-                    </div>
-                  </div>
-                </template>
+                <plan-avatar v-for="i in current_plan.dormitory_1.plans" :name="i.agent" :size="45" :style="bindingColorStyle(i, group_colors)" />
               </div>
             </div>
           </n-button>
         </div>
         <div class="mid_contain">
-          <n-button
-            :secondary="facility != 'dormitory_2'"
-            class="facility-5"
-            @click="set_facility('dormitory_2')"
-          >
+          <n-button :secondary="facility != 'dormitory_2'" class="facility-5" @click="set_facility('dormitory_2')">
             <div>
               <div class="facility-name">宿舍2</div>
               <div class="avatars">
-                <template v-for="(i, idx) in current_plan.dormitory_2?.plans ?? []" :key="idx">
-                  <div class="avatar-wrapper" v-if="i?.agent">
-                    <div class="avatar-inner" :style="{ 'border-bottom': color_map[i.group] }">
-                      <operator-avatar
-                        v-if="getCharId(i.agent)"
-                        :char-id="getCharId(i.agent)"
-                        :size="45"
-                        class="operator-avatar"
-                      />
-                      <img v-else :src="getAvatarUrl(i.agent)" width="45" height="45" draggable="false" />
-                    </div>
-                  </div>
-                </template>
+                <plan-avatar v-for="i in current_plan.dormitory_2.plans" :name="i.agent" :size="45" :style="bindingColorStyle(i, group_colors)" />
               </div>
             </div>
           </n-button>
         </div>
         <div class="mid_contain">
-          <n-button
-            :secondary="facility != 'dormitory_3'"
-            class="facility-5"
-            @click="set_facility('dormitory_3')"
-          >
+          <n-button :secondary="facility != 'dormitory_3'" class="facility-5" @click="set_facility('dormitory_3')">
             <div>
               <div class="facility-name">宿舍3</div>
               <div class="avatars">
-                <template v-for="(i, idx) in current_plan.dormitory_3?.plans ?? []" :key="idx">
-                  <div class="avatar-wrapper" v-if="i?.agent">
-                    <div class="avatar-inner" :style="{ 'border-bottom': color_map[i.group] }">
-                      <operator-avatar
-                        v-if="getCharId(i.agent)"
-                        :char-id="getCharId(i.agent)"
-                        :size="45"
-                        class="operator-avatar"
-                      />
-                      <img v-else :src="getAvatarUrl(i.agent)" width="45" height="45" draggable="false" />
-                    </div>
-                  </div>
-                </template>
+                <plan-avatar v-for="i in current_plan.dormitory_3.plans" :name="i.agent" :size="45" :style="bindingColorStyle(i, group_colors)" />
               </div>
             </div>
           </n-button>
         </div>
         <div class="mid_contain">
-          <n-button
-            :secondary="facility != 'dormitory_4'"
-            class="facility-5"
-            @click="set_facility('dormitory_4')"
-          >
+          <n-button :secondary="facility != 'dormitory_4'" class="facility-5" @click="set_facility('dormitory_4')">
             <div>
               <div class="facility-name">宿舍4</div>
               <div class="avatars">
-                <template v-for="(i, idx) in current_plan.dormitory_4?.plans ?? []" :key="idx">
-                  <div class="avatar-wrapper" v-if="i?.agent">
-                    <div class="avatar-inner" :style="{ 'border-bottom': color_map[i.group] }">
-                      <operator-avatar
-                        v-if="getCharId(i.agent)"
-                        :char-id="getCharId(i.agent)"
-                        :size="45"
-                        class="operator-avatar"
-                      />
-                      <img v-else :src="getAvatarUrl(i.agent)" width="45" height="45" draggable="false" />
-                    </div>
-                  </div>
-                </template>
+                <plan-avatar v-for="i in current_plan.dormitory_4.plans" :name="i.agent" :size="45" :style="bindingColorStyle(i, group_colors)" />
               </div>
             </div>
           </n-button>
@@ -498,267 +340,236 @@ function set_facility(e) {
       <!-- 右 -->
       <div class="right_box">
         <div class="right_contain">
-          <n-button
-            :secondary="facility != 'meeting'"
-            class="facility-2"
-            @click="set_facility('meeting')"
-          >
+          <n-button :secondary="facility != 'meeting'" class="facility-2" @click="set_facility('meeting')">
             <div>
               <div class="facility-name">会客室</div>
               <div class="avatars">
-                <template v-for="(i, idx) in current_plan.meeting?.plans ?? []" :key="idx">
-                  <div class="avatar-wrapper" v-if="i?.agent">
-                    <div class="avatar-inner" :style="{ 'border-bottom': color_map[i.group] }">
-                      <operator-avatar
-                        v-if="getCharId(i.agent)"
-                        :char-id="getCharId(i.agent)"
-                        :size="45"
-                        class="operator-avatar"
-                      />
-                      <img v-else :src="getAvatarUrl(i.agent)" width="45" height="45" draggable="false" />
-                    </div>
-                  </div>
-                </template>
+                <plan-avatar v-for="i in current_plan.meeting.plans" :name="i.agent" :size="45" :style="bindingColorStyle(i, group_colors)" />
               </div>
             </div>
           </n-button>
         </div>
         <div class="right_contain">
-          <n-button
-            :secondary="facility != 'factory'"
-            class="facility-2"
-            @click="set_facility('factory')"
-          >
+          <n-button :secondary="facility != 'factory'" class="facility-2" @click="set_facility('factory')">
             <div>
               <div class="facility-name">加工站</div>
               <div class="avatars">
-                <template v-for="(i, idx) in current_plan.factory?.plans ?? []" :key="idx">
-                  <div class="avatar-wrapper" v-if="i?.agent">
-                    <div class="avatar-inner" :style="{ 'border-bottom': color_map[i.group] }">
-                      <operator-avatar
-                        v-if="getCharId(i.agent)"
-                        :char-id="getCharId(i.agent)"
-                        :size="45"
-                        class="operator-avatar"
-                      />
-                      <img v-else :src="getAvatarUrl(i.agent)" width="45" height="45" draggable="false" />
-                    </div>
-                  </div>
-                </template>
+                <plan-avatar v-for="i in current_plan.factory.plans" :name="i.agent" :size="45" :style="bindingColorStyle(i, group_colors)" />
               </div>
             </div>
           </n-button>
         </div>
-        <div class="right_contain">
-          <n-button
-            :secondary="facility != 'contact'"
-            class="facility-2"
-            @click="set_facility('contact')"
-          >
-            <div>
-              <div class="facility-name">办公室</div>
-              <div class="avatars">
-                <template v-for="(i, idx) in current_plan.contact?.plans ?? []" :key="idx">
-                  <div class="avatar-wrapper" v-if="i?.agent">
-                    <div class="avatar-inner" :style="{ 'border-bottom': color_map[i.group] }">
-                      <operator-avatar
-                        v-if="getCharId(i.agent)"
-                        :char-id="getCharId(i.agent)"
-                        :size="45"
-                        class="operator-avatar"
-                      />
-                      <img v-else :src="getAvatarUrl(i.agent)" width="45" height="45" draggable="false" />
-                    </div>
-                  </div>
-                </template>
-              </div>
-            </div>
-          </n-button>
-        </div>
-        <div class="right_contain">
-          <n-button
-            :secondary="facility != 'train'"
-            class="facility-2"
-            @click="set_facility('train')"
-          >
+        <div
+          class="right_contain right-room-draggable"
+          v-for="r in right_side_room_order"
+          :key="r"
+          :draggable="!edit_locked"
+          :aria-label="`${right_room_names[r]}，拖动交换设施位置`"
+          title="拖动交换办公室、训练室与回收站位置；仅保存在本机，不随排班导出"
+          @dragstart="drag_right_facility(r, $event)"
+          @dragover.prevent="$event.dataTransfer.dropEffect = 'move'"
+          @dragenter.prevent
+          @drop="drop_right_facility(r, $event)"
+        >
+          <n-button :secondary="facility != r" :draggable="!edit_locked" class="facility-2" @click="set_facility(r)">
             <div>
               <div class="facility-name">
-                <div>协助位</div>
-                <div>训练位</div>
+                <template v-if="r === 'train'">
+                  <div>协助位</div>
+                  <div>训练位</div>
+                </template>
+                <template v-else>{{ right_room_names[r] }}</template>
               </div>
               <div class="avatars">
-                <template v-for="(i, idx) in current_plan.train?.plans ?? []" :key="idx">
-                  <div class="avatar-wrapper" v-if="i?.agent">
-                    <div class="avatar-inner" :style="{ 'border-bottom': color_map[i.group] }">
-                      <operator-avatar
-                        v-if="getCharId(i.agent)"
-                        :char-id="getCharId(i.agent)"
-                        :size="45"
-                        class="operator-avatar"
-                      />
-                      <img v-else :src="getAvatarUrl(i.agent)" width="45" height="45" draggable="false" />
-                    </div>
-                  </div>
-                </template>
+                <plan-avatar
+                  v-for="(i, index) in current_plan[r].plans"
+                  :key="index"
+                  :name="i.agent"
+                  :size="45"
+                  :style="bindingColorStyle(i, group_colors)"
+                  draggable="false"
+                />
               </div>
             </div>
           </n-button>
         </div>
       </div>
-      <!-- <div class="extra_box">
-        <div class="right_extra_contain">
-          <n-button
-            :secondary="facility != 'gaming_1'"
-            class="facility-1"
-            @click="set_facility('gaming_1')"
-          >
-            <div>
-              <div class="facility-name">活动室1</div>
-              <div class="avatars">
-                <img
-                  v-for="i in current_plan.gaming_1.plans"
-                  :src="`avatar/${i.agent}.webp`"
-                  width="45"
-                  height="45"
-                  :style="{ 'border-bottom': color_map[i.group] }"
-                />
-              </div>
-            </div>
-          </n-button>
-        </div>
-        <div>
-          <n-button
-            :secondary="facility != 'gaming_2'"
-            class="facility-1"
-            @click="set_facility('gaming_2')"
-          >
-            <div>
-              <div class="facility-name">活动室2</div>
-              <div class="avatars">
-                <img
-                  v-for="i in current_plan.gaming_2.plans"
-                  :src="`avatar/${i.agent}.webp`"
-                  width="45"
-                  height="45"
-                  :style="{ 'border-bottom': color_map[i.group] }"
-                />
-              </div>
-            </div>
-          </n-button>
-        </div>
-        <div>
-          <n-button
-            :secondary="facility != 'gaming_3'"
-            class="facility-1"
-            @click="set_facility('gaming_3')"
-          >
-            <div>
-              <div class="facility-name">活动室3</div>
-              <div class="avatars">
-                <img
-                  v-for="i in current_plan.gaming_3.plans"
-                  :src="`avatar/${i.agent}.webp`"
-                  width="45"
-                  height="45"
-                  :style="{ 'border-bottom': color_map[i.group] }"
-                />
-              </div>
-            </div>
-          </n-button>
-        </div>
-      </div> -->
     </div>
     <n-space justify="center" v-if="facility">
-      <table>
-        <tr>
-          <td>设施类别：</td>
-          <td>
-            <n-select
-              v-model:value="current_plan[facility].name"
-              :options="facility_types"
-              class="type-select"
-              v-if="facility.startsWith('room')"
-            />
-            <span v-else class="type-select">{{ right_side_facility_name }}</span>
-          </td>
-          <template v-if="['制造站', '贸易站'].includes(current_plan[facility].name)">
-            <td>产物<help-text>切产物功能暂未实装</help-text></td>
+      <table class="facility-actions">
+        <tbody>
+          <tr>
+            <td>设施类别：</td>
             <td>
               <n-select
-                v-model:value="current_plan[facility].product"
-                :options="
-                  current_plan[facility].name == '制造站' ? factory_products : trading_products
-                "
-                class="product-select"
-                :render-label="render_product"
+                v-model:value="current_plan[facility].name"
+                :disabled="edit_locked"
+                :options="facility_types"
+                class="type-select"
+                v-if="facility.startsWith('room')"
               />
+              <span v-else class="type-select">{{ right_side_facility_name }}</span>
             </td>
-          </template>
-          <td>
-            <n-button
-              ghost
-              type="primary"
-              @click="fill_with_free"
-              v-if="facility.startsWith('dorm')"
-            >
-              此宿舍内空位填充Free
-            </n-button>
-          </td>
-          <td>
-            <n-button ghost type="error" @click="clear" :disabled="facility_empty">
-              清空此设施内干员
-            </n-button>
-          </td>
-        </tr>
+            <template v-if="['制造站', '贸易站'].includes(current_plan[facility].name)">
+              <td>
+                产物
+                <help-text v-if="current_plan[facility].name == '制造站'"> 制造站会随排班自动核对并切换产物。 </help-text>
+                <help-text v-else> 贸易站会随排班自动核对并切换订单类型。 </help-text>
+              </td>
+              <td>
+                <n-select
+                  v-model:value="current_plan[facility].product"
+                  :disabled="edit_locked"
+                  :options="current_plan[facility].name == '制造站' ? factory_products : trading_products"
+                  class="product-select"
+                  :render-label="render_product"
+                />
+              </td>
+            </template>
+            <td>
+              <n-button ghost type="primary" @click="fill_with_free" :disabled="edit_locked" v-if="facility.startsWith('dorm')">
+                此宿舍内空位填充Free
+              </n-button>
+            </td>
+            <td v-if="sub_plan !== 'main'">
+              <n-button
+                ghost
+                :disabled="edit_locked"
+                title="用主表此设施的配置覆盖当前副表的此设施"
+                @click="!edit_locked && plan_store.import_main_facility(facility)"
+              >
+                从主表导入此设施
+              </n-button>
+            </td>
+            <td>
+              <n-button ghost type="error" @click="clear" :disabled="edit_locked || facility_empty"> 清空此设施内干员 </n-button>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </n-space>
     <n-space justify="center">
       <table>
-        <tr v-for="i in operator_limit" :key="i">
-          <td class="select-label">
-            <template v-if="facility == 'train' && i == 1">协助位</template>
-            <template v-else-if="facility == 'train' && i == 2">训练位</template>
-            <template v-else>干员：</template>
-          </td>
-          <td class="table-space">
-            <n-select
-              filterable
-              :options="operator_options(facility)"
-              class="operator-select"
-              v-model:value="current_plan[facility].plans[i - 1].agent"
-              :filter="(p, o) => o.label?.includes(p)"
-              :render-label="renderOperatorLabel"
-            />
-          </td>
-          <td class="select-label">
-            <span>组</span>
-            <help-text>可以将有联动基建技能的干员或者心情掉率相等的干员编入同组</help-text>
-          </td>
-          <td class="table-space group">
-            <n-input
-              v-model:value="current_plan[facility].plans[i - 1].group"
-              :disabled="!current_plan[facility].plans[i - 1].agent"
-            />
-          </td>
-          <td class="select-label">替换：</td>
-          <td>
-            <n-form-item :show-label="false" :show-feedback="false">
-              <operator-multi-select
-                :disabled="!current_plan[facility].plans[i - 1].agent"
-                v-model="current_plan[facility].plans[i - 1].replacement"
-                class="replacement-select"
+        <tbody v-for="i in operator_limit" :key="i">
+          <tr v-for="(binding, bindingIndex) in planBindings(current_plan[facility].plans[i - 1])" :key="bindingIndex">
+            <td v-if="bindingIndex === 0" class="select-label" :rowspan="planBindings(current_plan[facility].plans[i - 1]).length">
+              <template v-if="facility == 'train' && i == 1">协助位</template>
+              <template v-else-if="facility == 'train' && i == 2">训练位</template>
+              <template v-else>干员：</template>
+            </td>
+            <td v-if="bindingIndex === 0" class="table-space" :rowspan="planBindings(current_plan[facility].plans[i - 1]).length">
+              <n-select
+                filterable
+                :options="operator_options(facility)"
+                class="operator-select"
+                v-model:value="current_plan[facility].plans[i - 1].agent"
+                :disabled="edit_locked"
+                :filter="(p, o) => pinyin_match(o.label, p)"
+                :render-label="renderOperatorLabel"
+                :render-option="renderOperatorOption"
               />
-            </n-form-item>
-          </td>
-        </tr>
+            </td>
+            <td class="select-label">
+              <span>组</span>
+              <help-text>
+                <p>同组一起上下班。宿舍成员随组由替班接岗，不额外占床。</p>
+                <p>点击加号新增绑组，每列分别设置替班；组名不能为空或重复。</p>
+                <p>多绑组干员跟随最近触发换班的组，使用对应替班，不参与组内心情和回班时间计算。</p>
+                <p>每个绑组至少需要一名参与心情计算的非宿舍干员。</p>
+                <p>宿舍替班按已知心情从低到高选择，已在岗者保留。</p>
+                <p>宿舍替换填 Free 可在下班时开放休息床位；具体替班可填写同组工作主班或非主班。</p>
+              </help-text>
+            </td>
+            <td class="table-space group">
+              <div class="binding-group">
+                <n-input v-model:value="binding.group" :disabled="edit_locked || !current_plan[facility].plans[i - 1].agent" />
+                <div class="binding-actions">
+                  <n-button
+                    v-if="bindingIndex === 0"
+                    class="add-binding"
+                    aria-label="新增绑组"
+                    title="新增绑组"
+                    :disabled="edit_locked || ['', 'Free', 'Current', '菲亚梅塔'].includes(current_plan[facility].plans[i - 1].agent)"
+                    @click="addPlanBinding(current_plan[facility].plans[i - 1])"
+                    >+</n-button
+                  >
+                  <n-button
+                    v-if="bindingIndex > 0"
+                    class="remove-binding"
+                    aria-label="删除此绑组"
+                    title="删除此绑组"
+                    :disabled="edit_locked"
+                    @click="removePlanBinding(current_plan[facility].plans[i - 1], bindingIndex)"
+                    >−</n-button
+                  >
+                </div>
+              </div>
+            </td>
+            <td class="select-label">替换：</td>
+            <td>
+              <n-form-item :show-label="false" :show-feedback="false">
+                <slick-operator-select
+                  :disabled="edit_locked || !current_plan[facility].plans[i - 1].agent"
+                  :include-free="facility.startsWith('dorm')"
+                  v-model="binding.replacement"
+                  class="replacement-select"
+                />
+              </n-form-item>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </n-space>
   </div>
 </template>
 
 <style scoped lang="scss">
+.facility-actions {
+  border-spacing: 8px 0;
+
+  td {
+    vertical-align: middle;
+  }
+
+  :deep(.n-button) {
+    height: 36px;
+    --n-border-radius: 6px !important;
+    --n-border: 1px solid currentColor !important;
+    --n-border-hover: 1px solid currentColor !important;
+    --n-border-focus: 1px solid currentColor !important;
+    --n-border-pressed: 1px solid currentColor !important;
+    --n-border-disabled: 1px solid currentColor !important;
+  }
+
+  :deep(.n-base-selection) {
+    --n-height: 36px !important;
+  }
+}
+
+.binding-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  .n-input {
+    min-width: 90px;
+  }
+  .binding-actions {
+    width: 30px;
+    flex-shrink: 0;
+    display: flex;
+    gap: 4px;
+    justify-content: flex-end;
+  }
+  .n-button {
+    padding: 0 9px;
+  }
+}
+
 .select-label {
   width: 44px;
+  min-width: 44px;
+  white-space: nowrap;
 }
 
 .type-select {
@@ -785,6 +596,8 @@ function set_facility(e) {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  // Keep avatar and facility label z-index values inside the editor while scrolling.
+  isolation: isolate;
 }
 
 .group {
@@ -803,6 +616,14 @@ function set_facility(e) {
   margin: 2px 3px;
 }
 
+.right-room-draggable[draggable="true"] .n-button {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
 .facility-3 {
   width: 175px;
   height: 76px;
@@ -817,20 +638,14 @@ function set_facility(e) {
 
 .avatars {
   display: flex;
+  align-items: flex-start;
   gap: 6px;
   z-index: 5;
 
-  .avatar-inner {
+  & :deep(.plan-avatar) {
     box-sizing: content-box;
     border-radius: 2px;
     background: v-bind(avatar_bg);
-    display: flex;
-    overflow: hidden;
-  }
-
-  img,
-  .operator-avatar {
-    display: block;
   }
 }
 
@@ -878,7 +693,9 @@ function set_facility(e) {
       background-color: rgba(32, 128, 240, 0.16);
       border-radius: 3px;
       border: 1px solid transparent;
-      transition: all 0.3s;
+      transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease;
       position: relative;
 
       &:hover {
@@ -899,7 +716,9 @@ function set_facility(e) {
       background-color: rgba(240, 160, 32, 0.16);
       border-radius: 3px;
       border: 1px solid transparent;
-      transition: all 0.3s;
+      transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease;
       position: relative;
 
       &:hover {
@@ -920,7 +739,9 @@ function set_facility(e) {
       background-color: rgba(24, 160, 88, 0.16);
       border-radius: 3px;
       border: 1px solid transparent;
-      transition: all 0.3s;
+      transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease;
 
       &:hover {
         background-color: rgba(24, 160, 88, 0.22);
@@ -951,7 +772,9 @@ function set_facility(e) {
   justify-content: center;
   border: 1px dashed rgb(51, 54, 57);
   opacity: 0.6;
-  transition: all 0.3s;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease;
   cursor: pointer;
   border-radius: 3px;
 
@@ -976,7 +799,7 @@ function set_facility(e) {
 }
 
 .product-bg {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -996,7 +819,7 @@ function set_facility(e) {
 
 .workaholic {
   position: absolute;
-  content: '';
+  content: "";
   top: 0;
   left: 0;
   width: 45px;
@@ -1004,11 +827,5 @@ function set_facility(e) {
   opacity: 0.35;
   background-color: red;
   pointer-events: none;
-}
-</style>
-
-<style>
-.n-base-selection-placeholder .n-avatar {
-  display: none;
 }
 </style>
