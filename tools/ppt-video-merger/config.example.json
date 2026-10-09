@@ -1,0 +1,9 @@
+{
+  "input": "original.pptx",
+  "output_pptx": "merged.pptx",
+  "output_video": "merged.mp4",
+  "resolution": 1080,
+  "fps": 30,
+  "quality": 85,
+  "group_by_background": true
+}
