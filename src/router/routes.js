@@ -455,6 +455,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/yield-cover-maker',
+        text: '收益速览封面制图',
+        name: 'YieldOverviewCoverMaker',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/YieldOverviewCoverMaker.vue'),
+        meta: {
+            title: '收益速览封面制图'
+        }
+    },
+    {
         path: '/lb/pack-maker',
         text: '礼包性价比制图',
         name: 'LBPackMaker',

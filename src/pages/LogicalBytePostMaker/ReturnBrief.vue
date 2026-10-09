@@ -1,5 +1,8 @@
 <template>
-  <div class="logical-byte-container">
+  <div class="logical-byte-tool-page">
+    <LogicalByteToolNav v-if="isNewMaterialPage" />
+
+    <div class="logical-byte-container">
     <!-- 左栏：制图区 -->
     <div class="left-panel">
       <div class="panel-header">
@@ -401,12 +404,14 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed, ref, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import { ElMessage } from 'element-plus'
+import LogicalByteToolNav from '/src/components/logicalByte/LogicalByteToolNav.vue'
 import { getStageData } from '/src/utils/item/stageEfficiencyCal.js'
 import TMP_STAGE_RESULT from '/src/static/json/material/tmp_stage_result.json'
 import {
@@ -1861,9 +1866,18 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.logical-byte-tool-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .logical-byte-container {
   display: flex;
-  height: 100vh;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
   overflow: hidden;
 }
 
