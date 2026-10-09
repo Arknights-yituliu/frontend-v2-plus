@@ -13,11 +13,15 @@
     "check:riic-baseline-rules": "node scripts/check-riic-baseline-skill-resolver.js",
     "check:riic-calculation-feedback": "node scripts/check-riic-calculation-feedback.js",
     "check:riic-dynamic-fallback": "node scripts/check-riic-dynamic-fallback.js",
+    "check:riic-drone-preview": "node scripts/check-riic-drone-preview.js",
+    "check:riic-maa-calculator": "node scripts/check-riic-maa-calculator.js",
     "check:riic-trading-formula": "node scripts/check-riic-trading-formula.js",
     "check:riic-training-cost": "node scripts/check-riic-training-cost.js",
     "check:riic-schedule-model": "node scripts/check-riic-schedule-model.js",
     "preview": "vite preview",
-    "server": "node .\\server.js"
+    "server": "node .\\server.js",
+    "check:mower-income": "node scripts/check-mower-theoretical-output.mjs && node scripts/check-mower-site-inventory.mjs && node scripts/check-mower-output-worker.mjs",
+    "check:mower-plan": "node scripts/check-mower-plan.mjs"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
@@ -30,15 +34,19 @@
     "element-plus": "^2.11.7",
     "express": "^4.22.1",
     "file-saver": "^2.0.5",
+    "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
+    "jsqr": "^1.4.0",
     "jszip": "^3.10.1",
     "naive-ui": "^2.41.0",
+    "pako": "^3.0.0",
     "pinyin-pro": "^3.28.2",
     "puppeteer-core": "^25.7.0",
     "qrcode": "^1.5.4",
     "vite-plugin-vuetify": "^2.0.4",
     "vue": "^3.5.23",
     "vue-router": "^4.6.3",
+    "vue-slicksort": "^2.0.5",
     "vuetify": "^3.7.5"
   },
   "devDependencies": {

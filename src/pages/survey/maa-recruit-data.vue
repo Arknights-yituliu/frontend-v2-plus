@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import toolApi from "/src/api/tool";
+import toolApi from "/src/api/backend/tool";
 import "/src/assets/css/poster.css";
 
 export default {

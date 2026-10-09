@@ -1,22 +1,22 @@
 <script setup>
-import { inject } from 'vue'
-const show = inject('show_name_editor')
+import { inject, ref, watch } from "vue";
+const show = inject("show_name_editor");
+const edit_locked = inject("planEditLocked", ref(false));
+watch(edit_locked, (locked) => {
+  if (locked) show.value = false;
+});
 
-import { mowerPlanStore } from '../store/planStore.js'
-const { sub_plan, backup_plans } = mowerPlanStore
+import { mowerPlanStore } from "../store/planStore.js";
+
+const plan_store = mowerPlanStore;
+const { sub_plan, backup_plans } = plan_store;
 </script>
 
 <template>
-  <n-modal
-    v-model:show="show"
-    preset="card"
-    title="重命名"
-    transform-origin="center"
-    style="width: auto; max-width: 90vw"
-  >
+  <n-modal v-model:show="show" preset="card" title="重命名" transform-origin="center" style="width: auto; max-width: 90vw">
     <div class="dropdown-container">
       <label class="dropdown-label">副表名称 </label>
-      <n-input v-model:value="backup_plans[sub_plan].name"> </n-input>
+      <n-input v-model:value="backup_plans[sub_plan].name" :disabled="edit_locked"> </n-input>
     </div>
   </n-modal>
 </template>
@@ -26,6 +26,7 @@ const { sub_plan, backup_plans } = mowerPlanStore
   display: flex;
   align-items: center;
   margin-top: 5px;
+  padding: 2px;
 }
 
 .dropdown-label {

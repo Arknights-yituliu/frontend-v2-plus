@@ -26,7 +26,7 @@ import MaintenanceNotice from '/src/components/layout/MaintenanceNotice.vue'
 import {useTheme} from 'vuetify'
 
 import User from '/src/pages/account/user.vue'
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref, shallowRef, watch} from "vue";
 import {useRoute} from "vue-router";
 import {routeMap} from "/src/router/routes";
 import FeedbackTable from '/src/static/json/about/feedback_table.json'
@@ -59,7 +59,7 @@ let drawer = ref(true)
 
 
 let currentTheme = ref('dark')
-let naiveTheme = ref()
+let naiveTheme = shallowRef(null)
 
 function setTheme(value) {
   theme.global.name.value = value
@@ -68,7 +68,7 @@ function setTheme(value) {
   if (value === 'dark') {
     naiveTheme.value = darkTheme
   } else {
-    naiveTheme.value = ''
+    naiveTheme.value = null
   }
   localStorage.setItem("Theme", value)
 }
@@ -250,7 +250,7 @@ const buildTime = import.meta.env.BUILD_TIME;
           <div class="app-bar-content">
             <v-btn text="反馈" variant="text" @click="feedbackPopupVisible=true"></v-btn>
             <div class="app-bar-content-spacer"/>
-            <v-icon icon="mdi-theme-light-dark" @click="changeTheme"></v-icon>
+            <v-icon aria-label="切换明暗主题" icon="mdi-theme-light-dark" @click="changeTheme"></v-icon>
             <div class="app-bar-content-spacer"/>
             <v-menu>
               <template v-slot:activator="{ props }">

@@ -20,6 +20,14 @@ function formatNumber(value, digits = 1) {
   return Number(value).toFixed(digits)
 }
 
+function formatPercent(value, digits = 1) {
+  if (typeof value === 'undefined' || value === null || !Number.isFinite(Number(value))) {
+    return ''
+  }
+
+  return formatNumber(Number(value) * 100, digits)
+}
+
 function replaceZoneName(stage) {
   return String(stage?.zoneName || '').replace('(标准)', '')
 }
@@ -65,7 +73,7 @@ function shouldShowZoneName(stage) {
       </el-table-column>
       <el-table-column prop="knockRating" label="主产物掉率" width="120px">
         <template #default="scope">
-          <div style="margin-left: 8px;">{{ formatNumber(scope.row.knockRating * 100, 1) }}%</div>
+          <div style="margin-left: 8px;">{{ formatPercent(scope.row.knockRating) }}%</div>
         </template>
       </el-table-column>
       <el-table-column prop="apExpect" label="期望理智" width="96px">
@@ -75,17 +83,17 @@ function shouldShowZoneName(stage) {
       </el-table-column>
       <el-table-column prop="stageEfficiency" label="综合收益率" width="120px">
         <template #default="scope">
-          <div style="margin-left: 4px;">{{ formatNumber(scope.row.stageEfficiency * 100, 1) }}%</div>
+          <div style="margin-left: 4px;">{{ formatPercent(scope.row.stageEfficiency) }}%</div>
         </template>
       </el-table-column>
       <el-table-column prop="leT4Efficiency" label="T4材料效率" width="120px">
         <template #default="scope">
-          <div style="margin-left: 16px;">{{ formatNumber(scope.row.leT4Efficiency * 100, 1) }}%</div>
+          <div style="margin-left: 16px;">{{ formatPercent(scope.row.leT4Efficiency) }}%</div>
         </template>
       </el-table-column>
       <el-table-column prop="leT3Efficiency" label="T3材料效率" width="120px">
         <template #default="scope">
-          <div style="margin-left: 16px;">{{ formatNumber(scope.row.leT3Efficiency * 100, 1) }}%</div>
+          <div style="margin-left: 16px;">{{ formatPercent(scope.row.leT3Efficiency) }}%</div>
         </template>
       </el-table-column>
     </el-table>

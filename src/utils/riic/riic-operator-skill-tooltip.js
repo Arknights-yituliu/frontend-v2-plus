@@ -3,6 +3,7 @@ import OPERATOR_TABLE from "../../static/json/operator/character_table_simple.v2
 import PROFESSION_DICT from "../../static/json/operator/profession_dict.json";
 
 const SKILLS_BY_OPERATOR_ID = new Map();
+const SKILLS_BY_OPERATOR_NAME = new Map();
 const PROFESSION_LABELS = new Map();
 
 for (const profession of PROFESSION_DICT || []) {
@@ -21,6 +22,7 @@ for (const skill of BUILDING_TABLE || []) {
   const skills = SKILLS_BY_OPERATOR_ID.get(charId) || [];
   skills.push(skill);
   SKILLS_BY_OPERATOR_ID.set(charId, skills);
+  SKILLS_BY_OPERATOR_NAME.set(skill.name, skills);
 }
 
 function isSkillUnlocked(operator, skill) {
@@ -47,6 +49,17 @@ function stripMarkup(value) {
     .replace(/&amp;/g, "&")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+export function getRiicOperatorSkillDetails(charId) {
+  const name = OPERATOR_TABLE?.[charId]?.name || "";
+  const skills = SKILLS_BY_OPERATOR_ID.get(charId) || SKILLS_BY_OPERATOR_NAME.get(name) || SKILLS_BY_OPERATOR_NAME.get(name.replace(/（[^）]+）$/, "")) || [];
+  return skills.map((skill) => ({
+    name: skill.buffName,
+    facility: skill.roomType,
+    unlock: `精${skill.phase} ${skill.level}级`,
+    description: stripMarkup(skill.description),
+  }));
 }
 
 export function formatRiicOperatorTooltip(operator, skillTooltip) {

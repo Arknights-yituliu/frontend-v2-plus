@@ -1,7 +1,8 @@
 <script setup>
 import {createMessage} from "/src/utils/message.js";
-import operatorDataAPI from "/src/api/operatorData.js"
-import {saveAkAccountOperators} from "/src/api/userCenterApi.js"
+import operatorDataAPI from "/src/api/user-center/operatorData.js"
+import sklandCredentialAPI from "/src/api/backend/sklandCredential.js"
+import {saveAkAccountOperators} from "/src/api/user-center/userCenterApi.js"
 import {buildUcOperatorSavePayload} from "/src/utils/survey/ucOperatorData.js"
 import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
 import {operatorTableV2} from "/src/utils/gameData.js";
@@ -24,7 +25,7 @@ import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
-import { userInfo } from "/src/utils/user/userInfo.js";
+import { userInfo } from "/src/api/backend/userSession.js";
 import { useRoute, useRouter } from "vue-router";
 import Login from "/src/pages/account/login.vue";
 import QRCode from 'qrcode';
@@ -320,7 +321,7 @@ async function getPlayerBindingByOfficialToken() {
   sklandLoading.value = true
   try {
     // 后端用官网 token 换取森空岛凭证，返回 { cred, secret }
-    const result = await operatorDataAPI.getCredByHgToken({ token: hgToken })
+    const result = await sklandCredentialAPI.getCredByHgToken({ token: hgToken })
     const { cred, token } = result.data
     sklandCred.value = cred
     sklandToken.value = token
@@ -349,7 +350,7 @@ async function createSklandQrCode() {
   sklandQrStatusText.value = '正在生成二维码…'
   playBindingList.value = []
   try {
-    const res = await operatorDataAPI.createSklandQrCode()
+    const res = await sklandCredentialAPI.createSklandQrCode()
     const { scanId, qrContent } = res.data
     sklandQrScanId.value = scanId
     // 用 qrContent（deep link）渲染二维码图片
@@ -391,7 +392,7 @@ function startSklandQrPolling() {
   stopSklandQrPolling()
   sklandQrPollTimer = setInterval(async () => {
     try {
-      const res = await operatorDataAPI.checkSklandQrStatus(sklandQrScanId.value)
+      const res = await sklandCredentialAPI.checkSklandQrStatus(sklandQrScanId.value)
       const data = res.data
       if (data.status === 0) {
         // 用户已确认：停止轮询，用凭证拉取账号列表
@@ -795,6 +796,89 @@ function isOperatorRecommendationCompleted(operator) {
   }
 
   return activeConditions.length > 0 && activeConditions.every(Boolean)
+}
+
+// MAA Operator Progression (OperProgress) does not support any of Amiya's three forms
+const MAA_UNSUPPORTED_CHAR_IDS = new Set(['char_002_amiya', 'char_1001_amiya2', 'char_1037_amiya3'])
+
+/**
+ * Converts the unmet highlighted targets of owned operators in the current filter into MAA Operator Progression plans.
+ * Mastery targets carry their Elite 2 and skill level 7 prerequisites; modules are outside MAA's scope and only counted.
+ */
+function buildMaaOperProgressPlans() {
+  const plans = []
+  let ignoredEquipCount = 0
+  let ignoredAmiyaCount = 0
+
+  for (const operator of visibleOperatorList.value) {
+    if (!operator.own) {
+      continue
+    }
+
+    const skillMastery = [0, 0, 0]
+    for (const index of operatorRecommendedSkillSourceMap.value.get(operator.charId) || []) {
+      if ((operator[`skill${index + 1}`] || 0) < 3) {
+        skillMastery[index] = 3
+      }
+    }
+    const needMastery = skillMastery.some((level) => level > 0)
+
+    let eliteTarget = needMastery ? 2 : 0
+    if (operatorRecommendedEliteSourceSet.value.has(operator.charId)) {
+      eliteTarget = 2
+    } else if (operatorRecommendedElite1SourceSet.value.has(operator.charId)) {
+      eliteTarget = Math.max(eliteTarget, 1)
+    }
+
+    for (const index of operatorRecommendedEquipSourceMap.value.get(operator.charId) || []) {
+      if (!(operator[`mod${operator.equip[index].typeName2}`] > 0)) {
+        ignoredEquipCount++
+      }
+    }
+
+    const plan = {role: operator.profession.charAt(0) + operator.profession.slice(1).toLowerCase(), name: operator.name}
+    if (eliteTarget > operator.elite) {
+      plan.elite = eliteTarget
+    }
+    if (needMastery && (operator.mainSkill || 0) < 7) {
+      plan.skill_level = 7
+    }
+    if (needMastery) {
+      plan.skill_mastery = skillMastery
+    }
+    if (Object.keys(plan).length === 2) {
+      continue
+    }
+
+    if (MAA_UNSUPPORTED_CHAR_IDS.has(operator.charId)) {
+      ignoredAmiyaCount++
+      continue
+    }
+    plans.push(plan)
+  }
+
+  return {plans, ignoredEquipCount, ignoredAmiyaCount}
+}
+
+function copyMaaOperProgressPlans() {
+  const {plans, ignoredEquipCount, ignoredAmiyaCount} = buildMaaOperProgressPlans()
+  const ignored = [
+    ignoredEquipCount > 0 ? `${ignoredEquipCount} 条干员模组培养条目` : '',
+    ignoredAmiyaCount > 0 ? `${ignoredAmiyaCount} 条阿米娅培养条目` : '',
+  ].filter(Boolean).join('、')
+  const ignoredText = ignored ? `（因 MAA 暂不支持，已忽略 ${ignored}）` : ''
+
+  if (plans.length === 0) {
+    createMessage({type: 'warn', text: `当前筛选中没有需要培养的已招募干员${ignoredText}`})
+    return
+  }
+
+  const text = `[\n${plans.map((plan) => `  ${JSON.stringify(plan)}`).join(',\n')}\n]`
+  copyTextToClipboard(text, (success) => {
+    createMessage(success
+      ? {type: 'success', text: `已复制 ${plans.length} 名干员的培养计划，请在 MAA「干员培养」中点击「从剪贴板读取」${ignoredText}`}
+      : {type: 'error', text: '复制失败，请检查浏览器剪贴板权限'})
+  })
 }
 
 const visibleOperatorList = computed(() => {
@@ -1346,15 +1430,27 @@ onBeforeUnmount(() => {
                   </v-btn>
                 </div>
               </div>
-              <v-switch
-                  v-model="hideCompletedRecommendedOperators"
-                  class="operator-recommend-toggle"
-                  color="primary"
-                  density="compact"
-                  hide-details
-                  inset
-                  label="隐藏已满足条件的干员"
-              ></v-switch>
+              <div class="operator-recommend-actions">
+                <v-switch
+                    v-model="hideCompletedRecommendedOperators"
+                    class="operator-recommend-toggle"
+                    color="primary"
+                    density="compact"
+                    hide-details
+                    inset
+                    label="隐藏已满足条件的干员"
+                ></v-switch>
+                <v-btn
+                    color="primary"
+                    variant="tonal"
+                    prepend-icon="mdi-content-copy"
+                    :disabled="!hasActiveRecommendFilter"
+                    title="将当前筛选中已招募干员未达标的精英化与专精高亮复制为 MAA「干员培养」计划"
+                    @click="copyMaaOperProgressPlans()"
+                >
+                  复制 MAA 培养计划
+                </v-btn>
+              </div>
             </div>
             <v-divider class="operator-filter-divider"></v-divider>
             <div class="operator-filter-panel">

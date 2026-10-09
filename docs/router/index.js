@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory} from "vue-router";
 import {routes} from "./routes.js";
-import toolApi from "/src/api/tool.js";
+import toolApi from "/src/api/backend/tool.js";
 
 const router = createRouter({
     history: createWebHistory(),

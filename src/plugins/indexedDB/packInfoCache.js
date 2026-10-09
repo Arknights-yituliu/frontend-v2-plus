@@ -1,5 +1,5 @@
 import myDatabase from "/src/plugins/indexedDB/indexedDB.js";
-import materialAPI from "/src/api/materialV5.js";
+import materialAPI from "/src/api/backend/materialV5.js";
 
 async function putCache(data) {
     myDatabase.cache_data.put(data)

@@ -1,5 +1,5 @@
 import { reactive, ref, nextTick } from "vue";
-import operatorDataAPI from "/src/api/operatorData.js";
+import operatorDataAPI from "/src/api/user-center/operatorData.js";
 import { cMessage } from "/src/utils/message.js";
 import { operatorTableV2 } from "/src/utils/gameData.js";
 import { parseRiicMaaOperatorBox } from "/src/utils/riicMaaOperatorData.js";

@@ -1,5 +1,5 @@
 import myDatabase from "/src/plugins/indexedDB/indexedDB.js";
-import {getAkOperatorStatisticsResult} from "/src/api/userCenterApi.js";
+import {getAkOperatorStatisticsResult} from "/src/api/user-center/userCenterApi.js";
 import {operatorTableV2} from "/src/utils/gameData.js";
 import {formatNumber} from "/src/utils/format.js";
 

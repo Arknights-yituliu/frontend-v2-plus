@@ -4,7 +4,7 @@ import {operatorTableV2} from "/src/utils/gameData.js";
 import {onMounted, ref, watch} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
 import {createMessage} from "/src/utils/message.js";
-import questionnaireAPI from "/src/api/questionnaire.js";
+import questionnaireAPI from "/src/api/backend/questionnaire.js";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import operatorProgressionStatisticsDataCache from "/src/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import {formatNumber} from "/src/utils/format.js";

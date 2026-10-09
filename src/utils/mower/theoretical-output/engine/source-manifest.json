@@ -1,0 +1,511 @@
+{
+  "upstream": "https://github.com/Panda-Panta/R.I.I.C-Calculator",
+  "commit": "8885cdcc5a6d6f57a1c961a7af6fc8ebea2f892b",
+  "snapshotNotes": [
+    "All source hashes and updated runtime files come from this committed Git revision; uncommitted source-worktree changes are excluded."
+  ],
+  "files": [
+    {
+      "source": "src/data/operators.generated.json",
+      "sha256": "eab1ccda5ecfefd41602698ee4ef8e35d468e43f1f53da3369bb1487781425e7",
+      "vendoredSha256": "eab1ccda5ecfefd41602698ee4ef8e35d468e43f1f53da3369bb1487781425e7"
+    },
+    {
+      "source": "src/data/riic-term-evidence.json",
+      "sha256": "b5e567d78bb0d3d5bf173b50c3218f02081cf93c98d44c523bd1eba190634650",
+      "vendoredSha256": "b5e567d78bb0d3d5bf173b50c3218f02081cf93c98d44c523bd1eba190634650"
+    },
+    {
+      "source": "src/domain/defaults.ts",
+      "sha256": "3743b69d96b5b550801968d69e2b758078180abdcf9a7ddcf7928de71eed6f92",
+      "vendoredSha256": "3743b69d96b5b550801968d69e2b758078180abdcf9a7ddcf7928de71eed6f92"
+    },
+    {
+      "source": "src/domain/edition.ts",
+      "sha256": "729fcc6ad0b1bad51ad141ff19aa7b1ec7fe92a5baa071e5ac2f5e6eb8421350",
+      "vendoredSha256": "729fcc6ad0b1bad51ad141ff19aa7b1ec7fe92a5baa071e5ac2f5e6eb8421350"
+    },
+    {
+      "source": "src/domain/operatorContext.ts",
+      "sha256": "43eda0f1852538dfd25abc5ddf74be28e72635a00d989fe6bd267504773b0d7b",
+      "vendoredSha256": "43eda0f1852538dfd25abc5ddf74be28e72635a00d989fe6bd267504773b0d7b"
+    },
+    {
+      "source": "src/domain/operatorInventory.ts",
+      "sha256": "13642cfdb9bc58d7f773f6874d6e51dcffede2b357c50529dc4d67fa0888e601",
+      "vendoredSha256": "13642cfdb9bc58d7f773f6874d6e51dcffede2b357c50529dc4d67fa0888e601"
+    },
+    {
+      "source": "src/domain/operators.ts",
+      "sha256": "24684b209a6749b7c9224e78c447a6c18210efc0190e9c4a60d2f68f9c28ac0b",
+      "vendoredSha256": "24684b209a6749b7c9224e78c447a6c18210efc0190e9c4a60d2f68f9c28ac0b"
+    },
+    {
+      "source": "src/domain/productionWeights.ts",
+      "sha256": "e7f44680ebfffa13e30a1247dd2d94bce797e69303801feef033d4e56025ffac",
+      "vendoredSha256": "e7f44680ebfffa13e30a1247dd2d94bce797e69303801feef033d4e56025ffac"
+    },
+    {
+      "source": "src/domain/riicIdentity.ts",
+      "sha256": "7af984b60d414b483e852e757010762a37d10f9bdeab62f9fe541f1d32515678",
+      "vendoredSha256": "7af984b60d414b483e852e757010762a37d10f9bdeab62f9fe541f1d32515678"
+    },
+    {
+      "source": "src/domain/riicTags.ts",
+      "sha256": "e03b0b9ebd4200afbbb85bae57781906389abcd325be3d88b88d5810a658fe75",
+      "vendoredSha256": "e03b0b9ebd4200afbbb85bae57781906389abcd325be3d88b88d5810a658fe75"
+    },
+    {
+      "source": "src/domain/shiftRunPolicy.ts",
+      "sha256": "8e3659f3e1d5fb92f8ac45f35c8f074e8128c9d1c5de71cf4d2517cdcb038131",
+      "vendoredSha256": "8e3659f3e1d5fb92f8ac45f35c8f074e8128c9d1c5de71cf4d2517cdcb038131"
+    },
+    {
+      "source": "src/domain/types.ts",
+      "sha256": "ceb677e2951ea00b60e277179f65cf5c936cd4799b0cadf9325ec9082ad9b45c",
+      "vendoredSha256": "ceb677e2951ea00b60e277179f65cf5c936cd4799b0cadf9325ec9082ad9b45c"
+    },
+    {
+      "source": "src/engine/dormitoryRecovery.ts",
+      "sha256": "ac3bdcc2f653259cbf1a42bbf124437a4a23af0614eddef94653fe8a552aaca5",
+      "vendoredSha256": "ac3bdcc2f653259cbf1a42bbf124437a4a23af0614eddef94653fe8a552aaca5"
+    },
+    {
+      "source": "src/engine/globalContext.ts",
+      "sha256": "0119a67f9047f3650f05c98912e63f0df435b5028a3c4cc26c61cf0cdd27a200",
+      "vendoredSha256": "0119a67f9047f3650f05c98912e63f0df435b5028a3c4cc26c61cf0cdd27a200"
+    },
+    {
+      "source": "src/engine/jayeRules.ts",
+      "sha256": "691eb8047af77eb16c3983270367387c96488a5ed0025b9b31653e72fb5ee869",
+      "vendoredSha256": "691eb8047af77eb16c3983270367387c96488a5ed0025b9b31653e72fb5ee869"
+    },
+    {
+      "source": "src/engine/morale.ts",
+      "sha256": "c985d15c34dc4ce1f632819d1d3362d0999b2d68727298f236ec6ae6071f9e9a",
+      "vendoredSha256": "c985d15c34dc4ce1f632819d1d3362d0999b2d68727298f236ec6ae6071f9e9a"
+    },
+    {
+      "source": "src/engine/operatorGroups.ts",
+      "sha256": "7e3641b88d4e8f9dd008150e7f492b59026d51e46a2b253b86edcba9debbd621",
+      "vendoredSha256": "7e3641b88d4e8f9dd008150e7f492b59026d51e46a2b253b86edcba9debbd621"
+    },
+    {
+      "source": "src/engine/operatorRules.ts",
+      "sha256": "69c7821665cf6829bb1232afc189774655dec7907d5e7e4e026026061ae8b8d4",
+      "vendoredSha256": "69c7821665cf6829bb1232afc189774655dec7907d5e7e4e026026061ae8b8d4"
+    },
+    {
+      "source": "src/engine/orderCapacity.ts",
+      "sha256": "00a45da50a9113a1ddcdbf9d9592f95aea79fc71fa1970b496a0cc9e7247dad0",
+      "vendoredSha256": "00a45da50a9113a1ddcdbf9d9592f95aea79fc71fa1970b496a0cc9e7247dad0"
+    },
+    {
+      "source": "src/engine/shiftRoster.ts",
+      "sha256": "3493db6253ef895d8e2bb895036736424ada1e5a9a87fc5ea6e6a78ad91aeff0",
+      "vendoredSha256": "3493db6253ef895d8e2bb895036736424ada1e5a9a87fc5ea6e6a78ad91aeff0"
+    },
+    {
+      "source": "src/engine/supportRecovery.ts",
+      "sha256": "b8a0318f5249338a58937df7431624f5f0ba9abb5fdad7f3938b5ff813caa75e",
+      "vendoredSha256": "b8a0318f5249338a58937df7431624f5f0ba9abb5fdad7f3938b5ff813caa75e"
+    },
+    {
+      "source": "src/engine/timeDependentSkills.ts",
+      "sha256": "fccb6d5ddb86af895510aa25110f42bdcc6e62516bfa0c1a781fb8f0873a17db",
+      "vendoredSha256": "fccb6d5ddb86af895510aa25110f42bdcc6e62516bfa0c1a781fb8f0873a17db"
+    },
+    {
+      "source": "src/engine/tradeConditionalRules.ts",
+      "sha256": "f2610c3492471b5666ef7e34420ce7be2456e85f83c6d75913cbb14b9dd59e8f",
+      "vendoredSha256": "f2610c3492471b5666ef7e34420ce7be2456e85f83c6d75913cbb14b9dd59e8f"
+    },
+    {
+      "source": "src/optimizer/inventoryAdmission.ts",
+      "sha256": "574c977e2841bb837a856b34c007b7a3aa3e3edc261d6d50f355b8f82a24abeb",
+      "vendoredSha256": "97594c9f197626b0b73f707c11fa692bb12e7bee12a30354cddcdc18496d5b03",
+      "extraction": "Only runtime-used public members; function bodies are unchanged."
+    },
+    {
+      "source": "src/optimizer/productionObjective.ts",
+      "sha256": "19745e2d13e54ae62337fb396feec696a92be47555ac4b9a215854d964d951ab",
+      "vendoredSha256": "19745e2d13e54ae62337fb396feec696a92be47555ac4b9a215854d964d951ab"
+    },
+    {
+      "source": "src/rules/orderRules.ts",
+      "sha256": "21c889662cf5219024b4122afe69cd1f3e147846ad566e8510bfc24c12e3cea4",
+      "vendoredSha256": "21c889662cf5219024b4122afe69cd1f3e147846ad566e8510bfc24c12e3cea4"
+    },
+    {
+      "source": "src/rules/orderValue.ts",
+      "sha256": "cf3be5de94c7878cc20b91722b46e9a90065fe6810cb7460ed86562e370882f8",
+      "vendoredSha256": "cf3be5de94c7878cc20b91722b46e9a90065fe6810cb7460ed86562e370882f8"
+    },
+    {
+      "source": "src/scheduler/backupExpression.ts",
+      "sha256": "42a4dbafe0da05ff5de2f33a99845be96e78b29a313f87445e2e536f5c9ea13e",
+      "vendoredSha256": "42a4dbafe0da05ff5de2f33a99845be96e78b29a313f87445e2e536f5c9ea13e"
+    },
+    {
+      "source": "src/scheduler/backupPlans.ts",
+      "sha256": "48081bfd526fe534531eb670497e10516606f42aaddbc05bf9279d5586cda1e4",
+      "vendoredSha256": "48081bfd526fe534531eb670497e10516606f42aaddbc05bf9279d5586cda1e4"
+    },
+    {
+      "source": "src/scheduler/compileRosterSchedule.ts",
+      "sha256": "edc5cc82d5bb2ae91c4cff5dcc131e3ed2c04d9f7820c928c1b58d4e01a039f4",
+      "vendoredSha256": "edc5cc82d5bb2ae91c4cff5dcc131e3ed2c04d9f7820c928c1b58d4e01a039f4"
+    },
+    {
+      "source": "src/scheduler/fiammettaPolicy.ts",
+      "sha256": "3e51b24c1138506ac1ce8a8e54ec135dd26e2b2f2fc11094f44545cb83bdc357",
+      "vendoredSha256": "3e51b24c1138506ac1ce8a8e54ec135dd26e2b2f2fc11094f44545cb83bdc357"
+    },
+    {
+      "source": "src/scheduler/mowerAcceptOrder.ts",
+      "sha256": "4f9d3f5ac70ee9eb18755cd3e8ccef4e717b15bbc8034133fb1d583598e97350",
+      "vendoredSha256": "4f9d3f5ac70ee9eb18755cd3e8ccef4e717b15bbc8034133fb1d583598e97350"
+    },
+    {
+      "source": "src/scheduler/mowerAlphaCandidates.ts",
+      "sha256": "0db3fbb4056a4a953ded39c37913b590d018bbdd7926b3a7177789e21df27ca3",
+      "vendoredSha256": "0db3fbb4056a4a953ded39c37913b590d018bbdd7926b3a7177789e21df27ca3"
+    },
+    {
+      "source": "src/scheduler/mowerAlphaDorm.ts",
+      "sha256": "fe0f6e105f6405d08c95f9108d90e3cd64d233dea3552dcdefa45576a112c33c",
+      "vendoredSha256": "fe0f6e105f6405d08c95f9108d90e3cd64d233dea3552dcdefa45576a112c33c"
+    },
+    {
+      "source": "src/scheduler/mowerAlphaDormPlanning.ts",
+      "sha256": "873d3d5640b0bdbf5a21c47b895dbe9ab8b757108f6d15d141cffeae7fce5df5",
+      "vendoredSha256": "873d3d5640b0bdbf5a21c47b895dbe9ab8b757108f6d15d141cffeae7fce5df5"
+    },
+    {
+      "source": "src/scheduler/mowerAlphaExhaustSupport.ts",
+      "sha256": "3bc52e9b4ba25d02544148cdcee3f70934b78dd0ffc59616645a3a3bbdc42723",
+      "vendoredSha256": "3bc52e9b4ba25d02544148cdcee3f70934b78dd0ffc59616645a3a3bbdc42723"
+    },
+    {
+      "source": "src/scheduler/mowerAlphaMetadata.ts",
+      "sha256": "ab5ff4fd200c230c5527e075d03d759ab41aeb3680caa378cc9552208d23c629",
+      "vendoredSha256": "ab5ff4fd200c230c5527e075d03d759ab41aeb3680caa378cc9552208d23c629"
+    },
+    {
+      "source": "src/scheduler/mowerAlphaTaskProtection.ts",
+      "sha256": "f36606efefac97b593ea60928da4e9021079d3e6d31f0e1c3a4dcbd06f56dbe5",
+      "vendoredSha256": "f36606efefac97b593ea60928da4e9021079d3e6d31f0e1c3a4dcbd06f56dbe5"
+    },
+    {
+      "source": "src/scheduler/mowerArrangementError.ts",
+      "sha256": "87f91bc722cbae7dce9e0703b1f3bb881b3369ea956b24f01669a0f704ec10c4",
+      "vendoredSha256": "87f91bc722cbae7dce9e0703b1f3bb881b3369ea956b24f01669a0f704ec10c4"
+    },
+    {
+      "source": "src/scheduler/mowerArrangementRetry.ts",
+      "sha256": "00bf575464232eabb50e70243ab759d476dd7407ea375b6b4b4532da620b7c78",
+      "vendoredSha256": "00bf575464232eabb50e70243ab759d476dd7407ea375b6b4b4532da620b7c78"
+    },
+    {
+      "source": "src/scheduler/mowerClueLifecycle.ts",
+      "sha256": "37d6be3bc36484e22dd2ba8f8640ef7a983fe3cf90f89383391e6e1349750e2e",
+      "vendoredSha256": "37d6be3bc36484e22dd2ba8f8640ef7a983fe3cf90f89383391e6e1349750e2e"
+    },
+    {
+      "source": "src/scheduler/mowerCorrection.ts",
+      "sha256": "8d17b8df064671b02fc2bc319e1d1acfee11d9eefb3fd6b27dec61a7e50ff34d",
+      "vendoredSha256": "8d17b8df064671b02fc2bc319e1d1acfee11d9eefb3fd6b27dec61a7e50ff34d"
+    },
+    {
+      "source": "src/scheduler/mowerDormAssignment.ts",
+      "sha256": "b0f687661a6cff71da632e0e3438d6c7ade5383c7a3e7fd0eaa199dcd6480871",
+      "vendoredSha256": "b0f687661a6cff71da632e0e3438d6c7ade5383c7a3e7fd0eaa199dcd6480871"
+    },
+    {
+      "source": "src/scheduler/mowerDormRecovery.ts",
+      "sha256": "50f24ead377812f3be620f4d5b3cc401ca30edff1c47024d6e7dd7c71b5f8261",
+      "vendoredSha256": "50f24ead377812f3be620f4d5b3cc401ca30edff1c47024d6e7dd7c71b5f8261"
+    },
+    {
+      "source": "src/scheduler/mowerDormTasks.ts",
+      "sha256": "1f641ea7a21b88dd795b361d9d593c060bfc12ea8951a85f8aa9d2dbc791cc9c",
+      "vendoredSha256": "1f641ea7a21b88dd795b361d9d593c060bfc12ea8951a85f8aa9d2dbc791cc9c"
+    },
+    {
+      "source": "src/scheduler/mowerDroneInterface.ts",
+      "sha256": "369bf71f498428cf4e96034416a1efe309ab260b19a87a386ec03cd26b04b022",
+      "vendoredSha256": "369bf71f498428cf4e96034416a1efe309ab260b19a87a386ec03cd26b04b022"
+    },
+    {
+      "source": "src/scheduler/mowerExhaustPlanning.ts",
+      "sha256": "b8c3481103f6508250790816a6bf64861c0337fa266f41baa95f371d1a6d3da9",
+      "vendoredSha256": "b8c3481103f6508250790816a6bf64861c0337fa266f41baa95f371d1a6d3da9"
+    },
+    {
+      "source": "src/scheduler/mowerFiammetta.ts",
+      "sha256": "b7b4ecba23a8da09b563ac7b4ae3e9c9cc98e622163c01500e86e201bdeca412",
+      "vendoredSha256": "b7b4ecba23a8da09b563ac7b4ae3e9c9cc98e622163c01500e86e201bdeca412"
+    },
+    {
+      "source": "src/scheduler/mowerGlobalDormOrder.ts",
+      "sha256": "8d2b1189c36b0fba3040c758ac1788f491bbc653e0ccf4a0f772cf62396424f1",
+      "vendoredSha256": "8d2b1189c36b0fba3040c758ac1788f491bbc653e0ccf4a0f772cf62396424f1"
+    },
+    {
+      "source": "src/scheduler/mowerMetadata.ts",
+      "sha256": "d33e5046e0795524af2b2e4341c10aaec6f3e1b4c7800205c6af7f987644391c",
+      "vendoredSha256": "d33e5046e0795524af2b2e4341c10aaec6f3e1b4c7800205c6af7f987644391c"
+    },
+    {
+      "source": "src/scheduler/mowerMoodLimits.ts",
+      "sha256": "c1a50a7eca31cd17669d5ca7db0e86106796d8730caec22325ec5656ca4f8918",
+      "vendoredSha256": "c1a50a7eca31cd17669d5ca7db0e86106796d8730caec22325ec5656ca4f8918"
+    },
+    {
+      "source": "src/scheduler/mowerNativeErrors.ts",
+      "sha256": "0bfd2bdf6f0efbeeed6cda68042a7961452273373e65dba7498b0f8ea893103d",
+      "vendoredSha256": "0bfd2bdf6f0efbeeed6cda68042a7961452273373e65dba7498b0f8ea893103d"
+    },
+    {
+      "source": "src/scheduler/mowerNotification.ts",
+      "sha256": "09c6f49530128864dd7c016204faf2b5de2449255fb52a7bb0bb78c7fc1f950e",
+      "vendoredSha256": "09c6f49530128864dd7c016204faf2b5de2449255fb52a7bb0bb78c7fc1f950e"
+    },
+    {
+      "source": "src/scheduler/mowerObservations.ts",
+      "sha256": "4f36f52e9f8a5883c9851f4fcca72efe8a8e9bbba9a4ad2137d4ed475b871ca8",
+      "vendoredSha256": "4f36f52e9f8a5883c9851f4fcca72efe8a8e9bbba9a4ad2137d4ed475b871ca8"
+    },
+    {
+      "source": "src/scheduler/mowerOperatorState.ts",
+      "sha256": "c98c98918f10284687e3781ab0dab17f437ab42657188d0ae3da38e8a6bf6b7f",
+      "vendoredSha256": "c98c98918f10284687e3781ab0dab17f437ab42657188d0ae3da38e8a6bf6b7f"
+    },
+    {
+      "source": "src/scheduler/mowerOrdinaryPlanning.ts",
+      "sha256": "d0230558a1801b6fc7071e3e8a3b0db271330168f33282731f5008ed0e1e62ec",
+      "vendoredSha256": "d0230558a1801b6fc7071e3e8a3b0db271330168f33282731f5008ed0e1e62ec"
+    },
+    {
+      "source": "src/scheduler/mowerPlanningWake.ts",
+      "sha256": "dc72c9ad22d7b63c9d377c8f753a8f3dc2df3220b355ee6a6da1c48444872f9c",
+      "vendoredSha256": "dc72c9ad22d7b63c9d377c8f753a8f3dc2df3220b355ee6a6da1c48444872f9c"
+    },
+    {
+      "source": "src/scheduler/mowerPlanOrder.ts",
+      "sha256": "1a9e696e878bd1df98015175dbdf84773f0836f61733ac3597559eed6092f10e",
+      "vendoredSha256": "1a9e696e878bd1df98015175dbdf84773f0836f61733ac3597559eed6092f10e"
+    },
+    {
+      "source": "src/scheduler/mowerRecoveryBeds.ts",
+      "sha256": "813b8ce03930850377e79a6e1f44d86ed48461017f0092552c2c26d1d3981b09",
+      "vendoredSha256": "813b8ce03930850377e79a6e1f44d86ed48461017f0092552c2c26d1d3981b09"
+    },
+    {
+      "source": "src/scheduler/mowerRelease.ts",
+      "sha256": "0f18ba4b5efb2ace57b5c15a73fb5806a891a7a714cae902e7a8f1c4688b6b9d",
+      "vendoredSha256": "0f18ba4b5efb2ace57b5c15a73fb5806a891a7a714cae902e7a8f1c4688b6b9d"
+    },
+    {
+      "source": "src/scheduler/mowerReload.ts",
+      "sha256": "5ae78d062d26ed30542a4e70587038ae675d6ed3d64aa37a4980f6e9c96ca573",
+      "vendoredSha256": "5ae78d062d26ed30542a4e70587038ae675d6ed3d64aa37a4980f6e9c96ca573"
+    },
+    {
+      "source": "src/scheduler/mowerRunLifecycle.ts",
+      "sha256": "b9909d691f0fff9a63d2bc0ebb1a7b33fca96611fce761bff45f8a66d23611c3",
+      "vendoredSha256": "b9909d691f0fff9a63d2bc0ebb1a7b33fca96611fce761bff45f8a66d23611c3"
+    },
+    {
+      "source": "src/scheduler/mowerRunOrderBridge.ts",
+      "sha256": "d3e02038bc34c23b4e7f289e51f46a7c08285d792455490f288d4dc9fa8cd644",
+      "vendoredSha256": "d3e02038bc34c23b4e7f289e51f46a7c08285d792455490f288d4dc9fa8cd644"
+    },
+    {
+      "source": "src/scheduler/mowerRunOrderDroneAdjustment.ts",
+      "sha256": "fc8209ae0af25419c7f5fe38610b55a2ec09052aaa7640e76ab01e52b6436cdd",
+      "vendoredSha256": "fc8209ae0af25419c7f5fe38610b55a2ec09052aaa7640e76ab01e52b6436cdd"
+    },
+    {
+      "source": "src/scheduler/mowerRunOrderPlanning.ts",
+      "sha256": "b796dee361639f9dab3b884b669819e21621977fb6dd860f0158e4fa5fb42c3b",
+      "vendoredSha256": "b796dee361639f9dab3b884b669819e21621977fb6dd860f0158e4fa5fb42c3b"
+    },
+    {
+      "source": "src/scheduler/mowerRunOrderRefresh.ts",
+      "sha256": "c20ca0cc6fc31df55aa0e6d6ce189140260ee77d43da86133412d247aa5357c9",
+      "vendoredSha256": "c20ca0cc6fc31df55aa0e6d6ce189140260ee77d43da86133412d247aa5357c9"
+    },
+    {
+      "source": "src/scheduler/mowerSchedulingData.ts",
+      "sha256": "649a27ae93cca6be75ee7e21508b81906dc424143ac79a14f32c99df45057d4f",
+      "vendoredSha256": "649a27ae93cca6be75ee7e21508b81906dc424143ac79a14f32c99df45057d4f"
+    },
+    {
+      "source": "src/scheduler/mowerSelection.ts",
+      "sha256": "d522bf9cb97bf5d7e9f9581ca0278b5562458c81fc779fd3e73f11f38922dd58",
+      "vendoredSha256": "d522bf9cb97bf5d7e9f9581ca0278b5562458c81fc779fd3e73f11f38922dd58"
+    },
+    {
+      "source": "src/scheduler/mowerShiftCycle.ts",
+      "sha256": "8fc880e5059b096e17f032da56d2477a62fb3f4ae3d754d58df070732b863d29",
+      "vendoredSha256": "8fc880e5059b096e17f032da56d2477a62fb3f4ae3d754d58df070732b863d29"
+    },
+    {
+      "source": "src/scheduler/mowerShiftProtection.ts",
+      "sha256": "694d559911aa84fb2537c0186225cb03283220106042d55b87882c45a316f68d",
+      "vendoredSha256": "694d559911aa84fb2537c0186225cb03283220106042d55b87882c45a316f68d"
+    },
+    {
+      "source": "src/scheduler/mowerSourceRuntime.ts",
+      "sha256": "c1307fbb3fe16cc8bf0f0e1b3387a29fc44232787ec5e5e95a0183f6c08ae1c9",
+      "vendoredSha256": "c1307fbb3fe16cc8bf0f0e1b3387a29fc44232787ec5e5e95a0183f6c08ae1c9"
+    },
+    {
+      "source": "src/scheduler/mowerTaskExecutor.ts",
+      "sha256": "c4ece2a18bddf2251ed987b7948be74a1cd6cf2b41377ce6714d1396a6c695ab",
+      "vendoredSha256": "c4ece2a18bddf2251ed987b7948be74a1cd6cf2b41377ce6714d1396a6c695ab"
+    },
+    {
+      "source": "src/scheduler/mowerTaskQueue.ts",
+      "sha256": "3c37bc705b44ed070adbeb1c9ef378dad881e5b40cb4f8fa1af5431b8717a97c",
+      "vendoredSha256": "3c37bc705b44ed070adbeb1c9ef378dad881e5b40cb4f8fa1af5431b8717a97c"
+    },
+    {
+      "source": "src/scheduler/mowerTaskScheduling.ts",
+      "sha256": "5e641cd082578e01f57aa63d76e2408d5662cd8f00869a444a9d6bee6225c971",
+      "vendoredSha256": "5e641cd082578e01f57aa63d76e2408d5662cd8f00869a444a9d6bee6225c971"
+    },
+    {
+      "source": "src/scheduler/mowerTiming.ts",
+      "sha256": "482768893ed442d8eb317b286691be72d6ff85a5cb879cfe1f3fb4ed9ab10b3e",
+      "vendoredSha256": "482768893ed442d8eb317b286691be72d6ff85a5cb879cfe1f3fb4ed9ab10b3e"
+    },
+    {
+      "source": "src/scheduler/mowerTodoTask.ts",
+      "sha256": "a739d8499d93277f33b42d38b92c1a5718f8b68f509bdf3ef598ad1aad766cc8",
+      "vendoredSha256": "a739d8499d93277f33b42d38b92c1a5718f8b68f509bdf3ef598ad1aad766cc8"
+    },
+    {
+      "source": "src/scheduler/rosterRuntime.ts",
+      "sha256": "9c50cc1c1bd19d1bed103011677612b5eb26d22479d758e341ced05f5a9e3b62",
+      "vendoredSha256": "9c50cc1c1bd19d1bed103011677612b5eb26d22479d758e341ced05f5a9e3b62"
+    },
+    {
+      "source": "src/scheduler/scheduleAdapter.ts",
+      "sha256": "2fe43e93f74676dbe9d19b47559d442c4d774ec65393203ed9e2b48cc3743baf",
+      "vendoredSha256": "2fe43e93f74676dbe9d19b47559d442c4d774ec65393203ed9e2b48cc3743baf"
+    },
+    {
+      "source": "src/scheduler/types.ts",
+      "sha256": "68c441b37fa2bd5ab704e4d823c58ebe5a8c8357f371897f899ce2e00669241c",
+      "vendoredSha256": "68c441b37fa2bd5ab704e4d823c58ebe5a8c8357f371897f899ce2e00669241c"
+    },
+    {
+      "source": "src/simulator/droneTimeline.ts",
+      "sha256": "fb82732df1cc6338ffe2c2e95e52d1b75083f809e9d85d662b20298a80c7cbe9",
+      "vendoredSha256": "fb82732df1cc6338ffe2c2e95e52d1b75083f809e9d85d662b20298a80c7cbe9"
+    },
+    {
+      "source": "src/simulator/manufacturingTimeline.ts",
+      "sha256": "4037214828c960b9700caffb732d021c81f7ab6d769c246ae9c1f9ad474a4298",
+      "vendoredSha256": "4037214828c960b9700caffb732d021c81f7ab6d769c246ae9c1f9ad474a4298"
+    },
+    {
+      "source": "src/simulator/mowerNativeClueIO.ts",
+      "sha256": "ba8bf23e3a3495b6cc4bef6cf97178dcb58fe6550c2d47e8f3c7aaf59635939c",
+      "vendoredSha256": "ba8bf23e3a3495b6cc4bef6cf97178dcb58fe6550c2d47e8f3c7aaf59635939c"
+    },
+    {
+      "source": "src/simulator/mowerNativeProductionIO.ts",
+      "sha256": "3cdb3bb8e8c47d9970aaadcfeb1590b31e6d9d6a86f24f2597fc11112185e297",
+      "vendoredSha256": "3cdb3bb8e8c47d9970aaadcfeb1590b31e6d9d6a86f24f2597fc11112185e297"
+    },
+    {
+      "source": "src/simulator/orderTimeline.ts",
+      "sha256": "13cab8a17b33555054c70fd26d0e0bb9aeeb5d33810c5f0e336f38cfd1436d71",
+      "vendoredSha256": "13cab8a17b33555054c70fd26d0e0bb9aeeb5d33810c5f0e336f38cfd1436d71"
+    },
+    {
+      "source": "src/simulator/productionTimeline.ts",
+      "sha256": "8c9b7ba49d1383294a190b97bbf1fc3640b3a84d01c23b21b670c30ca6bfd482",
+      "vendoredSha256": "8c9b7ba49d1383294a190b97bbf1fc3640b3a84d01c23b21b670c30ca6bfd482"
+    },
+    {
+      "source": "src/simulator/resourceLedger.ts",
+      "sha256": "46e8f98c97afdcacf654bac88067fc850318ed76ed4eacdc2a8f707e47c63827",
+      "vendoredSha256": "46e8f98c97afdcacf654bac88067fc850318ed76ed4eacdc2a8f707e47c63827"
+    },
+    {
+      "source": "src/simulator/scheduleSimulation.ts",
+      "sha256": "09ad2c581532cc4d66907ffc6400a6f1a2144f480ef3b33f3d91c544244f2b1b",
+      "vendoredSha256": "09ad2c581532cc4d66907ffc6400a6f1a2144f480ef3b33f3d91c544244f2b1b"
+    },
+    {
+      "source": "src/workbench/compat/base45.ts",
+      "sha256": "03ee23ee33246fd955073167b0128a44e864b54e36a53c8eed891c14a6ab0e25",
+      "vendoredSha256": "03ee23ee33246fd955073167b0128a44e864b54e36a53c8eed891c14a6ab0e25"
+    },
+    {
+      "source": "src/workbench/compat/mowerJson.ts",
+      "sha256": "935f7450275cef2869a24d4b861c097f41661850cc87d5672f18567297affba8",
+      "vendoredSha256": "01b4d6ded12c43b1672997c2d9cbf44aa36c92d1b21f8ecb57bf34e54c8dfeed",
+      "adaptation": "Clear all default staffing slots before import; construction and level-zero semantics follow the committed source."
+    },
+    {
+      "source": "src/workbench/compat/mowerQrCodec.ts",
+      "sha256": "ec3d328349d46bfcc59fe0cd93e5d24d5d71335557e5f8284b72402603ecdcb6",
+      "vendoredSha256": "ec3d328349d46bfcc59fe0cd93e5d24d5d71335557e5f8284b72402603ecdcb6"
+    },
+    {
+      "source": "src/workbench/compat/mowerQrConstants.ts",
+      "sha256": "422ccf58ae79db00ca951d9b13b94881b82c787b67b2dfbb40093314a6e4d5f6",
+      "vendoredSha256": "422ccf58ae79db00ca951d9b13b94881b82c787b67b2dfbb40093314a6e4d5f6"
+    },
+    {
+      "source": "src/workbench/defaults.ts",
+      "sha256": "5f1e412f04682ce95064ad4b44ed56f73368d45b2b2ee125ad1387a9ff854dcb",
+      "vendoredSha256": "5f1e412f04682ce95064ad4b44ed56f73368d45b2b2ee125ad1387a9ff854dcb"
+    },
+    {
+      "source": "src/workbench/facilityState.ts",
+      "sha256": "ac6e2a07d6864680f023403b21293c4377fc9b1a73150fc83f910aa15d4f1fff",
+      "vendoredSha256": "ac6e2a07d6864680f023403b21293c4377fc9b1a73150fc83f910aa15d4f1fff"
+    },
+    {
+      "source": "src/workbench/levelInference.ts",
+      "sha256": "f634d847ba902b98938f3c2f48d99f1f7b1df99cd226815741695a21fd945e14",
+      "vendoredSha256": "f634d847ba902b98938f3c2f48d99f1f7b1df99cd226815741695a21fd945e14"
+    },
+    {
+      "source": "src/workbench/model.ts",
+      "sha256": "b25472f561f0173ea90a2df2a2e75476936e908560e48f533e77391501bcff16",
+      "vendoredSha256": "b25472f561f0173ea90a2df2a2e75476936e908560e48f533e77391501bcff16"
+    },
+    {
+      "source": "src/workbench/mowerReportMetrics.ts",
+      "sha256": "98781600aaaa0b89cc3d4edfd836d765b27387a76aae3a45dd9a0b347b5c76a4",
+      "vendoredSha256": "98781600aaaa0b89cc3d4edfd836d765b27387a76aae3a45dd9a0b347b5c76a4"
+    },
+    {
+      "source": "src/workbench/operatorHelpers.ts",
+      "sha256": "07615a10e96df9d64822e88c8ff2385088118bf2efcc213d213ac7aff6cd53a6",
+      "vendoredSha256": "965a5742b9980362a366975378432582ae6b0c76ed212f0d82c1d837e6cd61ab",
+      "extraction": "Only runtime-used public members; function bodies are unchanged."
+    },
+    {
+      "source": "src/workbench/scheduleSimulationBridge.ts",
+      "sha256": "8dd035f10c0f2365cc7eb12ff92903264a375eb810fb02a74533121dba5732b4",
+      "vendoredSha256": "8dd035f10c0f2365cc7eb12ff92903264a375eb810fb02a74533121dba5732b4"
+    },
+    {
+      "source": "src/workbench/validate.ts",
+      "sha256": "8677c594cfcd2b180a17073376eccfc93ac30a42df62ec31f8dcd64ab13454f4",
+      "vendoredSha256": "8677c594cfcd2b180a17073376eccfc93ac30a42df62ec31f8dcd64ab13454f4"
+    }
+  ],
+  "hashNormalization": {
+    "encoding": "UTF-8",
+    "lineEndings": "CRLF normalized to LF"
+  }
+}
