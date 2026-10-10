@@ -296,6 +296,84 @@ try {
     assert.match(errors, /人数超过/);
     assert.match(errors, /下限不大于上限/);
   });
+  check("alpha 全零心情工作绑组无需普通主班，仍校验替班唯一性", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅";
+    plan.plan1.room_1_1.plans[0].group_bindings = [{ group: "零心情附加组", replacement: ["砾"] }];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.room_1_1.plans.push({ agent: "凯尔希", group: "制造组", replacement: ["砾"] });
+    plan.conf.workaholic += ",凯尔希";
+    assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
+  });
+  check("alpha 候补或多绑组不能独自决定普通绑组上下班", () => {
+    const plan = cloneValid();
+    plan.conf.resting_standby = "阿米娅";
+    assert.match(validatePlan(plan).errors.join(";"), /缺少决定上下班/);
+    for (const field of ["rest_in_full", "exhaust_require"]) {
+      plan.conf[field] = "阿米娅";
+      assert.deepEqual(validatePlan(plan).errors, []);
+      delete plan.conf[field];
+    }
+    plan.conf.resting_standby = "";
+    plan.plan1.room_1_1.plans[0].group_bindings = [{ group: "额外组", replacement: ["砾"] }];
+    assert.match(validatePlan(plan).errors.join(";"), /缺少决定上下班/);
+    plan.conf.workaholic = "阿米娅";
+    plan.plan1.dormitory_1.plans[0] = { agent: "杜林", group: "只有宿管", replacement: ["芬"] };
+    assert.match(validatePlan(plan).errors.join(";"), /只有宿管.*缺少决定上下班/);
+  });
+  const bedFixture = () => {
+    const plan = cloneValid();
+    const workers = ["陈", "银灰", "能天使", "讯使", "芬"];
+    const covers = ["夜莺", "砾", "红", "黑角", "初雪"];
+    plan.plan1.central = { plans: workers.map((name, index) => ({ agent: name, group: "主班组", replacement: [covers[index]] })) };
+    return plan;
+  };
+  check("alpha 候补不占必需床位，用尽与回满成员仍须有床", () => {
+    const plan = bedFixture();
+    plan.conf.resting_standby = "芬";
+    assert.deepEqual(validatePlan(plan).errors, []);
+    for (const field of ["rest_in_full", "exhaust_require"]) {
+      plan.conf[field] = "芬";
+      assert.match(validatePlan(plan).errors.join(";"), /所需宿舍数 5.*有效宿舍数 4/);
+      delete plan.conf[field];
+    }
+  });
+  check("alpha 显式 Free 只增加所属绑组的有效床位", () => {
+    const plan = bedFixture();
+    plan.plan1.dormitory_1.plans = [
+      { agent: "杜林", group: "主班组", replacement: ["Free"] },
+      { agent: "塑心", group: "主班组", replacement: ["Free"] },
+      ...Array.from({ length: 3 }, () => slot("Free")),
+    ];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.dormitory_1.plans[1].group = "制造组";
+    assert.match(validatePlan(plan).errors.join(";"), /主班组.*所需宿舍数 5.*有效宿舍数 4/);
+  });
+  check("alpha 固定宿舍替班优先保留必需恢复成员，候补不能虚减床位", () => {
+    const plan = bedFixture();
+    plan.plan1.dormitory_1.plans = [
+      { agent: "杜林", group: "主班组", replacement: ["芬", "陈"] },
+      slot("塑心"),
+      ...Array.from({ length: 3 }, () => slot("Free")),
+    ];
+    plan.conf.resting_standby = "芬";
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.dormitory_1.plans[0].replacement = ["芬"];
+    assert.match(validatePlan(plan).errors.join(";"), /所需宿舍数 4.*有效宿舍数 3/);
+  });
+  check("alpha 副表合并最新零心情设置并支持宿舍及右侧岗位部分覆盖", () => {
+    const plan = cloneValid();
+    plan.plan1.train = { plans: [{ agent: "陈", group: "训练组", replacement: ["夜莺"] }, { agent: "银灰", group: "训练组", replacement: ["红"] }] };
+    plan.backup_plans.push({ name: "部分覆盖", conf: { workaholic: "陈,银灰,阿米娅" }, plan: { dormitory_1: { plans: [slot("Current")] }, train: { plans: [slot("Current")] } } });
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.backup_plans[0].conf = { resting_standby: "陈,银灰" };
+    assert.match(validatePlan(plan).errors.join(";"), /副表.*训练组.*缺少决定上下班/);
+  });
+  check("alpha 显式任务遵守主表实际岗位数", () => {
+    const plan = cloneValid();
+    plan.backup_plans.push({ name: "任务", plan: {}, conf: {}, task: { room_1_1: ["Current", "砾"] } });
+    assert.match(validatePlan(plan).errors.join(";"), /任务.*人数超过/);
+  });
   console.log(`\n${passed} 项排班检查通过`);
 } finally {
   await server.close();

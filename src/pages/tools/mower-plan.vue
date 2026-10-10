@@ -209,7 +209,7 @@ async function saveImage() {
     await nextTick();
     const blob = await exportPlanImage(plan_editor.value.outer, build_plan(), theme.value);
     if (!blob) throw new Error("图片生成失败");
-    saveAs(blob, `${plan_title.value || "plan"}.png`);
+    saveAs(blob, `${plan_title.value || "plan"}.jpg`);
   } catch (error) {
     message.error(error.message || "图片导出失败");
   } finally {
