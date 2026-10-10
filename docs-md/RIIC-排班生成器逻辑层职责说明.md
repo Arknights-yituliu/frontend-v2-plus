@@ -23,6 +23,8 @@ src/utils/riic/riic-schedule-workspace.js
 src/utils/riic/riic-schedule-result-snapshot.js
 ```
 
+消费同一套收益结算与展示模型的页面入口还包括 `src/pages/tools/maa-schedule-calculator.vue`（MAA排班表计算器），其结构见 `RIIC-MAA排班表计算器与交接协议.md`。
+
 本文中的层号来自源码文件名和调试面板中的阶段标识。当前实现并不是每个连续数字都有一个独立文件，部分层是兼容入口，部分层由多个文件共同组成。
 
 ## 二、L 层与 P 层的区别

@@ -1,11 +1,32 @@
 import {
   BATTLE_RECORD_EXPERIENCE,
+  buildDailySanityAmounts,
+  buildResultDisplay as buildPackageResultDisplay,
+  calculateDroneAcceleration,
   calculateEfficiency,
   createEfficiencyCatalog,
+  DEFAULT_LMD_DRONE_STRATEGIES,
   facilityId,
+  formatBasePointSource as formatPackageBasePointSource,
 } from "/src/vendor/riic-efficiency/dist/index.js";
 
-export { buildEfficiencyNotices } from "/src/vendor/riic-efficiency/dist/index.js";
+export {
+  buildDailyOutputDisplay,
+  buildEfficiencyNotices,
+  buildFacilityStepCards,
+  buildFacilityStepPanes,
+  calculateSanityValues,
+  completeInferredRooms,
+  DEFAULT_SANITY_SETTINGS,
+  flattenResultDisplay,
+  formatDisplayValue,
+  formatEfficiencyNumber,
+  formatNumber,
+  formatProduction,
+  inferScheduleLayout,
+  resourceLabel,
+  signedNumber,
+} from "/src/vendor/riic-efficiency/dist/index.js";
 
 const operatorModules = import.meta.glob(
   "/src/vendor/riic-efficiency/data/operators/*.json",
@@ -33,6 +54,54 @@ const catalog = {
   ),
   ruleset,
 };
+
+export function buildResultDisplay(result, options = {}) {
+  return buildPackageResultDisplay(result, {
+    basePointLabel: (term) => termsData.terms[term]?.name ?? term,
+    basePointSource: (source) =>
+      formatPackageBasePointSource(source, termsData.terms),
+    ...options,
+  });
+}
+
+export function calculateRiicDroneAcceleration(result, strategyText = "") {
+  const document = result?.document;
+  if (!document) {
+    return null;
+  }
+
+  const override = String(strategyText ?? "").trim();
+  const droneDocument = {
+    ...document,
+    settings: {
+      ...(document.settings || {}),
+      lmdDroneStrategy: override || undefined,
+    },
+  };
+  const tradingLevels = (document.layout || [])
+    .filter((entry) => entry.type === "trading")
+    .map((entry) => Number(entry.level));
+  const lowestTradingLevel = tradingLevels.length
+    ? Math.min(...tradingLevels)
+    : undefined;
+  const defaultStrategy = [1, 2, 3].includes(lowestTradingLevel)
+    ? DEFAULT_LMD_DRONE_STRATEGIES[lowestTradingLevel]
+    : "";
+
+  return {
+    acceleration: calculateDroneAcceleration(
+      droneDocument,
+      catalog,
+      buildDailySanityAmounts(result),
+      { efficiencyResult: result },
+    ),
+    strategyLabel: override
+      ? `自定义策略：${override}`
+      : defaultStrategy
+        ? `默认策略：${defaultStrategy}`
+        : "当前布局没有可用的贸易站策略",
+  };
+}
 
 const ROOM_TYPE_ALIASES = Object.freeze({ office: "hire" });
 const PRODUCT_ALIASES = Object.freeze({
@@ -130,7 +199,6 @@ function cloneRoomAssignment(
   roomType,
   operatorStates,
   craftMaterial,
-  initializeMood,
 ) {
   if (!room || typeof room !== "object") {
     return room;
@@ -139,11 +207,12 @@ function cloneRoomAssignment(
   const operators = Array.isArray(room.operators)
     ? room.operators.filter(Boolean)
     : [];
+  const importedStates = room.operatorStates || {};
   const states = Object.fromEntries(
     operators.map((name) => [
       name,
       {
-        ...(initializeMood ? { mood: 24 } : {}),
+        ...(importedStates[name] || {}),
         ...(operatorStates.get(name) || {}),
       },
     ]),
@@ -190,7 +259,7 @@ export function buildRiicEfficiencySchedule(
     operatorTable,
   );
   const craftMaterial = orundumCraftMaterial === "device" ? "装置" : "固源岩";
-  const plans = sourcePlans.map((sourcePlan, planIndex) => {
+  const plans = sourcePlans.map((sourcePlan) => {
     const rooms = Object.fromEntries(
       Object.entries(sourcePlan?.rooms || {}).map(([roomType, assignments]) => [
         normalizeRoomType(roomType),
@@ -201,7 +270,6 @@ export function buildRiicEfficiencySchedule(
                 roomType,
                 operatorStates,
                 craftMaterial,
-                planIndex === 0,
               ),
             )
           : assignments,
@@ -259,33 +327,6 @@ export function buildRiicEfficiencySchedule(
 
 export function calculateRiicEfficiency(schedule) {
   return calculateEfficiency(schedule, { catalog, ruleset });
-}
-
-export function createRiicEfficiencyDroneScenario(
-  schedule,
-  planIndex,
-  roomKey,
-  order,
-) {
-  const [room, rawIndex] = String(roomKey || "").split(":");
-  const index = Number(rawIndex);
-  if (
-    !["trading", "manufacture"].includes(room) ||
-    !Number.isInteger(index) ||
-    index < 0 ||
-    !schedule?.plans?.[planIndex]
-  ) {
-    return null;
-  }
-  return {
-    ...schedule,
-    plans: schedule.plans.map((plan, currentIndex) => ({
-      ...plan,
-      ...(currentIndex === planIndex
-        ? { drones: { enable: true, room, index, rule: "all", order } }
-        : {}),
-    })),
-  };
 }
 
 function facilityById(plan, key) {
@@ -478,22 +519,20 @@ function createResourceEffect(droneDetail) {
 export function createRiicEfficiencyYield(
   result,
   preview,
-  droneScenarioResults = {},
   roomIndexAssignments = {},
   goldResourceFlow = null,
 ) {
   const rooms = createRoomRows(result, preview, roomIndexAssignments);
+  const droneCandidates = result.maaDroneAcceleration?.candidates || [];
   const droneTargetSettlements = rooms.map((room) => {
-    const facilityKey = `${room.facility}:${room.stationIndex}`;
     const packageFacilityId = facilityId(room.facility, room.stationIndex);
     const effects = room.segments.map((_, stateIndex) => {
-      const scenario = droneScenarioResults[`${stateIndex}:${facilityKey}`] || result;
-      const droneDetail = scenario.maaDroneAcceleration?.details?.find(
-        (detail) =>
-          detail.planIndex === stateIndex &&
-          detail.facilityId === packageFacilityId,
+      const candidate = droneCandidates.find(
+        (item) =>
+          item.planIndex === stateIndex &&
+          item.facilityId === packageFacilityId,
       );
-      return createResourceEffect(droneDetail);
+      return createResourceEffect(candidate);
     });
     return {
       key: room.key,
@@ -505,19 +544,8 @@ export function createRiicEfficiencyYield(
     };
   });
   const droneDetailsByState = new Map();
-  for (const [key, scenario] of Object.entries(droneScenarioResults)) {
-    const stateIndex = Number(key.slice(0, key.indexOf(":")));
-    const detail = scenario?.maaDroneAcceleration?.details?.find(
-      (item) => item.planIndex === stateIndex,
-    );
-    if (Number.isInteger(stateIndex) && detail) {
-      droneDetailsByState.set(stateIndex, detail);
-    }
-  }
   for (const detail of result.maaDroneAcceleration?.details || []) {
-    if (!droneDetailsByState.has(detail.planIndex)) {
-      droneDetailsByState.set(detail.planIndex, detail);
-    }
+    droneDetailsByState.set(detail.planIndex, detail);
   }
   const droneUsageSegments = result.plans.map((_, stateIndex) => {
     const detail = droneDetailsByState.get(stateIndex);
@@ -615,6 +643,14 @@ export function createRiicEfficiencyYield(
   };
 }
 
+export function maaDroneWarningText(warning) {
+  if (typeof warning === "string") {
+    return warning;
+  }
+
+  return String(warning?.message || "");
+}
+
 export function createRiicEfficiencySettlement(result) {
   return {
     cycleHours: result.dailyHours,
@@ -622,7 +658,7 @@ export function createRiicEfficiencySettlement(result) {
     warnings: [
       ...(result.warnings || []),
       ...(result.fiammettaWarnings || []),
-      ...(result.maaDroneAcceleration?.warnings || []),
+      ...(result.maaDroneAcceleration?.warnings || []).map(maaDroneWarningText),
     ],
     states: (result.plans || []).map((plan) => ({
       rooms: (plan.facilities || []).map((facility) => ({

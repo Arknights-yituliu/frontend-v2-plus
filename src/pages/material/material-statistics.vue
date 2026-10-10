@@ -559,7 +559,6 @@ onMounted(() => {
       <v-tab value="2">未拆解材料需求(按版本)</v-tab>
       <v-tab value="3">拆解后材料需求</v-tab>
       <v-tab value="4">拆解后材料需求(按版本)</v-tab>
-      <!--      <v-tab value="RollSeed" >Roll种子</v-tab>-->
     </v-tabs>
 
 

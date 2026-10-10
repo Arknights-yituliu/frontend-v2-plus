@@ -264,7 +264,7 @@ function drawImageToCanvas(canvas, outputHeight = OUTPUT_HEIGHT) {
 
 function renderPreview() {
   nextTick(() => {
-    drawImageToCanvas(previewCanvasRef.value)
+    drawImageToCanvas(previewCanvasRef.value, previewHeight.value)
   })
 }
 

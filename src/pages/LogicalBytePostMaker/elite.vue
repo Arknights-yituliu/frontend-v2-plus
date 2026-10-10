@@ -1,5 +1,8 @@
 <template>
-  <div class="logical-byte-container">
+  <div class="logical-byte-tool-page">
+    <LogicalByteToolNav />
+
+    <div class="logical-byte-container">
     <!-- 左栏：制图区 -->
     <div class="left-panel">
       <div class="panel-header">
@@ -344,12 +347,14 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { ElMessage } from 'element-plus'
+import LogicalByteToolNav from '/src/components/logicalByte/LogicalByteToolNav.vue'
 import {operatorTableV2} from '/src/utils/gameData.js'
 import fallbackItemInfo from '/src/static/json/material/item_info.json'
 import itemCache from '/src/plugins/indexedDB/itemCache.js'
@@ -1577,9 +1582,18 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.logical-byte-tool-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .logical-byte-container {
   display: flex;
-  height: 100vh;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
   overflow: hidden;
 }
 

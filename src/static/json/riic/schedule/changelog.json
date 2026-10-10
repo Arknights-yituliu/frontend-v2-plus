@@ -18,7 +18,7 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20260928.1102"
+      "version": "v20261002.1334"
     },
     "recommendation": {
       "label": "调试信息",
@@ -26,6 +26,45 @@
     }
   },
   "entries": [
+    {
+      "date": "2026-10-02",
+      "version": "v20261002.1334",
+      "items": [
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 3,
+          "description": "排班分析报告改为统一维护隐藏清单，过滤定时换班空档、心情继承、菲亚梅塔恢复与电力不足等包内检查项",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-10-02",
+      "version": "v20261002.1144",
+      "items": [
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 4,
+          "description": "同步 riic-efficiency 计算引擎，无人机加速返回队列内全部设施的加速收益",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 3,
+          "description": "无人机投向预览改用包内加速收益数据，取消逐房间重复整套计算",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-09-28",
       "version": "v20260928.1118",

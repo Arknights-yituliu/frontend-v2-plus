@@ -24,6 +24,10 @@ import {
   normalizeRiicOperatorId,
   normalizeRiicOperatorName,
 } from "./riicOperatorIdentity.js";
+import {
+  createRiicScheduleLayoutFromRooms,
+  getRiicMaaRoomSortValue,
+} from "./riicScheduleLayout.js";
 
 function getOperatorName(operator) {
   const charId = normalizeRiicOperatorId(operator?.charId);
@@ -77,20 +81,6 @@ export function prepareRiicMaaScheduleForExport(
   });
 
   return hasTrainingRoom ? { ...schedule, plans } : schedule;
-}
-
-function getRoomSortValue(room, roomIndexAssignments = {}) {
-  const maaRoomIndex = Number(
-    roomIndexAssignments?.[String(room?.key || "").trim()],
-  );
-  if (Number.isInteger(maaRoomIndex) && maaRoomIndex >= 1) {
-    return maaRoomIndex - 1;
-  }
-
-  const stationIndex = Number(room?.stationIndex);
-  return Number.isInteger(stationIndex) && stationIndex >= 0
-    ? stationIndex
-    : Number.MAX_SAFE_INTEGER;
 }
 
 function getTimeInMinutes(time) {
@@ -237,8 +227,8 @@ function createPlanRooms(
   for (const [roomType, facilityRooms] of byType.entries()) {
     const sortedRooms = [...facilityRooms].sort(
       (left, right) =>
-        getRoomSortValue(left, roomIndexAssignments) -
-        getRoomSortValue(right, roomIndexAssignments),
+        getRiicMaaRoomSortValue(left, roomIndexAssignments) -
+        getRiicMaaRoomSortValue(right, roomIndexAssignments),
     );
 
     if (
@@ -310,25 +300,6 @@ function getFiammettaSetting(shift) {
     target: String(source?.target || "").trim(),
     order: source?.order === "post" ? "post" : "pre",
   };
-}
-
-function createLegacyScheduleType(state, planTimes) {
-  const scheduleType = {
-    planTimes,
-    trading: 0,
-    manufacture: 0,
-    power: 0,
-    dormitory: 0,
-  };
-
-  for (const room of state?.rooms || []) {
-    const facility = String(room?.facility || "").trim();
-    if (Object.prototype.hasOwnProperty.call(scheduleType, facility)) {
-      scheduleType[facility] += 1;
-    }
-  }
-
-  return scheduleType;
 }
 
 /**
@@ -459,12 +430,15 @@ export function buildRiicMaaScheduleFromPreview({
   }
 
   const planTimes = plans.length;
-  const scheduleType = createLegacyScheduleType(states[0], planTimes);
+  const layout = createRiicScheduleLayoutFromRooms(
+    states[0]?.rooms,
+    roomIndexAssignments,
+  );
 
   return {
     schedule: {
       planTimes: `${planTimes}班`,
-      scheduleType,
+      layout,
       title: String(title || "一图流基建排班表").trim(),
       author: String(author || "").trim(),
       description:

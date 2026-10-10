@@ -1,29 +1,29 @@
 <script setup>
-import { computed } from 'vue'
-import { mowerPlanStore } from '../store/planStore.js'
-import { renderOperatorLabel, renderOperatorTag } from '@/utils/mower/opSelect.js'
+import { computed } from "vue";
+import { mowerPlanStore } from "../store/planStore.js";
+import { renderOperatorOption, renderOperatorLabel, renderOperatorTag } from "@/utils/mower/opSelect.js";
 
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
   },
   placeholder: {
     type: String,
-    default: ''
-  }
-})
+    default: "",
+  },
+});
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"]);
 
-const options = computed(() => mowerPlanStore.operators.value ?? [])
+const options = computed(() => mowerPlanStore.operators.value ?? []);
 
 function update(value) {
-  emit('update:modelValue', value)
+  emit("update:modelValue", value);
 }
 </script>
 
@@ -36,6 +36,7 @@ function update(value) {
     :placeholder="placeholder"
     :value="modelValue"
     :render-label="renderOperatorLabel"
+    :render-option="renderOperatorOption"
     :render-tag="renderOperatorTag"
     @update:value="update"
   />
