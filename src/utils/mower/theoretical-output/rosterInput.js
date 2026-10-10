@@ -71,10 +71,10 @@ export async function readMowerRosterFile(file) {
     const context = canvas.getContext('2d', { willReadFrequently: true })
     if (!context) throw new Error('当前浏览器无法读取排班图片，请改用 JSON 文件')
     context.drawImage(picture, 0, 0)
-    const { decode16QrFromCanvas } = await import('./engine/workbench/compat/mowerQrCodec.ts')
+    const { decodePlanQrFromCanvas } = await import('../plan_qr.js')
     let text
-    try { text = decode16QrFromCanvas(canvas) } catch {
-      throw new Error('未能识别完整的 16 个排班二维码，请使用未裁剪的原始图片或 JSON 文件')
+    try { text = decodePlanQrFromCanvas(canvas) } catch {
+      throw new Error('未能识别完整的 14 或 16 个排班二维码，请使用未裁剪的原始图片或 JSON 文件')
     }
     return await parseMowerRosterText(text)
   } finally { URL.revokeObjectURL(url) }

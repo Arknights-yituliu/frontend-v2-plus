@@ -21,7 +21,8 @@
     "preview": "vite preview",
     "server": "node .\\server.js",
     "check:mower-income": "node scripts/check-mower-theoretical-output.mjs && node scripts/check-mower-site-inventory.mjs && node scripts/check-mower-output-worker.mjs",
-    "check:mower-plan": "node scripts/check-mower-plan.mjs"
+    "check:mower-plan": "node scripts/check-mower-plan.mjs",
+    "check:mower-plan-images": "node scripts/check-mower-plan-images.mjs"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
