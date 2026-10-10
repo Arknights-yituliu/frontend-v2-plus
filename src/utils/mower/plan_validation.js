@@ -48,11 +48,27 @@ export function validatePlan(payload) {
   function check(table, conf, label) {
     const primaries = new Map();
     const groups = new Map();
+    const slotBindings = new Map();
     const workaholics = new Set(list(conf.workaholic));
     const standby = new Set(list(conf.resting_standby));
     const exhaust = new Set(list(conf.exhaust_require));
     const full = new Set(list(conf.rest_in_full));
     const canStandby = (name) => standby.has(name) && !workaholics.has(name) && !exhaust.has(name) && !full.has(name);
+    for (const [room, facility] of Object.entries(table)) {
+      for (const slot of facility.plans || []) {
+        const bindings = planBindings(slot);
+        slotBindings.set(slot, bindings);
+        for (const binding of bindings) {
+          if (!binding.group) continue;
+          const members = groups.get(binding.group) || [];
+          members.push({ slot, room, replacements: binding.replacement || [] });
+          groups.set(binding.group, members);
+        }
+      }
+    }
+    const zeroMoodGroups = new Set(
+      [...groups].filter(([, members]) => members.every(({ slot }) => workaholics.has(slot.agent))).map(([group]) => group),
+    );
     const dormSlots = [];
     let workers = 0;
     let beds = 0;
@@ -81,24 +97,20 @@ export function validatePlan(payload) {
         } else if (!known(name)) add(label, `${position}：干员名无效「${name || "空位"}」`);
         else {
           if (primaries.has(name)) add(label, `${name} 同时在 ${primaries.get(name).room} 和 ${room} 担任主班`);
-          primaries.set(name, { ...slot, room });
+          primaries.set(name, { ...slot, room, bindings: slotBindings.get(slot) });
           if (!dorm(room) && !workaholics.has(name) && !canStandby(name)) workers++;
         }
         if (name === "菲亚梅塔" && (!dorm(room) || index === 1)) add(label, "菲亚梅塔必须安排在宿舍，且不能在第 2 岗位");
-        const bindings = planBindings(slot);
+        const bindings = slotBindings.get(slot);
         const names = bindings.map((binding) => (binding.group || "").trim());
         if (bindings.length > 1 && (names.some((group) => !group) || new Set(names).size !== names.length)) add(label, `${name} 的多绑组名称不能为空或重复`);
         if (["Free", "菲亚梅塔"].includes(name) && names.some(Boolean)) add(label, `${name} 不能绑组`);
         for (const binding of bindings) {
           const replacements = binding.replacement || [];
-          if ((bindings.length > 1 || !dorm(room) || name === "菲亚梅塔") && !replacements.some((replacement) => !runOrderAgents.has(replacement)))
+          const optional = name !== "菲亚梅塔" && !dorm(room) && workaholics.has(name) && (!binding.group || zeroMoodGroups.has(binding.group));
+          if (!optional && (bindings.length > 1 || !dorm(room) || name === "菲亚梅塔") && !replacements.some((replacement) => !runOrderAgents.has(replacement)))
             add(label, `${position}（${name}）缺少普通替班${binding.group ? `，绑组「${binding.group}」` : ""}`);
           if (replacements.filter((replacement) => runOrderAgents.has(replacement)).length > 1) add(label, `${name} 的同一替换组不能安排多个跑单干员`);
-          if (binding.group) {
-            const members = groups.get(binding.group) || [];
-            members.push({ slot, room, replacements });
-            groups.set(binding.group, members);
-          }
           for (const replacement of replacements) {
             if (replacement === "Free") {
               if (!dorm(room) || !binding.group || ["Free", "菲亚梅塔"].includes(name)) add(label, `${position}：Free 替班只能用于绑组宿舍干员`);
@@ -110,7 +122,7 @@ export function validatePlan(payload) {
     }
     if (workers && !beds) add(label, "工作干员需要宿舍 Free 床位");
     for (const [name, slot] of primaries) {
-      for (const binding of planBindings(slot))
+      for (const binding of slot.bindings)
         for (const replacement of binding.replacement || []) {
           const cover = primaries.get(replacement);
           if (name === "菲亚梅塔") {
@@ -120,15 +132,22 @@ export function validatePlan(payload) {
               name !== replacement &&
               binding.group &&
               (dorm(slot.room) || dorm(cover.room)) &&
-              planBindings(cover).some((item) => item.group === binding.group);
+              cover.bindings.some((item) => item.group === binding.group);
             if (!sameDormGroup) add(label, `${name} 的替班「${replacement}」已担任主班，须属于同一绑组且至少一方在宿舍`);
           }
         }
     }
     for (const [group, members] of groups) {
+      if (zeroMoodGroups.has(group) && members.every(({ room }) => !dorm(room))) {
+        const configured = new Map(
+          members.map(({ slot, replacements }) => [slot.agent, replacements.filter((name) => !runOrderAgents.has(name))]).filter(([, covers]) => covers.length),
+        );
+        if (configured.size && !matchReplacements(configured)) add(label, `绑组「${group}」无法为各岗位分配不同替班`);
+        continue;
+      }
       const workingMembers = members.filter(({ room }) => !dorm(room));
       const working = workingMembers.filter(({ slot }) => !workaholics.has(slot.agent));
-      if ((working.length || !workingMembers.length) && !working.some(({ slot }) => planBindings(slot).length === 1 && !canStandby(slot.agent)))
+      if ((working.length || !workingMembers.length) && !working.some(({ slot }) => slotBindings.get(slot).length === 1 && !canStandby(slot.agent)))
         add(label, `绑组「${group}」缺少决定上下班的工作主班：至少需要一名非宿舍、非零心情工作、非多绑组且非候补的主班`);
       const required = new Set(working.filter(({ slot }) => !canStandby(slot.agent)).map(({ slot }) => slot.agent));
       const options = new Map(
@@ -137,7 +156,7 @@ export function validatePlan(payload) {
           .map(({ slot, replacements }) => [slot.agent, replacements.filter((name) => name !== "Free" && !runOrderAgents.has(name))]),
       );
       const effectiveBeds = dormSlots.filter(
-        (slot) => slot.agent === "Free" || planBindings(slot).some((binding) => binding.group === group && binding.replacement?.includes("Free")),
+        (slot) => slot.agent === "Free" || slotBindings.get(slot).some((binding) => binding.group === group && binding.replacement?.includes("Free")),
       ).length;
       let requiredBeds = required.size;
       for (const preferred of [new Set(), required]) {
@@ -152,7 +171,7 @@ export function validatePlan(payload) {
             .map(({ slot }) => {
               const name = assignments.get(slot.agent);
               const cover = primaries.get(name);
-              return cover && !dorm(cover.room) && !workaholics.has(name) && planBindings(cover).some((binding) => binding.group === group) ? name : null;
+              return cover && !dorm(cover.room) && !workaholics.has(name) && cover.bindings.some((binding) => binding.group === group) ? name : null;
             })
             .filter(Boolean),
         );
@@ -170,7 +189,7 @@ export function validatePlan(payload) {
   check(main, payload.conf || {}, "主表");
   for (const [index, backup] of backups.entries()) {
     const label = `副表「${backup.name || index + 1}」`;
-    const effective = structuredClone(main);
+    const effective = { ...main };
     const conf = structuredClone(payload.conf || {});
     for (const key of OPERATOR_CONF_FIELDS)
       conf[key] = [...new Set([...list(conf[key]), ...list(backup.conf?.[key])])].filter((name) => !list(backup.conf?.removed_operators?.[key]).includes(name));
@@ -184,9 +203,9 @@ export function validatePlan(payload) {
       if (source && !Object.hasOwn(capacities, room) && facility.plans.length > source.plans.length) add(label, `${room} 排班超出主表的岗位数`);
       if (source && facility.product && facility.product !== source.product && !payload.advanced_settings?.product_switching?.enable)
         add(label, `${room} 改变产物或订单类型，需要开启自动切换产物与订单`);
-      const plans = structuredClone(source?.plans || []);
+      const plans = [...(source?.plans || [])];
       facility.plans.forEach((slot, index) => {
-        if (slot.agent !== "Current") plans[index] = structuredClone(slot);
+        if (slot.agent !== "Current") plans[index] = slot;
         else if (!plans[index]) add(label, `${room} 第 ${index + 1} 岗位没有可继承的主班`);
       });
       effective[room] = { ...source, ...facility, plans };

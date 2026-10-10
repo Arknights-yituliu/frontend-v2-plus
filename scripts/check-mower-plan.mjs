@@ -333,6 +333,124 @@ try {
     plan.conf.workaholic += ",凯尔希";
     assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
   });
+  check("零心情工作配置允许未绑组与整组省略替班，不按当前心情豁免", () => {
+    const plan = cloneValid();
+    const primary = plan.plan1.room_1_1.plans[0];
+    primary.replacement = [];
+    primary.group = "";
+    primary.mood = 0;
+    assert.match(validatePlan(plan).errors.join(";"), /缺少普通替班/);
+    plan.conf.workaholic = ["阿米娅"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    primary.group = "零心情组";
+    plan.plan1.room_1_1.plans.push(slot("凯尔希", "零心情组"));
+    plan.conf.workaholic.push("凯尔希");
+    delete plan.plan1.dormitory_1;
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("混合组逐成员检查替班，后出现的普通成员不能被遗漏", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅";
+    plan.plan1.room_1_1.plans[0].replacement = [];
+    plan.plan1.room_1_1.plans.push({ agent: "凯尔希", group: "制造组", replacement: ["红"] });
+    const errors = validatePlan(plan).errors.join(";");
+    assert.match(errors, /阿米娅.*缺少普通替班.*制造组/);
+    plan.plan1.room_1_1.plans[0].replacement = ["砾"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("多绑组分别判断全零组和混合组，附加列成员计入判断", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅";
+    const primary = plan.plan1.room_1_1.plans[0];
+    primary.group = "全零组";
+    primary.replacement = [];
+    primary.group_bindings = [{ group: "混合组", replacement: [] }];
+    plan.plan1.room_1_1.plans.push({ agent: "凯尔希", group: "混合组", replacement: ["红"] });
+    assert.deepEqual(validatePlan(plan).errors, ["主表：room_1_1 第 1 岗位（阿米娅）缺少普通替班，绑组「混合组」", "主表：绑组「混合组」无法为各岗位分配不同替班"]);
+    primary.group_bindings[0].replacement = ["砾"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.room_1_1.plans[1].group_bindings = [{ group: "全零组", replacement: ["芬"] }];
+    assert.match(validatePlan(plan).errors.join(";"), /阿米娅.*缺少普通替班.*全零组/);
+  });
+  check("全零组仅对已填写普通替班匹配，仍拒绝重名与不合法候选", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅,凯尔希,陈";
+    const primary = plan.plan1.room_1_1.plans[0];
+    plan.plan1.room_1_1.plans.push(slot("凯尔希", "制造组"), slot("陈", "制造组"));
+    assert.deepEqual(validatePlan(plan).errors, []);
+    const second = plan.plan1.room_1_1.plans[1];
+    second.replacement = ["砾"];
+    assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
+    second.replacement = ["红"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    for (const [replacement, error] of [["错误干员", /替班干员名无效/], ["Free", /Free 替班只能/], ["菲亚梅塔", /替班不能安排菲亚梅塔/], ["凯尔希", /已担任主班/]]) {
+      primary.replacement = [replacement];
+      assert.match(validatePlan(plan).errors.join(";"), error);
+    }
+    primary.replacement = ["龙舌兰"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    primary.replacement.push("但书");
+    assert.match(validatePlan(plan).errors.join(";"), /多个跑单干员/);
+  });
+  check("宿舍成员不获得工作替班豁免，宿舍混合绑定仍检查全组", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅";
+    plan.plan1.room_1_1.plans[0].replacement = [];
+    plan.plan1.dormitory_1.plans[0] = { agent: "杜林", group: "制造组", replacement: ["Free"] };
+    assert.match(validatePlan(plan).errors.join(";"), /阿米娅.*缺少普通替班/);
+    plan.conf.workaholic += ",杜林";
+    assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
+    plan.plan1.room_1_1.plans[0].replacement = ["砾"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("菲亚梅塔配置零心情工作仍须填写有效主班充能对象", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "菲亚梅塔";
+    const fia = slot("菲亚梅塔");
+    plan.plan1.dormitory_1.plans[0] = fia;
+    assert.match(validatePlan(plan).errors.join(";"), /菲亚梅塔.*缺少普通替班/);
+    fia.replacement = ["红"];
+    assert.match(validatePlan(plan).errors.join(";"), /充能对象.*不在主班/);
+    fia.replacement = ["阿米娅"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("副表增减零心情名单后重新判断豁免，并保留 Current 继承", () => {
+    const plan = cloneValid();
+    plan.backup_plans.push({ name: "免替班", conf: { workaholic: "阿米娅" }, plan: { room_1_1: { name: "制造站", product: "gold", plans: [slot("阿米娅", "制造组")] } } });
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.conf.workaholic = "阿米娅";
+    plan.plan1.room_1_1.plans[0].replacement = [];
+    plan.backup_plans[0] = { name: "取消零心情", conf: { removed_operators: { workaholic: "阿米娅" } }, plan: { room_1_1: { name: "制造站", product: "gold", plans: [slot("Current")] } } };
+    const errors = validatePlan(plan).errors;
+    assert.ok(errors.length);
+    assert.ok(errors.every((error) => error.startsWith("副表「取消零心情」")));
+    assert.match(errors.join(";"), /缺少普通替班/);
+    plan.backup_plans[0].conf = {};
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("副表只读合并不修改冻结的主表、附加绑定或其他副表", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅";
+    const primary = plan.plan1.room_1_1.plans[0];
+    primary.group_bindings = [{ group: "第二组", replacement: [] }];
+    plan.backup_plans = [
+      { name: "有效覆盖", conf: {}, plan: { room_1_1: { name: "制造站", product: "gold", plans: [slot("阿米娅", "独立组")] } } },
+      { name: "非法覆盖", conf: {}, plan: { room_1_1: { name: "制造站", product: "gold", plans: [{ ...slot("阿米娅"), replacement: ["错误干员"] }] } } },
+      { name: "继承主表", conf: {}, plan: {} },
+    ];
+    const before = JSON.stringify(plan);
+    function freeze(value) {
+      if (!value || typeof value !== "object") return;
+      Object.values(value).forEach(freeze);
+      Object.freeze(value);
+    }
+    freeze(plan);
+    const result = validatePlan(plan);
+    assert.equal(result.checkedPlans, 4);
+    assert.ok(result.errors.length);
+    assert.ok(result.errors.every((error) => error.startsWith("副表「非法覆盖」")));
+    assert.equal(JSON.stringify(plan), before);
+  });
   check("alpha 候补或多绑组不能独自决定普通绑组上下班", () => {
     const plan = cloneValid();
     plan.conf.resting_standby = "阿米娅";
