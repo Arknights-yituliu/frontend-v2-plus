@@ -186,7 +186,7 @@ const groups = computed(() => [
       .filter(Boolean)
   ),
 ]);
-const group_colors = computed(() => {
+const all_groups = computed(() => {
   const names = [
     ...new Set(
       [plan.value, ...backup_plans.value.map((backup) => backup.plan)].flatMap((table) =>
@@ -194,8 +194,11 @@ const group_colors = computed(() => {
       )
     ).values(),
   ].filter(Boolean);
-  return Object.fromEntries([["", "transparent"], ...names.map((name, index) => [name, `hsl(${(360 * index) / names.length}, 80%, 45%)`])]);
+  return names;
 });
+const group_colors = computed(() =>
+  Object.fromEntries([["", "transparent"], ...all_groups.value.map((name, index) => [name, `hsl(${(360 * index) / all_groups.value.length}, 80%, 45%)`])])
+);
 export const mowerPlanStore = {
   ...fields,
   ling_xi,
@@ -218,6 +221,7 @@ export const mowerPlanStore = {
   main_conf,
   createBackup,
   groups,
+  all_groups,
   group_colors,
   sub_plan,
   current_plan,

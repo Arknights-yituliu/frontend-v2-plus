@@ -242,7 +242,7 @@ function render_inventory_option(option) {
 
 import { mowerPlanStore } from "../store/planStore.js";
 import { mowerConfigStore } from "../store/configStore.js";
-const { operators, groups, plan, left_side_facility } = mowerPlanStore;
+const { operators, all_groups: groups, plan, left_side_facility } = mowerPlanStore;
 const inventory_select_options = computed(() => inventory_options.map((option) => ({ ...option, name: option.label, inventoryText: "在 Mower 中读取" })));
 const facility_product_summary = computed(() => summarize_facility_products(plan.value, {}));
 const facility_select_options = computed(() => [...left_side_facility, { label: "训练室", value: "train" }, { label: "回收站", value: "recycle" }]);
@@ -367,7 +367,7 @@ function render_custom_tip(option) {
   />
   <n-select
     v-if="op_type == 'group_mood'"
-    :default-value="op_data.group"
+    :value="op_data.group"
     :options="groups.map((group) => ({ label: group, value: group }))"
     :on-update:value="update_group"
     filterable
@@ -375,7 +375,7 @@ function render_custom_tip(option) {
   />
   <n-select
     v-if="op_type == 'group_mood'"
-    :default-value="op_data.mode"
+    :value="op_data.mode"
     :options="group_mood_mode_options"
     :on-update:value="update_group_mood_mode"
     :consistent-menu-width="false"

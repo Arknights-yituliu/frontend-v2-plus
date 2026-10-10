@@ -17,6 +17,7 @@ try {
   } = await server.ssrLoadModule("/src/pages/tools/mower-plan/store/configStore.js");
   const { swapPlanFacilities, apply_operator_replace, collect_plan_operators } = await server.ssrLoadModule("/src/utils/mower/plan_edit.js");
   const { addPlanBinding, bindingColorStyle } = await server.ssrLoadModule("/src/utils/mower/plan_bindings.js");
+  const { group_mood_expression } = await server.ssrLoadModule("/src/utils/mower/trigger_group.js");
   const slot = (agent, group = "") => ({ agent, group, replacement: [] });
   const legacy = {
     plan1: { room_1_1: { name: "制造站", product: "orirock", plans: [slot("阿米娅")] } },
@@ -73,6 +74,33 @@ try {
     store.current_plan.value.recycle.plans[0].group_bindings[0].replacement.push("桃金娘");
     assert.deepEqual(store.plan.value.recycle.plans[0].group_bindings[0].replacement, ["砾"]);
     assert.equal(JSON.stringify(store.backup_plans.value[0].trigger), trigger);
+  });
+  const conditionFixture = {
+    plan1: { central: { plans: [{ agent: "讯使", group: "自动化", replacement: ["红"], group_bindings: [{ group: "感知", replacement: ["黑角"] }] }] } },
+    conf: {},
+    backup_plans: [
+      { plan: { meeting: { plans: [{ agent: "银灰", group: "深海", replacement: ["初雪"] }] } }, conf: {}, trigger: {}, task: {} },
+      { plan: {}, conf: {}, trigger: { left: 'op_data.group_max_mood("感知")', operator: "<", right: "12" }, task: {} },
+    ],
+  };
+  store.hydratePlanData(conditionFixture);
+  const conditionBefore = JSON.stringify(store.build_plan());
+  check("空副表条件包含主表与其他副表的全部绑组，含多绑组附加列", () => {
+    store.sub_plan.value = 1;
+    assert.deepEqual(store.groups.value, []);
+    assert.deepEqual(store.all_groups.value, ["自动化", "感知", "深海"]);
+  });
+  check("切换主副表不清空候选或改写保存条件，新增组名去重且正确转义", () => {
+    for (const selected of ["main", 0, 1]) {
+      store.sub_plan.value = selected;
+      assert.deepEqual(store.all_groups.value, ["自动化", "感知", "深海"]);
+    }
+    assert.equal(JSON.stringify(store.build_plan()), conditionBefore);
+    const bindings = store.plan.value.central.plans[0].group_bindings;
+    bindings.push({ group: 'A"组', replacement: ["砾"] }, { group: "感知", replacement: ["砾"] });
+    assert.deepEqual(store.all_groups.value, ["自动化", "感知", 'A"组', "深海"]);
+    store.backup_plans.value[1].trigger.left = group_mood_expression('A"组', "max");
+    assert.equal(store.build_plan().backup_plans[1].trigger.left, 'op_data.group_max_mood("A\\"组")');
   });
   check("回收站排班或任务超过两人时拒绝导入并保留现有排班", () => {
     const previous = JSON.stringify(store.build_plan());
