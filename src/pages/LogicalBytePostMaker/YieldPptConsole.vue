@@ -45,6 +45,19 @@ const MATERIAL_DEMAND_MONTHS = 12
 const DRAFT_STORAGE_KEY = 'logicalByte_yieldPptConsole_draft_v1'
 const DRAFT_DB_NAME = 'LogicalByteYieldPptConsole'
 const DRAFT_ASSET_STORE = 'assets'
+const MATERIAL_AVERAGE_FIELDS = [
+  'knockRating',
+  'apExpect',
+  'stageEfficiency',
+  'leT4Efficiency',
+  'leT3Efficiency',
+]
+const MATERIAL_AVERAGE_PERCENT_FIELDS = new Set([
+  'knockRating',
+  'stageEfficiency',
+  'leT4Efficiency',
+  'leT3Efficiency',
+])
 
 const draftDatabase = new Dexie(DRAFT_DB_NAME)
 draftDatabase.version(1).stores({
@@ -294,6 +307,26 @@ function createActivityStore() {
   return activityStore
 }
 
+function createMaterialAverageStage() {
+  return Object.fromEntries(MATERIAL_AVERAGE_FIELDS.map(field => [field, null]))
+}
+
+function normalizeMaterialAverageStage(rawAverageStage) {
+  const averageStage = createMaterialAverageStage()
+  for (const field of MATERIAL_AVERAGE_FIELDS) {
+    const rawValue = rawAverageStage?.[field]
+    if (rawValue === '' || rawValue === null || typeof rawValue === 'undefined') {
+      continue
+    }
+
+    const value = Number(rawValue)
+    if (Number.isFinite(value)) {
+      averageStage[field] = value
+    }
+  }
+  return averageStage
+}
+
 function normalizeActivityStoreColumnLimit(value) {
   const columnLimit = Number(value)
   return [5, 6, 7, 8].includes(columnLimit) ? columnLimit : 7
@@ -304,6 +337,7 @@ function createMaterial(index) {
     title: '',
     seriesId: '',
     rerunEventKey: '',
+    averageStage: createMaterialAverageStage(),
     detail: createImageAsset({
       path: `${ASSET_FOLDER_NAME}/material-${index}-detail.png`,
     }),
@@ -389,6 +423,7 @@ function selectMaterialSeries(material) {
   const option = getMaterialOption(material.seriesId)
   if (!option) {
     material.rerunEventKey = ''
+    material.averageStage = createMaterialAverageStage()
     resetAsset(material.icon)
     resetAsset(material.rerun)
     return
@@ -396,8 +431,107 @@ function selectMaterialSeries(material) {
 
   material.title = option.name
   material.rerunEventKey = ''
+  material.averageStage = createMaterialAverageStage()
   resetAsset(material.icon)
   resetAsset(material.rerun)
+}
+
+function getAutomaticMaterialAverageStage(material) {
+  if (!material?.seriesId || useActivityAverageStageForMaterialPricing.value) {
+    return null
+  }
+
+  return materialActivityAverageStageMap.value.get(String(material.seriesId)) || null
+}
+
+function hasMaterialAverageStageOverride(material) {
+  return MATERIAL_AVERAGE_FIELDS.some(field => {
+    const value = material?.averageStage?.[field]
+    return value !== null && typeof value !== 'undefined' && Number.isFinite(Number(value))
+  })
+}
+
+function getMaterialAverageStage(material) {
+  if (!material?.seriesId) {
+    return null
+  }
+
+  const option = getMaterialOption(material.seriesId)
+  const automaticStage = getAutomaticMaterialAverageStage(material)
+  const baseStage = automaticStage
+    ? { ...automaticStage }
+    : {
+      stageCode: 'SS平均收益',
+      itemId: material.seriesId,
+      itemName: material.title || option?.name || '',
+      secondaryItemId: '',
+      knockRating: null,
+      apExpect: null,
+      stageEfficiency: null,
+      leT4Efficiency: null,
+      leT3Efficiency: null,
+    }
+
+  const averageStage = {
+    ...baseStage,
+    stageCode: 'SS平均收益',
+    itemId: baseStage.itemId || material.seriesId,
+    itemName: baseStage.itemName || material.title || option?.name || '',
+  }
+
+  for (const field of MATERIAL_AVERAGE_FIELDS) {
+    const value = material.averageStage?.[field]
+    if (value !== null && typeof value !== 'undefined' && Number.isFinite(Number(value))) {
+      averageStage[field] = Number(value)
+    }
+  }
+
+  return averageStage
+}
+
+function getMaterialAverageStageSource(material) {
+  if (hasMaterialAverageStageOverride(material)) {
+    return '手动覆盖'
+  }
+
+  return getAutomaticMaterialAverageStage(material) ? '自动平均值' : '待手动填写'
+}
+
+function getMaterialAverageInputValue(material, field) {
+  const value = getMaterialAverageStage(material)?.[field]
+  if (value === null || typeof value === 'undefined' || !Number.isFinite(Number(value))) {
+    return ''
+  }
+
+  const number = Number(value)
+  return MATERIAL_AVERAGE_PERCENT_FIELDS.has(field)
+    ? (number * 100).toFixed(1)
+    : number.toFixed(1)
+}
+
+function updateMaterialAverageField(material, field, event) {
+  if (!MATERIAL_AVERAGE_FIELDS.includes(field)) {
+    return
+  }
+
+  const rawValue = String(event?.target?.value || '').trim()
+  if (!rawValue) {
+    material.averageStage[field] = null
+    return
+  }
+
+  const value = Number(rawValue)
+  if (!Number.isFinite(value)) {
+    return
+  }
+
+  material.averageStage[field] = MATERIAL_AVERAGE_PERCENT_FIELDS.has(field)
+    ? value / 100
+    : value
+}
+
+function resetMaterialAverageStage(material) {
+  material.averageStage = createMaterialAverageStage()
 }
 
 function getMaterialStageRows(material) {
@@ -406,24 +540,30 @@ function getMaterialStageRows(material) {
   }
 
   const group = materialStageGroups.value.find(item => String(item.itemSeriesId) === material.seriesId)
-  if (!group?.stageResultList) {
-    return []
+  const stageRows = Array.isArray(group?.stageResultList)
+    ? [...group.stageResultList]
+    : []
+  const automaticAverageStage = getAutomaticMaterialAverageStage(material)
+  const shouldIncludeAverageStage = Boolean(
+    automaticAverageStage
+    || hasMaterialAverageStageOverride(material)
+    || stageRows.length === 0,
+  )
+  const averageStage = shouldIncludeAverageStage ? getMaterialAverageStage(material) : null
+  if (averageStage) {
+    stageRows.push(averageStage)
   }
 
-  const stageRows = [...group.stageResultList]
-  if (!useActivityAverageStageForMaterialPricing.value) {
-    const activityAverageStage = materialActivityAverageStageMap.value.get(material.seriesId)
-    if (activityAverageStage) {
-      stageRows.push({
-        ...activityAverageStage,
-        stageCode: 'SS平均收益',
-      })
-    }
-  }
-
-  return stageRows
+  const sortedStageRows = stageRows
     .sort((a, b) => Number(b.stageEfficiency || 0) - Number(a.stageEfficiency || 0))
-    .slice(0, 6)
+  if (!averageStage) {
+    return sortedStageRows.slice(0, 6)
+  }
+
+  return [
+    ...sortedStageRows.filter(row => row !== averageStage).slice(0, 5),
+    averageStage,
+  ].sort((a, b) => Number(b.stageEfficiency || 0) - Number(a.stageEfficiency || 0))
 }
 
 function getMaterialDemandItemId(material) {
@@ -1601,6 +1741,7 @@ function createDraftSnapshot() {
       title: material.title,
       seriesId: material.seriesId,
       rerunEventKey: material.rerunEventKey,
+      averageStage: normalizeMaterialAverageStage(material.averageStage),
       detail: createDraftAssetSnapshot(material.detail),
       curve: createDraftAssetSnapshot(material.curve),
       icon: createDraftAssetSnapshot(material.icon),
@@ -1675,6 +1816,7 @@ async function restoreDraft() {
         title: typeof material?.title === 'string' ? material.title : '',
         seriesId: resolveMaterialSeriesId(material?.seriesId, material?.title),
         rerunEventKey: typeof material?.rerunEventKey === 'string' ? material.rerunEventKey : '',
+        averageStage: normalizeMaterialAverageStage(material?.averageStage),
         detail: restoreDraftAsset(material?.detail, `${ASSET_FOLDER_NAME}/material-${index + 1}-detail.png`),
         curve: restoreDraftAsset(material?.curve, `${ASSET_FOLDER_NAME}/material-${index + 1}-curve.png`),
         icon: restoreDraftAsset(material?.icon, `${ASSET_FOLDER_NAME}/material-${index + 1}-icon.png`),
@@ -2146,6 +2288,7 @@ async function hydrateManifest(manifest) {
       title: String(material?.title || ''),
       seriesId: resolveMaterialSeriesId(material?.seriesId, material?.title),
       rerunEventKey: String(material?.rerunEventKey || ''),
+      averageStage: normalizeMaterialAverageStage(material?.averageStage),
       detail: createSavedAsset(material?.detailImage, `${ASSET_FOLDER_NAME}/material-${index + 1}-detail.png`),
       curve: createSavedAsset(material?.curveImage, `${ASSET_FOLDER_NAME}/material-${index + 1}-curve.png`),
       icon: createSavedAsset(material?.iconImage, `${ASSET_FOLDER_NAME}/material-${index + 1}-icon.png`),
@@ -2271,6 +2414,7 @@ function buildManifest() {
       title: material.title.trim(),
       seriesId: material.seriesId,
       rerunEventKey: material.rerunEventKey,
+      averageStage: normalizeMaterialAverageStage(material.averageStage),
       detailImage: hasAsset(material.detail) ? material.detail.path : '',
       curveImage: hasAsset(material.curve) ? material.curve.path : '',
       iconImage: hasAsset(material.icon) ? material.icon.path : '',
@@ -2586,6 +2730,69 @@ onBeforeUnmount(() => {
               未发现对应材料的未来复刻活动，可刷新材料关卡数据或直接上传 PNG
             </small>
           </label>
+          <div v-if="material.seriesId" class="yield-ppt-material-average-editor">
+            <div class="yield-ppt-material-average-heading">
+              <div>
+                <span>平均收益</span>
+                <small>{{ getMaterialAverageStageSource(material) }}</small>
+              </div>
+              <v-btn
+                icon="mdi-restore"
+                size="x-small"
+                variant="text"
+                :disabled="!hasMaterialAverageStageOverride(material)"
+                title="恢复自动平均收益"
+                @click="resetMaterialAverageStage(material)"
+              />
+            </div>
+            <div class="yield-ppt-material-average-fields">
+              <label>
+                <span>主产物掉率 (%)</span>
+                <input
+                  :value="getMaterialAverageInputValue(material, 'knockRating')"
+                  type="number"
+                  step="any"
+                  @input="updateMaterialAverageField(material, 'knockRating', $event)"
+                >
+              </label>
+              <label>
+                <span>期望理智</span>
+                <input
+                  :value="getMaterialAverageInputValue(material, 'apExpect')"
+                  type="number"
+                  step="any"
+                  @input="updateMaterialAverageField(material, 'apExpect', $event)"
+                >
+              </label>
+              <label>
+                <span>综合收益率 (%)</span>
+                <input
+                  :value="getMaterialAverageInputValue(material, 'stageEfficiency')"
+                  type="number"
+                  step="any"
+                  @input="updateMaterialAverageField(material, 'stageEfficiency', $event)"
+                >
+              </label>
+              <label>
+                <span>T4材料效率 (%)</span>
+                <input
+                  :value="getMaterialAverageInputValue(material, 'leT4Efficiency')"
+                  type="number"
+                  step="any"
+                  @input="updateMaterialAverageField(material, 'leT4Efficiency', $event)"
+                >
+              </label>
+              <label>
+                <span>T3材料效率 (%)</span>
+                <input
+                  :value="getMaterialAverageInputValue(material, 'leT3Efficiency')"
+                  type="number"
+                  step="any"
+                  @input="updateMaterialAverageField(material, 'leT3Efficiency', $event)"
+                >
+              </label>
+            </div>
+          </div>
           <div class="yield-ppt-row-actions">
             <v-btn
               v-if="materials.length > 2"
@@ -3356,6 +3563,55 @@ onBeforeUnmount(() => {
   grid-template-columns: minmax(140px, 0.75fr) minmax(140px, 0.75fr) minmax(250px, 1.25fr) minmax(250px, 1.25fr) auto;
 }
 
+.yield-ppt-material-average-editor {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--console-bg);
+}
+
+.yield-ppt-material-average-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.yield-ppt-material-average-heading > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.yield-ppt-material-average-heading > div > span {
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.yield-ppt-material-average-heading small {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.yield-ppt-material-average-fields {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.yield-ppt-material-average-fields label > span {
+  font-size: 0.72rem;
+}
+
+.yield-ppt-material-average-fields input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .yield-ppt-store-row {
   grid-template-columns:
     minmax(150px, 0.75fr)
@@ -3902,6 +4158,10 @@ onBeforeUnmount(() => {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .yield-ppt-material-average-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .yield-ppt-row-actions {
     position: absolute;
     right: 12px;
@@ -3936,6 +4196,10 @@ onBeforeUnmount(() => {
   .yield-ppt-store-row,
   .yield-ppt-pack-row,
   .yield-ppt-cultivation-row {
+    grid-template-columns: 1fr;
+  }
+
+  .yield-ppt-material-average-fields {
     grid-template-columns: 1fr;
   }
 }

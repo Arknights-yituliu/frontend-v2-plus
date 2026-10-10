@@ -1,121 +1,117 @@
-import { NAvatar, NTag } from 'naive-ui'
-import { h } from 'vue'
-import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
-import { operatorTableV2 } from '@/utils/gameData.js'
+import { NAvatar, NTag } from "naive-ui";
+import { h } from "vue";
+import OperatorSkillTooltip from "@/pages/tools/mower-plan/components/OperatorSkillTooltip.vue";
+import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { nameToCharId, charIdToName } from "./operatorAssets.js";
 
-const nameToCharId = {}
-const charIdToName = {}
-for (const key in operatorTableV2) {
-  const normalized = normalizeCharId(key)
-  const name = operatorTableV2[key].name
-  nameToCharId[name] = normalized
-  charIdToName[normalized] = name
-}
-
-function normalizeCharId(id) {
-  if (id === 'char_1001_amiya2') {
-    return 'char_002_amiya'
-  }
-  return id
-}
-
-const getInitial = (label) => (label ? label.slice(0, 1) : '')
+const getInitial = (label) => (label ? label.slice(0, 1) : "");
 
 const getDisplayName = (option) => {
-  if (option?.label) return option.label
-  if (option?.value && charIdToName[option.value]) return charIdToName[option.value]
-  return option?.value ?? ''
-}
+  if (option?.label) return option.label;
+  if (option?.value && charIdToName[option.value]) return charIdToName[option.value];
+  return option?.value ?? "";
+};
 
 const getCharId = (option) => {
-  if (option?.label && nameToCharId[option.label]) return nameToCharId[option.label]
-  if (option?.value && charIdToName[option.value]) return option.value
-  return option?.value
-}
+  if (option?.label && nameToCharId[option.label]) return nameToCharId[option.label];
+  if (option?.value && charIdToName[option.value]) return option.value;
+  return option?.value;
+};
 
-const renderAvatar = (option, size = 40) => {
-  const charId = getCharId(option)
+const renderAvatar = (option, size = 26) => {
+  const charId = getCharId(option);
   if (charId && charIdToName[charId]) {
     return h(OperatorAvatar, {
       charId,
       size,
-      border: true
-    })
+      mobileSize: size,
+      border: true,
+    });
   }
-  const label = getDisplayName(option)
+  const label = getDisplayName(option);
   return h(
     NAvatar,
     {
-      round: true,
-      size
+      round: false,
+      size,
+      style: { borderRadius: "2px", flexShrink: 0 },
     },
-    () => getInitial(label)
-  )
-}
+    () => (option?.value === "" ? "" : getInitial(label))
+  );
+};
 
 export const renderOperatorTag = ({ option, handleClose }) => {
   return h(
     NTag,
     {
       style: {
-        padding: '0 6px 0 4px'
+        padding: "0 6px 0 4px",
+        height: "28px",
+        display: "inline-flex",
+        alignItems: "center",
+        verticalAlign: "middle",
       },
       round: true,
       closable: true,
       onClose: (e) => {
-        e.stopPropagation()
-        handleClose()
-      }
+        e.stopPropagation();
+        handleClose();
+      },
     },
     {
       default: () =>
         h(
-          'div',
+          "div",
           {
             style: {
-              display: 'flex',
-              alignItems: 'center'
-            }
+              display: "flex",
+              alignItems: "center",
+              lineHeight: "1",
+            },
           },
           [
             h(
-              'div',
+              "div",
               {
                 style: {
-                  marginRight: '4px',
-                  display: 'flex'
-                }
+                  marginRight: "4px",
+                  display: "flex",
+                },
               },
-              renderAvatar(option, 32)
+              renderAvatar(option, 22)
             ),
-            getDisplayName(option)
+            getDisplayName(option),
           ]
-        )
+        ),
     }
-  )
-}
+  );
+};
 
 export const renderOperatorLabel = (option) => {
   return h(
-    'div',
+    "div",
     {
       style: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px'
-      }
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+      },
     },
     [
       h(
-        'div',
+        "div",
         {
           style: {
-            display: 'flex'
-          }
+            display: "flex",
+          },
         },
-        renderAvatar(option, 36)
+        renderAvatar(option, 26)
       ),
-      getDisplayName(option)
+      getDisplayName(option),
     ]
-  )
-}
+  );
+};
+
+// Only dropdown rows receive skill hints; selected fields and tags keep their normal rendering.
+export const renderOperatorOption = ({ option, node }) =>
+  h(OperatorSkillTooltip, { charId: getCharId(option), name: getDisplayName(option) }, { default: () => node });

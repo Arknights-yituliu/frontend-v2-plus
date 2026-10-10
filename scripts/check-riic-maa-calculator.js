@@ -171,6 +171,35 @@ assert.ok(
   "无人机开启时应能构建 MAA 无人机展示分区",
 );
 
+const scheduleDocument = { layout, settings, plans: completedPlans };
+const droneAcceleration = engine.calculateDroneAcceleration(
+  scheduleDocument,
+  catalog,
+  engine.buildDailySanityAmounts(withLayout),
+  { efficiencyResult: withLayout },
+);
+assert.ok(
+  droneAcceleration.scenarios.some((scenario) => scenario.key === "龙门币策略"),
+  "没有启用 MAA 无人机时应能生成龙门币策略场景",
+);
+const strategyDisplay = engine.buildResultDisplay(withLayout, {
+  sanityValues: engine.calculateSanityValues(engine.DEFAULT_SANITY_SETTINGS),
+  resourceAmountDisplayMode: "both",
+  droneAcceleration,
+});
+assert.ok(
+  strategyDisplay.droneScenarios.length > 0,
+  "通用无人机策略应能生成场景展示数据",
+);
+assert.ok(
+  strategyDisplay.calculationSteps.dailyOutput,
+  "展示模型应包含队列计算明细",
+);
+assert.ok(
+  strategyDisplay.droneScenarios.some((scenario) => scenario.baseRateLines?.length),
+  "二者都显示时赤金或作战记录加速项应包含数量和点数基础产出",
+);
+
 console.log(
-  "check-riic-maa-calculator: 布局推测、房间补齐、layoutSource 与无人机展示契约一致",
+  "check-riic-maa-calculator: 布局推测、房间补齐、MAA/通用无人机与结果展示契约一致",
 );

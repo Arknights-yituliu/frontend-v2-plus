@@ -15,6 +15,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  sectionDefaultOpen: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 function text(value) {
@@ -55,7 +59,13 @@ function cardSections() {
       v-if="props.card.title"
       class="riic-display-card-header"
     >
-      <span class="riic-display-card-title">{{ text(props.card.title) }}</span>
+      <span class="riic-display-card-title">
+        <span class="disclosure-chevron" aria-hidden="true">
+          <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+          <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+        </span>
+        {{ text(props.card.title) }}
+      </span>
       <span v-if="props.card.subtitle" class="riic-display-card-subtitle">{{ text(props.card.subtitle) }}</span>
       <span v-if="props.card.badge" class="riic-display-card-badge">{{ text(props.card.badge) }}</span>
     </component>
@@ -64,7 +74,7 @@ function cardSections() {
       :key="section.key"
       :section="section"
       :collapsible="props.collapsible"
-      :default-open="props.defaultOpen"
+      :default-open="props.sectionDefaultOpen"
     />
     <p v-if="props.card.emptyNote" class="riic-display-card-note">{{ props.card.emptyNote }}</p>
   </component>
@@ -72,39 +82,37 @@ function cardSections() {
 
 <style scoped>
 .riic-display-card {
-  padding: 12px 14px;
-  border: 1px solid var(--c-border-color);
-  border-radius: 4px;
-  background: var(--c-page-background-color-secondary, #fafafa);
+  padding: 12px;
+  border: 1px solid var(--maa-border, var(--c-border-color));
+  border-radius: 3px;
+  background: var(--maa-soft-panel, var(--c-page-background-color-secondary, #fafafa));
 }
 .riic-display-card-empty,
 .riic-display-card-note {
   margin: 0;
   color: var(--c-text-color-secondary, #6b7280);
   font-size: 13px;
+  line-height: 1.6;
 }
 .riic-display-card-header {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 6px 10px;
+  gap: 4px 8px;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--c-border-color);
+  border-bottom: 1px solid var(--maa-border, var(--c-border-color));
+  line-height: 1.5;
 }
 .riic-display-card > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
   list-style: none;
   cursor: pointer;
 }
 .riic-display-card > summary::-webkit-details-marker {
   display: none;
-}
-.riic-display-card > summary::after {
-  content: "+";
-  color: var(--c-text-color-secondary, #6b7280);
-  font-weight: 400;
-}
-.riic-display-card[open] > summary::after {
-  content: "-";
 }
 .riic-display-card-title {
   font-weight: 600;

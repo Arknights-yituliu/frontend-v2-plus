@@ -249,6 +249,18 @@ const routes = [
         }
     },
     {
+        path: '/tools/maa-schedule-calculator',
+        text: '收益计算（MAA）',
+        name: 'RiicMaaScheduleCalculator',
+        display: true,
+        module: 'riic',
+        icon: "mdi-calculator-variant-outline",
+        component: () => import('/src/pages/tools/maa-schedule-calculator.vue'),
+        meta: {
+            title: '收益计算（MAA）'
+        }
+    },
+    {
         path: '/tools/mower-plan',
         text: '排班表（Mower）',
         name: 'MowerPlan',
@@ -294,18 +306,6 @@ const routes = [
         component: () => import('/src/pages/tools/schedule-images.vue'),
         meta: {
             title: '一图流排班表'
-        }
-    },
-    {
-        path: '/tools/maa-schedule-calculator',
-        text: 'MAA排班表计算器',
-        name: 'RiicMaaScheduleCalculator',
-        display: true,
-        module: 'riic',
-        icon: "mdi-calculator-variant-outline",
-        component: () => import('/src/pages/tools/maa-schedule-calculator.vue'),
-        meta: {
-            title: 'MAA排班表计算器'
         }
     },
     {
@@ -455,6 +455,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/yield-cover-maker',
+        text: '收益速览封面制图',
+        name: 'YieldOverviewCoverMaker',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/YieldOverviewCoverMaker.vue'),
+        meta: {
+            title: '收益速览封面制图'
+        }
+    },
+    {
         path: '/lb/pack-maker',
         text: '礼包性价比制图',
         name: 'LBPackMaker',
@@ -536,12 +546,12 @@ const routes = [
     },
     {
         path: '/riicdev/efficiency-inspector',
-        text: 'MAA排班表计算器',
+        text: '收益计算（MAA）',
         name: 'RiicEfficiencyInspector',
         display: false,
         redirect: { name: 'RiicMaaScheduleCalculator' },
         meta: {
-            title: 'MAA排班表计算器'
+            title: '收益计算（MAA）'
         }
     },
     {

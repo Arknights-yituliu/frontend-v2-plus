@@ -36,7 +36,7 @@ function tokenize(text: string): Token[] {
   const tokens: Token[] = []
   for (let rest = text.trim(); rest; rest = rest.trimStart()) {
     if (tokens.length >= 1024) return fail('条件文本超过限制')
-    const worker = /^op_data\.operators\[['"]([^'"\[\]]+)['"]\]\.(is_resting\(\)|is_working\(\)|current_mood\(\)|current_room)/.exec(rest)
+    const worker = /^op_data\.operators\[['"]([^'"\[\]]+)['"]\]\.(is_resting\(\)|is_working\(\)|current_mood\(\)|current_room|current_index|room|index|mood|upper_limit|lower_limit|group|workaholic|exhaust_require|rest_in_full|operator_type|resting_priority)\b/.exec(rest) ?? /^op_data\.operators\[['"]([^'"\[\]]+)['"]\]\.(is_resting\(\)|is_working\(\)|current_mood\(\))/.exec(rest)
     const external = /^op_data\.party_time\b/.exec(rest)
     const quoted = /^(['"])((?:\\.|(?!\1)[^\\])*)\1/.exec(rest)
     const number = /^(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/.exec(rest)
@@ -59,7 +59,7 @@ function tokenize(text: string): Token[] {
   return tokens
 }
 
-export function compileBackupExpression(source: unknown, participants: Set<string>): { evaluate: Expression; skipped?: string } {
+export function compileBackupExpression(source: unknown, participants: Set<string>): { evaluate: Expression; usesCurrentMood: boolean; skipped?: string } {
   const tokens = tokenize(serialize(source))
   let cursor = 0, nesting = 0
   const peek = () => tokens[cursor]?.text
@@ -114,6 +114,18 @@ export function compileBackupExpression(source: unknown, participants: Set<strin
           if (token.member === 'is_resting()') return room.startsWith('dormitory_')
           if (token.member === 'is_working()') return roomName.test(room) && !room.startsWith('dormitory_')
           if (token.member === 'current_room') return room
+          if(token.member==='room')return observed?.room??state.config.positions.find(p=>p.primary===id)?.roomId??''
+          if(token.member==='index'){const parts=state.config.positions.find(p=>p.primary===id)?.id.split('_');return observed?.index??Number(parts?.[parts.length-1]??-1)}
+          if(token.member==='current_index')return observed?.currentIndex??-1
+          if(token.member==='mood')return observed?.mood??state.morale[id]??24
+          if(token.member==='upper_limit')return observed?.upperLimit??24
+          if(token.member==='lower_limit')return observed?.lowerLimit??0
+          if(token.member==='group')return observed?.group??''
+          if(token.member==='workaholic')return observed?.workaholic??false
+          if(token.member==='exhaust_require')return observed?.exhaustRequire??false
+          if(token.member==='rest_in_full')return observed?.restInFull??false
+          if(token.member==='operator_type')return observed?.operatorType??'low'
+          if(token.member==='resting_priority')return observed?.restingPriority??'low'
           if(observed)return observed.currentMood(toMowerMicros(state.time))
           return state.morale[id] ?? fail(`缺少 ${token.name} 的心情`)
         }
@@ -160,5 +172,5 @@ export function compileBackupExpression(source: unknown, participants: Set<strin
   function logicalOr(): Expression { let expr = logicalAnd(); while (take('or')) expr = binary(expr, logicalAnd(), 'or'); return expr }
   const evaluate = tokens.length ? logicalOr() : () => false
   if (cursor !== tokens.length) return fail(`条件存在未解析内容 ${peek()}`)
-  return { evaluate }
+  return { evaluate, usesCurrentMood: tokens.some(token=>token.kind==='worker'&&token.member==='current_mood()') }
 }

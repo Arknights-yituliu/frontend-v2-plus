@@ -1,5 +1,6 @@
 import {mowerPlanEntries} from './mowerPlanOrder'
 import {mowerDormOrderError} from './mowerGlobalDormOrder'
+import {readMowerMoodLimits} from './mowerMoodLimits'
 import { isTradeRunOrderOperator } from '../domain/shiftRunPolicy'
 import { GAME_DATA_VERSION, OPERATOR_MAP } from '../domain/operators'
 import { resolveOperatorCharId } from '../workbench/compat/mowerJson'
@@ -58,7 +59,8 @@ export function compileRosterSchedule(workspace: RosterWorkspace, options: Parti
     const list = Array.isArray(raw) ? raw : typeof raw === 'string' ? raw.replace(/，/g, ',').split(',').map(value=>value.trim()).filter(Boolean) : []
     policies[key] = list.map(value=>resolveOperatorCharId(String(value)))
   }
-  const knownPolicyKeys = new Set(['ling_xi', 'free_blacklist', ...LIST_POLICIES])
+  try {readMowerMoodLimits(rawConf,name=>{const id=resolveOperatorCharId(name);if(!isKnown(id))throw new Error('Unknown mood-limit operator: '+name);return id})}catch(error){diagnostics.push({code:'INVALID_MOOD_LIMITS',severity:'error',path:'mainPlan.conf',message:error instanceof Error?error.message:String(error)})}
+  const knownPolicyKeys = new Set(['ling_xi', 'free_blacklist','mood_limits','operator_mood_limits','dorm_order','dorm_order_override', ...LIST_POLICIES])
   for (const key of Object.keys(rawConf)) if (!knownPolicyKeys.has(key)) diagnostics.push({ code: 'UNKNOWN_POLICY', severity: 'warning', path: `mainPlan.conf.${key}`, message: `保留但不执行未知策略 ${key}` })
 
   const operators: CompiledSchedule['operators'] = {}
@@ -78,6 +80,7 @@ export function compileRosterSchedule(workspace: RosterWorkspace, options: Parti
       }
       const orderedCandidates = slot.replacements.map(resolveOperatorCharId)
       for (const [candidateIndex, id] of orderedCandidates.entries()) {
+        if(id==='Free'&&facility.type==='dormitory'&&slot.groupId&&primaryOperatorId&&OPERATOR_MAP.get(primaryOperatorId)?.name!=='菲亚梅塔')continue
         if (!isKnown(id)) diagnostics.push({ code: 'UNKNOWN_OPERATOR', severity: 'warning', path: `${facility.roomId}.slots.${slotIndex}.replacements.${candidateIndex}`, message: `未知干员 ${id}` })
       }
       if (primaryOperatorId && !isKnown(primaryOperatorId)) diagnostics.push({ code: 'UNKNOWN_OPERATOR', severity: 'warning', path: `${facility.roomId}.slots.${slotIndex}.occupant`, message: `未知干员 ${primaryOperatorId}` })

@@ -4,6 +4,15 @@ const MAX_IMAGE_BYTES = 8 * 1024 * 1024
 const MAX_IMAGE_PIXELS = 12 * 1024 * 1024
 let displayOperatorName = name => name
 
+export async function saveMowerRosterForIncome(payload, fileName, storage) {
+  const candidate = await parseMowerRosterText(JSON.stringify(payload))
+  try {
+    storage.setItem(MOWER_INCOME_STORAGE_KEY, JSON.stringify({ payload: candidate, fileName }))
+  } catch {
+    throw new Error('浏览器无法保存排班，请检查存储权限或可用空间')
+  }
+}
+
 export async function parseMowerRosterText(text) {
   if (typeof text !== 'string' || new TextEncoder().encode(text).length > MAX_JSON_BYTES) {
     throw new Error('排班 JSON 不能超过 2 MB')

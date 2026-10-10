@@ -42,6 +42,27 @@ import { RouterLink } from 'vue-router'
 
 const pageGroups = [
   {
+    title: '常用流程',
+    color: '#0f766e',
+    pages: [
+      {
+        title: '收益速览制图',
+        description: '输入干员名称生成精二与专精材料收益速览表',
+        to: '/lb/yield-overview'
+      },
+      {
+        title: '收益速览本期清单',
+        description: '整理本期材料、礼包和培养成本分页素材',
+        to: '/lb/yield-ppt'
+      },
+      {
+        title: '收益速览封面制图',
+        description: '上传横竖封底图，填写关卡、材料和刷图效率',
+        to: '/lb/yield-cover-maker'
+      }
+    ]
+  },
+  {
     title: '发布制图',
     color: '#3867d6',
     pages: [
@@ -51,14 +72,14 @@ const pageGroups = [
         to: '/lb/elite'
       },
       {
-        title: '复刻材料简报',
-        description: '制作活动复刻的材料与关卡简报',
-        to: '/lb/return'
-      },
-      {
         title: '新材料简报制图',
         description: '制作隐藏掉率与搓玉指标的材料简报',
         to: '/lb/new-material'
+      },
+      {
+        title: '商店性价比',
+        description: '查看常驻商店与活动商店的物品兑换性价比',
+        to: '/material/store'
       },
       {
         title: '礼包性价比制图',
@@ -66,21 +87,16 @@ const pageGroups = [
         to: '/lb/pack-maker'
       },
       {
-        title: '收益速览本期清单',
-        description: '整理本期材料、礼包和培养成本分页素材',
-        to: '/lb/yield-ppt'
-      },
+        title: '复刻材料简报',
+        description: '制作活动复刻的材料与关卡简报',
+        to: '/lb/return'
+      }
     ]
   },
   {
     title: '通用制图',
     color: '#7c3aed',
     pages: [
-      {
-        title: '收益速览制图',
-        description: '输入干员名称生成精二与专精材料收益速览表',
-        to: '/lb/yield-overview'
-      },
       {
         title: '卡片生成器',
         description: '创建由多个可配置卡片组成的组件',

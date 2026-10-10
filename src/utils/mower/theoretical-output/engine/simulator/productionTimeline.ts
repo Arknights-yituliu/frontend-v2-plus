@@ -45,7 +45,8 @@ function capture(frame:ProductionFrame,roomId:string):SpecialCapture {
  const room=frame.config.rooms.find(r=>r.id===roomId)!
  const skill=(id:string,buffId:string)=>frame.active.has(id)&&hasOperatorSkill(frame.config,id,buffId)
  const rank=(kind:'proviso'|'tequila')=>Math.max(0,...room.operatorIds.filter(id=>frame.active.has(id)).map(id=>runOrderSkillRank(frame.config,id,kind))) as 0|1|2
- return {proviso:rank('proviso'),tequila:rank('tequila'),uOfficial:room.operatorIds.some(id=>skill(id,'trade_ord_spd&wt[000]')),closure:room.operatorIds.some(id=>skill(id,'trade_ord_closure[000]')),pepe:room.operatorIds.some(id=>skill(id,'trade_ord_pepe[000]'))}
+ // Preserve the configured level restriction even when low-level quality produces four-gold orders.
+ return {proviso:rank('proviso'),tequila:room.level===3?rank('tequila'):0,uOfficial:room.operatorIds.some(id=>skill(id,'trade_ord_spd&wt[000]')),closure:room.operatorIds.some(id=>skill(id,'trade_ord_closure[000]')),pepe:room.operatorIds.some(id=>skill(id,'trade_ord_pepe[000]'))}
 }
 /** Shares the roster clock. Only this controller owns inventories and immutable order snapshots. */
 export function createProductionTimeline(schedule:CompiledSchedule,state:RuntimeState,options:ProductionOptions,warmupHours:number,diagnostic:(code:string,message:string)=>void,nativeScheduler=false){

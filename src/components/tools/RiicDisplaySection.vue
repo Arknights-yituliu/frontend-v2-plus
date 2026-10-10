@@ -49,7 +49,13 @@ function text(value) {
       :is="props.collapsible && props.section.label ? 'summary' : 'span'"
       v-if="props.section.label"
       class="riic-display-section-label"
-    >{{ props.section.label }}</component>
+    >
+      <span v-if="props.collapsible" class="disclosure-chevron" aria-hidden="true">
+        <v-icon class="disclosure-chevron-down" icon="mdi-chevron-down" size="18" />
+        <v-icon class="disclosure-chevron-up" icon="mdi-chevron-up" size="18" />
+      </span>
+      {{ props.section.label }}
+    </component>
 
     <div v-if="sectionLayout() === 'grid'" class="riic-display-grid">
       <template v-for="row in props.section.rows || []" :key="row.key">
@@ -102,16 +108,17 @@ function text(value) {
 
 <style scoped>
 .riic-display-section {
-  margin-top: 10px;
+  margin-top: 8px;
+  line-height: 1.5;
 }
 .riic-display-section-nested {
-  margin-left: 12px;
-  padding-left: 10px;
-  border-left: 1px solid var(--c-border-color);
+  margin-left: 8px;
+  padding-left: 8px;
+  border-left: 1px solid var(--maa-border, var(--c-border-color));
 }
 .riic-display-section-label {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   color: var(--c-text-color-secondary, #6b7280);
   font-size: 13px;
   font-weight: 600;
@@ -123,18 +130,10 @@ function text(value) {
 .riic-display-section > summary.riic-display-section-label::-webkit-details-marker {
   display: none;
 }
-.riic-display-section > summary.riic-display-section-label::after {
-  float: right;
-  content: "+";
-  font-weight: 400;
-}
-.riic-display-section[open] > summary.riic-display-section-label::after {
-  content: "-";
-}
 .riic-display-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px 12px;
+  gap: 4px 12px;
   font-size: 13px;
 }
 .riic-display-grid-label {
@@ -147,7 +146,7 @@ function text(value) {
 .riic-display-skill-list,
 .riic-display-candidate-list {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 .riic-display-mood-list {
   display: grid;
@@ -160,7 +159,7 @@ function text(value) {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 4px 12px;
   padding-bottom: 6px;
-  border-bottom: 1px solid var(--c-border-color);
+  border-bottom: 1px solid var(--maa-border, var(--c-border-color));
   font-size: 13px;
 }
 .riic-display-skill-title {
@@ -175,7 +174,7 @@ function text(value) {
 .riic-display-skill-calculation {
   grid-column: 1 / -1;
   display: grid;
-  gap: 3px;
+  gap: 4px;
   margin-top: 4px;
 }
 .riic-display-skill-calculation-row {

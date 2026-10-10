@@ -16,12 +16,16 @@ import {buildRiicGlobalContext} from '../engine/globalContext'
 import {getTemporalSkillBoundaries} from '../engine/timeDependentSkills'
 import type {CompiledSchedule} from '../scheduler/types'
 import {compiledScheduleToRuntimeConfig} from '../scheduler/scheduleAdapter'
+import {normalizeMowerRecoveryBeds} from '../scheduler/mowerRecoveryBeds'
 import {advanceRoster,createRosterRuntime,currentMoraleDerivatives,MORALE_EPSILON,nextRosterEventHours,nextRosterActionHours,settleRoster,moraleDerivative,type RuntimeState,type RuntimeRates,type RuntimeEvent} from '../scheduler/rosterRuntime'
 
 export interface ScheduleSimulationProgress {
  phase:'warmup'|'sampling'; elapsedHours:number; totalHours:number; warmupHours:number
 }
 export interface ScheduleSimulationOptions {
+ /** The complete-preview alpha scheduler requires an explicit opt-in. */
+ schedulingModel?:'mower-default'|'mower-alpha'
+ productionWeights?:import('../domain/productionWeights').ProductionWeights
  operatorInventory?:OwnedOperatorInput[]
  jayeElite0?:boolean
  production?:ProductionOptions
@@ -48,7 +52,7 @@ export interface ScheduleSegment {start:number;end:number;occupants:Record<strin
 export interface ScheduleSimulationReport {
  schemaVersion:1; engine:'mower-morale-v1'; success:boolean; elapsedHours:number; observedHours:number
  inputs:{schedule:CompiledSchedule;options:ScheduleSimulationOptions}
- assumptions:{sampleHours:number;warmupHours:number;maxStepHours:number;warmupModel:'continuous'|'hourly';restingThreshold:number;operationDurationHours:0;dormAtmosphere:string;singleRecoveryTarget:string}
+ assumptions:{schedulingModel?:'mower-default'|'mower-alpha';sampleHours:number;warmupHours:number;maxStepHours:number;warmupModel:'continuous'|'hourly';restingThreshold:number;operationDurationHours:0;dormAtmosphere:string;singleRecoveryTarget:string}
  production?:ProductionReport
  operators:SimulatedOperator[];rooms:SimulatedRoom[];events:RuntimeEvent[];segments:ScheduleSegment[]
  diagnostics:{code:string;message:string}[]
@@ -95,6 +99,9 @@ export function projectScheduleState(schedule:CompiledSchedule,state:RuntimeStat
 
 /** Integrates rates over actual joint rosters. This reports efficiency and duty, not order/resource settlement. */
 export function simulateSchedule(schedule:CompiledSchedule,options:ScheduleSimulationOptions={},onProgress?:(progress:ScheduleSimulationProgress)=>void):ScheduleSimulationReport {
+ const schedulingModel=options.schedulingModel??'mower-default'
+ if(!['mower-default','mower-alpha'].includes(schedulingModel))throw new Error('Invalid scheduling model')
+ options={...options,schedulingModel}
  assertRunOrderMode(options.production?.runOrderMode)
  assertRunOrderMode(schedule.assumptions.runOrderSimulationMode)
  schedule=structuredClone(schedule)
@@ -112,10 +119,11 @@ export function simulateSchedule(schedule:CompiledSchedule,options:ScheduleSimul
  const warmupModel=options.warmupModel??'continuous'
  if(!['continuous','hourly'].includes(warmupModel))throw new Error('Invalid warmup model')
  const report:ScheduleSimulationReport={schemaVersion:1,engine:'mower-morale-v1',success:false,elapsedHours:0,observedHours:0,
-  assumptions:{sampleHours,warmupHours,maxStepHours,warmupModel,restingThreshold:schedule.assumptions.restingThreshold??.65,operationDurationHours:0,dormAtmosphere:'各宿舍默认等级上限；可逐室覆盖',singleRecoveryTarget:'优先采用 Mower 已确认的入驻顺序；无有效确认时采用槽位顺序，允许显式覆盖'},
+  assumptions:{schedulingModel,sampleHours,warmupHours,maxStepHours,warmupModel,restingThreshold:schedule.assumptions.restingThreshold??.65,operationDurationHours:0,dormAtmosphere:'各宿舍默认等级上限；可逐室覆盖',singleRecoveryTarget:'优先采用 Mower 已确认的入驻顺序；无有效确认时采用槽位顺序，允许显式覆盖'},
   inputs:{schedule:structuredClone(schedule),options:structuredClone(options)},operators:[],rooms:[],events:[],segments:[],diagnostics:[]}
  const diagnostic=(code:string,message:string)=>{if(!report.diagnostics.some(d=>d.code===code&&d.message===message))report.diagnostics.push({code,message})}
  for(const d of schedule.diagnostics)diagnostic(d.code,d.message)
+ diagnostic('MOWER_SCHEDULING_MODEL',schedulingModel==='mower-default'?'使用 Mower 默认兼容换班策略；按六阶段评估副表，保留完整任务保护':'使用显式选择的试验性 alpha 完整预演换班策略')
  if(schedule.diagnostics.some(d=>d.severity==='error'||d.code==='UNKNOWN_OPERATOR'))return report
  const inventory=options.operatorInventory===undefined?undefined:compileOperatorInventory(options.operatorInventory)
  const operatorRecords=inventory?inventoryOperatorRecords(inventory):undefined
@@ -134,6 +142,10 @@ export function simulateSchedule(schedule:CompiledSchedule,options:ScheduleSimul
  let backups:ReturnType<typeof createBackupPlanController> | undefined
  try{
   const runtimeConfig=compiledScheduleToRuntimeConfig(schedule)
+  // Supported run orders are ideal production events and reserve no roster time.
+  runtimeConfig.mowerTaskScheduling={...runtimeConfig.mowerTaskScheduling,adjustForRunOrders:false}
+  runtimeConfig.mowerAlpha=schedulingModel==='mower-alpha'
+  normalizeMowerRecoveryBeds(runtimeConfig)
   // Mower scans unregistered global cards too. The imported library is the idle-card pool;
   // without it, every catalog operator is eligible, subject to native task/room exclusions.
   runtimeConfig.availableIdleOperators=inventory
@@ -280,7 +292,9 @@ export function simulateSchedule(schedule:CompiledSchedule,options:ScheduleSimul
     deferrals.push(episode);pendingDeferrals.set(key,episode)
    }
   }
-  refreshSessions(events);cachedRevision=-1;derivativeRevision=-1
+  // Occupancy, config, recovery order and morale bands already invalidate the
+  // physical rates above. An I/O return by itself changes none of those inputs.
+  refreshSessions(events)
  }
  const settle=()=>{
   if(backupFailed)return

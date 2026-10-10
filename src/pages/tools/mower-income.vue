@@ -1,5 +1,6 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
+import { mowerProductImage } from '@/utils/mower/productAssets.js'
 import { RouterLink } from 'vue-router'
 import { useThemeVars } from 'naive-ui'
 import TheoreticalOutputPanel from './mower-income/components/TheoreticalOutputPanel.vue'
@@ -70,9 +71,9 @@ onBeforeUnmount(() => { importId++ })
         <p>导入已有排班，按主替班、心情恢复与副表条件模拟每日理论产出。</p>
       </div>
       <div class="product-strip" aria-hidden="true">
-        <img src="/mower-income/product/exp3.png" alt="" />
-        <img src="/mower-income/product/gold.png" alt="" />
-        <img src="/mower-income/product/lmd.png" alt="" />
+        <img :src="mowerProductImage('exp3')" alt="" />
+        <img :src="mowerProductImage('gold')" alt="" />
+        <img :src="mowerProductImage('lmd')" alt="" />
       </div>
     </header>
 

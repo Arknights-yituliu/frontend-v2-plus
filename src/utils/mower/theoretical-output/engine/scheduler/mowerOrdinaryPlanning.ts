@@ -1,16 +1,22 @@
 // Port of default plan_solver/resting/_get_resting_plan_legacy/try_reorder.
 // Source: c6bdbb292fe7fcd84c6dfb66154a12a1a9bc5b88 (MIT, Copyright 2021 Nano).
 import {MowerExitError} from './mowerNativeErrors'
+import type {MowerTaskSchedulingOptions} from './mowerTaskScheduling'
 import {mowerReplacementCandidates} from './mowerOperatorState'
 import {MowerDormState,type MowerSchedulingData} from './mowerSchedulingData'
 import {mowerActiveHighRestingCount,mowerAvailableFree,mowerAssignDorm,mowerAssignDormGroup,mowerAverageMood,mowerStandbyCandidates} from './mowerDormAssignment'
 import {planMowerMetadata} from './mowerMetadata'
+import {mowerDormCandidateMood} from './mowerAlphaCandidates'
+import {alphaDormResidents,alphaRestoreDisplaced,alphaRestingTier,alphaSlotTakable,mowerMatchReplacements,alphaPrioritizeRecovery} from './mowerAlphaDorm'
 import {MowerTask,MOWER_TASK_TYPES as T,type MowerTaskPlan,type MowerTaskQueue,fromMowerMicros,toMowerMicros} from './mowerTaskQueue'
 export interface MowerRestingOptions {
+ returning?:Set<string>;tasks?:MowerTask[]
  fiaTargets?:string[];hasActiveMastery?:boolean;isMasteryBusy?:(name:string)=>boolean
  isDormReplacement?:(name:string)=>boolean;onBlocked?:(names:string[])=>void;onException?:(error:unknown)=>void
+ priorityScheduling?:MowerTaskSchedulingOptions
 }
 export function mowerGetRestingPlan(data:MowerSchedulingData,names:string[],existingReplacements:string[],plan:MowerTaskPlan,options:MowerRestingOptions={}):boolean {
+ if(data.alpha)return alphaGetRestingPlan(data,names,existingReplacements,plan,options)
  const dormAgents=names.filter(name=>data.operators[name]!.room.startsWith('dorm'))
  const agents=names.filter(name=>!dormAgents.includes(name)),fia=options.fiaTargets??[]
  agents.sort((a,b)=>{
@@ -27,10 +33,27 @@ export function mowerGetRestingPlan(data:MowerSchedulingData,names:string[],exis
    return !(target.currentRoom&&!target.isResting())&&!data.excludedCandidates.has(candidate)&&!options.isMasteryBusy?.(candidate)&&!existingReplacements.includes(candidate)&&!replacements.includes(candidate)&&!options.isDormReplacement?.(candidate)&&(op.room.startsWith('dorm')||target.currentRoom!==op.room)
   })
   if(candidate===undefined)return false
+  if(data.adjustForRunOrders===false&&plan[op.room]&&![candidate,'Current'].includes(plan[op.room]![op.index]!))return false
   replacements.push(candidate);(next[op.room]??=Array(data.plan[op.room]!.length).fill('Current'))[op.index]=candidate
  }
  const resting=agents.filter(name=>!data.operators[name]!.workaholic&&!data.operators[name]!.room.startsWith('dorm'))
- if(mowerAssignDormGroup(data,resting)===undefined)return false
+ // Selected replacements leave these physical beds in this same arrangement.
+ // Reserve the complete incoming group before committing any changes.
+ let departing:Set<string>|undefined
+ if(data.adjustForRunOrders===false){
+  departing=new Set()
+  const selected=new Set([...existingReplacements,...replacements])
+  for(const [room,row] of Object.entries({...plan,...next})){
+   for(let index=0;index<row.length;index++){
+    // A committed destination wins, exactly as in the merge below.
+    const committed=plan[room]?.[index]
+    const name=committed&&committed!=='Current'?committed:next[room]?.[index]??'Current'
+    const target=data.operators[name]
+    if(selected.has(name)&&target&&(target.currentRoom!==room||target.currentIndex!==index))departing.add(name)
+   }
+  }
+ }
+ if(mowerAssignDormGroup(data,resting,undefined,departing)===undefined)return false
  existingReplacements.push(...replacements)
  for(const [room,names] of Object.entries(next)){
   if(!plan[room]){plan[room]=names;continue}
@@ -38,34 +61,74 @@ export function mowerGetRestingPlan(data:MowerSchedulingData,names:string[],exis
  }
  return true
 }
+function alphaGetRestingPlan(data:MowerSchedulingData,names:string[],existing:string[],plan:MowerTaskPlan,options:MowerRestingOptions):boolean{
+ if(names.some(name=>data.reservedProductReplacements.has(name)))return false
+ const agents=[...names].sort((a,b)=>{
+  const x=data.operators[a]!,y=data.operators[b]!,fia=options.fiaTargets??[]
+  return Number(x.room.startsWith('dorm'))-Number(y.room.startsWith('dorm'))||Number(!fia.includes(a))-Number(!fia.includes(b))||Number(['factory','train'].includes(x.currentRoom))-Number(['factory','train'].includes(y.currentRoom))||(x.currentMood(data.nowMicros)-x.lowerLimit)-(y.currentMood(data.nowMicros)-y.lowerLimit)
+ })
+ const choices:Record<string,string[]>={},next:MowerTaskPlan={}
+ for(const name of agents){
+  const op=data.operators[name]!
+  if(!data.plan[op.room]||data.getDormByName(name))return false
+  if(op.room.startsWith('dorm')&&op.group&&op.replacement.includes('Free')){(next[op.room]??=Array(data.plan[op.room]!.length).fill('Current'))[op.index]='Free';continue}
+  choices[name]=mowerReplacementCandidates(op,data.operators,data.policy,data.nowMicros).filter(n=>{
+   const target=data.operators[n];return !!target&&!(target.currentRoom&&!target.isResting())&&(op.room.startsWith('dorm')||!data.replacementExhausted(n))&&!data.excludedCandidates.has(n)&&!data.reservedProductReplacements.has(n)&&!options.isMasteryBusy?.(n)&&!existing.includes(n)&&!options.isDormReplacement?.(n)&&(op.room.startsWith('dorm')||target.currentRoom!==op.room)
+  })
+ }
+ const match=mowerMatchReplacements(choices);if(!match)return false
+ for(const [name,cover] of Object.entries(match)){const op=data.operators[name]!;(next[op.room]??=Array(data.plan[op.room]!.length).fill('Current'))[op.index]=cover}
+ const previous=alphaDormResidents(data),resting=agents.filter(name=>!data.operators[name]!.workaholic&&!data.operators[name]!.room.startsWith('dorm'))
+ if(mowerAssignDormGroup(data,resting,new Set(agents.map(n=>data.operators[n]!.group).filter(Boolean)))===undefined)return false
+ alphaRestoreDisplaced(data,previous,next,options.tasks??[])
+ existing.push(...Object.values(match))
+ for(const [room,names] of Object.entries(next)){if(!plan[room])plan[room]=names;else names.forEach((name,index)=>{if(plan[room]![index]==='Current'&&name!=='Current')plan[room]![index]=name})}
+ return true
+}
 export function mowerResting(data:MowerSchedulingData,queue:MowerTaskQueue,options:MowerRestingOptions={}):MowerTaskPlan {
+ return resting(data,queue,options,false)
+}
+function resting(data:MowerSchedulingData,queue:MowerTaskQueue,options:MowerRestingOptions,metadataPrepared:boolean):MowerTaskPlan {
  if(data.policy.experimentalDormLogic)throw new Error('Experimental ordinary resting requires its source port')
- const total=Object.values(data.operators).filter(op=>(op.isHigh()||!op.currentRoom&&!op.room)&&!op.room.startsWith('dorm')).sort((a,b)=>a.currentMood(data.nowMicros)-b.currentMood(data.nowMicros))
- total.sort((a,b)=>(a.currentMood(data.nowMicros)-a.lowerLimit)-(b.currentMood(data.nowMicros)-b.lowerLimit))
- planMowerMetadata(data,queue)
+ if(data.alpha)Object.values(data.operators).forEach(op=>data.updateStandbyLowPriority(op))
+ const moods=new Map(Object.values(data.operators).map(op=>[op.name,data.alpha?mowerDormCandidateMood(data,op.name):op.currentMood(data.nowMicros)]))
+ const total=Object.values(data.operators).filter(op=>(op.isHigh()||!data.alpha&&!op.currentRoom&&!op.room)&&!op.room.startsWith('dorm')).sort((a,b)=>data.alpha?0:a.currentMood(data.nowMicros)-b.currentMood(data.nowMicros))
+ total.sort((a,b)=>Number(moods.get(a.name)===undefined)-Number(moods.get(b.name)===undefined)||((moods.get(a.name)??0)-a.lowerLimit)-((moods.get(b.name)??0)-b.lowerLimit))
+ if(!metadataPrepared)planMowerMetadata(data,queue)
  const current=mowerActiveHighRestingCount(data),effective=data.dorms.filter(b=>data.effectiveFreeSlot(b)).length
  const ideal=mowerAverageMood(data)>data.policy.restingThreshold*data.policy.rescueThreshold?Math.min(4,effective):effective
- const replacements:string[]=[],plan:MowerTaskPlan={},used=new Set<number>();let highDone=false
+ const replacements:string[]=[],plan:MowerTaskPlan={},used=new Set<number>(),attempted=new Set<string>();let highDone=false
  const exhaustGroups=new Set(Object.values(data.operators).filter(op=>op.exhaustRequire&&op.group).map(op=>op.group))
  for(const op of [...total.filter(op=>op.isHigh()),...total.filter(op=>!op.isHigh())]){
+  if(data.alpha&&(moods.get(op.name)===undefined||data.reservedProductReplacements.has(op.name)||options.returning?.has(op.name)||op.group&&data.group(op.group).some(n=>options.returning?.has(n))||replacements.includes(op.name)||alphaRestingTier(data,op.name)===7))continue
   if(op.isHigh()&&!op.workshop){
    const standby=mowerStandbyCandidates(data,op.group?data.group(op.group):[op.name])
-   if(highDone&&!standby.size)continue
-   if(!standby.size&&current+replacements.length>=ideal&&mowerAvailableFree(data)===0){highDone=true;continue}
+   const canPreempt=data.alpha&&alphaRestingTier(data,op.name)<=2&&data.dorms.some(b=>b.name&&alphaRestingTier(data,b.name)>alphaRestingTier(data,op.name)&&alphaSlotTakable(data,b,op.name))
+   const groupBed=data.alpha&&op.group&&data.dorms.some(b=>b.autoFree&&data.operators[data.plan[b.position[0]]?.[b.position[1]]??'']?.group===op.group)
+   if(highDone&&!standby.size&&!canPreempt&&!groupBed)continue
+   if(!standby.size&&!canPreempt&&!groupBed&&current+replacements.length>=ideal&&mowerAvailableFree(data)===0){highDone=true;continue}
   }else if(mowerAvailableFree(data,'low')===0)break
   if(op.workaholic||op.isResting()||data.isStandby(op.name)||op.currentRoom==='factory'||op.room==='factory'||options.hasActiveMastery&&[op.room,op.currentRoom].includes('train'))continue
-  const mood=op.currentMood(data.nowMicros)
-  if(op.restMoodLimit?mood>=op.upperLimit:op.upperLimit-mood<2)continue
-  if(op.exhaustRequire||mood>Math.floor((op.upperLimit-op.lowerLimit)*data.policy.restingThreshold+op.lowerLimit))continue
+  const mood=moods.get(op.name)!
+  if((data.alpha?op.customMoodLimit:op.restMoodLimit)?mood>=op.upperLimit:op.upperLimit-mood<2)continue
+  const threshold=(op.upperLimit-op.lowerLimit)*data.policy.restingThreshold+op.lowerLimit
+  if(op.exhaustRequire||mood>(data.alpha&&op.customMoodLimit?threshold:Math.floor(threshold)))continue
   if(!op.isHigh()){mowerAssignDorm(data,op.name,used);continue}
   if(op.group&&exhaustGroups.has(op.group))continue
+  if((data.alpha||data.adjustForRunOrders===false)&&op.group){if(attempted.has(op.group))continue;attempted.add(op.group)}
   const members=op.group?data.group(op.group):[op.name]
-  if(!mowerGetRestingPlan(data,[...members],replacements,plan,options))options.onBlocked?.(members)
+  if(!mowerGetRestingPlan(data,[...members],replacements,plan,{...options,tasks:queue.tasks}))options.onBlocked?.(members)
  }
  if(Object.keys(plan).length){const task=new MowerTask({plan,type:T.SHIFT_OFF});task.timeMicros=data.nowMicros;queue.tasks.push(task)}
  return plan
 }
 export function mowerTryReorder(data:MowerSchedulingData,newPlan:MowerTaskPlan):MowerTaskPlan|undefined {
+ if(data.alpha){
+  const assigned=new Set(Object.values(newPlan).flat());for(const bed of data.dorms)if(assigned.has(bed.name))bed.reset()
+  const destinations=new Set(data.dorms.filter(b=>data.effectiveFreeSlot(b)&&b.name).map(b=>b.position[0]+'\0'+b.position[1])),result:MowerTaskPlan={}
+  for(const bed of data.dorms)if(data.effectiveFreeSlot(bed)&&bed.name){const op=data.operators[bed.name]!,[room,index]=bed.position;if(op.currentRoom!==room||op.currentIndex!==index){(result[room]??=Array(data.plan[room]!.length).fill('Current'))[index]=bed.name;if(data.dynamicDormPosition(op.currentRoom,op.currentIndex)&&!destinations.has(op.currentRoom+'\0'+op.currentIndex))(result[op.currentRoom]??=Array(data.plan[op.currentRoom]!.length).fill('Current'))[op.currentIndex]='Free'}}
+  return alphaPrioritizeRecovery(data,result,newPlan)
+ }
  if(data.policy.experimentalDormLogic)throw new Error('Experimental recovery prioritization requires its source port')
  const assigned=new Set(Object.values(newPlan).flat())
  for(const bed of data.dorms)if(assigned.has(bed.name))bed.reset()
@@ -97,7 +160,8 @@ export function planMowerOrdinary(data:MowerSchedulingData,queue:MowerTaskQueue,
  try {
   if(queue.find({type:T.SHIFT_OFF}))return undefined
   planMowerMetadata(data,queue)
-  plan=mowerResting(data,queue,options)
+  // The default resting prelude only reads data; alpha updates standby priority.
+  plan=resting(data,queue,options,!data.alpha)
  }catch(error){
   // Native plan_solver catches every Exception here except MowerExit, then reorders.
   if(error instanceof MowerExitError)throw error
@@ -112,4 +176,4 @@ export function planMowerOrdinary(data:MowerSchedulingData,queue:MowerTaskQueue,
  }
  return plan
 }
-export function mowerPlanningHasNearTask(data:MowerSchedulingData,queue:MowerTaskQueue):boolean {return !!queue.find({time:fromMowerMicros(data.nowMicros+toMowerMicros(15/3600))})}
+export function mowerPlanningHasNearTask(data:MowerSchedulingData,queue:MowerTaskQueue,options:MowerTaskSchedulingOptions={}):boolean {return !!queue.find({time:fromMowerMicros(data.nowMicros+toMowerMicros(15/3600)),ignoreRunOrders:(options.adjustForRunOrders??data.adjustForRunOrders)===false})}
