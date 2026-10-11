@@ -4,6 +4,11 @@ import {
 import {
   recalculateRiicRoomTeamCandidateForActiveControlBindings,
 } from "./l62-team-calculation.js";
+import {
+  RIIC_ACTIVE_ROSTER_RUNTIME_RULES,
+  RIIC_ACTIVE_ROSTER_SELECTION_PRIORITY_RULES,
+  riicActiveRosterScopeMatches,
+} from "./riic-active-roster-rule-data.js";
 
 const EPSILON = 1e-9;
 const PREFERRED_SAME_SHIFT_PAIRS = Object.freeze([
@@ -154,6 +159,382 @@ function candidateHasOperator(candidate, operatorId) {
 
 function getCandidateOperatorIdsAtHour(candidate, hour) {
   return getSegmentOperatorIds(getSegmentAtHour(candidate?.segments, hour));
+}
+
+function getEntryScope(entry) {
+  return {
+    roomType: normalizeRoomType(
+      entry?.candidate?.candidateScope?.roomType || entry?.group?.facility,
+    ),
+    product: normalizeProduct(
+      entry?.candidate?.candidateScope?.product ||
+        entry?.group?.candidateProduct,
+    ),
+  };
+}
+
+function getActiveRosterBonusHours({
+  groupEntries = [],
+  ownedOperators = [],
+} = {}) {
+  const candidates = (groupEntries || []).map((entry) => entry?.candidate);
+  const cycles = candidates
+    .map((candidate) => getSegmentCycleHours(candidate?.segments))
+    .filter((cycle) => cycle > 0);
+  const cycleHours = cycles.reduce(
+    (cycle, current) =>
+      cycle > 0 ? leastCommonMultiple(cycle, current) : current,
+    0,
+  );
+  if (cycleHours <= 0) {
+    return 0;
+  }
+
+  const rosterById = new Map(
+    (ownedOperators || []).map((operator) => [
+      String(operator?.charId || "").trim(),
+      operator,
+    ]),
+  );
+  const boundaries = getTimelineBoundaries(candidates, cycleHours);
+  let bonusPercentHours = 0;
+
+  for (let index = 0; index < boundaries.length - 1; index += 1) {
+    const startHour = boundaries[index];
+    const durationHours = boundaries[index + 1] - startHour;
+    const activeEntries = (groupEntries || [])
+      .map((entry) => ({
+        entry,
+        scope: getEntryScope(entry),
+        operatorIds: getCandidateOperatorIdsAtHour(
+          entry?.candidate,
+          startHour,
+        ),
+      }))
+      .filter(({ operatorIds }) => operatorIds.size > 0);
+    const activeOperatorIds = new Set(
+      activeEntries.flatMap(({ operatorIds }) => [...operatorIds]),
+    );
+
+    for (const rule of RIIC_ACTIVE_ROSTER_RUNTIME_RULES) {
+      const owner = rosterById.get(rule.ownerId);
+      if (!owner || Number(owner.elite || 0) < rule.eliteAtLeast) {
+        continue;
+      }
+
+      const ownerIsActive = activeEntries.some(
+        ({ entry, scope, operatorIds }) =>
+          riicActiveRosterScopeMatches(
+            { roomType: rule.roomType, product: rule.product },
+            scope,
+          ) &&
+          operatorIds.has(rule.ownerId) &&
+          String(entry?.candidate?.candidateScope?.roomType || "").trim() !==
+            "control",
+      );
+      if (!ownerIsActive) {
+        continue;
+      }
+
+      const sourceOperatorIds = rule.sourceScope
+        ? new Set(
+            activeEntries
+              .filter(({ scope }) =>
+                riicActiveRosterScopeMatches(rule.sourceScope, scope),
+              )
+              .flatMap(({ operatorIds }) => [...operatorIds]),
+          )
+        : activeOperatorIds;
+      const matchingOperatorCount = Math.min(
+        [...sourceOperatorIds].filter(
+          (operatorId) =>
+            rule.taggedOperatorIds.has(operatorId) &&
+            (!rule.excludeOwner || operatorId !== rule.ownerId),
+        ).length,
+        rule.maximumOperatorCount,
+      );
+      bonusPercentHours +=
+        matchingOperatorCount * rule.percentPerOperator * durationHours;
+    }
+  }
+
+  return bonusPercentHours;
+}
+
+function hasSourceScopedActiveRosterOwner(entry, ownedOperators) {
+  const candidate = entry?.candidate;
+  const scope = getEntryScope(entry);
+  const operatorIds = new Set(
+    (candidate?.segments || []).flatMap((segment) => [
+      ...getSegmentOperatorIds(segment),
+    ]),
+  );
+  const rosterById = new Map(
+    (ownedOperators || []).map((operator) => [
+      String(operator?.charId || "").trim(),
+      operator,
+    ]),
+  );
+
+  return RIIC_ACTIVE_ROSTER_RUNTIME_RULES.some((rule) => {
+    const owner = rosterById.get(rule.ownerId);
+    return (
+      Boolean(rule.sourceScope) &&
+      operatorIds.has(rule.ownerId) &&
+      owner &&
+      Number(owner.elite || 0) >= rule.eliteAtLeast &&
+      riicActiveRosterScopeMatches(
+        { roomType: rule.roomType, product: rule.product },
+        scope,
+      )
+    );
+  });
+}
+
+function getCandidateTeamCoverageByOperator({
+  groupEntries = [],
+  operatorId,
+} = {}) {
+  const candidates = (groupEntries || []).map((entry) => entry?.candidate);
+  const cycles = candidates
+    .map((candidate) => getSegmentCycleHours(candidate?.segments))
+    .filter((cycle) => cycle > 0);
+  const cycleHours = cycles.reduce(
+    (cycle, current) =>
+      cycle > 0 ? leastCommonMultiple(cycle, current) : current,
+    0,
+  );
+  if (cycleHours <= 0) {
+    return new Map();
+  }
+
+  const statsByCandidateKey = new Map();
+  const boundaries = getTimelineBoundaries(candidates, cycleHours);
+  for (let index = 0; index < boundaries.length - 1; index += 1) {
+    const startHour = boundaries[index];
+    const durationHours = boundaries[index + 1] - startHour;
+    const activeEntries = (groupEntries || [])
+      .map((entry) => ({
+        entry,
+        segment: getSegmentAtHour(entry?.candidate?.segments, startHour),
+      }))
+      .filter(({ segment }) => segment);
+    const activeOperatorIds = new Set(
+      activeEntries.flatMap(({ segment }) => [...getSegmentOperatorIds(segment)]),
+    );
+
+    for (const { entry, segment } of activeEntries) {
+      for (const assignment of segment?.stationAssignments || []) {
+        const candidate = assignment?.candidate;
+        const candidateKey = String(candidate?.key || "").trim();
+        if (!candidateKey) {
+          continue;
+        }
+        const key = `${String(entry?.group?.id || "").trim()}:${candidateKey}`;
+        const stats = statsByCandidateKey.get(key) || {
+          groupId: String(entry?.group?.id || "").trim(),
+          candidateKey,
+          activeHours: 0,
+          operatorActiveHours: 0,
+        };
+        stats.activeHours += durationHours;
+        if (activeOperatorIds.has(operatorId)) {
+          stats.operatorActiveHours += durationHours;
+        }
+        statsByCandidateKey.set(key, stats);
+      }
+    }
+  }
+
+  return statsByCandidateKey;
+}
+
+function replaceFallbackOperator(candidate, oldOperatorId, newOperator) {
+  const oldId = String(oldOperatorId || "").trim();
+  const newId = String(newOperator?.charId || "").trim();
+  if (!oldId || !newId || !candidate?.fallback?.operators) {
+    return candidate;
+  }
+  const fallbackOperators = candidate.fallback.operators.map((operator) =>
+    String(operator?.charId || "").trim() === oldId
+      ? { ...newOperator }
+      : operator,
+  );
+  const operators = (candidate.operators || []).map((operator) =>
+    String(operator?.charId || "").trim() === oldId
+      ? {
+          ...(candidate.operators || []).find(
+            (item) => String(item?.charId || "").trim() === newId,
+          ),
+          ...newOperator,
+        }
+      : operator,
+  );
+
+  return {
+    ...candidate,
+    operatorIds: (candidate.operatorIds || []).map((operatorId) =>
+      String(operatorId || "").trim() === oldId ? newId : operatorId,
+    ),
+    operators,
+    fallback: {
+      ...candidate.fallback,
+      operators: fallbackOperators,
+      fallbackOperatorIds: fallbackOperators.map((operator) => operator.charId),
+    },
+  };
+}
+
+function replaceCandidateInEntries(groupEntries, groupId, candidateKey, update) {
+  return (groupEntries || []).map((entry) => {
+    if (String(entry?.group?.id || "").trim() !== groupId) {
+      return entry;
+    }
+
+    return {
+      ...entry,
+      candidate: {
+        ...entry.candidate,
+        segments: (entry.candidate?.segments || []).map((segment) => ({
+          ...segment,
+          stationAssignments: (segment?.stationAssignments || []).map(
+            (assignment) =>
+              String(assignment?.candidate?.key || "").trim() === candidateKey
+                ? {
+                    ...assignment,
+                    candidate: update(assignment.candidate),
+                  }
+                : assignment,
+          ),
+        })),
+      },
+    };
+  });
+}
+
+function alignActiveRosterHangerAssignments(groupEntries) {
+  let alignedEntries = [...(groupEntries || [])];
+  const transfers = [];
+  const teamDiagnostics = [];
+
+  for (const rule of RIIC_ACTIVE_ROSTER_SELECTION_PRIORITY_RULES) {
+    const statsByCandidateKey = getCandidateTeamCoverageByOperator({
+      groupEntries: alignedEntries,
+      operatorId: rule.triggerOperatorId,
+    });
+    const teams = [];
+    for (const entry of alignedEntries) {
+      for (const segment of entry?.candidate?.segments || []) {
+        for (const assignment of segment?.stationAssignments || []) {
+          const candidate = assignment?.candidate;
+          const groupId = String(entry?.group?.id || "").trim();
+          const candidateKey = String(candidate?.key || "").trim();
+          const stats = statsByCandidateKey.get(`${groupId}:${candidateKey}`);
+          if (!stats || teams.some((team) =>
+            team.groupId === groupId && team.candidateKey === candidateKey,
+          )) {
+            continue;
+          }
+          teams.push({
+            groupId,
+            candidateKey,
+            candidate,
+            operatorIds: candidate.operatorIds || [],
+            fallbackOperators: candidate.fallback?.operators || [],
+            coverage:
+              stats.activeHours > 0
+                ? stats.operatorActiveHours / stats.activeHours
+                : 0,
+          });
+        }
+      }
+    }
+    teamDiagnostics.push({
+      triggerOperatorId: rule.triggerOperatorId,
+      teams: teams.map((team) => ({
+        groupId: team.groupId,
+        candidateKey: team.candidateKey,
+        operatorIds: team.operatorIds,
+        coverage: team.coverage,
+        fallbackOperators: team.fallbackOperators.map((operator) => ({
+          charId: operator?.charId,
+          idleFill: operator?.idleFill === true,
+          hangerPriority: Number(operator?.hangerPriority || 0),
+        })),
+      })),
+    });
+
+    for (const source of teams) {
+      const hanger = (source.candidate?.fallback?.operators || []).find(
+        (operator) =>
+          rule.taggedOperatorIds.has(String(operator?.charId || "").trim()) &&
+          (operator?.idleFill === true || Number(operator?.hangerPriority) > 0),
+      );
+      if (!hanger || source.coverage > 0) {
+        continue;
+      }
+
+      const target = teams
+        .filter(
+          (team) =>
+            team.groupId === source.groupId &&
+            team.candidateKey !== source.candidateKey &&
+            team.coverage > source.coverage,
+        )
+        .sort((left, right) => right.coverage - left.coverage)
+        .find((team) =>
+          (team.candidate?.fallback?.operators || []).some(
+            (operator) =>
+              operator?.idleFill === true &&
+              !rule.taggedOperatorIds.has(
+                String(operator?.charId || "").trim(),
+              ),
+          ),
+        );
+      if (!target) {
+        continue;
+      }
+
+      const replacement = (target.candidate?.fallback?.operators || []).find(
+        (operator) =>
+          operator?.idleFill === true &&
+          !rule.taggedOperatorIds.has(String(operator?.charId || "").trim()),
+      );
+      if (!replacement) {
+        continue;
+      }
+
+      alignedEntries = replaceCandidateInEntries(
+        alignedEntries,
+        source.groupId,
+        source.candidateKey,
+        (candidate) =>
+          replaceFallbackOperator(candidate, hanger.charId, replacement),
+      );
+      alignedEntries = replaceCandidateInEntries(
+        alignedEntries,
+        target.groupId,
+        target.candidateKey,
+        (candidate) =>
+          replaceFallbackOperator(candidate, replacement.charId, hanger),
+      );
+      transfers.push({
+        groupId: source.groupId,
+        triggerOperatorId: rule.triggerOperatorId,
+        operatorId: hanger.charId,
+        fromCandidateKey: source.candidateKey,
+        toCandidateKey: target.candidateKey,
+      });
+      source.coverage = 1;
+      target.coverage = 0;
+    }
+  }
+
+  return {
+    groupEntries: alignedEntries,
+    transfers,
+    teamDiagnostics,
+  };
 }
 
 function getCandidatePairSameShiftHours({
@@ -787,6 +1168,7 @@ function alignPreferredSameShiftPairs({
 export function alignRiicScheduleSameShiftBindings({
   groupEntries = [],
   lockedOperatorIds = [],
+  ownedOperators = [],
 } = {}) {
   const controlEntry = (groupEntries || []).find(
     (entry) => String(entry?.group?.facility || "") === "control",
@@ -984,8 +1366,88 @@ export function alignRiicScheduleSameShiftBindings({
     };
   });
 
+  // L70 selects teams before same-shift groups are phase-aligned. Recheck
+  // source-scoped active-roster effects afterward so those rotations cannot
+  // leave the owner and its source team on different shifts.
+  const activeRosterAlignedEntries = [...alignedEntries];
+  const activeRosterAlignment = [];
+  const activeRosterAlignmentOrder = activeRosterAlignedEntries
+    .map((entry, index) => ({ entry, index }))
+    .filter(({ entry }) =>
+      hasSourceScopedActiveRosterOwner(entry, ownedOperators),
+    );
+
+  for (const { entry, index } of activeRosterAlignmentOrder) {
+    const candidate = activeRosterAlignedEntries[index]?.candidate;
+    const segmentCount = candidate?.segments?.length || 0;
+    const initialBonusPercentHours = getActiveRosterBonusHours({
+      groupEntries: activeRosterAlignedEntries,
+      ownedOperators,
+    });
+    let selectedOffset = 0;
+    let selectedBonusPercentHours = initialBonusPercentHours;
+    const attempts = [{
+      offset: 0,
+      bonusPercentHours: initialBonusPercentHours,
+      selected: true,
+    }];
+
+    for (let offset = 1; offset < segmentCount; offset += 1) {
+      const rotatedCandidate = rotateCandidateSegments(candidate, offset);
+      const rotatedEntries = activeRosterAlignedEntries.map(
+        (currentEntry, currentIndex) =>
+          currentIndex === index
+            ? { ...currentEntry, candidate: rotatedCandidate }
+            : currentEntry,
+      );
+      const bonusPercentHours = getActiveRosterBonusHours({
+        groupEntries: rotatedEntries,
+        ownedOperators,
+      });
+      const selected =
+        bonusPercentHours > selectedBonusPercentHours + EPSILON;
+      attempts.push({ offset, bonusPercentHours, selected });
+      if (selected) {
+        selectedOffset = offset;
+        selectedBonusPercentHours = bonusPercentHours;
+      }
+    }
+
+    if (selectedOffset > 0) {
+      activeRosterAlignedEntries[index] = rotateEntryCandidate({
+        entry: activeRosterAlignedEntries[index],
+        offset: selectedOffset,
+        controlCandidate,
+      });
+    }
+    const alignment = {
+      groupId: String(entry?.group?.id || "").trim(),
+      ownerOperatorIds: [
+        ...(candidate?.segments || []).flatMap((segment) => [
+          ...getSegmentOperatorIds(segment),
+        ]),
+      ].filter((operatorId) =>
+        RIIC_ACTIVE_ROSTER_RUNTIME_RULES.some(
+          (rule) => rule.sourceScope && rule.ownerId === operatorId,
+        ),
+      ),
+      initialBonusPercentHours,
+      finalBonusPercentHours: selectedBonusPercentHours,
+      selectedOffset,
+      attempts,
+    };
+    activeRosterAlignment.push(alignment);
+    const debugGroup = debugGroups[index];
+    if (debugGroup) {
+      debugGroup.activeRosterAlignment = alignment;
+    }
+  }
+
+  const activeRosterHangerAlignment = alignActiveRosterHangerAssignments(
+    activeRosterAlignedEntries,
+  );
   const preferredSameShiftAlignment = alignPreferredSameShiftPairs({
-    groupEntries: alignedEntries,
+    groupEntries: activeRosterHangerAlignment.groupEntries,
     controlCandidate,
   });
 
@@ -1019,6 +1481,11 @@ export function alignRiicScheduleSameShiftBindings({
         ),
       },
       groups: debugGroups,
+      activeRosterAlignment,
+      activeRosterHangerTransfers:
+        activeRosterHangerAlignment.transfers,
+      activeRosterHangerDiagnostics:
+        activeRosterHangerAlignment.teamDiagnostics,
       preferredSameShift: preferredSameShiftAlignment.debug,
     },
   };

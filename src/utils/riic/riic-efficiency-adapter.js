@@ -8,7 +8,10 @@ import {
   DEFAULT_LMD_DRONE_STRATEGIES,
   facilityId,
   formatBasePointSource as formatPackageBasePointSource,
+  RECYCLE_OUTPUT_PRODUCT,
 } from "/src/vendor/riic-efficiency/dist/index.js";
+import ITEM_INFO from "/src/static/json/material/item_info.json";
+import RECYCLE_RULES_DATA from "/src/static/json/tools/riic-recycle-rules.json";
 
 export {
   buildDailyOutputDisplay,
@@ -47,12 +50,71 @@ if (!ruleset || !termsData) {
   throw new Error("riic-efficiency 规则或术语数据未加载");
 }
 
+const itemIdByName = new Map(
+  ITEM_INFO.map((item) => [String(item.itemName || "").trim(), String(item.itemId || "")]),
+);
+
+function resolveRecycleItem(item) {
+  const name = String(item?.name || "").trim();
+  const itemId = itemIdByName.get(name);
+  if (!name || !itemId) {
+    throw new Error(`回收站物品不在本地物品表中：${name || "未知物品"}`);
+  }
+  return { ...item, itemId, name };
+}
+
+function createRecycleRules() {
+  const poolStart = Date.parse(RECYCLE_RULES_DATA.poolValidFrom);
+  const poolEnd = Date.parse(RECYCLE_RULES_DATA.poolValidUntil);
+  const now = Date.now();
+  const outputPool =
+    Number.isFinite(poolStart) && Number.isFinite(poolEnd) &&
+    poolStart <= now && now <= poolEnd
+      ? {
+          id: RECYCLE_RULES_DATA.outputPool.id,
+          extraPoolId: RECYCLE_RULES_DATA.outputPool.extraPoolId,
+          extraPoolRequirement:
+            RECYCLE_RULES_DATA.outputPool.extraPoolRequirement,
+          normalItems: RECYCLE_RULES_DATA.outputPool.normalItems.map(resolveRecycleItem),
+          extraItems: RECYCLE_RULES_DATA.outputPool.extraItems.map(resolveRecycleItem),
+        }
+      : undefined;
+
+  return {
+    basicSpeedBuff: RECYCLE_RULES_DATA.basicSpeedBuff,
+    phases: RECYCLE_RULES_DATA.phases,
+    timeRequirement: RECYCLE_RULES_DATA.timeRequirementSeconds,
+    baseCapacity: RECYCLE_RULES_DATA.baseCapacity,
+    boostSpeed: RECYCLE_RULES_DATA.boostSpeed,
+    boostLimit: RECYCLE_RULES_DATA.boostLimitHours * 3600,
+    boostLimitProtect: RECYCLE_RULES_DATA.boostLimitProtectHours * 3600,
+    speedUpUnlockLevel: RECYCLE_RULES_DATA.speedUpUnlockLevel,
+    twoPersonUnlockLevel: RECYCLE_RULES_DATA.twoPersonUnlockLevel,
+    inputItems: RECYCLE_RULES_DATA.inputItems.map((item) => ({
+      ...resolveRecycleItem(item),
+      addedTime: item.addedHours * 3600,
+    })),
+    ...(outputPool ? { outputPool } : {}),
+  };
+}
+
+const recycleRules = createRecycleRules();
+const rulesetWithRecycle = { ...ruleset, recycle: recycleRules };
+
+export const RIIC_RECYCLE_BOOST_OPTIONS = Object.freeze(
+  recycleRules.inputItems.map(({ itemId, name, addedTime }) => ({
+    itemId,
+    name,
+    addedTime,
+  })),
+);
+
 const catalog = {
   ...createEfficiencyCatalog(
     Object.values(operatorModules),
     termsData.terms,
   ),
-  ruleset,
+  ruleset: rulesetWithRecycle,
 };
 
 export function buildResultDisplay(result, options = {}) {
@@ -139,6 +201,7 @@ export const DEFAULT_RIIC_EFFICIENCY_SETTINGS = Object.freeze({
 export function normalizeRiicEfficiencySettings(value) {
   const source = value && typeof value === "object" ? value : {};
   const firstItemProgress = Number(source.firstItemProgress);
+  const recycleBoostItemId = String(source.recycleBoostItemId || "").trim();
 
   return {
     clueExchanging: source.clueExchanging !== false,
@@ -150,6 +213,11 @@ export function normalizeRiicEfficiencySettings(value) {
     firstItemProgress: Number.isFinite(firstItemProgress)
       ? Math.max(0, Math.min(1, firstItemProgress))
       : DEFAULT_RIIC_EFFICIENCY_SETTINGS.firstItemProgress,
+    ...(RIIC_RECYCLE_BOOST_OPTIONS.some(
+      (item) => item.itemId === recycleBoostItemId,
+    )
+      ? { recycleBoostItemId }
+      : {}),
   };
 }
 
@@ -311,6 +379,9 @@ export function buildRiicEfficiencySchedule(
     plan.fiammettaTarget ? { operators: [plan.fiammettaTarget] } : {},
   );
   const normalizedPlans = plans.map(({ fiammettaTarget, ...plan }) => plan);
+  const normalizedEfficiencySettings = normalizeRiicEfficiencySettings(
+    efficiencySettings,
+  );
 
   return {
     ...sourceSchedule,
@@ -318,7 +389,7 @@ export function buildRiicEfficiencySchedule(
     plans: normalizedPlans,
     fiammetta: { queue: fiammettaQueue },
     settings: {
-      ...normalizeRiicEfficiencySettings(efficiencySettings),
+      ...normalizedEfficiencySettings,
       fiammettaMode: "queue",
       tradeOrderCount,
     },
@@ -326,7 +397,10 @@ export function buildRiicEfficiencySchedule(
 }
 
 export function calculateRiicEfficiency(schedule) {
-  return calculateEfficiency(schedule, { catalog, ruleset });
+  return calculateEfficiency(schedule, {
+    catalog,
+    ruleset: rulesetWithRecycle,
+  });
 }
 
 function facilityById(plan, key) {
@@ -557,6 +631,17 @@ export function createRiicEfficiencyYield(
   });
   const dailyProduction = (product) =>
     (result.dailyProductions || []).find((item) => item.product === product);
+  const recycleProduction = dailyProduction(RECYCLE_OUTPUT_PRODUCT);
+  const recycleMaterialPerHour =
+    recycleProduction?.effectiveMaterialPerHour ||
+    recycleProduction?.materialPerHour ||
+    {};
+  const recycleBoostConsumption = Object.entries(recycleMaterialPerHour)
+    .filter(([, amount]) => Number(amount) < 0)
+    .map(([name, amount]) => ({
+      ...resolveRecycleItem({ name }),
+      amountPerDay: -Number(amount) * 24,
+    }));
   const orundumProduction = dailyProduction("合成玉");
   const shardProduction = dailyProduction("源石碎片");
   const craftMaterial = String(
@@ -599,6 +684,8 @@ export function createRiicEfficiencyYield(
     overviewResources: createResourceRows(result, result.document, {
       dailyOverview: true,
     }),
+    recycleOutputs: result.recycleOutputs || [],
+    recycleBoostConsumption,
     roomCount: rooms.length,
     calculatedRoomCount: rooms.filter((room) =>
       room.segments.some((segment) => segment.calculated),

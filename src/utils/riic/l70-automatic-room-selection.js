@@ -15,8 +15,10 @@ import {
   normalizeRiicFiammettaRecovery,
 } from "./l65-fiammetta-recovery.js";
 import {
+  buildRiicActiveOperatorIdsByStateIndex,
   evaluateRiicActiveRosterPlanEffects,
   getRiicActiveRosterCandidatePriority,
+  getRiicActiveOperatorIdsForStateIndexes,
 } from "./l65-active-roster-effects.js";
 import {
   RIIC_ACTIVE_ROSTER_RUNTIME_RULES,
@@ -195,6 +197,9 @@ function getAutomaticRoomTeamOptions({
   controlCenterRuntimeContext,
   fallbackPlanLimit,
   claimedOperatorIds = new Set(),
+  activeOperatorIds = null,
+  activeStateIndexes = [],
+  staffingRotationSegments = [],
   fiammettaTargetStateIndexes = new Set(),
   fiammettaRecovery,
   ownedOperators,
@@ -227,10 +232,12 @@ function getAutomaticRoomTeamOptions({
     facility === "power" &&
     teamIndex === 0 &&
     !claimedOperatorIds.has(reservedPowerOperatorId);
-  const activeSelectionOperatorIds = new Set([
-    ...controlCenterOperatorIds,
-    ...claimedOperatorIds,
-  ]);
+  const activeSelectionOperatorIds = new Set(
+    activeOperatorIds ?? [
+      ...controlCenterOperatorIds,
+      ...claimedOperatorIds,
+    ],
+  );
   const isReusableTarget = (charId) =>
     recovery.enabled && charId === recovery.targetOperatorId;
   const candidateUsesReusableTarget = coreOperatorIds.some((charId) =>
@@ -370,6 +377,10 @@ function getAutomaticRoomTeamOptions({
         ),
         fiammettaTargetStateIndexes: targetStateIndexes,
         teamIndex,
+        activeStateIndexes,
+        staffingTeamIndex: teamIndex,
+        staffingRotationSegments,
+        activeOperatorIds: [...activeSelectionOperatorIds],
         materializedCandidate,
         activeRosterPriority,
         baseRankingValue,
@@ -418,6 +429,7 @@ function createSelectionCohorts({
         candidateProduct: group.candidateProduct || "all",
         candidates: cohort.candidates || [],
         staffingCohort: cohort,
+        rotationSegments: cohort.rotationSegments || [],
       });
     }
   }
@@ -481,6 +493,11 @@ function createAutomaticSelectionDiagnostics({
       key: option?.key || "",
       candidateName: option?.materializedCandidate?.name || "",
       operatorIds: option?.materializedCandidate?.operatorIds || [],
+      activeStateIndexes: option?.activeStateIndexes || [],
+      staffingTeamIndex: option?.staffingTeamIndex,
+      staffingRotationSegments: option?.staffingRotationSegments || [],
+      activeOperatorIds: option?.activeOperatorIds || [],
+      activeRosterPriority: option?.activeRosterPriority || null,
       fallbackPlanScore: Number(option?.fallbackPlan?.score || 0),
       rankingValue: Number(option?.rankingValue || 0),
     });
@@ -553,6 +570,8 @@ export function buildRiicAutomaticRoomGroupSelections({
       .map((charId) => String(charId || "").trim())
       .filter(Boolean),
   );
+  const controlCenterActiveOperatorIdsByStateIndex =
+    buildRiicActiveOperatorIdsByStateIndex(controlCenterSegments);
   const recovery = normalizeRiicFiammettaRecovery({
     ...fiammettaRecovery,
   });
@@ -653,14 +672,55 @@ export function buildRiicAutomaticRoomGroupSelections({
       claimedOperatorIds,
       fiammettaTargetStateIndexes,
       selectedCandidateKeys,
+      plan,
     }) => {
       const teamIndex = Number(
         String(selectionKey || "").split(":").at(-1),
       );
+      const staffingCohort =
+        cohort.rotationSegments?.length > 0
+          ? cohort
+          : cohort.staffingCohort?.rotationSegments?.length > 0
+            ? cohort.staffingCohort
+          : cohort;
       const targetStateIndexes = getRiicFiammettaTeamStateIndexes(
-        cohort.staffingCohort,
+        staffingCohort,
         teamIndex,
       );
+      const priorSelectedEntries = (plan?.selections || []).map(
+        (selection) => {
+          const selectedTeamIndex = Number(
+            selection?.option?.teamIndex ??
+              String(selection?.selectionKey || "").split(":").at(-1),
+          );
+          return {
+            groupId: selection?.slot?.groupId,
+            selectionKey: selection?.selectionKey,
+            cohort:
+              selection?.slot?.rotationSegments?.length > 0
+                ? selection.slot
+                : selection?.slot?.staffingCohort?.rotationSegments?.length > 0
+                  ? selection.slot.staffingCohort
+                : selection?.slot,
+            teamIndex: selectedTeamIndex,
+            candidate: {
+              operatorIds:
+                selection?.option?.materializedCandidate?.operatorIds || [],
+            },
+          };
+        },
+      );
+      const activeOperatorIds = getRiicActiveOperatorIdsForStateIndexes({
+        selectedEntries: priorSelectedEntries,
+        stateIndexes: targetStateIndexes,
+        baseActiveOperatorIdsByStateIndex:
+          controlCenterActiveOperatorIdsByStateIndex,
+        baseActiveOperatorIds:
+          targetStateIndexes.length === 0 &&
+          controlCenterSegments.length === 0
+            ? [...normalizedControlCenterOperatorIds]
+            : [],
+      });
 
       const candidates = cohort.candidates || [];
       const candidateOptions = candidates
@@ -692,6 +752,9 @@ export function buildRiicAutomaticRoomGroupSelections({
               controlCenterRuntimeContext,
               fallbackPlanLimit,
               claimedOperatorIds,
+              activeOperatorIds,
+              activeStateIndexes: targetStateIndexes,
+              staffingRotationSegments: staffingCohort.rotationSegments || [],
               fiammettaTargetStateIndexes,
               fiammettaRecovery: {
                 ...recovery,
@@ -788,6 +851,11 @@ export function buildRiicAutomaticRoomGroupSelections({
               key: item.key,
               candidateName: item.materializedCandidate?.name || "",
               operatorIds: item.materializedCandidate?.operatorIds || [],
+              activeStateIndexes: item.activeStateIndexes || [],
+              staffingTeamIndex: item.staffingTeamIndex,
+              staffingRotationSegments: item.staffingRotationSegments || [],
+              activeOperatorIds: item.activeOperatorIds || [],
+              activeRosterPriority: item.activeRosterPriority || null,
               fallbackPlanScore: Number(item.fallbackPlan?.score || 0),
               rankingValue: Number(item.rankingValue || 0),
             })),

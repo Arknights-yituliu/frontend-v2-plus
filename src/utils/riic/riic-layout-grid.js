@@ -44,6 +44,7 @@ export function getRiicLayoutCells(rooms = []) {
   cells[18] = getFacilityRoom("dormitory", 2);
   cells[19] = getFacilityRoom("training");
   cells[23] = getFacilityRoom("dormitory", 3);
+  cells[24] = getFacilityRoom("recycle");
 
   return cells;
 }

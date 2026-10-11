@@ -5,6 +5,7 @@ import {
 } from "./l65-fiammetta-recovery.js";
 import {
   applyRiicActiveRosterFallbackOperatorEffects,
+  getRiicActiveRosterCandidatePriority,
 } from "./l65-active-roster-effects.js";
 import {
   RIIC_ACTIVE_ROSTER_RUNTIME_RULES,
@@ -25,19 +26,56 @@ function normalizeCount(value) {
   return Number.isFinite(count) ? Math.max(0, Math.trunc(count)) : 0;
 }
 
-function compareFallbackOperators(left, right) {
-  const leftIsIdleFill = Boolean(left?.idleFill);
-  const rightIsIdleFill = Boolean(right?.idleFill);
-  if (leftIsIdleFill !== rightIsIdleFill) {
-    return Number(leftIsIdleFill) - Number(rightIsIdleFill);
+function normalizeIdleOrderValue(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : Number.POSITIVE_INFINITY;
+}
+
+/**
+ * Fallback fill tiers, strongest first:
+ * 0. room-provided fill with a real skill rate (旅骨 20%/30% in 回收站);
+ * 1. active-roster hanger parked for its cross-room effect (S.E.E.S./莱茵生命);
+ * 2. ordinary fill: the recycle room's synthesized 1% rate, or the R71 idle pool.
+ */
+function getFallbackFillTier(operator) {
+  if (!operator?.idleFill && !operator?.isDefaultFill) {
+    return 0;
   }
 
-  if (leftIsIdleFill) {
-    const idlePriorityDifference =
-      normalizePercent(left?.idleFillPriority) -
-      normalizePercent(right?.idleFillPriority);
-    if (idlePriorityDifference !== 0) {
-      return idlePriorityDifference;
+  return normalizePercent(operator?.hangerPriority) > 0 ? 1 : 2;
+}
+
+function compareFallbackOperators(left, right) {
+  const leftTier = getFallbackFillTier(left);
+  const rightTier = getFallbackFillTier(right);
+  if (leftTier !== rightTier) {
+    return leftTier - rightTier;
+  }
+
+  if (leftTier === 1) {
+    // 挂件按 roomPriority 降序：结城理→S.E.E.S.(5) 先于 娜斯提→莱茵生命(3)。
+    const hangerDifference =
+      normalizePercent(right?.hangerPriority) -
+      normalizePercent(left?.hangerPriority);
+    if (hangerDifference !== 0) {
+      return hangerDifference;
+    }
+  }
+
+  if (leftTier === 2) {
+    // 普通补位沿用 R71 的闲置优先级：档位（纯宿舍 → … → 其余）→ 名单 → 名字。
+    const idleTierDifference =
+      normalizeIdleOrderValue(left?.idleFillPriority) -
+      normalizeIdleOrderValue(right?.idleFillPriority);
+    if (idleTierDifference !== 0) {
+      return idleTierDifference;
+    }
+
+    const idleNameDifference =
+      normalizeIdleOrderValue(left?.idleFillNamedPriority) -
+      normalizeIdleOrderValue(right?.idleFillNamedPriority);
+    if (idleNameDifference !== 0) {
+      return idleNameDifference;
     }
   }
 
@@ -99,6 +137,19 @@ function normalizeFallbackOperator(operator, { idleFill = false } = {}) {
     idleFill: idleFill || Boolean(operator?.idleFill),
     idleFillTier: String(operator?.idleFillTier || "").trim(),
     idleFillPriority: normalizePercent(operator?.idleFillPriority),
+    // 回收站候选池里"人人都有的 1% 兜底"标记，用来把它和真实补位区分开。
+    isDefaultFill: Boolean(operator?.isDefaultFill),
+    // 活跃名单挂件的 roomPriority（结城理→S.E.E.S. 5 / 娜斯提→莱茵生命 3）。
+    hangerPriority: normalizePercent(
+      operator?.hangerPriority ?? operator?.roomPriority,
+    ),
+    // R71 的名单顺序（priorityNames）在闲置池排序里是最先比较的键，
+    // 之前这里把它丢掉了，挂件这类后注入的候选就永远排在名单干员后面。
+    idleFillNamedPriority: Number.isFinite(
+      Number(operator?.idleFillNamedPriority),
+    )
+      ? Number(operator.idleFillNamedPriority)
+      : Number.POSITIVE_INFINITY,
     tags: [
       ...new Set(
         (operator?.tags || [])
@@ -109,6 +160,91 @@ function normalizeFallbackOperator(operator, { idleFill = false } = {}) {
     publicSkill: Boolean(operator?.publicSkill),
     upgradeRequirement: operator?.upgradeRequirement || null,
   };
+}
+
+function getRecycleCandidateRoomType(candidate) {
+  return String(
+    candidate?.candidateScope?.roomType ||
+      candidate?.scope?.roomType ||
+      candidate?.fallback?.scope?.roomType ||
+      String(candidate?.fallback?.poolKey || "").split(":")[0] ||
+      "",
+  ).trim();
+}
+
+/**
+ * 每个槽位用自己班次（selectionKey = cohort:teamIndex）的在岗名单；
+ * 没有分班信息时回落到整份排班的口径。
+ */
+function getActiveOperatorIdsForSelectionKey({
+  activeOperatorIdsBySelectionKey = null,
+  groupId = "",
+  selectionKey = "",
+  fallbackActiveOperatorIds = [],
+} = {}) {
+  const normalizedSelectionKey = String(selectionKey || "").trim();
+  const scopedKey = groupId
+    ? `${String(groupId).trim()}:${normalizedSelectionKey}`
+    : normalizedSelectionKey;
+  const keyed =
+    activeOperatorIdsBySelectionKey?.[scopedKey] ??
+    activeOperatorIdsBySelectionKey?.[normalizedSelectionKey];
+  return Array.isArray(keyed) ? keyed : fallbackActiveOperatorIds;
+}
+
+function getRecycleHangerFillOperators({
+  ownedOperators = [],
+  activeOperatorIds = [],
+} = {}) {
+  const activeIds = Array.from(activeOperatorIds || [])
+    .map((operatorId) => String(operatorId || "").trim())
+    .filter(Boolean);
+  if (activeIds.length === 0) {
+    return [];
+  }
+
+  return (ownedOperators || []).flatMap((operator) => {
+    const charId = normalizeOperatorId(operator?.charId);
+    if (!charId) {
+      return [];
+    }
+
+    const { roomPriority } = getRiicActiveRosterCandidatePriority({
+      candidate: { operatorIds: [charId] },
+      activeOperatorIds: activeIds,
+    });
+    if (roomPriority <= 0) {
+      return [];
+    }
+
+    // 与 L71 的闲置候选保持同一种形状，并给一个低于所有档位的排序值，
+    // 让挂件排在房间自带补位之后、普通闲置补位之前。
+    return [
+      {
+        charId,
+        name: String(operator?.name || charId).trim() || charId,
+        percent: 1,
+        basePercent: 1,
+        effectivePercent: 1,
+        fillPriority: 0,
+        tags: Array.isArray(operator?.tags) ? operator.tags : [],
+        idleFill: true,
+        hangerPriority: roomPriority,
+        idleFillTier: `roster-hanger:${roomPriority}`,
+        idleFillPriority: -1000 - roomPriority,
+        idleFillNamedPriority: -1000 - roomPriority,
+        roomPriority,
+      },
+    ];
+  })
+    // 按房间优先级降序挑选，而不是按持有名单顺序碰运气。
+    .sort(
+      (left, right) =>
+        normalizePercent(right.roomPriority) -
+          normalizePercent(left.roomPriority) ||
+        left.name.localeCompare(right.name, "zh-CN") ||
+        left.charId.localeCompare(right.charId, "en"),
+    );
 }
 
 function getCandidateFallbackOperators(
@@ -133,14 +269,58 @@ function getCandidateFallbackOperators(
     }
   };
 
+  // 回收站候选池会给每名持有干员合成一条 1% 的兜底条目，这些条目本身没有
+  // R71 的闲置档位/名单信息。这里用同一名干员的 R71 闲置候选补齐排序键，
+  // 让"随便放"档仍然按 R71 的档位（纯宿舍 → … → 其余）和名单挑人。
+  const idleOrderByCharId = new Map(
+    (candidate?.fallback?.idleCandidateOperators || []).flatMap((operator) => {
+      const charId = normalizeOperatorId(operator?.charId);
+      return charId ? [[charId, operator]] : [];
+    }),
+  );
+  const withIdleOrder = (operators) =>
+    (operators || []).map((operator) => {
+      if (operator?.isDefaultFill !== true) {
+        return operator;
+      }
+
+      const idleOrder = idleOrderByCharId.get(
+        normalizeOperatorId(operator?.charId),
+      );
+      return idleOrder
+        ? {
+            ...operator,
+            idleFillTier: idleOrder.idleFillTier,
+            idleFillPriority: idleOrder.idleFillPriority,
+            idleFillNamedPriority: idleOrder.idleFillNamedPriority,
+          }
+        : operator;
+    });
+
   addOperators(
-    candidate?.fallback?.candidateOperators ||
-      candidate?.fallback?.operators ||
-      [],
+    withIdleOrder(
+      candidate?.fallback?.candidateOperators ||
+        candidate?.fallback?.operators ||
+        [],
+    ),
   );
   addOperators(candidate?.fallback?.idleCandidateOperators || [], {
     idleFill: true,
   });
+
+  // 回收站的槽位本质是停车位：先用房间自带的可用补位（旅骨），
+  // 没有可用补位时按活跃名单抓挂件（结城理→S.E.E.S.、娜斯提→莱茵生命），
+  // 最后才轮到普通闲置补位。
+  const candidateRoomType = getRecycleCandidateRoomType(candidate);
+  if (candidateRoomType === "recycle") {
+    addOperators(
+      getRecycleHangerFillOperators({
+        ownedOperators,
+        activeOperatorIds,
+      }),
+      { idleFill: true },
+    );
+  }
 
   return applyRiicActiveRosterFallbackOperatorEffects({
     candidate,
@@ -179,6 +359,7 @@ function getFallbackSlots(selectedEntries) {
       entry?.candidate?.fallback?.taggedMemberRequirements || []
     ).map((requirement, index) => ({
       key: `${selectionKey || candidateKey}:tagged-member:${index}`,
+      groupId: entry.groupId || "",
       selectionKey,
       candidate: entry.candidate,
       kind: "taggedMember",
@@ -193,6 +374,7 @@ function getFallbackSlots(selectedEntries) {
     const count = Math.max(0, Number(entry?.candidate?.fallback?.count || 0));
     const fallbackSlots = Array.from({ length: count }, (_, index) => ({
       key: `${selectionKey || candidateKey}:fallback:${index}`,
+      groupId: entry.groupId || "",
       selectionKey,
       candidate: entry.candidate,
       kind: "fallback",
@@ -494,6 +676,7 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
   excludedOperatorIds = new Set(),
   ownedOperators = [],
   activeOperatorIds = [],
+  activeOperatorIdsBySelectionKey = null,
   fiammettaRecovery = null,
   maxPlanCount = 12,
 }) {
@@ -534,7 +717,12 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
         slot.candidate,
         {
           ownedOperators,
-          activeOperatorIds,
+          activeOperatorIds: getActiveOperatorIdsForSelectionKey({
+            activeOperatorIdsBySelectionKey,
+            groupId: slot.groupId,
+            selectionKey: slot.selectionKey,
+            fallbackActiveOperatorIds: activeOperatorIds,
+          }),
         },
       ).filter((operator) =>
         operatorMatchesRequiredTags(operator, slot.requiredTags),
@@ -815,6 +1003,7 @@ export function createRiicRoomGroupFallbackPlan({
   excludedOperatorIds = new Set(),
   ownedOperators = [],
   activeOperatorIds = [],
+  activeOperatorIdsBySelectionKey = null,
   fiammettaRecovery = null,
   preferredOperatorIdBySlotKey = {},
   preferredOperatorIds = [],
@@ -844,7 +1033,12 @@ export function createRiicRoomGroupFallbackPlan({
   const slotOptions = slots.map((slot) => {
     const operators = getCandidateFallbackOperators(slot.candidate, {
       ownedOperators,
-      activeOperatorIds,
+      activeOperatorIds: getActiveOperatorIdsForSelectionKey({
+        activeOperatorIdsBySelectionKey,
+        groupId: slot.groupId,
+        selectionKey: slot.selectionKey,
+        fallbackActiveOperatorIds: activeOperatorIds,
+      }),
     })
       .filter((operator) =>
         operatorMatchesRequiredTags(operator, slot.requiredTags),
@@ -899,17 +1093,71 @@ export function createRiicRoomGroupFallbackPlan({
   const preferredBySlotKey = normalizePreferredOperatorIdBySlotKey(
     preferredOperatorIdBySlotKey,
   );
+  // 回收站的补位偏好（保存下来的补位队列）会把 1% 兜底干员钉在槽位上，
+  // 于是房间自带补位和挂件永远轮不到。这里按"房间自带补位（旅骨一类）→
+  // 活跃名单挂件 → 保存的偏好"的顺序补位。
+  const isRecycleSlot = (slot) =>
+    getRecycleCandidateRoomType(slot?.candidate) === "recycle";
+  const pickRecycleRoomFillForSlot = (slot) => {
+    const operator = slot.operators.find(
+      (candidateOperator) =>
+        candidateOperator.isDefaultFill !== true &&
+        candidateOperator.idleFill !== true &&
+        canSelect(slot, candidateOperator),
+    );
+    return operator || null;
+  };
+  const pickRecycleHangerForSlot = (slot) => {
+    for (const hanger of getRecycleHangerFillOperators({
+      ownedOperators,
+      activeOperatorIds: getActiveOperatorIdsForSelectionKey({
+        activeOperatorIdsBySelectionKey,
+        groupId: slot.groupId,
+        selectionKey: slot.selectionKey,
+        fallbackActiveOperatorIds: activeOperatorIds,
+      }),
+    })) {
+      if (selectedIds.has(hanger.charId)) {
+        continue;
+      }
+      const operator = slot.operators.find(
+        (candidateOperator) => candidateOperator.charId === hanger.charId,
+      );
+      if (operator && canSelect(slot, operator)) {
+        return operator;
+      }
+    }
+    return null;
+  };
   for (const slot of slotOptions) {
     const charId = preferredBySlotKey.get(slot.key);
-    if (!charId) {
+    const preferredOperator = charId
+      ? slot.operators.find(
+          (candidateOperator) => candidateOperator.charId === charId,
+        )
+      : null;
+    // 只有"房间自带补位（旅骨一类，真实技能倍率）"才保留保存的偏好；
+    // 偏好落在 1% 兜底条目或闲置池上时，回收站重新按优先级挑人。
+    const preferredIsRoomFill =
+      Boolean(preferredOperator) &&
+      preferredOperator.idleFill !== true &&
+      preferredOperator.isDefaultFill !== true;
+
+    if (isRecycleSlot(slot) && !preferredIsRoomFill) {
+      const recycleOperator =
+        pickRecycleRoomFillForSlot(slot) || pickRecycleHangerForSlot(slot);
+      if (recycleOperator) {
+        selectOperatorForSlot(slot, recycleOperator);
+        continue;
+      }
+    }
+
+    if (!preferredOperator) {
       continue;
     }
 
-    const operator = slot.operators.find(
-      (candidateOperator) => candidateOperator.charId === charId,
-    );
-    if (operator && canSelect(slot, operator)) {
-      selectOperatorForSlot(slot, operator);
+    if (canSelect(slot, preferredOperator)) {
+      selectOperatorForSlot(slot, preferredOperator);
     }
   }
 

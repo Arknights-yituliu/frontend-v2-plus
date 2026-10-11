@@ -99,6 +99,8 @@ export function runRiicAutomaticSchedule(input = {}) {
     fallbackOperatorIdBySlotKeyByGroup:
       automaticSelection.fallbackOperatorIdBySlotKeyByGroup,
     controlCenterOperatorIds: input.controlCenterOperatorIds,
+    controlCenterSegments: input.controlCenterSegments,
+    ownedOperators: input.ownedOperators,
     idleFillOperators: input.idleFillOperators,
     fiammettaRecovery: input.fiammettaRecovery,
     fiammettaControlUsage: input.fiammettaControlUsage,
@@ -111,6 +113,7 @@ export function runRiicAutomaticSchedule(input = {}) {
     candidateStatesByGroupId: input.candidateStatesByGroupId,
     tailFillResult,
     controlCenterOperatorIds: input.controlCenterOperatorIds,
+    ownedOperators: input.ownedOperators,
     idleFillOperators: input.idleFillOperators,
     fiammettaRecovery: input.fiammettaRecovery,
     fiammettaControlUsage: input.fiammettaControlUsage,

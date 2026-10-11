@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from "vue";
+import RiicRecycleOutputDialog from "/src/components/tools/RiicRecycleOutputDialog.vue";
 import battleRecordBackground from "/src/assets/images/riic-schedule-preview/battle-record.png";
 import greenCertificateBackground from "/src/assets/images/riic-schedule-preview/green-certificate.png";
 import goldBackground from "/src/assets/images/riic-schedule-preview/gold.png";
@@ -487,6 +488,24 @@ function updateDroneOrder(index, order) {
               }}
             </strong>
           </div>
+          <RiicRecycleOutputDialog
+            :outputs="yield?.recycleOutputs"
+            :boost-consumption="yield?.recycleBoostConsumption"
+          >
+            <template #activator="{ canOpen, open, total }">
+              <button
+                v-if="canOpen"
+                type="button"
+                class="schedule-resource-overview-value schedule-resource-recycle"
+                title="查看回收站材料日均期望"
+                aria-label="查看回收站材料日均期望"
+                @click="open"
+              >
+                <v-icon icon="mdi-recycle" size="25" aria-hidden="true"></v-icon>
+                <strong>{{ formatOverviewValue(total, 2) }}</strong>
+              </button>
+            </template>
+          </RiicRecycleOutputDialog>
         </div>
         <div
           v-if="showOutputModeToggle"
@@ -763,6 +782,22 @@ function updateDroneOrder(index, order) {
   font-size: 17px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+
+.schedule-resource-overview-value.schedule-resource-recycle {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.schedule-resource-recycle .v-icon {
+  color: #23866c;
+}
+
+.schedule-resource-recycle:focus-visible {
+  outline: 2px solid var(--riic-blue);
+  outline-offset: 2px;
 }
 
 .schedule-resource-overview-value.resource-lmd strong {

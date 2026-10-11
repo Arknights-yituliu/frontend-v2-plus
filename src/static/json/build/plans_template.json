@@ -159,6 +159,22 @@
           "sort": false,
           "autofill": false
         }
+      ],
+      "training": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "recycle": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
       ]
     },
     "Fiammetta": {
@@ -327,6 +343,22 @@
         }
       ],
       "meeting": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "training": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "recycle": [
         {
           "skip": false,
           "operators": [],
@@ -507,6 +539,22 @@
           "sort": false,
           "autofill": false
         }
+      ],
+      "training": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "recycle": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
       ]
     },
     "Fiammetta": {
@@ -675,6 +723,22 @@
         }
       ],
       "meeting": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "training": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "recycle": [
         {
           "skip": false,
           "operators": [],
@@ -855,6 +919,22 @@
           "sort": false,
           "autofill": false
         }
+      ],
+      "training": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "recycle": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
       ]
     },
     "Fiammetta": {
@@ -1029,6 +1109,22 @@
           "sort": false,
           "autofill": false
         }
+      ],
+      "training": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "recycle": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
       ]
     },
     "Fiammetta": {
@@ -1197,6 +1293,22 @@
         }
       ],
       "meeting": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "training": [
+        {
+          "skip": false,
+          "operators": [],
+          "sort": false,
+          "autofill": false
+        }
+      ],
+      "recycle": [
         {
           "skip": false,
           "operators": [],

@@ -36,6 +36,14 @@ defineProps({
       fourOrBelow: true,
     }),
   },
+  allowTrainingRoomOperators: {
+    type: Boolean,
+    default: false,
+  },
+  allowRecycleRoomOperators: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits([
@@ -43,6 +51,8 @@ const emit = defineEmits([
   "select-facility-requirement",
   "set-training-mode",
   "set-training-rarity-selection",
+  "set-training-room-operators",
+  "set-recycle-room-operators",
 ]);
 </script>
 
@@ -194,6 +204,39 @@ const emit = defineEmits([
         </span>
       </section>
 
+      <section
+        class="facility-profile-switch"
+        aria-label="训练室干员安排"
+      >
+        <span class="facility-profile-label">允许向训练室安排干员</span>
+        <el-switch
+          :model-value="allowTrainingRoomOperators"
+          active-text="允许"
+          inactive-text="不允许"
+          aria-label="允许向训练室安排干员"
+          @change="emit('set-training-room-operators', $event)"
+        />
+        <span class="facility-profile-note">
+          MAA仅公测版允许训练室字段
+        </span>
+      </section>
+
+      <section
+        class="facility-profile-switch"
+        aria-label="回收站干员安排"
+      >
+        <span class="facility-profile-label">允许向回收站安排干员</span>
+        <el-switch
+          :model-value="allowRecycleRoomOperators"
+          active-text="允许"
+          inactive-text="不允许"
+          aria-label="允许向回收站安排干员"
+          @change="emit('set-recycle-room-operators', $event)"
+        />
+        <span class="facility-profile-note">
+          MAA仅公测版允许回收站字段
+        </span>
+      </section>
     </div>
   </section>
 </template>

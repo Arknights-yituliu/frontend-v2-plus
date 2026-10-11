@@ -160,10 +160,29 @@
         flex-wrap: wrap;
         font-weight: 600;
         height: 80px;
+        box-sizing: border-box;
         --room-operator-short: 180px;
         --room-operator-long: 300px;
         border: 1px solid var(--c-page-background-color);
         user-select: none;
+    }
+
+    /* 三列统一行距。
+       .room-wrap-left / .room-wrap-center 是 flex-wrap:wrap，父容器会把列拉伸到
+       整行高度，align-content 默认 stretch 就把多出来的空间分摊到各 flex 行盒上，
+       行距被撑成 110 / 105.6；而 .room-wrap-right 是 nowrap 单列、行距正好是
+       margin 4+4 = 8。这里把 align-content 钉成 flex-start，三列行距一律 8px。
+       注意不能改成 flex-direction:column —— 左列靠 wrap 排三列。 */
+    .room-wrap-left,
+    .room-wrap-center,
+    .room-wrap-right {
+        align-content: flex-start;
+    }
+
+    /* 复制/粘贴换班表：横跨网格上方 */
+    .copy-btn-bar {
+        width: auto;
+        margin: 8px auto;
     }
 
     .room-operators-skill-description {
@@ -263,6 +282,18 @@
         width: var(--room-operator-short);
     }
 
+    .training {
+        background-color: #7e7e7e15;
+        color: #7e7e7e;
+        width: var(--room-operator-short);
+    }
+
+    .recycle {
+        background-color: #7e7e7e15;
+        color: #7e7e7e;
+        width: var(--room-operator-short);
+    }
+
     .trading-selected {
         background-color: transparent;
         border: 1px solid #0288d1;
@@ -303,6 +334,16 @@
         border: 1px solid #7e7e7e;
     }
 
+    .training-selected {
+        background-color: transparent;
+        border: 1px solid #7e7e7e;
+    }
+
+    .recycle-selected {
+        background-color: transparent;
+        border: 1px solid #7e7e7e;
+    }
+
     .trading,
     .manufacture,
     .power,
@@ -310,7 +351,9 @@
     .dormitory,
     .meeting,
     .processing,
-    .hire {
+    .hire,
+    .training,
+    .recycle {
         transition: background-color 0.3s;
     }
 
@@ -348,6 +391,14 @@
         background-color: #dedede;
     }
 
+    .training:hover {
+        background-color: #dedede;
+    }
+
+    .recycle:hover {
+        background-color: #dedede;
+    }
+
     .trading,
     .manufacture,
     .power,
@@ -355,7 +406,9 @@
     .dormitory,
     .meeting,
     .processing,
-    .hire {
+    .hire,
+    .training,
+    .recycle {
         position: relative;
         overflow: hidden;
     }
@@ -385,7 +438,9 @@
 
     .meeting:focus,
     .processing:focus,
-    .hire:focus {
+    .hire:focus,
+    .training:focus,
+    .recycle:focus {
         --ripple-color: 126, 126, 126;
     }
 
@@ -396,7 +451,9 @@
     .dormitory:focus,
     .meeting:focus,
     .processing:focus,
-    .hire:focus {
+    .hire:focus,
+    .training:focus,
+    .recycle:focus {
         animation: ripple 1s;
     }
 

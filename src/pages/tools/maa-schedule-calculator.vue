@@ -2,7 +2,7 @@
 import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import { operatorTableV2 } from "/src/utils/gameData.js";
+import { operatorTableV2 as baseOperatorTableV2 } from "/src/utils/gameData.js";
 import ITEM_INFO from "/src/static/json/material/item_info.json";
 import { summarizeRiicFacilityPower } from "/src/utils/riic/riic-facility-power-model.js";
 import {
@@ -30,7 +30,9 @@ import {
 import RiicDisplayCard from "/src/components/tools/RiicDisplayCard.vue";
 import RiicDisplayTile from "/src/components/tools/RiicDisplayTile.vue";
 import RiicMaaOperatorProgressionEditor from "/src/components/tools/RiicMaaOperatorProgressionEditor.vue";
+import RiicRecycleBoostSelect from "/src/components/tools/RiicRecycleBoostSelect.vue";
 import { resolveRiicScheduleLayout } from "/src/utils/riicScheduleLayout.js";
+import { getRiicOperatorProfile } from "/src/utils/riicOperatorIdentity.js";
 
 const RIIC_MAA_EDITOR_TRANSFER_STORAGE_KEY = "riic_maa_editor_to_efficiency_calculator_v1";
 const RIIC_MAA_CALCULATOR_RETURN_STORAGE_KEY = "riic_maa_calculator_to_editor_v1";
@@ -55,6 +57,13 @@ const NOTICE_LEVELS = Object.freeze([
   { key: "warning", label: "警告" },
   { key: "error", label: "错误" },
 ]);
+const recycleOperatorProfile = getRiicOperatorProfile("char_4232_hbound");
+const operatorTableV2 = {
+  ...(recycleOperatorProfile
+    ? { [recycleOperatorProfile.charId]: recycleOperatorProfile }
+    : {}),
+  ...baseOperatorTableV2,
+};
 
 const ROOM_LAYOUT_LIMITS = Object.freeze({
   control: { minRooms: 1, maxRooms: 1, maxLevel: 5 },
@@ -66,6 +75,7 @@ const ROOM_LAYOUT_LIMITS = Object.freeze({
   dormitory: { minRooms: 0, maxRooms: 4, maxLevel: 5 },
   processing: { minRooms: 0, maxRooms: 1, maxLevel: 3 },
   training: { minRooms: 0, maxRooms: 1, maxLevel: 3 },
+  recycle: { minRooms: 0, maxRooms: 1, maxLevel: 3 },
 });
 const ROOM_TYPES = new Set(Object.keys(ROOM_LAYOUT_LIMITS));
 const MAX_TRADING_MANUFACTURE_POWER_ROOMS = 9;
@@ -79,13 +89,14 @@ const ROOM_LABELS = Object.freeze({
   dormitory: "宿舍",
   processing: "加工站",
   training: "训练室",
+  recycle: "回收站",
 });
 const LAYOUT_DISPLAY_ROWS = Object.freeze([
   { key: "control", facilities: ["control"] },
   { key: "trading", facilities: ["trading"] },
   { key: "manufacture", facilities: ["manufacture"] },
   { key: "power", facilities: ["power"] },
-  { key: "support", facilities: ["meeting", "processing", "hire", "training"] },
+  { key: "support", facilities: ["meeting", "processing", "hire", "training", "recycle"] },
   { key: "dormitory", facilities: ["dormitory"] },
 ]);
 
@@ -94,6 +105,18 @@ const itemValueApById = new Map(
   ITEM_INFO.map((item) => [String(item.itemId), item.itemValueAp ?? item.itemValue]),
 );
 const sanityDefinitions = sanityItemDefinitions();
+const sanityResourceNames = new Set(sanityDefinitions.map((item) => item.resource));
+const materialSanityValues = Object.fromEntries(
+  ITEM_INFO.flatMap((item) => {
+    const resource = String(item.itemName || "").trim();
+    if (!resource || sanityResourceNames.has(resource)) {
+      return [];
+    }
+    const rawValue = item.itemValueAp ?? item.itemValue;
+    const value = Number(rawValue);
+    return [[resource, rawValue != null && Number.isFinite(value) ? value : null]];
+  }),
+);
 const sanityAmountFactorByResource = new Map(
   sanityDefinitions.map((item) => [item.resource, item.amountFactor]),
 );
@@ -289,6 +312,7 @@ function updateFirstItemProgress(event) {
 }
 
 function restoreDefaultEfficiencySettings() {
+  delete efficiencySettings.recycleBoostItemId;
   Object.assign(efficiencySettings, DEFAULT_RIIC_EFFICIENCY_SETTINGS);
 }
 
@@ -434,10 +458,33 @@ const droneCalculation = computed(() =>
     ? calculateRiicDroneAcceleration(result.value, lmdDroneStrategyInput.value)
     : null,
 );
+function recycleItemSanity(recycleOutputs = []) {
+  let totalAmount = 0;
+  let totalSanity = 0;
+  for (const item of recycleOutputs) {
+    const amount = Number(item.amountPerDay);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      continue;
+    }
+    const rawSanity = itemValueApById.get(String(item.itemId));
+    const sanity = Number(rawSanity);
+    if (rawSanity == null || !Number.isFinite(sanity)) {
+      return null;
+    }
+    totalAmount += amount;
+    totalSanity += amount * sanity;
+  }
+  return totalAmount > 0 ? totalSanity / totalAmount : null;
+}
+const resultSanityValues = computed(() => ({
+  ...sanityValues.value,
+  recycleItemSanity: recycleItemSanity(result.value?.recycleOutputs),
+  materials: materialSanityValues,
+}));
 const resultDisplay = computed(() =>
   result.value
     ? buildResultDisplay(result.value, {
-        sanityValues: sanityValues.value,
+        sanityValues: resultSanityValues.value,
         resourceAmountDisplayMode: resourceAmountDisplayMode.value,
         droneAcceleration: droneCalculation.value?.acceleration,
       })
@@ -593,6 +640,13 @@ function getAddLayoutRoomReason(type) {
   if (type === "training" && getLayoutRoomCount("hire", layout) === 0) {
     return "请先建设办公室";
   }
+  if (
+    type === "recycle" &&
+    !layout.some((entry) => entry.type === "training" && entry.level >= 1) &&
+    !layout.some((entry) => entry.type === "control" && entry.level >= 5)
+  ) {
+    return "1级回收站需要训练室，2级及以上需要5级控制中枢";
+  }
   return "";
 }
 
@@ -607,6 +661,12 @@ function getRemoveLayoutRoomReason(type) {
   }
   if (type === "hire" && getLayoutRoomCount("training", layout) > 0) {
     return "训练室存在时不能移除办公室";
+  }
+  if (
+    type === "training" &&
+    layout.some((entry) => entry.type === "recycle" && entry.level === 1)
+  ) {
+    return "1级回收站需要训练室";
   }
   return "";
 }
@@ -647,7 +707,13 @@ function addLayoutRoom(type) {
   if (getAddLayoutRoomReason(type)) {
     return;
   }
-  layoutEditDraft.value = [...ensureLayoutEditDraft(), { type, level: 1 }];
+  const layout = ensureLayoutEditDraft();
+  const level =
+    type === "recycle" &&
+    layout.some((entry) => entry.type === "control" && entry.level >= 5)
+      ? 3
+      : 1;
+  layoutEditDraft.value = [...layout, { type, level }];
   layoutEditError.value = "";
 }
 
@@ -776,6 +842,18 @@ function validateLayoutConstraints(layout) {
   }
   if ((counts.get("hire") || 0) > 0 && (counts.get("processing") || 0) === 0) {
     throw new Error("布局错误：建造办公室必须先建造加工站");
+  }
+  if (
+    layout.some((entry) => entry.type === "recycle" && entry.level === 1) &&
+    !layout.some((entry) => entry.type === "training" && entry.level >= 1)
+  ) {
+    throw new Error("布局错误：1级回收站需要先建设训练室");
+  }
+  if (
+    layout.some((entry) => entry.type === "recycle" && entry.level >= 2) &&
+    !layout.some((entry) => entry.type === "control" && entry.level >= 5)
+  ) {
+    throw new Error("布局错误：2级及以上回收站需要5级控制中枢");
   }
   return layout;
 }
@@ -1303,6 +1381,19 @@ onMounted(() => {
             />
             <span class="efficiency-setting-unit">%</span>
           </label>
+          <div class="efficiency-setting efficiency-setting-select">
+            <span class="efficiency-setting-copy">
+              <strong>回收站加速材料</strong>
+              <small>未选择时不启用加速</small>
+            </span>
+            <RiicRecycleBoostSelect
+              class="efficiency-setting-select-control"
+              :model-value="efficiencySettings.recycleBoostItemId || ''"
+              placeholder="不加速"
+              aria-label="回收站加速材料"
+              @update:model-value="efficiencySettings.recycleBoostItemId = $event"
+            />
+          </div>
         </div>
       </div>
 
@@ -1425,7 +1516,12 @@ onMounted(() => {
             </div>
           </div>
           <div v-if="dailyOutput?.tiles?.length || dailyOutput?.totalTile" class="tile-grid">
-            <RiicDisplayTile v-for="tile in dailyOutput?.tiles || []" :key="tile.key" :tile="tile" />
+            <RiicDisplayTile
+              v-for="tile in dailyOutput?.tiles || []"
+              :key="tile.key"
+              :tile="tile"
+              :recycle-outputs="tile.product === '精英材料' ? (result?.recycleOutputs || []) : []"
+            />
             <RiicDisplayTile v-if="dailyOutput?.totalTile" :tile="dailyOutput.totalTile" />
           </div>
           <p v-else class="empty-hint">{{ dailyOutput?.empty || "当前排班没有可统计的产出" }}</p>
@@ -2078,6 +2174,13 @@ h2 {
 .efficiency-setting-copy strong {
   font-size: 13px;
   font-weight: 600;
+}
+.efficiency-setting-select {
+  justify-content: space-between;
+}
+.efficiency-setting-select-control {
+  width: min(52%, 220px);
+  min-width: 112px;
 }
 .efficiency-setting-copy small,
 .efficiency-setting-unit {

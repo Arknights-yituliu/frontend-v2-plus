@@ -39,8 +39,15 @@ import {
   RIIC_MAX_CUSTOM_OPERATOR_SOURCES,
 } from "/src/utils/riicOperatorSources.js";
 import { useRiicOperatorSources } from "/src/utils/riicOperatorSources.js";
-import { operatorTableV2 } from "/src/utils/gameData.js";
+import { operatorTableV2 as baseOperatorTableV2 } from "/src/utils/gameData.js";
+import { getRiicOperatorProfile } from "/src/utils/riicOperatorIdentity.js";
 import { getRiicOperatorSkillTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
+import {
+  buildRiicActiveOperatorIdsByStateIndex,
+  buildRiicActiveOperatorIdsBySelectionKey,
+  buildRiicActiveOperatorIdsByScopeForStateIndexes,
+  getRiicActiveRosterHangerOrder,
+} from "/src/utils/riic/l65-active-roster-effects.js";
 import {
   createRiicOperatorSearchEntries,
   findRiicOperatorSearchMatches,
@@ -139,6 +146,7 @@ import {
   settleRiicMaaScheduleEfficiency,
 } from "/src/utils/riic/l79-preview-efficiency-settlement.js";
 import {
+  addRiicScheduleExportFields,
   buildRiicMaaScheduleFromPreview,
   getRiicMaaRoomType,
   prepareRiicMaaScheduleForExport,
@@ -185,6 +193,13 @@ import {
   maaDroneWarningText,
   normalizeRiicEfficiencySettings,
 } from "/src/utils/riic/riic-efficiency-adapter.js";
+
+const operatorTableV2 = {
+  ...(getRiicOperatorProfile("char_4232_hbound")
+    ? { char_4232_hbound: getRiicOperatorProfile("char_4232_hbound") }
+    : {}),
+  ...baseOperatorTableV2,
+};
 
 const RIIC_OPERATOR_WORKSPACES_STORAGE_KEY =
   "riic_schedule_generator_workspaces_v1";
@@ -513,7 +528,8 @@ const scheduleExecutionSettings = reactive({
   calculationMode: "riic-efficiency",
   riicEfficiencySettings: { ...DEFAULT_RIIC_EFFICIENCY_SETTINGS },
   orundumCraftMaterial: "orirock",
-  includeTrainingRoom: false,
+  allowTrainingRoomOperators: false,
+  allowRecycleRoomOperators: false,
   exportInfo: {
     title: "",
     author: "",
@@ -821,7 +837,8 @@ function createEmptyScheduleExecutionSettings(
     calculationMode: "riic-efficiency",
     riicEfficiencySettings: normalizeRiicEfficiencySettings(),
     orundumCraftMaterial: "orirock",
-    includeTrainingRoom: false,
+    allowTrainingRoomOperators: false,
+    allowRecycleRoomOperators: false,
     exportInfo: normalizeScheduleExportInfo(),
   };
 }
@@ -925,7 +942,14 @@ function normalizeScheduleExecutionSettings(
     orundumCraftMaterial: normalizeOrundumCraftMaterial(
       value?.orundumCraftMaterial,
     ),
-    includeTrainingRoom: value?.includeTrainingRoom === true,
+    allowTrainingRoomOperators:
+      value?.allowTrainingRoomOperators === true ||
+      (!Object.hasOwn(value || {}, "allowTrainingRoomOperators") &&
+        value?.allowUnsupportedRoomOperators === true),
+    allowRecycleRoomOperators:
+      value?.allowRecycleRoomOperators === true ||
+      (!Object.hasOwn(value || {}, "allowRecycleRoomOperators") &&
+        value?.allowUnsupportedRoomOperators === true),
     exportInfo: normalizeScheduleExportInfo(value?.exportInfo),
   };
 }
@@ -957,7 +981,10 @@ function createScheduleExecutionSettingsSnapshot() {
     orundumCraftMaterial: normalizeOrundumCraftMaterial(
       scheduleExecutionSettings.orundumCraftMaterial,
     ),
-    includeTrainingRoom: scheduleExecutionSettings.includeTrainingRoom === true,
+    allowTrainingRoomOperators:
+      scheduleExecutionSettings.allowTrainingRoomOperators === true,
+    allowRecycleRoomOperators:
+      scheduleExecutionSettings.allowRecycleRoomOperators === true,
     exportInfo: normalizeScheduleExportInfo(scheduleExecutionSettings.exportInfo),
   };
 }
@@ -974,19 +1001,31 @@ function clearSchedulePreviewRoomEdits() {
   scheduleRoomEditorOperatorInput.value = "";
 }
 
-function resetScheduleExecutionSettings() {
+function resetScheduleExecutionSettings({
+  preserveRoomOperatorPermissions = true,
+  preserveRecycleBoostItem = true,
+} = {}) {
   const nextSettings = createEmptyScheduleExecutionSettings(
     confirmedLayoutPlan.value?.shiftMode,
     twoShiftRotationMode.value,
   );
   scheduleExecutionSettings.shifts = nextSettings.shifts;
   scheduleExecutionSettings.calculationMode = nextSettings.calculationMode;
-  scheduleExecutionSettings.riicEfficiencySettings =
-    nextSettings.riicEfficiencySettings;
+  scheduleExecutionSettings.riicEfficiencySettings = preserveRecycleBoostItem
+    ? normalizeRiicEfficiencySettings({
+        ...nextSettings.riicEfficiencySettings,
+        recycleBoostItemId:
+          scheduleExecutionSettings.riicEfficiencySettings.recycleBoostItemId,
+      })
+    : nextSettings.riicEfficiencySettings;
   scheduleExecutionSettings.orundumCraftMaterial =
     nextSettings.orundumCraftMaterial;
-  scheduleExecutionSettings.includeTrainingRoom =
-    nextSettings.includeTrainingRoom;
+  if (!preserveRoomOperatorPermissions) {
+    scheduleExecutionSettings.allowTrainingRoomOperators =
+      nextSettings.allowTrainingRoomOperators;
+    scheduleExecutionSettings.allowRecycleRoomOperators =
+      nextSettings.allowRecycleRoomOperators;
+  }
   scheduleExecutionSettings.exportInfo = nextSettings.exportInfo;
   clearSchedulePreviewRoomEdits();
   activeSchedulePreviewStateIndex.value =
@@ -1214,6 +1253,7 @@ const scheduleRoomGroups = computed(() => {
             .join(" / ")
         : "",
       candidateProduct,
+      staffingDisabled: false,
       candidateGenerationAvailable: Boolean(candidateProduct),
       rotationRequired: true,
       row: "production",
@@ -1227,6 +1267,11 @@ const scheduleRoomRows = computed(() => {
       (station) => Number(station?.stationLevel || 0) > 0,
     );
     const candidateProduct = ROOM_CANDIDATE_PRODUCTS[group.key] || null;
+    const staffingDisabled =
+      (group.key === "training" &&
+        scheduleExecutionSettings.allowTrainingRoomOperators !== true) ||
+      (group.key === "recycle" &&
+        scheduleExecutionSettings.allowRecycleRoomOperators !== true);
 
     return {
       ...group,
@@ -1244,10 +1289,13 @@ const scheduleRoomRows = computed(() => {
             .join(" / ")
         : "",
       candidateProduct,
+      staffingDisabled,
       manualControl: Boolean(group.manualControl),
       fallbackOnly: Boolean(group.fallbackOnly),
       candidateGenerationAvailable:
-        Boolean(candidateProduct) && !group.manualControl,
+        Boolean(candidateProduct) &&
+        !group.manualControl &&
+        !staffingDisabled,
       rotationRequired: group.rotationRequired,
     };
   };
@@ -1292,12 +1340,40 @@ const roomGroupSelectionRows = computed(() => {
     },
     {
       id: "support",
-      groups: ["meeting", "office", "dormitory", "processing", "training"]
+      groups: [
+        "meeting",
+        "office",
+        "dormitory",
+        "processing",
+        "training",
+        "recycle",
+      ]
         .map((key) => groupsByKey.get(key))
         .filter(Boolean),
     },
   ];
 });
+const roomGroupDisplayRows = computed(() =>
+  roomGroupSelectionRows.value.flatMap((row) => {
+    if (row.id !== "support") {
+      return [row];
+    }
+
+    const groupsByKey = new Map(row.groups.map((group) => [group.key, group]));
+    return [
+      {
+        ...row,
+        groups: ["meeting", "office", "recycle", "processing", "training"]
+          .map((key) => groupsByKey.get(key))
+          .filter(Boolean),
+      },
+      {
+        id: "dormitory",
+        groups: [groupsByKey.get("dormitory")].filter(Boolean),
+      },
+    ];
+  }),
+);
 const navigableScheduleRoomGroups = computed(() =>
   roomGroupSelectionRows.value.flatMap((row) => row.groups),
 );
@@ -2696,6 +2772,7 @@ function createRiicTrainingRecommendationWorkerInput(searchConfig) {
     operatorNameToCharId: Object.fromEntries(operatorNameToCharId),
     layoutData: activeLayoutFacilityCounts.value,
     idealTrainingRaritySelection: idealTrainingRaritySelection.value,
+    forceSkipFalse: true,
     controlRoomGroup: controlScheduleRoomGroup.value,
     controlCenterStaffingRequirement: controlCenterStaffingRequirement.value,
     controlCenterRoleDefinitions: CONTROL_CENTER_FUNCTION_ROLE_DEFINITIONS,
@@ -3067,7 +3144,10 @@ async function generateAutomaticSchedule({
 
     selectedRoomGroupTeamCandidateKeys.value = selections;
     roomGroupFallbackQueueStates.value = fallbackQueueStates;
-    resetScheduleExecutionSettings();
+    resetScheduleExecutionSettings({
+      preserveRoomOperatorPermissions: true,
+      preserveRecycleBoostItem: true,
+    });
     activeScheduleRoomGroupKey.value =
       controlScheduleRoomGroup.value?.id ||
       candidateEnabledScheduleRoomGroups.value[0]?.id ||
@@ -3150,7 +3230,7 @@ function requestTrainingImpactCalculation() {
       twoShiftRotationMode.value,
     ),
     shifts: schedulePreviewShifts.value,
-    roomOperatorOverrides: scheduleRoomOperatorOverrides.value,
+    roomOperatorOverrides: activeScheduleRoomOperatorOverrides.value,
     productOverrides: scheduleRoomProductOverrides.value,
     invalidatedRoomKeys: invalidatedScheduleRoomKeys.value,
     stickyOperatorIds: [
@@ -3159,6 +3239,8 @@ function requestTrainingImpactCalculation() {
     ].filter(Boolean),
     roomSettingOverrides: scheduleRoomMaaSettingOverrides.value,
     roomIndexAssignments: resolvedScheduleRoomMaaIndexAssignments.value,
+    recycleBoostItemId:
+      scheduleExecutionSettings.riicEfficiencySettings.recycleBoostItemId || "",
     hasFiammetta: schedulePreviewShifts.value.some(
       (shift) => shift?.fiammetta?.enable === true,
     ),
@@ -3308,6 +3390,12 @@ const automaticGenerationTriggerKey = computed(() => {
     twoShiftRotationMode.value,
     treatUnderleveledOperatorsAsQualified.value ? "ideal" : "current",
     JSON.stringify(idealTrainingRaritySelection.value),
+    scheduleExecutionSettings.allowTrainingRoomOperators
+      ? "training-room-operators-on"
+      : "training-room-operators-off",
+    scheduleExecutionSettings.allowRecycleRoomOperators
+      ? "recycle-room-operators-on"
+      : "recycle-room-operators-off",
     controlCenterAssignmentSignature.value,
     JSON.stringify(
       controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
@@ -3493,12 +3581,21 @@ function getRoomGroupCandidateEntriesForKeys(
 }
 
 function getSelectedRoomGroupCandidateEntries(group, state, options) {
-  return getRoomGroupCandidateEntriesForKeys(
+  const result = getRoomGroupCandidateEntriesForKeys(
     group,
     state,
     getRoomGroupTeamCandidateKeys(group.id),
     options,
   );
+  return result
+    ? {
+        ...result,
+        selectedEntries: result.selectedEntries.map((entry) => ({
+          ...entry,
+          groupId: group.id,
+        })),
+      }
+    : result;
 }
 
 function buildManualRoomGroupRotationCandidate(
@@ -3668,6 +3765,140 @@ const manualControlRoomGroupCandidate = computed(() => {
   };
 });
 
+// 静态房间（加工站、训练室、宿舍……）的容量，供挂件停靠和回收站补位共用。
+// 定义在 roomGroupFallbackPlanStates 之前，避免计算顺序上互相依赖。
+const schedulePreviewStaticRoomKeys = computed(
+  () =>
+    new Set(
+      scheduleRoomRows.value
+        .flatMap((row) => row.groups)
+        .filter(
+          (group) =>
+            !group.candidateGenerationAvailable && !group.manualControl,
+        )
+        .flatMap((group) =>
+          Array.from(
+            { length: Math.max(0, Number(group.count) || 0) },
+            (_, index) => `${group.id}:${index}`,
+          ),
+        ),
+    ),
+);
+const riicStaticRoomCapacityByType = computed(() =>
+  scheduleRoomRows.value
+    .flatMap((row) => row.groups)
+    .filter(
+      (group) =>
+        !group.candidateGenerationAvailable && !group.manualControl,
+    )
+    .reduce((capacityByType, group) => {
+      const roomType = String(group?.facility || "").trim();
+      if (!roomType) {
+        return capacityByType;
+      }
+
+      return {
+        ...capacityByType,
+        [roomType]:
+          Number(capacityByType[roomType] || 0) +
+          (group?.stations || []).reduce(
+            (total, station) =>
+              total + Math.max(0, Number(station?.slotCount) || 0),
+            0,
+          ),
+      };
+    }, {}),
+);
+
+function getRiicStaticRoomCapacityForHangerParking() {
+  return {
+    ...riicStaticRoomCapacityByType.value,
+    training: scheduleExecutionSettings.allowTrainingRoomOperators
+      ? Math.min(
+          1,
+          Number(riicStaticRoomCapacityByType.value.training || 0),
+        )
+      : 0,
+  };
+}
+
+// 挂件优先停靠适配的静态设施，回收站只使用剩下的挂件。
+function getRiicParkedHangerOperatorIds(
+  activeOperatorIds = [],
+  claimedOperatorIds = activeOperatorIds,
+  activeOperatorIdsByScope = null,
+) {
+  const placements = addActiveRosterHangerPlacements({
+    placements: {},
+    activeOperatorIds,
+    activeOperatorIdsByScope,
+    claimedOperatorIds: [...new Set([...activeOperatorIds, ...claimedOperatorIds])],
+    idleFillOperators: riicIdleFillOperators.value,
+    roomCapacityByType: getRiicStaticRoomCapacityForHangerParking(),
+  });
+
+  return [
+    ...new Set(
+      [
+        ...(placements.power || []),
+        ...(placements.processing || []),
+        ...(placements.training || []),
+      ]
+        .map((placement) => String(placement?.charId || "").trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
+const alignedCoreRotationOffsetByGroupId = computed(() => {
+  const controlGroup = controlScheduleRoomGroup.value;
+  const controlCandidate = buildControlCenterRoleCandidate(
+    controlGroup,
+    controlCenterRoleState.value,
+  );
+  if (!controlCandidate) {
+    return {};
+  }
+
+  const groupEntries = [{ group: controlGroup, candidate: controlCandidate }];
+  for (const group of getRiicAutomaticRoomGroupPlanningOrder(
+    candidateEnabledScheduleRoomGroups.value,
+  )) {
+    if (group.manualControl || group.facility === "control") {
+      continue;
+    }
+    const state = roomGroupCandidateStates.value[group.id];
+    const selected = getSelectedRoomGroupCandidateEntries(group, state, {
+      allowPartial: true,
+    });
+    if (!selected) {
+      continue;
+    }
+    const candidate = buildManualRoomGroupRotationCandidate(group, state);
+    if (candidate) {
+      groupEntries.push({ group, candidate });
+    }
+  }
+
+  const aligned = alignRiicScheduleSameShiftBindings({
+    groupEntries,
+    ownedOperators: virtualOperators.value || [],
+    lockedOperatorIds: [
+      "char_391_rosmon",
+      "char_4046_ebnhlz",
+      "char_436_whispr",
+      "char_4109_baslin",
+    ],
+  });
+
+  return Object.fromEntries(
+    aligned.groupEntries.map(({ group, candidate }) => [
+      String(group?.id || "").trim(),
+      Math.max(0, Number(candidate?.sameShiftBindingOffset) || 0),
+    ]),
+  );
+});
+
 const roomGroupFallbackPlanStates = computed(() => {
   const recovery = fiammettaRecoveryConfig.value;
   const planningGroups = getRiicAutomaticRoomGroupPlanningOrder(
@@ -3705,7 +3936,42 @@ const roomGroupFallbackPlanStates = computed(() => {
       )].filter((charId) => charId !== recovery.targetOperatorId),
     ]),
   );
+  // 手动编辑（含静态房间与回收站本身）已经摆了人的槽位，也算作当班在岗。
+  const manualScheduleOperatorIds = [
+    ...new Set(
+      Object.values(scheduleRoomOperatorOverrides.value || {})
+        .flatMap((operators) =>
+          (operators || []).map((operator) =>
+            String(operator?.charId || "").trim(),
+          ),
+        )
+        .filter(Boolean),
+    ),
+  ];
+  const activeOperatorIdsByStateIndex =
+    buildRiicActiveOperatorIdsByStateIndex(
+      controlCenterRoleState.value.segments || [],
+    );
+  const manualPreviewStateIndex = Number(
+    activeSchedulePreviewStateIndex.value,
+  );
+  const manualScheduleStateIndex = getSchedulePreviewStateOrder(
+    confirmedLayoutPlan.value?.shiftMode,
+    twoShiftRotationMode.value,
+  )[manualPreviewStateIndex];
+  if (
+    Number.isInteger(manualScheduleStateIndex) &&
+    manualScheduleStateIndex >= 0
+  ) {
+    activeOperatorIdsByStateIndex[manualScheduleStateIndex] = [
+      ...new Set([
+        ...(activeOperatorIdsByStateIndex[manualScheduleStateIndex] || []),
+        ...manualScheduleOperatorIds,
+      ]),
+    ];
+  }
 
+  const groupContexts = [];
   for (const group of planningGroups) {
     const state = roomGroupCandidateStates.value[group.id];
     const selected = getSelectedRoomGroupCandidateEntries(group, state, {
@@ -3720,9 +3986,66 @@ const roomGroupFallbackPlanStates = computed(() => {
       group,
       state,
     );
-    const coreOperatorIds = getManualRoomGroupCandidateOperatorIds(
-      coreCandidate,
+    groupContexts.push({
+      group,
+      state,
+      selected,
+      coreOperatorIds: getManualRoomGroupCandidateOperatorIds(coreCandidate),
+    });
+  }
+  // 每个班次单独算在岗名单：挂件只在它的主人当班的那一班停靠，
+  // 不会因为别的班次排了主人就跨班占用。
+  const activeRosterSelectedEntries = groupContexts.flatMap(
+    ({ group, selected }) => {
+      const offset = Math.max(
+        0,
+        Number(alignedCoreRotationOffsetByGroupId.value[group.id]) || 0,
+      );
+      return selected.selectedEntries.map((entry) => {
+        const stateIndexes = getRiicFiammettaTeamStateIndexes(
+          entry.cohort,
+          entry.teamIndex,
+        );
+        const segmentCount = entry.cohort?.rotationSegments?.length || 0;
+        return {
+          ...entry,
+          groupId: group.id,
+          scope:
+            entry.candidate?.candidateScope ||
+            entry.candidate?.scope || {
+              roomType: group.facility,
+              product: group.candidateProduct || "all",
+            },
+          activeStateIndexes:
+            offset > 0 && segmentCount > 0
+              ? stateIndexes.map(
+                  (stateIndex) =>
+                    (stateIndex - offset + segmentCount) % segmentCount,
+                )
+              : stateIndexes,
+        };
+      });
+    },
+  );
+  const activeOperatorIdsBySelectionKey =
+    buildRiicActiveOperatorIdsBySelectionKey({
+      selectedEntries: activeRosterSelectedEntries,
+      baseActiveOperatorIdsByStateIndex: activeOperatorIdsByStateIndex,
+    });
+  const getSelectionActiveOperatorIds = (groupId, selectionKey) =>
+    activeOperatorIdsBySelectionKey[`${groupId}:${selectionKey}`] || [];
+  const getSelectionActiveOperatorIdsByScope = (groupId, selectionKey) => {
+    const entry = activeRosterSelectedEntries.find(
+      (item) =>
+        item.groupId === groupId && item.selectionKey === selectionKey,
     );
+    return buildRiicActiveOperatorIdsByScopeForStateIndexes({
+      selectedEntries: activeRosterSelectedEntries,
+      stateIndexes: entry?.activeStateIndexes || [],
+    });
+  };
+
+  for (const { group, selected, coreOperatorIds } of groupContexts) {
     const occupiedIds = new Set([
       ...selectedCoreOperatorIds,
       ...occupiedOperatorIds,
@@ -3737,49 +4060,55 @@ const roomGroupFallbackPlanStates = computed(() => {
       selected.selectedEntries,
       riicIdleFillOperators.value,
     );
+    // 回收站：当班口径看整张班表，并排除已停靠在其他设施的挂件。
+    const isRecycleGroup = String(group.facility || group.key || "") === "recycle";
+    const planExcludedOperatorIds = isRecycleGroup
+      ? [
+          ...coreOperatorIds,
+          ...selected.selectedEntries.flatMap((entry) =>
+            getRiicParkedHangerOperatorIds(
+              getSelectionActiveOperatorIds(group.id, entry.selectionKey),
+              [...occupiedIds],
+              getSelectionActiveOperatorIdsByScope(
+                group.id,
+                entry.selectionKey,
+              ),
+            ),
+          ),
+          ...manualScheduleOperatorIds,
+        ]
+      : coreOperatorIds;
+    const fiammettaFallbackRecovery = {
+      ...recovery,
+      usedStateIndexes: [...fiammettaTargetStateIndexes],
+      stateIndexesBySelectionKey: Object.fromEntries(
+        selected.selectedEntries.map((entry) => [
+          entry.selectionKey,
+          getRiicFiammettaTeamStateIndexes(entry.cohort, entry.teamIndex),
+        ]),
+      ),
+    };
     const automaticPlan = createRiicRoomGroupFallbackPlan({
       selectedEntries,
       occupiedOperatorIds: occupiedIds,
-      excludedOperatorIds: coreOperatorIds,
+      excludedOperatorIds: planExcludedOperatorIds,
       ownedOperators: virtualOperators.value,
-      activeOperatorIds: occupiedIds,
-      fiammettaRecovery: {
-        ...recovery,
-        usedStateIndexes: [...fiammettaTargetStateIndexes],
-        stateIndexesBySelectionKey: Object.fromEntries(
-          selected.selectedEntries.map((entry) => [
-            entry.selectionKey,
-            getRiicFiammettaTeamStateIndexes(
-              entry.cohort,
-              entry.teamIndex,
-            ),
-          ]),
-        ),
-      },
+      activeOperatorIds: [],
+      activeOperatorIdsBySelectionKey,
+      fiammettaRecovery: fiammettaFallbackRecovery,
     });
     const plan = hasManualFallbackQueue
       ? createRiicRoomGroupFallbackPlan({
           selectedEntries,
           occupiedOperatorIds: occupiedIds,
-          excludedOperatorIds: coreOperatorIds,
+          excludedOperatorIds: planExcludedOperatorIds,
           ownedOperators: virtualOperators.value,
-          activeOperatorIds: occupiedIds,
-          fiammettaRecovery: {
-            ...recovery,
-            usedStateIndexes: [...fiammettaTargetStateIndexes],
-            stateIndexesBySelectionKey: Object.fromEntries(
-              selected.selectedEntries.map((entry) => [
-                entry.selectionKey,
-                getRiicFiammettaTeamStateIndexes(
-                  entry.cohort,
-                  entry.teamIndex,
-                ),
-              ]),
-            ),
-          },
+          activeOperatorIds: [],
+          activeOperatorIdsBySelectionKey,
+          fiammettaRecovery: fiammettaFallbackRecovery,
           preferredOperatorIdBySlotKey: savedQueue?.operatorIdBySlotKey,
-          preferredOperatorIds: savedQueue?.operatorIds,
-          allowAutomaticFill: false,
+          // 回收站不能留空位：队列里的人不可用时，剩下的槽位继续自动补位。
+          allowAutomaticFill: isRecycleGroup,
         })
       : automaticPlan;
 
@@ -4323,6 +4652,7 @@ const assembledScheduleCandidateState = computed(() => {
 
   const sameShiftAlignment = alignRiicScheduleSameShiftBindings({
     groupEntries: selectedGroups,
+    ownedOperators: virtualOperators.value || [],
     lockedOperatorIds: [
       "char_391_rosmon",
       "char_4046_ebnhlz",
@@ -4417,7 +4747,7 @@ const riicSchedulePreviewWithoutSupportRooms = computed(() =>
       confirmedLayoutPlan.value?.shiftMode,
       twoShiftRotationMode.value,
     ),
-    roomOperatorOverrides: scheduleRoomOperatorOverrides.value,
+    roomOperatorOverrides: activeScheduleRoomOperatorOverrides.value,
     productOverrides: scheduleRoomProductOverrides.value,
     invalidatedRoomKeys: invalidatedScheduleRoomKeys.value,
     stickyOperatorIds: [
@@ -4426,54 +4756,33 @@ const riicSchedulePreviewWithoutSupportRooms = computed(() =>
     ].filter(Boolean),
   }),
 );
-const schedulePreviewStaticRoomKeys = computed(
-  () =>
-    new Set(
-      scheduleRoomRows.value
-        .flatMap((row) => row.groups)
-        .filter(
-          (group) =>
-            !group.candidateGenerationAvailable && !group.manualControl,
-        )
-        .flatMap((group) =>
-          Array.from(
-            { length: Math.max(0, Number(group.count) || 0) },
-            (_, index) => `${group.id}:${index}`,
-          ),
-        ),
-    ),
-);
-const riicStaticRoomCapacityByType = computed(() =>
-  scheduleRoomRows.value
-    .flatMap((row) => row.groups)
-    .filter(
-      (group) =>
-        !group.candidateGenerationAvailable && !group.manualControl,
-    )
-    .reduce((capacityByType, group) => {
-      const roomType = String(group?.facility || "").trim();
-      if (!roomType) {
-        return capacityByType;
-      }
+const activeScheduleRoomOperatorOverrides = computed(() => {
+  return Object.fromEntries(
+    Object.entries(scheduleRoomOperatorOverrides.value).flatMap(
+      ([key, operators]) => {
+        if (/(?:^|:)training:\d+$/.test(key)) {
+          return scheduleExecutionSettings.allowTrainingRoomOperators
+            ? [[key, (operators || []).slice(0, 1)]]
+            : [];
+        }
 
-      return {
-        ...capacityByType,
-        [roomType]:
-          Number(capacityByType[roomType] || 0) +
-          (group?.stations || []).reduce(
-            (total, station) =>
-              total + Math.max(0, Number(station?.slotCount) || 0),
-            0,
-          ),
-      };
-    }, {}),
-);
+        if (/(?:^|:)recycle:\d+$/.test(key)) {
+          return scheduleExecutionSettings.allowRecycleRoomOperators
+            ? [[key, operators]]
+            : [];
+        }
+
+        return [[key, operators]];
+      },
+    ),
+  );
+});
 
 function getSchedulePreviewManualStaticOperatorIds(stateIndex) {
   const prefix = `${stateIndex}:`;
   const staticRoomKeys = schedulePreviewStaticRoomKeys.value;
 
-  return Object.entries(scheduleRoomOperatorOverrides.value).flatMap(
+  return Object.entries(activeScheduleRoomOperatorOverrides.value).flatMap(
     ([overrideKey, operators]) => {
       const roomKey = String(overrideKey || "").slice(prefix.length);
       return overrideKey.startsWith(prefix) && staticRoomKeys.has(roomKey)
@@ -4485,14 +4794,144 @@ function getSchedulePreviewManualStaticOperatorIds(stateIndex) {
   );
 }
 
+function addActiveRosterHangerPlacements({
+  placements,
+  roomAssignments = [],
+  activeOperatorIdsByScope = null,
+  activeOperatorIds,
+  claimedOperatorIds,
+  idleFillOperators,
+  roomCapacityByType,
+  stateUseCountByOperatorId,
+  maxStateUseCount,
+} = {}) {
+  const nextPlacements = Object.fromEntries(
+    Object.entries(placements || {}).map(([roomType, operators]) => [
+      roomType,
+      [...(operators || [])],
+    ]),
+  );
+  const selectedIds = new Set(claimedOperatorIds || []);
+  for (const operators of Object.values(nextPlacements)) {
+    for (const operator of operators) {
+      if (operator?.charId) {
+        selectedIds.add(operator.charId);
+      }
+    }
+  }
+
+  const activeIds = new Set([
+    ...(activeOperatorIds || []),
+    ...selectedIds,
+  ]);
+  const scopedActiveOperatorIds =
+    activeOperatorIdsByScope ||
+    buildRiicActiveOperatorIdsByScopeForStateIndexes({
+      selectedEntries: roomAssignments.map((assignment) => ({
+        candidate: {
+          candidateScope: {
+            roomType: assignment?.roomType,
+            product: assignment?.product || "all",
+          },
+        },
+        operatorIds: assignment?.operatorIds || [],
+      })),
+    });
+  const powerCapacity = Math.max(
+    0,
+    Number(roomCapacityByType?.power) || 0,
+  );
+  const powerHangers = getRiicActiveRosterHangerOrder({
+    idleFillOperators,
+    activeOperatorIds: [...activeIds],
+    claimedOperatorIds: [...selectedIds],
+    stateUseCountByOperatorId,
+    maxStateUseCount,
+    activeOperatorIdsByScope: scopedActiveOperatorIds,
+    targetScope: { roomType: "power", product: "all" },
+  });
+  for (const { operator, roomPriority, applications } of powerHangers) {
+    if ((nextPlacements.power || []).length >= powerCapacity) {
+      break;
+    }
+
+    const application = applications?.[0];
+    nextPlacements.power = [
+      ...(nextPlacements.power || []),
+      {
+        charId: operator.charId,
+        name: operator.name,
+        sourceRuleId: application?.ruleId || "active-roster-hanger",
+        priority: Number(roomPriority || 0),
+      },
+    ];
+    selectedIds.add(operator.charId);
+    if (stateUseCountByOperatorId instanceof Map) {
+      stateUseCountByOperatorId.set(
+        operator.charId,
+        Number(stateUseCountByOperatorId.get(operator.charId) || 0) + 1,
+      );
+    }
+  }
+
+  const roomTypes = [
+    ["processing", Math.max(0, Number(roomCapacityByType?.processing) || 0)],
+    [
+      "training",
+      scheduleExecutionSettings.allowTrainingRoomOperators
+        ? Math.min(1, Math.max(0, Number(roomCapacityByType?.training) || 0))
+        : 0,
+    ],
+  ];
+  const hangerCandidates = getRiicActiveRosterHangerOrder({
+    idleFillOperators,
+    activeOperatorIds: [...activeIds],
+    claimedOperatorIds: [...selectedIds],
+    stateUseCountByOperatorId,
+    maxStateUseCount,
+  });
+
+  for (const { operator, priority, roomPriority, applications } of hangerCandidates) {
+    const targetRoomType = roomTypes.find(([roomType, capacity]) => {
+      const roomPlacements = nextPlacements[roomType] || [];
+      return capacity > roomPlacements.length;
+    })?.[0];
+    if (!targetRoomType) {
+      break;
+    }
+
+    const application = applications?.[0] || priority?.applications?.[0];
+    nextPlacements[targetRoomType] = [
+      ...(nextPlacements[targetRoomType] || []),
+      {
+        charId: operator.charId,
+        name: operator.name,
+        sourceRuleId: application?.ruleId || "active-roster-hanger",
+        priority: Number(roomPriority || 0),
+      },
+    ];
+    selectedIds.add(operator.charId);
+    if (stateUseCountByOperatorId instanceof Map) {
+      stateUseCountByOperatorId.set(
+        operator.charId,
+        Number(stateUseCountByOperatorId.get(operator.charId) || 0) + 1,
+      );
+    }
+  }
+
+  return nextPlacements;
+}
+
 const riicSupportRoomPlacementsBySourceStateIndex = computed(() =>
-  Object.fromEntries(
-    (riicSchedulePreviewWithoutSupportRooms.value?.states || []).map(
-      (state) => {
+  (() => {
+    const stateContexts = (
+      riicSchedulePreviewWithoutSupportRooms.value?.states || []
+    ).map((state) => {
         const roomAssignments = (state?.rooms || [])
           .filter((room) => !room?.isStatic)
           .map((room) => ({
             roomType: room.facility,
+            product: room.product,
             operatorIds: (room?.operators || [])
               .map((operator) => operator?.charId)
               .filter(Boolean),
@@ -4509,20 +4948,74 @@ const riicSupportRoomPlacementsBySourceStateIndex = computed(() =>
           ? state.sourceStateIndex
           : state?.index;
 
-        return [
-          sourceStateIndex,
-          getRiicLayer3SupportRoomPlacements({
-            roomAssignments,
-            ownedOperators: virtualOperators.value || [],
-            claimedOperatorIds,
-            layoutData: activeLayoutFacilityCounts.value,
-            idleFillOperators: riicIdleFillOperators.value,
-            roomCapacityByType: riicStaticRoomCapacityByType.value,
-          }),
+        const roomCapacityByType = {
+          ...riicStaticRoomCapacityByType.value,
+          training: scheduleExecutionSettings.allowTrainingRoomOperators
+            ? Math.min(
+                1,
+                Number(riicStaticRoomCapacityByType.value.training || 0),
+              )
+            : 0,
+          recycle: 0,
+        };
+        const supportPlacements = getRiicLayer3SupportRoomPlacements({
+          roomAssignments,
+          ownedOperators: virtualOperators.value || [],
+          claimedOperatorIds,
+          layoutData: activeLayoutFacilityCounts.value,
+          idleFillOperators: riicIdleFillOperators.value,
+          roomCapacityByType,
+        });
+        const activeOperatorIds = [
+          ...roomAssignments.flatMap((assignment) => assignment.operatorIds),
+          ...claimedOperatorIds,
         ];
-      },
-    ),
-  ),
+
+        return {
+          sourceStateIndex,
+          roomAssignments,
+          claimedOperatorIds,
+          activeOperatorIds,
+          roomCapacityByType,
+          supportPlacements,
+        };
+      });
+    const stateUseCountByOperatorId = new Map();
+
+    // Hangers are added after the normal room plan, so count every state's
+    // existing facility placement before assigning any parking slots.
+    for (const context of stateContexts) {
+      const occupiedInState = new Set([
+        ...context.activeOperatorIds,
+        ...Object.values(context.supportPlacements || {}).flatMap((operators) =>
+          (operators || []).map((operator) => operator?.charId),
+        ),
+      ]);
+      for (const charId of occupiedInState) {
+        if (!charId) {
+          continue;
+        }
+        stateUseCountByOperatorId.set(
+          charId,
+          Number(stateUseCountByOperatorId.get(charId) || 0) + 1,
+        );
+      }
+    }
+
+    const maxStateUseCount = Math.max(1, stateContexts.length - 1);
+    return Object.fromEntries(
+      stateContexts.map((context) => [
+        context.sourceStateIndex,
+        addActiveRosterHangerPlacements({
+          ...context,
+          placements: context.supportPlacements,
+          idleFillOperators: riicIdleFillOperators.value,
+          stateUseCountByOperatorId,
+          maxStateUseCount,
+        }),
+      ]),
+    );
+  })(),
 );
 
 function distributeRiicSupportRoomPlacements(
@@ -4600,6 +5093,9 @@ const schedulePreviewStaticRooms = computed(() => {
           facility: group.facility,
           stationLevel: station?.stationLevel || null,
           expectedSlots,
+          maxStaffingSlots:
+            group.facility === "training" ? 1 : null,
+          staffingDisabled: group.staffingDisabled === true,
           operatorsByStateIndex,
         };
       }),
@@ -4614,7 +5110,7 @@ const riicSchedulePreviewBase = computed(() =>
       confirmedLayoutPlan.value?.shiftMode,
       twoShiftRotationMode.value,
     ),
-    roomOperatorOverrides: scheduleRoomOperatorOverrides.value,
+    roomOperatorOverrides: activeScheduleRoomOperatorOverrides.value,
     productOverrides: scheduleRoomProductOverrides.value,
     invalidatedRoomKeys: invalidatedScheduleRoomKeys.value,
     stickyOperatorIds: [
@@ -4992,11 +5488,24 @@ const riicLegacyActualScheduleMetrics = computed(() => {
       })
     : null;
 });
-const riicActualScheduleMetrics = computed(() =>
-  scheduleExecutionSettings.calculationMode === "riic-efficiency"
-    ? riicEfficiencyCalculation.value.actual || null
-    : riicLegacyActualScheduleMetrics.value,
-);
+const riicActualScheduleMetrics = computed(() => {
+  if (scheduleExecutionSettings.calculationMode === "riic-efficiency") {
+    return riicEfficiencyCalculation.value.actual || null;
+  }
+
+  const actual = riicLegacyActualScheduleMetrics.value;
+  const recycleYield = riicEfficiencyCalculation.value.yield;
+  return actual?.yield && Array.isArray(recycleYield?.recycleOutputs)
+    ? {
+        ...actual,
+        yield: {
+          ...actual.yield,
+          recycleOutputs: recycleYield.recycleOutputs,
+          recycleBoostConsumption: recycleYield.recycleBoostConsumption,
+        },
+      }
+    : actual;
+});
 function applyRiicTradingSettlementToPreview({
   preview,
   tradingSettlements,
@@ -5364,10 +5873,13 @@ function getRiicMaaScheduleBuildOptions(includeRiicRoomLevels = false) {
     description: scheduleExecutionSettings.exportInfo.description,
     roomSettingOverrides: scheduleRoomMaaSettingOverrides.value,
     roomIndexAssignments: resolvedScheduleRoomMaaIndexAssignments.value,
+    recycleBoostItemId:
+      scheduleExecutionSettings.riicEfficiencySettings.recycleBoostItemId || "",
     hasFiammetta: schedulePreviewShifts.value.some(
       (shift) => shift?.fiammetta?.enable === true,
     ),
     includeRiicRoomLevels,
+    forceSkipFalse: true,
   };
 }
 
@@ -5457,6 +5969,7 @@ const riicL79InputDebugState = computed(() => {
   try {
     const { schedule } = buildRiicMaaScheduleFromPreview({
       ...getRiicMaaScheduleBuildOptions(true),
+      includeUnstaffedRecycleRoom: true,
     });
     return {
       schedule,
@@ -6070,7 +6583,7 @@ function getDefaultScheduleRoomMaaSettings(room) {
     autofill:
       facility === "dormitory" ||
       (facility === "meeting" && operatorCount < 2),
-    skip: facility !== "dormitory" && operatorCount === 0,
+    skip: false,
   };
 }
 
@@ -6084,6 +6597,7 @@ function getScheduleRoomMaaSettings(room, stateIndex) {
     ...(scheduleRoomMaaSettingOverrides.value[
       getScheduleRoomOverrideKey(stateIndex, room.key)
     ] || {}),
+    skip: false,
   };
 }
 
@@ -6233,7 +6747,7 @@ function updateScheduleRoomMaaSettings(nextSettings) {
 
   const defaults = getDefaultScheduleRoomMaaSettings(room);
   const normalized = Object.fromEntries(
-    ["sort", "autofill", "skip"].flatMap((field) =>
+    ["sort", "autofill"].flatMap((field) =>
       typeof nextSettings?.[field] === "boolean" &&
       nextSettings[field] !== defaults[field]
         ? [[field, nextSettings[field]]]
@@ -6307,7 +6821,8 @@ function hasDuplicateSchedulePreviewRoomOperators(operators) {
 }
 
 function canFitSchedulePreviewRoomOperators(room, operators) {
-  const expectedSlots = Number(room?.expectedSlots);
+  const expectedSlots =
+    Number(room?.maxStaffingSlots) || Number(room?.expectedSlots);
   return (
     !Number.isInteger(expectedSlots) ||
     expectedSlots < 1 ||
@@ -6339,7 +6854,7 @@ function moveSchedulePreviewOperator({
   const targetRoom = (state?.rooms || []).find(
     (room) => room.key === targetRoomKey,
   );
-  if (!sourceRoom || !targetRoom) {
+  if (!sourceRoom || !targetRoom || targetRoom.staffingDisabled) {
     return;
   }
 
@@ -6518,7 +7033,7 @@ function addScheduleRoomEditorOperator(selectedOperator = null) {
       selectedOperator?.charId || scheduleRoomEditorInputCharId.value,
     name: selectedOperator?.name || scheduleRoomEditorInputName.value,
   });
-  if (!room || !nextOperator) {
+  if (!room || room.staffingDisabled || !nextOperator) {
     return;
   }
 
@@ -6529,8 +7044,7 @@ function addScheduleRoomEditorOperator(selectedOperator = null) {
         getScheduleRoomEditorOperatorKey(operator) ===
         getScheduleRoomEditorOperatorKey(nextOperator),
     ) ||
-    (Number(room.expectedSlots) > 0 &&
-      operators.length >= Number(room.expectedSlots))
+    !canFitSchedulePreviewRoomOperators(room, [...operators, nextOperator])
   ) {
     return;
   }
@@ -6712,13 +7226,18 @@ function normalizeScheduleRoomOperatorClipboard(operators, expectedSlots) {
 function copyScheduleRoomEditorOperators() {
   copiedScheduleRoomOperators.value = normalizeScheduleRoomOperatorClipboard(
     scheduleRoomEditorOperators.value,
-    activeSchedulePreviewRoom.value?.expectedSlots,
+    activeSchedulePreviewRoom.value?.maxStaffingSlots ||
+      activeSchedulePreviewRoom.value?.expectedSlots,
   );
 }
 
 function pasteScheduleRoomEditorOperators() {
   const room = activeSchedulePreviewRoom.value;
-  if (!room || !Array.isArray(copiedScheduleRoomOperators.value)) {
+  if (
+    !room ||
+    room.staffingDisabled ||
+    !Array.isArray(copiedScheduleRoomOperators.value)
+  ) {
     return;
   }
 
@@ -6727,7 +7246,7 @@ function pasteScheduleRoomEditorOperators() {
     activeSchedulePreviewStateIndex.value,
     normalizeScheduleRoomOperatorClipboard(
       copiedScheduleRoomOperators.value,
-      room.expectedSlots,
+      room.maxStaffingSlots || room.expectedSlots,
     ),
   );
 }
@@ -7432,6 +7951,10 @@ function getCustomStationSlotCount(facility, stationLevel) {
     return 5;
   }
 
+  if (facility === "recycle") {
+    return stationLevel >= 2 ? 2 : 1;
+  }
+
   return stationLevel;
 }
 
@@ -8124,7 +8647,7 @@ function normalizeSavedScheduleRoomMaaSettingOverrides(value) {
       }
 
       const normalized = Object.fromEntries(
-        ["sort", "autofill", "skip"].flatMap((field) =>
+        ["sort", "autofill"].flatMap((field) =>
           typeof settings[field] === "boolean"
             ? [[field, settings[field]]]
             : [],
@@ -8274,7 +8797,8 @@ function createInitialWorkspaceFromCurrent() {
         calculationMode: "riic-efficiency",
         riicEfficiencySettings: normalizeRiicEfficiencySettings(),
         orundumCraftMaterial: "orirock",
-        includeTrainingRoom: false,
+        allowTrainingRoomOperators: false,
+        allowRecycleRoomOperators: false,
         exportInfo: normalizeScheduleExportInfo(),
       },
     },
@@ -8410,8 +8934,10 @@ function applySavedWizardState(parsedDraft) {
     savedExecutionSettings.riicEfficiencySettings;
   scheduleExecutionSettings.orundumCraftMaterial =
     savedExecutionSettings.orundumCraftMaterial;
-  scheduleExecutionSettings.includeTrainingRoom =
-    savedExecutionSettings.includeTrainingRoom;
+  scheduleExecutionSettings.allowTrainingRoomOperators =
+    savedExecutionSettings.allowTrainingRoomOperators;
+  scheduleExecutionSettings.allowRecycleRoomOperators =
+    savedExecutionSettings.allowRecycleRoomOperators;
   scheduleExecutionSettings.exportInfo = savedExecutionSettings.exportInfo;
   scheduleRoomOperatorOverrides.value =
     normalizeSavedScheduleRoomOperatorOverrides(
@@ -8702,6 +9228,14 @@ function setIdealTrainingRaritySelection(value) {
   clearSelectedRoomGroupTeamCandidates();
 }
 
+function setRecycleBoostItemId(value) {
+  scheduleExecutionSettings.riicEfficiencySettings =
+    normalizeRiicEfficiencySettings({
+      ...scheduleExecutionSettings.riicEfficiencySettings,
+      recycleBoostItemId: String(value || "").trim(),
+    });
+}
+
 function selectManualScheduleOption(value) {
   const [shiftMode, cardKey] = String(value).split(":");
   const card = getLayoutCardByKey(cardKey);
@@ -8863,6 +9397,12 @@ async function clearSavedWizardState() {
   fiammettaRecoverySettings.value = normalizeFiammettaRecoverySettings();
   lastAutomaticGenerationTriggerKey.value = "";
   clearSelectedRoomGroupTeamCandidates();
+  // 「清空本页缓存」是显式重置：设施开关与加速材料也回默认，
+  // 与同一函数里 一天两换 / 干员练度 的处理保持一致。
+  resetScheduleExecutionSettings({
+    preserveRoomOperatorPermissions: false,
+    preserveRecycleBoostItem: false,
+  });
   recommendationPanelOpen.value = false;
   resetOperatorSources({ clearStorage: true });
   hasSavedWizardState.value = false;
@@ -8991,6 +9531,51 @@ async function exportGeneratedScheduleImage() {
   }
 }
 
+function createGeneratedMaaOperatorProgressions() {
+  return Object.fromEntries(
+    (ownedOperators.value || []).flatMap((operator) => {
+      const charId = String(operator?.charId || "").trim();
+      if (!charId) {
+        return [];
+      }
+
+      const name = String(operator?.name || "").trim();
+      const elite = Number(operator?.elite);
+      const rawLevel = operator?.level;
+      const level =
+        rawLevel === null || rawLevel === undefined || rawLevel === ""
+          ? null
+          : Number(rawLevel);
+
+      return [
+        [
+          charId,
+          {
+            ...(name ? { name } : {}),
+            elite:
+              Number.isInteger(elite) && elite >= 0 && elite <= 2 ? elite : 0,
+            level: Number.isInteger(level) && level >= 1 ? level : null,
+          },
+        ],
+      ];
+    }),
+  );
+}
+
+function createGeneratedMaaModuleVersions() {
+  return Object.fromEntries(
+    Object.entries(RIIC_SCHEDULE_MODULE_VERSIONS).flatMap(
+      ([module, metadata]) => {
+        const version =
+          typeof metadata === "string" ? metadata : metadata?.version;
+        return typeof version === "string" && version.trim()
+          ? [[module, version]]
+          : [];
+      },
+    ),
+  );
+}
+
 function exportGeneratedMaaSchedule() {
   if (!generatedMaaExportPreview.value) {
     cMessage("当前没有可导出的 MAA 排班", "warn");
@@ -9000,10 +9585,25 @@ function exportGeneratedMaaSchedule() {
   exportingMaa.value = true;
 
   try {
-    const schedule = prepareRiicMaaScheduleForExport(
-      generatedMaaExportPreview.value.schedule,
+    const schedule = addRiicScheduleExportFields(
+      prepareRiicMaaScheduleForExport(
+        generatedMaaExportPreview.value.schedule,
+        {
+          allowTrainingRoomOperators:
+            scheduleExecutionSettings.allowTrainingRoomOperators,
+          allowRecycleRoomOperators:
+            scheduleExecutionSettings.allowRecycleRoomOperators,
+          forceSkipFalse: true,
+        },
+      ),
       {
-        includeTrainingRoom: scheduleExecutionSettings.includeTrainingRoom,
+        generator: {
+          id: "yituliu-riic-schedule-generator",
+          name: "明日方舟一图流-排班表自动生成工具",
+          url: "https://ark.yituliu.cn/tools/scheduleV3",
+        },
+        moduleVersions: createGeneratedMaaModuleVersions(),
+        operators: createGeneratedMaaOperatorProgressions(),
       },
     );
     const blob = new Blob(
@@ -9029,7 +9629,11 @@ function openGeneratedScheduleInLegacyEditor() {
   const schedule = prepareRiicMaaScheduleForExport(
     generatedMaaExportPreview.value?.schedule,
     {
-      includeTrainingRoom: scheduleExecutionSettings.includeTrainingRoom,
+      allowTrainingRoomOperators:
+        scheduleExecutionSettings.allowTrainingRoomOperators,
+      allowRecycleRoomOperators:
+        scheduleExecutionSettings.allowRecycleRoomOperators,
+      forceSkipFalse: true,
     },
   );
   if (!schedule) {
@@ -9089,7 +9693,8 @@ watch(
     () => scheduleExecutionSettings.calculationMode,
     () => JSON.stringify(scheduleExecutionSettings.riicEfficiencySettings),
     () => scheduleExecutionSettings.orundumCraftMaterial,
-    () => scheduleExecutionSettings.includeTrainingRoom,
+    () => scheduleExecutionSettings.allowTrainingRoomOperators,
+    () => scheduleExecutionSettings.allowRecycleRoomOperators,
     scheduleRoomOperatorOverrides,
     scheduleRoomProductOverrides,
     invalidatedScheduleRoomKeys,
@@ -9406,10 +10011,22 @@ onBeforeUnmount(() => {
               treatUnderleveledOperatorsAsQualified
             "
             :ideal-training-rarity-selection="idealTrainingRaritySelection"
+            :allow-training-room-operators="
+              scheduleExecutionSettings.allowTrainingRoomOperators
+            "
+            :allow-recycle-room-operators="
+              scheduleExecutionSettings.allowRecycleRoomOperators
+            "
             @select-two-shift-rotation="selectTwoShiftRotationMode"
             @select-facility-requirement="selectFacilityRequirement"
             @set-training-mode="setTreatUnderleveledOperatorsAsQualified"
             @set-training-rarity-selection="setIdealTrainingRaritySelection"
+            @set-training-room-operators="
+              scheduleExecutionSettings.allowTrainingRoomOperators = $event
+            "
+            @set-recycle-room-operators="
+              scheduleExecutionSettings.allowRecycleRoomOperators = $event
+            "
           >
             <template v-if="hasFiammetta" #before-settings>
               <RiicFiammettaRecoverySetting
@@ -9430,7 +10047,7 @@ onBeforeUnmount(() => {
           </header>
 
           <RiicRoomGroupNavigator
-            :selection-rows="roomGroupSelectionRows"
+            :selection-rows="roomGroupDisplayRows"
             :active-group-id="activeScheduleRoomGroup?.id || ''"
             :get-group-status="getRoomGroupDisplayStatus"
             @select-group="activeScheduleRoomGroupKey = $event"
@@ -10143,9 +10760,6 @@ onBeforeUnmount(() => {
               :orundum-craft-material="
                 scheduleExecutionSettings.orundumCraftMaterial
               "
-              :include-training-room="
-                scheduleExecutionSettings.includeTrainingRoom
-              "
               :default-title="getDefaultGeneratedScheduleTitle()"
               :shifts="schedulePreviewShifts"
               :show-orundum-craft-material="hasOrundumManufactureRoom"
@@ -10158,9 +10772,7 @@ onBeforeUnmount(() => {
                 scheduleExecutionSettings.orundumCraftMaterial =
                   normalizeOrundumCraftMaterial($event)
               "
-              @update:include-training-room="
-                scheduleExecutionSettings.includeTrainingRoom = $event === true
-              "
+              @set-recycle-boost-item="setRecycleBoostItemId"
               @update-calculation-mode="
                 scheduleExecutionSettings.calculationMode =
                   normalizeScheduleCalculationMode($event)

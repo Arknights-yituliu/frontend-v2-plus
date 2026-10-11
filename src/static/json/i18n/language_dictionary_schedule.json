@@ -172,6 +172,14 @@
       "cn": "办公室",
       "en": "Office"
     },
+    "Training": {
+      "cn": "训练室",
+      "en": "Training"
+    },
+    "Recycle": {
+      "cn": "回收站",
+      "en": "Recycle"
+    },
     "RoomNumber": {
       "cn": "房间编号",
       "en": "Room Number"
@@ -301,6 +309,10 @@
     "Training": {
       "cn": "训练室",
       "en": "Training"
+    },
+    "Recycle": {
+      "cn": "回收站",
+      "en": "Recycle"
     },
     "GeneralWokers": {
       "cn": "生产力",

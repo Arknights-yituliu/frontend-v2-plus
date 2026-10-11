@@ -92,6 +92,13 @@ const operatorFilterConditionTable = {
                     return operator.roomType === 'training'
                 }
             },
+            {
+                label: "buildSkillFilter.Recycle",
+                roomType: 'recycle',
+                func: (operator) => {
+                    return operator.roomType === 'recycle'
+                }
+            },
         ]
     },
     manufacture: {

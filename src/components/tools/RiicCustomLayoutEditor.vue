@@ -84,6 +84,10 @@ const FACILITY_META = Object.freeze({
     label: "训练室",
     tone: "training",
   },
+  recycle: {
+    label: "回收站",
+    tone: "recycle",
+  },
 });
 
 const editorRooms = computed(() => [
@@ -469,6 +473,10 @@ function selectProduct(station, product) {
 
 .custom-layout-room.tone-office {
   --room-color: var(--riic-red);
+}
+
+.custom-layout-room.tone-recycle {
+  --room-color: #6ccbcb;
 }
 
 .custom-layout-room.tone-dormitory,

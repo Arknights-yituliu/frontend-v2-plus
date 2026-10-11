@@ -9,6 +9,7 @@ const MAA_ROOM_TYPE_BY_FACILITY = Object.freeze({
   dormitory: "dormitory",
   processing: "processing",
   training: "training",
+  recycle: "recycle",
 });
 
 const MAA_PRODUCT_BY_PRODUCT = Object.freeze({
@@ -46,12 +47,8 @@ export function getRiicMaaRoomType(facility) {
   return MAA_ROOM_TYPE_BY_FACILITY[String(facility || "").trim()] || null;
 }
 
-export function prepareRiicMaaScheduleForExport(
-  schedule,
-  { includeTrainingRoom = true } = {},
-) {
+export function prepareRiicMaaScheduleForExport(schedule, options = {}) {
   if (
-    includeTrainingRoom ||
     !schedule ||
     typeof schedule !== "object" ||
     !Array.isArray(schedule.plans)
@@ -59,28 +56,122 @@ export function prepareRiicMaaScheduleForExport(
     return schedule;
   }
 
-  let hasTrainingRoom = false;
+  const allowSharedRoomOperators =
+    options.allowUnsupportedRoomOperators === true;
+  const allowTrainingRoomOperators = Object.hasOwn(
+    options,
+    "allowTrainingRoomOperators",
+  )
+    ? options.allowTrainingRoomOperators === true
+    : Object.hasOwn(options, "includeTrainingRoom")
+      ? options.includeTrainingRoom === true
+      : allowSharedRoomOperators;
+  const allowRecycleRoomOperators = Object.hasOwn(
+    options,
+    "allowRecycleRoomOperators",
+  )
+    ? options.allowRecycleRoomOperators === true
+    : allowSharedRoomOperators;
+  const forceSkipFalse = options.forceSkipFalse === true;
+
+  let hasChanges = false;
   const plans = schedule.plans.map((plan) => {
     const rooms = plan?.rooms;
-    if (
-      !rooms ||
-      typeof rooms !== "object" ||
-      Array.isArray(rooms) ||
-      !Object.hasOwn(rooms, "training")
-    ) {
+    if (!rooms || typeof rooms !== "object" || Array.isArray(rooms)) {
       return plan;
     }
 
-    hasTrainingRoom = true;
     const nextRooms = { ...rooms };
-    delete nextRooms.training;
+    let planChanged = false;
+    if (forceSkipFalse) {
+      for (const [roomType, facilityRooms] of Object.entries(nextRooms)) {
+        if (!Array.isArray(facilityRooms)) {
+          continue;
+        }
+
+        let roomListChanged = false;
+        const normalizedRooms = facilityRooms.map((room) => {
+          if (!room || typeof room !== "object" || room.skip === false) {
+            return room;
+          }
+
+          roomListChanged = true;
+          return { ...room, skip: false };
+        });
+
+        if (roomListChanged) {
+          nextRooms[roomType] = normalizedRooms;
+          planChanged = true;
+        }
+      }
+    }
+
+    const trainingRooms = Array.isArray(nextRooms.training)
+      ? nextRooms.training
+      : [];
+    const recycleRooms = Array.isArray(nextRooms.recycle)
+      ? nextRooms.recycle
+      : [];
+    const hasTrainingOperators = trainingRooms.some(
+      (room) =>
+        (room?.operatorsA || []).length > 0 ||
+        (room?.operatorsB || []).length > 0 ||
+        (room?.operators || []).length > 0,
+    );
+    const hasRecycleOperators = recycleRooms.some(
+      (room) => (room?.operators || []).length > 0,
+    );
+    if (
+      Object.hasOwn(nextRooms, "training") &&
+      (!allowTrainingRoomOperators || !hasTrainingOperators)
+    ) {
+      planChanged = true;
+      delete nextRooms.training;
+    }
+    if (
+      Object.hasOwn(nextRooms, "recycle") &&
+      (!allowRecycleRoomOperators || !hasRecycleOperators)
+    ) {
+      planChanged = true;
+      delete nextRooms.recycle;
+    }
+    if (!planChanged) {
+      return plan;
+    }
+    hasChanges = true;
     return {
       ...plan,
       rooms: nextRooms,
     };
   });
 
-  return hasTrainingRoom ? { ...schedule, plans } : schedule;
+  return hasChanges ? { ...schedule, plans } : schedule;
+}
+
+export function addRiicScheduleExportFields(
+  schedule,
+  { generator, moduleVersions, operators } = {},
+) {
+  if (!schedule || typeof schedule !== "object" || Array.isArray(schedule)) {
+    return schedule;
+  }
+
+  const nextSchedule = {
+    ...schedule,
+    metadata: {
+      extensionVersion: "1.0",
+      generator: { ...generator },
+      ...(moduleVersions ? { moduleVersions: { ...moduleVersions } } : {}),
+    },
+  };
+
+  if (operators === undefined) {
+    delete nextSchedule.operators;
+  } else {
+    nextSchedule.operators = operators;
+  }
+
+  return nextSchedule;
 }
 
 function getTimeInMinutes(time) {
@@ -158,12 +249,20 @@ function createMaaRoom(
   stateIndex,
   roomSettingOverrides,
   includeRiicRoomLevels,
+  forceSkipFalse,
 ) {
   const operators = getRoomOperators(room);
-  const maaRoom = {
-    operators,
-    sort: ["control", "manufacture", "trading"].includes(room?.facility),
-  };
+  const maaRoom =
+    room?.facility === "training"
+      ? operators.length > 0
+        ? { operatorsA: [operators[0]] }
+        : {}
+      : {
+          operators,
+          sort: ["control", "manufacture", "trading"].includes(
+            room?.facility,
+          ),
+        };
   const stationLevel = Number(room?.stationLevel);
 
   if (includeRiicRoomLevels) {
@@ -200,6 +299,7 @@ function createMaaRoom(
   return {
     ...maaRoom,
     ...getRoomSettingsOverride(room, stateIndex, roomSettingOverrides),
+    ...(forceSkipFalse ? { skip: false } : {}),
   };
 }
 
@@ -209,6 +309,8 @@ function createPlanRooms(
   roomSettingOverrides,
   roomIndexAssignments,
   includeRiicRoomLevels,
+  includeUnstaffedRecycleRoom,
+  forceSkipFalse,
 ) {
   const byType = new Map();
 
@@ -225,6 +327,14 @@ function createPlanRooms(
 
   const maaRooms = {};
   for (const [roomType, facilityRooms] of byType.entries()) {
+    if (
+      ["training", "recycle"].includes(roomType) &&
+      !(includeUnstaffedRecycleRoom && roomType === "recycle") &&
+      facilityRooms.every((room) => (room?.operators || []).length === 0)
+    ) {
+      continue;
+    }
+
     const sortedRooms = [...facilityRooms].sort(
       (left, right) =>
         getRiicMaaRoomSortValue(left, roomIndexAssignments) -
@@ -251,6 +361,7 @@ function createPlanRooms(
         stateIndex,
         roomSettingOverrides,
         includeRiicRoomLevels,
+        forceSkipFalse,
       ),
     );
   }
@@ -315,8 +426,11 @@ export function buildRiicMaaScheduleFromPreview({
   description = "",
   roomSettingOverrides = {},
   roomIndexAssignments = {},
+  recycleBoostItemId = "",
   hasFiammetta = false,
   includeRiicRoomLevels = false,
+  includeUnstaffedRecycleRoom = false,
+  forceSkipFalse = false,
   durationSource = "clock",
 } = {}) {
   const states = Array.isArray(preview?.states) ? preview.states : [];
@@ -386,6 +500,8 @@ export function buildRiicMaaScheduleFromPreview({
         roomSettingOverrides,
         roomIndexAssignments,
         includeRiicRoomLevels,
+        includeUnstaffedRecycleRoom,
+        forceSkipFalse,
       ),
     };
 
@@ -443,6 +559,9 @@ export function buildRiicMaaScheduleFromPreview({
       author: String(author || "").trim(),
       description:
         String(description || "").trim() || "由一图流基建排班表生成器导出。",
+      ...(String(recycleBoostItemId || "").trim()
+        ? { settings: { recycleBoostItemId: String(recycleBoostItemId).trim() } }
+        : {}),
       plans,
     },
     warnings: [...warnings],

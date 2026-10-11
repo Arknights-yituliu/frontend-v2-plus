@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
+import RiicRecycleBoostSelect from "/src/components/tools/RiicRecycleBoostSelect.vue";
 
 const props = defineProps({
   exportInfo: {
@@ -22,10 +23,6 @@ const props = defineProps({
   orundumCraftMaterial: {
     type: String,
     default: "orirock",
-  },
-  includeTrainingRoom: {
-    type: Boolean,
-    default: false,
   },
   showOrundumCraftMaterial: {
     type: Boolean,
@@ -63,7 +60,7 @@ const displayShifts = computed(() =>
 const emit = defineEmits([
   "update:export-info",
   "update:orundum-craft-material",
-  "update:include-training-room",
+  "set-recycle-boost-item",
   "update:shift",
   "update-calculation-mode",
   "update:riic-efficiency-settings",
@@ -90,8 +87,8 @@ function updateOrundumCraftMaterial(value) {
   emit("update:orundum-craft-material", value);
 }
 
-function updateIncludeTrainingRoom(event) {
-  emit("update:include-training-room", event.target.checked);
+function updateRecycleBoostItem(value) {
+  emit("set-recycle-boost-item", String(value || "").trim());
 }
 
 function updateCalculationMode(event) {
@@ -259,21 +256,6 @@ function updateRiicEfficiencySetting(key, event, percent = false) {
           <strong>高级设置</strong>
         </header>
         <div class="schedule-export-area-content">
-          <section class="schedule-export-module schedule-export-maa-module">
-            <header class="schedule-export-module-heading">
-              <strong>MAA 导出内容</strong>
-            </header>
-            <label class="schedule-export-checkbox">
-              <input
-                type="checkbox"
-                :checked="includeTrainingRoom"
-                @change="updateIncludeTrainingRoom"
-              />
-              <span>强行输出训练室字段</span>
-            </label>
-            <p class="schedule-export-warning">MAA尚未支持训练室，请勿打开</p>
-          </section>
-
           <section class="schedule-export-module schedule-export-calculation-module">
             <header class="schedule-export-module-heading">
               <strong>效率计算</strong>
@@ -284,7 +266,7 @@ function updateRiicEfficiencySetting(key, event, percent = false) {
                 :checked="calculationMode === 'riic-efficiency'"
                 @change="updateCalculationMode"
               />
-              <span>使用riic-efficiency计算模块（实验版）</span>
+              <span>使用riic-efficiency计算模块</span>
             </label>
             <div
               v-if="calculationMode === 'riic-efficiency'"
@@ -362,6 +344,24 @@ function updateRiicEfficiencySetting(key, event, percent = false) {
                 </span>
               </label>
             </div>
+          </section>
+          <section
+            class="schedule-export-module schedule-export-recycle-module"
+            aria-label="回收站回收材料"
+          >
+            <header class="schedule-export-module-heading">
+              <strong>消耗的加速材料</strong>
+            </header>
+            <RiicRecycleBoostSelect
+              class="schedule-export-recycle-select"
+              :model-value="riicEfficiencySettings.recycleBoostItemId || ''"
+              placeholder="不消耗加速材料"
+              aria-label="消耗的加速材料"
+              @update:model-value="updateRecycleBoostItem"
+            />
+            <p class="schedule-export-recycle-note">
+              材料极其无用时再考虑
+            </p>
           </section>
         </div>
       </section>
@@ -474,6 +474,17 @@ function updateRiicEfficiencySetting(key, event, percent = false) {
   display: grid;
   gap: 4px;
   min-width: 0;
+}
+
+.schedule-export-recycle-select {
+  width: min(100%, 240px);
+}
+
+.schedule-export-recycle-note {
+  margin: 0;
+  color: var(--riic-muted);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .schedule-export-description-field {

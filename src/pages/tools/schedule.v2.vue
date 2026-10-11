@@ -25,6 +25,8 @@ import {
   readRiicScheduleEditorDraft,
   writeRiicScheduleEditorDraft,
 } from "/src/utils/riicScheduleEditorDraft.js";
+import { buildRiicOperatorIdByName } from "/src/utils/riicOperatorIdentity.js";
+import { addRiicScheduleExportFields } from "/src/utils/riicScheduleExport.js";
 
 const router = useRouter();
 const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
@@ -33,6 +35,11 @@ const RIIC_MAA_CALCULATOR_TRANSFER_STORAGE_KEY =
   "riic_maa_editor_to_efficiency_calculator_v1";
 const RIIC_MAA_CALCULATOR_RETURN_STORAGE_KEY =
   "riic_maa_calculator_to_editor_v1";
+const RIIC_MAA_SCHEDULE_EXPORT_GENERATOR = Object.freeze({
+  id: "yituliu-riic-schedule-v2",
+  name: "明日方舟一图流-排班表（MAA）",
+  url: "https://ark.yituliu.cn/tools/scheduleV2",
+});
 
 let operatorOwnMap = new Map();
 
@@ -65,6 +72,7 @@ const roomTypeMenu = [
   { label: "发电站", value: "power" },
   { label: "会客室", value: "meeting" },
   { label: "训练室", value: "training" },
+  { label: "回收站", value: "recycle" },
 ];
 
 const roomTypeMap = new Map();
@@ -99,18 +107,7 @@ const productTable = {
   ],
 };
 
-let characterIdAndName = {};
-
-for (const key in operatorTableV2) {
-  characterIdAndName[operatorTableV2[key].name] = replaceCharId(key);
-}
-
-function replaceCharId(string) {
-  if (string === "char_1001_amiya2") {
-    return "char_002_amiya";
-  }
-  return string;
-}
+const characterIdAndName = buildRiicOperatorIdByName(operatorTableV2);
 
 let selectedScheduleType = ref(SCHEDULE_MENU[0]);
 
@@ -135,11 +132,11 @@ function getRoomOperators(room, index) {
     return [];
   }
   if (!plansTemplate.value[selectedPlanIndex.value].rooms[room]) {
-    cMessage(room + "-" + translate("schedule", "FacilityNotExist"), "error");
+    cMessage(room + "-" + translate("schedule", "schedule.FacilityNotExist"), "error");
     return [];
   }
   if (!plansTemplate.value[selectedPlanIndex.value].rooms[room][index]) {
-    cMessage(index + "-" + translate("schedule", "OperatorIndexOutOfBounds"), "error");
+    cMessage(index + "-" + translate("schedule", "schedule.OperatorIndexOutOfBounds"), "error");
     return [];
   }
 
@@ -197,6 +194,8 @@ let roomSettlementOperatorMaxQuantity = {
   meeting: 2,
   hire: 1,
   processing: 1,
+  training: 2,
+  recycle: 2,
 };
 
 /**
@@ -282,12 +281,12 @@ function chooseRoom(roomType, index) {
   if ("trading" === roomType || "manufacture" === roomType) {
     selectedProduct.value = getItemIdByProductName(plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].product);
   }
- 
-  if(roomTypeFilterMap.has(roomType)){
-    const condition = roomTypeFilterMap.get(roomType);
-    const btnKey = `room-${condition.label}`;
-     //暂存筛选函数和按钮key
-    selectBtnKey.value = btnKey;
+
+  // 点击设施时同步选中下方「工作场所」筛选。加工站与训练室刻意不提供跳转：
+  // 这两个位置不需要放效率干员，命中面太大反而干扰排班。
+  const condition = roomWorkplaceFilterMap.get(roomType);
+  if (condition) {
+    selectBtnKey.value = `room-${condition.label}`;
     filterCondition.value = condition;
     commonFilterOperator();
   }
@@ -311,6 +310,29 @@ const roomTypeFilterMap = new Map();
 
 for (const condition of operatorFilterConditionTable.room.conditions) {
   roomTypeFilterMap.set(condition.roomType, condition);
+}
+
+// 设施类型 → 「工作场所」筛选条件。这里按设施类型（加工站是 processing）显式映射，
+// 而不是依赖 operatorFilterConditionTable 里的 roomType（加工站在筛选表里叫 workshop）。
+// 加工站和训练室刻意排除：这两个位置不需要放效率干员，跳转筛选反而干扰排班。
+const ROOM_WORKPLACE_FILTER_KEYS = {
+  trading: "trading",
+  manufacture: "manufacture",
+  hire: "hire",
+  dormitory: "dormitory",
+  control: "control",
+  power: "power",
+  meeting: "meeting",
+  recycle: "recycle",
+};
+
+const roomWorkplaceFilterMap = new Map();
+
+for (const [roomType, filterKey] of Object.entries(ROOM_WORKPLACE_FILTER_KEYS)) {
+  const condition = roomTypeFilterMap.get(filterKey);
+  if (condition) {
+    roomWorkplaceFilterMap.set(roomType, condition);
+  }
 }
 
 /**
@@ -558,7 +580,9 @@ function copyPlan() {
 }
 
 function pastePlan() {
-  plansTemplate.value[selectedPlanIndex.value] = JSON.parse(tmpPlanData.value.plan);
+  plansTemplate.value[selectedPlanIndex.value] = fillMissingRoomBuckets(
+    JSON.parse(tmpPlanData.value.plan),
+  );
   duplicateOperatorTable.value[selectedPlanIndex.value] = {};
 }
 
@@ -692,7 +716,7 @@ function restoreScheduleEditorDraft() {
     return;
   }
 
-  plansTemplate.value = draft.plans;
+  plansTemplate.value = draft.plans.map((plan) => fillMissingRoomBuckets(plan));
   scheduleTypeV2.value = {
     ...scheduleTypeV2.value,
     ...draft.scheduleTypeV2,
@@ -767,6 +791,31 @@ function cloneRoomList(roomList) {
 }
 
 /**
+ * 补齐 plan.rooms 里缺失的设施桶。
+ * 旧草稿、旧的粘贴换班表、旧的导入文件里都没有 training/recycle 桶，
+ * 整份替换 plansTemplate 会让这两个设施变成 undefined，
+ * 进而在 getRoomOperators 里报「设施不存在」，所以这里按模板补回来。
+ * @param {object} plan 班次对象
+ * @return {object} 补齐后的班次对象
+ */
+function fillMissingRoomBuckets(plan) {
+  if (!plan || typeof plan !== "object") {
+    return plan;
+  }
+  const templateRooms = SCHEDULE_TEMPLATE?.[0]?.rooms || {};
+  if (!plan.rooms || typeof plan.rooms !== "object") {
+    plan.rooms = cloneRoomList(templateRooms);
+    return plan;
+  }
+  for (const roomType of Object.keys(templateRooms)) {
+    if (plan.rooms[roomType] === undefined) {
+      plan.rooms[roomType] = cloneRoomList(templateRooms[roomType]);
+    }
+  }
+  return plan;
+}
+
+/**
  * 创建排班文件
  */
 function createSchedule() {
@@ -787,6 +836,8 @@ function createSchedule() {
         meeting: plansTemplate.value[i].rooms.meeting,
         hire: plansTemplate.value[i].rooms.hire,
         processing: plansTemplate.value[i].rooms.processing,
+        training: plansTemplate.value[i].rooms.training,
+        recycle: plansTemplate.value[i].rooms.recycle,
       },
     };
     const duration = getValidPlanDuration(plansTemplate.value[i].duration);
@@ -812,6 +863,8 @@ function createSchedule() {
       manufacture: scheduleTypeV2.value.manufacture,
       power: scheduleTypeV2.value.power,
       dormitory: scheduleTypeV2.value.dormitory,
+      training: scheduleTypeV2.value.training ?? 1,
+      recycle: scheduleTypeV2.value.recycle ?? 1,
     },
   );
   // scheduleInfo.value.buildingType = selectedScheduleType.value.label
@@ -826,7 +879,11 @@ function saveAndDownloadScheduleFile() {
   buildingApi.saveSchedule(scheduleInfo.value, 1111).then((response) => {
     scheduleId.value = response.data.scheduleId;
     scheduleInfo.value.id = scheduleId.value;
-    const blob = new Blob([JSON.stringify(scheduleInfo.value, null, 2)], { type: "application/json" });
+    const exportSchedule = addRiicScheduleExportFields(
+      { ...scheduleInfo.value, id: scheduleId.value },
+      { generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR },
+    );
+    const blob = new Blob([JSON.stringify(exportSchedule, null, 2)], { type: "application/json" });
     saveAs(blob, `${scheduleId.value}.json`);
     cMessage(translate("schedule", "schedule.SavedScheduleIDMessage") + scheduleId.value);
   });
@@ -834,9 +891,12 @@ function saveAndDownloadScheduleFile() {
 
 function downloadScheduleFile() {
   createSchedule();
+  const exportSchedule = addRiicScheduleExportFields(scheduleInfo.value, {
+    generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR,
+  });
   let link = document.createElement("a");
   link.download = `自定义排班.json`;
-  link.href = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(scheduleInfo.value, null, 2));
+  link.href = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportSchedule, null, 2));
   link.click();
   link.remove();
 }
@@ -1587,10 +1647,24 @@ function openMaaScheduleCalculator() {
         </v-card-text>
       </v-card>
 
+      <!--复制/粘贴换班表：移到网格上方，避免占用左列的高度、
+          导致左列与中列/右列的行高不一致（三列底边对齐时会把生产设施顶上去一行）-->
+      <div class="copy-btn-wrap copy-btn-bar">
+        <span>
+          {{ translate("schedule", "schedule.TempPlan") }}&nbsp;
+          {{ translate("schedule", "schedule.Shift") }}
+          {{ tmpPlanData.index }}
+        </span>
+        <v-btn color="primary" @click="copyPlan()" :text="translate('schedule', 'schedule.CopyPlan')"> </v-btn>
+        <v-btn color="primary" @click="pastePlan()" :text="translate('schedule', 'schedule.PastePlan')"> </v-btn>
+      </div>
+
       <div class="room-wrap">
         <!--  左边站点-->
         <div class="room-wrap-left">
-          <div class="copy-btn-wrap"></div>
+          <!-- 占位：正好一格高，让生产设施整体下移一格，
+               与中列的 宿舍#1~#3、右列的 加工站/办公室/训练室 横向对齐 -->
+          <div class="room-template blank" style="width: 544px; height: 80px"></div>
           <!--    贸易站-->
           <div
             class="room-template trading"
@@ -1604,15 +1678,13 @@ function openMaaScheduleCalculator() {
               <span>{{ translate("schedule", "schedule.TradingPost") }}#{{ num }}</span>
               <div :class="getRoomProduct('trading', index)"></div>
             </div>
-            <div class="settlement-operator">
-              <OperatorAvatar
-                :size="44"
-                v-for="(charName, index) in getRoomOperators('trading', index)"
-                :key="index"
-                :char-id="getCharId(charName)"
-                class="m-4"
-              ></OperatorAvatar>
-            </div>
+            <OperatorAvatar
+              :size="44"
+              v-for="(charName, index) in getRoomOperators('trading', index)"
+              :key="index"
+              :char-id="getCharId(charName)"
+              class="m-4"
+            ></OperatorAvatar>
           </div>
 
           <!--制造站-->
@@ -1628,16 +1700,13 @@ function openMaaScheduleCalculator() {
               <span>{{ translate("schedule", "schedule.Factory") }}#{{ num }}</span>
               <div :class="getRoomProduct('manufacture', index)"></div>
             </div>
-            <div class="settlement-operator">
-              <OperatorAvatar
-                :size="44"
-                v-for="(charName, index) in getRoomOperators('manufacture', index)"
-                :key="index"
-                :char-id="getCharId(charName)"
-                class="m-4"
-              >
-              </OperatorAvatar>
-            </div>
+            <OperatorAvatar
+              :size="44"
+              v-for="(charName, index) in getRoomOperators('manufacture', index)"
+              :key="index"
+              :char-id="getCharId(charName)"
+              class="m-4"
+            ></OperatorAvatar>
           </div>
 
           <!--  发电站-->
@@ -1657,16 +1726,6 @@ function openMaaScheduleCalculator() {
               :char-id="getCharId(charName)"
               class="m-4"
             ></OperatorAvatar>
-          </div>
-
-          <div class="copy-btn-wrap">
-            <span>
-              {{ translate("schedule", "schedule.TempPlan") }}&nbsp;
-              {{ translate("schedule", "schedule.Shift") }}
-              {{ tmpPlanData.index }}
-            </span>
-            <v-btn color="primary" @click="copyPlan()" :text="translate('schedule', 'schedule.CopyPlan')"> </v-btn>
-            <v-btn color="primary" @click="pastePlan()" :text="translate('schedule', 'schedule.PastePlan')"> </v-btn>
           </div>
         </div>
 
@@ -1704,7 +1763,6 @@ function openMaaScheduleCalculator() {
         </div>
 
         <div class="room-wrap-right">
-          <div class="room-template blank" style="width: 100px"></div>
           <!--     会客室-->
           <div class="room-template meeting" :id="`meeting#0`" :class="roomSelectedClass('meeting', 0)" @click="chooseRoom('meeting', 0)">
             <div class="room-name">{{ translate("schedule", "schedule.ReceptionRoom") }}</div>
@@ -1734,6 +1792,29 @@ function openMaaScheduleCalculator() {
             <OperatorAvatar
               :size="44"
               v-for="(charName, index) in getRoomOperators('hire', 0)"
+              :key="index"
+              :char-id="getCharId(charName)"
+              class="m-4"
+            ></OperatorAvatar>
+          </div>
+          <!--     训练室 -->
+          <div class="room-template training" :id="`training#0`" :class="roomSelectedClass('training', 0)" @click="chooseRoom('training', 0)">
+            <div class="room-name">{{ translate("schedule", "schedule.Training") }}</div>
+            <OperatorAvatar
+              :size="44"
+              v-for="(charName, index) in getRoomOperators('training', 0)"
+              :key="index"
+              :char-id="getCharId(charName)"
+              class="m-4"
+            ></OperatorAvatar>
+          </div>
+
+          <!--     回收站 -->
+          <div class="room-template recycle" :id="`recycle#0`" :class="roomSelectedClass('recycle', 0)" @click="chooseRoom('recycle', 0)">
+            <div class="room-name">{{ translate("schedule", "schedule.Recycle") }}</div>
+            <OperatorAvatar
+              :size="44"
+              v-for="(charName, index) in getRoomOperators('recycle', 0)"
               :key="index"
               :char-id="getCharId(charName)"
               class="m-4"
