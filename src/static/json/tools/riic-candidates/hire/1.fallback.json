@@ -55,6 +55,18 @@
       ]
     },
     {
+      "name": "德·托莱多",
+      "rates": [
+        {
+          "percent": 20
+        },
+        {
+          "percent": 30,
+          "elite": 2
+        }
+      ]
+    },
+    {
       "name": "地灵",
       "fillPriority": -15,
       "rates": [
