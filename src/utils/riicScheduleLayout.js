@@ -9,6 +9,7 @@ const ROOM_TYPES = Object.freeze([
   "processing",
   "hire",
   "training",
+  "recycle",
   "dormitory",
 ]);
 
@@ -21,6 +22,7 @@ const ROOM_LEVEL_RANGES = Object.freeze({
   processing: 3,
   hire: 3,
   training: 3,
+  recycle: 3,
   dormitory: 5,
 });
 const ROOM_COUNT_LIMITS = Object.freeze({
@@ -32,6 +34,7 @@ const ROOM_COUNT_LIMITS = Object.freeze({
   processing: 1,
   hire: 1,
   training: 1,
+  recycle: 1,
   dormitory: 4,
 });
 
@@ -44,6 +47,7 @@ const DEFAULT_ROOM_LEVELS = Object.freeze({
   processing: 3,
   hire: 3,
   training: 3,
+  recycle: 3,
   dormitory: 1,
 });
 
@@ -67,12 +71,13 @@ const DORMITORY_POSITIONS = Object.freeze([
   "B104",
   "B204",
   "B304",
-  "B404",
+  "B401",
 ]);
 const FIXED_POSITIONS = Object.freeze({
   processing: "B105",
   hire: "B205",
   training: "B305",
+  recycle: "B402",
 });
 const ROOM_LABELS = Object.freeze({
   control: "控制中枢",
@@ -83,6 +88,7 @@ const ROOM_LABELS = Object.freeze({
   processing: "加工站",
   hire: "办公室",
   training: "训练室",
+  recycle: "回收站",
   dormitory: "宿舍",
 });
 
@@ -348,7 +354,14 @@ export function resolveRiicScheduleLayout({ layout, scheduleType, plans } = {}) 
 
   const inferred = inferRiicScheduleLayout(plans);
   const legacyCounts = {};
-  for (const type of ["trading", "manufacture", "power", "dormitory"]) {
+  for (const type of [
+    "trading",
+    "manufacture",
+    "power",
+    "dormitory",
+    "training",
+    "recycle",
+  ]) {
     const count = Number(scheduleType?.[type]);
     if (Number.isInteger(count) && count >= 0) {
       legacyCounts[type] = count;

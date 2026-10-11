@@ -19,6 +19,7 @@ const RIGHT_FULL_STATIC_ROOM_STATIONS = Object.freeze({
   processing: [station(3, 1)],
   office: [station(3, 1)],
   training: [station(3, 2)],
+  recycle: [station(3, 2)],
 });
 
 const THREE_POWER_STATIC_ROOM_STATIONS = Object.freeze({
@@ -27,6 +28,7 @@ const THREE_POWER_STATIC_ROOM_STATIONS = Object.freeze({
   processing: [station(3, 1)],
   office: [station(3, 1)],
   training: [station(3, 2)],
+  recycle: [station(3, 2)],
 });
 
 const PROFILE_ROOM_STATIONS = Object.freeze({
@@ -121,6 +123,7 @@ const FIXED_LAYOUT_ROOM_STATIONS = Object.freeze({
 const STATIC_ROOM_STATIONS = Object.freeze({
   control: [station(5, 5)],
   office: [station(1, 1)],
+  recycle: [station(3, 2)],
 });
 
 const SHIFT_SEGMENT_HOURS = Object.freeze({
@@ -180,6 +183,7 @@ export function getRiicFacilityProfile({
     id: cardKey,
     productionSlots: Object.entries(roomStations)
       .filter(([roomKey]) => roomKey !== "power")
+      .filter(([roomKey]) => roomKey !== "recycle")
       .reduce(
         (total, [, stations]) =>
           total +

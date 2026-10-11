@@ -27,6 +27,75 @@
   },
   "entries": [
     {
+      "date": "2026-10-11",
+      "version": "v20261011.1852",
+      "items": [
+        {
+          "module": "布局模块",
+          "type": "feature",
+          "level": 5,
+          "description": "新增回收站房间布局与排班入口，支持自定义布局和对应工位容量",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 3,
+          "description": "新增回收站候选、设施规则与专属干员资料，并按产出池有效期加载当前常规池和额外池",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 4,
+          "description": "按班次、轮班时段和房间范围识别实际在岗干员，优化中枢同班联动与跨房间效果的轮班对齐",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "推荐模块",
+          "type": "update",
+          "level": 4,
+          "description": "优化自动排班的跨房效果评估与补位优先级；挂件按班次停靠在发电站、加工站或训练室，回收站优先使用专属技能干员并避开已占用干员",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "收益计算器",
+          "type": "feature",
+          "level": 4,
+          "description": "接入回收站长期平均产出与加速材料消耗，收益汇总可按稀有度或材料查看日均期望",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "组装器",
+          "type": "update",
+          "level": 3,
+          "description": "MAA 导出支持训练室和回收站兼容选项，规范房间 skip 字段，并附带生成器版本与持有干员练度信息",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 3,
+          "description": "补充候选在岗名单、跨房挂件调度、同班联动对齐过程与同班跨房重复干员检查明细",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
+    {
       "date": "2026-10-02",
       "version": "v20261002.1334",
       "items": [

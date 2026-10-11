@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4231_clemnt",
+  "name": "克莱门莎",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "谈判技巧",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 1
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "合作原则",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "moodCost",
+              "value": 1
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 15
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

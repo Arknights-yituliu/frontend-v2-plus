@@ -579,7 +579,8 @@ const roomTypeMenu = [
   {label: "控制中枢", value: "control"},
   {label: "发电站", value: "power"},
   {label: "会客室", value: "meeting"},
-  {label: "训练室", value: "training"}
+  {label: "训练室", value: "training"},
+  {label: "回收站", value: "recycle"}
 ]
 
 let roomTypeDict = {}

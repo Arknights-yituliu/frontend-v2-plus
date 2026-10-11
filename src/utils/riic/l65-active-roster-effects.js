@@ -2,11 +2,15 @@ import {
   RIIC_ACTIVE_ROSTER_RUNTIME_RULES,
   RIIC_ACTIVE_ROSTER_SELECTION_PRIORITY_RULES,
   getRiicActiveRosterMatchingOperatorIds,
+  riicActiveRosterScopeMatches,
 } from "./riic-active-roster-rule-data.js";
 import { getRiicOperatorName as getOperatorName } from "./riic-operator-identity.js";
 import {
   getRiicSameShiftBindingBonusBreakdown,
 } from "./l51-control-effects.js";
+import {
+  getRiicFiammettaTeamStateIndexes,
+} from "./l65-fiammetta-recovery.js";
 import {
   recalculateRiicRoomTeamCandidateForActiveControlBindings,
 } from "./l62-team-calculation.js";
@@ -52,6 +56,37 @@ function getCandidateScope(candidate) {
   };
 }
 
+function getActiveRosterScopeKey(scope) {
+  const roomType = normalizeOperatorId(scope?.roomType);
+  if (!roomType) {
+    return "";
+  }
+  return `${roomType}:${normalizeOperatorId(scope?.product) || "all"}`;
+}
+
+function getScopedActiveOperatorIds(activeOperatorIdsByScope, scope) {
+  const key = getActiveRosterScopeKey(scope);
+  if (!key) {
+    return [];
+  }
+  const entries =
+    activeOperatorIdsByScope instanceof Map
+      ? [...activeOperatorIdsByScope.entries()]
+      : Object.entries(activeOperatorIdsByScope || {});
+  const roomType = normalizeOperatorId(scope?.roomType);
+  const product = normalizeOperatorId(scope?.product) || "all";
+  const scopedEntries = entries.filter(([scopeKey]) =>
+    product === "all"
+      ? scopeKey.startsWith(`${roomType}:`)
+      : scopeKey === key || scopeKey === `${roomType}:all`,
+  );
+  return [
+    ...new Set(
+      scopedEntries.flatMap(([, ids]) => (Array.isArray(ids) ? ids : [])),
+    ),
+  ];
+}
+
 /**
  * L65 runtime selection priority for a candidate considered after earlier
  * selections in the same automatic-scheduling branch.
@@ -59,6 +94,7 @@ function getCandidateScope(candidate) {
 export function getRiicActiveRosterCandidatePriority({
   candidate,
   activeOperatorIds = [],
+  activeOperatorIdsByScope = null,
 } = {}) {
   const activeIds = new Set(
     Array.from(activeOperatorIds || []).map(normalizeOperatorId).filter(Boolean),
@@ -96,10 +132,359 @@ export function getRiicActiveRosterCandidatePriority({
     });
   }
 
+  const candidateScope = getCandidateScope(candidate);
+  for (const rule of RIIC_ACTIVE_ROSTER_RUNTIME_RULES) {
+    if (
+      !rule.sourceScope ||
+      !candidateOperatorIds.includes(rule.ownerId) ||
+      !riicActiveRosterScopeMatches(
+        { roomType: rule.roomType, product: rule.product },
+        candidateScope,
+      )
+    ) {
+      continue;
+    }
+
+    const matchingOperatorIds = [
+      ...new Set(
+        getScopedActiveOperatorIds(activeOperatorIdsByScope, rule.sourceScope)
+          .map(normalizeOperatorId)
+          .filter((operatorId) => rule.taggedOperatorIds.has(operatorId)),
+      ),
+    ].sort((left, right) => left.localeCompare(right, "en"));
+    const matchingOperatorCount = Math.min(
+      matchingOperatorIds.length,
+      rule.maximumOperatorCount,
+    );
+    if (matchingOperatorCount <= 0) {
+      continue;
+    }
+
+    const priority = matchingOperatorCount * rule.percentPerOperator;
+    roomPriority += priority;
+    applications.push({
+      ruleId: rule.id,
+      triggerOperatorId: "",
+      triggerName: "",
+      tag: rule.tag,
+      matchingOperatorIds,
+      matchingOperatorNames: matchingOperatorIds.map(getOperatorName),
+      roomPriority: priority,
+      metric: rule.metric,
+      sourceScope: rule.sourceScope,
+    });
+  }
+
   return {
     roomPriority,
     applications,
   };
+}
+
+export function buildRiicActiveOperatorIdsByStateIndex(segments = []) {
+  return Object.fromEntries(
+    (segments || []).map((segment, index) => {
+      const segmentIndex = Number(segment?.index);
+      const stateIndex =
+        Number.isInteger(segmentIndex) && segmentIndex >= 0
+          ? segmentIndex
+          : index;
+      return [
+        stateIndex,
+        [
+          ...new Set(
+            (segment?.operatorIds || [])
+              .map(normalizeOperatorId)
+              .filter(Boolean),
+          ),
+        ],
+      ];
+    }),
+  );
+}
+
+export function getRiicActiveOperatorIdsForStateIndexes({
+  selectedEntries = [],
+  stateIndexes = [],
+  baseActiveOperatorIds = [],
+  baseActiveOperatorIdsByStateIndex = {},
+} = {}) {
+  const targetStateIndexes = [
+    ...new Set(
+      (stateIndexes || [])
+        .map(Number)
+        .filter((index) => Number.isInteger(index) && index >= 0),
+    ),
+  ];
+  const result = new Set(
+    Array.from(baseActiveOperatorIds || [])
+      .map(normalizeOperatorId)
+      .filter(Boolean),
+  );
+  const getBaseIds = (stateIndex) =>
+    baseActiveOperatorIdsByStateIndex instanceof Map
+      ? baseActiveOperatorIdsByStateIndex.get(stateIndex) || []
+      : baseActiveOperatorIdsByStateIndex?.[stateIndex] || [];
+
+  if (targetStateIndexes.length === 0) {
+    for (const stateIds of
+      baseActiveOperatorIdsByStateIndex instanceof Map
+        ? baseActiveOperatorIdsByStateIndex.values()
+        : Object.values(baseActiveOperatorIdsByStateIndex || {})) {
+      for (const operatorId of stateIds || []) {
+        const normalizedId = normalizeOperatorId(operatorId);
+        if (normalizedId) {
+          result.add(normalizedId);
+        }
+      }
+    }
+    for (const entry of selectedEntries || []) {
+      for (const operatorId of
+        entry.operatorIds || entry.candidate?.operatorIds || []) {
+        const normalizedId = normalizeOperatorId(operatorId);
+        if (normalizedId) {
+          result.add(normalizedId);
+        }
+      }
+    }
+    return [...result];
+  }
+
+  // A cross-room owner must be on duty throughout the target team's active
+  // window before the team is scored as benefiting from that owner.
+  const activeIdsByState = targetStateIndexes.map(
+    (stateIndex) =>
+      new Set(
+        [
+          ...result,
+          ...getBaseIds(stateIndex),
+        ]
+          .map(normalizeOperatorId)
+          .filter(Boolean),
+      ),
+  );
+  for (const entry of selectedEntries || []) {
+    const entryStateIndexes = Array.isArray(entry.stateIndexes)
+      ? entry.stateIndexes
+      : getRiicFiammettaTeamStateIndexes(entry.cohort, entry.teamIndex);
+    if (
+      entryStateIndexes.length === 0 ||
+      !targetStateIndexes.every((stateIndex) =>
+        entryStateIndexes.includes(stateIndex),
+      )
+    ) {
+      continue;
+    }
+    for (const operatorId of
+      entry.operatorIds || entry.candidate?.operatorIds || []) {
+      const normalizedId = normalizeOperatorId(operatorId);
+      if (normalizedId) {
+        for (const activeIds of activeIdsByState) {
+          activeIds.add(normalizedId);
+        }
+      }
+    }
+  }
+
+  const firstStateIds = activeIdsByState[0] || new Set();
+  for (const operatorId of firstStateIds) {
+    if (activeIdsByState.every((activeIds) => activeIds.has(operatorId))) {
+      result.add(operatorId);
+    }
+  }
+  return [...result];
+}
+
+/**
+ * Builds the on-duty operator set for each fallback selection key
+ * (groupId:cohort:teamIndex). Rules that depend on who is actually stationed must only
+ * count operators that share a shift with the slot being filled, otherwise a
+ * hanger would be parked in shifts where its owner is off duty.
+ */
+export function buildRiicActiveOperatorIdsBySelectionKey({
+  selectedEntries = [],
+  baseActiveOperatorIds = [],
+  baseActiveOperatorIdsByStateIndex = {},
+} = {}) {
+  const entries = (selectedEntries || []).flatMap((entry) => {
+    const selectionKey = normalizeOperatorId(entry?.selectionKey);
+    if (!selectionKey) {
+      return [];
+    }
+
+    return [
+      {
+        groupId: normalizeOperatorId(entry?.groupId),
+        selectionKey,
+        operatorIds: [
+          ...new Set(
+            (entry?.candidate?.operatorIds || [])
+              .map(normalizeOperatorId)
+              .filter(Boolean),
+          ),
+        ],
+        stateIndexes: Array.isArray(entry?.activeStateIndexes)
+          ? [
+              ...new Set(
+                entry.activeStateIndexes
+                  .map(Number)
+                  .filter((index) => Number.isInteger(index) && index >= 0),
+              ),
+            ]
+          : getRiicFiammettaTeamStateIndexes(
+              entry?.cohort,
+              entry?.teamIndex,
+            ),
+      },
+    ];
+  });
+
+  return Object.fromEntries(
+    entries.map((entry) => [
+      entry.groupId
+        ? `${entry.groupId}:${entry.selectionKey}`
+        : entry.selectionKey,
+      getRiicActiveOperatorIdsForStateIndexes({
+        selectedEntries: entries,
+        stateIndexes: entry.stateIndexes,
+        baseActiveOperatorIds,
+        baseActiveOperatorIdsByStateIndex,
+      }),
+    ]),
+  );
+}
+
+export function buildRiicActiveOperatorIdsByScopeForStateIndexes({
+  selectedEntries = [],
+  stateIndexes = [],
+} = {}) {
+  const targetStateIndexes = [
+    ...new Set(
+      (stateIndexes || [])
+        .map(Number)
+        .filter((index) => Number.isInteger(index) && index >= 0),
+    ),
+  ];
+  const operatorIdsByScope = new Map();
+
+  for (const entry of selectedEntries || []) {
+    const entryStateIndexes = Array.isArray(entry?.activeStateIndexes)
+      ? entry.activeStateIndexes
+      : Array.isArray(entry?.stateIndexes)
+        ? entry.stateIndexes
+        : getRiicFiammettaTeamStateIndexes(entry?.cohort, entry?.teamIndex);
+    if (
+      targetStateIndexes.length > 0 &&
+      !targetStateIndexes.some((index) => entryStateIndexes.includes(index))
+    ) {
+      continue;
+    }
+
+    const scope =
+      entry?.candidate?.candidateScope ||
+      entry?.candidate?.scope ||
+      entry?.scope || {
+        roomType: entry?.group?.facility,
+        product: entry?.group?.candidateProduct,
+      };
+    const scopeKey = getActiveRosterScopeKey(scope);
+    if (!scopeKey) {
+      continue;
+    }
+
+    const operatorIds = operatorIdsByScope.get(scopeKey) || new Set();
+    for (const operatorId of
+      entry?.operatorIds || entry?.candidate?.operatorIds || []) {
+      const normalizedId = normalizeOperatorId(operatorId);
+      if (normalizedId) {
+        operatorIds.add(normalizedId);
+      }
+    }
+    operatorIdsByScope.set(scopeKey, operatorIds);
+  }
+
+  return Object.fromEntries(
+    [...operatorIdsByScope].map(([scopeKey, operatorIds]) => [
+      scopeKey,
+      [...operatorIds],
+    ]),
+  );
+}
+
+/**
+ * Orders the spare operators that exist only to provide a cross-room effect
+ * (S.E.E.S. members while 结城理 works, 莱茵生命 members while 娜斯提 works).
+ * Higher roomPriority first, then the idle order, then the name. Callers decide
+ * how many of them fit into the free parking slots.
+ */
+export function getRiicActiveRosterHangerOrder({
+  idleFillOperators = [],
+  activeOperatorIds = [],
+  claimedOperatorIds = [],
+  stateUseCountByOperatorId = null,
+  maxStateUseCount = Number.POSITIVE_INFINITY,
+  activeOperatorIdsByScope = null,
+  targetScope = null,
+} = {}) {
+  const claimedIds = new Set(
+    [...(claimedOperatorIds || []), ...(activeOperatorIds || [])]
+      .map(normalizeOperatorId)
+      .filter(Boolean),
+  );
+
+  return (idleFillOperators || [])
+    .flatMap((operator) => {
+      const charId = normalizeOperatorId(operator?.charId);
+      if (!charId || claimedIds.has(charId)) {
+        return [];
+      }
+
+      const stateUseCount = Number(
+        stateUseCountByOperatorId?.get?.(charId) ??
+          stateUseCountByOperatorId?.[charId] ??
+          0,
+      );
+      if (
+        Number.isFinite(Number(maxStateUseCount)) &&
+        stateUseCount >= Number(maxStateUseCount)
+      ) {
+        return [];
+      }
+
+      const candidatePriority = getRiicActiveRosterCandidatePriority({
+        candidate: {
+          operatorIds: [charId],
+          ...(targetScope ? { candidateScope: targetScope } : {}),
+        },
+        activeOperatorIds,
+        activeOperatorIdsByScope,
+      });
+      const applications = targetScope
+        ? candidatePriority.applications.filter(
+            (application) => application.sourceScope,
+          )
+        : candidatePriority.applications;
+      const roomPriority = applications.reduce(
+        (total, application) =>
+          total + toFiniteNumber(application.roomPriority),
+        0,
+      );
+      if (roomPriority <= 0) {
+        return [];
+      }
+
+      return [{ operator, charId, roomPriority, applications }];
+    })
+    .sort(
+      (left, right) =>
+        right.roomPriority - left.roomPriority ||
+        toFiniteNumber(left.operator?.idleFillPriority) -
+          toFiniteNumber(right.operator?.idleFillPriority) ||
+        String(left.operator?.name || left.charId).localeCompare(
+          String(right.operator?.name || right.charId),
+          "zh-CN",
+        ),
+    );
 }
 
 /**
@@ -111,6 +496,7 @@ export function applyRiicActiveRosterFallbackOperatorEffects({
   fallbackOperators = [],
   ownedOperators = [],
   activeOperatorIds = [],
+  activeOperatorIdsByScope = null,
 } = {}) {
   const rosterById = getRosterById(ownedOperators);
   const scope = getCandidateScope(candidate);
@@ -127,10 +513,8 @@ export function applyRiicActiveRosterFallbackOperatorEffects({
       return fallbackOperator;
     }
 
-    const projectedActiveOperatorIds = new Set([
-      ...baseActiveOperatorIds,
-      operatorId,
-    ]);
+    const projectedActiveOperatorIds = new Set(baseActiveOperatorIds);
+    projectedActiveOperatorIds.add(operatorId);
     const applications = [];
     let activeRosterBonusPercent = 0;
 
@@ -143,17 +527,19 @@ export function applyRiicActiveRosterFallbackOperatorEffects({
         continue;
       }
 
-      // Source-scoped effects are settled after room assignments are known.
-      if (rule.sourceScope) {
-        continue;
-      }
-
       const owner = rosterById.get(rule.ownerId);
       if (!owner || owner.elite < rule.eliteAtLeast) {
         continue;
       }
 
-      const matchingOperatorIds = [...projectedActiveOperatorIds]
+      const activeIds = rule.sourceScope
+        ? new Set(
+            getScopedActiveOperatorIds(activeOperatorIdsByScope, rule.sourceScope)
+              .map(normalizeOperatorId)
+              .filter(Boolean),
+          )
+        : projectedActiveOperatorIds;
+      const matchingOperatorIds = [...activeIds]
         .filter(
           (activeOperatorId) =>
             rule.taggedOperatorIds.has(activeOperatorId) &&

@@ -9,7 +9,7 @@
   "creditPerClue": 40,
   "hireOutputPerHour": 0.08333333333333333,
   "hireLimit": 3,
-  "droneLimit": 235,
+  "droneLimit": 250,
   "baseEfficiency": {
     "trading": 100,
     "manufacture": 100,

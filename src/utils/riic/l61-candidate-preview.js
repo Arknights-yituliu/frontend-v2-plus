@@ -21,6 +21,7 @@ import {
 import {
   recalculateRiicClosureSpecialOrder,
 } from "./l62-closure-calculation.js";
+import { getRiicOperatorTags } from "./riic-operator-tags.js";
 import {
   getRiicControlCenterRoomAdjustment,
 } from "./l51-control-effects.js";
@@ -49,6 +50,7 @@ const PERCENT_FIELD_BY_ROOM_TYPE = Object.freeze({
   meeting: "meetingPercent",
   hire: "officePercent",
   power: "powerPercent",
+  recycle: "recyclePercent",
 });
 const PERCEPTION_CORE_ROOM_TYPE_BY_OPERATOR_ID = Object.freeze({
   char_391_rosmon: "manufacture",
@@ -60,6 +62,7 @@ const PERCENT_FIELDS = Object.freeze([
   "meetingPercent",
   "officePercent",
   "powerPercent",
+  "recyclePercent",
 ]);
 const VALID_STATUSES = new Set([
   "calculated",
@@ -202,6 +205,24 @@ function getRateForTrainingMode(
     }
   }
 
+  if (
+    !appliedRate &&
+    scope?.roomType === "recycle" &&
+    pool.defaultPercent > 0
+  ) {
+    // Any operator can provide the recycling station's per-slot base bonus.
+    // isDefaultFill marks the synthesized per-slot rate so later layers can tell
+    // a real recycle skill (旅骨 20%/30%) apart from the 1% participation bonus.
+    appliedRate = {
+      elite: 0,
+      level: 1,
+      percent: pool.defaultPercent,
+      fillPriority: 0,
+      tags: getRiicOperatorTags(operator.name),
+      isDefaultFill: true,
+    };
+  }
+
   return appliedRate
     ? {
         percent: appliedRate.percent,
@@ -210,6 +231,7 @@ function getRateForTrainingMode(
         level: appliedRate.level,
         tags: appliedRate.tags,
         skipR30: appliedRate.skipR30 === true,
+        isDefaultFill: appliedRate.isDefaultFill === true,
         upgradeRequirement: createRiicUpgradeRequirement(
           currentOperator || operator,
           appliedRate,
@@ -382,6 +404,7 @@ function createFallbackOperatorProfiles({
                 teammateLayer3Bonus,
               fillPriority: Number(rate.fillPriority || 0),
               tags: rate.tags,
+              isDefaultFill: rate.isDefaultFill === true,
               upgradeRequirement: rate.upgradeRequirement,
             },
           ]

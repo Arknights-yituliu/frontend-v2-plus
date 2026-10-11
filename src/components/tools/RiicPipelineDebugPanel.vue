@@ -599,6 +599,26 @@ const pipelineDebugText = computed(() => {
         )} 黑键偏移=${formatDebugNumber(pair.rightOffset)}`,
     );
   }
+  for (const transfer of sameShift.activeRosterHangerTransfers || []) {
+    lines.push(
+      `跨房挂件 ${transfer.groupId}: ${formatDebugOperatorIds([
+        transfer.operatorId,
+      ])} ${transfer.fromCandidateKey} -> ${transfer.toCandidateKey}`,
+    );
+  }
+  for (const diagnostic of sameShift.activeRosterHangerDiagnostics || []) {
+    for (const team of diagnostic.teams || []) {
+      lines.push(
+        `挂件检查 ${team.groupId}/${team.candidateKey} 触发=${formatDebugOperatorIds([
+          diagnostic.triggerOperatorId,
+        ])} 覆盖=${formatDebugNumber(team.coverage)} 闲置=${(team.fallbackOperators || [])
+          .map((operator) =>
+            `${formatDebugOperatorIds([operator.charId])}:${operator.idleFill ? "idle" : "ordinary"}:${formatDebugNumber(operator.hangerPriority)}`,
+          )
+          .join("、") || "--"}`,
+      );
+    }
+  }
 
   lines.push("", "[最终排班]");
   for (const entry of props.assembledScheduleCandidate?.groups || []) {
@@ -1988,6 +2008,17 @@ const droneTableDebug = computed(() => {
                 候选排序值 {{ formatNumber(diagnostic.selected.rankingValue) }}；
                 补位方案分 {{ formatNumber(diagnostic.selected.fallbackPlanScore) }}
               </small>
+              <small>
+                班组索引={{ diagnostic.selected.staffingTeamIndex }}；
+                轮转={{ JSON.stringify(diagnostic.selected.staffingRotationSegments || []) }}；
+                实选活动时段={{ diagnostic.selected.activeStateIndexes || [] }}；
+                在岗触发={{ getCandidateNames(diagnostic.selected.activeOperatorIds || []) }}；
+                跨房优先={{
+                  (diagnostic.selected.activeRosterPriority?.applications || [])
+                    .map((application) => application.triggerName)
+                    .join("、") || "无"
+                }}
+              </small>
               <ul class="pipeline-list">
                 <li
                   v-for="alternative in diagnostic.alternatives"
@@ -2009,6 +2040,17 @@ const droneTableDebug = computed(() => {
                   </span>
                   <span>
                     补位方案分 {{ formatNumber(alternative.fallbackPlanScore) }}
+                  </span>
+                  <span>
+                    班组索引={{ alternative.staffingTeamIndex }}；
+                    轮转={{ JSON.stringify(alternative.staffingRotationSegments || []) }}；
+                    活动时段={{ alternative.activeStateIndexes || [] }}；
+                    在岗触发={{ getCandidateNames(alternative.activeOperatorIds || []) }}；
+                    跨房优先={{
+                      (alternative.activeRosterPriority?.applications || [])
+                        .map((application) => application.triggerName)
+                        .join("、") || "无"
+                    }}
                   </span>
                   <span v-if="alternative.planRank">
                     实际子分支：全局第 {{ alternative.planRank }}，

@@ -172,6 +172,14 @@
       "cn": "办公室",
       "en": "Office"
     },
+    "Training": {
+      "cn": "训练室",
+      "en": "Training"
+    },
+    "Recycle": {
+      "cn": "回收站",
+      "en": "Recycle"
+    },
     "RoomNumber": {
       "cn": "房间编号",
       "en": "Room Number"
@@ -302,6 +310,10 @@
       "cn": "训练室",
       "en": "Training"
     },
+    "Recycle": {
+      "cn": "回收站",
+      "en": "Recycle"
+    },
     "GeneralWokers": {
       "cn": "生产力",
       "en": "General Wokers"
@@ -382,17 +394,21 @@
       "cn": "深海猎人",
       "en": "Abyssal Hunters Team"
     },
+    "SEESTeam": {
+      "cn": "S.E.E.S.",
+      "en": "S.E.E.S."
+    },
     "BlacksteelTeam": {
       "cn": "黑钢国际",
       "en": "Blacksteel Team"
     },
+    "EliteOperators": {
+      "cn": "精英干员",
+      "en": "Elite Operators"
+    },
     "GlasgowTeam": {
       "cn": "格拉斯哥帮",
       "en": "Glasgow Team"
-    },
-    "KarianTradeTeam": {
-      "cn": "喀兰贸易",
-      "en": "Karian Trade Team"
     },
     "TeamRainbowTeam": {
       "cn": "彩虹小队",

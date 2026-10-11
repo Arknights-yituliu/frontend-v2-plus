@@ -30,6 +30,7 @@ const PERCENT_FIELD_BY_ROOM_TYPE = Object.freeze({
   meeting: "meetingPercent",
   hire: "officePercent",
   power: "powerPercent",
+  recycle: "recyclePercent",
 });
 
 /**

@@ -1,4 +1,27 @@
 
+import RIIC_TERMS from "/src/vendor/riic-efficiency/data/terms.json";
+
+const termMembers = (termId) => RIIC_TERMS.terms[termId]?.members || [];
+const termMemberSet = (...termIds) =>
+    new Set(termIds.flatMap((termId) => termMembers(termId)));
+
+const SuiMembers = termMemberSet("cc.g.sui");
+const DurinMembers = termMemberSet("cc.tag.durin");
+const KnightMembers = new Set([...termMembers("cc.g.psk"), "薇薇安娜", "砾"]);
+const AutomationSkillNames = new Set(
+    ["cc.m.pow1", "cc.m.pow2", "cc.m.pow3"]
+        .map((termId) => RIIC_TERMS.terms[termId]?.name)
+        .filter(Boolean),
+);
+const AutomationMembers = new Set(["Lancet-2", "清流", "冬时", "承曦格雷伊"]);
+const RhineLabMembers = termMemberSet("cc.g.rh");
+const RhineTechSkills = termMemberSet("cc.sk.manu2");
+const AbyssalHuntersMembers = termMemberSet("cc.g.abyssal");
+const BlacksteelMembers = new Set([...termMembers("cc.g.bs"), "涤火杰西卡"]);
+const GlasgowMembers = new Set([...termMembers("cc.g.glasgow"), "戴菲恩"]);
+const SEESMembers = termMemberSet("cc.tag.sees");
+const EliteMembers = termMemberSet("cc.g.elite");
+
 //干员基建技能筛选表，筛选类型：{name：筛选类型名称,color:筛选类型名称字体颜色,conditions:[{label:筛选条件描述,func:筛选函数,传入干员信息进行筛选}]}
 const operatorFilterConditionTable = {
     room: {
@@ -67,6 +90,13 @@ const operatorFilterConditionTable = {
                 roomType: 'training',    
                 func: (operator) => {
                     return operator.roomType === 'training'
+                }
+            },
+            {
+                label: "buildSkillFilter.Recycle",
+                roomType: 'recycle',
+                func: (operator) => {
+                    return operator.roomType === 'recycle'
                 }
             },
         ]
@@ -199,56 +229,68 @@ const operatorFilterConditionTable = {
             {
                 label: "buildSkillFilter.WorldlyPlight",
                 func: (operator) => {
-                    return operator.description.indexOf('人间烟火') > -1
+                    return operator.description.indexOf('人间烟火') > -1 ||
+                        SuiMembers.has(operator.name) || operator.name === '琴柳'
                 }
             },
             {
                 label: "buildSkillFilter.GoldProductionLine",
                 func: (operator) => {
-                    return operator.description.indexOf('赤金生产线') > -1 || GoldProductionLine.includes(operator.name)
-                }
-            },
-            {
-                label: "buildSkillFilter.KnightsTeam",
-                func: (operator) => {
-                    return operator.buffName.indexOf('红松') > -1 || Knight.includes(operator.name)
-                }
-            },
-            {
-                label: "buildSkillFilter.AutomationTeam",
-                func: (operator) => {
-                    return (operator.description.indexOf('发电站') > -1 && operator.description.indexOf('归零') > -1) ||
-                        Automation.includes(operator.name)
-                }
-            },
-            {
-                label: "buildSkillFilter.RhineLabTeam",
-                func: (operator) => {
-                    return RhineLab.includes(operator.name)
-                }
-            },
-            {
-                label: "buildSkillFilter.AbyssalHuntersTeam",
-                func: (operator) => {
-                    return AbyssalHunters.includes(operator.name)
-                }
-            },
-            {
-                label: "buildSkillFilter.BlacksteelTeam",
-                func: (operator) => {
-                    return Blacksteel.includes(operator.name)
+                    return operator.description.indexOf('赤金生产线') > -1 || DurinMembers.has(operator.name)
                 }
             },
             {
                 label: "buildSkillFilter.GlasgowTeam",
                 func: (operator) => {
-                    return Glasgow.includes(operator.name)
+                    return GlasgowMembers.has(operator.name)
                 }
             },
             {
-                label: "buildSkillFilter.KarianTradeTeam",
+                label: "buildSkillFilter.AutomationTeam",
                 func: (operator) => {
-                    return KarianTrade.includes(operator.name)
+                    return AutomationSkillNames.has(operator.buffName) || AutomationMembers.has(operator.name)
+                }
+            },
+            {
+                label: "buildSkillFilter.RhineLabTeam",
+                func: (operator) => {
+                    return RhineLabMembers.has(operator.name)
+                }
+            },
+            {
+                label: "buildSkillFilter.RhineTechTeam",
+                func: (operator) => {
+                    return RhineTechSkills.has(operator.buffName)
+                }
+            },
+            {
+                label: "buildSkillFilter.KnightsTeam",
+                func: (operator) => {
+                    return KnightMembers.has(operator.name)
+                }
+            },
+            {
+                label: "buildSkillFilter.AbyssalHuntersTeam",
+                func: (operator) => {
+                    return AbyssalHuntersMembers.has(operator.name)
+                }
+            },
+            {
+                label: "buildSkillFilter.SEESTeam",
+                func: (operator) => {
+                    return SEESMembers.has(operator.name)
+                }
+            },
+            {
+                label: "buildSkillFilter.BlacksteelTeam",
+                func: (operator) => {
+                    return BlacksteelMembers.has(operator.name)
+                }
+            },
+            {
+                label: "buildSkillFilter.EliteOperators",
+                func: (operator) => {
+                    return EliteMembers.has(operator.name)
                 }
             }
         ]
@@ -257,13 +299,5 @@ const operatorFilterConditionTable = {
 
 // Official english name is "Rosmontis"
 const RosmontisUniverse = ['琴柳']
-const GoldProductionLine = ['至简','桃金娘','褐果','杜林','特克诺']
-const Knight = ['砾','薇薇安娜','正义骑士号']
-const Automation = ['清流','承曦格雷伊','Lancet-2']
-const RhineLab = ['赫默','伊芙利特','塞雷娅','白面鸮','梅尔','麦哲伦','多萝西','星源','缪尔赛思']
-const AbyssalHunters = ['歌蕾蒂娅','斯卡蒂','幽灵鲨','安哲拉','乌尔比安']
-const Blacksteel = ['雷蛇','芙兰卡','杰西卡','香草','杏仁','涤火杰西卡']
-const Glasgow = ['推进之王','摩根','达格达','因陀罗','戴菲恩']
-const KarianTrade = ['银灰','灵知','初雪','崖心','角峰','讯使','耶拉','极光','锏']
 
 export {operatorFilterConditionTable}
