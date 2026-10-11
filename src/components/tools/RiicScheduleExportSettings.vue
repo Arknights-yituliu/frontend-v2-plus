@@ -360,7 +360,7 @@ function updateRiicEfficiencySetting(key, event, percent = false) {
               @update:model-value="updateRecycleBoostItem"
             />
             <p class="schedule-export-recycle-note">
-              材料极其无用时再考虑
+              材料极其无用时再考虑，该设置只用于收益计算，MAA并不支持
             </p>
           </section>
         </div>
