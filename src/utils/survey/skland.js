@@ -189,11 +189,10 @@ function formattingOperatorData(characterList) {
         const potential = Math.ceil(potentialRank + 1)
 
         // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，去掉 +1 转换
+        // 兜底：本地干员表未收录该干员（新干员/数据未同步）时不丢弃，星级默认 0
         let rarity = 0;
         if (operatorTableV2[id]) {
             rarity = operatorTableV2[id].rarity
-        } else {
-            continue
         }
 
 
