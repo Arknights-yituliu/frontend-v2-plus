@@ -1,6 +1,6 @@
 import {onBeforeUnmount, ref} from "vue";
 import {createMessage} from "/src/utils/message.js";
-import {sendEmailCode} from "/src/api/user-center/userCenterApi.js";
+import {sendEmailCode} from "/src/api/user-center/auth.js";
 
 const VERIFICATION_CODE_COUNTDOWN = 60;
 
@@ -50,7 +50,7 @@ function useVerificationCode() {
       startCountdown();
       return true;
     } catch (error) {
-      // 错误提示已由 UC 拦截器（userCenterApi.js）统一弹出，这里仅返回失败状态
+      // 错误提示已由 UC 拦截器（ucClient.js）统一弹出，这里仅返回失败状态
       console.error('验证码发送失败', error);
       return false;
     } finally {
