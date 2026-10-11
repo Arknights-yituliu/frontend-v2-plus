@@ -381,13 +381,14 @@ function canMoveOperatorToRoom(room) {
   if (
     !source ||
     !room?.key ||
+    room?.staffingDisabled ||
     room.key === source.roomKey ||
     roomHasOperator(room, source.operatorKey)
   ) {
     return false;
   }
 
-  const expectedSlots = getExpectedSlots(room);
+  const expectedSlots = Number(room?.maxStaffingSlots) || getExpectedSlots(room);
   return !expectedSlots || (room?.operators || []).length < expectedSlots;
 }
 
@@ -396,6 +397,7 @@ function canSwapOperatorWith(room, operator) {
   if (
     !source ||
     !room?.key ||
+    room?.staffingDisabled ||
     room.key === source.roomKey ||
     getOperatorKey(operator) === source.operatorKey ||
     roomHasOperator(room, source.operatorKey)
@@ -587,7 +589,7 @@ function dropOperator(room, operator) {
           <div
             v-if="
               !exportStatic &&
-              index === 24 &&
+              index === 22 &&
               $slots['schedule-analysis']
             "
             class="schedule-preview-analysis-slot"
@@ -1329,6 +1331,10 @@ function dropOperator(room, operator) {
 .facility-processing,
 .facility-training {
   --room-color: #7d8792;
+}
+
+.facility-recycle {
+  --room-color: #6ccbcb;
 }
 
 @media (max-width: 760px) {

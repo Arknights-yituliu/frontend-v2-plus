@@ -358,7 +358,7 @@ function normalizePlan({
             product,
             sourceProduct: String(sourceRoom?.product || "").trim(),
             operators,
-            skip: sourceRoom?.skip === true,
+            skip: false,
             issues: roomIssues,
           };
         },

@@ -10,6 +10,10 @@ import {
   getRiicFiammettaTeamStateIndexes,
   normalizeRiicFiammettaRecovery,
 } from "./l65-fiammetta-recovery.js";
+import {
+  buildRiicActiveOperatorIdsByStateIndex,
+  buildRiicActiveOperatorIdsBySelectionKey,
+} from "./l65-active-roster-effects.js";
 
 const SKILLS_BY_OPERATOR_ID = new Map();
 
@@ -163,6 +167,7 @@ function getSelectedEntries(group, state, selections) {
       const candidate = candidateByKey.get(candidateKey);
       if (candidate) {
         selectedEntries.push({
+          groupId: group.id,
           selectionKey: `${cohort.id}:${teamIndex}`,
           candidate,
           cohort,
@@ -335,6 +340,9 @@ export function buildRiicTailFillResult({
   selections = {},
   fallbackOperatorIdBySlotKeyByGroup = {},
   controlCenterOperatorIds = [],
+  controlCenterSegments = [],
+  ownedOperators = [],
+  activeOperatorIds = [],
   idleFillOperators = [],
   fiammettaRecovery = null,
   fiammettaControlUsage = null,
@@ -372,12 +380,36 @@ export function buildRiicTailFillResult({
     ...controlCenterOperatorIdSet,
     ...selectedCoreOperatorIds,
   ].filter((charId) => charId !== recovery.targetOperatorId));
+  // 活跃名单挂件（S.E.E.S./莱茵生命）需要知道这一班谁在基建里在岗。
+  const extraActiveOperatorIds = Array.from(activeOperatorIds || [])
+    .map((charId) => String(charId || "").trim())
+    .filter((charId) => charId && charId !== recovery.targetOperatorId);
   const nextFallbackOperatorIdBySlotKeyByGroup = Object.fromEntries(
     Object.entries(fallbackOperatorIdBySlotKeyByGroup || {}).map(
       ([groupId, assignments]) => [groupId, { ...(assignments || {}) }],
     ),
   );
   const fallbackOperatorsBySelectionKeyByGroup = {};
+  const selectedEntriesByGroupId = new Map();
+  for (const group of planningGroups) {
+    const state = candidateStatesByGroupId[group.id];
+    if (state?.status !== "ready") {
+      continue;
+    }
+
+    selectedEntriesByGroupId.set(
+      group.id,
+      getSelectedEntries(group, state, nextSelections),
+    );
+  }
+  // 每个班次单独算在岗名单：挂件只在它的主人当班的那一班停靠。
+  const activeOperatorIdsBySelectionKey =
+    buildRiicActiveOperatorIdsBySelectionKey({
+      selectedEntries: [...selectedEntriesByGroupId.values()].flat(),
+      baseActiveOperatorIds: extraActiveOperatorIds,
+      baseActiveOperatorIdsByStateIndex:
+        buildRiicActiveOperatorIdsByStateIndex(controlCenterSegments),
+    });
 
   for (const group of planningGroups) {
     const state = candidateStatesByGroupId[group.id];
@@ -385,7 +417,7 @@ export function buildRiicTailFillResult({
       continue;
     }
 
-    const selectedEntries = getSelectedEntries(group, state, nextSelections);
+    const selectedEntries = selectedEntriesByGroupId.get(group.id) || [];
     if (selectedEntries.length === 0) {
       continue;
     }
@@ -396,6 +428,9 @@ export function buildRiicTailFillResult({
         idleFillOperators,
       ),
       occupiedOperatorIds,
+      ownedOperators,
+      activeOperatorIds: extraActiveOperatorIds,
+      activeOperatorIdsBySelectionKey,
       preferredOperatorIdBySlotKey:
         nextFallbackOperatorIdBySlotKeyByGroup[group.id] || {},
       excludedOperatorIds: selectedEntries.flatMap(

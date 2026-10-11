@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "releaseId": "riic-recycle-2026-10-09",
+  "scope": {
+    "roomType": "recycle",
+    "product": "all",
+    "stationLevel": 3,
+    "slotCount": 2
+  },
+  "defaultPercent": 1,
+  "operators": [
+    { "name": "旅骨", "rates": [{ "percent": 20 }, { "elite": 2, "percent": 30 }] }
+  ]
+}

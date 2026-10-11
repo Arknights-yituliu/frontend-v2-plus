@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4232_hbound",
+  "name": "旅骨",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "recycle",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "拾荒者",
+          "effects": [
+            {
+              "target": "recycle",
+              "stat": "recycleSpd",
+              "value": 20,
+              "text": "进驻回收站时，材料转化效率<@cc.vup>+20%</>"
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "捡海人",
+          "effects": [
+            {
+              "target": "recycle",
+              "stat": "recycleSpd",
+              "value": 30,
+              "text": "进驻回收站时，材料转化效率<@cc.vup>+30%</>"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

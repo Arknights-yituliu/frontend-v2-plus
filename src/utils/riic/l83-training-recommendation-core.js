@@ -525,6 +525,7 @@ function buildTrialMaaSchedule({ input, scheduleCandidate }) {
     roomIndexAssignments: input.roomIndexAssignments || {},
     hasFiammetta: input.hasFiammetta === true,
     includeRiicRoomLevels: true,
+    forceSkipFalse: input.forceSkipFalse === true,
     durationSource: "preview",
   }).schedule;
 }

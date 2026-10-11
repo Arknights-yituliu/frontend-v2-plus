@@ -4,7 +4,10 @@ import { cMessage } from "/src/utils/message.js";
 import { operatorTableV2 } from "/src/utils/gameData.js";
 import { parseRiicMaaOperatorBox } from "/src/utils/riicMaaOperatorData.js";
 import { withRiicOperatorTags } from "/src/utils/riic/riic-operator-tags.js";
-import { normalizeRiicOperator } from "/src/utils/riicOperatorIdentity.js";
+import {
+  getRiicOperatorProfile,
+  normalizeRiicOperator,
+} from "/src/utils/riicOperatorIdentity.js";
 import {
   RIIC_MANUAL_OPERATOR_SOURCE_KEY,
   RIIC_MANUAL_OPERATOR_STORAGE_KEY,
@@ -124,7 +127,11 @@ function normalizeOwnedOperators(list = [], requireOwn = false) {
 
     const normalized = normalizeRiicOperator(operator);
     const charId = normalized.charId;
-    const name = operatorTableV2?.[charId]?.name || normalized.name;
+    const packageProfile = getRiicOperatorProfile(charId);
+    const name =
+      operatorTableV2?.[charId]?.name ||
+      packageProfile?.name ||
+      normalized.name;
     if (!name) {
       continue;
     }
@@ -151,7 +158,9 @@ function normalizeOwnedOperators(list = [], requireOwn = false) {
           rarity:
             Number.isFinite(Number(operator?.rarity))
               ? Number(operator.rarity)
-              : operatorTableV2?.[charId]?.rarity || 1,
+              : operatorTableV2?.[charId]?.rarity ||
+                packageProfile?.rarity ||
+                1,
           elite,
           level,
           potential: Number.isFinite(Number(operator?.potential))

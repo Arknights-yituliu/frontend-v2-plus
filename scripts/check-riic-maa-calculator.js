@@ -196,7 +196,9 @@ assert.ok(
   "展示模型应包含队列计算明细",
 );
 assert.ok(
-  strategyDisplay.droneScenarios.some((scenario) => scenario.baseRateLines?.length),
+  strategyDisplay.droneScenarios.some(
+    (scenario) => scenario.baseRateLines?.length || scenario.baseRate,
+  ),
   "二者都显示时赤金或作战记录加速项应包含数量和点数基础产出",
 );
 

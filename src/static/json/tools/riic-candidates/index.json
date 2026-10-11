@@ -122,6 +122,13 @@
       "operatorCount": 29
     },
     {
+      "key": "recycle:all:3:2",
+      "file": "recycle/3.json",
+      "fallbackFile": "recycle/3.fallback.json",
+      "candidateCount": 7,
+      "operatorCount": 15
+    },
+    {
       "key": "trading:all:1:1",
       "file": "trading/1.json",
       "fallbackFile": "trading/1.fallback.json",

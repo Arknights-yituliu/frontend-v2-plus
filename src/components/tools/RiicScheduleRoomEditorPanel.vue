@@ -246,14 +246,6 @@ function formatTraceDetails(details) {
       >
         自动补满
       </button>
-      <button
-        type="button"
-        :class="{ active: maaSettings.skip }"
-        :aria-pressed="maaSettings.skip"
-        @click="toggleMaaSetting('skip')"
-      >
-        跳过房间
-      </button>
     </div>
 
     <div class="schedule-room-editor-clipboard">

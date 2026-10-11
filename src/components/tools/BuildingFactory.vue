@@ -3,21 +3,10 @@ import {translate} from "/src/utils/i18n.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {operatorTableV2} from '/src/utils/gameData.js'
+import { buildRiicOperatorIdByName } from "/src/utils/riicOperatorIdentity.js";
 
 
-let characterIdAndName = {}
-
-for (const key in operatorTableV2) {
-  characterIdAndName[operatorTableV2[key].name] = replaceCharId(key)
-}
-
-
-function replaceCharId(string) {
-  if (string === 'char_1001_amiya2' || string === 'char_1001_amiya3') {
-    return 'char_002_amiya'
-  }
-  return string
-}
+const characterIdAndName = buildRiicOperatorIdByName(operatorTableV2)
 
 const props = defineProps({
   roomType: {
@@ -44,7 +33,8 @@ const translateKey = {
   meeting: 'ReceptionRoom',
   processing: 'Workshop',
   hire: 'Office',
-  Training: 'Training',
+  training: 'Training',
+  recycle: 'Recycle',
 }
 
 

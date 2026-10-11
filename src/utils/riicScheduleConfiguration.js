@@ -56,6 +56,11 @@ export const SCHEDULE_ROOM_GROUP_META = {
     icon: "mdi-school-outline",
     tone: "training",
   },
+  recycle: {
+    facilityLabel: "回收站",
+    icon: "mdi-recycle",
+    tone: "recycle",
+  },
 };
 export const SCHEDULE_ROOM_GROUP_ICONS = {
   "lmd-trading": "mdi-cash-multiple",
@@ -64,6 +69,7 @@ export const SCHEDULE_ROOM_GROUP_ICONS = {
   "orundum-trading": "mdi-star-four-points-outline",
   "orundum-manufacture": "mdi-star-four-points-outline",
   power: "mdi-lightning-bolt",
+  recycle: "mdi-recycle",
 };
 export const ROOM_CANDIDATE_PRODUCTS = Object.freeze({
   "lmd-trading": "lmd",
@@ -75,6 +81,7 @@ export const ROOM_CANDIDATE_PRODUCTS = Object.freeze({
   control: "all",
   meeting: "all",
   office: "all",
+  recycle: "all",
 });
 export const ROOM_CANDIDATE_EFFECT_META = Object.freeze([
   {
@@ -101,6 +108,11 @@ export const ROOM_CANDIDATE_EFFECT_META = Object.freeze([
     facility: "office",
     field: "officePercent",
     label: "办公室",
+  },
+  {
+    facility: "recycle",
+    field: "recyclePercent",
+    label: "回收站",
   },
 ]);
 export const STATIC_SCHEDULE_ROOM_GROUPS = Object.freeze([
@@ -178,6 +190,18 @@ export const STATIC_SCHEDULE_ROOM_GROUPS = Object.freeze([
     row: "support",
     width: 1,
     rotationRequired: false,
+  },
+  {
+    id: "support:recycle",
+    key: "recycle",
+    label: "回收站",
+    facilityLabel: "回收站",
+    icon: "mdi-recycle",
+    tone: "recycle",
+    count: 1,
+    row: "support",
+    width: 1,
+    rotationRequired: true,
   },
 ]);
 

@@ -309,6 +309,10 @@ function getTileStatus(group) {
   --room-group-color: #bf6252;
 }
 
+.room-group-tile.tone-recycle {
+  --room-group-color: #6ccbcb;
+}
+
 .room-group-tile:hover {
   background: color-mix(
     in srgb,

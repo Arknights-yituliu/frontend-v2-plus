@@ -258,6 +258,8 @@ function createStaticRoomPreview({
     stationIndex: Number(room?.stationIndex || 0),
     stationLevel: room?.stationLevel || null,
     expectedSlots: room?.expectedSlots || null,
+    maxStaffingSlots: room?.maxStaffingSlots || null,
+    staffingDisabled: room?.staffingDisabled === true,
     operators,
     automaticOperators,
     efficiency: null,

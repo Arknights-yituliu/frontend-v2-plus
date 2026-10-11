@@ -4,6 +4,7 @@ const PERCENT_FIELD_BY_ROOM_TYPE = Object.freeze({
   meeting: "meetingPercent",
   hire: "officePercent",
   power: "powerPercent",
+  recycle: "recyclePercent",
 });
 const PRODUCT_EQUIVALENT_FACILITY_BY_FIELD = Object.freeze({
   gold: "manufacture",

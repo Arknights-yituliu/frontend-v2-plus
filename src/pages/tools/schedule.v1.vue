@@ -26,10 +26,17 @@ import {
   reconcileRiicScheduleLayout,
   resolveRiicScheduleLayout,
 } from "/src/utils/riicScheduleLayout.js";
+import { buildRiicOperatorIdByName } from "/src/utils/riicOperatorIdentity.js";
+import { addRiicScheduleExportFields } from "/src/utils/riicScheduleExport.js";
 
 const router = useRouter();
 const RIIC_MAA_CALCULATOR_TRANSFER_STORAGE_KEY = "riic_maa_editor_to_efficiency_calculator_v1";
 const RIIC_MAA_CALCULATOR_RETURN_STORAGE_KEY = "riic_maa_calculator_to_editor_v1";
+const RIIC_MAA_SCHEDULE_EXPORT_GENERATOR = Object.freeze({
+  id: "yituliu-riic-schedule-v1",
+  name: "明日方舟一图流-排班表（MAA）",
+  url: "https://ark.yituliu.cn/tools/scheduleV1",
+});
 
 const {mobile} = useDisplay()
 
@@ -120,18 +127,7 @@ const productTable = {
   ]
 }
 
-let characterIdAndName = {}
-
-for (const key in operatorTableV2) {
-  characterIdAndName[operatorTableV2[key].name] = replaceCharId(key)
-}
-
-function replaceCharId(string) {
-  if (string === 'char_1001_amiya2') {
-    return 'char_002_amiya'
-  }
-  return string
-}
+const characterIdAndName = buildRiicOperatorIdByName(operatorTableV2)
 
 let selectedScheduleType = ref(SCHEDULE_MENU[0])
 
@@ -233,7 +229,9 @@ let roomSettlementOperatorMaxQuantity = {
   power: 1,
   meeting: 2,
   hire: 1,
-  processing: 1
+  processing: 1,
+  training: 2,
+  recycle: 2
 }
 
 /**
@@ -833,6 +831,8 @@ function createSchedule() {
         meeting: plansTemplate.value[i].rooms.meeting,
         hire: plansTemplate.value[i].rooms.hire,
         processing: plansTemplate.value[i].rooms.processing,
+        training: plansTemplate.value[i].rooms.training,
+        recycle: plansTemplate.value[i].rooms.recycle,
       }
     }
     const duration = Number(plansTemplate.value[i].duration)
@@ -858,6 +858,8 @@ function createSchedule() {
       manufacture: scheduleTypeV2.value.manufacture,
       power: scheduleTypeV2.value.power,
       dormitory: scheduleTypeV2.value.dormitory,
+      training: scheduleTypeV2.value.training ?? 1,
+      recycle: scheduleTypeV2.value.recycle ?? 1,
     },
   )
   scheduleInfo.value.planTimes = `${scheduleTypeV2.value.planTimes}班`
@@ -874,7 +876,11 @@ function saveAndDownloadScheduleFile() {
   buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
     scheduleId.value = response.data.scheduleId
     scheduleInfo.value.id = scheduleId.value
-    const blob = new Blob([JSON.stringify(scheduleInfo.value, null, 2)], {type: "application/json"});
+    const exportSchedule = addRiicScheduleExportFields(
+      { ...scheduleInfo.value, id: scheduleId.value },
+      { generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR },
+    )
+    const blob = new Blob([JSON.stringify(exportSchedule, null, 2)], {type: "application/json"});
     saveAs(blob, `${scheduleId.value}.json`)
 
     createMessage({type: 'success', text: translate('schedule', 'schedule.SavedScheduleIDMessage') + scheduleId.value})
@@ -884,9 +890,12 @@ function saveAndDownloadScheduleFile() {
 
 function downloadScheduleFile() {
   createSchedule()
+  const exportSchedule = addRiicScheduleExportFields(scheduleInfo.value, {
+    generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR,
+  })
   let link = document.createElement('a')
   link.download = `自定义排班.json`
-  link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(scheduleInfo.value, null, 2))
+  link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportSchedule, null, 2))
   link.click()
   link.remove()
 }
@@ -1530,6 +1539,20 @@ function useNewUI() {
                                :operators="getRoomOperators(scheduleIndex,'hire', 0)"
                                :product="getRoomProduct(scheduleIndex,'hire', 0)"
                                @click="openOperatorCheckBoxDialog(scheduleIndex,'hire',0)">
+              </BuildingFactory>
+              <!--训练室-->
+              <BuildingFactory :room-index="0"
+                               room-type="training"
+                               :operators="getRoomOperators(scheduleIndex,'training', 0)"
+                               :product="getRoomProduct(scheduleIndex,'training', 0)"
+                               @click="openOperatorCheckBoxDialog(scheduleIndex,'training',0)">
+              </BuildingFactory>
+              <!--回收站-->
+              <BuildingFactory :room-index="0"
+                               room-type="recycle"
+                               :operators="getRoomOperators(scheduleIndex,'recycle', 0)"
+                               :product="getRoomProduct(scheduleIndex,'recycle', 0)"
+                               @click="openOperatorCheckBoxDialog(scheduleIndex,'recycle',0)">
               </BuildingFactory>
               <!--宿舍-->
               <BuildingFactory v-for="(num, dormitoryIndex) in scheduleTypeV2.dormitory" :key="dormitoryIndex"

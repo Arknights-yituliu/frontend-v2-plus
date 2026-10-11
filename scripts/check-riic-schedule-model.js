@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import { buildRiicOperatorIdByName } from "../src/utils/riicOperatorIdentity.js";
 import {
   getRiicFacilityProfile,
   getRiicRoomStations,
@@ -59,6 +60,16 @@ const normalTradingOperators = Object.freeze([
 function createNormalTradingRoomOperators() {
   return normalTradingOperators.map(({ charId }) => ({ charId }));
 }
+
+const operatorTable = JSON.parse(
+  fs.readFileSync(
+    new URL("../src/static/json/operator/character_table_simple.v2.json", import.meta.url),
+    "utf8",
+  ),
+);
+const operatorIdByName = buildRiicOperatorIdByName(operatorTable);
+assert.equal(operatorIdByName["旅骨"], "char_4232_hbound");
+assert.equal(operatorIdByName["澄闪"], "char_377_gdglow");
 
 assert.deepEqual(getRiicRotationSegmentHours("once"), [24]);
 assert.deepEqual(getRiicRotationSegmentHours("twice"), [12]);
@@ -310,6 +321,7 @@ const maaRoomIndexExport = buildRiicMaaScheduleFromPreview({
           {
             key: "trading:lmd:0",
             facility: "trading",
+            stationLevel: 3,
             product: "lmd",
             stationIndex: 0,
             operators: [{ name: "LMD Operator" }],
@@ -317,6 +329,7 @@ const maaRoomIndexExport = buildRiicMaaScheduleFromPreview({
           {
             key: "trading:orundum:0",
             facility: "trading",
+            stationLevel: 3,
             product: "orundum",
             stationIndex: 0,
             operators: [{ name: "Orundum Operator" }],
