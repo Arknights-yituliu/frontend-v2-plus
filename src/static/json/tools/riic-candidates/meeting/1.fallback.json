@@ -221,6 +221,22 @@
       ]
     },
     {
+      "name": "克莱门莎",
+      "rates": [
+        {
+          "percent": 10
+        },
+        {
+          "percent": 10,
+          "elite": 1
+        },
+        {
+          "percent": 35,
+          "elite": 2
+        }
+      ]
+    },
+    {
       "name": "莱欧斯",
       "rates": [
         {
