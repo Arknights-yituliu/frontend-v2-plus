@@ -1,4 +1,19 @@
 {
+  "char_4232_hbound": {
+    "updateTime": "2026/10/09 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "旅骨"
+  },
+  "char_4231_clemnt": {
+    "updateTime": "2026/10/09 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "克莱门莎"
+  },
+  "char_393_toledo": {
+    "updateTime": "2026/10/09 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "德·托莱多"
+  },
   "char_4220_kormr": {
     "updateTime": "2026/09/04 12:00:00",
     "obtainApproach": "限定干员",
