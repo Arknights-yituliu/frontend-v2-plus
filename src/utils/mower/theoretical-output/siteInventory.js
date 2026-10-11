@@ -1,5 +1,5 @@
 import {onActivated, onBeforeUnmount, onDeactivated, onMounted, ref, watch} from 'vue'
-import {listAkAccounts, getAkAccountOperators} from '/src/api/user-center/userCenterApi.js'
+import {listAkAccounts, getAkAccountOperators} from '/src/api/user-center/gameData.js'
 import {userInfo} from '/src/api/backend/userSession.js'
 import {ensureUcToken, refreshUcToken, clearUcToken} from '/src/utils/user/ucToken.js'
 import {latestMowerSiteAccount, mapUcMowerInventory} from './siteInventoryMapping.js'

@@ -13,7 +13,7 @@ import {
 } from "/src/utils/user/authValidation.js";
 import {useVerificationCode} from "/src/api/user-center/verificationCode.js";
 import UserApiV2 from '/src/api/backend/UserApiV2.js'
-import {directRegister} from '/src/api/user-center/userCenterApi.js'
+import {directRegister} from '/src/api/user-center/auth.js'
 import {saveUcToken} from "/src/utils/user/ucToken.js"
 
 /**
@@ -100,7 +100,7 @@ async function toRegister() {
       })
     }, 3000)
   } catch (error) {
-    // 错误提示已由各请求拦截器（request.js / userCenterApi.js）统一弹出，这里不再重复处理
+    // 错误提示已由各请求拦截器（request.js / ucClient.js）统一弹出，这里不再重复处理
     console.error('注册失败', error);
   } finally {
     isSubmitting.value = false;
