@@ -129,8 +129,8 @@ function confirmCustomTarget() {
     class="fiammetta-recovery-setting"
     :class="{ compact }"
   >
-    <label>
-      <span>菲亚梅塔使用对象：</span>
+    <label class="fiammetta-recovery-control">
+      <span>菲亚梅塔使用对象</span>
       <select
         :value="selectedTarget"
         :disabled="!hasFiammetta"
@@ -191,6 +191,9 @@ function confirmCustomTarget() {
     >
       {{ status.text }}
     </p>
+    <p class="fiammetta-recovery-note">
+      只支持菲亚梅塔与固定一名干员互换心情
+    </p>
   </section>
 </template>
 
@@ -209,6 +212,7 @@ function confirmCustomTarget() {
 
 .fiammetta-recovery-setting.compact {
   margin-top: 0;
+  align-items: flex-start;
 }
 
 .fiammetta-recovery-setting label {
@@ -219,6 +223,17 @@ function confirmCustomTarget() {
   color: var(--c-text-color);
   font-size: 13px;
   line-height: 1.35;
+}
+
+.fiammetta-recovery-control > span {
+  font-weight: 700;
+}
+
+.fiammetta-recovery-setting.compact .fiammetta-recovery-control {
+  flex: 1 1 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
 }
 
 .fiammetta-recovery-setting select,
@@ -233,6 +248,11 @@ function confirmCustomTarget() {
   color: var(--c-text-color);
   font: inherit;
   font-size: 12px;
+}
+
+.fiammetta-recovery-setting.compact select {
+  width: 100%;
+  min-width: 0;
 }
 
 .fiammetta-recovery-setting button {
@@ -271,6 +291,15 @@ function confirmCustomTarget() {
 .fiammetta-recovery-status {
   flex: 1 1 100%;
   margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.fiammetta-recovery-note {
+  flex: 1 1 100%;
+  width: 100%;
+  margin: 0;
+  color: var(--riic-muted);
   font-size: 12px;
   line-height: 1.4;
 }
