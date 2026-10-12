@@ -2,30 +2,54 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20260924.2314"
+      "version": "v20261011.1852"
     },
     "data": {
       "label": "数据模块",
-      "version": "v20260924.2314"
+      "version": "v20261011.1852"
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260928.1118"
+      "version": "v20261012.1550"
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20260822.2233"
+      "version": "v20261011.1852"
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20261002.1334"
+      "version": "v20261011.1852"
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260928.1102"
+      "version": "v20261011.1852"
     }
   },
   "entries": [
+    {
+      "date": "2026-10-12",
+      "version": "v20261012.1550",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 5,
+          "description": "修复部分账号使用一图流数据生成排班时，多处设施无法排满干员的问题",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 3,
+          "description": "调整补位干员筛选逻辑，避免其他班次已占用的干员挤占可用候选名额，适用于普通生成、深度搜索及手动两换模式",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-10-11",
       "version": "v20261011.1852",
