@@ -383,7 +383,7 @@ try {
     assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
     second.replacement = ["红"];
     assert.deepEqual(validatePlan(plan).errors, []);
-    for (const [replacement, error] of [["错误干员", /替班干员名无效/], ["Free", /Free 替班只能/], ["菲亚梅塔", /替班不能安排菲亚梅塔/], ["凯尔希", /已担任主班/]]) {
+    for (const [replacement, error] of [["错误干员", /替班干员名无效/], ["Free", /Free 替班只能/], ["菲亚梅塔", /替班不能安排菲亚梅塔/], ["阿米娅", /已担任主班/]]) {
       primary.replacement = [replacement];
       assert.match(validatePlan(plan).errors.join(";"), error);
     }
@@ -474,6 +474,60 @@ try {
     plan.plan1.central = { plans: workers.map((name, index) => ({ agent: name, group: "主班组", replacement: [covers[index]] })) };
     return plan;
   };
+  const workingExchangeFixture = () => {
+    const plan = cloneValid();
+    plan.plan1.contact = { plans: [{ agent: "陈", group: "互填组", replacement: ["银灰"] }] };
+    plan.plan1.meeting = { plans: [{ agent: "银灰", group: "互填组", replacement: ["陈"] }] };
+    plan.plan1.central = { plans: [{ agent: "能天使", group: "互填组", replacement: ["黑角"] }] };
+    plan.plan1.dormitory_1.plans = ["杜林", "蜜莓", "芙蓉", "安赛尔", "Free"].map((name) => slot(name));
+    return plan;
+  };
+  check("同组工作主班互填不限设施，只为未匹配到岗位的恢复成员计床", () => {
+    const plan = workingExchangeFixture();
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.contact.plans[0].replacement.unshift("夜莺");
+    plan.plan1.meeting.plans[0].replacement.unshift("白面鸮");
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.central.plans.push({ agent: "讯使", group: "互填组", replacement: ["初雪"] });
+    assert.match(validatePlan(plan).errors.join(";"), /互填组.*所需宿舍数 2.*有效宿舍数 1/);
+  });
+  check("工作互填按唯一完整匹配扣床，同一候选不能重复抵扣", () => {
+    const plan = bedFixture();
+    plan.plan1.central.plans[0].replacement = ["银灰", "夜莺"];
+    plan.plan1.central.plans[2].replacement = ["银灰"];
+    plan.plan1.dormitory_1.plans = [slot("杜林"), slot("塑心"), slot("Free"), slot("Free"), slot("Free")];
+    assert.match(validatePlan(plan).errors.join(";"), /主班组.*所需宿舍数 4.*有效宿舍数 3/);
+    plan.plan1.central.plans[0].replacement = ["银灰"];
+    assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
+  });
+  check("工作互填继续拒绝空组、跨组与自替班，附加绑组按对应列判定", () => {
+    const plan = workingExchangeFixture();
+    const primary = plan.plan1.contact.plans[0];
+    primary.replacement = ["陈"];
+    assert.match(validatePlan(plan).errors.join(";"), /须是同一非空绑组内的其他主班/);
+    primary.replacement = ["银灰"];
+    primary.group = "";
+    assert.match(validatePlan(plan).errors.join(";"), /须是同一非空绑组内的其他主班/);
+    primary.group = "其他组";
+    plan.plan1.dormitory_1.plans[3] = slot("Free");
+    primary.replacement = ["夜莺"];
+    primary.group_bindings = [{ group: "互填组", replacement: ["银灰"] }];
+    plan.plan1.central.plans[0].group = "其他组";
+    assert.deepEqual(validatePlan(plan).errors, []);
+    primary.group_bindings[0].group = "无关组";
+    assert.match(validatePlan(plan).errors.join(";"), /须是同一非空绑组内的其他主班/);
+  });
+  check("副表按生效互填关系重算床位且不改写主表", () => {
+    const plan = workingExchangeFixture();
+    plan.backup_plans = [{ name: "取消互填", plan: { contact: { plans: [{ agent: "陈", group: "互填组", replacement: ["夜莺"] }] } }, conf: {} }];
+    const before = JSON.stringify(plan);
+    const errors = validatePlan(plan).errors;
+    assert.ok(errors.every((error) => error.startsWith("副表「取消互填」")));
+    assert.match(errors.join(";"), /所需宿舍数 2.*有效宿舍数 1/);
+    assert.equal(JSON.stringify(plan), before);
+    plan.backup_plans[0].plan.contact.plans[0].replacement = ["银灰"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
   check("alpha 候补不占必需床位，用尽与回满成员仍须有床", () => {
     const plan = bedFixture();
     plan.conf.resting_standby = "芬";

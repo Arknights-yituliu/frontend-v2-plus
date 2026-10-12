@@ -9,7 +9,7 @@ const list = (value) => (Array.isArray(value) ? value : typeof value === "string
 const dorm = (room) => room.startsWith("dormitory_");
 const capacity = (room, facility) => capacities[room] ?? (dorm(room) ? 5 : facility.name === "发电站" ? 1 : 3);
 
-// Follow alpha's preferred maximum matching: fixed dorm replacements can save beds.
+// Prefer complete matching that leaves fewer required primaries needing dynamic beds.
 function matchReplacements(options, preferred = new Set(), partial = false) {
   const seed = preferred.size
     ? matchReplacements(new Map([...options].map(([name, covers]) => [name, covers.filter((cover) => preferred.has(cover))])), new Set(), true)
@@ -128,12 +128,11 @@ export function validatePlan(payload) {
           if (name === "菲亚梅塔") {
             if (!cover) add(label, `菲亚梅塔的充能对象「${replacement}」不在主班中`);
           } else if (cover) {
-            const sameDormGroup =
+            const sameGroup =
               name !== replacement &&
               binding.group &&
-              (dorm(slot.room) || dorm(cover.room)) &&
               cover.bindings.some((item) => item.group === binding.group);
-            if (!sameDormGroup) add(label, `${name} 的替班「${replacement}」已担任主班，须属于同一绑组且至少一方在宿舍`);
+            if (!sameGroup) add(label, `${name} 的替班「${replacement}」已担任主班，须是同一非空绑组内的其他主班`);
           }
         }
     }
@@ -165,17 +164,8 @@ export function validatePlan(payload) {
           add(label, `绑组「${group}」无法为各岗位分配不同替班`);
           break;
         }
-        const fixed = new Set(
-          members
-            .filter(({ room }) => dorm(room))
-            .map(({ slot }) => {
-              const name = assignments.get(slot.agent);
-              const cover = primaries.get(name);
-              return cover && !dorm(cover.room) && !workaholics.has(name) && cover.bindings.some((binding) => binding.group === group) ? name : null;
-            })
-            .filter(Boolean),
-        );
-        requiredBeds = [...required].filter((name) => !fixed.has(name)).length;
+        const assignedCovers = new Set(assignments.values());
+        requiredBeds = [...required].filter((name) => !assignedCovers.has(name)).length;
         if (requiredBeds <= effectiveBeds) break;
         if (preferred === required) add(label, `绑组「${group}」所需宿舍数 ${requiredBeds} 大于当前有效宿舍数 ${effectiveBeds}`);
       }
