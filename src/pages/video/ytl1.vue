@@ -85,7 +85,9 @@ function getStageResult() {
     getItemTableData(0, false)
 
     itemCache.getLastSynchronizationTime().then(response => {
-      updateTime.value = dateFormat(response.createTime, 'yyyy/MM/dd HH:mm')
+      if (response) {
+        updateTime.value = dateFormat(response.createTime, 'yyyy/MM/dd HH:mm')
+      }
     })
   })
 
