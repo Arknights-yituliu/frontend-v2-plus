@@ -269,8 +269,9 @@ function getAutomaticRoomTeamOptions({
     excludedOperatorIds.add(reservedPowerOperatorId);
   }
   reportProgress?.("L70_FALLBACK");
+  // 其他班次已占用的干员也不可补位；当前班次名单仍单独用于技能效果计算。
   const occupiedOperatorIds = new Set(
-    [...activeSelectionOperatorIds].filter(
+    [...activeSelectionOperatorIds, ...claimedOperatorIds].filter(
       (charId) => !isReusableTarget(charId),
     ),
   );
