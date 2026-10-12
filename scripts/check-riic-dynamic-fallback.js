@@ -26,6 +26,9 @@ try {
     buildRiicTailFillResult,
   } = await vite.ssrLoadModule("/src/utils/riic/l71-idle-fill.js");
   const {
+    getRiicRoomGroupStaffingRequirement,
+  } = await vite.ssrLoadModule("/src/utils/riic/l60-staffing.js");
+  const {
     materializeRiicRoomTeamCandidate,
   } = await vite.ssrLoadModule("/src/utils/riic/l62-room-team-materializer.js");
   const {
@@ -384,6 +387,129 @@ try {
     40,
   );
   assert.equal(waaiFuManufactureRoom?.efficiency, 198);
+
+  // 补位方案数量受限时，不能让已排在其他班次的干员挤掉仍可使用的干员。
+  const rotatingFallbackOperators = ["first", "second", "third", "fourth"].map(
+    (name, index) => ({ charId: name, name, percent: 40 - index * 10 }),
+  );
+  const selectRotatingFallbackTeams = ({
+    operators = rotatingFallbackOperators,
+    shiftMode = "twice",
+    twoShiftRotationMode = "maa",
+    stationCount = 1,
+    ...options
+  } = {}) => {
+    const { cohorts } = getRiicRoomGroupStaffingRequirement({
+      stations: Array.from({ length: stationCount }, () => ({
+        stationLevel: 3,
+        slotCount: 1,
+      })),
+      roomType: "power",
+      shiftMode,
+      twoShiftRotationMode,
+    });
+    return buildRiicAutomaticRoomGroupSelections({
+      groups: [
+        { id: "rotating-power", label: "rotating power", facility: "power" },
+      ],
+      candidateStatesByGroupId: {
+        "rotating-power": {
+          status: "ready",
+          cohorts: cohorts.map((cohort) => ({
+            ...cohort,
+            candidates: Array.from({ length: cohort.teamCount }, (_, index) => ({
+              key: `${cohort.id}:fallback-${index}`,
+              candidateScope: { roomType: "power", product: "all" },
+              operatorIds: [],
+              corePercent: 100,
+              fallback: { count: 1, candidateOperators: operators },
+            })),
+          })),
+        },
+      },
+      selectionBeamLimit: 1,
+      selectionOptionLimit: 1,
+      selectionRepresentativeLimit: 1,
+      fallbackPlanLimit: 1,
+      collectPlanningDebug: true,
+      ...options,
+    });
+  };
+  for (const [shiftMode, twoShiftRotationMode] of [
+    ["once", "maa"],
+    ["twice", "maa"],
+    ["twice", "manual"],
+    ["threeTimes", "manual"],
+  ]) {
+    const selected = selectRotatingFallbackTeams({
+      shiftMode,
+      twoShiftRotationMode,
+    });
+    assert.deepEqual(
+      selected.unavailableGroups,
+      [],
+      `${shiftMode}/${twoShiftRotationMode}`,
+    );
+    const operatorIds = selected.selectedRoomTeams.flatMap(
+      (team) => team.operatorIds,
+    );
+    assert.equal(new Set(operatorIds).size, operatorIds.length);
+  }
+  const controlReservedSelection = selectRotatingFallbackTeams({
+    controlCenterOperatorIds: ["first"],
+    controlCenterSegments: [
+      { index: 0, durationHours: 12, operatorIds: [] },
+      { index: 1, durationHours: 12, operatorIds: ["first"] },
+    ],
+  });
+  assert.deepEqual(controlReservedSelection.unavailableGroups, []);
+  assert.deepEqual(
+    controlReservedSelection.selectedRoomTeams.flatMap((team) => team.operatorIds),
+    ["second", "third"],
+    "中枢已占用干员在其休息班次也不能挤掉可用的生产补位",
+  );
+  assert.deepEqual(
+    selectRotatingFallbackTeams({
+      operators: rotatingFallbackOperators.slice(0, 1),
+    }).unavailableGroups,
+    ["rotating power"],
+    "实际缺人时不能重复使用普通干员来伪装排满",
+  );
+  const recovery = { enabled: true, targetOperatorId: "first" };
+  const recoverySelection = selectRotatingFallbackTeams({
+    operators: rotatingFallbackOperators.slice(0, 1),
+    fiammettaRecovery: recovery,
+  });
+  assert.deepEqual(recoverySelection.unavailableGroups, []);
+  assert.deepEqual(
+    recoverySelection.selectedRoomTeams.flatMap((team) => team.operatorIds),
+    ["first", "first"],
+    "菲亚梅塔恢复目标仍可在不重叠班次复用",
+  );
+  const parallelRecoverySelection = selectRotatingFallbackTeams({
+    stationCount: 2,
+    operators: rotatingFallbackOperators.slice(0, 3),
+    fiammettaRecovery: recovery,
+    fallbackPlanLimit: 4,
+  });
+  assert.deepEqual(parallelRecoverySelection.unavailableGroups, []);
+  const parallelStaffing = getRiicRoomGroupStaffingRequirement({
+    stations: Array.from({ length: 2 }, () => ({ stationLevel: 3, slotCount: 1 })),
+    roomType: "power",
+    shiftMode: "twice",
+    twoShiftRotationMode: "maa",
+  });
+  for (const segment of parallelStaffing.cohorts[0].rotationSegments) {
+    assert.equal(
+      parallelRecoverySelection.selectedRoomTeams.filter(
+        (team) =>
+          team.operatorIds.includes("first") &&
+          segment.activeTeamIndexes.includes(team.teamIndex),
+      ).length,
+      1,
+      "恢复目标不能在同一班次进入两个房间",
+    );
+  }
 
   const automaticCrossSelection = buildRiicAutomaticRoomGroupSelections({
     groups: [
