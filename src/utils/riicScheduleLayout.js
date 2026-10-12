@@ -183,7 +183,11 @@ function normalizeLayoutEntries(layout) {
 }
 
 export function validateRiicLayoutPositionOrder(layout) {
-  const normalized = normalizeLayoutEntries(layout);
+  const normalized = normalizeLayoutEntries(layout).map((entry) =>
+    entry.type === "dormitory" && entry.position === "B404"
+      ? { ...entry, position: "B401" }
+      : entry,
+  );
   const positionable = normalized.filter(
     (entry) => getTypePositions(entry.type).length > 0,
   );
