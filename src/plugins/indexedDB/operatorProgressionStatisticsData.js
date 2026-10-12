@@ -1,16 +1,12 @@
-import myDatabase from "/src/plugins/indexedDB/indexedDB.js";
+import { putCacheSafe, getCacheSafe } from "/src/plugins/indexedDB/indexedDB.js";
 import {getAkOperatorStatisticsResult} from "/src/api/user-center/gameData.js";
 import {operatorTableV2} from "/src/utils/gameData.js";
 import {formatNumber} from "/src/utils/format.js";
 
-function putCache(data) {
-    myDatabase.cache_data.put(data)
-}
-
 async function getData() {
     // 干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级，旧缓存(V6)中的统计结果为 0-5 语义，升级版本号使旧缓存失效并强制重新拉取格式化
     const cacheKey = 'operatorProgressionStatisticsV7'
-    let cacheData = await myDatabase.cache_data.get(cacheKey)
+    let cacheData = await getCacheSafe(cacheKey)
 
     // if (cacheData && cacheData.resource.result.length) {
     //     if (new Date().getTime() - cacheData.createTime < 60 * 60 * 24 * 1000) {
@@ -25,7 +21,7 @@ async function getData() {
 
         const data = {result: _formatData(result)}
         const responseCache = {id: cacheKey, resource: data, version: "automated", createTime: new Date().getTime()}
-        putCache(responseCache)
+        putCacheSafe(responseCache)
         cacheData = data
     })
 

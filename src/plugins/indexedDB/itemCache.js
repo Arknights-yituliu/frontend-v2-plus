@@ -1,14 +1,9 @@
-import myDatabase from "/src/plugins/indexedDB/indexedDB.js";
+import { getCacheSafe, putCacheSafe } from "/src/plugins/indexedDB/indexedDB.js";
 import materialAPI from "/src/api/backend/materialV5.js";
 import axios from "axios";
 import {createMessage} from "@/utils/message.js";
 import {getItemInfoList} from "/src/utils/item/itemValue.js";
 import cacheKeyDict from "/src/plugins/indexedDB/cacheKeyDict.js";
-
-
-async function putCache(data) {
-    myDatabase.cache_data.put(data)
-}
 
 let localItemValueCache = new Map()
 
@@ -133,7 +128,7 @@ async function getPenguinMatrixCache() {
     //非强制刷新情况下，先判断是否有缓存
 
     //获取indexDB中的缓存数据
-    let cacheData = await myDatabase.cache_data.get(penguinCacheKey)
+    let cacheData = await getCacheSafe(penguinCacheKey)
     //有缓存判断缓存时间是否超过设定时间，未超过直接返回缓存
     if (cacheData) {
         if (Date.now() - cacheData.createTime < 60 * 60 * 1000) {
@@ -183,7 +178,7 @@ async function getPenguinMatrixCache() {
             version: "automated",
             createTime: new Date().getTime()
         }
-        putCache(info)
+        putCacheSafe(info)
         penguinData = matrix
     })
 
@@ -193,7 +188,7 @@ async function getPenguinMatrixCache() {
 
 
 function getLastSynchronizationTime() {
-    return myDatabase.cache_data.get(penguinCacheKey)
+    return getCacheSafe(penguinCacheKey)
 }
 
 async function getStageInfoCache() {
@@ -201,7 +196,7 @@ async function getStageInfoCache() {
     let stageInfo
 
 
-    let cacheData = await myDatabase.cache_data.get(cacheKey)
+    let cacheData = await getCacheSafe(cacheKey)
     if (cacheData) {
         if (new Date().getTime() - cacheData.createTime < 60 * 60 * 1000) {
             console.log(`${cacheKey}.返回缓存的数据`)
@@ -219,7 +214,7 @@ async function getStageInfoCache() {
             version: new Date().getTime(),
             createTime: new Date().getTime()
         }
-        putCache(info)
+        putCacheSafe(info)
         stageInfo = data
     })
 
