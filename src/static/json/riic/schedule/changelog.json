@@ -2,27 +2,27 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20260924.2314"
+      "version": "v20261011.1852"
     },
     "data": {
       "label": "数据模块",
-      "version": "v20260924.2314"
+      "version": "v20261011.1852"
     },
     "team": {
       "label": "班组模块",
-      "version": "v20260928.1118"
+      "version": "v20261011.1852"
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20260822.2233"
+      "version": "v20261011.1852"
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20261002.1334"
+      "version": "v20261011.1852"
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20260928.1102"
+      "version": "v20261011.1852"
     }
   },
   "entries": [
