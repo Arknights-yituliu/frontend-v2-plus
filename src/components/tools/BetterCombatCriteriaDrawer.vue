@@ -43,9 +43,17 @@ function escapeHtml(text) {
   return String(text == null ? "" : text).replace(/[&<>"]/g, (c) => HTML_ESCAPES[c]);
 }
 
+// 结果 JSON 的文本可携带白名单行内标签 <strong>／<code>（源项目生成器把 md 的 ** 与反引号转写而来，
+// 见源项目 docs/ui-render-rules.md §5.5／§7）；转义后仅放行这两个标签，其余一律按字面显示。
+const RESULT_INLINE_TAG_RE = /&lt;(\/?)(strong|code)&gt;/g;
+
+function escapeResultText(text) {
+  return escapeHtml(text).replace(RESULT_INLINE_TAG_RE, "<$1$2>");
+}
+
 // 正文 → 术语包上可点击 span（最长优先匹配；渲染用 v-html）
 function termify(text) {
-  const escaped = escapeHtml(text);
+  const escaped = escapeResultText(text);
   if (!TERM_REGEX.value) return escaped;
   return escaped.replace(TERM_REGEX.value, (m) => `<span class="bcd-term" data-criteria-term="${m}">${m}</span>`);
 }
@@ -59,7 +67,7 @@ function onBodyClick(event) {
   // 内联样式：ElNotification 挂在 body 下，拿不到本组件的 scoped 样式
   ElNotification({
     title: name,
-    message: htmlStringToVNode(`<div style="line-height:1.7;">${escapeHtml(text)}</div>`),
+    message: htmlStringToVNode(`<div style="line-height:1.7;">${escapeResultText(text)}</div>`),
     duration: 7000,
   });
 }
@@ -199,7 +207,7 @@ defineExpose({ scrollBodyToTop });
             <h2>{{ t.name }}</h2>
             <p class="bcd-lead" v-html="termify(t.intro)"></p>
             <div v-for="(s, si) in t.sections || []" :key="'ts' + si" class="bcd-sec">
-              <div class="bcd-label">{{ s.label }}<span v-if="s.note" class="bcd-note">{{ s.note }}</span></div>
+              <div class="bcd-label">{{ s.label }}<span v-if="s.note" class="bcd-note" v-html="escapeResultText(s.note)"></span></div>
               <ul class="bcd-items">
                 <li v-for="(it, ii) in s.items || []" :key="'ti' + ii">
                   <template v-if="typeof it === 'string'" v-html="termify(it)"></template>
@@ -223,7 +231,7 @@ defineExpose({ scrollBodyToTop });
               <h3>{{ sub.value }}<span class="bcd-sub-group">（{{ sub.group }}）</span></h3>
               <p class="bcd-lead" v-html="termify(sub.intro)"></p>
               <div v-for="(s, si) in sub.sections || []" :key="'ss' + si" class="bcd-sec">
-                <div class="bcd-label">{{ s.label }}<span v-if="s.note" class="bcd-note">{{ s.note }}</span></div>
+                <div class="bcd-label">{{ s.label }}<span v-if="s.note" class="bcd-note" v-html="escapeResultText(s.note)"></span></div>
                 <ul class="bcd-items">
                   <li v-for="(it, ii) in s.items || []" :key="'si' + ii">
                     <template v-if="typeof it === 'string'" v-html="termify(it)"></template>

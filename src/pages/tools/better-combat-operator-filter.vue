@@ -607,9 +607,17 @@ function escapeHtml(text) {
   return String(text == null ? "" : text).replace(/[&<>"]/g, (c) => HTML_ESCAPES[c]);
 }
 
+// 结果 JSON 的文本可携带白名单行内标签 <strong>／<code>（源项目生成器把 md 的 ** 与反引号转写而来，
+// 见源项目 docs/ui-render-rules.md §5.5／§7）；转义后仅放行这两个标签，其余一律按字面显示。
+const RESULT_INLINE_TAG_RE = /&lt;(\/?)(strong|code)&gt;/g;
+
+function escapeResultText(text) {
+  return escapeHtml(text).replace(RESULT_INLINE_TAG_RE, "<$1$2>");
+}
+
 // 备注/条件文本 → 术语包上 <span data-combat-term>（最长优先匹配）
 function wrapTerms(text) {
-  const escaped = escapeHtml(text);
+  const escaped = escapeResultText(text);
   if (!TERM_REGEX.value) return escaped;
   return escaped.replace(TERM_REGEX.value, (m) => `<span class="combat-term" data-combat-term="${m}">${m}</span>`);
 }
@@ -663,7 +671,7 @@ function renderRemark(remark) {
     (items || [])
       .map((it) =>
         it.label
-          ? `<div class="bcf-item"><span class="bcf-k">${linkifyArkdps(escapeHtml(it.label))}</span><span class="bcf-v">${linkifyArkdps(wrapTerms(it.text))}</span></div>`
+          ? `<div class="bcf-item"><span class="bcf-k">${linkifyArkdps(escapeResultText(it.label))}</span><span class="bcf-v">${linkifyArkdps(wrapTerms(it.text))}</span></div>`
           : `<div class="bcf-item bcf-item--wide"><span class="bcf-v">${linkifyArkdps(wrapTerms(it.text))}</span></div>`
       )
       .join("");
@@ -677,7 +685,7 @@ function renderRemark(remark) {
         return (
           `<div class="bcf-block bcf-block--score"><div class="bcf-block-head">` +
           `<span class="bcf-block-title">成绩</span>` +
-          (caseName ? `<span class="bcf-block-case">${escapeHtml(caseName)}</span>` : "") +
+          (caseName ? `<span class="bcf-block-case">${escapeResultText(caseName)}</span>` : "") +
           `</div>${body}</div>`
         );
       }
@@ -689,7 +697,7 @@ function renderRemark(remark) {
         return `<div class="bcf-block bcf-block--note"><div class="bcf-block-head">说明</div>${body}</div>`;
       }
       if (kind === "ability") {
-        return `<div class="bcf-block bcf-block--ability"><div class="bcf-block-head">${escapeHtml(label)}</div>${body}</div>`;
+        return `<div class="bcf-block bcf-block--ability"><div class="bcf-block-head">${escapeResultText(label)}</div>${body}</div>`;
       }
       return `<div class="bcf-block">${body}</div>`;
     })
@@ -713,9 +721,9 @@ function onTermClick(event) {
   if (!el) return;
   const term = TERM_MAP.value.get(el.getAttribute("data-combat-term"));
   if (!term) return;
-  const notes = (term.notes || []).map((n) => `<li>${escapeHtml(n)}</li>`).join("");
+  const notes = (term.notes || []).map((n) => `<li>${escapeResultText(n)}</li>`).join("");
   // 内联样式：ElNotification 挂在 body 下，拿不到本组件的 scoped 样式
-  const html = `<div>${escapeHtml(term.definition)}</div>` + (notes ? `<ul style="margin:6px 0 0;padding-left:18px;">${notes}</ul>` : "");
+  const html = `<div>${escapeResultText(term.definition)}</div>` + (notes ? `<ul style="margin:6px 0 0;padding-left:18px;">${notes}</ul>` : "");
   ElNotification({
     title: term.name,
     message: htmlStringToVNode(html),
@@ -1001,7 +1009,7 @@ const SENTINEL_INTERSECT = {
                   </template>
                   <div class="bcf-tt-body">
                     <div class="bcf-tt-title">{{ t.name }}</div>
-                    <p>{{ tagExplain(t) || "（暂无说明）" }}</p>
+                    <p v-html="escapeResultText(tagExplain(t) || '（暂无说明）')"></p>
                     <p v-if="t.id === 'P12'" class="bcf-tt-note">此 TAG 只能单独选择。</p>
                     <a class="bcf-tt-more" @click.stop="openCriteria(t.id)">
                       <span>查看评定标准详情</span>
@@ -1033,7 +1041,7 @@ const SENTINEL_INTERSECT = {
                   </template>
                   <div class="bcf-tt-body">
                     <div class="bcf-tt-title">{{ item.value }}</div>
-                    <p>{{ subExplain(panel.tag.id, item.group, item.value) || "（暂无说明）" }}</p>
+                    <p v-html="escapeResultText(subExplain(panel.tag.id, item.group, item.value) || '（暂无说明）')"></p>
                     <a class="bcf-tt-more" @click.stop="openCriteria(panel.tag.id, item.group, item.value)">
                       <span>查看评定标准详情</span>
                       <v-icon icon="mdi-chevron-right" size="13" />
@@ -1072,7 +1080,7 @@ const SENTINEL_INTERSECT = {
               </template>
               <div class="bcf-tt-body">
                 <div class="bcf-tt-title">{{ tagById.get(id)?.name }}</div>
-                <p>{{ tagExplain(tagById.get(id)) || "（暂无说明）" }}</p>
+                <p v-html="escapeResultText(tagExplain(tagById.get(id)) || '（暂无说明）')"></p>
                 <p v-if="id === 'P12'" class="bcf-tt-note">此 TAG 只能单独选择。</p>
                 <a class="bcf-tt-more" @click.stop="openCriteria(id)">
                   <span>查看评定标准详情</span>
