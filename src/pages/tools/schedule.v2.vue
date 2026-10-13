@@ -106,6 +106,7 @@ const productTable = {
     { id: "4003", value: "Orundum" },
   ],
 };
+const PRODUCTION_ROOM_TYPES = new Set(["trading", "manufacture"]);
 
 const characterIdAndName = buildRiicOperatorIdByName(operatorTableV2);
 
@@ -597,6 +598,15 @@ function setProduct(product) {
   selectedProduct.value = getItemIdByProductName(plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].product);
 }
 
+function isCurrentRoomProductEmpty() {
+  const room = plansTemplate.value[selectedPlanIndex.value]?.rooms?.[selectedRoomType.value]?.[selectedRoomIndex.value];
+  return String(room?.product ?? "").trim() === "";
+}
+
+function setCurrentRoomProductEnabled(enabled) {
+  setProduct(enabled ? productTable[selectedRoomType.value]?.[0]?.value || "" : "");
+}
+
 /**
  * 获得产物的物品id
  * @param {string} product 产物
@@ -874,13 +884,36 @@ function createSchedule() {
   delete scheduleInfo.value.scheduleType;
 }
 
+function prepareScheduleForExport(schedule) {
+  let hasEmptyProduct = false;
+  const plans = schedule.plans.map((plan) => {
+    const rooms = Object.fromEntries(Object.entries(plan.rooms || {}).map(([roomType, roomList]) => [
+      roomType,
+      PRODUCTION_ROOM_TYPES.has(roomType)
+        ? roomList.map((room) => {
+            if (String(room?.product ?? "").trim()) return room;
+            hasEmptyProduct = true;
+            if (!room || typeof room !== "object") return room;
+            const roomWithoutProduct = { ...room };
+            delete roomWithoutProduct.product;
+            return roomWithoutProduct;
+          })
+        : roomList,
+    ]));
+    return { ...plan, rooms };
+  });
+  return { schedule: { ...schedule, plans }, hasEmptyProduct };
+}
+
 function saveAndDownloadScheduleFile() {
   createSchedule();
-  buildingApi.saveSchedule(scheduleInfo.value, 1111).then((response) => {
+  const { schedule: scheduleForExport, hasEmptyProduct } = prepareScheduleForExport(scheduleInfo.value);
+  if (hasEmptyProduct) cMessage("当前排班表存在空产物", "warn");
+  buildingApi.saveSchedule(scheduleForExport, 1111).then((response) => {
     scheduleId.value = response.data.scheduleId;
     scheduleInfo.value.id = scheduleId.value;
     const exportSchedule = addRiicScheduleExportFields(
-      { ...scheduleInfo.value, id: scheduleId.value },
+      { ...scheduleForExport, id: scheduleId.value },
       { generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR },
     );
     const blob = new Blob([JSON.stringify(exportSchedule, null, 2)], { type: "application/json" });
@@ -891,7 +924,9 @@ function saveAndDownloadScheduleFile() {
 
 function downloadScheduleFile() {
   createSchedule();
-  const exportSchedule = addRiicScheduleExportFields(scheduleInfo.value, {
+  const { schedule, hasEmptyProduct } = prepareScheduleForExport(scheduleInfo.value);
+  if (hasEmptyProduct) cMessage("当前排班表存在空产物", "warn");
+  const exportSchedule = addRiicScheduleExportFields(schedule, {
     generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR,
   });
   let link = document.createElement("a");
@@ -1077,6 +1112,10 @@ function importSchedule(schedule, { preserveUnsupportedRooms = false } = {}) {
           }
           for (const property in roomList[roomIndex]) {
             targetRoomList[roomIndex][property] = roomList[roomIndex][property];
+          }
+          if (PRODUCTION_ROOM_TYPES.has(roomType)) {
+            const product = String(roomList[roomIndex].product ?? "").trim();
+            targetRoomList[roomIndex].product = product ? roomList[roomIndex].product : "";
           }
         }
       }
@@ -1640,6 +1679,15 @@ function openMaaScheduleCalculator() {
             </v-switch>
             <!--选择产物-->
             <span class="room-set-description">{{ translate("schedule", "schedule.ProductSelection") }}</span>
+            <v-switch
+              v-if="productTable[selectedRoomType]"
+              color="success"
+              density="compact"
+              hide-details
+              aria-label="选择产物"
+              :model-value="!isCurrentRoomProductEmpty()"
+              @update:model-value="setCurrentRoomProductEnabled"
+            ></v-switch>
             <div class="product-image-wrap" @click="setProduct(product.value)" v-for="(product, index) in productTable[selectedRoomType]" :key="index">
               <div :class="getItemSprite(product.id)"></div>
             </div>

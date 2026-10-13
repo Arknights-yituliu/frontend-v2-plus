@@ -159,7 +159,7 @@ export function addRiicScheduleExportFields(
   const nextSchedule = {
     ...schedule,
     metadata: {
-      extensionVersion: "1.0",
+      extensionVersion: "2.0",
       generator: { ...generator },
       ...(moduleVersions ? { moduleVersions: { ...moduleVersions } } : {}),
     },

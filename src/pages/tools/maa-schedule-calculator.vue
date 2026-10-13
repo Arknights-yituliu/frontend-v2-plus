@@ -397,6 +397,7 @@ const layoutEditDraft = ref(null);
 const layoutEditorOpen = ref(false);
 const layoutEditError = ref("");
 const activeOperators = ref([]);
+const progressionEditorRef = ref(null);
 const treatSkillsAsUnlocked = ref(true);
 const efficiencySettings = reactive(readPageEfficiencySettings());
 const resourceAmountDisplayMode = ref(readResourceAmountDisplayMode());
@@ -1012,6 +1013,19 @@ function normalizeSchedulePayload(payload) {
     };
   });
 
+  const emptyProductRooms = plans.flatMap((plan, planIndex) =>
+    ["trading", "manufacture"].flatMap((facility) =>
+      (plan.rooms[facility] || []).flatMap((room, roomIndex) =>
+        String(room?.product ?? "").trim()
+          ? []
+          : [`第${planIndex + 1}班${ROOM_LABELS[facility]}#${roomIndex + 1}`],
+      ),
+    ),
+  );
+  if (emptyProductRooms.length) {
+    throw new Error(`以下房间未设置产物：${emptyProductRooms.join("、")}`);
+  }
+
   const layout = validateLayoutConstraints(
     resolveRiicScheduleLayout({
       layout: payload.layout,
@@ -1096,6 +1110,26 @@ function applySchedule(
   maaEditorScheduleType.value = fromMaaEditor ? payload.scheduleType : undefined;
 }
 
+function importScheduleOperators(payload, fileName) {
+  if (!Object.hasOwn(payload, "operators")) {
+    return false;
+  }
+
+  try {
+    const editor = progressionEditorRef.value;
+    if (typeof editor?.importMaaOperatorData !== "function") {
+      throw new Error("干员练度编辑器尚未就绪");
+    }
+    editor.importMaaOperatorData(payload, fileName);
+    return true;
+  } catch (error) {
+    ElMessage.warning(
+      `干员数据导入失败：${error?.message || "MAA JSON 读取失败"}`,
+    );
+    return false;
+  }
+}
+
 async function handleScheduleFile(event) {
   inputError.value = "";
   const file = event.target.files?.[0];
@@ -1107,9 +1141,14 @@ async function handleScheduleFile(event) {
   try {
     const payload = JSON.parse((await file.text()).replace(/^\uFEFF/, ""));
     applySchedule(payload, { fileName: file.name });
-    ElMessage.success("排班已导入");
+    const importedOperators = importScheduleOperators(payload, file.name);
+    ElMessage.success(
+      importedOperators
+        ? "已导入排班表及其中的干员数据."
+        : "排班已导入",
+    );
   } catch (error) {
-    inputError.value = error?.message || "排班 JSON 读取失败";
+    inputError.value = `导入失败：${error?.message || "排班 JSON 读取失败"}`;
   }
 }
 
@@ -1144,6 +1183,7 @@ function consumeMaaEditorTransfer() {
     rawTransfer = sessionStorage.getItem(RIIC_MAA_EDITOR_TRANSFER_STORAGE_KEY);
   } catch (error) {
     console.error("Failed to read RIIC MAA editor transfer", error);
+    ElMessage.error(`导入失败：${error?.message || "读取排班数据失败"}`);
     return;
   }
   if (!rawTransfer) {
@@ -1155,14 +1195,14 @@ function consumeMaaEditorTransfer() {
     transfer = JSON.parse(rawTransfer);
   } catch (error) {
     sessionStorage.removeItem(RIIC_MAA_EDITOR_TRANSFER_STORAGE_KEY);
-    ElMessage.error("收到的排班数据无效");
+    ElMessage.error(`导入失败：${error?.message || "收到的排班数据无效"}`);
     return;
   }
 
   const schedule = transfer?.schedule;
   if (transfer?.version !== 1 || transfer?.source !== "riic-maa-editor" || !Array.isArray(schedule?.plans) || schedule.plans.length === 0) {
     sessionStorage.removeItem(RIIC_MAA_EDITOR_TRANSFER_STORAGE_KEY);
-    ElMessage.error("收到的排班数据无效");
+    ElMessage.error("导入失败：收到的排班数据无效");
     return;
   }
 
@@ -1172,11 +1212,17 @@ function consumeMaaEditorTransfer() {
       fromMaaEditor: true,
       returnRoute: transfer.returnRoute === "ScheduleV1" ? "ScheduleV1" : "ScheduleV2",
     });
+    const importedOperators = importScheduleOperators(schedule, "排班表MAA");
     sessionStorage.removeItem(RIIC_MAA_EDITOR_TRANSFER_STORAGE_KEY);
-    ElMessage.success("已导入排班表MAA的排班");
+    ElMessage.success(
+      importedOperators
+        ? "已导入排班表及其中的干员数据."
+        : "已导入排班表MAA的排班",
+    );
   } catch (error) {
     console.error("Failed to import RIIC MAA editor transfer", error);
-    ElMessage.error(error?.message || "导入排班表MAA的排班失败");
+    sessionStorage.removeItem(RIIC_MAA_EDITOR_TRANSFER_STORAGE_KEY);
+    ElMessage.error(`导入失败：${error?.message || "导入排班表MAA的排班失败"}`);
   }
 }
 
@@ -1376,6 +1422,7 @@ onUnmounted(() => {
     </section>
 
     <RiicMaaOperatorProgressionEditor
+      ref="progressionEditorRef"
       v-model:treat-skills-as-unlocked="treatSkillsAsUnlocked"
       @profiles-change="updateActiveOperators"
     />
