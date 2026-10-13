@@ -126,6 +126,7 @@ const productTable = {
     {id: '4003', value: 'Orundum'}
   ]
 }
+const PRODUCTION_ROOM_TYPES = new Set(['trading', 'manufacture'])
 
 const characterIdAndName = buildRiicOperatorIdByName(operatorTableV2)
 
@@ -617,6 +618,15 @@ function setProduct(product) {
       .rooms[selectedRoomType.value][selectedRoomIndex.value].product)
 }
 
+function isCurrentRoomProductEmpty() {
+  const room = plansTemplate.value[selectedScheduleIndex.value]?.rooms?.[selectedRoomType.value]?.[selectedRoomIndex.value]
+  return String(room?.product ?? '').trim() === ''
+}
+
+function setCurrentRoomProductEnabled(enabled) {
+  setProduct(enabled ? productTable[selectedRoomType.value]?.[0]?.value || '' : '')
+}
+
 /**
  * 获得产物的物品id
  * @param {string} product 产物
@@ -871,13 +881,36 @@ function createSchedule() {
 
 }
 
+function prepareScheduleForExport(schedule) {
+  let hasEmptyProduct = false
+  const plans = schedule.plans.map(plan => {
+    const rooms = Object.fromEntries(Object.entries(plan.rooms || {}).map(([roomType, roomList]) => [
+      roomType,
+      PRODUCTION_ROOM_TYPES.has(roomType)
+        ? roomList.map(room => {
+          if (String(room?.product ?? '').trim()) return room
+          hasEmptyProduct = true
+          if (!room || typeof room !== 'object') return room
+          const roomWithoutProduct = { ...room }
+          delete roomWithoutProduct.product
+          return roomWithoutProduct
+        })
+        : roomList,
+    ]))
+    return { ...plan, rooms }
+  })
+  return { schedule: { ...schedule, plans }, hasEmptyProduct }
+}
+
 function saveAndDownloadScheduleFile() {
   createSchedule()
-  buildingApi.saveSchedule(scheduleInfo.value, 1111).then(response => {
+  const { schedule: scheduleForExport, hasEmptyProduct } = prepareScheduleForExport(scheduleInfo.value)
+  if (hasEmptyProduct) createMessage({type: 'warn', text: '当前排班表存在空产物'})
+  buildingApi.saveSchedule(scheduleForExport, 1111).then(response => {
     scheduleId.value = response.data.scheduleId
     scheduleInfo.value.id = scheduleId.value
     const exportSchedule = addRiicScheduleExportFields(
-      { ...scheduleInfo.value, id: scheduleId.value },
+      { ...scheduleForExport, id: scheduleId.value },
       { generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR },
     )
     const blob = new Blob([JSON.stringify(exportSchedule, null, 2)], {type: "application/json"});
@@ -890,7 +923,9 @@ function saveAndDownloadScheduleFile() {
 
 function downloadScheduleFile() {
   createSchedule()
-  const exportSchedule = addRiicScheduleExportFields(scheduleInfo.value, {
+  const { schedule, hasEmptyProduct } = prepareScheduleForExport(scheduleInfo.value)
+  if (hasEmptyProduct) createMessage({type: 'warn', text: '当前排班表存在空产物'})
+  const exportSchedule = addRiicScheduleExportFields(schedule, {
     generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR,
   })
   let link = document.createElement('a')
@@ -1040,9 +1075,13 @@ function importSchedule(schedule) {
         }
         for (const roomIndex in roomList) {
           const room = roomList[roomIndex]
-          for (const property in roomList[roomIndex]) {
+          for (const property in room || {}) {
             // console.log(plansTemplate.value[index].rooms[roomType][roomIndex][property])
             plansTemplate.value[index].rooms[roomType][roomIndex][property] = room[property]
+          }
+          if (PRODUCTION_ROOM_TYPES.has(roomType)) {
+            const product = String(room?.product ?? '').trim()
+            plansTemplate.value[index].rooms[roomType][roomIndex].product = product ? room.product : ''
           }
         }
       }
@@ -1592,8 +1631,13 @@ function useNewUI() {
             </v-switch>
           </div>
 
-          <span class="room-set-label"
-                v-show="productTable[selectedRoomType]">{{ translate('schedule', 'schedule.ProductSelection') }}</span>
+          <div class="flex align-center">
+            <span class="room-set-label"
+                  v-show="productTable[selectedRoomType]">{{ translate('schedule', 'schedule.ProductSelection') }}</span>
+            <v-switch v-if="productTable[selectedRoomType]" color="success" density="compact" hide-details
+                      aria-label="选择产物" :model-value="!isCurrentRoomProductEmpty()"
+                      @update:model-value="setCurrentRoomProductEnabled"></v-switch>
+          </div>
           <div class="flex align-center">
             <ItemImage v-for="(product, index) in productTable[selectedRoomType]" :key="index"
                        :item-id="product.id"
@@ -1686,7 +1730,3 @@ function useNewUI() {
   </div>
 
 </template>
-
-<style scoped>
-
-</style>
