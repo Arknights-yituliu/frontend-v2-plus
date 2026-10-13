@@ -9,6 +9,7 @@ import { getStageConfig } from "/src/utils/user/userConfig.js";
 import { summarizeRiicFacilityPower } from "/src/utils/riic/riic-facility-power-model.js";
 import {
   DEFAULT_LMD_DRONE_STRATEGIES,
+  PURE_GOLD_POINTS,
   sanityItemDefinitions,
 } from "/src/vendor/riic-efficiency/dist/index.js";
 import {
@@ -45,6 +46,7 @@ const LEGACY_PAGE_SANITY_VALUES_STORAGE_KEYS = Object.freeze([
 ]);
 const PAGE_EFFICIENCY_SETTINGS_STORAGE_KEY = "riic_maa_schedule_calculator_efficiency_settings_v1";
 const PAGE_RESOURCE_AMOUNT_DISPLAY_MODE_STORAGE_KEY = "riic_maa_schedule_calculator_resource_amount_display_mode_v1";
+const PAGE_SHOW_VIRTUAL_GOLD_STORAGE_KEY = "riic_maa_schedule_calculator_show_virtual_gold_v1";
 const RESOURCE_AMOUNT_DISPLAY_MODES = Object.freeze([
   { key: "raw", label: "个数" },
   { key: "points", label: "点数" },
@@ -374,6 +376,14 @@ function readResourceAmountDisplayMode() {
   }
 }
 
+function readShowVirtualGold() {
+  try {
+    return localStorage.getItem(PAGE_SHOW_VIRTUAL_GOLD_STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
 function updateFirstItemProgress(event) {
   efficiencySettings.firstItemProgress = normalizeRiicEfficiencySettings({
     ...efficiencySettings,
@@ -401,6 +411,7 @@ const progressionEditorRef = ref(null);
 const treatSkillsAsUnlocked = ref(true);
 const efficiencySettings = reactive(readPageEfficiencySettings());
 const resourceAmountDisplayMode = ref(readResourceAmountDisplayMode());
+const showVirtualGold = ref(readShowVirtualGold());
 const lmdDroneStrategyInput = ref("");
 const importedFromMaaEditor = ref(false);
 const maaEditorReturnRoute = ref("ScheduleV2");
@@ -426,6 +437,14 @@ watch(resourceAmountDisplayMode, (mode) => {
     localStorage.setItem(PAGE_RESOURCE_AMOUNT_DISPLAY_MODE_STORAGE_KEY, mode);
   } catch {
     // Keep the selected mode usable in memory when browser storage is unavailable.
+  }
+});
+
+watch(showVirtualGold, (enabled) => {
+  try {
+    localStorage.setItem(PAGE_SHOW_VIRTUAL_GOLD_STORAGE_KEY, String(enabled));
+  } catch {
+    // Keep the selected setting usable in memory when browser storage is unavailable.
   }
 });
 
@@ -563,6 +582,83 @@ const resultDisplay = computed(() =>
 );
 const calculationError = computed(() => calculationState.value.error);
 const dailyOutput = computed(() => resultDisplay.value?.dailyOutput);
+function dailyProductionAmount(product) {
+  const production = result.value?.dailyProductions?.find(
+    (item) => item.product === product,
+  );
+  const amount = Number(
+    production?.effectiveAmountPerDay ?? production?.amountPerDay,
+  );
+  return Number.isFinite(amount) ? amount : null;
+}
+
+function dailyNetAmount(product) {
+  const netOutput = result.value?.dailyOutputs?.find(
+    (item) => item.product === product && item.kind === "net",
+  );
+  if (netOutput) {
+    const amount = Number(netOutput.amountPerDay);
+    return Number.isFinite(amount) ? amount : null;
+  }
+
+  const production = result.value?.dailyProductions?.find(
+    (item) => item.product === product,
+  );
+  const amount = dailyProductionAmount(product);
+  if (amount === null) {
+    return null;
+  }
+  const materialPerHour =
+    production?.effectiveMaterialPerHour || production?.materialPerHour || {};
+  return amount + (Number(materialPerHour[product]) || 0) * 24;
+}
+
+function getVirtualGoldPointAmounts() {
+  const lmdAmount = dailyProductionAmount("龙门币") ?? 0;
+  const goldAmount = dailyProductionAmount("赤金");
+  const netGoldAmount = dailyNetAmount("赤金");
+  if (goldAmount === null || netGoldAmount === null) {
+    return null;
+  }
+
+  const totalPoints = lmdAmount + netGoldAmount * PURE_GOLD_POINTS;
+  const virtualGoldPoints = totalPoints - goldAmount * PURE_GOLD_POINTS;
+  return { totalPoints, virtualGoldPoints };
+}
+
+const dailyOutputTiles = computed(() =>
+  (dailyOutput.value?.tiles || []).map((tile) => {
+    if (!showVirtualGold.value || tile.product !== "赤金") {
+      return tile;
+    }
+
+    const pointAmounts = getVirtualGoldPointAmounts();
+    if (!pointAmounts) {
+      return tile;
+    }
+
+    const toDisplayPair = (divisor = 1) => [
+      { value: pointAmounts.totalPoints / divisor },
+      { value: pointAmounts.virtualGoldPoints / divisor, signed: true },
+    ];
+    const displayMode = resourceAmountDisplayMode.value;
+    let main = {
+      template: "{0}（{1}）",
+      raws: toDisplayPair(PURE_GOLD_POINTS),
+    };
+
+    if (displayMode === "points") {
+      main.raws = toDisplayPair();
+    } else if (displayMode === "both") {
+      main = {
+        template: "{0}（{1}） / {2}（{3}）",
+        raws: [...toDisplayPair(PURE_GOLD_POINTS), ...toDisplayPair()],
+      };
+    }
+
+    return { ...tile, main };
+  }),
+);
 const calculationSteps = computed(() => resultDisplay.value?.calculationSteps);
 const queueCalculationPane = computed(() => calculationSteps.value?.dailyOutput);
 const facilitySteps = computed(() => calculationSteps.value?.facilitySteps);
@@ -844,9 +940,6 @@ const packageNoticeGroups = computed(() =>
     count: packageNotices.value.filter((notice) => notice.level === level.key).length,
     notices: packageNotices.value.filter((notice) => notice.level === level.key),
   })).filter((group) => group.count > 0),
-);
-const packageNoticeCount = computed(() =>
-  packageNoticeGroups.value.reduce((total, group) => total + group.count, 0),
 );
 const rawResultJson = computed(() => (result.value ? JSON.stringify(result.value, null, 2) : ""));
 
@@ -1578,7 +1671,16 @@ onUnmounted(() => {
           </span>
           计算提示
         </h2>
-        <span class="summary-meta">提示 · {{ packageNoticeCount }}</span>
+        <span class="package-notice-counts">
+          <span
+            v-for="group in packageNoticeGroups"
+            :key="group.key"
+            class="package-notice-count"
+            :class="`tone-${group.key}`"
+          >
+            {{ group.key }} <strong>{{ group.count }}</strong>
+          </span>
+        </span>
       </summary>
       <div class="package-notice-groups">
         <section
@@ -1628,22 +1730,36 @@ onUnmounted(() => {
         </summary>
         <div class="result-body">
           <p v-if="dailyOutput?.warning" class="warning-text">{{ dailyOutput.warning }}</p>
-          <div class="resource-amount-control" role="group" aria-label="赤金与中级作战记录的显示方式">
-            <span>赤金 / 中级作战记录</span>
-            <div class="segmented-control">
-              <button
-                v-for="mode in RESOURCE_AMOUNT_DISPLAY_MODES"
-                :key="mode.key"
-                type="button"
-                :class="{ active: resourceAmountDisplayMode === mode.key }"
-                :aria-pressed="resourceAmountDisplayMode === mode.key"
-                @click="resourceAmountDisplayMode = mode.key"
-              >{{ mode.label }}</button>
+          <div class="resource-amount-settings">
+            <div class="resource-amount-control" role="group" aria-label="赤金与中级作战记录显示格式">
+              <div class="resource-amount-control-copy">
+                <strong>赤金 / 中级作战记录 显示格式</strong>
+                <span>会影响计算结果中所有的显示格式</span>
+              </div>
+              <div class="segmented-control">
+                <button
+                  v-for="mode in RESOURCE_AMOUNT_DISPLAY_MODES"
+                  :key="mode.key"
+                  type="button"
+                  :class="{ active: resourceAmountDisplayMode === mode.key }"
+                  :aria-pressed="resourceAmountDisplayMode === mode.key"
+                  @click="resourceAmountDisplayMode = mode.key"
+                >{{ mode.label }}</button>
+              </div>
+            </div>
+            <div class="virtual-gold-setting">
+              <label class="switch-control">
+                <input v-model="showVirtualGold" type="checkbox" />
+                <span>显示虚拟赤金</span>
+              </label>
+              <p>
+                无论该设置如何，净收入中的计算都考虑了龙舌兰、可露希尔等干员减少的赤金消耗
+              </p>
             </div>
           </div>
           <div v-if="dailyOutput?.tiles?.length || dailyOutput?.totalTile" class="tile-grid">
             <RiicDisplayTile
-              v-for="tile in dailyOutput?.tiles || []"
+              v-for="tile in dailyOutputTiles"
               :key="tile.key"
               :tile="tile"
               :recycle-outputs="tile.product === '精英材料' ? (result?.recycleOutputs || []) : []"
@@ -2469,12 +2585,40 @@ h2 {
 .package-notices-summary {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
   min-height: var(--maa-control-height);
   padding: 0 var(--maa-gap-3);
   list-style: none;
   cursor: pointer;
+}
+.package-notice-counts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.package-notice-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.package-notice-count strong {
+  font-weight: inherit;
+  font-variant-numeric: tabular-nums;
+}
+.package-notice-count.tone-info {
+  color: var(--riic-blue, #2878c8);
+}
+.package-notice-count.tone-warning {
+  color: var(--riic-orange, #d46d2b);
+}
+.package-notice-count.tone-error {
+  color: var(--riic-red, #c94f4f);
 }
 .package-notice-groups {
   display: grid;
@@ -2527,11 +2671,48 @@ h2 {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 8px 12px;
-  margin-bottom: var(--maa-gap-3);
+  margin-bottom: 0;
   color: var(--c-text-color-secondary, #6b7280);
   font-size: 13px;
+}
+.resource-amount-settings {
+  display: grid;
+  gap: var(--maa-gap-3);
+  margin-bottom: var(--maa-gap-3);
+}
+.resource-amount-control-copy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+}
+.resource-amount-control-copy strong {
+  color: var(--c-text-color);
+  font-weight: 600;
+}
+.resource-amount-control-copy > span {
+  color: var(--c-text-color-secondary, #6b7280);
+}
+.virtual-gold-setting {
+  display: grid;
+  gap: 4px;
+  padding-top: var(--maa-gap-2);
+  border-top: 1px solid var(--maa-border);
+}
+.virtual-gold-setting .switch-control {
+  color: var(--c-text-color);
+}
+.virtual-gold-setting input {
+  margin: 0;
+  accent-color: var(--riic-blue, #2878c8);
+}
+.virtual-gold-setting p {
+  margin: 0;
+  color: var(--c-text-color-secondary, #6b7280);
+  font-size: 12px;
+  line-height: 1.5;
 }
 .segmented-control {
   display: inline-flex;
