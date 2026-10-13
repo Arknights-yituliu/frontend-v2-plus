@@ -1,25 +1,36 @@
 const MAA_NUMBER_FIELDS = [
-  ["rarity", 1, 6],
   ["elite", 0, 2],
-  ["level", 0, 90],
-  ["potential", 0, 6],
 ];
 
 function isIntegerInRange(value, min, max) {
   return Number.isInteger(value) && value >= min && value <= max;
 }
 
-export function parseRiicMaaOperatorBox(payload, operatorTable = {}) {
-  if (!Array.isArray(payload)) {
-    throw new Error("MAA JSON 顶层必须是干员数组");
+export function getRiicMaaOperatorRows(payload) {
+  if (Array.isArray(payload)) {
+    return payload;
   }
+  if (
+    payload &&
+    typeof payload === "object" &&
+    Array.isArray(payload.operators)
+  ) {
+    return payload.operators;
+  }
+  throw new Error(
+    "MAA JSON 顶层必须是干员数组或包含 operators 数组的对象",
+  );
+}
+
+export function parseRiicMaaOperatorBox(payload, operatorTable = {}) {
+  const records = getRiicMaaOperatorRows(payload);
 
   const errors = [];
   const warnings = [];
   const operators = [];
   const seenIds = new Set();
 
-  payload.forEach((record, index) => {
+  records.forEach((record, index) => {
     const row = index + 1;
     if (!record || typeof record !== "object" || Array.isArray(record)) {
       errors.push(`第 ${row} 条记录不是对象`);
@@ -42,12 +53,44 @@ export function parseRiicMaaOperatorBox(payload, operatorTable = {}) {
       errors.push(`第 ${row} 条记录的 own 不是布尔值`);
     }
 
+    const knownOperator = operatorTable[id];
     for (const [field, min, max] of MAA_NUMBER_FIELDS) {
       if (!isIntegerInRange(record[field], min, max)) {
         errors.push(
           `第 ${row} 条记录的 ${field} 必须是 ${min}-${max} 的整数`,
         );
       }
+    }
+
+    if (
+      record.level !== null &&
+      !isIntegerInRange(record.level, 0, 90)
+    ) {
+      errors.push(`第 ${row} 条记录的 level 必须是 0-90 的整数或 null`);
+    }
+
+    if (
+      record.rarity !== undefined &&
+      record.rarity !== null &&
+      !isIntegerInRange(record.rarity, 1, 6)
+    ) {
+      errors.push(`第 ${row} 条记录的 rarity 必须是 1-6 的整数`);
+    }
+
+    if (
+      record.potential !== undefined &&
+      record.potential !== null &&
+      !isIntegerInRange(record.potential, 0, 6)
+    ) {
+      errors.push(`第 ${row} 条记录的 potential 必须是 0-6 的整数`);
+    }
+
+    if (
+      record.own === true &&
+      !isIntegerInRange(knownOperator?.rarity, 1, 6) &&
+      !isIntegerInRange(record.rarity, 1, 6)
+    ) {
+      errors.push(`第 ${row} 条记录缺少可用的 rarity 数据`);
     }
 
     if (record.own !== true) {
@@ -60,7 +103,6 @@ export function parseRiicMaaOperatorBox(payload, operatorTable = {}) {
     }
     seenIds.add(id);
 
-    const knownOperator = operatorTable[id];
     if (!knownOperator) {
       warnings.push(`本地干员表未找到：${name || id}（${id}）`);
     }
@@ -71,7 +113,7 @@ export function parseRiicMaaOperatorBox(payload, operatorTable = {}) {
       rarity: knownOperator?.rarity || record.rarity,
       elite: record.elite,
       level: record.level,
-      potential: record.potential,
+      potential: record.potential ?? 0,
     });
   });
 

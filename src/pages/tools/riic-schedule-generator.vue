@@ -9532,34 +9532,43 @@ async function exportGeneratedScheduleImage() {
 }
 
 function createGeneratedMaaOperatorProgressions() {
-  return Object.fromEntries(
+  const ownedById = new Map(
     (ownedOperators.value || []).flatMap((operator) => {
       const charId = String(operator?.charId || "").trim();
-      if (!charId) {
-        return [];
-      }
+      return charId ? [[charId, operator]] : [];
+    }),
+  );
 
-      const name = String(operator?.name || "").trim();
-      const elite = Number(operator?.elite);
-      const rawLevel = operator?.level;
+  return Object.entries(baseOperatorTableV2)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([id, operator]) => {
+      const ownedOperator = ownedById.get(id);
+      const rawElite = Number(ownedOperator?.elite);
+      const rawLevel = ownedOperator?.level;
       const level =
         rawLevel === null || rawLevel === undefined || rawLevel === ""
           ? null
           : Number(rawLevel);
 
-      return [
-        [
-          charId,
-          {
-            ...(name ? { name } : {}),
-            elite:
-              Number.isInteger(elite) && elite >= 0 && elite <= 2 ? elite : 0,
-            level: Number.isInteger(level) && level >= 1 ? level : null,
-          },
-        ],
-      ];
-    }),
-  );
+      return {
+        id,
+        name: operator.name,
+        elite:
+          ownedOperator &&
+          Number.isInteger(rawElite) &&
+          rawElite >= 0 &&
+          rawElite <= 2
+            ? rawElite
+            : 0,
+        level:
+          !ownedOperator
+            ? 0
+            : Number.isInteger(level) && level >= 0 && level <= 90
+              ? level
+              : null,
+        own: Boolean(ownedOperator),
+      };
+    });
 }
 
 function createGeneratedMaaModuleVersions() {

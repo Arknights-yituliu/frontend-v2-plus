@@ -14,7 +14,10 @@ import {
   RIIC_MANUAL_OPERATOR_SOURCE_KEY,
   readRiicManualOperatorSnapshot,
 } from "/src/utils/riicManualOperatorData.js";
-import { parseRiicMaaOperatorBox } from "/src/utils/riicMaaOperatorData.js";
+import {
+  getRiicMaaOperatorRows,
+  parseRiicMaaOperatorBox,
+} from "/src/utils/riicMaaOperatorData.js";
 
 const emit = defineEmits(["profiles-change", "update:treatSkillsAsUnlocked"]);
 const props = defineProps({
@@ -91,6 +94,7 @@ function readSelectedWebsiteSource() {
     const snapshot = readRiicManualOperatorSnapshot();
     return {
       id: storedSourceId,
+      type: "manual",
       label: "手动编辑",
       operators: snapshot?.operators || [],
     };
@@ -110,6 +114,7 @@ function readSelectedWebsiteSource() {
   return source
     ? {
         id: source.id,
+        type: source.type,
         label: source.label || source.fileName || source.id,
         operators: source.operators || [],
       }
@@ -155,7 +160,9 @@ const currentOverrides = computed(() => {
 const currentSourceLabel = computed(() =>
   sourceMode.value === "maa"
     ? `MAA JSON · ${maaFileName.value}`
-    : `网页存储 · ${websiteSource.value.label}`,
+    : ["maa", "yituliu"].includes(websiteSource.value.type)
+      ? `网页存储 · 排班表生成器 · ${websiteSource.value.label}`
+      : `网页存储 · ${websiteSource.value.label}`,
 );
 const profiles = computed(() => {
   const output = new Map();
@@ -323,7 +330,17 @@ function getBranchLabel(operator) {
 }
 
 function refreshWebsiteSource() {
-  websiteSource.value = readSelectedWebsiteSource();
+  const refreshedSource = readSelectedWebsiteSource();
+  websiteSource.value = refreshedSource;
+
+  if (refreshedSource.operators.length === 0) {
+    ElMessage.warning(`网页干员来源「${refreshedSource.label}」没有可用干员数据`);
+    return;
+  }
+
+  ElMessage.success(
+    `已重新读取网页干员来源「${refreshedSource.label}」，共 ${refreshedSource.operators.length} 名干员`,
+  );
 }
 
 function handleProgressionToggle(event) {
@@ -347,13 +364,25 @@ async function handleMaaFile(event) {
   maaImportError.value = "";
   try {
     const payload = JSON.parse((await file.text()).replace(/^\uFEFF/, ""));
+    const recordCount = importMaaOperatorData(payload, file.name);
+    ElMessage.success(`MAA JSON 已导入，共 ${recordCount} 条干员数据`);
+  } catch (error) {
+    maaImportError.value = error?.message || "干员数据 JSON 读取失败";
+  }
+}
+
+function importMaaOperatorData(payload, fileName = "排班表") {
+  maaImportError.value = "";
+  try {
+    const rows = getRiicMaaOperatorRows(payload);
     const parsed = parseRiicMaaOperatorBox(payload, operatorTableV2);
-    if (payload.length === 0) {
+    if (rows.length === 0) {
       throw new Error("MAA Box 文件没有干员记录");
     }
+
     const ownedIds = new Set(parsed.operators.map((operator) => operator.charId));
     const records = new Map();
-    for (const row of payload) {
+    for (const row of rows) {
       const charId = String(row?.id || "").trim();
       const tableOperator = operatorTableV2[charId];
       if (!charId || !tableOperator) {
@@ -375,17 +404,21 @@ async function handleMaaFile(event) {
     if (records.size === 0) {
       throw new Error("MAA Box 中没有可识别的干员");
     }
+
     maaRecords.value = [...records.values()];
     maaOwnedIds.value = ownedIds;
-    maaFileName.value = file.name;
+    maaFileName.value = fileName;
     maaWarnings.value = parsed.warnings;
     maaOverrides.value = {};
     sourceMode.value = "maa";
-    ElMessage.success(`MAA JSON 已导入，共 ${records.size} 条干员数据`);
+    return records.size;
   } catch (error) {
     maaImportError.value = error?.message || "干员数据 JSON 读取失败";
+    throw error;
   }
 }
+
+defineExpose({ importMaaOperatorData });
 
 watch(
   profiles,
@@ -429,7 +462,12 @@ watch(
           <input type="file" accept=".json,application/json" @change="handleMaaFile" />
           <span>导入 MAA JSON</span>
         </label>
-        <button type="button" class="secondary-button" @click="refreshWebsiteSource">
+        <button
+          type="button"
+          class="secondary-button"
+          :disabled="sourceMode !== 'website'"
+          @click="refreshWebsiteSource"
+        >
           <v-icon icon="mdi-refresh" size="17" />
           重新读取已选来源
         </button>
