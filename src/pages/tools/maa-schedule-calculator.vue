@@ -582,83 +582,88 @@ const resultDisplay = computed(() =>
 );
 const calculationError = computed(() => calculationState.value.error);
 const dailyOutput = computed(() => resultDisplay.value?.dailyOutput);
-function dailyProductionAmount(product) {
-  const production = result.value?.dailyProductions?.find(
-    (item) => item.product === product,
+function dailyResourceAmount(product, kind = "production") {
+  const output = result.value?.dailyOutputs?.find(
+    (item) => item.product === product && item.kind === kind,
   );
-  const amount = Number(
-    production?.effectiveAmountPerDay ?? production?.amountPerDay,
-  );
-  return Number.isFinite(amount) ? amount : null;
-}
-
-function dailyNetAmount(product) {
-  const netOutput = result.value?.dailyOutputs?.find(
-    (item) => item.product === product && item.kind === "net",
-  );
-  if (netOutput) {
-    const amount = Number(netOutput.amountPerDay);
+  if (output) {
+    const amount = Number(output.amountPerDay);
     return Number.isFinite(amount) ? amount : null;
   }
 
   const production = result.value?.dailyProductions?.find(
     (item) => item.product === product,
   );
-  const amount = dailyProductionAmount(product);
-  if (amount === null) {
+  const amount = Number(
+    production?.effectiveAmountPerDay ?? production?.amountPerDay,
+  );
+  if (!Number.isFinite(amount)) {
     return null;
   }
+  if (kind !== "net") {
+    return amount;
+  }
+
   const materialPerHour =
     production?.effectiveMaterialPerHour || production?.materialPerHour || {};
   return amount + (Number(materialPerHour[product]) || 0) * 24;
 }
 
 function getVirtualGoldPointAmounts() {
-  const lmdAmount = dailyProductionAmount("龙门币") ?? 0;
-  const goldAmount = dailyProductionAmount("赤金");
-  const netGoldAmount = dailyNetAmount("赤金");
-  if (goldAmount === null || netGoldAmount === null) {
-    return null;
-  }
+  const lmdAmount = dailyResourceAmount("龙门币", "production") ?? 0;
+  const goldAmount = dailyResourceAmount("赤金", "production") ?? 0;
+  const netGoldAmount = dailyResourceAmount("赤金", "net") ?? 0;
 
   const totalPoints = lmdAmount + netGoldAmount * PURE_GOLD_POINTS;
   const virtualGoldPoints = totalPoints - goldAmount * PURE_GOLD_POINTS;
   return { totalPoints, virtualGoldPoints };
 }
 
-const dailyOutputTiles = computed(() =>
-  (dailyOutput.value?.tiles || []).map((tile) => {
-    if (!showVirtualGold.value || tile.product !== "赤金") {
-      return tile;
-    }
+const dailyOutputTiles = computed(() => {
+  const tiles = dailyOutput.value?.tiles || [];
+  if (!showVirtualGold.value) {
+    return tiles;
+  }
 
-    const pointAmounts = getVirtualGoldPointAmounts();
-    if (!pointAmounts) {
-      return tile;
-    }
+  const pointAmounts = getVirtualGoldPointAmounts();
+  const toDisplayPair = (divisor = 1) => [
+    { value: pointAmounts.totalPoints / divisor },
+    { value: pointAmounts.virtualGoldPoints / divisor, signed: true },
+  ];
+  const displayMode = resourceAmountDisplayMode.value;
+  let main = {
+    template: "{0}（{1}）",
+    raws: toDisplayPair(PURE_GOLD_POINTS),
+  };
 
-    const toDisplayPair = (divisor = 1) => [
-      { value: pointAmounts.totalPoints / divisor },
-      { value: pointAmounts.virtualGoldPoints / divisor, signed: true },
-    ];
-    const displayMode = resourceAmountDisplayMode.value;
-    let main = {
-      template: "{0}（{1}）",
-      raws: toDisplayPair(PURE_GOLD_POINTS),
+  if (displayMode === "points") {
+    main.raws = toDisplayPair();
+  } else if (displayMode === "both") {
+    main = {
+      template: "{0}（{1}） / {2}（{3}）",
+      raws: [...toDisplayPair(PURE_GOLD_POINTS), ...toDisplayPair()],
     };
+  }
 
-    if (displayMode === "points") {
-      main.raws = toDisplayPair();
-    } else if (displayMode === "both") {
-      main = {
-        template: "{0}（{1}） / {2}（{3}）",
-        raws: [...toDisplayPair(PURE_GOLD_POINTS), ...toDisplayPair()],
-      };
+  let hasGoldTile = false;
+  const outputTiles = tiles.map((tile) => {
+    if (tile.product !== "赤金") {
+      return tile;
     }
-
+    hasGoldTile = true;
     return { ...tile, main };
-  }),
-);
+  });
+
+  if (
+    !hasGoldTile &&
+    (Math.abs(pointAmounts.totalPoints) > 0.000001 ||
+      Math.abs(pointAmounts.virtualGoldPoints) > 0.000001)
+  ) {
+    outputTiles.push({ key: "daily-赤金", product: "赤金", main, lines: [] });
+  }
+
+  return outputTiles;
+});
 const calculationSteps = computed(() => resultDisplay.value?.calculationSteps);
 const queueCalculationPane = computed(() => calculationSteps.value?.dailyOutput);
 const facilitySteps = computed(() => calculationSteps.value?.facilitySteps);
@@ -1678,7 +1683,7 @@ onUnmounted(() => {
             class="package-notice-count"
             :class="`tone-${group.key}`"
           >
-            {{ group.key }} <strong>{{ group.count }}</strong>
+            {{ group.label }} <strong>{{ group.count }}</strong>
           </span>
         </span>
       </summary>
