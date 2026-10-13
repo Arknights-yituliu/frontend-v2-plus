@@ -630,19 +630,35 @@ const dailyOutputTiles = computed(() => {
     { value: pointAmounts.totalPoints / divisor },
     { value: pointAmounts.virtualGoldPoints / divisor, signed: true },
   ];
+  const toDisplaySegments = (pair, key) => [
+    { key: `${key}-total`, value: pair[0] },
+    { key: `${key}-open`, text: "（", secondary: true },
+    { key: `${key}-virtual`, value: pair[1], secondary: true },
+    { key: `${key}-close`, text: "）", secondary: true },
+  ];
   const displayMode = resourceAmountDisplayMode.value;
+  const countPair = toDisplayPair(PURE_GOLD_POINTS);
   let main = {
     template: "{0}（{1}）",
-    raws: toDisplayPair(PURE_GOLD_POINTS),
+    raws: countPair,
   };
+  let mainSegments = toDisplaySegments(countPair, "count");
 
   if (displayMode === "points") {
-    main.raws = toDisplayPair();
+    const pointPair = toDisplayPair();
+    main.raws = pointPair;
+    mainSegments = toDisplaySegments(pointPair, "points");
   } else if (displayMode === "both") {
+    const pointPair = toDisplayPair();
     main = {
       template: "{0}（{1}） / {2}（{3}）",
-      raws: [...toDisplayPair(PURE_GOLD_POINTS), ...toDisplayPair()],
+      raws: [...countPair, ...pointPair],
     };
+    mainSegments = [
+      ...toDisplaySegments(countPair, "count"),
+      { key: "separator", text: " / " },
+      ...toDisplaySegments(pointPair, "points"),
+    ];
   }
 
   let hasGoldTile = false;
@@ -651,7 +667,7 @@ const dailyOutputTiles = computed(() => {
       return tile;
     }
     hasGoldTile = true;
-    return { ...tile, main };
+    return { ...tile, main, mainSegments };
   });
 
   if (
@@ -659,7 +675,13 @@ const dailyOutputTiles = computed(() => {
     (Math.abs(pointAmounts.totalPoints) > 0.000001 ||
       Math.abs(pointAmounts.virtualGoldPoints) > 0.000001)
   ) {
-    outputTiles.push({ key: "daily-赤金", product: "赤金", main, lines: [] });
+    outputTiles.push({
+      key: "daily-赤金",
+      product: "赤金",
+      main,
+      mainSegments,
+      lines: [],
+    });
   }
 
   return outputTiles;
@@ -1767,6 +1789,7 @@ onUnmounted(() => {
               v-for="tile in dailyOutputTiles"
               :key="tile.key"
               :tile="tile"
+              :main-segments="tile.mainSegments"
               :recycle-outputs="tile.product === '精英材料' ? (result?.recycleOutputs || []) : []"
             />
             <RiicDisplayTile v-if="dailyOutput?.totalTile" :tile="dailyOutput.totalTile" />
@@ -2669,7 +2692,7 @@ h2 {
 }
 .tile-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: var(--maa-gap-4);
 }
 .resource-amount-control {
