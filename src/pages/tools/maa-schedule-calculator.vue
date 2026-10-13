@@ -1,9 +1,11 @@
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, reactive, ref, shallowRef, watch } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { operatorTableV2 as baseOperatorTableV2 } from "/src/utils/gameData.js";
 import ITEM_INFO from "/src/static/json/material/item_info.json";
+import { getItemInfoList } from "/src/utils/item/itemValue.js";
+import { getStageConfig } from "/src/utils/user/userConfig.js";
 import { summarizeRiicFacilityPower } from "/src/utils/riic/riic-facility-power-model.js";
 import {
   DEFAULT_LMD_DRONE_STRATEGIES,
@@ -36,8 +38,11 @@ import { getRiicOperatorProfile } from "/src/utils/riicOperatorIdentity.js";
 
 const RIIC_MAA_EDITOR_TRANSFER_STORAGE_KEY = "riic_maa_editor_to_efficiency_calculator_v1";
 const RIIC_MAA_CALCULATOR_RETURN_STORAGE_KEY = "riic_maa_calculator_to_editor_v1";
-const PAGE_SANITY_VALUES_STORAGE_KEY = "riic_maa_schedule_calculator_sanity_values_v2";
-const LEGACY_PAGE_SANITY_VALUES_STORAGE_KEY = "riic_maa_schedule_calculator_sanity_values_v1";
+const PAGE_SANITY_VALUES_STORAGE_KEY = "riic_maa_schedule_calculator_sanity_values_v3";
+const LEGACY_PAGE_SANITY_VALUES_STORAGE_KEYS = Object.freeze([
+  "riic_maa_schedule_calculator_sanity_values_v2",
+  "riic_maa_schedule_calculator_sanity_values_v1",
+]);
 const PAGE_EFFICIENCY_SETTINGS_STORAGE_KEY = "riic_maa_schedule_calculator_efficiency_settings_v1";
 const PAGE_RESOURCE_AMOUNT_DISPLAY_MODE_STORAGE_KEY = "riic_maa_schedule_calculator_resource_amount_display_mode_v1";
 const RESOURCE_AMOUNT_DISPLAY_MODES = Object.freeze([
@@ -101,22 +106,25 @@ const LAYOUT_DISPLAY_ROWS = Object.freeze([
 ]);
 
 const router = useRouter();
-const itemValueApById = new Map(
+const STATIC_ITEM_VALUE_BY_ID = new Map(
   ITEM_INFO.map((item) => [String(item.itemId), item.itemValueAp ?? item.itemValue]),
 );
+const itemValueById = shallowRef(new Map(STATIC_ITEM_VALUE_BY_ID));
+const sanityItemValueSyncFailed = ref(false);
+let sanityItemValueRefreshSequence = 0;
 const sanityDefinitions = sanityItemDefinitions();
 const sanityResourceNames = new Set(sanityDefinitions.map((item) => item.resource));
-const materialSanityValues = Object.fromEntries(
+const materialSanityValues = computed(() => Object.fromEntries(
   ITEM_INFO.flatMap((item) => {
     const resource = String(item.itemName || "").trim();
     if (!resource || sanityResourceNames.has(resource)) {
       return [];
     }
-    const rawValue = item.itemValueAp ?? item.itemValue;
+    const rawValue = itemValueById.value.get(String(item.itemId));
     const value = Number(rawValue);
     return [[resource, rawValue != null && Number.isFinite(value) ? value : null]];
   }),
-);
+));
 const sanityAmountFactorByResource = new Map(
   sanityDefinitions.map((item) => [item.resource, item.amountFactor]),
 );
@@ -143,18 +151,6 @@ const PROJECT_SANITY_ITEM_IDS = Object.freeze({
   装置: "30062",
 });
 const PROJECT_SANITY_RESOURCES = new Set(Object.keys(PROJECT_SANITY_ITEM_IDS));
-const DEFAULT_PAGE_SANITY_VALUES = Object.freeze({
-  ...defaultSanityValues,
-  ...Object.fromEntries(
-    Object.entries(PROJECT_SANITY_ITEM_IDS).map(([resource, itemId]) => {
-      const valueKey = SANITY_VALUE_KEYS[resource];
-      return [
-        valueKey,
-        getProjectSanityValue(itemId, resource, defaultSanityValues[valueKey]),
-      ];
-    }),
-  ),
-});
 
 function applyStoredSanityValues(target, stored) {
   if (!stored || typeof stored !== "object" || Array.isArray(stored)) {
@@ -171,7 +167,7 @@ function applyStoredSanityValues(target, stored) {
 function readPageSanitySettings() {
   const settings = {
     source: "yituliu",
-    websiteValues: { ...DEFAULT_PAGE_SANITY_VALUES },
+    websiteOverrides: {},
     packageValues: { ...defaultSanityValues },
   };
   if (typeof localStorage === "undefined") {
@@ -180,22 +176,42 @@ function readPageSanitySettings() {
 
   try {
     const stored = JSON.parse(localStorage.getItem(PAGE_SANITY_VALUES_STORAGE_KEY) || "null");
-    if (stored?.version === 2) {
+    if (stored?.version === 3) {
       settings.source = stored.source === "package" ? "package" : "yituliu";
-      applyStoredSanityValues(settings.websiteValues, stored.websiteValues);
+      const websiteOverrideKeys = new Set(Object.values(SANITY_VALUE_KEYS));
+      for (const key of websiteOverrideKeys) {
+        const value = stored.websiteOverrides?.[key];
+        if (value === null || (typeof value === "number" && Number.isFinite(value) && value >= 0)) {
+          settings.websiteOverrides[key] = value;
+        }
+      }
       applyStoredSanityValues(settings.packageValues, stored.packageValues);
-      return settings;
     }
-
-    const legacy = JSON.parse(localStorage.getItem(LEGACY_PAGE_SANITY_VALUES_STORAGE_KEY) || "null");
-    applyStoredSanityValues(settings.websiteValues, legacy);
   } catch {
     // Ignore invalid page-local settings and use the displayed defaults.
+  }
+  try {
+    for (const key of LEGACY_PAGE_SANITY_VALUES_STORAGE_KEYS) {
+      localStorage.removeItem(key);
+    }
+  } catch {
+    // Ignore legacy storage cleanup failures.
   }
   return settings;
 }
 
 const sanitySettings = reactive(readPageSanitySettings());
+const websiteSanityValues = computed(() => {
+  const values = { ...defaultSanityValues };
+  for (const [resource, itemId] of Object.entries(PROJECT_SANITY_ITEM_IDS)) {
+    const valueKey = SANITY_VALUE_KEYS[resource];
+    const value = getProjectSanityValue(itemId, resource, values[valueKey]);
+    if (value != null) {
+      values[valueKey] = value;
+    }
+  }
+  return { ...values, ...sanitySettings.websiteOverrides };
+});
 const useYituliuSanityValues = computed({
   get: () => sanitySettings.source === "yituliu",
   set: (enabled) => {
@@ -205,7 +221,7 @@ const useYituliuSanityValues = computed({
 });
 const sanityValues = computed(() =>
   sanitySettings.source === "yituliu"
-    ? sanitySettings.websiteValues
+    ? websiteSanityValues.value
     : sanitySettings.packageValues,
 );
 
@@ -228,7 +244,7 @@ const sanitySourceGroups = computed(() => {
   return [
     {
       key: "yituliu",
-      label: "一图流网页 · item_info.json",
+      label: "一图流网页 · 当前物品价值表",
       items: sanityDefinitions
         .filter((item) => PROJECT_SANITY_RESOURCES.has(item.resource))
         .map(createSanitySourceItem),
@@ -243,11 +259,59 @@ const sanitySourceGroups = computed(() => {
   ];
 });
 
-// Package sanity scores use normalized EXP and gold points; item_info values are per item.
 function getProjectSanityValue(itemId, resource, fallback) {
-  const itemValue = Number(itemValueApById.get(itemId));
+  const rawItemValue = itemValueById.value.get(String(itemId));
+  const itemValue = Number(rawItemValue);
   const amountFactor = Number(sanityAmountFactorByResource.get(resource)) || 1;
-  return Number.isFinite(itemValue) ? itemValue / amountFactor : fallback;
+  return rawItemValue != null && Number.isFinite(itemValue)
+    ? itemValue / amountFactor
+    : fallback;
+}
+
+async function refreshSanityItemValues() {
+  const requestSequence = ++sanityItemValueRefreshSequence;
+  try {
+    const items = await getItemInfoList(getStageConfig());
+    if (requestSequence !== sanityItemValueRefreshSequence) {
+      return;
+    }
+    if (!items.length) {
+      itemValueById.value = new Map(STATIC_ITEM_VALUE_BY_ID);
+      sanityItemValueSyncFailed.value = true;
+      return;
+    }
+
+    const values = new Map();
+    // Match the value table's visible rows while keeping its unrounded values.
+    for (const item of items) {
+      const sortId = Number(item.cardNum);
+      if (item.cardNum == null || !Number.isInteger(sortId) || sortId > 90) {
+        continue;
+      }
+      values.set(String(item.itemId), item.itemValue);
+    }
+    if (Object.values(PROJECT_SANITY_ITEM_IDS).some((itemId) => {
+      const value = values.get(itemId);
+      return value == null || !Number.isFinite(Number(value));
+    })) {
+      itemValueById.value = new Map(STATIC_ITEM_VALUE_BY_ID);
+      sanityItemValueSyncFailed.value = true;
+      return;
+    }
+    itemValueById.value = values;
+    sanityItemValueSyncFailed.value = false;
+  } catch {
+    if (requestSequence === sanityItemValueRefreshSequence) {
+      itemValueById.value = new Map(STATIC_ITEM_VALUE_BY_ID);
+      sanityItemValueSyncFailed.value = true;
+    }
+  }
+}
+
+function handleStageConfigStorage(event) {
+  if (event.key === "StageConfig" || event.key === null) {
+    void refreshSanityItemValues();
+  }
 }
 
 function updatePageSanityValue(key, rawValue) {
@@ -255,16 +319,19 @@ function updatePageSanityValue(key, rawValue) {
   if (!key || (value !== null && (!Number.isFinite(value) || value < 0))) {
     return;
   }
-  sanityValues.value[key] = value;
+  const target = sanitySettings.source === "yituliu"
+    ? sanitySettings.websiteOverrides
+    : sanitySettings.packageValues;
+  target[key] = value;
   savePageSanitySettings();
 }
 
 function savePageSanitySettings() {
   try {
     localStorage.setItem(PAGE_SANITY_VALUES_STORAGE_KEY, JSON.stringify({
-      version: 2,
+      version: 3,
       source: sanitySettings.source,
-      websiteValues: sanitySettings.websiteValues,
+      websiteOverrides: sanitySettings.websiteOverrides,
       packageValues: sanitySettings.packageValues,
     }));
   } catch {
@@ -273,15 +340,18 @@ function savePageSanitySettings() {
 }
 
 function restoreDefaultSanityValues() {
-  Object.assign(sanitySettings.websiteValues, DEFAULT_PAGE_SANITY_VALUES);
+  sanitySettings.websiteOverrides = {};
   Object.assign(sanitySettings.packageValues, defaultSanityValues);
   sanitySettings.source = "yituliu";
   try {
     localStorage.removeItem(PAGE_SANITY_VALUES_STORAGE_KEY);
-    localStorage.removeItem(LEGACY_PAGE_SANITY_VALUES_STORAGE_KEY);
+    for (const key of LEGACY_PAGE_SANITY_VALUES_STORAGE_KEYS) {
+      localStorage.removeItem(key);
+    }
   } catch {
     // The in-memory reset is sufficient when browser storage is unavailable.
   }
+  void refreshSanityItemValues();
 }
 
 function readPageEfficiencySettings() {
@@ -466,7 +536,7 @@ function recycleItemSanity(recycleOutputs = []) {
     if (!Number.isFinite(amount) || amount <= 0) {
       continue;
     }
-    const rawSanity = itemValueApById.get(String(item.itemId));
+    const rawSanity = itemValueById.value.get(String(item.itemId));
     const sanity = Number(rawSanity);
     if (rawSanity == null || !Number.isFinite(sanity)) {
       return null;
@@ -479,7 +549,7 @@ function recycleItemSanity(recycleOutputs = []) {
 const resultSanityValues = computed(() => ({
   ...sanityValues.value,
   recycleItemSanity: recycleItemSanity(result.value?.recycleOutputs),
-  materials: materialSanityValues,
+  materials: materialSanityValues.value,
 }));
 const resultDisplay = computed(() =>
   result.value
@@ -1112,6 +1182,12 @@ function consumeMaaEditorTransfer() {
 
 onMounted(() => {
   consumeMaaEditorTransfer();
+  void refreshSanityItemValues();
+  window.addEventListener("storage", handleStageConfigStorage);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("storage", handleStageConfigStorage);
 });
 </script>
 
@@ -1414,6 +1490,9 @@ onMounted(() => {
               恢复默认理智
             </button>
           </div>
+          <p v-if="sanityItemValueSyncFailed" class="sanity-source-warning" role="status">
+            当前物品价值表计算失败，暂时使用本地静态值。
+          </p>
           <div :class="['sanity-source-groups', { 'sanity-source-groups-single': !useYituliuSanityValues }]">
             <section v-for="group in sanitySourceGroups" :key="group.key" class="sanity-source-group">
               <h4>{{ group.label }}</h4>
@@ -2220,6 +2299,11 @@ h2 {
   justify-content: space-between;
   gap: 10px 16px;
   margin-bottom: 8px;
+}
+.sanity-source-warning {
+  margin: 0 0 10px;
+  color: var(--el-color-warning, #b88230);
+  font-size: 12px;
 }
 .sanity-source-mode-control {
   display: flex;
