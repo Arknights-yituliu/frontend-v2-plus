@@ -10,6 +10,7 @@ import { isFacilityBuilt } from './engine/workbench/facilityState'
 import { validateRosterWorkspace } from './engine/workbench/validate'
 import { isDroneCapacity, resolveDroneCapacity } from './engine/domain/droneCapacity'
 import { readIncomeWorkspace, incomeOperatorReferences, incomeFacilityMaxLevel, isIncomeRecord } from './planInput'
+import { THEORETICAL_OUTPUT_DEFAULTS } from './defaults.js'
 
 export interface TheoreticalOutputConfig {
   warmupDays?: number
@@ -53,13 +54,14 @@ export function inspectTheoreticalPlan(payload: unknown) {
 
 export function calculateTheoreticalOutput(payload: unknown, config: TheoreticalOutputConfig = {}, onProgress?: (progress: ScheduleSimulationProgress) => void) {
   if (!isIncomeRecord(config)) throw new Error('计算配置必须为对象')
-  const requestedSeed = config.seed ?? -1
+  const requestedSeed = config.seed ?? THEORETICAL_OUTPUT_DEFAULTS.seed
   if (!Number.isSafeInteger(requestedSeed) || requestedSeed < -1 || requestedSeed > 0xffffffff) {
     throw new Error('随机种子须为 -1 或 0–4294967295 的整数；-1 表示每次随机')
   }
   const workspace = readIncomeWorkspace(payload)
   const diagnostics: { code: string; message: string }[] = []
-  const warmupDays = config.warmupDays ?? 3, sampleDays = config.sampleDays ?? 7
+  const warmupDays = config.warmupDays ?? THEORETICAL_OUTPUT_DEFAULTS.warmupDays
+  const sampleDays = config.sampleDays ?? THEORETICAL_OUTPUT_DEFAULTS.sampleDays
   if (!Number.isFinite(warmupDays) || warmupDays < 0 || warmupDays > 30 ||
       !Number.isFinite(sampleDays) || sampleDays <= 0 || sampleDays > 90) throw new Error('预热须在 0–30 天，采样须大于 0 且不超过 90 天')
   if (config.restingThreshold !== undefined && (!Number.isFinite(config.restingThreshold) || config.restingThreshold < 0 || config.restingThreshold > 1)) throw new Error('休息阈值须在 0–1 之间')

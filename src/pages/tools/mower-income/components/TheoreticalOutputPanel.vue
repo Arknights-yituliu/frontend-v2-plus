@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
 import { createTheoreticalOutputJob } from '@/utils/mower/theoretical-output/client.js'
 import { inspectTheoreticalPlan } from '@/utils/mower/theoretical-output/calculate.ts'
+import { THEORETICAL_OUTPUT_DEFAULTS } from '@/utils/mower/theoretical-output/defaults.js'
 
 const props = defineProps({
   payload: { type: Object, default: null },
@@ -13,8 +14,8 @@ const inspection = shallowRef(null)
 const inspectionError = ref('')
 const levels = ref({})
 const levelsConfirmed = ref(false)
-const warmupDays = ref(3)
-const sampleDays = ref(7)
+const warmupDays = ref(THEORETICAL_OUTPUT_DEFAULTS.warmupDays)
+const sampleDays = ref(THEORETICAL_OUTPUT_DEFAULTS.sampleDays)
 const droneRoomId = ref('none')
 const droneCapacity = ref(250)
 const masteryPlanState = ref('')
@@ -129,7 +130,7 @@ async function calculate() {
   running.value = true
   status.value = '正在模拟主替班与产出…'
   const config = {
-    seed: -1,
+    seed: THEORETICAL_OUTPUT_DEFAULTS.seed,
     warmupDays: warmupDays.value, sampleDays: sampleDays.value,
     droneRoomId: droneRoomId.value,
     droneCapacity: droneCapacity.value,
