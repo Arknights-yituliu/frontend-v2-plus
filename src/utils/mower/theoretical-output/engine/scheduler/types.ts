@@ -1,4 +1,4 @@
-import type { MowerFacilityType, MowerMainConf, MowerOccupant, MowerProduct, RosterWorkspace } from '../workbench/model'
+import type { MowerFacilityType, MowerMainConf, MowerOccupant, MowerProduct, RosterWorkspace } from '../domain/roster'
 
 export interface CompileDiagnostic {
   code: string
@@ -9,6 +9,8 @@ export interface CompileDiagnostic {
 export interface SimulationAssumptions {
   schemaVersion: 1
   initialMorale: number
+  /** Hours from simulation start until major maintenance; omitted means no scheduled window. */
+  majorMaintenanceStartHours?: number
   /** Mower global configuration; absent from the plan JSON. */
   restingThreshold?: number
   rescueThreshold?: number
@@ -16,10 +18,14 @@ export interface SimulationAssumptions {
   freeRoom?: boolean
   /** Native global config.conf.dorm_order: every concrete recovery bed. */
   dormOrder?: string
+  dormIsolation?: string[][]
   groupRestInFullOnMoodGap?: boolean
+  groupMoodGapThresholdMinutes?: number
   groupMoodGapMaxExtraWaitHours?: number
   mergeIntervalMinutes?: number
   enableMastery?: boolean
+  /** Fixed presence of unresolved training plans; does not model training progress. */
+  masteryPlanPresent?: boolean
   enableParty?: boolean
   leifengMode?: boolean
   droneRoom?: string | null
@@ -52,6 +58,7 @@ export interface CompiledSlot {
   primaryOperatorId: string | null
   orderedCandidates: string[]
   groupId: string | null
+  groupBindings?: { group: string; replacement: string[] }[]
   role: 'work' | 'dorm-keeper' | 'free-rest' | 'fiammetta'
   metadata?: Record<string, unknown>
 }

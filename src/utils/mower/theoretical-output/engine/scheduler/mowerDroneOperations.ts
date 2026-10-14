@@ -3,9 +3,9 @@
  * Source c6bdbb292fe7fcd84c6dfb66154a12a1a9bc5b88 (MIT, Copyright 2021 Nano).
  * Observed absolute deadlines/counts and device timing come from I/O; no production fitting.
  */
-import type {RunOrderPlanningState} from './mowerRunOrderPlanning'
-export interface MowerTradeDroneAdjustmentState {
-  planning:RunOrderPlanningState
+export interface MowerDroneOperationState {
+  retainManufacturingReserve:boolean
+  readonly repeatTradeAcceleration:boolean
   room:string
   width:number
   height:number
@@ -15,7 +15,7 @@ export interface MowerTradeDroneAdjustmentState {
   droneCountLimit:number
   waitingScenes:readonly unknown[]
 }
-export type MowerTradeDroneAdjustmentRequest=
+export type MowerDroneOperationRequest=
   |{kind:'enter-room';room:string}
   |{kind:'tap';action:'detail'|'all-in'|'confirm-all'|'minus-reserve'|'confirm-manufacture';target:unknown;intervalSeconds?:3|0.1;yRate?:1}
   |{kind:'wait-interface';intervalSeconds:1|3;accelerateTemplate?:'bill_accelerate'}
@@ -28,19 +28,19 @@ export type MowerTradeDroneAdjustmentRequest=
   |{kind:'read-drone-count'}
   |{kind:'scene'}
   |{kind:'waiting-solver'}
-export interface MowerTradeDroneAdjustmentObservation {
-  kind:MowerTradeDroneAdjustmentRequest['kind']
+export interface MowerDroneOperationObservation {
+  kind:MowerDroneOperationRequest['kind']
   observedAtMicros:number
   /** Explicit value for every step; None is null. */
   value:unknown
 }
-export interface MowerTradeDroneAdjustmentSeam {
+export interface MowerDroneOperationSeam {
   nowMicros():number
 }
-export type MowerTradeDroneAdjustmentGenerator=Generator<MowerTradeDroneAdjustmentRequest,false|null,MowerTradeDroneAdjustmentObservation>
+export type MowerDroneOperationGenerator=Generator<MowerDroneOperationRequest,false|null,MowerDroneOperationObservation>
 function* observed(
-  seam:MowerTradeDroneAdjustmentSeam,request:MowerTradeDroneAdjustmentRequest,
-):Generator<MowerTradeDroneAdjustmentRequest,unknown,MowerTradeDroneAdjustmentObservation>{
+  seam:MowerDroneOperationSeam,request:MowerDroneOperationRequest,
+):Generator<MowerDroneOperationRequest,unknown,MowerDroneOperationObservation>{
   const observation=yield request
   if(!observation||observation.kind!==request.kind||!Object.prototype.hasOwnProperty.call(observation,'value')||observation.value===undefined)
     throw new Error('Explicit matching native drone observation is required; None is null')
@@ -59,8 +59,8 @@ function nativeTruthy(value:unknown):boolean{
   return true
 }
 function* waitingAfterTap(
-  state:MowerTradeDroneAdjustmentState,seam:MowerTradeDroneAdjustmentSeam,
-):Generator<MowerTradeDroneAdjustmentRequest,boolean,MowerTradeDroneAdjustmentObservation>{
+  state:MowerDroneOperationState,seam:MowerDroneOperationSeam,
+):Generator<MowerDroneOperationRequest,boolean,MowerDroneOperationObservation>{
   const scene=yield* observed(seam,{kind:'scene'})
   if(state.waitingScenes.includes(scene)){
     const result=yield* observed(seam,{kind:'waiting-solver'})
@@ -70,10 +70,10 @@ function* waitingAfterTap(
   return true
 }
 /** Full native drone facility branch. Selected quantity remains a device observation/action effect. */
-export function* executeMowerTradeDrone(
-  state:MowerTradeDroneAdjustmentState,seam:MowerTradeDroneAdjustmentSeam,
-):MowerTradeDroneAdjustmentGenerator{
-  const allIn=state.notCustomize?0:state.planning.runOrderRooms.length
+export function* executeMowerDroneOperation(
+  state:MowerDroneOperationState,seam:MowerDroneOperationSeam,
+):MowerDroneOperationGenerator{
+  const retainReserve=state.retainManufacturingReserve
   if(!state.skipEnter)yield* observed(seam,{kind:'enter-room',room:state.room})
   yield* observed(seam,{kind:'tap',action:'detail',target:[state.width*.05,state.height*.95],intervalSeconds:3})
   yield* observed(seam,{kind:'wait-interface',intervalSeconds:3})
@@ -83,7 +83,7 @@ export function* executeMowerTradeDrone(
     const count=finite(yield* observed(seam,{kind:'read-drone-count'}),'drone-count')
     if(count<state.droneCountLimit)return null
     const allInScope=yield* observed(seam,{kind:'tap-drone-accelerate',template:'manufacture_accelerate',control:'all_in'})
-    if(allIn>0){
+    if(retainReserve){
       const tapTimes=count-state.droneCountLimit
       if(!Number.isSafeInteger(tapTimes))throw new Error('Native manufacture minus count must be an integer')
       for(let tap=0;tap<tapTimes;tap+=1)
@@ -99,7 +99,7 @@ export function* executeMowerTradeDrone(
     if(!(yield* waitingAfterTap(state,seam)))return null
     yield* observed(seam,{kind:'recog-update'})
     yield* observed(seam,{kind:'accept-order'})
-    if(!(state.planning.droneRoom===null||(state.planning.droneRoom===state.room&&state.planning.runOrderRooms.includes(state.room))))break
+    if(!state.repeatTradeAcceleration)break
     if(state.notCustomize){
       const count=finite(yield* observed(seam,{kind:'read-drone-count'}),'drone-count')
       if(count<state.droneCountLimit||count===201)break

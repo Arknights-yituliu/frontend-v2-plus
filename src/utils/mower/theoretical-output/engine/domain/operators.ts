@@ -10,6 +10,7 @@ export type GameRoomType =
   | 'WORKSHOP'
   | 'TRAINING'
   | 'HIRE'
+  | 'RECYCLE'
   | string
 
 export interface OperatorSkill {

@@ -1,8 +1,11 @@
+import {planMowerDormIsolation} from './mowerDormIsolation'
+import {inheritMowerBackupRefreshRules} from './mowerBackupRefresh'
+import {normalizeMowerSharedArrangement,mowerArrangementGroupTransitions,commitMowerGroupShifts} from './mowerSharedGroups'
 // Complete in-memory arrangement replay, Mower alpha b2d9ac8 (MIT).
 import type {MowerSchedulingData} from './mowerSchedulingData'
 import {MowerShiftPreviewError} from './mowerNativeErrors'
 import {simplifyMowerAlphaDormFill} from './mowerAlphaTaskProtection'
-import {mowerAlphaFillPlan} from './mowerAlphaCandidates'
+import {mowerAlphaFillPlan,mowerDormTaskReservations} from './mowerAlphaCandidates'
 export {mowerAlphaFillPlan} from './mowerAlphaCandidates'
 import {projectMowerArrangements} from './mowerObservations'
 import {mowerResting,mowerTryReorder,type MowerRestingOptions} from './mowerOrdinaryPlanning'
@@ -14,10 +17,11 @@ export interface MowerShiftModel {
  count:number
  /** Recovery retries retain discrete observation for time-dependent conditions. */
  nextConditionWakeMicros?(data:MowerSchedulingData):number|undefined
+ nextIdleConditionWakeMicros?(data:MowerSchedulingData):number|undefined
  evaluate(data:MowerSchedulingData):boolean[]
  swap(data:MowerSchedulingData,conditions:boolean[]):MowerSchedulingData
  transition(previous:MowerSchedulingData,next:MowerSchedulingData,original:boolean[],conditions:boolean[],previousRecovery?:MowerSchedulingData):MowerTaskPlan
- activate(conditions:boolean[]):void
+ activate(conditions:boolean[],task?:MowerTask):void
 }
 const same=(a:boolean[],b:boolean[])=>a.length===b.length&&a.every((v,i)=>v===b[i])
 export function mergeMowerPlanOverlay(target:MowerTaskPlan,overlay:MowerTaskPlan,data:MowerSchedulingData):void{
@@ -35,7 +39,7 @@ export function mergeMowerShiftTransition(target:MowerTaskPlan,overlay:MowerTask
 }
 export function stripMowerCurrent(plan:MowerTaskPlan):MowerTaskPlan{return Object.fromEntries(Object.entries(plan).filter(([,names])=>names.some(name=>name!=='Current')))}
 const assigned=(plan:MowerTaskPlan)=>new Set(Object.entries(plan).flatMap(([room,names])=>room.startsWith('dorm')?[]:names.filter(n=>!['Current','Free',''].includes(n))))
-const cloneTask=(task:MowerTask):MowerTask=>Object.assign(new MowerTask({type:task.type}),task,{plan:structuredClone(task.plan),dormFillPlan:structuredClone(task.dormFillPlan),backupShiftIntent:task.backupShiftIntent&&structuredClone(task.backupShiftIntent),backupShiftConditions:task.backupShiftConditions&&[...task.backupShiftConditions]})
+const cloneTask=(task:MowerTask):MowerTask=>Object.assign(new MowerTask({type:task.type}),task,{plan:structuredClone(task.plan),groupShiftTransitions:{...task.groupShiftTransitions},dormFillPlan:structuredClone(task.dormFillPlan),backupShiftIntent:task.backupShiftIntent&&structuredClone(task.backupShiftIntent),backupShiftConditions:task.backupShiftConditions&&[...task.backupShiftConditions]})
 
 /** Application protection beyond pinned alpha: a canceled shift must not complete through incidental bed swaps. */
 function cancelledShiftLeavesOnlyDormFill(data:MowerSchedulingData,simulation:MowerSchedulingData,task:MowerTask,intent:MowerTaskPlan,conditions:boolean[],coalesced:MowerTask[],final:MowerTaskPlan):boolean{
@@ -58,6 +62,7 @@ function cancelledShiftLeavesOnlyDormFill(data:MowerSchedulingData,simulation:Mo
 export function prepareMowerShiftBackup(data:MowerSchedulingData,task:MowerTask,model:MowerShiftModel):void{
  if(!model.count||task.backupShiftActive||![T.SHIFT_ON,T.SHIFT_OFF,T.EXHAUST_OFF,T.SELF_CORRECTION,T.RE_ORDER].includes(task.type))return
  const intent=structuredClone(task.backupShiftIntent??task.plan),original=[...data.planConditions],seed=projectMowerArrangements(data,[intent])
+ commitMowerGroupShifts(seed,task.groupShiftTransitions)
  let conditions=model.evaluate(seed);const seen=new Set<string>()
  for(let pass=0;pass<64;pass++){
   const key=JSON.stringify(conditions);if(seen.has(key))throw new MowerShiftPreviewError('上下班副表推演出现循环，保留原任务，暂不执行换人');seen.add(key)
@@ -86,20 +91,25 @@ export function recordMowerDormAdmissions(data:MowerSchedulingData,step:MowerTas
 export function prepareMowerShiftCycle(data:MowerSchedulingData,task:MowerTask,queue:MowerTaskQueue,model:MowerShiftModel,options:MowerRestingOptions={}):void{
  if(task.backupShiftActive)return
  const probe=new MowerTask({time:data.nowMicros/3_600_000_000,type:T.FILL_DORM});simplifyMowerAlphaDormFill(probe,queue.tasks,data.nowMicros,options.priorityScheduling)
- if(probe.simpleDormFill||task.productShiftLocked||queue.tasks.some(t=>t!==task&&(t.type===T.FIAMMETTA&&t.timeMicros<=data.nowMicros||t.backupShiftActive||t.productShiftLocked))){prepareMowerShiftBackup(data,task,model);return}
+ if(probe.simpleDormFill||task.productShiftLocked||queue.tasks.some(t=>t!==task&&(t.type===T.FIAMMETTA&&t.timeMicros<=data.nowMicros||t.backupShiftActive||t.productShiftLocked))){prepareMowerShiftBackup(data,task,model);task.plan=planMowerDormIsolation(data,task.plan,mowerDormTaskReservations(data,queue.tasks.filter(t=>t!==task&&t.type!==T.SHIFT_ON)).slots);return}
  const ordinary=[T.SHIFT_ON,T.SHIFT_OFF,T.EXHAUST_OFF,T.SELF_CORRECTION,T.RE_ORDER,T.FILL_DORM]
  const coalesced=queue.tasks.filter(t=>t!==task&&ordinary.includes(t.type)&&Object.keys(t.plan).length&&t.timeMicros<=data.nowMicros&&!t.strictMoodLimit&&!t.dormRecoveryRestore.length)
  const intent=structuredClone(task.backupShiftIntent??task.plan)
  for(const queued of [...coalesced].sort((a,b)=>a.timeMicros-b.timeMicros))if(queued.type!==T.FILL_DORM)mergeMowerShiftTransition(intent,queued.backupShiftIntent??queued.plan,data)
  const pending=queue.tasks.filter(t=>t!==task&&!coalesced.includes(t)),returning=new Set<string>(),unresolved=new Set<string>(),ordinaryUnknown=new Set<string>(),seen=new Set<string>()
  let simulation=projectMowerArrangements(data,[]),step=new MowerTask({type:task.type,plan:intent})
+ commitMowerGroupShifts(simulation,task.groupShiftTransitions)
+ const returningGroups=new Set(Object.entries(task.groupShiftTransitions).filter(([group,resting])=>!resting&&data.groupIsResting(group)).map(([group])=>group))
  step.dormFillPlan=structuredClone(task.dormFillPlan)
  for(let pass=0;pass<64;pass++){
   prepareMowerShiftBackup(simulation,step,model)
   const conditions=step.backupShiftConditions??simulation.planConditions
   simulation=model.swap(simulation,conditions)
+  step.plan=planMowerDormIsolation(simulation,step.plan,mowerDormTaskReservations(simulation,pending.filter(t=>t.type!==T.SHIFT_ON||t.backupShiftActive||t.productShiftLocked||t.dormRecoveryRestore.length)).slots)
+  if(!normalizeMowerSharedArrangement(simulation,step.plan))throw new MowerShiftPreviewError('绑组共享替班冲突，保留原任务并等待岗位释放')
   for(const name of assigned(step.plan)){const op=simulation.operators[name];if(op&&(!op.currentRoom||op.isResting()))returning.add(name)}
   const positions=new Map(Object.values(simulation.operators).map(op=>[op.name,[op.currentRoom,op.currentIndex] as [string,number]]))
+  for(const [group,resting] of Object.entries(mowerArrangementGroupTransitions(simulation,step.plan)))if(!resting&&simulation.groupIsResting(group))returningGroups.add(group)
   simulation=projectMowerArrangements(simulation,[step.plan]);recordMowerDormAdmissions(simulation,step,positions)
   for(const [room,names] of Object.entries(step.plan))names.forEach((name,index)=>{
    const key=alphaPosition(room,index)
@@ -109,7 +119,7 @@ export function prepareMowerShiftCycle(data:MowerSchedulingData,task:MowerTask,q
   const key=JSON.stringify([conditions,[...unresolved].sort(),Object.values(simulation.operators).map(op=>[op.name,op.currentRoom,op.currentIndex])])
   if(seen.has(key))throw new MowerShiftPreviewError('完整换班预演出现循环，保留原任务，暂不执行换人');seen.add(key)
   const localQueue=new MowerTaskQueue();localQueue.tasks=pending.map(cloneTask)
-  const rest=mowerResting(simulation,localQueue,{...options,returning,isDormReplacement:name=>{const op=simulation.operators[name];return !!op&&op.currentRoom.startsWith('dorm')&&simulation.dormReplacementForSlot(name,op.currentRoom,op.currentIndex)},isMasteryBusy:name=>simulation.busyRestingNames.has(name)}),reorder=mowerTryReorder(simulation,rest)
+  const rest=mowerResting(simulation,localQueue,{...options,returning,returningGroups,isDormReplacement:name=>{const op=simulation.operators[name];return !!op&&op.currentRoom.startsWith('dorm')&&simulation.dormReplacementForSlot(name,op.currentRoom,op.currentIndex)},isMasteryBusy:name=>simulation.busyRestingNames.has(name)}),reorder=mowerTryReorder(simulation,rest)
   if(reorder)mergeMowerPlanOverlay(rest,reorder,simulation)
   let next=stripMowerCurrent(rest),fill:MowerTaskPlan={}
   if(!Object.keys(next).length){next=mowerCorrectionPlan(simulation);for(const [room,names] of Object.entries(next))names.forEach((name,index)=>{if(simulation.currentOperator(room,index)?.name===name)names[index]='Current'});next=stripMowerCurrent(next)}
@@ -120,7 +130,9 @@ export function prepareMowerShiftCycle(data:MowerSchedulingData,task:MowerTask,q
   const final:MowerTaskPlan={}
   for(const [room,names] of Object.entries(simulation.plan))names.forEach((_,index)=>{const old=data.currentOperator(room,index)?.name??'',name=simulation.currentOperator(room,index)?.name??'';if(old!==name||unresolved.has(alphaPosition(room,index)))(final[room]??=Array(names.length).fill('Current'))[index]=name||'Free'})
   if(cancelledShiftLeavesOnlyDormFill(data,simulation,task,intent,conditions,coalesced,final))throw new MowerShiftPreviewError('原下班意图被完全取消，仅剩普通填床换位，保留原任务，暂不执行换人')
+  task.groupShiftTransitions=Object.fromEntries(Object.entries(simulation.groupShiftState).filter(([group,resting])=>data.groupIsResting(group)!==resting))
   task.backupShiftIntent=intent;task.backupShiftConditions=[...conditions];task.plan=final
+  inheritMowerBackupRefreshRules(task,coalesced)
   task.dormFillPlan=Object.fromEntries(Object.entries(final).filter(([room])=>room.startsWith('dorm')).map(([room,names])=>[room,names.map((name,index)=>simulation.operators[name]?.temporaryDormFill||ordinaryUnknown.has(alphaPosition(room,index))?name:'Current')]))
   queue.tasks=queue.tasks.filter(t=>!coalesced.includes(t))
   for(const [room,names] of Object.entries(final))if(room.startsWith('dorm'))for(const name of names)if(data.operators[name])data.operators[name]!.dormMoodFallback=simulation.operators[name]!.dormMoodFallback

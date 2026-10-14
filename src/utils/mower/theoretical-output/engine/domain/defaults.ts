@@ -1,5 +1,8 @@
 import type { AppConfig, OutputRoom, RoomType } from './types'
 import { EDITION } from './edition'
+import { DEFAULT_DRONE_CAPACITY } from './droneCapacity'
+
+export const DRONE_CAPACITY = DEFAULT_DRONE_CAPACITY
 
 export const ROOM_LABELS: Record<RoomType, string> = {
   manufacture: '制造站',
@@ -81,7 +84,7 @@ export function createDefaultConfig(): AppConfig {
       monsterCuisine: 0,
       worldlyFireworks: 0,
       suiFacilities: 0,
-      droneCapacity: 235,
+      droneCapacity: DRONE_CAPACITY,
       extraWorkplaceOperatorIds: [],
       trainingOperatorIds: [],
     },

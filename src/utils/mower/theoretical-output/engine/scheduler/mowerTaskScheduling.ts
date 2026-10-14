@@ -8,7 +8,7 @@ export interface MowerTaskSchedulingOptions {
  adjustForRunOrders?:boolean
  runOrderDelayMinutes?:number;executionMinutes?:number;configuredDelayMinutes?:number
  enableMastery?:boolean;experimental?:boolean
- alpha?:boolean;grandet?:boolean;mergeIntervalMinutes?:number
+ alpha?:boolean;mergeIntervalMinutes?:number
  maintenance?:[startMicros:number,endMicros:number];dormDurations?:Record<string,number[]>
 }
 const minutes=(value:number)=>toMowerMicros(value/60)
@@ -70,7 +70,7 @@ function scheduleOrders(tasks:MowerTask[],now:number,delay:number,execution:numb
   const task=tasks[index]!
   if(task.type.priority===1&&now>task.timeMicros)totalExecution+=(now-task.timeMicros)/60_000_000
   if(task.type.priority===1){
-   if((!options.alpha||options.grandet===true)&&previous&&task.timeMicros-previous.timeMicros<minutes(delay)&&now<previous.timeMicros&&!task.adjusted)return [previous,task]
+   if(!options.alpha&&previous&&task.timeMicros-previous.timeMicros<minutes(delay)&&now<previous.timeMicros&&!task.adjusted)return [previous,task]
    previous=task;totalExecution=0
   }else{
    let nextIndex=-1
