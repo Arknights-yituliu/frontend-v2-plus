@@ -18,7 +18,6 @@ const warmupDays = ref(THEORETICAL_OUTPUT_DEFAULTS.warmupDays)
 const sampleDays = ref(THEORETICAL_OUTPUT_DEFAULTS.sampleDays)
 const droneRoomId = ref('none')
 const droneCapacity = ref(250)
-const masteryPlanState = ref('')
 const droneTargets = computed(() => (inspection.value?.droneTargets || []).filter(target =>
   target.value === 'none' || levels.value[target.value] > 0))
 watch(droneTargets, targets => {
@@ -70,7 +69,6 @@ watch(() => props.payload, payload => {
     fiammettaFool.value = info.scheduleSettings.fiammettaFool
     freeRoom.value = info.scheduleSettings.freeRoom
     droneCapacity.value = info.droneCapacity
-    masteryPlanState.value = ''
     levels.value = Object.fromEntries(info.facilities.map(room => [room.roomId, room.level]))
     droneRoomId.value = 'none'
   } catch (cause) {
@@ -81,11 +79,10 @@ watch([() => props.inventoryStatus, () => props.operatorInventory, () => props.i
   invalidate()
   if (inventoryReady.value && inventoryMode.value === '') inventoryMode.value = 'owned'
 }, { immediate: true, deep: true, flush: 'sync' })
-watch([warmupDays, sampleDays, droneRoomId, droneCapacity, masteryPlanState, restingPercent, jayeElite0, fiammettaFool, freeRoom, inventoryMode, levelsConfirmed, levels], invalidate, { deep: true, flush: 'sync' })
+watch([warmupDays, sampleDays, droneRoomId, droneCapacity, restingPercent, jayeElite0, fiammettaFool, freeRoom, inventoryMode, levelsConfirmed, levels], invalidate, { deep: true, flush: 'sync' })
 onBeforeUnmount(() => cancel())
 
 const canRun = computed(() => !!props.payload && !!inspection.value && levelsConfirmed.value &&
-  (!inspection.value.requiresMasteryPlanState || ['present', 'absent'].includes(masteryPlanState.value)) &&
   (inventoryMode.value === 'max' || (usingInventory.value && inventoryReady.value)) && !running.value)
 const progressPercent = computed(() => {
   const value = progress.value
@@ -134,7 +131,6 @@ async function calculate() {
     warmupDays: warmupDays.value, sampleDays: sampleDays.value,
     droneRoomId: droneRoomId.value,
     droneCapacity: droneCapacity.value,
-    ...(inspection.value.requiresMasteryPlanState ? { masteryPlanPresent: masteryPlanState.value === 'present' } : {}),
     restingThreshold: restingPercent.value / 100,
     jayeElite0: usingInventory.value ? false : jayeElite0.value,
     fiammettaFool: fiammettaFool.value, freeRoom: freeRoom.value,
@@ -160,7 +156,7 @@ async function calculate() {
       freeRoom: config.freeRoom,
       droneRoomId: config.droneRoomId,
       droneCapacity: report.droneCapacity,
-      ...(config.masteryPlanPresent !== undefined ? { masteryPlanPresent: config.masteryPlanPresent } : {}),
+      masteryPlanPresent: false,
       schedulingModel: report.schedulingModel,
       runOrderMode: 'ideal', warmupModel: 'hourly', requestedSeed: config.seed, seed: report.seed,
       calculatedAt: new Date().toLocaleString('zh-CN'),
@@ -222,13 +218,8 @@ function downloadResult() {
         <label>休息阈值（%）<input v-model.number="restingPercent" type="number" min="0" max="100" step="1" /></label>
         <label>无人机目标<select v-model="droneRoomId"><option v-for="item in droneTargets" :key="item.value" :value="item.value">{{ item.label }}</option></select></label>
         <label>无人机容量<input v-model.number="droneCapacity" type="number" min="0" step="1" /></label>
-        <label v-if="inspection?.requiresMasteryPlanState">是否有未完成训练计划<select v-model="masteryPlanState">
-          <option value="">请选择</option>
-          <option value="absent">无未完成训练计划</option>
-          <option value="present">有未完成训练计划</option>
-        </select></label>
       </div>
-      <p v-if="inspection?.requiresMasteryPlanState" class="note">排班副表引用了训练计划状态，请先明确选择；此状态在整段模拟内保持不变。</p>
+      <p v-if="inspection?.usesMasteryPlanCondition" class="note">本次计算固定按无未完成训练计划判断副表条件，不模拟训练进度。</p>
       <div class="switches">
         <label><input v-model="jayeElite0" type="checkbox" :disabled="usingInventory" />孑按精英 0 计算</label>
         <label><input v-model="fiammettaFool" type="checkbox" />菲亚梅塔防呆</label>
@@ -252,7 +243,7 @@ function downloadResult() {
       <h3 id="output-report-title">采样期日均理论产出</h3>
       <p class="note">{{ resultBasis.inventory }} · 预热 {{ resultBasis.warmupDays }} 天 · 实际采样 {{ number(result.observedHours / 24) }} 天 · {{ resultBasis.drone }}</p>
       <p class="note">随机种子：-1（每次随机）；本次实际种子：{{ result.seed }}</p>
-      <p class="note">无人机容量：{{ result.droneCapacity }}<template v-if="resultBasis.masteryPlanPresent !== undefined"> · 未完成训练计划：{{ resultBasis.masteryPlanPresent ? '有' : '无' }}</template></p>
+      <p class="note">无人机容量：{{ result.droneCapacity }} · 未完成训练计划：固定无</p>
       <p v-if="outputWarning" class="output-warning" role="alert">{{ outputWarning }}</p>
       <div class="resource-grid">
         <article v-for="resource in displayResources" :key="resource.label" class="resource-stat">

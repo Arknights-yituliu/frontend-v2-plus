@@ -18,7 +18,6 @@ export interface TheoreticalOutputConfig {
   seed?: number
   droneRoomId?: string
   droneCapacity?: number
-  masteryPlanPresent?: boolean
   facilityLevels?: Record<string, number>
   operatorInventory?: OwnedOperatorInput[]
   jayeElite0?: boolean
@@ -38,7 +37,7 @@ export function inspectTheoreticalPlan(payload: unknown) {
   }))
   return {
     facilities,
-    requiresMasteryPlanState: incomeOperatorReferences(workspace).requiresMasteryPlanState,
+    usesMasteryPlanCondition: incomeOperatorReferences(workspace).usesMasteryPlanCondition,
     droneCapacity: resolveDroneCapacity(workspace),
     scheduleSettings: {
       restingThreshold: assumptions.restingThreshold,
@@ -65,14 +64,13 @@ export function calculateTheoreticalOutput(payload: unknown, config: Theoretical
   if (!Number.isFinite(warmupDays) || warmupDays < 0 || warmupDays > 30 ||
       !Number.isFinite(sampleDays) || sampleDays <= 0 || sampleDays > 90) throw new Error('预热须在 0–30 天，采样须大于 0 且不超过 90 天')
   if (config.restingThreshold !== undefined && (!Number.isFinite(config.restingThreshold) || config.restingThreshold < 0 || config.restingThreshold > 1)) throw new Error('休息阈值须在 0–1 之间')
-  for (const key of ['jayeElite0', 'fiammettaFool', 'freeRoom', 'masteryPlanPresent'] as const) {
+  for (const key of ['jayeElite0', 'fiammettaFool', 'freeRoom'] as const) {
     if (config[key] !== undefined && typeof config[key] !== 'boolean') throw new Error(`${key} 必须为布尔值`)
   }
   if (config.droneCapacity !== undefined && !isDroneCapacity(config.droneCapacity)) throw new Error('无人机容量须为非负安全整数')
   if (config.droneCapacity !== undefined) workspace.droneCapacity = config.droneCapacity
   const droneCapacity = resolveDroneCapacity(workspace)
   const references = incomeOperatorReferences(workspace)
-  if (references.requiresMasteryPlanState && config.masteryPlanPresent === undefined) throw new Error('排班使用训练计划触发条件，请明确是否存在未完成的训练计划')
   if (config.facilityLevels !== undefined) {
     if (!isIncomeRecord(config.facilityLevels)) throw new Error('设施等级须为对象')
     for (const [roomId, level] of Object.entries(config.facilityLevels)) {
@@ -121,7 +119,6 @@ export function calculateTheoreticalOutput(payload: unknown, config: Theoretical
     restingThreshold: config.restingThreshold,
     fiammettaFool: config.fiammettaFool,
     freeRoom: config.freeRoom,
-    masteryPlanPresent: config.masteryPlanPresent,
   })
   const report = simulateSchedule(schedule, {
     schedulingModel: 'mower-alpha',
@@ -158,7 +155,7 @@ export function calculateTheoreticalOutput(payload: unknown, config: Theoretical
   return {
     schedulingModel: 'mower-alpha' as const,
     droneCapacity,
-    ...(config.masteryPlanPresent === undefined ? {} : { masteryPlanPresent: config.masteryPlanPresent }),
+    masteryPlanPresent: false,
     requestedSeed,
     seed: report.production.assumptions.seed,
     metrics,

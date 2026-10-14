@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { createServer } from 'vite'
 
 // Exercise the actual imported engine and public page adapter. Source tests are
@@ -19,7 +20,7 @@ try {
   const { inventoryOperatorRecords } = await load('domain/operatorContext')
   const { evaluateOperators } = await load('engine/operatorRules')
   const { evaluateRecycleEfficiency, evaluateNewContactAndClueSkills, evaluateHomeboundByproduct } = await load('engine/supportFacilitySkills')
-  const { importMowerJson } = await load('workbench/compat/mowerJson')
+  const { importMowerJson, exportMowerJson } = await load('workbench/compat/mowerJson')
   const { compileRosterSchedule } = await load('scheduler/compileRosterSchedule')
   const { simulateSchedule } = await load('simulator/scheduleSimulation')
   const { mowerReportMetrics } = await load('workbench/mowerReportMetrics')
@@ -210,15 +211,57 @@ try {
     assert.ok(report.success && report.production?.success, JSON.stringify(report.diagnostics))
     assert.deepEqual(actual.metrics, mowerReportMetrics(report), 'real shift behavior preserves imported/explicit option precedence')
   }
-  const mastery = structuredClone(payload)
-  mastery.backup_plans.push({ name: '专精状态', trigger: "op_data.facility_has_mastery_plan('train')", conf: {} })
-  assert.equal(inspectTheoreticalPlan(mastery).requiresMasteryPlanState, true)
-  assert.throws(() => calculateTheoreticalOutput(mastery, short), /训练|专精/)
-  for (const masteryPlanPresent of [false, true]) {
-    const result = calculateTheoreticalOutput(mastery, { ...short, masteryPlanPresent })
-    assert.equal(result.observedHours, 8)
+  const sourceProbeIndex = process.argv.indexOf('--source-probe')
+  const fixedSource = sourceProbeIndex >= 0
+    ? await import(pathToFileURL(resolve(process.argv[sourceProbeIndex + 1])).href) : undefined
+  assert.equal(inspectTheoreticalPlan(payload).usesMasteryPlanCondition, false)
+  const legacyMasteryOptions = [{}, { masteryPlanPresent: false }, { masteryPlanPresent: true },
+    { mowerMasteryPlanPresent: true }, { masteryPlanPresent: 'obsolete', mowerMasteryPlanPresent: 1 }]
+  for (const [trigger, active] of [
+    ["op_data.facility_has_mastery_plan('train')", false],
+    ["not op_data.facility_has_mastery_plan('train')", true],
+  ]) {
+    const mastery = structuredClone(payload)
+    mastery.advanced_settings = { enable_mastery: true }
+    mastery.backup_plans = [{ name: '训练空闲安排', trigger, plan: { train: { plans: [slot('芬')] } }, conf: {} }]
+    const originalMastery = JSON.stringify(mastery)
+    const inspection = inspectTheoreticalPlan(mastery)
+    assert.equal(inspection.usesMasteryPlanCondition, true)
+    assert.equal(Object.hasOwn(inspection, 'requiresMasteryPlanState'), false, 'inspection reports a condition without demanding an external state')
+    const resultWithoutChoice = calculateTheoreticalOutput(mastery, short)
+    assert.equal(resultWithoutChoice.observedHours, 8)
+    assert.equal(resultWithoutChoice.masteryPlanPresent, false)
+    assert.ok(resultWithoutChoice.diagnostics.some(issue => issue.code === 'MOWER_MASTERY_PLAN_ASSUMPTION' && /固定为无/.test(issue.message)),
+      'the successful report explicitly identifies the no-training-plan assumption')
+    for (const legacy of legacyMasteryOptions) {
+      const pageOptions = { ...short, ...legacy }
+      const optionsBefore = structuredClone(pageOptions)
+      const report = simulateSchedule(compileRosterSchedule(importMowerJson(originalMastery), legacy),
+        { ...simulation, recordSegments: true })
+      assert.ok(report.success && report.production?.success, JSON.stringify(report.diagnostics))
+      assert.ok(report.diagnostics.some(issue => issue.code === 'MOWER_MASTERY_PLAN_ASSUMPTION' && /固定为无/.test(issue.message)))
+      const activated = report.events.some(event => event.type === 'backup-plan' && event.active && event.backupName === '训练空闲安排')
+      assert.equal(activated, active, 'the original positive/negative condition actually controls backup activation')
+      assert.equal(report.segments.some(segment => segment.occupants.train_0 === id('芬')), active,
+        'the negative no-plan condition really staffs the training room while the positive condition does not')
+      const actual = calculateTheoreticalOutput(mastery, pageOptions)
+      assert.deepEqual(actual, resultWithoutChoice, 'omitted and obsolete JS states have identical complete public results')
+      assert.deepEqual(actual.metrics, mowerReportMetrics(report), 'page output matches the fixed no-plan scheduler with old states ignored')
+      if (fixedSource) {
+        const sourceReport = fixedSource.runScheduleSimulationBridge(fixedSource.importMowerJson(originalMastery),
+          { ...simulation, recordSegments: true }, legacy).report
+        assert.ok(sourceReport?.success && sourceReport.production?.success, JSON.stringify(sourceReport?.diagnostics))
+        assert.deepEqual(actual.metrics, fixedSource.mowerReportMetrics(sourceReport), 'independent fixed Git source reproduces every metric')
+        assert.equal(sourceReport.segments.some(segment => segment.occupants.train_0 === id('芬')), active)
+      }
+      assert.deepEqual(pageOptions, optionsBefore)
+    }
+    const exported = JSON.parse(exportMowerJson(importMowerJson(originalMastery)))
+    assert.equal(exported.backup_plans[0].trigger, trigger, 'the original condition is preserved rather than rewritten as a constant')
+    assert.equal(exported.advanced_settings.enable_mastery, true, 'unrelated advanced enable_mastery is retained')
+    assert.equal(JSON.stringify(mastery), originalMastery)
   }
-  console.log('PASS: imported advanced settings, explicit zero/false override, default alpha, detached input, explicit external mastery state')
+  console.log('PASS: imported advanced settings, explicit zero/false override, default alpha, detached input, fixed no-plan training conditions and obsolete JS states ignored')
 
   const { parseMowerRosterText, summarizeMowerRoster } = await server.ssrLoadModule('/src/utils/mower/theoretical-output/rosterInput.js')
   const archived = structuredClone(payload)

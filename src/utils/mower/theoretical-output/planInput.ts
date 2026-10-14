@@ -74,7 +74,7 @@ export function readIncomeWorkspace(payload: unknown): RosterWorkspace {
 /** Policy flags need known names, while assigned and observed cards need ownership. */
 export function incomeOperatorReferences(workspace: RosterWorkspace) {
   const validated = new Set<string>(backupParticipants(workspace)), required = new Set<string>()
-  let requiresMasteryPlanState = false
+  let usesMasteryPlanCondition = false
   const add = (value: unknown, needsOwnership = true): string => {
     if (typeof value !== 'string' || !value.trim()) throw new Error('排班干员格式错误')
     const name = value.trim()
@@ -97,7 +97,7 @@ export function incomeOperatorReferences(workspace: RosterWorkspace) {
   for (const raw of workspace.compatibility.backupPlans) {
     if (!isIncomeRecord(raw)) throw new Error('副表格式错误')
     const expression = compileBackupExpression(raw.trigger, required)
-    requiresMasteryPlanState = requiresMasteryPlanState || expression.usesMasteryPlan
+    usesMasteryPlanCondition = usesMasteryPlanCondition || expression.usesMasteryPlan
     // The source validates overlay capacities, newly introduced right-side rooms,
     // products, group rules and tasks. Only collect genuine ownership here.
     for (const room of Object.values((raw.plan ?? {}) as Record<string, Record<string, unknown>>)) {
@@ -113,5 +113,5 @@ export function incomeOperatorReferences(workspace: RosterWorkspace) {
     policies((raw.conf ?? {}) as Record<string, unknown>)
   }
   for (const id of validated) if (!OPERATOR_MAP.has(id)) throw new Error(`排班引用未知干员：${getOperatorName(id)}`)
-  return { required, requiresMasteryPlanState }
+  return { required, usesMasteryPlanCondition }
 }

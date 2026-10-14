@@ -1,6 +1,6 @@
 {
   "upstream": "https://github.com/Panda-Panta/R.I.I.C-Calculator",
-  "commit": "04def42eac7462bb14e030a2d45f3666f91c0c01",
+  "commit": "c144b71697874f1dec67b431842d0ff36364fe58",
   "snapshotNotes": [
     "All source hashes and runtime files come from this committed Git revision; uncommitted source-worktree changes are excluded.",
     "Dependency closure begins at the website calculation/import/QR roots. operatorHelpers keeps only unchanged runtime declarations; no source algorithms are rewritten.",
@@ -209,18 +209,18 @@
     },
     {
       "source": "src/scheduler/backupExpression.ts",
-      "sha256": "48b3484ddd99c7bf8527602c7819fca56aa2bb6cff7bba8cb263d57c7a0a66b4",
-      "vendoredSha256": "48b3484ddd99c7bf8527602c7819fca56aa2bb6cff7bba8cb263d57c7a0a66b4"
+      "sha256": "1d472871a5ccec5e85b898c4b23af2e380ddb15cddfba5a6633d43164c30ad14",
+      "vendoredSha256": "1d472871a5ccec5e85b898c4b23af2e380ddb15cddfba5a6633d43164c30ad14"
     },
     {
       "source": "src/scheduler/backupPlans.ts",
-      "sha256": "b2feab517997cb90ecc41407a17e24dbe8f6da40dbd0a69172120b82697d271d",
-      "vendoredSha256": "b2feab517997cb90ecc41407a17e24dbe8f6da40dbd0a69172120b82697d271d"
+      "sha256": "939e0914138e00f033981ddcd48d09c1d0aceac42221be30228ad85cbeb0c05f",
+      "vendoredSha256": "939e0914138e00f033981ddcd48d09c1d0aceac42221be30228ad85cbeb0c05f"
     },
     {
       "source": "src/scheduler/compileRosterSchedule.ts",
-      "sha256": "30fd401ed792d4f58853e87e49ea4a9dea481b3df06b436cc788899bc9837fef",
-      "vendoredSha256": "30fd401ed792d4f58853e87e49ea4a9dea481b3df06b436cc788899bc9837fef"
+      "sha256": "4cdb7bc6cedcadb61fc621534092efce79cab3836434d759626aac1ef48fc4a6",
+      "vendoredSha256": "4cdb7bc6cedcadb61fc621534092efce79cab3836434d759626aac1ef48fc4a6"
     },
     {
       "source": "src/scheduler/fiammettaPolicy.ts",
@@ -494,18 +494,18 @@
     },
     {
       "source": "src/scheduler/rosterRuntime.ts",
-      "sha256": "ee619f395de9609b2d17169d2f8b7f96584f79b685a96a6cccb8381cb6a812bb",
-      "vendoredSha256": "ee619f395de9609b2d17169d2f8b7f96584f79b685a96a6cccb8381cb6a812bb"
+      "sha256": "70f36010556e538142b8cc94546c4826e0efda6f623d67523b7651034e472c6e",
+      "vendoredSha256": "70f36010556e538142b8cc94546c4826e0efda6f623d67523b7651034e472c6e"
     },
     {
       "source": "src/scheduler/scheduleAdapter.ts",
-      "sha256": "1f7524f330beb1378259da6858206e9608c9b43a5fccb46aae793dd1fceeaa74",
-      "vendoredSha256": "1f7524f330beb1378259da6858206e9608c9b43a5fccb46aae793dd1fceeaa74"
+      "sha256": "a2e501cb4a61527892e5ec4513be6dd60fd6d90e5251d4af96b5c60cdbe11b44",
+      "vendoredSha256": "a2e501cb4a61527892e5ec4513be6dd60fd6d90e5251d4af96b5c60cdbe11b44"
     },
     {
       "source": "src/scheduler/types.ts",
-      "sha256": "1b0888b5abae75af35dfd509b7741d7bdb4755648b50908cea3a3adc16bf88f7",
-      "vendoredSha256": "1b0888b5abae75af35dfd509b7741d7bdb4755648b50908cea3a3adc16bf88f7"
+      "sha256": "c91d2c530b23289582ef7ec4cb07fcd2e959f5bc4894f72d18f268a570b619bb",
+      "vendoredSha256": "c91d2c530b23289582ef7ec4cb07fcd2e959f5bc4894f72d18f268a570b619bb"
     },
     {
       "source": "src/simulator/droneTimeline.ts",
