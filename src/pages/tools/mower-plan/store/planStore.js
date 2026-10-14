@@ -71,6 +71,7 @@ const plan_title = ref("");
 const plan_author = ref("");
 const plan_note = ref("");
 const plan = ref(fill_empty({}));
+const facility_levels = ref({});
 const backup_plans = ref([]);
 const operators = ref([]);
 const sub_plan = ref("main");
@@ -109,6 +110,7 @@ function hydratePlanData(payload) {
   operator_mood_limits.value = conf.operator_mood_limits ?? {};
   dorm_order.value = normalizeDormOrder(conf.dorm_order || data.advanced_settings?.dorm_order);
   hydrateAdvancedSettings(data.advanced_settings);
+  facility_levels.value = deepcopy(data.facility_levels ?? {});
   plan.value = main;
   backup_plans.value = backups;
   sub_plan.value = "main";
@@ -148,6 +150,7 @@ function build_plan() {
   }
   return {
     default: "plan1",
+    facility_levels: deepcopy(facility_levels.value),
     plan1: strip_plan(plan.value),
     conf,
     backup_plans: backups,
@@ -209,6 +212,7 @@ export const mowerPlanStore = {
   plan_author,
   plan_note,
   plan,
+  facility_levels,
   backup_plans,
   operators,
   facility_operator_limit,

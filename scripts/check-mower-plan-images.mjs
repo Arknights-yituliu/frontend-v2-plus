@@ -11,6 +11,7 @@ try {
   )
   const payload = {
     default: 'plan1',
+    facility_levels: { room_1_1: 1, contact: 1, recycle: 0, dormitory_1: 2 },
     plan1: { room_1_1: { name: '制造站', product: 'gold', plans: [{ agent: '阿米娅', group: '制造组', replacement: ['砾'] }] } },
     conf: { resting_standby: '阿米娅' },
     backup_plans: [{ name: '测试副表', plan: {}, conf: {}, trigger: { left: 'True', operator: '==', right: 'True' } }],

@@ -240,6 +240,8 @@ try {
     default: "plan1",
     plan1: {
       room_1_1: { name: "制造站", product: "gold", plans: [{ agent: "阿米娅", group: "制造组", replacement: ["砾"] }] },
+      room_1_3: { name: "发电站", plans: [] },
+      room_2_3: { name: "发电站", plans: [] },
       dormitory_1: { plans: [slot("杜林"), ...Array.from({ length: 4 }, () => slot("Free"))] },
     },
     conf: {},

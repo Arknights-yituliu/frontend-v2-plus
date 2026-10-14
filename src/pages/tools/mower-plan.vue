@@ -7,6 +7,7 @@ import jsonLang from "highlight.js/lib/languages/json";
 import buildingApi from "@/api/backend/building.js";
 import { saveAs } from "file-saver";
 import PlanEditor from "./mower-plan/components/PlanEditor.vue";
+import PlanFacilityLevels from "./mower-plan/components/PlanFacilityLevels.vue";
 import HelpText from "./mower-plan/components/HelpText.vue";
 import TriggerDialog from "./mower-plan/components/TriggerDialog.vue";
 import TaskDialog from "./mower-plan/components/TaskDialog.vue";
@@ -407,6 +408,7 @@ onUnmounted(() => {
           </div>
           <div class="file-actions">
             <n-button secondary type="primary" :disabled="!ready" :loading="opening_income" @click="openMowerIncome">转到 收益计算（Mower）</n-button>
+            <PlanFacilityLevels v-if="ready" />
             <n-button secondary @click="triggerLocalJsonImport">导入文件</n-button>
             <n-button secondary @click="export_json">导出 JSON</n-button>
             <n-button secondary :loading="generating_image" @click="saveImage">导出图片</n-button>
@@ -497,7 +499,7 @@ onUnmounted(() => {
               <span>宿舍高优先级干员</span>
               <help-text>
                 <p>高优干员 → 普通主班 → 低优主班 → 高优替班 → 候补 → 普通替班 → 空闲；同级距心情上限更远者优先。</p>
-                <p>只影响分床和单回，不改变下班顺序。更高排名的新入住者可重分单回，已有普通床位保持不动。</p>
+                <p>只影响分床和单回，不改变下班顺序。更高排名的新入住者可重分单回；入住隔离可交换普通位住客，固定驻员及预约仍受保护。</p>
               </help-text>
             </template>
             <PlanOperatorSelect

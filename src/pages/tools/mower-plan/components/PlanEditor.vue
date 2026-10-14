@@ -1,4 +1,5 @@
 <script setup>
+import PlanFacilityLevels from "./PlanFacilityLevels.vue";
 import { mowerProductImage } from "@/utils/mower/productAssets.js";
 import PlanAvatar from "./PlanAvatar.vue";
 import HelpText from "./HelpText.vue";
@@ -399,6 +400,9 @@ function set_facility(e) {
       <table class="facility-actions">
         <tbody>
           <tr>
+            <td v-if="!facility.startsWith('gaming_')">
+              <PlanFacilityLevels mode="level" :facility="facility" :locked="edit_locked" />
+            </td>
             <td>设施类别：</td>
             <td>
               <n-select

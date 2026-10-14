@@ -2,6 +2,7 @@ import { nameToCharId } from "./operatorAssets.js";
 import { planBindings } from "./plan_bindings.js";
 import { OPERATOR_CONF_FIELDS } from "./plan_edit.js";
 import { factory_product_ids } from "./base_products.js";
+import { facilityLevelState } from "./facility_levels.js";
 
 const capacities = { central: 5, meeting: 2, factory: 1, contact: 1, train: 2, recycle: 2 };
 const runOrderAgents = new Set(["龙舌兰", "但书", "佩佩", "可露希尔"]);
@@ -45,7 +46,9 @@ export function validatePlan(payload) {
   const add = (plan, message) => errors.push(`${plan}：${message}`);
   const known = (name) => Object.hasOwn(nameToCharId, name);
   const labels = new Map();
+  const levelState = facilityLevelState(payload);
   function check(table, conf, label) {
+    for (const issue of facilityLevelState(payload, table).issues) add(label, issue);
     const primaries = new Map();
     const groups = new Map();
     const slotBindings = new Map();
@@ -206,7 +209,8 @@ export function validatePlan(payload) {
         add(label, `任务设施 ${room} 不在排班中`);
         continue;
       }
-      const taskCapacity = Object.hasOwn(capacities, room) ? capacities[room] : (main[room]?.plans.length ?? 0);
+      const physicalCapacity = levelState.facilities[room]?.capacity ?? capacity(room, facility);
+      const taskCapacity = Math.min(physicalCapacity, Object.hasOwn(capacities, room) ? capacities[room] : (main[room]?.plans.length ?? 0));
       if (targets.length > taskCapacity) add(label, `任务 ${room} 人数超过设施容量`);
       for (const name of targets) if (!["Free", "Current"].includes(name) && !known(name)) add(label, `任务 ${room} 中的干员名无效「${name}」`);
     }
