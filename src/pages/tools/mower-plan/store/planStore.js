@@ -76,6 +76,7 @@ const operators = ref([]);
 const sub_plan = ref("main");
 const main_conf = reactive({ ...fields, ling_xi, mood_limits, operator_mood_limits, dorm_order });
 let extraConf = {};
+let planInitialized = false;
 
 function hydratePlanData(payload) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) throw new Error("请选择 Mower 排班 JSON 文件");
@@ -115,9 +116,11 @@ function hydratePlanData(payload) {
   plan_title.value = data.title ?? "";
   plan_author.value = data.author ?? "";
   plan_note.value = data.note ?? "";
+  planInitialized = true;
 }
 async function load_plan() {
-  hydratePlanData({ plan1: {}, conf: {} });
+  // Returning from income calculation must preserve the current unsaved draft.
+  if (!planInitialized) hydratePlanData({ plan1: {}, conf: {} });
 }
 async function load_operators() {
   operators.value = [...new Set(Object.values(operatorTableV2).map((op) => (op.name.startsWith("阿米娅（") ? "阿米娅" : op.name)))].map((name) => ({ value: name, label: name }));

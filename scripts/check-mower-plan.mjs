@@ -247,6 +247,20 @@ try {
   check("收益跳转存储失败时返回错误，保留编辑器内容", () => {
     assert.equal(JSON.stringify(store.build_plan()), incomeBefore);
   });
+  await store.load_plan();
+  check("从收益页返回编辑器不清空未保存的主副表与高级设置", () => {
+    assert.deepEqual(store.build_plan(), incomePayload);
+  });
+  store.plan_note.value = "返回后继续编辑的未保存笔记";
+  const revisedIncomePayload = store.build_plan();
+  await saveMowerRosterForIncome(revisedIncomePayload, store.plan_title.value, incomeStorage);
+  check("再次跳转收益页使用返回后最新编辑的完整排班", () => {
+    assert.deepEqual(JSON.parse(incomeCache.get(MOWER_INCOME_STORAGE_KEY)).payload, revisedIncomePayload);
+    assert.equal(revisedIncomePayload.note, "返回后继续编辑的未保存笔记");
+    assert.deepEqual(revisedIncomePayload.plan1, incomePayload.plan1);
+    assert.deepEqual(revisedIncomePayload.backup_plans, incomePayload.backup_plans);
+    assert.deepEqual(revisedIncomePayload.advanced_settings, incomePayload.advanced_settings);
+  });
   check("浏览器校验允许正常排班且不修改传入文件", () => {
     const before = JSON.stringify(valid);
     assert.deepEqual(validatePlan(valid).errors, []);
