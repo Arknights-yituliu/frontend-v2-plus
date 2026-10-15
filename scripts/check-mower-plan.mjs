@@ -302,7 +302,35 @@ try {
     plan.plan1.room_1_1.plans.push({ agent: "凯尔希", group: "制造组", replacement: ["砾"] });
     assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
     plan.plan1.room_1_1.plans[0].group_bindings = [{ group: "制造组", replacement: ["砾"] }];
-    assert.match(validatePlan(plan).errors.join(";"), /不能为空或重复/);
+    assert.match(validatePlan(plan).errors.join(";"), /不能重复/);
+  });
+  check("多绑组允许一列空组名，主副表及导出保留个人替班", () => {
+    for (const firstEmpty of [false, true]) {
+      const plan = cloneValid();
+      const primary = plan.plan1.room_1_1.plans[0];
+      plan.plan1.room_1_1.plans.push({ agent: "凯尔希", group: "制造组", replacement: ["芬"] });
+      primary.group_bindings = [{ group: "", replacement: ["红"] }];
+      if (firstEmpty) {
+        primary.group = "";
+        primary.replacement = ["红"];
+        primary.group_bindings = [{ group: "制造组", replacement: ["砾"] }];
+      }
+      plan.backup_plans.push({ name: "保留空列", conf: {}, plan: { room_1_1: { ...plan.plan1.room_1_1, plans: [slot("Current"), slot("Current")] } } });
+      const before = JSON.stringify(plan);
+      assert.deepEqual(validatePlan(plan).errors, []);
+      assert.equal(JSON.stringify(plan), before);
+      store.hydratePlanData(plan);
+      assert.deepEqual(store.build_plan().plan1.room_1_1.plans[0], primary);
+      primary.group_bindings.push({ group: "", replacement: ["黑角"] });
+      assert.match(validatePlan(plan).errors.join(";"), /空绑组最多填写一次/);
+    }
+  });
+  check("空绑组仍要求普通替班且不能充当具名组计时主班", () => {
+    const plan = cloneValid();
+    plan.plan1.room_1_1.plans[0].group_bindings = [{ group: "", replacement: [] }];
+    const errors = validatePlan(plan).errors.join(";");
+    assert.match(errors, /缺少普通替班/);
+    assert.match(errors, /缺少决定上下班/);
   });
   check("浏览器校验按 Current 继承主表并检查副表产物开关", () => {
     const plan = cloneValid();

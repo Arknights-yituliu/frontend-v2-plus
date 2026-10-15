@@ -106,7 +106,7 @@ export function validatePlan(payload) {
         if (name === "菲亚梅塔" && (!dorm(room) || index === 1)) add(label, "菲亚梅塔必须安排在宿舍，且不能在第 2 岗位");
         const bindings = slotBindings.get(slot);
         const names = bindings.map((binding) => (binding.group || "").trim());
-        if (bindings.length > 1 && (names.some((group) => !group) || new Set(names).size !== names.length)) add(label, `${name} 的多绑组名称不能为空或重复`);
+        if (bindings.length > 1 && new Set(names).size !== names.length) add(label, `${name} 的多绑组名称不能重复，空绑组最多填写一次`);
         if (["Free", "菲亚梅塔"].includes(name) && names.some(Boolean)) add(label, `${name} 不能绑组`);
         for (const binding of bindings) {
           const replacements = binding.replacement || [];
