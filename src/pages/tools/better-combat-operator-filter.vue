@@ -234,8 +234,24 @@ function p12RecHit(name) {
 
 // 干员/组合名 -> 是否出现在任一荐作用域（排序与角标按 recScopesByTag 判定，见下）
 
-// 决战歼灭：子 TAG 排列顺序（范围轴＋伤害轴；与源项目 tools/generate_results.py 的 P01_SUB_ORDER 同步）
+// 决战歼灭：子 TAG 排列顺序——仅在数据侧没有 `subOrder` 时的兜底（旧副本）。
+// 规范的顺序源是源项目 agent_workspace/tag_pipeline/tag_order.json，随产物以 tags[].subOrder 下发。
 const P01_SUB_ORDER = ["小范围", "大范围", "主物理伤害", "主法术伤害", "主真实伤害", "主弱点伤害", "物法混伤", "物真混伤", "物元混伤", "法元混伤"];
+
+// 该 TAG 的取值位次表：优先用产物下发的 subOrder；缺失时退回硬编码（仅 P01）；都没有则 null（＝沿用首次出现序）
+function subRankOf(tag) {
+  const list = Array.isArray(tag.subOrder) ? tag.subOrder : null;
+  if (list && list.length) {
+    const m = new Map();
+    list.forEach((s, i) => m.set(s.group + "|" + s.value, i));
+    return k => (m.has(k) ? m.get(k) : 1e9);
+  }
+  if (tag.id === "P01") {
+    const m = new Map(P01_SUB_ORDER.map((v, i) => ["子 TAG|" + v, i]));
+    return k => (m.has(k) ? m.get(k) : 1e9);   // 未命中的排末尾（旧写法 indexOf 返回 -1 会排到最前）
+  }
+  return null;
+}
 
 // 子 TAG 选项：tagId -> [{key, group, value, kind}]；阵容组合的子项＝子 TAG 分类（势力/用法）+ 组合名
 const subOptionsByTag = computed(() => {
@@ -254,9 +270,12 @@ const subOptionsByTag = computed(() => {
           items.push({ key, group: s.group, value: s.value, kind: "subtag" });
         }
       }
-      // 顺序：势力→用法
+      // 顺序：优先 subOrder，其次「势力→用法」
+      const rank = subRankOf(t);
       const catOrder = ["势力", "用法"];
-      items.sort((a, b) => catOrder.indexOf(a.value) - catOrder.indexOf(b.value));
+      items.sort((a, b) => rank
+        ? (rank("子 TAG|" + a.value) - rank("子 TAG|" + b.value))
+        : (catOrder.indexOf(a.value) - catOrder.indexOf(b.value)));
     } else {
       for (const m of t.members || []) {
         for (const s of m.subTags || []) {
@@ -266,10 +285,8 @@ const subOptionsByTag = computed(() => {
           items.push({ key, group: s.group, value: s.value, kind: "sub" });
         }
       }
-      if (t.id === "P01") {
-        // 决战歼灭按固定排列顺序展示（数据侧的成员顺序不保证子 TAG 顺序）
-        items.sort((a, b) => P01_SUB_ORDER.indexOf(a.value) - P01_SUB_ORDER.indexOf(b.value));
-      }
+      const rank = subRankOf(t);
+      if (rank) items.sort((a, b) => rank(a.key) - rank(b.key));
     }
     if (items.length) map.set(t.id, items);
   }
