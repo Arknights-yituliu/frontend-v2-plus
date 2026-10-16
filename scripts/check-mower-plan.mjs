@@ -340,6 +340,102 @@ try {
     assert.deepEqual(validatePlan(plan).errors, []);
     assert.equal(validatePlan(plan).checkedPlans, 2);
   });
+  const tradingPlan = (count, product = "lmd") => {
+    const plan = cloneValid();
+    plan.plan1.room_1_1 = {
+      name: "贸易站",
+      product,
+      plans: [
+        { agent: "阿米娅", group: "贸易组", replacement: ["砾"] },
+        { agent: "芬", group: "贸易组", replacement: ["香草"] },
+        { agent: "桃金娘", group: "贸易组", replacement: ["讯使"] },
+      ].slice(0, count),
+    };
+    return plan;
+  };
+  const tradeError = /仅三岗位贸易站支持切换订单类型/;
+  check("alpha 一、二岗位贸易站允许赤金订单，主表合成玉订单不受切换开关豁免", () => {
+    for (const count of [1, 2]) {
+      for (const enable of [false, true]) {
+        const plan = tradingPlan(count);
+        plan.advanced_settings = { product_switching: { enable } };
+        assert.deepEqual(validatePlan(plan).errors, []);
+        plan.plan1.room_1_1.product = "orundum";
+        const before = JSON.stringify(plan);
+        const errors = validatePlan(plan).errors;
+        assert.equal(errors.length, 1);
+        assert.match(errors[0], new RegExp(`主表：room_1_1 为 ${count} 岗位贸易站`));
+        assert.match(errors[0], tradeError);
+        assert.equal(JSON.stringify(plan), before);
+      }
+    }
+  });
+  check("alpha 三岗位贸易站可固定合成玉订单，无需开启自动切换", () => {
+    const plan = tradingPlan(3, "orundum");
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("alpha 副表合成玉订单按主表岗位数校验，未触发副表和自动切换也不豁免", () => {
+    for (const count of [1, 2]) {
+      for (const enable of [false, true]) {
+        const plan = tradingPlan(count);
+        plan.advanced_settings = { product_switching: { enable } };
+        plan.backup_plans.push({
+          name: "合成玉",
+          plan: { room_1_1: { name: "贸易站", product: "orundum", plans: Array.from({ length: count }, () => slot("Current")) } },
+          trigger: { left: "False", operator: "==", right: "True" },
+        });
+        const before = JSON.stringify(plan);
+        const errors = validatePlan(plan).errors;
+        assert.ok(errors.every((error) => error.startsWith("副表「合成玉」：")));
+        assert.match(errors.join(";"), tradeError);
+        assert.equal(errors.some((error) => /需要开启/.test(error)), !enable);
+        assert.equal(JSON.stringify(plan), before);
+      }
+    }
+  });
+  check("alpha 设施等级覆盖及副表虚增岗位不能绕过主表贸易订单限制", () => {
+    const plan = tradingPlan(2, "orundum");
+    plan.facility_levels = { room_1_1: 3 };
+    assert.match(validatePlan(plan).errors.join(";"), tradeError);
+    plan.plan1.room_1_1.product = "lmd";
+    plan.advanced_settings = { product_switching: { enable: true } };
+    plan.backup_plans.push({ name: "虚增岗位", plan: { room_1_1: { name: "贸易站", product: "orundum", plans: Array.from({ length: 3 }, () => slot("Current")) } } });
+    const errors = validatePlan(plan).errors.join(";");
+    assert.match(errors, /副表「虚增岗位」：room_1_1 为 2 岗位贸易站/);
+    assert.match(errors, /不能改变设施类型或岗位数/);
+    const capacityPlan = tradingPlan(3, "orundum");
+    capacityPlan.facility_levels = { room_1_1: 2 };
+    const capacityErrors = validatePlan(capacityPlan).errors.join(";");
+    assert.match(capacityErrors, /超过设施等级容量/);
+    assert.doesNotMatch(capacityErrors, tradeError);
+  });
+  check("alpha 三岗位贸易副表继承主班并切换订单，仍要求自动切换开关", () => {
+    const plan = tradingPlan(3);
+    plan.backup_plans.push({ name: "合成玉", plan: { room_1_1: { name: "贸易站", product: "orundum", plans: Array.from({ length: 3 }, () => slot("Current")) } } });
+    assert.match(validatePlan(plan).errors.join(";"), /需要开启/);
+    plan.advanced_settings = { product_switching: { enable: true } };
+    const before = JSON.stringify(plan);
+    assert.deepEqual(validatePlan(plan).errors, []);
+    assert.equal(validatePlan(plan).checkedPlans, 2);
+    assert.equal(JSON.stringify(plan), before);
+  });
+  check("贸易订单校验沿用指定主表，导入导出保留待修正订单和高级设置", () => {
+    const plan = tradingPlan(2, "orundum");
+    plan.facility_levels = { room_1_1: 3 };
+    plan.advanced_settings = { product_switching: { enable: true }, drone_count_limit: 137 };
+    plan.backup_plans.push({ name: "赤金", plan: { room_1_1: { name: "贸易站", product: "lmd", plans: [slot("Current"), slot("Current")] } } });
+    store.hydratePlanData(plan);
+    const exported = store.build_plan();
+    assert.equal(exported.plan1.room_1_1.product, "orundum");
+    assert.equal(exported.backup_plans[0].plan.room_1_1.product, "lmd");
+    assert.equal(exported.advanced_settings.drone_count_limit, 137);
+    assert.equal(exported.facility_levels.room_1_1, 3);
+    assert.match(validatePlan(exported).errors.join(";"), tradeError);
+    plan.default = "custom";
+    plan.custom = plan.plan1;
+    plan.plan1 = tradingPlan(3).plan1;
+    assert.match(validatePlan(plan).errors.join(";"), /主表：room_1_1 为 2 岗位贸易站/);
+  });
   check("浏览器校验覆盖副表设施变化、任务容量和个人心情", () => {
     const plan = cloneValid();
     plan.conf.operator_mood_limits = { 阿米娅: { lower: 20, upper: 10 } };

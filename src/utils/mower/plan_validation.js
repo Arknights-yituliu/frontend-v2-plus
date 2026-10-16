@@ -47,6 +47,18 @@ export function validatePlan(payload) {
   const known = (name) => Object.hasOwn(nameToCharId, name);
   const labels = new Map();
   const levelState = facilityLevelState(payload);
+  // Alpha checks trade targets against primary staffing, even for a backup or a saved level override.
+  function checkTradeOrders(table, label) {
+    for (const [room, facility] of Object.entries(table)) {
+      const source = main[room];
+      const slots = source?.plans?.length || 0;
+      if (source?.name === "贸易站" && slots && slots !== 3 && facility.product === "orundum")
+        add(
+          label,
+          `${room} 为 ${slots} 岗位贸易站，不能配置合成玉订单（开采协力）；仅三岗位贸易站支持切换订单类型，请改为赤金订单（龙门商法）或升级并更新主表岗位数`,
+        );
+    }
+  }
   function check(table, conf, label) {
     for (const issue of facilityLevelState(payload, table).issues) add(label, issue);
     const primaries = new Map();
@@ -179,9 +191,11 @@ export function validatePlan(payload) {
     }
     if (conf.mood_limits) labels.set(`${label}:全体干员`, conf.mood_limits);
   }
+  checkTradeOrders(main, "主表");
   check(main, payload.conf || {}, "主表");
   for (const [index, backup] of backups.entries()) {
     const label = `副表「${backup.name || index + 1}」`;
+    checkTradeOrders(backup.plan || {}, label);
     const effective = { ...main };
     const conf = structuredClone(payload.conf || {});
     for (const key of OPERATOR_CONF_FIELDS)

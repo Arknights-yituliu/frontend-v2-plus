@@ -418,7 +418,9 @@ function set_facility(e) {
               <td>
                 产物
                 <help-text v-if="current_plan[facility].name == '制造站'"> 制造站会随排班自动核对并切换产物。 </help-text>
-                <help-text v-else> 贸易站会随排班自动核对并切换订单类型。 </help-text>
+                <help-text v-else>
+                  开启自动切换后，贸易站会随排班核对并切换订单类型。主表须配置三个岗位才能使用合成玉订单（开采协力）；一、二岗位贸易站只能使用赤金订单（龙门商法）。仅修改设施等级不能代替更新岗位数。
+                </help-text>
               </td>
               <td>
                 <n-select
