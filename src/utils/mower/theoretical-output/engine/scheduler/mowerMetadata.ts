@@ -18,7 +18,7 @@ function stableGroupReturnMicros(data:MowerSchedulingData,beds:MowerDormState[])
  let ready=data.nowMicros
  for(const bed of beds){
   const op=data.operators[bed.name]
-  if(!op?.isHigh()||op.workaholic||op.exhaustRequire||['dorm','factory','train'].some(room=>op.room.startsWith(room)))continue
+  if(!op?.isHigh()||op.workaholic||op.group&&data.canStandby(op)||op.exhaustRequire||['dorm','factory','train'].some(room=>op.room.startsWith(room)))continue
   const mood=op.currentMood(data.nowMicros)
   const threshold=op.restMoodLimit?op.upperLimit:Math.min(op.upperLimit,Math.floor((op.upperLimit-op.lowerLimit)*data.policy.restingThreshold+op.lowerLimit)+.125)
   if(mood>=threshold)continue
@@ -48,7 +48,7 @@ export function planMowerMetadata(data:MowerSchedulingData,queue:MowerTaskQueue)
  queue.removeDerived()
  const limited=planMowerMoodLimitReleases(data),now=data.nowMicros
  let minimumRest=Infinity
- const agents=Object.values(data.operators).filter(op=>op.isHigh()&&!op.room.startsWith('dorm')&&!op.isResting()&&!data.isStandby(op.name)).sort((a,b)=>(a.currentMood(now)-a.lowerLimit)-(b.currentMood(now)-b.lowerLimit))
+ const agents=Object.values(data.operators).filter(op=>op.isHigh()&&!op.room.startsWith('dorm')&&!op.isResting()&&!(op.group&&data.canStandby(op))&&!data.isStandby(op.name)).sort((a,b)=>(a.currentMood(now)-a.lowerLimit)-(b.currentMood(now)-b.lowerLimit))
  for(const agent of agents)minimumRest=Math.min(minimumRest,Math.max(agent.predictExhaust(now),now+toMowerMicros(.5)))
  const grouped=new Map<string,MowerDormState[]>(),freeRooms:MowerDormState[]=[]
  for(const bed of data.dorms){
@@ -62,7 +62,7 @@ export function planMowerMetadata(data:MowerSchedulingData,queue:MowerTaskQueue)
  for(const [group,dorms] of grouped){
   const highPriority=dorms.filter(b=>data.operators[b.name]!.isHigh()&&data.operators[b.name]!.restingPriority==='high')
   const ordinary=dorms.filter(b=>data.operators[b.name]!.isHigh()&&data.operators[b.name]!.restingPriority!=='standby')
-  const high=highPriority.length?highPriority:ordinary.length?ordinary:dorms.filter(b=>data.operators[b.name]!.isHigh())
+  const high=highPriority.length?highPriority:ordinary.length?ordinary:dorms.filter(b=>data.operators[b.name]!.isHigh()&&!(group&&data.canStandby(data.operators[b.name]!)))
   const full=high.filter(b=>data.operators[b.name]!.restInFull)
   if(high.length&&group){
    const baseTime=high[0]!.timeMicros,needEarly=!data.operators[high[0]!.name]!.exhaustRequire
@@ -103,10 +103,10 @@ export function planMowerMetadata(data:MowerSchedulingData,queue:MowerTaskQueue)
  const generated=generateMowerDormTasks([...newTasks.values(),...releases.values()],data,existingTargets);queue.tasks.push(...generated)
  const returning=new Set(generated.flatMap(t=>Object.values(t.plan).flat())),busy=data.busyRestingNames
  for(const op of Object.values(data.operators)){
-  if(!op.isHigh()||op.room.startsWith('dorm')||op.currentRoom||!data.restMoodComplete(op.name))continue
+  if(!op.isHigh()||op.room.startsWith('dorm')||op.currentRoom||op.group&&data.canStandby(op)||!data.restMoodComplete(op.name))continue
   const members=op.group?data.group(op.group):[op.name]
   if(members.some(name=>returning.has(name)||busy.has(name)))continue
-  const workers=members.map(name=>data.operators[name]!).filter(worker=>!worker.room.startsWith('dorm')&&!worker.workaholic)
+  const workers=members.map(name=>data.operators[name]!).filter(worker=>!worker.room.startsWith('dorm')&&!worker.workaholic&&!(worker.group&&data.canStandby(worker)))
   if(!workers.every(worker=>!worker.currentRoom&&(data.canStandby(worker)||hasRestingMood(worker,now)&&worker.currentMood(now)>=worker.upperLimit)))continue
   const plan:MowerTaskPlan={}
   for(const name of members){const member=data.operators[name]!;if(!member.room||!data.plan[member.room])continue;const slots=plan[member.room]??=Array(data.plan[member.room]!.length).fill('Current');if(['Current',name].includes(slots[member.index]!))slots[member.index]=name}

@@ -1,15 +1,15 @@
 // Mower logic_expression.py serializes (left operator right) before evaluation.
 // This interpreter preserves that syntax without evaluating imported Python/JS.
 import { OPERATOR_MAP } from '../domain/operators'
-import { resolveOperatorCharId } from '../workbench/compat/mowerJson'
+import { resolveOperatorCharId } from '../domain/operatorIdentifiers'
 import type { RuntimeState } from './rosterRuntime'
 import type {MowerDateTimeValue} from './mowerSchedulingData'
 import {toMowerMicros} from './mowerTaskQueue'
 
 type Value = string | number | boolean | null | MowerDateTimeValue
 type Expression = (state: RuntimeState) => Value
-type Token = { text: string; kind: 'operator' | 'value' | 'worker' | 'external'; value?: Value; name?: string; member?: string }
-const roomName = /^(?:room_[1-3]_[1-3]|dormitory_[1-4]|central|meeting|factory|contact|train)$/
+type Token = { text: string; kind: 'operator' | 'value' | 'worker' | 'external' | 'query'; value?: Value; name?: string; member?: string }
+const roomName = /^(?:room_[1-3]_[1-3]|dormitory_[1-4]|central|meeting|factory|contact|train|recycle)$/
 const fail = (message: string): never => { throw new Error(`副表：${message}`) }
 
 export function actualRoom(state: RuntimeState, id: string): string {
@@ -37,14 +37,16 @@ function tokenize(text: string): Token[] {
   for (let rest = text.trim(); rest; rest = rest.trimStart()) {
     if (tokens.length >= 1024) return fail('条件文本超过限制')
     const worker = /^op_data\.operators\[['"]([^'"\[\]]+)['"]\]\.(is_resting\(\)|is_working\(\)|current_mood\(\)|current_room|current_index|room|index|mood|upper_limit|lower_limit|group|workaholic|exhaust_require|rest_in_full|operator_type|resting_priority)\b/.exec(rest) ?? /^op_data\.operators\[['"]([^'"\[\]]+)['"]\]\.(is_resting\(\)|is_working\(\)|current_mood\(\))/.exec(rest)
-    const external = /^op_data\.party_time\b/.exec(rest)
+    const query = /^op_data\.(group_min_mood|facility_has_mastery_plan)\b/.exec(rest)
+    const external = /^op_data\.(?:party_time\b|major_maintenance_remaining_hours\(\))/.exec(rest)
     const quoted = /^(['"])((?:\\.|(?!\1)[^\\])*)\1/.exec(rest)
     const number = /^(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?/.exec(rest)
     const word = /^(?:and|or|not|is|in|True|False|None)\b/.exec(rest)
     const symbol = /^(?:==|!=|<=|>=|[<>+*/()\-])/.exec(rest)
-    const room = /^(?:room_[1-3]_[1-3]|dormitory_[1-4]|central|meeting|factory|contact|train)\b/.exec(rest)
+    const room = /^(?:room_[1-3]_[1-3]|dormitory_[1-4]|central|meeting|factory|contact|train|recycle)\b/.exec(rest)
     let token: Token
     if (worker) token = { text: worker[0], kind: 'worker', name: worker[1], member: worker[2] }
+    else if (query) token = { text: query[0], kind: 'query', member: query[1] }
     else if (external) token = { text: external[0], kind: 'external' }
     else if (quoted) token = { text: quoted[0], kind: 'value', value: quoted[2]!.replace(/\\(['"\\nrt])/g, (_, c: string) => ({ n: '\n', r: '\r', t: '\t' }[c] ?? c)) }
     else if (number && Number.isFinite(Number(number[0]))) token = { text: number[0], kind: 'value', value: Number(number[0]) }
@@ -59,7 +61,7 @@ function tokenize(text: string): Token[] {
   return tokens
 }
 
-export function compileBackupExpression(source: unknown, participants: Set<string>): { evaluate: Expression; usesCurrentMood: boolean; skipped?: string } {
+export function compileBackupExpression(source: unknown, participants: Set<string>): { evaluate: Expression; usesCurrentMood: boolean; usesMajorMaintenance: boolean; usesMasteryPlan: boolean; skipped?: string } {
   const tokens = tokenize(serialize(source))
   let cursor = 0, nesting = 0
   const peek = () => tokens[cursor]?.text
@@ -103,7 +105,31 @@ export function compileBackupExpression(source: unknown, participants: Set<strin
       if (take('-')) { const expr = atom(); return state => -numeric(expr(state)) }
       const token = tokens[cursor++]
       if (token?.kind === 'value') return () => token.value!
-      if (token?.kind === 'external') return state => state.mowerSource?.data.partyTime ?? null
+      if (token?.kind === 'query') {
+        if (!take('(')) return fail(`${token.member} 缺少参数括号`)
+        const argument = tokens[cursor++]
+        if (argument?.kind !== 'value' || typeof argument.value !== 'string' || !take(')')) return fail(`${token.member} 需要一个字符串参数`)
+        const name = argument.value
+        if (token.member === 'facility_has_mastery_plan') {
+          if (name !== 'train') return fail(`不支持的训练室位置：${name}`)
+          // User contract: local simulation always assumes no unfinished training plan.
+          return () => false
+        }
+        // Alpha _group_moods uses the current effective group and only fixed work anchors.
+        return state => {
+          const data = state.mowerSource?.data
+          if (!data) return fail('缺少绑组心情观测状态')
+          const members = name ? data.group(name) : []
+          if (!members.length) return fail(`不存在的绑组：${name}`)
+          const anchors = members.map(member => data.operators[member]!).filter(op => data.isGroupShiftAnchor(op))
+          if (!anchors.length) return fail(`绑组内没有可统计心情的干员：${name}`)
+          return Math.min(...anchors.map(op => op.currentMood(toMowerMicros(state.time))))
+        }
+      }
+      if (token?.kind === 'external') {
+        if (token.text === 'op_data.major_maintenance_remaining_hours()') return state => {const remaining=(state.config.majorMaintenanceStartHours??Infinity)-state.time;return remaining>0?remaining:Infinity}
+        return state => state.mowerSource?.data.partyTime ?? null
+      }
       if (token?.kind === 'worker') {
         const id = resolveOperatorCharId(token.name!)
         if (!OPERATOR_MAP.has(id)) return fail(`未知干员 ${token.name}`)
@@ -172,5 +198,6 @@ export function compileBackupExpression(source: unknown, participants: Set<strin
   function logicalOr(): Expression { let expr = logicalAnd(); while (take('or')) expr = binary(expr, logicalAnd(), 'or'); return expr }
   const evaluate = tokens.length ? logicalOr() : () => false
   if (cursor !== tokens.length) return fail(`条件存在未解析内容 ${peek()}`)
-  return { evaluate, usesCurrentMood: tokens.some(token=>token.kind==='worker'&&token.member==='current_mood()') }
+  const usesMajorMaintenance = tokens.some(token => token.kind === 'external' && token.text === 'op_data.major_maintenance_remaining_hours()')
+  return { evaluate, usesMajorMaintenance, usesMasteryPlan: tokens.some(token=>token.kind==='query'&&token.member==='facility_has_mastery_plan'), usesCurrentMood: tokens.some(token=>token.kind==='worker'&&token.member==='current_mood()'||token.kind==='query'&&token.member==='group_min_mood') }
 }

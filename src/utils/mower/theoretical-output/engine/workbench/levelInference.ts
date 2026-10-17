@@ -1,4 +1,4 @@
-import { MOWER_OUTPUT_ROOM_IDS, type MowerFacility, type MowerRoomId } from './model'
+import { MOWER_OUTPUT_ROOM_IDS, type MowerFacility, type MowerRoomId } from '../domain/roster'
 import { isFacilityBuilt } from './facilityState'
 
 export function inferFacilityLevels(facilities: Record<MowerRoomId, MowerFacility>): void {

@@ -1,7 +1,8 @@
 {
-  "sourcePath": "C:\\Users\\Panda-Panta\\Downloads\\Compressed\\ArknightsGameData-master\\zh_CN\\gamedata\\excel\\gamedata_const.json",
-  "dataVersion": "76.0.0",
-  "sourceSha256": "55e428764bdbc8199fd5eaccd7a4813c562eda93517897e38793176c3e618ef9",
+  "sourcePath": "https://raw.githubusercontent.com/Kengxxiao/ArknightsGameData/17759cc8cdf37388414145d16262a3a06f3ab25e/zh_CN/gamedata/excel/gamedata_const.json",
+  "dataVersion": "78.0.0",
+  "sourceSha256": "f0d9f0d4146c3a7adeedb57c114d9a1a9ea0eed6453aabbd05355115a441971c",
+  "sourceCommit": "17759cc8cdf37388414145d16262a3a06f3ab25e",
   "terms": {
     "cc.bd_A_1": {
       "termId": "cc.bd_A_1",
@@ -414,52 +415,52 @@
       "description": "包含以下干员\n结城理、埃癸斯、岳羽由加莉、虎狼丸"
     }
   },
-  "overlaySource": {
+  "crossCheckSource": {
     "schemaVersion": 1,
     "provider": "arkntools",
     "route": "https://arkntools.app/#/riic",
-    "retrievedAt": "2026-09-12",
+    "retrievedAt": "2026-10-12T13:13:34.682Z",
     "checkUrl": "https://data.arkntools.app/check.json",
     "check": {
-      "mapMd5": "b7ec97b5",
-      "timestamp": 1789113774350,
-      "version": "2.3.0"
+      "mapMd5": "c6c33034",
+      "timestamp": 1791703003281,
+      "version": "2.5.0"
     },
-    "mapUrl": "https://data.arkntools.app/map.b7ec97b5.json",
-    "mapSha256": "2f8e8d178aa3714c1857a4c07ccb68a127999afcf52f7b98bdef251519a733aa",
+    "mapUrl": "https://data.arkntools.app/map.c6c33034.json",
+    "mapSha256": "05a50869d93a2502ee5cd9058ea9cae6f4275aa49bef7f38e350c937bcf59013",
     "resources": {
       "building": {
-        "url": "https://data.arkntools.app/data/building.4d3ebdb3.json",
-        "filename": "arkntools-data-building.4d3ebdb3.json",
-        "sha256": "7feb23d4521857ca5deb441a170eba267f7e5748f49bfc84664f38566e7e2fff"
+        "url": "https://data.arkntools.app/data/building.3db77af1.json",
+        "filename": "building.3db77af1.json",
+        "sha256": "16fc38f1ac5c90daf4ca597457b5341d8788088e3314ea6dda8b8af089811fb4"
       },
       "character": {
-        "url": "https://data.arkntools.app/data/character.c4d24f84.json",
-        "filename": "arkntools-data-character.c4d24f84.json",
-        "sha256": "513c468105947c9825692d76e4c2885d35485a93eda15d60fd6a9de6baee0539"
+        "url": "https://data.arkntools.app/data/character.2ffaa90c.json",
+        "filename": "character.2ffaa90c.json",
+        "sha256": "e629c262d6b9336b3bf082f25722ada778524e6d066ad0782c3a47bde93be211"
       },
       "cnBuilding": {
-        "url": "https://data.arkntools.app/locales/cn/building.1be16b58.json",
-        "filename": "arkntools-cn-building.1be16b58.json",
-        "sha256": "6e40f281936b2e08d9333075bb008fcaa7d35c92ea0eb61de3e3583881976899"
+        "url": "https://data.arkntools.app/locales/cn/building.8a955245.json",
+        "filename": "building.8a955245.json",
+        "sha256": "dd2514d81be4b1821f75b3f57218ee99a3fb1ad374d32c088cf066bbd6043f15"
       },
       "cnCharacter": {
-        "url": "https://data.arkntools.app/locales/cn/character.ce41f0f9.json",
-        "filename": "arkntools-cn-character.ce41f0f9.json",
-        "sha256": "545715ec6ec58a3c2066801b71c1977bb0949cdb9dc06f48c5357d185e65919d"
+        "url": "https://data.arkntools.app/locales/cn/character.7d402757.json",
+        "filename": "character.7d402757.json",
+        "sha256": "07c4cfc447fbde5991fd6f0cf9ae71f725cff67a0899c5627098d34fcc240476"
       },
       "cnTerm": {
         "url": "https://data.arkntools.app/locales/cn/term.3ed0dfee.json",
-        "filename": "arkntools-cn-term.3ed0dfee.json",
+        "filename": "term.3ed0dfee.json",
         "sha256": "7001712ee09aefe8cf8fbeac61a2fbf3d483d982378ca779e44ba7f4fba1bf5b"
       }
     },
     "verification": {
-      "operators": 429,
-      "skillStageEntries": 921,
-      "skillTagLabels": 749,
+      "operators": 432,
+      "skillStageEntries": 929,
+      "skillTagLabels": 763,
       "terms": 82,
-      "htmlComparison": "The supplied HTML differs from the source at Aigis power_rec_spd_P2[999] only (added 每小时). Mulberry text is correct in the original HTML; the former mismatch came from two-pass markup stripping and is fixed."
+      "comparison": "All obtainable operator stages match GameData skill IDs, unlocks, facility types, names, raw descriptions and icons."
     }
   }
 }

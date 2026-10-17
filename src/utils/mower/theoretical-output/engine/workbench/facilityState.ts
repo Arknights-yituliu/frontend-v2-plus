@@ -1,4 +1,4 @@
-import { MOWER_ROOM_IDS, type MowerFacility, type RosterWorkspace } from './model'
+import { MOWER_ROOM_IDS, type MowerFacility, type RosterWorkspace } from '../domain/roster'
 import { createDefaultWorkspace } from './defaults'
 
 /** Level zero retains the map position without creating power use or staffing slots. */

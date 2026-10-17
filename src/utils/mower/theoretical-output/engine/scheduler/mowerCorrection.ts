@@ -1,3 +1,4 @@
+import {normalizeMowerSharedArrangement,mowerSameGroupPrimaryReplacement} from './mowerSharedGroups'
 // Port of default agent_get_mood correction and prefer_resting_replacements.
 // Source: c6bdbb292fe7fcd84c6dfb66154a12a1a9bc5b88 (MIT, Copyright 2021 Nano).
 import {mowerReplacementCandidates,type MowerOperatorState} from './mowerOperatorState'
@@ -21,15 +22,15 @@ export function mowerIsDormReplacement(data:MowerSchedulingData,name:string):boo
 }
 export function preferMowerRestingReplacements(data:MowerSchedulingData,plan:MowerTaskPlan):void {
  if(!Object.keys(plan).length)return
- const ends=new Map(data.dorms.filter(b=>b.name).map(b=>[b.name,b.timeMicros])),resting=new Set<string>(),groups=new Set<string>()
+ const ends=new Map(data.allDorms().filter(b=>b.name).map(b=>[b.name,b.timeMicros])),resting=new Set<string>(),groups=new Set<string>()
  for(const op of Object.values(data.operators)){
   if(!op.isHigh()||op.workaholic||op.room.startsWith('dorm')||!op.isResting())continue
   const end=ends.get(op.name),unfinished=end!==undefined?end>data.nowMicros:op.mood>=0&&op.mood<op.upperLimit
-  if(unfinished){resting.add(op.name);if(op.group)groups.add(op.group)}
+  if(unfinished){resting.add(op.name);if(op.group&&(!data.alpha||data.isGroupShiftAnchor(op)))groups.add(op.group)}
  }
  for(const group of groups){
-  const members=data.group(group).map(n=>data.operators[n]!).filter(op=>!op.room.startsWith('dorm')&&!op.workaholic)
-  if(members.some(op=>!op.isResting()&&!(!op.currentRoom&&(data.canStandby(op)||data.alpha&&data.restMoodComplete(op.name)||op.timeStampMicros!==undefined&&op.mood>=op.upperLimit))))data.group(group).forEach(n=>resting.delete(n))
+  const members=(data.alpha?data.shiftGroupMembers(group):data.group(group)).map(n=>data.operators[n]!).filter(op=>!op.room.startsWith('dorm')&&!op.workaholic)
+  if(members.some(op=>(!data.alpha||data.isGroupShiftAnchor(op))&&!op.isResting()&&!(!op.currentRoom&&(data.canStandby(op)||data.alpha&&data.restMoodComplete(op.name)||op.timeStampMicros!==undefined&&op.mood>=op.upperLimit))))data.group(group).forEach(n=>resting.delete(n))
   else members.forEach(op=>resting.add(op.name))
  }
  if(!resting.size)return
@@ -47,12 +48,12 @@ export function preferMowerRestingReplacements(data:MowerSchedulingData,plan:Mow
    const actual=data.currentRoom(room,true)![index]
    if(actual===name||actual&&op.replacement.includes(actual)&&!data.excludedCandidates.has(actual)){names[index]='Current';continue}
    const candidate=mowerReplacementCandidates(op,data.operators,data.policy,data.nowMicros).find(n=>{
-    const cover=data.operators[n];if(!cover||cover.isHigh()||reserved.has(n)||resting.has(n)||data.excludedCandidates.has(n)||mowerIsDormReplacement(data,n)||data.busyRestingNames.has(n)||data.alpha&&data.replacementExhausted(n))return false
+    const cover=data.operators[n];if(!cover||cover.isHigh()&&(!data.alpha||!mowerSameGroupPrimaryReplacement(data,op,n))||reserved.has(n)||resting.has(n)||data.excludedCandidates.has(n)||mowerIsDormReplacement(data,n)||data.busyRestingNames.has(n)||data.alpha&&data.replacementExhausted(n))return false
     if(!cover.currentRoom||cover.isResting()||cover.currentRoom===room)return true
     const replacement=requested(original,cover.currentRoom,cover.currentIndex)
     return !placeholders.has(replacement)&&!resting.has(replacement)&&replacement!==cover.name
    })
-   if(candidate){names[index]=candidate;reserved.add(candidate)}else if(op.group)recall.add(op.group);else if(data.alpha&&op.exhaustRequire&&op.restInFull)names[index]='Current'
+   if(candidate){names[index]=candidate;reserved.add(candidate)}else if(op.group&&(!data.alpha||data.isGroupShiftAnchor(op)))recall.add(op.group);else if(data.alpha&&op.exhaustRequire&&op.restInFull)names[index]='Current'
   }
  }
  for(const group of recall)for(const name of data.group(group)){const op=data.operators[name]!;if(!op.room.startsWith('dorm'))(plan[op.room]??=Array(data.plan[op.room]!.length).fill('Current'))[op.index]=name}
@@ -71,23 +72,23 @@ export function mowerCorrectionPlan(data:MowerSchedulingData,skipDorm=false):Mow
   if(name==='Free')continue
   if(actual!==name&&!(op?.replacement.includes(actual)&&!data.excludedCandidates.has(actual)))set(room,index,name)
  }
- const miss=Object.values(data.operators).filter(op=>mowerNotValid(data,op)&&!(op.group&&op.room.startsWith('dorm'))&&!data.isStandby(op.name)&&!data.busyRestingNames.has(op.name))
+ const miss=Object.values(data.operators).filter(op=>mowerNotValid(data,op)&&!(data.alpha&&op.multiGroup)&&!(op.group&&op.room.startsWith('dorm'))&&!data.isStandby(op.name)&&!data.busyRestingNames.has(op.name))
  for(const op of miss){
   const peers=op.group?data.group(op.group).map(n=>data.operators[n]!):[]
-  if(op.group&&peers.some(peer=>!peer.room.startsWith('dorm')&&!mowerNotValid(data,peer)&&peer.isResting())&&(op.workaholic||op.timeStampMicros!==undefined&&(op.currentMood(data.nowMicros)>=op.upperLimit||op.mood>=op.upperLimit)))continue
-  for(const peer of peers)if(!peer.room.startsWith('dorm')&&(peer.currentRoom!==peer.room||peer.currentIndex!==peer.index))set(peer.room,peer.index,peer.name)
+  if(op.group&&(data.alpha?data.groupIsResting(op.group):peers.some(peer=>!peer.room.startsWith('dorm')&&!mowerNotValid(data,peer)&&peer.isResting()))&&(op.workaholic||data.alpha&&data.restMoodComplete(op.name)||op.timeStampMicros!==undefined&&(op.currentMood(data.nowMicros)>=op.upperLimit||op.mood>=op.upperLimit)))continue
+  for(const peer of peers)if((!data.alpha||data.isGroupShiftAnchor(op))&&!peer.room.startsWith('dorm')&&(peer.currentRoom!==peer.room||peer.currentIndex!==peer.index))set(peer.room,peer.index,peer.name)
   set(op.room,op.index,op.name)
   if(op.currentIndex!==-1&&op.currentIndex!==op.index||op.currentRoom&&op.currentRoom!==op.room)set(op.currentRoom,op.currentIndex,data.plan[op.currentRoom]![op.currentIndex]!)
  }
  const groups=new Set(Object.values(data.operators).map(op=>op.group).filter(Boolean))
  for(const group of groups){
-  const peers=data.group(group).map(n=>data.operators[n]!).filter(op=>!op.room.startsWith('dorm'))
+  const peers=data.group(group).map(n=>data.operators[n]!).filter(op=>!op.room.startsWith('dorm')&&(!data.alpha||!op.multiGroup&&!op.workaholic&&!data.canStandby(op)))
   if(peers.some(op=>op.currentRoom&&!op.isResting())&&peers.some(op=>!op.currentRoom||op.isResting()))for(const op of peers)if(!op.currentRoom||op.isResting())set(op.room,op.index,op.name)
  }
  for(const [room,names] of Object.entries(plan))if(skipDorm&&room.startsWith('dorm')&&names.every(n=>n==='Free'||n==='Current'))delete plan[room]
  for(const op of Object.values(data.operators))if(data.busyRestingNames.has(op.name)&&op.room==='train')delete plan.train
  preferMowerRestingReplacements(data,plan)
- if(data.alpha){alphaCorrectGroupDorms(data,plan);for(const [room,names] of Object.entries(plan))if(room.startsWith('dorm')){names.forEach((name,index)=>{if(data.restMoodComplete(name)&&data.currentOperator(room,index)?.name!==name)names[index]='Current'});if(names.every(n=>n==='Current'))delete plan[room]}return plan}
+ if(data.alpha){alphaCorrectGroupDorms(data,plan);if(!normalizeMowerSharedArrangement(data,plan))return {}; for(const [room,names] of Object.entries(plan))if(room.startsWith('dorm')){names.forEach((name,index)=>{if(data.restMoodComplete(name)&&data.currentOperator(room,index)?.name!==name)names[index]='Current'});if(names.every(n=>n==='Current'))delete plan[room]}return plan}
  for(const group of groups){
   const members=data.group(group),residents=members.map(n=>data.operators[n]!).filter(op=>op.room.startsWith('dorm'))
   const recalling=members.some(n=>{const op=data.operators[n]!;return !op.room.startsWith('dorm')&&!op.workaholic&&requested(plan,op.room,op.index)===n})

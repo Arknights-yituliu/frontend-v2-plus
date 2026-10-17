@@ -1,7 +1,9 @@
 // Port of Operator observation/prediction and replacement_candidates, Mower alpha.
 // Source: c6bdbb292fe7fcd84c6dfb66154a12a1a9bc5b88 (MIT, Copyright 2021 Nano).
 import {toMowerMicros,fromMowerMicros} from './mowerTaskQueue'
+export interface MowerGroupBinding {group:string;replacement:string[]}
 export interface MowerOperatorOptions {
+ groupBindings?:MowerGroupBinding[]
  alpha?:boolean;temporaryDormFill?:boolean;dormMoodFallback?:string;restMoodReleaseLimit?:number;moodIsPrediction?:boolean
  dormMoodPeers?:Record<string,unknown>
  name:string;nativeName?:string;room?:string;index?:number;group?:string;replacement?:string[];operatorType?:'high'|'low';restingPriority?:'high'|'low'|'standby'
@@ -14,6 +16,9 @@ export class MowerOperatorState {
  temporaryDormFill=false;dormMoodFallback='';restMoodReleaseLimit:number|undefined;moodIsPrediction=false
  customMoodLimit=false
  dormMoodPeers:Record<string,unknown>={}
+ groupBindings:MowerGroupBinding[]=[]
+ get multiGroup(){return this.groupBindings.length>1}
+ replacementsForGroup(group:string):string[]{return this.multiGroup?this.groupBindings.find(binding=>binding.group===group)?.replacement??[]:this.replacement}
  alpha=false
  setProjectedPosition:(room:string,index:number)=>void
  name:string;nativeName:string;room:string;index:number;group:string;replacement:string[];operatorType:'high'|'low';restingPriority:'high'|'low'|'standby'
@@ -23,6 +28,7 @@ export class MowerOperatorState {
  constructor(o:MowerOperatorOptions){
   let currentRoom:string|undefined,currentIndex=-1
   this.alpha=o.alpha??false
+  this.groupBindings=(o.groupBindings??[]).map(binding=>({group:binding.group,replacement:[...binding.replacement]}))
   this.setProjectedPosition=(room,index)=>{currentRoom=room;this.currentIndex=index}
   this.temporaryDormFill=o.temporaryDormFill??false;this.dormMoodFallback=o.dormMoodFallback??'';this.restMoodReleaseLimit=o.restMoodReleaseLimit;this.moodIsPrediction=o.moodIsPrediction??false
   this.customMoodLimit=o.customMoodLimit??false

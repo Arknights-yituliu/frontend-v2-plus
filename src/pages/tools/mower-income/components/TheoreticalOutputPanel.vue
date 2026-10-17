@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, ref, shallowRef, watch } from 'vue'
 import { createTheoreticalOutputJob } from '@/utils/mower/theoretical-output/client.js'
 import { inspectTheoreticalPlan } from '@/utils/mower/theoretical-output/calculate.ts'
+import { THEORETICAL_OUTPUT_DEFAULTS } from '@/utils/mower/theoretical-output/defaults.js'
 
 const props = defineProps({
   payload: { type: Object, default: null },
@@ -13,9 +14,10 @@ const inspection = shallowRef(null)
 const inspectionError = ref('')
 const levels = ref({})
 const levelsConfirmed = ref(false)
-const warmupDays = ref(3)
-const sampleDays = ref(7)
+const warmupDays = ref(THEORETICAL_OUTPUT_DEFAULTS.warmupDays)
+const sampleDays = ref(THEORETICAL_OUTPUT_DEFAULTS.sampleDays)
 const droneRoomId = ref('none')
+const droneCapacity = ref(250)
 const droneTargets = computed(() => (inspection.value?.droneTargets || []).filter(target =>
   target.value === 'none' || levels.value[target.value] > 0))
 watch(droneTargets, targets => {
@@ -63,6 +65,10 @@ watch(() => props.payload, payload => {
   try {
     const info = inspectTheoreticalPlan(payload)
     inspection.value = info
+    restingPercent.value = info.scheduleSettings.restingThreshold * 100
+    fiammettaFool.value = info.scheduleSettings.fiammettaFool
+    freeRoom.value = info.scheduleSettings.freeRoom
+    droneCapacity.value = info.droneCapacity
     levels.value = Object.fromEntries(info.facilities.map(room => [room.roomId, room.level]))
     droneRoomId.value = 'none'
   } catch (cause) {
@@ -73,7 +79,7 @@ watch([() => props.inventoryStatus, () => props.operatorInventory, () => props.i
   invalidate()
   if (inventoryReady.value && inventoryMode.value === '') inventoryMode.value = 'owned'
 }, { immediate: true, deep: true, flush: 'sync' })
-watch([warmupDays, sampleDays, droneRoomId, restingPercent, jayeElite0, fiammettaFool, freeRoom, inventoryMode, levelsConfirmed, levels], invalidate, { deep: true, flush: 'sync' })
+watch([warmupDays, sampleDays, droneRoomId, droneCapacity, restingPercent, jayeElite0, fiammettaFool, freeRoom, inventoryMode, levelsConfirmed, levels], invalidate, { deep: true, flush: 'sync' })
 onBeforeUnmount(() => cancel())
 
 const canRun = computed(() => !!props.payload && !!inspection.value && levelsConfirmed.value &&
@@ -85,6 +91,9 @@ const progressPercent = computed(() => {
 const progressLabel = computed(() => progress.value?.phase === 'warmup' ? '预热' : '采样')
 const number = value => typeof value === 'number' && Number.isFinite(value) ? value.toLocaleString('zh-CN', { maximumFractionDigits: 2 }) : '—'
 const metrics = computed(() => result.value?.metrics)
+const hasRecycleOutput = computed(() => (result.value?.daily?.recycle ?? 0) > 0 ||
+  (result.value?.recycle?.capacity ?? 0) > 0 ||
+  inspection.value?.facilities.some(room => room.type === 'recycle' && levels.value[room.roomId] > 0))
 const outputWarning = computed(() => result.value?.diagnostics?.find(item => item.code === 'SHIFT_DEFERRAL_UNCONFIRMED')?.message)
 const displayResources = computed(() => metrics.value ? [
   { label: '作战记录经验', value: metrics.value.exp, unit: 'EXP / 日', image: 'exp3' },
@@ -94,6 +103,8 @@ const displayResources = computed(() => metrics.value ? [
     ? [{ label: '源石碎片', value: result.value.daily?.fragment, unit: '件 / 日', image: 'orirock' }] : []),
   ...(result.value.daily?.orundum > 0 || inspection.value?.facilities.some(room => room.product === 'orundum')
     ? [{ label: '合成玉', value: result.value.daily?.orundum, unit: '合成玉 / 日', image: 'orundum' }] : []),
+  ...(hasRecycleOutput.value
+    ? [{ label: '回收站转化', value: result.value.daily?.recycle, unit: '次 / 日' }] : []),
 ] : [])
 
 async function calculate() {
@@ -107,14 +118,19 @@ async function calculate() {
     error.value = '休息阈值须为 0–100%'
     return
   }
+  if (!Number.isSafeInteger(droneCapacity.value) || droneCapacity.value < 0) {
+    error.value = '无人机容量须为非负整数'
+    return
+  }
   invalidate()
   const id = ++jobId
   running.value = true
   status.value = '正在模拟主替班与产出…'
   const config = {
-    seed: -1,
+    seed: THEORETICAL_OUTPUT_DEFAULTS.seed,
     warmupDays: warmupDays.value, sampleDays: sampleDays.value,
     droneRoomId: droneRoomId.value,
+    droneCapacity: droneCapacity.value,
     restingThreshold: restingPercent.value / 100,
     jayeElite0: usingInventory.value ? false : jayeElite0.value,
     fiammettaFool: fiammettaFool.value, freeRoom: freeRoom.value,
@@ -139,6 +155,9 @@ async function calculate() {
       fiammettaFool: config.fiammettaFool,
       freeRoom: config.freeRoom,
       droneRoomId: config.droneRoomId,
+      droneCapacity: report.droneCapacity,
+      masteryPlanPresent: false,
+      schedulingModel: report.schedulingModel,
       runOrderMode: 'ideal', warmupModel: 'hourly', requestedSeed: config.seed, seed: report.seed,
       calculatedAt: new Date().toLocaleString('zh-CN'),
       drone: inspection.value.droneTargets.find(item => item.value === config.droneRoomId)?.label || '不使用无人机',
@@ -198,7 +217,9 @@ function downloadResult() {
         <label>采样天数<input v-model.number="sampleDays" type="number" min="1" max="28" step="1" /></label>
         <label>休息阈值（%）<input v-model.number="restingPercent" type="number" min="0" max="100" step="1" /></label>
         <label>无人机目标<select v-model="droneRoomId"><option v-for="item in droneTargets" :key="item.value" :value="item.value">{{ item.label }}</option></select></label>
+        <label>无人机容量<input v-model.number="droneCapacity" type="number" min="0" step="1" /></label>
       </div>
+      <p v-if="inspection?.usesMasteryPlanCondition" class="note">本次计算固定按无未完成训练计划判断副表条件，不模拟训练进度。</p>
       <div class="switches">
         <label><input v-model="jayeElite0" type="checkbox" :disabled="usingInventory" />孑按精英 0 计算</label>
         <label><input v-model="fiammettaFool" type="checkbox" />菲亚梅塔防呆</label>
@@ -222,16 +243,18 @@ function downloadResult() {
       <h3 id="output-report-title">采样期日均理论产出</h3>
       <p class="note">{{ resultBasis.inventory }} · 预热 {{ resultBasis.warmupDays }} 天 · 实际采样 {{ number(result.observedHours / 24) }} 天 · {{ resultBasis.drone }}</p>
       <p class="note">随机种子：-1（每次随机）；本次实际种子：{{ result.seed }}</p>
+      <p class="note">无人机容量：{{ result.droneCapacity }} · 未完成训练计划：固定无</p>
       <p v-if="outputWarning" class="output-warning" role="alert">{{ outputWarning }}</p>
       <div class="resource-grid">
         <article v-for="resource in displayResources" :key="resource.label" class="resource-stat">
-          <img :src="`/mower-income/product/${resource.image}.png`" alt="" />
+          <img v-if="resource.image" :src="`/mower-income/product/${resource.image}.png`" alt="" />
           <div><span>{{ resource.label }}</span><strong>{{ number(resource.value) }}</strong><small>{{ resource.unit }}</small></div>
         </article>
       </div>
       <div class="score-stat"><span>每日综合产出（82 口径）</span><strong>{{ number(metrics.mower82) }}</strong></div>
       <p class="formula">{{ number(metrics.exp) }} EXP + 0.8 ×（{{ number(metrics.goldValue) }} 赤金价值 + {{ number(metrics.virtualGoldValue) }} 虚拟赤金价值）+ 0.2 × {{ number(metrics.orderLmd) }} 订单面值</p>
       <p class="note">赤金按每件 500 龙门币折算。虚拟赤金为订单溢价的计分等价物（{{ number(metrics.virtualGoldCount) }} 件 / 日），不会增加实际赤金库存；82 综合值用于比较排班，不是到账龙门币或净利润。</p>
+      <p v-if="hasRecycleOutput" class="note">回收站仅报告转化次数，随机材料种类及货币估值不计入 82 综合值。</p>
       <div class="order-stat"><span>采样期龙门币订单数：{{ number(metrics.orderCount) }} 单</span><span>平均订单面值：{{ metrics.meanOrderValue === null ? '无订单' : `${number(metrics.meanOrderValue)} 龙门币 / 单` }}</span></div>
       <details v-if="metrics.orderDistribution && Object.keys(metrics.orderDistribution).length"><summary>采样期订单分布</summary>
         <div class="table-scroll"><table><thead><tr><th>订单类型</th><th>完成数量（单）</th><th>总面值（龙门币）</th></tr></thead><tbody><tr v-for="(distribution, kind) in metrics.orderDistribution" :key="kind"><td>{{ kind }}</td><td>{{ number(distribution.count) }}</td><td>{{ number(distribution.lmd) }}</td></tr></tbody></table></div>

@@ -23,13 +23,17 @@ export function setMowerTaskType(value:MowerTaskType|string|null|undefined):Mowe
  return MOWER_TASK_TYPES.NOT_SPECIFIC
 }
 export type MowerTaskPlan=Record<string,string[]>
+export interface MowerBackupRefreshRule {drained:boolean;trading:[boolean,string[]]}
 export interface MowerTaskOptions {time?:number;type?:MowerTaskType|string|null;plan?:MowerTaskPlan;metadata?:string;adjusted?:boolean;strictMoodLimit?:boolean;moodLimit?:number}
 export class MowerTask {
  timeMicros:number;type:MowerTaskType;plan:MowerTaskPlan;metadata:string;adjusted:boolean;strictMoodLimit:boolean;moodLimit:number|undefined
  observedOrderDueMicros?:number;wakeOnlyCompletion=false
+ groupShiftTransitions:Record<string,boolean>={}
  productShiftLocked=false
  /** A complete physical arrangement must finish before backup/return replanning. */
  backupShiftActive=false
+ /** Old rules remain available only while this physical backup arrangement is unfinished. */
+ backupRefreshRules?:Record<string,MowerBackupRefreshRule>
  backupShiftIntent?:MowerTaskPlan;backupShiftConditions?:boolean[];dormFillPlan:MowerTaskPlan={};simpleDormFill=false;arrangementRetryDueMicros?:number
  dormRecoveryRestore:string[]=[]
  arrangementRetryRoom?:string;arrangementRetryCount?:number
@@ -65,7 +69,7 @@ export class MowerTaskQueue {
   return this.tasks.find(task=>(!query.ignoreRunOrders||!isMowerRunOrderTask(task))&&(comparison==='='?time!==undefined&&Math.abs(task.timeMicros-time)<1_500_000:time===undefined||(comparison==='>'?task.timeMicros>time:task.timeMicros<time))&&(!query.type||task.type===query.type)&&(!query.metadata||task.metadata.includes(query.metadata)))
  }
  /** infra_main removes every reference to the completed object, not every equal task. */
- consume(task:MowerTask):void {this.tasks=this.tasks.filter(t=>t!==task)}
+ consume(task:MowerTask):void {this.tasks=this.tasks.filter(t=>t!==task);delete task.backupRefreshRules}
  /** plan_metadata rebuilds these types; active arrangements and experimental locks retain identity. */
  removeDerived(experimental=false):void {this.tasks=this.tasks.filter(t=>t.backupShiftActive||![MOWER_TASK_TYPES.SHIFT_ON,MOWER_TASK_TYPES.RELEASE_DORM].includes(t.type)||experimental&&t.productShiftLocked)}
  /** Default handle_error branch: any queued task strictly inside 2.5h suppresses a fallback. */
