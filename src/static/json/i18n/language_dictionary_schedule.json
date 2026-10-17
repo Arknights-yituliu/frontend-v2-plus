@@ -354,9 +354,25 @@
       "cn": "心情消耗/恢复",
       "en": "Morale Drain/Restore"
     },
-    "Special": {
-      "cn": "特殊组合",
-      "en": "Special Combo"
+    "Faction": {
+      "cn": "势力",
+      "en": "Faction"
+    },
+    "System": {
+      "cn": "体系",
+      "en": "System"
+    },
+    "SiracusaTeam": {
+      "cn": "叙拉古",
+      "en": "Siracusa Team"
+    },
+    "ClearFilters": {
+      "cn": "清空筛选",
+      "en": "Clear Filters"
+    },
+    "MultiSelectTip": {
+      "cn": "可多选，筛选结果为交集",
+      "en": "Multiple selections are combined with AND"
     },
     "PerceptionInformation": {
       "cn": "感知信息",

@@ -47,6 +47,22 @@
         background-color: var(--c-page-background-color-secondary);
     }
 
+    .logistics-filter-actions {
+        display: flex;
+        flex: 0 0 100%;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 12px;
+        padding-left: var(--logistics-filter-label-width);
+        box-sizing: border-box;
+    }
+
+    .logistics-filter-tip {
+        font-size: 12px;
+        font-style: italic;
+        color: var(--c-secondary-text-color);
+    }
+
     .checkbox-line {
         margin: 4px;
         display: flex;

@@ -7,20 +7,25 @@ const termMemberSet = (...termIds) =>
 
 const SuiMembers = termMemberSet("cc.g.sui");
 const DurinMembers = termMemberSet("cc.tag.durin");
-const KnightMembers = new Set([...termMembers("cc.g.psk"), "薇薇安娜", "砾"]);
+const KnightMembers = termMemberSet("cc.tag.knight");
 const AutomationSkillNames = new Set(
     ["cc.m.pow1", "cc.m.pow2", "cc.m.pow3"]
         .map((termId) => RIIC_TERMS.terms[termId]?.name)
         .filter(Boolean),
 );
 const AutomationMembers = new Set(["Lancet-2", "清流", "冬时", "承曦格雷伊"]);
-const RhineLabMembers = termMemberSet("cc.g.rh");
 const RhineTechSkills = termMemberSet("cc.sk.manu2");
-const AbyssalHuntersMembers = termMemberSet("cc.g.abyssal");
-const BlacksteelMembers = new Set([...termMembers("cc.g.bs"), "涤火杰西卡"]);
-const GlasgowMembers = new Set([...termMembers("cc.g.glasgow"), "戴菲恩"]);
 const SEESMembers = termMemberSet("cc.tag.sees");
-const EliteMembers = termMemberSet("cc.g.elite");
+
+//势力组合：术语成员 + 术语表未收录的异格 + 技能描述中引用该势力的干员（如八幡海铃引用叙拉古）
+const factionCondition = ({label, termIds = [], members = [], keywords = []}) => {
+    const memberSet = new Set([...termMemberSet(...termIds), ...members]);
+    return {
+        label,
+        func: (operator) => memberSet.has(operator.name) ||
+            keywords.some((keyword) => operator.description.includes(keyword) || operator.buffName.includes(keyword)),
+    };
+};
 
 //干员基建技能筛选表，筛选类型：{name：筛选类型名称,color:筛选类型名称字体颜色,conditions:[{label:筛选条件描述,func:筛选函数,传入干员信息进行筛选}]}
 const operatorFilterConditionTable = {
@@ -213,8 +218,50 @@ const operatorFilterConditionTable = {
             }
         ]
     },
-    combo: {
-        name: "buildSkillFilter.Special",
+    faction: {
+        name: "buildSkillFilter.Faction",
+        color:'#b476ff',
+        display: true,
+        buttonColor:'purple',
+        conditions: [
+            factionCondition({
+                label: "buildSkillFilter.SiracusaTeam",
+                termIds: ["cc.g.siracusa"],
+                keywords: ["叙拉古"],
+            }),
+            factionCondition({
+                label: "buildSkillFilter.GlasgowTeam",
+                termIds: ["cc.g.glasgow"],
+                members: ["戴菲恩"],
+                keywords: ["格拉斯哥帮"],
+            }),
+            factionCondition({
+                label: "buildSkillFilter.RhineLabTeam",
+                termIds: ["cc.g.rh"],
+                members: ["淬羽赫默", "溯光星源"],
+                keywords: ["莱茵生命"],
+            }),
+            factionCondition({
+                label: "buildSkillFilter.AbyssalHuntersTeam",
+                termIds: ["cc.g.abyssal"],
+                members: ["归溟幽灵鲨"],
+                keywords: ["深海猎人"],
+            }),
+            factionCondition({
+                label: "buildSkillFilter.BlacksteelTeam",
+                termIds: ["cc.g.bs"],
+                members: ["涤火杰西卡"],
+                keywords: ["黑钢国际"],
+            }),
+            factionCondition({
+                label: "buildSkillFilter.EliteOperators",
+                termIds: ["cc.g.elite"],
+                keywords: ["精英干员"],
+            }),
+        ]
+    },
+    system: {
+        name: "buildSkillFilter.System",
         color:'#b476ff',
         display: true,
         buttonColor:'purple',
@@ -240,21 +287,9 @@ const operatorFilterConditionTable = {
                 }
             },
             {
-                label: "buildSkillFilter.GlasgowTeam",
-                func: (operator) => {
-                    return GlasgowMembers.has(operator.name)
-                }
-            },
-            {
                 label: "buildSkillFilter.AutomationTeam",
                 func: (operator) => {
                     return AutomationSkillNames.has(operator.buffName) || AutomationMembers.has(operator.name)
-                }
-            },
-            {
-                label: "buildSkillFilter.RhineLabTeam",
-                func: (operator) => {
-                    return RhineLabMembers.has(operator.name)
                 }
             },
             {
@@ -270,27 +305,9 @@ const operatorFilterConditionTable = {
                 }
             },
             {
-                label: "buildSkillFilter.AbyssalHuntersTeam",
-                func: (operator) => {
-                    return AbyssalHuntersMembers.has(operator.name)
-                }
-            },
-            {
                 label: "buildSkillFilter.SEESTeam",
                 func: (operator) => {
                     return SEESMembers.has(operator.name)
-                }
-            },
-            {
-                label: "buildSkillFilter.BlacksteelTeam",
-                func: (operator) => {
-                    return BlacksteelMembers.has(operator.name)
-                }
-            },
-            {
-                label: "buildSkillFilter.EliteOperators",
-                func: (operator) => {
-                    return EliteMembers.has(operator.name)
                 }
             }
         ]
@@ -300,4 +317,34 @@ const operatorFilterConditionTable = {
 // Official english name is "Rosmontis"
 const RosmontisUniverse = ['琴柳']
 
-export {operatorFilterConditionTable}
+// selectedConditions 元素为 {groupKey, condition}，用 label 比较避免响应式代理导致的引用比较失效
+const isConditionSelected = (selectedConditions, groupKey, condition) =>
+    selectedConditions.some(item =>
+        item.groupKey === groupKey && item.condition.label === condition.label);
+
+//多选交集：干员必须为每个条件各命中至少一条技能，返回命中技能的并集（保持原行顺序）
+const filterSkillsByConditions = (skills, conditions, keywordPredicate) => {
+    const candidates = keywordPredicate ? skills.filter(keywordPredicate) : skills;
+
+    if (conditions.length === 0) {
+        return candidates;
+    }
+
+    const matchedSkills = new Set();
+    for (const condition of conditions) {
+        let conditionMatched = false
+        for (const skill of candidates) {
+            if (condition.func(skill)) {
+                matchedSkills.add(skill)
+                conditionMatched = true
+            }
+        }
+        if (!conditionMatched) {
+            return []
+        }
+    }
+
+    return skills.filter(skill => matchedSkills.has(skill))
+}
+
+export {operatorFilterConditionTable, isConditionSelected, filterSkillsByConditions}

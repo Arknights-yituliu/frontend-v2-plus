@@ -8,7 +8,7 @@ import SCHEDULE_MENU from "/src/static/json/build/schedule_menu.json";
 import BUILDING_TABLE from "/src/static/json/build/building_table.json";
 import buildingApi from "/src/api/backend/building.js";
 import operatorDataAPI from "/src/api/user-center/operatorData.js";
-import { operatorFilterConditionTable } from "/src/utils/buildingSkillFilter.js";
+import { operatorFilterConditionTable, isConditionSelected, filterSkillsByConditions } from "/src/utils/buildingSkillFilter.js";
 import { translate } from "/src/utils/i18n.js";
 import { readFileToString } from "/src/utils/fileUtils.js";
 import { debounce } from "/src/utils/debounce.js";
@@ -283,29 +283,39 @@ function chooseRoom(roomType, index) {
     selectedProduct.value = getItemIdByProductName(plansTemplate.value[selectedPlanIndex.value].rooms[selectedRoomType.value][selectedRoomIndex.value].product);
   }
 
-  // 点击设施时同步选中下方「工作场所」筛选。加工站与训练室刻意不提供跳转：
-  // 这两个位置不需要放效率干员，命中面太大反而干扰排班。
+  // 点击设施时同步选中下方「工作场所」筛选，只替换工作场所条件，保留势力/体系等其他筛选。
+  // 加工站与训练室刻意不提供跳转：这两个位置不需要放效率干员，命中面太大反而干扰排班。
   const condition = roomWorkplaceFilterMap.get(roomType);
   if (condition) {
-    selectBtnKey.value = `room-${condition.label}`;
-    filterCondition.value = condition;
+    selectedConditions.value = selectedConditions.value.filter(item => item.groupKey !== "room");
+    selectedConditions.value.push({ groupKey: "room", condition });
     commonFilterOperator();
   }
 }
 
-let selectBtnKey = ref({});
+let selectedConditions = ref([]);
 let filterOperatorList = ref({});
 let filterNotOwnOperator = ref(false);
 
-function filterBtnStatus(key, label) {
-  if (selectBtnKey.value !== `${key}-${label}`) {
+//按 charId 聚合技能行，多选筛选以干员为单位取交集
+const buildingTableByCharId = new Map();
+for (const operator of BUILDING_TABLE) {
+  if (!buildingTableByCharId.has(operator.charId)) {
+    buildingTableByCharId.set(operator.charId, []);
+  }
+  buildingTableByCharId.get(operator.charId).push(operator);
+}
+
+function filterBtnStatus(key, condition) {
+  if (!isConditionSelected(selectedConditions.value, key, condition)) {
     return "tonal";
   }
 }
 
-let filterCondition = ref({
-  func: () => {},
-});
+function clearFilters() {
+  selectedConditions.value = [];
+  commonFilterOperator();
+}
 
 const roomTypeFilterMap = new Map();
 
@@ -337,27 +347,23 @@ for (const [roomType, filterKey] of Object.entries(ROOM_WORKPLACE_FILTER_KEYS)) 
 }
 
 /**
- * 筛选干员
+ * 切换筛选条件，多选结果取交集
  * @param condition
  * @param key 选项的分类名
  */
-const filterOperatorByTag = debounce((condition, key) => {
-  //清空干员列表
- 
-  const btnKey = `${key}-${condition.label}`;
-  
-  //判断按钮是否已经选中，已经选中则清空暂存的筛选函数和按钮key，撤销选中状态
-  if (selectBtnKey.value === btnKey) {
-    selectBtnKey.value = "";
-    filterCondition.value = "";
+function filterOperatorByTag(condition, key) {
+  const index = selectedConditions.value.findIndex(item =>
+    item.groupKey === key && item.condition.label === condition.label);
+
+  if (index > -1) {
+    selectedConditions.value.splice(index, 1);
   } else {
-    //暂存筛选函数和按钮key
-    selectBtnKey.value = btnKey;
-    filterCondition.value = condition;
+    selectedConditions.value.push({ groupKey: key, condition });
   }
+
   //筛选干员
   commonFilterOperator();
-}, 500);
+}
 
 //干员搜索输入框输入内容
 let searchInputText = ref("");
@@ -377,36 +383,33 @@ const searchOperatorDebounce = debounce(() => {
 function commonFilterOperator() {
   //清空干员列表
   filterOperatorList.value = {};
-  for (const operator of BUILDING_TABLE) {
-    // 当按钮key有值时通过暂存的筛选函数进行筛选
-    if (selectBtnKey.value && !filterCondition.value.func(operator)) {
-      continue;
-    }
-    //判断输入了关键词和干员符合关键词
-    if (searchInputText.value && !operatorHasKeyword(operator)) {
-      continue;
-    }
-    //如果未选中某个按钮和未输入关键词跳过
-    if (!selectBtnKey.value && !searchInputText.value) {
+
+  const conditions = selectedConditions.value.map(item => item.condition);
+  //如果未选中任何按钮和未输入关键词跳过
+  if (conditions.length === 0 && !searchInputText.value) {
+    return;
+  }
+
+  const keywordPredicate = searchInputText.value ? operatorHasKeyword : null;
+  for (const [charId, skills] of buildingTableByCharId) {
+    //多选条件取交集，命中条件并集的技能用于展示
+    const matchedSkills = filterSkillsByConditions(skills, conditions, keywordPredicate);
+    if (matchedSkills.length === 0) {
       continue;
     }
 
     //是否需要过滤未持有的干员
     if (filterNotOwnOperator.value) {
-      if (!operatorOwnMap.get(operator.charId)) {
+      if (!operatorOwnMap.get(charId)) {
         continue;
       }
     }
 
-    if (filterOperatorList.value[operator.charId]) {
-      let result = filterOperatorList.value[operator.charId];
-      result.description += "<br><br>" + `精英${operator.phase}-等级${operator.level} —— ${operator.description}`;
-      filterOperatorList.value[operator.charId] = result;
-    } else {
-      const tmp = JSON.parse(JSON.stringify(operator));
-      tmp.description = `精英${tmp.phase}-等级${tmp.level} —— ${tmp.description}`;
-      filterOperatorList.value[operator.charId] = tmp;
-    }
+    const tmp = JSON.parse(JSON.stringify(matchedSkills[0]));
+    tmp.description = matchedSkills
+      .map(skill => `精英${skill.phase}-等级${skill.level} —— ${skill.description}`)
+      .join("<br><br>");
+    filterOperatorList.value[charId] = tmp;
   }
 }
 
@@ -1610,7 +1613,7 @@ function openMaaScheduleCalculator() {
                   v-for="(condition, index) in room.conditions"
                   :key="index"
                   color="primary"
-                  :variant="filterBtnStatus(key, condition.label)"
+                  :variant="filterBtnStatus(key, condition)"
                   size="small"
                   class="m-2"
                   :text="translate('schedule', condition.label)"
@@ -1618,6 +1621,8 @@ function openMaaScheduleCalculator() {
                 >
                 </v-btn>
               </div>
+              <v-btn v-if="selectedConditions.length" size="small" variant="text" color="primary" class="m-2"
+                     @click="clearFilters">{{ translate('schedule', 'buildSkillFilter.ClearFilters') }}</v-btn>
             </div>
 
             <div class="operator-check-box-group">
@@ -1929,12 +1934,14 @@ function openMaaScheduleCalculator() {
               size="small"
               class="m-2"
               color="primary"
-              :variant="filterBtnStatus(key, condition.label)"
+              :variant="filterBtnStatus(key, condition)"
               @click="filterOperatorByTag(condition, key)"
             >
               {{ translate("schedule", condition.label) }}
             </v-btn>
           </div>
+          <v-btn v-if="selectedConditions.length" size="small" variant="text" color="primary" class="m-2"
+                 @click="clearFilters">{{ translate("schedule", "buildSkillFilter.ClearFilters") }}</v-btn>
           <span class="condition-tip">{{ translate("schedule", "schedule.DeveloperTip") }}</span>
         </div>
 
