@@ -1,9 +1,5 @@
-import myDatabase from "/src/plugins/indexedDB/indexedDB.js";
+import { putCacheSafe, getCacheSafe } from "/src/plugins/indexedDB/indexedDB.js";
 import materialAPI from "/src/api/backend/materialV5.js";
-
-async function putCache(data) {
-    myDatabase.cache_data.put(data)
-}
 
 const packInfoCacheKey = 'PackInfo-cache-v1'
 
@@ -11,7 +7,7 @@ async function listPackInfo(forceRefresh = false) {
     let listPackInfo = [];
     const versionResponse = await materialAPI.packInfoVersion()
     const version = versionResponse.data
-    const cacheData = await myDatabase.cache_data.get(packInfoCacheKey);
+    const cacheData = await getCacheSafe(packInfoCacheKey);
     if (cacheData && !forceRefresh) {
 
         if (cacheData.version === version) {
@@ -29,7 +25,7 @@ async function listPackInfo(forceRefresh = false) {
             version: version,
             createTime: Date.now()
         }
-        putCache(info)
+        putCacheSafe(info)
         console.log(`${packInfoCacheKey}——返回服务器的数据——版本${version}${forceRefresh ? '（强制刷新）' : ''}`)
         listPackInfo = data
     })
