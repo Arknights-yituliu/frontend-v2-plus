@@ -188,6 +188,16 @@ Every `<el-timeline-item>` step must have an icon and a visual color. Use this t
 
 Event names must NOT have underline (`tag="ins"`). Do NOT wrap event name text in `<el-text tag="ins">`.
 
+**Node type and floor are mandatory.** Every event step must state which node type the event is triggered from — never leave a bare event link with no trigger context:
+
+- Keep the established form `进入不期而遇，触发事件“事件名”` (adding `节点` is optional; this is the §2.13 canonical form).
+- For named node types, write `进入<节点类型>节点，触发事件“事件名”`, e.g. `进入险路尽头节点，触发事件“险路尽头”`, `进入命运所指节点，触发事件“大红按钮”`, `进入先行一步节点，触发事件“未涉足之树”`.
+- If the event lives in a special sub-area, include the location: `进入熄日余径中的命运所指节点，触发事件“大红按钮”`.
+- If the event is limited to specific floors, state the floor or floor range before the node phrase: `在第1层或第2层…`, `在第3~5层…`.
+- `会遭遇事件“事件名”` remains valid for involuntary/negative encounters when the node type is stated in the same sentence.
+
+Do not invent node types or floor ranges that cannot be confirmed from PRTS or game data; leave them for the player to supply after in-game testing.
+
 ### 2.6 Collectible/Item Patterns
 
 **Collectible name with tooltip showing its effect:**
@@ -352,6 +362,11 @@ Every ending must end with this exact structure:
 </div>
 ```
 
+**Finish step is stage-only.** The final step reads `[抵达第N层，]通过【关卡】达成结局`.
+
+- Do **not** name, link, or describe the final boss, and do **not** write `击败…`; clearing the final stage is what completes the ending.
+- `抵达第N层` may be omitted when the immediately preceding step already establishes the floor (existing examples: Sinkers 2nd/3rd endings, Expeditioners 4th ending).
+
 ### 2.13 Language and Tone
 
 - **All UI text is in Simplified Chinese**
@@ -367,7 +382,8 @@ Every ending must end with this exact structure:
   - `持有...，可进入不期而遇，触发事件` = holding ... enables entering an encounter and triggering an event
   - `消耗N希望/N源石锭` = costs N hope/N ingots
   - `让探索走向不同的结局` or `让探索开启不同的方向` = diverges exploration to a different ending
-- For enemy/boss names: use `<el-link>` to prts.wiki if the enemy has a page
+- For enemy/boss names: name and `<el-link>` an enemy only when it is the object of the step — the player must defeat/protect/select/weaken it, or its survival/defeat changes the ending. Example of a special enemy that must be written: 萨卡兹的终曲合声 (appears mid-battle; defeating it yields “绝望”). Ordinary enemies that merely appear in a stage are not written, and the final boss is never named.
+- Do not include out-of-game meta information: unlock conditions, content-expansion versions (`【内容拓展·一】`), "clear once to unlock", ending unlock order. The guide documents only the in-run route.
 - Use `<b>` sparingly for strong emphasis (e.g., `<b>入卷</b>` for the scroll-tucking mechanic)
 
 ### 2.14 Import Section Pattern
@@ -470,12 +486,12 @@ After completing a new theme or update, suggest the commit message:
 
 For new theme:
 ```
-feat(集成战略): 新增<主题名>结局一览
+feat(集成战略结局一览): 新增<主题名>结局一览
 ```
 
 For update:
 ```
-update(集成战略): <主题名><变更简述>
+update(集成战略结局一览): <主题名><变更简述>
 ```
 
 ---

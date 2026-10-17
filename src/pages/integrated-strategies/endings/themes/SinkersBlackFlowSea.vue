@@ -230,6 +230,125 @@ import Battle from "@/components/information/Battle.vue";
           </el-timeline>
         </el-card>
       </el-timeline-item>
+      <el-timeline-item placement="top" timestamp="第四结局">
+        <el-card>
+          <h3>旧日重燃</h3>
+          <el-timeline>
+            <el-timeline-item :icon="MoreFilled" type="primary">
+              <div>
+                在第1层或第2层进入险路尽头节点，触发事件
+                <el-link
+                  href="https://prts.wiki/w/%E6%B2%89%E6%B2%A6%E8%80%85%E7%9A%84%E9%BB%91%E6%B5%81%E6%A0%91%E6%B5%B7/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E9%99%A9%E8%B7%AF%E5%B0%BD%E5%A4%B4"
+                  target="_blank"
+                  type="primary"
+                >
+                  “险路尽头”
+                </el-link>
+                ，选择“帮助倒下的探险家同伴”（消耗10源石锭），获得
+                <el-tooltip
+                  content="区域III血色空脉及后续区域中出现熄日余径，探险者会出现在熄日余径的战斗中，血色空脉中的险路恶敌变得更加艰难"
+                  effect="light"
+                  placement="top"
+                >
+                  <el-text tag="ins">【谒日之祈】</el-text>
+                </el-tooltip>
+              </div>
+              <div>
+                <span class="optional tip">（提示）</span>
+                只有险路尽头节点会出现“帮助倒下的探险家同伴”选项，险路小径节点不会出现
+              </div>
+              <div>
+                <span class="optional warning">（注意）</span>
+                获得【谒日之祈】后，先行一步事件“未涉足之树”中的“尝试探索树的源头”选项将不再出现，本次探索无法再完成第三结局
+              </div>
+            </el-timeline-item>
+            <el-timeline-item :icon="MoreFilled" type="primary">
+              <div>
+                持有【谒日之祈】后，从第3层“血色空脉”起，后续区域的地图右侧会出现总节点数量为7的
+                <el-tooltip content="第5层的熄日余径的总节点数量为9" effect="light" placement="top">
+                  <el-text tag="ins">熄日余径</el-text>
+                </el-tooltip>
+                ；其距离主要区域具有2的最短节点距离且不与主要区域连通，无法通过徒步的方式进入；探险者会出现在其中的战斗中，血色空脉中的险路恶敌也会变得更加艰难
+              </div>
+            </el-timeline-item>
+            <el-timeline-item :icon="MoreFilled" type="primary">
+              <div>
+                进入熄日余径中的命运所指节点，触发事件
+                <el-link
+                  href="https://prts.wiki/w/%E6%B2%89%E6%B2%A6%E8%80%85%E7%9A%84%E9%BB%91%E6%B5%81%E6%A0%91%E6%B5%B7/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%A4%A7%E7%BA%A2%E6%8C%89%E9%92%AE"
+                  target="_blank"
+                  type="primary"
+                >
+                  “大红按钮”
+                </el-link>
+                ，选择“这个按钮是做什么用的？”，再选择“这下有麻烦了”，进入特殊战斗
+                <el-link href="https://prts.wiki/w/ISW-NO_%E7%81%B0%E5%9D%91" target="_blank" type="primary"> 【ISW-NO 灰坑】 </el-link>
+              </div>
+            </el-timeline-item>
+            <el-timeline-item :icon="Battle" color="#5EDFD6">
+              <div>
+                保护战斗中的“沉沦探险者”，使其发动“太阳渴望鲜血！”（需240技力），强制结束关卡并让探索开启不同的方向，获得
+                <el-tooltip
+                  content="不再出现熄日余径，所有干员再部署时间+50%，使用加工品移动后使其损毁（不会触发复得之轮）；让探索开启不同的方向"
+                  effect="light"
+                  placement="top"
+                >
+                  <el-text tag="ins">【祭日之契】</el-text>
+                </el-tooltip>
+              </div>
+            </el-timeline-item>
+            <el-timeline-item :icon="MoreFilled" type="primary">
+              <div>
+                <span class="optional">（可选）</span>
+                若“沉沦探险者”在战斗中倒下，可在3~5层数中进入不期而遇节点，触发事件
+                <el-link
+                  href="https://prts.wiki/w/%E6%B2%89%E6%B2%A6%E8%80%85%E7%9A%84%E9%BB%91%E6%B5%81%E6%A0%91%E6%B5%B7/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%89%8B%E6%9C%AF%E7%A5%AD%E5%9D%9B"
+                  target="_blank"
+                  type="primary"
+                >
+                  “手术祭坛”
+                </el-link>
+                ，选择“小心地移除电极”（失去一半目标生命上限），获得
+                <el-tooltip content="探险者重新出现在熄日余径的战斗中" effect="light" placement="top">
+                  <el-text tag="ins">【破碎噩兆】</el-text>
+                </el-tooltip>
+              </div>
+              <div>
+                <span class="optional warning">（注意）</span>
+                该补救事件只会触发一次，若沉沦探险者在第二次的守护战中仍被击倒，则本次探索无法再获得【祭日之契】，也无法达成第四结局
+              </div>
+            </el-timeline-item>
+            <el-timeline-item :icon="MoreFilled" type="primary">
+              <div>
+                <span class="optional">（可选）</span>
+                进入不期而遇节点，触发事件
+                <el-link
+                  href="https://prts.wiki/w/%E6%B2%89%E6%B2%A6%E8%80%85%E7%9A%84%E9%BB%91%E6%B5%81%E6%A0%91%E6%B5%B7/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E5%88%B6%E5%9B%BE%E6%A1%8C"
+                  target="_blank"
+                  type="primary"
+                >
+                  “制图桌”
+                </el-link>
+                ，选择“端详那册精致的图纸”，获得
+                <el-tooltip
+                  content="敌方单位攻击、移速+30%，最大生命值+50%，精英和领袖敌人登场30秒内受到的物理和法术伤害-50%，盲目者所见中的险路恶敌出现额外敌人"
+                  effect="light"
+                  placement="top"
+                >
+                  <el-text tag="ins">【生命蓝图】</el-text>
+                </el-tooltip>
+              </div>
+            </el-timeline-item>
+            <el-timeline-item :icon="BOSS" color="#8A0993">
+              <div>
+                抵达第6层，通过
+                <el-link href="https://prts.wiki/w/ISW-DF_%E7%86%84%E6%97%A5" target="_blank" type="primary"> 【ISW-DF 熄日】 </el-link>
+                达成结局
+              </div>
+            </el-timeline-item>
+          </el-timeline>
+        </el-card>
+      </el-timeline-item>
       <el-timeline-item placement="top" timestamp="未完待续" />
       <!-- 不要删除末尾时间线节点，因组件自身样式特性，删除该节点会导致最后一个时间线节点内部的时间线组件样式显示异常 -->
     </el-timeline>
