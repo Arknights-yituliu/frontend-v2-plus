@@ -2,7 +2,7 @@
 import '/src/assets/css/information/logistics.scss'
 import '/src/assets/css/information/logistics.phone.scss'
 
-import {operatorFilterConditionTable} from "/src/utils/buildingSkillFilter";
+import {operatorFilterConditionTable, isConditionSelected, filterSkillsByConditions} from "/src/utils/buildingSkillFilter";
 import building_table from '/src/static/json/build/building_table.json'
 import logistics_skill_replace_groups from '/src/static/json/build/logistics_skill_replace_groups.json'
 import {operatorTableV2} from "/src/utils/gameData.js"; // v2 干员信息与材料消耗数据
@@ -10,7 +10,7 @@ import item_info from '/src/static/json/material/item_info.json'
 import level_cost_table from '/src/static/json/operator/level_cost_table.json'
 import itemCache from "/src/plugins/indexedDB/itemCache.js";
 import {getStageConfig} from "/src/utils/user/userConfig.js";
-import {onMounted, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce";
 import {translate} from "/src/utils/i18n";
 import DescriptionExplain from "/src/components/tools/DescriptionExplain.vue";
@@ -55,8 +55,7 @@ const operatorEliteCostTable = {
 }
 const unlockCostCache = new Map()
 
-let selectBtnKey = ref('')
-let expandedConditionTypeKey = ref('')
+let selectedConditions = ref([])
 let filterOperatorList = ref([])
 let sortMode = ref('implementation')
 let detailMode = ref(false)
@@ -70,59 +69,54 @@ const sortModeOptions = [
 ]
 
 
-function filterBtnStatus(key, label) {
-  return selectBtnKey.value === `${key}+${label}`
+function isFilterSelected(key, condition) {
+  return isConditionSelected(selectedConditions.value, key, condition)
 }
 
-let filterCondition = ref({
-  func: () => {
-  }
-})
-
-function btnAction(key, label) {
-  if (selectBtnKey.value !== `${key}+${label}`) {
+function btnAction(key, condition) {
+  if (!isFilterSelected(key, condition)) {
     return "tonal"
   }
 }
 
 
 /**
- * 筛选干员
+ * 切换筛选条件，多选结果取交集
  * @param condition 筛选条件
- * @param key 筛选条件的按钮文本
+ * @param key 筛选条件所属分组
  */
 function filterOperatorByTag(condition, key) {
-  //清空干员列表
-  filterOperatorList.value = []
-  const btnKey = `${key}+${condition.label}`
-  const isSelected = selectBtnKey.value === btnKey
+  const index = selectedConditions.value.findIndex(item =>
+      item.groupKey === key && item.condition.label === condition.label)
 
-  if (key === 'room') {
-    expandedConditionTypeKey.value = !isSelected && contextualConditionTypeKeys.has(condition.roomType)
-        ? condition.roomType
-        : ''
-  }
-
-  //判断按钮是否已经选中，已经选中则清空暂存的筛选函数和按钮key，撤销选中状态
-  if (isSelected) {
-    selectBtnKey.value = ''
-    filterCondition.value = ''
+  if (index > -1) {
+    selectedConditions.value.splice(index, 1)
+    //取消工作场所时同步清空对应子筛选，避免按钮隐藏后条件仍然生效
+    if (key === 'room') {
+      selectedConditions.value = selectedConditions.value.filter(item => item.groupKey !== condition.roomType)
+    }
   } else {
-    //暂存筛选函数和按钮key
-    selectBtnKey.value = btnKey
-    filterCondition.value = condition;
+    selectedConditions.value.push({groupKey: key, condition})
   }
 
   //筛选干员
   commonFilterOperator()
 }
 
-function shouldShowConditionType(key, conditionType) {
-  if (!conditionType.display) {
-    return false
-  }
+function clearFilters() {
+  selectedConditions.value = []
+  commonFilterOperator()
+}
 
-  return !contextualConditionTypeKeys.has(key) || expandedConditionTypeKey.value === key
+//工作场所子栏（制造站/贸易站/控制中枢）随对应场所选中而展开
+const visibleContextualGroupKeys = computed(() => new Set(
+    selectedConditions.value
+        .filter(item => item.groupKey === 'room' && contextualConditionTypeKeys.has(item.condition.roomType))
+        .map(item => item.condition.roomType)
+))
+
+function shouldShowConditionType(key) {
+  return !contextualConditionTypeKeys.has(key) || visibleContextualGroupKeys.value.has(key)
 }
 
 function shouldShowConditionTypeLabel(key) {
@@ -163,27 +157,12 @@ function changeSortMode(value) {
 function commonFilterOperator() {
 
   const operatorGroups = []
+  const conditions = selectedConditions.value.map(item => item.condition)
+  const keywordPredicate = searchInputText.value ? operatorHasKeyword : null
 
   for (const charId in buildingTable) {
     const skills = buildingTable[charId]
-    const matchedSkills = []
-
-    for (const skill of skills) {
-
-
-      // 当按钮key有值时通过暂存的筛选函数进行筛选
-      if (selectBtnKey.value && !filterCondition.value.func(skill)) {
-
-        continue;
-      }
-      //通过输入关键词筛选
-      if (searchInputText.value && !operatorHasKeyword(skill)) {
-
-        continue;
-      }
-
-      matchedSkills.push(skill)
-    }
+    const matchedSkills = filterSkillsByConditions(skills, conditions, keywordPredicate)
 
     if (matchedSkills.length === 0) {
       continue
@@ -614,7 +593,7 @@ onMounted(() => {
   <div class="logistics-page">
     <div class="logistics-filter-checkbox">
       <div class="flex flex-wrap" v-for="(conditionType,key) in operatorFilterConditionTable"
-           v-show="shouldShowConditionType(key, conditionType)"
+           v-show="conditionType.display && shouldShowConditionType(key)"
            :class="{'logistics-filter-subgroup': contextualConditionTypeKeys.has(key)}"
            :key="key">
 
@@ -630,15 +609,20 @@ onMounted(() => {
             class="logistics-filter-subgroup-card"
         >
           <v-btn v-for="(condition,index) in conditionType.conditions" :key="index"
-                 class="m-2" color="primary" :variant="btnAction(key,condition.label)"
+                 class="m-2" color="primary" :variant="btnAction(key,condition)"
                  @click="filterOperatorByTag(condition,key)" :text="translate('schedule',condition.label)"></v-btn>
         </div>
         <template v-else>
           <v-btn v-for="(condition,index) in conditionType.conditions" :key="index"
-                 class="m-2" color="primary" :variant="btnAction(key,condition.label)"
+                 class="m-2" color="primary" :variant="btnAction(key,condition)"
                  @click="filterOperatorByTag(condition,key)" :text="translate('schedule',condition.label)"></v-btn>
         </template>
 
+      </div>
+      <div class="logistics-filter-actions">
+        <span class="logistics-filter-tip">{{ translate('schedule','buildSkillFilter.MultiSelectTip') }}</span>
+        <v-btn v-if="selectedConditions.length" size="small" variant="text" color="primary"
+               @click="clearFilters">{{ translate('schedule','buildSkillFilter.ClearFilters') }}</v-btn>
       </div>
     </div>
 
