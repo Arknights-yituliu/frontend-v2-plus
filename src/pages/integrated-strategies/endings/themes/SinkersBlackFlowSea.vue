@@ -300,7 +300,7 @@ import Battle from "@/components/information/Battle.vue";
             <el-timeline-item :icon="MoreFilled" type="primary">
               <div>
                 <span class="optional">（可选）</span>
-                若“沉沦探险者”在战斗中倒下，可在3~5层数中进入不期而遇节点，触发事件
+                若“沉沦探险者”在战斗中倒下，可在3~5层中进入不期而遇节点，触发事件
                 <el-link
                   href="https://prts.wiki/w/%E6%B2%89%E6%B2%A6%E8%80%85%E7%9A%84%E9%BB%91%E6%B5%81%E6%A0%91%E6%B5%B7/%E4%BA%8B%E4%BB%B6%E4%B8%80%E8%A7%88#%E6%89%8B%E6%9C%AF%E7%A5%AD%E5%9D%9B"
                   target="_blank"
