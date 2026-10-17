@@ -1,4 +1,5 @@
 <script setup>
+import PlanFacilityLevels from "./PlanFacilityLevels.vue";
 import { mowerProductImage } from "@/utils/mower/productAssets.js";
 import PlanAvatar from "./PlanAvatar.vue";
 import HelpText from "./HelpText.vue";
@@ -399,6 +400,9 @@ function set_facility(e) {
       <table class="facility-actions">
         <tbody>
           <tr>
+            <td v-if="!facility.startsWith('gaming_')">
+              <PlanFacilityLevels mode="level" :facility="facility" :locked="edit_locked" />
+            </td>
             <td>设施类别：</td>
             <td>
               <n-select
@@ -414,7 +418,9 @@ function set_facility(e) {
               <td>
                 产物
                 <help-text v-if="current_plan[facility].name == '制造站'"> 制造站会随排班自动核对并切换产物。 </help-text>
-                <help-text v-else> 贸易站会随排班自动核对并切换订单类型。 </help-text>
+                <help-text v-else>
+                  开启自动切换后，贸易站会随排班核对并切换订单类型。主表须配置三个岗位才能使用合成玉订单（开采协力）；一、二岗位贸易站只能使用赤金订单（龙门商法）。仅修改设施等级不能代替更新岗位数。
+                </help-text>
               </td>
               <td>
                 <n-select
@@ -473,9 +479,13 @@ function set_facility(e) {
               <span>组</span>
               <help-text>
                 <p>同组一起上下班。宿舍成员随组由替班接岗，不额外占床。</p>
-                <p>点击加号新增绑组，每列分别设置替班；组名不能为空或重复。</p>
-                <p>多绑组干员跟随最近触发换班的组，使用对应替班，不参与组内心情和回班时间计算。</p>
-                <p>每个绑组至少需要一名参与心情计算的非宿舍干员。</p>
+                <p>同一非空组内不同主班可互填替班，不限设施；匹配后接工作岗位或固定宿舍位者不重复占用动态床位。</p>
+                <p>成员正在为其他组接工作替班时，本组须等待占用岗位释放后才能下班；原岗位有替班不代表当前工作岗位已释放。Mower 运行时检查实际占用，浏览器静态校验不预测换班时序。</p>
+                <p>点击加号新增绑组，每列分别设置替班；组名不能重复，允许一列空绑组。</p>
+                <p>未绑组的0心情工作干员、整组均为0心情工作干员时可不填普通替班；混合组仍需为每位成员填写替班。</p>
+                <p>多绑组干员使用所有在休绑组均兼容的替班，不参与组内心情和回班时间计算。</p>
+                <p>工作主班可填写一列空绑组，按自身心情独立轮休；其他绑组下班时优先使用对应替班，已在休息的干员继续恢复。宿舍候补仍可被更高优先级主班腾床。</p>
+                <p>参与轮休的具名绑组至少需要一名参与心情计算的非宿舍干员。</p>
                 <p>宿舍替班按已知心情从低到高选择，已在岗者保留。</p>
                 <p>宿舍替换填 Free 可在下班时开放休息床位；具体替班可填写同组工作主班或非主班。</p>
               </help-text>
