@@ -16,6 +16,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  mainSegments: {
+    type: Array,
+    default: null,
+  },
 });
 
 const ITEM_IMAGE_IDS = Object.freeze({
@@ -47,6 +51,12 @@ const itemImageId = computed(() =>
   "",
 );
 const productIcon = computed(() => PRODUCT_ICONS[props.tile.product] || "");
+function formatMainSegment(segment) {
+  return (
+    segment.text ??
+    formatDisplayValue({ template: "{0}", raws: [segment.value] })
+  );
+}
 </script>
 
 <template>
@@ -69,7 +79,16 @@ const productIcon = computed(() => PRODUCT_ICONS[props.tile.product] || "");
           <img v-else :src="productIcon" alt="" />
         </span>
         <div class="riic-display-tile-content">
-          <strong class="riic-display-tile-main">{{ formatDisplayValue(props.tile.main) }}</strong>
+          <strong class="riic-display-tile-main">
+            <template v-if="props.mainSegments">
+              <span
+                v-for="(segment, index) in props.mainSegments"
+                :key="segment.key || index"
+                :class="{ 'riic-display-tile-main-secondary': segment.secondary }"
+              >{{ formatMainSegment(segment) }}</span>
+            </template>
+            <template v-else>{{ formatDisplayValue(props.tile.main) }}</template>
+          </strong>
           <span v-for="line in props.tile.lines || []" :key="line.key" class="riic-display-tile-line">
             {{ formatDisplayValue(line.value) }}
           </span>
@@ -123,6 +142,9 @@ const productIcon = computed(() => PRODUCT_ICONS[props.tile.product] || "");
 .riic-display-tile-main {
   font-size: 16px;
   font-variant-numeric: tabular-nums;
+}
+.riic-display-tile-main-secondary {
+  font-size: 14px;
 }
 .riic-display-tile-line {
   color: var(--c-text-color-secondary, #6b7280);

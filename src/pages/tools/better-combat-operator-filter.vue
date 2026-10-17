@@ -1,43 +1,45 @@
 <script setup>
-import { computed, nextTick, onMounted, ref, shallowRef, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from "vue";
 import { ElNotification } from "element-plus";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import BetterCombatCriteriaDrawer from "@/components/tools/BetterCombatCriteriaDrawer.vue";
 import { htmlStringToVNode } from "@/utils/format.js";
 import { debounce } from "@/utils/debounce.js";
 
 /**
  * 更好的作战干员筛选
- * 数据来源：better-combat-operators-selection 项目产出的 results/operator-tags.json 与 combat_glossary.json
- * （已复制到 src/static/json/combat/，两份文件保持原样，不在本仓库内手工维护）
+ * 数据来源：better-combat-operators-selection 项目产出的 results/operator-tags.json、combat_glossary.json
+ * 与 player-tags-criteria.json（评定标准抽屉文案）
+ * （已复制到 src/static/json/combat/，数据文件保持原样，不在本仓库内手工维护）
  */
 
 const DATA = ref(null);
 const GLOSSARY = ref(null);
-const EXPLAIN = ref(null);
+const CRITERIA = ref(null);
 const loadError = ref("");
 
 onMounted(async () => {
   try {
-    const [tagsModule, glossaryModule, explainModule] = await Promise.all([
+    const [tagsModule, glossaryModule, criteriaModule] = await Promise.all([
       import("@/static/json/combat/operator-tags.json"),
       import("@/static/json/combat/combat_glossary.json"),
-      import("@/static/json/combat/player-tags-explain.json"),
+      import("@/static/json/combat/player-tags-criteria.json"),
     ]);
     // 先放术语表：卡片备注的术语高亮（wrapTerms）现在只在「提交卡片」时算一次，
     // 若 DATA 先落导致在 GLOSSARY 到位前就把组合卡的备注算好，那批备注将永远没有术语高亮
     GLOSSARY.value = glossaryModule.default;
-    EXPLAIN.value = explainModule.default;
+    CRITERIA.value = criteriaModule.default;
     DATA.value = tagsModule.default;
   } catch (error) {
     loadError.value = String((error && error.message) || error);
   }
 });
 
-/* ---------------------------------------------------------------- 悬浮说明（玩家体感 TAG 通俗文案） */
+/* ---------------------------------------------------------------- 悬浮说明与评定标准（玩家体感 TAG 文案） */
 
-// 顶级按 tagId；子项按 `tagId|组|值`（源：results/player-tags-explain.json）
-const explainByTagId = computed(() => new Map((EXPLAIN.value?.tags || []).map((x) => [x.id, x.text])));
-const explainBySub = computed(() => new Map((EXPLAIN.value?.subs || []).map((x) => [x.tagId + "|" + x.group + "|" + x.value, x.text])));
+// 顶级按 tagId；子项按 `tagId|组|值`（源：results/player-tags-criteria.json 的 intro 字段）
+const explainByTagId = computed(() => new Map((CRITERIA.value?.tags || []).map((x) => [x.id, x.intro])));
+const explainBySub = computed(() => new Map((CRITERIA.value?.tags || []).flatMap((t) => (t.subs || []).map((s) => [t.id + "|" + s.group + "|" + s.value, s.intro]))));
 
 function tagExplain(t) {
   return t?.source === "player" ? explainByTagId.value.get(t.id) || "" : "";
@@ -46,6 +48,107 @@ function tagExplain(t) {
 function subExplain(tagId, group, value) {
   return explainBySub.value.get(tagId + "|" + group + "|" + value) || "";
 }
+
+// 评定标准抽屉：从 tooltip 的「查看评定标准详情」或面板入口打开，并定位到对应 TAG／子 TAG
+const criteriaOpen = ref(false);
+const criteriaTarget = ref(null);
+
+function openCriteria(tagId, group, value) {
+  criteriaTarget.value = tagId ? (group != null ? { tagId, group, value } : { tagId }) : null;
+  criteriaOpen.value = true;
+}
+
+/* ---------------------------------------------------------------- 移动端固钉按钮（≤700px 显示）
+
+   移动端痛点：查看/修改已选 TAG 必须手动划回顶部。固钉按钮随时可达：
+   - 普通态：回到顶部 ／ 定位筛选栏 ／ 定位干员列表（两个定位各自独立，不联动 TAG 变更——用户可连续编辑多个 TAG）
+   - 抽屉态：回到顶部（抽屉内） ／ 关闭评定细则 */
+
+const criteriaDrawerRef = ref(null);
+const filterEl = ref(null);
+const resultsEl = ref(null);
+
+const fabOpen = ref(false);
+const pageScrolled = ref(false);
+
+const fabVisible = computed(() => criteriaOpen.value || pageScrolled.value);
+
+const fabOptions = computed(() =>
+  criteriaOpen.value
+    ? [
+        { key: "criteria-top", icon: "mdi-arrow-up", label: "回到顶部", run: fabCriteriaTop },
+        { key: "criteria-close", icon: "mdi-close", label: "关闭评定细则", run: fabCloseCriteria },
+      ]
+    : [
+        { key: "page-top", icon: "mdi-arrow-up", label: "回到顶部", run: fabPageTop },
+        { key: "page-filter", icon: "mdi-filter-variant", label: "定位筛选栏", run: fabGotoFilter },
+        { key: "page-results", icon: "mdi-view-grid", label: "定位干员列表", run: fabGotoResults },
+      ]
+);
+
+// 站点顶栏（v-app-bar）是固定在顶部的，滚动定位要给它留出高度
+function topbarHeight() {
+  const bar = document.querySelector(".v-app-bar");
+  return bar ? bar.getBoundingClientRect().height : 64;
+}
+
+function domOf(r) {
+  const v = r?.value;
+  if (!v) return null;
+  if (v instanceof HTMLElement) return v;
+  return v.$el instanceof HTMLElement ? v.$el : null;
+}
+
+function scrollPageTo(el, behavior = "smooth") {
+  if (!el) return;
+  const top = Math.max(el.getBoundingClientRect().top + window.scrollY - topbarHeight(), 0);
+  window.scrollTo({ top, behavior });
+}
+
+function fabPageTop() {
+  fabOpen.value = false;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function fabCriteriaTop() {
+  fabOpen.value = false;
+  criteriaDrawerRef.value?.scrollBodyToTop();
+}
+
+function fabCloseCriteria() {
+  fabOpen.value = false;
+  criteriaOpen.value = false;
+}
+
+function fabGotoFilter() {
+  fabOpen.value = false;
+  scrollPageTo(domOf(filterEl), "smooth");
+}
+
+function fabGotoResults() {
+  fabOpen.value = false;
+  scrollPageTo(domOf(resultsEl), "smooth");
+}
+
+watch(criteriaOpen, () => {
+  fabOpen.value = false;
+});
+watch(fabVisible, (v) => {
+  if (!v) fabOpen.value = false;
+});
+
+function onWindowScroll() {
+  pageScrolled.value = window.scrollY > 240;
+}
+
+onMounted(() => {
+  window.addEventListener("scroll", onWindowScroll, { passive: true });
+  onWindowScroll();
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", onWindowScroll);
+});
 
 /* ---------------------------------------------------------------- 索引 */
 
@@ -131,8 +234,24 @@ function p12RecHit(name) {
 
 // 干员/组合名 -> 是否出现在任一荐作用域（排序与角标按 recScopesByTag 判定，见下）
 
-// 决战歼灭：子 TAG 排列顺序（范围轴＋伤害轴；与源项目 tools/generate_results.py 的 P01_SUB_ORDER 同步）
+// 决战歼灭：子 TAG 排列顺序——仅在数据侧没有 `subOrder` 时的兜底（旧副本）。
+// 规范的顺序源是源项目 agent_workspace/tag_pipeline/tag_order.json，随产物以 tags[].subOrder 下发。
 const P01_SUB_ORDER = ["小范围", "大范围", "主物理伤害", "主法术伤害", "主真实伤害", "主弱点伤害", "物法混伤", "物真混伤", "物元混伤", "法元混伤"];
+
+// 该 TAG 的取值位次表：优先用产物下发的 subOrder；缺失时退回硬编码（仅 P01）；都没有则 null（＝沿用首次出现序）
+function subRankOf(tag) {
+  const list = Array.isArray(tag.subOrder) ? tag.subOrder : null;
+  if (list && list.length) {
+    const m = new Map();
+    list.forEach((s, i) => m.set(s.group + "|" + s.value, i));
+    return k => (m.has(k) ? m.get(k) : 1e9);
+  }
+  if (tag.id === "P01") {
+    const m = new Map(P01_SUB_ORDER.map((v, i) => ["子 TAG|" + v, i]));
+    return k => (m.has(k) ? m.get(k) : 1e9);   // 未命中的排末尾（旧写法 indexOf 返回 -1 会排到最前）
+  }
+  return null;
+}
 
 // 子 TAG 选项：tagId -> [{key, group, value, kind}]；阵容组合的子项＝子 TAG 分类（势力/用法）+ 组合名
 const subOptionsByTag = computed(() => {
@@ -151,9 +270,12 @@ const subOptionsByTag = computed(() => {
           items.push({ key, group: s.group, value: s.value, kind: "subtag" });
         }
       }
-      // 顺序：势力→用法
+      // 顺序：优先 subOrder，其次「势力→用法」
+      const rank = subRankOf(t);
       const catOrder = ["势力", "用法"];
-      items.sort((a, b) => catOrder.indexOf(a.value) - catOrder.indexOf(b.value));
+      items.sort((a, b) => rank
+        ? (rank("子 TAG|" + a.value) - rank("子 TAG|" + b.value))
+        : (catOrder.indexOf(a.value) - catOrder.indexOf(b.value)));
     } else {
       for (const m of t.members || []) {
         for (const s of m.subTags || []) {
@@ -163,10 +285,8 @@ const subOptionsByTag = computed(() => {
           items.push({ key, group: s.group, value: s.value, kind: "sub" });
         }
       }
-      if (t.id === "P01") {
-        // 决战歼灭按固定排列顺序展示（数据侧的成员顺序不保证子 TAG 顺序）
-        items.sort((a, b) => P01_SUB_ORDER.indexOf(a.value) - P01_SUB_ORDER.indexOf(b.value));
-      }
+      const rank = subRankOf(t);
+      if (rank) items.sort((a, b) => rank(a.key) - rank(b.key));
     }
     if (items.length) map.set(t.id, items);
   }
@@ -504,9 +624,17 @@ function escapeHtml(text) {
   return String(text == null ? "" : text).replace(/[&<>"]/g, (c) => HTML_ESCAPES[c]);
 }
 
+// 结果 JSON 的文本可携带白名单行内标签 <strong>／<code>（源项目生成器把 md 的 ** 与反引号转写而来，
+// 见源项目 docs/ui-render-rules.md §5.5／§7）；转义后仅放行这两个标签，其余一律按字面显示。
+const RESULT_INLINE_TAG_RE = /&lt;(\/?)(strong|code)&gt;/g;
+
+function escapeResultText(text) {
+  return escapeHtml(text).replace(RESULT_INLINE_TAG_RE, "<$1$2>");
+}
+
 // 备注/条件文本 → 术语包上 <span data-combat-term>（最长优先匹配）
 function wrapTerms(text) {
-  const escaped = escapeHtml(text);
+  const escaped = escapeResultText(text);
   if (!TERM_REGEX.value) return escaped;
   return escaped.replace(TERM_REGEX.value, (m) => `<span class="combat-term" data-combat-term="${m}">${m}</span>`);
 }
@@ -560,7 +688,7 @@ function renderRemark(remark) {
     (items || [])
       .map((it) =>
         it.label
-          ? `<div class="bcf-item"><span class="bcf-k">${linkifyArkdps(escapeHtml(it.label))}</span><span class="bcf-v">${linkifyArkdps(wrapTerms(it.text))}</span></div>`
+          ? `<div class="bcf-item"><span class="bcf-k">${linkifyArkdps(escapeResultText(it.label))}</span><span class="bcf-v">${linkifyArkdps(wrapTerms(it.text))}</span></div>`
           : `<div class="bcf-item bcf-item--wide"><span class="bcf-v">${linkifyArkdps(wrapTerms(it.text))}</span></div>`
       )
       .join("");
@@ -574,7 +702,7 @@ function renderRemark(remark) {
         return (
           `<div class="bcf-block bcf-block--score"><div class="bcf-block-head">` +
           `<span class="bcf-block-title">成绩</span>` +
-          (caseName ? `<span class="bcf-block-case">${escapeHtml(caseName)}</span>` : "") +
+          (caseName ? `<span class="bcf-block-case">${escapeResultText(caseName)}</span>` : "") +
           `</div>${body}</div>`
         );
       }
@@ -586,7 +714,7 @@ function renderRemark(remark) {
         return `<div class="bcf-block bcf-block--note"><div class="bcf-block-head">说明</div>${body}</div>`;
       }
       if (kind === "ability") {
-        return `<div class="bcf-block bcf-block--ability"><div class="bcf-block-head">${escapeHtml(label)}</div>${body}</div>`;
+        return `<div class="bcf-block bcf-block--ability"><div class="bcf-block-head">${escapeResultText(label)}</div>${body}</div>`;
       }
       return `<div class="bcf-block">${body}</div>`;
     })
@@ -610,9 +738,9 @@ function onTermClick(event) {
   if (!el) return;
   const term = TERM_MAP.value.get(el.getAttribute("data-combat-term"));
   if (!term) return;
-  const notes = (term.notes || []).map((n) => `<li>${escapeHtml(n)}</li>`).join("");
+  const notes = (term.notes || []).map((n) => `<li>${escapeResultText(n)}</li>`).join("");
   // 内联样式：ElNotification 挂在 body 下，拿不到本组件的 scoped 样式
-  const html = `<div>${escapeHtml(term.definition)}</div>` + (notes ? `<ul style="margin:6px 0 0;padding-left:18px;">${notes}</ul>` : "");
+  const html = `<div>${escapeResultText(term.definition)}</div>` + (notes ? `<ul style="margin:6px 0 0;padding-left:18px;">${notes}</ul>` : "");
   ElNotification({
     title: term.name,
     message: htmlStringToVNode(html),
@@ -785,7 +913,7 @@ const SENTINEL_INTERSECT = {
       <div class="bcf-note">
         <strong>使用说明</strong>
         <span
-          >蓝色下划线术语点击可查看术语解释；把光标悬停在玩家体感 TAG 或子 TAG 上，可查看该 TAG 的通俗说明；选中玩家体感 TAG 后，卡片右上角的<em
+          >蓝色下划线术语点击可查看术语解释；把光标悬停在玩家体感 TAG 或子 TAG 上，可查看该 TAG 的通俗说明，并点击其中的「查看评定标准详情」打开完整收录标准（含收录条件、计算方式与例子）；选中玩家体感 TAG 后，卡片右上角的<em
             class="bcf-diamond-inline"
           ></em
           >菱彩标识表示该干员在所选的全部玩家体感 TAG 下均为「荐」。</span
@@ -825,7 +953,7 @@ const SENTINEL_INTERSECT = {
     </div>
 
     <template v-else>
-      <v-card class="bcf-filter" variant="outlined">
+      <v-card ref="filterEl" class="bcf-filter" variant="outlined">
         <div class="bcf-filter-row">
           <v-text-field
             v-model="searchText"
@@ -874,10 +1002,13 @@ const SENTINEL_INTERSECT = {
             <v-icon :icon="openGroups.player ? 'mdi-chevron-down' : 'mdi-chevron-right'" size="18" />
             玩家体感 TAG（{{ playerTags.length }}）
           </button>
+          <v-btn class="bcf-criteria-entry" size="x-small" variant="tonal" color="primary" prepend-icon="mdi-book-open-variant" @click="openCriteria()"
+            >查看评定标准</v-btn
+          >
           <v-expand-transition>
             <div v-show="openGroups.player" class="bcf-group-body">
               <div class="bcf-tags">
-                <v-tooltip v-for="t in playerTags" :key="t.id" location="top" max-width="380" content-class="bcf-tt" open-delay="150">
+                <v-tooltip v-for="t in playerTags" :key="t.id" location="top" max-width="380" content-class="bcf-tt" open-delay="150" interactive>
                   <template #activator="{ props: ttProps }">
                     <v-chip
                       v-bind="ttProps"
@@ -895,8 +1026,12 @@ const SENTINEL_INTERSECT = {
                   </template>
                   <div class="bcf-tt-body">
                     <div class="bcf-tt-title">{{ t.name }}</div>
-                    <p>{{ tagExplain(t) || "（暂无说明）" }}</p>
+                    <p v-html="escapeResultText(tagExplain(t) || '（暂无说明）')"></p>
                     <p v-if="t.id === 'P12'" class="bcf-tt-note">此 TAG 只能单独选择。</p>
+                    <a class="bcf-tt-more" @click.stop="openCriteria(t.id)">
+                      <span>查看评定标准详情</span>
+                      <v-icon icon="mdi-chevron-right" size="13" />
+                    </a>
                   </div>
                 </v-tooltip>
               </div>
@@ -909,7 +1044,7 @@ const SENTINEL_INTERSECT = {
             <div class="bcf-subhead">「{{ panel.tag.name }}」子 TAG（{{ panel.tag.id === "P12" ? "势力/用法分类多选取交集" : "多选取交集" }}；不选＝不限）</div>
             <div class="bcf-tags">
               <template v-for="item in panel.items" :key="item.key">
-                <v-tooltip v-if="panel.tag.source === 'player' && item.kind !== 'combo'" location="top" max-width="380" content-class="bcf-tt" open-delay="150">
+                <v-tooltip v-if="panel.tag.source === 'player' && item.kind !== 'combo'" location="top" max-width="380" content-class="bcf-tt" open-delay="150" interactive>
                   <template #activator="{ props: ttProps }">
                     <v-chip
                       v-bind="ttProps"
@@ -923,7 +1058,11 @@ const SENTINEL_INTERSECT = {
                   </template>
                   <div class="bcf-tt-body">
                     <div class="bcf-tt-title">{{ item.value }}</div>
-                    <p>{{ subExplain(panel.tag.id, item.group, item.value) || "（暂无说明）" }}</p>
+                    <p v-html="escapeResultText(subExplain(panel.tag.id, item.group, item.value) || '（暂无说明）')"></p>
+                    <a class="bcf-tt-more" @click.stop="openCriteria(panel.tag.id, item.group, item.value)">
+                      <span>查看评定标准详情</span>
+                      <v-icon icon="mdi-chevron-right" size="13" />
+                    </a>
                   </div>
                 </v-tooltip>
                 <v-chip
@@ -942,7 +1081,7 @@ const SENTINEL_INTERSECT = {
 
         <div v-if="hasSelection" class="bcf-selected">
           <template v-for="id in [...selTags]" :key="'sel-' + id">
-            <v-tooltip v-if="tagById.get(id)?.source === 'player'" location="top" max-width="380" content-class="bcf-tt" open-delay="150">
+            <v-tooltip v-if="tagById.get(id)?.source === 'player'" location="top" max-width="380" content-class="bcf-tt" open-delay="150" interactive>
               <template #activator="{ props: ttProps }">
                 <v-chip
                   v-bind="ttProps"
@@ -958,8 +1097,12 @@ const SENTINEL_INTERSECT = {
               </template>
               <div class="bcf-tt-body">
                 <div class="bcf-tt-title">{{ tagById.get(id)?.name }}</div>
-                <p>{{ tagExplain(tagById.get(id)) || "（暂无说明）" }}</p>
+                <p v-html="escapeResultText(tagExplain(tagById.get(id)) || '（暂无说明）')"></p>
                 <p v-if="id === 'P12'" class="bcf-tt-note">此 TAG 只能单独选择。</p>
+                <a class="bcf-tt-more" @click.stop="openCriteria(id)">
+                  <span>查看评定标准详情</span>
+                  <v-icon icon="mdi-chevron-right" size="13" />
+                </a>
               </div>
             </v-tooltip>
             <v-chip v-else size="small" color="primary" variant="flat" closable @click:close="toggleTag(tagById.get(id))">
@@ -969,7 +1112,7 @@ const SENTINEL_INTERSECT = {
         </div>
       </v-card>
 
-      <div class="bcf-stats">
+      <div ref="resultsEl" class="bcf-stats">
         命中 <b>{{ showOpGrid ? resultOperators.length : 0 }}</b> 名干员<template v-if="p12Selected">
           · <b>{{ resultCombos.length }}</b> 个组合</template
         >
@@ -1122,6 +1265,19 @@ const SENTINEL_INTERSECT = {
           </div>
         </v-card>
       </v-dialog>
+
+      <BetterCombatCriteriaDrawer ref="criteriaDrawerRef" v-model="criteriaOpen" :data="CRITERIA" :target="criteriaTarget" />
+
+      <!-- 移动端固钉按钮：随时回顶／打开筛选栏；抽屉打开时切换为「回抽屉顶／关闭抽屉」 -->
+      <div v-if="fabVisible" class="bcf-fab-wrap">
+        <button v-for="opt in fabOptions" v-show="fabOpen" :key="opt.key" type="button" class="bcf-fab-opt" @click="opt.run">
+          <v-icon :icon="opt.icon" size="15" />
+          <span>{{ opt.label }}</span>
+        </button>
+        <button class="bcf-fab" type="button" aria-label="快捷操作" :aria-expanded="fabOpen" @click="fabOpen = !fabOpen">
+          <v-icon :icon="fabOpen ? 'mdi-close' : 'mdi-menu'" size="22" />
+        </button>
+      </div>
     </template>
   </div>
 </template>
@@ -1303,6 +1459,11 @@ const SENTINEL_INTERSECT = {
   font-weight: 700;
   color: var(--c-text-color);
   padding: 2px 0;
+}
+
+.bcf-criteria-entry {
+  margin-left: 10px;
+  vertical-align: middle;
 }
 
 .bcf-group-body {
@@ -1809,6 +1970,63 @@ const SENTINEL_INTERSECT = {
   font-size: 12px;
 }
 
+/* tooltip 内「查看评定标准详情」的样式在文件末尾的全局块（内容被 teleport 到 body，按类名勾） */
+
+/* ---- 移动端固钉按钮（仅 ≤700px 显示） ---- */
+
+.bcf-fab-wrap {
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 2600;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.bcf-fab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.bcf-fab-opt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 13px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 999px;
+  background: var(--c-card-background-color);
+  color: var(--c-text-color);
+  font-size: 13px;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+}
+
+.bcf-fab-opt:hover {
+  border-color: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-primary));
+}
+
+@media (min-width: 701px) {
+  .bcf-fab-wrap {
+    display: none;
+  }
+}
+
 /* ---- 响应式 ---- */
 
 @media (max-width: 700px) {
@@ -1844,5 +2062,27 @@ const SENTINEL_INTERSECT = {
 .v-overlay__content.bcf-tt .bcf-arkdps {
   color: #8fc3ff;
   background: rgba(143, 195, 255, 0.16);
+}
+
+.v-overlay__content.bcf-tt .bcf-tt-more {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin: 8px -12px -10px;
+  padding: 7px 12px 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0 0 8px 8px;
+  color: rgba(242, 244, 248, 0.82);
+  font-size: 12px;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.v-overlay__content.bcf-tt .bcf-tt-more:hover {
+  background: rgba(143, 195, 255, 0.14);
+  color: #ffffff;
 }
 </style>
