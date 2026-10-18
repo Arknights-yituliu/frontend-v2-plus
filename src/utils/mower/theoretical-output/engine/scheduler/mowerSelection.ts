@@ -1,7 +1,8 @@
 // Port of default prepare_dorm_selection, called by actual choose_agent after no-op checks.
-// Source: c6bdbb292fe7fcd84c6dfb66154a12a1a9bc5b88 (MIT, Copyright 2021 Nano).
+// Default: c6bdbb292fe7fcd84c6dfb66154a12a1a9bc5b88; alpha cancellation: ab0a4e5bec23f6f8d7c37b0648f05dda28f31866.
+// Mower (MIT, Copyright 2021 Nano).
 import type {MowerSchedulingData} from './mowerSchedulingData'
-import {hasRestingMood} from './mowerOperatorState'
+import {alphaRestingTier} from './mowerAlphaDorm'
 import type {MowerTask} from './mowerTaskQueue'
 export function mowerDormReplacementForSlot(data:MowerSchedulingData,name:string,room:string,index:number):boolean {
  const resident=data.operators[data.plan[room]?.[index]??'']
@@ -18,10 +19,12 @@ export function prepareMowerDormSelection(data:MowerSchedulingData,names:string[
   else if(!['','Free','Current'].includes(name))names[index]='Free'
   const op=data.operators[names[index]!]
   if(!room.startsWith('dorm')||!op)continue
-  const dynamic=data.plan[room]?.[index]==='Free'||data.alpha&&data.dorms.some(b=>b.position[0]===room&&b.position[1]===index&&b.autoFree)&&data.plan[room]?.[index]!==op.name
+  const dynamic=data.alpha?data.dynamicDormPosition(room,index,op.name):data.plan[room]?.[index]==='Free'
   const limited=!moodProbe&&data.restMoodComplete(op.name)&&dynamic
-  const full=!preserve&&op.mood===op.upperLimit&&!op.room.startsWith('dorm')&&!mowerDormReplacementForSlot(data,op.name,room,index)&&(!data.alpha||data.freeRoom&&hasRestingMood(op,data.nowMicros)&&!(op.isResting()&&data.skipIdleDormRelease(op.name)||op.dormMoodFallback===room))
-  if(limited||full){names[index]='Free';op.depletionRate=0}
+  // Alpha cancels excluded or personally capped recovery targets, not ordinary full-mood names.
+  const excluded=data.alpha&&dynamic&&alphaRestingTier(data,op.name)===7
+  const full=!data.alpha&&!preserve&&op.mood===op.upperLimit&&!op.room.startsWith('dorm')&&!mowerDormReplacementForSlot(data,op.name,room,index)
+  if(limited||full||excluded){names[index]='Free';if(limited||full)op.depletionRate=0}
  }
 }
 

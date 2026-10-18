@@ -6,11 +6,12 @@ import { evaluateOperators } from './operatorRules'
 import { createOperatorGroupSchedule } from './operatorGroups'
 import { createShiftRoster } from './shiftRoster'
 import { buildRiicGlobalContext, deriveWorldlyFireworks } from './globalContext'
+import { isSupportOperatorWorking, recyclingOccupants, supportSkillConditionMatches, SUPPORT_OPERATOR_IDS } from './supportFacilities/conditions'
 
 interface Assignment {
   operator: OperatorRecord
   roomId: string
-  roomType: RoomType | 'control' | 'office' | 'reception'
+  roomType: RoomType | 'control' | 'office' | 'reception' | 'recycle'
   room?: OutputRoom
   peers: OperatorRecord[]
 }
@@ -81,8 +82,9 @@ function assignments(config: AppConfig): Assignment[] {
       result.push({ operator, roomId: room.id, roomType: room.type, room, peers })
     }
   }
-  for (const roomType of ['office', 'reception'] as const) {
-    const peers = selected(config, config.facilityOperatorIds[roomType])
+  for (const roomType of ['office', 'reception', 'recycle'] as const) {
+    if (roomType === 'recycle' && !config.facilities.recycle) continue
+    const peers = selected(config, config.facilityOperatorIds[roomType] ?? [])
     for (const operator of peers) result.push({ operator, roomId: roomType, roomType, peers })
   }
   return result
@@ -96,8 +98,11 @@ function activeAssignments(all: Assignment[], activeIds: Set<string>) {
   return all.filter((assignment) => activeIds.has(assignment.operator.charId))
 }
 
-function conditionMatches(skill: OperatorSkill, assignment: Assignment, activeIds: Set<string>) {
+function conditionMatches(skill: OperatorSkill, assignment: Assignment, activeIds: Set<string>, config: AppConfig) {
   const description = skill.description
+  const peers = assignment.peers.filter(peer => activeIds.has(peer.charId) &&
+    (skill.buffId !== 'meet_spd&cost_char[000]' || isSupportOperatorWorking(config, peer.charId, activeIds)))
+  if (!supportSkillConditionMatches(skill, assignment.operator.charId, peers.map(peer => peer.charId))) return false
   if (description.includes('生产作战记录类配方时') && assignment.room?.product !== 'exp') return false
   const sameRoom = description.match(/当与(.+?)在同一个(?:制造站|贸易站)时/)
   if (sameRoom) {
@@ -221,7 +226,7 @@ function computeRates(
 
   for (const source of active) {
     for (const skill of source.operator.skills.filter((item) => item.roomType === relevantRoomType(source.roomType))) {
-      if (CUSTOM_MOOD_SKILLS.has(skill.name) || !conditionMatches(skill, source, activeIds)) continue
+      if (CUSTOM_MOOD_SKILLS.has(skill.name) || !conditionMatches(skill, source, activeIds, config)) continue
       if (skill.description.includes('宿舍')) continue
       const delta = consumptionDelta(skill.description)
       if (delta === null) continue
@@ -383,10 +388,13 @@ function computeRates(
  * adapter after each atomic roster change instead of invoking legacy rotation. */
 export function currentMoraleRates(config: AppConfig): CurrentMoraleRates {
   const all = assignments(config)
-  const morale = new Map(all.map(({ operator }) => [
-    operator.charId,
-    Math.max(0, Math.min(24, config.operatorMorale[operator.charId] ?? 24)),
-  ]))
+  const morale = new Map(all.map(({ operator, roomType }) => {
+    // Preserve the frozen legacy adapter; new support providers also accept its explicit zero flag.
+    const newSupport = roomType === 'recycle' || Object.values(SUPPORT_OPERATOR_IDS).some(id => id === operator.charId)
+    const initial = newSupport && config.zeroMoraleOperatorIds.includes(operator.charId)
+      ? 0 : config.operatorMorale[operator.charId] ?? 24
+    return [operator.charId, Math.max(0, Math.min(24, initial))] as const
+  }))
   const activeIds = new Set(all
     .map(({ operator }) => operator.charId)
     .filter((id) => (morale.get(id) ?? 0) > 0))
@@ -487,6 +495,7 @@ export function simulateMorale(
     ...config.facilityOperatorIds.workshop,
     ...config.facilityOperatorIds.office,
     ...config.facilityOperatorIds.training,
+    ...recyclingOccupants(config),
     ...config.efficiencyResources.extraWorkplaceOperatorIds,
   ].filter((id) => !config.zeroMoraleOperatorIds.includes(id)))
 

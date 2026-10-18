@@ -3,6 +3,7 @@ import { matchesRiicIdentity } from '../domain/riicIdentity'
 import type { AppConfig } from '../domain/types'
 import { OPERATOR_MAP, type OperatorRecord } from '../domain/operators'
 import { hasRiicTag } from '../domain/riicTags'
+import { isSupportOperatorWorking, recyclingOccupants } from './supportFacilities/conditions'
 
 export interface GlobalResourceValue {
   derived: number
@@ -48,9 +49,12 @@ function selectedOperators(config: AppConfig, ids: readonly string[]): OperatorR
   return ids.map((id) => operatorFor(config, id)).filter((item): item is OperatorRecord => Boolean(item))
 }
 
-function isActive(id: string, config: AppConfig, activeOperatorIds?: ReadonlySet<string>): boolean {
+function isActive(id: string, config: AppConfig, activeOperatorIds?: ReadonlySet<string>, moraleValues?: ReadonlyMap<string, number>): boolean {
   // Exhaustion disables workplace skills, not the recovery/resource skills of resting occupants.
   if (config.facilityOperatorIds.dormitories.some(ids => ids.includes(id))) return true
+  if (recyclingOccupants(config).includes(id)) {
+    return isSupportOperatorWorking(config, id, activeOperatorIds, moraleValues)
+  }
   const isDynamicAssignment =
     config.controlOperatorIds.includes(id) ||
     config.rooms.some((room) => room.operatorIds.includes(id))
@@ -67,6 +71,7 @@ function occupiedFacilityOperatorIds(config: AppConfig): readonly string[][] {
     config.facilityOperatorIds.workshop,
     config.facilityOperatorIds.office,
     config.facilityOperatorIds.training,
+    [...recyclingOccupants(config)],
   ]
 }
 
@@ -127,9 +132,10 @@ export function deriveWorldlyFireworks(
       ...config.facilityOperatorIds.workshop,
       ...config.facilityOperatorIds.office,
       ...config.facilityOperatorIds.training,
+      ...recyclingOccupants(config),
     ]
     const activeSui = selectedOperators(config,
-      workOperatorIds.filter((id) => isActive(id, config, activeOperatorIds)),
+      workOperatorIds.filter((id) => isActive(id, config, activeOperatorIds, moraleValues)),
     ).filter((operator) => matchesRiicIdentity(operator, 'groupId', 'sui'))
     value += Math.min(5, activeSui.length) * 5
   }
@@ -179,6 +185,7 @@ function allPresentOperators(config: AppConfig): OperatorRecord[] {
     ...config.facilityOperatorIds.workshop,
     ...config.facilityOperatorIds.office,
     ...config.facilityOperatorIds.training,
+    ...recyclingOccupants(config),
     ...config.efficiencyResources.extraWorkplaceOperatorIds,
   ])
   return selectedOperators(config, [...ids])
@@ -285,6 +292,7 @@ function facilityLevelTotal(config: AppConfig): number {
     config.facilities.office +
     config.facilities.training +
     config.facilities.workshop +
+    (config.facilities.recycle ?? 0) +
     config.facilities.dormitories.reduce<number>((sum, level) => sum + level, 0)
   )
 }
@@ -415,7 +423,7 @@ export function buildRiicGlobalContext(
   moraleValues?: ReadonlyMap<string, number>,
 ): RiicGlobalContext {
   const presentOperators = allPresentOperators(config)
-  const assignedOperators = presentOperators.filter(op => isActive(op.charId, config, activeOperatorIds))
+  const assignedOperators = presentOperators.filter(op => isActive(op.charId, config, activeOperatorIds, moraleValues))
   const perception = derivePerceptionInformation(config, activeOperatorIds, moraleValues)
   const perceptionInformation = resource(perception.value, 0, perception.details)
   const thoughtChain = resource(

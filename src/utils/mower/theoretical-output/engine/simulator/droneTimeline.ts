@@ -1,5 +1,7 @@
+import { DRONE_CAPACITY } from '../domain/defaults'
+
 export interface DroneState { capacity: number; initial: number; stock: number; generated: number; overflow: number; consumed: number }
-export function createDroneState(initial: number, capacity = 235): DroneState {
+export function createDroneState(initial: number, capacity = DRONE_CAPACITY): DroneState {
   if (!Number.isFinite(initial) || !Number.isFinite(capacity) || initial < 0 || capacity < 0 || initial > capacity) throw new Error('Invalid drone state')
   return { capacity, initial, stock: initial, generated: 0, overflow: 0, consumed: 0 }
 }

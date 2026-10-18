@@ -1,3 +1,6 @@
+import {mowerDormIsolationCost} from './mowerDormIsolation'
+import { orderMowerAlphaDormIndices } from './mowerDormOrder'
+import {mowerRestingBindingGroups,mowerSharedReplacements,mowerSameGroupPrimaryReplacement} from './mowerSharedGroups'
 // October 3 alpha b2d9ac85fe070e805aadf0d5f44fc095c1e95253 (Mower, MIT).
 // Shared identity, takeover and displacement rules; actual room I/O stays in the adapter.
 import {mowerReplacementCandidates,restingMood,hasRestingMood} from './mowerOperatorState'
@@ -67,7 +70,8 @@ export function alphaRestoreDisplaced(data:MowerSchedulingData,previous:Map<stri
  return recalled
 }
 export function alphaSlotTakable(data:MowerSchedulingData,bed:MowerDormState,requester?:string,activeGroups?:Set<string>):boolean{
- if(!data.effectiveFreeSlot(bed)&&!(bed.autoFree&&activeGroups?.has(data.operators[data.plan[bed.position[0]]?.[bed.position[1]]??'']?.group??'')))return false
+ const owner=data.operators[data.plan[bed.position[0]]?.[bed.position[1]]??''],groups=owner?.multiGroup?mowerRestingBindingGroups(data,owner,Object.fromEntries([...(activeGroups??[])].map(group=>[group,true]))):[]
+ if(!data.effectiveFreeSlot(bed)&&!(bed.autoFree&&(owner?.multiGroup?groups.length>0&&mowerSharedReplacements(owner,groups).includes('Free'):activeGroups?.has(owner?.group??''))))return false
  const reserved=data.reservedProductBeds.get(alphaPosition(...bed.position));if(reserved&&requester!==reserved&&(!requester||![3,5,6].includes(alphaRestingTier(data,requester))))return false
  const actual=data.currentOperator(...bed.position),name=bed.name||(actual&&data.recoveryDorm(bed,actual.name)?actual.name:'')
  if(!name)return true
@@ -75,13 +79,13 @@ export function alphaSlotTakable(data:MowerSchedulingData,bed:MowerDormState,req
  if(!op||data.freeRoomExcluded(name)||op.currentRoom!==bed.position[0]||op.currentIndex!==bed.position[1]||!requester)return false
  return alphaRestingTier(data,requester)<alphaRestingTier(data,name)||data.emergencyDormAgents.has(name)&&(op.index<2||alphaRestingTier(data,requester)===alphaRestingTier(data,name))&&hasRestingMood(op,data.nowMicros)&&!op.moodIsPrediction&&op.mood>=op.upperLimit
 }
-export function alphaFindDormSlot(data:MowerSchedulingData,name:string,used:Set<number>,activeGroups?:Set<string>):number|undefined{
+export function alphaFindDormSlot(data:MowerSchedulingData,name:string,used:Set<number>,activeGroups?:Set<string>,plan:MowerTaskPlan={}):number|undefined{
  if(data.restMoodComplete(name)||alphaRestingTier(data,name)===7)return undefined
- const vip=Object.keys(data.plan).filter(room=>room.startsWith('dorm')).length,indices=data.dorms.map((_,i)=>i)
- const order=alphaRestingTier(data,name)<=1?indices:[...indices.slice(vip),...indices.slice(0,vip)]
+ const vip=Object.keys(data.plan).filter(room=>room.startsWith('dorm')).length,indices=orderMowerAlphaDormIndices(data,activeGroups)
+ const order=alphaRestingTier(data,name)<=1||data.dormOrder.some(value=>value.endsWith('_low'))?indices:[...indices.slice(vip),...indices.slice(0,vip)]
  const candidates=order.filter(i=>!used.has(i)&&alphaSlotTakable(data,data.dorms[i]!,name,activeGroups))
- const cost=(i:number)=>{const name=data.dorms[i]!.name;if(!name)return [0,0,0];const [tier,mood]=alphaRestingKey(data,name);return [1,-tier,-mood]}
- candidates.sort((a,b)=>{const x=cost(a),y=cost(b);return x[0]!-y[0]!||x[1]!-y[1]!||x[2]!-y[2]!})
+ const cost=(i:number)=>{const bed=data.dorms[i]!,isolation=data.dormOrder.some(value=>value.endsWith('_low'))?0:mowerDormIsolationCost(data,name,...bed.position,plan);if(!bed.name)return [0,0,0,isolation];const [tier,mood]=alphaRestingKey(data,bed.name);return [1,-tier,-mood,isolation]}
+ candidates.sort((a,b)=>{const x=cost(a),y=cost(b);return x[0]!-y[0]!||x[1]!-y[1]!||x[2]!-y[2]!||x[3]!-y[3]!})
  return candidates[0]
 }
 /** Only new arrivals compete for each room's first dynamic recovery position. */
@@ -110,7 +114,7 @@ export function alphaPrioritizeRecovery(data:MowerSchedulingData,plan:MowerTaskP
 }
 export function alphaCorrectGroupDorms(data:MowerSchedulingData,plan:MowerTaskPlan,positions?:Set<string>):void{
  for(const group of new Set(Object.values(data.operators).map(op=>op.group).filter(Boolean))){
-  const members=data.group(group),residents=members.map(n=>data.operators[n]!).filter(op=>op.room.startsWith('dorm')&&(!positions||positions.has(alphaPosition(op.room,op.index))))
+  const members=data.group(group),residents=members.map(n=>data.operators[n]!).filter(op=>!op.multiGroup&&op.room.startsWith('dorm')&&(!positions||positions.has(alphaPosition(op.room,op.index))))
   if(!residents.length)continue
   const recalling=members.some(n=>{const op=data.operators[n]!;return !op.room.startsWith('dorm')&&!op.workaholic&&plan[op.room]?.[op.index]===n}),resting=data.groupIsResting(group)&&!recalling,changes=new Map<string,string>()
   for(const op of residents){
@@ -121,7 +125,7 @@ export function alphaCorrectGroupDorms(data:MowerSchedulingData,plan:MowerTaskPl
      const candidates=mowerReplacementCandidates(op,data.operators,data.policy,data.nowMicros)
      if(actual&&candidates.includes(actual.name)){candidates.splice(candidates.indexOf(actual.name),1);candidates.unshift(actual.name)}
      const reserved=new Set([...Object.entries(plan).flatMap(([room,names])=>names.filter((_,index)=>room!==op.room||index!==op.index)),...changes.values()])
-     desired=candidates.find(n=>{const cover=data.operators[n];return !!cover&&!data.excludedCandidates.has(n)&&!reserved.has(n)&&!data.busyRestingNames.has(n)&&!cover.isHigh()&&(actual?.name===n||!data.dormReplacementForSlot(n,cover.currentRoom,cover.currentIndex)&&(!cover.currentRoom||cover.isResting()))})??op.name
+     desired=candidates.find(n=>{const cover=data.operators[n];return !!cover&&!data.excludedCandidates.has(n)&&!reserved.has(n)&&!data.busyRestingNames.has(n)&&(!cover.isHigh()||mowerSameGroupPrimaryReplacement(data,op,n))&&(actual?.name===n||!data.dormReplacementForSlot(n,cover.currentRoom,cover.currentIndex)&&(!cover.currentRoom||cover.isResting()))})??op.name
     }
    }
    changes.set(alphaPosition(op.room,op.index),desired)

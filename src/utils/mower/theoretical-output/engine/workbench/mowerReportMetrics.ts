@@ -1,5 +1,5 @@
 import type { ScheduleSimulationReport } from '../simulator/scheduleSimulation'
-import { scoreSimulationProduction } from '../optimizer/productionObjective'
+import { scoreSimulationProduction } from '../simulator/productionScore'
 import { virtualGoldEquivalent } from '../rules/orderValue'
 
 /** Shared weighted report; the default 82 coefficients value order premiums at 0.8.

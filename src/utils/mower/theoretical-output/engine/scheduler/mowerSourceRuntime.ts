@@ -1,3 +1,5 @@
+import {mowerArrangementGroupTransitions,normalizeMowerSharedArrangement,commitMowerGroupShifts} from './mowerSharedGroups'
+import {mergeMowerBackupRefreshRule} from './mowerBackupRefresh'
 import {executeMowerReload} from './mowerReload'
 import {MowerExitError,MowerRecognizeError,MowerShiftPreviewError,MowerRoomArrangementDeferred,rethrowMowerInfraFatal} from './mowerNativeErrors'
 import {executeMowerTodoTask,type MowerTodoTaskState} from './mowerTodoTask'
@@ -23,7 +25,7 @@ import {isTradeRunOrderOperator} from '../domain/shiftRunPolicy'
 import type {BackupTiming} from './backupPlans'
 import type {RuntimeState,RuntimeRates,RuntimeConfig} from './rosterRuntime'
 import {nextRosterEventHours} from './rosterRuntime'
-import {MowerOperatorState} from './mowerOperatorState'
+import {MowerOperatorState,type MowerGroupBinding} from './mowerOperatorState'
 import {MowerSchedulingData,MowerDormState} from './mowerSchedulingData'
 import {MowerTask,MowerTaskQueue,MOWER_TASK_TYPES as T,toMowerMicros,type MowerTaskPlan} from './mowerTaskQueue'
 import {executeMowerTaskArrangementSteps,type MowerRoomReturn,type MowerBackupResult} from './mowerTaskExecutor'
@@ -49,6 +51,7 @@ export interface MowerSourceRuntime {
  execution?:{task:MowerTask;steps:Generator<MowerRoomReturn,boolean,void>;wakeMicros:number;intent:MowerTaskPlan;data:MowerSchedulingData;lastBoundary?:MowerRoomReturn;positions?:Record<string,[string,number]>}
  phaseExecution?:{steps:Generator<MowerRoomReturn,void,void>;wakeMicros:number;skipPlanning:boolean;previewNoop?:boolean}
  runReturn?:{wakeMicros:number;finishFallback:boolean}
+ conditionWakeMicros?:number
  planningWake?:MowerPlanningWake;planningMoodRefreshNames?:string[]
  lastTrainMoodReadMicros?:number;lastWakeMicros?:number;lastFiaNoopMicros?:number;trace:{timeMicros:number;type:string;plan:MowerTaskPlan;metadata:string}[]
 }
@@ -57,11 +60,12 @@ const isConfiguredTradeRoom=(config:RuntimeConfig,room:string)=>config.runOrderP
 export function makeMowerSchedulingData(s:RuntimeState,previous?:{data:MowerSchedulingData}):MowerSchedulingData {
  const config=s.config,source=Object.fromEntries(mowerPlanEntries(config.mowerSourcePlan!)),rules=config.mowerSourceRules!,operators:Record<string,MowerOperatorState>={}
  const primary=new Set(Object.values(source).flatMap(slots=>slots.map(p=>p.agent)).filter(n=>!['Free','Current',''].includes(n)))
- const create=(name:string,room='',index=-1,group='',replacement:string[]=[])=>{
+ const create=(name:string,room='',index=-1,group='',replacement:string[]=[],groupBindings:MowerGroupBinding[]=[])=>{
   if(['Free','Current',''].includes(name)||operators[name])return
   s.morale[name]??=config.initialMorale?.[name]??24
+  ;(s.initialMorale??={})[name]??=s.morale[name]
   const old=previous?.data.operators[name],position=config.positions.find(p=>p.primary===name)
-  const op=new MowerOperatorState({name,nativeName:OPERATOR_MAP.get(name)?.name??name,room,index,group,replacement,operatorType:primary.has(name)&&!!room?'high':'low',restingPriority:rules.lowPriority.includes(name)||!room?'low':'high',workaholic:rules.workaholic.includes(name),exhaustRequire:rules.exhaustRequire.includes(name),restInFull:rules.restInFull.includes(name),lowerLimit:position?.lowerLimit??0,upperLimit:position?.upperLimit??config.mowerPolicy?.restMoodLimits?.[name]??24,restMoodLimit:!!config.mowerPolicy?.restMoodLimits?.[name],mood:old?.mood??24,timeStampMicros:old?.timeStampMicros,depletionRate:old?.depletionRate,currentRoom:old?.currentRoom??'',currentIndex:old?.currentIndex??-1,dormPositionVersion:old?.dormPositionVersion,dormRecoveryRoom:old?.dormRecoveryRoom,dormRecoveryIndex:old?.dormRecoveryIndex,dormRecoveryFixed:old?.dormRecoveryFixed,restingFromTrain:old?.restingFromTrain,idleRestCheck:old?.idleRestCheck})
+  const op=new MowerOperatorState({name,nativeName:OPERATOR_MAP.get(name)?.name??name,room,index,group,replacement,groupBindings,operatorType:primary.has(name)&&!!room?'high':'low',restingPriority:rules.lowPriority.includes(name)||!room?'low':'high',workaholic:rules.workaholic.includes(name),exhaustRequire:rules.exhaustRequire.includes(name),restInFull:rules.restInFull.includes(name),lowerLimit:position?.lowerLimit??0,upperLimit:position?.upperLimit??config.mowerPolicy?.restMoodLimits?.[name]??24,restMoodLimit:!!config.mowerPolicy?.restMoodLimits?.[name],mood:old?.mood??24,timeStampMicros:old?.timeStampMicros,depletionRate:old?.depletionRate,currentRoom:old?.currentRoom??'',currentIndex:old?.currentIndex??-1,dormPositionVersion:old?.dormPositionVersion,dormRecoveryRoom:old?.dormRecoveryRoom,dormRecoveryIndex:old?.dormRecoveryIndex,dormRecoveryFixed:old?.dormRecoveryFixed,restingFromTrain:old?.restingFromTrain,idleRestCheck:old?.idleRestCheck})
   op.refreshOrderRooms=mowerRefreshTradingSpec(op.nativeName,(rules.refreshTrading??[]).map(entry=>OPERATOR_MAP.get(entry)?.name??entry))
   op.workshop=['年','司霆惊蛰','九色鹿'].includes(op.nativeName)
   if(old){op.temporaryDormFill=old.temporaryDormFill;op.dormMoodFallback=old.dormMoodFallback;op.dormMoodPeers={...old.dormMoodPeers};op.restMoodReleaseLimit=old.restMoodReleaseLimit;op.moodIsPrediction=old.moodIsPrediction;op.standbyLowPriority=old.standbyLowPriority}
@@ -69,8 +73,8 @@ export function makeMowerSchedulingData(s:RuntimeState,previous?:{data:MowerSche
   if(rules.standby?.includes(name)&&op.isHigh()&&(config.mowerAlpha||op.group)&&!op.room.startsWith('dorm')&&!op.workaholic&&!op.exhaustRequire&&!op.restInFull&&(config.mowerAlpha||!op.workshop))op.restingPriority='standby'
   operators[name]=op
  }
- for(const [room,slots] of Object.entries(source))slots.forEach((p,index)=>create(p.agent,room,index,p.group,[...p.replacement]))
- for(const slots of Object.values(source))for(const p of slots)if(OPERATOR_MAP.get(p.agent)?.name!=='菲亚梅塔')p.replacement.forEach(name=>create(name))
+ for(const [room,slots] of Object.entries(source))slots.forEach((p,index)=>create(p.agent,room,index,p.group,[...p.replacement],p.groupBindings))
+ for(const slots of Object.values(source))for(const p of slots)if(OPERATOR_MAP.get(p.agent)?.name!=='菲亚梅塔')[...p.replacement,...(p.groupBindings??[]).flatMap(binding=>binding.replacement)].forEach(name=>create(name))
  config.idleOperators?.forEach(name=>create(name))
  if(previous)Object.keys(previous.data.operators).forEach(name=>create(name))
  const managerNames=new Set(Object.entries(source).filter(([room])=>room.startsWith('dorm')).flatMap(([,slots])=>slots.slice(0,2).flatMap(p=>[p.agent,...p.replacement])))
@@ -83,9 +87,20 @@ export function makeMowerSchedulingData(s:RuntimeState,previous?:{data:MowerSche
  const oldBeds=new Map(previous?.data.dorms.map(b=>[b.position[0]+'_'+b.position[1],b]))
  normalizeMowerRecoveryBeds(config)
  const configuredBeds=[...config.beds]
- const dorms=config.mowerAlpha?configuredBeds.filter(b=>b.managedRecovery!==false).sort((a,b)=>(config.mowerDormOrder??['dormitory_1','dormitory_2','dormitory_3','dormitory_4']).indexOf(a.roomId)-(config.mowerDormOrder??['dormitory_1','dormitory_2','dormitory_3','dormitory_4']).indexOf(b.roomId)||slotIndex(a.id)-slotIndex(b.id)).map(b=>{const old=oldBeds.get(b.id);return new MowerDormState([b.roomId,slotIndex(b.id)],old?.name??'',old?.timeMicros,source[b.roomId]?.[slotIndex(b.id)]?.replacement.includes('Free')??false)}):previous?.data.dorms??config.beds.filter(b=>b.managedRecovery!==false).sort((a,b)=>Number(b.vip)-Number(a.vip)).map(b=>new MowerDormState([b.roomId,slotIndex(b.id)]))
- const data=new MowerSchedulingData({alpha:config.mowerAlpha,priorityReplacement:rules.priorityReplacement,freeRoomExclusions:rules.freeRoomExclusions,standbyNames:rules.standby,dormOrder:config.mowerDormOrder,plan:Object.fromEntries(Object.entries(source).map(([room,slots])=>[room,slots.map(p=>p.agent)])),operators,dorms,runOrderRooms,nowMicros:toMowerMicros(s.time),policy:{restingThreshold:config.mowerPolicy!.restingThreshold,rescueThreshold:config.mowerPolicy?.rescueThreshold??.75},freeRoom:config.mowerPolicy?.freeRoom,groupRestInFullOnMoodGap:config.mowerPolicy?.groupRestInFullOnMoodGap,groupMoodGapMaxExtraWaitHours:config.mowerPolicy?.groupMoodGapMaxExtraWaitHours,mergeIntervalMinutes:config.mowerPolicy?.mergeIntervalMinutes,powerPlantCount:config.mowerPolicy?.powerPlantCount,planConditions:previous?.data.planConditions,partyTime:config.mowerServices?.enableParty===false?undefined:previous?.data.partyTime,restingPriorityNames:config.mowerPolicy?.opeRestingPriority,freeBlacklist:config.freeBlacklist,excludedCandidates:new Set(config.excludedCandidates),recentShiftOnByRestUnit:previous?.data.recentShiftOnByRestUnit})
+ const roomOrder=(config.mowerDormOrder??['dormitory_1','dormitory_2','dormitory_3','dormitory_4']).filter(option=>!option.endsWith('_low'))
+ const dorms=config.mowerAlpha?configuredBeds.filter(b=>b.managedRecovery!==false).sort((a,b)=>roomOrder.indexOf(a.roomId)-roomOrder.indexOf(b.roomId)||slotIndex(a.id)-slotIndex(b.id)).map(b=>{const old=oldBeds.get(b.id);return new MowerDormState([b.roomId,slotIndex(b.id)],old?.name??'',old?.timeMicros,[source[b.roomId]?.[slotIndex(b.id)]?.replacement??[],...(source[b.roomId]?.[slotIndex(b.id)]?.groupBindings??[]).map(binding=>binding.replacement)].some(replacements=>replacements.includes('Free')))}):previous?.data.dorms??config.beds.filter(b=>b.managedRecovery!==false).sort((a,b)=>Number(b.vip)-Number(a.vip)).map(b=>new MowerDormState([b.roomId,slotIndex(b.id)]))
+ const data=new MowerSchedulingData({dormIsolation:config.mowerDormIsolation,alpha:config.mowerAlpha,priorityReplacement:rules.priorityReplacement,freeRoomExclusions:rules.freeRoomExclusions,standbyNames:rules.standby,dormOrder:config.mowerDormOrder,plan:Object.fromEntries(Object.entries(source).map(([room,slots])=>[room,slots.map(p=>p.agent)])),operators,dorms,runOrderRooms,nowMicros:toMowerMicros(s.time),policy:{restingThreshold:config.mowerPolicy!.restingThreshold,rescueThreshold:config.mowerPolicy?.rescueThreshold??.75},freeRoom:config.mowerPolicy?.freeRoom,groupRestInFullOnMoodGap:config.mowerPolicy?.groupRestInFullOnMoodGap,groupMoodGapMaxExtraWaitHours:config.mowerPolicy?.groupMoodGapMaxExtraWaitHours,groupMoodGapThresholdMinutes:config.mowerPolicy?.groupMoodGapThresholdMinutes,groupShiftState:previous?.data.groupShiftState,mergeIntervalMinutes:config.mowerPolicy?.mergeIntervalMinutes,powerPlantCount:config.mowerPolicy?.powerPlantCount,planConditions:previous?.data.planConditions,partyTime:config.mowerServices?.enableParty===false?undefined:previous?.data.partyTime,restingPriorityNames:config.mowerPolicy?.opeRestingPriority,freeBlacklist:config.freeBlacklist,excludedCandidates:new Set(config.excludedCandidates),recentShiftOnByRestUnit:previous?.data.recentShiftOnByRestUnit})
  if(data.alpha)initializeMowerAlphaMoodLimits(data,rules.lingMode,config.mowerMoodLimits,Object.fromEntries(Object.values(previous?.data.operators??{}).map(o=>[o.name,o.upperLimit])))
+ if(data.alpha&&config.mowerInitialMorale?.fromUpperLimit){
+  const explicit=new Set(config.mowerInitialMorale.explicitOperators)
+  for(const op of Object.values(operators))if(!previous?.data.operators[op.name]&&!explicit.has(op.name)){
+   s.morale[op.name]=op.upperLimit
+   op.mood=op.upperLimit
+   ;(s.initialMorale??={})[op.name]=op.upperLimit
+  }
+ }
+ for(const bed of data.groupDorms){const old=previous?.data.groupDorms.find(previous=>previous.position[0]===bed.position[0]&&previous.position[1]===bed.position[1]);if(old){bed.name=old.name;bed.timeMicros=old.timeMicros}}
+ if(data.alpha&&previous)commitMowerGroupShifts(data,{})
  data.adjustForRunOrders=config.mowerTaskScheduling?.adjustForRunOrders
  data.unregisteredIdleNames=config.availableIdleOperators??[]
  data.dormMoodEstimates=new Map(previous?.data.dormMoodEstimates);data.idleDormSearchExhausted=previous?.data.idleDormSearchExhausted??false;data.idleDormSearchStoppedAtMicros=previous?.data.idleDormSearchStoppedAtMicros
@@ -133,8 +148,10 @@ function currentRoomChanged(s:RuntimeState,op:MowerOperatorState,startedWorking=
   task.plan=Object.fromEntries(Object.entries(task.plan).filter(([,row])=>row.some(name=>name!==op.name&&name!=='Current')).map(([room,row])=>[room,row.map(name=>name===op.name?'Current':name)]))
   if(!Object.values(task.plan).flat().some(name=>!['Current','Free',''].includes(name)))queue.consume(task)
  }
- if(s.config.mowerRunOrderEnabled!==false&&op.refreshOrderRooms[0])for(const room of op.refreshOrderRooms[1].length?op.refreshOrderRooms[1]:Object.keys(data.runOrderRooms))refreshMowerRunOrderTime(queue,data.nowMicros,room)
- if(!s.config.mowerSourceRules!.refreshDrained.includes(op.name))return
+ const current={drained:s.config.mowerSourceRules!.refreshDrained.includes(op.name),trading:op.refreshOrderRooms},previous=source.activeTask?.backupRefreshRules?.[op.name]
+ const refresh=previous?mergeMowerBackupRefreshRule(previous,current):current
+ if(s.config.mowerRunOrderEnabled!==false&&refresh.trading[0])for(const room of refresh.trading[1].length?refresh.trading[1]:Object.keys(data.runOrderRooms))refreshMowerRunOrderTime(queue,data.nowMicros,room)
+ if(!refresh.drained)return
  const solved=new Set<string>()
  for(const exhaust of Object.values(data.operators).filter(o=>o.exhaustRequire)){
   if(solved.has(exhaust.name))continue
@@ -273,6 +290,13 @@ function* arrangeRoom(s:RuntimeState,rates:RuntimeRates,room:string,names:string
   restoration={[room]:[...current],[target.room]:data.currentRoom(target.room,true)!}
   Object.assign(sharedRestoration,restoration)
  }
+ // Native final dorm confirmation invalidates every timer because co-residents change recovery rates.
+ const fiaArrangement=task.type===T.FIAMMETTA&&!!fia&&resolved.includes(fia)
+ const refreshDormIndexes=()=>{
+  const beds=data.allDorms().filter(bed=>bed.position[0]===room)
+  for(const bed of beds)bed.timeMicros=undefined
+  return beds.filter(bed=>{const name=resolved[bed.position[1]];return !!name&&data.recoveryDorm(bed,name)}).map(bed=>bed.position[1])
+ }
  // Native recovery ordering runs even when the requested final roster is an exact no-op.
  const resumingRecovery=task.dormRecoveryRestore.includes(room)
  const ensureRecovery=()=>ensureMowerDormRecovery(data,getMowerSourceRuntime(s).queue,task,room,resolved,{
@@ -280,7 +304,10 @@ function* arrangeRoom(s:RuntimeState,rates:RuntimeRates,room:string,names:string
  })
  let recoveryOrdered=ensureRecovery()
  const afterRecovery=cached()
- if(resolved.length===afterRecovery.length&&resolved.every((name,index)=>name===afterRecovery[index]))return restoration
+ if(resolved.length===afterRecovery.length&&resolved.every((name,index)=>name===afterRecovery[index])){
+  if(data.alpha&&room.startsWith('dorm')&&!fiaArrangement&&getTime)observeRoom(s,rates,room,task,refreshDormIndexes())
+  return restoration
+ }
  if(task.type===T.FIAMMETTA&&fia&&resolved.length===2&&resolved.includes(fia)){
   fiammettaCharge=true
   restoration=sharedRestoration
@@ -338,7 +365,7 @@ function* arrangeRoom(s:RuntimeState,rates:RuntimeRates,room:string,names:string
  }
  confirmPhysicalRoom(s,room,resolved)
 
- observeRoom(s,rates,room,task,readTimes)
+ observeRoom(s,rates,room,task,data.alpha&&room.startsWith('dorm')&&!fiaArrangement?refreshDormIndexes():readTimes)
  return restoration
 }
 /** Actual agent_arrange_room: four attempts, three back(0.5) retry boundaries. */
@@ -466,6 +493,11 @@ export function settleMowerSource(s:RuntimeState,rates:RuntimeRates,onPhase?:(ph
   return {changed,generated}
  }
 
+ if(!source.execution&&!source.phaseExecution&&!source.runReturn&&source.conditionWakeMicros!==undefined&&source.conditionWakeMicros<=source.data.nowMicros){
+  delete source.conditionWakeMicros
+  backup('END')
+ }
+
  function* clueSteps(flow:boolean):Generator<MowerNativeIOYield,null,void>{
   if(!rates.mowerClueIO)throw new Error('Native clue lifecycle requires explicit observations')
   const generator=(flow?runMowerClueFlow:executeMowerClueNew)(mowerClueState(s),{nowMicros:()=>toMowerMicros(s.time)})
@@ -512,9 +544,13 @@ export function settleMowerSource(s:RuntimeState,rates:RuntimeRates,onPhase?:(ph
     source.activeTask=task
     if(!running&&data.alpha&&[T.SHIFT_ON,T.SHIFT_OFF,T.EXHAUST_OFF,T.SELF_CORRECTION,T.RE_ORDER].includes(task.type)&&Object.keys(task.plan).length){
      const model:MowerShiftModel=s.mowerShiftModel??{count:0,evaluate:d=>d.planConditions,swap:d=>d,transition:()=>({}),activate:()=>{}}
+     commitMowerGroupShifts(data,{})
+     Object.assign(task.groupShiftTransitions,mowerArrangementGroupTransitions(data,task.plan))
+     if(!normalizeMowerSharedArrangement(data,task.plan,task.groupShiftTransitions))throw new MowerShiftPreviewError('绑组共享替班冲突，保留原任务并等待岗位释放')
      prepareMowerShiftCycle(data,task,queue,model,{...options(),priorityScheduling:s.config.mowerTaskScheduling})
+     if(!normalizeMowerSharedArrangement(data,task.plan,task.groupShiftTransitions))throw new MowerShiftPreviewError('绑组共享替班冲突，保留原任务并等待岗位释放')
      previewNoop=!Object.keys(task.plan).length
-     if(task.backupShiftConditions){model.activate(task.backupShiftConditions);data=getMowerSourceRuntime(s).data;task.backupShiftActive=true}
+     if(task.backupShiftConditions){model.activate(task.backupShiftConditions,task);data=getMowerSourceRuntime(s).data;task.backupShiftActive=true}
     }
     if(!running&&mowerProtectedShift(task)){
      const prepared=prepareMowerShiftBeds(data,task,queue.tasks)
@@ -562,7 +598,7 @@ export function settleMowerSource(s:RuntimeState,rates:RuntimeRates,onPhase?:(ph
     }else if(fia)queue.tasks.push(new MowerTask({time:task.time+(24-(fia.threshold??21.6))/2,type:T.FIAMMETTA}))
     queue.consume(task)
    }else if(!running&&task.type===T.EXHAUST_OFF&&!Object.keys(task.plan).length){
-    const first=data.operators[task.metadata.split(',')[0]!],members=first?.group?data.group(first.group):first?[first.name]:[],plan:MowerTaskPlan={}
+    const first=data.operators[task.metadata.split(',')[0]!],members=first?.group?data.shiftGroupMembers(first.group):first?[first.name]:[],plan:MowerTaskPlan={}
     mowerGetRestingPlan(data,[...members],[],plan,options())
     if(Object.keys(plan).length){
      const reorder=mowerTryReorder(data,plan);if(reorder)Object.assign(plan,reorder)
@@ -575,11 +611,12 @@ export function settleMowerSource(s:RuntimeState,rates:RuntimeRates,onPhase?:(ph
     queue.consume(task)
     if(queue.find({ignoreRunOrders:s.config.mowerTaskScheduling?.adjustForRunOrders===false})?.type===T.SHIFT_ON)backup('AFTER_PLANNING',task)
    }else{
+     data.pendingGroupTransitions={...mowerArrangementGroupTransitions(data,running?.intent??task.plan),...task.groupShiftTransitions}
      const intent=running?.intent??structuredClone(task.plan),positions=running?.positions??Object.fromEntries(Object.values(data.operators).map(op=>[op.name,[op.currentRoom,op.currentIndex] as [string,number]])),steps=running?.steps??executeMowerTaskArrangementSteps(task,queue,{
       protectShift:mowerProtectedShift(task),alpha:data.alpha,adjustForRunOrders:s.config.mowerTaskScheduling?.adjustForRunOrders,
      backup,
      arrangeRoom:(room,names,getTime,current,restoration)=>arrangeRoomSteps(s,rates,room,names,getTime,current,restoration),
-     metadata:()=>planMowerMetadata(getMowerSourceRuntime(s).data,queue),
+     metadata:()=>{const actual=getMowerSourceRuntime(s).data;if(actual.alpha)commitMowerGroupShifts(actual,{...mowerArrangementGroupTransitions(actual,intent),...task.groupShiftTransitions});planMowerMetadata(actual,queue)},
      corrections:()=>{readAgentMood(s,rates);const correction=planMowerCorrection(getMowerSourceRuntime(s).data,queue,true,task,false,skip,s.config.mowerTaskScheduling);return correction?[correction]:[]},
      prepareRelease:current=>prepareMowerRelease(getMowerSourceRuntime(s).data,queue,current),
      deferRoom:(room,current)=>deferMowerAlphaDorm(current,queue.tasks,room,getMowerSourceRuntime(s).data.nowMicros,s.config.mowerTaskScheduling),
@@ -603,9 +640,11 @@ export function settleMowerSource(s:RuntimeState,rates:RuntimeRates,onPhase?:(ph
     while(!next.done&&delay===0){next=resume();delay=boundaryDelay()}
     if(!next.done){source.execution={task,steps,wakeMicros:data.nowMicros+delay,intent,data:running?.data??data,lastBoundary:next.value,positions};break}
     delete source.execution
+    data.pendingGroupTransitions={}
     const success=next.value,eventData=running?.data??data
     skipPlanning=!success||task.type===T.RE_ORDER
     if(success&&data.alpha){
+     commitMowerGroupShifts(getMowerSourceRuntime(s).data,{...mowerArrangementGroupTransitions(data,intent),...task.groupShiftTransitions})
      const actual=getMowerSourceRuntime(s).data,off:string[]=[],on:string[]=[]
      for(const op of Object.values(actual.operators))if(op.isHigh()&&!op.room.startsWith('dorm')){
       const old=positions[op.name];if(!old)continue
@@ -736,6 +775,7 @@ export function settleMowerSource(s:RuntimeState,rates:RuntimeRates,onPhase?:(ph
    }
    if(rates.mowerNotificationIO){
     const notificationState={queue,flags:source.runFlags!,
+     get collectRecycle(){return s.config.mowerRecycleBuilt||Object.prototype.hasOwnProperty.call(s.config.mowerSourcePlan??{},'recycle')},
      get lastTodoMicros(){return source.lastTodoMicros??null},set lastTodoMicros(value:number|null){source.lastTodoMicros=value}}
     retryTimes=3
     while(!source.runFlags!.collectNotification||rates.mowerTodoListVisible?.()){
@@ -808,6 +848,7 @@ export function nextMowerSourceActionHours(s:RuntimeState,rates?:RuntimeRates):n
   // while the rounded scheduler clock is still one microsecond behind.
   if(!source.planningWake||source.planningWake.timeMicros>source.data.nowMicros+1)source.planningWake=nextMowerMoodPlanningWake(s,source.data,rates)
  }
- const next=running??Math.min(source.queue.tasks[0]?.timeMicros??Infinity,source.planningWake?.timeMicros??Infinity)
+ if(running===undefined)source.conditionWakeMicros??=s.mowerShiftModel?.nextIdleConditionWakeMicros?.(source.data)
+ const next=running??Math.min(source.queue.tasks[0]?.timeMicros??Infinity,source.planningWake?.timeMicros??Infinity,source.conditionWakeMicros??Infinity)
  return Math.max(0,(next-source.data.nowMicros)/3_600_000_000)
 }
