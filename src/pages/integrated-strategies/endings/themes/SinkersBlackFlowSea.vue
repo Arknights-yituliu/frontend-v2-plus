@@ -234,7 +234,7 @@ import Battle from "@/components/information/Battle.vue";
         <el-card>
           <h3>旧日重燃</h3>
           <el-timeline>
-            <el-timeline-item :icon="MoreFilled" type="primary">
+            <el-timeline-item :icon="Flag" type="warning">
               <div>
                 在第1层或第2层进入险路尽头节点，触发事件
                 <el-link
@@ -262,7 +262,7 @@ import Battle from "@/components/information/Battle.vue";
                 获得【谒日之祈】后，先行一步事件“未涉足之树”中的“尝试探索树的源头”选项将不再出现，本次探索无法再完成第三结局
               </div>
             </el-timeline-item>
-            <el-timeline-item :icon="MoreFilled" type="primary">
+            <el-timeline-item :icon="Right" type="primary">
               <div>
                 持有【谒日之祈】后，从第3层“血色空脉”起，后续区域的地图右侧会出现总节点数量为7的
                 <el-tooltip content="第5层的熄日余径的总节点数量为9" effect="light" placement="top">
@@ -271,7 +271,7 @@ import Battle from "@/components/information/Battle.vue";
                 ；其距离主要区域具有2的最短节点距离且不与主要区域连通，无法通过徒步的方式进入；探险者会出现在其中的战斗中，血色空脉中的险路恶敌也会变得更加艰难
               </div>
             </el-timeline-item>
-            <el-timeline-item :icon="MoreFilled" type="primary">
+            <el-timeline-item :icon="Flag" type="warning">
               <div>
                 进入熄日余径中的命运所指节点，触发事件
                 <el-link
