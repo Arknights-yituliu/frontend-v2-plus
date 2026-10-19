@@ -17,6 +17,7 @@ try {
   } = await server.ssrLoadModule("/src/pages/tools/mower-plan/store/configStore.js");
   const { swapPlanFacilities, apply_operator_replace, collect_plan_operators } = await server.ssrLoadModule("/src/utils/mower/plan_edit.js");
   const { addPlanBinding, bindingColorStyle } = await server.ssrLoadModule("/src/utils/mower/plan_bindings.js");
+  const { group_mood_expression } = await server.ssrLoadModule("/src/utils/mower/trigger_group.js");
   const slot = (agent, group = "") => ({ agent, group, replacement: [] });
   const legacy = {
     plan1: { room_1_1: { name: "制造站", product: "orirock", plans: [slot("阿米娅")] } },
@@ -73,6 +74,33 @@ try {
     store.current_plan.value.recycle.plans[0].group_bindings[0].replacement.push("桃金娘");
     assert.deepEqual(store.plan.value.recycle.plans[0].group_bindings[0].replacement, ["砾"]);
     assert.equal(JSON.stringify(store.backup_plans.value[0].trigger), trigger);
+  });
+  const conditionFixture = {
+    plan1: { central: { plans: [{ agent: "讯使", group: "自动化", replacement: ["红"], group_bindings: [{ group: "感知", replacement: ["黑角"] }] }] } },
+    conf: {},
+    backup_plans: [
+      { plan: { meeting: { plans: [{ agent: "银灰", group: "深海", replacement: ["初雪"] }] } }, conf: {}, trigger: {}, task: {} },
+      { plan: {}, conf: {}, trigger: { left: 'op_data.group_max_mood("感知")', operator: "<", right: "12" }, task: {} },
+    ],
+  };
+  store.hydratePlanData(conditionFixture);
+  const conditionBefore = JSON.stringify(store.build_plan());
+  check("空副表条件包含主表与其他副表的全部绑组，含多绑组附加列", () => {
+    store.sub_plan.value = 1;
+    assert.deepEqual(store.groups.value, []);
+    assert.deepEqual(store.all_groups.value, ["自动化", "感知", "深海"]);
+  });
+  check("切换主副表不清空候选或改写保存条件，新增组名去重且正确转义", () => {
+    for (const selected of ["main", 0, 1]) {
+      store.sub_plan.value = selected;
+      assert.deepEqual(store.all_groups.value, ["自动化", "感知", "深海"]);
+    }
+    assert.equal(JSON.stringify(store.build_plan()), conditionBefore);
+    const bindings = store.plan.value.central.plans[0].group_bindings;
+    bindings.push({ group: 'A"组', replacement: ["砾"] }, { group: "感知", replacement: ["砾"] });
+    assert.deepEqual(store.all_groups.value, ["自动化", "感知", 'A"组', "深海"]);
+    store.backup_plans.value[1].trigger.left = group_mood_expression('A"组', "max");
+    assert.equal(store.build_plan().backup_plans[1].trigger.left, 'op_data.group_max_mood("A\\"组")');
   });
   check("回收站排班或任务超过两人时拒绝导入并保留现有排班", () => {
     const previous = JSON.stringify(store.build_plan());
@@ -212,6 +240,8 @@ try {
     default: "plan1",
     plan1: {
       room_1_1: { name: "制造站", product: "gold", plans: [{ agent: "阿米娅", group: "制造组", replacement: ["砾"] }] },
+      room_1_3: { name: "发电站", plans: [] },
+      room_2_3: { name: "发电站", plans: [] },
       dormitory_1: { plans: [slot("杜林"), ...Array.from({ length: 4 }, () => slot("Free"))] },
     },
     conf: {},
@@ -272,7 +302,35 @@ try {
     plan.plan1.room_1_1.plans.push({ agent: "凯尔希", group: "制造组", replacement: ["砾"] });
     assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
     plan.plan1.room_1_1.plans[0].group_bindings = [{ group: "制造组", replacement: ["砾"] }];
-    assert.match(validatePlan(plan).errors.join(";"), /不能为空或重复/);
+    assert.match(validatePlan(plan).errors.join(";"), /不能重复/);
+  });
+  check("多绑组允许一列空组名，主副表及导出保留个人替班", () => {
+    for (const firstEmpty of [false, true]) {
+      const plan = cloneValid();
+      const primary = plan.plan1.room_1_1.plans[0];
+      plan.plan1.room_1_1.plans.push({ agent: "凯尔希", group: "制造组", replacement: ["芬"] });
+      primary.group_bindings = [{ group: "", replacement: ["红"] }];
+      if (firstEmpty) {
+        primary.group = "";
+        primary.replacement = ["红"];
+        primary.group_bindings = [{ group: "制造组", replacement: ["砾"] }];
+      }
+      plan.backup_plans.push({ name: "保留空列", conf: {}, plan: { room_1_1: { ...plan.plan1.room_1_1, plans: [slot("Current"), slot("Current")] } } });
+      const before = JSON.stringify(plan);
+      assert.deepEqual(validatePlan(plan).errors, []);
+      assert.equal(JSON.stringify(plan), before);
+      store.hydratePlanData(plan);
+      assert.deepEqual(store.build_plan().plan1.room_1_1.plans[0], primary);
+      primary.group_bindings.push({ group: "", replacement: ["黑角"] });
+      assert.match(validatePlan(plan).errors.join(";"), /空绑组最多填写一次/);
+    }
+  });
+  check("空绑组仍要求普通替班且不能充当具名组计时主班", () => {
+    const plan = cloneValid();
+    plan.plan1.room_1_1.plans[0].group_bindings = [{ group: "", replacement: [] }];
+    const errors = validatePlan(plan).errors.join(";");
+    assert.match(errors, /缺少普通替班/);
+    assert.match(errors, /缺少决定上下班/);
   });
   check("浏览器校验按 Current 继承主表并检查副表产物开关", () => {
     const plan = cloneValid();
@@ -281,6 +339,102 @@ try {
     plan.advanced_settings = { product_switching: { enable: true } };
     assert.deepEqual(validatePlan(plan).errors, []);
     assert.equal(validatePlan(plan).checkedPlans, 2);
+  });
+  const tradingPlan = (count, product = "lmd") => {
+    const plan = cloneValid();
+    plan.plan1.room_1_1 = {
+      name: "贸易站",
+      product,
+      plans: [
+        { agent: "阿米娅", group: "贸易组", replacement: ["砾"] },
+        { agent: "芬", group: "贸易组", replacement: ["香草"] },
+        { agent: "桃金娘", group: "贸易组", replacement: ["讯使"] },
+      ].slice(0, count),
+    };
+    return plan;
+  };
+  const tradeError = /仅三岗位贸易站支持切换订单类型/;
+  check("alpha 一、二岗位贸易站允许赤金订单，主表合成玉订单不受切换开关豁免", () => {
+    for (const count of [1, 2]) {
+      for (const enable of [false, true]) {
+        const plan = tradingPlan(count);
+        plan.advanced_settings = { product_switching: { enable } };
+        assert.deepEqual(validatePlan(plan).errors, []);
+        plan.plan1.room_1_1.product = "orundum";
+        const before = JSON.stringify(plan);
+        const errors = validatePlan(plan).errors;
+        assert.equal(errors.length, 1);
+        assert.match(errors[0], new RegExp(`主表：room_1_1 为 ${count} 岗位贸易站`));
+        assert.match(errors[0], tradeError);
+        assert.equal(JSON.stringify(plan), before);
+      }
+    }
+  });
+  check("alpha 三岗位贸易站可固定合成玉订单，无需开启自动切换", () => {
+    const plan = tradingPlan(3, "orundum");
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("alpha 副表合成玉订单按主表岗位数校验，未触发副表和自动切换也不豁免", () => {
+    for (const count of [1, 2]) {
+      for (const enable of [false, true]) {
+        const plan = tradingPlan(count);
+        plan.advanced_settings = { product_switching: { enable } };
+        plan.backup_plans.push({
+          name: "合成玉",
+          plan: { room_1_1: { name: "贸易站", product: "orundum", plans: Array.from({ length: count }, () => slot("Current")) } },
+          trigger: { left: "False", operator: "==", right: "True" },
+        });
+        const before = JSON.stringify(plan);
+        const errors = validatePlan(plan).errors;
+        assert.ok(errors.every((error) => error.startsWith("副表「合成玉」：")));
+        assert.match(errors.join(";"), tradeError);
+        assert.equal(errors.some((error) => /需要开启/.test(error)), !enable);
+        assert.equal(JSON.stringify(plan), before);
+      }
+    }
+  });
+  check("alpha 设施等级覆盖及副表虚增岗位不能绕过主表贸易订单限制", () => {
+    const plan = tradingPlan(2, "orundum");
+    plan.facility_levels = { room_1_1: 3 };
+    assert.match(validatePlan(plan).errors.join(";"), tradeError);
+    plan.plan1.room_1_1.product = "lmd";
+    plan.advanced_settings = { product_switching: { enable: true } };
+    plan.backup_plans.push({ name: "虚增岗位", plan: { room_1_1: { name: "贸易站", product: "orundum", plans: Array.from({ length: 3 }, () => slot("Current")) } } });
+    const errors = validatePlan(plan).errors.join(";");
+    assert.match(errors, /副表「虚增岗位」：room_1_1 为 2 岗位贸易站/);
+    assert.match(errors, /不能改变设施类型或岗位数/);
+    const capacityPlan = tradingPlan(3, "orundum");
+    capacityPlan.facility_levels = { room_1_1: 2 };
+    const capacityErrors = validatePlan(capacityPlan).errors.join(";");
+    assert.match(capacityErrors, /超过设施等级容量/);
+    assert.doesNotMatch(capacityErrors, tradeError);
+  });
+  check("alpha 三岗位贸易副表继承主班并切换订单，仍要求自动切换开关", () => {
+    const plan = tradingPlan(3);
+    plan.backup_plans.push({ name: "合成玉", plan: { room_1_1: { name: "贸易站", product: "orundum", plans: Array.from({ length: 3 }, () => slot("Current")) } } });
+    assert.match(validatePlan(plan).errors.join(";"), /需要开启/);
+    plan.advanced_settings = { product_switching: { enable: true } };
+    const before = JSON.stringify(plan);
+    assert.deepEqual(validatePlan(plan).errors, []);
+    assert.equal(validatePlan(plan).checkedPlans, 2);
+    assert.equal(JSON.stringify(plan), before);
+  });
+  check("贸易订单校验沿用指定主表，导入导出保留待修正订单和高级设置", () => {
+    const plan = tradingPlan(2, "orundum");
+    plan.facility_levels = { room_1_1: 3 };
+    plan.advanced_settings = { product_switching: { enable: true }, drone_count_limit: 137 };
+    plan.backup_plans.push({ name: "赤金", plan: { room_1_1: { name: "贸易站", product: "lmd", plans: [slot("Current"), slot("Current")] } } });
+    store.hydratePlanData(plan);
+    const exported = store.build_plan();
+    assert.equal(exported.plan1.room_1_1.product, "orundum");
+    assert.equal(exported.backup_plans[0].plan.room_1_1.product, "lmd");
+    assert.equal(exported.advanced_settings.drone_count_limit, 137);
+    assert.equal(exported.facility_levels.room_1_1, 3);
+    assert.match(validatePlan(exported).errors.join(";"), tradeError);
+    plan.default = "custom";
+    plan.custom = plan.plan1;
+    plan.plan1 = tradingPlan(3).plan1;
+    assert.match(validatePlan(plan).errors.join(";"), /主表：room_1_1 为 2 岗位贸易站/);
   });
   check("浏览器校验覆盖副表设施变化、任务容量和个人心情", () => {
     const plan = cloneValid();
@@ -295,6 +449,256 @@ try {
     assert.match(errors, /不能改变设施/);
     assert.match(errors, /人数超过/);
     assert.match(errors, /下限不大于上限/);
+  });
+  check("alpha 全零心情工作绑组无需普通主班，仍校验替班唯一性", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅";
+    plan.plan1.room_1_1.plans[0].group_bindings = [{ group: "零心情附加组", replacement: ["砾"] }];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.room_1_1.plans.push({ agent: "凯尔希", group: "制造组", replacement: ["砾"] });
+    plan.conf.workaholic += ",凯尔希";
+    assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
+  });
+  check("零心情工作配置允许未绑组与整组省略替班，不按当前心情豁免", () => {
+    const plan = cloneValid();
+    const primary = plan.plan1.room_1_1.plans[0];
+    primary.replacement = [];
+    primary.group = "";
+    primary.mood = 0;
+    assert.match(validatePlan(plan).errors.join(";"), /缺少普通替班/);
+    plan.conf.workaholic = ["阿米娅"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    primary.group = "零心情组";
+    plan.plan1.room_1_1.plans.push(slot("凯尔希", "零心情组"));
+    plan.conf.workaholic.push("凯尔希");
+    delete plan.plan1.dormitory_1;
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("混合组逐成员检查替班，后出现的普通成员不能被遗漏", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅";
+    plan.plan1.room_1_1.plans[0].replacement = [];
+    plan.plan1.room_1_1.plans.push({ agent: "凯尔希", group: "制造组", replacement: ["红"] });
+    const errors = validatePlan(plan).errors.join(";");
+    assert.match(errors, /阿米娅.*缺少普通替班.*制造组/);
+    plan.plan1.room_1_1.plans[0].replacement = ["砾"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("多绑组分别判断全零组和混合组，附加列成员计入判断", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅";
+    const primary = plan.plan1.room_1_1.plans[0];
+    primary.group = "全零组";
+    primary.replacement = [];
+    primary.group_bindings = [{ group: "混合组", replacement: [] }];
+    plan.plan1.room_1_1.plans.push({ agent: "凯尔希", group: "混合组", replacement: ["红"] });
+    assert.deepEqual(validatePlan(plan).errors, ["主表：room_1_1 第 1 岗位（阿米娅）缺少普通替班，绑组「混合组」", "主表：绑组「混合组」无法为各岗位分配不同替班"]);
+    primary.group_bindings[0].replacement = ["砾"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.room_1_1.plans[1].group_bindings = [{ group: "全零组", replacement: ["芬"] }];
+    assert.match(validatePlan(plan).errors.join(";"), /阿米娅.*缺少普通替班.*全零组/);
+  });
+  check("全零组仅对已填写普通替班匹配，仍拒绝重名与不合法候选", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅,凯尔希,陈";
+    const primary = plan.plan1.room_1_1.plans[0];
+    plan.plan1.room_1_1.plans.push(slot("凯尔希", "制造组"), slot("陈", "制造组"));
+    assert.deepEqual(validatePlan(plan).errors, []);
+    const second = plan.plan1.room_1_1.plans[1];
+    second.replacement = ["砾"];
+    assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
+    second.replacement = ["红"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    for (const [replacement, error] of [["错误干员", /替班干员名无效/], ["Free", /Free 替班只能/], ["菲亚梅塔", /替班不能安排菲亚梅塔/], ["阿米娅", /已担任主班/]]) {
+      primary.replacement = [replacement];
+      assert.match(validatePlan(plan).errors.join(";"), error);
+    }
+    primary.replacement = ["龙舌兰"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    primary.replacement.push("但书");
+    assert.match(validatePlan(plan).errors.join(";"), /多个跑单干员/);
+  });
+  check("宿舍成员不获得工作替班豁免，宿舍混合绑定仍检查全组", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅";
+    plan.plan1.room_1_1.plans[0].replacement = [];
+    plan.plan1.dormitory_1.plans[0] = { agent: "杜林", group: "制造组", replacement: ["Free"] };
+    assert.match(validatePlan(plan).errors.join(";"), /阿米娅.*缺少普通替班/);
+    plan.conf.workaholic += ",杜林";
+    assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
+    plan.plan1.room_1_1.plans[0].replacement = ["砾"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("菲亚梅塔配置零心情工作仍须填写有效主班充能对象", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "菲亚梅塔";
+    const fia = slot("菲亚梅塔");
+    plan.plan1.dormitory_1.plans[0] = fia;
+    assert.match(validatePlan(plan).errors.join(";"), /菲亚梅塔.*缺少普通替班/);
+    fia.replacement = ["红"];
+    assert.match(validatePlan(plan).errors.join(";"), /充能对象.*不在主班/);
+    fia.replacement = ["阿米娅"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("副表增减零心情名单后重新判断豁免，并保留 Current 继承", () => {
+    const plan = cloneValid();
+    plan.backup_plans.push({ name: "免替班", conf: { workaholic: "阿米娅" }, plan: { room_1_1: { name: "制造站", product: "gold", plans: [slot("阿米娅", "制造组")] } } });
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.conf.workaholic = "阿米娅";
+    plan.plan1.room_1_1.plans[0].replacement = [];
+    plan.backup_plans[0] = { name: "取消零心情", conf: { removed_operators: { workaholic: "阿米娅" } }, plan: { room_1_1: { name: "制造站", product: "gold", plans: [slot("Current")] } } };
+    const errors = validatePlan(plan).errors;
+    assert.ok(errors.length);
+    assert.ok(errors.every((error) => error.startsWith("副表「取消零心情」")));
+    assert.match(errors.join(";"), /缺少普通替班/);
+    plan.backup_plans[0].conf = {};
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("副表只读合并不修改冻结的主表、附加绑定或其他副表", () => {
+    const plan = cloneValid();
+    plan.conf.workaholic = "阿米娅";
+    const primary = plan.plan1.room_1_1.plans[0];
+    primary.group_bindings = [{ group: "第二组", replacement: [] }];
+    plan.backup_plans = [
+      { name: "有效覆盖", conf: {}, plan: { room_1_1: { name: "制造站", product: "gold", plans: [slot("阿米娅", "独立组")] } } },
+      { name: "非法覆盖", conf: {}, plan: { room_1_1: { name: "制造站", product: "gold", plans: [{ ...slot("阿米娅"), replacement: ["错误干员"] }] } } },
+      { name: "继承主表", conf: {}, plan: {} },
+    ];
+    const before = JSON.stringify(plan);
+    function freeze(value) {
+      if (!value || typeof value !== "object") return;
+      Object.values(value).forEach(freeze);
+      Object.freeze(value);
+    }
+    freeze(plan);
+    const result = validatePlan(plan);
+    assert.equal(result.checkedPlans, 4);
+    assert.ok(result.errors.length);
+    assert.ok(result.errors.every((error) => error.startsWith("副表「非法覆盖」")));
+    assert.equal(JSON.stringify(plan), before);
+  });
+  check("alpha 候补或多绑组不能独自决定普通绑组上下班", () => {
+    const plan = cloneValid();
+    plan.conf.resting_standby = "阿米娅";
+    assert.match(validatePlan(plan).errors.join(";"), /缺少决定上下班/);
+    for (const field of ["rest_in_full", "exhaust_require"]) {
+      plan.conf[field] = "阿米娅";
+      assert.deepEqual(validatePlan(plan).errors, []);
+      delete plan.conf[field];
+    }
+    plan.conf.resting_standby = "";
+    plan.plan1.room_1_1.plans[0].group_bindings = [{ group: "额外组", replacement: ["砾"] }];
+    assert.match(validatePlan(plan).errors.join(";"), /缺少决定上下班/);
+    plan.conf.workaholic = "阿米娅";
+    plan.plan1.dormitory_1.plans[0] = { agent: "杜林", group: "只有宿管", replacement: ["芬"] };
+    assert.match(validatePlan(plan).errors.join(";"), /只有宿管.*缺少决定上下班/);
+  });
+  const bedFixture = () => {
+    const plan = cloneValid();
+    const workers = ["陈", "银灰", "能天使", "讯使", "芬"];
+    const covers = ["夜莺", "砾", "红", "黑角", "初雪"];
+    plan.plan1.central = { plans: workers.map((name, index) => ({ agent: name, group: "主班组", replacement: [covers[index]] })) };
+    return plan;
+  };
+  const workingExchangeFixture = () => {
+    const plan = cloneValid();
+    plan.plan1.contact = { plans: [{ agent: "陈", group: "互填组", replacement: ["银灰"] }] };
+    plan.plan1.meeting = { plans: [{ agent: "银灰", group: "互填组", replacement: ["陈"] }] };
+    plan.plan1.central = { plans: [{ agent: "能天使", group: "互填组", replacement: ["黑角"] }] };
+    plan.plan1.dormitory_1.plans = ["杜林", "蜜莓", "芙蓉", "安赛尔", "Free"].map((name) => slot(name));
+    return plan;
+  };
+  check("同组工作主班互填不限设施，只为未匹配到岗位的恢复成员计床", () => {
+    const plan = workingExchangeFixture();
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.contact.plans[0].replacement.unshift("夜莺");
+    plan.plan1.meeting.plans[0].replacement.unshift("白面鸮");
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.central.plans.push({ agent: "讯使", group: "互填组", replacement: ["初雪"] });
+    assert.match(validatePlan(plan).errors.join(";"), /互填组.*所需宿舍数 2.*有效宿舍数 1/);
+  });
+  check("工作互填按唯一完整匹配扣床，同一候选不能重复抵扣", () => {
+    const plan = bedFixture();
+    plan.plan1.central.plans[0].replacement = ["银灰", "夜莺"];
+    plan.plan1.central.plans[2].replacement = ["银灰"];
+    plan.plan1.dormitory_1.plans = [slot("杜林"), slot("塑心"), slot("Free"), slot("Free"), slot("Free")];
+    assert.match(validatePlan(plan).errors.join(";"), /主班组.*所需宿舍数 4.*有效宿舍数 3/);
+    plan.plan1.central.plans[0].replacement = ["银灰"];
+    assert.match(validatePlan(plan).errors.join(";"), /分配不同替班/);
+  });
+  check("工作互填继续拒绝空组、跨组与自替班，附加绑组按对应列判定", () => {
+    const plan = workingExchangeFixture();
+    const primary = plan.plan1.contact.plans[0];
+    primary.replacement = ["陈"];
+    assert.match(validatePlan(plan).errors.join(";"), /须是同一非空绑组内的其他主班/);
+    primary.replacement = ["银灰"];
+    primary.group = "";
+    assert.match(validatePlan(plan).errors.join(";"), /须是同一非空绑组内的其他主班/);
+    primary.group = "其他组";
+    plan.plan1.dormitory_1.plans[3] = slot("Free");
+    primary.replacement = ["夜莺"];
+    primary.group_bindings = [{ group: "互填组", replacement: ["银灰"] }];
+    plan.plan1.central.plans[0].group = "其他组";
+    assert.deepEqual(validatePlan(plan).errors, []);
+    primary.group_bindings[0].group = "无关组";
+    assert.match(validatePlan(plan).errors.join(";"), /须是同一非空绑组内的其他主班/);
+  });
+  check("副表按生效互填关系重算床位且不改写主表", () => {
+    const plan = workingExchangeFixture();
+    plan.backup_plans = [{ name: "取消互填", plan: { contact: { plans: [{ agent: "陈", group: "互填组", replacement: ["夜莺"] }] } }, conf: {} }];
+    const before = JSON.stringify(plan);
+    const errors = validatePlan(plan).errors;
+    assert.ok(errors.every((error) => error.startsWith("副表「取消互填」")));
+    assert.match(errors.join(";"), /所需宿舍数 2.*有效宿舍数 1/);
+    assert.equal(JSON.stringify(plan), before);
+    plan.backup_plans[0].plan.contact.plans[0].replacement = ["银灰"];
+    assert.deepEqual(validatePlan(plan).errors, []);
+  });
+  check("alpha 候补不占必需床位，用尽与回满成员仍须有床", () => {
+    const plan = bedFixture();
+    plan.conf.resting_standby = "芬";
+    assert.deepEqual(validatePlan(plan).errors, []);
+    for (const field of ["rest_in_full", "exhaust_require"]) {
+      plan.conf[field] = "芬";
+      assert.match(validatePlan(plan).errors.join(";"), /所需宿舍数 5.*有效宿舍数 4/);
+      delete plan.conf[field];
+    }
+  });
+  check("alpha 显式 Free 只增加所属绑组的有效床位", () => {
+    const plan = bedFixture();
+    plan.plan1.dormitory_1.plans = [
+      { agent: "杜林", group: "主班组", replacement: ["Free"] },
+      { agent: "塑心", group: "主班组", replacement: ["Free"] },
+      ...Array.from({ length: 3 }, () => slot("Free")),
+    ];
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.dormitory_1.plans[1].group = "制造组";
+    assert.match(validatePlan(plan).errors.join(";"), /主班组.*所需宿舍数 5.*有效宿舍数 4/);
+  });
+  check("alpha 固定宿舍替班优先保留必需恢复成员，候补不能虚减床位", () => {
+    const plan = bedFixture();
+    plan.plan1.dormitory_1.plans = [
+      { agent: "杜林", group: "主班组", replacement: ["芬", "陈"] },
+      slot("塑心"),
+      ...Array.from({ length: 3 }, () => slot("Free")),
+    ];
+    plan.conf.resting_standby = "芬";
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.plan1.dormitory_1.plans[0].replacement = ["芬"];
+    assert.match(validatePlan(plan).errors.join(";"), /所需宿舍数 4.*有效宿舍数 3/);
+  });
+  check("alpha 副表合并最新零心情设置并支持宿舍及右侧岗位部分覆盖", () => {
+    const plan = cloneValid();
+    plan.plan1.train = { plans: [{ agent: "陈", group: "训练组", replacement: ["夜莺"] }, { agent: "银灰", group: "训练组", replacement: ["红"] }] };
+    plan.backup_plans.push({ name: "部分覆盖", conf: { workaholic: "陈,银灰,阿米娅" }, plan: { dormitory_1: { plans: [slot("Current")] }, train: { plans: [slot("Current")] } } });
+    assert.deepEqual(validatePlan(plan).errors, []);
+    plan.backup_plans[0].conf = { resting_standby: "陈,银灰" };
+    assert.match(validatePlan(plan).errors.join(";"), /副表.*训练组.*缺少决定上下班/);
+  });
+  check("alpha 显式任务遵守主表实际岗位数", () => {
+    const plan = cloneValid();
+    plan.backup_plans.push({ name: "任务", plan: {}, conf: {}, task: { room_1_1: ["Current", "砾"] } });
+    assert.match(validatePlan(plan).errors.join(";"), /任务.*人数超过/);
   });
   console.log(`\n${passed} 项排班检查通过`);
 } finally {
