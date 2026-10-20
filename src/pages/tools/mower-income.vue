@@ -83,7 +83,7 @@ onBeforeUnmount(() => { importId++ })
         <button type="button" class="primary" :disabled="importing" @click="fileInput?.click()">{{ importing ? '正在导入…' : '导入排班文件' }}</button>
       </div>
       <input ref="fileInput" type="file" class="hidden-input" accept=".json,.jpg,.jpeg,.png" aria-label="Mower 排班文件" @change="importFile" />
-      <p class="muted">支持 JSON，以及包含完整 16 个二维码的 JPEG / PNG。排班会保存在此浏览器中，便于前往“我的干员”后返回。</p>
+      <p class="muted">支持 JSON，以及包含完整 14 或 16 个二维码的 JPEG / PNG。排班会保存在此浏览器中，便于前往“我的干员”后返回。</p>
       <details class="paste-details">
         <summary>粘贴排班 JSON</summary>
         <label for="income-roster-json" class="sr-only">完整 Mower 排班 JSON</label>

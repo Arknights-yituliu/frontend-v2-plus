@@ -20,6 +20,7 @@ const MAA_PRODUCT_BY_PRODUCT = Object.freeze({
 });
 
 const ROOM_TYPES_WITH_PRODUCT = new Set(["manufacture", "trading"]);
+export const RIIC_TRAINING_ROOM_OPERATOR_SLOT_COUNT = 2;
 
 import {
   normalizeRiicOperatorId,
@@ -56,22 +57,6 @@ export function prepareRiicMaaScheduleForExport(schedule, options = {}) {
     return schedule;
   }
 
-  const allowSharedRoomOperators =
-    options.allowUnsupportedRoomOperators === true;
-  const allowTrainingRoomOperators = Object.hasOwn(
-    options,
-    "allowTrainingRoomOperators",
-  )
-    ? options.allowTrainingRoomOperators === true
-    : Object.hasOwn(options, "includeTrainingRoom")
-      ? options.includeTrainingRoom === true
-      : allowSharedRoomOperators;
-  const allowRecycleRoomOperators = Object.hasOwn(
-    options,
-    "allowRecycleRoomOperators",
-  )
-    ? options.allowRecycleRoomOperators === true
-    : allowSharedRoomOperators;
   const forceSkipFalse = options.forceSkipFalse === true;
 
   let hasChanges = false;
@@ -106,35 +91,6 @@ export function prepareRiicMaaScheduleForExport(schedule, options = {}) {
       }
     }
 
-    const trainingRooms = Array.isArray(nextRooms.training)
-      ? nextRooms.training
-      : [];
-    const recycleRooms = Array.isArray(nextRooms.recycle)
-      ? nextRooms.recycle
-      : [];
-    const hasTrainingOperators = trainingRooms.some(
-      (room) =>
-        (room?.operatorsA || []).length > 0 ||
-        (room?.operatorsB || []).length > 0 ||
-        (room?.operators || []).length > 0,
-    );
-    const hasRecycleOperators = recycleRooms.some(
-      (room) => (room?.operators || []).length > 0,
-    );
-    if (
-      Object.hasOwn(nextRooms, "training") &&
-      (!allowTrainingRoomOperators || !hasTrainingOperators)
-    ) {
-      planChanged = true;
-      delete nextRooms.training;
-    }
-    if (
-      Object.hasOwn(nextRooms, "recycle") &&
-      (!allowRecycleRoomOperators || !hasRecycleOperators)
-    ) {
-      planChanged = true;
-      delete nextRooms.recycle;
-    }
     if (!planChanged) {
       return plan;
     }
@@ -172,6 +128,84 @@ export function addRiicScheduleExportFields(
   }
 
   return nextSchedule;
+}
+
+export function getRiicTrainingRoomOperatorSlots(room) {
+  if (
+    Object.hasOwn(room || {}, "operatorsA") ||
+    Object.hasOwn(room || {}, "operatorsB")
+  ) {
+    return [
+      Array.isArray(room?.operatorsA) ? room.operatorsA[0] : undefined,
+      Array.isArray(room?.operatorsB) ? room.operatorsB[0] : undefined,
+    ];
+  }
+  const operators = Array.isArray(room?.operators) ? room.operators : [];
+  return [operators[0], operators[1]];
+}
+
+export function getRiicTrainingRoomOperators(room) {
+  return getRiicTrainingRoomOperatorSlots(room).filter(Boolean);
+}
+
+export function convertRiicTrainingRoomOperatorsForMaaExport(schedule) {
+  if (
+    !schedule ||
+    typeof schedule !== "object" ||
+    !Array.isArray(schedule.plans)
+  ) {
+    return schedule;
+  }
+
+  let hasChanges = false;
+  const plans = schedule.plans.map((plan) => {
+    const rooms = plan?.rooms;
+    if (
+      !rooms ||
+      typeof rooms !== "object" ||
+      Array.isArray(rooms) ||
+      !Array.isArray(rooms.training)
+    ) {
+      return plan;
+    }
+
+    let trainingChanged = false;
+    const training = rooms.training.map((room) => {
+      if (
+        !room ||
+        typeof room !== "object" ||
+        Array.isArray(room) ||
+        !["operators", "operatorsA", "operatorsB"].some((property) =>
+          Object.hasOwn(room, property),
+        )
+      ) {
+        return room;
+      }
+
+      const slots = getRiicTrainingRoomOperatorSlots(room);
+      const nextRoom = { ...room };
+      delete nextRoom.operators;
+      delete nextRoom.operatorsA;
+      delete nextRoom.operatorsB;
+      if (slots[0] !== undefined) {
+        nextRoom.operatorsA = [slots[0]];
+      }
+      if (slots[1] !== undefined) {
+        nextRoom.operatorsB = [slots[1]];
+      }
+      trainingChanged = true;
+      return nextRoom;
+    });
+
+    if (!trainingChanged) {
+      return plan;
+    }
+
+    hasChanges = true;
+    return { ...plan, rooms: { ...rooms, training } };
+  });
+
+  return hasChanges ? { ...schedule, plans } : schedule;
 }
 
 function getTimeInMinutes(time) {
@@ -252,11 +286,20 @@ function createMaaRoom(
   forceSkipFalse,
 ) {
   const operators = getRoomOperators(room);
+  const trainingOperators = operators.slice(
+    0,
+    RIIC_TRAINING_ROOM_OPERATOR_SLOT_COUNT,
+  );
   const maaRoom =
     room?.facility === "training"
-      ? operators.length > 0
-        ? { operatorsA: [operators[0]] }
-        : {}
+      ? {
+          ...(trainingOperators[0]
+            ? { operatorsA: [trainingOperators[0]] }
+            : {}),
+          ...(trainingOperators[1]
+            ? { operatorsB: [trainingOperators[1]] }
+            : {}),
+        }
       : {
           operators,
           sort: ["control", "manufacture", "trading"].includes(
@@ -309,7 +352,6 @@ function createPlanRooms(
   roomSettingOverrides,
   roomIndexAssignments,
   includeRiicRoomLevels,
-  includeUnstaffedRecycleRoom,
   forceSkipFalse,
 ) {
   const byType = new Map();
@@ -327,14 +369,6 @@ function createPlanRooms(
 
   const maaRooms = {};
   for (const [roomType, facilityRooms] of byType.entries()) {
-    if (
-      ["training", "recycle"].includes(roomType) &&
-      !(includeUnstaffedRecycleRoom && roomType === "recycle") &&
-      facilityRooms.every((room) => (room?.operators || []).length === 0)
-    ) {
-      continue;
-    }
-
     const sortedRooms = [...facilityRooms].sort(
       (left, right) =>
         getRiicMaaRoomSortValue(left, roomIndexAssignments) -
@@ -429,7 +463,6 @@ export function buildRiicMaaScheduleFromPreview({
   recycleBoostItemId = "",
   hasFiammetta = false,
   includeRiicRoomLevels = false,
-  includeUnstaffedRecycleRoom = false,
   forceSkipFalse = false,
   durationSource = "clock",
 } = {}) {
@@ -500,7 +533,6 @@ export function buildRiicMaaScheduleFromPreview({
         roomSettingOverrides,
         roomIndexAssignments,
         includeRiicRoomLevels,
-        includeUnstaffedRecycleRoom,
         forceSkipFalse,
       ),
     };

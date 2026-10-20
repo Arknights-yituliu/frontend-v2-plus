@@ -168,6 +168,8 @@
     .image-sprite {
       width: 32px;
       height: 32px;
+      overflow: hidden;
+      flex-shrink: 0;
     }
 
     //雪碧图的缩放
@@ -265,6 +267,41 @@
       margin: 0 2px;
       font-size: 14px;
       padding: 0 4px;
+    }
+
+    .budget-grid {
+      gap: 6px 10px;
+      padding: 6px 8px;
+    }
+
+    .budget-label {
+      font-size: 12px;
+      min-width: 28px;
+    }
+
+    .exist-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px 8px;
+      padding: 6px 8px;
+    }
+
+    .exist-item {
+      padding: 3px 6px;
+      gap: 4px;
+    }
+
+    .exist-item-label {
+      font-size: 12px;
+    }
+
+    .exist-item-input {
+      width: 64px;
+      flex-shrink: 0;
+      height: 24px;
+      line-height: 24px;
+      font-size: 14px;
+      padding: 0 4px;
+      margin-left: auto;
     }
 
     .tip {

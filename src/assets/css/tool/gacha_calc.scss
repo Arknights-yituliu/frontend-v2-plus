@@ -216,6 +216,8 @@
     width: 36px;
     height: 36px;
     position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
   }
 
   /*雪碧图的缩放*/
@@ -327,6 +329,84 @@
     padding: 0 4px;
     margin: 0 4px;
     border-bottom: 1px solid var(--c-text-color);
+  }
+
+  .budget-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    padding: 8px 12px;
+    margin: 4px 0;
+  }
+
+  .budget-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .budget-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--c-text-color);
+    white-space: nowrap;
+    min-width: 32px;
+  }
+
+  .exist-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 12px;
+    padding: 8px 12px;
+    margin: 4px 0;
+  }
+
+  .exist-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background-color: rgba(128, 128, 128, 0.08);
+    border: 1px solid var(--c-border-color);
+    min-width: 0;
+  }
+
+  .exist-item-label {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 14px;
+    color: var(--c-text-color);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .exist-item-name {
+    font-weight: 600;
+  }
+
+  .exist-item-input {
+    width: 80px;
+    flex-shrink: 0;
+    height: 28px;
+    line-height: 28px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: right;
+    box-sizing: border-box;
+    padding: 0 6px;
+    margin-left: auto;
+    border: 1px solid var(--c-border-color);
+    border-radius: 4px;
+    background-color: var(--c-page-background-color);
+    color: var(--c-text-color);
+    outline: none;
+  }
+
+  .exist-item-input:focus {
+    border-color: #7776ff;
+    box-shadow: 0 0 0 2px rgba(119, 118, 255, 0.2);
   }
 
 

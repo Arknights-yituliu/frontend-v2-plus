@@ -67,7 +67,7 @@ import Battle from '@/components/information/Battle.vue'
                     type="primary"
                 >
                   <el-tooltip
-                      content="持有【滚动先祖】，在“尾页”事件中选择“死魂灵从口中涌出”或“莲花瓣从口中飘落”遭遇"
+                      content="在“尾页”事件中选择“死魂灵从口中涌出”（持有【滚动先祖】）或“莲花瓣从口中飘落”（同时持有【滚动先祖】和【阿纳萨羯磨】）遭遇"
                       effect="light"
                       placement="top"
                   >
@@ -194,7 +194,7 @@ import Battle from '@/components/information/Battle.vue'
                     type="primary"
                 >
                   <el-tooltip
-                      content="持有【滚动先祖】，在“尾页”事件中选择“你被捂住了嘴”或“一片寂静”遭遇"
+                      content="在“尾页”事件中选择“你被捂住了嘴”（持有【滚动先祖】）或“一片寂静”（同时持有【滚动先祖】和【阿纳萨羯磨】）遭遇"
                       effect="light"
                       placement="top"
                   >

@@ -65,6 +65,19 @@ import Battle from "@/components/information/Battle.vue";
                 </el-tooltip>
               </div>
             </el-timeline-item>
+            <el-timeline-item :icon="MoreFilled" type="primary">
+              <div>
+                <span class="optional">（可选）</span>
+                参照第四结局达成步骤，获得
+                <el-tooltip
+                  content="不再出现熄日余径，所有干员再部署时间+50%，使用加工品移动后使其损毁（当加工品剩余使用次数＞1时，不会触发果腹和复得之轮）；让探索开启不同的方向"
+                  effect="light"
+                  placement="top"
+                >
+                  <el-text tag="ins">【祭日之契】</el-text>
+                </el-tooltip>
+              </div>
+            </el-timeline-item>
             <el-timeline-item :icon="Flag" type="warning">
               <div>
                 抵达第5层，若持有【沙盘α】或【沙盘β】，地图上会刷新出3个命运所指节点，进入包含二结局最终关卡的命运所指节点，触发事件
@@ -75,7 +88,11 @@ import Battle from "@/components/information/Battle.vue";
                 >
                   “窥视箱中”
                 </el-link>
-                ，选择“保护证据，查缴那些机器！”使该节点变为二结局最终关卡
+                ，选择“保护证据，查缴那些机器！”或
+                <el-tooltip content="持有【祭日之契】，可开启更艰难的战斗" effect="light" placement="top">
+                  <el-text tag="ins">“等等，这东西不太对劲”</el-text>
+                </el-tooltip>
+                使该节点变为二结局最终关卡
               </div>
               <div>
                 <span class="optional tip">（提示）</span>
@@ -107,6 +124,12 @@ import Battle from "@/components/information/Battle.vue";
                 通过
                 <el-link href="https://prts.wiki/w/ISW-DF_%E6%B7%B7%E6%B2%8C%E6%BA%90%E9%98%B6%E7%90%86%E8%AE%BA" target="_blank" type="primary">
                   【ISW-DF 混沌源阶理论】
+                </el-link>
+                或
+                <el-link :underline="false" href="https://prts.wiki/w/ISW-DF_%E5%A4%B1%E6%81%92%E5%B8%B8%E9%87%8F" target="_blank" type="primary">
+                  <el-tooltip content="持有【祭日之契】，在“好奇心与死”事件中选择“等等，这东西不太对劲”遭遇" effect="light" placement="top">
+                    <el-text tag="ins" type="primary">【ISW-DF 失恒常量】</el-text>
+                  </el-tooltip>
                 </el-link>
                 达成结局
               </div>
@@ -289,7 +312,7 @@ import Battle from "@/components/information/Battle.vue";
               <div>
                 保护战斗中的“沉沦探险者”，使其发动“太阳渴望鲜血！”（需240技力），强制结束关卡并让探索开启不同的方向，获得
                 <el-tooltip
-                  content="不再出现熄日余径，所有干员再部署时间+50%，使用加工品移动后使其损毁（不会触发复得之轮）；让探索开启不同的方向"
+                  content="不再出现熄日余径，所有干员再部署时间+50%，使用加工品移动后使其损毁（当加工品剩余使用次数＞1时，不会触发果腹和复得之轮）；让探索开启不同的方向"
                   effect="light"
                   placement="top"
                 >
