@@ -5,7 +5,7 @@ import {
 } from "./l65-fiammetta-recovery.js";
 import {
   applyRiicActiveRosterFallbackOperatorEffects,
-  getRiicActiveRosterCandidatePriority,
+  getRiicActiveRosterHangerOrder,
 } from "./l65-active-roster-effects.js";
 import {
   RIIC_ACTIVE_ROSTER_RUNTIME_RULES,
@@ -195,6 +195,7 @@ function getActiveOperatorIdsForSelectionKey({
 function getRecycleHangerFillOperators({
   ownedOperators = [],
   activeOperatorIds = [],
+  activeOperatorIdsByScope = null,
 } = {}) {
   const activeIds = Array.from(activeOperatorIds || [])
     .map((operatorId) => String(operatorId || "").trim())
@@ -203,48 +204,23 @@ function getRecycleHangerFillOperators({
     return [];
   }
 
-  return (ownedOperators || []).flatMap((operator) => {
-    const charId = normalizeOperatorId(operator?.charId);
-    if (!charId) {
-      return [];
-    }
-
-    const { roomPriority } = getRiicActiveRosterCandidatePriority({
-      candidate: { operatorIds: [charId] },
-      activeOperatorIds: activeIds,
-    });
-    if (roomPriority <= 0) {
-      return [];
-    }
-
-    // 与 L71 的闲置候选保持同一种形状，并给一个低于所有档位的排序值，
-    // 让挂件排在房间自带补位之后、普通闲置补位之前。
-    return [
-      {
-        charId,
-        name: String(operator?.name || charId).trim() || charId,
-        percent: 1,
-        basePercent: 1,
-        effectivePercent: 1,
-        fillPriority: 0,
-        tags: Array.isArray(operator?.tags) ? operator.tags : [],
-        idleFill: true,
-        hangerPriority: roomPriority,
-        idleFillTier: `roster-hanger:${roomPriority}`,
-        idleFillPriority: -1000 - roomPriority,
-        idleFillNamedPriority: -1000 - roomPriority,
-        roomPriority,
-      },
-    ];
-  })
-    // 按房间优先级降序挑选，而不是按持有名单顺序碰运气。
-    .sort(
-      (left, right) =>
-        normalizePercent(right.roomPriority) -
-          normalizePercent(left.roomPriority) ||
-        left.name.localeCompare(right.name, "zh-CN") ||
-        left.charId.localeCompare(right.charId, "en"),
-    );
+  return getRiicActiveRosterHangerOrder({
+    idleFillOperators: ownedOperators,
+    activeOperatorIds: activeIds,
+    activeOperatorIdsByScope,
+  }).map(({ operator, roomPriority }) => ({
+    ...operator,
+    percent: 1,
+    basePercent: 1,
+    effectivePercent: 1,
+    fillPriority: 0,
+    idleFill: true,
+    hangerPriority: roomPriority,
+    idleFillTier: `roster-hanger:${roomPriority}`,
+    idleFillPriority: -1000 - roomPriority,
+    idleFillNamedPriority: -1000 - roomPriority,
+    roomPriority,
+  }));
 }
 
 function getCandidateFallbackOperators(
@@ -252,6 +228,7 @@ function getCandidateFallbackOperators(
   {
     ownedOperators = [],
     activeOperatorIds = [],
+    activeOperatorIdsByScope = null,
   } = {},
 ) {
   const operatorsById = new Map();
@@ -317,6 +294,7 @@ function getCandidateFallbackOperators(
       getRecycleHangerFillOperators({
         ownedOperators,
         activeOperatorIds,
+        activeOperatorIdsByScope,
       }),
       { idleFill: true },
     );
@@ -677,6 +655,7 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
   ownedOperators = [],
   activeOperatorIds = [],
   activeOperatorIdsBySelectionKey = null,
+  activeOperatorIdsByScopeBySelectionKey = null,
   fiammettaRecovery = null,
   maxPlanCount = 12,
 }) {
@@ -723,6 +702,10 @@ export function createRiicRoomGroupFallbackPlanAlternatives({
             selectionKey: slot.selectionKey,
             fallbackActiveOperatorIds: activeOperatorIds,
           }),
+          activeOperatorIdsByScope:
+            activeOperatorIdsByScopeBySelectionKey?.[
+              `${slot.groupId}:${slot.selectionKey}`
+            ] || activeOperatorIdsByScopeBySelectionKey?.[slot.selectionKey],
         },
       ).filter((operator) =>
         operatorMatchesRequiredTags(operator, slot.requiredTags),
@@ -1004,9 +987,11 @@ export function createRiicRoomGroupFallbackPlan({
   ownedOperators = [],
   activeOperatorIds = [],
   activeOperatorIdsBySelectionKey = null,
+  activeOperatorIdsByScopeBySelectionKey = null,
   fiammettaRecovery = null,
   preferredOperatorIdBySlotKey = {},
   preferredOperatorIds = [],
+  preferredOperatorIdsBySelectionKey = {},
   allowAutomaticFill = true,
 }) {
   const occupied = new Set(
@@ -1039,6 +1024,10 @@ export function createRiicRoomGroupFallbackPlan({
         selectionKey: slot.selectionKey,
         fallbackActiveOperatorIds: activeOperatorIds,
       }),
+      activeOperatorIdsByScope:
+        activeOperatorIdsByScopeBySelectionKey?.[
+          `${slot.groupId}:${slot.selectionKey}`
+        ] || activeOperatorIdsByScopeBySelectionKey?.[slot.selectionKey],
     })
       .filter((operator) =>
         operatorMatchesRequiredTags(operator, slot.requiredTags),
@@ -1108,14 +1097,19 @@ export function createRiicRoomGroupFallbackPlan({
     return operator || null;
   };
   const pickRecycleHangerForSlot = (slot) => {
+    const selectionActiveOperatorIds = getActiveOperatorIdsForSelectionKey({
+      activeOperatorIdsBySelectionKey,
+      groupId: slot.groupId,
+      selectionKey: slot.selectionKey,
+      fallbackActiveOperatorIds: activeOperatorIds,
+    });
     for (const hanger of getRecycleHangerFillOperators({
       ownedOperators,
-      activeOperatorIds: getActiveOperatorIdsForSelectionKey({
-        activeOperatorIdsBySelectionKey,
-        groupId: slot.groupId,
-        selectionKey: slot.selectionKey,
-        fallbackActiveOperatorIds: activeOperatorIds,
-      }),
+      activeOperatorIds: selectionActiveOperatorIds,
+      activeOperatorIdsByScope:
+        activeOperatorIdsByScopeBySelectionKey?.[
+          `${slot.groupId}:${slot.selectionKey}`
+        ] || activeOperatorIdsByScopeBySelectionKey?.[slot.selectionKey],
     })) {
       if (selectedIds.has(hanger.charId)) {
         continue;
@@ -1152,11 +1146,10 @@ export function createRiicRoomGroupFallbackPlan({
       }
     }
 
-    if (!preferredOperator) {
-      continue;
-    }
-
-    if (canSelect(slot, preferredOperator)) {
+    if (
+      preferredIsRoomFill &&
+      canSelect(slot, preferredOperator)
+    ) {
       selectOperatorForSlot(slot, preferredOperator);
     }
   }
@@ -1194,6 +1187,40 @@ export function createRiicRoomGroupFallbackPlan({
       if (canSelect(slot, slotOperator)) {
         selectOperatorForSlot(slot, slotOperator);
       }
+    }
+  }
+
+  for (const slot of slotOptions) {
+    if (assignedSlotKeys.has(slot.key)) {
+      continue;
+    }
+
+    for (const preferredOperatorId of
+      preferredOperatorIdsBySelectionKey?.[slot.selectionKey] || []) {
+      const charId = normalizeOperatorId(preferredOperatorId);
+      const operator = slot.operators.find(
+        (candidateOperator) => candidateOperator.charId === charId,
+      );
+      if (operator && canSelect(slot, operator)) {
+        selectOperatorForSlot(slot, operator);
+        break;
+      }
+    }
+  }
+
+  for (const slot of slotOptions) {
+    if (assignedSlotKeys.has(slot.key)) {
+      continue;
+    }
+
+    const charId = preferredBySlotKey.get(slot.key);
+    const preferredOperator = charId
+      ? slot.operators.find(
+          (candidateOperator) => candidateOperator.charId === charId,
+        )
+      : null;
+    if (preferredOperator && canSelect(slot, preferredOperator)) {
+      selectOperatorForSlot(slot, preferredOperator);
     }
   }
 

@@ -262,6 +262,32 @@ function createOperatorStateByName(operatorProfiles, operatorTable) {
   return states;
 }
 
+function createProgressionProfile(operatorProfiles) {
+  const entries = Object.fromEntries(
+    (operatorProfiles || [])
+      .map((profile) => {
+        const charId = String(profile?.charId || "").trim();
+        const elite = Number(profile?.elite);
+        const level = Number(profile?.level);
+        if (!charId) {
+          return null;
+        }
+
+        return [
+          charId,
+          {
+            ...(Number.isInteger(elite) && elite >= 0 ? { elite } : {}),
+            ...(Number.isInteger(level) && level >= 1 ? { level } : {}),
+            owned: true,
+          },
+        ];
+      })
+      .filter(Boolean),
+  );
+
+  return { entries };
+}
+
 function cloneRoomAssignment(
   room,
   roomType,
@@ -272,9 +298,20 @@ function cloneRoomAssignment(
     return room;
   }
   const type = normalizeRoomType(roomType);
-  const operators = Array.isArray(room.operators)
-    ? room.operators.filter(Boolean)
-    : [];
+  const operators =
+    type === "training" &&
+    (Object.hasOwn(room, "operatorsA") || Object.hasOwn(room, "operatorsB"))
+      ? [
+          ...(Array.isArray(room.operatorsA)
+            ? room.operatorsA.slice(0, 1)
+            : []),
+          ...(Array.isArray(room.operatorsB)
+            ? room.operatorsB.slice(0, 1)
+            : []),
+        ].filter(Boolean)
+      : Array.isArray(room.operators)
+        ? room.operators.filter(Boolean)
+        : [];
   const importedStates = room.operatorStates || {};
   const states = Object.fromEntries(
     operators.map((name) => [
@@ -317,15 +354,15 @@ export function buildRiicEfficiencySchedule(
     operatorTable = {},
     orundumCraftMaterial = "orirock",
     efficiencySettings = DEFAULT_RIIC_EFFICIENCY_SETTINGS,
+    treatSkillsAsUnlocked = false,
   } = {},
 ) {
   const sourcePlans = Array.isArray(sourceSchedule?.plans)
     ? sourceSchedule.plans
     : [];
-  const operatorStates = createOperatorStateByName(
-    operatorProfiles,
-    operatorTable,
-  );
+  const operatorStates = treatSkillsAsUnlocked
+    ? new Map()
+    : createOperatorStateByName(operatorProfiles, operatorTable);
   const craftMaterial = orundumCraftMaterial === "device" ? "装置" : "固源岩";
   const plans = sourcePlans.map((sourcePlan) => {
     const rooms = Object.fromEntries(
@@ -390,6 +427,12 @@ export function buildRiicEfficiencySchedule(
     fiammetta: { queue: fiammettaQueue },
     settings: {
       ...normalizedEfficiencySettings,
+      ...(treatSkillsAsUnlocked
+        ? {
+            progressionProfile: createProgressionProfile(operatorProfiles),
+            treatSkillsAsUnlocked: true,
+          }
+        : {}),
       fiammettaMode: "queue",
       tradeOrderCount,
     },

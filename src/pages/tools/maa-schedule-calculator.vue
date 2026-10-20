@@ -1080,13 +1080,33 @@ function normalizeRoom(sourceRoom, facility) {
   if (!sourceRoom || typeof sourceRoom !== "object" || Array.isArray(sourceRoom)) {
     throw new Error(`${ROOM_LABELS[facility]}包含无效房间`);
   }
-  if (sourceRoom.operators !== undefined && (!Array.isArray(sourceRoom.operators) || sourceRoom.operators.some((operator) => typeof operator !== "string"))) {
+  const hasTrainingOperatorSlots =
+    facility === "training" &&
+    (Object.hasOwn(sourceRoom, "operatorsA") ||
+      Object.hasOwn(sourceRoom, "operatorsB"));
+  const operatorValues = hasTrainingOperatorSlots
+    ? [sourceRoom.operatorsA, sourceRoom.operatorsB]
+    : [sourceRoom.operators];
+  if (
+    operatorValues.some(
+      (operators) =>
+        operators !== undefined &&
+        (!Array.isArray(operators) ||
+          operators.some((operator) => typeof operator !== "string")),
+    )
+  ) {
     throw new Error(`${ROOM_LABELS[facility]}干员必须是名称数组`);
   }
+  const operators = hasTrainingOperatorSlots
+    ? operatorValues.flatMap((value) => (value || []).slice(0, 1))
+    : operatorValues.flatMap((value) => value || []);
+  const roomFields = { ...sourceRoom };
+  delete roomFields.operatorsA;
+  delete roomFields.operatorsB;
   return {
-    ...sourceRoom,
+    ...roomFields,
     ...(sourceRoom.product !== undefined ? { product: normalizeProduct(facility, sourceRoom.product) } : {}),
-    operators: (sourceRoom.operators || []).map((operator) => operator.trim()).filter(Boolean),
+    operators: operators.map((operator) => operator.trim()).filter(Boolean),
   };
 }
 

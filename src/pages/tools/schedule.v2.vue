@@ -26,7 +26,11 @@ import {
   writeRiicScheduleEditorDraft,
 } from "/src/utils/riicScheduleEditorDraft.js";
 import { buildRiicOperatorIdByName } from "/src/utils/riicOperatorIdentity.js";
-import { addRiicScheduleExportFields } from "/src/utils/riicScheduleExport.js";
+import {
+  addRiicScheduleExportFields,
+  convertRiicTrainingRoomOperatorsForMaaExport,
+  getRiicTrainingRoomOperators,
+} from "/src/utils/riicScheduleExport.js";
 
 const router = useRouter();
 const RIIC_LEGACY_EDITOR_TRANSFER_STORAGE_KEY =
@@ -916,7 +920,10 @@ function saveAndDownloadScheduleFile() {
     scheduleId.value = response.data.scheduleId;
     scheduleInfo.value.id = scheduleId.value;
     const exportSchedule = addRiicScheduleExportFields(
-      { ...scheduleForExport, id: scheduleId.value },
+      convertRiicTrainingRoomOperatorsForMaaExport({
+        ...scheduleForExport,
+        id: scheduleId.value,
+      }),
       { generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR },
     );
     const blob = new Blob([JSON.stringify(exportSchedule, null, 2)], { type: "application/json" });
@@ -929,9 +936,10 @@ function downloadScheduleFile() {
   createSchedule();
   const { schedule, hasEmptyProduct } = prepareScheduleForExport(scheduleInfo.value);
   if (hasEmptyProduct) cMessage("当前排班表存在空产物", "warn");
-  const exportSchedule = addRiicScheduleExportFields(schedule, {
-    generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR,
-  });
+  const exportSchedule = addRiicScheduleExportFields(
+    convertRiicTrainingRoomOperatorsForMaaExport(schedule),
+    { generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR },
+  );
   let link = document.createElement("a");
   link.download = `自定义排班.json`;
   link.href = "data:application/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportSchedule, null, 2));
@@ -1106,27 +1114,40 @@ function importSchedule(schedule, { preserveUnsupportedRooms = false } = {}) {
       for (const roomType in rooms) {
         const roomList = rooms[roomType];
         const targetRoomList = plansTemplate.value[index].rooms[roomType];
-        if (!Array.isArray(roomList) || !Array.isArray(targetRoomList)) {
+        if (!Array.isArray(roomList)) {
+          continue;
+        }
+        if (!Array.isArray(targetRoomList)) {
+          if (preserveUnsupportedRooms && roomType === "training") {
+            transferredUnsupportedRoomData.value[index] = {
+              training: cloneRoomList(roomList),
+            };
+          }
           continue;
         }
         for (const roomIndex in roomList) {
           if (!targetRoomList[roomIndex] || !roomList[roomIndex]) {
             continue;
           }
-          for (const property in roomList[roomIndex]) {
-            targetRoomList[roomIndex][property] = roomList[roomIndex][property];
+          const sourceRoom = roomList[roomIndex];
+          for (const property in sourceRoom) {
+            if (
+              roomType === "training" &&
+              ["operators", "operatorsA", "operatorsB"].includes(property)
+            ) {
+              continue;
+            }
+            targetRoomList[roomIndex][property] = sourceRoom[property];
+          }
+          if (roomType === "training") {
+            targetRoomList[roomIndex].operators =
+              getRiicTrainingRoomOperators(sourceRoom);
           }
           if (PRODUCTION_ROOM_TYPES.has(roomType)) {
-            const product = String(roomList[roomIndex].product ?? "").trim();
-            targetRoomList[roomIndex].product = product ? roomList[roomIndex].product : "";
+            const product = String(sourceRoom.product ?? "").trim();
+            targetRoomList[roomIndex].product = product ? sourceRoom.product : "";
           }
         }
-      }
-
-      if (preserveUnsupportedRooms && Array.isArray(rooms.training)) {
-        transferredUnsupportedRoomData.value[index] = {
-          training: cloneRoomList(rooms.training),
-        };
       }
     }
 
