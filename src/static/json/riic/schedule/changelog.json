@@ -2,7 +2,7 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20261011.1852"
+      "version": "v20261020.1130"
     },
     "data": {
       "label": "数据模块",
@@ -10,15 +10,15 @@
     },
     "team": {
       "label": "班组模块",
-      "version": "v20261012.1550"
+      "version": "v20261020.1130"
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20261011.1852"
+      "version": "v20261020.1130"
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20261011.1852"
+      "version": "v20261020.1130"
     },
     "recommendation": {
       "label": "调试信息",
@@ -26,6 +26,48 @@
     }
   },
   "entries": [
+    {
+      "date": "2026-10-20",
+      "version": "v20261020.1130",
+      "items": [
+        {
+          "module": "布局模块",
+          "type": "update",
+          "level": 3,
+          "description": "新增训练室自动挂件停靠人数（0/1/2）设置；人数变更触发重新生成，手动安排与 MAA 导出不按此人数过滤；回收站干员安排默认启用并移除独立开关",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 4,
+          "description": "跨房挂件按当班在岗范围和规则人数上限筛选，优先补入普通房间空位，回收站排除已在其他房间停靠的挂件以避免重复安排",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "组装器",
+          "type": "update",
+          "level": 4,
+          "description": "MAA 排班导入识别训练室 operatorsA/operatorsB，导出按 A、B 工位各一人的格式写入",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "收益计算器",
+          "type": "update",
+          "level": 3,
+          "description": "收益试算识别训练室 A、B 工位干员；理想练度模式按持有干员练度计算已解锁的基建技能",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-10-12",
       "version": "v20261012.1550",

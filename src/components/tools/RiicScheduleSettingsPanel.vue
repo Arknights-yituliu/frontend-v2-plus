@@ -36,13 +36,9 @@ defineProps({
       fourOrBelow: true,
     }),
   },
-  allowTrainingRoomOperators: {
-    type: Boolean,
-    default: false,
-  },
-  allowRecycleRoomOperators: {
-    type: Boolean,
-    default: false,
+  trainingRoomOperatorCount: {
+    type: Number,
+    default: 0,
   },
 });
 
@@ -51,8 +47,7 @@ const emit = defineEmits([
   "select-facility-requirement",
   "set-training-mode",
   "set-training-rarity-selection",
-  "set-training-room-operators",
-  "set-recycle-room-operators",
+  "set-training-room-operator-count",
 ]);
 </script>
 
@@ -206,35 +201,25 @@ const emit = defineEmits([
 
       <section
         class="facility-profile-switch"
-        aria-label="训练室干员安排"
+        aria-label="训练室可安排人数"
       >
-        <span class="facility-profile-label">允许向训练室安排干员</span>
-        <el-switch
-          :model-value="allowTrainingRoomOperators"
-          active-text="允许"
-          inactive-text="不允许"
-          aria-label="允许向训练室安排干员"
-          @change="emit('set-training-room-operators', $event)"
-        />
+        <span class="facility-profile-label">训练室可安排人数</span>
+        <div class="facility-profile-options" aria-label="训练室可安排人数">
+          <button
+            v-for="count in [0, 1, 2]"
+            :key="count"
+            type="button"
+            class="facility-profile-option"
+            :class="{ active: trainingRoomOperatorCount === count }"
+            :aria-pressed="trainingRoomOperatorCount === count"
+            @click="emit('set-training-room-operator-count', count)"
+          >
+            {{ count }}
+          </button>
+        </div>
         <span class="facility-profile-note">
-          MAA仅公测版允许训练室字段
-        </span>
-      </section>
-
-      <section
-        class="facility-profile-switch"
-        aria-label="回收站干员安排"
-      >
-        <span class="facility-profile-label">允许向回收站安排干员</span>
-        <el-switch
-          :model-value="allowRecycleRoomOperators"
-          active-text="允许"
-          inactive-text="不允许"
-          aria-label="允许向回收站安排干员"
-          @change="emit('set-recycle-room-operators', $event)"
-        />
-        <span class="facility-profile-note">
-          MAA仅公测版允许回收站字段
+          有7级/专1/专2技能的干员才能放入训练位<br />
+          即使有干员正在专精，MAA也会替换协助位干员
         </span>
       </section>
     </div>

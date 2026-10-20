@@ -119,15 +119,43 @@ export function getRiicActiveRosterCandidatePriority({
       continue;
     }
 
-    const priority = matchingOperatorIds.length * rule.roomPriorityPerOperator;
+    const matchingRuntimeRules = RIIC_ACTIVE_ROSTER_RUNTIME_RULES.filter(
+      (runtimeRule) =>
+        runtimeRule.ownerId === rule.triggerOperatorId &&
+        runtimeRule.tag === rule.tag,
+    );
+    const maximumOperatorCount = matchingRuntimeRules.length
+      ? Math.min(
+          ...matchingRuntimeRules.map(
+            (runtimeRule) => runtimeRule.maximumOperatorCount,
+          ),
+        )
+      : Number.POSITIVE_INFINITY;
+    const activeTaggedOperatorCount = new Set(
+      [...activeIds].filter((operatorId) =>
+        rule.taggedOperatorIds.has(operatorId),
+      ),
+    ).size;
+    const availableOperatorCount = Math.max(
+      0,
+      maximumOperatorCount - activeTaggedOperatorCount,
+    );
+    const prioritizedOperatorIds = matchingOperatorIds
+      .filter((operatorId) => !activeIds.has(operatorId))
+      .slice(0, availableOperatorCount);
+    const priority =
+      prioritizedOperatorIds.length * rule.roomPriorityPerOperator;
+    if (priority <= 0) {
+      continue;
+    }
     roomPriority += priority;
     applications.push({
       ruleId: rule.id,
       triggerOperatorId: rule.triggerOperatorId,
       triggerName: rule.triggerName,
       tag: rule.tag,
-      matchingOperatorIds,
-      matchingOperatorNames: matchingOperatorIds.map(getOperatorName),
+      matchingOperatorIds: prioritizedOperatorIds,
+      matchingOperatorNames: prioritizedOperatorIds.map(getOperatorName),
       roomPriority: priority,
     });
   }
@@ -179,6 +207,52 @@ export function getRiicActiveRosterCandidatePriority({
     roomPriority,
     applications,
   };
+}
+
+function getActiveRosterHangerRules(application) {
+  return RIIC_ACTIVE_ROSTER_RUNTIME_RULES.filter(
+    (rule) =>
+      rule.id === application?.ruleId ||
+      (rule.ownerId === application?.triggerOperatorId &&
+        rule.tag === application?.tag),
+  );
+}
+
+function getActiveRosterHangerRuleCount(
+  rule,
+  activeOperatorIds,
+  activeOperatorIdsByScope,
+) {
+  const activeIds = rule.sourceScope && activeOperatorIdsByScope
+    ? getScopedActiveOperatorIds(activeOperatorIdsByScope, rule.sourceScope)
+    : [...(activeOperatorIds || [])];
+  return new Set(
+    activeIds
+      .map(normalizeOperatorId)
+      .filter((operatorId) => rule.taggedOperatorIds.has(operatorId)),
+  ).size;
+}
+
+function hasActiveRosterHangerHeadroom(
+  application,
+  candidateOperatorId,
+  activeOperatorIds,
+  activeOperatorIdsByScope,
+) {
+  const matchingRules = getActiveRosterHangerRules(application);
+  if (matchingRules.length === 0) {
+    return true;
+  }
+
+  return matchingRules.some(
+    (rule) =>
+      !rule.taggedOperatorIds.has(candidateOperatorId) ||
+      getActiveRosterHangerRuleCount(
+        rule,
+        activeOperatorIds,
+        activeOperatorIdsByScope,
+      ) < rule.maximumOperatorCount,
+  );
 }
 
 export function buildRiicActiveOperatorIdsByStateIndex(segments = []) {
@@ -432,7 +506,7 @@ export function getRiicActiveRosterHangerOrder({
       .filter(Boolean),
   );
 
-  return (idleFillOperators || [])
+  const candidates = (idleFillOperators || [])
     .flatMap((operator) => {
       const charId = normalizeOperatorId(operator?.charId);
       if (!charId || claimedIds.has(charId)) {
@@ -464,7 +538,15 @@ export function getRiicActiveRosterHangerOrder({
             (application) => application.sourceScope,
           )
         : candidatePriority.applications;
-      const roomPriority = applications.reduce(
+      const applicableHangerEffects = applications.filter((application) =>
+        hasActiveRosterHangerHeadroom(
+          application,
+          charId,
+          activeOperatorIds,
+          activeOperatorIdsByScope,
+        ),
+      );
+      const roomPriority = applicableHangerEffects.reduce(
         (total, application) =>
           total + toFiniteNumber(application.roomPriority),
         0,
@@ -473,7 +555,14 @@ export function getRiicActiveRosterHangerOrder({
         return [];
       }
 
-      return [{ operator, charId, roomPriority, applications }];
+      return [
+        {
+          operator,
+          charId,
+          roomPriority,
+          applications: applicableHangerEffects,
+        },
+      ];
     })
     .sort(
       (left, right) =>
@@ -485,6 +574,55 @@ export function getRiicActiveRosterHangerOrder({
           "zh-CN",
         ),
     );
+  const allocatedByRuleId = new Map();
+  const result = [];
+
+  for (const candidate of candidates) {
+    const applications = candidate.applications.filter((application) => {
+      const matchingRules = getActiveRosterHangerRules(application);
+      return (
+        matchingRules.length === 0 ||
+        matchingRules.some((rule) => {
+          if (!rule.taggedOperatorIds.has(candidate.charId)) {
+            return true;
+          }
+
+          const currentCount = getActiveRosterHangerRuleCount(
+            rule,
+            activeOperatorIds,
+            activeOperatorIdsByScope,
+          );
+          const allocatedCount = Number(
+            allocatedByRuleId.get(rule.id) || 0,
+          );
+          return currentCount + allocatedCount < rule.maximumOperatorCount;
+        })
+      );
+    });
+    const roomPriority = applications.reduce(
+      (total, application) =>
+        total + toFiniteNumber(application.roomPriority),
+      0,
+    );
+    if (roomPriority <= 0) {
+      continue;
+    }
+
+    for (const application of applications) {
+      for (const rule of getActiveRosterHangerRules(application)) {
+        if (!rule.taggedOperatorIds.has(candidate.charId)) {
+          continue;
+        }
+        allocatedByRuleId.set(
+          rule.id,
+          Number(allocatedByRuleId.get(rule.id) || 0) + 1,
+        );
+      }
+    }
+    result.push({ ...candidate, roomPriority, applications });
+  }
+
+  return result;
 }
 
 /**
