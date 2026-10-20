@@ -153,6 +153,33 @@ function normalizeOperators(value, jsonPath, issues) {
     .filter(Boolean);
 }
 
+function normalizeRoomOperators(sourceRoom, facility, jsonPath, issues) {
+  if (
+    facility === "training" &&
+    (Object.hasOwn(sourceRoom, "operatorsA") ||
+      Object.hasOwn(sourceRoom, "operatorsB"))
+  ) {
+    return [
+      ...normalizeOperators(
+        sourceRoom.operatorsA,
+        `${jsonPath}.operatorsA`,
+        issues,
+      ).slice(0, 1),
+      ...normalizeOperators(
+        sourceRoom.operatorsB,
+        `${jsonPath}.operatorsB`,
+        issues,
+      ).slice(0, 1),
+    ];
+  }
+
+  return normalizeOperators(
+    sourceRoom.operators,
+    `${jsonPath}.operators`,
+    issues,
+  );
+}
+
 function normalizeRoom({
   sourceRoom,
   facility,
@@ -200,11 +227,7 @@ function normalizeRoom({
     mode: skipped ? "skipped" : autofill || hasCandidates || hasGroups ? "dynamic" : "fixed",
     product,
     sourceProduct: productText,
-    operators: normalizeOperators(
-      sourceRoom.operators,
-      `${jsonPath}.operators`,
-      issues,
-    ),
+    operators: normalizeRoomOperators(sourceRoom, facility, jsonPath, issues),
     hasCandidates,
     hasGroups,
     autofill,

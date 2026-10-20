@@ -27,7 +27,11 @@ import {
   resolveRiicScheduleLayout,
 } from "/src/utils/riicScheduleLayout.js";
 import { buildRiicOperatorIdByName } from "/src/utils/riicOperatorIdentity.js";
-import { addRiicScheduleExportFields } from "/src/utils/riicScheduleExport.js";
+import {
+  addRiicScheduleExportFields,
+  convertRiicTrainingRoomOperatorsForMaaExport,
+  getRiicTrainingRoomOperators,
+} from "/src/utils/riicScheduleExport.js";
 
 const router = useRouter();
 const RIIC_MAA_CALCULATOR_TRANSFER_STORAGE_KEY = "riic_maa_editor_to_efficiency_calculator_v1";
@@ -918,7 +922,10 @@ function saveAndDownloadScheduleFile() {
     scheduleId.value = response.data.scheduleId
     scheduleInfo.value.id = scheduleId.value
     const exportSchedule = addRiicScheduleExportFields(
-      { ...scheduleForExport, id: scheduleId.value },
+      convertRiicTrainingRoomOperatorsForMaaExport({
+        ...scheduleForExport,
+        id: scheduleId.value,
+      }),
       { generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR },
     )
     const blob = new Blob([JSON.stringify(exportSchedule, null, 2)], {type: "application/json"});
@@ -933,9 +940,10 @@ function downloadScheduleFile() {
   createSchedule()
   const { schedule, hasEmptyProduct } = prepareScheduleForExport(scheduleInfo.value)
   if (hasEmptyProduct) createMessage({type: 'warn', text: '当前排班表存在空产物'})
-  const exportSchedule = addRiicScheduleExportFields(schedule, {
-    generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR,
-  })
+  const exportSchedule = addRiicScheduleExportFields(
+    convertRiicTrainingRoomOperatorsForMaaExport(schedule),
+    { generator: RIIC_MAA_SCHEDULE_EXPORT_GENERATOR },
+  )
   let link = document.createElement('a')
   link.download = `自定义排班.json`
   link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportSchedule, null, 2))
@@ -1084,8 +1092,15 @@ function importSchedule(schedule) {
         for (const roomIndex in roomList) {
           const room = roomList[roomIndex]
           for (const property in room || {}) {
+            if (roomType === "training" && ["operators", "operatorsA", "operatorsB"].includes(property)) {
+              continue
+            }
             // console.log(plansTemplate.value[index].rooms[roomType][roomIndex][property])
             plansTemplate.value[index].rooms[roomType][roomIndex][property] = room[property]
+          }
+          if (roomType === "training") {
+            plansTemplate.value[index].rooms.training[roomIndex].operators =
+              getRiicTrainingRoomOperators(room)
           }
           if (PRODUCTION_ROOM_TYPES.has(roomType)) {
             const product = String(room?.product ?? '').trim()

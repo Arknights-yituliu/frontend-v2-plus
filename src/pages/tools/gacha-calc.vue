@@ -858,9 +858,11 @@ const userConfigV2 = ref({
   existGachaTicket: 0,
   existTenGachaTicket: 0,
   correctOrundum: 0, //用于修正的合成玉数量
-  skinBudget: 0, //要购买多少皮肤
-  skinBudgetPlus: 0, // 要购买多少高级皮肤
-  skinBudgetPro: 0, // 要购买多少顶级皮肤
+  skinBudget: 0, //要购买多少皮肤(18石)
+  skinBudgetPlus: 0, // 要购买多少高级皮肤(21石)
+  skinBudgetPro: 0, // 要购买多少顶级皮肤(24石)
+  skinBudgetUltimate: 0, // 要购买多少终极皮肤(27石)
+  themeBudget: 0, // 要购买多少主题(30石)
   //是否使用源石抽卡
   originiumIsUsed: true,
   //周常是否完成
@@ -879,6 +881,42 @@ const userConfigV2 = ref({
   //额外购买月卡数量
   monthlyCardExtraCount: 0,
 });
+
+/**
+ * 正整数输入过滤：过滤掉字母、标点、空格等所有非数字字符（仅保留 0-9）
+ * 直接写回 userConfigV2 对象上的指定字段，避免使用 v-model 时输入非法字符
+ * @param {string} field userConfigV2 上的字段名
+ * @param {InputEvent} event 原生 input 事件
+ */
+function sanitizePositiveIntInput(field, event) {
+  const raw = String(event.target.value);
+  const cleaned = raw.replace(/\D+/g, '');
+  if (raw !== cleaned) {
+    event.target.value = cleaned;
+  }
+  userConfigV2.value[field] = cleaned === '' ? 0 : Number(cleaned);
+  gachaResourcesCalculation();
+}
+
+/**
+ * 整数输入过滤（允许开头负号）：用于“自定义修正”等可填负数的字段
+ * @param {string} field userConfigV2 上的字段名
+ * @param {InputEvent} event 原生 input 事件
+ */
+function sanitizeSignedIntInput(field, event) {
+  const raw = String(event.target.value);
+  // 先剔除非数字非负号字符
+  let stripped = raw.replace(/[^\d-]/g, '');
+  // 仅保留开头的负号，其它位置的 - 一律丢弃
+  const negative = stripped.startsWith('-');
+  stripped = stripped.replace(/-/g, '');
+  const cleaned = (negative ? '-' : '') + stripped;
+  if (raw !== cleaned) {
+    event.target.value = cleaned;
+  }
+  userConfigV2.value[field] = cleaned === '' || cleaned === '-' ? cleaned : Number(cleaned);
+  gachaResourcesCalculation();
+}
 
 /**
  * 计算抽卡资源
@@ -1046,6 +1084,10 @@ function gachaResourcesCalculation() {
     originium -= stringToNumber(userConfigV2.value.skinBudgetPlus.toString()) * 21;
     //计算用户预留给顶级皮肤的源石
     originium -= stringToNumber(userConfigV2.value.skinBudgetPro.toString()) * 24;
+    //计算用户预留给终极皮肤的源石
+    originium -= stringToNumber(userConfigV2.value.skinBudgetUltimate.toString()) * 27;
+    //计算用户预留给主题的源石
+    originium -= stringToNumber(userConfigV2.value.themeBudget.toString()) * 30;
 
     if (!userConfigV2.value.originiumIsUsed) {
       originium = 0;
@@ -1535,6 +1577,8 @@ function readLastSettings() {
   userConfigV2.value.skinBudget = stringToNumber(lastSettings.skinBudget);
   userConfigV2.value.skinBudgetPlus = stringToNumber(lastSettings.skinBudgetPlus);
   userConfigV2.value.skinBudgetPro = stringToNumber(lastSettings.skinBudgetPro);
+  userConfigV2.value.skinBudgetUltimate = stringToNumber(lastSettings.skinBudgetUltimate);
+  userConfigV2.value.themeBudget = stringToNumber(lastSettings.themeBudget);
 
   userConfigV2.value.originiumIsUsed = lastSettings.originiumIsUsed;
   userConfigV2.value.weeklyTaskCompleted = lastSettings.weeklyTaskCompleted;
@@ -2077,27 +2121,78 @@ function sharePage() {
           </template>
           <div class="collapse-content-subheading"><span></span> 当前库存</div>
 
-          <div class="resources-line" style="flex-wrap: wrap">
-            <!-- <div class="exist-resources-input-wrap"> -->
-            <div class="exist-resources-input">
-              <div class="image-sprite">
-                <div class="bg-icon_4002"></div>
+          <div class="exist-grid">
+            <div class="exist-item">
+              <div class="exist-item-label">
+                <div class="image-sprite">
+                  <div class="bg-icon_4002"></div>
+                </div>
+                <span class="exist-item-name">源石</span>
               </div>
-              <input @change="gachaResourcesCalculation" v-model="userConfigV2.existOriginium" />
-              <div class="image-sprite">
-                <div class="bg-icon_4003"></div>
-              </div>
-              <input @change="gachaResourcesCalculation" v-model="userConfigV2.existOrundum" />
+              <input
+                class="exist-item-input"
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+                placeholder="0"
+                :value="userConfigV2.existOriginium"
+                @input="sanitizePositiveIntInput('existOriginium', $event)"
+              />
             </div>
-            <div class="exist-resources-input">
-              <div class="image-sprite">
-                <div class="bg-icon_7003"></div>
+            <div class="exist-item">
+              <div class="exist-item-label">
+                <div class="image-sprite">
+                  <div class="bg-icon_4003"></div>
+                </div>
+                <span class="exist-item-name">合成玉</span>
               </div>
-              <input @change="gachaResourcesCalculation" v-model="userConfigV2.existGachaTicket" />
-              <div class="image-sprite">
-                <div class="bg-icon_7004"></div>
+              <input
+                class="exist-item-input"
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+                placeholder="0"
+                :value="userConfigV2.existOrundum"
+                @input="sanitizePositiveIntInput('existOrundum', $event)"
+              />
+            </div>
+            <div class="exist-item">
+              <div class="exist-item-label">
+                <div class="image-sprite">
+                  <div class="bg-icon_7003"></div>
+                </div>
+                <span class="exist-item-name">单抽券</span>
               </div>
-              <input @change="gachaResourcesCalculation" v-model="userConfigV2.existTenGachaTicket" />
+              <input
+                class="exist-item-input"
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+                placeholder="0"
+                :value="userConfigV2.existGachaTicket"
+                @input="sanitizePositiveIntInput('existGachaTicket', $event)"
+              />
+            </div>
+            <div class="exist-item">
+              <div class="exist-item-label">
+                <div class="image-sprite">
+                  <div class="bg-icon_7004"></div>
+                </div>
+                <span class="exist-item-name">十连券</span>
+              </div>
+              <input
+                class="exist-item-input"
+                type="text"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                autocomplete="off"
+                placeholder="0"
+                :value="userConfigV2.existTenGachaTicket"
+                @input="sanitizePositiveIntInput('existTenGachaTicket', $event)"
+              />
             </div>
           </div>
 
@@ -2108,29 +2203,43 @@ function sharePage() {
           </div>
 
           <div class="collapse-content-subheading"><span></span> 时装预留源石</div>
-          <div class="resources-line" style="overflow-x: scroll">
-            <el-space>
-              <el-input-number v-model="userConfigV2.skinBudget" :step="1" :min="0" :max="10" @change="gachaResourcesCalculation()">
-                <template #prefix>
-                  <span>18石</span>
-                </template>
-              </el-input-number>
-              <el-input-number v-model="userConfigV2.skinBudgetPlus" :step="1" :min="0" :max="10" @change="gachaResourcesCalculation()">
-                <template #prefix>
-                  <span>21石</span>
-                </template>
-              </el-input-number>
-              <el-input-number v-model="userConfigV2.skinBudgetPro" :step="1" :min="0" :max="10" @change="gachaResourcesCalculation()">
-                <template #prefix>
-                  <span>24石</span>
-                </template>
-              </el-input-number>
-            </el-space>
+          <div class="budget-grid">
+            <div class="budget-item">
+              <span class="budget-label">18石</span>
+              <el-input-number v-model="userConfigV2.skinBudget" :step="1" :min="0" :max="10" size="small" @change="gachaResourcesCalculation()" />
+            </div>
+            <div class="budget-item">
+              <span class="budget-label">21石</span>
+              <el-input-number v-model="userConfigV2.skinBudgetPlus" :step="1" :min="0" :max="10" size="small" @change="gachaResourcesCalculation()" />
+            </div>
+            <div class="budget-item">
+              <span class="budget-label">24石</span>
+              <el-input-number v-model="userConfigV2.skinBudgetPro" :step="1" :min="0" :max="10" size="small" @change="gachaResourcesCalculation()" />
+            </div>
+            <div class="budget-item">
+              <span class="budget-label">27石</span>
+              <el-input-number v-model="userConfigV2.skinBudgetUltimate" :step="1" :min="0" :max="10" size="small" @change="gachaResourcesCalculation()" />
+            </div>
+          </div>
+
+          <div class="collapse-content-subheading"><span></span> 主题预留源石</div>
+          <div class="budget-grid">
+            <div class="budget-item">
+              <span class="budget-label">30石</span>
+              <el-input-number v-model="userConfigV2.themeBudget" :step="1" :min="0" :max="10" size="small" @change="gachaResourcesCalculation()" />
+            </div>
           </div>
 
           <div class="collapse-content-subheading"><span></span> 自定义修正</div>
           <div class="resources-line">
-            <input v-model="userConfigV2.correctOrundum" @input="gachaResourcesCalculation" />
+            <input
+              type="text"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder="0"
+              :value="userConfigV2.correctOrundum"
+              @input="sanitizeSignedIntInput('correctOrundum', $event)"
+            />
             <span>合成玉自定义修正</span>
             <div class="image-sprite">
               <div class="bg-icon_4003"></div>
