@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import ITEM_INFO from "/src/static/json/material/item_info.json";
-import RiicRecycleOutputDialog from "/src/components/tools/RiicRecycleOutputDialog.vue";
+import RiicRecycleOutputDialog from "/src/components/tools/riic/RiicRecycleOutputDialog.vue";
 import { formatDisplayValue } from "/src/utils/riic/riic-efficiency-adapter.js";
 import originiumShardIcon from "/src/assets/images/riic-schedule-preview/originium-shard.png";
 import creditIcon from "/src/assets/images/riic-schedule-preview/credit.png";

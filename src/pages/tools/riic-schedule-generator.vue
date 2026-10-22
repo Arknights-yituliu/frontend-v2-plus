@@ -12,21 +12,21 @@ import {
 } from "vue";
 import { saveAs } from "file-saver";
 import { useRoute, useRouter } from "vue-router";
-import RiicAdditionalInfoPanel from "/src/components/tools/RiicAdditionalInfoPanel.vue";
-import RiicControlCenterStaffingPanel from "/src/components/tools/RiicControlCenterStaffingPanel.vue";
-import RiicOperatorSourcePanel from "/src/components/tools/RiicOperatorSourcePanel.vue";
-import RiicPipelineDebugPanel from "/src/components/tools/RiicPipelineDebugPanel.vue";
-import RiicRoomGroupNavigator from "/src/components/tools/RiicRoomGroupNavigator.vue";
-import RiicScheduleExportActions from "/src/components/tools/RiicScheduleExportActions.vue";
-import RiicScheduleExportSettings from "/src/components/tools/RiicScheduleExportSettings.vue";
-import RiicFiammettaRecoverySetting from "/src/components/tools/RiicFiammettaRecoverySetting.vue";
-import RiicScheduleFiammettaSettings from "/src/components/tools/RiicScheduleFiammettaSettings.vue";
-import RiicScheduleResourceSummary from "/src/components/tools/RiicScheduleResourceSummary.vue";
-import RiicLayoutChoicePanel from "/src/components/tools/RiicLayoutChoicePanel.vue";
-import RiicSchedulePreview from "/src/components/tools/RiicSchedulePreview.vue";
-import RiicScheduleRoomEditorPanel from "/src/components/tools/RiicScheduleRoomEditorPanel.vue";
-import RiicRoomGroupStaffingPanel from "/src/components/tools/RiicRoomGroupStaffingPanel.vue";
-import RiicScheduleSettingsPanel from "/src/components/tools/RiicScheduleSettingsPanel.vue";
+import RiicAdditionalInfoPanel from "/src/components/tools/riic/RiicAdditionalInfoPanel.vue";
+import RiicControlCenterStaffingPanel from "/src/components/tools/riic/RiicControlCenterStaffingPanel.vue";
+import RiicOperatorSourcePanel from "/src/components/tools/riic/RiicOperatorSourcePanel.vue";
+import RiicPipelineDebugPanel from "/src/components/tools/riic/RiicPipelineDebugPanel.vue";
+import RiicRoomGroupNavigator from "/src/components/tools/riic/RiicRoomGroupNavigator.vue";
+import RiicScheduleExportActions from "/src/components/tools/riic/RiicScheduleExportActions.vue";
+import RiicScheduleExportSettings from "/src/components/tools/riic/RiicScheduleExportSettings.vue";
+import RiicFiammettaRecoverySetting from "/src/components/tools/riic/RiicFiammettaRecoverySetting.vue";
+import RiicScheduleFiammettaSettings from "/src/components/tools/riic/RiicScheduleFiammettaSettings.vue";
+import RiicScheduleResourceSummary from "/src/components/tools/riic/RiicScheduleResourceSummary.vue";
+import RiicLayoutChoicePanel from "/src/components/tools/riic/RiicLayoutChoicePanel.vue";
+import RiicSchedulePreview from "/src/components/tools/riic/RiicSchedulePreview.vue";
+import RiicScheduleRoomEditorPanel from "/src/components/tools/riic/RiicScheduleRoomEditorPanel.vue";
+import RiicRoomGroupStaffingPanel from "/src/components/tools/riic/RiicRoomGroupStaffingPanel.vue";
+import RiicScheduleSettingsPanel from "/src/components/tools/riic/RiicScheduleSettingsPanel.vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
 import { cMessage } from "/src/utils/message.js";
 import battleRecordImage from "/src/assets/images/riic-schedule-preview/battle-record.png";
@@ -555,7 +555,7 @@ const RiicManualOperatorSourceChoice = import.meta.env.DEV
   ? defineAsyncComponent(
       () =>
         import(
-          "/src/components/tools/RiicManualOperatorSourceChoice.vue"
+          "/src/components/tools/riic/RiicManualOperatorSourceChoice.vue"
         ),
     )
   : null;

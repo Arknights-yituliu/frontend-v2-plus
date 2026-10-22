@@ -1,6 +1,6 @@
 <script setup>
 import { formatDisplayValue } from "/src/utils/riic/riic-efficiency-adapter.js";
-import RiicDisplaySection from "/src/components/tools/RiicDisplaySection.vue";
+import RiicDisplaySection from "/src/components/tools/riic/RiicDisplaySection.vue";
 
 const props = defineProps({
   card: {

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import RiicCustomLayoutEditor from "/src/components/tools/RiicCustomLayoutEditor.vue";
+import RiicCustomLayoutEditor from "/src/components/tools/riic/RiicCustomLayoutEditor.vue";
 
 const props = defineProps({
   recommendationPanelOpen: {

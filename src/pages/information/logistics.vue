@@ -13,7 +13,7 @@ import {getStageConfig} from "/src/utils/user/userConfig.js";
 import {computed, onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce";
 import {translate} from "/src/utils/i18n";
-import DescriptionExplain from "/src/components/tools/DescriptionExplain.vue";
+import DescriptionExplain from "/src/components/tools/shared/DescriptionExplain.vue";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 
 let buildingTable = {}

@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
-import RiicRecycleBoostSelect from "/src/components/tools/RiicRecycleBoostSelect.vue";
+import RiicRecycleBoostSelect from "/src/components/tools/riic/RiicRecycleBoostSelect.vue";
 
 const props = defineProps({
   exportInfo: {

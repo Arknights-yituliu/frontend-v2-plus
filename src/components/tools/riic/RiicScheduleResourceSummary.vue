@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import RiicRecycleOutputDialog from "/src/components/tools/RiicRecycleOutputDialog.vue";
+import RiicRecycleOutputDialog from "/src/components/tools/riic/RiicRecycleOutputDialog.vue";
 import battleRecordBackground from "/src/assets/images/riic-schedule-preview/battle-record.png";
 import greenCertificateBackground from "/src/assets/images/riic-schedule-preview/green-certificate.png";
 import goldBackground from "/src/assets/images/riic-schedule-preview/gold.png";

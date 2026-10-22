@@ -2,8 +2,8 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from "vue";
 import { ElNotification } from "element-plus";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
-import BetterCombatCriteriaDrawer from "@/components/tools/BetterCombatCriteriaDrawer.vue";
-import CombatCalcDetail from "@/components/tools/CombatCalcDetail.vue";
+import BetterCombatCriteriaDrawer from "@/components/tools/better-combat/BetterCombatCriteriaDrawer.vue";
+import CombatCalcDetail from "@/components/tools/better-combat/CombatCalcDetail.vue";
 import { htmlStringToVNode } from "@/utils/format.js";
 import { debounce } from "@/utils/debounce.js";
 

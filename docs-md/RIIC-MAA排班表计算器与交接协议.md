@@ -45,9 +45,9 @@ buildResultDisplay(result, { sanityValues, droneAcceleration })
 渲染组件：
 
 ```text
-src/components/tools/RiicDisplayCard.vue
-src/components/tools/RiicDisplaySection.vue
-src/components/tools/RiicDisplayTile.vue
+src/components/tools/riic/RiicDisplayCard.vue
+src/components/tools/riic/RiicDisplaySection.vue
+src/components/tools/riic/RiicDisplayTile.vue
 ```
 
 ## 四、两个方向的交接

@@ -30,10 +30,10 @@ import {
   normalizeRiicEfficiencySettings,
   resourceLabel,
 } from "/src/utils/riic/riic-efficiency-adapter.js";
-import RiicDisplayCard from "/src/components/tools/RiicDisplayCard.vue";
-import RiicDisplayTile from "/src/components/tools/RiicDisplayTile.vue";
-import RiicMaaOperatorProgressionEditor from "/src/components/tools/RiicMaaOperatorProgressionEditor.vue";
-import RiicRecycleBoostSelect from "/src/components/tools/RiicRecycleBoostSelect.vue";
+import RiicDisplayCard from "/src/components/tools/riic/RiicDisplayCard.vue";
+import RiicDisplayTile from "/src/components/tools/riic/RiicDisplayTile.vue";
+import RiicMaaOperatorProgressionEditor from "/src/components/tools/riic/RiicMaaOperatorProgressionEditor.vue";
+import RiicRecycleBoostSelect from "/src/components/tools/riic/RiicRecycleBoostSelect.vue";
 import { resolveRiicScheduleLayout } from "/src/utils/riicScheduleLayout.js";
 import { getRiicOperatorProfile } from "/src/utils/riicOperatorIdentity.js";
 
