@@ -10,8 +10,8 @@ import {
   readRiicMaaYieldTestLocalOperators,
 } from "/src/utils/riic/maa-yield-test.js";
 import { operatorTableV2 } from "/src/utils/gameData.js";
-import RiicSchedulePreview from "/src/components/tools/RiicSchedulePreview.vue";
-import RiicScheduleResourceSummary from "/src/components/tools/RiicScheduleResourceSummary.vue";
+import RiicSchedulePreview from "/src/components/tools/riic/RiicSchedulePreview.vue";
+import RiicScheduleResourceSummary from "/src/components/tools/riic/RiicScheduleResourceSummary.vue";
 
 const scheduleFileName = ref("");
 const operatorFileName = ref("");

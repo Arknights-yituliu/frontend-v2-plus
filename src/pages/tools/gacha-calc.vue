@@ -11,8 +11,8 @@ import FIXED_TABLE from "/src/static/json/tools/schedule_fixed.json";
 import probabilityTableData from "/src/static/json/tools/limited_probability_table.json";
 import { createMessage } from "/src/utils/message.js";
 
-import PackButtonContent from "/src/components/tools/PackButtonContent.vue";
-import ActivityGachaResources from "/src/components/tools/ActivityGachaResources.vue";
+import PackButtonContent from "/src/components/tools/gacha/PackButtonContent.vue";
+import ActivityGachaResources from "/src/components/tools/gacha/ActivityGachaResources.vue";
 import deepClone from "/src/utils/deepClone.js";
 import { dateDiff } from "/src/utils/dateUtil.js";
 import packInfoCache from "/src/plugins/indexedDB/packInfoCache.js";

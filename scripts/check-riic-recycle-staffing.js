@@ -19,7 +19,7 @@ const vite = await createServer({
 try {
   globalThis.window = { innerWidth: 1024, addEventListener() {} };
   const { default: BuildingFactory } = await vite.ssrLoadModule(
-    "/src/components/tools/BuildingFactory.vue",
+    "/src/components/tools/riic/schedule-v1/BuildingFactory.vue",
   );
   const { createSSRApp, h } = await import("vue");
   const { renderToString } = await import("vue/server-renderer");
