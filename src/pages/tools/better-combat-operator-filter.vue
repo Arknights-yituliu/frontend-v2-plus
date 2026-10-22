@@ -3,6 +3,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch 
 import { ElNotification } from "element-plus";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import BetterCombatCriteriaDrawer from "@/components/tools/BetterCombatCriteriaDrawer.vue";
+import CombatCalcDetail from "@/components/tools/CombatCalcDetail.vue";
 import { htmlStringToVNode } from "@/utils/format.js";
 import { debounce } from "@/utils/debounce.js";
 
@@ -17,6 +18,15 @@ const DATA = ref(null);
 const GLOSSARY = ref(null);
 const CRITERIA = ref(null);
 const loadError = ref("");
+
+// 帧级时间轴单独成文件（源项目 results/operator-timelines.json），只在详情弹窗需要时加载一次
+let timelinePromise = null;
+function loadTimeline() {
+  if (!timelinePromise) {
+    timelinePromise = import("@/static/json/combat/operator-timelines.json").then((m) => (m.default && m.default.timelines) || {});
+  }
+  return timelinePromise;
+}
 
 onMounted(async () => {
   try {
@@ -664,7 +674,6 @@ function blockKind(label) {
   const s = String(label || "");
   if (!s) return "plain";
   if (s === "成绩" || s.startsWith("成绩 ")) return "score";
-  if (s === "计算") return "calc";
   if (s === "说明") return "note";
   return "ability";
 }
@@ -706,10 +715,6 @@ function renderRemark(remark) {
           `</div>${body}</div>`
         );
       }
-      if (kind === "calc") {
-        // 默认折叠，点击标题展开：v-html 内容拿不到 Vue 事件，走 onTermClick 的委托切换 .is-open
-        return `<div class="bcf-block bcf-block--calc" data-calc><div class="bcf-block-head bcf-calc-head" data-calc-toggle>演算过程</div>${body}</div>`;
-      }
       if (kind === "note") {
         return `<div class="bcf-block bcf-block--note"><div class="bcf-block-head">说明</div>${body}</div>`;
       }
@@ -727,13 +732,8 @@ function remarkSummary(remark, limit = 96) {
   return truncate(text, limit);
 }
 
-// 点击术语 → 浮窗（照「基建技能一览」的 ElNotification 方式）；点击演算过程标题 → 展开/收起
+// 点击术语 → 浮窗（照「基建技能一览」的 ElNotification 方式）
 function onTermClick(event) {
-  const toggle = event.target?.closest?.("[data-calc-toggle]");
-  if (toggle) {
-    toggle.closest("[data-calc]")?.classList.toggle("is-open");
-    return;
-  }
   const el = event.target?.closest?.("[data-combat-term]");
   if (!el) return;
   const term = TERM_MAP.value.get(el.getAttribute("data-combat-term"));
@@ -1198,6 +1198,7 @@ const SENTINEL_INTERSECT = {
                     <span class="bcf-label">备注</span>
                     <div class="bcf-remark" v-html="renderRemark(e.remark)"></div>
                   </div>
+                  <CombatCalcDetail v-if="e.calc" :key="group.tag.id + '-' + i" :calc="e.calc" :timeline-loader="loadTimeline" :tag-id="group.tag.id" />
                   <div v-if="e.subTags?.length" class="bcf-chips">
                     <v-chip v-for="s in e.subTags" :key="s.group + s.value" size="x-small" variant="outlined">
                       {{ s.value }}
@@ -1244,6 +1245,7 @@ const SENTINEL_INTERSECT = {
                     <span class="bcf-label">备注</span>
                     <div class="bcf-remark" v-html="renderRemark(p.remark)"></div>
                   </div>
+                  <CombatCalcDetail v-if="p.calc" :calc="p.calc" :timeline-loader="loadTimeline" />
                   <a class="bcf-prts" :href="p.prtsUrl" target="_blank" rel="noreferrer">PRTS 详情 ↗</a>
                 </div>
               </div>
@@ -1879,30 +1881,7 @@ const SENTINEL_INTERSECT = {
   color: rgba(var(--v-theme-on-surface), 0.7);
 }
 
-/* 计算：默认折叠，点标题展开 */
-.bcf-dialog :deep(.bcf-calc-head) {
-  cursor: pointer;
-  user-select: none;
-  color: rgba(var(--v-theme-on-surface), 0.6);
-}
-
-.bcf-dialog :deep(.bcf-calc-head)::before {
-  content: "▸ ";
-}
-
-.bcf-dialog :deep(.bcf-block--calc.is-open > .bcf-calc-head)::before {
-  content: "▾ ";
-}
-
-.bcf-dialog :deep(.bcf-block--calc > .bcf-items) {
-  display: none;
-}
-
-.bcf-dialog :deep(.bcf-block--calc.is-open > .bcf-items) {
-  display: flex;
-}
-
-.bcf-dialog :deep(.bcf-block--calc),
+/* 说明块：小字灰色 */
 .bcf-dialog :deep(.bcf-block--note) {
   font-size: 12px;
   color: rgba(var(--v-theme-on-surface), 0.6);
