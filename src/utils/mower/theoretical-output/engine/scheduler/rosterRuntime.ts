@@ -1,3 +1,4 @@
+import {mowerInitialMorale} from './mowerInitialMorale'
 import type {MowerReloadRequest,MowerReloadObservation} from './mowerReload'
 import type {MowerClueRequest,MowerClueObservation} from './mowerClueLifecycle'
 import type {MowerTodoTaskRequest,MowerTodoTaskObservation} from './mowerTodoTask'
@@ -25,13 +26,22 @@ export interface RuntimePosition {
 }
 export interface RuntimeBed { id: string; roomId: string; vip: boolean; managedRecovery?: boolean }
 export interface RuntimeConfig {
+ majorMaintenanceStartHours?:number
  /** The application simulation selects the October 3 source contract. */
+ mowerDormIsolation?:string[][]
  mowerAlpha?:boolean;mowerDormOrder?:string[]
+ /** Operators with an unlocked single-target recovery skill in the active simulation roster. */
+ mowerSingleRecoverySkillNames?:string[]
  mowerMoodLimits?:MowerMoodLimitConfig
   positions: RuntimePosition[]; beds: RuntimeBed[]; initialMorale?: Record<string, number>
-  mowerSourcePlan?: Record<string,{agent:string;group:string;replacement:string[]}[]>
+  /** Default scene input uses native policy upper limits; explicit overrides remain unchanged except the fixed Fiammetta initial condition. */
+  mowerInitialMorale?: { fromUpperLimit: boolean; explicitOperators: string[] }
+  mowerSourcePlan?: Record<string,{agent:string;group:string;replacement:string[];groupBindings?:{group:string;replacement:string[]}[]}[]>
+  mowerRecycleBuilt?: boolean
   /** Disable order tasks only for the old no-wake comparison. */
   mowerRunOrderEnabled?: boolean
+  /** An effective maintenance backup owns at least one native runner primary. */
+  mowerMaintenanceRunOrderPaused?: boolean
   mowerDroneCountLimit?: number
   /** Source device back(0.5); absent for pure, frozen-clock decision fixtures. */
   mowerDeviceTiming?: {roomReturnMicros:number}
@@ -48,7 +58,7 @@ export interface RuntimeConfig {
   mowerServices?:{enableParty:boolean;droneIntervalHours:number;reloadRooms:readonly string[]|null;maaGapHours:number;leifengMode:boolean}
   mowerClueObservations?:{partyEndMicros:number|null;clueCount:number}
   mowerTaskScheduling?:MowerTaskSchedulingOptions
-  mowerPolicy?: { groupRestInFullOnMoodGap?:boolean; groupMoodGapMaxExtraWaitHours?:number; mergeIntervalMinutes?:number; restMoodLimits?: Record<string,number>; freeRoom?: boolean; taskBuffers?: boolean; rescueThreshold?: number; restingThreshold: number; powerPlantCount: number; opeRestingPriority: string[] }
+  mowerPolicy?: { groupRestInFullOnMoodGap?:boolean; groupMoodGapThresholdMinutes?:number; groupMoodGapMaxExtraWaitHours?:number; groupMoodGapExclusions?:string[]; mergeIntervalMinutes?:number; restMoodLimits?: Record<string,number>; freeRoom?: boolean; taskBuffers?: boolean; rescueThreshold?: number; restingThreshold: number; powerPlantCount: number; opeRestingPriority: string[] }
   runOrderPolicies?: RunOrderPolicy[]
 }
 export interface RuntimeEvent {
@@ -57,11 +67,20 @@ export interface RuntimeEvent {
   beds?: string[]; moraleBefore?: number[]; moraleAfter?: number[]; reason?: 'position-correction'
 }
 export interface RuntimeState {
+  /** Current simulation inventory, keyed by the six native Chinese item names. */
+  mowerInventoryCounts?: Readonly<Record<string, number>>
+  /** Observed products with the base-plan fallback already applied by the host. */
+  mowerFacilityProducts?: Readonly<Record<string, string | null>>
+  /** Non-enumerable live query installed only for observed inventory/product conditions. */
+  mowerBackupObservationWakeMicros?: () => number | undefined
   /** Explicit stable scene input shared by headless facility adapters. */
   mowerUI?:{scene:string;lastRoom:string}
   mowerSource?:MowerSourceRuntime; mowerBackupContext?:MowerBackupContext; mowerBackupGenerated?:MowerTask[]
   mowerShiftModel?:MowerShiftModel
   config: RuntimeConfig; time: number; occupants: Record<string, string>; morale: Record<string, number>
+  /** First physical mood, including operators first introduced by a later backup. */
+  initialMorale?: Record<string, number>
+  workPositionChanges?: Record<string, number>
   bedOccupants: Record<string, string>; events: RuntimeEvent[]
   backupBedOccupants?: Set<string>
   pendingRest?: string[]
@@ -88,6 +107,8 @@ export interface RuntimeRates {
   recoveryRate: (operatorId: string, roomId: string, state: RuntimeState) => number
   /** Stable rate tables for one physical-state sweep; callers must not mutate state while using them. */
   snapshotRates?:()=>{work:Readonly<Record<string,number>>;recovery:Readonly<Record<string,number>>}
+  /** Isolated recall forecast: current projected consumption and conservative recovery. */
+  forecastRates?:(state:RuntimeState)=>{work:Readonly<Record<string,number>>;recovery:Readonly<Record<string,number>>}
   /** Additional skill morale boundaries; callers can split intervals at non-roster events too. */
   thresholds?: (operatorId: string, state: RuntimeState) => number[]
 }
@@ -105,10 +126,11 @@ export function createRosterRuntime(config: RuntimeConfig): RuntimeState {
   if(config.mowerSourcePlan)for(const slots of Object.values(config.mowerSourcePlan))for(const slot of slots){if(!['Free','Current',''].includes(slot.agent))ids.add(slot.agent);slot.replacement.forEach(id=>ids.add(id))}
   config.runOrderPolicies?.forEach(policy => policy.orderedOperatorIds.forEach(id => ids.add(id)))
   for (const id of ids) {
-    const m = config.initialMorale?.[id] ?? 24
+    const m = mowerInitialMorale(id, config.initialMorale?.[id] ?? 24)
     if (!Number.isFinite(m) || m < 0 || m > 24) throw new Error(`Invalid morale: ${id}`)
     s.morale[id] = m
   }
+  s.initialMorale = {...s.morale}
   if (config.mowerPolicy && config.beds.length && config.idleOperators === undefined && config.availableIdleOperators === undefined) rosterDiagnostic(s,'idle-roster-unspecified','Mower Free card pool is unspecified in this direct fixture')
   return s
 }
@@ -557,7 +579,7 @@ function applyExhaustSupport(s:RuntimeState,trial:RuntimeState):void {
 function fillIdleBeds(s: RuntimeState): void {
   const pool = [...new Set([...s.config.positions.flatMap(p=>p.candidates),...(s.config.runOrderPolicies?.flatMap(p=>p.orderedOperatorIds) ?? []),...(s.config.idleOperators ?? []),...(s.config.availableIdleOperators ?? [])])]
   const available = pool.filter(id => !s.config.freeBlacklist?.includes(id) && !s.config.positions.some(p => p.primary === id) && !Object.values(s.occupants).includes(id) && !Object.values(s.bedOccupants).includes(id) && (s.morale[id] ?? 24) < (restMoodLimit(s,id) ?? Infinity)-MORALE_EPSILON && (!s.config.mowerPolicy?.freeRoom || (s.morale[id] ?? 24) < 24 - MORALE_EPSILON)).sort((a,b) => (s.morale[a] ?? 24) - (s.morale[b] ?? 24))
-  for (const bed of s.config.beds) if (!s.bedOccupants[bed.id] && available.length) {const name=available.shift()!;s.morale[name]??=s.config.initialMorale?.[name]??24;s.bedOccupants[bed.id]=name}
+  for (const bed of s.config.beds) if (!s.bedOccupants[bed.id] && available.length) {const name=available.shift()!;s.morale[name]??=mowerInitialMorale(name,s.config.initialMorale?.[name]??24);s.bedOccupants[bed.id]=name}
 }
 /** Mower try_reorder: explicit list, then high/normal primaries, then substitutes. */
 function reorderMowerBeds(s: RuntimeState): void {

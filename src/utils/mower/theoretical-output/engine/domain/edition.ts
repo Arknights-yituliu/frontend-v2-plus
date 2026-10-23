@@ -13,7 +13,7 @@ export interface CalculatorEdition {
 export const EDITION: CalculatorEdition = {
   id: 'shift-run',
   label: '跑单排班版',
-  description: '以但书与龙舌兰换入跑单为核心，贸易站默认启用跑单。',
+  description: '按理想跑单模型，计算贸易站已配置候补的特殊订单收益。',
   storageNamespace: 'shift-run',
   allowShiftRun: true,
   importLegacyConfig: false,

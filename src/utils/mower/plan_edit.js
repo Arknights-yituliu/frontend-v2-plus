@@ -46,6 +46,13 @@ function swapTask(tasks, source, target) {
 }
 
 function updateTrigger(trigger, source, target) {
+  if (Array.isArray(trigger?.args)) {
+    trigger.args = trigger.args.map((value) => {
+      if (typeof value === 'string') return swapSubstrings(value, source, target)
+      updateTrigger(value, source, target)
+      return value
+    })
+  }
   for (const key in trigger) {
     if (key === 'left' || key === 'right') {
       if (typeof trigger[key] === 'string') {
@@ -57,7 +64,8 @@ function updateTrigger(trigger, source, target) {
   }
 }
 
-function swapPlanFacilities(mainPlan, backupPlans, activePlan, source, target) {
+function swapPlanFacilities(mainPlan, backupPlans, activePlan, source, target, backupGroups = []) {
+  for (const group of backupGroups) updateTrigger(group.trigger, source, target)
   if (activePlan === 'main') {
     swap(source, target, mainPlan)
   } else {
@@ -114,6 +122,13 @@ export function replace_trigger_operators(trigger, source, target) {
   // 按带引号边界替换——避免裸子串替换误伤更长干员名（阿 ⊂ 阿米娅/阿消 等）
   const quoted_source = `['${source}']`
   const quoted_target = `['${target}']`
+  if (Array.isArray(trigger.args)) {
+    trigger.args = trigger.args.map((value) => {
+      if (typeof value === 'string') return value.split(quoted_source).join(quoted_target)
+      replace_trigger_operators(value, source, target)
+      return value
+    })
+  }
   for (const key of ['left', 'right']) {
     const value = trigger[key]
     if (typeof value === 'string') {
@@ -131,7 +146,8 @@ export function replace_task_operators(task, source, target) {
   }
 }
 
-export function apply_operator_replace({ main_plan, main_conf, backup_plans }, source, target) {
+export function apply_operator_replace({ main_plan, main_conf, backup_plans, backup_groups = [] }, source, target) {
+  for (const group of backup_groups) replace_trigger_operators(group.trigger, source, target)
   replace_plan_operators(main_plan, source, target)
   replace_conf_operators(main_conf, source, target)
   for (const backup of backup_plans || []) {

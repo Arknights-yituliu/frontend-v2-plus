@@ -1,8 +1,9 @@
 import { OPERATOR_MAP } from '../domain/operators'
 import type { OperatorInventory } from '../domain/operatorInventory'
 import type { EfficiencyResources } from '../domain/types'
-import type { CompiledSchedule } from '../scheduler/types'
-import { compiledScheduleToRuntimeConfig } from '../scheduler/scheduleAdapter'
+import type { CompiledSchedule } from './types'
+import { compiledScheduleToRuntimeConfig } from './scheduleAdapter'
+
 export interface ScheduleInventoryDiagnostic {code:string;message:string;operatorName?:string}
 /** Validate ownership and input stages; skill selection belongs to each simulation. */
 export function validateScheduleInventory(schedule: CompiledSchedule, inventory: OperatorInventory, resources?: Partial<EfficiencyResources>, scope: 'all' | 'efficiency-resources' = 'all') {
@@ -22,4 +23,3 @@ export function validateScheduleInventory(schedule: CompiledSchedule, inventory:
   }
   return {valid:inventory.valid&&diagnostics.length===0,diagnostics,participantIds:[...references]}
 }
-
