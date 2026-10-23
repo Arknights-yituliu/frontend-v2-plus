@@ -1,3 +1,4 @@
+import {commitMowerGroupShifts,mowerArrangementGroupTransitions,mowerRestingBindingGroups,normalizeMowerSharedArrangement} from './mowerSharedGroups'
 // Port of generate_plan_by_drom and merge_release_dorm, default Mower alpha.
 // Source: c6bdbb292fe7fcd84c6dfb66154a12a1a9bc5b88 (MIT, Copyright 2021 Nano).
 import {MOWER_TASK_TYPES as T,MowerTask,toMowerMicros,isMowerRunOrderTask,type MowerTaskPlan} from './mowerTaskQueue'
@@ -66,25 +67,31 @@ function generateAlphaDormTasks(batches:MowerDormBatch[],data:MowerSchedulingDat
  if(!batches.length)return []
  const shadow=projectMowerArrangements(data,[]),ordered=batches.map(b=>({...b,dorms:b.dorms.map(d=>({...d,position:[...d.position] as [string,number]}))})).sort((a,b)=>a.timeMicros-b.timeMicros)
  const result:MowerTask[]=[],planned=new Set<string>(),now=data.nowMicros
+ const releasePositions=new Map(data.dorms.filter(b=>b.name).map(b=>[b.name,b.position]))
  const add=(plan:MowerTaskPlan,type:typeof T.SHIFT_ON,time:number,metadata='')=>{const task=new MowerTask({plan,type,metadata});task.timeMicros=time;result.push(task)}
  for(const batch of ordered){
-  const plan:MowerTaskPlan={};let exhaust=false
+  const plan:MowerTaskPlan={}
   for(const bed of batch.dorms){
-   const op=shadow.operators[bed.name];if(!bed.name||!op||planned.has(op.name))continue
-   if(op.exhaustRequire)exhaust=true
+   // A return can be postponed by backup dependencies after personal recovery completes.
+   const op=shadow.operators[bed.name];if(!bed.name||!op||batch.restInFull!==null&&planned.has(op.name))continue
    if(!op.isHigh()||batch.restInFull===null){
     if(batch.restInFull===null&&shadow.skipIdleDormRelease(op.name))continue
     if(!shadow.plan[op.currentRoom]||op.currentIndex<0||op.currentIndex>=shadow.plan[op.currentRoom]!.length)continue
-    const projected=shadow.dorms.find(d=>d.name===op.name);if(!projected)continue
-    const [room,index]=projected.position;projected.reset()
+    const projected=shadow.dorms.find(d=>d.name===op.name)
+    // A projected return can close a temporary bed before the physical return succeeds.
+    const position=projected?.position??(batch.restInFull===null?releasePositions.get(op.name):undefined)
+    if(!position)continue
+    const [room,index]=position;projected?.reset()
     const row=Array(shadow.plan[room]!.length).fill('Current');row[index]='Free'
     if(batch.restInFull===null){
      if(shadow.freeRoom){const releasePlan={[room]:row};add(releasePlan,T.RELEASE_DORM,Math.max(batch.timeMicros,now-1_000_000,mowerAfterPendingArrangements(releasePlan,pending)),op.name);if(!op.isHigh())planned.add(op.name)}
      continue
     }
     ;(plan[room]??=Array(row.length).fill('Current'))[index]='Free'
-   }else for(const name of op.group?shadow.group(op.group):[op.name]){
-    const member=shadow.operators[name]!;let room=member.room,index=member.index
+   }else for(const name of op.group?shadow.shiftGroupMembers(op.group):[op.name]){
+    const member=shadow.operators[name]!
+    if(member.independentRest&&(name!==op.name||mowerRestingBindingGroups(shadow,member).length))continue
+    let room=member.room,index=member.index
     const old=existing[name]
     if(old){const [r,i]=old,native=shadow.plan[r]?.[i];if(native!==undefined&&(!plan[r]||['Current',name].includes(plan[r]![i]!))&&(native===name||!batch.dorms.some(d=>d.name===native))){room=r;index=i}}
     const row=plan[room]??=Array(shadow.plan[room]!.length).fill('Current')
@@ -93,9 +100,15 @@ function generateAlphaDormTasks(batches:MowerDormBatch[],data:MowerSchedulingDat
    }
   }
   if(!Object.keys(plan).length)continue
-  if(batch.restInFull!==null)alphaRebalanceClosingDorms(shadow,plan,planned).forEach(n=>planned.add(n))
+  if(batch.restInFull!==null){
+   const transitions=mowerArrangementGroupTransitions(shadow,plan)
+   if(!normalizeMowerSharedArrangement(shadow,plan,transitions))continue
+   for(const op of Object.values(shadow.operators))if(op.multiGroup&&mowerRestingBindingGroups(shadow,op,transitions).length)planned.delete(op.name)
+   commitMowerGroupShifts(shadow,transitions)
+   alphaRebalanceClosingDorms(shadow,plan,planned).forEach(n=>planned.add(n))
+  }
   const earliest=mowerAfterPendingArrangements(plan,pending)
-  if(batch.restInFull){add(plan,T.SHIFT_ON,Math.max(batch.timeMicros-(exhaust?0:toMowerMicros(8/60)),now,earliest));continue}
+  if(batch.restInFull){add(plan,T.SHIFT_ON,Math.max(batch.timeMicros,now,earliest));continue}
   if(batch.restInFull===null&&!shadow.freeRoom)continue
   const type=batch.restInFull===null?T.RELEASE_DORM:T.SHIFT_ON
   let inserted=false

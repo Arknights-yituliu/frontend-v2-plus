@@ -1,8 +1,9 @@
+import type {MowerTaskPlan} from './mowerTaskQueue'
 // Port of default available_free / _find_dorm_slot / assign_dorm(_group).
 // Source: c6bdbb292fe7fcd84c6dfb66154a12a1a9bc5b88 (MIT, Copyright 2021 Nano).
 import {hasRestingMood,rescueMoodThreshold,restingMood,type MowerOperatorState} from './mowerOperatorState'
 import type {MowerSchedulingData,MowerDormState} from './mowerSchedulingData'
-import {alphaRestingTier,alphaRestingKey,compareAlphaKeys,alphaSlotTakable,alphaFindDormSlot} from './mowerAlphaDorm'
+import {alphaRestingTier,alphaFullDynamicCandidate,alphaRestingKey,compareAlphaKeys,alphaSlotTakable,alphaFindDormSlot} from './mowerAlphaDorm'
 function defaultOnly(data:MowerSchedulingData){if(data.policy.experimentalDormLogic)throw new Error('Experimental resting tiers require their source port')}
 export function mowerStandbyCanYield(data:MowerSchedulingData,op:MowerOperatorState):boolean {
  return data.canStandby(op)&&hasRestingMood(op,data.nowMicros)&&restingMood(op,data.nowMicros)>=rescueMoodThreshold(op,data.policy)
@@ -65,21 +66,27 @@ export function mowerFindDormSlot(data:MowerSchedulingData,name:string,used:Set<
 export function mowerStandbyCandidates(data:MowerSchedulingData,names:string[]):Set<string> {
  const anchors=new Set(names.map(n=>data.operators[n]!).filter(op=>op.group&&op.isHigh()&&(data.alpha?!data.canStandby(op):op.restingPriority==='high')&&!op.workaholic&&(data.alpha||data.policy.experimentalDormLogic||!op.workshop)&&!op.room.startsWith('dorm')&&op.mood>=0&&op.mood<op.upperLimit&&op.currentMood(data.nowMicros)<op.upperLimit).map(op=>op.group))
  const hasAnchor=data.dorms.some(b=>{const op=data.operators[b.name];return !!op&&data.effectiveFreeSlot(b)&&op.isHigh()&&(data.alpha?!data.canStandby(op)&&!data.restMoodComplete(op.name):op.restingPriority==='high')})
- return new Set(names.filter(n=>{const op=data.operators[n]!;return data.canStandby(op)&&(anchors.has(op.group)||!op.group&&hasAnchor)}))
+ return new Set(names.filter(n=>{const op=data.operators[n]!;return data.canStandby(op)&&(anchors.has(op.group)||op.independentRest&&op.groupBindings.some(binding=>!!binding.group&&anchors.has(binding.group))||!op.group&&hasAnchor)}))
 }
-export function mowerAssignDormGroup(data:MowerSchedulingData,names:string[],activeGroups?:Set<string>,departingNames?:ReadonlySet<string>):MowerDormState[]|undefined {
+/** Alpha group admission follows Operators.assign_dorm_group at Mower
+ * 617aef56f233381426107087437262fb6a802287: keep the ordered greedy choices;
+ * a required member without a bed rejects the whole reservation atomically. */
+export function mowerAssignDormGroup(data:MowerSchedulingData,names:string[],activeGroups?:Set<string>,departingNames?:ReadonlySet<string>,plan:MowerTaskPlan={},reservedSlots:ReadonlySet<string>=new Set()):MowerDormState[]|undefined {
  defaultOnly(data)
  const required=names.filter(n=>!data.restMoodComplete(n)),optional=mowerStandbyCandidates(data,required)
  const ordered=[...required].sort((a,b)=>{
-  if(data.alpha)return Number(optional.has(a))-Number(optional.has(b))||compareAlphaKeys(alphaRestingKey(data,a),alphaRestingKey(data,b))
+  if(data.alpha)return Number(optional.has(a))-Number(optional.has(b))||Number(alphaFullDynamicCandidate(data,a))-Number(alphaFullDynamicCandidate(data,b))||compareAlphaKeys(alphaRestingKey(data,a),alphaRestingKey(data,b))
   const x=data.operators[a]!,y=data.operators[b]!
   return Number(x.restingPriority==='standby')-Number(y.restingPriority==='standby')||Number(x.restingPriority==='high')-Number(y.restingPriority==='high')
  })
+ const pending=structuredClone(plan)
  const used=new Set<number>(),assignments:{name:string;index:number}[]=[]
  for(const name of ordered){
-  const index=data.alpha?alphaFindDormSlot(data,name,used,activeGroups):mowerFindDormSlot(data,name,used,true,departingNames)
+  const index=data.alpha?alphaFindDormSlot(data,name,used,activeGroups,pending,reservedSlots):mowerFindDormSlot(data,name,used,true,departingNames)
   if(index===undefined){if(optional.has(name))continue;return undefined}
   used.add(index);assignments.push({name,index})
+  const [room,position]=data.dorms[index]!.position
+  ;(pending[room]??=Array(data.plan[room]!.length).fill('Current'))[position]=name
  }
  return assignments.map(({name,index})=>{const bed=data.dorms[index]!;bed.name=name;bed.timeMicros=undefined;return bed})
 }
@@ -90,7 +97,7 @@ export function mowerAssignDorm(data:MowerSchedulingData,name:string,used=new Se
 export function mowerAverageMood(data:MowerSchedulingData):number {
  let current=0,total=0
  for(const op of Object.values(data.operators)){
-  if(op.isResting()||op.group&&op.room.startsWith('dorm')||!op.isHigh()||op.workaholic||data.isStandby(op.name))continue
+  if(op.isResting()||op.group&&op.room.startsWith('dorm')||!op.isHigh()||op.workaholic||op.group&&data.canStandby(op)||data.isStandby(op.name))continue
   current+=op.currentMood(data.nowMicros)-op.lowerLimit;total+=op.upperLimit-op.lowerLimit
  }
  return total?current/total:0

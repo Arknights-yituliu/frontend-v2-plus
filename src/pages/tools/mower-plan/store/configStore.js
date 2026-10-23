@@ -22,6 +22,7 @@ const defaults = {
   group_rest_in_full_on_mood_gap: true,
   group_mood_gap_threshold_minutes: 60,
   group_mood_gap_max_extra_wait_hours: 0,
+  group_mood_gap_exclusions: [],
   fia_fool: true,
   assistant_follows_schedule: false,
   fia_threshold: 90,

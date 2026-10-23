@@ -7,6 +7,7 @@ import { hasRiicTag } from '../domain/riicTags'
 import type { AppConfig, OutputRoom, QualityRule, SpecialOrder } from '../domain/types'
 import { OPERATOR_MAP, type OperatorRecord, type OperatorSkill } from '../domain/operators'
 import { buildRiicGlobalContext, deriveCentralManufactureBonus, type RiicGlobalContext } from './globalContext'
+import { recyclingOccupants } from './supportFacilities/conditions'
 
 export interface OperatorBonusItem {
   name: string
@@ -377,15 +378,18 @@ function controlGlobalBonus(
     const gladiiaInControl = controlOperators.find(op => op.name === '歌蕾蒂娅')
     const gladiiaSkill = gladiiaInControl?.skills.find(s => s.buffId === 'control_mp_aegir2[010]' || s.buffId === 'control_mp_aegir2[000]')
     if (gladiiaSkill && !roomOperators.some(operator => operator.skills.some(isAutomationSkill))) {
-      // cc.c.abyssal2_2 and 2_3: manufacturing presence only, 90% per-room cap;
-      // automation wins, and the grant must not be copied by Waai Fu.
+      // cc.c.abyssal2_2 and 2_3: physical manufacturing residents receive this
+      // external grant even at zero morale; their staffing and own skills remain
+      // inactive. Automation wins; the stage cap is 45%/90%, and Waai Fu cannot copy it.
       const multiplier = gladiiaSkill.buffId === 'control_mp_aegir2[010]' ? 10 : 5
+      const stationCap = multiplier === 10 ? 90 : 45
       const manufacturingAbyssalCount = new Set(
         config.rooms.filter(r => r.type === 'manufacture').flatMap(r => r.operatorIds)
           .filter(id => { const operator = OPERATOR_MAP.get(id); return operator !== undefined && matchesRiicIdentity(operator, 'groupId', 'abyssal') }),
       ).size
-      const abyssalInRoom = roomOperators.filter(operator => matchesRiicIdentity(operator, 'groupId', 'abyssal'))
-      const value = Math.min(90, manufacturingAbyssalCount * abyssalInRoom.length * multiplier)
+      const abyssalInRoom = selectedOperators(config, room.operatorIds)
+        .filter(operator => matchesRiicIdentity(operator, 'groupId', 'abyssal'))
+      const value = Math.min(stationCap, manufacturingAbyssalCount * abyssalInRoom.length * multiplier)
       if (value > 0) {
         bonus += value
         const perBeneficiaryValue = value / abyssalInRoom.length
@@ -397,7 +401,7 @@ function controlGlobalBonus(
         for (const op of abyssalInRoom) {
           const list = operatorBonuses.get(op.charId) ?? []
           list.push({ name: '歌蕾蒂娅·集群狩猎', value: perBeneficiaryValue,
-            detail: `制造站内共 ${manufacturingAbyssalCount} 名深海猎人，单站最高90%` })
+            detail: `制造站内共 ${manufacturingAbyssalCount} 名深海猎人，单站最高${stationCap}%` })
           operatorBonuses.set(op.charId, list)
         }
       }
@@ -596,7 +600,7 @@ export function evaluateOperators(
   if (operators.length) {
     details.push(`进驻基础：${operators.length} 人，+${staffBonus}%`)
     const exhausted = operators.filter((operator) => !activeOperators.includes(operator))
-    if (exhausted.length) details.push(`0 心情失效：${exhausted.map((operator) => operator.name).join('、')}`)
+    if (exhausted.length) details.push(`0 心情：进驻基础及自身技能失效：${exhausted.map((operator) => operator.name).join('、')}`)
     if (automationOperators.size > 0) {
       details.push('自动化：仅清零其他干员的技能生产力，不影响每人 1% 进驻基础')
     }
@@ -804,6 +808,7 @@ export function evaluateOperators(
             ...config.controlOperatorIds, ...config.rooms.flatMap(r => r.operatorIds),
             ...config.facilityOperatorIds.reception, ...config.facilityOperatorIds.workshop,
             ...config.facilityOperatorIds.office, ...config.facilityOperatorIds.training,
+            ...recyclingOccupants(config),
             ...config.efficiencyResources.extraWorkplaceOperatorIds,
           ]).map(op => op.name))
           applied = 30 + (workplaceNames.has('伊内丝') ? 5 : 0) + (workplaceNames.has('W') ? 5 : 0)
@@ -1121,13 +1126,15 @@ export function evaluateOperators(
 
   const exhausted = operators.filter((operator) => !activeOperators.some((a) => a.charId === operator.charId))
   for (const op of exhausted) {
+    const synergies = global.operatorBonuses.get(op.charId) ?? []
+    const grantedBonus = synergies.reduce((sum, item) => sum + item.value, 0)
     operatorContributions.push({
       operatorId: op.charId,
       operatorName: op.name,
       staffBonus: 0,
-      skillBonus: 0,
-      totalBonus: 0,
-      items: [{ name: '0 心情失效', value: 0 }],
+      skillBonus: grantedBonus,
+      totalBonus: grantedBonus,
+      items: [{ name: '0 心情：进驻基础及自身技能失效', value: 0 }, ...synergies],
     })
   }
 

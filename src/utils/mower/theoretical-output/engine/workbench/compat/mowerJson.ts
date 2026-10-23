@@ -1,81 +1,24 @@
-import { OPERATOR_MAP, OPERATORS, type OperatorRecord } from '../../domain/operators'
+import {parseProduct, serializeProduct} from '../../domain/mowerProducts'
+export {parseProduct, serializeProduct} from '../../domain/mowerProducts'
+import { resolveOperatorCharId, restoreOperatorMowerName } from '../../domain/operatorIdentifiers'
+export { resolveOperatorCharId, restoreOperatorMowerName } from '../../domain/operatorIdentifiers'
 import { createDefaultWorkspace } from '../defaults'
+import { migrateMowerAlphaDocument } from './mowerAlphaMigration'
 import { inferFacilityLevels } from '../levelInference'
 import { hasDormKeeper } from '../facilityState'
 import {
   MOWER_ROOM_IDS,
-  type MowerFacilityType,
-  type MowerProduct,
+  MOWER_OPERATOR_LIST_FIELDS,
   type MowerRoomId,
   type MowerSlot,
   type RosterWorkspace,
-} from '../model'
-
-const OPERATOR_BY_NAME = new Map<string, OperatorRecord>()
-const OPERATOR_BY_APPELLATION = new Map<string, OperatorRecord>()
-const OPERATOR_BY_ID = new Map<string, OperatorRecord>()
-
-for (const op of OPERATORS) {
-  OPERATOR_BY_NAME.set(op.name, op)
-  OPERATOR_BY_APPELLATION.set(op.appellation.toLowerCase(), op)
-  OPERATOR_BY_ID.set(op.charId, op)
-}
-
-export function resolveOperatorCharId(identifier: string): string {
-  if (OPERATOR_BY_ID.has(identifier)) return identifier
-  const byName = OPERATOR_BY_NAME.get(identifier)
-  if (byName) return byName.charId
-  const byAppellation = OPERATOR_BY_APPELLATION.get(identifier.toLowerCase())
-  if (byAppellation) return byAppellation.charId
-  return identifier
-}
-
-export function restoreOperatorMowerName(charIdOrName: string): string {
-  const op = OPERATOR_MAP.get(charIdOrName)
-  return op ? op.name : charIdOrName
-}
-
-export function parseProduct(product: unknown): MowerProduct | undefined {
-  if (typeof product !== 'string') return undefined
-  if (product === 'exp3' || product === 'exp') return 'exp'
-  if (product === 'orirock' || product === 'fragment') return 'fragment'
-  if (product === 'lmd' || product === 'money') return 'money'
-  if (product === 'gold') return 'gold'
-  if (product === 'orundum') return 'orundum'
-  return undefined
-}
-
-export function serializeProduct(
-  facilityType: MowerFacilityType,
-  product: MowerProduct | undefined,
-): string | undefined {
-  if (facilityType === 'manufacture') {
-    if (product === 'exp') return 'exp3'
-    if (product === 'fragment') return 'orirock'
-    if (product === 'gold') return 'gold'
-    return undefined
-  }
-  if (facilityType === 'trading') {
-    if (product === 'orundum') return 'orundum'
-    if (product === 'money') return 'lmd'
-    return undefined
-  }
-  return undefined
-}
+} from '../../domain/roster'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
-const CONF_LIST_FIELDS = [
-  'exhaust_require',
-  'rest_in_full',
-  'resting_priority',
-  'workaholic',
-  'refresh_trading',
-  'refresh_drained',
-  'ope_resting_priority',
-] as const
+const CONF_LIST_FIELDS = MOWER_OPERATOR_LIST_FIELDS
 
 type ConfListField = (typeof CONF_LIST_FIELDS)[number]
 
@@ -83,17 +26,33 @@ function isConfListField(key: string): key is ConfListField {
   return (CONF_LIST_FIELDS as readonly string[]).includes(key)
 }
 
+export function importMowerGroupBindings(value: unknown, roomId: string): NonNullable<MowerSlot['groupBindings']> {
+  if (!Array.isArray(value)) throw new Error(`Invalid Mower JSON: group_bindings in room "${roomId}" must be an array`)
+  return value.map((binding: unknown) => {
+    if (!isRecord(binding) || !Array.isArray(binding.replacement ?? [])) throw new Error(`Invalid Mower JSON: Invalid group binding in room "${roomId}"`)
+    const metadata = Object.fromEntries(Object.entries(binding).filter(([key]) => key !== 'group' && key !== 'replacement'))
+    return {
+      groupId: typeof binding.group === 'string' && binding.group ? binding.group : null,
+      replacements: (binding.replacement as unknown[] ?? []).filter((name): name is string => typeof name === 'string').map(resolveOperatorCharId),
+      ...(Object.keys(metadata).length ? { metadata } : {}),
+    }
+  })
+}
+
 export function importMowerJson(text: string): RosterWorkspace {
-  let parsed: unknown
+  let raw: unknown
   try {
-    parsed = JSON.parse(text)
+    raw = JSON.parse(text)
   } catch (err) {
     throw new Error(`Invalid Mower JSON: ${err instanceof Error ? err.message : String(err)}`)
   }
 
-  if (!isRecord(parsed)) {
+  if (!isRecord(raw)) {
     throw new Error('Invalid Mower JSON: Root must be an object')
   }
+
+  const migration = migrateMowerAlphaDocument(raw)
+  const parsed = migration.document
 
   const defaultKey = typeof parsed.default === 'string' && parsed.default.trim()
     ? parsed.default.trim()
@@ -108,9 +67,9 @@ export function importMowerJson(text: string): RosterWorkspace {
   }
 
   const ws = createDefaultWorkspace()
-  // Imported staffing must come only from the supplied Mower plan.
-  for (const roomId of MOWER_ROOM_IDS) ws.mainPlan.facilities[roomId].slots = []
   ws.compatibility.defaultPlanKey = defaultKey
+  if (migration.retiredBackupPlans.length) ws.compatibility.retiredBackupPlans = migration.retiredBackupPlans
+  if (migration.warnings.length) ws.compatibility.migrationWarnings = migration.warnings
   ws.compatibility.facilityMetadata = {}
   ws.compatibility.unrecognizedRooms = {}
 
@@ -131,6 +90,13 @@ export function importMowerJson(text: string): RosterWorkspace {
     const roomId = roomIdStr as MowerRoomId
     const facility = ws.mainPlan.facilities[roomId]
 
+    // Native Mower plans omit right-side levels. As for existing support rooms,
+    // assume the maximum built level unless explicit local metadata provides it.
+    if (roomId === 'recycle') {
+      facility.level = Number.isInteger(rawFacility.level) && Number(rawFacility.level) >= 0 && Number(rawFacility.level) <= 3
+        ? Number(rawFacility.level) : 3
+    }
+
     const facilityExtra: Record<string, unknown> = {}
     for (const [k, v] of Object.entries(rawFacility)) {
       if (k !== 'name' && k !== 'plans' && k !== 'product') {
@@ -141,6 +107,10 @@ export function importMowerJson(text: string): RosterWorkspace {
     if (rawFacility.name === '制造站') facility.type = 'manufacture'
     else if (rawFacility.name === '贸易站') facility.type = 'trading'
     else if (rawFacility.name === '发电站') facility.type = 'power'
+    else if (roomId === 'recycle' && rawFacility.name === '回收站') {
+      facility.type = 'recycle'
+      facilityExtra.rawName = rawFacility.name
+    }
     else if (typeof rawFacility.name === 'string' && rawFacility.name) {
       facility.type = ''
       facilityExtra.rawName = rawFacility.name
@@ -149,6 +119,7 @@ export function importMowerJson(text: string): RosterWorkspace {
     const parsedProduct = parseProduct(rawFacility.product)
     if (parsedProduct) {
       facility.product = parsedProduct
+      if (rawFacility.product === 'orirock_device') facilityExtra.rawProduct = rawFacility.product
     } else {
       facility.product = undefined
       if (typeof rawFacility.product === 'string' && rawFacility.product) {
@@ -171,7 +142,7 @@ export function importMowerJson(text: string): RosterWorkspace {
 
         const slotExtra: Record<string, unknown> = {}
         for (const [sk, sv] of Object.entries(rawSlot)) {
-          if (sk !== 'agent' && sk !== 'group' && sk !== 'replacement') {
+          if (sk !== 'agent' && sk !== 'group' && sk !== 'replacement' && sk !== 'group_bindings') {
             slotExtra[sk] = sv
           }
         }
@@ -201,6 +172,9 @@ export function importMowerJson(text: string): RosterWorkspace {
           groupId: typeof rawSlot.group === 'string' && rawSlot.group ? rawSlot.group : null,
           replacements,
         }
+        if (rawSlot.group_bindings !== undefined) {
+          slot.groupBindings = importMowerGroupBindings(rawSlot.group_bindings, roomId)
+        }
         if (Object.keys(slotExtra).length > 0) {
           slot.metadata = slotExtra
         }
@@ -217,14 +191,35 @@ export function importMowerJson(text: string): RosterWorkspace {
   for (const roomId of MOWER_ROOM_IDS) {
     const facility = ws.mainPlan.facilities[roomId]
     if (!importedPresentRooms.includes(roomId) ||
-      (facility.type === 'dormitory' && !hasDormKeeper(facility))) {
-      facility.level = 0
+      (!Object.prototype.hasOwnProperty.call(parsed.facility_levels ?? {}, roomId) && facility.type === 'dormitory' && !hasDormKeeper(facility) &&
+        !facility.slots.some(slot => slot.occupant.kind === 'free'))) {
+      facility.level = ['meeting', 'factory', 'contact', 'train', 'recycle'].includes(roomId) ? 3 : 0
       facility.slots = []
     }
   }
 
-  // Infer facility levels strictly according to existing inference rules
+  // Building levels are shared by the main roster and all backup arrangements.
+  if (parsed.facility_levels !== undefined) {
+    if (!isRecord(parsed.facility_levels)) throw new Error('设施等级必须为对象')
+    for (const [room, level] of Object.entries(parsed.facility_levels)) {
+      const maximum = room === 'central' || room.startsWith('dormitory_') ? 5 : 3
+      if (!knownRoomSet.has(room) || room.startsWith('gaming_') ||
+        !Number.isInteger(level) || Number(level) < 0 || Number(level) > maximum) {
+        throw new Error(`设施 ${room} 等级必须为 0–${maximum} 的整数`)
+      }
+      if (Number(level) > 0 && room.startsWith('room_') &&
+        !['制造站', '贸易站', '发电站'].includes(String((rawPlan[room] as Record<string, unknown> | undefined)?.name))) {
+        throw new Error(`请先设置 ${room} 的设施类别`)
+      }
+      ws.mainPlan.facilities[room as MowerRoomId].level = Number(level)
+    }
+  }
+
+  // Infer unset levels using the actual built-room layout, then restore explicit values.
   inferFacilityLevels(ws.mainPlan.facilities)
+  for (const [room, level] of Object.entries(parsed.facility_levels ?? {})) {
+    ws.mainPlan.facilities[room as MowerRoomId].level = Number(level)
+  }
 
   // Parse conf
   const hasConf = parsed.conf !== undefined
@@ -243,6 +238,7 @@ export function importMowerJson(text: string): RosterWorkspace {
 
     for (const key of CONF_LIST_FIELDS) {
       const val = c[key]
+      if (val === undefined && ws.mainPlan.conf[key] === undefined) continue
       let items: string[] = []
       if (typeof val === 'string') {
         items = val
@@ -293,6 +289,26 @@ export function importMowerJson(text: string): RosterWorkspace {
   return ws
 }
 
+/** Older versions retained recycle as an opaque room. Promote it without touching other plans. */
+export function promotePreservedRecycleRoom(workspace: RosterWorkspace): void {
+  const raw = workspace.compatibility.unrecognizedRooms?.recycle
+  if (!isRecord(raw) || workspace.mainPlan.facilities.recycle?.level) return
+  let imported: RosterWorkspace
+  try {
+    imported = importMowerJson(JSON.stringify({ default: 'plan1', plan1: { recycle: raw } }))
+  } catch {
+    // An old opaque room may be malformed. Retain it for export and inspection;
+    // migration must not make the rest of the user's workspace inaccessible.
+    return
+  }
+  workspace.mainPlan.facilities.recycle = imported.mainPlan.facilities.recycle
+  const metadata = imported.compatibility.facilityMetadata?.recycle
+  if (metadata) (workspace.compatibility.facilityMetadata ??= {}).recycle = metadata
+  const present = workspace.compatibility.importedPresentRooms
+  if (present && !present.includes('recycle')) present.push('recycle')
+  delete workspace.compatibility.unrecognizedRooms!.recycle
+}
+
 export function exportMowerJson(workspace: RosterWorkspace): string {
   const planObj: Record<string, unknown> = {}
   const facilities = workspace.mainPlan.facilities
@@ -313,7 +329,7 @@ export function exportMowerJson(workspace: RosterWorkspace): string {
 
   for (const roomId of roomIdsToExport) {
     const f = facilities[roomId]
-    if (!f || f.level === 0) continue
+    if (!f || f.level === 0 && f.slots.length === 0) continue
     const meta = workspace.compatibility.facilityMetadata?.[roomId]
     const extraMeta: Record<string, unknown> = {}
     if (meta) {
@@ -352,6 +368,9 @@ export function exportMowerJson(workspace: RosterWorkspace): string {
         group: slot.groupId || '',
         replacement,
       }
+      if (slot.groupBindings !== undefined) slotObj.group_bindings = slot.groupBindings.map(binding => ({
+        ...(binding.metadata ?? {}), group: binding.groupId || '', replacement: binding.replacements.map(restoreOperatorMowerName),
+      }))
       return slotObj
     })
 
@@ -364,7 +383,9 @@ export function exportMowerJson(workspace: RosterWorkspace): string {
     let exportedProduct: string | undefined
     if (f.type !== 'power') {
       const serialized = serializeProduct(f.type, f.product)
-      if (serialized !== undefined) {
+      if (f.product === 'fragment' && meta?.rawProduct === 'orirock_device') {
+        exportedProduct = 'orirock_device'
+      } else if (serialized !== undefined) {
         exportedProduct = serialized
       } else if (f.product === undefined && typeof meta?.rawProduct === 'string' && meta.rawProduct) {
         exportedProduct = meta.rawProduct
@@ -382,9 +403,13 @@ export function exportMowerJson(workspace: RosterWorkspace): string {
     planObj[roomId] = facilityData
   }
 
+  // Infer levels from structured rooms without parsing preserved opaque values.
+  const inferencePlanObj = { ...planObj }
+
   // Include any unrecognized rooms preserved from import
   if (workspace.compatibility.unrecognizedRooms) {
     for (const [uRoomId, uRoomData] of Object.entries(workspace.compatibility.unrecognizedRooms)) {
+      if (uRoomId === 'recycle' && planObj.recycle !== undefined) continue
       planObj[uRoomId] = uRoomData
     }
   }
@@ -398,7 +423,11 @@ export function exportMowerJson(workspace: RosterWorkspace): string {
   }
   conf.ling_xi = workspace.mainPlan.conf.ling_xi
   for (const field of CONF_LIST_FIELDS) {
-    const list = workspace.mainPlan.conf[field] || []
+    const value: unknown = workspace.mainPlan.conf[field]
+    if (value === undefined) continue
+    // Persisted pre-alpha workspaces retained these newer lists as native CSV.
+    const list = Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string')
+      : typeof value === 'string' ? value.split(/[,，]/).map(item => item.trim()).filter(Boolean) : []
     conf[field] = list.map(restoreOperatorMowerName).join(',')
   }
 
@@ -409,6 +438,23 @@ export function exportMowerJson(workspace: RosterWorkspace): string {
     default: defaultKey,
     [defaultKey]: planObj,
   }
+
+  const savedLevels = workspace.compatibility.unrecognizedFields.facility_levels
+  const exportedLevels: Record<string, unknown> = isRecord(savedLevels) ? { ...savedLevels } : {}
+  for (const room of Object.keys(exportedLevels)) {
+    const facility = facilities[room as MowerRoomId]
+    if (facility) exportedLevels[room] = facility.level
+  }
+  // Save edited levels that the exported legacy layout would infer differently.
+  const inferred = importMowerJson(JSON.stringify({ default: defaultKey, [defaultKey]: inferencePlanObj })).mainPlan.facilities
+  for (const room of MOWER_ROOM_IDS) {
+    if (room.startsWith('gaming_')) continue
+    const facility = facilities[room]
+    if (facility && (facility.level !== inferred[room].level || facility.level === 0 && facility.slots.length > 0)) {
+      exportedLevels[room] = facility.level
+    }
+  }
+  if (isRecord(savedLevels) || Object.keys(exportedLevels).length) output.facility_levels = exportedLevels
 
   if (workspace.compatibility.importedHasConf !== false) {
     output.conf = conf
