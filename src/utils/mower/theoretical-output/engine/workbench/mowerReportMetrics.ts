@@ -1,6 +1,20 @@
 import type { ScheduleSimulationReport } from '../simulator/scheduleSimulation'
-import { scoreSimulationProduction } from '../optimizer/productionObjective'
+import { scoreSimulationProduction, simulationOutputOrders } from '../simulator/productionScore'
 import { virtualGoldEquivalent } from '../rules/orderValue'
+
+export function receptionClueMetrics(report: Pick<ScheduleSimulationReport, 'observedHours' | 'receptionClues'>) {
+  const clues = report.receptionClues
+  if (!clues || !Number.isFinite(report.observedHours) || report.observedHours <= 0) return null
+  return {
+    clueCount: clues.completed * 24 / report.observedHours,
+    clueTotal: clues.completed,
+    progress: clues.progress,
+  }
+}
+
+export function formatClueCount(count: number): string {
+  return count.toLocaleString('zh-CN', { maximumFractionDigits: 2 })
+}
 
 /** Shared weighted report; the default 82 coefficients value order premiums at 0.8.
  * Virtual gold is a reporting convention, never a physical gold inventory inflow.
@@ -9,9 +23,7 @@ export function mowerReportMetrics(report: ScheduleSimulationReport) {
   const production = report.production
   if (!report.success || !production?.success || report.observedHours <= 0) return null
   const factor = 24 / report.observedHours
-  const orders = production.events.filter(e => e.type === 'order-completed'
-    && e.time > report.assumptions.warmupHours && e.time <= report.elapsedHours
-    && e.order && e.order.kind !== 'orundum').map(e => e.order!)
+  const orders = simulationOutputOrders(report).filter(order => order.kind !== 'orundum')
   const virtualGoldCount = orders.reduce((n, o) => n + virtualGoldEquivalent(o), 0)
   const score = scoreSimulationProduction(report)
   return {

@@ -1,8 +1,15 @@
-// Extracted unchanged report/validation helpers; see README.md and source-manifest.json.
+/**
+ * Derivative work based on arknights-mower (PlanEditor.vue / SlickOperatorSelect.vue)
+ * Original work Copyright (c) 2021 Nano
+ * Licensed under the MIT License
+ */
+
+// Only the report/validation runtime members are included; declarations below match the fixed source revision.
 import { OPERATOR_MAP, OPERATORS } from '../domain/operators'
-import type { MowerFacilityType } from './model'
+import type { MowerFacilityType } from '../domain/roster'
 
 const OPERATOR_BY_NAME = new Map(OPERATORS.map((op) => [op.name, op]))
+
 const OPERATOR_BY_APPELLATION = new Map(OPERATORS.map((op) => [op.appellation.toLowerCase(), op]))
 
 export function getOperatorName(identifier: string | null | undefined): string {
@@ -32,6 +39,7 @@ const FACILITY_TYPE_NAMES: Record<string, string> = {
   factory: '加工站',
   contact: '办公室',
   train: '训练室',
+  recycle: '回收站',
   gaming: '活动室',
 }
 
@@ -55,10 +63,10 @@ export function getRoomDisplayName(roomId: string, type?: MowerFacilityType | st
   if (roomId === 'factory') return '加工站'
   if (roomId === 'contact') return '办公室'
   if (roomId === 'train') return '训练室'
+  if (roomId === 'recycle') return '回收站'
   if (roomId.startsWith('gaming_')) {
     const num = roomId.replace('gaming_', '')
     return `活动室${num}`
   }
   return roomId
 }
-

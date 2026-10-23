@@ -93,8 +93,8 @@ onBeforeUnmount(() => { importId++ })
       <p v-if="importError" class="error" role="alert">{{ importError }}<span v-if="payload">。当前有效排班已保留。</span></p>
       <p v-if="importStatus" class="muted" role="status">{{ importStatus }}</p>
       <div v-if="summary" class="plan-summary">
-        <p class="summary-line"><strong>{{ fileName }}</strong><span>{{ summary.mainKey }} · {{ summary.backupCount }} 张副表 · {{ summary.operatorCount }} 位指定干员</span></p>
-        <p class="muted">计算包括完整主表与全部副表；副表按导入的触发条件切换，所有替补位与绑组均保留。</p>
+        <p class="summary-line"><strong>{{ fileName }}</strong><span>{{ summary.mainKey }} · {{ summary.backupCount }} 张副表<template v-if="summary.archivedBackupCount">（{{ summary.activeBackupCount }} 张有效，{{ summary.archivedBackupCount }} 张已归档）</template> · {{ summary.operatorCount }} 位指定干员</span></p>
+        <p class="muted">计算包括完整主表与有效副表；已归档副表保留预览，不参与模拟。副表按导入的触发条件切换，所有替补位与绑组均保留。</p>
         <details v-for="(plan, index) in summary.plans" :key="index" class="plan-preview" :open="index === 0">
           <summary>{{ plan.name }} · {{ plan.rooms.length }} 个设施</summary>
           <p v-if="plan.trigger" class="muted condition">触发条件：{{ plan.trigger }}</p>

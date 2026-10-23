@@ -3,7 +3,8 @@ import HelpText from "./HelpText.vue";
 import SlickOperatorSelect from "./SlickOperatorSelect.vue";
 import MowerInputNumber from "./MowerInputNumber.vue";
 import { mowerConfigStore } from "../store/configStore.js";
-import { inject } from "vue";
+import { computed, inject } from "vue";
+import { mowerPlanStore } from "../store/planStore.js";
 
 const { disabled } = defineProps({ disabled: Boolean });
 const mobile = inject("mobile");
@@ -21,12 +22,14 @@ const {
   group_rest_in_full_on_mood_gap,
   group_mood_gap_threshold_minutes,
   group_mood_gap_max_extra_wait_hours,
+  group_mood_gap_exclusions,
   fia_fool,
   assistant_follows_schedule,
   fia_threshold,
   rescue_threshold,
   favorite,
 } = configStore;
+const excludedGroupOptions = computed(() => [...new Set([...mowerPlanStore.all_groups.value, ...group_mood_gap_exclusions.value])].map((group) => ({ label: group, value: group })));
 </script>
 
 <template>
@@ -98,6 +101,7 @@ const {
         <template #label>
           <span>无人机使用阈值</span>
           <help-text>
+            <div>普通制造站加速仅使用超过阈值的无人机，与跑单房间和自动切产物开关无关。</div>
             <div>如加速贸易，推荐大于 贸易站数*10 + 92</div>
             <div>如加速制造，推荐大于 贸易站数*10</div>
           </help-text>
@@ -197,12 +201,36 @@ const {
         <n-checkbox v-model:checked="group_rest_in_full_on_mood_gap">
           组内心情差距过大时延后回班
           <help-text
-            >默认开启。参与正常回班计时成员的最晚与最早预计恢复完成时间之差超过下方阈值时，延后整组回班。关闭后按组内最早恢复时间安排回班；单独设置“回满”的干员仍会回满。</help-text
+            >默认开启。单绑、非候补工作主班的最晚与最早预计恢复完成时间之差超过下方阈值后，本轮等这些主班全部回满再回班。候补、替班和多绑主班不延长这项等待；明确设置“回满”的主班仍须全部回满。组内等待受下方额外等待上限限制，单独设置“回满”的主班不受该上限限制。</help-text
           >
         </n-checkbox>
       </n-form-item>
+      <n-form-item v-if="group_rest_in_full_on_mood_gap">
+        <template #label>
+          <span class="label-with-help">
+            <span>延后回班排除组</span>
+            <help-text>
+              可多选或输入组名，选项包含主表和副表的组。选中的组按普通规则回班，本轮已触发的组内恢复时间差等待也会取消；个人“回满”要求继续生效。此设置同时用于收益模拟。
+            </help-text>
+          </span>
+        </template>
+        <n-select
+          v-model:value="group_mood_gap_exclusions"
+          :options="excludedGroupOptions"
+          multiple
+          filterable
+          tag
+          clearable
+          placeholder="不排除任何组"
+        />
+      </n-form-item>
       <n-form-item v-if="group_rest_in_full_on_mood_gap" label="组内恢复时间差阈值">
-        <mower-input-number v-model:value="group_mood_gap_threshold_minutes" :min="1" :max="1440" :step="5">
+        <mower-input-number
+          v-model:value="group_mood_gap_threshold_minutes"
+          :min="1"
+          :max="1440"
+          :step="5"
+        >
           <template #suffix>分钟</template>
         </mower-input-number>
       </n-form-item>
@@ -210,10 +238,18 @@ const {
         <template #label>
           <span class="label-with-help">
             <span>额外等待上限</span>
-            <help-text>仅对上方“组内心情差距过大时延后回班”生效。以不延后时的预计回班时间为起点；0 表示不限时。单独设置“回满”的干员不受此限制。</help-text>
+            <help-text>
+              仅限制组内恢复时间差触发的等待。从本轮不延后时的预计回班时间起计算，重复规划和已回满成员离宿不重新计时。0
+              表示不限时；单独设置“回满”的干员仍须回满。开启不养闲人后，先回满的成员可按原有清退规则离宿，其余成员继续休息。
+            </help-text>
           </span>
         </template>
-        <mower-input-number v-model:value="group_mood_gap_max_extra_wait_hours" :min="0" :max="24" :step="0.5">
+        <mower-input-number
+          v-model:value="group_mood_gap_max_extra_wait_hours"
+          :min="0"
+          :max="24"
+          :step="0.5"
+        >
           <template #suffix>小时</template>
         </mower-input-number>
       </n-form-item>

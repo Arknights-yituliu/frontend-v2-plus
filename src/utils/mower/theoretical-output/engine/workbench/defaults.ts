@@ -3,7 +3,7 @@ import {
   type MowerFacility,
   type MowerRoomId,
   type RosterWorkspace,
-} from './model'
+} from '../domain/roster'
 
 function createDefaultSlots(count: number) {
   return Array.from({ length: count }, () => ({
@@ -45,6 +45,9 @@ function createDefaultFacility(roomId: MowerRoomId): MowerFacility {
   }
   if (roomId === 'train') {
     return { roomId, type: 'train', level: 3, slots: createDefaultSlots(2) }
+  }
+  if (roomId === 'recycle') {
+    return { roomId, type: 'recycle', level: 0, slots: [] }
   }
   return { roomId, type: 'gaming', level: 1, slots: createDefaultSlots(1) }
 }
