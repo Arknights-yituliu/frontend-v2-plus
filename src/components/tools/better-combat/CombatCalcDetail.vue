@@ -86,13 +86,46 @@ const chartEl = ref(null);
 let chart = null;
 let themeObserver = null;
 
-// 图例配色：按图例在该时间轴内的**出现顺序**逐个取色——同一张图里绝不重色。
-// 不再按 damageType 上色（同类型多图例必然撞色，克莱门莎两条物理、逻各斯两条元素）。
-const LIGHT_PALETTE = ["#e07a1f", "#3d8bfd", "#19a974", "#8e6bbf", "#c0392b", "#1f9bb5", "#b8860b", "#7a7a7a"];
-const DARK_PALETTE = ["#ffa552", "#6fa8ff", "#3fd39a", "#b892e8", "#ff6b5e", "#4cc9e0", "#e0b040", "#a8a8a8"];
+// 图例配色：**按伤害类型取色**，不按图例出现顺序。
+// 同一张图上同一种伤害类型出现多次时（逻各斯两条凋亡、荒芜拉普兰德三条法术……），
+// 第 2/3 个取同色相的变体档位并用虚线区分——跨干员仍然是「物理=橙、法术=紫」。
+// 色值经 dataviz 校验器逐图校验（色觉模拟 ΔE ≥ 8、正常视觉 ΔE ≥ 15、对底对比度 ≥ 3:1）。
+const ROLE_COLORS = {
+  light: {
+    physical: ["#e0701a", "#f5b07a"],
+    art: ["#7c3aed", "#b596f7", "#4c1d95"],
+    true: ["#b0248f"],
+    weakpoint: ["#a07622"],
+    element: ["#10938a"],
+    apoptosis: ["#8a8a8a", "#c4c4c4"],
+    burn: ["#b3202e", "#e88a90"],
+    erosion: ["#1f6fd0"],
+    neural: ["#0f9ba0"],
+  },
+  dark: {
+    physical: ["#cf7a35", "#f8dcc4"],
+    art: ["#a78bfa", "#dcd0fe", "#6d4fd0"],
+    true: ["#e0579f"],
+    weakpoint: ["#c9a94a"],
+    element: ["#40c9b8"],
+    apoptosis: ["#c0c0c0", "#5e5e5e"],
+    burn: ["#d4564a", "#f0988f"],
+    erosion: ["#5a9ce8"],
+    neural: ["#45b8bd"],
+  },
+};
 
-function palette(c) {
-  return c.dark ? DARK_PALETTE : LIGHT_PALETTE;
+// 旧副本没有 colorRole 时的兜底：按 damageType 近似映射
+const DAMAGE_TYPE_FALLBACK = {
+  physical: "physical",
+  art: "art",
+  true: "true",
+  element: "element",
+  fixed: "art",
+};
+
+function roleOf(series) {
+  return series.colorRole || DAMAGE_TYPE_FALLBACK[series.damageType] || "art";
 }
 
 function themeColors() {
@@ -107,13 +140,19 @@ function themeColors() {
   };
 }
 
-// group → { points: [[frame, value]], desc, type, keys }
+// group → { points: [[frame, value]], desc, role, tier, keys }
 function buildSeries(sc) {
   const metricKey = metric.value; // damage | hits
   const groups = new Map();
+  const usedByRole = new Map(); // role → 已分配的图例数（决定取第几档色）
   for (const s of sc.series || []) {
     const g = s.group || s.label || s.key;
-    if (!groups.has(g)) groups.set(g, { group: g, desc: s.groupDesc || g, type: s.damageType, keys: [], points: [] });
+    if (!groups.has(g)) {
+      const role = roleOf(s);
+      const tier = usedByRole.get(role) || 0;
+      usedByRole.set(role, tier + 1);
+      groups.set(g, { group: g, desc: s.groupDesc || g, role, tier, keys: [], points: [] });
+    }
     const slot = groups.get(g);
     slot.keys.push({ key: s.key, label: s.label, damageType: s.damageType });
     for (const ev of s.events || []) {
@@ -148,10 +187,13 @@ function chartOption(sc) {
   const cumulative = view.value === "cumulative";
   const dense = groups.reduce((n, g) => n + g.points.length, 0) > 40;
 
-  const colors = palette(c);
-  const series = groups.map((g, i) => {
+  const table = c.dark ? ROLE_COLORS.dark : ROLE_COLORS.light;
+  const series = groups.map((g) => {
     const pts = cumulative ? toCumulative(g.points) : g.points;
-    const color = colors[i % colors.length];
+    // 同一伤害类型的第 2/3 个图例取同色相变体，并以虚线区分
+    const shades = table[g.role] || table.art;
+    const color = shades[Math.min(g.tier, shades.length - 1)];
+    const dashed = g.tier > 0;
     return {
       name: g.group,
       type: "line",
@@ -161,7 +203,7 @@ function chartOption(sc) {
       showSymbol: !cumulative || !dense,
       symbol: "circle",
       symbolSize: cumulative ? 4 : 6,
-      lineStyle: { width: 2, color },
+      lineStyle: { width: 2, color, type: dashed ? "dashed" : "solid" },
       itemStyle: { color },
       label: { show: false },
       data: pts,
