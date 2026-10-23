@@ -145,7 +145,7 @@ function drop_facility(target, event) {
   const source = event.dataTransfer.getData("text/plain");
   if (!/^room_[1-3]_[1-3]$/.test(source)) return;
 
-  swapPlanFacilities(plan.value, backup_plans.value, sub_plan.value, source, target);
+  swapPlanFacilities(plan.value, backup_plans.value, sub_plan.value, source, target, plan_store.backup_groups.value);
 }
 
 function drag_right_facility(room, event) {

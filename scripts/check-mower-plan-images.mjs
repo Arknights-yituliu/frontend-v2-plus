@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import QRCode from 'qrcode'
 import { createServer } from 'vite'
 
-const server = await createServer({ server: { middlewareMode: true }, appType: 'custom' })
+const server = await createServer({ server: { middlewareMode: true, watch: null, hmr: false, ws: false }, appType: 'custom' })
 try {
   const { encodePlanQrChunks, decodePlanQrFromRgba } = await server.ssrLoadModule('/src/utils/mower/plan_qr.js')
   const { planImageLayout } = await server.ssrLoadModule('/src/utils/mower/plan_image.js')
@@ -14,8 +14,9 @@ try {
     facility_levels: { room_1_1: 1, contact: 1, recycle: 0, dormitory_1: 2 },
     plan1: { room_1_1: { name: '制造站', product: 'gold', plans: [{ agent: '阿米娅', group: '制造组', replacement: ['砾'] }] } },
     conf: { resting_standby: '阿米娅' },
-    backup_plans: [{ name: '测试副表', plan: {}, conf: {}, trigger: { left: 'True', operator: '==', right: 'True' } }],
-    advanced_settings: { drone_threshold: 175, product_switching: { enable: true } },
+    backup_groups: [{ id: "night", name: "夜班", trigger: { function: "all", args: ["True"] } }],
+    backup_plans: [{ name: '测试副表', plan: {}, conf: {}, group_ids: ["night"], type: "exclusive", trigger: { left: { function: "max", args: ["1", "2"] }, operator: '==', right: '2' } }],
+    advanced_settings: { group_mood_gap_exclusions: ["制造组"], drone_threshold: 175, product_switching: { enable: true } },
   }
   const text = JSON.stringify(payload)
   const layout = planImageLayout(2844, 1230, 1605, 246, 954)

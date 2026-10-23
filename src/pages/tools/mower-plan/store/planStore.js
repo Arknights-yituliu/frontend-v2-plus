@@ -1,6 +1,7 @@
 import { computed, reactive, ref } from "vue";
 import { deepcopy } from "@/utils/mower/deepcopy.js";
 import { OPERATOR_CONF_FIELDS } from "@/utils/mower/plan_edit.js";
+import { backupGroupErrors } from "@/utils/mower/backup_groups.js";
 import { planBindings } from "@/utils/mower/plan_bindings.js";
 import { factory_product_ids } from "@/utils/mower/base_products.js";
 import { operatorTableV2 } from "@/utils/gameData.js";
@@ -73,10 +74,12 @@ const plan_note = ref("");
 const plan = ref(fill_empty({}));
 const facility_levels = ref({});
 const backup_plans = ref([]);
+const backup_groups = ref([{ id: "default", name: "默认分组", trigger: {} }]);
 const operators = ref([]);
 const sub_plan = ref("main");
 const main_conf = reactive({ ...fields, ling_xi, mood_limits, operator_mood_limits, dorm_order });
 let extraConf = {};
+let planInitialized = false;
 
 function hydratePlanData(payload) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) throw new Error("请选择 Mower 排班 JSON 文件");
@@ -84,8 +87,12 @@ function hydratePlanData(payload) {
   const main = data.plan1 ?? data[data.default];
   if (!main || typeof main !== "object" || Array.isArray(main)) throw new Error("文件中缺少排班主表");
   const backups = Array.isArray(data.backup_plans) ? data.backup_plans : [];
+  const groupErrors = backupGroupErrors({ ...data, backup_plans: backups });
+  if (groupErrors.length) throw new Error(groupErrors.join("；"));
   fill_empty(main);
   for (const backup of backups) {
+    backup.group_ids ??= ["default"];
+    backup.type ??= "global";
     backup.plan = fill_empty(backup.plan ?? {});
     backup.conf ??= {};
     backup.conf.mood_limits ??= null;
@@ -112,14 +119,20 @@ function hydratePlanData(payload) {
   hydrateAdvancedSettings(data.advanced_settings);
   facility_levels.value = deepcopy(data.facility_levels ?? {});
   plan.value = main;
+  const groups = deepcopy(data.backup_groups ?? []);
+  if (!groups.some((group) => group.id === "default")) groups.unshift({ id: "default", name: "默认分组", trigger: {} });
+  groups.sort((a, b) => Number(b.id === "default") - Number(a.id === "default"));
+  backup_groups.value = groups;
   backup_plans.value = backups;
   sub_plan.value = "main";
   plan_title.value = data.title ?? "";
   plan_author.value = data.author ?? "";
   plan_note.value = data.note ?? "";
+  planInitialized = true;
 }
 async function load_plan() {
-  hydratePlanData({ plan1: {}, conf: {} });
+  // Returning from income calculation must preserve the current unsaved draft.
+  if (!planInitialized) hydratePlanData({ plan1: {}, conf: {} });
 }
 async function load_operators() {
   operators.value = [...new Set(Object.values(operatorTableV2).map((op) => (op.name.startsWith("阿米娅（") ? "阿米娅" : op.name)))].map((name) => ({ value: name, label: name }));
@@ -153,6 +166,7 @@ function build_plan() {
     facility_levels: deepcopy(facility_levels.value),
     plan1: strip_plan(plan.value),
     conf,
+    backup_groups: deepcopy(backup_groups.value),
     backup_plans: backups,
     advanced_settings: buildAdvancedSettings(),
     title: plan_title.value,
@@ -163,6 +177,8 @@ function build_plan() {
 function createBackup() {
   backup_plans.value.push({
     name: `plan${backup_plans.value.length}`,
+    group_ids: ["default"],
+    type: "global",
     plan: fill_empty({}),
     trigger: { left: "", operator: "", right: "" },
     task: {},
@@ -214,6 +230,7 @@ export const mowerPlanStore = {
   plan,
   facility_levels,
   backup_plans,
+  backup_groups,
   operators,
   facility_operator_limit,
   left_side_facility,

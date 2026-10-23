@@ -13,6 +13,10 @@ export const LEFT = 40
 export const RIGHT_PAIR_X = 2520
 
 export const QR_COUNT = 16
+/** Current Mower leaves the bottom-right facility cards unobscured. */
+export const CURRENT_QR_COUNT = 14
+export const CURRENT_MIN_CANVAS_WIDTH = LEFT + (QRCODE_SIZE + GAP_SIZE) * 7
+export const CURRENT_MIN_CANVAS_HEIGHT = BOTTOM + QRCODE_SIZE + GAP_SIZE
 export const TOP_COUNT = 7
 export const BOTTOM_LEFT_COUNT = 7
 export const BOTTOM_RIGHT_COUNT = 2

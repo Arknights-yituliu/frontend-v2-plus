@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createServer } from "vite";
 
-const server = await createServer({ server: { middlewareMode: true }, appType: "custom" });
+const server = await createServer({ server: { middlewareMode: true, watch: null, hmr: false, ws: false }, appType: "custom" });
 let passed = 0;
 function check(name, callback) {
   callback();
@@ -26,6 +26,53 @@ try {
       { name: "旧副表", plan: {}, conf: {}, trigger: { left: "True", operator: "==", right: "True" }, trigger_timing: "AFTER_PLANNING", task: {} },
     ],
   };
+  const { function_options, new_expression } = await server.ssrLoadModule("/src/utils/mower/trigger_function.js");
+  check("嵌套函数提供六种操作，新增节点保留函数结构", () => {
+    assert.deepEqual(function_options.map((option) => option.value), ["max", "min", "sum", "any", "all", "abs"]);
+    assert.deepEqual(new_expression("function"), { function: "max", args: [""] });
+  });
+  const grouped = {
+    plan1: {}, conf: {},
+    backup_groups: [{ id: "night", name: "夜班", trigger: { function: "all", args: ["True", { left: "op_data.facility_product('room_1_1')", operator: "==", right: "'gold'" }] } }],
+    backup_plans: [{ name: "夜班副表", plan: {}, conf: {}, group_ids: ["night"], type: "exclusive", trigger: { function: "max", args: ["op_data.operators['阿米娅'].current_mood()", { function: "abs", args: ["-1"] }] } }],
+    advanced_settings: { group_mood_gap_exclusions: ["深海组", "尚未使用的组"] },
+  };
+  store.hydratePlanData(grouped);
+  check("分组条件、互斥类型、嵌套函数与排除组完整往返", () => {
+    const exported = store.build_plan();
+    assert.equal(exported.backup_groups[0].id, "default");
+    assert.deepEqual(exported.backup_groups[1], grouped.backup_groups[0]);
+    assert.deepEqual(exported.backup_plans[0].group_ids, ["night"]);
+    assert.equal(exported.backup_plans[0].type, "exclusive");
+    assert.deepEqual(exported.backup_plans[0].trigger, grouped.backup_plans[0].trigger);
+    assert.deepEqual(exported.advanced_settings.group_mood_gap_exclusions, ["深海组", "尚未使用的组"]);
+    store.hydratePlanData(exported);
+    assert.deepEqual(store.build_plan(), exported);
+  });
+  check("无效分组拒绝导入，保留原有完整排班", () => {
+    const previous = store.build_plan();
+    for (const change of [
+      { backup_groups: {} },
+      { backup_groups: [grouped.backup_groups[0], grouped.backup_groups[0]] },
+      { backup_plans: [{ ...grouped.backup_plans[0], group_ids: ["missing"] }] },
+      { backup_plans: [{ ...grouped.backup_plans[0], group_ids: [] }] },
+      { backup_plans: [{ ...grouped.backup_plans[0], group_ids: ["night", "night"] }] },
+      { backup_plans: [{ ...grouped.backup_plans[0], type: "invalid" }] },
+    ]) {
+      assert.throws(() => store.hydratePlanData({ ...grouped, ...change }), /副表/);
+      assert.deepEqual(store.build_plan(), previous);
+    }
+  });
+  check("设施换位与干员替换深入函数参数及分组条件", () => {
+    const state = structuredClone(grouped);
+    state.backup_groups[0].trigger.args.push("op_data.operators['阿米娅'].current_mood()");
+    swapPlanFacilities(state.plan1, state.backup_plans, "main", "room_1_1", "room_2_1", state.backup_groups);
+    apply_operator_replace({ main_plan: state.plan1, main_conf: state.conf, backup_plans: state.backup_plans, backup_groups: state.backup_groups }, "阿米娅", "砾");
+    assert.equal(state.backup_groups[0].trigger.args[1].left, "op_data.facility_product('room_2_1')");
+    assert.equal(state.backup_groups[0].trigger.args[2], "op_data.operators['砾'].current_mood()");
+    assert.equal(state.backup_plans[0].trigger.args[0], "op_data.operators['砾'].current_mood()");
+    assert.deepEqual(state.backup_plans[0].trigger.args[1], { function: "abs", args: ["-1"] });
+  });
   const before = JSON.stringify(legacy);
   store.hydratePlanData(legacy);
   check("旧排班载入不修改传入数据，回收站保持省略", () => {
@@ -37,6 +84,8 @@ try {
   check("副表创建包含新版可编辑字段", () => {
     store.createBackup();
     assert.equal(store.current_plan.value.recycle.plans.length, 2);
+    assert.deepEqual(store.backup_plans.value[1].group_ids, ["default"]);
+    assert.equal(store.backup_plans.value[1].type, "global");
     assert.deepEqual(store.backup_plans.value[1].conf.removed_operators.resting_standby, []);
     assert.equal(store.backup_plans.value[1].conf.dorm_order_override, false);
   });
@@ -276,6 +325,20 @@ try {
   await assert.rejects(saveMowerRosterForIncome(incomePayload, "存储失败", { setItem: () => { throw new Error("浏览器存储不可用"); } }), /浏览器无法保存排班/);
   check("收益跳转存储失败时返回错误，保留编辑器内容", () => {
     assert.equal(JSON.stringify(store.build_plan()), incomeBefore);
+  });
+  await store.load_plan();
+  check("从收益页返回编辑器不清空未保存的主副表与高级设置", () => {
+    assert.deepEqual(store.build_plan(), incomePayload);
+  });
+  store.plan_note.value = "返回后继续编辑的未保存笔记";
+  const revisedIncomePayload = store.build_plan();
+  await saveMowerRosterForIncome(revisedIncomePayload, store.plan_title.value, incomeStorage);
+  check("再次跳转收益页使用返回后最新编辑的完整排班", () => {
+    assert.deepEqual(JSON.parse(incomeCache.get(MOWER_INCOME_STORAGE_KEY)).payload, revisedIncomePayload);
+    assert.equal(revisedIncomePayload.note, "返回后继续编辑的未保存笔记");
+    assert.deepEqual(revisedIncomePayload.plan1, incomePayload.plan1);
+    assert.deepEqual(revisedIncomePayload.backup_plans, incomePayload.backup_plans);
+    assert.deepEqual(revisedIncomePayload.advanced_settings, incomePayload.advanced_settings);
   });
   check("浏览器校验允许正常排班且不修改传入文件", () => {
     const before = JSON.stringify(valid);

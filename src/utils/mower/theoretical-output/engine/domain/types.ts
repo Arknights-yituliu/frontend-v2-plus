@@ -34,6 +34,8 @@ export interface FacilityLevels {
   office: 0 | 1 | 2 | 3
   training: 0 | 1 | 2 | 3
   workshop: 0 | 1 | 2 | 3
+  /** Omitted in older configurations; an omitted recycle station is unbuilt. */
+  recycle?: 0 | 1 | 2 | 3
   dormitories: Array<0 | 1 | 2 | 3 | 4 | 5>
 }
 
@@ -61,6 +63,7 @@ export interface FacilityOperatorAssignments {
   workshop: string[]
   office: string[]
   training: string[]
+  recycle?: string[]
 }
 
 export interface AppConfig {
@@ -158,12 +161,14 @@ export interface CalculationReport {
     orderLmd: number
     fragments: number
     orundum: number
+    clueCount?: number
+    clueTotal?: number
     goldConsumed: number
     fragmentsConsumed: number
     netGoldCount: number
     netGoldValue: number
     totalScore82: number
-    scoreBreakdown?: import('../optimizer/productionObjective').ProductionScore
+    scoreBreakdown?: import('./productionScore').ProductionScore
     totalEquivalentLmd: number
   } | null
 }

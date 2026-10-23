@@ -176,7 +176,7 @@ watch(show_replace_dialog, (open) => {
   }
 });
 
-const replacementState = () => ({ main_plan: plan.value, main_conf: mowerPlanStore.mainConf(), backup_plans: backup_plans.value });
+const replacementState = () => ({ main_plan: plan.value, main_conf: mowerPlanStore.mainConf(), backup_plans: backup_plans.value, backup_groups: mowerPlanStore.backup_groups.value });
 const replace_source_options = computed(() =>
   collect_plan_operators(replacementState())
     .filter((name) => !["Free", "Current"].includes(name))
@@ -500,6 +500,7 @@ onUnmounted(() => {
               <help-text>
                 <p>高优干员 → 普通主班 → 低优主班 → 高优替班 → 候补 → 普通替班 → 空闲；同级距心情上限更远者优先。</p>
                 <p>只影响分床和单回，不改变下班顺序。更高排名的新入住者可重分单回；入住隔离可交换普通位住客，固定驻员及预约仍受保护。</p>
+                <p>动态选择的干员达到或超过个人心情上限后，按普通空闲级参与分床和保床；固定宿舍岗位及宿舍保留干员除外。</p>
               </help-text>
             </template>
             <PlanOperatorSelect
@@ -537,9 +538,9 @@ onUnmounted(() => {
             <template #label>
               <span>宿舍休息候补干员</span>
               <help-text>
-                有床休息，无床或被更高优接管后待命；需有正常优先级主班在休息。绑组随组回班，未绑组随下一批回班。低于急救线升为低优并保床。
+                任意干员均可填写，恢复优先级低于高优替班、高于普通替班，不随心情临时升为低优。
 
-                <p>待命不恢复心情；用尽、回满、固定宿舍和零心情工作干员不适用。</p>
+                <p>符合待命条件的工作主班有床休息，无床或被更高优接管后待命；需有正常优先级主班在休息，绑组随组回班，未绑组随下一批回班。待命不恢复心情；固定宿舍、用尽、回满和零心情工作规则独立生效。</p>
               </help-text>
             </template>
             <PlanOperatorSelect
@@ -573,7 +574,7 @@ onUnmounted(() => {
           <n-form-item v-if="!rescue">
             <template #label>
               <span>宿舍保留干员</span>
-              <help-text> 名单内干员保留 Free 宿舍床位，不因满心情而离宿，仍按正常回班及个人心情上限规则离宿。 </help-text>
+              <help-text> 名单内干员保留 Free 宿舍床位，不因满心情而离宿或降低恢复优先级，仍按正常回班及个人心情上限规则离宿。 </help-text>
             </template>
             <PlanOperatorSelect
               :disabled="edit_locked"

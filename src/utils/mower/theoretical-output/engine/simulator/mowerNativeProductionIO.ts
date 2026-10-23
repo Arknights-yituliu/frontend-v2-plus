@@ -11,7 +11,7 @@ import type {MowerNotificationObservation} from '../scheduler/mowerNotification'
 import type {RuntimeState,RuntimeRates} from '../scheduler/rosterRuntime'
 import {mowerRunOrderContext} from '../scheduler/mowerSourceRuntime'
 import {bridgeMowerNativeIO} from '../scheduler/mowerRunOrderBridge'
-import {executeMowerTradeDrone,type MowerTradeDroneAdjustmentRequest,type MowerTradeDroneAdjustmentObservation} from '../scheduler/mowerRunOrderDroneAdjustment'
+import {executeMowerDroneOperation,type MowerDroneOperationRequest,type MowerDroneOperationObservation} from '../scheduler/mowerDroneOperations'
 import type {createProductionTimeline,ProductionFrame} from './productionTimeline'
 import {toMowerMicros} from '../scheduler/mowerTaskQueue'
 type Controller=ReturnType<typeof createProductionTimeline>
@@ -42,7 +42,7 @@ export function createMowerProductionIO(state:RuntimeState,production:Controller
   const [planning,seam]=mowerRunOrderContext(state)
   let selectedQuantity=0,panelOpen=false
   const droneCountLimit=state.config.mowerDroneCountLimit??100
-  function* facilityInterface(request:Extract<MowerTradeDroneAdjustmentRequest,{kind:'wait-interface'|'tap-drone-accelerate'}>){
+  function* facilityInterface(request:Extract<MowerDroneOperationRequest,{kind:'wait-interface'|'tap-drone-accelerate'}>){
    const helper=request.kind==='wait-interface'
     ?waitMowerDroneInterface({width:1920,height:1080},{nowMicros:now},{intervalSeconds:request.intervalSeconds,accelerateTemplate:request.accelerateTemplate})
     :tapMowerDroneAccelerate({nowMicros:now},{accelerateTemplate:request.template,allInTemplate:request.control})
@@ -69,8 +69,12 @@ export function createMowerProductionIO(state:RuntimeState,production:Controller
    }),()=>room)
    return {kind:request.kind,observedAtMicros:now(),value}
   }
-  const generator=executeMowerTradeDrone({planning,room,width:1920,height:1080,...flags,droneCountLimit,waitingScenes:[]},seam)
-  return yield* bridgeMowerNativeIO(generator,(request:MowerTradeDroneAdjustmentRequest)=>{
+  const generator=executeMowerDroneOperation({
+   retainManufacturingReserve:!flags.notCustomize&&planning.runOrderRooms.length>0,
+   get repeatTradeAcceleration(){return planning.droneRoom===null||(planning.droneRoom===room&&planning.runOrderRooms.includes(room))},
+   room,width:1920,height:1080,...flags,droneCountLimit,waitingScenes:[],
+  },seam)
+  return yield* bridgeMowerNativeIO(generator,(request:MowerDroneOperationRequest)=>{
    if(request.kind==='wait-interface'||request.kind==='tap-drone-accelerate')return facilityInterface(request)
    if(request.kind==='accept-order')return (function*(){
     const value=yield* accept(room)
@@ -78,7 +82,7 @@ export function createMowerProductionIO(state:RuntimeState,production:Controller
    })()
    return {
    delayMicros:request.kind==='tap'?toMowerMicros((request.intervalSeconds??1)/3600):0,
-   observe:():MowerTradeDroneAdjustmentObservation=>{
+   observe:():MowerDroneOperationObservation=>{
     let value:unknown=null
     switch(request.kind){
      case 'enter-room':detailPage=true;ui.scene='INFRA_DETAILS';ui.lastRoom=room;receiptBlocked=false;break
@@ -124,12 +128,13 @@ export function createMowerProductionIO(state:RuntimeState,production:Controller
    observe:():MowerNotificationObservation=>{
     let value:unknown=null
     switch(request.kind){
-     case 'detect-notification':value=production.nativePendingTradeOrders()>0||production.nativePendingManufacturingItems()>0?{control:'infra_notification'}:null;break
+     case 'detect-notification':value=production.nativePendingTradeOrders()>0||production.nativePendingManufacturingItems()>0||production.nativePendingRecycleItems()>0?{control:'infra_notification'}:null;break
      case 'tap-notification':todoPage=true;ui.scene='INFRA_TODOLIST';break
-     case 'find-collect':value=request.resource==='bill'&&production.nativePendingTradeOrders()>0||request.resource==='factory'&&production.nativePendingManufacturingItems()>0?{control:request.name}:null;break
+     case 'find-collect':value=request.resource==='bill'&&production.nativePendingTradeOrders()>0||request.resource==='factory'&&production.nativePendingManufacturingItems()>0||request.resource==='recycle'&&production.nativePendingRecycleItems()>0?{control:request.name}:null;break
      case 'tap-collect':
       if(request.resource==='bill')production.nativeCollectTradeOrders(frame())
       if(request.resource==='factory')production.nativeCollectManufacturingItems(frame())
+      if(request.resource==='recycle')production.nativeCollectRecycleItems()
       break
      case 'tap-close-todo':todoPage=false;ui.scene='INFRA_MAIN';break
     }

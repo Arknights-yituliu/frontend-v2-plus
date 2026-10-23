@@ -9,13 +9,16 @@ import type {MowerTaskQueue} from './mowerTaskQueue'
 export interface MowerNotificationFlags {todoTask:boolean;collectNotification:boolean;planned:boolean}
 export interface MowerNotificationState {
  queue:MowerTaskQueue;flags:MowerNotificationFlags;lastTodoMicros:number|null
+ /** Recycle extension from alpha 9091f2b; omitted for frozen legacy replays. */
+ collectRecycle?:boolean
 }
+type CollectResource='bill'|'factory'|'trust'|'recycle'
 export type MowerNotificationRequest=
  |{kind:'detect-notification'}
  |{kind:'sleep';seconds:1}
  |{kind:'tap-notification';target:unknown}
- |{kind:'find-collect';resource:'bill'|'factory'|'trust';name:'infra_collect_bill'|'infra_collect_factory'|'infra_collect_trust'}
- |{kind:'tap-collect';resource:'bill'|'factory'|'trust';target:unknown}
+ |{kind:'find-collect';resource:CollectResource;name:`infra_collect_${CollectResource}`}
+ |{kind:'tap-collect';resource:CollectResource;target:unknown}
  |{kind:'tap-close-todo';target:[1840,140]}
 export interface MowerNotificationObservation {
  kind:MowerNotificationRequest['kind'];observedAtMicros:number;value:unknown
@@ -42,8 +45,9 @@ export function resetMowerRunFlags(flags:MowerNotificationFlags):void{
 }
 /** Selected infra_main notification branch, not a replacement for the preceding stages. */
 export function* collectMowerInfraNotification(state:MowerNotificationState,seam:MowerNotificationSeam):MowerNotificationGenerator{
- // Native no_pending_task(1) uses strict time < now+one minute, with no task type filter.
- if(state.queue.tasks.every(task=>task.timeMicros>=seam.nowMicros()+60_000_000)){
+ // Native no_pending_task(1) uses strict time < now+one minute. Retained
+ // failures have released dispatch and must also release notification collection.
+ if(state.queue.tasks.every(task=>task.executionFailure||task.timeMicros>=seam.nowMicros()+60_000_000)){
   let notification=yield* observed(seam,{kind:'detect-notification'})
   if(notification===null){
    yield* observed(seam,{kind:'sleep',seconds:1})
@@ -57,8 +61,9 @@ export function* collectMowerInfraNotification(state:MowerNotificationState,seam
 /** Scene.INFRA_TODOLIST dispatch; no_pending_task gating is not present in this method. */
 export function* collectMowerTodoList(state:MowerNotificationState,seam:MowerNotificationSeam):MowerNotificationGenerator{
  let tapped=false
- if(state.lastTodoMicros===null||state.lastTodoMicros<seam.nowMicros()-900_000_000){
-  for(const resource of ['bill','factory','trust'] as const){
+ if(state.lastTodoMicros===null||(state.collectRecycle?state.lastTodoMicros<=seam.nowMicros()-900_000_000:state.lastTodoMicros<seam.nowMicros()-900_000_000)){
+  const resources:CollectResource[]=state.collectRecycle?['bill','factory','trust','recycle']:['bill','factory','trust']
+  for(const resource of resources){
    const target=yield* observed(seam,{kind:'find-collect',resource,name:`infra_collect_${resource}`})
    if(nativeTruthy(target)){
     yield* observed(seam,{kind:'tap-collect',resource,target})

@@ -83,12 +83,13 @@ try {
   const inspected = inspectTheoreticalPlan(payload)
   assert.equal(inspected.facilities.filter(room => room.level > 0 && ['manufacture', 'trading', 'power'].includes(room.type)).length, 4)
   assert.ok(inspected.facilities.find(room => room.roomId === 'train').assumed)
-  assert.equal(inspected.facilities.find(room => room.roomId === 'train').level, 0)
+  assert.equal(inspected.facilities.find(room => room.roomId === 'train').level, 3)
   assert.equal(inspected.facilities.find(room => room.roomId === 'room_1_2').editable, false)
   const workspace = importMowerJson(JSON.stringify(payload))
   for (const [roomId, facility] of Object.entries(workspace.mainPlan.facilities)) {
     if (Object.hasOwn(payload.plan1, roomId)) continue
-    assert.equal(facility.level, 0, `${roomId}: omitted rooms never become built defaults`)
+    assert.equal(facility.level, ['meeting', 'factory', 'contact', 'train', 'recycle'].includes(roomId) ? 3 : 0,
+      `${roomId}: omitted support rooms use Mower level-three defaults; other omitted rooms stay unbuilt`)
     assert.deepEqual(facility.slots, [], `${roomId}: omitted rooms have no staffing`)
   }
   fails(() => calculateTheoreticalOutput(payload, { sampleDays: 0 }), /采样/)
@@ -193,7 +194,7 @@ try {
     dormitory_1: { name: '', plans: [slot('杜林'), slot('Free'), slot('Free'), slot('Free'), slot('Free')] },
     dormitory_2: { name: '', plans: [slot('芬'), slot('Free'), slot('Free'), slot('Free'), slot('Free')] },
     dormitory_3: { name: '', plans: [slot('芙蓉'), slot('Free'), slot('Free'), slot('Free'), slot('Free')] },
-  }, conf: {}, backup_plans: [] }
+  }, facility_levels: { train: 0, recycle: 0 }, conf: {}, backup_plans: [] }
   const reducedWorkspace = importMowerJson(JSON.stringify(reduced))
   const reducedValidation = validateRosterWorkspace(reducedWorkspace)
   assert.ok(reducedValidation.isValid, JSON.stringify(reducedValidation.criticalErrors))
@@ -206,12 +207,16 @@ try {
   const freeOnly = structuredClone(reduced)
   freeOnly.plan1.dormitory_4 = { name: '', plans: Array.from({ length: 5 }, () => slot('Free')) }
   const freeOnlyWorkspace = importMowerJson(JSON.stringify(freeOnly))
-  assert.equal(freeOnlyWorkspace.mainPlan.facilities.dormitory_4.level, 0)
-  assert.deepEqual(freeOnlyWorkspace.mainPlan.facilities.dormitory_4.slots, [])
+  assert.equal(freeOnlyWorkspace.mainPlan.facilities.dormitory_4.level, 1)
+  assert.equal(freeOnlyWorkspace.mainPlan.facilities.dormitory_4.slots.length, 5)
   const freeOnlySchedule = compileRosterSchedule(freeOnlyWorkspace)
-  assert.equal(freeOnlySchedule.restPools.some(pool => pool.roomId === 'dormitory_4'), false)
-  assert.equal(compiledScheduleToRuntimeConfig(freeOnlySchedule).beds.some(bed => bed.roomId === 'dormitory_4'), false)
-  assert.deepEqual(validateRosterWorkspace(freeOnlyWorkspace).power, validateRosterWorkspace(reducedWorkspace).power)
+  assert.equal(freeOnlySchedule.restPools.some(pool => pool.roomId === 'dormitory_4'), true)
+  assert.equal(compiledScheduleToRuntimeConfig(freeOnlySchedule).beds.filter(bed => bed.roomId === 'dormitory_4').length, 5)
+  assert.equal(validateRosterWorkspace(freeOnlyWorkspace).power.consumption, reducedValidation.power.consumption + 10)
+  freeOnly.facility_levels.dormitory_4 = 0
+  const explicitlyUnbuilt = importMowerJson(JSON.stringify(freeOnly))
+  assert.equal(compiledScheduleToRuntimeConfig(compileRosterSchedule(explicitlyUnbuilt)).beds.some(bed => bed.roomId === 'dormitory_4'), false)
+  assert.deepEqual(validateRosterWorkspace(explicitlyUnbuilt).power, reducedValidation.power)
   console.log('PASS: missing/Free-only facilities, three-dorm power 540/470, zero-level production and drone guards, strict ownership, real skill stages, progress, detached inputs')
 
   const ordinaryBackup = { default: 'plan1', plan1: {
@@ -226,6 +231,7 @@ try {
   // 5000 is a deliberate bounded regression probe, distinct from the page's 200000 cap.
   // Ordinary staffing must not retry runner countdown calibration once per second.
   const ordinaryReport = simulateSchedule(ordinarySchedule, {
+    schedulingModel: 'mower-default',
     warmupHours: 0, sampleHours: 8, warmupModel: 'hourly', maxStepHours: .25,
     maxEvents: 5000, recordSegments: true,
     production: { outputMode: 'potential', inventoryMode: 'unlimited', runOrderMode: 'ideal', droneTarget: 'none', seed: 42 },
@@ -241,7 +247,13 @@ try {
     .every(segment => segment.occupants.room_3_1_0 === provisoId), 'resident staffing remains in place after the native boundary')
   assert.ok(ordinaryReport.events.filter(event => event.reason === 'position-correction').length < 5, 'ordinary staffing never floods correction tasks')
   const ordinaryActual = calculateTheoreticalOutput(ordinaryBackup, short)
-  assert.deepEqual(ordinaryActual.metrics, mowerReportMetrics(ordinaryReport), 'the actual page input path uses the same corrected runtime')
+  const ordinaryAlphaReport = simulateSchedule(ordinarySchedule, {
+    schedulingModel: 'mower-alpha', warmupHours: 0, sampleHours: 8, warmupModel: 'hourly', maxStepHours: .25,
+    maxEvents: 5000, recordSegments: false,
+    production: { outputMode: 'potential', inventoryMode: 'unlimited', runOrderMode: 'ideal', droneTarget: 'none', seed: 42 },
+  })
+  assert.ok(ordinaryAlphaReport.success && ordinaryAlphaReport.production?.success, JSON.stringify(ordinaryAlphaReport.diagnostics))
+  assert.deepEqual(ordinaryActual.metrics, mowerReportMetrics(ordinaryAlphaReport), 'the actual page input path uses the new default alpha runtime')
   assert.ok(ordinaryActual.metrics.orderLmd > 0)
   checkDefaultScore(ordinaryActual)
   // Observe the random boundary directly, rather than relying on two random
@@ -276,7 +288,7 @@ try {
   checkDefaultScore(experienceActual)
   console.log('PASS: ordinary Proviso backup staffing, bounded eight-hour simulation, actual page calculation parity')
 
-  // Fixed upstream 8885cdc regressions, independent of account rosters. An ideal
+  // Legacy mower-default regressions, independent of account rosters. An ideal
   // order changes production only; it cannot move an ordinary shift by 101 seconds.
   const ordinaryShift = new MowerTask({ type: taskTypes.SHIFT_OFF,
     plan: { central: ['Manager'], room_1_1: ['Replacement'], dormitory_1: ['Worker'] } })
@@ -303,6 +315,7 @@ try {
     idleOperators: ['Incoming', 'Other'],
     mowerPolicy: { restingThreshold: .65, powerPlantCount: 2, opeRestingPriority: [] },
     mowerTaskScheduling: { adjustForRunOrders: false },
+    mowerAlpha: false,
     mowerDeviceTiming: { roomReturnMicros: 500_000 },
     mowerRunLoopClock: { minimumClockStepMicros: 1, notificationSleepMicros: 1_000_000 },
     mowerSourcePlan: { room_1_1: [slot('Worker', ['Replacement'])],
@@ -345,7 +358,7 @@ try {
   assert.equal(dormState.bedOccupants[`${dormRoom}_4`], 'Other')
   assert.equal(dormSource.data.operators.Other.dormPositionVersion, otherPositionVersion,
     'an identical backup arrangement does not move an already observed resident')
-  console.log('PASS: ideal orders preserve ordinary shift timing; first Free selection confirms recovery and repeated dorm arrangement retains beds')
+  console.log('PASS: explicit legacy mower-default ideal orders preserve ordinary shift timing; first Free selection confirms recovery and repeated dorm arrangement retains beds')
 
   // Exercise native Free selection after both backup activation and exit. None of
   // the three idle cards is referenced by the plan, so only the owned pool supplies them.
@@ -356,7 +369,7 @@ try {
   const ownedInventory = ['砾', '杜林', '芙蓉', '芬', '安赛尔', '克洛丝'].map(operator => ({ operator, elitePhase: 0, level: 1 }))
   const ownedIds = new Set(ownedInventory.map(entry => resolveOperatorCharId(entry.operator)))
   const idleIds = ['芬', '安赛尔', '克洛丝'].map(resolveOperatorCharId)
-  const simulationOptions = { warmupHours: 0, sampleHours: 8, warmupModel: 'hourly', maxStepHours: .25,
+  const simulationOptions = { schedulingModel: 'mower-default', warmupHours: 0, sampleHours: 8, warmupModel: 'hourly', maxStepHours: .25,
     maxEvents: 5000, recordSegments: true,
     production: { outputMode: 'potential', inventoryMode: 'unlimited', runOrderMode: 'ideal', droneTarget: 'none', seed: 42 } }
   const ownedReport = simulateSchedule(compileRosterSchedule(importMowerJson(JSON.stringify(ownedIdle))), {
@@ -376,7 +389,21 @@ try {
   assert.ok(ownedReport.segments.some(segment => segment.start >= transitions[1].time && hasAllIdleCards(segment)),
     'owned idle occupancy survives the rebuilt configuration on backup exit')
   const ownedActual = calculateTheoreticalOutput(ownedIdle, { ...short, operatorInventory: ownedInventory })
-  assert.deepEqual(ownedActual.metrics, mowerReportMetrics(ownedReport), 'the page uses the actual inventory through backup changes')
+  const ownedAlphaReport = simulateSchedule(compileRosterSchedule(importMowerJson(JSON.stringify(ownedIdle))), {
+    ...simulationOptions, schedulingModel: 'mower-alpha', operatorInventory: ownedInventory,
+  })
+  assert.ok(ownedAlphaReport.success && ownedAlphaReport.production?.success, JSON.stringify(ownedAlphaReport.diagnostics))
+  const alphaTransitions = ownedAlphaReport.events.filter(event => event.type === 'backup-plan')
+  assert.deepEqual(alphaTransitions.map(event => event.active), [true, false], 'alpha exercises real backup activation and exit')
+  for (const segment of ownedAlphaReport.segments) {
+    assert.ok([...Object.values(segment.occupants), ...Object.values(segment.bedOccupants)].every(id => ownedIds.has(id)),
+      'default alpha selection never uses an unowned card')
+  }
+  assert.ok(ownedAlphaReport.segments.some(segment => segment.start >= alphaTransitions[0].time && hasAllIdleCards(segment)),
+    'alpha Free selection really draws all three idle cards from the owned pool')
+  assert.ok(ownedAlphaReport.segments.some(segment => segment.start >= alphaTransitions[1].time && hasAllIdleCards(segment)),
+    'alpha retains the owned Free occupants after backup exit')
+  assert.deepEqual(ownedActual.metrics, mowerReportMetrics(ownedAlphaReport), 'the alpha page uses the actual inventory through backup changes')
   checkDefaultScore(ownedActual)
   console.log('PASS: backup activation/exit, real owned Free-card selection, all segment occupants restricted to the held inventory')
 
@@ -387,7 +414,7 @@ try {
   deferred.backup_plans = []
   const deferredReport = simulateSchedule(compileRosterSchedule(importMowerJson(JSON.stringify(deferred)), {
     restingThreshold: .65, freeRoom: false, fiammettaFool: true,
-  }), { ...simulationOptions, sampleHours: 24 })
+  }), { ...simulationOptions, schedulingModel: 'mower-alpha', sampleHours: 24 })
   assert.ok(deferredReport.success && deferredReport.production?.success, JSON.stringify(deferredReport.diagnostics))
   assert.equal(deferredReport.observedHours, 24)
   assert.ok(deferredReport.diagnostics.some(issue => issue.code === 'group-blocked'))
@@ -405,7 +432,7 @@ try {
   duplicateBackup.conf.workaholic = '砾,斑点'
   duplicateBackup.backup_plans = [{ name: '重复主班', trigger: 'True', trigger_timing: 'BEGINNING',
     plan: { room_1_1: { plans: [slot('芬'), slot('芬')] } } }]
-  fails(() => calculateTheoreticalOutput(duplicateBackup, short), /模拟未完成.*重复主班/)
+  fails(() => calculateTheoreticalOutput(duplicateBackup, short), /副表 重复主班.*不可重复指派主力/)
   const malformedBackup = structuredClone(ownedIdle)
   malformedBackup.backup_plans[0].trigger = '('
   fails(() => calculateTheoreticalOutput(malformedBackup, short), /条件|表达式|副表|语法/)
@@ -427,23 +454,55 @@ try {
     const originalMetrics = await sourceServer.ssrLoadModule('/src/workbench/mowerReportMetrics.ts')
     // Existing public source fixtures stay in the source checkout and never enter this PR.
     const fixtures = ['mower-252-2gold.json', 'mower-252-3gold.json', 'mower-342-pure-lmd.json', 'mower-342-orirock.json']
-    for (const filename of fixtures) {
+    const fixtureIndex = args.indexOf('--fixture')
+    const selected = fixtureIndex < 0 ? fixtures : [args[fixtureIndex + 1]]
+    assert.ok(selected.every(filename => fixtures.includes(filename)), 'the optional diagnostic fixture is one of the four public source plans')
+    const progressLogger = (filename, path) => {
+      if (!args.includes('--progress')) return undefined
+      let last = -Infinity
+      return progress => {
+        const now = performance.now()
+        if (now - last < 15000) return
+        last = now
+        console.log(`PROGRESS: ${filename} ${path} ${JSON.stringify({ phase: progress.phase,
+          hours: progress.elapsedHours, totalHours: progress.totalHours, activity: progress.activity })}`)
+      }
+    }
+    for (const filename of selected) {
       const raw = JSON.parse(await readFile(resolve(source, 'src/workbench/compat/fixtures', filename), 'utf8'))
       console.log(`Checking original-source parity: ${filename}`)
+      const sourceStart = performance.now()
       const baseline = originalBridge.runScheduleSimulationBridge(originalImport.importMowerJson(JSON.stringify(raw)), {
-        warmupHours: 72, sampleHours: 168, maxStepHours: .25, warmupModel: 'hourly', recordSegments: false,
+        schedulingModel: 'mower-alpha', warmupHours: 72, sampleHours: 168, maxStepHours: .25, warmupModel: 'hourly', recordSegments: false,
         production: { outputMode: 'potential', inventoryMode: 'unlimited', runOrderMode: 'ideal', droneTarget: 'none', seed: 42 },
-      }, { restingThreshold: .65, freeRoom: false, fiammettaFool: true })
-      assert.ok(baseline.report?.success && baseline.report.production?.success, baseline.error)
+      }, {}, progressLogger(filename, 'source'))
+      const sourceSeconds = (performance.now() - sourceStart) / 1000
+      assert.ok(baseline.report?.success && baseline.report.production?.success,
+        baseline.error ?? JSON.stringify(baseline.report?.diagnostics))
+      console.log(`Source complete: ${filename}, ${sourceSeconds.toFixed(2)}s, observed ${baseline.report.observedHours}h`)
       const blocked = baseline.report.diagnostics.some(issue => issue.code === 'group-blocked') ||
         baseline.report.shiftDeferrals?.some(episode => episode.resolvedAt === undefined)
-      const actual = calculateTheoreticalOutput(raw, { seed: 42 })
+      const pageStart = performance.now()
+      const actual = calculateTheoreticalOutput(raw, { seed: 42 }, progressLogger(filename, 'page'))
+      const pageSeconds = (performance.now() - pageStart) / 1000
       assert.deepEqual(actual.metrics, originalMetrics.mowerReportMetrics(baseline.report), 'all source report fields must match exactly')
+      const factor = 24 / baseline.report.observedHours
+      assert.deepEqual(actual.daily, {
+        physicalGold: baseline.report.production.sample.completed.gold * factor,
+        fragment: baseline.report.production.manufacturing.filter(room => room.product === 'fragment')
+          .reduce((sum, room) => sum + room.sampleCompletedItems, 0) * factor,
+        orundum: baseline.report.production.events.filter(event => event.type === 'order-completed' && event.time > 72)
+          .reduce((sum, event) => sum + (event.order?.orundumReward ?? 0), 0) * factor,
+        recycle: (baseline.report.production.recycle?.sampleCompletedItems ?? 0) * factor,
+      }, 'all displayed physical resources retain the same full-window source accounting')
+      assert.deepEqual(actual.shiftDeferrals, baseline.report.shiftDeferrals ?? [], 'every shift-deferral episode is retained')
+      assert.equal(actual.schedulingModel, 'mower-alpha')
+      assert.equal(actual.droneCapacity, baseline.report.inputs.schedule.sourceWorkspace.droneCapacity)
       assert.ok(Math.abs(actual.observedHours - 168) < 1e-6)
       checkDefaultScore(actual)
       if (blocked) checkDeferralExport(actual, baseline.report)
       else assert.equal(actual.diagnostics.some(issue => issue.code === 'SHIFT_DEFERRAL_UNCONFIRMED'), false)
-      console.log(`PASS: ${filename} original metric parity (${actual.metrics.mower82})${blocked ? ', unresolved deferral warning/export retained' : ''}`)
+      console.log(`PASS: ${filename} alpha 72h+168h original metric parity (${actual.metrics.mower82}), source ${sourceSeconds.toFixed(2)}s / page ${pageSeconds.toFixed(2)}s${blocked ? ', unresolved deferral warning/export retained' : ''}`)
     }
     // Explicit maximum-stage inventory must preserve the same numeric engine path.
     assert.equal(fullCatalogIdleInventory().length, OPERATORS.length)

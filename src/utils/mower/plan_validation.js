@@ -1,3 +1,4 @@
+import { backupGroupErrors } from "./backup_groups.js";
 import { nameToCharId } from "./operatorAssets.js";
 import { planBindings } from "./plan_bindings.js";
 import { OPERATOR_CONF_FIELDS } from "./plan_edit.js";
@@ -40,7 +41,7 @@ function matchReplacements(options, preferred = new Set(), partial = false) {
 // Browser checks have no device state or owned-operator roster. Mower remains authoritative
 // for reachable backup combinations and runtime recovery-bed assignment.
 export function validatePlan(payload) {
-  const errors = [];
+  const errors = backupGroupErrors(payload);
   const main = payload[payload.default || "plan1"] || {};
   const backups = payload.backup_plans || [];
   const add = (plan, message) => errors.push(`${plan}：${message}`);

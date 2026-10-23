@@ -1,6 +1,6 @@
 {
-  "version": "v36",
-  "updated": "2026-10-22",
+  "version": "v37",
+  "updated": "2026-10-24",
   "timelines": {
     "克莱门莎@S3": {
       "fps": 30,
@@ -17,6 +17,7 @@
               "groupDesc": "主攻击（235% 物理）",
               "label": "主攻击（235%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   15,
@@ -396,6 +397,7 @@
               "groupDesc": "轰炸物理（300% 物理）",
               "label": "轰炸物理（300%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   51,
@@ -555,6 +557,7 @@
               "groupDesc": "轰炸元素（250% 元素）",
               "label": "轰炸元素（250%）",
               "damageType": "element",
+              "colorRole": "element",
               "events": [
                 [
                   51,
@@ -714,6 +717,7 @@
               "groupDesc": "侵蚀损伤爆发（5000 点/次）",
               "label": "侵蚀损伤爆发（5000 点/次）",
               "damageType": "element",
+              "colorRole": "erosion",
               "events": [
                 [
                   51,
@@ -781,6 +785,7 @@
               "groupDesc": "主攻击（235% 物理）",
               "label": "主攻击（235%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   15,
@@ -1260,6 +1265,7 @@
               "groupDesc": "轰炸物理（300% 物理）",
               "label": "轰炸物理（300%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   123,
@@ -1419,6 +1425,7 @@
               "groupDesc": "轰炸元素（250% 元素）",
               "label": "轰炸元素（250%）",
               "damageType": "element",
+              "colorRole": "element",
               "events": [
                 [
                   123,
@@ -1578,6 +1585,7 @@
               "groupDesc": "侵蚀损伤爆发（5000 点/次）",
               "label": "侵蚀损伤爆发（5000 点/次）",
               "damageType": "element",
+              "colorRole": "erosion",
               "events": [
                 [
                   123,
@@ -1650,6 +1658,7 @@
               "groupDesc": "替身普通攻击（230% 弱点伤害，天赋 ×2）",
               "label": "替身攻击（230%×200%）",
               "damageType": "art",
+              "colorRole": "weakpoint",
               "events": [
                 [
                   0,
@@ -1759,6 +1768,7 @@
               "groupDesc": "第二天赋总攻击（450% 真实伤害，形态结束时结算）",
               "label": "S.E.E.S.队长总攻击（450%）",
               "damageType": "true",
+              "colorRole": "true",
               "events": [
                 [
                   600,
@@ -1786,6 +1796,7 @@
               "groupDesc": "主攻击（100%＋280%，触发率 260%，×1.5）",
               "label": "十字范围攻击（1482%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   69,
@@ -1850,6 +1861,7 @@
               "groupDesc": "冲锋落点伤害（300%×(100%＋280%)）",
               "label": "冲锋（1140%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   69,
@@ -1877,6 +1889,7 @@
               "groupDesc": "中继器改向的群体法术攻击（200%×2.8）",
               "label": "混沌的本质每发（200%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -1986,6 +1999,7 @@
               "groupDesc": "攻击经过中继器的额外 30% 攻击力法术伤害",
               "label": "中继器附伤（30%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -2108,6 +2122,7 @@
               "groupDesc": "每枚棋子／跟子触发 380%×1.45 的法术伤害",
               "label": "棋子／跟子触发（551%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -2335,6 +2350,7 @@
               "groupDesc": "每枚棋子／跟子触发 380%×1.45 的法术伤害",
               "label": "棋子／跟子触发（551%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   60,
@@ -2527,6 +2543,7 @@
               "groupDesc": "每轮对最多 4 名地面敌人造成 3 次 210% 的攻击力伤害（×1.16）",
               "label": "每轮 3 段（3×210%×1.16）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   0,
@@ -2836,6 +2853,7 @@
               "groupDesc": "开技瞬间向前释放剑气，对穿过的敌人造成至少 580% 攻击力（×1.16）",
               "label": "剑气（580%×1.16）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -2863,6 +2881,7 @@
               "groupDesc": "群体法术主攻击（598%，含特性追加 ×1.15）",
               "label": "主攻击（598%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -3000,6 +3019,7 @@
               "groupDesc": "二连击（关技能后四连击）的攻击力伤害，含 X 模组每击附带 10% 法术伤害",
               "label": "主攻击（二连击／临死四连击）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -3209,6 +3229,7 @@
               "groupDesc": "受到攻击时对目标额外造成 10% 攻击力的法术伤害",
               "label": "受击反弹（2.5 秒节拍）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   75,
@@ -3286,6 +3307,7 @@
               "groupDesc": "二连击（关技能后四连击）的攻击力伤害，含 X 模组每击附带 10% 法术伤害",
               "label": "主攻击（二连击／临死四连击）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -3495,6 +3517,7 @@
               "groupDesc": "受到攻击时对目标额外造成 10% 攻击力的法术伤害",
               "label": "受击反弹（2.5 秒节拍）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   75,
@@ -3572,6 +3595,7 @@
               "groupDesc": "二连击（关技能后四连击）的攻击力伤害，含 X 模组每击附带 10% 法术伤害",
               "label": "主攻击（二连击／临死四连击）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -3921,6 +3945,7 @@
               "groupDesc": "受到攻击时对目标额外造成 10% 攻击力的法术伤害",
               "label": "受击反弹（2.5 秒节拍）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   75,
@@ -4023,6 +4048,7 @@
               "groupDesc": "二连击（关技能后四连击）的攻击力伤害，含 X 模组每击附带 10% 法术伤害",
               "label": "主攻击（二连击／临死四连击）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -4372,6 +4398,7 @@
               "groupDesc": "受到攻击时对目标额外造成 10% 攻击力的法术伤害",
               "label": "受击反弹（2.5 秒节拍）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   75,
@@ -4479,6 +4506,7 @@
               "groupDesc": "直接攻击（235% 物理）",
               "label": "直接攻击（235%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   0,
@@ -4638,6 +4666,7 @@
               "groupDesc": "心烛受伤时原敌人受到等量真实伤害（235%）",
               "label": "心烛转移（235%）",
               "damageType": "true",
+              "colorRole": "true",
               "events": [
                 [
                   0,
@@ -4797,6 +4826,7 @@
               "groupDesc": "第一天赋萃血（每秒 500 点法术伤害）",
               "label": "萃血（500 点/跳）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -4919,6 +4949,7 @@
               "groupDesc": "每发群体攻击本体（225%×110% 法术）",
               "label": "众恶的焚场每发（225%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -5053,6 +5084,7 @@
               "groupDesc": "灼燃爆发期间额外元素伤害（80%×225%×110%）",
               "label": "额外元素伤害（80%）",
               "damageType": "element",
+              "colorRole": "burn",
               "events": [
                 [
                   0,
@@ -5187,6 +5219,7 @@
               "groupDesc": "第一天赋熔点引爆固定点（420%×110% 元素）",
               "label": "熔点引爆（420%）",
               "damageType": "element",
+              "colorRole": "burn",
               "events": [
                 [
                   0,
@@ -5214,6 +5247,7 @@
               "groupDesc": "本体普通攻击（100%×1.8＝180%，间隔 1.167 秒）",
               "label": "本体普通攻击（180%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -5393,6 +5427,7 @@
               "groupDesc": "浮游单元攻击（伤害上限按 35%→50%→65%→80%→95%→110%→121% 递增，4 个单元合计）",
               "label": "4 个浮游单元攻击（35%→121%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   50,
@@ -5567,6 +5602,7 @@
               "groupDesc": "浮游单元周围敌人每秒受到 120%×1.8＝216% 攻击力法术伤害（不叠加）",
               "label": "单元周围每秒法术伤害（216%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   50,
@@ -5779,6 +5815,7 @@
               "groupDesc": "主攻击与法术附加（400%＋语汇演化 260%＋剜魂具辞 165 点）",
               "label": "主攻击（400%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -5883,6 +5920,7 @@
               "groupDesc": "主攻击与法术附加（400%＋语汇演化 260%＋剜魂具辞 165 点）",
               "label": "语汇演化法术附加",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -5987,6 +6025,7 @@
               "groupDesc": "主攻击与法术附加（400%＋语汇演化 260%＋剜魂具辞 165 点）",
               "label": "剜魂具辞固定点",
               "damageType": "fixed",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -6091,6 +6130,7 @@
               "groupDesc": "凋亡损伤爆发期间攻击附带的元素伤害（60%×240%）",
               "label": "语汇演化元素附加",
               "damageType": "element",
+              "colorRole": "apoptosis",
               "events": [
                 [
                   120,
@@ -6175,6 +6215,7 @@
               "groupDesc": "凋亡损伤爆发后持续伤害（800/秒）",
               "label": "凋亡损伤爆发（800/秒）",
               "damageType": "element",
+              "colorRole": "apoptosis",
               "events": [
                 [
                   120,
@@ -6297,6 +6338,7 @@
               "groupDesc": "主攻击与法术附加（400%＋语汇演化 260%＋剜魂具辞 165 点）",
               "label": "主攻击（400%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -6401,6 +6443,7 @@
               "groupDesc": "主攻击与法术附加（400%＋语汇演化 260%＋剜魂具辞 165 点）",
               "label": "语汇演化法术附加",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -6505,6 +6548,7 @@
               "groupDesc": "主攻击与法术附加（400%＋语汇演化 260%＋剜魂具辞 165 点）",
               "label": "剜魂具辞固定点",
               "damageType": "fixed",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -6609,6 +6653,7 @@
               "groupDesc": "凋亡损伤爆发期间攻击附带的元素伤害（60%×240%）",
               "label": "语汇演化元素附加",
               "damageType": "element",
+              "colorRole": "apoptosis",
               "events": [
                 [
                   264,
@@ -6668,6 +6713,7 @@
               "groupDesc": "凋亡损伤爆发后持续伤害（800/秒）",
               "label": "凋亡损伤爆发（800/秒）",
               "damageType": "element",
+              "colorRole": "apoptosis",
               "events": [
                 [
                   264,
@@ -6765,6 +6811,7 @@
               "groupDesc": "旋风最远段（420%×2×148%，15 轮）",
               "label": "旋风每轮（420%×200%×148%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -6862,6 +6909,7 @@
               "groupDesc": "主攻击（266.5% 法术：技能 155%＋模组特性 15.5%＋第一天赋 96%）",
               "label": "问雪每击（266.5%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   30,
@@ -7114,6 +7162,7 @@
               "groupDesc": "每击 180%×1.28×(1＋特性档) 的攻击力伤害",
               "label": "攻击（满档 1152%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   0,
@@ -7248,6 +7297,7 @@
               "groupDesc": "每击 12%×(1＋特性档) 的真实伤害",
               "label": "附加真伤（满档 60%）",
               "damageType": "true",
+              "colorRole": "true",
               "events": [
                 [
                   0,
@@ -7390,6 +7440,7 @@
               "groupDesc": "每击 180%×1.28×(1＋特性档) 的攻击力伤害",
               "label": "攻击（满档 1152%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   0,
@@ -7524,6 +7575,7 @@
               "groupDesc": "每击 12%×(1＋特性档) 的真实伤害",
               "label": "附加真伤（满档 60%）",
               "damageType": "true",
+              "colorRole": "true",
               "events": [
                 [
                   0,
@@ -7666,6 +7718,7 @@
               "groupDesc": "每击 180%×1.28×(1＋特性档) 的攻击力伤害",
               "label": "攻击（满档 1152%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   0,
@@ -7800,6 +7853,7 @@
               "groupDesc": "每击 12%×(1＋特性档) 的真实伤害",
               "label": "附加真伤（满档 60%）",
               "damageType": "true",
+              "colorRole": "true",
               "events": [
                 [
                   0,
@@ -7942,6 +7996,7 @@
               "groupDesc": "每击 180%×1.28×(1＋特性档) 的攻击力伤害",
               "label": "攻击（满档 1152%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   0,
@@ -8076,6 +8131,7 @@
               "groupDesc": "每击 12%×(1＋特性档) 的真实伤害",
               "label": "附加真伤（满档 60%）",
               "damageType": "true",
+              "colorRole": "true",
               "events": [
                 [
                   0,
@@ -8218,6 +8274,7 @@
               "groupDesc": "每击 180%×1.28×(1＋特性档) 的攻击力伤害",
               "label": "攻击（满档 1152%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   0,
@@ -8352,6 +8409,7 @@
               "groupDesc": "每击 12%×(1＋特性档) 的真实伤害",
               "label": "附加真伤（满档 60%）",
               "damageType": "true",
+              "colorRole": "true",
               "events": [
                 [
                   0,
@@ -8499,6 +8557,7 @@
               "groupDesc": "每轮两次伤害（各 228%×150% 物理）",
               "label": "假日风暴每轮（684%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   0,
@@ -8601,6 +8660,7 @@
               "groupDesc": "3技能期间每 2 秒一击的法术伤害（含暖机与蓄力层）",
               "label": "主攻击（逐击递增）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -8673,6 +8733,7 @@
               "groupDesc": "3技能期间每 2 秒一击的法术伤害（仅暖机）",
               "label": "主攻击（逐击递增）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -8750,6 +8811,7 @@
               "groupDesc": "满月主攻击（200% 物理）",
               "label": "满月每下（200%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   0,
@@ -8912,6 +8974,7 @@
               "groupDesc": "真银斩每下（376.05% 物理）",
               "label": "真银斩（376.05%）",
               "damageType": "physical",
+              "colorRole": "physical",
               "events": [
                 [
                   0,
@@ -9036,6 +9099,7 @@
               "groupDesc": "X模组特性附带的 10% 攻击力法术伤害",
               "label": "模组附带法术（10%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -9173,6 +9237,7 @@
               "groupDesc": "3技能 每次攻击造成的法术伤害（250%）",
               "label": "3技能 主攻击（250%）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -9257,6 +9322,7 @@
               "groupDesc": "集成战略特限模组：失衡／浮空状态敌人每 0.5 秒受到 60%×2.5＝150% 攻击力法术伤害",
               "label": "浮空持续伤害（150%/跳）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
@@ -9529,6 +9595,7 @@
               "groupDesc": "第二天赋：全场敌人处于凋亡损伤爆发期间时每秒受到 100 点元素伤害",
               "label": "每秒 1 跳（100 点）",
               "damageType": "element",
+              "colorRole": "apoptosis",
               "events": [
                 [
                   0,
@@ -9801,6 +9868,7 @@
               "groupDesc": "第一天赋「神经腐蚀」：攻击使目标中毒，3 秒内每秒受到 125 点法术伤害",
               "label": "每秒 1 跳（125 点）",
               "damageType": "art",
+              "colorRole": "art",
               "events": [
                 [
                   0,
