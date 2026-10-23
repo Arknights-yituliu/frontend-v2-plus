@@ -22,7 +22,12 @@ const OPERATOR_ITEM_COST_TABLE = (() => {
         costTable[charId] = {
             elite: operator.elite || [],
             allSkill: operator.allSkill || [],
+            // skillLevelUpCost 存在两种形态：多数干员为 [{id, count}] 数组，
+            // 电弧、机械师等为 {itemId: count} 对象（可能为空），这里统一转成 {itemId: count}
             skills: (operator.skills || []).map(item => (item.skillLevelUpCost || []).map(rank => {
+                if (!Array.isArray(rank)) {
+                    return {...rank}
+                }
                 const obj = {}
                 rank.forEach(({count, id}) => { obj[id] = count })
                 return obj
