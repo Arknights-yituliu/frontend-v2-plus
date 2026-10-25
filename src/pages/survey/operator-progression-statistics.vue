@@ -48,7 +48,7 @@ const updateTimeText = ref("");
 
 const keyword = ref("");
 const profession = ref("");
-const rarity = ref("");
+const rarity = ref(6);
 const year = ref("");
 const obtain = ref("");
 const modFilter = ref("");
