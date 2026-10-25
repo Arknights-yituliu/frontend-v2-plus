@@ -25,11 +25,5 @@ export default {
         });
     },
 
-    collectLog(logInfo){
-        request({
-            url:'/log/collect',
-            method:'post',
-            data:logInfo
-        })
-    }
+   
 };

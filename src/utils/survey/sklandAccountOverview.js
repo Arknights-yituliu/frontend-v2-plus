@@ -74,7 +74,7 @@ async function getPlayerInfoFull(akUid, cred, token) {
                 apiPath: PLAYER_INFO_API,
                 logType: 'error'
             }
-            toolAPI.collectLog(log)
+
             createMessage({type: 'error', text: '森空岛：' + (error.response?.data?.message || error.message)})
         })
 

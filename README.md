@@ -9,6 +9,7 @@
 
 # 项目框架和部分依赖
 
+
 ![](https://img.shields.io/badge/vite-@5.1.4-blue)
 ![](https://img.shields.io/badge/vue-@3.3.4-blue)
 ![](https://img.shields.io/badge/vue_router-@4.3.0-blue)

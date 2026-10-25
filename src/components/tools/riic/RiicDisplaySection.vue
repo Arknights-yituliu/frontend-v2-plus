@@ -57,14 +57,14 @@ function text(value) {
       {{ props.section.label }}
     </component>
 
-    <div v-if="sectionLayout() === 'grid'" class="riic-display-grid">
+    <div v-if="props.section.rows?.length" class="riic-display-grid">
       <template v-for="row in props.section.rows || []" :key="row.key">
         <span class="riic-display-grid-label">{{ text(row.label) }}</span>
         <strong class="riic-display-grid-value">{{ text(row.value) }}</strong>
       </template>
     </div>
 
-    <div v-else-if="sectionLayout() === 'skill-list'" class="riic-display-skill-list">
+    <div v-if="sectionLayout() === 'skill-list'" class="riic-display-skill-list">
       <div v-for="entry in props.section.entries" :key="entry.key" class="riic-display-skill-row">
         <span class="riic-display-skill-title">{{ text(entry.title) }}</span>
         <span class="riic-display-skill-value">{{ text(entry.value) }}</span>
@@ -89,7 +89,7 @@ function text(value) {
       </div>
     </div>
 
-    <div v-else class="riic-display-candidate-list">
+    <div v-else-if="sectionLayout() === 'candidate-list'" class="riic-display-candidate-list">
       <div v-for="entry in props.section.entries" :key="entry.key" class="riic-display-candidate-row">
         <span v-for="(cell, cellIndex) in entry.cells || []" :key="cellIndex" class="riic-display-candidate-cell">{{ text(cell) }}</span>
       </div>

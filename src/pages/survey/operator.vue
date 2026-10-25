@@ -1,19 +1,25 @@
 <script setup>
+// 我的干员页面：展示账号干员练度，支持筛选 / 排序 / Excel 导出 / MAA 培养计划复制，
+// 以及森空岛凭证、官网 Token、森空岛扫码三种导入方式。
+// ===== 业务接口：干员数据 / 森空岛凭证 / 导入保存 =====
 import {createMessage} from "/src/utils/message.js";
 import operatorDataAPI from "/src/api/user-center/operatorData.js"
 import sklandCredentialAPI from "/src/api/backend/sklandCredential.js"
 import {saveAkAccountOperators} from "/src/api/user-center/gameData.js"
 import {buildUcOperatorSavePayload} from "/src/utils/survey/ucOperatorData.js"
+// ===== Vue API、图鉴数据与通用工具 =====
 import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
 import {operatorTableV2} from "/src/utils/gameData.js";
 import PROFESSION_DICT from "/src/static/json/operator/profession_dict.json";
 import {exportExcel} from '/src/utils/exportExcel.js'
 import {dateFormat} from "/src/utils/dateUtil.js";
 
+// ===== 页面样式 =====
 import "/src/assets/css/survey/operator.scss";
 import "/src/assets/css/survey/operator.phone.scss";
 import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/operatorFilter.js";
 
+// ===== 页面内组件 =====
 import OperatorStatisticalTable from "/src/components/survey/OperatorStatisticalTable.vue";
 import deepClone from "/src/utils/deepClone.js";
 import EquipIcon from "/src/components/sprite/EquipIcon.vue";
@@ -30,6 +36,7 @@ import { useRoute, useRouter } from "vue-router";
 import Login from "/src/pages/account/login.vue";
 import QRCode from 'qrcode';
 
+// 职业 / 分支 ID → 中文名映射，导出与详情展示复用
 const operatorClassLabelMap = new Map()
 for (const profession of PROFESSION_DICT || []) {
   operatorClassLabelMap.set(profession.value, profession.label)
@@ -38,7 +45,9 @@ for (const profession of PROFESSION_DICT || []) {
   }
 }
 
+// 折叠面板（导入 / 筛选 / 列表等区块）的展开状态
 const sectionPanels = ref([])
+// 路由实例：用于处理 ?openImport=1 直达导入流程
 const route = useRoute()
 const router = useRouter()
 
@@ -51,6 +60,7 @@ const SKLAND_ACCOUNT_SESSION_STORAGE_KEY = 'skland_account_data'
 const OFFICIAL_SITE_LINK = 'https://ak.hypergryph.com/user/home'
 const HG_ACCOUNT_INFO_URL = 'https://web-api.hypergryph.com/account/info/hg'
 
+// 弹窗与导入流程的共享状态（三种导入方式共用）
 const sklandImportDialog = ref(false)
 const loginDialog = ref(false)
 const sklandInputText = ref('')
@@ -64,6 +74,7 @@ const selectedImportMethod = ref('')
 const importFlowStarted = ref(false)
 const sklandImportTab = ref('skland')
 const importViewHeight = ref('auto')
+// 导入视图高度过渡用的动画帧句柄
 let importViewAnimationFrame = 0
 // 官网导入：用户粘贴的 account/info/hg 返回内容
 const officialTokenText = ref('')
@@ -76,6 +87,7 @@ const sklandQrImage = ref('') // 渲染出的二维码 data URL
 const sklandQrStatusText = ref('') // 扫码状态提示文案
 let sklandQrPollTimer = null // 轮询定时器
 
+// 三种导入方式的说明卡片配置：标题、可获取内容、风险提示
 const importMethods = [
   {
     key: 'skland',
@@ -134,14 +146,17 @@ const isUserLoggedIn = computed(() => {
   return !!userInfo.value.token || hasStoredUserToken()
 })
 
+// 在新标签页打开官网 / 森空岛页面
 function openLinkOnNewPage(url) {
   window.open(url)
 }
 
+// 复制文本到剪贴板（用于一键复制控制台取凭证脚本）
 function copyText(text) {
   copyTextToClipboard(text)
 }
 
+// 解析粘贴的森空岛凭证：去空白去引号后按逗号拆成 cred / token
 function getCredAndSecret(text) {
   text = text.replace(/\s+/g, '').replace(/["']/g, '')
   const textArr = text.split(',')
@@ -150,6 +165,7 @@ function getCredAndSecret(text) {
   return { cred, token }
 }
 
+// 打开导入弹窗，并重置全部导入状态（含扫码轮询）
 function openSklandImportDialog() {
   sklandImportDialog.value = true
   playBindingList.value = []
@@ -167,10 +183,12 @@ function openSklandImportDialog() {
   sklandQrStatusText.value = ''
 }
 
+// 点击说明卡片切换选中态（再次点击取消）
 function selectImportMethod(method) {
   selectedImportMethod.value = selectedImportMethod.value === method ? '' : method
 }
 
+// 从说明卡片进入正式导入流程；扫码方式立即申请二维码
 function startImportFlow(method) {
   selectedImportMethod.value = method
   importFlowStarted.value = true
@@ -181,11 +199,13 @@ function startImportFlow(method) {
   }
 }
 
+// 从导入流程返回导入方式选择
 function returnToImportMethodSelection() {
   importFlowStarted.value = false
   playBindingList.value = []
 }
 
+// 取消导入视图的高度过渡动画
 function cancelImportViewAnimationFrame() {
   if (!importViewAnimationFrame) {
     return
@@ -195,11 +215,13 @@ function cancelImportViewAnimationFrame() {
   importViewAnimationFrame = 0
 }
 
+// 离开当前步骤前记录当前高度，作为过渡起点
 function beforeImportViewLeave(element) {
   cancelImportViewAnimationFrame()
   importViewHeight.value = `${element.offsetHeight}px`
 }
 
+// 进入新步骤后按新内容高度做过渡
 function enterImportView(element) {
   cancelImportViewAnimationFrame()
   importViewAnimationFrame = requestAnimationFrame(() => {
@@ -208,10 +230,12 @@ function enterImportView(element) {
   })
 }
 
+// 过渡完成后恢复 auto 高度，避免后续内容变化被锁死
 function afterImportViewEnter() {
   importViewHeight.value = 'auto'
 }
 
+// 关闭导入弹窗（二次确认），同时停止扫码轮询
 function requestCloseImportDialog() {
   if (!sklandImportDialog.value) {
     return
@@ -223,6 +247,7 @@ function requestCloseImportDialog() {
   }
 }
 
+// 支持 ?openImport=1 直达：展开导入区、打开弹窗，并清理 query 防止重复触发
 function openImportFlowFromRoute() {
   if (route.query.openImport !== '1') {
     return
@@ -239,6 +264,7 @@ function openImportFlowFromRoute() {
   router.replace({query: nextQuery})
 }
 
+// 同步前要求已登录一图流账号，未登录则弹出登录框
 function ensureSklandSyncLogin() {
   if (!hasStoredUserToken()) {
     loginDialog.value = true
@@ -248,15 +274,18 @@ function ensureSklandSyncLogin() {
   return true
 }
 
+// 登录成功：关闭登录弹窗
 function handleLoginSuccess() {
   loginDialog.value = false
 }
 
+// 登录弹窗内的跳转（注册 / 找回密码等）
 function handleLoginNavigate(routeName) {
   loginDialog.value = false
   router.push({name: routeName})
 }
 
+// 森空岛凭证导入：校验凭证并拉取该凭证绑定的明日方舟账号列表
 async function getPlayerBindingBySkland() {
   if (!ensureSklandSyncLogin()) {
     return
@@ -317,6 +346,7 @@ async function getPlayerBindingByOfficialToken() {
     return
   }
 
+  // 清除剪贴板中残留的官网 token，避免敏感信息留在系统剪贴板
   copyText('已清除剪贴板内的hgtoken')
   sklandLoading.value = true
   try {
@@ -325,9 +355,7 @@ async function getPlayerBindingByOfficialToken() {
     const { cred, token } = result.data
     sklandCred.value = cred
     sklandToken.value = token
-    console.log(result.data)
     // 用换取的凭证自动拉取账号列表
-    console.log(cred, token)
     const playBinding = await SklandAPI.getPlayBindingV2('', '', cred, token)
     playBindingList.value = playBinding.bindingList
 
@@ -440,10 +468,12 @@ async function getPlayerDataAndSync(binding) {
   createMessage({ type: 'info', text: '正在同步干员数据，请稍候...' })
   
   try {
+    // 拉取账号仓库（含干员）数据，并补上昵称 / 区服等账号标识
     const warehouseData = await SklandAPI.getWarehouseInfo(uid, sklandCred.value, sklandToken.value)
     warehouseData.channelName = channelName
     warehouseData.channelMasterId = channelMasterId
     warehouseData.nickName = nickName
+    // 缓存本次导入的账号快照，供账号总览等页面复用
     sessionStorage.setItem(SKLAND_ACCOUNT_SESSION_STORAGE_KEY, JSON.stringify({
       ...warehouseData,
       nickName,
@@ -452,6 +482,7 @@ async function getPlayerDataAndSync(binding) {
       importedAt: new Date().toISOString(),
     }))
 
+    // 转成一图流后端的保存结构后提交
     const payload = buildUcOperatorSavePayload(warehouseData)
     if (payload.operators.length === 0) {
       createMessage({ type: 'warn', text: '未获取到干员数据，无法同步' })
@@ -478,35 +509,34 @@ let operatorList = ref([])  //干员列表
 //前端筛选后的干员信息
 let displayOperatorList = ref([])  //干员列表
 
+// 干员练度大数据：charId → 各等级 / 技能 / 模组的全服达成率
 let operatorProgressionStatisticsMap = new Map()
 
+// 练度推荐阈值：技能专三 / 模组 / 精一 / 精二，null 表示该维度未启用
 const recommendThreshold = ref(null)
 const recommendEquipThreshold = ref(null)
 const recommendElite1Threshold = ref(null)
 const recommendEliteThreshold = ref(null)
+// 阈值选项：以百分比为主，0.325 为保留的特殊分位值
 const recommendThresholdOptions = [90, 80, 70, 60, 50, 40, 30, 20, 10, 0.325]
 const recommendEliteThresholdOptions = [90, 80, 70, 60, 50, 40, 30, 20, 10, 0.325]
+// 是否隐藏已达成推荐目标的干员
 const hideCompletedRecommendedOperators = ref(false)
+// 筛选面板中展示的筛选维度及顺序
 const displayOperatorFilterModules = ['profession', 'rarity', 'date', 'itemObtainApproach', 'own']
-const hasAutoAppliedGuestOwnFilter = ref(false)
 
+// 本地是否已保存一图流登录 token
 function hasStoredUserToken() {
   const token = localStorage.getItem("USER_TOKEN")
   return Boolean(token && token !== 'null' && token !== 'undefined')
 }
 
+// 按当前筛选条件重新计算展示列表
 function refreshDisplayOperatorList() {
   displayOperatorList.value = filterOperatorList(operatorList.value)
 }
 
-function resetOperatorFilterActions() {
-  for (const filterGroup of Object.values(operatorFilterCondition.value)) {
-    filterGroup.conditions.forEach((condition) => {
-      condition.action = false
-    })
-  }
-}
-
+// 清空「招募情况」维度的勾选
 function clearOwnFilterActions() {
   const ownConditions = operatorFilterCondition.value.own?.conditions || []
   ownConditions.forEach((condition) => {
@@ -514,47 +544,35 @@ function clearOwnFilterActions() {
   })
 }
 
-function applyGuestOwnFilterDefault() {
-  resetOperatorFilterActions()
-
-  const unownedCondition = operatorFilterCondition.value.own?.conditions?.find((condition) => condition.value === false)
-  if (unownedCondition) {
-    unownedCondition.action = true
-  }
-
-  hasAutoAppliedGuestOwnFilter.value = true
-}
-
-function clearGuestOwnFilterDefault() {
-  if (!hasAutoAppliedGuestOwnFilter.value) {
-    return
-  }
-
+/**
+ * 应用默认筛选：在既有星级默认（六星）之上叠加「已招募」
+ */
+function applyDefaultOwnFilter() {
   clearOwnFilterActions()
-  hasAutoAppliedGuestOwnFilter.value = false
-}
 
-function syncGuestOwnFilterDefault(hasData) {
-  if (!hasData && !hasStoredUserToken()) {
-    applyGuestOwnFilterDefault()
-  } else {
-    clearGuestOwnFilterDefault()
+  const ownedCondition = operatorFilterCondition.value.own?.conditions?.find((condition) => condition.value === true)
+  if (ownedCondition) {
+    ownedCondition.action = true
   }
 
   refreshDisplayOperatorList()
 }
 
+// 以干员图鉴为基准合并用户数据：未持有干员补 0 并标记 own=false
 function createOperatorList(list = []) {
   const operatorMap = {}
   for (const item of list) {
     operatorMap[item.charId] = item
   }
 
+  // 以图鉴为遍历基准，保证所有干员都出现在列表中
   const tmpList = []
   for (const charId in operatorTableV2) {
     const sourceOperator = operatorTableV2[charId]
+    // 深拷贝图鉴数据作为模板，避免改动 operatorTableV2 原对象
     let formatData = deepClone(sourceOperator)
 
+    // 用户数据缺失时补一套零值，视为未招募
     let item = {}
     if (operatorMap[charId]) {
       item = operatorMap[charId]
@@ -575,6 +593,7 @@ function createOperatorList(list = []) {
       }
     }
 
+    // 把用户练度字段覆盖到图鉴模板上（后端可能缺字段，统一兜底为 0）
     formatData.elite = item.elite
     formatData.level = item.level
     formatData.potential = item.potential
@@ -595,12 +614,14 @@ function createOperatorList(list = []) {
   return tmpList
 }
 
+// 仅保留有条件的筛选维度，供筛选面板渲染
 const displayOperatorFilterCondition = computed(() => {
   return displayOperatorFilterModules
       .map((module) => ({module, conditions: operatorFilterCondition.value[module]}))
       .filter((item) => item.conditions)
 })
 
+// 读取干员练度大数据（IndexedDB 缓存），用于练度推荐与详情对比
 async function getCharStatisticsResult() {
   const data = await operatorProgressionStatisticsDataCache.getData();
   let {result} = data
@@ -610,8 +631,10 @@ async function getCharStatisticsResult() {
   }
 }
 
+// 首屏即预加载，供推荐计算与详情弹窗使用
 getCharStatisticsResult()
 
+// 技能专精推荐：专三达成率 ≥ 阈值 → 记录需要专三的技能下标
 const operatorRecommendedSkillSourceMap = computed(() => {
   const recommendedMap = new Map()
   const threshold = recommendThreshold.value
@@ -627,6 +650,7 @@ const operatorRecommendedSkillSourceMap = computed(() => {
       continue
     }
 
+    // rank3 达成率换算为百分比后与阈值比较
     const recommendedSkillIndexes = operator.skills.reduce((indexes, _, index) => {
       const ranks = result[`skill${index + 1}`]
       if (!ranks) {
@@ -649,6 +673,7 @@ const operatorRecommendedSkillSourceMap = computed(() => {
   return recommendedMap
 })
 
+// 模组推荐：模组各级解锁率之和 ≥ 阈值 → 记录建议解锁的模组下标
 const operatorRecommendedEquipSourceMap = computed(() => {
   const recommendedMap = new Map()
   const threshold = recommendEquipThreshold.value
@@ -670,6 +695,7 @@ const operatorRecommendedEquipSourceMap = computed(() => {
         return indexes
       }
 
+      // 一 / 二 / 三级解锁率合计，作为模组解锁热度
       const unlockRate = ((ranks.rank1 || 0) + (ranks.rank2 || 0) + (ranks.rank3 || 0)) * 100
       if (unlockRate >= threshold) {
         indexes.push(index)
@@ -685,6 +711,7 @@ const operatorRecommendedEquipSourceMap = computed(() => {
 
   return recommendedMap
 })
+// 精二推荐：精二达成率 ≥ 阈值 → 记录 charId
 const operatorRecommendedEliteSourceSet = computed(() => {
   const recommendedSet = new Set()
   const threshold = recommendEliteThreshold.value
@@ -705,6 +732,7 @@ const operatorRecommendedEliteSourceSet = computed(() => {
   return recommendedSet
 })
 
+// 精一推荐：精一（含精二）达成率 ≥ 阈值 → 记录 charId
 const operatorRecommendedElite1SourceSet = computed(() => {
   const recommendedSet = new Set()
   const threshold = recommendElite1Threshold.value
@@ -725,6 +753,7 @@ const operatorRecommendedElite1SourceSet = computed(() => {
   return recommendedSet
 })
 
+// 是否启用了任一练度推荐阈值（决定推荐列与相关筛选是否生效）
 const hasActiveRecommendFilter = computed(() => {
   return Boolean(
       recommendThreshold.value ||
@@ -734,6 +763,7 @@ const hasActiveRecommendFilter = computed(() => {
   )
 })
 
+// 技能推荐是否已达标：被推荐的技能全部专三
 function hasCompletedSkillRecommendation(operator) {
   const recommendedSkillIndexes = operatorRecommendedSkillSourceMap.value.get(operator.charId) || []
   if (recommendedSkillIndexes.length > 0) {
@@ -743,6 +773,7 @@ function hasCompletedSkillRecommendation(operator) {
   return true
 }
 
+// 模组推荐是否已达标：被推荐的模组均已解锁（等级 > 0）
 function hasCompletedEquipRecommendation(operator) {
   const recommendedEquipIndexes = operatorRecommendedEquipSourceMap.value.get(operator.charId) || []
 
@@ -760,6 +791,7 @@ function hasCompletedEquipRecommendation(operator) {
   return true
 }
 
+// 精一推荐是否已达标
 function hasCompletedElite1Recommendation(operator) {
   if (!operatorRecommendedElite1SourceSet.value.has(operator.charId)) {
     return true
@@ -768,6 +800,7 @@ function hasCompletedElite1Recommendation(operator) {
   return operator.elite >= 1
 }
 
+// 精二推荐是否已达标
 function hasCompletedEliteRecommendation(operator) {
   if (!operatorRecommendedEliteSourceSet.value.has(operator.charId)) {
     return true
@@ -776,6 +809,7 @@ function hasCompletedEliteRecommendation(operator) {
   return operator.elite === 2
 }
 
+// 在全部启用的推荐维度下是否已达标（供「隐藏已达标干员」使用）
 function isOperatorRecommendationCompleted(operator) {
   const activeConditions = []
 
@@ -815,6 +849,7 @@ function buildMaaOperProgressPlans() {
       continue
     }
 
+    // 需要补到专三的技能位置（0 表示该技能无需专三）
     const skillMastery = [0, 0, 0]
     for (const index of operatorRecommendedSkillSourceMap.value.get(operator.charId) || []) {
       if ((operator[`skill${index + 1}`] || 0) < 3) {
@@ -823,6 +858,7 @@ function buildMaaOperProgressPlans() {
     }
     const needMastery = skillMastery.some((level) => level > 0)
 
+    // 有专三需求时至少要精二，否则按推荐档位设定精英化目标
     let eliteTarget = needMastery ? 2 : 0
     if (operatorRecommendedEliteSourceSet.value.has(operator.charId)) {
       eliteTarget = 2
@@ -836,10 +872,12 @@ function buildMaaOperProgressPlans() {
       }
     }
 
+    // MAA 计划字段：role 为职业英文名（首字母大写、其余小写）
     const plan = {role: operator.profession.charAt(0) + operator.profession.slice(1).toLowerCase(), name: operator.name}
     if (eliteTarget > operator.elite) {
       plan.elite = eliteTarget
     }
+    // 专三的前提是技能等级先到 7 级
     if (needMastery && (operator.mainSkill || 0) < 7) {
       plan.skill_level = 7
     }
@@ -860,6 +898,7 @@ function buildMaaOperProgressPlans() {
   return {plans, ignoredEquipCount, ignoredAmiyaCount}
 }
 
+// 复制 MAA 干员培养计划：跳过模组与阿米娅，并在提示中说明忽略数量
 function copyMaaOperProgressPlans() {
   const {plans, ignoredEquipCount, ignoredAmiyaCount} = buildMaaOperProgressPlans()
   const ignored = [
@@ -873,6 +912,7 @@ function copyMaaOperProgressPlans() {
     return
   }
 
+  // 拼接成 MAA「干员培养」可读取的 JSON 数组格式
   const text = `[\n${plans.map((plan) => `  ${JSON.stringify(plan)}`).join(',\n')}\n]`
   copyTextToClipboard(text, (success) => {
     createMessage(success
@@ -881,6 +921,7 @@ function copyMaaOperProgressPlans() {
   })
 }
 
+// 最终渲染列表：筛选结果 + 可选的「隐藏已达标推荐干员」
 const visibleOperatorList = computed(() => {
   let operatorList = displayOperatorList.value
 
@@ -891,12 +932,14 @@ const visibleOperatorList = computed(() => {
   return operatorList
 })
 
+// 练度对比弹窗：明细数据、显示开关、当前查看的干员
 let operatorsStatisticsDetail = ref({})
 
 let operatorsStatisticsDetailDialog = ref(false)
 
 let operatorsStatisticsDetailOperator = ref({})
 
+// 弹窗表头：等级一 / 二 / 三对应各技能、模组等级的达成率
 const detailHeader = [
   {title: '', sortable: false, align: 'center'},
   {title: '等级一', sortable: false, align: 'center'},
@@ -906,6 +949,7 @@ const detailHeader = [
 
 
 
+// 打开练度对比弹窗：汇总该干员技能 / 模组的全服达成率，并高亮本人已达等级
 function openOperatorsStatisticsDetail(operator) {
 
   const {charId,elite,skill1,skill2,skill3,modX,modY,modD,modA} = operator
@@ -919,10 +963,12 @@ function openOperatorsStatisticsDetail(operator) {
   const result = operatorProgressionStatisticsMap.get(charId)
   const skillList = Array.isArray(result.skills) ? result.skills : []
   const equipList = Array.isArray(result.equip) ? result.equip : []
+  // 汇总成弹窗表格行：先技能、后模组
   const data = []
 
   const playerSkillRankList = [skill1,skill2,skill3]
 
+  // 技能达成率：等级一 / 二 / 三 分别对应专精 1 / 2 / 3
   for (let index = 0; index < skillList.length; index++) {
     const info = skillList[index]
     const playerSkillRank = playerSkillRankList[index]
@@ -956,6 +1002,7 @@ function openOperatorsStatisticsDetail(operator) {
 
 
 
+  // 模组达成率：按模组类型（X / Y / D / A / B）取对应统计
   for (const info of equipList) {
     const playerEquipRank = operator[`mod${info.typeName2}`]
     const ranks = result[`mod${info.typeName2}`]
@@ -990,6 +1037,7 @@ function openOperatorsStatisticsDetail(operator) {
 }
 
 
+// 本人已达到的等级回传给模板，用于高亮样式
 function playProgressionHighlight(highlight){
   if(highlight){
     return 'highlight'
@@ -1003,16 +1051,18 @@ function getOperatorData() {
   if (!hasStoredUserToken()) {
     sectionPanels.value = ['importExport']
     operatorList.value = createOperatorList()
-    syncGuestOwnFilterDefault(false)
+    applyDefaultOwnFilter()
     return
   }
 
   //根据一图流的token查询用户填写的干员数据
   operatorDataAPI.getOperatorData().then((response) => {
     let list = response.data || []; //后端返回的数据
+    // 有数据时收起导入区；无数据时自动展开，引导用户先导入
     sectionPanels.value = list.length > 0 ? [] : ['importExport']
     operatorList.value = createOperatorList(list)
-    syncGuestOwnFilterDefault(list.length > 0)
+    // 默认只看已招募：无数据时列表为空，同时自动展开导入面板引导导入
+    applyDefaultOwnFilter()
     createMessage({type:'success',text:"导入了 " + list.length + " 条数据"});
 
   }).catch(() => {
@@ -1041,14 +1091,17 @@ function btnAction(action) {
   }
 }
 
+// 切换技能专精阈值，再次点击同一值取消
 function toggleRecommendThreshold(threshold) {
   recommendThreshold.value = recommendThreshold.value === threshold ? null : threshold
 }
 
+// 切换模组阈值，再次点击同一值取消
 function toggleRecommendEquipThreshold(threshold) {
   recommendEquipThreshold.value = recommendEquipThreshold.value === threshold ? null : threshold
 }
 
+// 切换精一阈值；精一与精二互斥，开启一个会关闭另一个
 function toggleRecommendElite1Threshold(threshold) {
   const nextThreshold = recommendElite1Threshold.value === threshold ? null : threshold
   recommendElite1Threshold.value = nextThreshold
@@ -1057,6 +1110,7 @@ function toggleRecommendElite1Threshold(threshold) {
   }
 }
 
+// 切换精二阈值；与精一互斥
 function toggleRecommendEliteThreshold(threshold) {
   const nextThreshold = recommendEliteThreshold.value === threshold ? null : threshold
   recommendEliteThreshold.value = nextThreshold
@@ -1066,6 +1120,7 @@ function toggleRecommendEliteThreshold(threshold) {
 }
 
 
+// 导出设置：范围（全部 / 已持有 / 当前筛选）与可选扩展列
 const operatorExportSettingsDialog = ref(false)
 const operatorExportScope = ref('all')
 const operatorExportScopeOptions = [
@@ -1073,6 +1128,7 @@ const operatorExportScopeOptions = [
   {title: '导出已持有干员', value: 'owned'},
   {title: '导出当前筛选的干员', value: 'filtered'},
 ]
+// 模组类型 → 字段名 / 展示名映射（导出与页面展示共用）
 const operatorExportModules = [
   {type: 'X', field: 'modX', label: 'χ'},
   {type: 'Y', field: 'modY', label: 'γ'},
@@ -1080,8 +1136,10 @@ const operatorExportModules = [
   {type: 'A', field: 'modA', label: 'α'},
   {type: 'B', field: 'modB', label: 'β'},
 ]
+// 导出列分组：基础信息、练度、技能、模组；每组含必选列与可选扩展列
 const operatorExportColumnGroups = [
   {
+    // 基础信息组：名称 / 星级 / 职业必选，干员 ID、分支、实装日期、获得方式为可选扩展列
     key: 'profile',
     fields: [
       {key: 'name', title: '干员名称', value: (operator) => operator.name},
@@ -1096,6 +1154,7 @@ const operatorExportColumnGroups = [
     ],
   },
   {
+    // 练度组：是否已招募 / 等级 / 精英化 / 潜能 / 通用技能等级（均为必选列）
     key: 'progress',
     fields: [
       {key: 'own', title: '是否已招募', value: (operator) => operator.own ? '是' : '否'},
@@ -1107,6 +1166,7 @@ const operatorExportColumnGroups = [
     optionalOptions: [],
   },
   {
+    // 技能组：三个技能的技能名与专精等级，全部为可选扩展列
     key: 'skills',
     fields: [],
     optionalOptions: [{
@@ -1127,6 +1187,7 @@ const operatorExportColumnGroups = [
     }],
   },
   {
+    // 模组组：各类型模组的名称与等级，全部为可选扩展列
     key: 'modules',
     fields: [],
     optionalOptions: [{
@@ -1147,34 +1208,41 @@ const operatorExportColumnGroups = [
     }],
   },
 ]
+// 拍平所有可选扩展列，便于设置面板遍历勾选
 const operatorExportOptionalOptions = operatorExportColumnGroups.flatMap((group) => group.optionalOptions)
+// 生效中的导出设置，以及设置弹窗内的草稿
 const selectedOperatorExportOptions = ref([])
 const draftOperatorExportScope = ref(operatorExportScope.value)
 const draftOperatorExportOptions = ref([])
 
+// 打开导出设置：把生效配置复制到草稿，取消不影响已保存设置
 function openOperatorExportSettings() {
   draftOperatorExportScope.value = operatorExportScope.value
   draftOperatorExportOptions.value = [...selectedOperatorExportOptions.value]
   operatorExportSettingsDialog.value = true
 }
 
+// 勾选 / 取消勾选某个可选导出列
 function toggleOperatorExportOption(key) {
   draftOperatorExportOptions.value = draftOperatorExportOptions.value.includes(key)
     ? draftOperatorExportOptions.value.filter((option) => option !== key)
     : [...draftOperatorExportOptions.value, key]
 }
 
+// 重置为默认：导出全部干员、不带扩展列
 function resetOperatorExportSettings() {
   draftOperatorExportScope.value = 'all'
   draftOperatorExportOptions.value = []
 }
 
+// 保存设置：草稿写回生效配置
 function saveOperatorExportSettings() {
   operatorExportScope.value = draftOperatorExportScope.value
   selectedOperatorExportOptions.value = [...draftOperatorExportOptions.value]
   operatorExportSettingsDialog.value = false
 }
 
+// 根据勾选的扩展列 key 还原实际列定义，并按分组顺序输出
 function getSelectedOperatorExportFields(selectedOptions) {
   const selectedKeys = new Set(selectedOptions)
   return operatorExportColumnGroups.flatMap((group) => [
@@ -1189,6 +1257,7 @@ function getSelectedOperatorExportFields(selectedOptions) {
  * 导出干员信息与练度表
  */
 function exportOperatorExcel() {
+  // 导出范围：全部干员 / 仅已持有 / 当前筛选结果
   let sourceList = operatorList.value
   if (operatorExportScope.value === 'owned') {
     sourceList = sourceList.filter((operator) => operator.own)
@@ -1206,6 +1275,7 @@ function exportOperatorExcel() {
   const sortedOperatorList = [...sourceList].sort((a, b) =>
     b.updateTime - a.updateTime || b.rarity - a.rarity
   )
+  // 首行为表头，之后每行对应一名干员
   const list = [selectedFields.map((field) => field.title)]
   for (const operator of sortedOperatorList) {
     list.push(selectedFields.map((field) => field.value(operator)))
@@ -1215,6 +1285,7 @@ function exportOperatorExcel() {
 }
 
 
+// 各属性当前的排序方向（true 为降序），key 为干员属性名
 let sortProperty = ref({})
 
 /**
@@ -1223,6 +1294,7 @@ let sortProperty = ref({})
  */
 function sortOperatorList(property) {
 
+  // 同一列再次点击时切换升降序
   sortProperty.value[property] = !sortProperty.value[property]
   displayOperatorList.value.sort((a, b) => {
     if (sortProperty.value[property]) {
@@ -1233,12 +1305,14 @@ function sortOperatorList(property) {
   });
 }
 
+// 按练度排序：精英化 → 等级 → 星级 → 实装时间
 function sortOperatorListByLevel() {
   sortProperty.value.progressionLevel = !sortProperty.value.progressionLevel
   const direction = sortProperty.value.progressionLevel ? -1 : 1
   displayOperatorList.value.sort((a, b) => compareOperatorLevel(a, b) * direction)
 }
 
+// 练度比较器，返回值直接交给 sort 使用
 function compareOperatorLevel(a, b) {
   const eliteDiff = getSortNumber(a.elite) - getSortNumber(b.elite)
   if (eliteDiff !== 0) return eliteDiff
@@ -1252,32 +1326,26 @@ function compareOperatorLevel(a, b) {
   return getSortNumber(a.updateTime) - getSortNumber(b.updateTime)
 }
 
+// 排序时把 null / undefined 归一为 0
 function getSortNumber(value) {
   return Number(value) || 0
 }
 
 
+// 挂载：拉取干员数据，并处理 ?openImport=1 直达导入
 onMounted(() => {
   getOperatorData()
   openImportFlowFromRoute()
 });
 
-watch(isUserLoggedIn, (loggedIn) => {
-  if (!loggedIn) {
-    return
-  }
-
-  clearGuestOwnFilterDefault()
-  refreshDisplayOperatorList()
-})
-
+// query 变化时重新处理直达导入（例如从其他页面再次跳入）
 watch(() => route.query.openImport, () => {
   openImportFlowFromRoute()
 })
 
+// 卸载：清理动画帧与扫码轮询，避免内存泄漏
 onBeforeUnmount(() => {
   cancelImportViewAnimationFrame()
-  clearGuestOwnFilterDefault()
   stopSklandQrPolling()
 })
 </script>

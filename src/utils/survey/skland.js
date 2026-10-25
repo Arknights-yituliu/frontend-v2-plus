@@ -109,7 +109,7 @@ async function getPlayBindingV2(defaultAkUid, params, cred, token) {
             apiPath: PLAYER_BINDING_URL,
             logType: 'error'
         }
-        toolAPI.collectLog(log)
+
         console.log(error)
         createMessage({type:'error',text:'森空岛：' + error.response.data.message})
         return void 0

@@ -37,22 +37,22 @@
             {
               "target": "dormitory",
               "stat": "moodRecover",
-              "value": 0.45,
-              "scope": "room",
-              "subjects": "single",
-              "stack": "max",
-              "maxGroup": "dormRec-single",
-              "scopeGroup": "cc.g.laterano"
-            },
-            {
-              "target": "dormitory",
-              "stat": "moodRecover",
               "value": 0.55,
               "scope": "room",
               "other": true,
               "subjects": "single",
               "stack": "max",
-              "maxGroup": "dormRec-single"
+              "maxGroup": "dormRec-single",
+              "targetBonuses": [
+                {
+                  "value": 0.45,
+                  "targets": [
+                    {
+                      "scopeGroup": "cc.g.laterano"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }

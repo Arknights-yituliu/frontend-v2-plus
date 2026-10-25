@@ -39,17 +39,32 @@ function c(e, r = "") {
 		name: a,
 		elite: n(o),
 		level: Math.max(1, s),
-		owned: e.own,
-		rarity: c
+		owned: e.own
 	};
 }
-function l(e) {
+function l(e, t = {}) {
 	if (!Array.isArray(e) || e.length === 0) throw Error("练度 JSON 必须是非空数组");
-	let t = e.map((e) => c(e));
-	if (t.some((e) => !e)) throw Error("练度 JSON 包含无效干员记录");
-	let n = t;
-	if (new Set(n.map((e) => e.id)).size !== n.length) throw Error("练度 JSON 包含重复干员 ID");
-	return n;
+	let n = e.map((e) => c(e));
+	if (n.some((e) => !e)) throw Error("练度 JSON 包含无效干员记录");
+	let r = n;
+	if (new Set(r.map((e) => e.id)).size !== r.length) throw Error("练度 JSON 包含重复干员 ID");
+	let i = e, a = /* @__PURE__ */ new Map();
+	return r.forEach((e, n) => {
+		let r = i[n];
+		if (!r) throw Error("练度 JSON 包含无效干员记录");
+		let o = Number(r.rarity), s = Object.hasOwn(t, e.id) ? t[e.id] : void 0, c = typeof s == "string" ? s : e.id, l = {
+			...e,
+			id: c
+		}, u = a.get(c);
+		if (u) {
+			if (u.entry.name !== l.name || u.entry.elite !== l.elite || u.entry.level !== l.level || u.entry.owned !== l.owned || u.rarity !== o) throw Error(`练度 JSON 中 ${l.name} 的多个形态数据冲突`);
+			return;
+		}
+		a.set(c, {
+			entry: l,
+			rarity: o
+		});
+	}), [...a.values()].map(({ entry: e }) => e);
 }
 function u(e) {
 	return Object.fromEntries(Object.entries(e).map(([e, t]) => [e, { ...t }]));
@@ -213,102 +228,102 @@ function T(e) {
 		members: t.members?.length ? [...t.members] : w(t.definition)
 	}]));
 }
-function E(e) {
+function te(e) {
 	return e ? e.chains.flatMap((e) => e.stages.map((e) => e.name)) : [];
 }
-function te(e, t) {
+function ne(e, t) {
 	let n = {};
 	return e.forEach((e) => {
 		n[e.name] = {
 			id: e.id,
 			name: e.name,
-			maxEliteLevel: ne(e.rarity ?? 0),
+			maxEliteLevel: re(e.rarity ?? 0),
 			rarity: e.rarity ?? 0,
 			skillFile: e,
-			skillNames: E(e)
+			skillNames: te(e)
 		};
 	}), {
 		operators: n,
 		terms: T(t)
 	};
 }
-function ne(e) {
+function re(e) {
 	return e >= 4 ? 2 : +(e === 3);
 }
-function re(e, t) {
+function ie(e, t) {
 	return e.operators[t];
 }
-function ie(e, t) {
+function ae(e, t) {
 	return t ? e.terms[t]?.members ?? [] : [];
 }
-function ae(e, t, n) {
-	return ie(e, t).includes(n);
+function oe(e, t, n) {
+	return ae(e, t).includes(n);
 }
 //#endregion
 //#region src/utils/specialOperators.ts
-var oe = /^\d+(?:\.\d+)?%$/;
-function se(e) {
-	if (oe.test(e.trim())) return Number(e.trim().slice(0, -1));
-}
+var se = /^\d+(?:\.\d+)?%$/;
 function ce(e) {
-	return se(e) !== void 0;
+	if (se.test(e.trim())) return Number(e.trim().slice(0, -1));
 }
-function le(e, t) {
-	return ue(e, t.terms);
+function le(e) {
+	return ce(e) !== void 0;
 }
 function ue(e, t) {
+	return de(e, t.terms);
+}
+function de(e, t) {
 	let n = e.trim();
 	return Object.entries(t).filter(([e, t]) => e === n || t.name === n).map(([e]) => e);
 }
-function de(e, t) {
-	return le(e, t).length > 0;
-}
 function fe(e, t) {
-	return ce(e) || de(e, t);
+	return ue(e, t).length > 0;
 }
-function pe(e, t = {}) {
-	return ce(e) || ue(e, t).length > 0;
+function pe(e, t) {
+	return le(e) || fe(e, t);
 }
-function me(e, t) {
+function me(e, t = {}) {
+	return le(e) || de(e, t).length > 0;
+}
+function he(e, t) {
 	let n = e.trim();
-	if (ce(n)) return n;
-	let r = ue(n, t)[0], i = r ? t[r]?.name : void 0;
+	if (le(n)) return n;
+	let r = de(n, t)[0], i = r ? t[r]?.name : void 0;
 	if (i) return Array.from(i).slice(0, 2).join("");
 }
-function he(e) {
+function ge(e) {
 	let t = /* @__PURE__ */ new Map();
 	return function(n) {
-		return t.has(n) || t.set(n, me(n, e)), t.get(n);
+		return t.has(n) || t.set(n, he(n, e)), t.get(n);
 	};
 }
-function D(e, t, n) {
-	return ie(e, t).includes(n) || t !== void 0 && le(n, e).includes(t);
+function E(e, t, n) {
+	return ae(e, t).includes(n) || t !== void 0 && ue(n, e).includes(t);
 }
-function ge(e, t) {
-	let n = le(e, t);
-	return Array.from(new Set(n.flatMap((e) => ie(t, e))));
+function _e(e, t) {
+	let n = ue(e, t);
+	return Array.from(new Set(n.flatMap((e) => ae(t, e))));
 }
 //#endregion
 //#region src/utils/schedule.ts
-var _e = class extends Error {
+var ve = class extends Error {
 	constructor(e) {
 		super(e.join("；")), this.name = "SchedulePeriodError";
 	}
 };
-function O(e) {
+function D(e) {
 	if (typeof e != "string" || !/^\d{2}:\d{2}$/.test(e)) return;
 	let [t, n] = e.split(":"), r = Number(t), i = Number(n);
 	return r <= 23 && i <= 59 ? r * 60 + i : void 0;
 }
-function ve(e, t) {
-	let n = O(e), r = O(t);
+function ye(e, t) {
+	let n = D(e), r = D(t);
 	if (n !== void 0 && r !== void 0) return n <= r ? [[e, t]] : [[e, "23:59"], ["00:00", t]];
 }
-function ye(e) {
+function be(e) {
 	let t = Math.max(0, Math.min(1439, e));
 	return `${String(Math.floor(t / 60)).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
 }
-function be(e, t, n) {
+function xe(e, t, n) {
 	if (!Array.isArray(e) || e.length === 0 || e.length > 2) return {
 		intervals: [],
 		error: `队列 ${t + 1} 的 period 必须包含一个时间段，或包含规范的跨午夜两个时间段`
@@ -319,7 +334,7 @@ function be(e, t, n) {
 			intervals: [],
 			error: `队列 ${t + 1} 的 period[${a}] 必须是开始和结束时间`
 		};
-		let s = O(o[0]), c = O(o[1]);
+		let s = D(o[0]), c = D(o[1]);
 		if (s === void 0 || c === void 0) return {
 			intervals: [],
 			error: `队列 ${t + 1} 的 period 时间必须是 HH:mm 格式且在 00:00 到 23:59 之间`
@@ -336,7 +351,7 @@ function be(e, t, n) {
 		s === c || s < c ? u(s, c, l) : (u(s, 1439), u(0, c, l));
 	}
 	if (e.length === 2) {
-		let n = e[0], r = e[1], i = O(n?.[0]), a = O(n?.[1]), o = O(r?.[0]), s = O(r?.[1]);
+		let n = e[0], r = e[1], i = D(n?.[0]), a = D(n?.[1]), o = D(r?.[0]), s = D(r?.[1]);
 		if (i === void 0 || a !== 1439 || o !== 0 || s === void 0 || i <= s) return {
 			intervals: [],
 			error: `队列 ${t + 1} 的多个 period 只能表示一个规范的跨午夜时间段`
@@ -347,7 +362,7 @@ function be(e, t, n) {
 		start: i
 	};
 }
-function xe(e) {
+function Se(e) {
 	if (!e.plans.some((e) => e.period !== void 0)) return {
 		durations: e.plans.map(() => void 0),
 		enabled: !1,
@@ -360,7 +375,7 @@ function xe(e) {
 			t.push(`队列 ${r + 1} 缺少 period 时间设置`);
 			return;
 		}
-		let o = e.plans[(r + 1) % e.plans.length], s = e.plans.length > 1 ? O(o?.period?.[0]?.[0]) : void 0, c = be(n.period, r, s);
+		let o = e.plans[(r + 1) % e.plans.length], s = e.plans.length > 1 ? D(o?.period?.[0]?.[0]) : void 0, c = xe(n.period, r, s);
 		if (c.error || c.start === void 0) {
 			t.push(c.error ?? `队列 ${r + 1} 的 period 无效`);
 			return;
@@ -373,12 +388,12 @@ function xe(e) {
 			t.push(`队列 ${e.planIndex + 1} 的 period 与其他队列时间重叠`), s = Math.max(s, e.end);
 			return;
 		}
-		r > 0 && e.start > s && n.push(`定时换班存在 ${ye(s)} 到 ${ye(e.start - 1)} 的时间空档`), s = e.end;
+		r > 0 && e.start > s && n.push(`定时换班存在 ${be(s)} 到 ${be(e.start - 1)} 的时间空档`), s = e.end;
 	});
 	let c = o[0];
-	return c && c.start > 0 && n.unshift(`定时换班存在 00:00 到 ${ye(c.start - 1)} 的时间空档`), s < 1440 && n.push(`定时换班存在 ${ye(s)} 到 23:59 的时间空档`), t.length === 0 && a.length === e.plans.length && r.forEach((t, n) => {
+	return c && c.start > 0 && n.unshift(`定时换班存在 00:00 到 ${be(c.start - 1)} 的时间空档`), s < 1440 && n.push(`定时换班存在 ${be(s)} 到 23:59 的时间空档`), t.length === 0 && a.length === e.plans.length && r.forEach((t, n) => {
 		let i = a[n], o = a[(n + 1) % a.length];
-		i !== void 0 && o !== void 0 && (r[n] = a.length === 1 ? i === O(e.plans[0]?.period?.[0]?.[1]) ? 1 : 1440 : (o - i + 1440) % 1440);
+		i !== void 0 && o !== void 0 && (r[n] = a.length === 1 ? i === D(e.plans[0]?.period?.[0]?.[1]) ? 1 : 1440 : (o - i + 1440) % 1440);
 	}), {
 		durations: r,
 		enabled: !0,
@@ -386,7 +401,7 @@ function xe(e) {
 		warnings: n
 	};
 }
-var k = {
+var O = {
 	control: "控制中枢",
 	trading: "贸易站",
 	manufacture: "制造站",
@@ -397,7 +412,7 @@ var k = {
 	training: "训练室",
 	recycle: "回收站",
 	dormitory: "宿舍"
-}, Se = [...C], Ce = {
+}, Ce = [...C], we = {
 	control: 1,
 	trading: 5,
 	manufacture: 5,
@@ -408,7 +423,7 @@ var k = {
 	processing: 1,
 	training: 1,
 	recycle: 1
-}, we = {
+}, Te = {
 	control: [
 		0,
 		0,
@@ -463,53 +478,51 @@ var k = {
 		0,
 		0
 	]
-}, Te = {
+}, Ee = {
 	龙门币: "龙门币",
 	合成玉: "合成玉",
 	赤金: "赤金",
-	中级作战记录: "作战记录",
+	中级作战记录: "中级作战记录",
 	源石碎片: "源石碎片"
-}, Ee = {
+}, De = {
 	LMD: "龙门币",
 	Orundum: "合成玉",
 	"Pure Gold": "赤金",
 	"Battle Record": "中级作战记录",
-	"Originium Shard": "源石碎片",
-	作战记录: "中级作战记录",
-	贵金属: "赤金"
+	"Originium Shard": "源石碎片"
 };
-function A(e) {
+function k(e) {
 	let t = e.trim();
-	return Ee[t] ?? t;
+	return De[t] ?? t;
 }
-var De = {
+var Oe = {
 	trading: "龙门币",
 	manufacture: "赤金"
 };
-function Oe(e) {
-	let t = De[e];
+function ke(e) {
+	let t = Oe[e];
 	return t ? { product: t } : {};
 }
-Object.entries(Te).map(([e, t]) => ({
+Object.entries(Ee).map(([e, t]) => ({
 	value: e,
 	label: t
 })), new Set(C);
-function ke(e) {
+function Ae(e) {
 	return typeof e == "object" && !!e && !Array.isArray(e);
 }
-function Ae(e, t) {
+function je(e, t) {
 	return e === "control" || e === "trading" || e === "manufacture" ? t : e === "power" || e === "hire" || e === "processing" ? 1 : e === "meeting" || e === "training" ? 2 : e === "recycle" ? t >= 2 ? 2 : 1 : 5;
 }
-function je(e, t = {}) {
+function Me(e, t = {}) {
 	return e.plans.flatMap((e, n) => {
 		let r = /* @__PURE__ */ new Map();
 		return C.forEach((n) => {
 			let i = e.rooms[n];
 			Array.isArray(i) && i.forEach((e, i) => {
-				ke(e) && Array.isArray(e.operators) && e.operators.forEach((e, a) => {
-					if (typeof e != "string" || !e || pe(e, t)) return;
+				Ae(e) && Array.isArray(e.operators) && e.operators.forEach((e, a) => {
+					if (typeof e != "string" || !e || me(e, t)) return;
 					let o = r.get(e) ?? [];
-					o.push(`${k[n]} ${i + 1} 槽位${a + 1}`), r.set(e, o);
+					o.push(`${O[n]} ${i + 1} 槽位${a + 1}`), r.set(e, o);
 				});
 			});
 		}), [...r.entries()].filter(([, e]) => e.length > 1).map(([e, t]) => ({
@@ -519,27 +532,26 @@ function je(e, t = {}) {
 		}));
 	});
 }
-function Me(e, t) {
-	return we[e][t - 1] ?? 0;
+function Ne(e, t) {
+	return Te[e][t - 1] ?? 0;
 }
-function Ne(e) {
-	let t = JSON.parse(JSON.stringify(e)), n = t.settings;
-	return n && (delete n.featherFixedOps, delete n.featherTargets), t;
+function Pe(e) {
+	return JSON.parse(JSON.stringify(e));
 }
-function Pe(e, t, n) {
+function Fe(e, t, n) {
 	let r = e.rooms[t];
 	if (!Array.isArray(r)) return {};
 	let i = r[n];
-	if (!ke(i)) return {};
+	if (!Ae(i)) return {};
 	let a = i;
 	if (typeof a.product != "string") return a;
-	let o = A(a.product);
+	let o = k(a.product);
 	return o === a.product ? a : {
 		...a,
 		product: o
 	};
 }
-function Fe(e) {
+function Ie(e) {
 	if (!e) return;
 	let t = Object.fromEntries(Object.entries(e).map(([e, t]) => {
 		let n = { ...t };
@@ -547,8 +559,8 @@ function Fe(e) {
 	}));
 	return Object.keys(t).length > 0 ? t : void 0;
 }
-function Ie(e, t, n, r) {
-	let i = e.plans[t], a = i ? Pe(i, n, r) : {};
+function Le(e, t, n, r) {
+	let i = e.plans[t], a = i ? Fe(i, n, r) : {};
 	if (!a.skip || e.plans.length === 0) return {
 		assignment: a,
 		inherited: !1
@@ -556,9 +568,9 @@ function Ie(e, t, n, r) {
 	for (let i = 1; i <= e.plans.length; i += 1) {
 		let o = (t - i + e.plans.length) % e.plans.length, s = e.plans[o];
 		if (!s) continue;
-		let c = Pe(s, n, r);
+		let c = Fe(s, n, r);
 		if (c.skip || !c.operators?.some(Boolean)) continue;
-		let l = Fe(c.operatorStates);
+		let l = Ie(c.operatorStates);
 		return {
 			inherited: !0,
 			sourcePlanIndex: o,
@@ -581,7 +593,7 @@ function Ie(e, t, n, r) {
 }
 //#endregion
 //#region src/utils/efficiency/baseRules.ts
-var Le = [
+var Re = [
 	"control",
 	"trading",
 	"manufacture",
@@ -589,29 +601,29 @@ var Le = [
 	"meeting",
 	"hire",
 	"recycle"
-], Re = {
+], ze = {
 	trading: 100,
 	manufacture: 100,
 	power: 100,
 	meeting: 107,
 	hire: 100
-}, ze = {
+}, Be = {
 	1: 107,
 	2: 109,
 	3: 111
-}, Be = {
+}, Ve = {
 	1: 24,
 	2: 36,
 	3: 54
-}, Ve = {
+}, He = {
 	1: 6,
 	2: 8,
 	3: 10
-}, He = {
+}, Ue = {
 	productAmount: 20,
 	materialAmount: 2,
 	hours: 2
-}, j = {
+}, A = {
 	schemaVersion: 2,
 	version: "arknights-riic-2026-09",
 	defaultDurationMinutes: 720,
@@ -623,10 +635,10 @@ var Le = [
 	hireOutputPerHour: 1 / 12,
 	hireLimit: 3,
 	droneLimit: 250,
-	baseEfficiency: Re,
-	meetingEfficiencyByLevel: ze,
-	manufactureStorageByLevel: Be,
-	tradeOrderLimitByLevel: Ve,
+	baseEfficiency: ze,
+	meetingEfficiencyByLevel: Be,
+	manufactureStorageByLevel: Ve,
+	tradeOrderLimitByLevel: He,
 	manufactureRules: {
 		中级作战记录: {
 			product: "中级作战记录",
@@ -716,7 +728,7 @@ var Le = [
 			}
 		]
 	},
-	orundumTradeOrder: He,
+	orundumTradeOrder: Ue,
 	tailorProbabilities: {
 		"1α": [
 			.15,
@@ -748,9 +760,7 @@ var Le = [
 		Orundum: "合成玉",
 		"Pure Gold": "赤金",
 		"Battle Record": "中级作战记录",
-		"Originium Shard": "源石碎片",
-		作战记录: "中级作战记录",
-		贵金属: "赤金"
+		"Originium Shard": "源石碎片"
 	},
 	maxEliteLevelByRarity: {
 		1: 0,
@@ -761,66 +771,66 @@ var Le = [
 		6: 2
 	}
 };
-function Ue(e, t) {
+function We(e, t) {
 	return `${e}-${t + 1}`;
 }
-function We(e) {
+function Ge(e) {
 	let t = /* @__PURE__ */ new Map();
 	return e.map((e) => {
 		let n = t.get(e.type) ?? 0;
 		return t.set(e.type, n + 1), {
-			id: Ue(e.type, n),
+			id: We(e.type, n),
 			type: e.type,
 			level: e.level,
 			index: n
 		};
 	});
 }
-function Ge(e) {
-	return ze[e] ?? ze[1] ?? 107;
+function Ke(e) {
+	return Be[e] ?? Be[1] ?? 107;
 }
-function Ke(e, t, n = j) {
+function qe(e, t, n = A) {
 	return e === "meeting" ? n.meetingEfficiencyByLevel[t] ?? 107 : e === "recycle" ? (n.recycle?.phases[t - 1]?.recycleSpeed ?? 0) * 100 : n.baseEfficiency[e] ?? 0;
 }
-function M(e, t, n = j) {
+function j(e, t, n = A) {
 	if (!e) return;
-	let r = A(e);
+	let r = k(e);
 	return r === "源石碎片" ? n.manufactureRules[`源石碎片:${t || "固源岩"}`] : n.manufactureRules[r];
 }
-function qe(e) {
+function Je(e) {
 	return e.filter((e) => e.type === "dormitory").reduce((e, t) => e + t.level * 1e3, 0);
 }
-function Je(e) {
+function Ye(e) {
 	return e >= 4e3 ? 15 : e >= 3e3 ? 10 : e >= 2e3 ? 5 : 0;
 }
-function Ye(e) {
+function Xe(e) {
 	return e >= 6 ? 5 : e === 5 ? 4 : e === 4 ? 2 : 0;
 }
-function Xe(e) {
+function Ze(e) {
 	return e >= 2 ? 16 : e >= 1 ? 8 : 0;
 }
 //#endregion
 //#region src/utils/importLayout.ts
-function Ze(e) {
+function Qe(e) {
 	return typeof e == "object" && !!e && !Array.isArray(e);
 }
-function Qe(e, t, n) {
+function $e(e, t, n) {
 	return e.reduce((e, r) => {
 		let i = r.rooms[t];
 		if (!Array.isArray(i)) return e;
 		let a = i[n];
-		return Ze(a) && Array.isArray(a.operators) ? Math.max(e, a.operators.length) : e;
+		return Qe(a) && Array.isArray(a.operators) ? Math.max(e, a.operators.length) : e;
 	}, 0);
 }
-function $e(e, t) {
+function et(e, t) {
 	return e.reduce((e, n) => {
 		let r = n.rooms[t];
 		return Array.isArray(r) ? Math.max(e, r.length) : e;
 	}, 0);
 }
-function et(e) {
+function tt(e) {
 	return e.reduce((e, t) => {
-		let n = we[t.type][t.level - 1] ?? 0;
+		let n = Te[t.type][t.level - 1] ?? 0;
 		return n >= 0 ? e.provided += n : e.used += -n, e.net = e.provided - e.used, e;
 	}, {
 		provided: 0,
@@ -828,15 +838,15 @@ function et(e) {
 		net: 0
 	});
 }
-function tt(e, t, n) {
-	t.slice(0, Ce[e]).forEach((t) => {
+function nt(e, t, n) {
+	t.slice(0, we[e]).forEach((t) => {
 		n.push({
 			type: e,
 			level: t
 		});
 	});
 }
-function nt(e, t) {
+function rt(e, t) {
 	let n = [], r = Math.max(0, t);
 	for (; n.length < Math.min(e, 4) && r >= 10;) n.push(1), r -= 10;
 	let i = [
@@ -852,16 +862,16 @@ function nt(e, t) {
 	}
 	return n;
 }
-function rt(e) {
-	let t = [], n = Object.fromEntries(C.map((t) => [t, $e(e, t)]));
-	n.control > 0 && tt("control", [5], t), ["trading", "manufacture"].forEach((r) => {
-		tt(r, Array.from({ length: n[r] }, (t, n) => Math.max(1, Math.min(3, Qe(e, r, n) || 3))), t);
+function it(e) {
+	let t = [], n = Object.fromEntries(C.map((t) => [t, et(e, t)]));
+	n.control > 0 && nt("control", [5], t), ["trading", "manufacture"].forEach((r) => {
+		nt(r, Array.from({ length: n[r] }, (t, n) => Math.max(1, Math.min(3, $e(e, r, n) || 3))), t);
 	});
-	let r = Math.min(Ce.power, Math.max(n.power, e.reduce((e, t) => {
+	let r = Math.min(we.power, Math.max(n.power, e.reduce((e, t) => {
 		let n = t.rooms.power;
-		return Array.isArray(n) ? Math.max(e, n.reduce((e, t) => e + (Ze(t) && Array.isArray(t.operators) ? t.operators.filter(Boolean).length : 0), 0)) : e;
+		return Array.isArray(n) ? Math.max(e, n.reduce((e, t) => e + (Qe(t) && Array.isArray(t.operators) ? t.operators.filter(Boolean).length : 0), 0)) : e;
 	}, 0)));
-	tt("power", Array.from({ length: r }, () => 3), t);
+	nt("power", Array.from({ length: r }, () => 3), t);
 	let i = [
 		"meeting",
 		"processing",
@@ -872,19 +882,19 @@ function rt(e) {
 		3,
 		3,
 		3
-	], o = et(t).net >= ((e) => i.reduce((t, n, r) => t - (we[n][e[r] - 1] ?? 0), 0))(a) ? a : [
+	], o = tt(t).net >= ((e) => i.reduce((t, n, r) => t - (Te[n][e[r] - 1] ?? 0), 0))(a) ? a : [
 		1,
 		3,
 		1,
 		3
 	];
 	i.forEach((e, n) => {
-		tt(e, Array.from({ length: Ce[e] }, () => o[n]), t);
-	}), tt("recycle", [3], t);
-	let s = et(t);
-	return tt("dormitory", nt(Ce.dormitory, s.net), t), t;
+		nt(e, Array.from({ length: we[e] }, () => o[n]), t);
+	}), nt("recycle", [3], t);
+	let s = tt(t);
+	return nt("dormitory", rt(we.dormitory, s.net), t), t;
 }
-function it(e, t) {
+function at(e, t) {
 	return e.map((e) => {
 		let n = { ...e.rooms };
 		return C.forEach((e) => {
@@ -893,7 +903,7 @@ function it(e, t) {
 			let i = Array.isArray(n[e]) ? [...n[e]] : [];
 			if (e === "power" && i.length === 1) {
 				let t = i[0];
-				if (Ze(t) && Array.isArray(t.operators) && t.operators.length > 1) {
+				if (Qe(t) && Array.isArray(t.operators) && t.operators.length > 1) {
 					let r = t, i = r.operatorStates, a = { ...r };
 					delete a.operators, delete a.operatorStates;
 					let o = r.operators ?? [];
@@ -905,7 +915,7 @@ function it(e, t) {
 					return;
 				}
 			}
-			for (; i.length < r;) i.push(Oe(e));
+			for (; i.length < r;) i.push(ke(e));
 			n[e] = i;
 		}), {
 			...e,
@@ -913,10 +923,10 @@ function it(e, t) {
 		};
 	});
 }
-function at(e, t) {
+function ot(e, t) {
 	return e.map((e) => {
 		let n = { ...e.rooms };
-		return Se.forEach((e) => {
+		return Ce.forEach((e) => {
 			let r = t.filter((t) => t.type === e);
 			if (r.length === 0) {
 				delete n[e];
@@ -924,7 +934,7 @@ function at(e, t) {
 			}
 			let i = Array.isArray(n[e]) ? n[e] : [];
 			n[e] = r.map((t, n) => {
-				let r = Ze(i[n]) ? { ...i[n] } : Oe(e), a = Ae(e, t.level);
+				let r = Qe(i[n]) ? { ...i[n] } : ke(e), a = je(e, t.level);
 				if (Array.isArray(r.operators) && (r.operators = r.operators.slice(0, a), r.operators.length === 0 && delete r.operators), r.operatorStates) {
 					let e = new Set(r.operators ?? []);
 					r.operatorStates = Object.fromEntries(Object.entries(r.operatorStates).filter(([t]) => e.has(t))), Object.keys(r.operatorStates).length === 0 && delete r.operatorStates;
@@ -937,12 +947,12 @@ function at(e, t) {
 		};
 	});
 }
-function ot(e) {
-	return et(e);
+function st(e) {
+	return tt(e);
 }
 //#endregion
 //#region src/utils/efficiency/basePoints.ts
-var st = [
+var ct = [
 	"cc.t.flow_gold",
 	"cc.bd_a1",
 	"cc.bd_malist",
@@ -961,20 +971,20 @@ var st = [
 	"cc.bd_B",
 	"cc.bd_a1_a3"
 ];
-function ct(e, t) {
+function lt(e, t) {
 	return e.localeCompare(t, "zh-CN") || e.localeCompare(t);
 }
-function lt(e, t) {
-	return ct(e.name, t.name) || e.key.localeCompare(t.key);
+function ut(e, t) {
+	return lt(e.name, t.name) || e.key.localeCompare(t.key);
 }
-function ut(e) {
-	return st.map((t) => ({
+function dt(e) {
+	return ct.map((t) => ({
 		key: t,
 		name: e[t]?.name ?? t
-	})).sort(lt);
+	})).sort(ut);
 }
-function dt(e, t, n) {
-	return t.value - e.value || lt({
+function ft(e, t, n) {
+	return t.value - e.value || ut({
 		key: e.term,
 		name: n[e.term]?.name ?? e.term
 	}, {
@@ -982,12 +992,12 @@ function dt(e, t, n) {
 		name: n[t.term]?.name ?? t.term
 	});
 }
-function ft(e, t) {
-	return t.value - e.value || (e.kind === t.kind ? 0 : e.kind === "gain" ? -1 : 1) || Se.indexOf(e.facility) - Se.indexOf(t.facility) || e.facilityIndex - t.facilityIndex || e.slotIndex - t.slotIndex;
+function pt(e, t) {
+	return t.value - e.value || (e.kind === t.kind ? 0 : e.kind === "gain" ? -1 : 1) || Ce.indexOf(e.facility) - Ce.indexOf(t.facility) || e.facilityIndex - t.facilityIndex || e.slotIndex - t.slotIndex;
 }
 //#endregion
 //#region src/utils/efficiency/model.ts
-var N = 1e-6, pt = "菲亚梅塔", mt = 630 + 300 / 7, ht = [
+var M = 1e-6, mt = "菲亚梅塔", ht = 630 + 300 / 7, gt = [
 	"龙门币",
 	"合成玉",
 	"赤金",
@@ -997,7 +1007,7 @@ var N = 1e-6, pt = "菲亚梅塔", mt = 630 + 300 / 7, ht = [
 	"信用",
 	"公开招募标签刷新次数",
 	"精英材料"
-], P = /* @__PURE__ */ new Set([
+], N = /* @__PURE__ */ new Set([
 	"tradeSpd",
 	"manuProd",
 	"recycleSpd",
@@ -1005,47 +1015,47 @@ var N = 1e-6, pt = "菲亚梅塔", mt = 630 + 300 / 7, ht = [
 	"hireSpd",
 	"droneCharge",
 	"abyssalBoost"
-]), gt = /* @__PURE__ */ new Set([
+]), _t = /* @__PURE__ */ new Set([
 	"tradeSpd",
 	"manuProd",
 	"recycleSpd",
 	"droneCharge",
 	"clueSpeed",
 	"hireSpd"
-]), _t = {
+]), vt = {
 	trading: "tradeSpd",
 	manufacture: "manuProd",
 	recycle: "recycleSpd",
 	power: "droneCharge",
 	meeting: "clueSpeed",
 	hire: "hireSpd"
-}, vt = /* @__PURE__ */ new Set(["orderLimit", "storageCap"]), yt = /* @__PURE__ */ new Set(["basePointGain", "basePointConvert"]), bt = [
+}, yt = /* @__PURE__ */ new Set(["orderLimit", "storageCap"]), bt = /* @__PURE__ */ new Set(["basePointGain", "basePointConvert"]), xt = [
 	"绮良",
 	"鸿雪",
 	"图耶"
-], xt = {
+], St = {
 	operators: /* @__PURE__ */ new Set(),
 	exceptSources: /* @__PURE__ */ new Set()
 };
-function F(e) {
+function P(e) {
 	return Math.max(0, Math.min(24, Number.isFinite(e) ? e : 24));
 }
-function St(e) {
+function Ct(e) {
 	return typeof e == "object" && !!e && !Array.isArray(e);
 }
-function I(e, t, n) {
-	return Ie(e, t, n.type, n.index).assignment;
+function F(e, t, n) {
+	return Le(e, t, n.type, n.index).assignment;
 }
-function Ct(e) {
-	return e.facilities.filter((e) => e.type === "trading").some((t) => (I(e.document, e.index, t).operators ?? []).some((e) => bt.includes(e)));
-}
-function wt(e, t) {
-	return e.operatorStates?.[t] ?? {};
+function wt(e) {
+	return e.facilities.filter((e) => e.type === "trading").some((t) => (F(e.document, e.index, t).operators ?? []).some((e) => xt.includes(e)));
 }
 function Tt(e, t) {
+	return e.operatorStates?.[t] ?? {};
+}
+function Et(e, t) {
 	let n = e.firstItemProgress;
 	if (typeof n == "number") return Math.max(0, Math.min(1, n));
-	if (St(n)) {
+	if (Ct(n)) {
 		let e = n[t] ?? n[t.replace(/-\d+$/, "")];
 		return typeof e == "number" ? Math.max(0, Math.min(1, e)) : 0;
 	}
@@ -1053,24 +1063,24 @@ function Tt(e, t) {
 }
 //#endregion
 //#region src/utils/efficiency/aggregate.ts
-function Et(e) {
+function Dt(e) {
 	return typeof e == "number" ? e : e === "unowned" ? 8 : 9;
 }
-function Dt(e) {
-	return [...new Set(e)].sort((e, t) => Et(e) - Et(t));
+function Ot(e) {
+	return [...new Set(e)].sort((e, t) => Dt(e) - Dt(t));
 }
-function Ot(e, t) {
+function kt(e, t) {
 	return (e[0]?.facilities ?? []).map((n) => {
-		let r = e.map((e) => e.facilities.find((e) => e.facility.id === n.facility.id)?.production).filter((e) => !!e), i = Dt(e.flatMap((e) => e.facilities.find((e) => e.facility.id === n.facility.id)?.cluePreferences ?? []));
+		let r = e.map((e) => e.facilities.find((e) => e.facility.id === n.facility.id)?.production).filter((e) => !!e), i = Ot(e.flatMap((e) => e.facilities.find((e) => e.facility.id === n.facility.id)?.cluePreferences ?? []));
 		if (r.length === 0 || t <= 1e-6) return n;
 		let a = e.reduce((e, t) => {
 			let r = t.facilities.find((e) => e.facility.id === n.facility.id)?.production;
 			return r ? (e.base += r.baseAmountPerHour * t.durationHours, e.actual += r.amountPerHour * t.durationHours, e.effective += (r.effectiveAmountPerHour ?? r.amountPerHour) * t.durationHours, Object.entries(r.baseMaterialPerHour ?? r.materialPerHour ?? {}).forEach(([n, r]) => {
-				e.baseMaterials[A(n)] = (e.baseMaterials[A(n)] ?? 0) + r * t.durationHours;
+				e.baseMaterials[k(n)] = (e.baseMaterials[k(n)] ?? 0) + r * t.durationHours;
 			}), Object.entries(r.materialPerHour ?? {}).forEach(([n, r]) => {
-				e.materials[A(n)] = (e.materials[A(n)] ?? 0) + r * t.durationHours;
+				e.materials[k(n)] = (e.materials[k(n)] ?? 0) + r * t.durationHours;
 			}), Object.entries(r.effectiveMaterialPerHour ?? r.materialPerHour ?? {}).forEach(([n, r]) => {
-				e.effectiveMaterials[A(n)] = (e.effectiveMaterials[A(n)] ?? 0) + r * t.durationHours;
+				e.effectiveMaterials[k(n)] = (e.effectiveMaterials[k(n)] ?? 0) + r * t.durationHours;
 			}), e) : e;
 		}, {
 			base: 0,
@@ -1085,7 +1095,7 @@ function Ot(e, t) {
 			...i.length > 0 ? { cluePreferences: i } : {},
 			production: {
 				...n.production,
-				product: A(r[0]?.product ?? n.production?.product ?? ""),
+				product: k(r[0]?.product ?? n.production?.product ?? ""),
 				...i.length > 0 ? { cluePreferences: i } : {},
 				baseAmountPerHour: a.base / t,
 				baseAmountPerDay: a.base / t * 24,
@@ -1102,14 +1112,14 @@ function Ot(e, t) {
 		};
 	});
 }
-function kt(e, t) {
+function At(e, t) {
 	if (t <= 1e-6) return [];
 	let n = /* @__PURE__ */ new Map();
 	return e.forEach((e) => {
 		e.facilities.forEach((t) => {
 			let r = t.production;
 			if (!r) return;
-			let i = A(r.product), a = r.effectiveAmountPerHour ?? r.amountPerHour, o = n.get(i) ?? {
+			let i = k(r.product), a = r.effectiveAmountPerHour ?? r.amountPerHour, o = n.get(i) ?? {
 				basePerCycle: 0,
 				actualPerCycle: 0,
 				effectivePerCycle: 0,
@@ -1119,14 +1129,14 @@ function kt(e, t) {
 				materialsPerCycle: {},
 				effectiveMaterialsPerCycle: {}
 			};
-			!o.conversion && r.conversion && (o.conversion = r.conversion), o.cluePreferences = Dt([...o.cluePreferences, ...r.cluePreferences ?? []]), o.basePerCycle += r.baseAmountPerHour * e.durationHours, o.actualPerCycle += r.amountPerHour * e.durationHours, o.effectivePerCycle += a * e.durationHours, Object.entries(r.baseMaterialPerHour ?? r.materialPerHour ?? {}).forEach(([t, n]) => {
-				let r = A(t);
+			!o.conversion && r.conversion && (o.conversion = r.conversion), o.cluePreferences = Ot([...o.cluePreferences, ...r.cluePreferences ?? []]), o.basePerCycle += r.baseAmountPerHour * e.durationHours, o.actualPerCycle += r.amountPerHour * e.durationHours, o.effectivePerCycle += a * e.durationHours, Object.entries(r.baseMaterialPerHour ?? r.materialPerHour ?? {}).forEach(([t, n]) => {
+				let r = k(t);
 				o.baseMaterialsPerCycle[r] = (o.baseMaterialsPerCycle[r] ?? 0) + n * e.durationHours;
 			}), Object.entries(r.materialPerHour ?? {}).forEach(([t, n]) => {
-				let r = A(t);
+				let r = k(t);
 				o.materialsPerCycle[r] = (o.materialsPerCycle[r] ?? 0) + n * e.durationHours;
 			}), Object.entries(r.effectiveMaterialPerHour ?? r.materialPerHour ?? {}).forEach(([t, n]) => {
-				let r = A(t);
+				let r = k(t);
 				o.effectiveMaterialsPerCycle[r] = (o.effectiveMaterialsPerCycle[r] ?? 0) + n * e.durationHours;
 			}), n.set(i, o);
 		});
@@ -1150,23 +1160,23 @@ function kt(e, t) {
 		};
 	});
 }
-function At(e) {
+function jt(e) {
 	return e.effectiveAmountPerDay ?? e.amountPerDay;
 }
-function jt(e, t, n = j) {
+function Mt(e, t, n = A) {
 	let r = /* @__PURE__ */ new Map(), i = /* @__PURE__ */ new Map();
 	t.forEach((e) => {
-		let t = A(e.product);
-		t !== "线索" && r.set(t, At(e));
+		let t = k(e.product);
+		t !== "线索" && r.set(t, jt(e));
 		let n = e.effectiveMaterialPerHour ?? e.materialPerHour ?? {};
 		Object.entries(n).forEach(([e, t]) => {
-			let n = A(e);
+			let n = k(e);
 			i.set(n, (i.get(n) ?? 0) + t * 24);
 		});
 	});
-	let a = e.layout.filter((e) => e.type === "dormitory").reduce((e, t) => e + Math.floor(10 + t.level * 1e3 / 125), 0), o = t.find((e) => A(e.product) === "线索");
-	r.set("信用", mt + a + (o ? At(o) * n.creditPerClue : 0));
-	let s = ht.flatMap((e) => {
+	let a = e.layout.filter((e) => e.type === "dormitory").reduce((e, t) => e + Math.floor(10 + t.level * 1e3 / 125), 0), o = t.find((e) => k(e.product) === "线索");
+	r.set("信用", ht + a + (o ? jt(o) * n.creditPerClue : 0));
+	let s = gt.flatMap((e) => {
 		let t = r.get(e);
 		return t === void 0 || Math.abs(t) <= 1e-6 ? [] : [{
 			product: e,
@@ -1178,7 +1188,7 @@ function jt(e, t, n = j) {
 		kind: "net",
 		amountPerDay: (r.get(e) ?? 0) + t,
 		consumed: t
-	})).filter((e) => e.consumed < -1e-6 && Math.abs(e.amountPerDay) > 1e-6).sort((e, t) => (ht.indexOf(e.product) < 0 ? ht.length : ht.indexOf(e.product)) - (ht.indexOf(t.product) < 0 ? ht.length : ht.indexOf(t.product)) || e.product.localeCompare(t.product)).map(({ product: e, kind: t, amountPerDay: n }) => ({
+	})).filter((e) => e.consumed < -1e-6 && Math.abs(e.amountPerDay) > 1e-6).sort((e, t) => (gt.indexOf(e.product) < 0 ? gt.length : gt.indexOf(e.product)) - (gt.indexOf(t.product) < 0 ? gt.length : gt.indexOf(t.product)) || e.product.localeCompare(t.product)).map(({ product: e, kind: t, amountPerDay: n }) => ({
 		product: e,
 		kind: t,
 		amountPerDay: n
@@ -1187,8 +1197,8 @@ function jt(e, t, n = j) {
 }
 //#endregion
 //#region src/utils/efficiency/recycling.ts
-var Mt = "精英材料";
-function Nt(e) {
+var Nt = "精英材料";
+function Pt(e) {
 	let t = e?.outputPool;
 	if (!t) return [];
 	let n = t.normalItems.reduce((e, t) => e + t.weight, 0), r = t.extraItems.reduce((e, t) => e + t.weight, 0);
@@ -1206,15 +1216,15 @@ function Nt(e) {
 	}
 	return l(t.normalItems, n, s), l(t.extraItems, r, o), [...c.values()];
 }
-function Pt(e, t) {
-	return Nt(e).map((e) => ({
+function Ft(e, t) {
+	return Pt(e).map((e) => ({
 		itemId: e.itemId,
 		name: e.name,
 		amountPerHour: e.amount * t
 	}));
 }
-function Ft(e, t) {
-	let n = Nt(e), r = n.reduce((e, t) => e + t.amount, 0);
+function It(e, t) {
+	let n = Pt(e), r = n.reduce((e, t) => e + t.amount, 0);
 	if (r <= 0) return null;
 	let i = 0;
 	for (let e of n) {
@@ -1226,13 +1236,13 @@ function Ft(e, t) {
 }
 //#endregion
 //#region src/utils/sanity.ts
-var It = 3, Lt = 1e3, Rt = 500, zt = {
+var Lt = 3, Rt = 1e3, zt = 500, Bt = {
 	lmd: .0036,
 	goldExperienceRatio: 1.2,
 	orundum: .75,
 	credit: 5.3271 / 129,
 	recruitRefresh: 19.0787820209763
-}, Bt = [
+}, Vt = [
 	{
 		resource: "龙门币",
 		label: "龙门币",
@@ -1256,9 +1266,9 @@ var It = 3, Lt = 1e3, Rt = 500, zt = {
 	},
 	{
 		resource: "中级作战记录",
-		label: "作战记录（经验）",
+		label: "中级作战记录（经验）",
 		amountUnit: "经验",
-		amountFactor: Lt,
+		amountFactor: Rt,
 		value: (e) => e.experience
 	},
 	{
@@ -1297,11 +1307,11 @@ var It = 3, Lt = 1e3, Rt = 500, zt = {
 		value: (e) => e.originiumShard
 	}
 ];
-function Vt(e) {
+function Ht(e) {
 	return e * 60 / 3;
 }
-function Ht(e) {
-	let t = e.goldExperienceRatio > 0 ? e.lmd / e.goldExperienceRatio : 0, n = t * Lt, r = M("中级作战记录", void 0)?.hours ?? 0, i = M("赤金", void 0)?.hours ?? 0, a = Vt(r), o = a > 0 ? n / a : 0, s = o * Vt(i), c = (He.productAmount * e.orundum - Vt(He.hours) * o) / He.materialAmount;
+function Ut(e) {
+	let t = e.goldExperienceRatio > 0 ? e.lmd / e.goldExperienceRatio : 0, n = t * Rt, r = j("中级作战记录", void 0)?.hours ?? 0, i = j("赤金", void 0)?.hours ?? 0, a = Ht(r), o = a > 0 ? n / a : 0, s = o * Ht(i), c = (Ue.productAmount * e.orundum - Ht(Ue.hours) * o) / Ue.materialAmount;
 	return {
 		lmd: e.lmd,
 		goldExperienceRatio: e.goldExperienceRatio,
@@ -1315,23 +1325,23 @@ function Ht(e) {
 		recycleItemSanity: e.recycleItemSanity ?? null
 	};
 }
-function Ut(e, t, n) {
+function Wt(e, t, n) {
 	if (n === 0) return;
-	let r = A(t);
+	let r = k(t);
 	e[r] = (e[r] ?? 0) + n;
 }
-function Wt(e, t, n) {
+function Gt(e, t, n) {
 	let r = t.effectiveAmountPerHour ?? t.amountPerHour;
-	t.product === "线索" ? Ut(e, "信用", r * n * (t.conversion?.amountPerUnit ?? 0)) : Ut(e, t.product, r * n);
+	t.product === "线索" ? Wt(e, "信用", r * n * (t.conversion?.amountPerUnit ?? 0)) : Wt(e, t.product, r * n);
 	let i = t.effectiveMaterialPerHour ?? t.materialPerHour ?? {};
 	Object.entries(i).forEach(([t, r]) => {
-		Ut(e, t, r * n);
+		Wt(e, t, r * n);
 	});
 }
-function Gt(e, t) {
+function Kt(e, t) {
 	let n = [], r = 0, i = t.materials ?? {};
 	return {
-		items: [...Bt.filter((e) => !Object.hasOwn(i, e.resource)), ...Object.entries(i).map(([e, t]) => ({
+		items: [...Vt.filter((e) => !Object.hasOwn(i, e.resource)), ...Object.entries(i).map(([e, t]) => ({
 			resource: e,
 			label: e,
 			amountUnit: e,
@@ -1362,19 +1372,19 @@ function Gt(e, t) {
 		missing: n
 	};
 }
-function Kt() {
-	return Bt;
+function qt() {
+	return Vt;
 }
 //#endregion
 //#region src/utils/efficiency/calculate.ts
-function qt(e) {
-	return e.ruleset ?? j;
-}
 function Jt(e) {
-	return e.effect.stat === "facBase" || hr(e);
+	return e.ruleset ?? A;
 }
-function Yt(e, t, n, r, i, a, o) {
-	let s = re(n, t);
+function Yt(e) {
+	return e.effect.stat === "facBase" || xr(e);
+}
+function Xt(e, t, n, r, i, a, o) {
+	let s = ie(n, t);
 	return v({
 		operatorId: s?.id ?? t,
 		facility: r.type,
@@ -1387,18 +1397,18 @@ function Yt(e, t, n, r, i, a, o) {
 		dormitoryDefaultIncludesMoodRecovery: o
 	});
 }
-function Xt(e, t) {
+function Zt(e, t) {
 	let n = Number(e.unlock?.value ?? 0);
 	return e.unlock?.type === "level" ? (t.level ?? 30) >= n : (t.elite ?? 0) >= n;
 }
-function Zt(e, t, n, r) {
+function Qt(e, t, n, r) {
 	let i = t ? t.chains.filter((e) => e.room === n).flatMap((e) => {
-		let t = e.stages.filter((e) => Xt(e, r)).at(-1);
+		let t = e.stages.filter((e) => Zt(e, r)).at(-1);
 		return t ? t.effects.map((e) => ({
 			skill: t.name,
 			effect: e
 		})) : [];
-	}) : [], a = se(e), o = _t[n];
+	}) : [], a = ce(e), o = vt[n];
 	return a !== void 0 && o !== void 0 ? [...i, {
 		skill: `${e}效率`,
 		effect: {
@@ -1408,16 +1418,16 @@ function Zt(e, t, n, r) {
 		}
 	}] : i;
 }
-function Qt(e, t, n, r = !1, i = !1) {
-	let a = We(e.layout), o = t.ruleset ?? j, s = xe(e);
+function $t(e, t, n, r = !1, i = !1) {
+	let a = Ge(e.layout), o = t.ruleset ?? A, s = Se(e);
 	return e.plans.map((c, l) => {
 		let u = Math.max(0, Number(s.durations[l] ?? c.duration ?? o.defaultDurationMinutes) / 60), d = [], f = [], p = [];
 		return a.forEach((a) => {
-			let o = I(e, l, a), s = (e, s, c) => {
+			let o = F(e, l, a), s = (e, s, c) => {
 				if (!e) return;
-				let u = re(t, e);
-				!u && !fe(e, t) && p.push(`队列 ${l + 1}：找不到干员“${e}”的技能数据`);
-				let m = wt(o, e), h = fe(e, t), g = Yt(n, e, t, a, m, r, i), _ = {
+				let u = ie(t, e);
+				!u && !pe(e, t) && p.push(`队列 ${l + 1}：找不到干员“${e}”的技能数据`);
+				let m = Tt(o, e), h = pe(e, t), g = Xt(n, e, t, a, m, r, i), _ = {
 					...m,
 					elite: g.elite,
 					level: g.level
@@ -1429,10 +1439,10 @@ function Qt(e, t, n, r = !1, i = !1) {
 					state: _,
 					profile: u,
 					skillFile: u?.skillFile,
-					selected: Zt(e, u?.skillFile, a.type, _).filter(({ effect: e }) => !c || e.stat === "tradeOrder" && e.order?.type !== "tailor"),
+					selected: Qt(e, u?.skillFile, a.type, _).filter(({ effect: e }) => !c || e.stat === "tradeOrder" && e.order?.type !== "tailor"),
 					explicitMood: !c && !h && Object.prototype.hasOwnProperty.call(m, "mood"),
-					moodStart: c || h ? 24 : F(m.mood ?? 24),
-					moodEnd: c || h ? 24 : F(m.mood ?? 24),
+					moodStart: c || h ? 24 : P(m.mood ?? 24),
+					moodEnd: c || h ? 24 : P(m.mood ?? 24),
 					costRate: 0,
 					moodRateDetails: [],
 					working: !0,
@@ -1442,7 +1452,7 @@ function Qt(e, t, n, r = !1, i = !1) {
 				(c ? f : d).push(v);
 			};
 			(o.operators ?? []).forEach((e, t) => s(e, t, !1));
-			let c = e.settings?.runOrderEnabled === !0, u = A(o.product ?? "龙门币") === "龙门币";
+			let c = e.settings?.runOrderEnabled === !0, u = k(o.product ?? "龙门币") === "龙门币";
 			c && a.type === "trading" && u && (o.runOrderOperators ?? []).forEach((e, t) => s(e, t, !0));
 		}), {
 			catalog: t,
@@ -1461,35 +1471,36 @@ function Qt(e, t, n, r = !1, i = !1) {
 			statValues: /* @__PURE__ */ new Map(),
 			moodWarnings: [],
 			autoRestWarnings: [],
+			dormitoryRecoveries: [],
 			fiammettaWarnings: [],
 			warnings: p
 		};
 	});
 }
-function L(e) {
-	return Le.includes(e.facility.type);
+function I(e) {
+	return Re.includes(e.facility.type);
 }
-function $t(e, t) {
-	return e.facility.type !== "dormitory" && !fe(e.name, t);
+function en(e, t) {
+	return e.facility.type !== "dormitory" && !pe(e.name, t);
 }
-function en(e) {
+function tn(e) {
 	return e.placements.find((e) => e.name === "菲亚梅塔" && e.facility.type === "dormitory");
 }
-function tn(e, t, n) {
-	let r = {}, i = wt(r, pt), a = Yt(e.settings.progressionProfile, pt, e.catalog, t, i, e.settings.treatSkillsAsUnlocked ?? !1, e.settings.dormitoryDefaultIncludesMoodRecovery ?? !1), o = {
+function nn(e, t, n) {
+	let r = {}, i = Tt(r, mt), a = Xt(e.settings.progressionProfile, mt, e.catalog, t, i, e.settings.treatSkillsAsUnlocked ?? !1, e.settings.dormitoryDefaultIncludesMoodRecovery ?? !1), o = {
 		...i,
 		elite: a.elite,
 		level: a.level
-	}, s = re(e.catalog, pt);
+	}, s = ie(e.catalog, mt);
 	return {
-		name: pt,
+		name: mt,
 		facility: t,
 		assignment: r,
 		index: n,
 		state: o,
 		profile: s,
 		skillFile: s?.skillFile,
-		selected: Zt(pt, s?.skillFile, "dormitory", o),
+		selected: Qt(mt, s?.skillFile, "dormitory", o),
 		explicitMood: !1,
 		moodStart: 24,
 		moodEnd: 24,
@@ -1500,7 +1511,7 @@ function tn(e, t, n) {
 		fiammettaForced: !1
 	};
 }
-function nn(e, t, n) {
+function rn(e, t, n) {
 	let r = (t, n) => !e.placements.some((e) => e.facility.id === t.id && e.index === n), i = e.facilities.find((e) => e.id === n?.facilityId);
 	if (t === "queue" && i?.type === "dormitory" && n && r(i, n.slotIndex)) return {
 		facility: i,
@@ -1508,21 +1519,21 @@ function nn(e, t, n) {
 	};
 	let a = e.facilities.filter((e) => e.type === "dormitory").sort((e, n) => t === "direct" ? e.level - n.level || e.index - n.index : n.level - e.level || e.index - n.index);
 	for (let e of a) {
-		let t = Array.from({ length: Ae("dormitory", e.level) }, (e, t) => t).find((t) => r(e, t));
+		let t = Array.from({ length: je("dormitory", e.level) }, (e, t) => t).find((t) => r(e, t));
 		if (t !== void 0) return {
 			facility: e,
 			slotIndex: t
 		};
 	}
 }
-function rn(e) {
-	let t = Yn(e[0]?.settings ?? {}), n = e.findIndex((e, t) => Xn(e, t));
+function an(e) {
+	let t = Zn(e[0]?.settings ?? {}), n = e.findIndex((e, t) => Qn(e, t));
 	if (t === "queue" && n < 0) return;
 	let r, i = t === "queue" ? n : 0;
 	e.forEach((n, a) => {
 		let o = e[(i + a) % e.length];
 		if (!o) return;
-		let s = en(o);
+		let s = tn(o);
 		if (s) {
 			r = {
 				facilityId: s.facility.id,
@@ -1530,71 +1541,71 @@ function rn(e) {
 			};
 			return;
 		}
-		let c = nn(o, t, t === "queue" ? r : void 0);
-		c && (o.placements.push(tn(o, c.facility, c.slotIndex)), r = {
+		let c = rn(o, t, t === "queue" ? r : void 0);
+		c && (o.placements.push(nn(o, c.facility, c.slotIndex)), r = {
 			facilityId: c.facility.id,
 			slotIndex: c.slotIndex
 		});
 	});
 }
-function R(e) {
-	return e.working && (!L(e) || e.moodStart > 1e-6);
+function L(e) {
+	return e.working && (!I(e) || e.moodStart > 1e-6);
 }
-function z(e, t) {
+function R(e, t) {
 	return e.placements.filter((e) => e.facility.id === t.id);
 }
-function an(e, t) {
+function on(e, t) {
 	return e.placements.filter((e) => e.facility.type === t);
 }
-function B(e, t = !1) {
+function z(e, t = !1) {
 	return !t || e.moodStart > 1e-6;
 }
-function on(e, t, n) {
-	if (yt.has(e.stat) || e.stat === "facilityCount" || e.stat === "skillTagConvert") return [void 0];
+function sn(e, t, n) {
+	if (bt.has(e.stat) || e.stat === "facilityCount" || e.stat === "skillTagConvert") return [void 0];
 	if (e.target === "training" || e.target === "processing") return [];
-	if (e.target === "any") return e.facilities?.length ? n.filter((t) => e.facilities?.includes(t.type)) : n.filter((e) => Le.includes(e.type) || e.type === "dormitory");
+	if (e.target === "any") return e.facilities?.length ? n.filter((t) => e.facilities?.includes(t.type)) : n.filter((e) => Re.includes(e.type) || e.type === "dormitory");
 	let r = e.target, i = n.filter((e) => e.type === r);
 	return i.length === 0 ? [] : t.facility.type === r ? [t.facility] : i;
 }
-function sn(e, t, n = "ge") {
+function cn(e, t, n = "ge") {
 	return n === "gt" ? e > t : n === "le" ? e <= t : n === "lt" ? e < t : e >= t;
 }
-function cn(e, t) {
+function ln(e, t) {
 	return typeof t == "number" ? t : t ? e.basePoints[t] ?? 0 : 0;
 }
-function ln(e, t, n, r, i) {
+function un(e, t, n, r, i) {
 	return i.terms[n]?.members?.includes(t) ? !0 : r.active.some((r) => r.effect.stat === "skillTagConvert" && r.effect.tagTo === n && r.owner.facility.id === e.facility.id && r.effect.tagFrom?.some((e) => i.terms[e]?.members?.includes(t)) === !0);
 }
-function un(e, t, n) {
-	return t === "same" ? z(e, n.facility) : t ? an(e, t) : [];
+function dn(e, t, n) {
+	return t === "same" ? R(e, n.facility) : t ? on(e, t) : [];
 }
-function dn(e, t, n, r, i) {
+function fn(e, t, n, r, i) {
 	if (!e) return !0;
 	let a;
 	switch (e.type) {
 		case "opAtFacility":
-			a = un(r, e.facility, t).some((t) => t.name === String(e.op ?? "") && B(t, e.moodCheck));
+			a = dn(r, e.facility, t).some((t) => t.name === String(e.op ?? "") && z(t, e.moodCheck));
 			break;
 		case "opInBase":
-			a = r.placements.some((t) => t.name === String(e.op ?? "") && (!e.facilities?.length || e.facilities.includes(t.facility.type)) && B(t, e.moodCheck));
+			a = r.placements.some((t) => t.name === String(e.op ?? "") && (!e.facilities?.length || e.facilities.includes(t.facility.type)) && z(t, e.moodCheck));
 			break;
 		case "opInFacilityAndTarget":
-			a = r.placements.some((t) => t.name === String(e.op ?? "") && t.facility.type === e.facility && t.facility.id === n?.id && B(t, e.moodCheck));
+			a = r.placements.some((t) => t.name === String(e.op ?? "") && t.facility.type === e.facility && t.facility.id === n?.id && z(t, e.moodCheck));
 			break;
 		case "opGroupInFacility":
 		case "opGroupNotInFacility": {
-			let n = un(r, e.facility, t).filter((t) => B(t, e.moodCheck)).filter((n) => !e.other || n.name !== t.name).some((t) => D(i, e.group, t.name));
+			let n = dn(r, e.facility, t).filter((t) => z(t, e.moodCheck)).filter((n) => !e.other || n.name !== t.name).some((t) => E(i, e.group, t.name));
 			a = e.type === "opGroupNotInFacility" ? !n : n;
 			break;
 		}
 		case "opGroupCountInFacility":
-			a = un(r, e.facility, t).filter((t) => B(t, e.moodCheck)).filter((t) => D(i, e.group, t.name)).filter((n) => !e.other || n.name !== t.name).length >= Number(e.min ?? 1);
+			a = dn(r, e.facility, t).filter((t) => z(t, e.moodCheck)).filter((t) => E(i, e.group, t.name)).filter((n) => !e.other || n.name !== t.name).length >= Number(e.min ?? 1);
 			break;
 		case "opGroupCountInBase":
-			a = r.placements.filter((t) => !e.exclude?.includes(t.facility.type)).filter((t) => B(t, e.moodCheck)).filter((t) => D(i, e.group, t.name)).filter((n) => !e.other || n.name !== t.name).length >= Number(e.min ?? 1);
+			a = r.placements.filter((t) => !e.exclude?.includes(t.facility.type)).filter((t) => z(t, e.moodCheck)).filter((t) => E(i, e.group, t.name)).filter((n) => !e.other || n.name !== t.name).length >= Number(e.min ?? 1);
 			break;
 		case "onlySelf": {
-			let e = r.placements.filter((e) => e.facility.id === t.facility.id && R(e));
+			let e = r.placements.filter((e) => e.facility.id === t.facility.id && L(e));
 			a = e.length === 1 && e[0]?.name === t.name;
 			break;
 		}
@@ -1602,17 +1613,17 @@ function dn(e, t, n, r, i) {
 			a = r.plan.rooms.meeting !== void 0 && r.settings.clueExchanging !== !1;
 			break;
 		case "moodCmp":
-			a = sn(t.moodStart, Number(e.value ?? 0), e.op);
+			a = cn(t.moodStart, Number(e.value ?? 0), e.op);
 			break;
 		case "moodDrop":
-			a = sn(yn(t, r.durationHours), Number(e.value ?? 0), e.op ?? "gt");
+			a = cn(bn(t, r.durationHours), Number(e.value ?? 0), e.op ?? "gt");
 			break;
 		case "termCmp":
-			a = sn(cn(r, e.a), cn(r, e.b), e.op);
+			a = cn(ln(r, e.a), ln(r, e.b), e.op);
 			break;
 		case "statCmp": {
-			let i = `${n?.id ?? t.facility.id}:${e.stat ?? ""}`, o = n?.type === "hire" ? Ke(n.type, n.level, r.ruleset) : 0;
-			a = sn(r.statValues.get(i) ?? 0, Number(e.value ?? 0) + o, e.op);
+			let i = `${n?.id ?? t.facility.id}:${e.stat ?? ""}`, o = n?.type === "hire" ? qe(n.type, n.level, r.ruleset) : 0;
+			a = cn(r.statValues.get(i) ?? 0, Number(e.value ?? 0) + o, e.op);
 			break;
 		}
 		case "workHours":
@@ -1622,43 +1633,46 @@ function dn(e, t, n, r, i) {
 	}
 	return e.negate ? !a : a;
 }
-function fn(e, t) {
+function pn(e, t) {
 	return e.facilities.filter((e) => e.type === t).length + e.active.filter((e) => e.effect.stat === "facilityCount" && e.effect.target === t).reduce((e, t) => e + Number(t.effect.value ?? 0), 0);
 }
-function pn(e, t) {
+function mn(e, t) {
 	return Math.max(0, e.settings.tradeOrderCount?.[t.id] ?? 0);
 }
-function mn(e, t) {
+function hn(e, t) {
 	return t ? e.basePoints[t] ?? 0 : 0;
 }
-function hn(e, t) {
+function gn(e, t) {
 	return e.selected.some((e) => e.skill === t && (e.effect.per?.source === "moodDrop" || e.effect.condition?.type === "moodDrop"));
 }
-function V(e) {
-	return hn(e.owner, e.skill);
-}
-function gn(e, t) {
-	return e.moodStart <= 1e-6 ? 0 : e.costRate > 1e-6 ? Math.min(t, e.moodStart / e.costRate) : t;
+function B(e) {
+	return gn(e.owner, e.skill);
 }
 function _n(e, t) {
-	return F(e.moodStart - e.costRate * t);
+	return e.moodStart <= 1e-6 ? 0 : e.costRate > 1e-6 ? Math.min(t, e.moodStart / e.costRate) : t;
 }
 function vn(e, t) {
-	return 24 - _n(e, t);
+	return P(e.moodStart - e.costRate * t);
 }
 function yn(e, t) {
-	if (t <= 1e-6) return 0;
-	let n = gn(e, t);
-	return n <= 1e-6 ? 0 : (vn(e, 0) + vn(e, n)) / 2 * (n / t);
+	return 24 - vn(e, t);
 }
-function bn(e, t, n, r, i, a, o) {
-	let s = r === "any" || !n ? t.facility : n, c = (e) => e === "same" || !e ? z(i, s) : an(i, e), l = 0;
+function bn(e, t) {
+	if (t <= 1e-6) return 0;
+	let n = _n(e, t);
+	return n <= 1e-6 ? 0 : (yn(e, 0) + yn(e, n)) / 2 * (n / t);
+}
+function V(e) {
+	return Number(e.value ?? 0) + Number(e.baseValue ?? 0);
+}
+function xn(e, t, n, r, i, a, o) {
+	let s = r === "any" || !n ? t.facility : n, c = (e) => e === "same" || !e ? R(i, s) : on(i, e), l = 0;
 	switch (e.source) {
 		case "basePoint":
-			l = mn(i, e.term);
+			l = hn(i, e.term);
 			break;
 		case "facilityCount":
-			l = fn(i, e.facility ?? "power");
+			l = pn(i, e.facility ?? "power");
 			break;
 		case "facilityLevel":
 			l = i.facilities.filter((t) => t.type === (e.facility ?? "trading")).reduce((e, t) => e + t.level, 0);
@@ -1678,40 +1692,40 @@ function bn(e, t, n, r, i, a, o) {
 		case "dormHere": {
 			let e = t.facility.type === "dormitory" ? t.facility : void 0;
 			if (!e) break;
-			l = i.settings.dormFullTreat === !1 ? z(i, e).length : Ae("dormitory", e.level);
+			l = i.settings.dormFullTreat === !1 ? R(i, e).length : je("dormitory", e.level);
 			break;
 		}
 		case "dormOccupants":
-			l = i.facilities.filter((e) => e.type === "dormitory").reduce((e, t) => e + (i.settings.dormFullTreat === !1 ? z(i, t).length : Ae("dormitory", t.level)), 0);
+			l = i.facilities.filter((e) => e.type === "dormitory").reduce((e, t) => e + (i.settings.dormFullTreat === !1 ? R(i, t).length : je("dormitory", t.level)), 0);
 			break;
 		case "dormOccupantsOwn":
-			l = t.facility.type === "dormitory" ? z(i, t.facility).filter((e) => e.name !== t.name).length : 0;
+			l = t.facility.type === "dormitory" ? R(i, t.facility).filter((e) => e.name !== t.name).length : 0;
 			break;
 		case "dormNotFull":
-			l = t.facility.type === "dormitory" ? z(i, t.facility).filter((e) => e.moodStart < 24 - N).length : 0;
+			l = t.facility.type === "dormitory" ? R(i, t.facility).filter((e) => e.moodStart < 24 - M).length : 0;
 			break;
 		case "recruitSlots":
 			l = i.facilities.filter((e) => e.type === "hire").reduce((e, t) => e + Math.max(0, t.level - 1), 0);
 			break;
 		case "opCount":
-			l = c(e.facility).filter((t) => B(t, e.moodCheck)).filter((n) => !e.other || n.name !== t.name).length;
+			l = c(e.facility).filter((t) => z(t, e.moodCheck)).filter((n) => !e.other || n.name !== t.name).length;
 			break;
 		case "opGroupInBase":
-			l = i.placements.filter((t) => !e.exclude?.includes(t.facility.type)).filter((t) => B(t, e.moodCheck)).filter((t) => D(a, e.group, t.name)).filter((n) => !e.other || n.name !== t.name).length;
+			l = i.placements.filter((t) => !e.exclude?.includes(t.facility.type)).filter((t) => z(t, e.moodCheck)).filter((t) => E(a, e.group, t.name)).filter((n) => !e.other || n.name !== t.name).length;
 			break;
 		case "opGroupInFacility":
-			l = c(e.facility).filter((t) => B(t, e.moodCheck)).filter((t) => D(a, e.group, t.name)).filter((n) => !e.other || n.name !== t.name).filter((t) => !e.fullMood || t.moodStart >= 24 - 1e-6).length;
+			l = c(e.facility).filter((t) => z(t, e.moodCheck)).filter((t) => E(a, e.group, t.name)).filter((n) => !e.other || n.name !== t.name).filter((t) => !e.fullMood || t.moodStart >= 24 - 1e-6).length;
 			break;
 		case "baseFacilityWithGroup":
-			l = i.facilities.filter((t) => z(i, t).some((t) => D(a, e.group, t.name) && B(t, e.moodCheck))).length;
+			l = i.facilities.filter((t) => R(i, t).some((t) => E(a, e.group, t.name) && z(t, e.moodCheck))).length;
 			break;
 		case "skillOwners": {
 			let t = a.terms[e.term ?? ""]?.members ?? [];
-			l = an(i, "control").filter((t) => B(t, e.moodCheck)).filter((e) => e.selected.some((e) => t.includes(e.skill))).length;
+			l = on(i, "control").filter((t) => z(t, e.moodCheck)).filter((e) => e.selected.some((e) => t.includes(e.skill))).length;
 			break;
 		}
 		case "skillTagCount":
-			l = c(e.facility).filter((t) => B(t, e.moodCheck)).reduce((t, n) => t + n.selected.filter(({ skill: t }) => ln(n, t, e.tag ?? "", i, a)).length, 0);
+			l = c(e.facility).filter((t) => z(t, e.moodCheck)).reduce((t, n) => t + n.selected.filter(({ skill: t }) => un(n, t, e.tag ?? "", i, a)).length, 0);
 			break;
 		case "stat": {
 			let r = e.stat ?? "", i = n?.id ?? t.facility.id, a = e.statScope === "targetFacility" ? o.bonusByFacility : o.sameFacilityBonusByFacility ?? o.bonusByFacility;
@@ -1731,25 +1745,25 @@ function bn(e, t, n, r, i, a, o) {
 			break;
 		}
 		case "moodDrop":
-			l = yn(t, i.durationHours);
+			l = bn(t, i.durationHours);
 			break;
 		case "orderCount":
-			l = n ? pn(i, n) : 0;
+			l = n ? mn(i, n) : 0;
 			break;
 		case "orderLimitNet":
 			l = o.capBoosts.orderLimit ? Object.values(o.capBoosts.orderLimit).reduce((e, t) => e + t, 0) : 0;
 			break;
 		case "droneLimit":
-			l = qt(a).droneLimit;
+			l = Jt(a).droneLimit;
 			break;
 		case "manuRecipes":
 			l = new Set(i.facilities.filter((e) => e.type === "manufacture").map((e) => {
-				let t = I(i.document, i.index, e);
-				return M(t.product, t.sourceMaterial, qt(a))?.recipe;
+				let t = F(i.document, i.index, e);
+				return j(t.product, t.sourceMaterial, Jt(a))?.recipe;
 			}).filter((e) => !!e)).size;
 			break;
 		case "abyssalBoost": {
-			let t = c("same").filter((t) => D(a, e.group, t.name) && B(t, e.moodCheck)).length, n = i.placements.filter((e) => e.facility.type === "manufacture").filter((t) => D(a, e.group, t.name) && B(t, e.moodCheck)).length, r = t * n * Number(e.value ?? 0);
+			let t = c("same").filter((t) => E(a, e.group, t.name) && z(t, e.moodCheck)).length, n = i.placements.filter((e) => e.facility.type === "manufacture").filter((t) => E(a, e.group, t.name) && z(t, e.moodCheck)).length, r = t * n * Number(e.value ?? 0);
 			return {
 				value: e.capUnit === "value" ? Math.min(r, Number(e.cap ?? Infinity)) : r,
 				count: t,
@@ -1758,14 +1772,14 @@ function bn(e, t, n, r, i, a, o) {
 		}
 		default: l = 0;
 	}
-	let u = Math.max(N, Number(e.per) || 1), d = e.floor ?? e.source !== "facCap" ? e.source === "stat" && e.statScope === "targetFacility" ? Math.floor(l / u) : Math.max(0, Math.floor(l / u)) : l / u, f = d * (Number(e.value) || 0);
+	let u = Math.max(M, Number(e.per) || 1), d = e.floor ?? e.source !== "facCap" ? e.source === "stat" && e.statScope === "targetFacility" ? Math.floor(l / u) : Math.max(0, Math.floor(l / u)) : l / u, f = d * (Number(e.value) || 0);
 	return {
 		value: e.capUnit === "value" ? Math.min(f, Number(e.cap ?? Infinity)) : e.cap === void 0 ? f : Math.min(d, e.cap) * (Number(e.value) || 0),
 		count: l,
 		times: d
 	};
 }
-function xn(e, t, n) {
+function Sn(e, t, n) {
 	let r = 0, i = [];
 	for (let a = 1; a <= Math.ceil(t); a += 1) {
 		let o = Math.max(0, Math.min(1, t - (a - 1))), s = Math.min(e.startValue + (n + a - e.startHours) * e.step, e.cap);
@@ -1780,35 +1794,35 @@ function xn(e, t, n) {
 		steps: i
 	};
 }
-function Sn(e, t) {
-	let n = Math.max(N, Number(e.per) || 1), r = e.floor ?? !0 ? Math.max(0, Math.floor(t / n)) : Math.max(0, t / n), i = r * (Number(e.value) || 0);
+function Cn(e, t) {
+	let n = Math.max(M, Number(e.per) || 1), r = e.floor ?? !0 ? Math.max(0, Math.floor(t / n)) : Math.max(0, t / n), i = r * (Number(e.value) || 0);
 	return e.capUnit === "value" ? Math.min(i, Number(e.cap ?? Infinity)) : e.cap === void 0 ? i : Math.min(r, e.cap) * (Number(e.value) || 0);
 }
-function Cn(e, t) {
-	let n = sn(t, Number(e.value ?? 0), e.op ?? "gt");
+function wn(e, t) {
+	let n = cn(t, Number(e.value ?? 0), e.op ?? "gt");
 	return e.negate ? !n : n;
 }
-function wn(e, t, n, r, i, a) {
-	let { effect: o, owner: s } = e, c = Dn(i, a), l = gn(s, n.durationHours);
-	if (a > l + 1e-6 || a >= l - 1e-6 && _n(s, a) <= 1e-6) return 0;
+function Tn(e, t, n, r, i, a) {
+	let { effect: o, owner: s } = e, c = On(i, a), l = _n(s, n.durationHours);
+	if (a > l + 1e-6 || a >= l - 1e-6 && vn(s, a) <= 1e-6) return 0;
 	let u;
-	if (u = o.per?.source === "moodDrop" ? Sn(o.per, vn(s, a)) : o.curve ? Math.min(o.curve.startValue + (s.workHoursBefore + a - o.curve.startHours) * o.curve.step, o.curve.cap) : o.per ? bn(o.per, s, t, o.target, n, r, c).value : Number(o.value ?? 0) + Number(o.baseValue ?? 0), o.condition?.type === "moodDrop" && !Cn(o.condition, vn(s, a))) return 0;
+	if (u = o.per?.source === "moodDrop" ? V(o) + Cn(o.per, yn(s, a)) : o.curve ? Math.min(o.curve.startValue + (s.workHoursBefore + a - o.curve.startHours) * o.curve.step, o.curve.cap) : o.per ? V(o) + xn(o.per, s, t, o.target, n, r, c).value : V(o), o.condition?.type === "moodDrop" && !wn(o.condition, yn(s, a))) return 0;
 	if (o.condition?.type === "workHours") {
 		let e = Number(o.condition.value ?? 0);
 		if (s.workHoursBefore + a < e) return 0;
 	}
 	return u;
 }
-function Tn(e, t) {
-	let { effect: n, owner: r } = e, i = gn(r, t), a = [0, i], o = r.costRate;
+function En(e, t) {
+	let { effect: n, owner: r } = e, i = _n(r, t), a = [0, i], o = r.costRate;
 	if (Math.abs(o) > 1e-6) {
-		let e = vn(r, 0), t = (t) => {
+		let e = yn(r, 0), t = (t) => {
 			let n = (t - e) / o;
 			n > 1e-6 && n < i - 1e-6 && a.push(n);
 		};
 		if (n.per?.source === "moodDrop") {
-			let e = Math.max(N, Number(n.per.per) || 1);
-			for (let n = 0; n <= 24 + N; n += e) t(n);
+			let e = Math.max(M, Number(n.per.per) || 1);
+			for (let n = 0; n <= 24 + M; n += e) t(n);
 		}
 		n.condition?.type === "moodDrop" && t(Number(n.condition.value ?? 0));
 	}
@@ -1818,17 +1832,17 @@ function Tn(e, t) {
 	}
 	return Array.from(new Set(a.map((e) => Math.max(0, e)))).sort((e, t) => e - t);
 }
-function En(e, t, n, r, i) {
+function Dn(e, t, n, r, i) {
 	let a = n.durationHours;
 	if (a <= 1e-6) return 0;
-	let o = Array.from(/* @__PURE__ */ new Set([...Tn(e, a), ...(i.capacitySegments ?? []).flatMap(({ startHours: e, endHours: t }) => [e, t])])).sort((e, t) => e - t), s = 0;
+	let o = Array.from(/* @__PURE__ */ new Set([...En(e, a), ...(i.capacitySegments ?? []).flatMap(({ startHours: e, endHours: t }) => [e, t])])).sort((e, t) => e - t), s = 0;
 	for (let a = 1; a < o.length; a += 1) {
 		let c = o[a - 1] ?? 0, l = o[a] ?? c;
-		l <= c + 1e-6 || (s += wn(e, t, n, r, i, (c + l) / 2) * (l - c));
+		l <= c + 1e-6 || (s += Tn(e, t, n, r, i, (c + l) / 2) * (l - c));
 	}
 	return s / a;
 }
-function Dn(e, t) {
+function On(e, t) {
 	let n = e.capacitySegments, r = n?.find((e) => t >= e.startHours - 1e-6 && t < e.endHours - 1e-6) ?? (t <= (n?.at(-1)?.endHours ?? 0) + 1e-6 ? n?.at(-1) : void 0), i = e.bonusSegments?.find((e) => t >= e.startHours - 1e-6 && t < e.endHours - 1e-6) ?? (t <= (e.bonusSegments?.at(-1)?.endHours ?? 0) + 1e-6 ? e.bonusSegments?.at(-1) : void 0);
 	return !r && !i ? e : {
 		...e,
@@ -1839,19 +1853,19 @@ function Dn(e, t) {
 		} : {}
 	};
 }
-function On(e, t, n, r, i) {
+function kn(e, t, n, r, i) {
 	let a = e.effect.per, o = i.bonusSegments;
 	if (a?.source !== "stat") return {
 		value: 0,
 		steps: []
 	};
 	if (!o) return {
-		value: bn(a, e.owner, t, e.effect.target, n, r, i).value,
+		value: V(e.effect) + xn(a, e.owner, t, e.effect.target, n, r, i).value,
 		steps: []
 	};
 	let s = o.flatMap((o) => {
 		if (o.endHours <= o.startHours + 1e-6) return [];
-		let s = (o.startHours + o.endHours) / 2, c = Dn(i, s), l = V(e) ? wn(e, t, n, r, c, s) : e.effect.condition?.type === "workHours" && e.owner.workHoursBefore + s < Number(e.effect.condition.value ?? 0) ? 0 : bn(a, e.owner, t, e.effect.target, n, r, c).value;
+		let s = (o.startHours + o.endHours) / 2, c = On(i, s), l = B(e) ? Tn(e, t, n, r, c, s) : e.effect.condition?.type === "workHours" && e.owner.workHoursBefore + s < Number(e.effect.condition.value ?? 0) ? 0 : V(e.effect) + xn(a, e.owner, t, e.effect.target, n, r, c).value;
 		return [{
 			startHours: o.startHours,
 			endHours: o.endHours,
@@ -1863,9 +1877,9 @@ function On(e, t, n, r, i) {
 		steps: s
 	};
 }
-function kn(e, t, n, r, i) {
+function An(e, t, n, r, i) {
 	if (e.effect.per?.source !== "stat" || !i.bonusSegments) return;
-	let { steps: a } = On(e, t, n, r, i), o = [];
+	let { steps: a } = kn(e, t, n, r, i), o = [];
 	if (a.forEach((e) => {
 		let t = o[o.length - 1];
 		t && Math.abs(t.value - e.value) <= 1e-6 ? t.endHours = e.endHours : o.push({ ...e });
@@ -1875,16 +1889,16 @@ function kn(e, t, n, r, i) {
 		steps: o
 	};
 }
-function An(e, t, n, r, i) {
+function jn(e, t, n, r, i) {
 	let a = n.durationHours, o = i.capacitySegments;
 	return a <= 1e-6 || !o || o.length === 0 ? 0 : o.reduce((a, o) => {
 		let s = Math.max(0, o.endHours - o.startHours);
 		if (s <= 1e-6) return a;
-		let c = Dn(i, (o.startHours + o.endHours) / 2);
-		return a + bn(e.effect.per, e.owner, t, e.effect.target, n, r, c).value * s;
+		let c = On(i, (o.startHours + o.endHours) / 2), l = xn(e.effect.per, e.owner, t, e.effect.target, n, r, c);
+		return a + (V(e.effect) + l.value) * s;
 	}, 0) / a;
 }
-function jn(e, t) {
+function Mn(e, t) {
 	if (e.effect.condition?.type !== "workHours") return;
 	let n = Number(e.effect.condition.value ?? 0);
 	return {
@@ -1893,28 +1907,28 @@ function jn(e, t) {
 	};
 }
 function H(e, t, n, r, i) {
-	if (e.effect.per?.source === "stat" && i.bonusSegments) return On(e, t, n, r, i).value;
-	if (V(e)) return En(e, t, n, r, i);
-	if ((e.effect.per?.source === "facCap" || e.effect.per?.source === "capTier") && (i.capacitySegments?.length ?? 0) > 1) return An(e, t, n, r, i);
+	if (e.effect.per?.source === "stat" && i.bonusSegments) return kn(e, t, n, r, i).value;
+	if (B(e)) return Dn(e, t, n, r, i);
+	if ((e.effect.per?.source === "facCap" || e.effect.per?.source === "capTier") && (i.capacitySegments?.length ?? 0) > 1) return jn(e, t, n, r, i);
 	let { effect: a, owner: o } = e, s;
-	s = a.curve ? xn(a.curve, n.durationHours, o.workHoursBefore).value : a.per ? bn(a.per, o, t, a.target, n, r, i).value : Number(a.value ?? 0) + Number(a.baseValue ?? 0);
-	let c = jn(e, n);
+	s = a.curve ? Sn(a.curve, n.durationHours, o.workHoursBefore).value : a.per ? V(a) + xn(a.per, o, t, a.target, n, r, i).value : V(a);
+	let c = Mn(e, n);
 	return c && (s *= n.durationHours > 1e-6 ? c.activeHours / n.durationHours : 0), s;
 }
-function Mn(e, t, n, r, i, a) {
-	if (V(e)) return wn(e, t, n, r, i, a);
+function Nn(e, t, n, r, i, a) {
+	if (B(e)) return Tn(e, t, n, r, i, a);
 	if (e.effect.condition?.type === "workHours" && e.owner.workHoursBefore + a < Number(e.effect.condition.value ?? 0)) return 0;
-	let o = Dn(i, a);
+	let o = On(i, a);
 	if (e.effect.curve) {
 		let t = Math.max(1, Math.ceil(a));
 		return Math.min(e.effect.curve.startValue + (e.owner.workHoursBefore + t - e.effect.curve.startHours) * e.effect.curve.step, e.effect.curve.cap);
 	}
-	return e.effect.per ? bn(e.effect.per, e.owner, t, e.effect.target, n, r, o).value : Number(e.effect.value ?? 0) + Number(e.effect.baseValue ?? 0);
+	return e.effect.per ? V(e.effect) + xn(e.effect.per, e.owner, t, e.effect.target, n, r, o).value : V(e.effect);
 }
-function Nn(e, t) {
-	let { effect: n, owner: r } = e, i = jn(e, t);
+function Pn(e, t) {
+	let { effect: n, owner: r } = e, i = Mn(e, t);
 	if (n.curve) {
-		let e = xn(n.curve, t.durationHours, r.workHoursBefore);
+		let e = Sn(n.curve, t.durationHours, r.workHoursBefore);
 		return {
 			type: "curve",
 			beforeHours: r.workHoursBefore,
@@ -1936,21 +1950,21 @@ function Nn(e, t) {
 		baseValue: Number(n.value ?? 0) + Number(n.baseValue ?? 0)
 	};
 }
-function Pn(e, t, n, r) {
-	let { effect: i, owner: a } = e;
-	return !(e.target?.id !== n.id || i.other && t.name === a.name || i.scope === "op" && t.name !== i.op || i.scope === "room" && t.facility.id !== a.facility.id || i.moodBelow !== void 0 && !(t.moodStart < Number(i.moodBelow)) || i.scopeGroup && !D(r, i.scopeGroup, t.name) || !i.scope && i.target !== "any" && t.name !== a.name);
-}
 function Fn(e, t, n, r) {
-	return Pn(e, t, n, r) && (!e.effect.group || D(r, e.effect.group, t.name));
+	let { effect: i, owner: a } = e;
+	return !(e.target?.id !== n.id || i.other && t.name === a.name || i.scope === "op" && t.name !== i.op || i.scope === "room" && t.facility.id !== a.facility.id || i.moodBelow !== void 0 && !(t.moodStart < Number(i.moodBelow)) || i.scopeGroup && !E(r, i.scopeGroup, t.name) || !i.scope && i.target !== "any" && t.name !== a.name);
 }
-function In(e, t) {
+function In(e, t, n, r) {
+	return Fn(e, t, n, r) && (!e.effect.group || E(r, e.effect.group, t.name));
+}
+function Ln(e, t) {
 	return e.owner.name === t.name ? e.effect.scope === "self" ? !0 : e.effect.scope === "op" ? e.effect.op === t.name : e.effect.scope === void 0 && e.effect.target !== "any" : !1;
 }
-function Ln(e, t, n = !1) {
+function Rn(e, t, n = !1) {
 	let r = [], i = (i, a) => {
-		R(i) && i.selected.forEach(({ skill: o, effect: s }) => {
-			n && s.condition?.type === "statCmp" || on(s, i, e.facilities).forEach((e) => {
-				(s.condition?.type === "moodDrop" && (P.has(s.stat) || vt.has(s.stat)) || dn(s.condition, i, e, a, t)) && r.push({
+		L(i) && i.selected.forEach(({ skill: o, effect: s }) => {
+			n && s.condition?.type === "statCmp" || sn(s, i, e.facilities).forEach((e) => {
+				(s.condition?.type === "moodDrop" && (N.has(s.stat) || yt.has(s.stat)) || fn(s.condition, i, e, a, t)) && r.push({
 					owner: i,
 					effect: s,
 					skill: o,
@@ -1966,25 +1980,68 @@ function Ln(e, t, n = !1) {
 	} : e;
 	return e.runOrderPlacements.forEach((e) => i(e, a)), r;
 }
-function Rn(e, t) {
+function zn(e, t) {
 	if (typeof e.cluePreference == "number" || e.cluePreference === "unowned" || e.cluePreference === "owned") return e.cluePreference;
 	let n = e.text ?? "";
-	return n.includes("尚未拥有") ? "unowned" : n.includes("已经拥有") ? "owned" : Object.entries(qt(t).cluePreferenceByFaction).find(([e]) => n.includes(e))?.[1];
-}
-function zn(e) {
-	return typeof e == "number" ? e : e === "unowned" ? 8 : 9;
+	return n.includes("尚未拥有") ? "unowned" : n.includes("已经拥有") ? "owned" : Object.entries(Jt(t).cluePreferenceByFaction).find(([e]) => n.includes(e))?.[1];
 }
 function Bn(e) {
-	return [...new Set(e)].sort((e, t) => zn(e) - zn(t));
+	return typeof e == "number" ? e : e === "unowned" ? 8 : 9;
 }
-function Vn(e, t) {
-	return Bn(e.active.filter((e) => e.target?.id === t.id && e.effect.stat === "clueChance").map((t) => Rn(t.effect, e.catalog)).filter((e) => e !== void 0));
+function Vn(e) {
+	return [...new Set(e)].sort((e, t) => Bn(e) - Bn(t));
 }
-function Hn(e, t, n) {
+function Hn(e, t) {
+	let n = /* @__PURE__ */ new Map();
+	e.active.forEach((r) => {
+		if (r.target?.id !== t.id || r.effect.stat !== "clueChance") return;
+		let i = zn(r.effect, e.catalog);
+		if (i === void 0) return;
+		let a = n.get(r.owner.name) ?? [];
+		a.push(i), n.set(r.owner.name, a);
+	});
+	let r = Object.fromEntries([...n.entries()].map(([e, t]) => [e, Vn(t)]));
+	return {
+		preferences: Vn(Object.values(r).flat()),
+		byOperator: r
+	};
+}
+function Un(e, t) {
+	let n = e.active.flatMap((n) => {
+		let r = n.target;
+		if (!r || r.type !== "dormitory" || n.effect.stat !== "moodRecover") return [];
+		let { effect: i } = n;
+		return [{
+			contribution: {
+				operator: n.owner.name,
+				skill: n.skill,
+				facilityId: r.id,
+				value: H(n, r, e, t, gr()),
+				...i.scope === void 0 ? {} : { scope: i.scope },
+				...i.op === void 0 ? {} : { op: i.op },
+				...i.moodBelow === void 0 ? {} : { moodBelow: i.moodBelow },
+				...i.subjects === void 0 ? {} : { subjects: i.subjects },
+				...i.scopeGroup === void 0 ? {} : { scopeGroup: i.scopeGroup },
+				...i.maxGroup === void 0 ? {} : { maxGroup: i.maxGroup }
+			},
+			stack: i.stack,
+			groupKey: i.maxGroup ?? `${i.target}|${i.stat}|${i.recipe ?? ""}`
+		}];
+	}), r = n.filter((e) => e.stack !== "max").map((e) => e.contribution), i = /* @__PURE__ */ new Map();
+	return n.forEach((e) => {
+		if (e.stack !== "max") return;
+		let t = `${e.contribution.facilityId}|${e.contribution.operator}|${e.groupKey}`, n = i.get(t) ?? [];
+		n.push(e), i.set(t, n);
+	}), i.forEach((e) => {
+		let t = e.reduce((e, t) => t.contribution.value > e.contribution.value ? t : e);
+		r.push(t.contribution);
+	}), r;
+}
+function Wn(e, t, n) {
 	let r = e[t] ?? (e[t] = []), i = r.find((e) => e.kind === n.kind && e.operator === n.operator && e.skill === n.skill && e.facility === n.facility && e.facilityIndex === n.facilityIndex && e.slotIndex === n.slotIndex && e.from === n.from && e.rate === n.rate);
 	i ? i.value += n.value : r.push(n);
 }
-function Un(e) {
+function Gn(e) {
 	let t = e.filter((e) => e.effect.stat === "basePointConvert" && !!e.effect.from && !!e.effect.to), n = [];
 	for (; t.length > 0;) {
 		let e = t.findIndex((e) => !t.some((t) => t !== e && t.effect.to === e.effect.from)), [r] = t.splice(e >= 0 ? e : 0, 1);
@@ -1992,16 +2049,16 @@ function Un(e) {
 	}
 	return n;
 }
-function Wn(e) {
+function Kn(e) {
 	return e.effect.stat === "basePointGain" && e.effect.per?.source === "basePoint" && e.effect.per.term === e.effect.term;
 }
-function Gn(e, t, n, r) {
+function qn(e, t, n, r) {
 	let i = {}, a = {};
 	return e.basePoints = i, e.facilities.filter((e) => e.type === "manufacture").filter((t) => {
-		let n = I(e.document, e.index, t);
-		return M(n.product, n.sourceMaterial, e.ruleset)?.recipe === "贵金属";
+		let n = F(e.document, e.index, t);
+		return j(n.product, n.sourceMaterial, e.ruleset)?.recipe === "贵金属";
 	}).forEach((e) => {
-		i["cc.t.flow_gold"] = (i["cc.t.flow_gold"] ?? 0) + 1, Hn(a, "cc.t.flow_gold", {
+		i["cc.t.flow_gold"] = (i["cc.t.flow_gold"] ?? 0) + 1, Wn(a, "cc.t.flow_gold", {
 			kind: "gain",
 			operator: "生产赤金",
 			facility: "manufacture",
@@ -2009,11 +2066,11 @@ function Gn(e, t, n, r) {
 			slotIndex: 0,
 			value: 1
 		});
-	}), e.basePoints = { ...i }, t.filter(Wn).forEach((t) => {
+	}), e.basePoints = { ...i }, t.filter(Kn).forEach((t) => {
 		let o = t.effect.term;
 		if (!o) return;
 		let s = H(t, t.target, e, n, r);
-		i[o] = (i[o] ?? 0) + s, s > 1e-6 && Hn(a, o, {
+		i[o] = (i[o] ?? 0) + s, s > 1e-6 && Wn(a, o, {
 			kind: "gain",
 			operator: t.owner.name,
 			skill: t.skill,
@@ -2022,11 +2079,11 @@ function Gn(e, t, n, r) {
 			slotIndex: t.owner.index,
 			value: s
 		});
-	}), e.basePoints = i, t.filter((e) => e.effect.stat === "basePointGain").filter((e) => !Wn(e)).forEach((t) => {
+	}), e.basePoints = i, t.filter((e) => e.effect.stat === "basePointGain").filter((e) => !Kn(e)).forEach((t) => {
 		let o = t.effect.term;
 		if (!o) return;
 		let s = H(t, t.target, e, n, r);
-		i[o] = (i[o] ?? 0) + s, s > 1e-6 && Hn(a, o, {
+		i[o] = (i[o] ?? 0) + s, s > 1e-6 && Wn(a, o, {
 			kind: "gain",
 			operator: t.owner.name,
 			skill: t.skill,
@@ -2035,11 +2092,11 @@ function Gn(e, t, n, r) {
 			slotIndex: t.owner.index,
 			value: s
 		});
-	}), Un(t).forEach((e) => {
+	}), Gn(t).forEach((e) => {
 		let t = e.effect.from, n = e.effect.to;
 		if (!t || !n) return;
 		let r = Math.max(0, (i[t] ?? 0) * Number(e.effect.rate ?? 0));
-		i[n] = (i[n] ?? 0) + r, r > 1e-6 && Hn(a, n, {
+		i[n] = (i[n] ?? 0) + r, r > 1e-6 && Wn(a, n, {
 			kind: "convert",
 			operator: e.owner.name,
 			skill: e.skill,
@@ -2052,42 +2109,42 @@ function Gn(e, t, n, r) {
 		});
 	}), {
 		points: i,
-		details: Object.entries(i).filter(([t, n]) => n > 1e-6 && (t !== "cc.t.flow_gold" || Ct(e))).map(([e, t]) => ({
+		details: Object.entries(i).filter(([t, n]) => n > 1e-6 && (t !== "cc.t.flow_gold" || wt(e))).map(([e, t]) => ({
 			term: e,
 			value: t,
-			sources: [...a[e] ?? []].sort(ft)
-		})).sort((e, t) => dt(e, t, n.terms))
+			sources: [...a[e] ?? []].sort(pt)
+		})).sort((e, t) => ft(e, t, n.terms))
 	};
 }
-function Kn(e, t, n) {
+function Jn(e, t, n) {
 	let r = /* @__PURE__ */ new Map();
 	return e.facilities.forEach((i) => {
 		let a = {
 			capBoosts: {},
 			bonusByFacility: {}
-		}, o = pr(e, i), s = U(e, i, n, t, a, xt, /* @__PURE__ */ new Set([...P, "facBase"]), "base"), c = U(e, i, n, t, a, o, P, "combination"), l = U(e, i, n, t, a, o, P, "combination", "stat"), u = z(e, i).reduce((t, n) => t + wr(i, n, e.ruleset), 0), d = Ke(i.type, i.level, e.ruleset);
+		}, o = yr(e, i), s = U(e, i, n, t, a, St, /* @__PURE__ */ new Set([...N, "facBase"]), "base"), c = U(e, i, n, t, a, o, N, "combination"), l = U(e, i, n, t, a, o, N, "combination", "stat"), u = R(e, i).reduce((t, n) => t + Ar(i, n, e.ruleset), 0), d = qe(i.type, i.level, e.ruleset);
 		if (i.type === "meeting") {
 			let t = e.facilities.filter((e) => e.type === "dormitory").reduce((e, t) => e + t.level * 1e3, 0);
-			d += Je(t);
+			d += Ye(t);
 		}
 		r.set(`${i.id}:${i.type === "hire" ? "hireSpd" : i.type === "trading" ? "tradeSpd" : i.type === "manufacture" ? "manuProd" : i.type === "recycle" ? "recycleSpd" : "clueSpeed"}`, d + s.total + u + c.total + l.total);
 	}), r;
 }
-function qn(e, t, n, r) {
-	if (fe(t.name, n) || !R(t) || !L(t)) return {
+function Yn(e, t, n, r) {
+	if (pe(t.name, n) || !L(t) || !I(t)) return {
 		rate: 0,
 		details: []
 	};
 	let i = [{
 		kind: "base",
 		value: 1
-	}], a = an(e, "control").filter((e) => R(e)).length, o = 1 - a * .05;
+	}], a = on(e, "control").filter((e) => L(e)).length, o = 1 - a * .05;
 	if (a > 0 && i.push({
 		kind: "controlWorkers",
 		value: -a * .05,
 		count: a
 	}), t.facility.type === "trading" || t.facility.type === "manufacture") {
-		let n = z(e, t.facility).filter((e) => R(e)).length;
+		let n = R(e, t.facility).filter((e) => L(e)).length;
 		n >= 3 ? (o -= .1, i.push({
 			kind: "facilityWorkers",
 			value: -.1,
@@ -2099,9 +2156,9 @@ function qn(e, t, n, r) {
 		}));
 	}
 	let s = e.active.filter((e) => e.effect.stat === "zeroOpMood");
-	return Jn(e, t, n, r).flatMap(({ item: e, value: r }) => {
+	return Xn(e, t, n, r).flatMap(({ item: e, value: r }) => {
 		let i = e.effect.stat === "moodRecover" ? -r : r;
-		return s.some((r) => Fn(r, t, t.facility, n) && (In(e, t) || r.effect.target === "control" && r.target?.id === e.target?.id)) ? [] : [{
+		return s.some((r) => In(r, t, t.facility, n) && (Ln(e, t) || r.effect.target === "control" && r.target?.id === e.target?.id)) ? [] : [{
 			cost: i,
 			detail: {
 				kind: "skill",
@@ -2118,9 +2175,9 @@ function qn(e, t, n, r) {
 		details: i
 	};
 }
-function Jn(e, t, n, r) {
+function Xn(e, t, n, r) {
 	let i = [], a = /* @__PURE__ */ new Map();
-	e.active.filter((e) => e.effect.stat === "moodCost" || e.effect.stat === "moodRecover").filter((e) => Pn(e, t, t.facility, n)).forEach((o) => {
+	e.active.filter((e) => e.effect.stat === "moodCost" || e.effect.stat === "moodRecover").filter((e) => Fn(e, t, t.facility, n)).forEach((o) => {
 		let s = H(o, t.facility, e, n, r);
 		if (o.effect.stack !== "max") {
 			i.push({
@@ -2144,41 +2201,41 @@ function Jn(e, t, n, r) {
 		}), t && o.push(...e.get(t) ?? []);
 	}), o;
 }
-function Yn(e) {
+function Zn(e) {
 	return e.fiammettaMode === "queue" ? "queue" : "direct";
 }
-function Xn(e, t) {
-	return (Yn(e.settings) === "queue" ? e.document.fiammetta?.queue?.[t] : t === 0 ? e.document.fiammetta?.direct : void 0)?.operators?.find(Boolean);
+function Qn(e, t) {
+	return (Zn(e.settings) === "queue" ? e.document.fiammetta?.queue?.[t] : t === 0 ? e.document.fiammetta?.direct : void 0)?.operators?.find(Boolean);
 }
-function Zn(e) {
+function $n(e) {
 	return e.fiammetta?.direct?.operators?.filter(Boolean) ?? [];
 }
-function Qn(e, t, n) {
-	return Yn(e.settings) === "queue" ? Xn(e, t) === n : Zn(e.document).includes(n);
+function er(e, t, n) {
+	return Zn(e.settings) === "queue" ? Qn(e, t) === n : $n(e.document).includes(n);
 }
-function $n(e, t) {
-	return t.name === "菲亚梅塔" ? !1 : Yn(e.settings) === "queue" ? Xn(e, e.index) === t.name : Zn(e.document).includes(t.name);
+function tr(e, t) {
+	return t.name === "菲亚梅塔" ? !1 : Zn(e.settings) === "queue" ? Qn(e, e.index) === t.name : $n(e.document).includes(t.name);
 }
-function er(e, t) {
+function nr(e, t) {
 	let n = e.placements.find((e) => e.name === "菲亚梅塔" && e.facility.type === "dormitory");
 	return n ? n.selected.filter(({ effect: e }) => e.stat === "moodRecover").reduce((r, { effect: i, skill: a }) => r + H({
 		owner: n,
 		effect: i,
 		skill: a,
 		target: n.facility
-	}, n.facility, e, t, ur()), 0) : 0;
+	}, n.facility, e, t, gr()), 0) : 0;
 }
-function tr(e, t) {
+function rr(e, t) {
 	e.forEach((e) => {
 		e.fiammettaWarnings = [];
 	});
-	let n = Yn(e[0]?.settings ?? {}), r = [];
+	let n = Zn(e[0]?.settings ?? {}), r = [];
 	if (n === "queue") {
 		let i = 24;
 		return e.forEach((n, a) => {
-			let o = Xn(n, a), s = (a - 1 + e.length) % e.length, c = o ? e[s]?.placements.find((e) => e.name === o) : void 0, l = o ? c?.moodEnd ?? 24 : i;
+			let o = Qn(n, a), s = (a - 1 + e.length) % e.length, c = o ? e[s]?.placements.find((e) => e.name === o) : void 0, l = o ? c?.moodEnd ?? 24 : i;
 			o && i < 24 - 1e-6 && e.length > 1 && n.fiammettaWarnings.push(`菲亚梅塔在${a + 1}队列使用时心情未满`), o && (i = l);
-			let u = i, d = er(n, t), f = d * n.durationHours > 1e-6 ? d * n.durationHours : 0, p = F(i + (d > 1e-6 ? f : 0));
+			let u = i, d = nr(n, t), f = d * n.durationHours > 1e-6 ? d * n.durationHours : 0, p = P(i + (d > 1e-6 ? f : 0));
 			n.fiammetta = {
 				...o ? { target: o } : {},
 				targetMood: l,
@@ -2186,7 +2243,7 @@ function tr(e, t) {
 				end: p,
 				recoverRate: d,
 				recoverHours: f,
-				resting: d > N
+				resting: d > M
 			}, r.push(n.fiammetta), i = p;
 		}), {
 			mode: n,
@@ -2196,11 +2253,11 @@ function tr(e, t) {
 			totalRecovery: r.reduce((e, t) => e + (t?.recoverHours ?? 0), 0)
 		};
 	}
-	let i = Zn(e[0].document), a = 0, o = 0;
+	let i = $n(e[0].document), a = 0, o = 0;
 	return e.forEach((e) => {
-		let n = er(e, t), s = n * e.durationHours;
+		let n = nr(e, t), s = n * e.durationHours;
 		o += s, e.placements.forEach((t) => {
-			i.includes(t.name) && L(t) && (a += t.costRate * e.durationHours);
+			i.includes(t.name) && I(t) && (a += t.costRate * e.durationHours);
 		}), e.fiammetta = {
 			target: i[e.index],
 			targetMood: (i[e.index], 24),
@@ -2208,7 +2265,7 @@ function tr(e, t) {
 			end: 24,
 			recoverRate: n,
 			recoverHours: s,
-			resting: n > N
+			resting: n > M
 		}, r.push(e.fiammetta);
 	}), a > o + 1e-6 && i.length > 0 && e[0]?.fiammettaWarnings.push("菲亚梅塔无法完全恢复这些干员心情"), {
 		mode: n,
@@ -2218,61 +2275,148 @@ function tr(e, t) {
 		totalRecovery: o
 	};
 }
-function nr(e, t, n) {
+function ir(e, t, n) {
 	for (let r = 1; r <= e.length; r += 1) {
-		let i = e[(t + r) % e.length]?.placements.find((e) => e.name === n && L(e));
-		if (i) return i.fiammettaForced ? 24 : i.explicitMood ? F(i.state.mood ?? 24) : 24;
+		let i = e[(t + r) % e.length]?.placements.find((e) => e.name === n && I(e));
+		if (i) return i.fiammettaForced ? 24 : i.explicitMood ? P(i.state.mood ?? 24) : 24;
 	}
 	return 24;
 }
-function rr(e, t, n, r) {
+function ar(e, t, n, r) {
 	let { effect: i, owner: a } = e;
-	return !(e.target?.id !== n.id || i.other && t.name === a.name || i.scope === "self" && t.name !== a.name || i.scope === "op" && t.name !== i.op || i.scope === "room" && a.facility.type === "dormitory" && a.facility.id !== n.id || i.op && t.name !== i.op || i.moodBelow !== void 0 && !(t.moodStart < Number(i.moodBelow)) || i.scopeGroup && !D(r, i.scopeGroup, t.name) || !i.scope && i.target !== "any" && t.name !== a.name);
+	return !(e.target?.id !== n.id || i.other && t.name === a.name || i.scope === "self" && t.name !== a.name || i.scope === "op" && t.name !== i.op || i.scope === "room" && a.facility.type === "dormitory" && a.facility.id !== n.id || i.op && t.name !== i.op || i.moodBelow !== void 0 && !(t.moodStart < Number(i.moodBelow)) || i.scopeGroup && !E(r, i.scopeGroup, t.name) || !i.scope && i.target !== "any" && t.name !== a.name);
 }
-function ir(e, t, n, r) {
-	let i = 0, a = /* @__PURE__ */ new Map();
+function or(e, t, n, r, i) {
+	return H(e, t, r, i, gr()) + (e.effect.targetBonuses ?? []).reduce((e, t) => e + (t.targets.some((e) => e.op === n.name || e.scopeGroup !== void 0 && E(i, e.scopeGroup, n.name)) ? t.value : 0), 0);
+}
+function sr(e, t, n, r, i, a) {
+	let o = [];
+	function s(e) {
+		return a === "shared" && e.effect.maxGroup !== "dormRec-overall" && (e.effect.scope === "op" || e.effect.op !== void 0 || e.effect.moodBelow !== void 0 || e.effect.scopeGroup !== void 0) ? "specific" : a;
+	}
+	let c = /* @__PURE__ */ new Map();
 	return e.forEach((e) => {
-		let o = H(e, t, n, r, ur());
 		if (e.effect.stack !== "max") {
-			i += o;
+			o.push({
+				operator: e.owner.name,
+				skill: e.skill,
+				distribution: s(e),
+				value: or(e, t, n, r, i)
+			});
 			return;
 		}
-		let s = e.effect.maxGroup ?? `${e.effect.target}|${e.effect.stat}|${e.effect.recipe ?? ""}`, c = a.get(s) ?? /* @__PURE__ */ new Map();
-		c.set(e.owner.name, (c.get(e.owner.name) ?? 0) + o), a.set(s, c);
-	}), a.forEach((e) => {
-		i += Math.max(...e.values());
-	}), i;
+		let a = e.effect.maxGroup ?? `${e.effect.target}|${e.effect.stat}|${e.effect.recipe ?? ""}`, l = c.get(a) ?? [];
+		l.push(e), c.set(a, l);
+	}), c.forEach((e) => {
+		let a, c = -Infinity;
+		e.forEach((e) => {
+			let o = or(e, t, n, r, i);
+			o > c && (c = o, a = e);
+		}), a && o.push({
+			operator: a.owner.name,
+			skill: a.skill,
+			distribution: s(a),
+			value: c
+		});
+	}), o;
 }
-function ar(e, t, n, r, i, a) {
+function cr(e, t, n, r, i) {
+	let a = 0, o = /* @__PURE__ */ new Map();
+	return e.forEach((e) => {
+		let s = or(e, t, n, r, i);
+		if (e.effect.stack !== "max") {
+			a += s;
+			return;
+		}
+		let c = e.effect.maxGroup ?? `${e.effect.target}|${e.effect.stat}|${e.effect.recipe ?? ""}`;
+		o.set(c, Math.max(o.get(c) ?? -Infinity, s));
+	}), o.forEach((e) => {
+		a += e;
+	}), a;
+}
+function lr(e, t, n, r, i, a) {
 	let o = e.active.filter((e) => e.target?.id === t.id && e.effect.stat === "moodRecover"), s = o.filter((e) => e.owner.name === n.name);
-	if (s.some((e) => e.effect.blockOtherRecovery === !0)) return ir(s.filter((e) => e.effect.scope === "self"), t, e, a);
-	let c = (e) => rr(e, n, t, a), l = o.filter((e) => e.effect.subjects === void 0 && (e.effect.scope === "room" || e.owner.facility.type !== "dormitory") && c(e)), u = s.filter((e) => e.effect.scope === "self" && c(e)), d = r.filter((e) => e.moodStart < (i.get(e.name) ?? 24) - N), f = o.filter((e) => e.effect.subjects === "single" && d.slice().sort((e, t) => e.moodStart - t.moodStart || e.index - t.index)[0]?.name === n.name && c(e)), p = d.length, m = p > 0 ? o.filter((e) => e.effect.subjects === "spread").filter(c).map((n) => ({
+	if (s.some((e) => e.effect.blockOtherRecovery === !0)) return sr(s.filter((e) => e.effect.scope === "self"), t, n, e, a, "self");
+	let c = (e) => ar(e, n, t, a), l = o.filter((e) => e.effect.subjects === void 0 && (e.effect.scope === "room" || e.owner.facility.type !== "dormitory") && c(e)), u = s.filter((e) => e.effect.scope === "self" && c(e)), d = r.filter((e) => e.moodStart < (i.get(e.name) ?? 24) - M), f = o.filter((e) => e.effect.subjects === "single" && d.filter((n) => ar(e, n, t, a)).slice().sort((e, t) => e.moodStart - t.moodStart || e.index - t.index)[0]?.name === n.name && c(e)), p = d.length, m = p > 0 ? o.filter((e) => e.effect.subjects === "spread").filter(c).map((n) => ({
 		...n,
 		effect: {
 			...n.effect,
-			value: H(n, t, e, a, ur()) / p,
+			value: H(n, t, e, a, gr()) / p,
 			baseValue: void 0,
 			per: void 0,
 			curve: void 0
 		}
 	})) : [];
-	return 1.5 + .5 * t.level + ir(l, t, e, a) + ir(u, t, e, a) + ir(f, t, e, a) + ir(m, t, e, a);
+	return [
+		...sr(l, t, n, e, a, "shared"),
+		...sr(u, t, n, e, a, "self"),
+		...sr(f, t, n, e, a, "single"),
+		...sr(m, t, n, e, a, "spread")
+	];
 }
-function or(e, t, n, r, i, a) {
-	let o = wt(t.assignment, t.name), s = Yt(e.settings.progressionProfile, t.name, a, n, o, e.settings.treatSkillsAsUnlocked ?? !1, e.settings.dormitoryDefaultIncludesMoodRecovery ?? !1), c = {
+function ur(e, t, n, r, i, a) {
+	let o = e.active.filter((e) => e.target?.id === t.id && e.effect.stat === "moodRecover"), s = o.filter((e) => e.owner.name === n.name);
+	if (s.some((e) => e.effect.blockOtherRecovery === !0)) return cr(s.filter((e) => e.effect.scope === "self"), t, n, e, a);
+	let c = (e) => ar(e, n, t, a), l = o.filter((e) => e.effect.subjects === void 0 && (e.effect.scope === "room" || e.owner.facility.type !== "dormitory") && c(e)), u = s.filter((e) => e.effect.scope === "self" && c(e)), d = r.filter((e) => e.moodStart < (i.get(e.name) ?? 24) - M), f = o.filter((e) => e.effect.subjects === "single" && d.filter((n) => ar(e, n, t, a)).slice().sort((e, t) => e.moodStart - t.moodStart || e.index - t.index)[0]?.name === n.name && c(e)), p = d.length, m = p > 0 ? o.filter((e) => e.effect.subjects === "spread").filter(c).map((n) => ({
+		...n,
+		effect: {
+			...n.effect,
+			value: H(n, t, e, a, gr()) / p,
+			baseValue: void 0,
+			per: void 0,
+			curve: void 0
+		}
+	})) : [];
+	return 1.5 + .5 * t.level + cr(l, t, n, e, a) + cr(u, t, n, e, a) + cr(f, t, n, e, a) + cr(m, t, n, e, a);
+}
+function dr(e, t, n, r = /* @__PURE__ */ new Map(), i = t.placements, a = /* @__PURE__ */ new Set()) {
+	let o = i.filter((e) => e.facility.type === "dormitory"), s = /* @__PURE__ */ new Map();
+	t.placements.filter((e) => e.facility.type === "dormitory").forEach((n) => s.set(n.name, ir(e, t.index, n.name)));
+	let c = Un(t, n);
+	return t.facilities.filter((e) => e.type === "dormitory").map((e) => {
+		let i = t.placements.filter((t) => t.facility.id === e.id), l = o.filter((t) => t.facility.id === e.id).flatMap((o) => {
+			let c = i.find((e) => e.name === o.name);
+			if (!c) return [];
+			let l = lr(t, e, c, i, s, n), u = t.active.some((t) => t.target?.id === e.id && t.owner.name === c.name && t.effect.stat === "moodRecover" && t.effect.blockOtherRecovery === !0), d = ur(t, e, c, i, s, n), f = r.get(`${e.id}|${c.name}`);
+			return [{
+				operator: c.name,
+				slotIndex: c.index,
+				...a.has(c.name) ? { automaticRest: !0 } : {},
+				rate: d,
+				contributions: l,
+				...u ? { blocksOtherRecovery: !0 } : {},
+				...f ? {
+					startMood: f.startMood,
+					expectedMood: f.expectedMood,
+					recoveredMood: f.endMood - f.startMood,
+					endMood: f.endMood
+				} : {}
+			}];
+		});
+		return {
+			facilityId: e.id,
+			facilityIndex: e.index,
+			baseRate: 1.5 + .5 * e.level,
+			contributions: c.filter((t) => t.facilityId === e.id),
+			operators: l
+		};
+	});
+}
+function fr(e, t, n, r, i, a) {
+	let o = Tt(t.assignment, t.name), s = Xt(e.settings.progressionProfile, t.name, a, n, o, e.settings.treatSkillsAsUnlocked ?? !1, e.settings.dormitoryDefaultIncludesMoodRecovery ?? !1), c = {
 		...o,
 		elite: s.elite,
 		level: s.level
-	}, l = re(a, t.name);
+	}, l = ie(a, t.name);
 	return {
 		...t,
 		facility: n,
-		assignment: I(e.document, e.index, n),
+		assignment: F(e.document, e.index, n),
 		index: r,
 		state: c,
 		profile: l,
 		skillFile: l?.skillFile,
-		selected: Zt(t.name, l?.skillFile, "dormitory", c),
+		selected: Qt(t.name, l?.skillFile, "dormitory", c),
 		explicitMood: !1,
 		moodStart: i,
 		moodEnd: i,
@@ -2283,18 +2427,22 @@ function or(e, t, n, r, i, a) {
 		fiammettaForced: !1
 	};
 }
-function sr(e, t) {
-	e.length <= 1 || e.forEach((n, r) => {
+function pr(e, t) {
+	e.forEach((n, r) => {
+		if (n.dormitoryRecoveries = [], e.length <= 1) {
+			n.dormitoryRecoveries = dr(e, n, t, /* @__PURE__ */ new Map(), n.placements);
+			return;
+		}
 		let i = e[(r - 1 + e.length) % e.length];
 		if (!i) return;
-		n.autoRestWarnings = [];
+		n.autoRestWarnings = [], n.dormitoryRecoveries = [];
 		let a = [];
 		i.placements.forEach((i, o) => {
-			if (!$t(i, t) || Qn(n, r, i.name)) return;
-			let s = nr(e, r, i.name);
+			if (!en(i, t) || er(n, r, i.name)) return;
+			let s = ir(e, r, i.name);
 			if (i.moodEnd >= s - 1e-6) return;
 			let c = n.placements.find((e) => e.name === i.name);
-			n.placements.some((e) => e.name === i.name && e.facility.type !== "dormitory" && R(e)) || a.some((e) => e.source.name === i.name) || a.push({
+			n.placements.some((e) => e.name === i.name && e.facility.type !== "dormitory" && L(e)) || a.some((e) => e.source.name === i.name) || a.push({
 				source: i,
 				current: c,
 				expectedMood: s,
@@ -2310,14 +2458,14 @@ function sr(e, t) {
 				return;
 			}
 			for (let t of o) {
-				let n = Ae("dormitory", t.level), r = s.get(t.id) ?? /* @__PURE__ */ new Set(), i = Array.from({ length: n }, (e, t) => t).find((e) => !r.has(e));
+				let n = je("dormitory", t.level), r = s.get(t.id) ?? /* @__PURE__ */ new Set(), i = Array.from({ length: n }, (e, t) => t).find((e) => !r.has(e));
 				if (i !== void 0) {
 					r.add(i), s.set(t.id, r), e.dormitory = t, e.slotIndex = i;
 					break;
 				}
 			}
 		});
-		let c = n.placements, l = n.active, u = /* @__PURE__ */ new Set(), d = /* @__PURE__ */ new Map(), f = [];
+		let c = n.placements, l = n.active, u = /* @__PURE__ */ new Set(), d = /* @__PURE__ */ new Map(), f = [], p = /* @__PURE__ */ new Set();
 		a.forEach((e) => {
 			if (!e.dormitory || e.slotIndex === void 0) {
 				n.autoRestWarnings.push({
@@ -2330,32 +2478,38 @@ function sr(e, t) {
 				return;
 			}
 			if (e.restPlacement) {
-				d.set(e.restPlacement, {
+				p.add(e.source.name), d.set(e.restPlacement, {
 					start: e.restPlacement.moodStart,
 					end: e.restPlacement.moodEnd
 				}), e.restPlacement.moodStart = e.startMood, e.restPlacement.moodEnd = e.startMood;
 				return;
 			}
-			e.current && u.add(e.current), f.push(or(n, e.current ?? e.source, e.dormitory, e.slotIndex, e.startMood, t));
+			e.current && u.add(e.current), p.add(e.source.name), f.push(fr(n, e.current ?? e.source, e.dormitory, e.slotIndex, e.startMood, t));
 		});
 		try {
-			n.placements = [...c.filter((e) => !u.has(e)), ...f], n.active = Ln(n, t);
+			n.placements = [...c.filter((e) => !u.has(e)), ...f], n.active = Rn(n, t);
 			let i = /* @__PURE__ */ new Map();
-			n.placements.filter((e) => e.facility.type === "dormitory").forEach((t) => i.set(t.name, nr(e, r, t.name))), a.forEach((e) => {
+			n.placements.filter((e) => e.facility.type === "dormitory").forEach((t) => i.set(t.name, ir(e, r, t.name)));
+			let o = /* @__PURE__ */ new Map();
+			a.forEach((e) => {
 				if (!e.dormitory || e.slotIndex === void 0) return;
 				let r = e.restPlacement ?? f.find((t) => t.name === e.source.name);
 				if (!r) return;
-				let a = n.placements.filter((t) => t.facility.id === e.dormitory?.id), o = ar(n, e.dormitory, r, a, i, t), s = Math.min(e.expectedMood, F(e.startMood + o * n.durationHours));
-				s < e.expectedMood - 1e-6 && n.autoRestWarnings.push({
+				let a = n.placements.filter((t) => t.facility.id === e.dormitory?.id), s = ur(n, e.dormitory, r, a, i, t), c = Math.min(e.expectedMood, P(e.startMood + s * n.durationHours));
+				o.set(`${e.dormitory.id}|${e.source.name}`, {
+					startMood: e.startMood,
+					expectedMood: e.expectedMood,
+					endMood: c
+				}), c < e.expectedMood - 1e-6 && n.autoRestWarnings.push({
 					operator: e.source.name,
 					reason: "not-recovered",
 					startMood: e.startMood,
-					endMood: s,
+					endMood: c,
 					expectedMood: e.expectedMood,
 					facilityId: e.dormitory.id,
 					facilityIndex: e.dormitory.index
 				});
-			});
+			}), n.dormitoryRecoveries = dr(e, n, t, o, [...c, ...f], p);
 		} finally {
 			d.forEach((e, t) => {
 				t.moodStart = e.start, t.moodEnd = e.end;
@@ -2363,8 +2517,8 @@ function sr(e, t) {
 		}
 	});
 }
-function cr(e, t) {
-	rn(e);
+function mr(e, t) {
+	an(e);
 	let n = (t, n) => {
 		if (e.length <= 1) return {};
 		let r = e[(t - 1 + e.length) % e.length];
@@ -2382,41 +2536,41 @@ function cr(e, t) {
 	}, i = (e, t) => n(e, (e) => e.name === t.name);
 	e.forEach((e) => {
 		e.placements.forEach((t) => {
-			t.fiammettaForced = $n(e, t);
+			t.fiammettaForced = tr(e, t);
 		});
 	});
 	let a = new Set(e.flatMap((e) => e.placements.filter((e) => e.fiammettaForced).map((e) => e.name))), o = new Set(e.length > 1 ? e[0]?.placements.map((e) => e.name).filter((n) => !a.has(n) && e.every((e) => {
 		let r = e.placements.find((e) => e.name === n);
-		return !!r && $t(r, t) && !r.explicitMood;
+		return !!r && en(r, t) && !r.explicitMood;
 	})).filter((t) => e.some((e) => {
 		let n = e.placements.find((e) => e.name === t);
-		return !!n && L(n);
-	})) : []), s = /* @__PURE__ */ new Map(), c = (e, n) => !!e && $t(e, t) && $t(n, t), l = (e, t) => !!e && R(e) && e.moodEnd > 1e-6 && L(e) && L(t) && (!t.explicitMood || F(t.state.mood ?? 24) > 1e-6);
+		return !!n && I(n);
+	})) : []), s = /* @__PURE__ */ new Map(), c = (e, n) => !!e && en(e, t) && en(n, t), l = (e, t) => !!e && L(e) && e.moodEnd > 1e-6 && I(e) && I(t) && (!t.explicitMood || P(t.state.mood ?? 24) > 1e-6);
 	e.forEach((e, t) => {
 		e.placements.forEach((e) => {
 			let n = i(t, e).placement, a = c(n, e), o = r(t, e), u = o.placement, d = l(u, e), f = s.get(e.name);
-			e.moodStart = e.fiammettaForced ? 24 : e.explicitMood ? F(e.state.mood ?? 24) : f === void 0 ? a ? n.moodEnd : 24 : f, e.working = !0, e.workHoursBefore = d ? u.workHoursBefore + (o.context?.durationHours ?? 0) : 0, e.moodEnd = e.moodStart;
+			e.moodStart = e.fiammettaForced ? 24 : e.explicitMood ? P(e.state.mood ?? 24) : f === void 0 ? a ? n.moodEnd : 24 : f, e.working = !0, e.workHoursBefore = d ? u.workHoursBefore + (o.context?.durationHours ?? 0) : 0, e.moodEnd = e.moodStart;
 		});
 	});
 	for (let n = 0; n < 16; n += 1) {
 		let a = 0, u = 0;
 		if (e.forEach((e, n) => {
 			e.placements.forEach((e) => {
-				let t = i(n, e).placement, o = c(t, e), u = r(n, e), d = u.placement, f = l(d, e), p = s.get(e.name), m = e.fiammettaForced ? 24 : e.explicitMood ? F(e.state.mood ?? 24) : p === void 0 ? o ? t.moodEnd : 24 : p;
+				let t = i(n, e).placement, o = c(t, e), u = r(n, e), d = u.placement, f = l(d, e), p = s.get(e.name), m = e.fiammettaForced ? 24 : e.explicitMood ? P(e.state.mood ?? 24) : p === void 0 ? o ? t.moodEnd : 24 : p;
 				a = Math.max(a, Math.abs(m - e.moodStart)), e.moodStart = m, e.working = !0, e.workHoursBefore = f ? d.workHoursBefore + (u.context?.durationHours ?? 0) : 0;
 			});
 			let o = {
 				capBoosts: {},
 				bonusByFacility: {}
 			};
-			e.active = Ln(e, t, !0);
-			let d = Gn(e, e.active, t, o);
-			e.basePoints = d.points, e.basePointDetails = d.details, e.statValues = Kn(e, e.active, t), e.active = Ln(e, t, !1);
-			let f = Gn(e, e.active, t, o);
+			e.active = Rn(e, t, !0);
+			let d = qn(e, e.active, t, o);
+			e.basePoints = d.points, e.basePointDetails = d.details, e.statValues = Jn(e, e.active, t), e.active = Rn(e, t, !1);
+			let f = qn(e, e.active, t, o);
 			e.basePoints = f.points, e.basePointDetails = f.details, e.placements.forEach((n) => {
-				let r = qn(e, n, t, o);
+				let r = Yn(e, n, t, o);
 				n.costRate = r.rate, n.moodRateDetails = r.details;
-				let i = L(n) ? F(n.moodStart - n.costRate * e.durationHours) : n.moodStart;
+				let i = I(n) ? P(n.moodStart - n.costRate * e.durationHours) : n.moodStart;
 				u = Math.max(u, Math.abs(i - n.moodEnd)), n.moodEnd = i;
 			});
 		}), n === 7 && o.size > 0 && (o.forEach((t) => {
@@ -2427,8 +2581,8 @@ function cr(e, t) {
 	e.forEach((e, n) => {
 		e.moodWarnings = e.placements.flatMap((e) => {
 			if (!e.explicitMood) return [];
-			let r = i(n, e).placement, a = F(e.state.mood ?? 24);
-			return !r || !$t(r, t) || !$t(e, t) || r.moodEnd >= a ? [] : [{
+			let r = i(n, e).placement, a = P(e.state.mood ?? 24);
+			return !r || !en(r, t) || !en(e, t) || r.moodEnd >= a ? [] : [{
 				operator: e.name,
 				facility: e.facility.type,
 				facilityId: e.facility.id,
@@ -2439,12 +2593,12 @@ function cr(e, t) {
 			}];
 		});
 	});
-	let u = tr(e, t);
-	return sr(e, t), (Yn(e[0]?.settings ?? {}) === "direct" || e.some((e, t) => Xn(e, t))) && e.forEach((e) => {
-		if (en(e)) return;
+	let u = rr(e, t);
+	return pr(e, t), (Zn(e[0]?.settings ?? {}) === "direct" || e.some((e, t) => Qn(e, t))) && e.forEach((e) => {
+		if (tn(e)) return;
 		let t = e.fiammetta?.end ?? 24;
 		e.autoRestWarnings.push({
-			operator: pt,
+			operator: mt,
 			reason: "no-space",
 			startMood: t,
 			endMood: t,
@@ -2452,28 +2606,28 @@ function cr(e, t) {
 		});
 	}), u;
 }
-function lr(e, t, n = j) {
-	return !e.recipe || !t.product ? !e.recipe : M(t.product, t.sourceMaterial, n)?.recipe === e.recipe;
+function hr(e, t, n = A) {
+	return !e.recipe || !t.product ? !e.recipe : j(t.product, t.sourceMaterial, n)?.recipe === e.recipe;
 }
-function ur() {
+function gr() {
 	return {
 		capBoosts: {},
 		bonusByFacility: {}
 	};
 }
-function dr(e, t, n, r, i) {
-	return V(e) ? wn(e, t, n, r, i, n.durationHours) : H(e, t, n, r, i);
+function _r(e, t, n, r, i) {
+	return B(e) ? Tn(e, t, n, r, i, n.durationHours) : H(e, t, n, r, i);
 }
-function fr(e, t, n, r) {
-	let i = ur(), a = I(e.document, e.index, t), o = t.type === "trading" ? e.ruleset.tradeOrderLimitByLevel[t.level] ?? 0 : 0, s = t.type === "manufacture" ? e.ruleset.manufactureStorageByLevel[t.level] ?? 0 : 0, c = {
+function vr(e, t, n, r) {
+	let i = gr(), a = F(e.document, e.index, t), o = t.type === "trading" ? e.ruleset.tradeOrderLimitByLevel[t.level] ?? 0 : 0, s = t.type === "manufacture" ? e.ruleset.manufactureStorageByLevel[t.level] ?? 0 : 0, c = {
 		orderLimit: 0,
 		storageCap: 0
 	}, l = {
 		orderLimit: {},
 		storageCap: {}
-	}, u = mr(e, t);
-	r.filter((e) => e.target?.id === t.id && vt.has(e.effect.stat)).filter((e) => !u.has(e.skill)).filter((e) => e.effect.per?.source !== "stat" && e.effect.per?.source !== "facCap" && e.effect.per?.source !== "capTier").filter((t) => lr(t.effect, a, e.ruleset)).forEach((r) => {
-		let a = dr(r, t, e, n, i);
+	}, u = br(e, t);
+	r.filter((e) => e.target?.id === t.id && yt.has(e.effect.stat)).filter((e) => !u.has(e.skill)).filter((e) => e.effect.per?.source !== "stat" && e.effect.per?.source !== "facCap" && e.effect.per?.source !== "capTier").filter((t) => hr(t.effect, a, e.ruleset)).forEach((r) => {
+		let a = _r(r, t, e, n, i);
 		c[r.effect.stat] = (c[r.effect.stat] ?? 0) + a;
 		let o = l[r.effect.stat] ?? (l[r.effect.stat] = {});
 		o[r.owner.name] = (o[r.owner.name] ?? 0) + a;
@@ -2482,8 +2636,8 @@ function fr(e, t, n, r) {
 		capBoosts: l,
 		bonusByFacility: {}
 	};
-	r.filter((e) => e.target?.id === t.id && vt.has(e.effect.stat)).filter((e) => !u.has(e.skill)).filter((e) => ["facCap", "capTier"].includes(e.effect.per?.source ?? "")).filter((t) => lr(t.effect, a, e.ruleset)).forEach((r) => {
-		let i = dr(r, t, e, n, d);
+	r.filter((e) => e.target?.id === t.id && yt.has(e.effect.stat)).filter((e) => !u.has(e.skill)).filter((e) => ["facCap", "capTier"].includes(e.effect.per?.source ?? "")).filter((t) => hr(t.effect, a, e.ruleset)).forEach((r) => {
+		let i = _r(r, t, e, n, d);
 		c[r.effect.stat] = (c[r.effect.stat] ?? 0) + i;
 		let a = l[r.effect.stat] ?? (l[r.effect.stat] = {});
 		a[r.owner.name] = (a[r.owner.name] ?? 0) + i;
@@ -2513,41 +2667,41 @@ function fr(e, t, n, r) {
 		orderLimitNet: c.orderLimit ?? 0
 	};
 }
-function pr(e, t) {
+function yr(e, t) {
 	let n = e.active.filter((e) => e.target?.id === t.id && e.effect.stat === "zeroOpBonus"), r = new Set(n.map((e) => e.owner.name));
-	return r.size === 0 ? xt : {
+	return r.size === 0 ? St : {
 		operators: new Set(e.active.filter((e) => e.target?.id === t.id && !r.has(e.owner.name)).map((e) => e.owner.name)),
 		exceptSources: new Set(n.flatMap((e) => e.effect.except ?? []))
 	};
 }
-function mr(e, t) {
+function br(e, t) {
 	return new Set(e.active.filter((e) => e.target?.id === t.id).flatMap((e) => e.effect.suppresses ?? []));
 }
-function hr(e) {
-	return e.effect.stack === "max" && gt.has(e.effect.stat);
+function xr(e) {
+	return e.effect.stack === "max" && _t.has(e.effect.stat);
 }
-function gr(e, t) {
+function Sr(e, t) {
 	let n = e.effect.per?.source;
-	return Jt(e) || typeof n == "string" && t.has(n);
+	return Yt(e) || typeof n == "string" && t.has(n);
 }
-function _r(e, t) {
-	return !t.operators.has(e.owner.name) || gr(e, t.exceptSources);
+function Cr(e, t) {
+	return !t.operators.has(e.owner.name) || Sr(e, t.exceptSources);
 }
 function U(e, t, n, r, i, a, o, s = "all", c = "regular", l) {
-	let u = mr(e, t), d = (r) => {
-		let a = l === void 0 ? H(r, t, e, n, i) : Mn(r, t, e, n, i, l), o = l === void 0 ? kn(r, t, e, n, i) : void 0;
+	let u = br(e, t), d = (r) => {
+		let a = l === void 0 ? H(r, t, e, n, i) : Nn(r, t, e, n, i, l), o = l === void 0 ? An(r, t, e, n, i) : void 0;
 		return {
 			item: r,
 			value: a,
 			...o ? { calculation: o } : {}
 		};
 	}, f = (e) => {
-		let t = Jt(e);
+		let t = Yt(e);
 		return s === "all" || (s === "base" ? t : !t);
 	}, p = (e) => c === "stat" ? e.effect.per?.source === "stat" : e.effect.per?.source !== "stat" && e.effect.per?.source !== "orderCount", m = [];
-	r.filter((e) => e.target?.id === t.id && o.has(e.effect.stat)).filter(f).filter((n) => lr(n.effect, I(e.document, e.index, t), e.ruleset)).filter((e) => e.effect.stat !== "tradeNetEff").filter(p).filter((e) => !["moodCost", "moodRecover"].includes(e.effect.stat)).filter((e) => e.effect.stack !== "max").filter((e) => !u.has(e.skill)).filter((e) => _r(e, a)).forEach((e) => m.push(d(e)));
+	r.filter((e) => e.target?.id === t.id && o.has(e.effect.stat)).filter(f).filter((n) => hr(n.effect, F(e.document, e.index, t), e.ruleset)).filter((e) => e.effect.stat !== "tradeNetEff").filter(p).filter((e) => !["moodCost", "moodRecover"].includes(e.effect.stat)).filter((e) => e.effect.stack !== "max").filter((e) => !u.has(e.skill)).filter((e) => Cr(e, a)).forEach((e) => m.push(d(e)));
 	let h = /* @__PURE__ */ new Map();
-	r.filter((e) => e.target?.id === t.id && o.has(e.effect.stat)).filter(f).filter((n) => lr(n.effect, I(e.document, e.index, t), e.ruleset)).filter(p).filter((e) => e.effect.stack === "max").filter((e) => e.effect.stat !== "tradeNetEff").filter((e) => !u.has(e.skill)).filter((e) => _r(e, a)).forEach((e) => {
+	r.filter((e) => e.target?.id === t.id && o.has(e.effect.stat)).filter(f).filter((n) => hr(n.effect, F(e.document, e.index, t), e.ruleset)).filter(p).filter((e) => e.effect.stack === "max").filter((e) => e.effect.stat !== "tradeNetEff").filter((e) => !u.has(e.skill)).filter((e) => Cr(e, a)).forEach((e) => {
 		let t = e.effect.maxGroup ?? `${e.effect.target}|${e.effect.stat}|${e.effect.recipe ?? ""}`, n = h.get(t) ?? /* @__PURE__ */ new Map(), r = n.get(e.owner.name) ?? [];
 		r.push(d(e)), n.set(e.owner.name, r), h.set(t, n);
 	});
@@ -2563,14 +2717,14 @@ function U(e, t, n, r, i, a, o, s = "all", c = "regular", l) {
 		details: _
 	};
 }
-function vr(e, t, n, r, i, a) {
+function wr(e, t, n, r, i, a) {
 	let o = {};
 	return e.facilities.forEach((s) => {
 		let c = r.get(s.id), l = {
 			capBoosts: n.get(s.id)?.capBoosts ?? {},
 			bonusByFacility: o,
 			...c ? { capacitySegments: c.segments } : {}
-		}, u = pr(e, s), d = /* @__PURE__ */ new Set([
+		}, u = yr(e, s), d = /* @__PURE__ */ new Set([
 			"tradeSpd",
 			"manuProd",
 			"recycleSpd",
@@ -2586,25 +2740,25 @@ function vr(e, t, n, r, i, a) {
 		}
 		if (f.details.forEach(({ item: e, value: t }) => m(e, t)), i === "targetFacility" && s.type === "trading") {
 			let r = n.get(s.id);
-			r && Sr(e, s, t, r, e.active, l, u, f.total, 0).details.forEach(({ item: e, value: t }) => m(e, t));
+			r && Or(e, s, t, r, e.active, l, u, f.total, 0).details.forEach(({ item: e, value: t }) => m(e, t));
 		}
 		o[s.id] = p;
 	}), o;
 }
-function yr(e, t) {
+function Tr(e, t) {
 	let n = e.durationHours, r = [0, n];
-	return e.active.filter((e) => P.has(e.effect.stat)).forEach((e) => {
-		if (e.effect.curve) for (let e = 1; e < n - N; e += 1) r.push(e);
-		e.effect.condition?.type === "workHours" && r.push(Number(e.effect.condition.value ?? 0) - e.owner.workHoursBefore), V(e) && r.push(...Tn(e, n));
+	return e.active.filter((e) => N.has(e.effect.stat)).forEach((e) => {
+		if (e.effect.curve) for (let e = 1; e < n - M; e += 1) r.push(e);
+		e.effect.condition?.type === "workHours" && r.push(Number(e.effect.condition.value ?? 0) - e.owner.workHoursBefore), B(e) && r.push(...En(e, n));
 	}), t.forEach(({ segments: e }) => {
 		e.forEach(({ startHours: e, endHours: t }) => {
 			r.push(e, t);
 		});
 	}), Array.from(new Set(r.map((e) => Math.max(0, Math.min(n, e))).sort((e, t) => e - t)));
 }
-function br(e, t, n, r) {
+function Er(e, t, n, r) {
 	if (!e.active.some((e) => e.effect.per?.source === "stat")) return;
-	let i = yr(e, r), a = [];
+	let i = Tr(e, r), a = [];
 	for (let o = 1; o < i.length; o += 1) {
 		let s = i[o - 1] ?? 0, c = i[o] ?? s;
 		if (c <= s + 1e-6) continue;
@@ -2612,25 +2766,25 @@ function br(e, t, n, r) {
 		a.push({
 			startHours: s,
 			endHours: c,
-			bonusByFacility: vr(e, t, n, r, "targetFacility", l),
-			sameFacilityBonusByFacility: vr(e, t, n, r, "sameFacility", l)
+			bonusByFacility: wr(e, t, n, r, "targetFacility", l),
+			sameFacilityBonusByFacility: wr(e, t, n, r, "sameFacility", l)
 		});
 	}
 	return a;
 }
-function xr(e, t) {
+function Dr(e, t) {
 	let n = /* @__PURE__ */ new Map();
 	return e.facilities.forEach((r) => {
-		n.set(r.id, fr(e, r, t, e.active));
+		n.set(r.id, vr(e, r, t, e.active));
 	}), n;
 }
-function Sr(e, t, n, r, i, a, o, s, c) {
+function Or(e, t, n, r, i, a, o, s, c) {
 	if (t.type !== "trading") return {
 		value: 0,
 		orderLimitNet: r.rawOrderLimit,
 		details: []
 	};
-	let l = mr(e, t), u = i.filter((e) => e.target?.id === t.id && !l.has(e.skill) && e.effect.stat === "orderLimit" && e.effect.per?.source === "stat"), d = i.filter((e) => e.target?.id === t.id && e.effect.stat === "tradeNetEff").filter((e) => !l.has(e.skill)).filter((e) => _r(e, o)), f = i.filter((e) => e.target?.id === t.id && !l.has(e.skill) && e.effect.stat === "tradeSpd" && e.effect.per?.source === "orderCount").filter((e) => _r(e, o)), p = i.filter((e) => e.target?.id === t.id && !l.has(e.skill) && e.effect.stat === "tradeGapEff").filter((e) => _r(e, o)), m = e.ruleset.tradeOrderLimitByLevel[t.level] ?? 0;
+	let l = br(e, t), u = i.filter((e) => e.target?.id === t.id && !l.has(e.skill) && e.effect.stat === "orderLimit" && e.effect.per?.source === "stat"), d = i.filter((e) => e.target?.id === t.id && e.effect.stat === "tradeNetEff").filter((e) => !l.has(e.skill)).filter((e) => Cr(e, o)), f = i.filter((e) => e.target?.id === t.id && !l.has(e.skill) && e.effect.stat === "tradeSpd" && e.effect.per?.source === "orderCount").filter((e) => Cr(e, o)), p = i.filter((e) => e.target?.id === t.id && !l.has(e.skill) && e.effect.stat === "tradeGapEff").filter((e) => Cr(e, o)), m = e.ruleset.tradeOrderLimitByLevel[t.level] ?? 0;
 	if (u.length === 0 && d.length === 0 && f.length === 0 && p.length === 0) return {
 		value: 0,
 		orderLimitNet: r.rawOrderLimit,
@@ -2659,7 +2813,7 @@ function Sr(e, t, n, r, i, a, o, s, c) {
 			value: n
 		});
 	}), p.length > 0) {
-		let a = f.length > 0 ? g : Math.max(1, m + r.rawOrderLimit), o = p.map((e) => a * Number(e.effect.value ?? 0)), s = o.reduce((e, t) => e + t, 0), l = c + v + s, u = e.settings.preferMaxJieEfficiency !== !1, d = (u ? void 0 : kr(e, t, 100, n, i))?.orders ?? [], h = d.reduce((e, t) => e + t.probability * t.time, 0), y = d.length === 1 && d[0]?.ignoreEfficiency ? "fixedOrder" : d.length === 0 || h <= 1e-6 ? "missingOrders" : void 0, b = !u && !y && e.durationHours > 1e-6, x = l, S = 0, ee = Tt(e.settings, t.id), C = p.reduce((e, t) => e + Number(t.effect.value ?? 0), 0), w = f.reduce((e, t) => e + Number(t.effect.per?.value ?? t.effect.value ?? 0), 0), T = C - w;
+		let a = f.length > 0 ? g : Math.max(1, m + r.rawOrderLimit), o = p.map((e) => a * Number(e.effect.value ?? 0)), s = o.reduce((e, t) => e + t, 0), l = c + v + s, u = e.settings.preferMaxJieEfficiency !== !1, d = (u ? void 0 : Fr(e, t, 100, n, i))?.orders ?? [], h = d.reduce((e, t) => e + t.probability * t.time, 0), y = d.length === 1 && d[0]?.ignoreEfficiency ? "fixedOrder" : d.length === 0 || h <= 1e-6 ? "missingOrders" : void 0, b = !u && !y && e.durationHours > 1e-6, x = l, S = 0, ee = Et(e.settings, t.id), C = p.reduce((e, t) => e + Number(t.effect.value ?? 0), 0), w = f.reduce((e, t) => e + Number(t.effect.per?.value ?? t.effect.value ?? 0), 0), T = C - w;
 		if (b) {
 			let t = 0, n = l, r = 0;
 			for (; t < e.durationHours - 1e-6 && n > 1e-6;) {
@@ -2673,7 +2827,7 @@ function Sr(e, t, n, r, i, a, o, s, c) {
 			}
 			x = (r + Math.max(0, n) * Math.max(0, e.durationHours - t)) / e.durationHours;
 		}
-		let E = b ? x - c - v : s, te = {
+		let te = b ? x - c - v : s, ne = {
 			type: "tradeGap",
 			mode: b ? "integral" : "max",
 			durationHours: e.durationHours,
@@ -2692,10 +2846,10 @@ function Sr(e, t, n, r, i, a, o, s, c) {
 			let n = o[t] ?? 0, r = Math.abs(s) > 1e-6 ? n / s : 0;
 			_.push({
 				item: e,
-				value: b ? E * r : n,
-				calculation: te
+				value: b ? te * r : n,
+				calculation: ne
 			});
-		}), v += b ? E : s;
+		}), v += b ? te : s;
 	}
 	return {
 		value: v,
@@ -2703,11 +2857,11 @@ function Sr(e, t, n, r, i, a, o, s, c) {
 		details: _
 	};
 }
-function Cr(e, t, n, r) {
+function kr(e, t, n, r) {
 	return e.details.map(({ item: e, value: t, calculation: n }) => ({
 		item: e,
 		value: t,
-		calculation: n ?? Nn(e, r)
+		calculation: n ?? Pn(e, r)
 	})).filter(({ value: e, calculation: t }) => Math.abs(e) > 1e-6 || t !== void 0).map(({ item: e, value: r, calculation: i }) => ({
 		operator: e.owner.name,
 		skill: e.skill,
@@ -2720,42 +2874,42 @@ function Cr(e, t, n, r) {
 		...i ? { calculation: i } : {}
 	}));
 }
-function wr(e, t, n) {
-	if (e.type === "meeting") return R(t) ? 5 : 0;
+function Ar(e, t, n) {
+	if (e.type === "meeting") return L(t) ? 5 : 0;
 	if (e.type === "power" || e.type === "hire" || e.type === "trading" || e.type === "manufacture") {
 		let n = e.type === "trading" || e.type === "manufacture" ? 1 : 5;
-		return R(t) ? n : 0;
+		return L(t) ? n : 0;
 	}
-	return e.type === "recycle" && R(t) ? (n.recycle?.basicSpeedBuff ?? 0) * 100 : 0;
+	return e.type === "recycle" && L(t) ? (n.recycle?.basicSpeedBuff ?? 0) * 100 : 0;
 }
-function Tr(e, t) {
+function jr(e, t) {
 	let n = e.ruleset.recycle, r = e.settings.recycleBoostItemId;
 	if (!(t.type !== "recycle" || !n || !n.outputPool || t.level < n.speedUpUnlockLevel || !r)) return n.inputItems.find((e) => e.itemId === r);
 }
-function Er(e) {
-	return Ye(e.profile?.rarity ?? 0) + Xe(e.state.elite ?? 0);
+function Mr(e) {
+	return Xe(e.profile?.rarity ?? 0) + Ze(e.state.elite ?? 0);
 }
-function Dr(e, t, n, r, i, a, o, s) {
-	let c = Ie(e.document, e.index, t.type, t.index), l = {
+function Nr(e, t, n, r, i, a, o, s) {
+	let c = Le(e.document, e.index, t.type, t.index), l = {
 		capBoosts: r.capBoosts,
 		bonusByFacility: i,
 		sameFacilityBonusByFacility: a,
 		...o ? { bonusSegments: o } : {},
 		...s ? { capacitySegments: s.segments } : {}
-	}, u = pr(e, t), d = U(e, t, n, e.active, l, xt, /* @__PURE__ */ new Set([...P, "facBase"]), "base"), f = U(e, t, n, e.active, l, u, P, "combination"), p = U(e, t, n, e.active, l, u, P, "combination", "stat"), m = z(e, t), h = m.reduce((n, r) => n + wr(t, r, e.ruleset), 0), g = Ke(t.type, t.level, e.ruleset);
-	if (t.type === "recycle" && Tr(e, t) && (g += (e.ruleset.recycle?.boostSpeed ?? 0) * 100), t.type === "meeting") {
+	}, u = yr(e, t), d = U(e, t, n, e.active, l, St, /* @__PURE__ */ new Set([...N, "facBase"]), "base"), f = U(e, t, n, e.active, l, u, N, "combination"), p = U(e, t, n, e.active, l, u, N, "combination", "stat"), m = R(e, t), h = m.reduce((n, r) => n + Ar(t, r, e.ruleset), 0), g = qe(t.type, t.level, e.ruleset);
+	if (t.type === "recycle" && jr(e, t) && (g += (e.ruleset.recycle?.boostSpeed ?? 0) * 100), t.type === "meeting") {
 		let t = e.facilities.filter((e) => e.type === "dormitory").reduce((e, t) => e + t.level * 1e3, 0);
-		g += Je(t);
+		g += Ye(t);
 	}
 	g += d.total;
 	let _ = t.type === "meeting" ? m.map((e) => ({
 		operator: e.name,
 		stat: "operatorTraining",
-		value: Er(e),
+		value: Mr(e),
 		facility: t.type,
 		ownerFacility: e.facility.type,
 		category: "combination"
-	})).filter((e) => Math.abs(e.value) > N) : [], v = _.reduce((e, t) => e + t.value, 0), y = Sr(e, t, n, r, e.active, l, u, f.total, g + h + f.total + p.total + v);
+	})).filter((e) => Math.abs(e.value) > M) : [], v = _.reduce((e, t) => e + t.value, 0), y = Or(e, t, n, r, e.active, l, u, f.total, g + h + f.total + p.total + v);
 	if (t.type === "trading" && r.attributes.orderLimit) {
 		let e = r.rawOrderLimit, t = r.linked ? y.orderLimitNet : e;
 		r.attributes.orderLimit = {
@@ -2764,12 +2918,12 @@ function Dr(e, t, n, r, i, a, o, s) {
 			total: Math.max(1, r.attributes.orderLimit.base + t)
 		};
 	}
-	let b = f.total + p.total + y.value + v, x = Cr(d, t.type, "base", e), S = [
-		...Cr(f, t.type, "combination", e),
-		...Cr(p, t.type, "combination", e),
-		...Cr(y, t.type, "combination", e),
+	let b = f.total + p.total + y.value + v, x = kr(d, t.type, "base", e), S = [
+		...kr(f, t.type, "combination", e),
+		...kr(p, t.type, "combination", e),
+		...kr(y, t.type, "combination", e),
 		..._
-	], ee = b, C = [...x, ...S], w = t.type === "meeting" ? Vn(e, t) : [], T = {
+	], ee = b, C = [...x, ...S], w = t.type === "meeting" ? Hn(e, t) : void 0, T = {
 		facility: t,
 		inherited: c.inherited,
 		inheritedFromPlanIndex: c.sourcePlanIndex,
@@ -2780,22 +2934,23 @@ function Dr(e, t, n, r, i, a, o, s) {
 		operatorSkillEfficiency: ee,
 		efficiency: g + h + b,
 		attributes: r.attributes,
-		...w.length > 0 ? { cluePreferences: w } : {},
+		...w?.preferences.length ? { cluePreferences: w.preferences } : {},
+		...w && Object.keys(w.byOperator).length > 0 ? { cluePreferencesByOperator: w.byOperator } : {},
 		details: C,
 		baseDetails: x,
 		combinationDetails: S
-	}, E = Ar(e, t, T.efficiency, n, e.active);
-	if (T.capacity = Ir(e, t, r, n, e.active)?.capacity, T.production = Lr(e, t, E, T.capacity), T.production && w.length > 0 && (T.production.cluePreferences = w), t.type === "recycle" && E && T.production) {
-		let t = e.ruleset.recycle?.timeRequirement ?? 0, n = t > 0 ? 3600 / t : 0, r = T.production.effectiveAmountPerHour ?? T.production.amountPerHour, i = E.amountPerHour > 1e-6 ? r / E.amountPerHour : 0;
-		T.recycleOutputs = Pt(e.ruleset.recycle, n * (T.efficiency / 100) * i);
+	}, te = Ir(e, t, T.efficiency, n, e.active);
+	if (T.capacity = Hr(e, t, r, n, e.active)?.capacity, T.production = Ur(e, t, te, T.capacity), T.production && w?.preferences.length && (T.production.cluePreferences = w.preferences), t.type === "recycle" && te && T.production) {
+		let t = e.ruleset.recycle?.timeRequirement ?? 0, n = t > 0 ? 3600 / t : 0, r = T.production.effectiveAmountPerHour ?? T.production.amountPerHour, i = te.amountPerHour > 1e-6 ? r / te.amountPerHour : 0;
+		T.recycleOutputs = Ft(e.ruleset.recycle, n * (T.efficiency / 100) * i);
 	}
 	return T;
 }
-function Or(e, t) {
+function Pr(e, t) {
 	return e.filter((e) => e.target?.id === t.id && e.effect.stat === "tradeOrder").map((e) => e.effect);
 }
-function kr(e, t, n, r, i) {
-	let a = qt(r), o = A(I(e.document, e.index, t).product ?? "龙门币");
+function Fr(e, t, n, r, i) {
+	let a = Jt(r), o = k(F(e.document, e.index, t).product ?? "龙门币");
 	if (o === "合成玉") {
 		let e = n / 100, t = a.orundumTradeOrder.productAmount / a.orundumTradeOrder.hours, r = { 源石碎片: -a.orundumTradeOrder.materialAmount / a.orundumTradeOrder.hours };
 		return {
@@ -2818,9 +2973,9 @@ function kr(e, t, n, r, i) {
 			materialPerHour: Object.fromEntries(Object.entries(r).map(([t, n]) => [t, n * e]))
 		};
 	}
-	let s = Or(i, t), c = s.filter((e) => e.order?.type === "fixed").sort((e, t) => Number(e.order?.priority ?? 99) - Number(t.order?.priority ?? 99))[0], l = n / 100;
+	let s = Pr(i, t), c = s.filter((e) => e.order?.type === "fixed").sort((e, t) => Number(e.order?.priority ?? 99) - Number(t.order?.priority ?? 99))[0], l = n / 100;
 	if (c?.order) {
-		let e = Number(c.order.qty ?? 0) / Number(c.order.time ?? 1), t = e * (c.order.ignoreEff ? 1 : l), n = c.order.material ? A(c.order.material) : null, r = {}, i = {};
+		let e = Number(c.order.qty ?? 0) / Number(c.order.time ?? 1), t = e * (c.order.ignoreEff ? 1 : l), n = c.order.material ? k(c.order.material) : null, r = {}, i = {};
 		if (n && c.order.amount) {
 			let e = Number(c.order.amount) / Number(c.order.time ?? 1);
 			r[n] = -e, i[n] = -e * (c.order.ignoreEff ? 1 : l);
@@ -2880,11 +3035,11 @@ function kr(e, t, n, r, i) {
 		materialPerHour: Object.fromEntries(Object.entries(w).map(([e, t]) => [e, t * l]))
 	};
 }
-function Ar(e, t, n, r, i) {
-	let a = I(e.document, e.index, t);
-	if (t.type === "trading") return kr(e, t, n, r, i);
+function Ir(e, t, n, r, i) {
+	let a = F(e.document, e.index, t);
+	if (t.type === "trading") return Fr(e, t, n, r, i);
 	if (t.type === "manufacture") {
-		let t = M(a.product, a.sourceMaterial, e.ruleset);
+		let t = j(a.product, a.sourceMaterial, e.ruleset);
 		if (!t) return;
 		let r = n / 100, i = t.amount / t.hours, o = Object.fromEntries(Object.entries(t.materials ?? {}).map(([e, n]) => [e, -n / t.hours]));
 		return {
@@ -2901,9 +3056,9 @@ function Ar(e, t, n, r, i) {
 	if (t.type === "recycle") {
 		let r = e.ruleset.recycle, i = (r?.timeRequirement ?? 0) / 3600;
 		if (!r || i <= 0) return;
-		let a = Nt(r).reduce((e, t) => e + t.amount, 0) / i, o = n / 100 * a, s = Tr(e, t), c = s ? { [s.name]: -3600 / s.addedTime } : void 0;
+		let a = Pt(r).reduce((e, t) => e + t.amount, 0) / i, o = n / 100 * a, s = jr(e, t), c = s ? { [s.name]: -3600 / s.addedTime } : void 0;
 		return {
-			product: Mt,
+			product: Nt,
 			baseAmountPerHour: a,
 			baseAmountPerDay: a * 24,
 			amountPerHour: o,
@@ -2942,16 +3097,16 @@ function Ar(e, t, n, r, i) {
 		};
 	}
 }
-function jr(e, t) {
+function Lr(e, t) {
 	return [.../* @__PURE__ */ new Set([...Object.keys(e), ...Object.keys(t)])].every((n) => {
 		let r = e[n] ?? {}, i = t[n] ?? {};
-		return [.../* @__PURE__ */ new Set([...Object.keys(r), ...Object.keys(i)])].every((e) => Math.abs((r[e] ?? 0) - (i[e] ?? 0)) <= N);
+		return [.../* @__PURE__ */ new Set([...Object.keys(r), ...Object.keys(i)])].every((e) => Math.abs((r[e] ?? 0) - (i[e] ?? 0)) <= M);
 	});
 }
-function Mr(e) {
+function Rr(e) {
 	return Object.fromEntries(Object.entries(e).map(([e, t]) => [e, { ...t }]));
 }
-function Nr(e) {
+function zr(e) {
 	return e.map((e) => ({
 		startHours: e.startHours,
 		endHours: e.endHours,
@@ -2960,39 +3115,39 @@ function Nr(e) {
 		total: e.total
 	}));
 }
-function Pr(e, t, n, r, i, a) {
-	let o = I(e.document, e.index, t), s = {
+function Br(e, t, n, r, i, a) {
+	let o = F(e.document, e.index, t), s = {
 		capBoosts: n.capBoosts,
 		bonusByFacility: {}
-	}, c = mr(e, t), l = {};
+	}, c = br(e, t), l = {};
 	return {
-		skill: r.filter((e) => e.target?.id === t.id && vt.has(e.effect.stat)).filter((e) => !c.has(e.skill)).filter((e) => e.effect.per?.source !== "stat").filter((t) => lr(t.effect, o, e.ruleset)).reduce((n, r) => {
-			let o = V(r) ? wn(r, t, e, i, s, a) : H(r, t, e, i, s), c = l[r.effect.stat] ?? (l[r.effect.stat] = {});
+		skill: r.filter((e) => e.target?.id === t.id && yt.has(e.effect.stat)).filter((e) => !c.has(e.skill)).filter((e) => e.effect.per?.source !== "stat").filter((t) => hr(t.effect, o, e.ruleset)).reduce((n, r) => {
+			let o = B(r) ? Tn(r, t, e, i, s, a) : H(r, t, e, i, s), c = l[r.effect.stat] ?? (l[r.effect.stat] = {});
 			return c[r.owner.name] = (c[r.owner.name] ?? 0) + o, n + o;
 		}, 0),
 		capBoosts: l
 	};
 }
-function Fr(e, t, n, r, i, a, o, s = 0) {
-	let c = e.durationHours, l = r.filter((n) => n.target?.id === t.id && vt.has(n.effect.stat) && V(n) && n.effect.per?.source !== "stat" && !mr(e, t).has(n.skill) && lr(n.effect, I(e.document, e.index, t), e.ruleset));
+function Vr(e, t, n, r, i, a, o, s = 0) {
+	let c = e.durationHours, l = r.filter((n) => n.target?.id === t.id && yt.has(n.effect.stat) && B(n) && n.effect.per?.source !== "stat" && !br(e, t).has(n.skill) && hr(n.effect, F(e.document, e.index, t), e.ruleset));
 	if (l.length === 0) return [{
 		startHours: 0,
 		endHours: c,
 		base: a,
 		skill: o,
 		total: Math.max(s, a + o),
-		capBoosts: Mr(n.capBoosts)
+		capBoosts: Rr(n.capBoosts)
 	}];
 	let u = [0, c];
 	l.forEach((e) => {
-		u.push(...Tn(e, c));
+		u.push(...En(e, c));
 	});
 	let d = Array.from(new Set(u.map((e) => Math.max(0, Math.min(c, e))).sort((e, t) => e - t))), f = [];
 	for (let o = 1; o < d.length; o += 1) {
 		let c = d[o - 1] ?? 0, l = d[o] ?? c;
 		if (l <= c + 1e-6) continue;
-		let u = Pr(e, t, n, r, i, (c + l) / 2), p = Math.max(s, a + u.skill), m = f[f.length - 1];
-		if (m && Math.abs(m.total - p) <= 1e-6 && jr(m.capBoosts, u.capBoosts)) {
+		let u = Br(e, t, n, r, i, (c + l) / 2), p = Math.max(s, a + u.skill), m = f[f.length - 1];
+		if (m && Math.abs(m.total - p) <= 1e-6 && Lr(m.capBoosts, u.capBoosts)) {
 			m.endHours = l;
 			continue;
 		}
@@ -3011,15 +3166,15 @@ function Fr(e, t, n, r, i, a, o, s = 0) {
 		base: a,
 		skill: o,
 		total: Math.max(s, a + o),
-		capBoosts: Mr(n.capBoosts)
+		capBoosts: Rr(n.capBoosts)
 	}];
 }
-function Ir(e, t, n, r, i) {
+function Hr(e, t, n, r, i) {
 	let a = n.attributes;
 	if (t.type === "trading") {
 		let o = a.orderLimit;
 		if (!o) return;
-		let s = Fr(e, t, n, i, r, o.base, o.skill, 1);
+		let s = Vr(e, t, n, i, r, o.base, o.skill, 1);
 		return {
 			capacity: {
 				label: "订单上限",
@@ -3027,7 +3182,7 @@ function Ir(e, t, n, r, i) {
 				base: o.base,
 				skill: o.skill,
 				total: o.total,
-				segments: Nr(s)
+				segments: zr(s)
 			},
 			segments: s
 		};
@@ -3035,7 +3190,7 @@ function Ir(e, t, n, r, i) {
 	if (t.type === "manufacture") {
 		let o = a.storageCap;
 		if (!o) return;
-		let s = I(e.document, e.index, t), c = M(s.product, s.sourceMaterial, e.ruleset), l = Fr(e, t, n, i, r, o.base, o.skill), u = i.some((n) => n.target?.id === t.id && vt.has(n.effect.stat) && V(n) && n.effect.per?.source !== "stat" && !mr(e, t).has(n.skill) && lr(n.effect, s, e.ruleset)) ? Pr(e, t, n, i, r, e.durationHours).skill : o.skill;
+		let s = F(e.document, e.index, t), c = j(s.product, s.sourceMaterial, e.ruleset), l = Vr(e, t, n, i, r, o.base, o.skill), u = i.some((n) => n.target?.id === t.id && yt.has(n.effect.stat) && B(n) && n.effect.per?.source !== "stat" && !br(e, t).has(n.skill) && hr(n.effect, s, e.ruleset)) ? Br(e, t, n, i, r, e.durationHours).skill : o.skill;
 		return {
 			capacity: {
 				label: "仓库容量",
@@ -3043,7 +3198,7 @@ function Ir(e, t, n, r, i) {
 				base: o.base,
 				skill: u,
 				total: o.base + u,
-				segments: Nr(l),
+				segments: zr(l),
 				itemVolume: c?.volume
 			},
 			segments: l
@@ -3052,7 +3207,7 @@ function Ir(e, t, n, r, i) {
 	if (t.type === "recycle") {
 		let a = e.ruleset.recycle, o = a?.phases[t.level - 1];
 		if (!a || !o) return;
-		let s = n.attributes.storageCap?.skill ?? 0, c = a.baseCapacity + o.recycleCapacity, l = Fr(e, t, n, i, r, c, s);
+		let s = n.attributes.storageCap?.skill ?? 0, c = a.baseCapacity + o.recycleCapacity, l = Vr(e, t, n, i, r, c, s);
 		return {
 			capacity: {
 				label: "储藏容量",
@@ -3060,7 +3215,7 @@ function Ir(e, t, n, r, i) {
 				base: c,
 				skill: s,
 				total: c + s,
-				segments: Nr(l)
+				segments: zr(l)
 			},
 			segments: l
 		};
@@ -3081,7 +3236,7 @@ function Ir(e, t, n, r, i) {
 				base: e.ruleset.droneLimit,
 				skill: 0,
 				total: e.ruleset.droneLimit,
-				segments: Nr(t)
+				segments: zr(t)
 			},
 			segments: t
 		};
@@ -3102,7 +3257,7 @@ function Ir(e, t, n, r, i) {
 				base: e.ruleset.clueLimit,
 				skill: 0,
 				total: e.ruleset.clueLimit,
-				segments: Nr(t)
+				segments: zr(t)
 			},
 			segments: t
 		};
@@ -3123,16 +3278,16 @@ function Ir(e, t, n, r, i) {
 				base: e.ruleset.hireLimit,
 				skill: 0,
 				total: e.ruleset.hireLimit,
-				segments: Nr(t)
+				segments: zr(t)
 			},
 			segments: t
 		};
 	}
 }
-function Lr(e, t, n, r) {
+function Ur(e, t, n, r) {
 	if (!n) return;
 	if (!r || !n.itemRate || n.itemRate <= 1e-6) return n;
-	let i = n.itemRate, a = Tt(e.settings, t.id), o = Infinity;
+	let i = n.itemRate, a = Et(e.settings, t.id), o = Infinity;
 	if (r.segments.forEach((e) => {
 		if (Number.isFinite(o)) return;
 		let n = t.type === "manufacture" && r.itemVolume ? Math.floor(e.total / r.itemVolume) : e.total, s = e.startHours, c = Math.max(0, e.endHours - s);
@@ -3150,7 +3305,7 @@ function Lr(e, t, n, r) {
 		let n = t.type === "manufacture" && r.itemVolume ? Math.floor(r.total / r.itemVolume) : r.total;
 		o = a >= n - 1e-6 ? e.durationHours : e.durationHours + (n - a) / i;
 	}
-	let s = o <= e.durationHours + N;
+	let s = o <= e.durationHours + M;
 	if (!s || e.settings.overflowMode !== "zero") return {
 		...n,
 		breachTime: o,
@@ -3166,7 +3321,7 @@ function Lr(e, t, n, r) {
 		overflowed: s
 	};
 }
-function Rr(e) {
+function Wr(e) {
 	return [
 		e.owner.facility.id,
 		e.owner.index,
@@ -3176,30 +3331,30 @@ function Rr(e) {
 		JSON.stringify(e.effect.per ?? e.effect.value ?? null)
 	].join("|");
 }
-function zr(e, t, n, r, i, a) {
+function Gr(e, t, n, r, i, a) {
 	let o = e.facilities.filter((e) => e.type === "power"), s = o[0];
-	if (!s || !an(e, "power").length) return;
-	let c = an(e, "power").filter((e) => R(e)).length * 5, l = /* @__PURE__ */ new Set(), u = /* @__PURE__ */ new Set(), d = 0, f = 0, p = [], m = [];
+	if (!s || !on(e, "power").length) return;
+	let c = on(e, "power").filter((e) => L(e)).length * 5, l = /* @__PURE__ */ new Set(), u = /* @__PURE__ */ new Set(), d = 0, f = 0, p = [], m = [];
 	o.forEach((o) => {
 		let s = {
 			capBoosts: n.get(o.id)?.capBoosts ?? {},
 			bonusByFacility: r,
 			sameFacilityBonusByFacility: i,
 			...a ? { bonusSegments: a } : {}
-		}, c = U(e, o, t, e.active, s, xt, /* @__PURE__ */ new Set(["droneCharge", "abyssalBoost"]), "combination"), h = U(e, o, t, e.active, s, xt, /* @__PURE__ */ new Set([
+		}, c = U(e, o, t, e.active, s, St, /* @__PURE__ */ new Set(["droneCharge", "abyssalBoost"]), "combination"), h = U(e, o, t, e.active, s, St, /* @__PURE__ */ new Set([
 			"droneCharge",
 			"abyssalBoost",
 			"facBase"
 		]), "base");
 		c.details.forEach(({ item: t, value: n }) => {
-			let r = Rr(t);
-			l.has(r) || (l.add(r), d += n, p.push(...Cr({ details: [{
+			let r = Wr(t);
+			l.has(r) || (l.add(r), d += n, p.push(...kr({ details: [{
 				item: t,
 				value: n
 			}] }, o.type, "combination", e)));
 		}), h.details.forEach(({ item: t, value: n }) => {
-			let r = Rr(t);
-			u.has(r) || (u.add(r), f += n, m.push(...Cr({ details: [{
+			let r = Wr(t);
+			u.has(r) || (u.add(r), f += n, m.push(...kr({ details: [{
 				item: t,
 				value: n
 			}] }, o.type, "base", e)));
@@ -3225,7 +3380,7 @@ function zr(e, t, n, r, i, a) {
 			skill: 0,
 			total: e.ruleset.droneLimit
 		}]
-	}, b = Lr(e, s, v, y);
+	}, b = Ur(e, s, v, y);
 	return {
 		facility: s,
 		baseEfficiency: h,
@@ -3242,10 +3397,10 @@ function zr(e, t, n, r, i, a) {
 		combinationDetails: p
 	};
 }
-function Br(e, t) {
-	let n = xr(e, t), r = /* @__PURE__ */ new Map();
+function Kr(e, t) {
+	let n = Dr(e, t), r = /* @__PURE__ */ new Map();
 	e.facilities.forEach((i) => {
-		let a = Ir(e, i, n.get(i.id) ?? {
+		let a = Hr(e, i, n.get(i.id) ?? {
 			attributes: {},
 			rawOrderLimit: 0,
 			capBoosts: {},
@@ -3254,14 +3409,14 @@ function Br(e, t) {
 		}, t, e.active);
 		a && r.set(i.id, a);
 	});
-	let i = vr(e, t, n, r, "targetFacility"), a = vr(e, t, n, r, "sameFacility"), o = br(e, t, n, r), s = [], c = zr(e, t, n, i, a, o);
+	let i = wr(e, t, n, r, "targetFacility"), a = wr(e, t, n, r, "sameFacility"), o = Er(e, t, n, r), s = [], c = Gr(e, t, n, i, a, o);
 	return e.facilities.forEach((l) => {
 		if (l.type === "control" || l.type === "processing" || l.type === "training" || l.type === "dormitory") return;
 		if (l.type === "power") {
 			l.index === 0 && c && s.push(c);
 			return;
 		}
-		if (!z(e, l).length && l.type !== "recycle") return;
+		if (!R(e, l).length && l.type !== "recycle") return;
 		let u = n.get(l.id) ?? {
 			attributes: {},
 			rawOrderLimit: 0,
@@ -3269,12 +3424,14 @@ function Br(e, t) {
 			linked: !1,
 			orderLimitNet: 0
 		};
-		s.push(Dr(e, l, t, u, i, a, o, r.get(l.id)));
+		s.push(Nr(e, l, t, u, i, a, o, r.get(l.id)));
 	}), {
 		name: e.plan.name ?? `队列${e.index + 1}`,
 		durationHours: e.durationHours,
 		facilities: s,
-		moods: e.placements.filter((e) => $t(e, t)).map((e) => ({
+		dormitoryRecoveries: e.dormitoryRecoveries,
+		moodRecoveryContributions: Un(e, t),
+		moods: e.placements.filter((e) => en(e, t)).map((e) => ({
 			operator: e.name,
 			facility: e.facility.type,
 			facilityId: e.facility.id,
@@ -3283,7 +3440,7 @@ function Br(e, t) {
 			start: e.moodStart,
 			end: e.moodEnd,
 			costRate: e.costRate,
-			working: R(e),
+			working: L(e),
 			rateDetails: e.moodRateDetails
 		})),
 		moodWarnings: e.moodWarnings,
@@ -3296,7 +3453,7 @@ function Br(e, t) {
 		droneAccelerations: []
 	};
 }
-function Vr(e, t, n) {
+function qr(e, t, n) {
 	let r = [], i = [];
 	return e.plans.forEach((a, o) => {
 		let s = a.drones;
@@ -3328,28 +3485,28 @@ function Vr(e, t, n) {
 		warnings: r
 	};
 }
-function Hr(e, t) {
+function Jr(e, t) {
 	return e.map((e) => {
 		let n = e.facilities.find((e) => e.facility.id === t?.id && e.production)?.production;
 		return Math.max(0, (n?.effectiveAmountPerHour ?? n?.amountPerHour ?? 0) * e.durationHours);
 	});
 }
-function Ur(e) {
+function Yr(e) {
 	return e.type === "trading" || e.type === "manufacture";
 }
-function Wr(e, t) {
+function Xr(e, t) {
 	let n = t.baseMaterialPerHour ?? t.materialPerHour ?? {}, r = Object.keys(n).sort().map((e) => `${e}:${n[e]}`).join(",");
 	return `${e.type}:${t.product}:${t.baseAmountPerHour}:${r}`;
 }
-function Gr(e, t, n, r, i) {
+function Zr(e, t, n, r, i) {
 	let a = [], o = /* @__PURE__ */ new Map();
 	return n.forEach((n) => {
 		let s = e[n.sourcePlanIndex];
 		if (!s) return;
-		let c = r.get(n.planIndex) ?? 0, l = c * 3 / 60, u = i.get(n.planIndex) ?? 0, d = t.filter(Ur).flatMap((e) => {
+		let c = r.get(n.planIndex) ?? 0, l = c * 3 / 60, u = i.get(n.planIndex) ?? 0, d = t.filter(Yr).flatMap((e) => {
 			let t = s.facilities.find((t) => t.facility.id === e.id)?.production;
 			if (!t) return [];
-			let r = Wr(e, t), i = o.get(r);
+			let r = Xr(e, t), i = o.get(r);
 			return i || (i = {
 				product: t.product,
 				baseAmountPerHour: t.baseAmountPerHour,
@@ -3377,8 +3534,8 @@ function Gr(e, t, n, r, i) {
 		a.push(...d);
 	}), a;
 }
-function Kr(e, t, n, r) {
-	let { targets: i, warnings: a } = Vr(e, t, n);
+function Qr(e, t, n, r) {
+	let { targets: i, warnings: a } = qr(e, t, n);
 	if (i.length === 0) return a.length > 0 ? {
 		enabled: !1,
 		details: [],
@@ -3387,7 +3544,7 @@ function Kr(e, t, n, r) {
 		generatedDrones: 0,
 		usedDrones: 0
 	} : void 0;
-	let o = Hr(t, n.find((e) => e.type === "power")), s = [...i].sort((e, t) => e.planIndex - t.planIndex), c = /* @__PURE__ */ new Map(), l = /* @__PURE__ */ new Map();
+	let o = Jr(t, n.find((e) => e.type === "power")), s = [...i].sort((e, t) => e.planIndex - t.planIndex), c = /* @__PURE__ */ new Map(), l = /* @__PURE__ */ new Map();
 	s.forEach((n, i) => {
 		let u = s[(i - 1 + s.length) % s.length], d = 0, f = u.planIndex, p = s.length === 1, m = 0;
 		do {
@@ -3431,13 +3588,13 @@ function Kr(e, t, n, r) {
 	}), {
 		enabled: !0,
 		details: u,
-		candidates: Gr(t, n, i, c, l),
+		candidates: Zr(t, n, i, c, l),
 		warnings: a,
 		generatedDrones: o.reduce((e, t) => e + t, 0),
 		usedDrones: u.reduce((e, t) => e + t.droneAmount, 0)
 	};
 }
-function qr(e, t, n) {
+function $r(e, t, n) {
 	n <= 1e-6 || t.forEach((t) => {
 		let r = e.find((e) => e.product === t.product);
 		if (!r) return;
@@ -3452,8 +3609,8 @@ function qr(e, t, n) {
 		r.materialPerHour = a(r.materialPerHour, t.extraMaterial), r.effectiveMaterialPerHour &&= a(r.effectiveMaterialPerHour, t.extraMaterial);
 	});
 }
-function Jr(e, t, n = {}) {
-	let r = Qt(e, t, n.progressionProfile, n.treatSkillsAsUnlocked, n.dormitoryDefaultIncludesMoodRecovery), i = cr(r, t), a = r.map((e) => Br(e, t)), o = Kr(e, a, We(e.layout), t.ruleset ?? j), s = a.reduce((e, t) => e + t.durationHours, 0), c = /* @__PURE__ */ new Map();
+function ei(e, t, n = {}) {
+	let r = $t(e, t, n.progressionProfile, n.treatSkillsAsUnlocked, n.dormitoryDefaultIncludesMoodRecovery), i = mr(r, t), a = r.map((e) => Kr(e, t)), o = Qr(e, a, Ge(e.layout), t.ruleset ?? A), s = a.reduce((e, t) => e + t.durationHours, 0), c = /* @__PURE__ */ new Map();
 	s > 1e-6 && a.forEach((e) => {
 		e.facilities.forEach((t) => {
 			t.recycleOutputs?.forEach((t) => {
@@ -3470,16 +3627,16 @@ function Jr(e, t, n = {}) {
 		itemId: e,
 		name: t,
 		amountPerDay: n * 24 / s
-	})).filter((e) => Math.abs(e.amountPerDay) > N), u = kt(a, s);
-	o?.enabled && qr(u, o.details, s);
-	let d = jt(e, u, t.ruleset ?? j);
+	})).filter((e) => Math.abs(e.amountPerDay) > M), u = At(a, s);
+	o?.enabled && $r(u, o.details, s);
+	let d = Mt(e, u, t.ruleset ?? A);
 	if (o) {
 		let t = d.filter((e) => e.product !== "无人机");
 		return {
 			document: e,
 			plans: a,
 			dailyHours: s,
-			dailyFacilities: Ot(a, s),
+			dailyFacilities: kt(a, s),
 			dailyProductions: u,
 			dailyOutputs: t,
 			recycleOutputs: l,
@@ -3493,7 +3650,7 @@ function Jr(e, t, n = {}) {
 		document: e,
 		plans: a,
 		dailyHours: s,
-		dailyFacilities: Ot(a, s),
+		dailyFacilities: kt(a, s),
 		dailyProductions: u,
 		dailyOutputs: d,
 		recycleOutputs: l,
@@ -3503,26 +3660,26 @@ function Jr(e, t, n = {}) {
 		...o ? { maaDroneAcceleration: o } : {}
 	};
 }
-function Yr(e) {
+function ti(e) {
 	return Array.isArray(e.layout) && e.layout.length > 0 ? {
 		document: e,
 		layoutSource: "document"
 	} : {
 		document: {
 			...e,
-			layout: rt(e.plans)
+			layout: it(e.plans)
 		},
 		layoutSource: "inferred"
 	};
 }
-function Xr(e, t) {
-	let n = Yr(e), r = n.document.settings ?? {}, i = {
+function ni(e, t) {
+	let n = ti(e), r = n.document.settings ?? {}, i = {
 		...t.catalog,
-		ruleset: t.ruleset ?? t.catalog.ruleset ?? j
-	}, a = xe(n.document);
-	if (a.errors.length > 0) throw new _e(a.errors);
+		ruleset: t.ruleset ?? t.catalog.ruleset ?? A
+	}, a = Se(n.document);
+	if (a.errors.length > 0) throw new ve(a.errors);
 	return {
-		...Jr(n.document, i, {
+		...ei(n.document, i, {
 			progressionProfile: r.progressionProfile,
 			treatSkillsAsUnlocked: r.treatSkillsAsUnlocked,
 			dormitoryDefaultIncludesMoodRecovery: r.dormitoryDefaultIncludesMoodRecovery
@@ -3532,26 +3689,26 @@ function Xr(e, t) {
 }
 //#endregion
 //#region src/utils/efficiency/drone.ts
-var Zr = [
+var ri = [
 	"龙门币",
 	"合成玉",
 	"赤金",
 	"中级作战记录",
 	"源石碎片"
-], Qr = {
+], ii = {
 	1: "1 但书",
 	2: "2 但书",
 	3: "3 但书 龙舌兰"
 };
-function $r(e) {
+function ai(e) {
 	let t = Math.min(...e.layout.filter((e) => e.type === "trading").map((e) => e.level));
 	return Number.isInteger(t) && t >= 1 && t <= 3 ? t : void 0;
 }
-function ei(e, t, n) {
-	let r = A(t);
+function oi(e, t, n) {
+	let r = k(t);
 	e[r] = (e[r] ?? 0) + n;
 }
-function ti(e, t) {
+function si(e, t) {
 	if (t.operators[e]) return { name: e };
 	let n = e.match(/^(.+)([012])$/), r = n?.[1];
 	if (r && t.operators[r]) return {
@@ -3559,14 +3716,14 @@ function ti(e, t) {
 		state: { elite: Number(n[2]) }
 	};
 }
-function ni(e, t) {
+function ci(e, t) {
 	let n = e.trim();
 	if (!n) return {};
 	let r = n.split(/\s+/), i = Number(r[0]);
 	if (!Number.isInteger(i) || i < 1 || i > 3) return { error: "龙门币策略格式应为“贸易站等级 干员名…”，等级必须是 1 到 3" };
 	let a = [], o = {};
 	for (let e of r.slice(1)) {
-		let n = ti(e, t);
+		let n = si(e, t);
 		if (!n) return { error: `找不到干员“${e}”，或练度后缀不是 0、1、2` };
 		if (a.includes(n.name)) return { error: `干员“${n.name}”重复输入` };
 		a.push(n.name), n.state && (o[n.name] = n.state);
@@ -3577,24 +3734,24 @@ function ni(e, t) {
 		operatorStates: o
 	} };
 }
-function ri(e) {
-	return Zr.includes(e);
+function li(e) {
+	return ri.includes(e);
 }
-function ii(e) {
+function ui(e) {
 	let t = e.baseAmountPerHour;
 	if (t <= 0) return;
 	let n = e.baseMaterialPerHour ?? {};
 	return {
 		amountPerHour: t,
-		materialPerHour: Object.fromEntries(Object.entries(n).map(([e, t]) => [A(e), t]))
+		materialPerHour: Object.fromEntries(Object.entries(n).map(([e, t]) => [k(e), t]))
 	};
 }
-function ai(e, t) {
-	return e === "trading" ? A(t.product ?? "龙门币") : t.product ? A(t.product) : void 0;
+function di(e, t) {
+	return e === "trading" ? k(t.product ?? "龙门币") : t.product ? k(t.product) : void 0;
 }
-function oi(e, t, n, r) {
-	let i = r.ruleset ?? j, a = ai(e, t);
-	if (e === "trading" && a === "龙门币") return ci((i.tradeOrdersByLevel[n] ?? i.tradeOrdersByLevel[1] ?? []).map((e) => ({
+function fi(e, t, n, r) {
+	let i = r.ruleset ?? A, a = di(e, t);
+	if (e === "trading" && a === "龙门币") return mi((i.tradeOrdersByLevel[n] ?? i.tradeOrdersByLevel[1] ?? []).map((e) => ({
 		probability: e.probability,
 		quantity: e.gold,
 		time: e.hours,
@@ -3606,46 +3763,46 @@ function oi(e, t, n, r) {
 		materialPerHour: { 源石碎片: -i.orundumTradeOrder.materialAmount / i.orundumTradeOrder.hours }
 	};
 	if (e !== "manufacture") return;
-	let o = M(a, t.sourceMaterial, i);
+	let o = j(a, t.sourceMaterial, i);
 	if (o) return {
 		amountPerHour: o.amount / o.hours,
-		materialPerHour: Object.fromEntries(Object.entries(o.materials ?? {}).map(([e, t]) => [A(e), -t / o.hours]))
+		materialPerHour: Object.fromEntries(Object.entries(o.materials ?? {}).map(([e, t]) => [k(e), -t / o.hours]))
 	};
 }
-function si(e, t, n) {
-	return We(e.layout).filter((e) => e.type === "trading" || e.type === "manufacture").flatMap((r) => e.plans.flatMap((i, a) => {
-		let o = Ie(e, a, r.type, r.index).assignment, s = ai(r.type, o);
-		if (!s || !ri(s)) return [];
-		let c = t.plans[a]?.facilities.find((e) => e.facility.id === r.id), l = c?.production ? ii(c.production) : oi(r.type, o, r.level, n);
+function pi(e, t, n) {
+	return Ge(e.layout).filter((e) => e.type === "trading" || e.type === "manufacture").flatMap((r) => e.plans.flatMap((i, a) => {
+		let o = Le(e, a, r.type, r.index).assignment, s = di(r.type, o);
+		if (!s || !li(s)) return [];
+		let c = t.plans[a]?.facilities.find((e) => e.facility.id === r.id), l = c?.production ? ui(c.production) : fi(r.type, o, r.level, n);
 		if (!l) return [];
 		let u = t.plans[a]?.name ?? i.name;
 		return [{
 			...l,
 			key: `${a}-${r.id}`,
 			product: s,
-			sourceLabel: `${u || `队列${a + 1}`} · ${k[r.type]}${r.index + 1}`
+			sourceLabel: `${u || `队列${a + 1}`} · ${O[r.type]}${r.index + 1}`
 		}];
 	}));
 }
-function ci(e) {
+function mi(e) {
 	let t = e.reduce((e, t) => e + t.probability * t.time, 0);
 	if (t <= 0) return;
-	let n = e.reduce((e, t) => e + t.probability * t.quantity, 0), r = e.reduce((e, t) => e + (A(t.material ?? "") === "赤金" ? t.probability * (t.amount ?? 0) : 0), 0);
+	let n = e.reduce((e, t) => e + t.probability * t.quantity, 0), r = e.reduce((e, t) => e + (k(t.material ?? "") === "赤金" ? t.probability * (t.amount ?? 0) : 0), 0);
 	return {
 		amountPerHour: n / t,
 		materialPerHour: { 赤金: -r / t }
 	};
 }
-function li(e, t) {
-	let n = t.ruleset ?? j;
-	if (e.operators.length === 0) return ci((n.tradeOrdersByLevel[e.level] ?? n.tradeOrdersByLevel[1] ?? []).map((e) => ({
+function hi(e, t) {
+	let n = t.ruleset ?? A;
+	if (e.operators.length === 0) return mi((n.tradeOrdersByLevel[e.level] ?? n.tradeOrdersByLevel[1] ?? []).map((e) => ({
 		probability: e.probability,
 		quantity: e.gold,
 		time: e.hours,
 		material: "赤金",
 		amount: e.amount
 	})));
-	let r = Xr({
+	let r = ni({
 		layout: [{
 			type: "control",
 			level: 5
@@ -3666,29 +3823,29 @@ function li(e, t) {
 		}],
 		settings: { preferMaxJieEfficiency: !0 }
 	}, { catalog: t }).plans[0]?.facilities.find((e) => e.facility.type === "trading")?.production;
-	return r ? ui(r) : void 0;
+	return r ? gi(r) : void 0;
 }
-function ui(e) {
-	return ci(e.orders ?? []);
+function gi(e) {
+	return mi(e.orders ?? []);
 }
-function di(e, t, n) {
+function _i(e, t, n) {
 	Object.entries(t).forEach(([t, r]) => {
-		ei(e, t, r * n);
+		oi(e, t, r * n);
 	});
 }
-function fi(e, t, n, r = {}) {
+function vi(e, t, n, r = {}) {
 	let i = r.ruleset ? {
 		...t,
 		ruleset: r.ruleset
-	} : t, a = Math.max(0, n.无人机 ?? 0), o = a * 3 / 60, s = e.settings?.lmdDroneStrategy?.trim(), c = $r(e), l = r.lmdDroneStrategies ?? Qr, u = ni(s || (c ? l[c] ?? "" : ""), i);
+	} : t, a = Math.max(0, n.无人机 ?? 0), o = a * 3 / 60, s = e.settings?.lmdDroneStrategy?.trim(), c = ai(e), l = r.lmdDroneStrategies ?? ii, u = ci(s || (c ? l[c] ?? "" : ""), i);
 	!s && c !== void 0 && u.strategy && u.strategy.level !== c && (u = { error: `${c}级贸易站策略必须以“${c}”开头` });
-	let d = si(e, r.efficiencyResult ?? Xr(e, { catalog: i }), i), f = d.some((e) => e.product === "龙门币") && u.strategy ? li(u.strategy, i) : void 0, p = Zr.flatMap((e) => {
+	let d = pi(e, r.efficiencyResult ?? ni(e, { catalog: i }), i), f = d.some((e) => e.product === "龙门币") && u.strategy ? hi(u.strategy, i) : void 0, p = ri.flatMap((e) => {
 		if (e === "龙门币") {
 			let t = u.strategy;
-			return !f || !t ? [] : [pi("龙门币策略", e, f, a, o)];
+			return !f || !t ? [] : [yi("龙门币策略", e, f, a, o)];
 		}
 		let t = d.find((t) => t.product === e);
-		return t ? [pi(t.key, t.product, t, a, o, t.sourceLabel)] : [];
+		return t ? [yi(t.key, t.product, t, a, o, t.sourceLabel)] : [];
 	});
 	return {
 		dailyDrones: a,
@@ -3697,9 +3854,9 @@ function fi(e, t, n, r = {}) {
 		scenarios: p
 	};
 }
-function pi(e, t, n, r, i, a) {
+function yi(e, t, n, r, i, a) {
 	let o = { 无人机: -r };
-	return ei(o, t, n.amountPerHour * i), di(o, n.materialPerHour, i), {
+	return oi(o, t, n.amountPerHour * i), _i(o, n.materialPerHour, i), {
 		key: e,
 		product: t,
 		...a ? { sourceLabel: a } : {},
@@ -3712,7 +3869,7 @@ function pi(e, t, n, r, i, a) {
 }
 //#endregion
 //#region src/utils/specialOperatorMappings.ts
-var mi = [
+var bi = [
 	{
 		room: "manufacture",
 		product: "中级作战记录",
@@ -3751,28 +3908,28 @@ var mi = [
 		]
 	}
 ];
-function hi(e) {
+function xi(e) {
 	return typeof e == "object" && !!e && !Array.isArray(e);
 }
-function gi(e, t, n) {
-	return mi.find((r) => r.room === e && r.percentage === n && (r.product === void 0 || r.product === t));
+function Si(e, t, n) {
+	return bi.find((r) => r.room === e && r.percentage === n && (r.product === void 0 || r.product === t));
 }
-function _i(e, t) {
-	let n = Ne(e), r = /* @__PURE__ */ new Map(), i = [];
+function Ci(e, t) {
+	let n = Pe(e), r = /* @__PURE__ */ new Map(), i = [];
 	return n.plans.forEach((e, n) => {
 		let a = /* @__PURE__ */ new Set();
 		Object.values(e.rooms).forEach((e) => {
 			Array.isArray(e) && e.forEach((e) => {
-				hi(e) && Array.isArray(e.operators) && e.operators.forEach((e) => {
-					typeof e == "string" && !ce(e) && !(t && de(e, t)) && a.add(e);
+				xi(e) && Array.isArray(e.operators) && e.operators.forEach((e) => {
+					typeof e == "string" && !le(e) && !(t && fe(e, t)) && a.add(e);
 				});
 			});
 		}), Object.entries(e.rooms).forEach(([e, o]) => {
 			Array.isArray(o) && o.forEach((o, s) => {
-				if (!hi(o) || !Array.isArray(o.operators)) return;
+				if (!xi(o) || !Array.isArray(o.operators)) return;
 				let c = o, l = e, u = c.operators ?? [], d = c.operatorStates, f = {};
 				c.operators = u.map((e, o) => {
-					let u = gi(l, c.product, e);
+					let u = Si(l, c.product, e);
 					if (u) {
 						let t = `${l}|${u.product ?? "*"}|${u.percentage}`, c = r.get(t) ?? 0, p = -1;
 						for (let e = 0; e < u.operators.length; e += 1) {
@@ -3788,28 +3945,28 @@ function _i(e, t) {
 							roomIndex: s,
 							slotIndex: o,
 							name: e,
-							errorMessage: `${k[l]} 中的 ${e} 没有可用的百分比映射干员`
+							errorMessage: `${O[l]} 中的 ${e} 没有可用的百分比映射干员`
 						}), d?.[e] && (f[e] = d[e]), e;
 						let m = u.operators[p];
 						return r.set(t, (p + 1) % u.operators.length), a.add(m), d?.[e] && (f[m] = d[e]), m;
 					}
-					if (ce(e)) return i.push({
+					if (le(e)) return i.push({
 						planIndex: n,
 						room: l,
 						roomIndex: s,
 						slotIndex: o,
 						name: e,
-						errorMessage: `${k[l]} 中的百分比干员“${e}”没有配置映射`
+						errorMessage: `${O[l]} 中的百分比干员“${e}”没有配置映射`
 					}), d?.[e] && (f[e] = d[e]), e;
-					if (t && de(e, t)) {
-						let r = ge(e, t).find((e) => !a.has(e));
+					if (t && fe(e, t)) {
+						let r = _e(e, t).find((e) => !a.has(e));
 						return r ? (a.add(r), d?.[e] && (f[r] = d[e]), r) : (i.push({
 							planIndex: n,
 							room: l,
 							roomIndex: s,
 							slotIndex: o,
 							name: e,
-							errorMessage: `${k[l]} 中的术语干员“${e}”没有可用的映射干员`
+							errorMessage: `${O[l]} 中的术语干员“${e}”没有可用的映射干员`
 						}), d?.[e] && (f[e] = d[e]), e);
 					}
 					return d?.[e] && (f[e] = d[e]), e;
@@ -3823,7 +3980,7 @@ function _i(e, t) {
 }
 //#endregion
 //#region src/utils/presentation.ts
-function vi(e) {
+function wi(e) {
 	let t = Number(e.duration ?? 720);
 	return Math.round(t / 60 * 100) / 100;
 }
@@ -3833,22 +3990,22 @@ function W(e, t = 2) {
 		useGrouping: !1
 	});
 }
-function yi(e) {
+function Ti(e) {
 	return e < 0 ? `-${W(Math.abs(e))}` : W(e);
 }
-function bi(e) {
+function Ei(e) {
 	return `${e >= 0 ? "+" : ""}${W(e)}`;
 }
-function xi(e) {
+function Di(e) {
 	let t = e.calculation;
 	if (!t) return [];
 	if (t.type === "tradeGap") {
 		let e = [`模式：${t.mode === "max" ? "最大效率" : "积分平均"}`, `差值基数：${W(t.gapBase)} × ${W(t.gapValue / Math.max(t.gapBase, 1))}% = ${W(t.gapValue)}%`];
-		return t.mode === "integral" && e.push(`期望单耗时：${W(t.expectedOrderHours ?? 0)} 小时，首件进度：${W(t.firstItemProgress * 100)}%`, `完成订单：${W(t.completedOrders)}，每单净变化：${bi(-t.decrement)}%${t.orderIncrement > 0 ? `（订单效率补偿 ${bi(t.orderIncrement)}%）` : ""}`, `整站效率平均：${W(t.averageEfficiency)}%（初始 ${W(t.initialEfficiency)}%）`), t.fallbackReason && e.push(t.fallbackReason === "fixedOrder" ? "固定订单不参与逐单衰减，按最大效率计算" : "没有可用的订单分布，按最大效率计算"), e;
+		return t.mode === "integral" && e.push(`期望单耗时：${W(t.expectedOrderHours ?? 0)} 小时，首件进度：${W(t.firstItemProgress * 100)}%`, `完成订单：${W(t.completedOrders)}，每单净变化：${Ei(-t.decrement)}%${t.orderIncrement > 0 ? `（订单效率补偿 ${Ei(t.orderIncrement)}%）` : ""}`, `整站效率平均：${W(t.averageEfficiency)}%（初始 ${W(t.initialEfficiency)}%）`), t.fallbackReason && e.push(t.fallbackReason === "fixedOrder" ? "固定订单不参与逐单衰减，按最大效率计算" : "没有可用的订单分布，按最大效率计算"), e;
 	}
 	if (t.type === "stat") {
-		let n = t.steps.map((e) => `${yi(e.value)} × ${W(e.endHours - e.startHours)}`).join(" + ");
-		return [`逐时段折算：${t.steps.map((e) => `${W(e.startHours)}-${W(e.endHours)} 小时：${yi(e.value)}%`).join("；")}`, t.durationHours > 0 ? `加权平均：(${n}) ÷ ${W(t.durationHours)} = ${yi(e.value)}%` : "加权平均：队列时长为 0，结果为 0%"];
+		let n = t.steps.map((e) => `${Ti(e.value)} × ${W(e.endHours - e.startHours)}`).join(" + ");
+		return [`逐时段折算：${t.steps.map((e) => `${W(e.startHours)}-${W(e.endHours)} 小时：${Ti(e.value)}%`).join("；")}`, t.durationHours > 0 ? `加权平均：(${n}) ÷ ${W(t.durationHours)} = ${Ti(e.value)}%` : "加权平均：队列时长为 0，结果为 0%"];
 	}
 	if (t.type === "workHours") {
 		let n = t.durationHours > 0 ? `效率：${W(t.baseValue)}% × ${W(t.activeHours)} ÷ ${W(t.durationHours)} = ${W(e.value)}%` : "效率：队列时长为 0，结果为 0%";
@@ -3869,8 +4026,8 @@ function xi(e) {
 	}
 	return c;
 }
-function Si(e) {
-	return xi(e).map((e) => {
+function Oi(e) {
+	return Di(e).map((e) => {
 		let t = e.indexOf("：");
 		return t < 0 ? { value: e } : {
 			label: e.slice(0, t + 1),
@@ -3878,11 +4035,11 @@ function Si(e) {
 		};
 	});
 }
-function Ci(e) {
+function ki(e) {
 	return W(e);
 }
-var wi = {
-	...Te,
+var Ai = {
+	...Ee,
 	线索: "线索",
 	无人机: "无人机",
 	信用: "信用",
@@ -3892,26 +4049,26 @@ var wi = {
 	装置: "装置"
 };
 function G(e) {
-	let t = A(e);
-	return wi[t] ?? t;
+	let t = k(e);
+	return Ai[t] ?? t;
 }
-function Ti(e) {
+function ji(e) {
 	return G(e);
 }
-function Ei(e) {
+function Mi(e) {
 	return e?.length ? `更容易获得${e.map((e) => typeof e == "number" ? `线索${e}` : e === "unowned" ? "尚未拥有的线索" : "已经拥有的线索").join("、")}` : "";
 }
-function Di(e, t) {
+function Ni(e, t) {
 	return t * (e.conversion?.amountPerUnit ?? 1);
 }
-function Oi(e) {
+function Pi(e) {
 	return e.kind === "base" ? "基础消耗速度" : e.kind === "controlWorkers" ? `控制中枢干员减耗（${e.count ?? 0}人）` : e.kind === "facilityWorkers" ? `同设施干员减耗（${e.count ?? 0}人）` : `${[e.operator, e.skill].filter(Boolean).join(" · ") || "技能"}${e.stat === "moodRecover" ? "恢复" : "消耗"}`;
 }
-function ki(e) {
+function Fi(e) {
 	let [t, ...n] = e.rateDetails;
 	return t ? `${W(t.value)}${n.map((e) => ` ${e.value >= 0 ? "+" : "-"} ${W(Math.abs(e.value))}`).join("")} = ${W(e.costRate)}/小时` : `0 = ${W(e.costRate)}/小时`;
 }
-var Ai = {
+var Ii = {
 	tradeSpd: "贸易效率",
 	tradeGapEff: "订单差值效率",
 	tradeNetEff: "贸易净效率",
@@ -3936,7 +4093,7 @@ var Ai = {
 	moodSwap: "心情交换",
 	skillTagConvert: "技能类别转换",
 	operatorTraining: "干员练度效率"
-}, ji = /* @__PURE__ */ new Set([
+}, Li = /* @__PURE__ */ new Set([
 	"tradeSpd",
 	"tradeGapEff",
 	"tradeNetEff",
@@ -3950,16 +4107,16 @@ var Ai = {
 	"abyssalBoost",
 	"operatorTraining"
 ]);
-function Mi(e) {
-	return Ai[e] ?? "其他效果";
+function Ri(e) {
+	return Ii[e] ?? "其他效果";
 }
-function Ni(e, t) {
-	return `${bi(t)}${ji.has(e) ? "%" : ""}`;
+function zi(e, t) {
+	return `${Ei(t)}${Li.has(e) ? "%" : ""}`;
 }
-function Pi(e) {
-	return ji.has(e) ? "%" : "";
+function Bi(e) {
+	return Li.has(e) ? "%" : "";
 }
-function Fi(e, t = !1) {
+function Vi(e, t = !1) {
 	let n = e.baseMaterialPerHour ?? e.materialPerHour ?? {}, r = t ? e.effectiveMaterialPerHour ?? e.materialPerHour ?? {} : e.materialPerHour ?? {};
 	return [.../* @__PURE__ */ new Set([...Object.keys(n), ...Object.keys(r)])].map((e) => ({
 		material: e,
@@ -3967,37 +4124,48 @@ function Fi(e, t = !1) {
 		baseAmount: n[e] ?? 0
 	})).filter(({ amount: e, baseAmount: t }) => Math.abs(e) > 1e-6 || Math.abs(t) > 1e-6);
 }
-function Ii(e) {
+function Hi(e) {
 	return `${W(e)} 小时`;
 }
-function Li(e) {
+function Ui(e) {
 	return e.overflowed === void 0 ? "未启用容量模拟" : e.overflowed ? "计划内会爆仓" : "计划内不爆仓";
 }
 //#endregion
 //#region src/utils/resultPresentation.ts
-function Ri(e, t) {
+function Wi(e, t) {
 	return e.moods.filter((e) => e.working && (e.facilityId === t.facility.id || t.facility.type === "power" && e.facility === "power"));
 }
-function zi(e) {
+function Gi(e) {
 	return e.plans.flatMap((e, t) => {
-		let n = e.facilities.filter((e) => e.production !== void 0 || e.capacity !== void 0 || e.details.length > 0).map((n) => ({
+		let n = e.dormitoryRecoveries.length > 0 ? [{
+			plan: e,
+			planIndex: t,
+			dormitory: {
+				id: "dormitory-recovery",
+				type: "dormitory",
+				level: 0,
+				index: 0
+			},
+			dormitoryRecoveries: e.dormitoryRecoveries,
+			moods: []
+		}] : [], r = e.facilities.filter((e) => e.facility.type !== "dormitory" && (e.production !== void 0 || e.capacity !== void 0 || e.details.length > 0)).map((n) => ({
 			plan: e,
 			planIndex: t,
 			facility: n,
-			moods: Ri(e, n),
+			moods: Wi(e, n),
 			droneAccelerations: e.droneAccelerations.filter((e) => e.facilityId === n.facility.id)
-		})), r = e.moods.filter((e) => e.facility === "control" && e.working);
-		return r.length > 0 ? [{
+		})), i = e.moods.filter((e) => e.facility === "control" && e.working), a = r.findIndex(({ facility: e }) => e?.facility.type === "recycle");
+		return r.splice(a >= 0 ? a + 1 : r.length, 0, ...n), i.length > 0 ? [{
 			plan: e,
 			planIndex: t,
-			moods: r
-		}, ...n] : n;
+			moods: i
+		}, ...r] : r;
 	});
 }
-function Bi(e, t, n = {}) {
+function Ki(e, t, n = {}) {
 	let r = /* @__PURE__ */ new Map();
 	return t.forEach((t) => {
-		let i = t.facility?.facility.id ?? "control", a = t.facility ? n.facilityLabel?.(t.facility) ?? `${k[t.facility.facility.type]} ${t.facility.facility.index + 1}` : k.control, o = r.get(i);
+		let i = t.dormitoryRecoveries ? "dormitory-recovery" : t.facility?.facility.id ?? t.dormitory?.id ?? "control", a = t.facility ? n.facilityLabel?.(t.facility) ?? `${O[t.facility.facility.type]} ${t.facility.facility.index + 1}` : t.dormitoryRecoveries ? O.dormitory : t.dormitory ? `${O.dormitory} ${t.dormitory.index + 1}` : O.control, o = r.get(i);
 		o || (o = {
 			key: i,
 			label: a,
@@ -4011,7 +4179,7 @@ function Bi(e, t, n = {}) {
 		s && (s.step || (o.activeColumnCount += 1), s.step = t);
 	}), [...r.values()];
 }
-function Vi(e) {
+function qi(e) {
 	return {
 		name: e.name,
 		probability: e.probability,
@@ -4021,7 +4189,7 @@ function Vi(e) {
 		...e.amount === void 0 ? {} : { amount: e.amount }
 	};
 }
-function Hi(e, t, n) {
+function Ji(e, t, n) {
 	let r = e.baseMaterialPerHour ?? e.materialPerHour ?? {}, i = e.effectiveMaterialPerHour ?? e.materialPerHour ?? {};
 	return [.../* @__PURE__ */ new Set([...Object.keys(r), ...Object.keys(i)])].map((e) => ({
 		material: e,
@@ -4034,20 +4202,20 @@ function Hi(e, t, n) {
 		queueTotal: i * t
 	}));
 }
-function Ui(e, t) {
+function Yi(e, t) {
 	t.forEach((t) => {
 		let n = e.find((e) => e.material === t.material);
 		n ? (n.baseAmountPerHour += t.baseAmountPerHour, n.dailyAmount += t.dailyAmount, n.queueTotal += t.queueTotal) : e.push({ ...t });
 	});
 }
-function Wi(e, t, n = {}) {
+function Xi(e, t, n = {}) {
 	return e.dailyHours <= 0 ? [] : e.plans.map((r, i) => {
 		let a = /* @__PURE__ */ new Map(), o = {};
 		return r.facilities.forEach((t) => {
 			let i = t.production;
 			if (!i) return;
-			Wt(o, i, r.durationHours);
-			let s = i.baseAmountPerHour, c = i.amountPerHour, l = i.effectiveAmountPerHour ?? c, u = Hi(i, r.durationHours, e.dailyHours), d = a.get(i.product) ?? {
+			Gt(o, i, r.durationHours);
+			let s = i.baseAmountPerHour, c = i.amountPerHour, l = i.effectiveAmountPerHour ?? c, u = Ji(i, r.durationHours, e.dailyHours), d = a.get(i.product) ?? {
 				product: i.product,
 				baseEfficiency: 0,
 				totalEfficiency: 0,
@@ -4059,15 +4227,15 @@ function Wi(e, t, n = {}) {
 				materials: [],
 				facilities: []
 			};
-			Ui(d.materials, u), d.baseEfficiency += t.baseEfficiency, d.totalEfficiency += t.efficiency, d.baseOutputPerHour += s, d.totalOutputPerHour += c, d.selectedOutputPerHour += l, d.queueTotal += l * r.durationHours, d.facilities.push({
-				label: n.facilityLabel?.(t) ?? `${k[t.facility.type]} ${t.facility.index + 1}`,
+			Yi(d.materials, u), d.baseEfficiency += t.baseEfficiency, d.totalEfficiency += t.efficiency, d.baseOutputPerHour += s, d.totalOutputPerHour += c, d.selectedOutputPerHour += l, d.queueTotal += l * r.durationHours, d.facilities.push({
+				label: n.facilityLabel?.(t) ?? `${O[t.facility.type]} ${t.facility.index + 1}`,
 				baseEfficiency: t.baseEfficiency,
 				totalEfficiency: t.efficiency,
 				baseOutputPerHour: s,
 				totalOutputPerHour: c,
 				selectedOutputPerHour: l,
 				materials: u,
-				orders: (i.orders ?? []).map((e) => Vi(e))
+				orders: (i.orders ?? []).map((e) => qi(e))
 			}), a.set(i.product, d);
 		}), {
 			plan: r,
@@ -4076,33 +4244,33 @@ function Wi(e, t, n = {}) {
 				...t,
 				dailyContribution: t.selectedOutputPerHour * r.durationHours * 24 / e.dailyHours
 			})),
-			sanity: Gt(Object.fromEntries(Object.entries(o).map(([t, n]) => [t, n * 24 / e.dailyHours])), t)
+			sanity: Kt(Object.fromEntries(Object.entries(o).map(([t, n]) => [t, n * 24 / e.dailyHours])), t)
 		};
 	}).filter((e) => e.products.length > 0);
 }
-function Gi(e) {
+function Zi(e) {
 	let t = {};
 	e.dailyProductions.forEach((n) => {
-		e.maaDroneAcceleration?.enabled && n.product === "无人机" || Wt(t, n, 24);
+		e.maaDroneAcceleration?.enabled && n.product === "无人机" || Gt(t, n, 24);
 	});
 	let n = e.dailyOutputs.find((e) => e.product === "信用");
 	return n && (t.信用 = n.amountPerDay), t;
 }
-function Ki(e) {
+function Qi(e) {
 	if (e === "赤金") return {
 		factor: 500,
 		label: "赤金点数"
 	};
 	if (e === "中级作战记录") return {
-		factor: Lt,
+		factor: Rt,
 		label: "经验点数"
 	};
 }
-function qi(e, t) {
+function $i(e, t) {
 	return e[t] ?? 0;
 }
-function Ji(e, t, n, r, i) {
-	let a = Ki(e), o = n?.items.find((t) => t.resource === e), s = t[e] ?? r ?? 0, c = a?.label ?? o?.amountUnit ?? G(e), l = s * (a?.factor ?? 1), u = o?.contribution ?? (n?.complete ? 0 : void 0), d = r === void 0 || !a ? void 0 : r * a.factor;
+function ea(e, t, n, r, i) {
+	let a = Qi(e), o = n?.items.find((t) => t.resource === e), s = t[e] ?? r ?? 0, c = a?.label ?? o?.amountUnit ?? G(e), l = s * (a?.factor ?? 1), u = o?.contribution ?? (n?.complete ? 0 : void 0), d = r === void 0 || !a ? void 0 : r * a.factor;
 	return {
 		product: e,
 		...i === void 0 ? {} : { sourceFacility: i },
@@ -4116,11 +4284,11 @@ function Ji(e, t, n, r, i) {
 		showNet: r === void 0 || Math.abs(s - r) > 1e-6
 	};
 }
-function Yi(e, t, n, r = {}) {
+function ta(e, t, n, r = {}) {
 	let i = e.dailyOutputs.filter((e) => e.kind === "production"), a = new Set(i.map((e) => e.product));
-	return [...i.map((e) => Ji(e.product, t, n, e.amountPerDay, r.sourceFacilityForProduct?.(e.product))), ...e.dailyOutputs.filter((e) => e.kind === "net" && !a.has(e.product)).map((e) => Ji(e.product, t, n, void 0, r.sourceFacilityForProduct?.(e.product)))];
+	return [...i.map((e) => ea(e.product, t, n, e.amountPerDay, r.sourceFacilityForProduct?.(e.product))), ...e.dailyOutputs.filter((e) => e.kind === "net" && !a.has(e.product)).map((e) => ea(e.product, t, n, void 0, r.sourceFacilityForProduct?.(e.product)))];
 }
-function Xi(e, t) {
+function na(e, t) {
 	Object.entries(t).forEach(([t, n]) => {
 		if (n !== void 0) {
 			let r = e;
@@ -4128,16 +4296,16 @@ function Xi(e, t) {
 		}
 	});
 }
-function Zi(e, t) {
+function ra(e, t) {
 	let n = { ...t }, r = e.maaDroneAcceleration;
 	return !r?.enabled || e.dailyHours <= 0 || r.details.forEach((t) => {
-		Xi(n, {
+		na(n, {
 			[t.product]: -t.extraAmount * 24 / e.dailyHours,
 			...Object.fromEntries(Object.entries(t.extraMaterial).map(([t, n]) => [t, -n * 24 / e.dailyHours]))
 		});
 	}), n;
 }
-function Qi(e, ...t) {
+function ia(e, ...t) {
 	let n = /* @__PURE__ */ new Set([e]);
 	return t.forEach((e) => {
 		Object.entries(e).forEach(([e, t]) => {
@@ -4145,29 +4313,29 @@ function Qi(e, ...t) {
 		});
 	}), [...n];
 }
-function $i(e, t, n, r, i) {
-	return r.filter((n) => n !== "无人机" && (n === e || Math.abs(qi(t, n)) > 1e-6)).map((r) => Ji(r, t, void 0, r === e ? n : void 0, i?.(r)));
+function aa(e, t, n, r, i) {
+	return r.filter((n) => n !== "无人机" && (n === e || Math.abs($i(t, n)) > 1e-6)).map((r) => ea(r, t, void 0, r === e ? n : void 0, i?.(r)));
 }
-function ea(e, t, n, r = {}) {
+function oa(e, t, n, r = {}) {
 	return e.dailyHours <= 0 ? [] : t.scenarios.map((t) => {
-		let i = e.dailyProductions.find((e) => e.product === t.product), a = i ? (i.effectiveAmountPerDay ?? i.amountPerDay) - (e.maaDroneAcceleration?.details.filter((e) => e.product === t.product).reduce((t, n) => t + n.extraAmount * 24 / e.dailyHours, 0) ?? 0) : 0, o = Zi(e, n);
-		Xi(o, t.extraFlow);
-		let s = Qi(t.product, t.extraFlow), c = qi(t.extraFlow, t.product);
+		let i = e.dailyProductions.find((e) => e.product === t.product), a = i ? (i.effectiveAmountPerDay ?? i.amountPerDay) - (e.maaDroneAcceleration?.details.filter((e) => e.product === t.product).reduce((t, n) => t + n.extraAmount * 24 / e.dailyHours, 0) ?? 0) : 0, o = ra(e, n);
+		na(o, t.extraFlow);
+		let s = ia(t.product, t.extraFlow), c = $i(t.extraFlow, t.product);
 		return {
 			scenario: t,
 			views: [{
 				key: "extra",
 				label: "无人机额外产出与消耗",
-				cards: $i(t.product, t.extraFlow, c, s, r.sourceFacilityForProduct)
+				cards: aa(t.product, t.extraFlow, c, s, r.sourceFacilityForProduct)
 			}, {
 				key: "accelerated",
 				label: "全部无人机加速后",
-				cards: $i(t.product, o, a + c, s, r.sourceFacilityForProduct)
+				cards: aa(t.product, o, a + c, s, r.sourceFacilityForProduct)
 			}]
 		};
 	});
 }
-function ta(e, t) {
+function sa(e, t) {
 	let n = (e) => e.basePointDetails.filter((e) => !t || t.has(e.term));
 	return e.plans.some((e) => n(e).length > 0) ? e.plans.map((e, t) => ({
 		plan: e,
@@ -4175,7 +4343,7 @@ function ta(e, t) {
 		points: n(e)
 	})) : [];
 }
-function na(e) {
+function ca(e) {
 	let t = e.maaDroneAcceleration?.details ?? [], n = e.maaDroneAcceleration?.candidates ?? [];
 	return e.plans.map((e, r) => ({
 		plan: e,
@@ -4184,45 +4352,45 @@ function na(e) {
 		candidates: n.filter((e) => e.planIndex === r)
 	}));
 }
-function ra(e, t) {
+function la(e, t) {
 	let { facility: n } = e;
-	if (n.type === "power") return k[n.type];
+	if (n.type === "power") return O[n.type];
 	let r = t.filter((e) => e.type === n.type).length;
-	return `${k[n.type]}${r > 1 ? ` ${n.index + 1}` : ""}`;
+	return `${O[n.type]}${r > 1 ? ` ${n.index + 1}` : ""}`;
 }
-function ia(e, t) {
-	let n = [e.operator, e.skill].filter(Boolean).join(" · "), r = k[e.facility] ?? e.facility;
+function ua(e, t) {
+	let n = [e.operator, e.skill].filter(Boolean).join(" · "), r = O[e.facility] ?? e.facility;
 	return e.kind === "convert" && e.from ? `${n}（${r}，由${t[e.from]?.name ?? e.from} × ${W(e.rate ?? 0)}派生）` : `${n}（${r}）`;
 }
-function aa(e, t) {
+function da(e, t) {
 	return t[e]?.name ?? e;
 }
-function oa(e, t) {
+function fa(e, t) {
 	return !e.inherited || e.inheritedFromPlanIndex === void 0 ? "" : `继承自 ${t[e.inheritedFromPlanIndex]?.name || `队列${e.inheritedFromPlanIndex + 1}`}`;
 }
-function sa(e, t) {
+function pa(e, t) {
 	return e === "信用" ? "meeting" : t.dailyFacilities.find((t) => t.production?.product === e)?.facility.type;
 }
-function ca(e, t) {
-	let n = t.dailyAmounts ?? Gi(e), r = Gt(n, t.sanityValues), i = zi(e), a = {
+function ma(e, t) {
+	let n = t.dailyAmounts ?? Zi(e), r = Kt(n, t.sanityValues), i = Gi(e), a = {
 		sourceFacilityForProduct: t.sourceFacilityForProduct,
 		facilityLabel: t.facilityLabel
 	};
 	return {
 		calculationSteps: i,
-		calculationStepGroups: Bi(e, i, a),
-		dailyOutputQueueDetails: Wi(e, t.sanityValues, a),
+		calculationStepGroups: Ki(e, i, a),
+		dailyOutputQueueDetails: Xi(e, t.sanityValues, a),
 		dailySanityAmounts: n,
 		dailySanityResult: r,
-		dailyOutputCards: Yi(e, n, r, a),
-		droneScenarioDisplays: t.droneAcceleration ? ea(e, t.droneAcceleration, n, a) : [],
-		basePointQueueDetails: ta(e, t.visibleBasePointTerms),
-		maaDroneQueueDetails: na(e)
+		dailyOutputCards: ta(e, n, r, a),
+		droneScenarioDisplays: t.droneAcceleration ? oa(e, t.droneAcceleration, n, a) : [],
+		basePointQueueDetails: sa(e, t.visibleBasePointTerms),
+		maaDroneQueueDetails: ca(e)
 	};
 }
 //#endregion
 //#region src/utils/notices.ts
-var la = [
+var ha = [
 	{
 		code: "efficiency-data-error",
 		label: "效率数据读取失败",
@@ -4304,9 +4472,9 @@ var la = [
 		level: "info"
 	}
 ];
-function ua(e) {
+function ga(e) {
 	let t = [], n = e.document, r = n?.layout?.reduce((e, t) => {
-		let n = Me(t.type, t.level);
+		let n = Ne(t.type, t.level);
 		return n >= 0 ? e.provided += n : e.used += -n, e.net = e.provided - e.used, e;
 	}, {
 		used: 0,
@@ -4328,7 +4496,7 @@ function ua(e) {
 		message: "效率数据读取失败",
 		details: [e.efficiencyError]
 	}), t;
-	let i = n ? xe(n) : void 0;
+	let i = n ? Se(n) : void 0;
 	if (i?.errors.length) return t.push({
 		code: "schedule-period-error",
 		level: "error",
@@ -4349,19 +4517,19 @@ function ua(e) {
 		message: "本次计算使用了推测布局",
 		details: ["排班表未包含布局，已按队列中的设施自动推测"]
 	}), n) {
-		let r = je(n, e.catalog?.terms ?? {}).map(({ planIndex: e, name: t, locations: r }) => `${n.plans[e]?.name?.trim() || `队列${e + 1}`}：${t}（${r.join("、")}）`);
+		let r = Me(n, e.catalog?.terms ?? {}).map(({ planIndex: e, name: t, locations: r }) => `${n.plans[e]?.name?.trim() || `队列${e + 1}`}：${t}（${r.join("、")}）`);
 		r.length > 0 && t.push({
 			code: "duplicate-operator",
 			level: "warning",
 			message: "同一队列存在重复干员",
 			details: r
 		});
-		let i = _i(n, e.catalog).issues;
+		let i = Ci(n, e.catalog).issues;
 		i.length > 0 && t.push({
 			code: "special-operator-mapping",
 			level: "warning",
 			message: "特殊干员没有可用的映射干员",
-			details: i.map((e) => `${n.plans[e.planIndex]?.name?.trim() || `队列${e.planIndex + 1}`} · ${k[e.room]} ${e.roomIndex + 1} 槽位${e.slotIndex + 1} · ${e.name}：${e.errorMessage}`)
+			details: i.map((e) => `${n.plans[e.planIndex]?.name?.trim() || `队列${e.planIndex + 1}`} · ${O[e.room]} ${e.roomIndex + 1} 槽位${e.slotIndex + 1} · ${e.name}：${e.errorMessage}`)
 		});
 	}
 	let o = a.maaDroneAcceleration?.warnings ?? [], s = o.filter((e) => e.code === "overflow").map((e) => e.message);
@@ -4383,15 +4551,15 @@ function ua(e) {
 		message: "找不到干员技能数据",
 		details: a.warnings
 	});
-	let l = a.plans.flatMap((e, t) => e.moodWarnings.map((n) => `${e.name || `队列${t + 1}`} · ${k[n.facility]} ${n.facilityIndex + 1} · ${n.operator}：上一队列结束心情 ${W(n.previousEnd)}，当前手动设置为 ${W(n.configuredStart)}`));
+	let l = a.plans.flatMap((e, t) => e.moodWarnings.map((n) => `${e.name || `队列${t + 1}`} · ${O[n.facility]} ${n.facilityIndex + 1} · ${n.operator}：上一队列结束心情 ${W(n.previousEnd)}，当前手动设置为 ${W(n.configuredStart)}`));
 	l.length > 0 && t.push({
 		code: "mood-inheritance",
 		level: "warning",
 		message: "发现心情继承异常",
 		details: l
 	});
-	let u = a.plans.flatMap((e, t) => e.moods.filter((e) => Le.includes(e.facility)).flatMap((n) => {
-		let r = `${e.name || `队列${t + 1}`} · ${k[n.facility]} ${n.facilityIndex + 1} · ${n.operator}`;
+	let u = a.plans.flatMap((e, t) => e.moods.filter((e) => Re.includes(e.facility)).flatMap((n) => {
+		let r = `${e.name || `队列${t + 1}`} · ${O[n.facility]} ${n.facilityIndex + 1} · ${n.operator}`;
 		return n.start <= 1e-6 ? [`${r}：整轮心情为 0，未实际工作`] : n.end <= 1e-6 ? [`${r}：工作后心情从 ${W(n.start)} 降至 0`] : [];
 	}));
 	u.length > 0 && t.push({
@@ -4431,8 +4599,8 @@ function ua(e) {
 	let m = a.plans.flatMap((e, t) => e.facilities.flatMap((r) => {
 		let i = r.production;
 		if (!i?.overflowed || i.breachTime === void 0) return [];
-		let a = r.facility.type === "power" ? e.moods.filter((e) => e.facility === "power").map((e) => e.operator) : e.moods.filter((e) => e.facilityId === r.facility.id).map((e) => e.operator), o = i.breachTime <= 0 ? "将立即爆仓" : `将在工作 ${Ii(i.breachTime)}后爆仓`;
-		return [`${e.name || `队列${t + 1}`} · ${ra(r, n?.layout ?? [])} · ${a.join("、") || "无干员"}：${o}`];
+		let a = r.facility.type === "power" ? e.moods.filter((e) => e.facility === "power").map((e) => e.operator) : e.moods.filter((e) => e.facilityId === r.facility.id).map((e) => e.operator), o = i.breachTime <= 0 ? "将立即爆仓" : `将在工作 ${Hi(i.breachTime)}后爆仓`;
+		return [`${e.name || `队列${t + 1}`} · ${la(r, n?.layout ?? [])} · ${a.join("、") || "无干员"}：${o}`];
 	}));
 	return m.length > 0 && t.push({
 		code: "overflow-risk",
@@ -4441,8 +4609,8 @@ function ua(e) {
 		details: m
 	}), t;
 }
-function da(e) {
-	let t = e.plans.flatMap((t, n) => Se.flatMap((r) => {
+function _a(e) {
+	let t = e.plans.flatMap((t, n) => Ce.flatMap((r) => {
 		let i = t.rooms[r];
 		if (!Array.isArray(i)) return [];
 		let a = e.layout.filter((e) => e.type === r).length;
@@ -4459,15 +4627,15 @@ function da(e) {
 		message: "导入排班表包含未登记设施实例",
 		details: t.map((e) => {
 			let t = e.room.operators?.filter((e) => !!e), n = t?.length ? `：${t.join("、")}` : "";
-			return `${e.planName} · ${k[e.type]} ${e.index + 1}${n}`;
+			return `${e.planName} · ${O[e.type]} ${e.index + 1}${n}`;
 		}),
 		closable: !0
 	};
 }
 //#endregion
 //#region src/utils/resultDisplay.ts
-var fa = "net", pa = "sanity", ma = "sanity-missing", ha = "points";
-function ga(e) {
+var va = "net", ya = "sanity", ba = "sanity-missing", xa = "points";
+function Sa(e) {
 	let t = "", n = [];
 	for (let r of e) {
 		if (typeof r == "string") {
@@ -4484,10 +4652,10 @@ function ga(e) {
 		raws: n
 	};
 }
-function _a(e) {
-	return e.signed === !0 ? bi(e.value) : W(e.value);
+function Ca(e) {
+	return e.signed === !0 ? Ei(e.value) : W(e.value);
 }
-function K(e, t = _a) {
+function K(e, t = Ca) {
 	let n = e.raws;
 	return n === void 0 || n.length === 0 ? e.template : e.template.replace(/\{(\d+)\}/g, (e, r) => {
 		let i = n[Number(r)];
@@ -4495,19 +4663,19 @@ function K(e, t = _a) {
 	});
 }
 function q(...e) {
-	return ga(e);
+	return Sa(e);
 }
 function J(e) {
 	return { template: e };
 }
 function Y(e, t = "number") {
-	return ga([{
+	return Sa([{
 		value: e,
 		format: t
 	}]);
 }
 function X(e, t, n) {
-	return ga([{
+	return Sa([{
 		value: e,
 		format: t
 	}, n]);
@@ -4518,8 +4686,8 @@ function Z(e, t = "number") {
 		format: t
 	};
 }
-function va(e, t, n = ha) {
-	let r = Ki(t);
+function wa(e, t, n = xa) {
+	let r = Qi(t);
 	if (r !== void 0) return n === "raw" ? [
 		t,
 		" × ",
@@ -4537,10 +4705,10 @@ function va(e, t, n = ha) {
 		"）"
 	];
 }
-function ya(e, t, n, r, i = {}) {
-	let a = Ki(t);
+function Ta(e, t, n, r, i = {}) {
+	let a = Qi(t);
 	if (a === void 0) return;
-	let o = n ?? ha, s = i.unitSuffix ?? "", c = i.prefix ?? "";
+	let o = n ?? xa, s = i.unitSuffix ?? "", c = i.prefix ?? "";
 	return o === "raw" ? i.resourceFirst ? [
 		c,
 		t,
@@ -4580,7 +4748,7 @@ function ya(e, t, n, r, i = {}) {
 	];
 }
 function Q(e, t, n, r, i, a = {}) {
-	let o = ya(e, t, n, r, a);
+	let o = Ta(e, t, n, r, a);
 	return o === void 0 ? i : q(...o);
 }
 function $(e, t, n) {
@@ -4590,7 +4758,7 @@ function $(e, t, n) {
 		value: n
 	};
 }
-function ba(e, t, n, r) {
+function Ea(e, t, n, r) {
 	return {
 		key: e,
 		...t === void 0 ? {} : { label: t },
@@ -4598,65 +4766,65 @@ function ba(e, t, n, r) {
 		...r === void 0 ? {} : { sections: r }
 	};
 }
-function xa(e, t) {
+function Da(e, t) {
 	return e.name || `队列${t + 1}`;
 }
-function Sa(e) {
+function Oa(e) {
 	return q(" · ", Z(e, "number"), " 小时");
 }
-function Ca(e, t) {
+function ka(e, t) {
 	let n = e.facility;
-	return n ? oa(n, t.plans) : "";
+	return n ? fa(n, t.plans) : "";
 }
-function wa(e, t) {
+function Aa(e, t) {
 	return q(" · ", Z(t.durationHours, "number"), " 小时", ...e.inheritedLabel ? ["· ", e.inheritedLabel] : []);
 }
-function Ta(e, t, n, r = ha) {
-	let i = [], a = Ki(e.product);
+function ja(e, t, n, r = xa) {
+	let i = [], a = Qi(e.product);
 	if (e.showNet) {
 		let t = r;
 		if (a === void 0) i.push({
-			key: fa,
+			key: va,
 			value: q("净收入 ", Z(e.netAmount, "signed"), ` ${e.netUnit}`)
 		});
 		else if (t === "both") i.push({
-			key: fa,
+			key: va,
 			value: q("净收入 ", Z(e.netResourceAmount, "signed"), "（", Z(e.netAmount, "signed"), "）")
 		});
 		else if (e.grossAmount !== void 0) {
 			let n = t === "raw", r = n ? G(e.product) : a.label;
 			i.push({
-				key: fa,
+				key: va,
 				value: q("净收入 ", Z(n ? e.netResourceAmount : e.netAmount, "signed"), ` ${r}`)
 			});
 		}
 	}
 	return i.push(...t), n && i.push(e.netContribution === void 0 ? {
-		key: ma,
+		key: ba,
 		value: J("未计入")
 	} : {
-		key: pa,
+		key: ya,
 		value: q(Z(e.netContribution, "signed"), " 理智")
 	}), i;
 }
-function Ea(e, t, n, r = [], i = ha) {
-	let a = t.grossAmount, o = a ?? t.netResourceAmount, s = Ki(t.product), c = a === void 0 ? "signed" : "number", l = i === "points" ? s?.label : i === "raw" && s !== void 0 ? t.product : void 0, u = i === "points" && s ? o * s.factor : o, d = i === "both" && s ? q(Z(o, c), "（", Z(o * s.factor, c), "）") : Y(u, c);
+function Ma(e, t, n, r = [], i = xa) {
+	let a = t.grossAmount, o = a ?? t.netResourceAmount, s = Qi(t.product), c = a === void 0 ? "signed" : "number", l = i === "points" ? s?.label : i === "raw" && s !== void 0 ? t.product : void 0, u = i === "points" && s ? o * s.factor : o, d = i === "both" && s ? q(Z(o, c), "（", Z(o * s.factor, c), "）") : Y(u, c);
 	return {
 		key: e,
 		product: t.product,
 		...t.sourceFacility === void 0 ? {} : { sourceFacility: t.sourceFacility },
 		main: d,
 		...l === void 0 ? {} : { mainUnit: l },
-		lines: Ta(t, r, n, i)
+		lines: ja(t, r, n, i)
 	};
 }
-function Da(e, t) {
-	let n = e.dailyHours > 0 ? t.dailyAmounts ?? Gi(e) : void 0, r = n ? Gt(n, t.sanityValues) : void 0, i = n && r ? Yi(e, n, r, { sourceFacilityForProduct: t.sourceFacilityForProduct }) : [];
+function Na(e, t) {
+	let n = e.dailyHours > 0 ? t.dailyAmounts ?? Zi(e) : void 0, r = n ? Kt(n, t.sanityValues) : void 0, i = n && r ? ta(e, n, r, { sourceFacilityForProduct: t.sourceFacilityForProduct }) : [];
 	return {
 		key: "daily-output",
 		label: "每日产出",
 		cycleHours: q(Z(e.dailyHours, "number"), " 小时"),
-		tiles: i.map((e) => Ea(`daily-${e.product}`, e, !0, [], t.resourceAmountDisplayMode)),
+		tiles: i.map((e) => Ma(`daily-${e.product}`, e, !0, [], t.resourceAmountDisplayMode)),
 		...r ? { totalTile: {
 			key: "daily-sanity-total",
 			product: "理智",
@@ -4667,7 +4835,7 @@ function Da(e, t) {
 		...r && !r.complete ? { warning: `总理智不完整：未设置${r.missing.join("、")}价值` } : {}
 	};
 }
-function Oa(e) {
+function Pa(e) {
 	return {
 		label: "无人机使用策略",
 		inputLabel: "本排班表专用策略（可选）",
@@ -4677,10 +4845,10 @@ function Oa(e) {
 		...e.droneAcceleration?.strategyError === void 0 ? {} : { strategyError: e.droneAcceleration.strategyError }
 	};
 }
-function ka(e, t) {
+function Fa(e, t) {
 	let n = t.droneAcceleration;
-	return n ? ea(e, n, t.dailyAmounts ?? Gi(e), { sourceFacilityForProduct: t.sourceFacilityForProduct }).map((e) => {
-		let n = e.scenario, r = t.resourceAmountDisplayMode ?? ha, i = Ki(n.product), a = r === "both" && i !== void 0 ? q("基础 ", Z(n.baseAmountPerHour, "number"), "/小时（", Z(n.baseAmountPerHour * i.factor, "number"), "）") : Q(n.baseAmountPerHour, n.product, r, "number", q("基础 ", Z(n.baseAmountPerHour, "number"), "/小时"), {
+	return n ? oa(e, n, t.dailyAmounts ?? Zi(e), { sourceFacilityForProduct: t.sourceFacilityForProduct }).map((e) => {
+		let n = e.scenario, r = t.resourceAmountDisplayMode ?? xa, i = Qi(n.product), a = r === "both" && i !== void 0 ? q("基础 ", Z(n.baseAmountPerHour, "number"), "/小时（", Z(n.baseAmountPerHour * i.factor, "number"), "）") : Q(n.baseAmountPerHour, n.product, r, "number", q("基础 ", Z(n.baseAmountPerHour, "number"), "/小时"), {
 			unitSuffix: "/小时",
 			prefix: "基础 "
 		});
@@ -4692,55 +4860,55 @@ function ka(e, t) {
 			views: e.views.map((e) => ({
 				key: e.key,
 				label: e.label,
-				tiles: e.cards.map((n) => Ea(`${e.key}-${n.product}`, n, !1, [], t.resourceAmountDisplayMode))
+				tiles: e.cards.map((n) => Ma(`${e.key}-${n.product}`, n, !1, [], t.resourceAmountDisplayMode))
 			}))
 		};
 	}) : [];
 }
-function Aa(e, t, n) {
+function Ia(e, t, n) {
 	return Object.entries(e.extraMaterial).map(([e, r]) => $(`${t}-material-${e}`, J("无人机额外材料"), Q(r, e, n, "signed", q(G(e), " ", Z(r, "signed")), { resourceFirst: !0 })));
 }
-function ja(e, t) {
+function La(e, t) {
 	return e.overflowed ? [$(`${t}-overflow`, J("无人机爆仓"), q("超出 ", Z(e.overflowAmount, "number"), "架"))] : [];
 }
-function Ma(e, t, n) {
+function Ra(e, t, n) {
 	return [
 		$(`${t}-base`, J("基础速率"), Q(e.baseAmountPerHour, e.product, n, "number", X(e.baseAmountPerHour, "number", "/小时"), { unitSuffix: "/小时" })),
 		$(`${t}-amount`, J("消耗无人机"), q(Z(e.droneAmount, "number"), "架")),
 		$(`${t}-hours`, J("加速时长"), q(Z(e.acceleratedHours, "number"), "小时")),
 		$(`${t}-extra`, J("无人机额外产出"), Q(e.extraAmount, e.product, n, "number", Y(e.extraAmount, "number"))),
-		...Aa(e, t, n),
-		...ja(e, t)
+		...Ia(e, t, n),
+		...La(e, t)
 	];
 }
-function Na(e, t, n) {
+function za(e, t, n) {
 	return t.flatMap((t) => {
 		let r = `drone-${t.facilityId}-${t.order}`, i = e.plans[t.sourcePlanIndex];
 		return [
-			$(`${r}-room`, J("设施"), J(`${k[t.room]}${t.facilityIndex + 1}`)),
+			$(`${r}-room`, J("设施"), J(`${O[t.room]}${t.facilityIndex + 1}`)),
 			$(`${r}-order`, J("加速时机"), J(t.order === "pre" ? "换班前" : "换班后")),
-			$(`${r}-source`, J("来源队列"), J(i ? xa(i, t.sourcePlanIndex) : `队列${t.sourcePlanIndex + 1}`)),
+			$(`${r}-source`, J("来源队列"), J(i ? Da(i, t.sourcePlanIndex) : `队列${t.sourcePlanIndex + 1}`)),
 			$(`${r}-product`, J("产物"), J(G(t.product))),
-			...Ma(t, r, n)
+			...Ra(t, r, n)
 		];
 	});
 }
-function Pa(e, t) {
+function Ba(e, t) {
 	return e.flatMap((e) => {
 		let n = `facility-drone-${e.facilityId}-${e.order}`;
 		return [
 			$(`${n}-order`, J("加速时机"), J(e.order === "pre" ? "换班前" : "换班后")),
 			$(`${n}-product`, J("加速产物"), J(G(e.product))),
-			...Ma(e, n, t)
+			...Ra(e, n, t)
 		];
 	});
 }
-function Fa(e, t) {
+function Va(e, t) {
 	let n = e.maaDroneAcceleration;
 	if (!n?.enabled) return;
-	let r = na(e).map((n) => {
+	let r = ca(e).map((n) => {
 		let r = n.candidates.filter((e) => !e.accelerated), i = [];
-		return n.details.length && i.push(ba(`maa-${n.planIndex}-details`, void 0, Na(e, n.details, t))), r.length && i.push({
+		return n.details.length && i.push(Ea(`maa-${n.planIndex}-details`, void 0, za(e, n.details, t))), r.length && i.push({
 			key: `maa-${n.planIndex}-others`,
 			label: "其他设施加速收益",
 			rows: [],
@@ -4748,13 +4916,13 @@ function Fa(e, t) {
 				key: `candidate-${e.facilityId}`,
 				rows: [],
 				cells: [
-					J(`${k[e.room]}${e.facilityIndex + 1}`),
+					J(`${O[e.room]}${e.facilityIndex + 1}`),
 					J(G(e.product)),
 					Q(e.baseAmountPerHour, e.product, t, "number", q("基础 ", Z(e.baseAmountPerHour, "number"), "/小时"), {
 						unitSuffix: "/小时",
 						prefix: "基础 "
 					}),
-					q("额外 ", ...ya(e.extraAmount, e.product, t, "number") ?? [Z(e.extraAmount, "number")], ...Object.entries(e.extraMaterial).flatMap(([e, n]) => [" · ", ...ya(n, e, t, "signed", { resourceFirst: !0 }) ?? [
+					q("额外 ", ...Ta(e.extraAmount, e.product, t, "number") ?? [Z(e.extraAmount, "number")], ...Object.entries(e.extraMaterial).flatMap(([e, n]) => [" · ", ...Ta(n, e, t, "signed", { resourceFirst: !0 }) ?? [
 						G(e),
 						" ",
 						Z(n, "signed")
@@ -4763,8 +4931,8 @@ function Fa(e, t) {
 			}))
 		}), {
 			key: `maa-${n.planIndex}`,
-			title: J(xa(n.plan, n.planIndex)),
-			subtitle: Sa(n.plan.durationHours),
+			title: J(Da(n.plan, n.planIndex)),
+			subtitle: Oa(n.plan.durationHours),
 			...n.candidates.length ? { badge: J(`${n.candidates.length} 项`) } : {},
 			sections: i,
 			...n.details.length ? {} : { empty: "当前队列未设置无人机加速" }
@@ -4777,7 +4945,7 @@ function Fa(e, t) {
 		cards: r
 	};
 }
-function Ia(e, t, n, r = {}) {
+function Ha(e, t, n, r = {}) {
 	let i = r.includeBaseRate ?? !0, a = r.includeMaterialLabel === !1 ? "" : "材料消耗 · ";
 	return t.flatMap((t) => {
 		let r = G(t.material);
@@ -4794,14 +4962,14 @@ function Ia(e, t, n, r = {}) {
 		];
 	});
 }
-function La(e, t) {
-	return e.orders.map((n) => $(`${e.label}-order-${n.name}-name`, q(`订单摘要 · ${n.name} · `, Z(n.probability * 100, "number"), "%"), q(Z(n.quantity), " / ", Z(n.time, "number"), " 小时", ...n.material ? [" · ", ...va(n.amount ?? 0, n.material, t) ?? [
+function Ua(e, t) {
+	return e.orders.map((n) => $(`${e.label}-order-${n.name}-name`, q(`订单摘要 · ${n.name} · `, Z(n.probability * 100, "number"), "%"), q(Z(n.quantity), " / ", Z(n.time, "number"), " 小时", ...n.material ? [" · ", ...wa(n.amount ?? 0, n.material, t) ?? [
 		G(n.material),
 		" × ",
 		Z(n.amount ?? 0)
 	]] : [])));
 }
-function Ra(e, t) {
+function Wa(e, t) {
 	let n = [
 		$(`${e.product}-efficiency`, J("总效率"), X(e.totalEfficiency, "number", "%")),
 		$(`${e.product}-total-output`, J("总产出速率"), Q(e.totalOutputPerHour, e.product, t, "number", X(e.totalOutputPerHour, "number", "/小时"), { unitSuffix: "/小时" })),
@@ -4811,7 +4979,7 @@ function Ra(e, t) {
 	return e.materials.length && r.push({
 		key: `${e.product}-materials`,
 		label: "材料消耗合计",
-		rows: Ia(`${e.product}-material`, e.materials, t, {
+		rows: Ha(`${e.product}-material`, e.materials, t, {
 			includeBaseRate: !1,
 			includeMaterialLabel: !1
 		})
@@ -4826,8 +4994,8 @@ function Ra(e, t) {
 				$(`${n.label}-eff`, J("整体效率"), X(n.totalEfficiency, "number", "%")),
 				$(`${n.label}-base`, J("基础产出速率"), Q(n.baseOutputPerHour, e.product, t, "number", X(n.baseOutputPerHour, "number", "/小时"), { unitSuffix: "/小时" })),
 				$(`${n.label}-total`, J("实际产出速率"), Q(n.totalOutputPerHour, e.product, t, "number", X(n.totalOutputPerHour, "number", "/小时"), { unitSuffix: "/小时" })),
-				...Ia(`${n.label}-material`, n.materials, t),
-				...La(n, t)
+				...Ha(`${n.label}-material`, n.materials, t),
+				...Ua(n, t)
 			]
 		}))
 	}), {
@@ -4837,10 +5005,10 @@ function Ra(e, t) {
 		...r.length ? { sections: r } : {}
 	};
 }
-function za(e, t) {
+function Ga(e, t) {
 	let n = e.sanity.items.map((e) => ({
 		key: `sanity-${e.resource}`,
-		label: Q(e.amount / (Ki(e.resource)?.factor ?? 1), e.resource, t, "signed", q(e.label, " · ", Z(e.amount, "signed"), " ", e.amountUnit, "/日"), {
+		label: Q(e.amount / (Qi(e.resource)?.factor ?? 1), e.resource, t, "signed", q(e.label, " · ", Z(e.amount, "signed"), " ", e.amountUnit, "/日"), {
 			unitSuffix: "/日",
 			resourceFirst: !0
 		}),
@@ -4856,37 +5024,37 @@ function za(e, t) {
 		rows: n
 	};
 }
-function Ba(e, t) {
-	let n = Wi(e, t.sanityValues, t.facilityLabel ? { facilityLabel: t.facilityLabel } : {});
+function Ka(e, t) {
+	let n = Xi(e, t.sanityValues, t.facilityLabel ? { facilityLabel: t.facilityLabel } : {});
 	if (n.length) return {
 		key: "daily-output-breakdown",
 		label: "队列计算明细",
 		hint: J("按队列时长折算到每日产出"),
 		cards: n.map((e) => ({
 			key: `daily-output-${e.planIndex}`,
-			title: J(xa(e.plan, e.planIndex)),
-			subtitle: Sa(e.plan.durationHours),
+			title: J(Da(e.plan, e.planIndex)),
+			subtitle: Oa(e.plan.durationHours),
 			badge: J(`${e.products.length} 种产物`),
-			sections: [...e.products.map((e) => Ra(e, t.resourceAmountDisplayMode)), za(e, t.resourceAmountDisplayMode)]
+			sections: [...e.products.map((e) => Wa(e, t.resourceAmountDisplayMode)), Ga(e, t.resourceAmountDisplayMode)]
 		}))
 	};
 }
-function Va(e, t) {
-	let n = ta(e, t.visibleBasePointTerms);
+function qa(e, t) {
+	let n = sa(e, t.visibleBasePointTerms);
 	if (n.length) return {
 		key: "base-points",
 		label: "基地点数",
 		columns: n.map((e) => ({
 			key: `base-points-${e.planIndex}`,
-			title: J(xa(e.plan, e.planIndex)),
-			subtitle: Sa(e.plan.durationHours),
+			title: J(Da(e.plan, e.planIndex)),
+			subtitle: Oa(e.plan.durationHours),
 			points: e.points.map((e) => ({
 				key: e.term,
-				name: J(t.basePointLabel?.(e.term) ?? aa(e.term, {})),
+				name: J(t.basePointLabel?.(e.term) ?? da(e.term, {})),
 				value: Y(e.value),
 				sources: e.sources.map((n, r) => ({
 					key: `${e.term}-${n.operator}-${n.kind}-${r}`,
-					label: J(t.basePointSource?.(n) ?? ia(n, {})),
+					label: J(t.basePointSource?.(n) ?? ua(n, {})),
 					value: Y(n.value, "signed")
 				}))
 			})),
@@ -4894,18 +5062,18 @@ function Va(e, t) {
 		}))
 	};
 }
-function Ha(e) {
+function Ja(e) {
 	return {
 		key: "skill-details",
 		label: "生效技能明细",
 		rows: [],
 		entries: e.map((e, t) => {
-			let n = Pi(e.stat);
+			let n = Bi(e.stat);
 			return {
 				key: `skill-${e.operator}-${e.skill ?? "skill"}-${e.stat}-${t}`,
 				title: q(e.operator, ...e.skill ? [" · ", e.skill] : []),
-				value: q(`${Mi(e.stat)} `, Z(e.value, "signed"), n),
-				rows: Si(e).map((e, t) => ({
+				value: q(`${Ri(e.stat)} `, Z(e.value, "signed"), n),
+				rows: Oi(e).map((e, t) => ({
 					key: `calculation-${t}`,
 					...e.label ? { label: J(e.label) } : {},
 					value: J(e.value)
@@ -4914,7 +5082,7 @@ function Ha(e) {
 		})
 	};
 }
-function Ua(e, t) {
+function Ya(e, t) {
 	return {
 		key: "moods",
 		label: "干员心情消耗步骤",
@@ -4922,10 +5090,10 @@ function Ua(e, t) {
 		entries: e.map((e) => {
 			let n = e.rateDetails.map((e, t) => ({
 				key: `mood-rate-${e.kind}-${t}`,
-				label: J(Oi(e)),
+				label: J(Pi(e)),
 				value: X(e.value, "signed", "/小时")
 			}));
-			return n.push($("mood-cost-rate", J("消耗速度"), J(ki(e))), $("mood-calculation", J("计算过程"), q(`${W(e.start)} - ${W(e.costRate)} × ${W(t.durationHours)} = ${W(e.end)}`)), $("mood-end", J("剩余心情"), Y(e.end))), {
+			return n.push($("mood-cost-rate", J("消耗速度"), J(Fi(e))), $("mood-calculation", J("计算过程"), q(`${W(e.start)} - ${W(e.costRate)} × ${W(t.durationHours)} = ${W(e.end)}`)), $("mood-end", J("剩余心情"), Y(e.end))), {
 				key: `mood-${e.facilityId}-${e.slotIndex}-${e.operator}`,
 				title: J(e.operator),
 				rows: n
@@ -4933,11 +5101,57 @@ function Ua(e, t) {
 		})
 	};
 }
-function Wa(e, t) {
+function Xa(e, t = !1, n = !1) {
+	return `${{
+		shared: "群体恢复",
+		self: n ? "固定恢复" : "自身恢复",
+		single: "单体恢复",
+		spread: t ? "特定恢复 · 均摊总量" : "特定恢复 · 均摊",
+		specific: "特定恢复"
+	}[e.distribution]}${e.skill ? ` · ${e.skill}` : ""}`;
+}
+function Za(e) {
+	return e.maxGroup === "dormRec-overall" ? "shared" : e.subjects === "single" ? "single" : e.subjects === "spread" ? "spread" : e.scope === "self" ? "self" : e.scope === "op" || e.op !== void 0 || e.moodBelow !== void 0 || e.scopeGroup !== void 0 ? "specific" : "shared";
+}
+function Qa(e, t, n) {
+	return {
+		key: "dormitory-recovery",
+		rows: [],
+		sections: e.slice().sort((e, t) => e.facilityIndex - t.facilityIndex).map((e) => {
+			let r = `宿舍 ${e.facilityIndex + 1}`, i = new Set(e.operators.filter((e) => e.automaticRest).map((e) => e.operator)), a = [$(`dormitory-${e.facilityId}-base-recovery-rate`, J("基础恢复速度"), X(e.baseRate, "number", " 心情/小时"))];
+			e.contributions.filter((e) => n || !i.has(e.operator)).forEach((t, n) => {
+				let r = {
+					operator: t.operator,
+					...t.skill === void 0 ? {} : { skill: t.skill },
+					value: t.value,
+					distribution: Za(t)
+				};
+				a.push($(`dormitory-${e.facilityId}-room-source-${n}`, J(`${t.operator} · ${Xa(r, !0, e.operators.some((e) => e.operator === t.operator && e.blocksOtherRecovery === !0))}`), X(t.value, "signed", " 心情/小时")));
+			});
+			let o = e.operators.filter((e) => n || !e.automaticRest).map((n) => {
+				let r = [];
+				return n.contributions.forEach((e, t) => {
+					r.push($(`dormitory-operator-source-${t}`, J(`${e.operator} · ${Xa(e, !1, n.blocksOtherRecovery === !0)}`), X(e.value, "signed", " 心情/小时")));
+				}), r.push($("dormitory-operator-final-rate", J("实际恢复速度"), X(n.rate, "number", " 心情/小时"))), n.startMood !== void 0 && n.expectedMood !== void 0 && n.recoveredMood !== void 0 && n.endMood !== void 0 && r.push($("dormitory-operator-start-mood", J("队列开始时心情"), Y(n.startMood)), $("dormitory-operator-recovery-amount", J("队列内恢复量"), X(n.recoveredMood, "number", " 心情")), $("dormitory-operator-end-mood", J("队列结束时心情"), q(`${W(n.endMood)}（目标 ${W(n.expectedMood)}，${W(t.durationHours)} 小时）`))), {
+					key: `dormitory-${e.facilityId}-operator-${n.slotIndex}-${n.operator}`,
+					title: J(n.operator),
+					rows: r
+				};
+			});
+			return {
+				key: `dormitory-${e.facilityId}`,
+				label: r,
+				rows: a,
+				entries: o
+			};
+		})
+	};
+}
+function $a(e, t) {
 	let n = e.production, r = [];
 	if (n) {
-		r.push($("production-product", J("产物"), J(Ti(n.product)))), n.cluePreferences?.length && r.push($("production-clue", J("线索倾向"), J(Ei(n.cluePreferences)))), r.push($("production-base-rate", J("基础速率"), Q(n.baseAmountPerHour, n.product, t.resourceAmountDisplayMode, "number", X(n.baseAmountPerHour, "number", "/小时"), { unitSuffix: "/小时" })), $("production-rate", J("实际速率"), Q(n.amountPerHour, n.product, t.resourceAmountDisplayMode, "number", X(n.amountPerHour, "number", "/小时"), { unitSuffix: "/小时" })), $("production-item-rate", J("容量消耗速率"), n.itemRate === void 0 ? J("") : Q(n.itemRate, n.product, t.resourceAmountDisplayMode, "number", q(Z(n.itemRate, "number"), "/小时"), { unitSuffix: "/小时" })));
-		let i = Fi(n, t.simulateOverflow ?? !1);
+		r.push($("production-product", J("产物"), J(ji(n.product)))), n.cluePreferences?.length && r.push($("production-clue", J("线索倾向"), J(Mi(n.cluePreferences)))), r.push($("production-base-rate", J("基础速率"), Q(n.baseAmountPerHour, n.product, t.resourceAmountDisplayMode, "number", X(n.baseAmountPerHour, "number", "/小时"), { unitSuffix: "/小时" })), $("production-rate", J("实际速率"), Q(n.amountPerHour, n.product, t.resourceAmountDisplayMode, "number", X(n.amountPerHour, "number", "/小时"), { unitSuffix: "/小时" })), $("production-item-rate", J("容量消耗速率"), n.itemRate === void 0 ? J("") : Q(n.itemRate, n.product, t.resourceAmountDisplayMode, "number", q(Z(n.itemRate, "number"), "/小时"), { unitSuffix: "/小时" })));
+		let i = Vi(n, t.simulateOverflow ?? !1);
 		if ((e.facility.type === "trading" || e.facility.type === "manufacture" || e.facility.type === "recycle") && i.length && i.forEach((e, n) => {
 			r.push($(`facility-material-${e.material}-${n}-base`, J("基础材料消耗速率"), Q(e.baseAmount, e.material, t.resourceAmountDisplayMode, "signed", q(G(e.material), " ", Z(e.baseAmount, "signed"), "/小时"), {
 				unitSuffix: "/小时",
@@ -4948,12 +5162,12 @@ function Wa(e, t) {
 			})));
 		}), n.conversion) {
 			let e = n.conversion;
-			r.push($("production-conversion", J("单位折算"), J(`${W(e.amountPerUnit)} ${e.label}/${e.sourceUnit}`)), $("production-conversion-cycle", J("基础周期"), J(`${W(e.baseCycleHours)} 小时/${e.sourceUnit}`)), $("production-conversion-rate", J("折算实际速率"), Q(Di(n, n.amountPerHour), n.product, t.resourceAmountDisplayMode, "number", X(Di(n, n.amountPerHour), "number", "/小时"), { unitSuffix: "/小时" })));
+			r.push($("production-conversion", J("单位折算"), J(`${W(e.amountPerUnit)} ${e.label}/${e.sourceUnit}`)), $("production-conversion-cycle", J("基础周期"), J(`${W(e.baseCycleHours)} 小时/${e.sourceUnit}`)), $("production-conversion-rate", J("折算实际速率"), Q(Ni(n, n.amountPerHour), n.product, t.resourceAmountDisplayMode, "number", X(Ni(n, n.amountPerHour), "number", "/小时"), { unitSuffix: "/小时" })));
 		}
 		n.orderRule && r.push($("production-order-rule", J("订单规则"), J(n.orderRule)));
 	}
 	let i = e.capacity;
-	i && r.push($("capacity-total", J(i.label), q(Z(i.total, "number"), " ", i.unit, " （基础 ", Z(i.base, "number"), "，技能 ", Z(i.skill, "signed"), "）"))), n?.breachTime !== void 0 && r.push($("production-breach", J("爆仓"), q(`${Li(n)} · `, Z(n.breachTime, "number"), " 小时")));
+	i && r.push($("capacity-total", J(i.label), q(Z(i.total, "number"), " ", i.unit, " （基础 ", Z(i.base, "number"), "，技能 ", Z(i.skill, "signed"), "）"))), n?.breachTime !== void 0 && r.push($("production-breach", J("爆仓"), q(`${Ui(n)} · `, Z(n.breachTime, "number"), " 小时")));
 	let a = [];
 	return i && i.segments.length > 1 && a.push({
 		key: "capacity-segments",
@@ -4969,15 +5183,15 @@ function Wa(e, t) {
 		rows: n.orders.map((e, n) => ({
 			key: `order-${e.name}-${e.time}-${e.quantity}-${n}`,
 			label: q(`${e.name} · `, Z(e.probability * 100, "number"), "%"),
-			value: q(Z(e.quantity), " / ", Z(e.time, "number"), " 小时", ...e.material ? [" · ", ...va(e.amount ?? 0, e.material, t.resourceAmountDisplayMode) ?? [
+			value: q(Z(e.quantity), " / ", Z(e.time, "number"), " 小时", ...e.material ? [" · ", ...wa(e.amount ?? 0, e.material, t.resourceAmountDisplayMode) ?? [
 				G(e.material),
 				" × ",
 				Z(e.amount ?? 0)
 			]] : [])
 		}))
-	}), ba("production-capacity", "产出与容量", r, a);
+	}), Ea("production-capacity", "产出与容量", r, a);
 }
-function Ga(e, t) {
+function eo(e, t) {
 	let n = e.tradeOrdersByLevel[t] ?? e.tradeOrdersByLevel[1] ?? [], r = 0, i = 0, a = 0;
 	for (let e of n) r += e.probability * e.gold, i += e.probability * e.amount, a += e.probability * e.hours;
 	if (!(a <= 0 || i <= 0)) return {
@@ -4985,10 +5199,10 @@ function Ga(e, t) {
 		goldPerHour: i / a
 	};
 }
-function Ka(e, t) {
+function to(e, t) {
 	let n = e.production;
 	if (e.facility.type !== "trading" || n?.product !== "龙门币" || n.orderRule === void 0 || n.orderRule === "龙门商法") return [];
-	let r = Ga(t, e.facility.level), i = Ga(t, 3);
+	let r = eo(t, e.facility.level), i = eo(t, 3);
 	if (!r || r.lmdPerHour <= 0) return [];
 	let a = [$("equivalent-current-trade-efficiency", J("等效当前站贸易效率"), X(n.amountPerHour / r.lmdPerHour * 100, "number", "%"))];
 	e.facility.level !== 3 && i !== void 0 && i.lmdPerHour > 0 && a.push($("equivalent-level-three-trade-efficiency", J("等效3级站贸易效率"), X(n.amountPerHour / i.lmdPerHour * 100, "number", "%")));
@@ -4997,40 +5211,41 @@ function Ka(e, t) {
 	let s = r.lmdPerHour / r.goldPerHour, c = o.amount / o.hours, l = n.amountPerHour / s + (n.materialPerHour?.赤金 ?? 0);
 	return c > 0 && l > 1e-6 && a.push($("equivalent-manufacture-efficiency", J("等效制造效率"), X(l / c * 100, "number", "%"))), a;
 }
-function qa(e, t, n) {
+function no(e, t, n) {
 	let r = [], i = e.facility;
-	return i ? (i.inherited && r.push(ba("inherited", "继承说明", [$("inherited-note", J("说明"), q("本队列为跳过队列，已继承 ", oa(i, t.plans).replace(/^继承自 /, ""), " 的干员与练度；心情按当前队列重新计算。"))])), r.push(ba("efficiency-summary", "效率汇总", [
+	return i ? (i.inherited && r.push(Ea("inherited", "继承说明", [$("inherited-note", J("说明"), q("本队列为跳过队列，已继承 ", fa(i, t.plans).replace(/^继承自 /, ""), " 的干员与练度；心情按当前队列重新计算。"))])), r.push(Ea("efficiency-summary", "效率汇总", [
 		$("facility-base-efficiency", J("设施效率"), X(i.baseEfficiency, "number", "%")),
 		$("facility-mood-efficiency", J("干员心情效率"), X(i.moodEfficiency, "signed", "%")),
 		$("facility-skill-efficiency", J("干员技能效率"), X(i.operatorSkillEfficiency, "signed", "%")),
 		$("facility-efficiency", J("整体效率"), X(i.efficiency, "number", "%")),
-		...Ka(i, n.ruleset ?? j)
-	])), (i.capacity || i.production) && r.push(Wa(i, n)), i.details.length && r.push(Ha(i.details)), e.droneAccelerations?.length && r.push(ba("drone-acceleration", "无人机加速", Pa(e.droneAccelerations, n.resourceAmountDisplayMode))), e.moods.length && r.push(Ua(e.moods, e.plan)), r) : (e.moods.length && r.push(Ua(e.moods, e.plan)), r);
+		...to(i, n.ruleset ?? A)
+	])), (i.capacity || i.production) && r.push($a(i, n)), i.details.length && r.push(Ja(i.details)), e.droneAccelerations?.length && r.push(Ea("drone-acceleration", "无人机加速", Ba(e.droneAccelerations, n.resourceAmountDisplayMode))), e.moods.length && r.push(Ya(e.moods, e.plan)), r) : (e.dormitoryRecoveries && r.push(Qa(e.dormitoryRecoveries, e.plan, n.showAutomaticRestOperators ?? !1)), e.moods.length && r.push(Ya(e.moods, e.plan)), r);
 }
-function Ja(e, t, n) {
-	let r = e.facility, i = Ca(e, t), a = r && !r.details.length && !e.moods.length && !e.droneAccelerations?.length ? "当前设施没有可展开的技能明细" : void 0;
+function ro(e, t, n) {
+	let r = e.facility, i = ka(e, t), a = r && !r.details.length && !e.moods.length && !e.droneAccelerations?.length ? "当前设施没有可展开的技能明细" : void 0;
 	return {
-		key: `step-${e.planIndex}-${r?.facility.id ?? "control"}`,
+		key: `step-${e.planIndex}-${r?.facility.id ?? e.dormitory?.id ?? "control"}`,
 		planIndex: e.planIndex,
 		...r ? { facilityId: r.facility.id } : {},
-		facilityLabel: r ? n.facilityLabel?.(r) ?? ra(r, t.document.layout) : k.control,
+		facilityLabel: r ? n.facilityLabel?.(r) ?? la(r, t.document.layout) : e.dormitoryRecoveries ? O.dormitory : e.dormitory ? `${O.dormitory} ${e.dormitory.index + 1}` : O.control,
+		...e.dormitory ? { facilityId: e.dormitory.id } : {},
 		...i ? { inheritedLabel: i } : {},
 		...r ? { efficiency: r.efficiency } : {},
-		sections: qa(e, t, n),
+		sections: no(e, t, n),
 		...a === void 0 ? {} : { emptyNote: a }
 	};
 }
-function Ya(e, t) {
+function io(e, t) {
 	return {
 		plans: e.plans.map((e, t) => ({
 			planIndex: t,
 			name: e.name,
 			durationHours: e.durationHours
 		})),
-		steps: zi(e).map((n) => Ja(n, e, t))
+		steps: Gi(e).map((n) => ro(n, e, t))
 	};
 }
-function Xa(e) {
+function ao(e) {
 	return e.steps.map((t) => {
 		let n = e.plans[t.planIndex];
 		return {
@@ -5043,7 +5258,7 @@ function Xa(e) {
 		};
 	});
 }
-function Za(e) {
+function oo(e) {
 	let t = /* @__PURE__ */ new Map();
 	for (let n of e.steps) {
 		let e = n.facilityId ?? "control", r = t.get(e);
@@ -5053,20 +5268,20 @@ function Za(e) {
 		let r = new Map(n.map((e) => [e.planIndex, e]));
 		return {
 			key: `facility-${t}`,
-			label: n[0]?.facilityLabel ?? k.control,
+			label: n[0]?.facilityLabel ?? O.control,
 			badge: J(`${n.length} / ${e.plans.length} 个队列`),
 			cards: e.plans.map((e) => {
 				let n = r.get(e.planIndex);
 				return n === void 0 ? {
 					key: `empty-${t}-${e.planIndex}`,
 					title: J(e.name),
-					subtitle: Sa(e.durationHours),
+					subtitle: Oa(e.durationHours),
 					sections: [],
 					empty: "当前队列无此设施计算数据"
 				} : {
 					key: n.key,
 					title: J(e.name),
-					subtitle: wa(n, e),
+					subtitle: Aa(n, e),
 					...n.efficiency === void 0 ? {} : { badge: X(n.efficiency, "number", "%") },
 					sections: n.sections,
 					...n.emptyNote === void 0 ? {} : { emptyNote: n.emptyNote }
@@ -5075,23 +5290,23 @@ function Za(e) {
 		};
 	});
 }
-function Qa(e, t) {
-	let n = Fa(e, t.resourceAmountDisplayMode), r = Ba(e, t), i = Va(e, t);
+function so(e, t) {
+	let n = Va(e, t.resourceAmountDisplayMode), r = Ka(e, t), i = qa(e, t);
 	return {
-		dailyOutput: Da(e, t),
-		droneStrategy: Oa(t),
-		droneScenarios: ka(e, t),
+		dailyOutput: Na(e, t),
+		droneStrategy: Pa(t),
+		droneScenarios: Fa(e, t),
 		calculationSteps: {
 			label: "计算步骤",
 			hint: "展开分区查看详细计算过程",
 			...n === void 0 ? {} : { maaDrone: n },
 			...r === void 0 ? {} : { dailyOutput: r },
 			...i === void 0 ? {} : { basePoints: i },
-			facilitySteps: Ya(e, t)
+			facilitySteps: io(e, t)
 		}
 	};
 }
-function $a(e, t = _a) {
+function co(e, t = Ca) {
 	let n = [], r = (e, r, i, a) => {
 		i !== void 0 && n.push({
 			level: e,
@@ -5208,4 +5423,4 @@ function $a(e, t = _a) {
 	return n;
 }
 //#endregion
-export { st as BASE_POINT_TERM_KEYS, Lt as BATTLE_RECORD_EXPERIENCE, Qr as DEFAULT_LMD_DRONE_STRATEGIES, j as DEFAULT_RULESET, zt as DEFAULT_SANITY_SETTINGS, Zr as DRONE_ACCELERATABLE_PRODUCTS, It as DRONE_ACCELERATION_MINUTES, la as EFFICIENCY_NOTICE_DISPLAY_OPTIONS, N as EPSILON, He as ORUNDUM_TRADE_ORDER, Rt as PURE_GOLD_POINTS, Mt as RECYCLE_OUTPUT_PRODUCT, _e as SchedulePeriodError, Ve as TRADE_ORDER_LIMIT, Wt as addProductionFlow, Ot as aggregateDaily, jt as aggregateDailyOutputs, kt as aggregateDailyProductions, xe as analyzeSchedulePeriods, Zi as baseAmountsWithoutMaaDrones, ut as basePointTermOptions, ta as buildBasePointQueueDetails, Bi as buildCalculationStepGroups, zi as buildCalculationSteps, Yi as buildDailyOutputCards, Da as buildDailyOutputDisplay, Wi as buildDailyOutputQueueDetails, Gi as buildDailySanityAmounts, ea as buildDroneScenarioDisplays, ka as buildDroneScenarioViews, Oa as buildDroneStrategyDisplay, ua as buildEfficiencyNotices, We as buildFacilities, Xa as buildFacilityStepCards, Za as buildFacilityStepPanes, da as buildImportedExtraRoomsNotice, na as buildMaaDroneQueueDetails, Qa as buildResultDisplay, ca as buildResultPresentation, fi as calculateDroneAcceleration, Xr as calculateEfficiency, Gt as calculateSanityResult, Ht as calculateSanityValues, re as catalogOperator, F as clampMood, u as cloneProgressionEntries, Ei as cluePreferenceText, dt as compareBasePointDetails, ft as compareBasePointSources, lt as compareBasePointTermOptions, it as completeInferredRooms, Di as convertedProductionAmount, te as createEfficiencyCatalog, he as createSpecialOperatorAvatarLabelResolver, qe as dormitoryAtmosphere, nt as dormitoryLevels, Mi as efficiencyStatLabel, Pi as efficiencyStatUnit, Ni as efficiencyStatValue, Xe as eliteEfficiency, S as entryHasNode, ee as entryUnlocksFacility, Nt as expectedRecycleOutputPerDraw, Ke as facilityBaseEfficiency, Ue as facilityId, Li as facilityOverflowLabel, Tt as firstItemProgress, b as fixedProgressionNodes, $a as flattenResultDisplay, aa as formatBasePointLabel, ia as formatBasePointSource, _a as formatDisplayNumber, K as formatDisplayValue, Ii as formatDurationHours, yi as formatEfficiencyNumber, ra as formatFacilityResultLabel, oa as formatInheritedSourceLabel, W as formatNumber, Ci as formatProduction, D as groupIncludesOperator, ie as groupMembers, Ct as hasFlowGoldDisplayOperator, ae as hasGroupMember, _ as highestEliteLevel, ot as importPowerSummary, rt as inferScheduleLayout, pe as isKnownSpecialOperator, ce as isPercentageOperator, fe as isSpecialOperator, de as isTermOperator, M as manufactureRule, _i as mapSpecialOperators, g as maximumProgressionForFacility, Je as meetingAtmosphereBonus, Ge as meetingBaseEfficiency, h as minimumProgressionForNodes, Oi as moodRateDetailLabel, ki as moodRateFormula, Ri as moodSnapshotsForFacility, y as nodesForOperator, xi as operatorCalculationLines, Si as operatorCalculationRows, ni as parseLmdDroneStrategy, l as parseOperatorProgressionImport, gi as percentageMappingFor, se as percentageOperatorValue, vi as planDurationHoursValue, Ti as productionLabel, Fi as productionMaterialsForDisplay, c as progressionEntryFromUnknown, d as progressionNodes, x as progressionNodesForFacility, Ye as rarityEfficiency, Ft as recycleOutputItemSanity, Pt as recycleOutputRates, at as resizeImportedRooms, v as resolveOperatorProgression, G as resourceLabel, sa as resultPresentationSourceFacility, I as roomAssignments, Kt as sanityItemDefinitions, ve as schedulePeriodForRange, O as schedulePeriodMinute, bi as signedNumber, me as specialOperatorAvatarLabel, ge as specialOperatorTermMembers, wt as stateOf, le as termKeysForSpecialOperator };
+export { ct as BASE_POINT_TERM_KEYS, Rt as BATTLE_RECORD_EXPERIENCE, ii as DEFAULT_LMD_DRONE_STRATEGIES, A as DEFAULT_RULESET, Bt as DEFAULT_SANITY_SETTINGS, ri as DRONE_ACCELERATABLE_PRODUCTS, Lt as DRONE_ACCELERATION_MINUTES, ha as EFFICIENCY_NOTICE_DISPLAY_OPTIONS, M as EPSILON, Ue as ORUNDUM_TRADE_ORDER, zt as PURE_GOLD_POINTS, Nt as RECYCLE_OUTPUT_PRODUCT, ve as SchedulePeriodError, He as TRADE_ORDER_LIMIT, Gt as addProductionFlow, kt as aggregateDaily, Mt as aggregateDailyOutputs, At as aggregateDailyProductions, Se as analyzeSchedulePeriods, ra as baseAmountsWithoutMaaDrones, dt as basePointTermOptions, sa as buildBasePointQueueDetails, Ki as buildCalculationStepGroups, Gi as buildCalculationSteps, ta as buildDailyOutputCards, Na as buildDailyOutputDisplay, Xi as buildDailyOutputQueueDetails, Zi as buildDailySanityAmounts, oa as buildDroneScenarioDisplays, Fa as buildDroneScenarioViews, Pa as buildDroneStrategyDisplay, ga as buildEfficiencyNotices, Ge as buildFacilities, ao as buildFacilityStepCards, oo as buildFacilityStepPanes, _a as buildImportedExtraRoomsNotice, ca as buildMaaDroneQueueDetails, so as buildResultDisplay, ma as buildResultPresentation, vi as calculateDroneAcceleration, ni as calculateEfficiency, Kt as calculateSanityResult, Ut as calculateSanityValues, ie as catalogOperator, P as clampMood, u as cloneProgressionEntries, Mi as cluePreferenceText, ft as compareBasePointDetails, pt as compareBasePointSources, ut as compareBasePointTermOptions, at as completeInferredRooms, Ni as convertedProductionAmount, ne as createEfficiencyCatalog, ge as createSpecialOperatorAvatarLabelResolver, Je as dormitoryAtmosphere, rt as dormitoryLevels, Ri as efficiencyStatLabel, Bi as efficiencyStatUnit, zi as efficiencyStatValue, Ze as eliteEfficiency, S as entryHasNode, ee as entryUnlocksFacility, Pt as expectedRecycleOutputPerDraw, qe as facilityBaseEfficiency, We as facilityId, Ui as facilityOverflowLabel, Et as firstItemProgress, b as fixedProgressionNodes, co as flattenResultDisplay, da as formatBasePointLabel, ua as formatBasePointSource, Ca as formatDisplayNumber, K as formatDisplayValue, Hi as formatDurationHours, Ti as formatEfficiencyNumber, la as formatFacilityResultLabel, fa as formatInheritedSourceLabel, W as formatNumber, ki as formatProduction, E as groupIncludesOperator, ae as groupMembers, wt as hasFlowGoldDisplayOperator, oe as hasGroupMember, _ as highestEliteLevel, st as importPowerSummary, it as inferScheduleLayout, me as isKnownSpecialOperator, le as isPercentageOperator, pe as isSpecialOperator, fe as isTermOperator, j as manufactureRule, Ci as mapSpecialOperators, g as maximumProgressionForFacility, Ye as meetingAtmosphereBonus, Ke as meetingBaseEfficiency, h as minimumProgressionForNodes, Pi as moodRateDetailLabel, Fi as moodRateFormula, Wi as moodSnapshotsForFacility, y as nodesForOperator, Di as operatorCalculationLines, Oi as operatorCalculationRows, ci as parseLmdDroneStrategy, l as parseOperatorProgressionImport, Si as percentageMappingFor, ce as percentageOperatorValue, wi as planDurationHoursValue, ji as productionLabel, Vi as productionMaterialsForDisplay, c as progressionEntryFromUnknown, d as progressionNodes, x as progressionNodesForFacility, Xe as rarityEfficiency, It as recycleOutputItemSanity, Ft as recycleOutputRates, ot as resizeImportedRooms, v as resolveOperatorProgression, G as resourceLabel, pa as resultPresentationSourceFacility, F as roomAssignments, qt as sanityItemDefinitions, ye as schedulePeriodForRange, D as schedulePeriodMinute, Ei as signedNumber, he as specialOperatorAvatarLabel, _e as specialOperatorTermMembers, Tt as stateOf, ue as termKeysForSpecialOperator };
