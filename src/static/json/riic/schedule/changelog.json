@@ -6,7 +6,7 @@
     },
     "data": {
       "label": "数据模块",
-      "version": "v20261011.1852"
+      "version": "v20261025.1958"
     },
     "team": {
       "label": "班组模块",
@@ -18,7 +18,7 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20261020.1130"
+      "version": "v20261025.1958"
     },
     "recommendation": {
       "label": "调试信息",
@@ -26,6 +26,30 @@
     }
   },
   "entries": [
+    {
+      "date": "2026-10-25",
+      "version": "v20261025.1958",
+      "items": [
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 3,
+          "description": "更新多名干员的宿舍恢复技能目标加成数据，补充“行医”干员组",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 4,
+          "description": "支持宿舍恢复技能按指定干员和干员组匹配目标，并按恢复范围正确叠加结算",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-10-20",
       "version": "v20261020.1130",

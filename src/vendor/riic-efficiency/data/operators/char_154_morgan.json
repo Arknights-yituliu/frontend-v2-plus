@@ -21,9 +21,8 @@
               "value": 0.3,
               "scope": "room",
               "scopeGroup": "cc.g.glasgow",
-              "subjects": "single",
               "stack": "max",
-              "maxGroup": "dormRec-single",
+              "maxGroup": "dormRec-mood-below",
               "condition": {
                 "type": "opAtFacility",
                 "op": "推进之王",

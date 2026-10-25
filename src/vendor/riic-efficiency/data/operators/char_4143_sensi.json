@@ -20,18 +20,18 @@
               "stat": "moodRecover",
               "value": 0.15,
               "scope": "room",
-              "subjects": "single",
               "stack": "max",
-              "maxGroup": "dormRec-single",
-              "scopeGroup": "cc.tag.dungeon"
-            },
-            {
-              "target": "dormitory",
-              "stat": "moodRecover",
-              "value": 0.15,
-              "scope": "room",
-              "stack": "max",
-              "maxGroup": "dormRec-room"
+              "maxGroup": "dormRec-room",
+              "targetBonuses": [
+                {
+                  "value": 0.15,
+                  "targets": [
+                    {
+                      "scopeGroup": "cc.tag.dungeon"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }

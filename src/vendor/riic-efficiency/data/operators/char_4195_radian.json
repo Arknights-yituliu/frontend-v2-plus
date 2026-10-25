@@ -43,7 +43,7 @@
               "scope": "room",
               "scopeGroup": "cc.g.elite",
               "stack": "max",
-              "maxGroup": "dormRec-elite"
+              "maxGroup": "dormRec-overall"
             }
           ]
         }
