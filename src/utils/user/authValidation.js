@@ -1,7 +1,8 @@
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
-const englishNumberRegex = /^[A-Za-z0-9]+$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const verificationCodeRegex = /^\d{6}$/;
+// 密码正则（登录与注册共用）：6-32 位，仅允许字母、数字、@、下划线
+const passwordRegex = /^[A-Za-z0-9@_]{6,32}$/;
 
 const requiredRule = value => String(value ?? '').trim().length > 0 || '不能为空';
 const requiredRules = [requiredRule];
@@ -24,9 +25,10 @@ const verificationCodeRules = [
   value => verificationCodeRegex.test(String(value)) || '验证码为 6 位数字'
 ];
 
+// 密码规则（登录与注册一致）：6-32 位，仅允许字母、数字、@、下划线
 const passwordRules = [
   requiredRule,
-  value => englishNumberRegex.test(String(value)) || '密码仅可由数字、英文组成'
+  value => passwordRegex.test(String(value)) || '密码需为 6-32 位数字、字母、@ 或下划线'
 ];
 
 // 用户名规则：UC 统一注册形态要求 3-20 位字母、数字、下划线
@@ -36,12 +38,8 @@ const userNameRules = [
   value => userNameRegex.test(String(value ?? '').trim()) || '用户名仅支持字母、数字、下划线，长度 3-20 位'
 ];
 
-// 注册密码规则：UC 统一注册形态要求 6-32 位，仅允许字母、数字、@、下划线
-const registerPasswordRegex = /^[A-Za-z0-9@_]{6,32}$/;
-const registerPasswordRules = [
-  requiredRule,
-  value => registerPasswordRegex.test(String(value)) || '密码需为 6-32 位数字、字母、@ 或下划线'
-];
+// 注册密码规则：与登录密码规则保持一致（6-32 位，仅允许字母、数字、@、下划线）
+const registerPasswordRules = passwordRules;
 
 function getFirstRuleError(value, rules) {
   for (const rule of rules) {
