@@ -635,6 +635,18 @@ const routes = [
         }
     },
     {
+        path: '/48-12-1',
+        text: '感谢庆典特别招募',
+        name: 'ThanksgivingSpecialRecruitment',
+        display: false,
+        module: 'tools',
+        icon: "mdi-gift-open-outline",
+        component: () => import('/src/pages/tools/thanksgiving-special-recruitment.vue'),
+        meta: {
+            title: '感谢庆典特别招募'
+        }
+    },
+    {
         path: '/reclamation/sandbox-foods',
         text: '生息演算食材一览',
         name: 'SandboxFoods',

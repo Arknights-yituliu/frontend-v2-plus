@@ -24,6 +24,7 @@
 - [界园树洞模拟 - 明日方舟一图流](https://ark.yituliu.cn/integrated-strategies/jie-garden): 明日方舟界园树洞模拟工具，探索集成战略界园玩法
 - [集成战略结局一览 - 明日方舟一图流](https://ark.yituliu.cn/integrated-strategies/endings): 明日方舟集成战略各主题结局达成条件一览，助你集齐全结局
 - [专精时间减半计算器 - 明日方舟一图流](https://ark.yituliu.cn/tools/specializationTimeCalculate): 明日方舟专精时间减半计算器，计算干员专精训练时间与收益
+- [感谢庆典特别招募 - 明日方舟一图流](https://ark.yituliu.cn/48-12-1): 明日方舟感谢庆典特别招募四选一辅助，根据干员持有情况、作战与基建偏好比较四个招募队列
 - [生息演算食材一览 - 明日方舟一图流](https://ark.yituliu.cn/reclamation/sandbox-foods): 明日方舟生息演算食材一览，查询各食材属性与获取方式
 - [我的干员 - 明日方舟一图流](https://ark.yituliu.cn/survey/operators): 记录你的明日方舟干员练度，参与干员大数据统计
 - [干员大数据 - 明日方舟一图流](https://ark.yituliu.cn/survey/operator-progression-statistics): 查看明日方舟干员练度大数据统计，了解主流养成趋势

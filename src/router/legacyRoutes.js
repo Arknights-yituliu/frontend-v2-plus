@@ -17,4 +17,6 @@ export const LEGACY_ROUTE_REDIRECTS = [
     { from: '/information/logistics', to: '/riic/logistics' },
     // 岁兽残识记录器原先还有一个未展示的快捷路由
     { from: '/sui', to: '/integrated-strategies/sui' },
+    // 感谢庆典特别招募改为短路径，并从侧栏隐藏
+    { from: '/tools/thanksgiving-special-recruitment', to: '/48-12-1' },
 ]
