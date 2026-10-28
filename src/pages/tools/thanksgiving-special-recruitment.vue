@@ -5,6 +5,7 @@ import { operatorTableV2 } from "/src/utils/gameData.js";
 import operatorDataAPI from "/src/api/user-center/operatorData.js";
 import operatorProgressionStatisticsDataCache from "/src/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import RECRUITMENT_CONFIG from "/src/static/json/tools/thanksgiving-special-recruitment.json";
+import COMBAT_DESCRIPTIONS from "/src/static/json/tools/thanksgiving-combat-descriptions.json";
 import COMBAT_DATA from "/src/static/json/combat/operator-tags.json";
 import BUILDING_TABLE from "/src/static/json/build/building_table.json";
 import BUILDING_SCORES from "/src/static/json/build/logistics_efficiency_scores/auto.json";
@@ -51,8 +52,14 @@ const sampleSize = ref(0);
 
 const hasLoginToken = computed(() => Boolean(localStorage.getItem("USER_TOKEN")));
 
-const operatorByName = new Map(
-  Object.values(operatorTableV2).map((operator) => [operator.name, operator])
+const operatorByName = new Map(Object.values(operatorTableV2).map((operator) => [operator.name, operator]));
+
+const operatorMetaByName = new Map((COMBAT_DATA.operators || []).map((operator) => [operator.name, operator]));
+
+// 特限模组（集成战略 ISW / 生息演算 RA）在干员表里以 typeName1 区分
+const LIMITED_EQUIP_TYPES = new Set(["ISW", "RA"]);
+const hasLimitedEquipByName = new Map(
+  Object.values(operatorTableV2).map((operator) => [operator.name, (operator.equip || []).some((equip) => LIMITED_EQUIP_TYPES.has(equip.typeName1))])
 );
 
 const combatTagsByName = buildCombatTagsByName();
@@ -162,6 +169,7 @@ function getOperatorView(configOperator) {
       description: cleanHtml(skill.description),
     }));
   const stats = getPublicStats(configOperator.name);
+  const prtsUrl = operatorMetaByName.get(configOperator.name)?.prtsUrl || "";
 
   return {
     ...configOperator,
@@ -175,11 +183,42 @@ function getOperatorView(configOperator) {
     finalScore: dimensionScore + accountBonus,
     accountLabel: getAccountLabel(configOperator.name),
     accountOperator: getAccountOperator(configOperator.name),
-    playerTags: tags.player.map((tag) => tag.name),
-    officialTags: tags.official.map((tag) => tag.name),
+    combatDescriptions: buildCombatDescriptions(configOperator.name, tags),
+    prtsUrl,
+    hasLimitedEquip: hasLimitedEquipByName.get(configOperator.name) === true,
     buildingSkills,
     stats,
   };
+}
+
+function buildCombatDescriptions(name, tags) {
+  const descriptionMap = COMBAT_DESCRIPTIONS.descriptions[name] || {};
+  const playerTagNames = tags.player.map((tag) => tag.name);
+  const entries = playerTagNames.map((tagName) => ({
+    name: tagName,
+    description: descriptionMap[tagName] || "",
+  }));
+  // 没有玩家标签的干员可直接在描述文件里补条目，按补充项追加显示
+  for (const [tagName, description] of Object.entries(descriptionMap)) {
+    if (!playerTagNames.includes(tagName)) {
+      entries.push({ name: tagName, description });
+    }
+  }
+  return entries;
+}
+
+// 作战评分脚的说明：有特限模组 → 提示该评分可借特限模组达成；无特限模组且为 S → 提示是纯常规模组打出的成绩
+function getGradeNote(operator) {
+  if (operator.hasLimitedEquip) {
+    return "考虑特限模组达到此评分";
+  }
+  return operator.combatGrade === "S" ? "无特限模组达到此评分" : "";
+}
+
+function getGradeNoteTitle(operator) {
+  return operator.hasLimitedEquip
+    ? "该干员拥有集成战略 / 生息演算特限模组，该评分需考虑特限模组才能达成"
+    : "该干员没有集成战略 / 生息演算特限模组";
 }
 
 const groupResults = computed(() => {
@@ -235,11 +274,7 @@ function formatPercent(value) {
 
 function getMasteryRate(stats) {
   if (!stats) return null;
-  return Math.max(
-    Number(stats.skill1Rank3) || 0,
-    Number(stats.skill2Rank3) || 0,
-    Number(stats.skill3Rank3) || 0
-  );
+  return Math.max(Number(stats.skill1Rank3) || 0, Number(stats.skill2Rank3) || 0, Number(stats.skill3Rank3) || 0);
 }
 
 function getModuleRate(stats) {
@@ -304,9 +339,7 @@ onMounted(loadPage);
       <div>
         <p class="thanksgiving-kicker">感谢庆典 / 四选一辅助</p>
         <h1>感谢庆典特别招募</h1>
-        <p class="thanksgiving-description">
-          每个队列包含 12 名干员，组内等概率获得 1 名。本页把作战、基建和账号收益放在同一张表里，辅助选择队列。
-        </p>
+        <p class="thanksgiving-description">每个队列包含 12 名干员，组内等概率获得 1 名。本页把作战、基建和账号收益放在同一张表里，辅助选择队列。</p>
       </div>
       <div class="thanksgiving-header-meta">
         <strong>当前建议</strong>
@@ -325,13 +358,7 @@ onMounted(loadPage);
         </v-btn-toggle>
       </div>
       <div class="toolbar-block toolbar-account">
-        <v-switch
-          v-model="preferUnowned"
-          color="primary"
-          hide-details
-          density="compact"
-          label="未持有优先"
-        />
+        <v-switch v-model="preferUnowned" color="primary" hide-details density="compact" label="未持有优先" />
         <span class="toolbar-note">未持有试算加权 +{{ ACCOUNT_SCORING.unownedBonus }}</span>
       </div>
       <div class="data-status" :class="{ 'is-account': accountStatus === 'loaded' }">
@@ -348,12 +375,7 @@ onMounted(loadPage);
     </v-alert>
 
     <section class="summary-grid" aria-label="队列比较">
-      <article
-        v-for="group in groupResults"
-        :key="group.id"
-        class="summary-item"
-        :class="{ 'is-best': group.rank === 1 }"
-      >
+      <article v-for="group in groupResults" :key="group.id" class="summary-item" :class="{ 'is-best': group.rank === 1 }">
         <div class="summary-topline">
           <span class="summary-name">{{ group.name }}</span>
           <v-chip v-if="group.rank === 1" size="x-small" color="primary" variant="flat">当前最高</v-chip>
@@ -410,6 +432,18 @@ onMounted(loadPage);
                 <div class="operator-name-row">
                   <strong>{{ operator.name }}</strong>
                   <span class="grade-badge" :class="`grade-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }}</span>
+                  <a
+                    v-if="operator.prtsUrl"
+                    class="operator-prts-link"
+                    :href="operator.prtsUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    :title="`在 PRTS 查看${operator.name}`"
+                    :aria-label="`在 PRTS 查看${operator.name}`"
+                  >
+                    <v-icon size="13">mdi-open-in-new</v-icon>
+                    <span>PRTS</span>
+                  </a>
                 </div>
                 <span class="operator-status" :class="{ owned: operator.accountLabel === '已持有' }">
                   {{ operator.accountLabel }}
@@ -423,14 +457,27 @@ onMounted(loadPage);
             </div>
 
             <div class="operator-dimensions">
-              <span>作战 <b :class="`grade-text-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }} {{ operator.combatScore }}</b></span>
-              <span>基建 <b :class="`grade-text-${operator.baseGrade.toLowerCase()}`">{{ operator.baseGrade }} {{ operator.baseScore }}</b></span>
+              <span
+                >作战 <b :class="`grade-text-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }} {{ operator.combatScore }}</b>
+                <span v-if="getGradeNote(operator)" class="grade-note" :class="{ 'is-limited': operator.hasLimitedEquip }"
+                  :title="getGradeNoteTitle(operator)">{{ getGradeNote(operator) }}</span
+                >
+              </span>
+              <span
+                >基建 <b :class="`grade-text-${operator.baseGrade.toLowerCase()}`">{{ operator.baseGrade }} {{ operator.baseScore }}</b></span
+              >
               <span v-if="operator.accountBonus > 0">账号 +{{ formatScore(operator.accountBonus) }}</span>
             </div>
 
             <div class="operator-info-row">
-              <span class="info-label">作战标签</span>
-              <span class="info-value">{{ operator.playerTags.slice(0, 3).join("、") || "暂无玩家标签" }}</span>
+              <span class="info-label">作战描述</span>
+              <span v-if="operator.combatDescriptions.length" class="info-value">
+                <span v-for="entry in operator.combatDescriptions" :key="entry.name" class="combat-entry">
+                  <b>{{ entry.name }}</b>
+                  <template v-if="entry.description">：{{ entry.description }}</template>
+                </span>
+              </span>
+              <span v-else class="info-value info-value-empty">暂无作战描述</span>
             </div>
             <div class="operator-info-row">
               <span class="info-label">基建技能</span>
@@ -771,6 +818,8 @@ h1 {
 }
 
 .operator-item {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   padding: 14px;
   border-right: 1px solid var(--border);
@@ -818,10 +867,18 @@ h1 {
   font-weight: 800;
 }
 
-.grade-s { background: #d97706; }
-.grade-a { background: #2878c8; }
-.grade-b { background: #64748b; }
-.grade-c { background: #94a3b8; }
+.grade-s {
+  background: #d97706;
+}
+.grade-a {
+  background: #2878c8;
+}
+.grade-b {
+  background: #64748b;
+}
+.grade-c {
+  background: #94a3b8;
+}
 
 .operator-status {
   display: block;
@@ -870,10 +927,33 @@ h1 {
   border-right: 0;
 }
 
-.grade-text-s { color: #b45309; }
-.grade-text-a { color: #2878c8; }
-.grade-text-b { color: #64748b; }
-.grade-text-c { color: #94a3b8; }
+.grade-note {
+  padding: 0 6px !important;
+  margin-left: 6px !important;
+  border-right: 0 !important;
+  border-radius: 3px;
+  background: rgba(217, 119, 6, 0.12);
+  color: #b45309;
+  line-height: 18px;
+}
+
+.grade-note.is-limited {
+  background: rgba(40, 120, 200, 0.12);
+  color: #2878c8;
+}
+
+.grade-text-s {
+  color: #b45309;
+}
+.grade-text-a {
+  color: #2878c8;
+}
+.grade-text-b {
+  color: #64748b;
+}
+.grade-text-c {
+  color: #94a3b8;
+}
 
 .operator-info-row {
   display: grid;
@@ -889,16 +969,54 @@ h1 {
 }
 
 .info-value {
-  overflow: hidden;
+  overflow-wrap: anywhere;
   color: var(--text);
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  line-height: 1.6;
+}
+
+.info-value-empty {
+  color: var(--muted);
+}
+
+.combat-entry {
+  display: block;
+}
+
+.combat-entry + .combat-entry {
+  margin-top: 4px;
+}
+
+.combat-entry b {
+  color: #2878c8;
+  font-weight: 700;
+}
+
+.operator-prts-link {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 5px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 16px;
+  text-decoration: none;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.operator-prts-link:hover {
+  border-color: #2878c8;
+  color: #2878c8;
 }
 
 .operator-stats {
   flex-wrap: wrap;
-  margin-top: 10px;
+  margin-top: auto;
+  padding-top: 10px;
   color: var(--muted);
   font-size: 11px;
 }
