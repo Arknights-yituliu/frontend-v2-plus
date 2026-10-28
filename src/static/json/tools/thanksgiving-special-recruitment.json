@@ -1,7 +1,8 @@
 {
   "version": "v0.1",
   "scoreMap": {
-    "S": 5,
+    "X": 5,
+    "S": 4,
     "A": 3,
     "B": 2,
     "C": 1
@@ -17,7 +18,7 @@
         {"name": "艾雅法拉", "combatGrade": "A", "baseGrade": "A"},
         {"name": "安洁莉娜", "combatGrade": "S", "baseGrade": "B"},
         {"name": "闪灵", "combatGrade": "C", "baseGrade": "C"},
-        {"name": "夜莺", "combatGrade": "S", "baseGrade": "B"},
+        {"name": "夜莺", "combatGrade": "X", "baseGrade": "B"},
         {"name": "星熊", "combatGrade": "A", "baseGrade": "A"},
         {"name": "塞雷娅", "combatGrade": "S", "baseGrade": "B"},
         {"name": "银灰", "combatGrade": "A", "baseGrade": "B"},
@@ -53,7 +54,7 @@
         {"name": "瑕光", "combatGrade": "B", "baseGrade": "A"},
         {"name": "泥岩", "combatGrade": "B", "baseGrade": "A"},
         {"name": "山", "combatGrade": "B", "baseGrade": "B"},
-        {"name": "空弦", "combatGrade": "S", "baseGrade": "C"},
+        {"name": "空弦", "combatGrade": "X", "baseGrade": "C"},
         {"name": "嵯峨", "combatGrade": "C", "baseGrade": "A"},
         {"name": "异客", "combatGrade": "A", "baseGrade": "B"},
         {"name": "凯尔希", "combatGrade": "A", "baseGrade": "A"},
@@ -65,11 +66,11 @@
       "id": "IV",
       "name": "特别招募队列·Ⅳ",
       "operators": [
-        {"name": "水月", "combatGrade": "S", "baseGrade": "B"},
+        {"name": "水月", "combatGrade": "X", "baseGrade": "B"},
         {"name": "琴柳", "combatGrade": "A", "baseGrade": "A"},
         {"name": "远牙", "combatGrade": "C", "baseGrade": "B"},
         {"name": "焰尾", "combatGrade": "C", "baseGrade": "B"},
-        {"name": "灵知", "combatGrade": "S", "baseGrade": "B"},
+        {"name": "灵知", "combatGrade": "X", "baseGrade": "B"},
         {"name": "老鲤", "combatGrade": "B", "baseGrade": "A"},
         {"name": "澄闪", "combatGrade": "A", "baseGrade": "B"},
         {"name": "菲亚梅塔", "combatGrade": "S", "baseGrade": "C"},

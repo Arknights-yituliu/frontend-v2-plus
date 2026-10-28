@@ -207,12 +207,14 @@ function buildCombatDescriptions(name, tags) {
   return entries;
 }
 
-// 作战评分脚的说明：有特限模组 → 提示该评分可借特限模组达成；无特限模组且为 S → 提示是纯常规模组打出的成绩
+// 作战评分脚的说明：有特限模组 → 提示该评分可借特限模组达成；无特限模组且为 S/X → 提示是纯常规模组打出的成绩
+const TOP_COMBAT_GRADES = new Set(["X", "S"]);
+
 function getGradeNote(operator) {
   if (operator.hasLimitedEquip) {
     return "考虑特限模组达到此评分";
   }
-  return operator.combatGrade === "S" ? "无特限模组达到此评分" : "";
+  return TOP_COMBAT_GRADES.has(operator.combatGrade) ? "无特限模组达到此评分" : "";
 }
 
 function getGradeNoteTitle(operator) {
@@ -867,6 +869,9 @@ h1 {
   font-weight: 800;
 }
 
+.grade-x {
+  background: #a855f7;
+}
 .grade-s {
   background: #d97706;
 }
@@ -942,6 +947,9 @@ h1 {
   color: #2878c8;
 }
 
+.grade-text-x {
+  color: #a855f7;
+}
 .grade-text-s {
   color: #b45309;
 }
