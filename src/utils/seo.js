@@ -138,8 +138,8 @@ export const SEO_ROUTES = [
     },
     {
         path: '/48-12-1',
-        title: '感谢庆典特别招募',
-        description: '明日方舟感谢庆典特别招募四选一辅助，根据干员持有情况、作战与基建偏好比较四个招募队列',
+        title: '感谢庆典特别招募活动抽签器',
+        description: '明日方舟感谢庆典特别招募活动抽签器，根据干员持有情况、作战与基建偏好为四个招募队列计算权重并辅助选择',
         changefreq: 'weekly',
         priority: 0.6,
     },

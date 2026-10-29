@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import { operatorTableV2 } from "/src/utils/gameData.js";
 import operatorDataAPI from "/src/api/user-center/operatorData.js";
@@ -38,6 +38,7 @@ const ROOM_LABELS = {
   training: "训练室",
   recycle: "回收站",
 };
+const OFFICIAL_ACTIVITY_URL = "https://ak.hypergryph.com/news/0787";
 
 const dimension = ref("general");
 const preferUnowned = ref(true);
@@ -49,6 +50,11 @@ const accountStatus = ref("public");
 const accountOperators = ref(new Map());
 const progressionStatistics = ref(new Map());
 const sampleSize = ref(0);
+const drawResult = ref(null);
+const drawPreviewGroup = ref(null);
+const isDrawing = ref(false);
+let drawInterval = null;
+let drawTimeout = null;
 
 const hasLoginToken = computed(() => Boolean(localStorage.getItem("USER_TOKEN")));
 
@@ -238,15 +244,23 @@ const groupResults = computed(() => {
       minScore: Math.min(...scores),
       maxScore: Math.max(...scores),
       bestOperator: sorted[0],
+      topOperators: sorted.slice(0, 3),
     };
   });
 
   const ranking = [...results].sort((a, b) => b.expected - a.expected);
   const rankById = new Map(ranking.map((group, index) => [group.id, index + 1]));
-  return results.map((group) => ({ ...group, rank: rankById.get(group.id) }));
+  const totalExpected = results.reduce((sum, group) => sum + Math.max(group.expected, 0), 0);
+  return results.map((group) => ({
+    ...group,
+    rank: rankById.get(group.id),
+    probability: totalExpected > 0 ? group.expected / totalExpected : 1 / Math.max(results.length, 1),
+  }));
 });
 
 const bestGroup = computed(() => [...groupResults.value].sort((a, b) => b.expected - a.expected)[0]);
+const drawReady = computed(() => !loading.value && !accountLoading.value && !statsLoading.value && groupResults.value.length > 0);
+const dimensionLabel = computed(() => DIMENSION_OPTIONS.find((option) => option.value === dimension.value)?.label || "通用");
 
 const dataModeLabel = computed(() => {
   if (accountStatus.value === "loaded") {
@@ -272,6 +286,62 @@ function formatScore(value) {
 function formatPercent(value) {
   const number = Number(value);
   return Number.isFinite(number) ? `${number.toFixed(1)}%` : "暂无";
+}
+
+function getWeightedGroup() {
+  const groups = groupResults.value;
+  if (!groups.length) return null;
+
+  const totalWeight = groups.reduce((sum, group) => sum + Math.max(group.expected, 0), 0);
+  if (totalWeight <= 0) {
+    return groups[Math.floor(Math.random() * groups.length)];
+  }
+
+  let target = Math.random() * totalWeight;
+  for (const group of groups) {
+    target -= Math.max(group.expected, 0);
+    if (target <= 0) return group;
+  }
+  return groups[groups.length - 1];
+}
+
+function clearDrawTimers() {
+  if (drawInterval) {
+    clearInterval(drawInterval);
+    drawInterval = null;
+  }
+  if (drawTimeout) {
+    clearTimeout(drawTimeout);
+    drawTimeout = null;
+  }
+}
+
+function drawGroup() {
+  if (!drawReady.value || isDrawing.value) return;
+
+  clearDrawTimers();
+  drawResult.value = null;
+  isDrawing.value = true;
+
+  const groups = groupResults.value;
+  let previewIndex = 0;
+  drawPreviewGroup.value = groups[previewIndex];
+  drawInterval = setInterval(() => {
+    previewIndex = (previewIndex + 1) % groups.length;
+    drawPreviewGroup.value = groups[previewIndex];
+  }, 110);
+
+  drawTimeout = setTimeout(() => {
+    clearDrawTimers();
+    drawResult.value = getWeightedGroup();
+    drawPreviewGroup.value = drawResult.value;
+    isDrawing.value = false;
+  }, 1200);
+}
+
+function getDrawReason(group) {
+  const leaders = group.topOperators.slice(0, 3).map((operator) => operator.name).join("、");
+  return `当前采用${dimensionLabel.value}，${preferUnowned.value ? "已启用未持有优先" : "未额外偏向未持有"}；该队列的期望分为 ${formatScore(group.expected)}，组内高分干员包括 ${leaders}。`;
 }
 
 function getMasteryRate(stats) {
@@ -332,23 +402,58 @@ async function loadPage() {
   loading.value = false;
 }
 
+watch([dimension, preferUnowned, accountStatus], () => {
+  clearDrawTimers();
+  isDrawing.value = false;
+  drawResult.value = null;
+  drawPreviewGroup.value = null;
+});
+
+onBeforeUnmount(clearDrawTimers);
 onMounted(loadPage);
 </script>
 
 <template>
   <main class="thanksgiving-page">
-    <header class="thanksgiving-header">
-      <div>
-        <p class="thanksgiving-kicker">感谢庆典 / 四选一辅助</p>
-        <h1>感谢庆典特别招募</h1>
-        <p class="thanksgiving-description">每个队列包含 12 名干员，组内等概率获得 1 名。本页把作战、基建和账号收益放在同一张表里，辅助选择队列。</p>
+    <section class="hero-panel" aria-labelledby="thanksgiving-title">
+      <div class="hero-copy">
+        <p class="hero-kicker"><v-icon size="18">mdi-party-popper</v-icon> 感谢庆典 / 四选一辅助</p>
+        <h1 id="thanksgiving-title">感谢庆典特别招募活动抽签器</h1>
+        <p class="hero-description">根据你的干员持有情况、潜能和偏好，为四个特别招募队列计算权重，抽出一个值得优先考虑的选择。</p>
+        <div class="hero-actions">
+          <v-btn class="draw-button" size="x-large" :loading="isDrawing" :disabled="!drawReady" @click="drawGroup">
+            <v-icon start>mdi-dice-5-outline</v-icon>
+            {{ isDrawing ? "抽签中..." : "开始抽签" }}
+          </v-btn>
+          <a class="official-button" :href="OFFICIAL_ACTIVITY_URL" target="_blank" rel="noopener noreferrer">
+            <v-icon size="18">mdi-open-in-new</v-icon>
+            查看官网活动说明
+          </a>
+        </div>
+        <div class="hero-status-row">
+          <span><v-icon size="16">mdi-view-grid-outline</v-icon> 四组 · 每组 12 名</span>
+          <span><v-icon size="16">mdi-dice-multiple-outline</v-icon> 组内等概率获得 1 名</span>
+          <span><v-icon size="16">mdi-chart-line</v-icon> 当前按{{ dimensionLabel }}计算</span>
+        </div>
       </div>
-      <div class="thanksgiving-header-meta">
-        <strong>当前建议</strong>
-        <span v-if="bestGroup">优先查看 {{ bestGroup.name }}</span>
-        <small>结果会随模式、账号持有情况和潜能变化</small>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-visual-caption">四选一 · 抽出你的优先队列</div>
+        <div class="hero-operator-strip">
+          <div v-for="group in groupResults" :key="group.id" class="hero-operator">
+            <OperatorAvatar
+              v-if="group.bestOperator"
+              :char-id="group.bestOperator.charId"
+              :rarity="group.bestOperator.rarity"
+              :size="70"
+              :mobile-size="54"
+              :border="true"
+            />
+            <span>{{ group.id }}</span>
+          </div>
+        </div>
+        <strong class="hero-visual-title">让评分替你<br />先抽一次</strong>
       </div>
-    </header>
+    </section>
 
     <section class="thanksgiving-toolbar" aria-label="推荐设置">
       <div class="toolbar-block">
@@ -376,6 +481,58 @@ onMounted(loadPage);
       {{ loadError }}
     </v-alert>
 
+    <section v-if="drawResult || isDrawing" class="draw-result" :class="{ 'is-drawing': isDrawing }" aria-live="polite">
+      <div v-if="isDrawing" class="draw-state">
+        <span class="result-eyebrow">正在抽签</span>
+        <strong>{{ drawPreviewGroup?.name || "正在准备队列" }}</strong>
+        <span>根据当前四组评分权重滚动中...</span>
+      </div>
+      <template v-else-if="drawResult">
+        <div class="result-heading">
+          <span class="result-eyebrow">本次推荐队列</span>
+          <h2>{{ drawResult.name }}</h2>
+          <p>这是基于当前设置的辅助决策结果，可以继续抽签比较其他可能性。</p>
+        </div>
+        <div class="result-metrics">
+          <div>
+            <strong>{{ formatPercent(drawResult.probability * 100) }}</strong>
+            <span>抽签权重</span>
+          </div>
+          <div>
+            <strong>{{ formatScore(drawResult.expected) }}</strong>
+            <span>期望分</span>
+          </div>
+          <div>
+            <strong>{{ formatScore(drawResult.standardDeviation) }}</strong>
+            <span>风险值</span>
+          </div>
+        </div>
+        <div class="result-details">
+          <div class="result-highlight-block">
+            <span class="result-label">组内值得期待</span>
+            <div class="result-operators">
+              <div v-for="operator in drawResult.topOperators" :key="operator.charId" class="result-operator">
+                <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="42" :mobile-size="36" :border="true" />
+                <span>{{ operator.name }}</span>
+                <small>{{ formatScore(operator.finalScore) }} 分</small>
+              </div>
+            </div>
+          </div>
+          <div class="result-reason">
+            <span class="result-label">为什么是这一组</span>
+            <p>{{ getDrawReason(drawResult) }}</p>
+          </div>
+        </div>
+        <div class="result-footer">
+          <span>辅助抽签结果不会改变游戏内的实际抽取结果。</span>
+          <v-btn variant="outlined" color="primary" size="small" @click="drawGroup">
+            <v-icon start size="16">mdi-refresh</v-icon>
+            再抽一次
+          </v-btn>
+        </div>
+      </template>
+    </section>
+
     <section class="summary-grid" aria-label="队列比较">
       <article v-for="group in groupResults" :key="group.id" class="summary-item" :class="{ 'is-best': group.rank === 1 }">
         <div class="summary-topline">
@@ -384,6 +541,7 @@ onMounted(loadPage);
         </div>
         <div class="summary-score">{{ formatScore(group.expected) }}</div>
         <div class="summary-caption">期望分 · 风险 {{ formatScore(group.standardDeviation) }}</div>
+        <div class="summary-probability">{{ formatPercent(group.probability * 100) }} 抽签权重</div>
         <div class="summary-details">
           <span>最低 {{ formatScore(group.minScore) }}</span>
           <span>最高 {{ formatScore(group.maxScore) }}</span>
@@ -399,7 +557,7 @@ onMounted(loadPage);
       </div>
       <div>
         <strong>账号收益</strong>
-        <span>未登录时所有干员均按未持有处理，开关只会统一移除或增加未持有加权，不改变四组相对排序；已持有干员仍保留潜能收益，满潜仍保留重复黄票收益。</span>
+        <span>未登录时所有干员均按未持有处理；登录后未持有优先会根据各组持有与潜能情况影响分数，已持有干员仍保留潜能收益，满潜仍保留重复黄票收益。</span>
       </div>
       <div>
         <strong>统计说明</strong>
@@ -412,8 +570,17 @@ onMounted(loadPage);
       <span>正在整理干员数据...</span>
     </section>
 
-    <section v-else class="group-list" aria-label="干员详情">
-      <article v-for="group in groupResults" :key="group.id" class="group-section">
+    <details v-else class="detail-disclosure">
+      <summary>
+        <span>
+          <v-icon size="18">mdi-format-list-bulleted-square</v-icon>
+          查看完整评分与干员详情
+        </span>
+        <small>包含持有状态、作战与基建评分、公开统计</small>
+      </summary>
+      <div class="detail-disclosure-body">
+        <section class="group-list" aria-label="干员详情">
+          <article v-for="group in groupResults" :key="group.id" class="group-section">
         <header class="group-header">
           <div>
             <span class="group-rank">#{{ group.rank }}</span>
@@ -496,8 +663,10 @@ onMounted(loadPage);
             <div v-else class="operator-stats operator-stats-empty">公开统计暂无</div>
           </article>
         </div>
-      </article>
-    </section>
+          </article>
+        </section>
+      </div>
+    </details>
 
     <footer class="thanksgiving-footer">
       <span>公开统计样本：{{ sampleSize ? `${sampleSize.toLocaleString()} 位玩家` : "加载中" }}</span>
@@ -507,6 +676,171 @@ onMounted(loadPage);
 </template>
 
 <style scoped>
+.hero-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
+  gap: 28px;
+  min-height: 330px;
+  overflow: hidden;
+  padding: clamp(28px, 5vw, 58px);
+  border: 1px solid #a9283e;
+  border-radius: 8px;
+  background: #741326;
+  color: #fff;
+  box-shadow: 0 18px 36px rgba(116, 19, 38, 0.2);
+}
+
+.hero-panel::after {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(125deg, transparent 0 32px, rgba(255, 209, 102, 0.08) 33px 34px, transparent 35px 70px);
+  content: "";
+  pointer-events: none;
+}
+
+.hero-copy,
+.hero-visual {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-copy {
+  align-self: center;
+}
+
+.hero-kicker,
+.hero-status-row,
+.official-button {
+  display: inline-flex;
+  align-items: center;
+}
+
+.hero-kicker {
+  gap: 6px;
+  margin: 0 0 14px;
+  color: #ffd166;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.hero-panel h1 {
+  max-width: 680px;
+  margin-bottom: 12px;
+  font-size: clamp(30px, 5vw, 58px);
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+
+.hero-description {
+  max-width: 650px;
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.draw-button {
+  min-width: 190px;
+  min-height: 58px;
+  border: 1px solid #ff8794 !important;
+  border-radius: 6px !important;
+  background: #ed304a !important;
+  box-shadow: 0 8px 18px rgba(45, 5, 14, 0.25);
+  color: #fff !important;
+  font-size: 18px !important;
+  font-weight: 800 !important;
+}
+
+.draw-button:hover {
+  background: #f8445d !important;
+}
+
+.official-button {
+  gap: 6px;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 209, 102, 0.7);
+  border-radius: 5px;
+  color: #ffd166;
+  font-size: 13px;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.official-button:hover {
+  background: rgba(255, 209, 102, 0.14);
+  color: #fff2bd;
+}
+
+.hero-status-row {
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 24px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 12px;
+}
+
+.hero-status-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hero-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  padding: 20px;
+  border-left: 1px solid rgba(255, 209, 102, 0.28);
+  text-align: center;
+}
+
+.hero-visual-caption {
+  margin-bottom: 20px;
+  color: #ffd166;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.hero-operator-strip {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(8px, 1.5vw, 16px);
+}
+
+.hero-operator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.hero-operator:nth-child(2n) {
+  transform: translateY(-16px);
+}
+
+.hero-visual-title {
+  margin-top: 24px;
+  color: #fff;
+  font-size: clamp(22px, 3vw, 34px);
+  line-height: 1.18;
+}
+
 .thanksgiving-page {
   --page-bg: var(--c-page-background-color, #f4f6f8);
   --surface: var(--c-background-color, #ffffff);
@@ -606,6 +940,7 @@ h1 {
 
 .thanksgiving-toolbar {
   flex-wrap: wrap;
+  margin-top: 16px;
   padding: 12px 16px;
   border-radius: 6px;
 }
@@ -647,6 +982,164 @@ h1 {
 
 .thanksgiving-alert {
   margin-top: 12px;
+}
+
+.draw-result {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  margin-top: 16px;
+  padding: 22px 24px;
+  border: 1px solid #e0a62a;
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: inset 4px 0 0 #e0a62a;
+}
+
+.draw-result.is-drawing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 190px;
+  background: #fff9e8;
+  text-align: center;
+}
+
+.draw-state,
+.result-heading {
+  display: flex;
+  flex-direction: column;
+}
+
+.draw-state {
+  align-items: center;
+  gap: 8px;
+}
+
+.draw-state strong {
+  color: #a56d00;
+  font-size: 28px;
+}
+
+.draw-state span:last-child,
+.result-heading p,
+.result-reason p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.result-eyebrow,
+.result-label {
+  color: #b77900;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.result-heading h2 {
+  margin: 5px 0 0;
+  font-size: clamp(24px, 4vw, 34px);
+  line-height: 1.2;
+}
+
+.result-heading p {
+  margin: 8px 0 0;
+}
+
+.result-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(82px, 1fr));
+  gap: 8px;
+  align-self: start;
+  min-width: min(360px, 100%);
+}
+
+.result-metrics > div {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface-soft);
+  text-align: center;
+}
+
+.result-metrics strong,
+.result-metrics span {
+  display: block;
+}
+
+.result-metrics strong {
+  color: #b77900;
+  font-size: 20px;
+}
+
+.result-metrics span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.result-details,
+.result-footer {
+  grid-column: 1 / -1;
+}
+
+.result-details {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(220px, 0.9fr);
+  gap: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.result-operators {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.result-operator {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 8px;
+  align-items: center;
+  min-width: 120px;
+}
+
+.result-operator :deep(.operator-avatar) {
+  grid-row: 1 / span 2;
+}
+
+.result-operator span {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.result-operator small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.result-reason {
+  padding-left: 20px;
+  border-left: 1px solid var(--border);
+}
+
+.result-reason p {
+  margin: 8px 0 0;
+}
+
+.result-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .summary-grid {
@@ -707,6 +1200,13 @@ h1 {
   margin-top: 7px;
 }
 
+.summary-probability {
+  margin-top: 4px;
+  color: #b77900;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .summary-details {
   flex-wrap: wrap;
   margin-top: 14px;
@@ -748,6 +1248,57 @@ h1 {
   gap: 10px;
   min-height: 260px;
   color: var(--muted);
+}
+
+.detail-disclosure {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.detail-disclosure summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 58px;
+  padding: 0 18px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.detail-disclosure summary::-webkit-details-marker {
+  display: none;
+}
+
+.detail-disclosure summary > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.detail-disclosure summary > small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.detail-disclosure summary::after {
+  flex-shrink: 0;
+  color: #2878c8;
+  content: "展开";
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.detail-disclosure[open] summary::after {
+  content: "收起";
+}
+
+.detail-disclosure-body {
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--border);
 }
 
 .group-list {
@@ -1052,6 +1603,10 @@ h1 {
 }
 
 @media (max-width: 1050px) {
+  .hero-panel {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.75fr);
+  }
+
   .operator-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1070,9 +1625,18 @@ h1 {
     padding: 14px 10px 32px;
   }
 
+  .hero-panel,
   .thanksgiving-header,
   .method-note {
     display: block;
+  }
+
+  .hero-visual {
+    min-height: 190px;
+    margin-top: 24px;
+    padding: 20px 0 0;
+    border-top: 1px solid rgba(255, 209, 102, 0.28);
+    border-left: 0;
   }
 
   .thanksgiving-header-meta {
@@ -1090,6 +1654,25 @@ h1 {
   .data-status {
     width: 100%;
     margin-left: 0;
+  }
+
+  .draw-result {
+    grid-template-columns: 1fr;
+  }
+
+  .result-metrics {
+    min-width: 0;
+  }
+
+  .result-details {
+    grid-template-columns: 1fr;
+  }
+
+  .result-reason {
+    padding-top: 16px;
+    padding-left: 0;
+    border-top: 1px solid var(--border);
+    border-left: 0;
   }
 }
 
@@ -1110,6 +1693,41 @@ h1 {
   .summary-grid,
   .operator-grid {
     grid-template-columns: 1fr;
+  }
+
+  .hero-panel {
+    padding: 24px 18px;
+  }
+
+  .hero-actions,
+  .draw-button,
+  .official-button {
+    width: 100%;
+  }
+
+  .official-button {
+    justify-content: center;
+  }
+
+  .hero-operator-strip {
+    gap: 6px;
+  }
+
+  .result-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .result-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .detail-disclosure summary {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    padding: 12px 14px;
   }
 
   .operator-item,
