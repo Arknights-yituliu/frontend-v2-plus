@@ -39,10 +39,10 @@ const ROOM_LABELS = {
   recycle: "回收站",
 };
 const HERO_RIBBON_THEMES = [
-  { color: "#9a3934", accent: "#f1b05a", ink: "#fff8ee", duration: "34s" },
-  { color: "#b97927", accent: "#332a20", ink: "#fffaf0", duration: "28s" },
-  { color: "#197773", accent: "#f5c24c", ink: "#effffb", duration: "32s" },
-  { color: "#1f5a73", accent: "#e6a338", ink: "#f4fbff", duration: "26s" },
+  { color: "#253532", accent: "#ff9f3f", ink: "#f7fbf7", duration: "34s" },
+  { color: "#293834", accent: "#ffb04d", ink: "#f7fbf7", duration: "28s" },
+  { color: "#263a36", accent: "#ffad46", ink: "#f7fbf7", duration: "32s" },
+  { color: "#2b3733", accent: "#ffc05b", ink: "#f7fbf7", duration: "26s" },
 ];
 
 const dimension = ref("general");
@@ -452,15 +452,12 @@ onMounted(() => {
     <section class="hero-panel" aria-labelledby="thanksgiving-title">
       <div class="hero-ribbons" aria-hidden="true">
         <div
-          v-for="(ribbon, ribbonIndex) in heroRibbons"
+          v-for="ribbon in heroRibbons"
           :key="ribbon.id"
           class="hero-ribbon"
           :style="ribbon.style"
         >
-          <div class="hero-ribbon-label">
-            <strong>{{ String(ribbonIndex + 1).padStart(2, "0") }}</strong>
-            <span>{{ ribbon.name }}</span>
-          </div>
+          <div class="hero-ribbon-label">{{ ribbon.id }}</div>
           <div class="hero-ribbon-viewport">
             <div class="hero-ribbon-track" :class="{ 'is-reverse': ribbon.direction === 'reverse' }">
               <div v-for="copy in 2" :key="copy" class="hero-ribbon-copy">
@@ -754,40 +751,27 @@ onMounted(() => {
 
 .hero-ribbon-label {
   position: absolute;
-  top: 0;
+  right: 0;
   bottom: 0;
   left: 0;
   z-index: 3;
   display: flex;
-  width: clamp(104px, 16vw, 210px);
-  flex-direction: column;
+  height: 24px;
+  align-items: center;
   justify-content: center;
-  padding: 0 clamp(12px, 2.2vw, 28px);
-  background: rgba(15, 19, 20, 0.72);
-  color: var(--ribbon-ink);
-  clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%);
-}
-
-.hero-ribbon-label strong {
+  background: rgba(12, 24, 22, 0.38);
   color: var(--ribbon-accent);
-  font-size: clamp(28px, 4vw, 58px);
+  font-size: 16px;
   font-style: italic;
   font-weight: 950;
-  line-height: 0.86;
-}
-
-.hero-ribbon-label span {
-  max-width: 132px;
-  margin-top: 8px;
-  font-size: clamp(10px, 1.2vw, 14px);
-  font-weight: 800;
-  line-height: 1.25;
-  white-space: nowrap;
+  line-height: 1;
+  letter-spacing: 0.08em;
 }
 
 .hero-ribbon-viewport {
-  height: 100%;
-  padding-left: clamp(88px, 13vw, 174px);
+  position: relative;
+  z-index: 1;
+  height: calc(100% - 24px);
   overflow: hidden;
 }
 
@@ -807,8 +791,8 @@ onMounted(() => {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  gap: clamp(4px, 1vw, 18px);
-  padding: 0 clamp(16px, 2.4vw, 36px);
+  gap: clamp(6px, 1vw, 12px);
+  padding: 0 clamp(6px, 1vw, 12px) 0 0;
 }
 
 .hero-ribbon-operator {
@@ -1712,30 +1696,17 @@ h1 {
   }
 
   .hero-ribbon-label {
-    width: 78px;
-    padding: 0 10px;
-  }
-
-  .hero-ribbon-label strong {
-    font-size: 30px;
-  }
-
-  .hero-ribbon-label span {
-    max-width: 56px;
-    margin-top: 5px;
-    overflow: hidden;
-    font-size: 9px;
-    text-overflow: ellipsis;
-    white-space: normal;
+    height: 20px;
+    font-size: 13px;
   }
 
   .hero-ribbon-viewport {
-    padding-left: 66px;
+    height: calc(100% - 20px);
   }
 
   .hero-ribbon-copy {
-    gap: 2px;
-    padding: 0 12px;
+    gap: 4px;
+    padding-right: 4px;
   }
 
   .hero-ribbon-operator {
