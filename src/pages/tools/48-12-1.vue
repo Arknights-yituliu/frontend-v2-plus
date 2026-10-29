@@ -213,9 +213,7 @@ function getGradeNote(operator) {
 }
 
 function getGradeNoteTitle(operator) {
-  return operator.hasLimitedEquip
-    ? "该干员拥有集成战略 / 生息演算特限模组，该评分需考虑特限模组才能达成"
-    : "该干员没有集成战略 / 生息演算特限模组";
+  return operator.hasLimitedEquip ? "该干员拥有集成战略 / 生息演算特限模组，该评分需考虑特限模组才能达成" : "该干员没有集成战略 / 生息演算特限模组";
 }
 
 const groupResults = computed(() => {
@@ -496,55 +494,49 @@ onMounted(() => {
                     <span>PRTS</span>
                   </a>
                 </div>
-                <span class="operator-status" :class="{ owned: operator.accountLabel === '已持有' }">
-                  {{ operator.accountLabel }}
-                  <template v-if="operator.accountOperator?.potential"> · 潜能{{ operator.accountOperator.potential }}</template>
-                </span>
-              </div>
-              <div class="operator-score">
-                <strong>{{ formatScore(operator.finalScore) }}</strong>
-                <span>当前分</span>
-              </div>
-            </div>
 
-            <div class="operator-dimensions">
-              <span
-                >作战 <b :class="`grade-text-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }} {{ operator.combatScore }}</b>
-                <span v-if="getGradeNote(operator)" class="grade-note" :class="{ 'is-limited': operator.hasLimitedEquip }"
-                  :title="getGradeNoteTitle(operator)">{{ getGradeNote(operator) }}</span
-                >
-              </span>
-              <span
-                >基建 <b :class="`grade-text-${operator.baseGrade.toLowerCase()}`">{{ operator.baseGrade }} {{ operator.baseScore }}</b></span
-              >
-              <span v-if="operator.accountBonus > 0">账号 +{{ formatScore(operator.accountBonus) }}</span>
-            </div>
+                <div class="operator-dimensions">
+                  <span
+                    >作战 <b :class="`grade-text-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }} {{ operator.combatScore }}</b>
+                    <span
+                      v-if="getGradeNote(operator)"
+                      class="grade-note"
+                      :class="{ 'is-limited': operator.hasLimitedEquip, 'is-x-without-limited': !operator.hasLimitedEquip && operator.combatGrade === 'X' }"
+                      :title="getGradeNoteTitle(operator)"
+                      >{{ getGradeNote(operator) }}</span
+                    >
+                  </span>
+                  <span
+                    >基建 <b :class="`grade-text-${operator.baseGrade.toLowerCase()}`">{{ operator.baseGrade }} {{ operator.baseScore }}</b></span
+                  >
+                  <span v-if="operator.accountBonus > 0">账号 +{{ formatScore(operator.accountBonus) }}</span>
+                </div>
 
-            <div class="operator-info-row">
-              <span class="info-label">作战描述</span>
-              <span v-if="operator.combatDescriptions.length" class="info-value">
-                <span v-for="entry in operator.combatDescriptions" :key="entry.name" class="combat-entry">
-                  <b>{{ entry.name }}</b>
-                  <template v-if="entry.description">：{{ entry.description }}</template>
-                </span>
-              </span>
-              <span v-else class="info-value info-value-empty">暂无作战描述</span>
+                <div class="operator-info-row">
+                  <span class="info-label">作战描述</span>
+                  <span v-if="operator.combatDescriptions.length" class="info-value">
+                    <span v-for="entry in operator.combatDescriptions" :key="entry.name" class="combat-entry">
+                      <b>{{ entry.name }}</b>
+                      <template v-if="entry.description">：{{ entry.description }}</template>
+                    </span>
+                  </span>
+                  <span v-else class="info-value info-value-empty">暂无作战描述</span>
+                </div>
+                <div class="operator-info-row">
+                  <span class="info-label">基建技能</span>
+                  <span class="info-value">
+                    {{ operator.buildingSkills.map((skill) => `${skill.room}：${skill.description}`).join("；") || "暂无基建记录" }}
+                  </span>
+                </div>
+                <div class="operator-stats" v-if="operator.stats">
+                  <span>持有 {{ formatPercent(operator.stats.ownRate) }}</span>
+                  <span>精二 {{ formatPercent(operator.stats.eliteRank2) }}</span>
+                  <span>专三 {{ formatPercent(getMasteryRate(operator.stats)) }}</span>
+                  <span>模组 {{ formatPercent(getModuleRate(operator.stats)) }}</span>
+                </div>
+                <div v-else class="operator-stats operator-stats-empty">公开统计暂无</div>
+              </article>
             </div>
-            <div class="operator-info-row">
-              <span class="info-label">基建技能</span>
-              <span class="info-value">
-                {{ operator.buildingSkills.map((skill) => `${skill.room}：${skill.description}`).join("；") || "暂无基建记录" }}
-              </span>
-            </div>
-            <div class="operator-stats" v-if="operator.stats">
-              <span>持有 {{ formatPercent(operator.stats.ownRate) }}</span>
-              <span>精二 {{ formatPercent(operator.stats.eliteRank2) }}</span>
-              <span>专三 {{ formatPercent(getMasteryRate(operator.stats)) }}</span>
-              <span>模组 {{ formatPercent(getModuleRate(operator.stats)) }}</span>
-            </div>
-            <div v-else class="operator-stats operator-stats-empty">公开统计暂无</div>
-          </article>
-        </div>
           </article>
         </section>
     </template>
@@ -557,7 +549,7 @@ onMounted(() => {
     <section class="method-note">
       <div>
         <strong>计算口径</strong>
-        <span>S/A/B/C 对应 5/3/2/1 分；通用维度为作战与基建平均值；四组均按 1/12 等概率计算。</span>
+        <span>X/S/A/B/C 对应 5/4/3/2/1 分；通用维度为作战与基建平均值；四组均按 1/12 等概率计算。</span>
       </div>
       <div>
         <strong>账号收益</strong>
@@ -1063,6 +1055,11 @@ h1 {
 .grade-note.is-limited {
   background: rgba(40, 120, 200, 0.12);
   color: #2878c8;
+}
+
+.grade-note.is-x-without-limited {
+  background: rgba(168, 85, 247, 0.12);
+  color: #9427fa;
 }
 
 .grade-text-x {
