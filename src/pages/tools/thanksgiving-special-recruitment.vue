@@ -38,7 +38,25 @@ const ROOM_LABELS = {
   training: "训练室",
   recycle: "回收站",
 };
-const OFFICIAL_ACTIVITY_URL = "https://ak.hypergryph.com/news/0787";
+const HERO_AVATAR_COUNT = 16;
+const HERO_AVATAR_LAYOUT = [
+  { left: "5%", top: "13%", size: 62, mobileSize: 48, delay: "-1.2s", duration: "6.8s", opacity: 0.72 },
+  { left: "22%", top: "7%", size: 78, mobileSize: 58, delay: "-3.7s", duration: "8.2s", opacity: 0.86 },
+  { left: "42%", top: "15%", size: 48, mobileSize: 38, delay: "-5.1s", duration: "7.4s", opacity: 0.64 },
+  { left: "63%", top: "8%", size: 70, mobileSize: 52, delay: "-2.4s", duration: "9.1s", opacity: 0.8 },
+  { left: "85%", top: "16%", size: 56, mobileSize: 42, delay: "-6.2s", duration: "7.8s", opacity: 0.7 },
+  { left: "12%", top: "34%", size: 86, mobileSize: 64, delay: "-4.4s", duration: "8.8s", opacity: 0.9 },
+  { left: "31%", top: "29%", size: 58, mobileSize: 44, delay: "-1.8s", duration: "7.1s", opacity: 0.74 },
+  { left: "52%", top: "36%", size: 92, mobileSize: 68, delay: "-7.3s", duration: "9.6s", opacity: 0.92 },
+  { left: "74%", top: "30%", size: 66, mobileSize: 50, delay: "-3.1s", duration: "8.4s", opacity: 0.78 },
+  { left: "94%", top: "42%", size: 46, mobileSize: 36, delay: "-6.7s", duration: "7.5s", opacity: 0.62 },
+  { left: "4%", top: "63%", size: 74, mobileSize: 56, delay: "-2.9s", duration: "8.9s", opacity: 0.82 },
+  { left: "22%", top: "72%", size: 52, mobileSize: 40, delay: "-5.6s", duration: "7.6s", opacity: 0.66 },
+  { left: "42%", top: "64%", size: 64, mobileSize: 48, delay: "-4.1s", duration: "8.1s", opacity: 0.76 },
+  { left: "65%", top: "70%", size: 80, mobileSize: 60, delay: "-7.8s", duration: "9.2s", opacity: 0.86 },
+  { left: "85%", top: "66%", size: 54, mobileSize: 40, delay: "-1.4s", duration: "7.9s", opacity: 0.68 },
+  { left: "56%", top: "84%", size: 44, mobileSize: 34, delay: "-6.4s", duration: "6.9s", opacity: 0.58 },
+];
 
 const dimension = ref("general");
 const preferUnowned = ref(true);
@@ -52,6 +70,7 @@ const progressionStatistics = ref(new Map());
 const sampleSize = ref(0);
 const drawResult = ref(null);
 const drawPreviewGroup = ref(null);
+const heroOperators = ref([]);
 const isDrawing = ref(false);
 let drawInterval = null;
 let drawTimeout = null;
@@ -59,6 +78,49 @@ let drawTimeout = null;
 const hasLoginToken = computed(() => Boolean(localStorage.getItem("USER_TOKEN")));
 
 const operatorByName = new Map(Object.values(operatorTableV2).map((operator) => [operator.name, operator]));
+
+function shuffle(values) {
+  const result = [...values];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [result[index], result[swapIndex]] = [result[swapIndex], result[index]];
+  }
+  return result;
+}
+
+function refreshHeroOperators() {
+  const candidates = RECRUITMENT_CONFIG.groups
+    .flatMap((group) => group.operators)
+    .map((configOperator) => {
+      const operator = operatorByName.get(configOperator.name);
+      if (!operator?.charId) {
+        return null;
+      }
+      return {
+        charId: operator.charId,
+        rarity: operator.rarity || 6,
+      };
+    })
+    .filter(Boolean);
+
+  heroOperators.value = shuffle(candidates)
+    .slice(0, HERO_AVATAR_COUNT)
+    .map((operator, index) => {
+      const layout = HERO_AVATAR_LAYOUT[index % HERO_AVATAR_LAYOUT.length];
+      return {
+        ...operator,
+        style: {
+          "--hero-left": layout.left,
+          "--hero-top": layout.top,
+          "--hero-size": `${layout.size}px`,
+          "--hero-mobile-size": `${layout.mobileSize}px`,
+          "--hero-delay": layout.delay,
+          "--hero-duration": layout.duration,
+          "--hero-opacity": layout.opacity,
+        },
+      };
+    });
+}
 
 const operatorMetaByName = new Map((COMBAT_DATA.operators || []).map((operator) => [operator.name, operator]));
 
@@ -410,48 +472,38 @@ watch([dimension, preferUnowned, accountStatus], () => {
 });
 
 onBeforeUnmount(clearDrawTimers);
-onMounted(loadPage);
+onMounted(() => {
+  refreshHeroOperators();
+  loadPage();
+});
 </script>
 
 <template>
   <main class="thanksgiving-page">
     <section class="hero-panel" aria-labelledby="thanksgiving-title">
-      <div class="hero-copy">
-        <p class="hero-kicker"><v-icon size="18">mdi-party-popper</v-icon> 感谢庆典 / 四选一辅助</p>
-        <h1 id="thanksgiving-title">感谢庆典特别招募活动抽签器</h1>
-        <p class="hero-description">根据你的干员持有情况、潜能和偏好，为四个特别招募队列计算权重，抽出一个值得优先考虑的选择。</p>
-        <div class="hero-actions">
-          <v-btn class="draw-button" size="x-large" :loading="isDrawing" :disabled="!drawReady" @click="drawGroup">
-            <v-icon start>mdi-dice-5-outline</v-icon>
-            {{ isDrawing ? "抽签中..." : "开始抽签" }}
-          </v-btn>
-          <a class="official-button" :href="OFFICIAL_ACTIVITY_URL" target="_blank" rel="noopener noreferrer">
-            <v-icon size="18">mdi-open-in-new</v-icon>
-            查看官网活动说明
-          </a>
-        </div>
-        <div class="hero-status-row">
-          <span><v-icon size="16">mdi-view-grid-outline</v-icon> 四组 · 每组 12 名</span>
-          <span><v-icon size="16">mdi-dice-multiple-outline</v-icon> 组内等概率获得 1 名</span>
-          <span><v-icon size="16">mdi-chart-line</v-icon> 当前按{{ dimensionLabel }}计算</span>
+      <div class="hero-avatar-field" aria-hidden="true">
+        <div
+          v-for="(operator, index) in heroOperators"
+          :key="`${operator.charId}-${index}`"
+          class="hero-avatar"
+          :style="operator.style"
+        >
+          <OperatorAvatar
+            :char-id="operator.charId"
+            :rarity="operator.rarity"
+            :size="Number.parseInt(operator.style['--hero-size'], 10)"
+            :mobile-size="Number.parseInt(operator.style['--hero-mobile-size'], 10)"
+            :border="true"
+          />
         </div>
       </div>
-      <div class="hero-visual" aria-hidden="true">
-        <div class="hero-visual-caption">四选一 · 抽出你的优先队列</div>
-        <div class="hero-operator-strip">
-          <div v-for="group in groupResults" :key="group.id" class="hero-operator">
-            <OperatorAvatar
-              v-if="group.bestOperator"
-              :char-id="group.bestOperator.charId"
-              :rarity="group.bestOperator.rarity"
-              :size="70"
-              :mobile-size="54"
-              :border="true"
-            />
-            <span>{{ group.id }}</span>
-          </div>
+      <div class="hero-copy">
+        <h1 id="thanksgiving-title">特别招募活动<br />怎么选？</h1>
+        <div class="hero-actions">
+          <v-btn class="draw-button" size="x-large" variant="flat" :loading="isDrawing" :disabled="!drawReady" @click="drawGroup">
+            帮我决定！
+          </v-btn>
         </div>
-        <strong class="hero-visual-title">让评分替你<br />先抽一次</strong>
       </div>
     </section>
 
@@ -678,167 +730,93 @@ onMounted(loadPage);
 <style scoped>
 .hero-panel {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(260px, 0.85fr);
-  gap: 28px;
-  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
+  min-height: min(760px, calc(100svh - 64px));
   overflow: hidden;
-  padding: clamp(28px, 5vw, 58px);
-  border: 1px solid #a9283e;
-  border-radius: 8px;
-  background: #741326;
+  padding: clamp(28px, 6vw, 64px) clamp(18px, 5vw, 72px) clamp(42px, 8vw, 76px);
+  border-radius: 0;
+  background: #8f1b34;
   color: #fff;
-  box-shadow: 0 18px 36px rgba(116, 19, 38, 0.2);
 }
 
-.hero-panel::after {
+.hero-avatar-field {
   position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(125deg, transparent 0 32px, rgba(255, 209, 102, 0.08) 33px 34px, transparent 35px 70px);
-  content: "";
+  inset: 0 0 230px;
+  overflow: hidden;
   pointer-events: none;
 }
 
-.hero-copy,
-.hero-visual {
+.hero-copy {
   position: relative;
   z-index: 1;
-}
-
-.hero-copy {
-  align-self: center;
-}
-
-.hero-kicker,
-.hero-status-row,
-.official-button {
-  display: inline-flex;
-  align-items: center;
-}
-
-.hero-kicker {
-  gap: 6px;
-  margin: 0 0 14px;
-  color: #ffd166;
-  font-size: 14px;
-  font-weight: 800;
+  width: min(100%, 430px);
+  margin: 0 auto;
+  text-align: center;
 }
 
 .hero-panel h1 {
-  max-width: 680px;
-  margin-bottom: 12px;
-  font-size: clamp(30px, 5vw, 58px);
-  line-height: 1.08;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(32px, 7vw, 54px);
+  font-weight: 900;
+  line-height: 1.18;
   letter-spacing: 0;
-}
-
-.hero-description {
-  max-width: 650px;
-  margin-bottom: 0;
-  color: rgba(255, 255, 255, 0.82);
-  font-size: 15px;
-  line-height: 1.75;
 }
 
 .hero-actions {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
-  margin-top: 26px;
+  justify-content: center;
+  margin-top: 24px;
 }
 
 .draw-button {
-  min-width: 190px;
-  min-height: 58px;
-  border: 1px solid #ff8794 !important;
-  border-radius: 6px !important;
-  background: #ed304a !important;
-  box-shadow: 0 8px 18px rgba(45, 5, 14, 0.25);
+  width: min(100%, 330px);
+  min-height: 62px;
+  border: 1px solid #ff9aa6 !important;
+  border-radius: 4px !important;
+  background: #e52b46 !important;
+  box-shadow: 0 10px 20px rgba(45, 5, 14, 0.3);
   color: #fff !important;
-  font-size: 18px !important;
+  font-size: 19px !important;
   font-weight: 800 !important;
 }
 
 .draw-button:hover {
-  background: #f8445d !important;
+  background: #f13b56 !important;
 }
 
-.official-button {
-  gap: 6px;
-  min-height: 42px;
-  padding: 0 14px;
-  border: 1px solid rgba(255, 209, 102, 0.7);
-  border-radius: 5px;
-  color: #ffd166;
-  font-size: 13px;
-  text-decoration: none;
-  transition: background 0.15s, color 0.15s;
-}
-
-.official-button:hover {
-  background: rgba(255, 209, 102, 0.14);
-  color: #fff2bd;
-}
-
-.hero-status-row {
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  margin-top: 24px;
-  color: rgba(255, 255, 255, 0.68);
-  font-size: 12px;
-}
-
-.hero-status-row span {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.hero-visual {
+.hero-avatar {
+  position: absolute;
+  top: var(--hero-top);
+  left: var(--hero-left);
   display: flex;
-  flex-direction: column;
+  width: var(--hero-size);
+  height: var(--hero-size);
   align-items: center;
   justify-content: center;
-  min-height: 240px;
-  padding: 20px;
-  border-left: 1px solid rgba(255, 209, 102, 0.28);
-  text-align: center;
+  opacity: var(--hero-opacity);
+  transform: translate(-50%, -50%);
+  animation: hero-avatar-float var(--hero-duration) ease-in-out var(--hero-delay) infinite alternate;
 }
 
-.hero-visual-caption {
-  margin-bottom: 20px;
-  color: #ffd166;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0;
+@keyframes hero-avatar-float {
+  0% {
+    transform: translate(-50%, -50%) translate3d(-4px, 4px, 0) rotate(-3deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) translate3d(5px, -8px, 0) rotate(3deg);
+  }
 }
 
-.hero-operator-strip {
-  display: flex;
-  align-items: flex-end;
-  gap: clamp(8px, 1.5vw, 16px);
-}
-
-.hero-operator {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  color: rgba(255, 255, 255, 0.86);
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.hero-operator:nth-child(2n) {
-  transform: translateY(-16px);
-}
-
-.hero-visual-title {
-  margin-top: 24px;
-  color: #fff;
-  font-size: clamp(22px, 3vw, 34px);
-  line-height: 1.18;
+@media (prefers-reduced-motion: reduce) {
+  .hero-avatar {
+    animation: none;
+  }
 }
 
 .thanksgiving-page {
@@ -1622,21 +1600,30 @@ h1 {
 
 @media (max-width: 760px) {
   .thanksgiving-page {
-    padding: 14px 10px 32px;
+    padding: 0 10px 32px;
   }
 
-  .hero-panel,
   .thanksgiving-header,
   .method-note {
     display: block;
   }
 
-  .hero-visual {
-    min-height: 190px;
-    margin-top: 24px;
-    padding: 20px 0 0;
-    border-top: 1px solid rgba(255, 209, 102, 0.28);
-    border-left: 0;
+  .hero-panel {
+    min-height: calc(100svh - 64px);
+    padding: 28px 18px 42px;
+  }
+
+  .hero-avatar-field {
+    inset: 0 0 180px;
+  }
+
+  .hero-avatar {
+    width: var(--hero-mobile-size);
+    height: var(--hero-mobile-size);
+  }
+
+  .hero-panel h1 {
+    font-size: clamp(32px, 10vw, 46px);
   }
 
   .thanksgiving-header-meta {
@@ -1700,17 +1687,8 @@ h1 {
   }
 
   .hero-actions,
-  .draw-button,
-  .official-button {
+  .draw-button {
     width: 100%;
-  }
-
-  .official-button {
-    justify-content: center;
-  }
-
-  .hero-operator-strip {
-    gap: 6px;
   }
 
   .result-metrics {
