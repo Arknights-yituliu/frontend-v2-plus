@@ -52,7 +52,7 @@
         {"name": "森蚺", "combatGrade": "S", "baseGrade": "B"},
         {"name": "史尔特尔", "combatGrade": "S", "baseGrade": "A"},
         {"name": "瑕光", "combatGrade": "B", "baseGrade": "A"},
-        {"name": "泥岩", "combatGrade": "B", "baseGrade": "A"},
+        {"name": "泥岩", "combatGrade": "A", "baseGrade": "A"},
         {"name": "山", "combatGrade": "B", "baseGrade": "B"},
         {"name": "空弦", "combatGrade": "X", "baseGrade": "C"},
         {"name": "嵯峨", "combatGrade": "C", "baseGrade": "A"},
