@@ -48,6 +48,8 @@ Example:
 fix(攒抽计算器): 每月黄票兑换月份错误
 ```
 
+Commit messages must not include `Co-Authored-By` or any other AI/tool attribution trailers.
+
 Common commit types:
 - `feat` - New feature
 - `fix` - Bug fix
