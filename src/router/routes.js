@@ -637,11 +637,11 @@ const routes = [
     {
         path: '/48-12-1',
         text: '感谢庆典特别招募活动抽签器',
-        name: 'ThanksgivingSpecialRecruitment',
+        name: '48-12-1',
         display: false,
         module: 'tools',
         icon: "mdi-gift-open-outline",
-        component: () => import('/src/pages/tools/thanksgiving-special-recruitment.vue'),
+        component: () => import('/src/pages/tools/48-12-1.vue'),
         meta: {
             title: '感谢庆典特别招募活动抽签器'
         }

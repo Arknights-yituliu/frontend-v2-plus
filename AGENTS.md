@@ -2,6 +2,14 @@
 
 This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
 
+## Execution Boundaries
+
+- Unless the user explicitly requests it, do not perform visual checks, screenshots, browser inspection, or other visual verification.
+- After starting the local test server, leave it running. Do not restart it after routine code changes unless the user explicitly requests a restart or the change clearly requires one for the server to function.
+- Do not perform GitHub operations, including fetch, pull, push, branch synchronization, or remote inspection, unless the user explicitly requests that operation.
+- Do not synchronize, deploy, rebuild, restart, or otherwise change the FnOS service unless the user explicitly requests it.
+- Do not perform any extra operation that was not explicitly requested. Keep implementation, checks, and state changes to the smallest scope necessary for the current request.
+
 ## Project Overview
 
 This is the frontend for "明日方舟一图流" (Arknights Yituliu), a comprehensive resource site for the mobile game Arknights. The site provides material efficiency calculations, stage recommendations, gacha calculators, operator surveys, and various game data tools.
