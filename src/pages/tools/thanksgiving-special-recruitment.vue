@@ -38,24 +38,11 @@ const ROOM_LABELS = {
   training: "训练室",
   recycle: "回收站",
 };
-const HERO_AVATAR_COUNT = 16;
-const HERO_AVATAR_LAYOUT = [
-  { left: "5%", top: "13%", size: 62, mobileSize: 48, delay: "-1.2s", duration: "6.8s", opacity: 0.72 },
-  { left: "22%", top: "7%", size: 78, mobileSize: 58, delay: "-3.7s", duration: "8.2s", opacity: 0.86 },
-  { left: "42%", top: "15%", size: 48, mobileSize: 38, delay: "-5.1s", duration: "7.4s", opacity: 0.64 },
-  { left: "63%", top: "8%", size: 70, mobileSize: 52, delay: "-2.4s", duration: "9.1s", opacity: 0.8 },
-  { left: "85%", top: "16%", size: 56, mobileSize: 42, delay: "-6.2s", duration: "7.8s", opacity: 0.7 },
-  { left: "12%", top: "34%", size: 86, mobileSize: 64, delay: "-4.4s", duration: "8.8s", opacity: 0.9 },
-  { left: "31%", top: "29%", size: 58, mobileSize: 44, delay: "-1.8s", duration: "7.1s", opacity: 0.74 },
-  { left: "52%", top: "36%", size: 92, mobileSize: 68, delay: "-7.3s", duration: "9.6s", opacity: 0.92 },
-  { left: "74%", top: "30%", size: 66, mobileSize: 50, delay: "-3.1s", duration: "8.4s", opacity: 0.78 },
-  { left: "94%", top: "42%", size: 46, mobileSize: 36, delay: "-6.7s", duration: "7.5s", opacity: 0.62 },
-  { left: "4%", top: "63%", size: 74, mobileSize: 56, delay: "-2.9s", duration: "8.9s", opacity: 0.82 },
-  { left: "22%", top: "72%", size: 52, mobileSize: 40, delay: "-5.6s", duration: "7.6s", opacity: 0.66 },
-  { left: "42%", top: "64%", size: 64, mobileSize: 48, delay: "-4.1s", duration: "8.1s", opacity: 0.76 },
-  { left: "65%", top: "70%", size: 80, mobileSize: 60, delay: "-7.8s", duration: "9.2s", opacity: 0.86 },
-  { left: "85%", top: "66%", size: 54, mobileSize: 40, delay: "-1.4s", duration: "7.9s", opacity: 0.68 },
-  { left: "56%", top: "84%", size: 44, mobileSize: 34, delay: "-6.4s", duration: "6.9s", opacity: 0.58 },
+const HERO_RIBBON_THEMES = [
+  { color: "#9a3934", accent: "#f1b05a", ink: "#fff8ee", duration: "34s" },
+  { color: "#b97927", accent: "#332a20", ink: "#fffaf0", duration: "28s" },
+  { color: "#197773", accent: "#f5c24c", ink: "#effffb", duration: "32s" },
+  { color: "#1f5a73", accent: "#e6a338", ink: "#f4fbff", duration: "26s" },
 ];
 
 const dimension = ref("general");
@@ -70,7 +57,6 @@ const progressionStatistics = ref(new Map());
 const sampleSize = ref(0);
 const drawResult = ref(null);
 const drawPreviewGroup = ref(null);
-const heroOperators = ref([]);
 const isDrawing = ref(false);
 let drawInterval = null;
 let drawTimeout = null;
@@ -79,48 +65,32 @@ const hasLoginToken = computed(() => Boolean(localStorage.getItem("USER_TOKEN"))
 
 const operatorByName = new Map(Object.values(operatorTableV2).map((operator) => [operator.name, operator]));
 
-function shuffle(values) {
-  const result = [...values];
-  for (let index = result.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [result[index], result[swapIndex]] = [result[swapIndex], result[index]];
-  }
-  return result;
-}
-
-function refreshHeroOperators() {
-  const candidates = RECRUITMENT_CONFIG.groups
-    .flatMap((group) => group.operators)
-    .map((configOperator) => {
-      const operator = operatorByName.get(configOperator.name);
-      if (!operator?.charId) {
-        return null;
-      }
-      return {
-        charId: operator.charId,
-        rarity: operator.rarity || 6,
-      };
-    })
-    .filter(Boolean);
-
-  heroOperators.value = shuffle(candidates)
-    .slice(0, HERO_AVATAR_COUNT)
-    .map((operator, index) => {
-      const layout = HERO_AVATAR_LAYOUT[index % HERO_AVATAR_LAYOUT.length];
-      return {
-        ...operator,
-        style: {
-          "--hero-left": layout.left,
-          "--hero-top": layout.top,
-          "--hero-size": `${layout.size}px`,
-          "--hero-mobile-size": `${layout.mobileSize}px`,
-          "--hero-delay": layout.delay,
-          "--hero-duration": layout.duration,
-          "--hero-opacity": layout.opacity,
-        },
-      };
-    });
-}
+const heroRibbons = computed(() => RECRUITMENT_CONFIG.groups.map((group, index) => {
+  const theme = HERO_RIBBON_THEMES[index % HERO_RIBBON_THEMES.length];
+  return {
+    ...group,
+    direction: index % 2 === 1 ? "reverse" : "forward",
+    style: {
+      "--ribbon-color": theme.color,
+      "--ribbon-accent": theme.accent,
+      "--ribbon-ink": theme.ink,
+      "--ribbon-duration": theme.duration,
+    },
+    operators: group.operators
+      .map((configOperator) => {
+        const operator = operatorByName.get(configOperator.name);
+        if (!operator?.charId) {
+          return null;
+        }
+        return {
+          name: configOperator.name,
+          charId: operator.charId,
+          rarity: operator.rarity || 6,
+        };
+      })
+      .filter(Boolean),
+  };
+}));
 
 const operatorMetaByName = new Map((COMBAT_DATA.operators || []).map((operator) => [operator.name, operator]));
 
@@ -473,7 +443,6 @@ watch([dimension, preferUnowned, accountStatus], () => {
 
 onBeforeUnmount(clearDrawTimers);
 onMounted(() => {
-  refreshHeroOperators();
   loadPage();
 });
 </script>
@@ -481,22 +450,29 @@ onMounted(() => {
 <template>
   <main class="thanksgiving-page">
     <section class="hero-panel" aria-labelledby="thanksgiving-title">
-      <div class="hero-avatar-field" aria-hidden="true">
+      <div class="hero-ribbons" aria-hidden="true">
         <div
-          v-for="(operator, index) in heroOperators"
-          :key="`${operator.charId}-${index}`"
-          class="hero-avatar"
-          :style="operator.style"
+          v-for="(ribbon, ribbonIndex) in heroRibbons"
+          :key="ribbon.id"
+          class="hero-ribbon"
+          :style="ribbon.style"
         >
-          <OperatorAvatar
-            :char-id="operator.charId"
-            :rarity="operator.rarity"
-            :size="Number.parseInt(operator.style['--hero-size'], 10)"
-            :mobile-size="Number.parseInt(operator.style['--hero-mobile-size'], 10)"
-            :border="true"
-          />
+          <div class="hero-ribbon-label">
+            <strong>{{ String(ribbonIndex + 1).padStart(2, "0") }}</strong>
+            <span>{{ ribbon.name }}</span>
+          </div>
+          <div class="hero-ribbon-viewport">
+            <div class="hero-ribbon-track" :class="{ 'is-reverse': ribbon.direction === 'reverse' }">
+              <div v-for="copy in 2" :key="copy" class="hero-ribbon-copy">
+                <div v-for="operator in ribbon.operators" :key="`${copy}-${operator.charId}`" class="hero-ribbon-operator">
+                  <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="88" :mobile-size="64" :border="true" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      <div class="hero-tint" aria-hidden="true"></div>
       <div class="hero-copy">
         <h1 id="thanksgiving-title">特别招募活动<br />怎么选？</h1>
         <div class="hero-actions">
@@ -731,39 +707,162 @@ onMounted(() => {
 .hero-panel {
   position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
   min-height: min(760px, calc(100svh - 64px));
+  margin: -24px clamp(-36px, -2.5vw, -12px) 0;
   overflow: hidden;
-  padding: clamp(28px, 6vw, 64px) clamp(18px, 5vw, 72px) clamp(42px, 8vw, 76px);
+  padding: clamp(28px, 6vw, 64px) clamp(18px, 5vw, 72px);
   border-radius: 0;
-  background: #8f1b34;
+  isolation: isolate;
+  background: #171b1d;
   color: #fff;
 }
 
-.hero-avatar-field {
+.hero-ribbons {
   position: absolute;
-  inset: 0 0 230px;
+  top: 13%;
+  right: 0;
+  left: 0;
+  display: grid;
+  height: 68%;
+  grid-template-rows: repeat(4, minmax(0, 1fr));
   overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-ribbon {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.28);
+  background: var(--ribbon-color);
+}
+
+.hero-ribbon::after {
+  position: absolute;
+  top: 0;
+  right: -2%;
+  bottom: 0;
+  z-index: 2;
+  width: 11%;
+  background: rgba(10, 14, 16, 0.34);
+  clip-path: polygon(45% 0, 100% 0, 55% 100%, 0 100%);
+  content: "";
+}
+
+.hero-ribbon-label {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  width: clamp(104px, 16vw, 210px);
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 clamp(12px, 2.2vw, 28px);
+  background: rgba(15, 19, 20, 0.72);
+  color: var(--ribbon-ink);
+  clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%);
+}
+
+.hero-ribbon-label strong {
+  color: var(--ribbon-accent);
+  font-size: clamp(28px, 4vw, 58px);
+  font-style: italic;
+  font-weight: 950;
+  line-height: 0.86;
+}
+
+.hero-ribbon-label span {
+  max-width: 132px;
+  margin-top: 8px;
+  font-size: clamp(10px, 1.2vw, 14px);
+  font-weight: 800;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.hero-ribbon-viewport {
+  height: 100%;
+  padding-left: clamp(88px, 13vw, 174px);
+  overflow: hidden;
+}
+
+.hero-ribbon-track {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  animation: hero-ribbon-scroll var(--ribbon-duration) linear infinite;
+  will-change: transform;
+}
+
+.hero-ribbon-track.is-reverse {
+  animation-name: hero-ribbon-scroll-reverse;
+}
+
+.hero-ribbon-copy {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: clamp(4px, 1vw, 18px);
+  padding: 0 clamp(16px, 2.4vw, 36px);
+}
+
+.hero-ribbon-operator {
+  position: relative;
+  display: flex;
+  width: clamp(72px, 8vw, 116px);
+  height: 100%;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-ribbon-operator::before {
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  left: 50%;
+  width: 74%;
+  background: rgba(255, 255, 255, 0.12);
+  clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
+  content: "";
+  transform: translateX(-50%);
+}
+
+.hero-ribbon-operator :deep(.operator-avatar) {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.28));
+}
+
+.hero-tint {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: rgba(9, 13, 15, 0.16);
   pointer-events: none;
 }
 
 .hero-copy {
   position: relative;
-  z-index: 1;
+  z-index: 5;
   width: min(100%, 430px);
-  margin: 0 auto;
+  margin-top: 9%;
   text-align: center;
 }
 
 .hero-panel h1 {
   margin: 0;
   color: #fff;
-  font-size: clamp(32px, 7vw, 54px);
+  font-size: clamp(38px, 7vw, 66px);
   font-weight: 900;
   line-height: 1.18;
   letter-spacing: 0;
+  text-shadow: 0 3px 0 #11181a, 0 7px 18px rgba(0, 0, 0, 0.5);
 }
 
 .hero-actions {
@@ -789,32 +888,28 @@ onMounted(() => {
   background: #f13b56 !important;
 }
 
-.hero-avatar {
-  position: absolute;
-  top: var(--hero-top);
-  left: var(--hero-left);
-  display: flex;
-  width: var(--hero-size);
-  height: var(--hero-size);
-  align-items: center;
-  justify-content: center;
-  opacity: var(--hero-opacity);
-  transform: translate(-50%, -50%);
-  animation: hero-avatar-float var(--hero-duration) ease-in-out var(--hero-delay) infinite alternate;
-}
-
-@keyframes hero-avatar-float {
+@keyframes hero-ribbon-scroll {
   0% {
-    transform: translate(-50%, -50%) translate3d(-4px, 4px, 0) rotate(-3deg);
+    transform: translateX(0);
   }
 
   100% {
-    transform: translate(-50%, -50%) translate3d(5px, -8px, 0) rotate(3deg);
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes hero-ribbon-scroll-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+
+  100% {
+    transform: translateX(0);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-avatar {
+  .hero-ribbon-track {
     animation: none;
   }
 }
@@ -1581,10 +1676,6 @@ h1 {
 }
 
 @media (max-width: 1050px) {
-  .hero-panel {
-    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.75fr);
-  }
-
   .operator-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1610,20 +1701,49 @@ h1 {
 
   .hero-panel {
     min-height: calc(100svh - 64px);
+    margin-right: -10px;
+    margin-left: -10px;
     padding: 28px 18px 42px;
   }
 
-  .hero-avatar-field {
-    inset: 0 0 180px;
+  .hero-ribbons {
+    top: 11%;
+    height: 70%;
   }
 
-  .hero-avatar {
-    width: var(--hero-mobile-size);
-    height: var(--hero-mobile-size);
+  .hero-ribbon-label {
+    width: 78px;
+    padding: 0 10px;
+  }
+
+  .hero-ribbon-label strong {
+    font-size: 30px;
+  }
+
+  .hero-ribbon-label span {
+    max-width: 56px;
+    margin-top: 5px;
+    overflow: hidden;
+    font-size: 9px;
+    text-overflow: ellipsis;
+    white-space: normal;
+  }
+
+  .hero-ribbon-viewport {
+    padding-left: 66px;
+  }
+
+  .hero-ribbon-copy {
+    gap: 2px;
+    padding: 0 12px;
+  }
+
+  .hero-ribbon-operator {
+    width: 72px;
   }
 
   .hero-panel h1 {
-    font-size: clamp(32px, 10vw, 46px);
+    font-size: clamp(36px, 10vw, 50px);
   }
 
   .thanksgiving-header-meta {
