@@ -495,6 +495,17 @@ onMounted(() => {
                   </a>
                 </div>
 
+                <span class="operator-status" :class="{ owned: operator.accountLabel === '已持有' }">
+                  {{ operator.accountLabel }}
+                  <template v-if="operator.accountOperator?.potential"> · 潜能{{ operator.accountOperator.potential }}</template>
+                </span>
+              </div>
+              <div class="operator-score">
+                <strong>{{ formatScore(operator.finalScore) }}</strong>
+                <span>当前分</span>
+              </div>
+            </div>
+
                 <div class="operator-dimensions">
                   <span
                     >作战 <b :class="`grade-text-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }} {{ operator.combatScore }}</b>
