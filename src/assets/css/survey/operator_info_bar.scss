@@ -49,6 +49,7 @@
     min-height: 70px;
     padding: 8px 12px;
     box-sizing: border-box;
+    position: relative;
   }
 
   .operator-avatar-area,
@@ -244,6 +245,40 @@
     top: 0;
     width: 16px;
     box-shadow: 1px 1px 2px white;
+  }
+
+  // 未持有干员标志：居中覆盖在卡片展示区，突出提示且不拦截点击
+  .operator-unowned-badge {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+
+    span {
+      padding: 3px 14px;
+      border: 2px solid rgba(var(--v-theme-error), 0.7);
+      border-radius: 8px;
+      background: rgba(var(--v-theme-surface), 0.9);
+      color: rgb(var(--v-theme-error));
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 24px;
+      letter-spacing: 4px;
+      transform: rotate(-12deg);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  // 未持有干员：技能与模组图标置灰，降低存在感
+  &.operator-info-card--not-owned {
+    .operator-skills-area,
+    .operator-modules-area {
+      filter: grayscale(1);
+      opacity: 0.55;
+    }
   }
 }
 
