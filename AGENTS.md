@@ -9,6 +9,7 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 - Do not perform GitHub operations, including fetch, pull, push, branch synchronization, or remote inspection, unless the user explicitly requests that operation.
 - Do not synchronize, deploy, rebuild, restart, or otherwise change the FnOS service unless the user explicitly requests it.
 - Do not perform any extra operation that was not explicitly requested. Keep implementation, checks, and state changes to the smallest scope necessary for the current request.
+- When reverting changes, use the conversation history to scope the reversal to one user's explicitly requested change from one conversation at a time. If the requested reversal would affect changes from two or more conversations, explain the scope and obtain manual confirmation before reverting anything. Preserve all other conversation changes and unauthorized modifications.
 
 ## Project Overview
 
