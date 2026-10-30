@@ -30,6 +30,14 @@ const TOTAL_GRADE_THRESHOLDS = {
   A: (SCORE_MAP.A + SCORE_MAP.B) / 2,
   B: (SCORE_MAP.B + SCORE_MAP.C) / 2,
 };
+const GRADE_ORDER = ["X", "S", "A", "B", "C"];
+const gradeScaleText = computed(() => {
+  const grades = GRADE_ORDER.filter((grade) => Number.isFinite(SCORE_MAP[grade]));
+  const thresholds = [TOTAL_GRADE_THRESHOLDS.S, TOTAL_GRADE_THRESHOLDS.A, TOTAL_GRADE_THRESHOLDS.B]
+    .map((value) => Number(value.toFixed(2)))
+    .join("/");
+  return `${grades.join("/")} 对应 ${grades.map((grade) => SCORE_MAP[grade]).join("/")} 分；总分评级按 ${thresholds} 分作为档位分界`;
+});
 const ROOM_LABELS = {
   trading: "贸易站",
   manufacture: "制造站",
@@ -222,6 +230,7 @@ function getOperatorView(configOperator) {
   const stats = getPublicStats(configOperator.name);
   const prtsUrl = operatorMetaByName.get(configOperator.name)?.prtsUrl || "";
   const finalScore = dimensionScore + accountBonus;
+  const hasLimitedEquip = hasLimitedEquipByName.get(configOperator.name) === true;
 
   return {
     ...configOperator,
@@ -238,7 +247,8 @@ function getOperatorView(configOperator) {
     accountOperator: getAccountOperator(configOperator.name),
     combatDescriptions: buildCombatDescriptions(configOperator.name, tags),
     prtsUrl,
-    hasLimitedEquip: hasLimitedEquipByName.get(configOperator.name) === true,
+    hasLimitedEquip,
+    gradeNote: buildGradeNote(configOperator.combatGrade, hasLimitedEquip),
     buildingSkills,
     stats,
   };
@@ -260,20 +270,25 @@ function buildCombatDescriptions(name, tags) {
   return entries;
 }
 
-// 作战评分脚的说明：有特限模组 → 提示该评分可借特限模组达成；无特限模组且为 S → 提示是纯常规模组打出的成绩
-const TOP_COMBAT_GRADES = new Set(["S"]);
+// 作战评分脚的说明：有特限模组 → 提示该评分可借特限模组达成；无特限模组且为 S/X → 提示是纯常规模组打出的成绩
+const TOP_COMBAT_GRADES = new Set(["X", "S"]);
 
-function getGradeNote(operator) {
-  if (operator.hasLimitedEquip) {
-    return "考虑特限模组达到此评分";
+function buildGradeNote(combatGrade, hasLimitedEquip) {
+  if (hasLimitedEquip) {
+    return {
+      tone: "is-limited",
+      text: "考虑特限模组达到此评分",
+      title: "该干员拥有集成战略 / 生息演算特限模组，该评分需考虑特限模组才能达成",
+    };
   }
-  return TOP_COMBAT_GRADES.has(operator.combatGrade) ? "无特限模组达到此评分" : "";
-}
-
-function getGradeNoteTitle(operator) {
-  return operator.hasLimitedEquip
-    ? "该干员拥有集成战略 / 生息演算特限模组，该评分需考虑特限模组才能达成"
-    : "该干员没有集成战略 / 生息演算特限模组";
+  if (!TOP_COMBAT_GRADES.has(combatGrade)) {
+    return null;
+  }
+  return {
+    tone: combatGrade === "X" ? "is-x-without-limited" : "",
+    text: "无特限模组达到此评分",
+    title: "该干员没有集成战略 / 生息演算特限模组，该评分由常规模组达成",
+  };
 }
 
 const groupResults = computed(() => {
@@ -683,6 +698,22 @@ onMounted(() => {
                 <div class="operator-name-row">
                   <strong>{{ operator.name }}</strong>
                 </div>
+                <div class="operator-rating-module">
+                  <span class="operator-rating-line is-combat">
+                    <span>作战评分</span>
+                    <b class="grade-badge" :class="`grade-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }}</b>
+                    <span
+                      v-if="operator.gradeNote"
+                      class="operator-grade-note"
+                      :class="operator.gradeNote.tone"
+                      :title="operator.gradeNote.title"
+                    >{{ operator.gradeNote.text }}</span>
+                  </span>
+                  <span class="operator-rating-line">
+                    <span>基建评分</span>
+                    <b class="grade-badge" :class="`grade-${operator.baseGrade.toLowerCase()}`">{{ operator.baseGrade }}</b>
+                  </span>
+                </div>
               </div>
               <a
                 v-if="operator.prtsUrl"
@@ -696,16 +727,6 @@ onMounted(() => {
                 <v-icon size="13">mdi-open-in-new</v-icon>
                 <span>PRTS</span>
               </a>
-              <div class="operator-rating-module">
-                <span class="operator-rating-line">
-                  <span>作战评分</span>
-                  <b class="grade-badge" :class="`grade-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }}</b>
-                </span>
-                <span class="operator-rating-line">
-                  <span>基建评分</span>
-                  <b class="grade-badge" :class="`grade-${operator.baseGrade.toLowerCase()}`">{{ operator.baseGrade }}</b>
-                </span>
-              </div>
               <div class="operator-total-score">
                 <span>总分</span>
                 <strong class="grade-badge" :class="`grade-${operator.finalGrade.toLowerCase()}`">{{ operator.finalGrade }}</strong>
@@ -755,7 +776,7 @@ onMounted(() => {
     <section class="method-note">
       <div>
         <strong>计算口径</strong>
-        <span>S/A/B/C 对应 5/3/2/1 分；总分评级按 4/2.5/1.5 分作为档位分界；作战优先为作战 85% 与基建 15%，通用为各 50%，基建优先为作战 15% 与基建 85%；四组均按 1/12 等概率计算。</span>
+        <span>{{ gradeScaleText }}；作战优先为作战 85% 与基建 15%，通用为各 50%，基建优先为作战 15% 与基建 85%；四组均按 1/12 等概率计算；作战评分旁的「考虑特限模组达到此评分」表示该评分需借助特限模组达成，「无特限模组达到此评分」表示该评分由常规模组达成。</span>
       </div>
       <div>
         <strong>账号收益</strong>
@@ -805,18 +826,19 @@ onMounted(() => {
                   <div class="operator-name-row">
                     <strong>干员名称</strong>
                   </div>
+                  <div class="operator-rating-module">
+                    <span class="operator-rating-line is-combat">
+                      <span>作战评分</span>
+                      <b class="grade-badge grade-x">X</b>
+                      <span class="operator-grade-note is-limited">考虑特限模组达到此评分</span>
+                    </span>
+                    <span class="operator-rating-line">
+                      <span>基建评分</span>
+                      <b class="grade-badge grade-a">A</b>
+                    </span>
+                  </div>
                 </div>
                 <span class="operator-prts-link">PRTS</span>
-                <div class="operator-rating-module">
-                  <span class="operator-rating-line">
-                    <span>作战评分</span>
-                    <b class="grade-badge grade-a">A</b>
-                  </span>
-                  <span class="operator-rating-line">
-                    <span>基建评分</span>
-                    <b class="grade-badge grade-a">A</b>
-                  </span>
-                </div>
                 <div class="operator-total-score">
                   <span>总分</span>
                   <strong class="grade-badge grade-s">S</strong>
@@ -1861,6 +1883,7 @@ h1 {
 .detail-terms-copy .operator-title {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
   gap: 7px;
 }
@@ -1965,17 +1988,23 @@ h1 {
 
 .operator-main {
   display: grid;
-  grid-template-columns: auto minmax(100px, 1fr) auto minmax(94px, auto) auto;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(62px, auto);
   align-items: center;
   gap: 10px;
 }
 
 .operator-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   min-width: 0;
+  column-gap: 12px;
+  row-gap: 2px;
 }
 
 .operator-name-row {
   display: flex;
+  flex: 0 1 auto;
   align-items: center;
   gap: 6px;
   min-width: 0;
@@ -1987,21 +2016,54 @@ h1 {
   white-space: nowrap;
 }
 
+/* 评级内置在名称行的冗余空间里；两行评分竖排，放不下时整体换到名称下方 */
 .operator-rating-module {
-  display: grid;
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 2px;
-  min-width: 94px;
+  min-width: 0;
 }
 
 .operator-rating-line {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 6px;
+  justify-content: flex-start;
+  gap: 5px;
+  min-width: 0;
   color: var(--muted);
   font-size: 11px;
   line-height: 1.2;
   white-space: nowrap;
+}
+
+.operator-rating-line.is-combat {
+  flex-wrap: wrap;
+  row-gap: 1px;
+}
+
+.operator-grade-note {
+  max-width: 100%;
+  padding: 3px 4px;
+  border-radius: 3px;
+  background: rgba(217, 119, 6, 0.13);
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 15px;
+  white-space: nowrap;
+  cursor: help;
+}
+
+.operator-grade-note.is-limited {
+  background: rgba(40, 120, 200, 0.13);
+  color: #1f5fa8;
+}
+
+.operator-grade-note.is-x-without-limited {
+  background: rgba(168, 85, 247, 0.13);
+  color: #7e22ce;
 }
 
 .operator-total-score {
@@ -2252,21 +2314,11 @@ h1 {
   }
 
   .detail-page .operator-main {
-    grid-template-columns: auto minmax(0, 1fr) auto minmax(82px, auto) auto;
     gap: 6px;
   }
 
-  .detail-page .operator-rating-module {
-    min-width: 82px;
-  }
-
   .detail-page:not(.detail-terms-copy) .operator-main {
-    grid-template-columns: auto minmax(64px, 1fr) auto minmax(78px, auto) 62px;
     gap: 4px;
-  }
-
-  .detail-page:not(.detail-terms-copy) .operator-rating-module {
-    min-width: 78px;
   }
 
   .detail-page:not(.detail-terms-copy) .operator-prts-link {
