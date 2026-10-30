@@ -38,17 +38,14 @@ function buildUcOperatorSavePayload(warehouseData) {
 }
 
 /**
- * 将 UC 干员数据转换为前端干员列表记录
- *
- * <p>UC 的 items 只包含该账号实际拥有的干员，因此 own 恒为 true；
- * 未出现在 items 中的干员由调用方补默认值（own: false）。</p>
- *
- * @param {Array<Object>} items UC 返回的干员数组
- * @returns {Array<Object>} 前端字段格式的干员记录（charId/elite/potential/skill/mod 等）
+ * 将单条 UC 干员记录转换为前端干员字段
+ * @param {Object} item UC 返回的干员记录
+ * @param {boolean} own 是否持有
+ * @returns {Object} 前端字段格式的干员记录
  */
-function toOperatorDataList(items) {
-  return (items || []).map((item) => ({
-    own: true,
+function mapUcOperatorItem(item, own) {
+  return {
+    own,
     charId: item.id,
     rarity: item.rarity,
     level: item.level,
@@ -63,7 +60,68 @@ function toOperatorDataList(items) {
     modD: item.equipD,
     modA: item.equipA,
     modB: item.equipB,
-  }))
+  }
 }
 
-export {buildUcOperatorSavePayload, toOperatorDataList}
+/**
+ * 将 UC 干员数据转换为前端干员列表记录
+ *
+ * <p>UC 的 items 只包含该账号实际拥有的干员，因此 own 恒为 true；
+ * 未出现在 items 中的干员由调用方补默认值（own: false）。</p>
+ *
+ * @param {Array<Object>} items UC 返回的干员数组
+ * @returns {Array<Object>} 前端字段格式的干员记录（charId/elite/potential/skill/mod 等）
+ */
+function toOperatorDataList(items) {
+  return (items || []).map((item) => mapUcOperatorItem(item, true))
+}
+
+/**
+ * 将 UC 手动修改版干员数组转换为前端干员列表记录
+ *
+ * <p>手动版额外包含 owned（1 是、0 否，缺省按 0），转换为前端 own 布尔值；
+ * 未出现在数组中的干员由调用方补默认值（own: false）。</p>
+ *
+ * @param {Array<Object>} items GET /oauth2/ak-accounts/manual-operators 返回的干员数组
+ * @returns {Array<Object>} 前端字段格式的干员记录（含 own）
+ */
+function toManualOperatorDataList(items) {
+  return (items || []).map((item) => mapUcOperatorItem(item, Number(item.owned) === 1))
+}
+
+/**
+ * 将前端干员记录转换为 UC 手动修改版保存接口的请求体
+ *
+ * <p>数值字段统一兜底为 0：接口对缺省 / null / 空字符串按 0 落库，不表示沿用旧值。</p>
+ *
+ * @param {Array<Object>} operators 前端干员记录（含 own 与各练度字段）
+ * @returns {{operators: Array<Object>}} UC 手动版保存接口请求体
+ */
+function buildManualOperatorSavePayload(operators = []) {
+  return {
+    operators: (operators || []).map((operator) => ({
+      id: operator.charId,
+      owned: operator.own ? 1 : 0,
+      rarity: operator.rarity ?? 0,
+      level: operator.level ?? 0,
+      evolvePhase: operator.elite ?? 0,
+      mainSkillLevel: operator.mainSkill ?? 0,
+      skill1: operator.skill1 ?? 0,
+      skill2: operator.skill2 ?? 0,
+      skill3: operator.skill3 ?? 0,
+      equipX: operator.modX ?? 0,
+      equipY: operator.modY ?? 0,
+      equipD: operator.modD ?? 0,
+      equipA: operator.modA ?? 0,
+      equipB: operator.modB ?? 0,
+      potentialRank: operator.potential ?? 0,
+    })),
+  }
+}
+
+export {
+  buildUcOperatorSavePayload,
+  toOperatorDataList,
+  toManualOperatorDataList,
+  buildManualOperatorSavePayload,
+}

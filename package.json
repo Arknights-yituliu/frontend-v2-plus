@@ -7,6 +7,7 @@
     "dev": "vite --port 3000",
     "dev:local": "set VITE_USE_LOCAL=1&& vite --port 3000",
     "build": "NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-seo.mjs && NODE_OPTIONS=--max-old-space-size=4096 vite build",
+    "build:no-prerender": "node scripts/generate-seo.mjs && node --max-old-space-size=4096 node_modules/vite/bin/vite.js build --mode no-prerender",
     "gen:seo": "node scripts/generate-seo.mjs",
     "build:logistics-skill-groups": "node scripts/generate-logistics-skill-groups.js",
     "build:riic-baseline-rules": "node scripts/generate-riic-baseline-skill-rules.js",

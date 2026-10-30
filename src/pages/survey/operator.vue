@@ -1,12 +1,21 @@
 <script setup>
 // 我的干员页面：展示账号干员练度，支持筛选 / 排序 / Excel 导出 / MAA 培养计划复制，
 // 以及森空岛凭证、官网 Token、森空岛扫码三种导入方式。
-// ===== 业务接口：干员数据 / 森空岛凭证 / 导入保存 =====
+// ===== 业务接口：干员数据 / 森空岛凭证 / 导入保存 / 手动版 =====
 import {createMessage} from "/src/utils/message.js";
 import operatorDataAPI from "/src/api/user-center/operatorData.js"
 import sklandCredentialAPI from "/src/api/backend/sklandCredential.js"
-import {saveAkAccountOperators} from "/src/api/user-center/gameData.js"
-import {buildUcOperatorSavePayload} from "/src/utils/survey/ucOperatorData.js"
+import {
+  saveAkAccountOperators,
+  listAkAccounts,
+  getAkAccountOperators,
+  saveManualOperators
+} from "/src/api/user-center/gameData.js"
+import {
+  buildUcOperatorSavePayload,
+  toOperatorDataList,
+  buildManualOperatorSavePayload
+} from "/src/utils/survey/ucOperatorData.js"
 // ===== Vue API、图鉴数据与通用工具 =====
 import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
 import {operatorTableV2} from "/src/utils/gameData.js";
@@ -24,6 +33,7 @@ import OperatorStatisticalTable from "/src/components/survey/OperatorStatistical
 import deepClone from "/src/utils/deepClone.js";
 import EquipIcon from "/src/components/sprite/EquipIcon.vue";
 import OperatorBar from "/src/components/survey/OperatorBar.vue";
+import OperatorEditBar from "/src/components/survey/OperatorEditBar.vue";
 import ImportCommonQuestions from "/src/components/survey/ImportCommonQuestions.vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import {formatNumber} from "/src/utils/format.js";
@@ -509,6 +519,13 @@ let operatorList = ref([])  //干员列表
 //前端筛选后的干员信息
 let displayOperatorList = ref([])  //干员列表
 
+// 用户历史导入（已绑定）的游戏账号列表，最近导入的在前
+const akAccountList = ref([])
+// 当前页面展示干员数据的游戏账号 UID（即最近导入的账号）
+const currentAkUid = ref('')
+// 正在切换中的账号 UID，用于按钮 loading 与防重复点击
+const switchingAkUid = ref('')
+
 // 干员练度大数据：charId → 各等级 / 技能 / 模组的全服达成率
 let operatorProgressionStatisticsMap = new Map()
 
@@ -580,6 +597,7 @@ function createOperatorList(list = []) {
       item = {
         elite: 0,
         level: 0,
+        potential: 0,
         mainSkill: 0,
         skill1: 0,
         skill2: 0,
@@ -1045,6 +1063,75 @@ function playProgressionHighlight(highlight){
 }
 
 /**
+ * 拉取当前用户历史导入（已绑定）的游戏账号列表向页面展示
+ */
+async function loadAkAccountList() {
+  if (!hasStoredUserToken()) {
+    akAccountList.value = []
+    currentAkUid.value = ''
+    return
+  }
+
+  try {
+    const accounts = await listAkAccounts()
+    akAccountList.value = accounts || []
+    // 干员数据默认取最近导入的账号，列表首条即页面上当前展示的账号
+    currentAkUid.value = accounts?.[0]?.akUid || ''
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+/**
+ * 格式化账号接口返回的日期，展示为「YYYY-MM-DD HH:mm」
+ * @param {Object} account 游戏账号
+ * @returns {string} 展示用日期文本，缺失或无法解析时原样返回
+ */
+function formatAkAccountDate(account) {
+  // 优先展示最近导入时间，缺失时退回创建时间
+  const rawTime = account?.updateTime || account?.createTime
+  if (!rawTime) {
+    return '暂无导入时间'
+  }
+  const date = new Date(rawTime)
+  if (Number.isNaN(date.getTime())) {
+    return String(rawTime)
+  }
+  const pad = (value) => String(value).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+/**
+ * 切换到指定历史导入账号：拉取该账号的干员数据并刷新列表
+ * @param {Object} account 游戏账号
+ */
+async function switchAkAccount(account) {
+  if (!account?.akUid || account.akUid === currentAkUid.value || switchingAkUid.value) {
+    return
+  }
+
+  // 存在未上传的修改时先阻止切换，避免未保存的改动丢失
+  if (manualDirtyCount.value > 0) {
+    createMessage({type: 'warn', text: '存在未上传的修改，请先上传后再切换账号'})
+    return
+  }
+
+  switchingAkUid.value = account.akUid
+  try {
+    const operatorPayload = await getAkAccountOperators(account.akUid)
+    const list = toOperatorDataList(operatorPayload?.items)
+    operatorList.value = createOperatorList(list)
+    currentAkUid.value = account.akUid
+    applyDefaultOwnFilter()
+    createMessage({type: 'success', text: `已切换至账号 ${account.akUid}，共 ${list.length} 条数据`})
+  } catch (error) {
+    console.error(error)
+  } finally {
+    switchingAkUid.value = ''
+  }
+}
+
+/**
  * 找回填写过的角色信息
  */
 function getOperatorData() {
@@ -1052,9 +1139,12 @@ function getOperatorData() {
     sectionPanels.value = ['importExport']
     operatorList.value = createOperatorList()
     applyDefaultOwnFilter()
+    loadAkAccountList()
     return
   }
 
+  // 账号列表与干员数据同时请求，账号列表仅用于页面展示
+  loadAkAccountList()
   //根据一图流的token查询用户填写的干员数据
   operatorDataAPI.getOperatorData().then((response) => {
     let list = response.data || []; //后端返回的数据
@@ -1079,6 +1169,260 @@ function addFilterConditionAndFilterOperator (func, index){
   func(index)
   refreshDisplayOperatorList()
 }
+
+// ===== 列表模式（手动修改版干员数据）=====
+// 是否处于列表模式：列表视图可直接修改干员的全部练度字段与是否持有
+const listMode = ref(false)
+// 列表模式下可选的等级范围
+const operatorLevelOptions = Array.from({length: 91}, (_, index) => index)
+// 列表模式下精英化 / 技能专精 / 模组等级的可选范围
+const operatorEliteOptions = [0, 1, 2]
+const operatorMasteryOptions = [0, 1, 2, 3]
+const operatorModuleOptions = [0, 1, 2, 3]
+// 手动版数据的保存中状态
+const manualSaving = ref(false)
+// 本次编辑中发生变更、待保存的干员 charId 集合
+const manualDirtyCharIds = ref(new Set())
+// 列表模式图标下拉菜单：{ operator, field, options, top, left }
+const operatorIconMenu = ref(null)
+// 待保存的干员数量
+const manualDirtyCount = computed(() => manualDirtyCharIds.value.size)
+
+// 各练度字段的取值范围：[最小值, 最大值]，超出范围时按范围裁剪
+const OPERATOR_EDIT_VALUE_RANGES = {
+  elite: [0, 2],
+  level: [0, 90],
+  potential: [0, 6],
+  mainSkill: [0, 7],
+  skill1: [0, 3],
+  skill2: [0, 3],
+  skill3: [0, 3],
+  modX: [0, 3],
+  modY: [0, 3],
+  modD: [0, 3],
+  modA: [0, 3],
+  modB: [0, 3],
+}
+
+/**
+ * 清空所有筛选条件，手动编辑时展示全部干员，便于逐条维护
+ */
+function clearAllOperatorFilterActions() {
+  for (const group of Object.values(operatorFilterCondition.value)) {
+    (group.conditions || []).forEach((condition) => {
+      condition.action = false
+    })
+  }
+  refreshDisplayOperatorList()
+}
+
+/**
+ * 归一化手动编辑的数值：转为整数并按字段范围裁剪
+ * @param {string} field 干员字段名
+ * @param {*} value 输入值
+ * @returns {number} 合法数值
+ */
+function normalizeOperatorEditValue(field, value) {
+  const [min, max] = OPERATOR_EDIT_VALUE_RANGES[field] || [0, 255]
+  const number = Math.round(Number(value) || 0)
+  return Math.min(Math.max(number, min), max)
+}
+
+/**
+ * 取消持有时清零全部练度字段，避免出现「未持有但等级很高」的数据
+ * @param {Object} operator 干员记录
+ */
+function resetOperatorProgression(operator) {
+  operator.elite = 0
+  operator.level = 0
+  operator.potential = 0
+  operator.mainSkill = 0
+  operator.skill1 = 0
+  operator.skill2 = 0
+  operator.skill3 = 0
+  operator.modX = 0
+  operator.modY = 0
+  operator.modD = 0
+  operator.modA = 0
+  operator.modB = 0
+}
+
+/**
+ * 处理列表中的练度 / 持有变更：更新字段并标记为待保存
+ * @param {Object} operator 干员记录
+ * @param {string} field 字段名
+ * @param {*} value 新值
+ */
+function handleOperatorFieldUpdate(operator, field, value) {
+  if (!listMode.value || !operator) {
+    return
+  }
+
+  if (field === 'own') {
+    operator.own = Boolean(value)
+    if (!operator.own) {
+      resetOperatorProgression(operator)
+    }
+  } else {
+    operator[field] = normalizeOperatorEditValue(field, value)
+  }
+
+  // Set 为响应式集合，add 后待保存数量会同步更新
+  manualDirtyCharIds.value.add(operator.charId)
+}
+
+/**
+ * 构建列表模式图标下拉菜单的可选项
+ * @param {string} field 待修改字段
+ * @returns {Array<{label: string, value: *}>} 菜单选项
+ */
+function getOperatorIconMenuOptions(field) {
+  if (field === 'elite') {
+    return ['精零', '精一', '精二'].map((label, index) => ({label, value: index}))
+  }
+
+  if (field === 'level') {
+    return operatorLevelOptions.map((value) => ({label: `等级 ${value}`, value}))
+  }
+
+  if (field.startsWith('skill')) {
+    return operatorMasteryOptions.map((value) => ({label: `专精 ${value}`, value}))
+  }
+
+  if (field.startsWith('mod')) {
+    return operatorModuleOptions.map((value) => ({label: `模组 ${value}`, value}))
+  }
+
+  return []
+}
+
+/**
+ * 打开图标下拉菜单：根据被点击图标的位置计算菜单坐标
+ * @param {MouseEvent|KeyboardEvent} event 点击 / 回车事件
+ * @param {Object} operator 干员记录
+ * @param {string} field 待修改字段
+ */
+function openOperatorIconMenu(event, operator, field) {
+  if (!listMode.value || !operator) {
+    return
+  }
+
+  const options = getOperatorIconMenuOptions(field)
+  if (!options.length) {
+    return
+  }
+
+  const rect = event.currentTarget.getBoundingClientRect()
+  const menuHeight = Math.min(options.length * 34 + 8, 280)
+  const openAbove = rect.bottom + 4 + menuHeight > window.innerHeight
+  operatorIconMenu.value = {
+    operator,
+    field,
+    options,
+    top: openAbove ? Math.max(4, rect.top - menuHeight - 4) : rect.bottom + 4,
+    left: Math.min(rect.left, Math.max(4, window.innerWidth - 152)),
+  }
+}
+
+/**
+ * 关闭图标下拉菜单
+ */
+function closeOperatorIconMenu() {
+  operatorIconMenu.value = null
+}
+
+/**
+ * 判断菜单选项是否为当前字段值
+ * @param {{label: string, value: *}} option 菜单选项
+ * @returns {boolean} 是否为当前值
+ */
+function isOperatorIconMenuOptionActive(option) {
+  const menu = operatorIconMenu.value
+  if (!menu) {
+    return false
+  }
+
+  const current = menu.field === 'own' ? Boolean(menu.operator.own) : Number(menu.operator[menu.field] ?? 0)
+  return current === option.value
+}
+
+/**
+ * 应用菜单选项：写入字段并关闭菜单
+ * @param {*} value 选中的值
+ */
+function applyOperatorIconMenuOption(value) {
+  const menu = operatorIconMenu.value
+  if (!menu) {
+    return
+  }
+
+  const isSameValue = isOperatorIconMenuOptionActive({value})
+  if (!isSameValue) {
+    handleOperatorFieldUpdate(menu.operator, menu.field, value)
+  }
+  closeOperatorIconMenu()
+}
+
+/**
+ * 在卡片视图与列表视图之间切换：列表视图可直接修改干员等级与是否持有
+ */
+function toggleOperatorViewMode() {
+  if (listMode.value) {
+    listMode.value = false
+    return
+  }
+
+  if (!hasStoredUserToken()) {
+    loginDialog.value = true
+    return
+  }
+
+  listMode.value = true
+  // 列表模式展示全部干员，便于逐条维护
+  clearAllOperatorFilterActions()
+}
+
+/**
+ * 保存手动版修改：只提交本次变更过的干员
+ */
+async function saveManualOperatorData() {
+  if (manualSaving.value || manualDirtyCount.value === 0) {
+    return
+  }
+
+  if (!hasStoredUserToken()) {
+    loginDialog.value = true
+    return
+  }
+
+  const dirtyCharIds = manualDirtyCharIds.value
+  const operators = operatorList.value.filter((operator) => dirtyCharIds.has(operator.charId))
+  manualSaving.value = true
+  try {
+    const result = await saveManualOperators(buildManualOperatorSavePayload(operators))
+    // 服务端返回新增 / 更新 / 未变更条数，三项之和为本次提交的干员数
+    const {createdCount = 0, updatedCount = 0, unchangedCount = 0} = result || {}
+    // 上传成功后清空待上传标记
+    manualDirtyCharIds.value.clear()
+    createMessage({
+      type: 'success',
+      text: `手动版已保存：新增 ${createdCount} 条，更新 ${updatedCount} 条，未变更 ${unchangedCount} 条`
+    })
+  } catch (error) {
+    console.error(error)
+  } finally {
+    manualSaving.value = false
+  }
+}
+
+/**
+ * 点击干员卡片：打开练度统计弹窗
+ * @param {Object} operator 干员记录
+ */
+function handleOperatorCardClick(operator) {
+  openOperatorsStatisticsDetail(operator)
+}
+
 
 /**
  * 根据按钮点击状态返回按钮样式
@@ -1392,6 +1736,65 @@ onBeforeUnmount(() => {
                 @click="openOperatorExportSettings()"
               />
             </div>
+            <v-btn
+              class="operator-import-action"
+              color="primary"
+              variant="outlined"
+              @click="toggleOperatorViewMode()"
+            >
+              <v-icon class="operator-import-action-icon">{{ listMode ? 'mdi-view-grid-outline' : 'mdi-view-list-outline' }}</v-icon>
+              <span class="operator-import-action-copy">
+                <span class="operator-import-action-title">{{ listMode ? '卡片模式' : '列表模式' }}</span>
+                <span class="operator-import-action-desc">
+                  {{ listMode ? '切换回卡片视图' : '切换为列表视图，可直接修改等级与是否持有' }}
+                </span>
+              </span>
+            </v-btn>
+            <v-btn
+              class="operator-import-action"
+              color="primary"
+              variant="outlined"
+              :loading="manualSaving"
+              :disabled="manualDirtyCount === 0"
+              @click="saveManualOperatorData()"
+            >
+              <v-icon class="operator-import-action-icon">mdi-cloud-upload</v-icon>
+              <span class="operator-import-action-copy">
+                <span class="operator-import-action-title">上传</span>
+                <span class="operator-import-action-desc">
+                  {{ manualDirtyCount > 0 ? `保存本次修改（待上传 ${manualDirtyCount} 名干员）` : '修改等级或持有状态后可上传' }}
+                </span>
+              </span>
+            </v-btn>
+          </div>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+
+      <!-- 切换导入账号：展示历史导入过的游戏账号，点击账号切换展示对应数据 -->
+      <v-expansion-panel v-if="akAccountList.length > 0" class="operator-section-card" value="switchAkAccount">
+        <v-expansion-panel-title>
+          <span class="operator-section-title">
+            <v-icon class="operator-section-title-icon">mdi-account-switch</v-icon>
+            切换导入账号
+          </span>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
+          <div class="operator-account-history-actions">
+            <v-btn
+                v-for="account in akAccountList"
+                :key="account.akUid"
+                :class="['operator-import-action', 'operator-account-history-action']"
+                :color="account.akUid === currentAkUid ? 'primary' : undefined"
+                :variant="account.akUid === currentAkUid ? 'flat' : 'outlined'"
+                :loading="switchingAkUid === account.akUid"
+                @click="switchAkAccount(account)"
+            >
+              <v-icon class="operator-import-action-icon">mdi-account</v-icon>
+              <span class="operator-import-action-copy">
+                <span class="operator-import-action-title">{{ account.akUid }}</span>
+                <span class="operator-import-action-desc">{{ formatAkAccountDate(account) }}</span>
+              </span>
+            </v-btn>
           </div>
         </v-expansion-panel-text>
       </v-expansion-panel>
@@ -1551,16 +1954,47 @@ onBeforeUnmount(() => {
     </v-expansion-panels>
 
     <p>点击干员卡片可查看当前干员的练度统计结果</p>
+
     <!--   干员表单-->
-    <div class="operator-form">
+    <div v-if="!listMode" class="operator-form">
       <OperatorBar
           v-for="(operator, charId) in visibleOperatorList"
           :operator-info="operator"
           :recommended-skill-indexes="operatorRecommendedSkillSourceMap.get(operator.charId) || []"
           :recommended-equip-indexes="operatorRecommendedEquipSourceMap.get(operator.charId) || []"
           :is-elite-recommended="operatorRecommendedElite1SourceSet.has(operator.charId) || operatorRecommendedEliteSourceSet.has(operator.charId)"
-          @click="openOperatorsStatisticsDetail(operator)"
+          @click="handleOperatorCardClick(operator)"
       ></OperatorBar>
+    </div>
+
+    <!-- 列表模式：与干员卡片同构，名称下方开关控制持有，点击精英化 / 等级 / 技能 / 模组图标弹出下拉框修改 -->
+    <div v-else class="operator-edit-list">
+      <OperatorEditBar
+        v-for="operator in visibleOperatorList"
+        :key="operator.charId"
+        :operator-info="operator"
+        @open-menu="(event, field) => openOperatorIconMenu(event, operator, field)"
+        @update-field="(field, value) => handleOperatorFieldUpdate(operator, field, value)"
+      />
+
+      <!-- 图标下拉菜单：fixed 定位，避免被卡片裁剪 -->
+      <template v-if="operatorIconMenu">
+        <div class="operator-icon-menu-backdrop" @click="closeOperatorIconMenu()"></div>
+        <div
+          class="operator-icon-menu"
+          :style="{ top: `${operatorIconMenu.top}px`, left: `${operatorIconMenu.left}px` }"
+        >
+          <button
+            v-for="option in operatorIconMenu.options"
+            :key="String(option.value)"
+            type="button"
+            :class="['operator-icon-menu-item', { 'operator-icon-menu-item--active': isOperatorIconMenuOptionActive(option) }]"
+            @click="applyOperatorIconMenuOption(option.value)"
+          >
+            {{ option.label }}
+          </button>
+        </div>
+      </template>
     </div>
 
 

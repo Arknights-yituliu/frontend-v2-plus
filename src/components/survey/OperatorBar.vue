@@ -28,14 +28,19 @@ defineProps({
   }
 });
 
-
 </script>
 
 <template>
 
   <!--干员星级格式统一化修复: v2 数据 rarity 已改为 1-6 星级, 卡片边框 class 直接使用星级-->
-  <v-card :class="['operator-info-card', `operator-rarity-${operatorInfo.rarity ?? 1}`]">
+  <v-card :class="[
+      'operator-info-card',
+      `operator-rarity-${operatorInfo.rarity ?? 1}`,
+      { 'operator-info-card--not-owned': !operatorInfo.own }
+    ]">
     <div class="operator-info-bar">
+      <!-- 未持有干员标志：居中覆盖在卡片展示区，用于快速区分尚未招募的干员 -->
+      <div v-if="!operatorInfo.own" class="operator-unowned-badge"><span>未招募</span></div>
       <div :class="['operator-avatar-area', { 'operator-avatar-area-recommended': isEliteRecommended }]">
         <OperatorAvatar :size="56" :mobile-size="44" :char-id="operatorInfo.charId"></OperatorAvatar>
       </div>
@@ -72,4 +77,3 @@ defineProps({
     </div>
   </v-card>
 </template>
-

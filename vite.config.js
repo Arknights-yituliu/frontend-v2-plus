@@ -34,7 +34,8 @@ function prerenderPlugin() {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig({
+// 使用 `vite build --mode no-prerender` 时跳过 SEO 预渲染，供本地快速构建验证
+export default defineConfig(({ mode }) => ({
     resolve: {
         alias: {
             '@': resolve(__dirname, 'src'),
@@ -43,12 +44,11 @@ export default defineConfig({
     },
     plugins: [
         vue(),
-        visualizer({
-            open:false,
-            gzipSize:true,
-        }),
-        buildTimePlugin(),
-        prerenderPlugin()
+        // 快速构建模式跳过统计分析插件，减少 gzip 统计与 stats.html 生成开销
+        ...(mode === 'no-prerender'
+            ? []
+            : [visualizer({ open: false, gzipSize: true }), prerenderPlugin()]),
+        buildTimePlugin()
     ],
     server: {
         host: '0.0.0.0',
@@ -82,5 +82,5 @@ export default defineConfig({
             }
         },
     },
-})
+}))
 
