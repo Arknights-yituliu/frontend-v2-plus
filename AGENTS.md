@@ -32,6 +32,14 @@ Builds for production using Vite. The build outputs two HTML entry points:
 - `index.html` - Main application
 - `docs.html` - Documentation page
 
+### Local Fast Build (preferred for local verification)
+```bash
+npm run build:no-prerender
+```
+Runs the same Vite build but skips SEO prerendering (26 routes, ~130s) and the bundle analyzer (`stats.html`). It still runs `gen:seo` and still catches bundling errors, but it does not emit per-route `dist/**/index.html`.
+
+Use `npm run build:no-prerender` for routine local change verification. Use `npm run build` only for releases or when the prerendered HTML / SEO output itself must be validated.
+
 ### Preview Production Build
 ```bash
 npm run preview
