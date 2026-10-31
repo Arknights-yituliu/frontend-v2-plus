@@ -3,6 +3,9 @@ import ucService from "/src/api/user-center/ucClient.js";
 // UC OAuth 游戏数据接口路径：读写游戏账号与干员数据
 const OAUTH_AK_ACCOUNTS_PATH = "/oauth2/ak-accounts";
 const OAUTH_AK_ACCOUNTS_OPERATOR_SAVE_PATH = "/oauth2/ak-accounts/operators/save";
+// UC 手动修改版干员数据路径：每个用户一份个人副本，额外包含 owned（是否持有）
+const OAUTH_AK_ACCOUNTS_MANUAL_OPERATORS_PATH = "/oauth2/ak-accounts/manual-operators";
+const OAUTH_AK_ACCOUNTS_MANUAL_OPERATOR_SAVE_PATH = "/oauth2/ak-accounts/manual-operators/save";
 
 // UC 干员养成数据统计结果查询路径：只读统计结果表，无需登录、无需授权范围
 const AK_OPERATOR_STATISTICS_RESULT_PATH = "/open/ak-operator-statistics/result";
@@ -49,6 +52,33 @@ async function getAkAccountOperators(akUid) {
 }
 
 /**
+ * 查询当前用户的手动修改版干员数据（UC OAuth 游戏数据接口）
+ *
+ * <p>手动修改版是用户个人的干员副本，与具体游戏账号无关，每个用户仅一份，
+ * 额外包含 owned（是否持有）字段。需要 UC access_token 具备 gama-data.read 授权范围；
+ * 尚未创建手动版时返回空数组。失败提示由 ucService 响应拦截器统一弹出。</p>
+ *
+ * @returns {Promise<Array<Object>>} 手动版干员数组（含 owned / 等级 / 精英化 / 技能 / 模组等字段）
+ */
+async function getManualOperators() {
+  return ucService.get(OAUTH_AK_ACCOUNTS_MANUAL_OPERATORS_PATH);
+}
+
+/**
+ * 保存手动修改版干员数据（UC OAuth 游戏数据接口）
+ *
+ * <p>需要 UC access_token 具备 gama-data.write 授权范围。请求体形如 { operators: [...] }，
+ * 同一次请求内 id 不可重复；未出现在请求中的干员不会被删除，本接口不占用游戏账号上传限流名额。
+ * 失败提示由 ucService 响应拦截器统一弹出。</p>
+ *
+ * @param {{operators: Array<Object>}} payload 完整请求体（由 buildManualOperatorSavePayload 生成）
+ * @returns {Promise<{createdCount: number, updatedCount: number, unchangedCount: number}>} 新增/更新/未变更条数统计
+ */
+async function saveManualOperators(payload) {
+  return ucService.post(OAUTH_AK_ACCOUNTS_MANUAL_OPERATOR_SAVE_PATH, payload);
+}
+
+/**
  * 查询干员养成数据统计结果（UC 干员数据统计接口）
  *
  * <p>只读统计结果表，无需登录、无需授权范围，故不携带业务参数；尚未跑过统计时返回空数组。
@@ -65,5 +95,7 @@ export {
   saveAkAccountOperators,
   listAkAccounts,
   getAkAccountOperators,
+  getManualOperators,
+  saveManualOperators,
   getAkOperatorStatisticsResult,
 };

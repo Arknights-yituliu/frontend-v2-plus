@@ -221,6 +221,7 @@ export function runRiicTrainingRecommendationTrial(input = {}) {
         idealTrainingRaritySelection: input.idealTrainingRaritySelection,
         controlCenterRuntimeContext,
         idleFillOperators,
+        fiammettaRecovery: input.fiammettaRecovery,
       }),
     ]),
   );

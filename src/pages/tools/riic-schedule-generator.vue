@@ -2016,6 +2016,7 @@ const roomGroupCandidateStates = computed(() =>
         idealTrainingRaritySelection: idealTrainingRaritySelection.value,
         controlCenterRuntimeContext: controlCenterRuntimeContext.value,
         idleFillOperators: riicIdleFillOperators.value,
+        fiammettaRecovery: fiammettaRecoveryConfig.value,
       }),
     ]),
   ),
@@ -6560,9 +6561,11 @@ function syncFiammettaRecoveryUsage(
   recovery,
   usage,
 ) {
+  // A single selected team can still span multiple shifts and needs the
+  // configured Fiammetta queue for those shifts.
   const enabled =
     recovery?.enabled === true &&
-    Number(usage?.selectionCount || 0) > 1;
+    Number(usage?.selectionCount || 0) > 0;
   const targetOperatorId = String(recovery?.targetOperatorId || "").trim();
 
   scheduleExecutionSettings.shifts = scheduleExecutionSettings.shifts.map(

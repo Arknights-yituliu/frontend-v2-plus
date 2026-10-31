@@ -278,6 +278,102 @@
     }
   }
 
+  // 列表模式：与干员卡片同构的网格与卡片外观，宽度比卡片视图更宽以容纳更多图标
+  .operator-edit-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 640px));
+    gap: 12px;
+    justify-content: center;
+    align-items: stretch;
+    margin: 8px 0 20px;
+  }
+
+  .operator-edit-list-card.operator-info-card {
+    width: 100%;
+    margin: 0;
+  }
+
+  // 可点击图标：保持卡片原有布局，仅补充交互反馈
+  .operator-icon-trigger {
+    cursor: pointer;
+    transition: filter 0.15s ease;
+  }
+
+  .operator-icon-trigger:hover {
+    filter: brightness(1.18);
+  }
+
+  .operator-icon-trigger:focus-visible {
+    outline: 2px solid rgb(var(--v-theme-primary));
+    outline-offset: 2px;
+  }
+
+  // 图标下拉菜单与遮罩：fixed 定位，避免被卡片裁剪
+  .operator-icon-menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+  }
+
+  .operator-icon-menu {
+    position: fixed;
+    z-index: 1000;
+    min-width: 140px;
+    max-height: 280px;
+    padding: 4px;
+    overflow-y: auto;
+    border: 1px solid rgba(var(--v-theme-on-surface), 0.12);
+    border-radius: 8px;
+    background: rgb(var(--v-theme-surface));
+    box-shadow: 0 6px 18px rgba(var(--v-theme-on-surface), 0.18);
+  }
+
+  .operator-icon-menu-item {
+    display: block;
+    width: 100%;
+    padding: 6px 10px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: rgb(var(--v-theme-on-surface));
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .operator-icon-menu-item:hover {
+    background: rgba(var(--v-theme-primary), 0.12);
+  }
+
+  .operator-icon-menu-item--active {
+    background: rgba(var(--v-theme-primary), 0.16);
+    color: rgb(var(--v-theme-primary));
+    font-weight: 600;
+  }
+
+  // 切换导入账号：折叠面板内沿用导入按钮的图标 + 标题 + 日期风格，横向排列
+  .operator-account-history-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .operator-account-history-action.operator-import-action {
+    flex: 0 1 240px;
+    min-height: 56px;
+    height: 56px;
+    padding: 8px 14px;
+  }
+
+  .operator-account-history-action .operator-import-action-icon {
+    font-size: 24px;
+  }
+
+  .operator-account-history-action .operator-import-action-title {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
   .highlight {
     background-color: rgb(var(--v-theme-primary));
     color: rgb(var(--v-theme-on-primary));

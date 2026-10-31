@@ -635,6 +635,18 @@ const routes = [
         }
     },
     {
+        path: '/48-12-1',
+        text: '感谢庆典特别招募决策页',
+        name: '48-12-1',
+        display: true,
+        module: 'tools',
+        icon: "mdi-gift-open-outline",
+        component: () => import('/src/pages/tools/48-12-1.vue'),
+        meta: {
+            title: '感谢庆典特别招募活动抽签器'
+        }
+    },
+    {
         path: '/reclamation/sandbox-foods',
         text: '生息演算食材一览',
         name: 'SandboxFoods',

@@ -2,6 +2,15 @@
 
 This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
 
+## Execution Boundaries
+
+- Unless the user explicitly requests it, do not perform visual checks, screenshots, browser inspection, or other visual verification.
+- After starting the local test server, leave it running. Do not restart it after routine code changes unless the user explicitly requests a restart or the change clearly requires one for the server to function.
+- Do not perform GitHub operations, including fetch, pull, push, branch synchronization, or remote inspection, unless the user explicitly requests that operation.
+- Do not synchronize, deploy, rebuild, restart, or otherwise change the FnOS service unless the user explicitly requests it.
+- Do not perform any extra operation that was not explicitly requested. Keep implementation, checks, and state changes to the smallest scope necessary for the current request.
+- When reverting changes, use the conversation history to scope the reversal to one user's explicitly requested change from one conversation at a time. If the requested reversal would affect changes from two or more conversations, explain the scope and obtain manual confirmation before reverting anything. Preserve all other conversation changes and unauthorized modifications.
+
 ## Project Overview
 
 This is the frontend for "明日方舟一图流" (Arknights Yituliu), a comprehensive resource site for the mobile game Arknights. The site provides material efficiency calculations, stage recommendations, gacha calculators, operator surveys, and various game data tools.
@@ -23,6 +32,14 @@ npm run build
 Builds for production using Vite. The build outputs two HTML entry points:
 - `index.html` - Main application
 - `docs.html` - Documentation page
+
+### Local Fast Build (preferred for local verification)
+```bash
+npm run build:no-prerender
+```
+Runs the same Vite build but skips SEO prerendering (26 routes, ~130s) and the bundle analyzer (`stats.html`). It still runs `gen:seo` and still catches bundling errors, but it does not emit per-route `dist/**/index.html`.
+
+Use `npm run build:no-prerender` for routine local change verification. Use `npm run build` only for releases or when the prerendered HTML / SEO output itself must be validated.
 
 ### Preview Production Build
 ```bash
@@ -47,6 +64,8 @@ Example:
 ```
 fix(攒抽计算器): 每月黄票兑换月份错误
 ```
+
+Commit messages must not include `Co-Authored-By` or any other AI/tool attribution trailers.
 
 Common commit types:
 - `feat` - New feature
