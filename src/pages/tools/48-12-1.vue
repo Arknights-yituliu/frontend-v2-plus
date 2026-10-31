@@ -26,6 +26,7 @@ const DIMENSION_WEIGHTS = {
   general: { combat: 0.5, base: 0.5 },
   base: { combat: 0.15, base: 0.85 },
 };
+const SCORE_VALUE_OUTSIDE_THRESHOLD = 64;
 const ACCOUNT_SCORING = {
   potentialStep: 0.1,
 };
@@ -347,14 +348,14 @@ function getAccountLabel(name) {
   return getAccountOperator(name) ? "已持有" : "未持有";
 }
 
-function getAccountBonus(name) {
+function getAccountBonus(name, selectedUnownedBonus = unownedBonus.value) {
   if (accountStatus.value !== "loaded") {
     return 0;
   }
 
   const accountOperator = getAccountOperator(name);
   if (!accountOperator) {
-    return unownedBonus.value;
+    return selectedUnownedBonus;
   }
 
   const potential = Math.max(1, Math.min(6, Number(accountOperator.potential) || 1));
@@ -380,16 +381,16 @@ function buildDevAccountOperators(mode) {
   );
 }
 
-function getOperatorView(configOperator) {
+function getOperatorView(configOperator, scoreSettings = {}) {
   const operator = operatorByName.get(configOperator.name) || {};
   const accountOperator = getAccountOperator(configOperator.name);
   const combatScore = accountOperator ? 0 : scoreForGrade(configOperator.combatGrade);
   const buildingSubjectiveDescription = BUILDING_SUBJECTIVE_DESCRIPTIONS[configOperator.name] || "";
   const baseGrade = BUILDING_GRADE_OVERRIDES[configOperator.name] || "D";
   const baseScore = scoreForGrade(baseGrade);
-  const weights = DIMENSION_WEIGHTS[dimension.value];
+  const weights = DIMENSION_WEIGHTS[scoreSettings.dimension || dimension.value];
   const dimensionScore = combatScore * weights.combat + baseScore * weights.base;
-  const accountBonus = getAccountBonus(configOperator.name);
+  const accountBonus = getAccountBonus(configOperator.name, scoreSettings.unownedBonus ?? unownedBonus.value);
   const tags = combatTagsByName.get(configOperator.name) || { official: [], player: [] };
   const buildingSkills = [...(buildingSkillsByName.get(configOperator.name) || [])]
     .sort((a, b) => getBuildingSkillScore(b) - getBuildingSkillScore(a))
@@ -483,8 +484,12 @@ function buildGradeNote(combatGrade, hasLimitedEquip) {
 }
 
 const groupResults = computed(() => {
+  const scoreSettings = {
+    dimension: dimension.value,
+    unownedBonus: unownedBonus.value,
+  };
   const results = RECRUITMENT_CONFIG.groups.map((group) => {
-    const operators = group.operators.map(getOperatorView);
+    const operators = group.operators.map((operator) => getOperatorView(operator, scoreSettings));
     if (accountStatus.value === "loaded") {
       operators.sort((a, b) => Number(Boolean(a.accountOperator)) - Number(Boolean(b.accountOperator)));
     }
@@ -562,14 +567,11 @@ const decisionGroups = computed(() => {
     }
     return b.totalScore - a.totalScore;
   });
-  const rankById = new Map(ranking.map((group, index) => [group.id, index + 1]));
 
-  return groups
-    .map((group) => ({
-      ...group,
-      decisionRank: rankById.get(group.id),
-    }))
-    .sort((a, b) => a.decisionRank - b.decisionRank);
+  return ranking.map((group, index) => ({
+    ...group,
+    decisionRank: index + 1,
+  }));
 });
 
 const decisionBestGroup = computed(() => decisionGroups.value[0] || null);
@@ -596,7 +598,29 @@ function formatStatPercent(value) {
 
 function getDecisionScoreWidth(group) {
   const score = Number(group.totalScore) || 0;
-  return `${Math.max(0, Math.min(100, (score / decisionScoreMax.value) * 100))}%`;
+  return `${getDecisionScorePercent(group)}%`;
+}
+
+function getDecisionScorePercent(group) {
+  if (accountCompletion.value.allMax) {
+    return 100;
+  }
+  const score = Number(group.totalScore) || 0;
+  return Math.max(0, Math.min(100, (score / decisionScoreMax.value) * 100));
+}
+
+function getDecisionScoreText(group) {
+  if (accountCompletion.value.allMax) {
+    return "100";
+  }
+  if (accountCompletion.value.allOwned) {
+    return formatPercent(group.potentialUpgradeProbability * 100);
+  }
+  return formatScore(group.totalScore);
+}
+
+function shouldPlaceScoreOutside(group) {
+  return getDecisionScorePercent(group) < SCORE_VALUE_OUTSIDE_THRESHOLD;
 }
 
 function clearDrawTimers() {
@@ -795,36 +819,40 @@ onMounted(() => {
                 class="result-score-row"
                 :class="{ 'is-best': !accountCompletion.allMax && group.decisionRank === 1 }"
               >
-                <div class="result-score-track" :style="{ '--score-width': getDecisionScoreWidth(group) }">
-                  <div class="result-score-bar-content">
-                    <div class="result-score-row-label">
-                      <strong>队列·{{ group.id }}</strong>
-                      <span v-if="!accountCompletion.allMax && group.decisionRank === 1">推荐</span>
-                      <div v-if="group.unownedPreview.length" class="result-score-row-unowned">
-                        <span
-                          v-for="operator in group.unownedPreview"
-                          :key="operator.charId"
-                          class="result-score-row-avatar"
-                          :title="operator.name"
-                          :aria-label="operator.name"
-                        >
-                          <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="26" :mobile-size="20" :border="true" />
-                        </span>
-                        <span v-if="group.unownedOverflow" class="result-score-row-unowned-more"> +{{ group.unownedOverflow }} </span>
+                <div class="result-score-line" :class="{ 'has-external-score': shouldPlaceScoreOutside(group) }">
+                  <div class="result-score-track" :style="{ '--score-width': getDecisionScoreWidth(group) }">
+                    <div class="result-score-bar-content">
+                      <div class="result-score-row-label">
+                        <strong>队列·{{ group.id }}</strong>
+                        <span v-if="!accountCompletion.allMax && group.decisionRank === 1">推荐</span>
+                        <div v-if="group.unownedPreview.length" class="result-score-row-unowned">
+                          <span
+                            v-for="operator in group.unownedPreview"
+                            :key="operator.charId"
+                            class="result-score-row-avatar"
+                            :title="operator.name"
+                            :aria-label="operator.name"
+                          >
+                            <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="26" :mobile-size="20" :border="true" />
+                          </span>
+                          <span v-if="group.unownedOverflow" class="result-score-row-unowned-more"> +{{ group.unownedOverflow }} </span>
+                        </div>
+                      </div>
+                      <div v-if="!shouldPlaceScoreOutside(group)" class="result-score-row-value">
+                        <strong>{{ getDecisionScoreText(group) }}</strong>
                       </div>
                     </div>
-                    <div class="result-score-row-value">
-                      <strong>{{ formatScore(group.totalScore) }}</strong>
-                      <span v-if="accountCompletion.allOwned && !accountCompletion.allMax">
-                        提升 {{ formatPercent(group.potentialUpgradeProbability * 100) }}
-                      </span>
-                    </div>
+                  </div>
+                  <div v-if="shouldPlaceScoreOutside(group)" class="result-score-row-value">
+                    <strong>{{ getDecisionScoreText(group) }}</strong>
                   </div>
                 </div>
               </article>
             </div>
 
-            <div v-if="accountCompletion.allOwned && !accountCompletion.allMax" class="result-recommendation-line is-owned">您已拥有所有干员</div>
+            <div v-if="accountCompletion.allOwned && !accountCompletion.allMax" class="result-recommendation-line is-owned">
+              您已拥有所有干员，改为展示潜能提升的概率
+            </div>
           </section>
 
           <section class="result-settings-module" aria-label="评分参数">
@@ -1146,16 +1174,32 @@ onMounted(() => {
   min-width: 0;
 }
 
+.result-score-line {
+  min-width: 0;
+}
+
+.result-score-line.has-external-score {
+  display: grid;
+  grid-template-columns: minmax(0, var(--score-width)) auto;
+  align-items: center;
+  gap: 12px;
+}
+
 .result-score-track {
   position: relative;
   min-width: 0;
   min-height: 52px;
-  width: max(var(--score-width), 68%);
+  width: var(--score-width);
+  max-width: 100%;
   overflow: hidden;
   border: 1px solid rgba(201, 159, 99, 0.52);
   border-radius: 10px;
   background: #c66c1b;
   transition: width 180ms ease;
+}
+
+.result-score-line.has-external-score .result-score-track {
+  width: 100%;
 }
 
 .result-score-row.is-best .result-score-track {
@@ -1232,6 +1276,7 @@ onMounted(() => {
 
 .result-score-row-value {
   display: flex;
+  flex: 0 0 auto;
   min-width: 86px;
   margin-left: auto;
   flex-direction: column;
@@ -1239,6 +1284,10 @@ onMounted(() => {
   gap: 2px;
   text-align: right;
   white-space: nowrap;
+}
+
+.result-score-line.has-external-score .result-score-row-value {
+  margin-left: 0;
 }
 
 .result-score-row-value strong {
