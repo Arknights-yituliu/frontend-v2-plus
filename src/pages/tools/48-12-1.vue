@@ -29,6 +29,8 @@ const DIMENSION_WEIGHTS = {
 const ACCOUNT_SCORING = {
   potentialStep: 0.1,
 };
+const PAGE_MODE = new URLSearchParams(window.location.search).get("mode") || "";
+const DEV_ACCOUNT_SIMULATION_MODES = new Set(["dev1", "dev2", "dev3"]);
 const TOTAL_GRADE_THRESHOLDS = {
   S: (SCORE_MAP.S + SCORE_MAP.A) / 2,
   A: (SCORE_MAP.A + SCORE_MAP.B) / 2,
@@ -76,6 +78,7 @@ const BUILDING_SUBJECTIVE_DESCRIPTIONS = Object.freeze({
   泥岩: "精2后源岩类最高特化（还是低于年等干员）",
   空弦: "精2后是3发电站布局40%贸易",
   帕拉斯: "精2后是红云组最高经验特化之一（稀音Ⅱ更高，与刻俄柏Ⅱ效率接近）",
+  异客: "自动化组替补，但数值较弱",
   森蚺: "精2后自动化组核心之一（最高制造组合），备注：0心情Lancet-2既可以触发森蚺Ⅱ技能也不影响承曦格雷伊Ⅱ技能，二者可叠加",
   瑕光: "唯一的精英材料免费加工，精2后合成绿/蓝材料时收益尚可，合成紫/金材料时不如年等干员",
   艾丽妮: "精2后专精幻神，与精2逻各斯技能相同",
@@ -113,6 +116,7 @@ const BUILDING_GRADE_OVERRIDES = Object.freeze({
   泥岩: "A",
   空弦: "A",
   帕拉斯: "A",
+  异客: "B",
   森蚺: "S",
   瑕光: "A",
   艾丽妮: "A",
@@ -194,18 +198,19 @@ const statsLoading = ref(false);
 const loadError = ref("");
 const accountStatus = ref("public");
 const accountOperators = ref(new Map());
+const loadedOperatorCount = computed(() => accountOperators.value.size);
 const progressionStatistics = ref(new Map());
-const sampleSize = ref(0);
 const drawPreviewGroup = ref(null);
 const isDrawing = ref(false);
 const pageStage = ref("welcome");
 const activeDetailGroupId = ref(RECRUITMENT_CONFIG.groups[0]?.id || "");
 const operatorExpansionOverrides = ref(new Map());
-const isDevMode = ref(new URLSearchParams(window.location.search).get("mode") === "dev");
+const isDevAccountSimulation = DEV_ACCOUNT_SIMULATION_MODES.has(PAGE_MODE);
+const isDevMode = ref(PAGE_MODE === "dev" || isDevAccountSimulation);
 let drawInterval = null;
 let drawTimeout = null;
 
-const hasLoginToken = computed(() => Boolean(localStorage.getItem("USER_TOKEN")));
+const hasLoginToken = computed(() => Boolean(localStorage.getItem("USER_TOKEN")) || isDevAccountSimulation);
 
 const operatorByName = new Map(Object.values(operatorTableV2).map((operator) => [operator.name, operator]));
 
@@ -337,8 +342,26 @@ function getAccountBonus(name) {
   }
 
   const potential = Math.max(1, Math.min(6, Number(accountOperator.potential) || 1));
+  if (name === "风笛" && potential === 5) {
+    return 5;
+  }
   const remainingPotential = Math.max(0, 6 - potential);
   return remainingPotential * ACCOUNT_SCORING.potentialStep;
+}
+
+function buildDevAccountOperators(mode) {
+  return new Map(
+    RECRUITMENT_CONFIG.groups
+      .flatMap((group) => group.operators)
+      .flatMap((configOperator) => {
+        const operator = operatorByName.get(configOperator.name);
+        if (!operator?.charId) {
+          return [];
+        }
+        const potential = mode === "dev3" ? 6 : Math.floor(Math.random() * 5) + 1;
+        return [[operator.charId, { charId: operator.charId, potential }]];
+      })
+  );
 }
 
 function getOperatorView(configOperator) {
@@ -445,6 +468,9 @@ function buildGradeNote(combatGrade, hasLimitedEquip) {
 const groupResults = computed(() => {
   const results = RECRUITMENT_CONFIG.groups.map((group) => {
     const operators = group.operators.map(getOperatorView);
+    if (accountStatus.value === "loaded") {
+      operators.sort((a, b) => Number(Boolean(a.accountOperator)) - Number(Boolean(b.accountOperator)));
+    }
     const scores = operators.map((operator) => operator.finalScore);
     const expected = average(scores);
     const variance = average(scores.map((score) => (score - expected) ** 2));
@@ -582,13 +608,13 @@ function drawGroup() {
   drawInterval = setInterval(() => {
     previewIndex = (previewIndex + 1) % groups.length;
     drawPreviewGroup.value = groups[previewIndex];
-  }, 110);
+  }, 100);
 
   drawTimeout = setTimeout(() => {
     clearDrawTimers();
     drawPreviewGroup.value = decisionBestGroup.value;
     isDrawing.value = false;
-  }, 1200);
+  }, 1000);
 }
 
 function getMasteryRate(stats) {
@@ -613,7 +639,6 @@ async function loadPublicStatistics() {
     const response = await operatorProgressionStatisticsDataCache.getData();
     const list = response?.result || [];
     progressionStatistics.value = new Map(list.map((item) => [item.charId, item]));
-    sampleSize.value = Number(list[0]?.sampleSize) || 0;
   } catch (error) {
     console.error("load operator progression statistics failed", error);
     loadError.value = "干员大数据暂时加载失败，其他评分仍可使用。";
@@ -623,6 +648,12 @@ async function loadPublicStatistics() {
 }
 
 async function loadAccountOperators() {
+  if (isDevAccountSimulation) {
+    accountOperators.value = PAGE_MODE === "dev1" ? new Map() : buildDevAccountOperators(PAGE_MODE);
+    accountStatus.value = PAGE_MODE === "dev1" ? "public" : "loaded";
+    return;
+  }
+
   if (!hasLoginToken.value) {
     accountStatus.value = "public";
     return;
@@ -716,7 +747,7 @@ onMounted(() => {
               <v-icon size="18">
                 {{ accountStatus === "loaded" ? "mdi-account-check" : accountStatus === "loading" ? "mdi-loading" : "mdi-alert-circle-outline" }}
               </v-icon>
-              <span>{{ accountStatus === "loaded" ? "已载入干员数据" : accountStatus === "loading" ? "正在载入干员数据" : "干员数据读取失败" }}</span>
+              <span>{{ accountStatus === "loaded" ? loadedOperatorCount + "位干员数据已同步" : accountStatus === "public" ? "未同步干员数据" : accountStatus === "loading" ? "正在载入干员数据" : "干员数据读取失败" }}</span>
             </div>
           </template>
           <v-btn
@@ -739,7 +770,18 @@ onMounted(() => {
       aria-label="推荐结果"
     >
       <div v-if="isDrawing" class="result-page-loading" aria-live="polite">
-        <strong>队列·{{ drawPreviewGroup?.id || "·" }}</strong>
+        <div class="result-draw-avatars" aria-hidden="true">
+          <OperatorAvatar
+            v-for="operator in drawPreviewGroup?.operators || []"
+            :key="operator.charId"
+            :char-id="operator.charId"
+            :rarity="operator.rarity"
+            :size="72"
+            :mobile-size="52"
+            :border="true"
+          />
+        </div>
+        <strong class="result-draw-label">计算中</strong>
       </div>
 
       <template v-else>
@@ -832,6 +874,7 @@ onMounted(() => {
                 </v-btn-toggle>
               </div>
             </div>
+            <p class="result-settings-note">评分含有大量主观因素，仅供参考。</p>
           </section>
         </div>
 
@@ -868,7 +911,7 @@ onMounted(() => {
         >
           <header class="group-header">
             <div class="group-header-main">
-              <h2>{{ group.id }}</h2>
+              <h2>队列 {{ group.id }}</h2>
               <div class="group-header-stats">
                 <div class="group-header-stat">
                   <span>未持有</span>
@@ -888,7 +931,7 @@ onMounted(() => {
                 </div>
               </div>
               <div class="group-header-score">
-                <span>队列评分</span>
+                <span>综合评分</span>
                 <strong>{{ formatScore(group.expected) }}</strong>
               </div>
             </div>
@@ -930,7 +973,11 @@ onMounted(() => {
               </span>
             </div>
 
-            <div v-if="isOperatorExpanded(operator)" class="operator-details">
+            <div
+              v-if="isOperatorExpanded(operator)"
+              class="operator-details"
+              :class="{ 'is-base-priority': dimension === 'base' }"
+            >
               <div class="operator-info-row">
                 <div class="operator-info-heading operator-rating-line is-combat">
                   <span>作战评分</span>
@@ -1007,11 +1054,11 @@ onMounted(() => {
     <section class="method-note">
       <div>
         <strong>计算口径</strong>
-        <span>{{ gradeScaleText }}；作战优先为作战 85% 与基建 15%，通用为各 50%，基建优先为作战 15% 与基建 85%；四组均按 1/12 等概率计算；作战评分旁的「考虑特限模组达到此评分」表示该评分需借助特限模组达成，「无特限模组达到此评分」表示该评分由常规模组达成；风险评分为该组 12 名干员最终总分的总体标准差，即先计算总分与队列评分（平均分）的偏差平方平均值，再开平方，数值越高表示抽取结果的分数差异越大。</span>
+        <span>{{ gradeScaleText }}；作战优先为作战 85% 与基建 15%，通用为各 50%，基建优先为作战 15% 与基建 85%；四组均按 1/12 等概率计算；作战评分旁的「考虑特限模组达到此评分」表示该评分需借助特限模组达成，「无特限模组达到此评分」表示该评分由常规模组达成；风险评分为该组 12 名干员最终总分的总体标准差，即先计算总分与综合评分（平均分）的偏差平方平均值，再开平方，数值越高表示抽取结果的分数差异越大。</span>
       </div>
       <div>
         <strong>账号收益</strong>
-        <span>未同步干员数据时，所有干员均不计入账号通用加成；同步后，未持有干员按“未持有加分”选项增加 0、5 或 99 分，已持有干员按缺少的潜能数每个加 0.1 分。</span>
+        <span>未同步干员数据时，所有干员均不计入账号通用加成；同步后，未持有干员按“未持有加分”选项增加 0、5 或 99 分，已持有干员按缺少的潜能数每个加 0.1 分；风笛达到 5 潜时按 5 分计算。</span>
       </div>
       <div>
         <strong>统计说明</strong>
@@ -1019,10 +1066,6 @@ onMounted(() => {
       </div>
     </section>
 
-    <footer class="page-48-12-1-footer">
-      <span>公开统计样本：{{ sampleSize ? `${sampleSize.toLocaleString()} 位玩家` : "加载中" }}</span>
-      <span>当前账号收益参数为试算值，后续可根据实际结果调整。</span>
-    </footer>
     </section>
 
   </main>
@@ -1044,8 +1087,8 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  min-height: min(900px, max(760px, calc(100svh - 64px)));
-  min-height: min(900px, max(760px, calc(100dvh - 64px)));
+  min-height: max(760px, calc(100svh - 64px));
+  min-height: max(760px, calc(100dvh - 64px));
   margin: -24px clamp(-36px, -2.5vw, -12px) 0;
   overflow: hidden;
   padding: clamp(28px, 6vw, 64px) clamp(18px, 5vw, 72px) calc(clamp(28px, 6vw, 64px) + env(safe-area-inset-bottom, 0px));
@@ -1072,6 +1115,12 @@ onMounted(() => {
   justify-content: flex-start;
   gap: 28px;
   text-align: left;
+}
+
+.result-page.is-drawing {
+  min-height: max(calc(100svh - 64px), 0px);
+  min-height: max(calc(100dvh - 64px), 0px);
+  justify-content: center;
 }
 
 .result-modules {
@@ -1286,6 +1335,13 @@ onMounted(() => {
   color: #7d3b32;
 }
 
+.result-settings-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .result-score-settings-panel .dimension-toggle {
   width: 100%;
   min-width: 0;
@@ -1319,19 +1375,28 @@ onMounted(() => {
 
 .result-page-loading {
   display: flex;
-  min-height: 240px;
-  width: min(100%, 620px);
+  min-height: 0;
+  width: min(100%, 1120px);
+  flex: 1 1 auto;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  justify-content: space-between;
   padding: 24px;
-  border-left: 5px solid #e0a62a;
-  background: var(--surface, #fff);
+  background: transparent;
 }
 
-.result-page-loading strong {
-  font-size: clamp(34px, 7vw, 64px);
+.result-draw-avatars {
+  display: grid;
+  width: min(100%, 720px);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  justify-items: center;
+}
+
+.result-draw-label {
+  color: var(--text);
+  font-size: clamp(28px, 4vw, 52px);
+  line-height: 1;
 }
 
 .detail-page {
@@ -1636,8 +1701,7 @@ onMounted(() => {
 
 .page-48-12-1-header,
 .method-note,
-.group-header,
-.page-48-12-1-footer {
+.group-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1708,8 +1772,7 @@ h1 {
 
 .method-note,
 .summary-item,
-.group-section,
-.page-48-12-1-footer {
+.group-section {
   border: 1px solid var(--border);
   background: var(--surface);
 }
@@ -2008,8 +2071,10 @@ h1 {
 }
 
 .detail-page .group-list {
+  width: min(100%, 1120px);
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;
+  margin: 16px auto 0;
 }
 
 .group-section {
@@ -2083,11 +2148,11 @@ h1 {
 
 .group-header-score {
   display: flex;
-  align-items: flex-end;
-  flex-direction: column;
-  gap: 4px;
+  align-items: baseline;
+  flex-direction: row;
+  gap: 8px;
   min-width: 88px;
-  text-align: right;
+  text-align: left;
 }
 
 .group-header-score span {
@@ -2119,6 +2184,11 @@ h1 {
 
 .operator-item:not(.is-expanded) {
   padding-bottom: 0;
+}
+
+.operator-item:not(.is-expanded) .operator-main {
+  padding-bottom: 0;
+  border-bottom: 0;
 }
 
 .operator-item:nth-child(3n) {
@@ -2250,7 +2320,17 @@ h1 {
 }
 
 .operator-details {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
+}
+
+.operator-details.is-base-priority .operator-info-row:first-child {
+  order: 2;
+}
+
+.operator-details.is-base-priority .operator-info-row:nth-child(2) {
+  order: 1;
 }
 
 .grade-badge {
@@ -2409,15 +2489,6 @@ h1 {
   color: #7c2d12;
 }
 
-.page-48-12-1-footer {
-  flex-wrap: wrap;
-  margin-top: 16px;
-  padding: 12px 16px;
-  border-radius: 6px;
-  color: var(--muted);
-  font-size: 12px;
-}
-
 @media (max-width: 1050px) {
   .detail-page .group-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2543,6 +2614,12 @@ h1 {
     min-height: 0;
     width: 100%;
     flex: 1 1 auto;
+  }
+
+  .result-draw-avatars {
+    width: 100%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .result-modules {
