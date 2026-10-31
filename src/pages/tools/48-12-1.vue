@@ -227,32 +227,34 @@ const hasLoginToken = computed(() => Boolean(localStorage.getItem("USER_TOKEN"))
 
 const operatorByName = new Map(Object.values(operatorTableV2).map((operator) => [operator.name, operator]));
 
-const heroRibbons = computed(() => RECRUITMENT_CONFIG.groups.map((group, index) => {
-  const theme = HERO_RIBBON_THEMES[index % HERO_RIBBON_THEMES.length];
-  return {
-    ...group,
-    direction: index % 2 === 1 ? "reverse" : "forward",
-    style: {
-      "--ribbon-color": theme.color,
-      "--ribbon-accent": theme.accent,
-      "--ribbon-ink": theme.ink,
-      "--ribbon-duration": theme.duration,
-    },
-    operators: group.operators
-      .map((configOperator) => {
-        const operator = operatorByName.get(configOperator.name);
-        if (!operator?.charId) {
-          return null;
-        }
-        return {
-          name: configOperator.name,
-          charId: operator.charId,
-          rarity: operator.rarity || 6,
-        };
-      })
-      .filter(Boolean),
-  };
-}));
+const heroRibbons = computed(() =>
+  RECRUITMENT_CONFIG.groups.map((group, index) => {
+    const theme = HERO_RIBBON_THEMES[index % HERO_RIBBON_THEMES.length];
+    return {
+      ...group,
+      direction: index % 2 === 1 ? "reverse" : "forward",
+      style: {
+        "--ribbon-color": theme.color,
+        "--ribbon-accent": theme.accent,
+        "--ribbon-ink": theme.ink,
+        "--ribbon-duration": theme.duration,
+      },
+      operators: group.operators
+        .map((configOperator) => {
+          const operator = operatorByName.get(configOperator.name);
+          if (!operator?.charId) {
+            return null;
+          }
+          return {
+            name: configOperator.name,
+            charId: operator.charId,
+            rarity: operator.rarity || 6,
+          };
+        })
+        .filter(Boolean),
+    };
+  })
+);
 
 const operatorMetaByName = new Map((COMBAT_DATA.operators || []).map((operator) => [operator.name, operator]));
 
@@ -491,12 +493,8 @@ const groupResults = computed(() => {
     const averageScore = average(scores);
     const variance = average(scores.map((score) => (score - averageScore) ** 2));
     const accountStatsAvailable = accountStatus.value === "loaded";
-    const ownedCount = accountStatsAvailable
-      ? operators.filter((operator) => Boolean(operator.accountOperator)).length
-      : null;
-    const potentialUpgradeCount = accountStatsAvailable
-      ? operators.filter((operator) => Number(operator.accountOperator?.potential) < 6).length
-      : null;
+    const ownedCount = accountStatsAvailable ? operators.filter((operator) => Boolean(operator.accountOperator)).length : null;
+    const potentialUpgradeCount = accountStatsAvailable ? operators.filter((operator) => Number(operator.accountOperator?.potential) < 6).length : null;
     const potentialTotal = accountStatsAvailable
       ? operators.reduce((total, operator) => {
           if (!operator.accountOperator) {
@@ -544,9 +542,7 @@ const accountCompletion = computed(() => {
 
 const decisionGroups = computed(() => {
   const groups = groupResults.value.map((group) => {
-    const potentialUpgradeCount = group.operators.filter(
-      (operator) => Number(operator.accountOperator?.potential) < 6
-    ).length;
+    const potentialUpgradeCount = group.operators.filter((operator) => Number(operator.accountOperator?.potential) < 6).length;
     const unownedOperators = group.operators.filter((operator) => !operator.accountOperator);
     const previewCount = unownedOperators.length > 4 ? 3 : unownedOperators.length;
     return {
@@ -568,10 +564,12 @@ const decisionGroups = computed(() => {
   });
   const rankById = new Map(ranking.map((group, index) => [group.id, index + 1]));
 
-  return groups.map((group) => ({
-    ...group,
-    decisionRank: rankById.get(group.id),
-  })).sort((a, b) => a.decisionRank - b.decisionRank);
+  return groups
+    .map((group) => ({
+      ...group,
+      decisionRank: rankById.get(group.id),
+    }))
+    .sort((a, b) => a.decisionRank - b.decisionRank);
 });
 
 const decisionBestGroup = computed(() => decisionGroups.value[0] || null);
@@ -636,17 +634,13 @@ function drawGroup() {
 
 function getMasteryRate(stats) {
   if (!stats) return null;
-  const values = [stats.skill1Rank3, stats.skill2Rank3, stats.skill3Rank3]
-    .map(Number)
-    .filter(Number.isFinite);
+  const values = [stats.skill1Rank3, stats.skill2Rank3, stats.skill3Rank3].map(Number).filter(Number.isFinite);
   return values.length ? Math.max(...values) : null;
 }
 
 function getModuleRate(stats) {
   if (!stats) return null;
-  const values = [stats.modXRank3, stats.modYRank3, stats.modDRank3, stats.modARank3, stats.modBRank3]
-    .map(Number)
-    .filter(Number.isFinite);
+  const values = [stats.modXRank3, stats.modYRank3, stats.modDRank3, stats.modARank3, stats.modBRank3].map(Number).filter(Number.isFinite);
   return values.length ? Math.max(...values) : null;
 }
 
@@ -721,12 +715,7 @@ onMounted(() => {
   <main class="page-48-12-1">
     <section v-if="pageStage === 'welcome'" class="hero-panel" aria-labelledby="page-48-12-1-title">
       <div class="hero-ribbons" aria-hidden="true">
-        <div
-          v-for="ribbon in heroRibbons"
-          :key="ribbon.id"
-          class="hero-ribbon"
-          :style="ribbon.style"
-        >
+        <div v-for="ribbon in heroRibbons" :key="ribbon.id" class="hero-ribbon" :style="ribbon.style">
           <div class="hero-ribbon-label">{{ ribbon.id }}</div>
           <div class="hero-ribbon-viewport">
             <div class="hero-ribbon-track" :class="{ 'is-reverse': ribbon.direction === 'reverse' }">
@@ -744,9 +733,7 @@ onMounted(() => {
       <div class="hero-copy">
         <h1 id="page-48-12-1-title">特别招募怎么选？</h1>
         <div class="hero-actions">
-          <v-btn class="draw-button" size="x-large" variant="flat" :loading="isDrawing" :disabled="!drawReady" @click="drawGroup">
-            帮我决定！
-          </v-btn>
+          <v-btn class="draw-button" size="x-large" variant="flat" :loading="isDrawing" :disabled="!drawReady" @click="drawGroup"> 帮我决定！ </v-btn>
         </div>
         <div class="hero-secondary-actions">
           <v-btn
@@ -764,28 +751,25 @@ onMounted(() => {
               <v-icon size="18">
                 {{ accountStatus === "loaded" ? "mdi-account-check" : accountStatus === "loading" ? "mdi-loading" : "mdi-alert-circle-outline" }}
               </v-icon>
-              <span>{{ accountStatus === "loaded" ? loadedOperatorCount + "位干员数据已同步" : accountStatus === "public" ? "未同步干员数据" : accountStatus === "loading" ? "正在载入干员数据" : "干员数据读取失败" }}</span>
+              <span>{{
+                accountStatus === "loaded"
+                  ? loadedOperatorCount + "位干员数据已同步"
+                  : accountStatus === "public"
+                    ? "未同步干员数据"
+                    : accountStatus === "loading"
+                      ? "正在载入干员数据"
+                      : "干员数据读取失败"
+              }}</span>
             </div>
           </template>
-          <v-btn
-            v-else
-            class="hero-secondary-button"
-            variant="outlined"
-            prepend-icon="mdi-database-import-outline"
-            to="/survey/account/importbyskland"
-          >
+          <v-btn v-else class="hero-secondary-button" variant="outlined" prepend-icon="mdi-database-import-outline" to="/survey/account/importbyskland">
             前往同步干员数据
           </v-btn>
         </div>
       </div>
     </section>
 
-    <section
-      v-else-if="pageStage === 'result'"
-      class="result-page"
-      :class="{ 'is-drawing': isDrawing, 'has-inline-detail': !isDrawing }"
-      aria-label="推荐结果"
-    >
+    <section v-else-if="pageStage === 'result'" class="result-page" :class="{ 'is-drawing': isDrawing, 'has-inline-detail': !isDrawing }" aria-label="推荐结果">
       <div v-if="isDrawing" class="result-page-loading" aria-live="polite">
         <div class="result-draw-avatars" aria-hidden="true">
           <OperatorAvatar
@@ -826,9 +810,7 @@ onMounted(() => {
                         >
                           <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="26" :mobile-size="20" :border="true" />
                         </span>
-                        <span v-if="group.unownedOverflow" class="result-score-row-unowned-more">
-                          +{{ group.unownedOverflow }}
-                        </span>
+                        <span v-if="group.unownedOverflow" class="result-score-row-unowned-more"> +{{ group.unownedOverflow }} </span>
                       </div>
                     </div>
                     <div class="result-score-row-value">
@@ -842,10 +824,7 @@ onMounted(() => {
               </article>
             </div>
 
-            <div v-if="accountCompletion.allOwned && !accountCompletion.allMax" class="result-recommendation-line is-owned">
-              您已拥有所有干员
-            </div>
-
+            <div v-if="accountCompletion.allOwned && !accountCompletion.allMax" class="result-recommendation-line is-owned">您已拥有所有干员</div>
           </section>
 
           <section class="result-settings-module" aria-label="评分参数">
@@ -861,11 +840,7 @@ onMounted(() => {
               <div class="result-score-settings-dimension">
                 <span class="result-score-settings-label">
                   未持有加分
-                  <router-link
-                    v-if="accountStatus !== 'loaded'"
-                    class="result-score-settings-sync"
-                    to="/survey/account/importbyskland"
-                  >
+                  <router-link v-if="accountStatus !== 'loaded'" class="result-score-settings-sync" to="/survey/account/importbyskland">
                     尚未同步干员，点击前往同步
                   </router-link>
                 </span>
@@ -877,12 +852,7 @@ onMounted(() => {
                   density="comfortable"
                   :disabled="accountStatus !== 'loaded'"
                 >
-                  <v-btn
-                    v-for="option in UNOWNED_BONUS_OPTIONS"
-                    :key="option.value"
-                    :value="option.value"
-                    :disabled="accountStatus !== 'loaded'"
-                  >
+                  <v-btn v-for="option in UNOWNED_BONUS_OPTIONS" :key="option.value" :value="option.value" :disabled="accountStatus !== 'loaded'">
                     {{ option.label }}
                   </v-btn>
                 </v-btn-toggle>
@@ -892,10 +862,7 @@ onMounted(() => {
           </section>
         </div>
 
-        <section v-if="accountCompletion.allMax" class="result-full-max-notice" aria-label="满潜提示">
-          您已满潜所有干员，请关闭本页面并随便抽一个
-        </section>
-
+        <section v-if="accountCompletion.allMax" class="result-full-max-notice" aria-label="满潜提示">您已满潜所有干员，请关闭本页面并随便抽一个</section>
       </template>
     </section>
 
@@ -919,178 +886,175 @@ onMounted(() => {
         </button>
       </nav>
 
-    <template v-if="!loading">
-      <section class="group-list" aria-label="干员详情">
-        <article
-          v-for="group in groupResults"
-          :key="group.id"
-          class="group-section"
-          :class="{ 'is-active': group.id === activeDetailGroupId }"
-        >
-          <header class="group-header">
-            <div class="group-header-main">
-              <h2>队列 {{ group.id }}</h2>
-              <div class="group-header-stats">
-                <div class="group-header-stat">
-                  <span>未持有</span>
-                  <strong>{{ group.accountStatsAvailable ? group.operators.length - group.ownedCount + "/" + group.operators.length : "-" }}</strong>
+      <template v-if="!loading">
+        <section class="group-list" aria-label="干员详情">
+          <article v-for="group in groupResults" :key="group.id" class="group-section" :class="{ 'is-active': group.id === activeDetailGroupId }">
+            <header class="group-header">
+              <div class="group-header-main">
+                <h2>队列 {{ group.id }}</h2>
+                <div class="group-header-stats">
+                  <div class="group-header-stat">
+                    <span>未持有</span>
+                    <strong>{{ group.accountStatsAvailable ? group.operators.length - group.ownedCount + "/" + group.operators.length : "-" }}</strong>
+                  </div>
+                  <div class="group-header-stat">
+                    <span>已持有未满潜</span>
+                    <strong>{{ group.accountStatsAvailable ? group.potentialUpgradeCount + "/" + group.operators.length : "-" }}</strong>
+                  </div>
+                  <div class="group-header-stat">
+                    <span>总潜能数</span>
+                    <strong>{{ group.accountStatsAvailable ? group.potentialTotal + "/" + group.operators.length * 6 : "-" }}</strong>
+                  </div>
+                  <div class="group-header-stat">
+                    <span>风险评分</span>
+                    <strong>{{ formatScore(group.standardDeviation) }}</strong>
+                  </div>
                 </div>
-                <div class="group-header-stat">
-                  <span>已持有未满潜</span>
-                  <strong>{{ group.accountStatsAvailable ? group.potentialUpgradeCount + "/" + group.operators.length : "-" }}</strong>
-                </div>
-                <div class="group-header-stat">
-                  <span>总潜能数</span>
-                  <strong>{{ group.accountStatsAvailable ? group.potentialTotal + "/" + group.operators.length * 6 : "-" }}</strong>
-                </div>
-                <div class="group-header-stat">
-                  <span>风险评分</span>
-                  <strong>{{ formatScore(group.standardDeviation) }}</strong>
+                <div class="group-header-score">
+                  <span>综合评分</span>
+                  <strong>{{ formatScore(group.totalScore, 1) }}</strong>
                 </div>
               </div>
-              <div class="group-header-score">
-                <span>综合评分</span>
-                <strong>{{ formatScore(group.totalScore, 1) }}</strong>
-              </div>
-            </div>
-          </header>
+            </header>
 
-          <div class="operator-grid">
-
-            <article
-              v-for="operator in group.operators"
-              :key="operator.charId"
-              class="operator-item"
-              :class="{ 'is-expanded': isOperatorExpanded(operator) }"
-            >
-            <div
-              class="operator-main"
-              role="button"
-              tabindex="0"
-              :aria-expanded="isOperatorExpanded(operator)"
-              :aria-label="isOperatorExpanded(operator) ? `收起${operator.name}详细信息` : `展开${operator.name}详细信息`"
-              @click="toggleOperatorExpanded(operator)"
-              @keydown.enter.prevent.self="toggleOperatorExpanded(operator)"
-              @keydown.space.prevent.self="toggleOperatorExpanded(operator)"
-            >
-              <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="58" :mobile-size="46" :border="true" />
-              <div class="operator-title">
-                <div class="operator-name-row">
-                  <strong>{{ operator.name }}</strong>
-                </div>
-                <small v-if="operator.appellation" class="operator-english-name">{{ operator.appellation }}</small>
-              </div>
-              <div class="operator-total-score">
-                <strong class="grade-badge" :class="`grade-${operator.finalGrade.toLowerCase()}`">{{ operator.finalGrade }}</strong>
-              </div>
-              <span
-                class="operator-toggle"
-                aria-hidden="true"
+            <div class="operator-grid">
+              <article
+                v-for="operator in group.operators"
+                :key="operator.charId"
+                class="operator-item"
+                :class="{ 'is-expanded': isOperatorExpanded(operator) }"
               >
-                <v-icon size="18">{{ isOperatorExpanded(operator) ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
-              </span>
-            </div>
+                <div
+                  class="operator-main"
+                  role="button"
+                  tabindex="0"
+                  :aria-expanded="isOperatorExpanded(operator)"
+                  :aria-label="isOperatorExpanded(operator) ? `收起${operator.name}详细信息` : `展开${operator.name}详细信息`"
+                  @click="toggleOperatorExpanded(operator)"
+                  @keydown.enter.prevent.self="toggleOperatorExpanded(operator)"
+                  @keydown.space.prevent.self="toggleOperatorExpanded(operator)"
+                >
+                  <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="58" :mobile-size="46" :border="true" />
+                  <div class="operator-title">
+                    <div class="operator-name-row">
+                      <strong>{{ operator.name }}</strong>
+                    </div>
+                    <small v-if="operator.appellation" class="operator-english-name">{{ operator.appellation }}</small>
+                  </div>
+                  <div class="operator-total-score">
+                    <strong class="grade-badge" :class="`grade-${operator.finalGrade.toLowerCase()}`">{{ operator.finalGrade }}</strong>
+                  </div>
+                  <span class="operator-toggle" aria-hidden="true">
+                    <v-icon size="18">{{ isOperatorExpanded(operator) ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
+                  </span>
+                </div>
 
-            <div
-              v-if="isOperatorExpanded(operator)"
-              class="operator-details"
-              :class="{ 'is-base-priority': dimension === 'base' }"
-            >
-              <div class="operator-info-row">
-                <div class="operator-info-heading operator-rating-line is-combat">
-                  <span>作战评分</span>
-                  <b class="grade-badge" :class="`grade-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }}</b>
-                  <span
-                    v-if="operator.gradeNote"
-                    class="operator-grade-note"
-                    :class="operator.gradeNote.tone"
-                    :title="operator.gradeNote.title"
-                  >{{ operator.gradeNote.text }}</span>
+                <div v-if="isOperatorExpanded(operator)" class="operator-details" :class="{ 'is-base-priority': dimension === 'base' }">
+                  <div class="operator-info-row">
+                    <div class="operator-info-heading operator-rating-line is-combat">
+                      <span>作战评分</span>
+                      <b class="grade-badge" :class="`grade-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }}</b>
+                      <span v-if="operator.gradeNote" class="operator-grade-note" :class="operator.gradeNote.tone" :title="operator.gradeNote.title">{{
+                        operator.gradeNote.text
+                      }}</span>
+                    </div>
+                    <span v-if="operator.combatDescriptions.length" class="info-value">
+                      <span v-for="entry in operator.combatDescriptions" :key="entry.name" class="combat-entry">
+                        <b>{{ entry.name }}</b>
+                        <template v-if="entry.description">：{{ entry.description }}</template>
+                      </span>
+                    </span>
+                    <span v-else class="info-value info-value-empty">暂无作战描述</span>
+                  </div>
+                  <div class="operator-info-row">
+                    <div class="operator-info-heading operator-rating-line">
+                      <span>基建评分</span>
+                      <b class="grade-badge" :class="`grade-${operator.baseGrade.toLowerCase()}`">{{ operator.baseGrade }}</b>
+                    </div>
+                    <div v-if="operator.buildingSkills.length || operator.buildingSubjectiveDescription" class="info-value">
+                      <span v-if="operator.buildingSkills.length">
+                        {{ operator.buildingSkills.map((skill) => `${skill.room}：${skill.description}`).join("；") }}
+                      </span>
+                      <span v-if="operator.buildingSubjectiveDescription" class="operator-subjective-description">
+                        {{ operator.buildingSubjectiveDescription }}
+                      </span>
+                    </div>
+                    <span v-else class="info-value info-value-empty">暂无基建记录</span>
+                  </div>
+                  <div v-if="isDevMode" class="dev-score-breakdown">
+                    <span>作战分 {{ formatScore(operator.combatScore) }}</span>
+                    <span>基建分 {{ formatScore(operator.baseScore) }}</span>
+                    <span>维度分 {{ formatScore(operator.dimensionScore) }}</span>
+                    <span>通用加成 {{ formatScore(operator.accountBonus) }}</span>
+                    <strong>总分 {{ operator.finalGrade }}（{{ formatScore(operator.finalScore) }}）</strong>
+                  </div>
                 </div>
-                <span v-if="operator.combatDescriptions.length" class="info-value">
-                  <span v-for="entry in operator.combatDescriptions" :key="entry.name" class="combat-entry">
-                    <b>{{ entry.name }}</b>
-                    <template v-if="entry.description">：{{ entry.description }}</template>
-                  </span>
-                </span>
-                <span v-else class="info-value info-value-empty">暂无作战描述</span>
-              </div>
-              <div class="operator-info-row">
-                <div class="operator-info-heading operator-rating-line">
-                  <span>基建评分</span>
-                  <b class="grade-badge" :class="`grade-${operator.baseGrade.toLowerCase()}`">{{ operator.baseGrade }}</b>
+                <div v-if="isOperatorExpanded(operator)" class="operator-card-footer">
+                  <div class="operator-stats">
+                    <span>持有率 {{ formatStatPercent(operator.stats?.ownRate) }}</span>
+                    <span>精二率 {{ formatStatPercent(operator.stats?.eliteRank2) }}</span>
+                    <span>专三率 {{ formatStatPercent(getMasteryRate(operator.stats)) }}</span>
+                    <span>模组率 {{ formatStatPercent(getModuleRate(operator.stats)) }}</span>
+                  </div>
+                  <a
+                    v-if="operator.prtsUrl"
+                    class="operator-prts-link"
+                    :href="operator.prtsUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    :title="`在 PRTS 查看${operator.name}`"
+                    :aria-label="`在 PRTS 查看${operator.name}`"
+                  >
+                    <v-icon size="13">mdi-open-in-new</v-icon>
+                    <span>PRTS</span>
+                  </a>
                 </div>
-                <div v-if="operator.buildingSkills.length || operator.buildingSubjectiveDescription" class="info-value">
-                  <span v-if="operator.buildingSkills.length">
-                    {{ operator.buildingSkills.map((skill) => `${skill.room}：${skill.description}`).join("；") }}
-                  </span>
-                  <span v-if="operator.buildingSubjectiveDescription" class="operator-subjective-description">
-                    {{ operator.buildingSubjectiveDescription }}
-                  </span>
-                </div>
-                <span v-else class="info-value info-value-empty">暂无基建记录</span>
-              </div>
-              <div v-if="isDevMode" class="dev-score-breakdown">
-                <span>作战分 {{ formatScore(operator.combatScore) }}</span>
-                <span>基建分 {{ formatScore(operator.baseScore) }}</span>
-                <span>维度分 {{ formatScore(operator.dimensionScore) }}</span>
-                <span>通用加成 {{ formatScore(operator.accountBonus) }}</span>
-                <strong>总分 {{ operator.finalGrade }}（{{ formatScore(operator.finalScore) }}）</strong>
-              </div>
+              </article>
             </div>
-            <div v-if="isOperatorExpanded(operator)" class="operator-card-footer">
-              <div class="operator-stats">
-                <span>持有率 {{ formatStatPercent(operator.stats?.ownRate) }}</span>
-                <span>精二率 {{ formatStatPercent(operator.stats?.eliteRank2) }}</span>
-                <span>专三率 {{ formatStatPercent(getMasteryRate(operator.stats)) }}</span>
-                <span>模组率 {{ formatStatPercent(getModuleRate(operator.stats)) }}</span>
-              </div>
-              <a
-                v-if="operator.prtsUrl"
-                class="operator-prts-link"
-                :href="operator.prtsUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                :title="`在 PRTS 查看${operator.name}`"
-                :aria-label="`在 PRTS 查看${operator.name}`"
-              >
-                <v-icon size="13">mdi-open-in-new</v-icon>
-                <span>PRTS</span>
-              </a>
-            </div>
-          </article>
-        </div>
           </article>
         </section>
-    </template>
+      </template>
 
-    <section v-if="loading" class="loading-state">
-      <v-progress-circular indeterminate color="primary" />
-      <span>正在整理干员数据...</span>
+      <section v-if="loading" class="loading-state">
+        <v-progress-circular indeterminate color="primary" />
+        <span>正在整理干员数据...</span>
+      </section>
+
+      <section class="method-note">
+        <div>
+          <strong>计算口径</strong>
+          <span>S/A/B/C/D 对应 5/4/3/2/1 分，总分评级按 4.5/3.5/2.5/1.5 分作为档位分界</span>
+          <span>作战优先为作战 85% 与基建 15%，通用为各 50%，基建优先为作战 15% 与基建 85%</span>
+          <span>队列评分为 12 名干员最终分数之和，四组均按 1/12 等概率计算</span>
+          <span
+            >风险评分为该组 12 名干员最终分数的总体标准差，即先计算 12
+            名干员最终分数的平均值，再计算各分数与平均值的偏差平方平均值并开平方，数值越高表示抽取结果的分数差异越大</span
+          >
+        </div>
+        <div>
+          <strong>账号收益</strong>
+          <span>未同步干员数据时，所有干员均不计入账号通用加成</span>
+          <span>同步后，未持有干员按“未持有加分”选项增加 0、5 或 99 分</span>
+          <span>已持有干员按缺少的潜能数每个加 0.1 分，例如风笛达到 5 潜时按 5 分计算</span>
+        </div>
+        <div>
+          <strong>统计说明</strong>
+          <span>持有率、精二率、专三率和模组率仅作为干员背景信息展示，不参与推荐分</span>
+        </div>
+        <div class="method-note-full">
+          <strong>作战相关主观评分标准</strong>
+          <span>优势区间对策以第一优先级进行主观评分：无需特限模组即可达到该评分（卡片标注「无特限模组达到此评分」）</span>
+          <span>集成战略相关以第二优先级进行主观评分：主观评分标准与前者一致，但需借助特限模组达成（卡片标注「考虑特限模组达到此评分」）</span>
+          <span
+            >生息演算与危机合约以第三优先级进行主观评分：在计入特限模组（如有）达成相应评分的基础上，因主玩上述模式的玩家相对较少而下调一档，具备显著特殊机制者（如森蚺特限模组的大范围寻路点改动）不予下调</span
+          >
+          <span>日常游玩以第四优先级进行主观评分：本页面不以挂机技能作为主要评定依据</span>
+          <span class="method-note-disclaimer"
+            >以上评分系编辑基于当前版本环境与使用体验的主观判断，仅供参考，不同阵容、打法与练度可能得出不同结论 ヽ(>.<)ﾉ</span
+          >
+        </div>
+      </section>
     </section>
-
-    <section class="method-note">
-      <div>
-        <strong>计算口径</strong>
-        <span>{{ gradeScaleText }}；作战优先为作战 85% 与基建 15%；通用为各 50%；基建优先为作战 15% 与基建 85%；队列评分为 12 名干员最终分数之和；四组均按 1/12 等概率计算；风险评分为该组 12 名干员最终分数的总体标准差，即先计算 12 名干员最终分数的平均值，再计算各分数与平均值的偏差平方平均值并开平方；数值越高表示抽取结果的分数差异越大。</span>
-      </div>
-      <div>
-        <strong>账号收益</strong>
-        <span>未同步干员数据时，所有干员均不计入账号通用加成；同步后，未持有干员按“未持有加分”选项增加 0、5 或 99 分；已持有干员按缺少的潜能数每个加 0.1 分；风笛达到 5 潜时按 5 分计算。</span>
-      </div>
-      <div>
-        <strong>统计说明</strong>
-        <span>持有率、精二率、专三率和模组率仅作为干员背景信息展示，不参与推荐分。</span>
-      </div>
-      <div class="method-note-full">
-        <strong>作战相关主观评分标准</strong>
-        <span>优势区间对策以第一优先级进行主观评分：无需特限模组即可达到该评分（卡片标注「无特限模组达到此评分」）；集成战略相关以第二优先级进行主观评分：主观评分标准与前者一致，但需借助特限模组达成（卡片标注「考虑特限模组达到此评分」）；生息演算与危机合约以第三优先级进行主观评分：在计入特限模组（如有）达成相应评分的基础上，因主玩上述模式的玩家相对较少而下调一档，具备显著特殊机制者（如森蚺特限模组的大范围寻路点改动）不予下调；日常游玩以第四优先级进行主观评分：本页面不以挂机技能作为主要评定依据。</span>
-        <span class="method-note-disclaimer">以上评分系编辑基于当前版本环境与使用体验的主观判断，仅供参考；不同阵容、打法与练度可能得出不同结论 ヽ(>.<)ﾉ</span>
-      </div>
-    </section>
-
-    </section>
-
   </main>
 </template>
 
@@ -1618,7 +1582,9 @@ onMounted(() => {
   line-height: 1.1;
   letter-spacing: 0;
   text-align: left;
-  text-shadow: 0 3px 0 #11181a, 0 7px 18px rgba(0, 0, 0, 0.5);
+  text-shadow:
+    0 3px 0 #11181a,
+    0 7px 18px rgba(0, 0, 0, 0.5);
   white-space: nowrap;
 }
 
@@ -2093,6 +2059,10 @@ h1 {
   color: var(--muted);
   font-size: 12px;
   line-height: 1.6;
+}
+
+.method-note span + span {
+  margin-top: 2px;
 }
 
 .method-note .method-note-disclaimer {
@@ -2962,6 +2932,5 @@ h1 {
   .group-header-score strong {
     font-size: 34px;
   }
-
 }
 </style>
