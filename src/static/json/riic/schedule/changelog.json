@@ -10,11 +10,11 @@
     },
     "team": {
       "label": "班组模块",
-      "version": "v20261020.1130"
+      "version": "v20261031.0948"
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20261020.1130"
+      "version": "v20261031.0948"
     },
     "yield": {
       "label": "收益计算器",
@@ -22,10 +22,43 @@
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20261011.1852"
+      "version": "v20261031.0948"
     }
   },
   "entries": [
+    {
+      "date": "2026-10-31",
+      "version": "v20261031.0948",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 5,
+          "description": "修复一天三换和一天两换·手动三班轮换中菲亚梅塔目标无法跨站点覆盖全部班次的问题；仅在目标候选可用且干员数量足够时拆分站点轮换，并保留同班次不可重复使用的限制",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "组装器",
+          "type": "fix",
+          "level": 4,
+          "description": "修复菲亚梅塔目标仅出现在一个队列时未同步菲亚梅塔恢复设置的问题",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "调试信息",
+          "type": "fix",
+          "level": 3,
+          "description": "培养建议试算沿用菲亚梅塔目标轮换修复，保持自动排班与培养建议的轮换模型一致",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-10-25",
       "version": "v20261025.1958",

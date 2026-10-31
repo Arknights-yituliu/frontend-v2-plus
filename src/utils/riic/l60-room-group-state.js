@@ -112,6 +112,65 @@ function getRiicRoomGroupCatalogLoadState({
   return "idle";
 }
 
+function catalogContainsOperator(catalog, targetName) {
+  return (catalog?.candidates || []).some((candidate) =>
+    (candidate?.members || []).some(
+      (member) => String(member?.name || "").trim() === targetName,
+    ),
+  );
+}
+
+function shouldSplitStationCohortsForFiammetta({
+  group,
+  roster,
+  catalogsByKey,
+  operatorNameToCharId,
+  fiammettaRecovery,
+}) {
+  const targetOperatorId = String(
+    fiammettaRecovery?.targetOperatorId || "",
+  ).trim();
+  if (fiammettaRecovery?.enabled !== true || !targetOperatorId) {
+    return false;
+  }
+
+  const nameToIdEntries =
+    operatorNameToCharId instanceof Map
+      ? [...operatorNameToCharId.entries()]
+      : Object.entries(operatorNameToCharId || {});
+  const targetName = nameToIdEntries.find(
+    ([, charId]) => String(charId || "").trim() === targetOperatorId,
+  )?.[0];
+  if (!targetName) {
+    return false;
+  }
+
+  const stationCount = (group?.stations || []).filter(
+    (station) =>
+      Number.isInteger(station?.stationLevel) &&
+      Number.isInteger(station?.slotCount),
+  ).length;
+  if (stationCount <= 1) {
+    return false;
+  }
+
+  const requiredOperatorCount = (group?.stations || []).reduce(
+    (total, station) => total + Number(station?.slotCount || 0) * 2,
+    0,
+  );
+  if ((roster || []).length < requiredOperatorCount - 1) {
+    return false;
+  }
+
+  return getRiicRoomGroupCatalogRequests(group).some(({ key }) => {
+    const library = key ? catalogsByKey?.[key] : null;
+    return (
+      catalogContainsOperator(library?.catalog, targetName) ||
+      catalogContainsOperator(library?.fallbackCatalog, targetName)
+    );
+  });
+}
+
 function compareRiicRoomGroupCandidates(left, right) {
   const rankingDifference =
     getRiicRuntimeCandidateRankingValue(right) -
@@ -289,6 +348,7 @@ export function createRiicRoomGroupCandidateState({
   idealTrainingRaritySelection,
   controlCenterRuntimeContext,
   idleFillOperators = [],
+  fiammettaRecovery = null,
 } = {}) {
   if (!group) {
     return { status: "idle", cohorts: [] };
@@ -321,6 +381,13 @@ export function createRiicRoomGroupCandidateState({
     shiftMode,
     roomType: group.facility,
     twoShiftRotationMode,
+    splitStationCohorts: shouldSplitStationCohortsForFiammetta({
+      group,
+      roster,
+      catalogsByKey,
+      operatorNameToCharId,
+      fiammettaRecovery,
+    }),
   });
   if (staffingRequirement.status !== "ready") {
     return {

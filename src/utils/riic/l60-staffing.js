@@ -232,7 +232,17 @@ function createCohort({
   };
 }
 
-function splitThreeTimesStationIndexes(stationIndexes, shiftMode) {
+function splitThreeTimesStationIndexes(
+  stationIndexes,
+  shiftMode,
+  splitStationCohorts = false,
+) {
+  // Fiammetta can reuse one target across separate station rotations, but
+  // keeping the normal grouped model avoids extra teams for ordinary schedules.
+  if (splitStationCohorts && stationIndexes.length > 1) {
+    return stationIndexes.map((stationIndex) => [stationIndex]);
+  }
+
   if (shiftMode !== "threeTimes" || stationIndexes.length <= 2) {
     return [stationIndexes];
   }
@@ -326,6 +336,7 @@ export function getRiicRoomGroupStaffingRequirement({
   shiftMode,
   roomType,
   twoShiftRotationMode = "manual",
+  splitStationCohorts = false,
 }) {
   const normalizedStations = normalizeStations({ stations, stationSlots });
   if (normalizedStations.length === 0) {
@@ -385,6 +396,7 @@ export function getRiicRoomGroupStaffingRequirement({
       splitThreeTimesStationIndexes(
         entry.stationIndexes,
         shiftMode,
+        splitStationCohorts && segmentHours.length === 3,
       ).map((stationIndexes) =>
         createCohort({
           stationLevel: entry.stationLevel,
