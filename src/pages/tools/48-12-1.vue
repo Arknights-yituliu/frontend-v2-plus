@@ -35,11 +35,12 @@ const TOTAL_GRADE_THRESHOLDS = {
   S: (SCORE_MAP.S + SCORE_MAP.A) / 2,
   A: (SCORE_MAP.A + SCORE_MAP.B) / 2,
   B: (SCORE_MAP.B + SCORE_MAP.C) / 2,
+  C: (SCORE_MAP.C + SCORE_MAP.D) / 2,
 };
-const GRADE_ORDER = ["X", "S", "A", "B", "C"];
+const GRADE_ORDER = ["S", "A", "B", "C", "D"];
 const gradeScaleText = computed(() => {
   const grades = GRADE_ORDER.filter((grade) => Number.isFinite(SCORE_MAP[grade]));
-  const thresholds = [TOTAL_GRADE_THRESHOLDS.S, TOTAL_GRADE_THRESHOLDS.A, TOTAL_GRADE_THRESHOLDS.B]
+  const thresholds = [TOTAL_GRADE_THRESHOLDS.S, TOTAL_GRADE_THRESHOLDS.A, TOTAL_GRADE_THRESHOLDS.B, TOTAL_GRADE_THRESHOLDS.C]
     .map((value) => Number(value.toFixed(2)))
     .join("/");
   return `${grades.join("/")} 对应 ${grades.map((grade) => SCORE_MAP[grade]).join("/")} 分；总分评级按 ${thresholds} 分作为档位分界`;
@@ -97,40 +98,52 @@ const BUILDING_SUBJECTIVE_DESCRIPTIONS = Object.freeze({
 const BUILDING_GRADE_OVERRIDES = Object.freeze({
   能天使: "S",
   推进之王: "S",
-  伊芙利特: "B",
-  闪灵: "B",
-  艾雅法拉: "A",
-  塞雷娅: "B",
-  斯卡蒂: "B",
-  陈: "A",
-  银灰: "A",
-  夜莺: "B",
+  伊芙利特: "C",
+  安洁莉娜: "D",
+  闪灵: "C",
+  艾雅法拉: "B",
+  夜莺: "C",
+  星熊: "D",
+  塞雷娅: "C",
+  银灰: "B",
+  斯卡蒂: "C",
+  陈: "B",
+  黑: "D",
+  赫拉格: "B",
+  麦哲伦: "C",
+  莫斯提马: "D",
+  煌: "B",
+  阿: "D",
   刻俄柏: "S",
-  风笛: "A",
-  铃兰: "A",
-  麦哲伦: "B",
+  风笛: "B",
+  傀影: "D",
   温蒂: "S",
-  煌: "A",
-  赫拉格: "A",
-  凯尔希: "B",
-  泥岩: "A",
-  空弦: "A",
-  帕拉斯: "A",
-  异客: "B",
+  早露: "D",
+  铃兰: "B",
+  棘刺: "D",
   森蚺: "S",
-  瑕光: "A",
-  艾丽妮: "A",
-  黑键: "S",
-  菲亚梅塔: "S",
-  澄闪: "A",
-  琴柳: "B",
-  老鲤: "B",
-  多萝西: "S",
+  史尔特尔: "D",
+  瑕光: "B",
+  泥岩: "B",
+  山: "D",
+  空弦: "A",
+  嵯峨: "D",
+  异客: "B",
+  凯尔希: "C",
+  卡涅利安: "D",
+  帕拉斯: "A",
+  水月: "B",
+  琴柳: "C",
   远牙: "A",
-  灵知: "A",
-  号角: "A",
   焰尾: "S",
-  水月: "A",
+  灵知: "A",
+  老鲤: "C",
+  澄闪: "B",
+  菲亚梅塔: "S",
+  号角: "B",
+  艾丽妮: "A",
+  黑键: "A",
+  多萝西: "S",
 });
 const OPERATOR_ENGLISH_NAMES = Object.freeze({
   能天使: "Exusiai",
@@ -297,7 +310,8 @@ function gradeForTotalScore(score) {
   if (score >= TOTAL_GRADE_THRESHOLDS.S) return "S";
   if (score >= TOTAL_GRADE_THRESHOLDS.A) return "A";
   if (score >= TOTAL_GRADE_THRESHOLDS.B) return "B";
-  return "C";
+  if (score >= TOTAL_GRADE_THRESHOLDS.C) return "C";
+  return "D";
 }
 
 function getBuildingSkillScore(skill) {
@@ -366,9 +380,10 @@ function buildDevAccountOperators(mode) {
 
 function getOperatorView(configOperator) {
   const operator = operatorByName.get(configOperator.name) || {};
-  const combatScore = scoreForGrade(configOperator.combatGrade);
+  const accountOperator = getAccountOperator(configOperator.name);
+  const combatScore = accountOperator ? 0 : scoreForGrade(configOperator.combatGrade);
   const buildingSubjectiveDescription = BUILDING_SUBJECTIVE_DESCRIPTIONS[configOperator.name] || "";
-  const baseGrade = BUILDING_GRADE_OVERRIDES[configOperator.name] || "C";
+  const baseGrade = BUILDING_GRADE_OVERRIDES[configOperator.name] || "D";
   const baseScore = scoreForGrade(baseGrade);
   const weights = DIMENSION_WEIGHTS[dimension.value];
   const dimensionScore = combatScore * weights.combat + baseScore * weights.base;
@@ -400,7 +415,7 @@ function getOperatorView(configOperator) {
     finalScore,
     finalGrade: gradeForTotalScore(finalScore),
     accountLabel: getAccountLabel(configOperator.name),
-    accountOperator: getAccountOperator(configOperator.name),
+    accountOperator,
     combatDescriptions: buildCombatDescriptions(configOperator.name, tags),
     prtsUrl,
     hasLimitedEquip,
@@ -444,8 +459,8 @@ function buildCombatDescriptions(name, tags) {
   return entries;
 }
 
-// 作战评分脚的说明：有特限模组 → 提示该评分可借特限模组达成；无特限模组且为 S/X → 提示是纯常规模组打出的成绩
-const TOP_COMBAT_GRADES = new Set(["X", "S"]);
+// 作战评分的说明：有特限模组 → 提示该评分可借特限模组达成；无特限模组且为 S/A → 提示是纯常规模组打出的成绩
+const TOP_COMBAT_GRADES = new Set(["S", "A"]);
 
 function buildGradeNote(combatGrade, hasLimitedEquip) {
   if (hasLimitedEquip) {
@@ -459,7 +474,7 @@ function buildGradeNote(combatGrade, hasLimitedEquip) {
     return null;
   }
   return {
-    tone: combatGrade === "X" ? "is-x-without-limited" : "",
+    tone: "",
     text: "无特限模组达到此评分",
     title: "该干员没有集成战略 / 生息演算特限模组，该评分由常规模组达成",
   };
@@ -472,8 +487,9 @@ const groupResults = computed(() => {
       operators.sort((a, b) => Number(Boolean(a.accountOperator)) - Number(Boolean(b.accountOperator)));
     }
     const scores = operators.map((operator) => operator.finalScore);
-    const expected = average(scores);
-    const variance = average(scores.map((score) => (score - expected) ** 2));
+    const totalScore = scores.reduce((sum, score) => sum + score, 0);
+    const averageScore = average(scores);
+    const variance = average(scores.map((score) => (score - averageScore) ** 2));
     const accountStatsAvailable = accountStatus.value === "loaded";
     const ownedCount = accountStatsAvailable
       ? operators.filter((operator) => Boolean(operator.accountOperator)).length
@@ -493,7 +509,8 @@ const groupResults = computed(() => {
     return {
       ...group,
       operators,
-      expected,
+      totalScore,
+      averageScore,
       standardDeviation: Math.sqrt(variance),
       minScore: Math.min(...scores),
       maxScore: Math.max(...scores),
@@ -504,7 +521,7 @@ const groupResults = computed(() => {
     };
   });
 
-  const ranking = [...results].sort((a, b) => b.expected - a.expected);
+  const ranking = [...results].sort((a, b) => b.totalScore - a.totalScore);
   const rankById = new Map(ranking.map((group, index) => [group.id, index + 1]));
   return results.map((group) => ({
     ...group,
@@ -545,9 +562,9 @@ const decisionGroups = computed(() => {
   const usePotentialRanking = accountCompletion.value.allOwned && !accountCompletion.value.allMax;
   const ranking = [...groups].sort((a, b) => {
     if (usePotentialRanking) {
-      return b.potentialUpgradeProbability - a.potentialUpgradeProbability || b.expected - a.expected;
+      return b.potentialUpgradeProbability - a.potentialUpgradeProbability || b.totalScore - a.totalScore;
     }
-    return b.expected - a.expected;
+    return b.totalScore - a.totalScore;
   });
   const rankById = new Map(ranking.map((group, index) => [group.id, index + 1]));
 
@@ -559,7 +576,7 @@ const decisionGroups = computed(() => {
 
 const decisionBestGroup = computed(() => decisionGroups.value[0] || null);
 
-const decisionScoreMax = computed(() => Math.max(...decisionGroups.value.map((group) => Number(group.expected) || 0), 1));
+const decisionScoreMax = computed(() => Math.max(...decisionGroups.value.map((group) => Number(group.totalScore) || 0), 1));
 
 function average(values) {
   return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
@@ -580,7 +597,7 @@ function formatStatPercent(value) {
 }
 
 function getDecisionScoreWidth(group) {
-  const score = Number(group.expected) || 0;
+  const score = Number(group.totalScore) || 0;
   return `${Math.max(0, Math.min(100, (score / decisionScoreMax.value) * 100))}%`;
 }
 
@@ -815,7 +832,7 @@ onMounted(() => {
                       </div>
                     </div>
                     <div class="result-score-row-value">
-                      <strong>{{ formatScore(group.expected) }}</strong>
+                      <strong>{{ formatScore(group.totalScore) }}</strong>
                       <span v-if="accountCompletion.allOwned && !accountCompletion.allMax">
                         提升 {{ formatPercent(group.potentialUpgradeProbability * 100) }}
                       </span>
@@ -825,10 +842,7 @@ onMounted(() => {
               </article>
             </div>
 
-            <div v-if="accountCompletion.allMax" class="result-recommendation-line is-neutral">
-              您已满潜所有干员，请关闭本页面并随便抽一个
-            </div>
-            <div v-else-if="accountCompletion.allOwned" class="result-recommendation-line is-owned">
+            <div v-if="accountCompletion.allOwned && !accountCompletion.allMax" class="result-recommendation-line is-owned">
               您已拥有所有干员
             </div>
 
@@ -877,6 +891,10 @@ onMounted(() => {
             <p class="result-settings-note">评分含有大量主观因素，仅供参考。</p>
           </section>
         </div>
+
+        <section v-if="accountCompletion.allMax" class="result-full-max-notice" aria-label="满潜提示">
+          您已满潜所有干员，请关闭本页面并随便抽一个
+        </section>
 
       </template>
     </section>
@@ -932,7 +950,7 @@ onMounted(() => {
               </div>
               <div class="group-header-score">
                 <span>综合评分</span>
-                <strong>{{ formatScore(group.expected) }}</strong>
+                <strong>{{ formatScore(group.totalScore) }}</strong>
               </div>
             </div>
           </header>
@@ -1054,7 +1072,7 @@ onMounted(() => {
     <section class="method-note">
       <div>
         <strong>计算口径</strong>
-        <span>{{ gradeScaleText }}；作战优先为作战 85% 与基建 15%，通用为各 50%，基建优先为作战 15% 与基建 85%；四组均按 1/12 等概率计算；作战评分旁的「考虑特限模组达到此评分」表示该评分需借助特限模组达成，「无特限模组达到此评分」表示该评分由常规模组达成；风险评分为该组 12 名干员最终总分的总体标准差，即先计算总分与综合评分（平均分）的偏差平方平均值，再开平方，数值越高表示抽取结果的分数差异越大。</span>
+        <span>{{ gradeScaleText }}；作战优先为作战 85% 与基建 15%，通用为各 50%，基建优先为作战 15% 与基建 85%；队列评分为 12 名干员最终分数之和；四组均按 1/12 等概率计算；作战评分旁的「考虑特限模组达到此评分」表示该评分需借助特限模组达成，「无特限模组达到此评分」表示该评分由常规模组达成；风险评分为该组 12 名干员最终分数的总体标准差，即先计算 12 名干员最终分数的平均值，再计算各分数与平均值的偏差平方平均值并开平方，数值越高表示抽取结果的分数差异越大。</span>
       </div>
       <div>
         <strong>账号收益</strong>
@@ -1284,10 +1302,19 @@ onMounted(() => {
   font-weight: 900;
 }
 
-.result-recommendation-line.is-neutral {
+.result-full-max-notice {
+  width: min(100%, 1120px);
+  margin: 0 auto;
+  padding: clamp(22px, 4vw, 36px) clamp(18px, 4vw, 48px);
+  border: 1px solid var(--border);
+  border-left: 6px solid #e52b46;
+  background: var(--surface);
+  box-shadow: 0 2px 8px rgba(62, 42, 36, 0.08);
   color: var(--text);
-  font-size: clamp(18px, 2.5vw, 26px);
-  line-height: 1.35;
+  font-size: clamp(26px, 4vw, 48px);
+  font-weight: 900;
+  line-height: 1.25;
+  text-align: center;
 }
 
 .result-recommendation-line.is-owned {
@@ -2184,7 +2211,7 @@ h1 {
 }
 
 .operator-item:not(.is-expanded) {
-  padding-bottom: 0;
+  padding-bottom: 14px;
 }
 
 .operator-item:not(.is-expanded) .operator-main {
@@ -2275,11 +2302,6 @@ h1 {
   color: #1f5fa8;
 }
 
-.operator-grade-note.is-x-without-limited {
-  background: rgba(168, 85, 247, 0.13);
-  color: #7e22ce;
-}
-
 .operator-total-score {
   display: inline-flex;
   min-width: 45px;
@@ -2347,9 +2369,6 @@ h1 {
   font-weight: 800;
 }
 
-.grade-x {
-  background: #a855f7;
-}
 .grade-s {
   background: #d97706;
 }
@@ -2362,10 +2381,11 @@ h1 {
 .grade-c {
   background: #94a3b8;
 }
-
-.grade-text-x {
-  color: #a855f7;
+.grade-d {
+  background: #cbd5e1;
+  color: #475569;
 }
+
 .grade-text-s {
   color: #b45309;
 }

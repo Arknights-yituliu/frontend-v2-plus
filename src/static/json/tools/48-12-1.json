@@ -1,83 +1,83 @@
 {
   "version": "v0.1",
   "scoreMap": {
-    "X": 5,
-    "S": 4,
-    "A": 3,
-    "B": 2,
-    "C": 1
+    "S": 5,
+    "A": 4,
+    "B": 3,
+    "C": 2,
+    "D": 1
   },
   "groups": [
     {
       "id": "I",
       "name": "特别招募队列·Ⅰ",
       "operators": [
-        {"name": "能天使", "combatGrade": "B", "baseGrade": "A"},
-        {"name": "推进之王", "combatGrade": "C", "baseGrade": "B"},
-        {"name": "伊芙利特", "combatGrade": "A", "baseGrade": "B"},
-        {"name": "艾雅法拉", "combatGrade": "A", "baseGrade": "A"},
-        {"name": "安洁莉娜", "combatGrade": "S", "baseGrade": "B"},
-        {"name": "闪灵", "combatGrade": "C", "baseGrade": "C"},
-        {"name": "夜莺", "combatGrade": "X", "baseGrade": "B"},
-        {"name": "星熊", "combatGrade": "A", "baseGrade": "A"},
-        {"name": "塞雷娅", "combatGrade": "S", "baseGrade": "B"},
-        {"name": "银灰", "combatGrade": "A", "baseGrade": "B"},
-        {"name": "斯卡蒂", "combatGrade": "B", "baseGrade": "C"},
-        {"name": "陈", "combatGrade": "B", "baseGrade": "A"}
+        {"name": "能天使", "combatGrade": "C", "baseGrade": "A"},
+        {"name": "推进之王", "combatGrade": "D", "baseGrade": "B"},
+        {"name": "伊芙利特", "combatGrade": "B", "baseGrade": "B"},
+        {"name": "艾雅法拉", "combatGrade": "B", "baseGrade": "A"},
+        {"name": "安洁莉娜", "combatGrade": "A", "baseGrade": "B"},
+        {"name": "闪灵", "combatGrade": "D", "baseGrade": "C"},
+        {"name": "夜莺", "combatGrade": "S", "baseGrade": "B"},
+        {"name": "星熊", "combatGrade": "B", "baseGrade": "A"},
+        {"name": "塞雷娅", "combatGrade": "A", "baseGrade": "B"},
+        {"name": "银灰", "combatGrade": "B", "baseGrade": "B"},
+        {"name": "斯卡蒂", "combatGrade": "C", "baseGrade": "C"},
+        {"name": "陈", "combatGrade": "C", "baseGrade": "A"}
       ]
     },
     {
       "id": "II",
       "name": "特别招募队列·Ⅱ",
       "operators": [
-        {"name": "黑", "combatGrade": "B", "baseGrade": "A"},
-        {"name": "赫拉格", "combatGrade": "C", "baseGrade": "A"},
-        {"name": "麦哲伦", "combatGrade": "A", "baseGrade": "B"},
-        {"name": "莫斯提马", "combatGrade": "A", "baseGrade": "B"},
-        {"name": "煌", "combatGrade": "B", "baseGrade": "A"},
-        {"name": "阿", "combatGrade": "A", "baseGrade": "A"},
-        {"name": "刻俄柏", "combatGrade": "S", "baseGrade": "B"},
-        {"name": "风笛", "combatGrade": "S", "baseGrade": "A"},
-        {"name": "傀影", "combatGrade": "A", "baseGrade": "A"},
-        {"name": "温蒂", "combatGrade": "A", "baseGrade": "B"},
-        {"name": "早露", "combatGrade": "B", "baseGrade": "B"},
-        {"name": "铃兰", "combatGrade": "S", "baseGrade": "A"}
+        {"name": "黑", "combatGrade": "C", "baseGrade": "A"},
+        {"name": "赫拉格", "combatGrade": "D", "baseGrade": "A"},
+        {"name": "麦哲伦", "combatGrade": "B", "baseGrade": "B"},
+        {"name": "莫斯提马", "combatGrade": "B", "baseGrade": "B"},
+        {"name": "煌", "combatGrade": "C", "baseGrade": "A"},
+        {"name": "阿", "combatGrade": "B", "baseGrade": "A"},
+        {"name": "刻俄柏", "combatGrade": "A", "baseGrade": "B"},
+        {"name": "风笛", "combatGrade": "A", "baseGrade": "A"},
+        {"name": "傀影", "combatGrade": "B", "baseGrade": "A"},
+        {"name": "温蒂", "combatGrade": "B", "baseGrade": "B"},
+        {"name": "早露", "combatGrade": "C", "baseGrade": "B"},
+        {"name": "铃兰", "combatGrade": "A", "baseGrade": "A"}
       ]
     },
     {
       "id": "III",
       "name": "特别招募队列·Ⅲ",
       "operators": [
-        {"name": "棘刺", "combatGrade": "C", "baseGrade": "B"},
-        {"name": "森蚺", "combatGrade": "S", "baseGrade": "B"},
-        {"name": "史尔特尔", "combatGrade": "S", "baseGrade": "A"},
-        {"name": "瑕光", "combatGrade": "B", "baseGrade": "A"},
-        {"name": "泥岩", "combatGrade": "A", "baseGrade": "A"},
-        {"name": "山", "combatGrade": "B", "baseGrade": "B"},
-        {"name": "空弦", "combatGrade": "X", "baseGrade": "C"},
-        {"name": "嵯峨", "combatGrade": "C", "baseGrade": "A"},
-        {"name": "异客", "combatGrade": "A", "baseGrade": "B"},
-        {"name": "凯尔希", "combatGrade": "A", "baseGrade": "A"},
-        {"name": "卡涅利安", "combatGrade": "B", "baseGrade": "A"},
-        {"name": "帕拉斯", "combatGrade": "C", "baseGrade": "B"}
+        {"name": "棘刺", "combatGrade": "D", "baseGrade": "B"},
+        {"name": "森蚺", "combatGrade": "A", "baseGrade": "B"},
+        {"name": "史尔特尔", "combatGrade": "A", "baseGrade": "A"},
+        {"name": "瑕光", "combatGrade": "C", "baseGrade": "A"},
+        {"name": "泥岩", "combatGrade": "B", "baseGrade": "A"},
+        {"name": "山", "combatGrade": "C", "baseGrade": "B"},
+        {"name": "空弦", "combatGrade": "S", "baseGrade": "C"},
+        {"name": "嵯峨", "combatGrade": "D", "baseGrade": "A"},
+        {"name": "异客", "combatGrade": "B", "baseGrade": "B"},
+        {"name": "凯尔希", "combatGrade": "B", "baseGrade": "A"},
+        {"name": "卡涅利安", "combatGrade": "C", "baseGrade": "A"},
+        {"name": "帕拉斯", "combatGrade": "D", "baseGrade": "B"}
       ]
     },
     {
       "id": "IV",
       "name": "特别招募队列·Ⅳ",
       "operators": [
-        {"name": "水月", "combatGrade": "X", "baseGrade": "B"},
-        {"name": "琴柳", "combatGrade": "A", "baseGrade": "A"},
-        {"name": "远牙", "combatGrade": "C", "baseGrade": "B"},
-        {"name": "焰尾", "combatGrade": "C", "baseGrade": "B"},
-        {"name": "灵知", "combatGrade": "X", "baseGrade": "B"},
-        {"name": "老鲤", "combatGrade": "B", "baseGrade": "A"},
-        {"name": "澄闪", "combatGrade": "A", "baseGrade": "B"},
-        {"name": "菲亚梅塔", "combatGrade": "S", "baseGrade": "C"},
-        {"name": "号角", "combatGrade": "A", "baseGrade": "A"},
-        {"name": "艾丽妮", "combatGrade": "S", "baseGrade": "B"},
-        {"name": "黑键", "combatGrade": "B", "baseGrade": "C"},
-        {"name": "多萝西", "combatGrade": "A", "baseGrade": "B"}
+        {"name": "水月", "combatGrade": "S", "baseGrade": "B"},
+        {"name": "琴柳", "combatGrade": "B", "baseGrade": "A"},
+        {"name": "远牙", "combatGrade": "D", "baseGrade": "B"},
+        {"name": "焰尾", "combatGrade": "D", "baseGrade": "B"},
+        {"name": "灵知", "combatGrade": "S", "baseGrade": "B"},
+        {"name": "老鲤", "combatGrade": "C", "baseGrade": "A"},
+        {"name": "澄闪", "combatGrade": "B", "baseGrade": "B"},
+        {"name": "菲亚梅塔", "combatGrade": "A", "baseGrade": "C"},
+        {"name": "号角", "combatGrade": "B", "baseGrade": "A"},
+        {"name": "艾丽妮", "combatGrade": "A", "baseGrade": "B"},
+        {"name": "黑键", "combatGrade": "C", "baseGrade": "C"},
+        {"name": "多萝西", "combatGrade": "B", "baseGrade": "B"}
       ]
     }
   ]
