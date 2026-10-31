@@ -88,6 +88,29 @@ export function getRiicOperatorSkillDetails(charId) {
   );
 }
 
+/**
+ * 获取干员的职业大类与职业分支名称
+ * @param {string} charId 干员 ID
+ * @param {Object} [operator] 可选：调用方已持有的干员数据，缺省时回落到内置干员表
+ * @returns {{profession: string, branch: string, label: string}} 职业、分支及拼接后的展示文案
+ */
+export function getRiicOperatorClassLabel(charId, operator = null) {
+  const key = String(charId || "").trim();
+  const metadata =
+    operator || (key ? OPERATOR_TABLE?.[key] : null) || getRiicOperatorProfile(key);
+  if (!metadata) {
+    return { profession: "", branch: "", label: "" };
+  }
+
+  const profession = PROFESSION_LABELS.get(metadata.profession) || "";
+  const branch = PROFESSION_LABELS.get(metadata.subProfessionId) || "";
+  return {
+    profession,
+    branch,
+    label: [profession, branch].filter(Boolean).join(" · "),
+  };
+}
+
 export function formatRiicOperatorTooltip(operator, skillTooltip) {
   const charId = String(operator?.charId || "").trim();
   const metadata =
@@ -100,9 +123,7 @@ export function formatRiicOperatorTooltip(operator, skillTooltip) {
   const rarity = Number(metadata.rarity);
   const rarityLabel =
     Number.isInteger(rarity) && rarity > 0 ? `${rarity}星` : "";
-  const profession = PROFESSION_LABELS.get(metadata.profession);
-  const branch = PROFESSION_LABELS.get(metadata.subProfessionId);
-  const classLabel = [profession, branch].filter(Boolean).join(" · ");
+  const classLabel = getRiicOperatorClassLabel(charId, metadata).label;
   const header = [name, rarityLabel, classLabel].filter(Boolean).join("｜");
 
   return [header, String(skillTooltip || "")].filter(Boolean).join("\n");
