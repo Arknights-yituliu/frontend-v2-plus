@@ -545,28 +545,26 @@ const accountCompletion = computed(() => {
   return { allOwned, allMax };
 });
 
+const decisionMode = computed(() => (accountCompletion.value.allOwned && !accountCompletion.value.allMax ? "potential" : "score"));
+
 const decisionGroups = computed(() => {
   const groups = groupResults.value.map((group) => {
     const potentialUpgradeCount = group.operators.filter((operator) => Number(operator.accountOperator?.potential) < 6).length;
     const unownedOperators = group.operators.filter((operator) => !operator.accountOperator);
     const previewCount = unownedOperators.length > 4 ? 3 : unownedOperators.length;
+    const potentialUpgradeProbability = potentialUpgradeCount / Math.max(group.operators.length, 1);
     return {
       ...group,
       potentialUpgradeCount,
-      potentialUpgradeProbability: potentialUpgradeCount / Math.max(group.operators.length, 1),
+      potentialUpgradeProbability,
+      decisionValue: decisionMode.value === "potential" ? potentialUpgradeProbability : group.totalScore,
       unownedOperators,
       unownedPreview: unownedOperators.slice(0, previewCount),
       unownedOverflow: Math.max(0, unownedOperators.length - previewCount),
     };
   });
 
-  const usePotentialRanking = accountCompletion.value.allOwned && !accountCompletion.value.allMax;
-  const ranking = [...groups].sort((a, b) => {
-    if (usePotentialRanking) {
-      return b.potentialUpgradeProbability - a.potentialUpgradeProbability || b.totalScore - a.totalScore;
-    }
-    return b.totalScore - a.totalScore;
-  });
+  const ranking = [...groups].sort((a, b) => b.decisionValue - a.decisionValue || b.totalScore - a.totalScore);
 
   return ranking.map((group, index) => ({
     ...group,
@@ -576,7 +574,10 @@ const decisionGroups = computed(() => {
 
 const decisionBestGroup = computed(() => decisionGroups.value[0] || null);
 
-const decisionScoreMax = computed(() => Math.max(...decisionGroups.value.map((group) => Number(group.totalScore) || 0), 1));
+const decisionScoreMax = computed(() => {
+  const max = Math.max(...decisionGroups.value.map((group) => Number(group.decisionValue) || 0), 0);
+  return max > 0 ? max : 1;
+});
 
 function average(values) {
   return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
@@ -597,7 +598,6 @@ function formatStatPercent(value) {
 }
 
 function getDecisionScoreWidth(group) {
-  const score = Number(group.totalScore) || 0;
   return `${getDecisionScorePercent(group)}%`;
 }
 
@@ -605,16 +605,16 @@ function getDecisionScorePercent(group) {
   if (accountCompletion.value.allMax) {
     return 100;
   }
-  const score = Number(group.totalScore) || 0;
+  const score = Number(group.decisionValue) || 0;
   return Math.max(0, Math.min(100, (score / decisionScoreMax.value) * 100));
 }
 
 function getDecisionScoreText(group) {
   if (accountCompletion.value.allMax) {
-    return "100";
+    return "all";
   }
-  if (accountCompletion.value.allOwned) {
-    return formatPercent(group.potentialUpgradeProbability * 100);
+  if (decisionMode.value === "potential") {
+    return formatPercent(group.decisionValue * 100);
   }
   return formatScore(group.totalScore);
 }
