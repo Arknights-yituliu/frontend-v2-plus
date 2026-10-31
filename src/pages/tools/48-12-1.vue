@@ -26,7 +26,8 @@ const DIMENSION_WEIGHTS = {
   general: { combat: 0.5, base: 0.5 },
   base: { combat: 0.15, base: 0.85 },
 };
-const SCORE_VALUE_OUTSIDE_THRESHOLD = 64;
+// Keep the score value outside when the bar is shorter than 40% of the widest bar.
+const SCORE_VALUE_OUTSIDE_THRESHOLD = 40;
 const ACCOUNT_SCORING = {
   potentialStep: 0.1,
 };
@@ -387,7 +388,7 @@ function getOperatorView(configOperator, scoreSettings = {}) {
   const combatScore = accountOperator ? 0 : scoreForGrade(configOperator.combatGrade);
   const buildingSubjectiveDescription = BUILDING_SUBJECTIVE_DESCRIPTIONS[configOperator.name] || "";
   const baseGrade = BUILDING_GRADE_OVERRIDES[configOperator.name] || "D";
-  const baseScore = scoreForGrade(baseGrade);
+  const baseScore = accountOperator ? 0 : scoreForGrade(baseGrade);
   const weights = DIMENSION_WEIGHTS[scoreSettings.dimension || dimension.value];
   const dimensionScore = combatScore * weights.combat + baseScore * weights.base;
   const accountBonus = getAccountBonus(configOperator.name, scoreSettings.unownedBonus ?? unownedBonus.value);
@@ -576,7 +577,7 @@ const decisionBestGroup = computed(() => decisionGroups.value[0] || null);
 
 const decisionScoreMax = computed(() => {
   const max = Math.max(...decisionGroups.value.map((group) => Number(group.decisionValue) || 0), 0);
-  return max > 0 ? max : 1;
+  return max;
 });
 
 function average(values) {
@@ -597,15 +598,14 @@ function formatStatPercent(value) {
   return Number.isFinite(number) ? `${number.toFixed(1)}%` : "-";
 }
 
-function getDecisionScoreWidth(group) {
-  return `${getDecisionScorePercent(group)}%`;
-}
-
 function getDecisionScorePercent(group) {
   if (accountCompletion.value.allMax) {
     return 100;
   }
   const score = Number(group.decisionValue) || 0;
+  if (decisionScoreMax.value <= 0) {
+    return 0;
+  }
   return Math.max(0, Math.min(100, (score / decisionScoreMax.value) * 100));
 }
 
@@ -619,9 +619,17 @@ function getDecisionScoreText(group) {
   return formatScore(group.totalScore);
 }
 
-function shouldPlaceScoreOutside(group) {
-  return getDecisionScorePercent(group) < SCORE_VALUE_OUTSIDE_THRESHOLD;
-}
+const decisionScoreRows = computed(() =>
+  decisionGroups.value.map((group) => {
+    const scorePercent = getDecisionScorePercent(group);
+    return {
+      ...group,
+      scoreWidth: `${scorePercent}%`,
+      scoreText: getDecisionScoreText(group),
+      scoreValueOutside: scorePercent < SCORE_VALUE_OUTSIDE_THRESHOLD,
+    };
+  }),
+);
 
 function clearDrawTimers() {
   if (drawInterval) {
@@ -814,13 +822,13 @@ onMounted(() => {
           <section class="result-score-module" aria-label="各组评分">
             <div class="result-score-grid">
               <article
-                v-for="group in decisionGroups"
+                v-for="group in decisionScoreRows"
                 :key="group.id"
                 class="result-score-row"
                 :class="{ 'is-best': !accountCompletion.allMax && group.decisionRank === 1 }"
               >
-                <div class="result-score-line" :class="{ 'has-external-score': shouldPlaceScoreOutside(group) }">
-                  <div class="result-score-track" :style="{ '--score-width': getDecisionScoreWidth(group) }">
+                <div class="result-score-line" :class="{ 'has-external-score': group.scoreValueOutside }">
+                  <div class="result-score-track" :style="{ '--score-width': group.scoreWidth }">
                     <div class="result-score-bar-content">
                       <div class="result-score-row-label">
                         <strong>队列·{{ group.id }}</strong>
@@ -838,13 +846,13 @@ onMounted(() => {
                           <span v-if="group.unownedOverflow" class="result-score-row-unowned-more"> +{{ group.unownedOverflow }} </span>
                         </div>
                       </div>
-                      <div v-if="!shouldPlaceScoreOutside(group)" class="result-score-row-value">
-                        <strong>{{ getDecisionScoreText(group) }}</strong>
+                      <div v-if="!group.scoreValueOutside" class="result-score-row-value">
+                        <strong>{{ group.scoreText }}</strong>
                       </div>
                     </div>
                   </div>
-                  <div v-if="shouldPlaceScoreOutside(group)" class="result-score-row-value">
-                    <strong>{{ getDecisionScoreText(group) }}</strong>
+                  <div v-if="group.scoreValueOutside" class="result-score-row-value">
+                    <strong>{{ group.scoreText }}</strong>
                   </div>
                 </div>
               </article>
@@ -1175,18 +1183,17 @@ onMounted(() => {
 }
 
 .result-score-line {
-  min-width: 0;
-}
-
-.result-score-line.has-external-score {
-  display: grid;
-  grid-template-columns: minmax(0, var(--score-width)) auto;
+  display: flex;
+  width: 100%;
   align-items: center;
   gap: 12px;
+  min-width: 0;
 }
 
 .result-score-track {
   position: relative;
+  box-sizing: border-box;
+  flex: 0 0 var(--score-width);
   min-width: 0;
   min-height: 52px;
   width: var(--score-width);
@@ -1195,11 +1202,7 @@ onMounted(() => {
   border: 1px solid rgba(201, 159, 99, 0.52);
   border-radius: 10px;
   background: #c66c1b;
-  transition: width 180ms ease;
-}
-
-.result-score-line.has-external-score .result-score-track {
-  width: 100%;
+  transition: width 180ms ease, flex-basis 180ms ease;
 }
 
 .result-score-row.is-best .result-score-track {
@@ -1286,7 +1289,7 @@ onMounted(() => {
   white-space: nowrap;
 }
 
-.result-score-line.has-external-score .result-score-row-value {
+.result-score-line.has-external-score > .result-score-row-value {
   margin-left: 0;
 }
 
