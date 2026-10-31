@@ -2,7 +2,10 @@
 import { computed, ref, watch } from "vue";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import OPERATOR_UPGRADE_DATA from "/src/static/json/tools/operatorUpgradeData.json";
-import { formatRiicOperatorTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
+import {
+  formatRiicOperatorTooltip,
+  getRiicOperatorClassLabel,
+} from "/src/utils/riic/riic-operator-skill-tooltip.js";
 import {
   buildRiicCalculationFeedback,
   formatRiicCalculationFeedback,
@@ -117,6 +120,16 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["calculate-training-impact"]);
+
+/**
+ * 获取培养建议条目对应干员的职业分支展示文案
+ * @param {Object} requirement 培养建议条目
+ * @returns {string} 形如「术师 · 核心术师」的文案，缺少干员数据时返回空串
+ */
+function getOperatorClassLabel(requirement) {
+  const charId = requirement?.charId;
+  return getRiicOperatorClassLabel(charId, props.operatorTable?.[charId]).label;
+}
 
 const calculationFeedbackCopyStatus = ref("");
 const trainingImpactRequestStatus = ref("");
@@ -426,6 +439,12 @@ async function copyCalculationFeedback() {
         <div class="schedule-training-requirement-copy">
           <div class="schedule-training-requirement-title">
             <strong>{{ entry.requirement.name }}</strong>
+            <span
+              v-if="getOperatorClassLabel(entry.requirement)"
+              class="schedule-training-class"
+            >
+              {{ getOperatorClassLabel(entry.requirement) }}
+            </span>
             <span>{{ formatTrainingRequirement(entry.requirement) }}</span>
           </div>
           <ul
@@ -871,6 +890,15 @@ async function copyCalculationFeedback() {
   color: var(--riic-muted);
   font-size: 12px;
   line-height: 1.4;
+}
+
+.schedule-training-requirement-title .schedule-training-class {
+  padding: 0 4px;
+  border: 1px solid var(--c-border-color);
+  border-radius: 3px;
+  font-size: 11px;
+  line-height: 1.6;
+  white-space: nowrap;
 }
 
 .schedule-training-upgrade-effects {
