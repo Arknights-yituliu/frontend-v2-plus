@@ -16,13 +16,17 @@ const DIMENSION_OPTIONS = [
   { label: "通用", value: "general" },
   { label: "基建优先", value: "base" },
 ];
+const UNOWNED_BONUS_OPTIONS = [
+  { label: "0分", value: 0 },
+  { label: "5分", value: 5 },
+  { label: "99分", value: 99 },
+];
 const DIMENSION_WEIGHTS = {
   combat: { combat: 0.85, base: 0.15 },
   general: { combat: 0.5, base: 0.5 },
   base: { combat: 0.15, base: 0.85 },
 };
 const ACCOUNT_SCORING = {
-  unownedBonus: 10,
   potentialStep: 0.1,
 };
 const TOTAL_GRADE_THRESHOLDS = {
@@ -50,6 +54,130 @@ const ROOM_LABELS = {
   training: "训练室",
   recycle: "回收站",
 };
+const BUILDING_SUBJECTIVE_DESCRIPTIONS = Object.freeze({
+  能天使: "精2后与蕾缪安Ⅱ搭配有双人80%贸易",
+  推进之王: "无需练度与摩根Ⅱ+中枢戴菲恩Ⅱ搭配双人95%贸易（摩根和戴菲恩均为主线赠送干员）",
+  伊芙利特: "娜斯提Ⅱ、缪尔赛思Ⅱ挂件",
+  闪灵: "精2后是除冰酿Ⅱ外最高单回宿管，但是通常情况下宿管作用不大",
+  艾雅法拉: "无需练度是35%源石碎片特化之一（褐果外最高源石碎片特化），精2后是第二档办公室效率（第一档为斥罪和凯尔希·思衡托）",
+  塞雷娅: "较低的会客室效率，但可以在不损失大量会客室效率的同时作为娜斯提Ⅱ、缪尔赛思Ⅱ挂件，节约宿舍位",
+  斯卡蒂: "歌蕾蒂娅组件之一，在深海猎人齐全且定闹钟或使用工具换班是有较高效率",
+  陈: "精2后是第二档会客室效率",
+  银灰: "精2后有较高订单上限，与孑+中枢灵知Ⅱ搭配有很高订单上限和较高效率，可用于搓玉防爆仓",
+  夜莺: "精2后是第二档群回宿管，但是通常情况下宿管作用不大",
+  刻俄柏: "精2后是红云组最高效率干员之一（稀音Ⅱ更高，与帕拉斯Ⅱ效率接近）",
+  风笛: "精2后最高芯片特化",
+  铃兰: "精2后与忍冬Ⅱ搭配有第二档会客室效率（忍冬Ⅱ不需要精2铃兰才能触发技能，但是精英化等级也会提供会客室效率）",
+  麦哲伦: "娜斯提Ⅱ、缪尔赛思Ⅱ挂件",
+  温蒂: "自动化组核心（最高制造组合）",
+  煌: "凯尔希·思衡托Ⅱ挂件，精1后最高基建材料特化",
+  赫拉格: "无需练度最高技能书特化",
+  凯尔希: "精2后与Mon3trⅡ等干员同类技能，可用于中枢补位（斩业星熊Ⅱ下位）",
+  泥岩: "精2后源岩类最高特化（还是低于年等干员）",
+  空弦: "精2后是3发电站布局40%贸易",
+  帕拉斯: "精2后是红云组最高经验特化之一（稀音Ⅱ更高，与刻俄柏Ⅱ效率接近）",
+  森蚺: "精2后自动化组核心之一（最高制造组合），备注：0心情Lancet-2既可以触发森蚺Ⅱ技能也不影响承曦格雷伊Ⅱ技能，二者可叠加",
+  瑕光: "唯一的精英材料免费加工，精2后合成绿/蓝材料时收益尚可，合成紫/金材料时不如年等干员",
+  艾丽妮: "精2后专精幻神，与精2逻各斯技能相同",
+  黑键: "感知信息组核心之一，精2和精0提供的感知信息点数相同，精2后提高贸易效率，组合效率较高，但需要组件很多",
+  菲亚梅塔: "无需练度帮但书、可露希尔等高效率干员永续工作",
+  澄闪: "精2后是承曦格雷伊、缪尔赛思Ⅱ之下最高发电效率之一",
+  琴柳: "无需练度是闪灵之下最强单回宿管，精2后可以补充感知信息组絮雨或人间烟火组桑葚的办公室效率",
+  老鲤: "精2后最高中枢会客室效率，但会客室效率收益很低作用不大",
+  多萝西: "精2后莱茵科技组核心之一，与淬羽赫默Ⅱ搭配双人65%制造，也可提高娜斯提Ⅱ效率",
+  远牙: "精2后红松林组成员之一（最高经验特化组合）",
+  灵知: "与贸易站孑+银灰Ⅱ搭配有很高订单上限和较高贸易效率，可用于搓玉防爆仓",
+  号角: "精2后最高炽合金块特化",
+  焰尾: "精2后红松林组核心之一（最高经验特化组合）",
+  水月: "标准化组核心，但组合效率较低",
+});
+const BUILDING_GRADE_OVERRIDES = Object.freeze({
+  能天使: "S",
+  推进之王: "S",
+  伊芙利特: "B",
+  闪灵: "B",
+  艾雅法拉: "A",
+  塞雷娅: "B",
+  斯卡蒂: "B",
+  陈: "A",
+  银灰: "A",
+  夜莺: "B",
+  刻俄柏: "S",
+  风笛: "A",
+  铃兰: "A",
+  麦哲伦: "B",
+  温蒂: "S",
+  煌: "A",
+  赫拉格: "A",
+  凯尔希: "B",
+  泥岩: "A",
+  空弦: "A",
+  帕拉斯: "A",
+  森蚺: "S",
+  瑕光: "A",
+  艾丽妮: "A",
+  黑键: "S",
+  菲亚梅塔: "S",
+  澄闪: "A",
+  琴柳: "B",
+  老鲤: "B",
+  多萝西: "S",
+  远牙: "A",
+  灵知: "A",
+  号角: "A",
+  焰尾: "S",
+  水月: "A",
+});
+const OPERATOR_ENGLISH_NAMES = Object.freeze({
+  能天使: "Exusiai",
+  推进之王: "Siege",
+  伊芙利特: "Ifrit",
+  艾雅法拉: "Eyjafjalla",
+  安洁莉娜: "Angelina",
+  闪灵: "Shining",
+  夜莺: "Nightingale",
+  星熊: "Hoshiguma",
+  塞雷娅: "Saria",
+  银灰: "SilverAsh",
+  斯卡蒂: "Skadi",
+  陈: "Ch'en",
+  黑: "Schwarz",
+  赫拉格: "Hellagur",
+  麦哲伦: "Magallan",
+  莫斯提马: "Mostima",
+  煌: "Blaze",
+  阿: "Aak",
+  刻俄柏: "Ceobe",
+  风笛: "Bagpipe",
+  傀影: "Phantom",
+  温蒂: "Weedy",
+  早露: "Роса",
+  铃兰: "Suzuran",
+  棘刺: "Thorns",
+  森蚺: "Eunectes",
+  史尔特尔: "Surtr",
+  瑕光: "Blemishine",
+  泥岩: "Mudrock",
+  山: "Mountain",
+  空弦: "Archetto",
+  嵯峨: "Saga",
+  异客: "Passenger",
+  凯尔希: "Kal'tsit",
+  卡涅利安: "Carnelian",
+  帕拉斯: "Pallas",
+  水月: "Mizuki",
+  琴柳: "Saileach",
+  远牙: "Fartooth",
+  焰尾: "Flametail",
+  灵知: "Gnosis",
+  老鲤: "Lee",
+  澄闪: "Goldenglow",
+  菲亚梅塔: "Fiammetta",
+  号角: "Horn",
+  艾丽妮: "Irene",
+  黑键: "Ebenholz",
+  多萝西: "Dorothy",
+});
 const OFFICIAL_ACTIVITY_URL = "https://ak.hypergryph.com/news/0787";
 const HERO_RIBBON_THEMES = [
   { color: "#7d3b32", accent: "#ffd18b", ink: "#fff8ec", duration: "34s" },
@@ -59,7 +187,7 @@ const HERO_RIBBON_THEMES = [
 ];
 
 const dimension = ref("general");
-const preferUnowned = ref(true);
+const unownedBonus = ref(5);
 const loading = ref(true);
 const accountLoading = ref(false);
 const statsLoading = ref(false);
@@ -72,6 +200,7 @@ const drawPreviewGroup = ref(null);
 const isDrawing = ref(false);
 const pageStage = ref("welcome");
 const activeDetailGroupId = ref(RECRUITMENT_CONFIG.groups[0]?.id || "");
+const operatorExpansionOverrides = ref(new Map());
 const isDevMode = ref(new URLSearchParams(window.location.search).get("mode") === "dev");
 let drawInterval = null;
 let drawTimeout = null;
@@ -204,7 +333,7 @@ function getAccountBonus(name) {
 
   const accountOperator = getAccountOperator(name);
   if (!accountOperator) {
-    return preferUnowned.value ? ACCOUNT_SCORING.unownedBonus : 0;
+    return unownedBonus.value;
   }
 
   const potential = Math.max(1, Math.min(6, Number(accountOperator.potential) || 1));
@@ -215,7 +344,9 @@ function getAccountBonus(name) {
 function getOperatorView(configOperator) {
   const operator = operatorByName.get(configOperator.name) || {};
   const combatScore = scoreForGrade(configOperator.combatGrade);
-  const baseScore = scoreForGrade(configOperator.baseGrade);
+  const buildingSubjectiveDescription = BUILDING_SUBJECTIVE_DESCRIPTIONS[configOperator.name] || "";
+  const baseGrade = BUILDING_GRADE_OVERRIDES[configOperator.name] || "C";
+  const baseScore = scoreForGrade(baseGrade);
   const weights = DIMENSION_WEIGHTS[dimension.value];
   const dimensionScore = combatScore * weights.combat + baseScore * weights.base;
   const accountBonus = getAccountBonus(configOperator.name);
@@ -237,6 +368,8 @@ function getOperatorView(configOperator) {
     charId: operator.charId,
     rarity: operator.rarity || 6,
     profession: operator.profession,
+    appellation: OPERATOR_ENGLISH_NAMES[configOperator.name] || "",
+    baseGrade,
     combatScore,
     baseScore,
     dimensionScore,
@@ -250,8 +383,26 @@ function getOperatorView(configOperator) {
     hasLimitedEquip,
     gradeNote: buildGradeNote(configOperator.combatGrade, hasLimitedEquip),
     buildingSkills,
+    buildingSubjectiveDescription,
     stats,
   };
+}
+
+function isOwnedOperator(operator) {
+  return accountStatus.value === "loaded" && Boolean(operator.accountOperator);
+}
+
+function isOperatorExpanded(operator) {
+  const operatorKey = operator.charId || operator.name;
+  const override = operatorExpansionOverrides.value.get(operatorKey);
+  return override === undefined ? !isOwnedOperator(operator) : override;
+}
+
+function toggleOperatorExpanded(operator) {
+  const operatorKey = operator.charId || operator.name;
+  const next = new Map(operatorExpansionOverrides.value);
+  next.set(operatorKey, !isOperatorExpanded(operator));
+  operatorExpansionOverrides.value = next;
 }
 
 function buildCombatDescriptions(name, tags) {
@@ -304,6 +455,15 @@ const groupResults = computed(() => {
     const potentialUpgradeCount = accountStatsAvailable
       ? operators.filter((operator) => Number(operator.accountOperator?.potential) < 6).length
       : null;
+    const potentialTotal = accountStatsAvailable
+      ? operators.reduce((total, operator) => {
+          if (!operator.accountOperator) {
+            return total;
+          }
+          const potential = Math.max(1, Math.min(6, Number(operator.accountOperator.potential) || 1));
+          return total + potential;
+        }, 0)
+      : null;
     return {
       ...group,
       operators,
@@ -314,6 +474,7 @@ const groupResults = computed(() => {
       accountStatsAvailable,
       ownedCount,
       potentialUpgradeCount,
+      potentialTotal,
     };
   });
 
@@ -488,10 +649,14 @@ async function loadPage() {
   loading.value = false;
 }
 
-watch([dimension, preferUnowned, accountStatus], () => {
+watch([dimension, unownedBonus, accountStatus], () => {
   clearDrawTimers();
   isDrawing.value = false;
   drawPreviewGroup.value = null;
+});
+
+watch(accountStatus, () => {
+  operatorExpansionOverrides.value = new Map();
 });
 
 onBeforeUnmount(() => {
@@ -570,7 +735,7 @@ onMounted(() => {
     <section
       v-else-if="pageStage === 'result'"
       class="result-page"
-      :class="{ 'is-drawing': isDrawing }"
+      :class="{ 'is-drawing': isDrawing, 'has-inline-detail': !isDrawing }"
       aria-label="推荐结果"
     >
       <div v-if="isDrawing" class="result-page-loading" aria-live="polite">
@@ -627,20 +792,45 @@ onMounted(() => {
 
           </section>
 
-          <section class="result-settings-module" aria-label="设置">
-            <div class="result-module-heading">
-              <h2>设置</h2>
-            </div>
+          <section class="result-settings-module" aria-label="评分参数">
             <div class="result-score-settings-panel">
               <div class="result-score-settings-dimension">
                 <span class="result-score-settings-label">评价维度</span>
-                <v-btn-toggle class="dimension-toggle" v-model="dimension" mandatory divided color="primary" density="comfortable">
+                <v-btn-toggle class="dimension-toggle result-settings-toggle" v-model="dimension" mandatory divided density="comfortable">
                   <v-btn v-for="option in DIMENSION_OPTIONS" :key="option.value" :value="option.value">
                     {{ option.label }}
                   </v-btn>
                 </v-btn-toggle>
               </div>
-              <v-switch v-model="preferUnowned" color="primary" hide-details density="compact" label="未持有优先" />
+              <div class="result-score-settings-dimension">
+                <span class="result-score-settings-label">
+                  未持有加分
+                  <router-link
+                    v-if="accountStatus !== 'loaded'"
+                    class="result-score-settings-sync"
+                    to="/survey/account/importbyskland"
+                  >
+                    尚未同步干员，点击前往同步
+                  </router-link>
+                </span>
+                <v-btn-toggle
+                  class="dimension-toggle result-settings-toggle"
+                  v-model="unownedBonus"
+                  mandatory
+                  divided
+                  density="comfortable"
+                  :disabled="accountStatus !== 'loaded'"
+                >
+                  <v-btn
+                    v-for="option in UNOWNED_BONUS_OPTIONS"
+                    :key="option.value"
+                    :value="option.value"
+                    :disabled="accountStatus !== 'loaded'"
+                  >
+                    {{ option.label }}
+                  </v-btn>
+                </v-btn-toggle>
+              </div>
             </div>
           </section>
         </div>
@@ -661,9 +851,10 @@ onMounted(() => {
           type="button"
           class="detail-tab"
           :class="{ 'is-active': group.id === activeDetailGroupId }"
+          :aria-label="`队列·${group.id}`"
           @click="activeDetailGroupId = group.id"
         >
-          <span>队列·{{ group.id }}</span>
+          <span>{{ group.id }}</span>
         </button>
       </nav>
 
@@ -677,43 +868,117 @@ onMounted(() => {
         >
           <header class="group-header">
             <div class="group-header-main">
-              <span class="group-rank">{{ group.id }}</span>
-              <div>
-                <h2>队列·{{ group.id }}</h2>
-                <p>
-                  队列评分：{{ formatScore(group.expected) }} · 风险评分：{{ formatScore(group.standardDeviation) }} ·
-                  持有统计：{{ group.accountStatsAvailable ? group.ownedCount + "/" + group.operators.length : "-" }} ·
-                  潜能统计：{{ group.accountStatsAvailable ? group.potentialUpgradeCount + "/" + group.operators.length : "-" }}
-                </p>
+              <h2>{{ group.id }}</h2>
+              <div class="group-header-stats">
+                <div class="group-header-stat">
+                  <span>未持有</span>
+                  <strong>{{ group.accountStatsAvailable ? group.operators.length - group.ownedCount + "/" + group.operators.length : "-" }}</strong>
+                </div>
+                <div class="group-header-stat">
+                  <span>已持有未满潜</span>
+                  <strong>{{ group.accountStatsAvailable ? group.potentialUpgradeCount + "/" + group.operators.length : "-" }}</strong>
+                </div>
+                <div class="group-header-stat">
+                  <span>总潜能数</span>
+                  <strong>{{ group.accountStatsAvailable ? group.potentialTotal + "/" + group.operators.length * 6 : "-" }}</strong>
+                </div>
+                <div class="group-header-stat">
+                  <span>风险评分</span>
+                  <strong>{{ formatScore(group.standardDeviation) }}</strong>
+                </div>
+              </div>
+              <div class="group-header-score">
+                <span>队列评分</span>
+                <strong>{{ formatScore(group.expected) }}</strong>
               </div>
             </div>
           </header>
 
           <div class="operator-grid">
 
-            <article v-for="operator in group.operators" :key="operator.charId" class="operator-item">
-            <div class="operator-main">
+            <article
+              v-for="operator in group.operators"
+              :key="operator.charId"
+              class="operator-item"
+              :class="{ 'is-expanded': isOperatorExpanded(operator) }"
+            >
+            <div
+              class="operator-main"
+              role="button"
+              tabindex="0"
+              :aria-expanded="isOperatorExpanded(operator)"
+              :aria-label="isOperatorExpanded(operator) ? `收起${operator.name}详细信息` : `展开${operator.name}详细信息`"
+              @click="toggleOperatorExpanded(operator)"
+              @keydown.enter.prevent.self="toggleOperatorExpanded(operator)"
+              @keydown.space.prevent.self="toggleOperatorExpanded(operator)"
+            >
               <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="58" :mobile-size="46" :border="true" />
               <div class="operator-title">
                 <div class="operator-name-row">
                   <strong>{{ operator.name }}</strong>
                 </div>
-                <div class="operator-rating-module">
-                  <span class="operator-rating-line is-combat">
-                    <span>作战评分</span>
-                    <b class="grade-badge" :class="`grade-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }}</b>
-                    <span
-                      v-if="operator.gradeNote"
-                      class="operator-grade-note"
-                      :class="operator.gradeNote.tone"
-                      :title="operator.gradeNote.title"
-                    >{{ operator.gradeNote.text }}</span>
+                <small v-if="operator.appellation" class="operator-english-name">{{ operator.appellation }}</small>
+              </div>
+              <div class="operator-total-score">
+                <strong class="grade-badge" :class="`grade-${operator.finalGrade.toLowerCase()}`">{{ operator.finalGrade }}</strong>
+              </div>
+              <span
+                class="operator-toggle"
+                aria-hidden="true"
+              >
+                <v-icon size="18">{{ isOperatorExpanded(operator) ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
+              </span>
+            </div>
+
+            <div v-if="isOperatorExpanded(operator)" class="operator-details">
+              <div class="operator-info-row">
+                <div class="operator-info-heading operator-rating-line is-combat">
+                  <span>作战评分</span>
+                  <b class="grade-badge" :class="`grade-${operator.combatGrade.toLowerCase()}`">{{ operator.combatGrade }}</b>
+                  <span
+                    v-if="operator.gradeNote"
+                    class="operator-grade-note"
+                    :class="operator.gradeNote.tone"
+                    :title="operator.gradeNote.title"
+                  >{{ operator.gradeNote.text }}</span>
+                </div>
+                <span v-if="operator.combatDescriptions.length" class="info-value">
+                  <span v-for="entry in operator.combatDescriptions" :key="entry.name" class="combat-entry">
+                    <b>{{ entry.name }}</b>
+                    <template v-if="entry.description">：{{ entry.description }}</template>
                   </span>
-                  <span class="operator-rating-line">
-                    <span>基建评分</span>
-                    <b class="grade-badge" :class="`grade-${operator.baseGrade.toLowerCase()}`">{{ operator.baseGrade }}</b>
+                </span>
+                <span v-else class="info-value info-value-empty">暂无作战描述</span>
+              </div>
+              <div class="operator-info-row">
+                <div class="operator-info-heading operator-rating-line">
+                  <span>基建评分</span>
+                  <b class="grade-badge" :class="`grade-${operator.baseGrade.toLowerCase()}`">{{ operator.baseGrade }}</b>
+                </div>
+                <div v-if="operator.buildingSkills.length || operator.buildingSubjectiveDescription" class="info-value">
+                  <span v-if="operator.buildingSkills.length">
+                    {{ operator.buildingSkills.map((skill) => `${skill.room}：${skill.description}`).join("；") }}
+                  </span>
+                  <span v-if="operator.buildingSubjectiveDescription" class="operator-subjective-description">
+                    {{ operator.buildingSubjectiveDescription }}
                   </span>
                 </div>
+                <span v-else class="info-value info-value-empty">暂无基建记录</span>
+              </div>
+              <div v-if="isDevMode" class="dev-score-breakdown">
+                <span>作战分 {{ formatScore(operator.combatScore) }}</span>
+                <span>基建分 {{ formatScore(operator.baseScore) }}</span>
+                <span>维度分 {{ formatScore(operator.dimensionScore) }}</span>
+                <span>通用加成 {{ formatScore(operator.accountBonus) }}</span>
+                <strong>总分 {{ operator.finalGrade }}（{{ formatScore(operator.finalScore) }}）</strong>
+              </div>
+            </div>
+            <div v-if="isOperatorExpanded(operator)" class="operator-card-footer">
+              <div class="operator-stats">
+                <span>持有率 {{ formatStatPercent(operator.stats?.ownRate) }}</span>
+                <span>精二率 {{ formatStatPercent(operator.stats?.eliteRank2) }}</span>
+                <span>专三率 {{ formatStatPercent(getMasteryRate(operator.stats)) }}</span>
+                <span>模组率 {{ formatStatPercent(getModuleRate(operator.stats)) }}</span>
               </div>
               <a
                 v-if="operator.prtsUrl"
@@ -727,40 +992,6 @@ onMounted(() => {
                 <v-icon size="13">mdi-open-in-new</v-icon>
                 <span>PRTS</span>
               </a>
-              <div class="operator-total-score">
-                <span>总分</span>
-                <strong class="grade-badge" :class="`grade-${operator.finalGrade.toLowerCase()}`">{{ operator.finalGrade }}</strong>
-              </div>
-            </div>
-
-            <div class="operator-info-row">
-              <span class="info-label">作战描述</span>
-              <span v-if="operator.combatDescriptions.length" class="info-value">
-                <span v-for="entry in operator.combatDescriptions" :key="entry.name" class="combat-entry">
-                  <b>{{ entry.name }}</b>
-                  <template v-if="entry.description">：{{ entry.description }}</template>
-                </span>
-              </span>
-              <span v-else class="info-value info-value-empty">暂无作战描述</span>
-            </div>
-            <div class="operator-info-row">
-              <span class="info-label">基建技能</span>
-              <span class="info-value">
-                {{ operator.buildingSkills.map((skill) => `${skill.room}：${skill.description}`).join("；") || "暂无基建记录" }}
-              </span>
-            </div>
-            <div class="operator-stats">
-              <span>持有率 {{ formatStatPercent(operator.stats?.ownRate) }}</span>
-              <span>精二率 {{ formatStatPercent(operator.stats?.eliteRank2) }}</span>
-              <span>专三率 {{ formatStatPercent(getMasteryRate(operator.stats)) }}</span>
-              <span>模组率 {{ formatStatPercent(getModuleRate(operator.stats)) }}</span>
-            </div>
-            <div v-if="isDevMode" class="dev-score-breakdown">
-              <span>作战分 {{ formatScore(operator.combatScore) }}</span>
-              <span>基建分 {{ formatScore(operator.baseScore) }}</span>
-              <span>维度分 {{ formatScore(operator.dimensionScore) }}</span>
-              <span>通用加成 {{ formatScore(operator.accountBonus) }}</span>
-              <strong>总分 {{ operator.finalGrade }}（{{ formatScore(operator.finalScore) }}）</strong>
             </div>
           </article>
         </div>
@@ -776,11 +1007,11 @@ onMounted(() => {
     <section class="method-note">
       <div>
         <strong>计算口径</strong>
-        <span>{{ gradeScaleText }}；作战优先为作战 85% 与基建 15%，通用为各 50%，基建优先为作战 15% 与基建 85%；四组均按 1/12 等概率计算；作战评分旁的「考虑特限模组达到此评分」表示该评分需借助特限模组达成，「无特限模组达到此评分」表示该评分由常规模组达成。</span>
+        <span>{{ gradeScaleText }}；作战优先为作战 85% 与基建 15%，通用为各 50%，基建优先为作战 15% 与基建 85%；四组均按 1/12 等概率计算；作战评分旁的「考虑特限模组达到此评分」表示该评分需借助特限模组达成，「无特限模组达到此评分」表示该评分由常规模组达成；风险评分为该组 12 名干员最终总分的总体标准差，即先计算总分与队列评分（平均分）的偏差平方平均值，再开平方，数值越高表示抽取结果的分数差异越大。</span>
       </div>
       <div>
         <strong>账号收益</strong>
-        <span>未同步干员数据时，所有干员均不计入账号通用加成；同步后，开启未持有优先时未持有干员加 10 分，已持有干员按缺少的潜能数每个加 0.1 分。</span>
+        <span>未同步干员数据时，所有干员均不计入账号通用加成；同步后，未持有干员按“未持有加分”选项增加 0、5 或 99 分，已持有干员按缺少的潜能数每个加 0.1 分。</span>
       </div>
       <div>
         <strong>统计说明</strong>
@@ -794,79 +1025,6 @@ onMounted(() => {
     </footer>
     </section>
 
-    <section
-      v-if="pageStage === 'detail' || (pageStage === 'result' && !isDrawing)"
-      class="detail-page detail-terms-copy"
-      aria-label="组件称呼副本"
-    >
-      <nav class="detail-tabs" aria-label="干员列表">
-        <button type="button" class="detail-tab is-active">
-          <span>干员列表</span>
-        </button>
-      </nav>
-
-      <section class="group-list" aria-label="干员列表">
-        <article class="group-section is-active">
-          <header class="group-header">
-            <div class="group-header-main">
-              <span class="group-rank">I</span>
-              <div>
-                <h2>队列·I</h2>
-                <p>队列评分：- · 风险评分：- · 持有统计：- · 潜能统计：-</p>
-              </div>
-            </div>
-          </header>
-
-          <div class="operator-grid">
-            <article class="operator-item">
-              <div class="operator-main">
-                <div class="component-term-avatar">干员头像</div>
-                <div class="operator-title">
-                  <span class="component-term-label">干员名称行</span>
-                  <div class="operator-name-row">
-                    <strong>干员名称</strong>
-                  </div>
-                  <div class="operator-rating-module">
-                    <span class="operator-rating-line is-combat">
-                      <span>作战评分</span>
-                      <b class="grade-badge grade-x">X</b>
-                      <span class="operator-grade-note is-limited">考虑特限模组达到此评分</span>
-                    </span>
-                    <span class="operator-rating-line">
-                      <span>基建评分</span>
-                      <b class="grade-badge grade-a">A</b>
-                    </span>
-                  </div>
-                </div>
-                <span class="operator-prts-link">PRTS</span>
-                <div class="operator-total-score">
-                  <span>总分</span>
-                  <strong class="grade-badge grade-s">S</strong>
-                </div>
-              </div>
-
-              <div class="operator-info-row">
-                <span class="info-label">详细数据区</span>
-                <span class="info-value">作战描述</span>
-              </div>
-
-              <div class="operator-info-row">
-                <span class="info-label">详细数据区</span>
-                <span class="info-value">基建技能</span>
-              </div>
-
-              <div class="operator-stats">
-                <span>数据统计区</span>
-                <span>持有率 -</span>
-                <span>精二率 -</span>
-                <span>专三率 -</span>
-                <span>模组率 -</span>
-              </div>
-            </article>
-          </div>
-        </article>
-      </section>
-    </section>
   </main>
 </template>
 
@@ -931,22 +1089,7 @@ onMounted(() => {
   border: 1px solid var(--border, #dce1e8);
   border-radius: 6px;
   background: var(--surface, #fff);
-}
-
-.result-module-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.result-module-heading h1,
-.result-module-heading h2 {
-  margin: 0;
-  color: var(--text, #1f2937);
-  font-size: clamp(22px, 3vw, 32px);
-  font-weight: 900;
-  line-height: 1.15;
+  box-shadow: 0 2px 8px rgba(62, 42, 36, 0.08);
 }
 
 .detail-page-eyebrow,
@@ -1105,32 +1248,73 @@ onMounted(() => {
 
 .result-score-settings-panel {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: stretch;
+  flex-direction: column;
+  gap: 14px;
   margin-top: 8px;
 }
 
 .result-settings-module .result-score-settings-panel {
-  margin-top: 18px;
+  margin-top: 0;
 }
 
 .result-score-settings-dimension {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1 1 auto;
+  align-items: stretch;
+  flex-direction: column;
+  gap: 6px;
   min-width: 0;
 }
 
 .result-score-settings-label {
+  display: block;
   color: var(--muted);
   font-size: 12px;
-  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.result-score-settings-sync {
+  margin-left: 6px;
+  color: #9a4c35;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.result-score-settings-sync:hover {
+  color: #7d3b32;
 }
 
 .result-score-settings-panel .dimension-toggle {
-  flex: 1 1 auto;
+  width: 100%;
   min-width: 0;
+}
+
+.result-settings-toggle {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: rgba(255, 249, 237, 0.72);
+}
+
+.result-settings-toggle :deep(.v-btn) {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 36px;
+  border-radius: 0;
+  color: var(--muted);
+  background: transparent;
+  font-weight: 700;
+}
+
+.result-settings-toggle :deep(.v-btn + .v-btn) {
+  border-left: 1px solid var(--border);
+}
+
+.result-settings-toggle :deep(.v-btn.v-btn--active) {
+  background: #7d3b32;
+  color: #fff8ec;
 }
 
 .result-page-loading {
@@ -1159,23 +1343,14 @@ onMounted(() => {
   margin-top: 0;
 }
 
-.detail-terms-copy {
-  margin-top: 16px;
-}
+@media (min-width: 761px) {
+  .result-page.has-inline-detail {
+    padding-bottom: 16px;
+  }
 
-.component-term-avatar {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 58px;
-  height: 58px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--surface-soft);
-  color: var(--muted);
-  font-size: 11px;
-  text-align: center;
+  .detail-page.is-inline-result {
+    padding-top: 0;
+  }
 }
 
 .detail-tabs {
@@ -1189,6 +1364,7 @@ onMounted(() => {
   border-radius: 4px;
   background: var(--surface, #fff);
   color: var(--muted, #6b7280);
+  box-shadow: 0 2px 6px rgba(62, 42, 36, 0.1);
   cursor: pointer;
   font: inherit;
   font-size: 14px;
@@ -1839,6 +2015,7 @@ h1 {
 .group-section {
   overflow: hidden;
   border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(62, 42, 36, 0.08);
 }
 
 .detail-page .group-section {
@@ -1847,80 +2024,11 @@ h1 {
 
 .detail-page .operator-grid {
   grid-template-columns: 1fr;
+  align-items: start;
 }
 
 .detail-page .operator-item {
   border-right: 0;
-}
-
-.detail-terms-copy .group-list {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.detail-terms-copy .group-section {
-  width: 100%;
-}
-
-.detail-terms-copy .group-header {
-  min-height: 112px;
-}
-
-.detail-terms-copy .group-header-main {
-  min-width: 0;
-  flex: 1;
-}
-
-.detail-terms-copy .operator-item {
-  min-height: 320px;
-  padding: 20px;
-}
-
-.detail-terms-copy .operator-main {
-  min-height: 74px;
-  gap: 16px;
-}
-
-.detail-terms-copy .operator-title {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 7px;
-}
-
-.detail-terms-copy .operator-name-row {
-  gap: 8px;
-}
-
-.detail-terms-copy .operator-info-row {
-  min-height: 48px;
-  margin-top: 16px;
-  align-items: start;
-}
-
-.detail-terms-copy .info-value {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.detail-terms-copy .operator-stats {
-  min-height: 24px;
-  padding-top: 18px;
-  gap: 12px;
-}
-
-.component-term-label {
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.2;
-}
-
-.detail-terms-copy .grade-badge {
-  min-width: auto;
-  padding-right: 8px;
-  padding-left: 8px;
-  white-space: nowrap;
 }
 
 .group-header {
@@ -1931,41 +2039,68 @@ h1 {
 }
 
 .group-header-main {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   min-width: 0;
   align-items: center;
-  gap: 12px;
-}
-
-.group-header-main > div {
-  min-width: 0;
+  gap: 16px;
 }
 
 .group-header h2 {
   display: block;
   margin: 0;
-  font-size: 20px;
+  color: #7d3b32;
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1;
 }
 
-.group-header p {
-  margin: 6px 0 0;
+.group-header-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 12px;
+  min-width: 0;
+}
+
+.group-header-stat {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.group-header-stat span {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.group-header-stat strong {
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.1;
+}
+
+.group-header-score {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 88px;
+  text-align: right;
+}
+
+.group-header-score span {
   color: var(--muted);
   font-size: 12px;
 }
 
-.group-rank {
-  display: inline-flex;
-  flex: 0 0 42px;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  margin-right: 0;
-  border-radius: 4px;
-  background: #2878c8;
-  color: #fff;
-  font-size: 18px;
-  font-weight: 800;
+.group-header-score strong {
+  color: #e52b46;
+  font-size: clamp(42px, 5vw, 68px);
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 0.85;
 }
 
 .operator-grid {
@@ -1982,24 +2117,30 @@ h1 {
   border-bottom: 1px solid var(--border);
 }
 
+.operator-item:not(.is-expanded) {
+  padding-bottom: 0;
+}
+
 .operator-item:nth-child(3n) {
   border-right: 0;
 }
 
 .operator-main {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto minmax(62px, auto);
+  grid-template-columns: auto minmax(0, 1fr) minmax(62px, auto) auto;
   align-items: center;
   gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--border);
+  cursor: pointer;
 }
 
 .operator-title {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: column;
   min-width: 0;
-  column-gap: 12px;
-  row-gap: 2px;
+  gap: 2px;
 }
 
 .operator-name-row {
@@ -2012,18 +2153,20 @@ h1 {
 
 .operator-name-row strong {
   overflow: hidden;
+  font-size: 18px;
+  line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-/* 评级内置在名称行的冗余空间里；两行评分竖排，放不下时整体换到名称下方 */
-.operator-rating-module {
-  display: flex;
-  flex: 0 1 auto;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  min-width: 0;
+.operator-english-name {
+  overflow: hidden;
+  max-width: 100%;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .operator-rating-line {
@@ -2068,10 +2211,9 @@ h1 {
 
 .operator-total-score {
   display: inline-flex;
-  min-width: 62px;
+  min-width: 45px;
   align-items: center;
   justify-content: center;
-  gap: 5px;
   color: var(--muted);
   font-size: 11px;
   line-height: 1.2;
@@ -2082,11 +2224,33 @@ h1 {
 }
 
 .operator-total-score .grade-badge {
-  min-width: 30px;
+  min-width: 45px;
+  height: 42px;
+  padding-right: 9px;
+  padding-left: 9px;
+  font-size: 26px;
+}
+
+.operator-toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 28px;
   height: 28px;
-  padding-right: 6px;
-  padding-left: 6px;
-  font-size: 17px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--muted);
+}
+
+.operator-toggle:hover {
+  color: #2878c8;
+}
+
+.operator-details {
+  min-width: 0;
 }
 
 .grade-badge {
@@ -2135,16 +2299,17 @@ h1 {
 }
 
 .operator-info-row {
-  display: grid;
-  grid-template-columns: 58px minmax(0, 1fr);
-  gap: 8px;
-  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 12px;
   font-size: 12px;
   line-height: 1.5;
 }
 
-.info-label {
-  color: var(--muted);
+.operator-info-heading {
+  width: fit-content;
+  font-weight: 700;
 }
 
 .info-value {
@@ -2155,6 +2320,12 @@ h1 {
 
 .info-value-empty {
   color: var(--muted);
+}
+
+.operator-subjective-description {
+  display: block;
+  margin-top: 6px;
+  color: #7d3b32;
 }
 
 .combat-entry {
@@ -2192,17 +2363,29 @@ h1 {
   color: #2878c8;
 }
 
-.operator-stats {
-  flex-wrap: wrap;
+.operator-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   margin-top: auto;
-  padding-top: 10px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+}
+
+.operator-stats {
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-wrap: wrap;
+  margin-top: 0;
+  padding-top: 0;
   color: var(--muted);
   font-size: 11px;
 }
 
 .operator-stats span {
   padding-right: 7px;
-  border-right: 1px solid var(--border);
+  border-right: 1px dashed var(--border);
 }
 
 .operator-stats span:last-child {
@@ -2238,10 +2421,6 @@ h1 {
 @media (max-width: 1050px) {
   .detail-page .group-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .detail-terms-copy .group-list {
-    grid-template-columns: minmax(0, 1fr);
   }
 
   .detail-page .operator-grid {
@@ -2297,43 +2476,40 @@ h1 {
     gap: 6px;
   }
 
-  .detail-terms-copy .detail-tabs {
-    grid-template-columns: minmax(0, 1fr);
+  .detail-page .detail-tabs {
+    position: sticky;
+    top: calc(64px + 8px);
+    z-index: 10;
+    background: transparent;
   }
 
-  .detail-terms-copy .operator-name-row {
-    flex-wrap: wrap;
-  }
-
-  .detail-terms-copy .group-header {
-    min-height: 0;
-  }
-
-  .detail-terms-copy .operator-item {
-    min-height: 380px;
+  .detail-page .detail-tab {
+    min-height: 42px;
+    padding: 10px 6px;
+    font-size: 15px;
   }
 
   .detail-page .operator-main {
     gap: 6px;
   }
 
-  .detail-page:not(.detail-terms-copy) .operator-main {
+  .detail-page .operator-main {
     gap: 4px;
   }
 
-  .detail-page:not(.detail-terms-copy) .operator-prts-link {
+  .detail-page .operator-prts-link {
     padding-right: 3px;
     padding-left: 3px;
     font-size: 10px;
   }
 
-  .detail-page:not(.detail-terms-copy) .operator-total-score {
+  .detail-page .operator-total-score {
     min-width: 62px;
   }
 
-  .detail-terms-copy .operator-main {
-    align-items: start;
-    gap: 6px;
+  .detail-page .operator-toggle {
+    width: 26px;
+    height: 26px;
   }
 
   .detail-page .group-list {
@@ -2373,12 +2549,6 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .result-module-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 6px;
-  }
-
   .result-score-bar-content {
     gap: 8px;
     padding-right: 10px;
@@ -2409,8 +2579,16 @@ h1 {
     padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
   }
 
+  .result-page:not(.is-drawing) {
+    padding-bottom: 0;
+  }
+
   .detail-page {
     justify-content: flex-start;
+  }
+
+  .detail-page.is-inline-result {
+    padding-top: 24px;
   }
 
   .hero-ribbons {
@@ -2582,7 +2760,36 @@ h1 {
   }
 
   .group-header {
-    display: block;
+    padding: 12px 14px;
+  }
+
+  .group-header-main {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .group-header h2 {
+    font-size: 28px;
+  }
+
+  .group-header-stats {
+    gap: 4px 8px;
+  }
+
+  .group-header-stat span {
+    font-size: 10px;
+  }
+
+  .group-header-stat strong {
+    font-size: 12px;
+  }
+
+  .group-header-score {
+    min-width: 62px;
+  }
+
+  .group-header-score strong {
+    font-size: 34px;
   }
 
 }
