@@ -23,7 +23,7 @@ import '/src/assets/css/atomic/atomic.scss'
 import Navigation from '/src/components/layout/Navigation.vue'
 import PageTracker from '/src/components/layout/PageTracker.vue'
 import MaintenanceNotice from '/src/components/layout/MaintenanceNotice.vue'
-import {useTheme} from 'vuetify'
+import {useDisplay, useTheme} from 'vuetify'
 
 import User from '/src/pages/account/user.vue'
 import {computed, onMounted, ref, shallowRef, watch} from "vue";
@@ -53,6 +53,7 @@ const themeOverrides = {
 
 
 const theme = useTheme()
+const {mdAndUp} = useDisplay()
 
 let customTheme = ref("")
 let drawer = ref(true)
@@ -224,7 +225,7 @@ const buildTime = import.meta.env.BUILD_TIME;
       <v-app class="app" :class="customTheme">
         <PageTracker />
         <MaintenanceNotice />
-        <v-navigation-drawer v-model="drawer" width="280" class="navigation-drawer">
+        <v-navigation-drawer v-model="drawer" :width="mdAndUp ? 288 : 280" class="navigation-drawer">
           <div style="text-align: center;font-size: 24px;font-weight: bolder;padding: 12px 0 0">
             明日方舟一图流
           </div>
