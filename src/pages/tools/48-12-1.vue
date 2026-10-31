@@ -582,8 +582,8 @@ function average(values) {
   return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
 }
 
-function formatScore(value) {
-  return Number(value || 0).toFixed(2);
+function formatScore(value, digits = 2) {
+  return Number(value || 0).toFixed(digits);
 }
 
 function formatPercent(value) {
@@ -950,7 +950,7 @@ onMounted(() => {
               </div>
               <div class="group-header-score">
                 <span>综合评分</span>
-                <strong>{{ formatScore(group.totalScore) }}</strong>
+                <strong>{{ formatScore(group.totalScore, 1) }}</strong>
               </div>
             </div>
           </header>
@@ -2133,7 +2133,8 @@ h1 {
 
 .group-header-main {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr) max-content;
+  width: 100%;
   min-width: 0;
   align-items: center;
   gap: 16px;
@@ -2150,15 +2151,19 @@ h1 {
 
 .group-header-stats {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px 12px;
+  width: 156px;
+  max-width: 100%;
+  grid-template-columns: minmax(0, 1fr);
+  justify-self: start;
+  gap: 6px;
   min-width: 0;
 }
 
 .group-header-stat {
   display: flex;
   min-width: 0;
-  flex-direction: column;
+  align-items: baseline;
+  justify-content: space-between;
   gap: 2px;
 }
 
@@ -2176,11 +2181,14 @@ h1 {
 
 .group-header-score {
   display: flex;
+  width: max-content;
   align-items: baseline;
+  justify-content: flex-end;
+  justify-self: end;
   flex-direction: row;
   gap: 8px;
   min-width: 88px;
-  text-align: left;
+  text-align: right;
 }
 
 .group-header-score span {
@@ -2373,17 +2381,17 @@ h1 {
   background: #d97706;
 }
 .grade-a {
-  background: #2878c8;
+  background: #7c3aed;
 }
 .grade-b {
-  background: #64748b;
+  background: #2878c8;
 }
 .grade-c {
-  background: #94a3b8;
+  background: #4d9f68;
 }
 .grade-d {
-  background: #cbd5e1;
-  color: #475569;
+  background: #64748b;
+  color: #fff;
 }
 
 .grade-text-s {
@@ -2862,7 +2870,7 @@ h1 {
   }
 
   .group-header-main {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr) max-content;
     gap: 8px;
   }
 
