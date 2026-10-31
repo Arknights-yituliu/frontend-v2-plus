@@ -810,7 +810,7 @@ onMounted(() => {
                           <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="26" :mobile-size="20" :border="true" />
                         </span>
                         <span v-if="group.unownedOverflow" class="result-score-row-unowned-more">
-                          以及另外{{ group.unownedOverflow }}个干员
+                          +{{ group.unownedOverflow }}
                         </span>
                       </div>
                     </div>
@@ -1380,7 +1380,8 @@ onMounted(() => {
   flex: 1 1 auto;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 24px;
   padding: 24px;
   background: transparent;
 }
