@@ -1,13 +1,13 @@
 <script setup>
 import { computed } from "vue";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "@/utils/arknightsResource.js";
 import { nameToCharId } from "@/utils/mower/operatorAssets.js";
 const props = defineProps({ name: String, size: { type: Number, default: 45 } });
 const id = computed(() => nameToCharId[props.name]);
 </script>
 <template>
   <div class="plan-avatar" :style="{ width: `${size}px`, minHeight: `${size}px` }" draggable="false">
-    <OperatorAvatar v-if="id" :char-id="id" :size="size" :mobile-size="size" />
+    <img v-if="id" class="operator-avatar-img" :style="getOperatorAvatarStyle({ size: size, mobileSize: size })" :src="getOperatorAvatarUrl(id)" alt="" draggable="false">
     <div v-else class="placeholder" :style="{ height: `${size}px` }">{{ name === "Current" ? "Curr" : name === "Free" ? "Free" : name?.slice(0, 2) }}</div>
   </div>
 </template>

@@ -2,8 +2,7 @@
 // import RankBar from "./rankBar";
 // import RankBarContent from "./rankBarContent";
 import MaterialItem from "./materialItem";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import { getSkillIconUrl, getEquipIconUrl } from "/src/utils/arknightsResource.js";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle, getSkillIconUrl, getEquipIconUrl } from "/src/utils/arknightsResource.js";
 
 import { ref } from 'vue';
 import { detailData, detailTableData, costFormatter, percentFormatter } from '../js/table'
@@ -76,7 +75,8 @@ function getEquipIcon(typeIcon){
                 <!-- 图标 -->
                 <td>
                   <div class="icon-container">
-                    <OperatorAvatar :size="48" :mobile-size="40" :char-id="item.charId" v-if="item.iconType === 'operator'"></OperatorAvatar>
+                    <img class="operator-avatar-img" :style="getOperatorAvatarStyle({ size: 48, mobileSize: 40 })"
+                         :src="getOperatorAvatarUrl(item.charId)" alt="" v-if="item.iconType === 'operator'">
                     <img class="skill-icon-image" :src="getSkillIconUrl(item.iconId)" alt=""
                          v-else-if="item.iconType === 'skill'">
                     <img class="equip-icon-image" :src="getEquipIconUrl(item.typeIcon)" alt="" v-else loading="lazy">
