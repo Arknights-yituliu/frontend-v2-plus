@@ -6,7 +6,7 @@
     },
     "data": {
       "label": "数据模块",
-      "version": "v20261025.1958"
+      "version": "v20261101.1439"
     },
     "team": {
       "label": "班组模块",
@@ -18,7 +18,7 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20261025.1958"
+      "version": "v20261101.1439"
     },
     "recommendation": {
       "label": "调试信息",
@@ -26,6 +26,30 @@
     }
   },
   "entries": [
+    {
+      "date": "2026-11-01",
+      "version": "v20261101.1439",
+      "items": [
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 3,
+          "description": "同步新干员基建技能与效率候选数据，并新增冻河、国度、行铃的培养建议",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 4,
+          "description": "修复未选择菲亚梅塔休整对象时仍触发自动休整，并误报宿舍无空位的问题",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-10-31",
       "version": "v20261031.0948",
