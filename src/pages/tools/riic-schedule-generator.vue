@@ -7,6 +7,7 @@ import {
   onMounted,
   reactive,
   ref,
+  shallowRef,
   toRaw,
   watch,
 } from "vue";
@@ -5378,7 +5379,7 @@ const riicLegacyL79Settlement = computed(() => {
       })
     : null;
 });
-const riicEfficiencyCalculation = computed(() => {
+const riicEfficiencyCalculationSource = computed(async () => {
   const input = riicL79InputDebugState.value;
   if (!input?.schedule) {
     return { result: null, error: "当前没有可计算的排班" };
@@ -5393,7 +5394,7 @@ const riicEfficiencyCalculation = computed(() => {
       efficiencySettings: scheduleExecutionSettings.riicEfficiencySettings,
       treatSkillsAsUnlocked: riicTrainingMode.value === "ideal",
     });
-    const result = calculateRiicEfficiency(schedule);
+    const result = await calculateRiicEfficiency(schedule);
     const yieldSummary = createRiicEfficiencyYield(
       result,
       riicSchedulePreviewBase.value,
@@ -5424,6 +5425,13 @@ const riicEfficiencyCalculation = computed(() => {
       warnings: [],
     };
   }
+});
+
+// 干员目录改为按需加载后计算变为异步：用 ref 承接结果，
+// 下游仍按同步方式读取 riicEfficiencyCalculation.value.result 等字段。
+const riicEfficiencyCalculation = shallowRef({
+  result: null,
+  error: "当前没有可计算的排班",
 });
 // 「排班分析报告」只展示可行动的检查结果，以下几项包内引擎提示在生成器场景下隐藏。
 // 在消费端按 code 过滤，而不是改动 src/vendor 的同步产物，同时让 ?mode=dev
@@ -6148,6 +6156,34 @@ const riicL79InputDebugState = computed(() => {
     console.error(error);
     return null;
   }
+});
+// 必须放在所有依赖声明之后：riicEfficiencyCalculationSource 读取
+// riicL79InputDebugState（下方声明），若在声明前 immediate 求值会抛
+// “Cannot access before initialization”，异步结果将永远不写回。
+let riicEfficiencyCalcDisposed = false;
+watch(
+  riicEfficiencyCalculationSource,
+  (pending) => {
+    pending
+      .then((calculation) => {
+        if (!riicEfficiencyCalcDisposed) {
+          riicEfficiencyCalculation.value = calculation;
+        }
+      })
+      .catch((error) => {
+        if (!riicEfficiencyCalcDisposed) {
+          riicEfficiencyCalculation.value = {
+            result: null,
+            error: String(error?.message || "riic-efficiency 计算失败"),
+          };
+        }
+        console.error("riic-efficiency calculation failed", error);
+      });
+  },
+  { immediate: true },
+);
+onBeforeUnmount(() => {
+  riicEfficiencyCalcDisposed = true;
 });
 const riicScheduleResultSnapshot = computed(() =>
   createRiicScheduleResultSnapshot({

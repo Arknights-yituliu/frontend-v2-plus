@@ -482,7 +482,7 @@ const unmatchedOperatorNames = computed(() => {
   return scheduleOperatorNames.value.filter((name) => !rosterNames.has(name));
 });
 
-const calculationState = computed(() => {
+const calculationSource = computed(async () => {
   if (!sourceSchedule.value) {
     return { result: null, document: null, layout: null, layoutSource: "inferred", error: "", efficiencyError: "" };
   }
@@ -515,7 +515,7 @@ const calculationState = computed(() => {
     document.settings.treatSkillsAsUnlocked = treatSkillsAsUnlocked.value;
     let result;
     try {
-      result = calculateRiicEfficiency(document);
+      result = await calculateRiicEfficiency(document);
       result.layoutSource = layoutSource;
     } catch (error) {
       efficiencyError = error?.message || "riic-efficiency 计算失败";
@@ -541,13 +541,63 @@ const calculationState = computed(() => {
   }
 });
 
+// 干员目录按需加载导致计算变为异步：用一个 ref 承接 Promise 结果，
+// 下游仍按同步 state 读取（calculationState.value.result/.layout 等）。
+const calculationState = shallowRef({
+  result: null,
+  document: null,
+  layout: null,
+  layoutSource: "inferred",
+  error: "",
+  efficiencyError: "",
+});
+
+function settleAsync(pendingRef, targetRef, fallback) {
+  let disposed = false;
+  const stop = watch(
+    pendingRef,
+    (pending) => {
+      pending
+        .then((value) => {
+          if (!disposed) {
+            targetRef.value = value;
+          }
+        })
+        .catch(() => {
+          if (!disposed) {
+            targetRef.value = fallback;
+          }
+        });
+    },
+    { immediate: true },
+  );
+  onUnmounted(() => {
+    disposed = true;
+    stop();
+  });
+}
+
+settleAsync(calculationSource, calculationState, {
+  result: null,
+  document: null,
+  layout: null,
+  layoutSource: "inferred",
+  error: "riic-efficiency 计算失败",
+  efficiencyError: "",
+});
+
 const result = computed(() => calculationState.value.result);
 const hasMaaDroneUsage = computed(() => Boolean(result.value?.maaDroneAcceleration?.enabled));
-const droneCalculation = computed(() =>
-  result.value && !hasMaaDroneUsage.value
-    ? calculateRiicDroneAcceleration(result.value, lmdDroneStrategyInput.value)
-    : null,
-);
+// 无人机加速同样是异步计算，结果写入 ref 供模板与下游读取
+const droneCalculationState = shallowRef(null);
+const droneCalculationSource = computed(() => {
+  if (!result.value || hasMaaDroneUsage.value) {
+    return Promise.resolve(null);
+  }
+  return calculateRiicDroneAcceleration(result.value, lmdDroneStrategyInput.value);
+});
+settleAsync(droneCalculationSource, droneCalculationState, null);
+const droneCalculation = computed(() => droneCalculationState.value);
 function recycleItemSanity(recycleOutputs = []) {
   let totalAmount = 0;
   let totalSanity = 0;
