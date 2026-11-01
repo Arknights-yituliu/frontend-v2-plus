@@ -404,6 +404,14 @@
       filter: drop-shadow(2px 2px 2px rgb(100, 100, 100));
     }
 
+    /* 干员推荐技能图标：与原先组件 40px（内缩 4px）尺寸保持一致 */
+    .operator-skill-image {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      object-fit: cover;
+    }
+
     .equip-name {
       width: 100%;
       text-align: center;

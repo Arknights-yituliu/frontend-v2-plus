@@ -52,3 +52,38 @@ export function getEquipIconUrl(icon) {
   }
   return `${OPERATOR_EQUIP_ICON_BASE_URL}${icon}.png`
 }
+
+// 头像描边渐变色（与原 OperatorAvatar 组件的 rarity 边框保持一致）
+const OPERATOR_RARITY_BORDER_COLORS = {
+  6: 'linear-gradient(135deg, #ff8a3d, #ffd24a)',
+  5: 'linear-gradient(135deg, #ffffff, #f2c75c)',
+  4: 'linear-gradient(135deg, #ffffff, #d8c6ff)',
+  3: 'linear-gradient(135deg, #ffffff, #7fb7ff)',
+  2: 'linear-gradient(135deg, #ffffff, #7fd88f)',
+  1: 'linear-gradient(135deg, #ffffff, #c5c9d3)',
+}
+
+/**
+ * 生成干员头像 <img> 的内联样式，尺寸走 CSS 变量，描边底色按稀有度取渐变色
+ * @param {Object} options 配置项
+ * @param {number} [options.size] 桌面尺寸（px）
+ * @param {number} [options.mobileSize] 手机尺寸（px），缺省时沿用桌面尺寸
+ * @param {number} [options.rarity] 干员星级，用于描边底色
+ * @param {boolean} [options.bordered] 是否需要稀有度描边
+ * @returns {Object} Vue 可直接绑定的样式对象
+ */
+export function getOperatorAvatarStyle({ size, mobileSize, rarity, bordered = false } = {}) {
+  const style = {}
+  if (size) {
+    style['--avatar-size'] = `${size}px`
+  }
+  const resolvedMobileSize = mobileSize || size
+  if (resolvedMobileSize) {
+    style['--avatar-mobile-size'] = `${resolvedMobileSize}px`
+  }
+  if (bordered) {
+    const normalizedRarity = Math.min(6, Math.max(1, Math.floor(Number(rarity) || 6)))
+    style.background = OPERATOR_RARITY_BORDER_COLORS[normalizedRarity]
+  }
+  return style
+}

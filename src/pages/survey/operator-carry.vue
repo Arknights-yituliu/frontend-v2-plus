@@ -5,7 +5,7 @@ import {onMounted, ref, watch} from "vue";
 import '/src/assets/css/survey/questionnaire.scss'
 import {createMessage} from "/src/utils/message.js";
 import questionnaireAPI from "/src/api/backend/questionnaire.js";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import operatorProgressionStatisticsDataCache from "/src/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import {formatNumber} from "/src/utils/format.js";
 import {NDatePicker} from 'naive-ui'
@@ -326,7 +326,8 @@ onMounted(() => {
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, index) of operatorTeam" :key="index" class="operator-team-item"
                  @click="removeOperator(operator)">
-              <OperatorAvatar :char-id="operator.charId" :size="80" :mobile-size="44"></OperatorAvatar>
+              <img class="operator-avatar-img" :style="getOperatorAvatarStyle({ size: 80, mobileSize: 44 })"
+                   :src="getOperatorAvatarUrl(operator.charId)" alt="">
               <img src="/image/icon/cancel.png" alt="" class="cancel-icon">
 
             </div>
@@ -354,8 +355,9 @@ onMounted(() => {
           <div class="flex flex-wrap justify-center">
             <div v-for="(operator, profession) of displayOperatorList" :key="profession" class="operator-option"
                  @click="chooseOperator(operator)">
-              <OperatorAvatar :border="true" :char-id="operator.charId" :rarity="operator.rarity" :size="60"
-                              :mobile-size="40"></OperatorAvatar>
+              <img class="operator-avatar-img operator-avatar-img--bordered"
+                   :style="getOperatorAvatarStyle({ size: 60, mobileSize: 40, rarity: operator.rarity, bordered: true })"
+                   :src="getOperatorAvatarUrl(operator.charId)" alt="">
               <div>{{ operator.name }}</div>
               <div :class="selectedOperatorClass(operator.charId)"></div>
             </div>
@@ -420,7 +422,9 @@ onMounted(() => {
 <!--                </div>-->
 
 
-                  <OperatorAvatar :border="true" :char-id="item.charId" :size="50" class="m-4-0"></OperatorAvatar>
+                  <img class="operator-avatar-img operator-avatar-img--bordered m-4-0"
+                       :style="getOperatorAvatarStyle({ size: 50, mobileSize: 40, rarity: item.rarity, bordered: true })"
+                       :src="getOperatorAvatarUrl(item.charId)" alt="">
 
 
               </td>
