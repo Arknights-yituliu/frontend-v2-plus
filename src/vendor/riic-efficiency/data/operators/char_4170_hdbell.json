@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4170_hdbell",
+  "name": "行铃",
+  "rarity": 4,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "recycle",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "梅里塔精拣",
+          "effects": [
+            {
+              "target": "recycle",
+              "stat": "recycleSpd",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "花椰菜甄选",
+          "effects": [
+            {
+              "target": "recycle",
+              "stat": "recycleSpd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

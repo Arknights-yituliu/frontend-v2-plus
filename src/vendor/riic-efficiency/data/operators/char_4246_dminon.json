@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4246_dminon",
+  "name": "国度",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "recycle",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "无差别回收",
+          "effects": [
+            {
+              "target": "recycle",
+              "stat": "moodCost",
+              "value": -0.1
+            },
+            {
+              "target": "recycle",
+              "stat": "recycleSpd",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "无差别转化",
+          "effects": [
+            {
+              "target": "recycle",
+              "stat": "moodCost",
+              "value": -0.1
+            },
+            {
+              "target": "recycle",
+              "stat": "recycleSpd",
+              "value": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "power",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "人造物之畏",
+          "effects": [
+            {
+              "target": "power",
+              "stat": "droneCharge",
+              "value": 15
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

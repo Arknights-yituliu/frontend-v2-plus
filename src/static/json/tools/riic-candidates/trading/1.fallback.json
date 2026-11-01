@@ -642,6 +642,29 @@
           ]
         }
       ]
+    },
+    {
+      "name": "冻河",
+      "rates": [
+        {
+          "percent": 15,
+          "slotCount": 2
+        },
+        {
+          "percent": 30,
+          "slotCount": 3
+        },
+        {
+          "elite": 2,
+          "percent": 20,
+          "slotCount": 2
+        },
+        {
+          "elite": 2,
+          "percent": 40,
+          "slotCount": 3
+        }
+      ]
     }
   ]
 }
