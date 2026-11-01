@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4244_tocka",
+  "name": "冻河",
+  "rarity": 6,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "trading",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "“无用的人脉”",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 15,
+                "source": "opCount",
+                "other": true,
+                "moodCheck": true
+              }
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "“真有用？”",
+          "effects": [
+            {
+              "target": "trading",
+              "stat": "tradeSpd",
+              "per": {
+                "per": 1,
+                "value": 20,
+                "source": "opCount",
+                "other": true,
+                "moodCheck": true
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slot": 2,
+      "room": "dormitory",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "微小的帮助",
+          "effects": [
+            {
+              "target": "dormitory",
+              "stat": "moodRecover",
+              "scope": "room",
+              "per": {
+                "per": 1,
+                "value": 0.01,
+                "source": "dormNotFull"
+              },
+              "stack": "max",
+              "maxGroup": "dormRec-room",
+              "baseValue": 0.1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

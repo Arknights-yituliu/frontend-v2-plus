@@ -9,6 +9,8 @@
   },
   "defaultPercent": 1,
   "operators": [
-    { "name": "旅骨", "rates": [{ "percent": 20 }, { "elite": 2, "percent": 30 }] }
+    { "name": "旅骨", "rates": [{ "percent": 20 }, { "elite": 2, "percent": 30 }] },
+    { "name": "国度", "rates": [{ "percent": 20 }, { "elite": 2, "percent": 30 }] },
+    { "name": "行铃", "rates": [{ "percent": 20 }, { "elite": 2, "percent": 30 }] }
   ]
 }

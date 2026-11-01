@@ -1,7 +1,6 @@
 import BUILDING_TABLE from "../../static/json/build/building_table.json";
 import OPERATOR_TABLE from "../../static/json/operator/character_table_simple.v2.json";
 import PROFESSION_DICT from "../../static/json/operator/profession_dict.json";
-import RECYCLE_OPERATOR from "/src/vendor/riic-efficiency/data/operators/char_4232_hbound.json";
 import { getRiicOperatorProfile } from "/src/utils/riicOperatorIdentity.js";
 
 const SKILLS_BY_OPERATOR_ID = new Map();
@@ -65,27 +64,7 @@ export function getRiicOperatorSkillDetails(charId) {
     unlock: `精${skill.phase} ${skill.level}级`,
     description: stripMarkup(skill.description),
   }));
-  if (localSkills.length > 0) {
-    return localSkills;
-  }
-
-  const packageSkillFile =
-    charId === RECYCLE_OPERATOR.id ? RECYCLE_OPERATOR : null;
-  return (packageSkillFile?.chains || []).flatMap(
-    (chain) =>
-      (chain.stages || []).map((stage) => ({
-        name: stage.name,
-        facility: chain.room,
-        unlock:
-          stage.unlock?.type === "elite"
-            ? `精英${stage.unlock.value}`
-            : `${stage.unlock?.value || 1}级`,
-        description: (stage.effects || [])
-          .map((effect) => stripMarkup(effect.text))
-          .filter(Boolean)
-          .join("；"),
-      })),
-  );
+  return localSkills;
 }
 
 /**
@@ -157,32 +136,7 @@ export function getRiicOperatorSkillTooltip(operator, fallbackOperator = null) {
     })
     .filter(Boolean);
 
-  const packageSkillFile =
-    charId === RECYCLE_OPERATOR.id ? RECYCLE_OPERATOR : null;
-  const packageDescriptions = (packageSkillFile?.chains || []).flatMap((chain) =>
-    (chain.stages || [])
-      .filter((stage) => {
-        const unlock = stage.unlock || {};
-        if (unlock.type === "elite") {
-          return Number(source?.elite) >= Number(unlock.value || 0);
-        }
-        return Number(source?.level) >= Number(unlock.value || 1);
-      })
-      .map((stage) => {
-        const effectText = (stage.effects || [])
-          .map((effect) => stripMarkup(effect.text))
-          .filter(Boolean)
-          .join("；");
-        return effectText
-          ? `${String(stage.name || "").trim()}：${effectText}`
-          : String(stage.name || "").trim();
-      })
-      .filter(Boolean),
-  );
-
   return descriptions.length > 0
     ? [...new Set(descriptions)].join("\n")
-    : packageDescriptions.length > 0
-      ? [...new Set(packageDescriptions)].join("\n")
-      : "暂无已解锁基建技能";
+    : "暂无已解锁基建技能";
 }
