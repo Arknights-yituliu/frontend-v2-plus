@@ -1,6 +1,9 @@
 <script setup>
 import { computed, ref } from "vue";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import {
+  getOperatorAvatarStyle,
+  getOperatorAvatarUrl,
+} from "/src/utils/arknightsResource.js";
 import battleRecordBackground from "/src/assets/images/riic-schedule-preview/battle-record.png";
 import creditBackground from "/src/assets/images/riic-schedule-preview/credit.png";
 import droneBackground from "/src/assets/images/riic-schedule-preview/drone.png";
@@ -606,25 +609,24 @@ function dropOperator(room, operator) {
             :title="getOperatorAvatarTooltip(outputFiammettaTargetOperator)"
           >
             <div class="schedule-preview-fiammetta-flow">
-              <OperatorAvatar
-                char-id="char_300_phenxi"
-                :size="45"
-                :mobile-size="39"
-                :border="true"
-              ></OperatorAvatar>
+              <img
+                class="operator-avatar-img operator-avatar-img--bordered"
+                :style="getOperatorAvatarStyle({ size: 45, mobileSize: 39, bordered: true })"
+                :src="getOperatorAvatarUrl('char_300_phenxi')"
+                alt=""
+              />
               <v-icon
                 icon="mdi-arrow-right"
                 size="22"
                 aria-hidden="true"
               ></v-icon>
-              <OperatorAvatar
+              <img
                 v-if="outputFiammettaTargetOperator.charId"
-                :char-id="outputFiammettaTargetOperator.charId"
-                :rarity="getRarity(outputFiammettaTargetOperator.charId)"
-                :size="45"
-                :mobile-size="39"
-                :border="true"
-              ></OperatorAvatar>
+                class="operator-avatar-img operator-avatar-img--bordered"
+                :style="getOperatorAvatarStyle({ size: 45, mobileSize: 39, rarity: getRarity(outputFiammettaTargetOperator.charId), bordered: true })"
+                :src="getOperatorAvatarUrl(outputFiammettaTargetOperator.charId)"
+                alt=""
+              />
               <span
                 v-else
                 class="schedule-preview-fiammetta-manual-target"
@@ -700,14 +702,13 @@ function dropOperator(room, operator) {
                @drop.stop.prevent="dropOperator(room, operator)"
                @dragend.stop="endOperatorDrag"
              >
-               <OperatorAvatar
+               <img
                  v-if="operator.charId"
-                :char-id="operator.charId"
-                :rarity="getRarity(operator.charId)"
-                :size="45"
-                :mobile-size="39"
-                border
-              ></OperatorAvatar>
+                class="operator-avatar-img operator-avatar-img--bordered"
+                :style="getOperatorAvatarStyle({ size: 45, mobileSize: 39, rarity: getRarity(operator.charId), bordered: true })"
+                :src="getOperatorAvatarUrl(operator.charId)"
+                alt=""
+              />
               <span
                 v-else
                 class="schedule-preview-manual-operator"

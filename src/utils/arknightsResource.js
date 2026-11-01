@@ -64,7 +64,7 @@ const OPERATOR_RARITY_BORDER_COLORS = {
 }
 
 /**
- * 生成干员头像 <img> 的内联样式，尺寸走 CSS 变量，描边底色按稀有度取渐变色
+ * 生成干员头像 <img> 的内联样式，尺寸和稀有度描边渐变均通过 CSS 变量传入
  * @param {Object} options 配置项
  * @param {number} [options.size] 桌面尺寸（px）
  * @param {number} [options.mobileSize] 手机尺寸（px），缺省时沿用桌面尺寸
@@ -83,7 +83,7 @@ export function getOperatorAvatarStyle({ size, mobileSize, rarity, bordered = fa
   }
   if (bordered) {
     const normalizedRarity = Math.min(6, Math.max(1, Math.floor(Number(rarity) || 6)))
-    style.background = OPERATOR_RARITY_BORDER_COLORS[normalizedRarity]
+    style['--avatar-border-gradient'] = OPERATOR_RARITY_BORDER_COLORS[normalizedRarity]
   }
   return style
 }

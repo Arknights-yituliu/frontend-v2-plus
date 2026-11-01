@@ -1,6 +1,9 @@
 <script setup>
 import { computed, ref, watch } from "vue";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import {
+  getOperatorAvatarStyle,
+  getOperatorAvatarUrl,
+} from "/src/utils/arknightsResource.js";
 import OPERATOR_UPGRADE_DATA from "/src/static/json/tools/operatorUpgradeData.json";
 import {
   formatRiicOperatorTooltip,
@@ -428,14 +431,13 @@ async function copyCalculationFeedback() {
         @keydown.space.prevent="toggleMaaSelection(entry.requirement)"
         @keydown.enter.prevent="toggleMaaSelection(entry.requirement)"
       >
-        <OperatorAvatar
-          :char-id="entry.requirement.charId"
-          :rarity="operatorTable?.[entry.requirement.charId]?.rarity || 1"
-          :size="36"
-          :mobile-size="32"
+        <img
+          class="operator-avatar-img operator-avatar-img--bordered"
+          :style="getOperatorAvatarStyle({ size: 36, mobileSize: 32, rarity: operatorTable?.[entry.requirement.charId]?.rarity || 1, bordered: true })"
+          :src="getOperatorAvatarUrl(entry.requirement.charId)"
           :title="getOperatorAvatarTooltip(entry.requirement)"
-          border
-        ></OperatorAvatar>
+          alt=""
+        />
         <div class="schedule-training-requirement-copy">
           <div class="schedule-training-requirement-title">
             <strong>{{ entry.requirement.name }}</strong>
