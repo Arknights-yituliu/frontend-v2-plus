@@ -2594,7 +2594,7 @@ function mr(e, t) {
 		});
 	});
 	let u = rr(e, t);
-	return pr(e, t), (Zn(e[0]?.settings ?? {}) === "direct" || e.some((e, t) => Qn(e, t))) && e.forEach((e) => {
+	return pr(e, t), e.some((e, t) => Qn(e, t) !== void 0) && e.forEach((e) => {
 		if (tn(e)) return;
 		let t = e.fiammetta?.end ?? 24;
 		e.autoRestWarnings.push({
