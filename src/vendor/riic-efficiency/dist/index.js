@@ -1528,7 +1528,7 @@ function rn(e, t, n) {
 }
 function an(e) {
 	let t = Zn(e[0]?.settings ?? {}), n = e.findIndex((e, t) => Qn(e, t));
-	if (t === "queue" && n < 0) return;
+	if (n < 0) return;
 	let r, i = t === "queue" ? n : 0;
 	e.forEach((n, a) => {
 		let o = e[(i + a) % e.length];
@@ -2594,7 +2594,7 @@ function mr(e, t) {
 		});
 	});
 	let u = rr(e, t);
-	return pr(e, t), (Zn(e[0]?.settings ?? {}) === "direct" || e.some((e, t) => Qn(e, t))) && e.forEach((e) => {
+	return pr(e, t), e.some((e, t) => Qn(e, t) !== void 0) && e.forEach((e) => {
 		if (tn(e)) return;
 		let t = e.fiammetta?.end ?? 24;
 		e.autoRestWarnings.push({

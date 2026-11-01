@@ -46,6 +46,22 @@
       ]
     },
     {
+      "name": "奥尔佳",
+      "rates": [
+        {
+          "percent": 14
+        },
+        {
+          "percent": 22,
+          "elite": 1
+        },
+        {
+          "percent": 30,
+          "elite": 2
+        }
+      ]
+    },
+    {
       "name": "白雪",
       "rates": [
         {
