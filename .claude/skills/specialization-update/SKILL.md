@@ -116,6 +116,14 @@ For each profession/branch that the new operator covers, check:
 
 **Do NOT update** if the new efficiency is lower or equal to the existing best.
 
+**Branch entries are per-branch, not per-level.** A branch `best_assistant` is reused
+at every mastery level, while `general` has a different best per level. Before adding
+or changing a branch entry, confirm its efficiency is **≥ the general best at each of
+specialization_1/2/3** — otherwise the branch route becomes slower than the general
+route at that level. `OptimalSpecializationPaths.vue`'s `getBestAssistant` now enforces
+this at runtime (takes the branch assistant only when it is at least as efficient as the
+level's general best), but the JSON should also stay consistent.
+
 ### Step 6: Update UI component branch list
 
 When a **new branch** is added to `optimal_specialization.json` (e.g. `游击手` under `辅助`), the corresponding UI component must also be updated.

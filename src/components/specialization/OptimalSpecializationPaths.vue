@@ -24,9 +24,9 @@ const extraEfficiency = computed(() => {
 
 // 每个职业的分支
 const branchesByProfession = {
-  "近卫": ["领主", "斗士"],
+  "近卫": ["领主", "斗士", "本源近卫"],
   "狙击": ["攻城手", "速射手"],
-  "术师": [],
+  "术师": ["本源术师"],
   "医疗": ["链愈师", "行医"],
   "重装": ["驭法铁卫"],
   "辅助": ["游击手"],
@@ -42,24 +42,19 @@ const baseHours = {
 };
 
 // 获取职业和专精级别对应的最佳干员
+// 分支干员的加成与专精等级无关，会作用于每一级训练，因此必须与同级通用最优比较：
+// 效率低于通用最优时不能采用，否则该等级反而更慢（如塔露拉 0.75 低于百炼嘉维尔 0.95）。
 function getBestAssistant(profession, level, branch = null) {
   const professionData = optimalSpecialization.professions[profession];
   if (!professionData) return null;
 
-  let bestAssistant = null;
+  const generalAssistant = professionData.general[`specialization_${level}`]?.best_assistant;
+  let bestAssistant = generalAssistant ? {...generalAssistant} : null;
 
-  // 检查是否有分支特定的数据
-  if (branch && professionData.branches && professionData.branches[branch]) {
-    const branchData = professionData.branches[branch];
-    // 分支数据存在，直接返回最佳助手
-    if (branchData.best_assistant) {
-      bestAssistant = {...branchData.best_assistant};
-    }
-  }
-
-  // 没有分支特定数据或无效分支，使用通用数据
-  if (!bestAssistant) {
-    bestAssistant = {...professionData.general[`specialization_${level}`]?.best_assistant};
+  // 分支干员效率不低于通用最优时优先采用（相等时保留分支干员）
+  const branchAssistant = branch && professionData.branches?.[branch]?.best_assistant;
+  if (branchAssistant && (!bestAssistant || branchAssistant.efficiency >= bestAssistant.efficiency)) {
+    bestAssistant = {...branchAssistant};
   }
 
   if (bestAssistant) {

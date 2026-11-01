@@ -41,6 +41,8 @@ const branches = ref([
   "领主",
   "斗士",
   "驭法铁卫",
+  "本源近卫",
+  "本源术师",
 ]);
 
 // 专精阶段列表
@@ -100,7 +102,8 @@ const sortOperatorsByEfficiency = () => {
     // 分支筛选
     if (filters.value.branch && filters.value.branch !== "全部") {
       const branch = operator.conditions.branch;
-      if (!branch || branch !== filters.value.branch) {
+      const branchList = Array.isArray(branch) ? branch : [branch];
+      if (!branchList.includes(filters.value.branch)) {
         return false;
       }
     }
@@ -322,7 +325,11 @@ const getSpecialEffectInfo = (operator) => {
         <!-- 子分支要求 -->
         <el-table-column label="子分支要求" width="100">
           <template #default="scope">
-            {{ scope.row.conditions.branch || '无' }}
+            {{
+              Array.isArray(scope.row.conditions.branch)
+                  ? scope.row.conditions.branch.join('、')
+                  : (scope.row.conditions.branch || '无')
+            }}
           </template>
         </el-table-column>
 
