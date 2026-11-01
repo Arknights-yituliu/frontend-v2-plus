@@ -1,7 +1,7 @@
 /**
  * 干员头像图片直连（替代原 OperatorAvatar 精灵图组件）
  * 尺寸通过内联 CSS 变量传入：--avatar-size（桌面）/ --avatar-mobile-size（600px 以下）
- * 稀有度描边底色由 getOperatorAvatarStyle 生成的内联 background 提供
+ * 稀有度描边渐变由 getOperatorAvatarStyle 生成的内联 CSS 变量提供
  */
 .operator-avatar-img {
   display: inline-block;
@@ -13,11 +13,14 @@
   background-color: var(--c-background-color);
 }
 
-/* 对应原组件的 border：稀有度渐变描边（桌面 2px、手机 1px） */
+/* 对应原组件的 border：渐变只绘制在透明边框层，不铺满头像背景 */
 .operator-avatar-img--bordered {
   box-sizing: border-box;
-  padding: 2px;
+  border: 2px solid transparent;
   border-radius: 4px;
+  background:
+    linear-gradient(var(--c-background-color), var(--c-background-color)) padding-box,
+    var(--avatar-border-gradient) border-box;
 }
 
 /* 对应原组件的 rounded */
@@ -32,6 +35,6 @@
   }
 
   .operator-avatar-img--bordered {
-    padding: 1px;
+    border-width: 1px;
   }
 }

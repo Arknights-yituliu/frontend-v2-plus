@@ -2,7 +2,7 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20261020.1130"
+      "version": "v20261101.1704"
     },
     "data": {
       "label": "数据模块",
@@ -26,6 +26,21 @@
     }
   },
   "entries": [
+    {
+      "date": "2026-11-01",
+      "version": "v20261101.1704",
+      "items": [
+        {
+          "module": "布局模块",
+          "type": "update",
+          "level": 2,
+          "description": "排班表生成器头像改用 COS 图片直连，统一保留桌面和移动端尺寸、稀有度描边及圆形样式",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-01",
       "version": "v20261101.1439",

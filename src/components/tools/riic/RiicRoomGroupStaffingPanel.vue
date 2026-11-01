@@ -1,5 +1,8 @@
 <script setup>
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import {
+  getOperatorAvatarStyle,
+  getOperatorAvatarUrl,
+} from "/src/utils/arknightsResource.js";
 import { formatRiicOperatorTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
 
 const props = defineProps({
@@ -306,15 +309,14 @@ function appendFallbackOperator(section, operator) {
                     下一班
                   </span>
                   <div class="room-staffing-candidate-avatars">
-                    <OperatorAvatar
+                    <img
                       v-for="charId in candidate.operatorIds"
                       :key="charId"
-                      :char-id="charId"
-                      :rarity="operatorTable?.[charId]?.rarity || 1"
-                      :size="32"
-                      :mobile-size="30"
-                      border
-                    ></OperatorAvatar>
+                      class="operator-avatar-img operator-avatar-img--bordered"
+                      :style="getOperatorAvatarStyle({ size: 32, mobileSize: 30, rarity: operatorTable?.[charId]?.rarity || 1, bordered: true })"
+                      :src="getOperatorAvatarUrl(charId)"
+                      alt=""
+                    />
                     <span
                       v-for="operator in getRoomGroupCandidateFallbackQueueOperators(
                         roomGroup,
@@ -324,13 +326,12 @@ function appendFallbackOperator(section, operator) {
                       :key="`fallback-operator-${operator.charId}`"
                       class="room-staffing-candidate-fallback-avatar"
                     >
-                      <OperatorAvatar
-                        :char-id="operator.charId"
-                        :rarity="operatorTable?.[operator.charId]?.rarity || 1"
-                        :size="32"
-                        :mobile-size="30"
-                        rounded
-                      ></OperatorAvatar>
+                      <img
+                        class="operator-avatar-img operator-avatar-img--rounded"
+                        :style="getOperatorAvatarStyle({ size: 32, mobileSize: 30 })"
+                        :src="getOperatorAvatarUrl(operator.charId)"
+                        alt=""
+                      />
                     </span>
                     <span
                       v-for="index in getRoomGroupCandidateFallbackPlaceholderCount(
@@ -733,15 +734,12 @@ function appendFallbackOperator(section, operator) {
                 @click="removeFallbackOperator(slot)"
                 :title="getOperatorAvatarTooltip(slot.assignedOperator)"
               >
-                <OperatorAvatar
-                  :char-id="slot.assignedOperator.charId"
-                  :rarity="
-                    operatorTable?.[slot.assignedOperator.charId]?.rarity || 1
-                  "
-                  :size="34"
-                  :mobile-size="32"
-                  border
-                ></OperatorAvatar>
+                <img
+                  class="operator-avatar-img operator-avatar-img--bordered"
+                  :style="getOperatorAvatarStyle({ size: 34, mobileSize: 32, rarity: operatorTable?.[slot.assignedOperator.charId]?.rarity || 1, bordered: true })"
+                  :src="getOperatorAvatarUrl(slot.assignedOperator.charId)"
+                  alt=""
+                />
                 <small>{{ slot.assignedOperator.name }}</small>
                 <span
                   v-if="slot.assignedOperator.idleFill"
@@ -838,13 +836,12 @@ function appendFallbackOperator(section, operator) {
                 @click="appendFallbackOperator(section, operator)"
                 :title="getOperatorAvatarTooltip(operator)"
               >
-                <OperatorAvatar
-                  :char-id="operator.charId"
-                  :rarity="operatorTable?.[operator.charId]?.rarity || 1"
-                  :size="34"
-                  :mobile-size="32"
-                  border
-                ></OperatorAvatar>
+                <img
+                  class="operator-avatar-img operator-avatar-img--bordered"
+                  :style="getOperatorAvatarStyle({ size: 34, mobileSize: 32, rarity: operatorTable?.[operator.charId]?.rarity || 1, bordered: true })"
+                  :src="getOperatorAvatarUrl(operator.charId)"
+                  alt=""
+                />
                 <small>{{ operator.name }}</small>
                 <span
                   v-if="operator.idleFill"

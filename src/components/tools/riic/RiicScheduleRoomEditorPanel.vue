@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from "vue";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import {
+  getOperatorAvatarStyle,
+  getOperatorAvatarUrl,
+} from "/src/utils/arknightsResource.js";
 import { formatRiicOperatorTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
 
 const props = defineProps({
@@ -282,14 +285,13 @@ function formatTraceDetails(details) {
         @dragend="endOperatorDrag"
         @click="removeOperator(operator)"
       >
-        <OperatorAvatar
+        <img
           v-if="operator.known"
-          :char-id="operator.charId"
-          :rarity="operator.rarity"
-          :size="34"
-          :mobile-size="32"
-          border
-        ></OperatorAvatar>
+          class="operator-avatar-img operator-avatar-img--bordered"
+          :style="getOperatorAvatarStyle({ size: 34, mobileSize: 32, rarity: operator.rarity, bordered: true })"
+          :src="getOperatorAvatarUrl(operator.charId)"
+          alt=""
+        />
         <span v-else class="schedule-room-editor-manual-name">
           {{ operator.name }}
         </span>
@@ -388,13 +390,12 @@ function formatTraceDetails(details) {
         @mousedown.prevent
         @click="selectOperator(operator)"
       >
-        <OperatorAvatar
-          :char-id="operator.charId"
-          :rarity="operator.rarity || 1"
-          :size="24"
-          :mobile-size="24"
-          border
-        ></OperatorAvatar>
+        <img
+          class="operator-avatar-img operator-avatar-img--bordered"
+          :style="getOperatorAvatarStyle({ size: 24, mobileSize: 24, rarity: operator.rarity || 1, bordered: true })"
+          :src="getOperatorAvatarUrl(operator.charId)"
+          alt=""
+        />
         <span>{{ operator.name }}</span>
       </button>
     </div>
