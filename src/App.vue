@@ -13,6 +13,7 @@ import "/src/assets/css/sprite/sprite_skill.css";
 // 通用样式
 import '/src/assets/css/common/title_and_tag.scss'
 import '/src/assets/css/common/icon.scss'
+import '/src/assets/css/common/operator_avatar.scss'
 
 import '/src/assets/css/common/app.scss'
 import '/src/assets/css/common/vuetify.scss'
