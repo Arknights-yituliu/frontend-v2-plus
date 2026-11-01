@@ -4,9 +4,7 @@ import '/src/assets/css/survey/operator_info_bar.scss'
 import '/src/assets/css/survey/operator_info_bar.phone.scss'
 
 
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import SkillIcon from "/src/components/sprite/SkillIcon.vue";
-import EquipIcon from "/src/components/sprite/EquipIcon.vue";
+import { getOperatorAvatarUrl, getSkillIconUrl, getEquipIconUrl } from "/src/utils/arknightsResource.js";
 
 defineProps({
   modelValue: null,
@@ -42,7 +40,8 @@ defineProps({
       <!-- 未持有干员标志：居中覆盖在卡片展示区，用于快速区分尚未招募的干员 -->
       <div v-if="!operatorInfo.own" class="operator-unowned-badge"><span>未招募</span></div>
       <div :class="['operator-avatar-area', { 'operator-avatar-area-recommended': isEliteRecommended }]">
-        <OperatorAvatar :size="56" :mobile-size="44" :char-id="operatorInfo.charId"></OperatorAvatar>
+        <img class="operator-avatar-image" :src="getOperatorAvatarUrl(operatorInfo.charId)"
+             :alt="operatorInfo.name" loading="lazy">
       </div>
       <div class="operator-info">
         <div class="operator-name">{{ operatorInfo.name }}</div>
@@ -56,7 +55,8 @@ defineProps({
         <!--v2 数据中技能字段为 skills(元素含 skillIcon/skillName), 旧格式为 skill-->
         <div class="bar-operator-skill-item" v-for="(skill,index) in operatorInfo.skills" :key="index">
           <div :class="['operator-skill-frame', { 'operator-skill-frame-recommended': recommendedSkillIndexes.includes(index) }]">
-            <SkillIcon :size="40" :mobile-size="30" :icon="`${skill.skillIcon}`"></SkillIcon>
+            <img class="operator-skill-icon" :src="getSkillIconUrl(skill.skillIcon)"
+                 :alt="skill.skillName" loading="lazy">
           </div>
           <img :src="`/image/survey/skill-rank-${operatorInfo[`skill${index+1}`]}-v1.jpg`"
                v-show="operatorInfo[`skill${index+1}`]>0"
@@ -67,7 +67,7 @@ defineProps({
       <div class="operator-modules-area">
         <div :class="['operator-equip-group', { 'operator-equip-group-recommended': recommendedEquipIndexes.includes(index) }]" v-for="(equip,index) in operatorInfo.equip" :key="index">
           <div class="operator-equip">
-            <EquipIcon :icon="equip.typeIcon" :mobile-size="20" :size="24" class="equip-icon" ></EquipIcon>
+            <img class="equip-icon" :src="getEquipIconUrl(equip.typeIcon)" alt="" loading="lazy">
             <img :src="`/image/survey/mod-rank-${operatorInfo[`mod${equip.typeName2}`]}-v1.jpg`"
                  v-show="operatorInfo[`mod${equip.typeName2}`]>0" class="equip-rank-icon" alt="">
             <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>

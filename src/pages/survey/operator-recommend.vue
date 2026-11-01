@@ -8,7 +8,7 @@ import deepClone from "/src/utils/deepClone.js";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import SkillIcon from "@/components/sprite/SkillIcon.vue";
-import EquipIcon from "/src/components/sprite/EquipIcon.vue";
+import { getEquipIconUrl } from "/src/utils/arknightsResource.js";
 import {formatNumber} from "/src/utils/format.js";
 
 import "/src/assets/css/survey/operator.scss";
@@ -117,7 +117,7 @@ onMounted(() => {
                 </SkillIcon>
                 <div class="operator-equip-group" v-show="item.info.type==='equip'">
                   <div class="operator-equip">
-                    <EquipIcon :icon="item.info.iconId" mobile-size="30" size="30" class="block m-a"></EquipIcon>
+                    <img class="operator-equip-icon" :src="getEquipIconUrl(item.info.iconId)" alt="" loading="lazy">
                     <div class="equip-name">{{ item.info.iconId }}</div>
                   </div>
                 </div>

@@ -4,7 +4,7 @@
 import MaterialItem from "./materialItem";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
 import SkillIcon from "/src/components/sprite/SkillIcon.vue";
-import EquipIcon from "/src/components/sprite/EquipIcon.vue";
+import { getEquipIconUrl } from "/src/utils/arknightsResource.js";
 
 import { ref } from 'vue';
 import { detailData, detailTableData, costFormatter, percentFormatter } from '../js/table'
@@ -79,7 +79,7 @@ function getEquipIcon(typeIcon){
                   <div class="icon-container">
                     <OperatorAvatar :size="48" :mobile-size="40" :char-id="item.charId" v-if="item.iconType === 'operator'"></OperatorAvatar>
                     <SkillIcon :size="50" :mobile-size="42" :icon="item.iconId" v-else-if="item.iconType === 'skill'"></SkillIcon>
-                    <EquipIcon :size="50" :mobile-size="42" :icon="item.typeIcon" class="equip-icon" v-else="item.iconType === 'equip'"></EquipIcon>
+                    <img class="equip-icon-image" :src="getEquipIconUrl(item.typeIcon)" alt="" v-else loading="lazy">
                   </div>
                 </td>
                 <!-- 材料开销 -->
@@ -212,6 +212,13 @@ function getEquipIcon(typeIcon){
           position: relative;
           height: 55px;
           line-height: 55px;
+
+          .equip-icon-image {
+            width: 50px;
+            height: 50px;
+            vertical-align: middle;
+            filter: drop-shadow(1px 1px 1px rgb(0, 0, 0));
+          }
         }
       }
     
@@ -224,6 +231,14 @@ function getEquipIcon(typeIcon){
         padding: 0 50px;
       }
     }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  /* 手机端模组图标：与原先组件的 mobileSize 42 保持一致 */
+  .icon-container .equip-icon-image {
+    width: 42px;
+    height: 42px;
   }
 }
 </style>
