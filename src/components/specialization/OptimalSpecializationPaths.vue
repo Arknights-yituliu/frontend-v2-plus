@@ -2,7 +2,7 @@
 import {computed, onMounted, ref, watch} from "vue";
 import {Location} from "@element-plus/icons-vue";
 import optimalSpecialization from "@/static/json/build/optimal_specialization.json";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "@/utils/arknightsResource.js";
 
 const professions = ref([
   "近卫", "狙击", "术师", "医疗", "重装", "辅助", "特种", "先锋"
@@ -560,21 +560,21 @@ function calculateSavingsFromDefault(optimizedTime) {
                     <div class="step-details">
                       <div class="assistant-info">
                         <el-tooltip :content="step.assistant.description" effect="light" placement="top">
-                          <OperatorAvatar
+                          <img
                               v-if="step.assistant.charId"
-                              :char-id="step.assistant.charId"
-                              :size="40"
-                              rounded
+                              class="operator-avatar-img operator-avatar-img--rounded"
+                              :style="getOperatorAvatarStyle({ size: 40, mobileSize: 40 })"
+                              :src="getOperatorAvatarUrl(step.assistant.charId)" alt=""
                           />
                         </el-tooltip>
                         <!-- 如果有替代头像，显示两个头像 -->
                         <el-tooltip v-if="step.assistant.alternativeCharId"
                                     :content="'进驻训练室协助位时，专精训练可以触发减半效果'" effect="light"
                                     placement="top">
-                          <OperatorAvatar
-                              :char-id="step.assistant.alternativeCharId"
-                              :size="40"
-                              rounded
+                          <img
+                              class="operator-avatar-img operator-avatar-img--rounded"
+                              :style="getOperatorAvatarStyle({ size: 40, mobileSize: 40 })"
+                              :src="getOperatorAvatarUrl(step.assistant.alternativeCharId)" alt=""
                           />
                         </el-tooltip>
                         <span class="assistant-name">{{ step.assistant.name }}</span>
@@ -651,21 +651,21 @@ function calculateSavingsFromDefault(optimizedTime) {
                     <div class="step-details">
                       <div class="assistant-info">
                         <el-tooltip :content="step.assistant.description" effect="light" placement="top">
-                          <OperatorAvatar
+                          <img
                               v-if="step.assistant.charId"
-                              :char-id="step.assistant.charId"
-                              :size="40"
-                              rounded
+                              class="operator-avatar-img operator-avatar-img--rounded"
+                              :style="getOperatorAvatarStyle({ size: 40, mobileSize: 40 })"
+                              :src="getOperatorAvatarUrl(step.assistant.charId)" alt=""
                           />
                         </el-tooltip>
                         <!-- 如果有替代头像，显示两个头像 -->
                         <el-tooltip v-if="step.assistant.alternativeCharId"
                                     :content="'进驻训练室协助位时，专精训练可以触发减半效果'" effect="light"
                                     placement="top">
-                          <OperatorAvatar
-                              :char-id="step.assistant.alternativeCharId"
-                              :size="40"
-                              rounded
+                          <img
+                              class="operator-avatar-img operator-avatar-img--rounded"
+                              :style="getOperatorAvatarStyle({ size: 40, mobileSize: 40 })"
+                              :src="getOperatorAvatarUrl(step.assistant.alternativeCharId)" alt=""
                           />
                         </el-tooltip>
                         <span class="assistant-name">{{ step.assistant.name }}</span>

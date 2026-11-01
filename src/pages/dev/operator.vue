@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import operatorDataAPI from "/src/api/user-center/operatorData.js";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import { operatorTableV2 } from "/src/utils/gameData.js";
 import { createMessage } from "/src/utils/message.js";
 import {
@@ -355,11 +355,12 @@ onMounted(() => {
           'is-unowned': !operatorStates[operator.charId]?.own,
         }"
       >
-        <OperatorAvatar
-          :char-id="operator.charId"
-          :size="42"
-          :mobile-size="38"
-        ></OperatorAvatar>
+        <img
+          class="operator-avatar-img"
+          :style="getOperatorAvatarStyle({ size: 42, mobileSize: 38 })"
+          :src="getOperatorAvatarUrl(operator.charId)"
+          alt=""
+        >
         <div class="operator-roster-name">
           <strong>{{ operator.name }}</strong>
           <span>{{ operator.rarity }} 星</span>

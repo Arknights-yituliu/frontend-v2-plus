@@ -1,6 +1,5 @@
 <script setup>
 import eliteData from '/src/pages/video-material/elite/elite.json'
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
 import {operatorTableV2} from "/src/utils/gameData.js";
 import {ref, onMounted, onUnmounted, watch} from "vue";
 

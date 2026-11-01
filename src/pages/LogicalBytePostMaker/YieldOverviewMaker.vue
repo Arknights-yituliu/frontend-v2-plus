@@ -2,8 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import ItemImage from '/src/components/sprite/ItemImage.vue'
-import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
-import { getSkillIconUrl } from '/src/utils/arknightsResource.js'
+import { getOperatorAvatarUrl, getOperatorAvatarStyle, getSkillIconUrl } from '/src/utils/arknightsResource.js'
 import {operatorTableV2} from '/src/utils/gameData.js'
 import fallbackItemInfo from '/src/static/json/material/item_info.json'
 import itemCache from '/src/plugins/indexedDB/itemCache.js'
@@ -860,11 +859,11 @@ onBeforeUnmount(() => {
         >
           <header class="preview-header">
             <div class="operator-identity">
-              <OperatorAvatar
-                :char-id="matchedOperator.charId"
-                :rarity="matchedOperator.rarity"
-                :size="68"
-                border
+              <img
+                class="operator-avatar-img operator-avatar-img--bordered"
+                :style="getOperatorAvatarStyle({ size: 68, mobileSize: 40, rarity: matchedOperator.rarity, bordered: true })"
+                :src="getOperatorAvatarUrl(matchedOperator.charId)"
+                alt=""
               />
               <div>
                 <div class="operator-name">{{ matchedOperator.name }}</div>
