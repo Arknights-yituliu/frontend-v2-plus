@@ -177,6 +177,27 @@ function getAutomationRuntimeContext({
   };
 }
 
+export function getRiicAutomaticPlanDiversityKey(plan) {
+  const groupId = plan.selections.at(-1)?.slot?.groupId;
+  return plan.selections
+    .filter((selection) => selection.slot?.groupId === groupId)
+    .map((selection) => [
+      selection.slot?.cohortId,
+      selection.selectionKey,
+      selection.option?.candidateKey,
+      [...(selection.option?.claimedOperatorIds || [])].sort().join(","),
+    ].join(":"))
+    .sort()
+    .join("|");
+}
+
+export function getRiicAutomaticPlanPriorOperatorIds(plan) {
+  const groupId = plan.selections.at(-1)?.slot?.groupId;
+  return plan.selections
+    .filter((selection) => selection.slot?.groupId !== groupId)
+    .flatMap((selection) => selection.option?.claimedOperatorIds || []);
+}
+
 export function getRiicAutomaticRoomGroupPlanningOrder(groups = []) {
   const orderById = new Map(
     groups.map((group, index) => [group.id, index]),
@@ -667,6 +688,8 @@ export function buildRiicAutomaticRoomGroupSelections({
     getOptionProtectionKeys: ({ option }) =>
       getActiveRosterProtectionKeys(option?.materializedCandidate),
     getPlanProtectionKeys: getActiveRosterPlanProtectionKeys,
+    getPlanDiversityKey: getRiicAutomaticPlanDiversityKey,
+    getPlanPriorOperatorIds: getRiicAutomaticPlanPriorOperatorIds,
     resolveTeamOptions: ({
       cohort,
       selectionKey,
