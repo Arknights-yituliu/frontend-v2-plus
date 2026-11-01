@@ -3,8 +3,7 @@
 // import RankBarContent from "./rankBarContent";
 import MaterialItem from "./materialItem";
 import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import SkillIcon from "/src/components/sprite/SkillIcon.vue";
-import { getEquipIconUrl } from "/src/utils/arknightsResource.js";
+import { getSkillIconUrl, getEquipIconUrl } from "/src/utils/arknightsResource.js";
 
 import { ref } from 'vue';
 import { detailData, detailTableData, costFormatter, percentFormatter } from '../js/table'
@@ -78,7 +77,8 @@ function getEquipIcon(typeIcon){
                 <td>
                   <div class="icon-container">
                     <OperatorAvatar :size="48" :mobile-size="40" :char-id="item.charId" v-if="item.iconType === 'operator'"></OperatorAvatar>
-                    <SkillIcon :size="50" :mobile-size="42" :icon="item.iconId" v-else-if="item.iconType === 'skill'"></SkillIcon>
+                    <img class="skill-icon-image" :src="getSkillIconUrl(item.iconId)" alt=""
+                         v-else-if="item.iconType === 'skill'">
                     <img class="equip-icon-image" :src="getEquipIconUrl(item.typeIcon)" alt="" v-else loading="lazy">
                   </div>
                 </td>
@@ -219,6 +219,14 @@ function getEquipIcon(typeIcon){
             vertical-align: middle;
             filter: drop-shadow(1px 1px 1px rgb(0, 0, 0));
           }
+
+          /* 技能图标：与原先组件 50px（内缩 4px）尺寸保持一致 */
+          .skill-icon-image {
+            width: 46px;
+            height: 46px;
+            vertical-align: middle;
+            object-fit: cover;
+          }
         }
       }
     
@@ -239,6 +247,12 @@ function getEquipIcon(typeIcon){
   .icon-container .equip-icon-image {
     width: 42px;
     height: 42px;
+  }
+
+  /* 手机端技能图标：与原先组件的 mobileSize 42（内缩 2px）保持一致 */
+  .icon-container .skill-icon-image {
+    width: 40px;
+    height: 40px;
   }
 }
 </style>
