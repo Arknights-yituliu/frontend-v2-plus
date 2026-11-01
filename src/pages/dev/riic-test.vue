@@ -58,13 +58,12 @@
                     :key="index"
                     class="operator-slot-row"
                   >
-                    <OperatorAvatar
+                    <img
                       v-if="slot.charId"
-                      :char-id="slot.charId"
-                      :rarity="getOperatorRarity(slot.charId)"
-                      :size="44"
-                      :mobile-size="40"
-                      border
+                      class="operator-avatar-img operator-avatar-img--bordered"
+                      :style="getOperatorAvatarStyle({ size: 44, mobileSize: 40, rarity: getOperatorRarity(slot.charId), bordered: true })"
+                      :src="getOperatorAvatarUrl(slot.charId)"
+                      alt=""
                     />
                     <div v-else class="operator-slot-avatar" aria-hidden="true">
                       <v-icon icon="mdi-account-outline" size="22"></v-icon>
@@ -255,13 +254,12 @@
                     :key="index"
                     class="operator-slot-row"
                   >
-                    <OperatorAvatar
+                    <img
                       v-if="slot.charId"
-                      :char-id="slot.charId"
-                      :rarity="getOperatorRarity(slot.charId)"
-                      :size="44"
-                      :mobile-size="40"
-                      border
+                      class="operator-avatar-img operator-avatar-img--bordered"
+                      :style="getOperatorAvatarStyle({ size: 44, mobileSize: 40, rarity: getOperatorRarity(slot.charId), bordered: true })"
+                      :src="getOperatorAvatarUrl(slot.charId)"
+                      alt=""
                     />
                     <div v-else class="operator-slot-avatar" aria-hidden="true">
                       <v-icon icon="mdi-account-outline" size="22"></v-icon>
@@ -466,7 +464,7 @@
 
 <script setup>
 import { computed, ref } from "vue";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "@/utils/arknightsResource.js";
 import droneImage from "@/assets/images/riic-schedule-preview/drone.png";
 import goldImage from "@/assets/images/riic-schedule-preview/gold.png";
 import lmdImage from "@/assets/images/riic-schedule-preview/lmd.png";

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import { operatorTableV2 } from "/src/utils/gameData.js";
 import operatorDataAPI from "/src/api/user-center/operatorData.js";
 import operatorProgressionStatisticsDataCache from "/src/plugins/indexedDB/operatorProgressionStatisticsData.js";
@@ -753,7 +753,9 @@ onMounted(() => {
             <div class="hero-ribbon-track" :class="{ 'is-reverse': ribbon.direction === 'reverse' }">
               <div v-for="copy in 2" :key="copy" class="hero-ribbon-copy">
                 <div v-for="operator in ribbon.operators" :key="`${copy}-${operator.charId}`" class="hero-ribbon-operator">
-                  <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="88" :mobile-size="64" :border="true" />
+                  <img class="operator-avatar-img operator-avatar-img--bordered"
+                       :style="getOperatorAvatarStyle({ size: 88, mobileSize: 64, rarity: operator.rarity, bordered: true })"
+                       :src="getOperatorAvatarUrl(operator.charId)" alt="">
                 </div>
               </div>
             </div>
@@ -804,15 +806,14 @@ onMounted(() => {
     <section v-else-if="pageStage === 'result'" class="result-page" :class="{ 'is-drawing': isDrawing, 'has-inline-detail': !isDrawing }" aria-label="推荐结果">
       <div v-if="isDrawing" class="result-page-loading" aria-live="polite">
         <div class="result-draw-avatars" aria-hidden="true">
-          <OperatorAvatar
+          <img
             v-for="operator in drawPreviewGroup?.operators || []"
             :key="operator.charId"
-            :char-id="operator.charId"
-            :rarity="operator.rarity"
-            :size="72"
-            :mobile-size="52"
-            :border="true"
-          />
+            class="operator-avatar-img operator-avatar-img--bordered"
+            :style="getOperatorAvatarStyle({ size: 72, mobileSize: 52, rarity: operator.rarity, bordered: true })"
+            :src="getOperatorAvatarUrl(operator.charId)"
+            alt=""
+          >
         </div>
         <strong class="result-draw-label">计算中</strong>
       </div>
@@ -841,7 +842,9 @@ onMounted(() => {
                             :title="operator.name"
                             :aria-label="operator.name"
                           >
-                            <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="26" :mobile-size="20" :border="true" />
+                            <img class="operator-avatar-img operator-avatar-img--bordered"
+                                 :style="getOperatorAvatarStyle({ size: 26, mobileSize: 20, rarity: operator.rarity, bordered: true })"
+                                 :src="getOperatorAvatarUrl(operator.charId)" alt="">
                           </span>
                           <span v-if="group.unownedOverflow" class="result-score-row-unowned-more"> +{{ group.unownedOverflow }} </span>
                         </div>
@@ -970,7 +973,9 @@ onMounted(() => {
                   @keydown.enter.prevent.self="toggleOperatorExpanded(operator)"
                   @keydown.space.prevent.self="toggleOperatorExpanded(operator)"
                 >
-                  <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="58" :mobile-size="46" :border="true" />
+                  <img class="operator-avatar-img operator-avatar-img--bordered"
+                       :style="getOperatorAvatarStyle({ size: 58, mobileSize: 46, rarity: operator.rarity, bordered: true })"
+                       :src="getOperatorAvatarUrl(operator.charId)" alt="">
                   <div class="operator-title">
                     <div class="operator-name-row">
                       <strong>{{ operator.name }}</strong>

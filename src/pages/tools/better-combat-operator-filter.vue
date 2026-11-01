@@ -1,7 +1,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from "vue";
 import { ElNotification } from "element-plus";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "@/utils/arknightsResource.js";
 import BetterCombatCriteriaDrawer from "@/components/tools/better-combat/BetterCombatCriteriaDrawer.vue";
 import CombatCalcDetail from "@/components/tools/better-combat/CombatCalcDetail.vue";
 import { htmlStringToVNode } from "@/utils/format.js";
@@ -1125,7 +1125,9 @@ const SENTINEL_INTERSECT = {
       <div class="bcf-grid" v-intersect="GRID_INTERSECT">
         <v-card v-for="card in committedOpCards" :key="'op-' + card.op.charId" class="bcf-card" variant="outlined" @click="openOperator(card.op, $event)">
           <div v-if="card.diamond" class="bcf-diamond" :title="card.tip"></div>
-          <OperatorAvatar :char-id="card.op.charId" :rarity="card.op.rarity" :size="64" :mobile-size="48" border />
+          <img class="operator-avatar-img operator-avatar-img--bordered"
+               :style="getOperatorAvatarStyle({ size: 64, mobileSize: 48, rarity: card.op.rarity, bordered: true })"
+               :src="getOperatorAvatarUrl(card.op.charId)" alt="">
           <div class="bcf-name">{{ card.op.name }}</div>
           <div class="bcf-stars">{{ "★".repeat(card.op.rarity || 1) }}</div>
           <div class="bcf-sub">{{ [card.op.class, card.op.branch].filter(Boolean).join("·") }}</div>
@@ -1144,7 +1146,10 @@ const SENTINEL_INTERSECT = {
           <div v-if="card.diamond" class="bcf-diamond" :title="card.tip"></div>
           <div class="bcf-combo-name">{{ card.combo.combo }}</div>
           <div class="bcf-providers">
-            <OperatorAvatar v-for="p in card.providers" :key="card.combo.combo + '-' + p.name" :char-id="p.charId" :size="36" :rarity="p.rarity" border />
+            <img v-for="p in card.providers" :key="card.combo.combo + '-' + p.name"
+                 class="operator-avatar-img operator-avatar-img--bordered"
+                 :style="getOperatorAvatarStyle({ size: 36, mobileSize: 40, rarity: p.rarity, bordered: true })"
+                 :src="getOperatorAvatarUrl(p.charId)" alt="">
           </div>
           <div class="bcf-sub">提供者 {{ (card.combo.providers || []).length }} 名 · 受益者 {{ (card.combo.beneficiaries || []).length }} 名</div>
           <div class="bcf-combo-note" v-html="card.remarkHtml"></div>
@@ -1170,7 +1175,9 @@ const SENTINEL_INTERSECT = {
           <div class="bcf-dialog-body">
             <template v-if="detail.type === 'op'">
               <div class="bcf-dialog-head">
-                <OperatorAvatar :char-id="detail.op.charId" :rarity="detail.op.rarity" :size="88" :mobile-size="64" border />
+                <img class="operator-avatar-img operator-avatar-img--bordered"
+                     :style="getOperatorAvatarStyle({ size: 88, mobileSize: 64, rarity: detail.op.rarity, bordered: true })"
+                     :src="getOperatorAvatarUrl(detail.op.charId)" alt="">
                 <div class="bcf-dialog-info">
                   <div class="bcf-dialog-name">
                     {{ detail.op.name }}
@@ -1235,7 +1242,9 @@ const SENTINEL_INTERSECT = {
               </div>
               <div v-for="(p, i) in detailComboProviders" :key="'prov-' + i" class="bcf-entry">
                 <div class="bcf-entry-head">
-                  <OperatorAvatar :char-id="providersCharId.get(p.operator) || ''" :rarity="providersRarity.get(p.operator) || 6" :size="32" border />
+                  <img class="operator-avatar-img operator-avatar-img--bordered"
+                       :style="getOperatorAvatarStyle({ size: 32, mobileSize: 40, rarity: providersRarity.get(p.operator) || 6, bordered: true })"
+                       :src="getOperatorAvatarUrl(providersCharId.get(p.operator) || '')" alt="">
                   <b>{{ p.operator }}</b>
                   <em v-if="memberRecTip(p.operator)" class="bcf-diamond bcf-diamond--inline" :title="memberRecTip(p.operator)"></em>
                 </div>

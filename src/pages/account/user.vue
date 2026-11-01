@@ -16,9 +16,9 @@
     <div v-show="userInfo.status>0">
         <v-menu v-model="accountMenu">
         <template v-slot:activator="{ props }">
-          <OperatorAvatar :char-id="userInfo.avatar" :size="44" :mobile-size="44"
-                          rounded v-bind="props">
-          </OperatorAvatar>
+          <img class="operator-avatar-img operator-avatar-img--rounded"
+               :style="getOperatorAvatarStyle({ size: 44, mobileSize: 44 })"
+               :src="getOperatorAvatarUrl(userInfo.avatar)" alt="" v-bind="props">
           <!--        <v-btn  ></v-btn>-->
         </template>
 
@@ -55,7 +55,7 @@
 import {onMounted, ref} from "vue";
 import {getUserInfo, userInfo} from "/src/api/backend/userSession.js";
 import {useRouter} from "vue-router";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import Login from "/src/pages/account/login.vue";
 import LogoutConfirmDialog from "/src/components/account/LogoutConfirmDialog.vue";
 
