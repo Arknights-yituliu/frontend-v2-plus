@@ -1,4 +1,34 @@
 {
+  "char_4170_hdbell": {
+    "updateTime": "2026/11/01 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "行铃"
+  },
+  "char_4245_alga": {
+    "updateTime": "2026/11/01 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "奥尔佳"
+  },
+  "char_4169_caledo": {
+    "updateTime": "2026/11/01 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "镜匠"
+  },
+  "char_4244_tocka": {
+    "updateTime": "2026/11/01 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "冻河"
+  },
+  "char_4246_dminon": {
+    "updateTime": "2026/11/01 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "国度"
+  },
+  "char_4247_oxi": {
+    "updateTime": "2026/11/01 12:00:00",
+    "obtainApproach": "常驻干员",
+    "name": "塔露拉"
+  },
   "char_4232_hbound": {
     "updateTime": "2026/10/09 12:00:00",
     "obtainApproach": "常驻干员",
