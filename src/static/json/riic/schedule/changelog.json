@@ -2,15 +2,15 @@
   "moduleVersions": {
     "layout": {
       "label": "布局模块",
-      "version": "v20261020.1130"
+      "version": "v20261101.1704"
     },
     "data": {
       "label": "数据模块",
-      "version": "v20261025.1958"
+      "version": "v20261101.1439"
     },
     "team": {
       "label": "班组模块",
-      "version": "v20261031.0948"
+      "version": "v20261101.2303"
     },
     "assembler": {
       "label": "组装器",
@@ -18,7 +18,7 @@
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20261025.1958"
+      "version": "v20261101.1439"
     },
     "recommendation": {
       "label": "调试信息",
@@ -26,6 +26,60 @@
     }
   },
   "entries": [
+    {
+      "date": "2026-11-01",
+      "version": "v20261101.2303",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 4,
+          "description": "优化自动排班搜索剪枝，保留当前房间组候选及前序已选干员组合的差异方案，减少高分完整路线因候选相似而被提前淘汰",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-01",
+      "version": "v20261101.1704",
+      "items": [
+        {
+          "module": "布局模块",
+          "type": "update",
+          "level": 2,
+          "description": "排班表生成器头像改用 COS 图片直连，统一保留桌面和移动端尺寸、稀有度描边及圆形样式",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2026-11-01",
+      "version": "v20261101.1439",
+      "items": [
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 3,
+          "description": "同步新干员基建技能与效率候选数据，并新增冻河、国度、行铃的培养建议",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 4,
+          "description": "修复未选择菲亚梅塔休整对象时仍触发自动休整，并误报宿舍无空位的问题",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-10-31",
       "version": "v20261031.0948",

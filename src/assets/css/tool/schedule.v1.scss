@@ -173,3 +173,66 @@
 
 
 
+
+/* 干员头像：原 OperatorAvatar 组件改为 COS 图片直连 */
+.operator-avatar-image {
+  display: inline-block;
+  vertical-align: middle;
+  object-fit: cover;
+  background-color: var(--c-background-color);
+  border-radius: 2px;
+
+  &.avatar-rounded {
+    border-radius: 100px;
+  }
+}
+
+.avatar-50 {
+  width: 50px;
+  height: 50px;
+}
+
+.avatar-60-m32 {
+  width: 60px;
+  height: 60px;
+}
+
+.avatar-28-m30 {
+  width: 28px;
+  height: 28px;
+}
+
+@media screen and (max-width: 600px) {
+  .avatar-50 {
+    width: 40px;
+    height: 40px;
+  }
+
+  .avatar-60-m32 {
+    width: 32px;
+    height: 32px;
+  }
+
+  .avatar-28-m30 {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* 恢复目标未设置时的占位：不显示空图片，改为文字提示 */
+.operator-avatar-empty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--c-border-color);
+  color: var(--c-text-color);
+  font-size: 12px;
+  cursor: pointer;
+  background-color: var(--c-background-color);
+  box-sizing: border-box;
+  opacity: 0.7;
+
+  &.avatar-rounded {
+    border-radius: 100px;
+  }
+}

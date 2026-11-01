@@ -11,6 +11,11 @@
 
     .operator-avatar-area {
       flex: 0 0 44px;
+
+      .operator-avatar-image {
+        width: 44px;
+        height: 44px;
+      }
     }
 
     .operator-info {
@@ -60,6 +65,11 @@
     .operator-skill-frame {
       width: 30px;
       height: 30px;
+
+      .operator-skill-icon {
+        width: 30px;
+        height: 30px;
+      }
     }
 
     .operator-skills-area,
@@ -93,6 +103,8 @@
 
     .equip-icon {
       left: 5px;
+      width: 20px;
+      height: 20px;
     }
 
     .equip-rank-icon {

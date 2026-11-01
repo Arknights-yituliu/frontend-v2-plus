@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "id": "char_4245_alga",
+  "name": "奥尔佳",
+  "rarity": 5,
+  "chains": [
+    {
+      "slot": 1,
+      "room": "meeting",
+      "stages": [
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 0
+          },
+          "name": "外交禀赋",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "unlock": {
+            "type": "elite",
+            "value": 2
+          },
+          "name": "群策群力",
+          "effects": [
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 10
+            },
+            {
+              "target": "meeting",
+              "stat": "clueSpeed",
+              "value": 20,
+              "condition": {
+                "type": "opGroupInFacility",
+                "group": "cc.g.ussg",
+                "facility": "same",
+                "other": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

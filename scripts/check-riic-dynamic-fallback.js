@@ -21,6 +21,8 @@ try {
   } = await vite.ssrLoadModule("/src/utils/riic/l70-selection-planner.js");
   const {
     buildRiicAutomaticRoomGroupSelections,
+    getRiicAutomaticPlanDiversityKey,
+    getRiicAutomaticPlanPriorOperatorIds,
   } = await vite.ssrLoadModule("/src/utils/riic/l70-automatic-room-selection.js");
   const {
     buildRiicTailFillResult,
@@ -1598,6 +1600,126 @@ assert.deepEqual(
     ?.selections.map((selection) => selection.candidateKey),
   ["first-low", "second-bonus"],
 );
+
+const rosterDiversityPlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: [
+    {
+      key: "trade", groupId: "trade", cohortId: "trade",
+      cohortKey: "trade", teamCount: 1,
+    },
+    {
+      key: "gold", groupId: "gold", cohortId: "gold",
+      cohortKey: "gold", teamCount: 3,
+    },
+  ],
+  beamLimit: 6,
+  optionLimit: 6,
+  representativeLimit: 6,
+  selectionBatchSize: 2,
+  getPlanDiversityKey: getRiicAutomaticPlanDiversityKey,
+  getPlanPriorOperatorIds: getRiicAutomaticPlanPriorOperatorIds,
+  resolveTeamOptions: ({ cohort, selectedCandidateKeys, claimedOperatorIds }) => {
+    if (cohort.groupId === "trade") {
+      return Array.from({ length: 6 }, (_, index) => ({
+        key: `trade-${index}`,
+        candidateKey: `trade-${index}`,
+        claimedOperatorIds: [`trade-${index}`],
+        rankingValue: 100,
+      }));
+    }
+    if (selectedCandidateKeys.length === 0) {
+      return [
+        {
+          key: "qingliu-ordinary", candidateKey: "qingliu-ordinary",
+          claimedOperatorIds: ["qingliu", "waaifu", "minimalist"],
+          rankingValue: 140,
+        },
+        {
+          key: "qingliu-automation", candidateKey: "qingliu-automation",
+          claimedOperatorIds: ["qingliu", "weedy", "winter"],
+          rankingValue: 135,
+        },
+      ];
+    }
+    if (selectedCandidateKeys.length === 1) {
+      return [{
+        key: "gold-middle", candidateKey: "gold-middle",
+        claimedOperatorIds: ["gold-middle"], rankingValue: 100,
+      }];
+    }
+    return [{
+      key: "gold-last", candidateKey: "gold-last", claimedOperatorIds: [],
+      rankingValue: claimedOperatorIds.has("waaifu") ? 50 : 80,
+    }];
+  },
+});
+assert.equal(rosterDiversityPlan.complete, true);
+assert.equal(rosterDiversityPlan.bestPlan.rankingValue, 415);
+assert.ok(
+  rosterDiversityPlan.bestPlan.selections.some(
+    (selection) => selection.option.candidateKey === "qingliu-automation",
+  ),
+);
+
+const priorRosterDiversityPlan = planRiicAutomaticRoomSelections({
+  selectionCohorts: ["trade", "gold", "power", "office"].map((id) => ({
+    key: id,
+    groupId: id,
+    cohortId: id,
+    cohortKey: id,
+    teamCount: 1,
+  })),
+  beamLimit: 6,
+  optionLimit: 6,
+  representativeLimit: 6,
+  selectionBatchSize: 2,
+  getPlanDiversityKey: getRiicAutomaticPlanDiversityKey,
+  getPlanPriorOperatorIds: getRiicAutomaticPlanPriorOperatorIds,
+  resolveTeamOptions: ({ cohort }) => {
+    if (cohort.groupId === "trade") {
+      return Array.from({ length: 6 }, (_, index) => ({
+        key: `trade-${index}`,
+        candidateKey: `trade-${index}`,
+        claimedOperatorIds: [index === 5 ? "backup" : "important", `trade-${index}`],
+        rankingValue: 105 - index,
+      }));
+    }
+    if (cohort.groupId === "gold") {
+      return ["high", "low"].map((id, index) => ({
+        key: id,
+        candidateKey: id,
+        claimedOperatorIds: [],
+        rankingValue: 100 - index * 10,
+      }));
+    }
+    if (cohort.groupId === "power") {
+      return [
+        {
+          key: "power-important",
+          candidateKey: "power-important",
+          claimedOperatorIds: ["important"],
+          rankingValue: 100,
+        },
+        {
+          key: "power-backup",
+          candidateKey: "power-backup",
+          claimedOperatorIds: ["power-backup"],
+          rankingValue: 0,
+        },
+      ];
+    }
+    return [{
+      key: "office",
+      candidateKey: "office",
+      claimedOperatorIds: ["office"],
+      rankingValue: 0,
+    }];
+  },
+});
+assert.equal(priorRosterDiversityPlan.complete, true);
+assert.equal(priorRosterDiversityPlan.bestPlan.rankingValue, 300);
+assert.equal(priorRosterDiversityPlan.bestPlan.selections[0].option.candidateKey, "trade-5");
+assert.equal(priorRosterDiversityPlan.bestPlan.selections[2].option.candidateKey, "power-important");
 
 const diverseRoutePlan = planRiicAutomaticRoomSelections({
   selectionCohorts: [

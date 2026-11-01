@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 
 import operatorDataAPI from '/src/api/user-center/operatorData.js'
 import { listOperatorZootMatcherStageInfo, searchOperatorZootMatcherJobs } from '/src/api/maa/operatorZootMatcher.js'
-import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from '/src/utils/arknightsResource.js'
 import { operatorTableV2 } from '/src/utils/gameData.js'
 import { createMessage } from '/src/utils/message.js'
 import { buildOwnedOperatorLookup, normalizeOperatorName, resolveOperatorZootMatcherJobs } from '/src/utils/operatorZootMatcher.js'
@@ -2641,7 +2641,9 @@ onMounted(async () => {
             :key="operator.charId || operator.name"
             class="operator-dialog-item"
           >
-            <OperatorAvatar :char-id="operator.charId" :rarity="getOperatorDisplayRarity(operator)" :border="true" :size="44" :mobile-size="40"></OperatorAvatar>
+            <img class="operator-avatar-img operator-avatar-img--bordered"
+                 :style="getOperatorAvatarStyle({ size: 44, mobileSize: 40, rarity: getOperatorDisplayRarity(operator), bordered: true })"
+                 :src="getOperatorAvatarUrl(operator.charId)" alt="">
             <div class="operator-dialog-copy">
               <span class="operator-dialog-name">{{ operator.name }}</span>
               <span class="operator-dialog-meta">{{ getOperatorDialogMeta(operator) }}</span>

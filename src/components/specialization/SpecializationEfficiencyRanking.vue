@@ -1,7 +1,7 @@
 <script setup>
 import {computed, onMounted, ref} from "vue";
 import maxEfficiency from "@/static/json/build/maximum_efficiency.json";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "@/utils/arknightsResource.js";
 import SpecializationFilter from "@/components/specialization/SpecializationFilter.vue";
 import {calculateEfficiency, getEfficiencyExplanation} from "@/utils/specializationEfficiencyCalculator";
 
@@ -267,7 +267,9 @@ const getSpecialEffectInfo = (operator) => {
         <el-table-column fixed="left" label="干员" width="170">
           <template #default="scope">
             <div class="flex align-center">
-              <OperatorAvatar v-if="scope.row.charId" :char-id="scope.row.charId" :size="50" rounded/>
+              <img v-if="scope.row.charId" class="operator-avatar-img operator-avatar-img--rounded"
+                   :style="getOperatorAvatarStyle({ size: 50, mobileSize: 40 })"
+                   :src="getOperatorAvatarUrl(scope.row.charId)" alt=""/>
               <span class="ml-2">{{ scope.row.name }}</span>
             </div>
           </template>

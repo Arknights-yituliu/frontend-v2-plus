@@ -53,9 +53,18 @@ function normalizeProtectionKeys(value) {
   ];
 }
 
-function pruneNextBeamPlans(nextPlans, beamLimit, getPlanProtectionKeys) {
+function pruneNextBeamPlans(
+  nextPlans,
+  beamLimit,
+  getPlanProtectionKeys,
+  getPlanDiversityKey,
+  getPlanPriorOperatorIds,
+) {
   const sortedPlans = [...nextPlans].sort(comparePlans);
-  if (typeof getPlanProtectionKeys !== "function") {
+  if (
+    typeof getPlanProtectionKeys !== "function" &&
+    typeof getPlanDiversityKey !== "function"
+  ) {
     return sortedPlans.slice(0, beamLimit);
   }
 
@@ -64,7 +73,7 @@ function pruneNextBeamPlans(nextPlans, beamLimit, getPlanProtectionKeys) {
   const protectedPlanByKey = new Map();
   for (const plan of sortedPlans) {
     for (const protectionKey of normalizeProtectionKeys(
-      getPlanProtectionKeys(plan),
+      getPlanProtectionKeys?.(plan),
     )) {
       if (!protectedPlanByKey.has(protectionKey)) {
         protectedPlanByKey.set(protectionKey, plan);
@@ -81,6 +90,81 @@ function pruneNextBeamPlans(nextPlans, beamLimit, getPlanProtectionKeys) {
     }
     selectedPlans.push(plan);
     selectedPlanKeys.add(plan.key);
+  }
+
+  if (typeof getPlanDiversityKey === "function") {
+    // Reserve space for both current-group and earlier roster differences.
+    const diversityKeys = new Set();
+    const eliteCount = Math.ceil(beamLimit / 2);
+    for (const plan of sortedPlans) {
+      if (selectedPlans.length >= eliteCount) {
+        break;
+      }
+      if (!selectedPlanKeys.has(plan.key)) {
+        selectedPlans.push(plan);
+        selectedPlanKeys.add(plan.key);
+      }
+    }
+    for (const plan of selectedPlans) {
+      diversityKeys.add(getPlanDiversityKey(plan));
+    }
+    const currentGroupLimit =
+      typeof getPlanPriorOperatorIds === "function"
+        ? selectedPlans.length + Math.ceil((beamLimit - selectedPlans.length) / 2)
+        : beamLimit;
+    for (const plan of sortedPlans) {
+      if (selectedPlans.length >= currentGroupLimit) {
+        break;
+      }
+      const diversityKey = getPlanDiversityKey(plan);
+      if (selectedPlanKeys.has(plan.key) || diversityKeys.has(diversityKey)) {
+        continue;
+      }
+      selectedPlans.push(plan);
+      selectedPlanKeys.add(plan.key);
+      diversityKeys.add(diversityKey);
+    }
+
+    if (
+      typeof getPlanPriorOperatorIds === "function" &&
+      selectedPlans.length < beamLimit
+    ) {
+      const priorOperatorsByPlan = new Map(
+        sortedPlans.map((plan) => [plan.key, new Set(getPlanPriorOperatorIds(plan))]),
+      );
+      while (selectedPlans.length < beamLimit) {
+        let mostDistinctPlan = null;
+        let largestDistance = 0;
+        for (const plan of sortedPlans) {
+          if (selectedPlanKeys.has(plan.key)) {
+            continue;
+          }
+          const operators = priorOperatorsByPlan.get(plan.key);
+          // Compare against the closest retained roster; score order breaks ties.
+          const distance = Math.min(
+            ...selectedPlans.map((selectedPlan) => {
+              const selectedOperators = priorOperatorsByPlan.get(selectedPlan.key);
+              let difference = operators.size + selectedOperators.size;
+              for (const id of operators) {
+                if (selectedOperators.has(id)) {
+                  difference -= 2;
+                }
+              }
+              return difference;
+            }),
+          );
+          if (distance > largestDistance) {
+            mostDistinctPlan = plan;
+            largestDistance = distance;
+          }
+        }
+        if (!mostDistinctPlan) {
+          break;
+        }
+        selectedPlans.push(mostDistinctPlan);
+        selectedPlanKeys.add(mostDistinctPlan.key);
+      }
+    }
   }
 
   for (const plan of sortedPlans) {
@@ -401,6 +485,8 @@ export function planRiicAutomaticRoomSelections({
   getOptionDiversityKey,
   getOptionProtectionKeys,
   getPlanProtectionKeys,
+  getPlanDiversityKey,
+  getPlanPriorOperatorIds,
   resolveTeamOptions,
   evaluatePlan,
   collectDebug = false,
@@ -615,6 +701,8 @@ export function planRiicAutomaticRoomSelections({
             rankedNextPlans,
             normalizedBeamLimit,
             getPlanProtectionKeys,
+            getPlanDiversityKey,
+            getPlanPriorOperatorIds,
           )
         : rankedNextPlans;
       batchStages.push({

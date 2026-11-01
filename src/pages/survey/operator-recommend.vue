@@ -6,9 +6,7 @@ import {operatorRecommend} from "/src/utils/survey/operatorRecommend";
 import {operatorTableV2} from "/src/utils/gameData.js";
 import deepClone from "/src/utils/deepClone.js";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
-import SkillIcon from "@/components/sprite/SkillIcon.vue";
-import EquipIcon from "/src/components/sprite/EquipIcon.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle, getSkillIconUrl, getEquipIconUrl } from "/src/utils/arknightsResource.js";
 import {formatNumber} from "/src/utils/format.js";
 
 import "/src/assets/css/survey/operator.scss";
@@ -110,14 +108,16 @@ onMounted(() => {
           <template v-slot:item="{ item }">
             <tr>
               <td>
-                <OperatorAvatar :size="50" :mobile-size="50" :border="true" :char-id="item.charId"></OperatorAvatar>
+                <img class="operator-avatar-img operator-avatar-img--bordered"
+                     :style="getOperatorAvatarStyle({ size: 50, mobileSize: 50, rarity: item.rarity, bordered: true })"
+                     :src="getOperatorAvatarUrl(item.charId)" alt="">
               </td>
               <td>
-                <SkillIcon :icon="item.info.iconId" size="40" mobile-size="40" v-show="item.info.type==='skill'">
-                </SkillIcon>
+                <img class="operator-skill-image" :src="getSkillIconUrl(item.info.iconId)" alt=""
+                     v-show="item.info.type==='skill'">
                 <div class="operator-equip-group" v-show="item.info.type==='equip'">
                   <div class="operator-equip">
-                    <EquipIcon :icon="item.info.iconId" mobile-size="30" size="30" class="block m-a"></EquipIcon>
+                    <img class="operator-equip-icon" :src="getEquipIconUrl(item.info.iconId)" alt="" loading="lazy">
                     <div class="equip-name">{{ item.info.iconId }}</div>
                   </div>
                 </div>

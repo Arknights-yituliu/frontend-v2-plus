@@ -65,9 +65,12 @@
   .operator-avatar-area {
     flex: 0 0 56px;
 
-    > div,
-    > div > div {
+    .operator-avatar-image {
+      display: block;
+      width: 56px;
+      height: 56px;
       border-radius: 2px;
+      object-fit: cover;
     }
   }
 
@@ -155,6 +158,14 @@
     border: 1px solid rgba(72, 78, 88, 0.58);
     border-radius: 4px;
     background-color: rgba(255, 255, 255, 0.24);
+
+    .operator-skill-icon {
+      display: block;
+      width: 40px;
+      height: 40px;
+      border-radius: 3px;
+      object-fit: cover;
+    }
   }
 
   .operator-skill-frame-recommended {
@@ -222,6 +233,9 @@
     position: absolute;
     top: 0;
     left: 7px;
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(1px 1px 1px rgb(0, 0, 0));
   }
 
   .equip-rank-icon {

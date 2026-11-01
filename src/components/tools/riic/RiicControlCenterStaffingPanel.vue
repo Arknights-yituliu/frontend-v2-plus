@@ -1,6 +1,9 @@
 <script setup>
 import { computed, ref, watch } from "vue";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import {
+  getOperatorAvatarStyle,
+  getOperatorAvatarUrl,
+} from "/src/utils/arknightsResource.js";
 import { formatRiicOperatorTooltip } from "/src/utils/riic/riic-operator-skill-tooltip.js";
 
 const props = defineProps({
@@ -883,13 +886,12 @@ function saveDraft() {
                   })
                 "
               >
-                <OperatorAvatar
-                  :char-id="operator.charId"
-                  :rarity="operatorTable?.[operator.charId]?.rarity || 1"
-                  :size="34"
-                  :mobile-size="32"
-                  border
-                ></OperatorAvatar>
+                <img
+                  class="operator-avatar-img operator-avatar-img--bordered"
+                  :style="getOperatorAvatarStyle({ size: 34, mobileSize: 32, rarity: operatorTable?.[operator.charId]?.rarity || 1, bordered: true })"
+                  :src="getOperatorAvatarUrl(operator.charId)"
+                  alt=""
+                />
                 <span>
                   <strong>{{ operator.name }}</strong>
                   <small>
@@ -971,13 +973,12 @@ function saveDraft() {
                 :title="getSkillTooltip(operator)"
                 @click="addOperatorToActiveTeam(operator.charId)"
               >
-                <OperatorAvatar
-                  :char-id="operator.charId"
-                  :rarity="operatorTable?.[operator.charId]?.rarity || 1"
-                  :size="34"
-                  :mobile-size="32"
-                  border
-                ></OperatorAvatar>
+                <img
+                  class="operator-avatar-img operator-avatar-img--bordered"
+                  :style="getOperatorAvatarStyle({ size: 34, mobileSize: 32, rarity: operatorTable?.[operator.charId]?.rarity || 1, bordered: true })"
+                  :src="getOperatorAvatarUrl(operator.charId)"
+                  alt=""
+                />
                 <span class="control-center-candidate-copy">
                   <strong>{{ operator.name }}</strong>
                   <small v-if="operator.controlCenterRoomEffectLabel">

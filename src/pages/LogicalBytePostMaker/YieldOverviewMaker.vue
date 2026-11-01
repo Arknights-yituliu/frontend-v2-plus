@@ -2,8 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import ItemImage from '/src/components/sprite/ItemImage.vue'
-import OperatorAvatar from '/src/components/sprite/OperatorAvatar.vue'
-import SkillIcon from '/src/components/sprite/SkillIcon.vue'
+import { getOperatorAvatarUrl, getOperatorAvatarStyle, getSkillIconUrl } from '/src/utils/arknightsResource.js'
 import {operatorTableV2} from '/src/utils/gameData.js'
 import fallbackItemInfo from '/src/static/json/material/item_info.json'
 import itemCache from '/src/plugins/indexedDB/itemCache.js'
@@ -860,11 +859,11 @@ onBeforeUnmount(() => {
         >
           <header class="preview-header">
             <div class="operator-identity">
-              <OperatorAvatar
-                :char-id="matchedOperator.charId"
-                :rarity="matchedOperator.rarity"
-                :size="68"
-                border
+              <img
+                class="operator-avatar-img operator-avatar-img--bordered"
+                :style="getOperatorAvatarStyle({ size: 68, mobileSize: 40, rarity: matchedOperator.rarity, bordered: true })"
+                :src="getOperatorAvatarUrl(matchedOperator.charId)"
+                alt=""
               />
               <div>
                 <div class="operator-name">{{ matchedOperator.name }}</div>
@@ -927,12 +926,12 @@ onBeforeUnmount(() => {
                         src="/image/survey/rank/elite2.png"
                         alt=""
                       >
-                      <SkillIcon
+                      <img
                         v-else-if="row.skillIcon"
-                        :icon="row.skillIcon"
-                        :size="58"
-                        border
-                      />
+                        class="skill-icon-image"
+                        :src="getSkillIconUrl(row.skillIcon)"
+                        alt=""
+                      >
                       <div v-else class="skill-icon-placeholder"></div>
                     </td>
                     <td class="row-title-cell">
@@ -1405,6 +1404,25 @@ onBeforeUnmount(() => {
 .skill-icon-placeholder {
   width: 58px;
   height: 58px;
+}
+
+/* 技能图标：与原先组件 58px（含 2px 蓝色边框）尺寸保持一致 */
+.skill-icon-image {
+  display: block;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  border: 2px solid rgb(33, 150, 243);
+  border-radius: 4px;
+}
+
+@media screen and (max-width: 600px) {
+  .skill-icon-image {
+    width: 40px;
+    height: 40px;
+    border-width: 1px;
+  }
 }
 
 .elite2-icon {

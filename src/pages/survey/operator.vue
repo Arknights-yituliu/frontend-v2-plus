@@ -31,13 +31,11 @@ import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/ope
 // ===== 页面内组件 =====
 import OperatorStatisticalTable from "/src/components/survey/OperatorStatisticalTable.vue";
 import deepClone from "/src/utils/deepClone.js";
-import EquipIcon from "/src/components/sprite/EquipIcon.vue";
 import OperatorBar from "/src/components/survey/OperatorBar.vue";
 import OperatorEditBar from "/src/components/survey/OperatorEditBar.vue";
 import ImportCommonQuestions from "/src/components/survey/ImportCommonQuestions.vue";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getSkillIconUrl, getEquipIconUrl } from "/src/utils/arknightsResource.js";
 import {formatNumber} from "/src/utils/format.js";
-import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
@@ -2063,12 +2061,10 @@ onBeforeUnmount(() => {
     <v-dialog v-model="operatorsStatisticsDetailDialog" max-width="500">
       <v-card>
         <div class="operator-detail-dialog-title">
-          <OperatorAvatar
-              :char-id="operatorsStatisticsDetailOperator.charId"
-              :size="40"
-              :mobile-size="36"
-              :border="true"
-          ></OperatorAvatar>
+          <div class="operator-detail-dialog-avatar">
+            <img :src="getOperatorAvatarUrl(operatorsStatisticsDetailOperator.charId)"
+                 :alt="operatorsStatisticsDetailOperator.name" loading="lazy">
+          </div>
           <div class="operator-detail-dialog-copy">
             <div class="operator-detail-dialog-name">{{ operatorsStatisticsDetailOperator.name }}</div>
             <div class="operator-detail-dialog-desc">表中数值为全服平均练度，蓝色高亮为博士当前练度</div>
@@ -2087,8 +2083,11 @@ onBeforeUnmount(() => {
                 <td class="operator-detail-item-cell">
                   <div class="operator-detail-item">
                     <div class="operator-detail-item-icon">
-                      <EquipIcon :icon="item.iconId" :size="34" v-show="item.type==='equip'"></EquipIcon>
-                      <SkillIcon size="36" :mobile-size="32" :border="true" :icon="`${item.iconId}`" v-show="item.type==='skill'"></SkillIcon>
+                      <img class="operator-detail-equip-icon" :src="getEquipIconUrl(item.iconId)"
+                           alt="" loading="lazy" v-show="item.type==='equip'">
+                      <div class="operator-detail-skill-icon" v-show="item.type==='skill'">
+                        <img :src="getSkillIconUrl(item.iconId)" alt="" loading="lazy">
+                      </div>
                     </div>
                     <div class="operator-detail-item-label">{{ item.label }}</div>
                   </div>

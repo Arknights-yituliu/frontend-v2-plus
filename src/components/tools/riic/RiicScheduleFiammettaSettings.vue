@@ -1,6 +1,9 @@
 <script setup>
 import { computed, ref, watch } from "vue";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import {
+  getOperatorAvatarStyle,
+  getOperatorAvatarUrl,
+} from "/src/utils/arknightsResource.js";
 
 const CUSTOM_TARGET_VALUE = "__custom__";
 
@@ -89,13 +92,12 @@ function confirmCustomTarget() {
 <template>
   <section class="schedule-fiammetta-settings">
     <div class="schedule-fiammetta-main">
-      <OperatorAvatar
-        class="schedule-fiammetta-avatar"
-        char-id="char_300_phenxi"
-        :size="34"
-        :mobile-size="34"
-        :border="true"
-      ></OperatorAvatar>
+      <img
+        class="operator-avatar-img operator-avatar-img--bordered schedule-fiammetta-avatar"
+        :style="getOperatorAvatarStyle({ size: 34, mobileSize: 34, bordered: true })"
+        :src="getOperatorAvatarUrl('char_300_phenxi')"
+        alt=""
+      />
       <span class="schedule-fiammetta-question">要我替你休息吗？</span>
       <div class="schedule-fiammetta-choice">
         <button
