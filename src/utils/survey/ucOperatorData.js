@@ -6,7 +6,7 @@
  * - 保存：POST /oauth2/ak-accounts/operators/save
  *
  * UC 与前端字段名不同，读写两侧在此集中对齐：
- * charId↔id、elite↔evolvePhase、mainSkill↔mainSkillLevel、
+ * charId↔id、own↔owned、elite↔evolvePhase、mainSkill↔mainSkillLevel、
  * modX/Y/D/A/B↔equipX/Y/D/A/B，potential 与 potentialRank 同值传递
  */
 
@@ -20,6 +20,7 @@ function buildUcOperatorSavePayload(warehouseData) {
     playerInfo: {akUid: String(warehouseData?.uid ?? "")},
     operators: (warehouseData?.operatorDataList || []).map((operator) => ({
       id: operator.charId,
+      owned: operator.own ? 1 : 0,
       rarity: operator.rarity,
       level: operator.level,
       evolvePhase: operator.elite,

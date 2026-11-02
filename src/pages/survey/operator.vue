@@ -1381,10 +1381,10 @@ function toggleOperatorViewMode() {
 }
 
 /**
- * 保存手动版修改：只提交本次变更过的干员
+ * 全量上传手动版数据：提交当前列表中的全部干员
  */
 async function saveManualOperatorData() {
-  if (manualSaving.value || manualDirtyCount.value === 0) {
+  if (manualSaving.value || operatorList.value.length === 0) {
     return
   }
 
@@ -1393,8 +1393,7 @@ async function saveManualOperatorData() {
     return
   }
 
-  const dirtyCharIds = manualDirtyCharIds.value
-  const operators = operatorList.value.filter((operator) => dirtyCharIds.has(operator.charId))
+  const operators = operatorList.value
   manualSaving.value = true
   try {
     const result = await saveManualOperators(buildManualOperatorSavePayload(operators))
@@ -1404,7 +1403,7 @@ async function saveManualOperatorData() {
     manualDirtyCharIds.value.clear()
     createMessage({
       type: 'success',
-      text: `手动版已保存：新增 ${createdCount} 条，更新 ${updatedCount} 条，未变更 ${unchangedCount} 条`
+      text: `手动版已全量上传：新增 ${createdCount} 条，更新 ${updatedCount} 条，未变更 ${unchangedCount} 条`
     })
   } catch (error) {
     console.error(error)
@@ -1753,14 +1752,16 @@ onBeforeUnmount(() => {
               color="primary"
               variant="outlined"
               :loading="manualSaving"
-              :disabled="manualDirtyCount === 0"
+              :disabled="operatorList.length === 0"
               @click="saveManualOperatorData()"
             >
               <v-icon class="operator-import-action-icon">mdi-cloud-upload</v-icon>
               <span class="operator-import-action-copy">
                 <span class="operator-import-action-title">上传</span>
                 <span class="operator-import-action-desc">
-                  {{ manualDirtyCount > 0 ? `保存本次修改（待上传 ${manualDirtyCount} 名干员）` : '修改等级或持有状态后可上传' }}
+                  {{ manualDirtyCount > 0
+                    ? `全量上传（当前待上传修改 ${manualDirtyCount} 名，共 ${operatorList.length} 名干员）`
+                    : `全量上传当前 ${operatorList.length} 名干员` }}
                 </span>
               </span>
             </v-btn>
