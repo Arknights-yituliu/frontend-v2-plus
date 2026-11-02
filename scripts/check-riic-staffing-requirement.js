@@ -186,6 +186,20 @@ const maaMeetingRequirement = getRiicRoomGroupStaffingRequirement({
   shiftMode: "twice",
   twoShiftRotationMode: "maa",
 });
+
+const rotatingRecycleRequirement = getRiicRoomGroupStaffingRequirement({
+  roomType: "recycle",
+  stations: [{ stationLevel: 3, slotCount: 2 }],
+  shiftMode: "threeTimes",
+});
+assert.equal(rotatingRecycleRequirement.cohorts[0].selectionMode, "individual");
+assert.equal(rotatingRecycleRequirement.cohorts[0].operatorCount, 3);
+assert.deepEqual(
+  rotatingRecycleRequirement.cohorts[0].rotationSegments.map(
+    (segment) => segment.assignments[0].candidateIndexes,
+  ),
+  [[0, 1], [1, 2], [2, 0]],
+);
 assert.equal(maaMeetingRequirement.cohorts[0].selectionMode, "individual");
 assert.equal(maaMeetingRequirement.cohorts[0].teamCount, 4);
 assert.equal(maaMeetingRequirement.cohorts[0].operatorCount, 4);

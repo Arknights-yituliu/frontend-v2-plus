@@ -702,14 +702,15 @@ function getAutomationSupportState({ rooms, profilesById } = {}) {
   const powerPlantCount = (rooms || []).filter(
     (room) => room.facility === "power",
   ).length;
-  const supportOperatorActive = (rooms || []).some(
-    (room) =>
-      room.facility === "power" &&
-      room.operators.some(
-        (operator) =>
-          operator.charId === AUTOMATION_POWER_SUPPORT_OPERATOR_ID &&
-          Number(profilesById.get(operator.charId)?.elite) >= 2,
-      ),
+  const supportRoom = (rooms || []).find(
+    (room) => room.facility === "power" && room.operators.some(
+      (operator) => operator.charId === AUTOMATION_POWER_SUPPORT_OPERATOR_ID &&
+        Number(profilesById.get(operator.charId)?.elite) >= 2,
+    ),
+  );
+  const supportOperatorActive = Boolean(supportRoom) && !(rooms || []).some(
+    (room) => room.facility === "power" && room !== supportRoom &&
+      room.operators.some((operator) => (operator.tags || []).includes("work-platform")),
   );
   const facilityCountAdjustments = [
     ...(supportOperatorActive

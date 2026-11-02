@@ -5,7 +5,7 @@ import {
   planRiicAutomaticRoomSelections,
 } from "./l70-selection-planner.js";
 import {
-  getRiicRuntimeCandidateRankingValue,
+  getRiicRuntimeCandidateContributionBreakdown,
 } from "./l60-candidate-ranking.js";
 import {
   materializeRiicRoomTeamCandidate,
@@ -24,6 +24,7 @@ import {
   RIIC_ACTIVE_ROSTER_RUNTIME_RULES,
   riicActiveRosterScopeMatches,
 } from "./riic-active-roster-rule-data.js";
+import { getRiicReservedDormitorySupportOperatorIds } from "./l30-rules.js";
 
 const AUTOMATION_POWER_SUPPORT_OPERATOR_ID = "char_1027_greyy2";
 
@@ -211,6 +212,26 @@ export function getRiicAutomaticRoomGroupPlanningOrder(groups = []) {
   );
 }
 
+function getRiicCandidateDurationWeightedValue({
+  totalContributionPercent,
+  activeStateIndexes = [],
+  staffingRotationSegments = [],
+} = {}) {
+  const cycleHours = staffingRotationSegments.reduce(
+    (total, segment) => total + Math.max(0, Number(segment?.durationHours) || 0),
+    0,
+  );
+  const activeHours = staffingRotationSegments.reduce(
+    (total, segment) => total + (
+      activeStateIndexes.includes(segment?.index)
+        ? Math.max(0, Number(segment?.durationHours) || 0)
+        : 0
+    ),
+    0,
+  );
+  return cycleHours > 0 ? totalContributionPercent * activeHours / cycleHours : 0;
+}
+
 function getAutomaticRoomTeamOptions({
   candidate,
   selectionKey,
@@ -229,6 +250,7 @@ function getAutomaticRoomTeamOptions({
   facility,
   automationRuntimeContext,
   reservedPowerOperatorId = "",
+  reservedDormitoryOperatorIds = [],
   idleFillOperators = [],
   fallbackPlanCache,
   onFallbackPlanCache,
@@ -285,7 +307,7 @@ function getAutomaticRoomTeamOptions({
     return [];
   }
 
-  const excludedOperatorIds = new Set(coreOperatorIds);
+  const excludedOperatorIds = new Set([...coreOperatorIds, ...reservedDormitoryOperatorIds]);
   if (reserveOperatorForPower) {
     excludedOperatorIds.add(reservedPowerOperatorId);
   }
@@ -379,9 +401,8 @@ function getAutomaticRoomTeamOptions({
       candidate: materializedCandidate,
       activeOperatorIds: activeSelectionOperatorIds,
     });
-    const baseRankingValue =
-      getRiicRuntimeCandidateRankingValue(materializedCandidate) +
-      Number(activeRosterPriority.roomPriority || 0);
+    const contribution = getRiicRuntimeCandidateContributionBreakdown(materializedCandidate);
+    const baseRankingValue = contribution.rankingValue + Number(activeRosterPriority.roomPriority || 0);
 
     return [
       {
@@ -407,6 +428,10 @@ function getAutomaticRoomTeamOptions({
         activeRosterPriority,
         baseRankingValue,
         rankingValue: baseRankingValue,
+        durationWeightedValue: getRiicCandidateDurationWeightedValue({
+          totalContributionPercent: contribution.totalContributionPercent,
+          activeStateIndexes, staffingRotationSegments,
+        }),
         unmetUpgradeRequirementCount: (
           materializedCandidate?.upgradeRequirements || []
         ).length,
@@ -667,6 +692,20 @@ export function buildRiicAutomaticRoomGroupSelections({
   const fallbackPlanCache = createRiicFallbackPlanCache({
     idleFillOperators,
   });
+  const dormitoryReservationCache = new Map();
+  const getDormitoryReservations = (entries) => {
+    const key = JSON.stringify(entries.flatMap((entry) =>
+      (entry.candidate?.operatorIds || []).map((operatorId) =>
+        `${entry.scope?.roomType || ""}:${operatorId}`,
+      ),
+    ).sort());
+    if (!dormitoryReservationCache.has(key)) {
+      dormitoryReservationCache.set(key, getRiicReservedDormitorySupportOperatorIds({
+        selectedEntries: entries, ownedOperators, layoutData,
+      }));
+    }
+    return dormitoryReservationCache.get(key);
+  };
   const {
     bestPlan,
     complete: bestPlanIsComplete,
@@ -719,6 +758,7 @@ export function buildRiicAutomaticRoomGroupSelections({
           );
           return {
             groupId: selection?.slot?.groupId,
+            scope: { roomType: selection?.slot?.facility },
             selectionKey: selection?.selectionKey,
             cohort:
               selection?.slot?.rotationSegments?.length > 0
@@ -747,8 +787,22 @@ export function buildRiicAutomaticRoomGroupSelections({
       });
 
       const candidates = cohort.candidates || [];
+      const hasDormitory = (layoutData?.facilities || []).some(
+        (facility) => facility?.facilityType === "dormitory",
+      );
+      const priorFallbackIds = (plan?.selections || []).flatMap((selection) =>
+        (selection?.option?.materializedCandidate?.fallback?.operators || [])
+          .map((operator) => operator.charId),
+      );
       const candidateOptions = candidates
         .flatMap((candidate, candidateIndex) => {
+          const candidateEntry = { scope: { roomType: cohort.facility }, candidate };
+          const reservedDormitoryOperatorIds = hasDormitory
+            ? getDormitoryReservations([...priorSelectedEntries, candidateEntry])
+            : [];
+          if (priorFallbackIds.some((operatorId) => reservedDormitoryOperatorIds.includes(operatorId))) {
+            return [];
+          }
           if (runtimeDebug) {
             runtimeDebug.fallbackInvocationCount += 1;
           }
@@ -794,6 +848,7 @@ export function buildRiicAutomaticRoomGroupSelections({
               facility: cohort.facility,
               idleFillOperators,
               reservedPowerOperatorId,
+              reservedDormitoryOperatorIds,
               automationRuntimeContext: getAutomationRuntimeContext({
                 layoutData,
                 ownedOperators,
@@ -832,7 +887,13 @@ export function buildRiicAutomaticRoomGroupSelections({
             currentCandidateName:
               candidate?.name || candidate?.key || "",
           });
-          return options;
+          return hasDormitory ? options.filter((option) => {
+            const reservedIds = getDormitoryReservations([
+              ...priorSelectedEntries, { ...candidateEntry, candidate: option.materializedCandidate },
+            ]);
+            return ![...priorFallbackIds, ...(option.materializedCandidate?.fallback?.operators || []).map((operator) => operator.charId)]
+              .some((operatorId) => reservedIds.includes(operatorId));
+          }) : options;
         })
         .sort(
           (left, right) =>

@@ -8,4 +8,5 @@ export {
   getRiicLayer3OperatorLocalBonus,
   getRiicLayer3RuleConditionChecks,
   getRiicLayer3SupportRoomPlacements,
+  getRiicReservedDormitorySupportOperatorIds,
 } from "./P06-condition-match-core.js";

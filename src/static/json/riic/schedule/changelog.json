@@ -10,22 +10,73 @@
     },
     "team": {
       "label": "班组模块",
-      "version": "v20261102.1459"
+      "version": "v20261102.2155"
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20261031.0948"
+      "version": "v20261102.2155"
     },
     "yield": {
       "label": "收益计算器",
-      "version": "v20261101.1439"
+      "version": "v20261102.2155"
     },
     "recommendation": {
       "label": "调试信息",
-      "version": "v20261031.0948"
+      "version": "v20261102.2155"
     }
   },
   "entries": [
+    {
+      "date": "2026-11-02",
+      "version": "v20261102.2155",
+      "items": [
+        {
+          "module": "班组模块",
+          "type": "update",
+          "level": 4,
+          "description": "优化一天三换的回收站排班，支持按干员分别安排轮换；自动排班在候选优先级相同时参考实际工作时长",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "班组模块",
+          "type": "fix",
+          "level": 4,
+          "description": "为已选班组所需的宿舍支援干员预留位置，避免自动补位和中枢补位重复占用",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "组装器",
+          "type": "update",
+          "level": 4,
+          "description": "优化中枢、制造站、贸易站与发电站的同班联动和轮换对齐，部分换班结合干员冲突、工作时长及实际收益筛选，并保留感知联动换班后的人员信息",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "收益计算器",
+          "type": "fix",
+          "level": 4,
+          "description": "修正承曦格雷伊的自动化加成条件：其他发电站存在作业平台时不再错误触发加成",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "调试信息",
+          "type": "update",
+          "level": 2,
+          "description": "同班联动调试信息补充自动化发电站换班前后的生效与作业平台冲突时长",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-02",
       "version": "v20261102.1459",

@@ -40,6 +40,13 @@ function comparePlans(left, right) {
     return upgradeRequirementDifference;
   }
 
+  // Preserve existing priorities; use working time only to break score ties.
+  const durationWeightedDifference =
+    Number(right.durationWeightedValue || 0) - Number(left.durationWeightedValue || 0);
+  if (Math.abs(durationWeightedDifference) > 1e-9) {
+    return durationWeightedDifference;
+  }
+
   return left.key.localeCompare(right.key, "en");
 }
 
@@ -440,6 +447,8 @@ function createNextPlan(
     key: planKey,
     baseRankingValue,
     rankingValue: baseRankingValue,
+    durationWeightedValue:
+      Number(plan.durationWeightedValue || 0) + Number(option.durationWeightedValue || 0),
     unmetUpgradeRequirementCount,
     claimedOperatorIds: [...claimedOperatorIds].sort((left, right) =>
       left.localeCompare(right, "en"),
