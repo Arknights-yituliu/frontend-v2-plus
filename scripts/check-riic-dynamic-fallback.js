@@ -2227,6 +2227,70 @@ assert.deepEqual(
   ["manufacture-idle"],
 );
 
+const officeRotationOperators = [
+  { charId: "char_4065_judge", name: "斥罪", percent: 50 },
+  { charId: "char_180_amgoat", name: "艾雅法拉", percent: 45 },
+];
+for (const [shiftMode, twoShiftRotationMode, firstOperatorId] of [
+  ["twice", "manual", "char_4065_judge"],
+  ["threeTimes", "manual", "char_4065_judge"],
+  ["twice", "maa", "char_180_amgoat"],
+]) {
+  const cohort = getRiicRoomGroupStaffingRequirement({
+    roomType: "hire",
+    stations: [{ stationLevel: 1, slotCount: 1 }],
+    shiftMode,
+    twoShiftRotationMode,
+  }).cohorts[0];
+  const candidates = [0, 1].map((index) => ({
+    key: `office-fill-${index}`,
+    sourceRoomType: "hire",
+    candidateScope: { roomType: "hire", product: "all", stationLevel: 1, slotCount: 1 },
+    operatorIds: [],
+    fallback: { count: 1, candidateOperators: officeRotationOperators },
+  }));
+  const groups = [{ id: "office", facility: "hire", candidateProduct: "all" }];
+  const candidateStatesByGroupId = {
+    office: { status: "ready", cohorts: [{ ...cohort, candidates }] },
+  };
+  const selection = buildRiicAutomaticRoomGroupSelections({
+    groups, candidateStatesByGroupId, ownedOperators: officeRotationOperators,
+  });
+  const fill = buildRiicTailFillResult({
+    groups, candidateStatesByGroupId, selections: selection.selections,
+    fallbackOperatorIdBySlotKeyByGroup: selection.fallbackOperatorIdBySlotKeyByGroup,
+    ownedOperators: officeRotationOperators,
+  });
+  const assignments = fill.fallbackOperatorsBySelectionKeyByGroup.office;
+  assert.equal(assignments[`${cohort.id}:0`][0].charId, firstOperatorId);
+  assert.deepEqual(
+    new Set(Object.values(assignments).flat().map((operator) => operator.charId)),
+    new Set(officeRotationOperators.map((operator) => operator.charId)),
+  );
+}
+
+const rankingPrecedesDurationPlan = planRiicAutomaticRoomSelections({
+  selectionSlots: [{ key: "preserve-ranking", options: [
+    { key: "higher", candidateKey: "higher", claimedOperatorIds: ["higher"], rankingValue: 51, durationWeightedValue: 0 },
+    { key: "lower", candidateKey: "lower", claimedOperatorIds: ["lower"], rankingValue: 50, durationWeightedValue: 1000 },
+  ] }],
+});
+assert.equal(rankingPrecedesDurationPlan.bestPlan.selections[0].option.key, "higher");
+const fiammettaPrecedesDurationPlan = planRiicAutomaticRoomSelections({
+  selectionSlots: [{ key: "preserve-fiammetta", options: [
+    { key: "target", candidateKey: "target", claimedOperatorIds: ["target"], rankingValue: 50, fiammettaTargetStateIndexes: [0], durationWeightedValue: 0 },
+    { key: "longer", candidateKey: "longer", claimedOperatorIds: ["longer"], rankingValue: 50, durationWeightedValue: 1000 },
+  ] }],
+});
+assert.equal(fiammettaPrecedesDurationPlan.bestPlan.selections[0].option.key, "target");
+const trainingPrecedesDurationPlan = planRiicAutomaticRoomSelections({
+  selectionSlots: [{ key: "preserve-training", options: [
+    { key: "ready", candidateKey: "ready", claimedOperatorIds: ["ready"], rankingValue: 50, unmetUpgradeRequirementCount: 0, durationWeightedValue: 0 },
+    { key: "upgrade", candidateKey: "upgrade", claimedOperatorIds: ["upgrade"], rankingValue: 50, unmetUpgradeRequirementCount: 1, durationWeightedValue: 1000 },
+  ] }],
+});
+assert.equal(trainingPrecedesDurationPlan.bestPlan.selections[0].option.key, "ready");
+
   console.log("RIIC dynamic fallback checks passed.");
 } finally {
   await vite.close();

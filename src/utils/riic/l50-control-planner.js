@@ -794,6 +794,70 @@ function getStateTeams(state) {
   return [];
 }
 
+export function swapRiicControlCenterOperatorRotations({ baseState, leftOperatorId, rightOperatorId } = {}) {
+  if (baseState?.status !== "ready" || !leftOperatorId || !rightOperatorId || leftOperatorId === rightOperatorId) return null;
+  const teams = getStateTeams(baseState);
+  const roleKeys = ["roomEffectOperators", "operatorEffectOperators", "fillerOperators"];
+  const roles = new Set();
+  for (const team of teams) {
+    for (const key of roleKeys) {
+      if (team[key].some((operator) => operator.charId === leftOperatorId || operator.charId === rightOperatorId)) roles.add(key);
+    }
+  }
+  if (roles.size !== 1) return null;
+  const roleKey = [...roles][0];
+  const operators = teams.flatMap((team) => team[roleKey]);
+  const left = operators.find((operator) => operator.charId === leftOperatorId);
+  const right = operators.find((operator) => operator.charId === rightOperatorId);
+  if (!left || !right) return null;
+  for (const team of teams) {
+    const ids = getTeamOperatorIds(team);
+    if (ids.has(leftOperatorId) && ids.has(rightOperatorId)) continue;
+    team[roleKey] = team[roleKey].map((operator) =>
+      operator.charId === leftOperatorId ? right : operator.charId === rightOperatorId ? left : operator
+    );
+  }
+  return buildControlStateFromTeams({
+    teams,
+    roleDefinitions: (baseState.roles || []).filter((role) => role.id !== FILLER_ROLE_ID),
+    candidates: (baseState.roles || []).flatMap((role) => role.candidates || []),
+    staffingRequirement: {
+      ...baseState,
+      segmentHours: (baseState.segments || []).map((segment) => segment.durationHours),
+      cohorts: [{ rotationSegments: (baseState.segments || []).map((segment) => ({ activeTeamIndexes: [segment.teamIndex] })) }],
+    },
+    slotCount: baseState.slotCount,
+  });
+}
+
+export function swapRiicControlCenterTeamOperators({ baseState, leftTeamIndex, rightTeamIndex, leftOperatorId, rightOperatorId } = {}) {
+  if (baseState?.status !== "ready") return null;
+  const teams = getStateTeams(baseState);
+  const left = teams.find((team) => Number(team.teamIndex) === Number(leftTeamIndex));
+  const right = teams.find((team) => Number(team.teamIndex) === Number(rightTeamIndex));
+  if (!left || !right || left === right) return null;
+
+  const roleKey = ["roomEffectOperators", "operatorEffectOperators", "fillerOperators"].find(
+    (key) => left[key].some((operator) => operator.charId === leftOperatorId) && right[key].some((operator) => operator.charId === rightOperatorId)
+  );
+  if (!roleKey || getTeamOperatorIds(left).has(rightOperatorId) || getTeamOperatorIds(right).has(leftOperatorId)) return null;
+  const leftIndex = left[roleKey].findIndex((operator) => operator.charId === leftOperatorId);
+  const rightIndex = right[roleKey].findIndex((operator) => operator.charId === rightOperatorId);
+  [left[roleKey][leftIndex], right[roleKey][rightIndex]] = [right[roleKey][rightIndex], left[roleKey][leftIndex]];
+
+  return buildControlStateFromTeams({
+    teams,
+    roleDefinitions: (baseState.roles || []).filter((role) => role.id !== FILLER_ROLE_ID),
+    candidates: (baseState.roles || []).flatMap((role) => role.candidates || []),
+    staffingRequirement: {
+      ...baseState,
+      segmentHours: (baseState.segments || []).map((segment) => segment.durationHours),
+      cohorts: [{ rotationSegments: (baseState.segments || []).map((segment) => ({ activeTeamIndexes: [segment.teamIndex] })) }],
+    },
+    slotCount: baseState.slotCount,
+  });
+}
+
 export function buildRiicControlCenterAutomaticRoleState({
   staffingRequirement,
   roomGroup,

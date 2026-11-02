@@ -254,13 +254,14 @@ function splitThreeTimesStationIndexes(
   return chunks;
 }
 
-function createMeetingIndividualCohort({
+function createTwoSlotIndividualCohort({
   stationLevel,
   slotCount,
   stationIndexes,
   segmentHours,
   shiftMode,
   twoShiftRotationMode,
+  roomType,
 }) {
   const usesMaaTwoShiftRotation = isMaaTwoShiftRotation(
     shiftMode,
@@ -300,7 +301,7 @@ function createMeetingIndividualCohort({
     teams: Array.from({ length: selectionCount }, (_, index) => ({
       id: `${cohortId}-operator-${index + 1}`,
       index,
-      label: `会客室干员 ${index + 1}`,
+      label: `${roomType === "recycle" ? "回收站" : "会客室"}干员 ${index + 1}`,
       stationLevel,
       slotCount: 1,
     })),
@@ -358,18 +359,20 @@ export function getRiicRoomGroupStaffingRequirement({
   }
 
   if (
-    roomType === "meeting" &&
+    (roomType === "meeting" ||
+      (roomType === "recycle" && shiftMode === "threeTimes")) &&
     normalizedStations.length === 1 &&
     normalizedStations[0].slotCount === 2
   ) {
     const [station] = normalizedStations;
-    const cohort = createMeetingIndividualCohort({
+    const cohort = createTwoSlotIndividualCohort({
       stationLevel: station.stationLevel,
       slotCount: station.slotCount,
       stationIndexes: [0],
       segmentHours,
       shiftMode,
       twoShiftRotationMode,
+      roomType,
     });
 
     return {

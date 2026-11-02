@@ -35,7 +35,7 @@ try {
   );
   assert.match(
     recycleRoomHtml,
-    /bg-char_4232_hbound/,
+    /char_4232_hbound\.png/,
     "V1 回收站应显示旅骨头像",
   );
 
@@ -51,6 +51,19 @@ try {
   const { alignRiicScheduleSameShiftBindings } = await vite.ssrLoadModule(
     "/src/utils/riic/l74-same-shift-bindings.js",
   );
+  const { getRiicRoomGroupStaffingRequirement } = await vite.ssrLoadModule(
+    "/src/utils/riic/l60-staffing.js",
+  );
+  const { reconcileRiicControlCenterAfterRoomSelection } = await vite.ssrLoadModule(
+    "/src/utils/riic/l73-control-center-reconciliation.js",
+  );
+  const { getRiicReservedDormitorySupportOperatorIds } = await vite.ssrLoadModule(
+    "/src/utils/riic/l30-rules.js",
+  );
+  const {
+    materializeRiicRoomTeamCandidate,
+    mergeRiicIndividualRoomTeamCandidates,
+  } = await vite.ssrLoadModule("/src/utils/riic/l62-room-team-materializer.js");
   const { getRiicActiveRosterHangerOrder, buildRiicActiveOperatorIdsBySelectionKey } =
     await vite.ssrLoadModule("/src/utils/riic/l65-active-roster-effects.js");
 
@@ -118,6 +131,199 @@ try {
       taggedMemberRequirements: [],
     },
   };
+
+  const rotationRoster = [
+    { charId: "char_4170_hdbell", name: "行铃", elite: 0, level: 1 },
+    { charId: "char_4246_dminon", name: "国度", elite: 0, level: 1 },
+    { charId: RECYCLE_FILL_ID, name: "旅骨", elite: 1, level: 70 },
+  ];
+  const rotationCohort = getRiicRoomGroupStaffingRequirement({
+    roomType: "recycle",
+    stations: [{ stationLevel: 3, slotCount: 2 }],
+    shiftMode: "threeTimes",
+  }).cohorts[0];
+  const rotationCandidates = rotationRoster.map((_, index) => ({
+    ...recycleCandidate,
+    key: `rotation-${index}`,
+    fallback: {
+      ...recycleCandidate.fallback,
+      count: 1,
+      candidateOperators: rotationRoster.map((operator) => ({
+        ...operator,
+        percent: 20,
+      })),
+      idleCandidateOperators: [],
+    },
+  }));
+  const rotationState = {
+    status: "ready",
+    cohorts: [{ ...rotationCohort, candidates: rotationCandidates }],
+  };
+  const rotationGroup = {
+    id: "recycle", facility: "recycle", candidateProduct: "all",
+  };
+  const rotationSelection = buildRiicAutomaticRoomGroupSelections({
+    groups: [rotationGroup],
+    candidateStatesByGroupId: { recycle: rotationState },
+    ownedOperators: rotationRoster,
+  });
+  const rotationFill = buildRiicTailFillResult({
+    groups: [rotationGroup],
+    candidateStatesByGroupId: { recycle: rotationState },
+    selections: rotationSelection.selections,
+    ownedOperators: rotationRoster,
+  });
+  const filledBySelection =
+    rotationFill.fallbackOperatorsBySelectionKeyByGroup.recycle;
+  const teams = rotationCohort.rotationSegments.map((segment) =>
+    segment.activeTeamIndexes.map(
+      (index) => filledBySelection[`${rotationCohort.id}:${index}`]?.[0]?.charId,
+    ),
+  );
+  assert.ok(teams.every(
+    (team) => team.length === 2 && new Set(team).size === 2 && team.every(Boolean),
+  ));
+  assert.deepEqual(
+    new Set(teams.flat()),
+    new Set(rotationRoster.map((operator) => operator.charId)),
+  );
+  for (const operator of rotationRoster) {
+    assert.equal(
+      teams.filter((team) => !team.includes(operator.charId)).length,
+      1,
+    );
+  }
+  for (const segment of rotationCohort.rotationSegments) {
+    const merged = mergeRiicIndividualRoomTeamCandidates(
+      segment.activeTeamIndexes.map((index) =>
+        materializeRiicRoomTeamCandidate(
+          { ...rotationCandidates[index], sourceRoomType: "recycle" },
+          filledBySelection[`${rotationCohort.id}:${index}`],
+        ),
+      ),
+    );
+    assert.equal(merged.operatorIds.length, 2);
+    assert.equal(merged.totalPercent, 140);
+  }
+
+  const irisId = "char_338_iris";
+  const blackKeyId = "char_4046_ebnhlz";
+  const supportRoster = [
+    { charId: irisId, name: "爱丽丝", elite: 2, level: 1 },
+    { charId: blackKeyId, name: "黑键", elite: 0, level: 1 },
+  ];
+  const blackKeyEntry = {
+    scope: { roomType: "trading" }, candidate: { operatorIds: [blackKeyId] },
+  };
+  const reservedForDormitory = getRiicReservedDormitorySupportOperatorIds({
+    selectedEntries: [blackKeyEntry],
+    ownedOperators: supportRoster,
+    dormitoryCapacity: 5,
+  });
+  assert.ok(reservedForDormitory.includes(irisId));
+  assert.deepEqual(
+    getRiicReservedDormitorySupportOperatorIds({
+      selectedEntries: [], ownedOperators: supportRoster, dormitoryCapacity: 5,
+    }),
+    [],
+  );
+  assert.deepEqual(
+    getRiicReservedDormitorySupportOperatorIds({
+      selectedEntries: [blackKeyEntry],
+      ownedOperators: supportRoster,
+      dormitoryCapacity: 0,
+    }),
+    [],
+  );
+  const irisPlan = createRiicRoomGroupFallbackPlan({
+    selectedEntries: [{
+      selectionKey: "recycle:0",
+      candidate: {
+        ...recycleCandidate,
+        fallback: {
+          ...recycleCandidate.fallback,
+          count: 1,
+          candidateOperators: [{
+            charId: irisId, name: "爱丽丝", percent: 1, isDefaultFill: true,
+          }],
+        },
+      },
+    }],
+    excludedOperatorIds: reservedForDormitory,
+    ownedOperators: supportRoster,
+  });
+  assert.ok(!irisPlan.selectedOperatorIds.includes(irisId));
+  const controlResult = reconcileRiicControlCenterAfterRoomSelection({
+    controlState: {
+      status: "ready", teamCount: 1, slotCount: 1, roles: [], candidates: [],
+      teams: [{ teamIndex: 0, slotCount: 1, roomEffectOperators: [], operatorEffectOperators: [], fillerOperators: [] }],
+      segments: [{ teamIndex: 0, durationHours: 24, operatorIds: [], operators: [] }],
+    },
+    selectedRoomTeams: [{ operatorIds: [blackKeyId] }],
+    excludedOperatorIds: reservedForDormitory,
+    idleFillOperators: [{ charId: irisId, name: "爱丽丝" }],
+  });
+  assert.ok(!controlResult.lateFillState.operatorIds.includes(irisId));
+
+  for (const facility of ["manufacture", "meeting", "recycle"]) {
+    const group = { id: facility, facility, candidateProduct: "all" };
+    const candidate = {
+      key: `${facility}-fill`, candidateScope: { roomType: facility, product: "all" },
+      operatorIds: [], fallback: { count: 1, candidateOperators: [{ charId: irisId, name: "爱丽丝", percent: 25 }] },
+    };
+    const tradeCandidate = { key: "black-key", candidateScope: { roomType: "trading" }, operatorIds: [blackKeyId], fallback: { count: 0 } };
+    const cohort = { id: "test", candidates: [candidate] };
+    const tradeCohort = { id: "trade", candidates: [tradeCandidate] };
+    const result = buildRiicTailFillResult({
+      groups: [group, { id: "trade", facility: "trading" }],
+      candidateStatesByGroupId: { [facility]: { status: "ready", cohorts: [cohort] }, trade: { status: "ready", cohorts: [tradeCohort] } },
+      selections: { [facility]: { test: [candidate.key] }, trade: { trade: [tradeCandidate.key] } },
+      ownedOperators: supportRoster,
+      layoutData: { facilities: [{ facilityType: "dormitory" }] },
+    });
+    assert.deepEqual(result.fallbackOperatorsBySelectionKeyByGroup[facility], {}, `${facility} 应保留宿舍支援干员`);
+  }
+
+  const supportFillCandidate = (key, roomType, operator) => ({
+    key, candidateScope: { roomType, product: "all" }, operatorIds: [],
+    fallback: { count: 1, candidateOperators: [{ ...operator, percent: 25 }] },
+  });
+  const factoryFill = supportFillCandidate("factory-iris", "manufacture", supportRoster[0]);
+  const tradeFill = supportFillCandidate("trade-black-key", "trading", supportRoster[1]);
+  const fillGroups = [{ id: "factory", facility: "manufacture" }, { id: "trade", facility: "trading" }];
+  const fillStates = {
+    factory: { status: "ready", cohorts: [{ id: "factory", teamCount: 1, candidates: [factoryFill] }] },
+    trade: { status: "ready", cohorts: [{ id: "trade", teamCount: 1, candidates: [tradeFill] }] },
+  };
+  const fillSelections = { factory: { factory: [factoryFill.key] }, trade: { trade: [tradeFill.key] } };
+  const dormitoryLayout = { facilities: [{ facilityType: "dormitory" }] };
+  const lateTriggerFill = buildRiicTailFillResult({
+    groups: fillGroups, candidateStatesByGroupId: fillStates, selections: fillSelections,
+    ownedOperators: supportRoster, layoutData: dormitoryLayout,
+  });
+  assert.deepEqual(lateTriggerFill.fallbackOperatorsBySelectionKeyByGroup.factory, {});
+  assert.equal(lateTriggerFill.fallbackOperatorsBySelectionKeyByGroup.trade["trade:0"][0].charId, blackKeyId);
+  const noDormitoryFill = buildRiicTailFillResult({
+    groups: fillGroups, candidateStatesByGroupId: fillStates, selections: fillSelections,
+    ownedOperators: supportRoster, layoutData: { facilities: [] },
+  });
+  assert.equal(noDormitoryFill.fallbackOperatorsBySelectionKeyByGroup.factory["factory:0"][0].charId, irisId);
+
+  const searchStates = {
+    factory: { status: "ready", cohorts: [{ id: "factory", teamCount: 1, candidates: [{
+      ...factoryFill, fallback: { ...factoryFill.fallback, candidateOperators: [
+        ...factoryFill.fallback.candidateOperators, { charId: TWELVE_F_ID, name: "12F", percent: 1 },
+      ] },
+    }] }] },
+    trade: { status: "ready", cohorts: [{ id: "trade", teamCount: 1, candidates: [{ ...tradeFill, key: "trade-core", operatorIds: [blackKeyId], fallback: { count: 0 } }] }] },
+  };
+  const searchResult = buildRiicAutomaticRoomGroupSelections({
+    groups: fillGroups, candidateStatesByGroupId: searchStates,
+    ownedOperators: [...supportRoster, { charId: TWELVE_F_ID, name: "12F", elite: 0, level: 1 }], layoutData: dormitoryLayout,
+  });
+  assert.equal(searchResult.selections.trade.trade[0], "trade-core");
+  assert.ok(!Object.values(searchResult.fallbackOperatorIdBySlotKeyByGroup || {})
+    .some((assignments) => Object.values(assignments).includes(irisId)));
 
   function createRecyclePlan({
     activeOperatorIds = [],
