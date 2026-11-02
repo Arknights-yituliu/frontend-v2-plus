@@ -249,6 +249,22 @@ function inspectFacilityRequirement(
     };
   }
 
+  if (
+    facilityType === "power" &&
+    !product &&
+    stationLevel === null &&
+    Number.isInteger(layoutData?.automationPowerPlantCount) &&
+    layoutData.automationPowerPlantCount >= 0
+  ) {
+    const actualValue = layoutData.automationPowerPlantCount;
+    return {
+      ...base,
+      actualValue,
+      kind: "powerCount",
+      matched: actualValue === count,
+    };
+  }
+
   if (facilities.length) {
     const actualValue = facilities.filter(
       (facility) =>
