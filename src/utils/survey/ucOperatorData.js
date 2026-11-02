@@ -12,8 +12,8 @@
 
 /**
  * 将森空岛同步数据转换为 UC 保存接口的请求体
- * @param {Object} warehouseData 森空岛同步数据（含 uid 与已格式化的 operatorDataList）
- * @returns {{playerInfo: {akUid: string}, operators: Array<Object>}} UC 保存接口请求体
+ * @param {Object} warehouseData 森空岛同步数据（含 uid、已格式化的 operatorDataList 与 itemList）
+ * @returns {{playerInfo: {akUid: string}, operators: Array<Object>, items: Array<{itemId: string, count: string}>}} UC 保存接口请求体
  */
 function buildUcOperatorSavePayload(warehouseData) {
   return {
@@ -34,6 +34,10 @@ function buildUcOperatorSavePayload(warehouseData) {
       equipA: operator.modA,
       equipB: operator.modB,
       potentialRank: operator.potential,
+    })),
+    items: (warehouseData?.itemList || []).map((item) => ({
+      itemId: String(item.itemId),
+      count: String(item.quantity),
     })),
   }
 }
