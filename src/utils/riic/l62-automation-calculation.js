@@ -42,6 +42,7 @@ export function getRiicAutomationOperatorLayer3Bonus({
       layoutData: {
         ...layoutData,
         powerPlantCount,
+        automationPowerPlantCount: powerPlantCount,
       },
     });
 

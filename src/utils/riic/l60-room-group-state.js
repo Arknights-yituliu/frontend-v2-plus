@@ -283,6 +283,7 @@ function createRiicManualFallbackCandidates(cohort, fallbackCandidate) {
       isManualFallbackTeam: true,
       fallback: {
         ...fallbackCandidate.fallback,
+        ...(cohort.selectionMode === "individual" ? { count: 1 } : {}),
         operators: [],
         materialized: false,
       },

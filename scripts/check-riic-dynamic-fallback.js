@@ -34,6 +34,15 @@ try {
     materializeRiicRoomTeamCandidate,
   } = await vite.ssrLoadModule("/src/utils/riic/l62-room-team-materializer.js");
   const {
+    getRiicAutomationOperatorLayer3Bonus,
+  } = await vite.ssrLoadModule("/src/utils/riic/l62-automation-calculation.js");
+  const {
+    getRiicLayer3OperatorLocalBonus,
+  } = await vite.ssrLoadModule("/src/utils/riic/l30-rules.js");
+  const {
+    getRiicRuntimeCandidateRankingValue,
+  } = await vite.ssrLoadModule("/src/utils/riic/l60-candidate-ranking.js");
+  const {
     applyRiicActiveRosterFallbackOperatorEffects,
     evaluateRiicActiveRosterPlanEffects,
   } = await vite.ssrLoadModule("/src/utils/riic/l65-active-roster-effects.js");
@@ -1316,6 +1325,67 @@ const automationSupportedMaterialized = materializeRiicRoomTeamCandidate(
 assert.equal(automationBaselineMaterialized.totalPercent, 130);
 assert.equal(automationSupportedMaterialized.totalPercent, 145);
 
+const automationFullLayout = {
+  powerPlantCount: 3,
+  tradingStationCount: 3,
+  facilities: [
+    ...Array.from({ length: 3 }, () => ({ facilityType: "power", stationLevel: 3 })),
+    ...Array.from({ length: 3 }, () => ({ facilityType: "trading", stationLevel: 3 })),
+  ],
+};
+const automationFullRoster = [
+  { charId: "char_400_weedy", name: "温蒂", elite: 2, level: 1 },
+  { charId: "char_416_zumama", name: "森蚺", elite: 2, level: 1 },
+];
+for (const [effectivePowerPlantCount, weedy, eunectes] of [
+  [2, 30, 20],
+  [3, 45, 30],
+  [4, 60, 40],
+]) {
+  for (const [operator, expected] of [
+    [automationFullRoster[0], weedy],
+    [automationFullRoster[1], eunectes],
+  ]) {
+    assert.equal(getRiicAutomationOperatorLayer3Bonus({
+      operatorId: operator.charId,
+      ownedOperators: automationFullRoster,
+      scope: { roomType: "manufacture", product: "gold", stationLevel: 3, slotCount: 3 },
+      layoutData: automationFullLayout,
+      effectivePowerPlantCount,
+      getLayer3OperatorLocalBonus: getRiicLayer3OperatorLocalBonus,
+    }), expected);
+  }
+}
+assert.equal(automationFullLayout.facilities.length, 6);
+assert.equal(automationFullLayout.powerPlantCount, 3);
+
+const qingliuAutomation = materializeRiicRoomTeamCandidate({
+  key: "qingliu-full-automation",
+  candidateScope: { roomType: "manufacture", product: "gold", stationLevel: 3, slotCount: 3 },
+  sourceRoomType: "manufacture",
+  operatorIds: ["char_385_finlpp"],
+  coreBaseBonusPercent: 0,
+  coreLayer3BonusPercent: 60,
+  localBonusPercent: 60,
+  fallback: { count: 0, candidateOperators: [] },
+}, [
+  { ...automationFullRoster[0], taggedMember: true, tags: ["automation"], basePercent: 0, layer3Bonus: 45 },
+  { ...automationFullRoster[1], taggedMember: true, tags: ["automation"], basePercent: 0, layer3Bonus: 30 },
+], {
+  automationRuntimeContext: {
+    layoutData: automationFullLayout,
+    ownedOperators: [
+      ...automationFullRoster,
+      { charId: "char_385_finlpp", name: "清流", elite: 1, level: 1 },
+    ],
+    powerPlantCount: 3,
+    effectivePowerPlantCount: 4,
+    supportOperatorId: "char_1027_greyy2",
+  },
+});
+assert.equal(qingliuAutomation.totalPercent, 260);
+assert.equal(getRiicRuntimeCandidateRankingValue(qingliuAutomation), 160);
+
 const automationReservationGroups = [
   {
     id: "automation-manufacture",
@@ -2156,6 +2226,70 @@ assert.deepEqual(
   ),
   ["manufacture-idle"],
 );
+
+const officeRotationOperators = [
+  { charId: "char_4065_judge", name: "斥罪", percent: 50 },
+  { charId: "char_180_amgoat", name: "艾雅法拉", percent: 45 },
+];
+for (const [shiftMode, twoShiftRotationMode, firstOperatorId] of [
+  ["twice", "manual", "char_4065_judge"],
+  ["threeTimes", "manual", "char_4065_judge"],
+  ["twice", "maa", "char_180_amgoat"],
+]) {
+  const cohort = getRiicRoomGroupStaffingRequirement({
+    roomType: "hire",
+    stations: [{ stationLevel: 1, slotCount: 1 }],
+    shiftMode,
+    twoShiftRotationMode,
+  }).cohorts[0];
+  const candidates = [0, 1].map((index) => ({
+    key: `office-fill-${index}`,
+    sourceRoomType: "hire",
+    candidateScope: { roomType: "hire", product: "all", stationLevel: 1, slotCount: 1 },
+    operatorIds: [],
+    fallback: { count: 1, candidateOperators: officeRotationOperators },
+  }));
+  const groups = [{ id: "office", facility: "hire", candidateProduct: "all" }];
+  const candidateStatesByGroupId = {
+    office: { status: "ready", cohorts: [{ ...cohort, candidates }] },
+  };
+  const selection = buildRiicAutomaticRoomGroupSelections({
+    groups, candidateStatesByGroupId, ownedOperators: officeRotationOperators,
+  });
+  const fill = buildRiicTailFillResult({
+    groups, candidateStatesByGroupId, selections: selection.selections,
+    fallbackOperatorIdBySlotKeyByGroup: selection.fallbackOperatorIdBySlotKeyByGroup,
+    ownedOperators: officeRotationOperators,
+  });
+  const assignments = fill.fallbackOperatorsBySelectionKeyByGroup.office;
+  assert.equal(assignments[`${cohort.id}:0`][0].charId, firstOperatorId);
+  assert.deepEqual(
+    new Set(Object.values(assignments).flat().map((operator) => operator.charId)),
+    new Set(officeRotationOperators.map((operator) => operator.charId)),
+  );
+}
+
+const rankingPrecedesDurationPlan = planRiicAutomaticRoomSelections({
+  selectionSlots: [{ key: "preserve-ranking", options: [
+    { key: "higher", candidateKey: "higher", claimedOperatorIds: ["higher"], rankingValue: 51, durationWeightedValue: 0 },
+    { key: "lower", candidateKey: "lower", claimedOperatorIds: ["lower"], rankingValue: 50, durationWeightedValue: 1000 },
+  ] }],
+});
+assert.equal(rankingPrecedesDurationPlan.bestPlan.selections[0].option.key, "higher");
+const fiammettaPrecedesDurationPlan = planRiicAutomaticRoomSelections({
+  selectionSlots: [{ key: "preserve-fiammetta", options: [
+    { key: "target", candidateKey: "target", claimedOperatorIds: ["target"], rankingValue: 50, fiammettaTargetStateIndexes: [0], durationWeightedValue: 0 },
+    { key: "longer", candidateKey: "longer", claimedOperatorIds: ["longer"], rankingValue: 50, durationWeightedValue: 1000 },
+  ] }],
+});
+assert.equal(fiammettaPrecedesDurationPlan.bestPlan.selections[0].option.key, "target");
+const trainingPrecedesDurationPlan = planRiicAutomaticRoomSelections({
+  selectionSlots: [{ key: "preserve-training", options: [
+    { key: "ready", candidateKey: "ready", claimedOperatorIds: ["ready"], rankingValue: 50, unmetUpgradeRequirementCount: 0, durationWeightedValue: 0 },
+    { key: "upgrade", candidateKey: "upgrade", claimedOperatorIds: ["upgrade"], rankingValue: 50, unmetUpgradeRequirementCount: 1, durationWeightedValue: 1000 },
+  ] }],
+});
+assert.equal(trainingPrecedesDurationPlan.bestPlan.selections[0].option.key, "ready");
 
   console.log("RIIC dynamic fallback checks passed.");
 } finally {

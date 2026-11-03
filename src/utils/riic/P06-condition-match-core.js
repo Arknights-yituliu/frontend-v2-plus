@@ -249,6 +249,22 @@ function inspectFacilityRequirement(
     };
   }
 
+  if (
+    facilityType === "power" &&
+    !product &&
+    stationLevel === null &&
+    Number.isInteger(layoutData?.automationPowerPlantCount) &&
+    layoutData.automationPowerPlantCount >= 0
+  ) {
+    const actualValue = layoutData.automationPowerPlantCount;
+    return {
+      ...base,
+      actualValue,
+      kind: "powerCount",
+      matched: actualValue === count,
+    };
+  }
+
   if (facilities.length) {
     const actualValue = facilities.filter(
       (facility) =>
@@ -604,6 +620,26 @@ export function getRiicLayer3SupportRoomPlacements({
       ),
     ]),
   );
+}
+
+export function getRiicReservedDormitorySupportOperatorIds({
+  selectedEntries = [],
+  ownedOperators = [],
+  layoutData,
+  dormitoryCapacity = (layoutData?.facilities || []).filter(
+    (facility) => facility?.facilityType === "dormitory",
+  ).length,
+} = {}) {
+  if (!(Number(dormitoryCapacity) > 0)) return [];
+  const placements = getRiicLayer3SupportRoomPlacements({
+    roomAssignments: selectedEntries.map((entry) => ({
+      roomType: entry.scope?.roomType || entry.candidate?.candidateScope?.roomType,
+      operatorIds: entry.candidate?.operatorIds || [],
+    })),
+    ownedOperators,
+    layoutData,
+  });
+  return (placements.dormitory || []).map((operator) => operator.charId);
 }
 
 export function getRiicLayer3ControlCenterEffects({

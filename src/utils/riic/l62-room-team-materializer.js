@@ -342,10 +342,19 @@ export function mergeRiicIndividualRoomTeamCandidates(candidates) {
     ),
   ];
   const totalPercent =
-    candidates.reduce(
-      (total, candidate) => total + Number(candidate?.totalPercent || 0),
-      0,
-    ) / Math.max(candidates.length, 1);
+    sourceCandidate.sourceRoomType === "recycle"
+      ? 100 + candidates.reduce(
+          (total, candidate) =>
+            total +
+            (candidate?.incomplete
+              ? 0
+              : Number(candidate?.totalPercent ?? 100) - 100),
+          0,
+        )
+      : candidates.reduce(
+          (total, candidate) => total + Number(candidate?.totalPercent || 0),
+          0,
+        ) / Math.max(candidates.length, 1);
 
   return {
     key: `individual:${candidates.map((candidate) => candidate.key).join("+")}`,
@@ -394,7 +403,10 @@ export function mergeRiicIndividualRoomTeamCandidates(candidates) {
     bonusPercent: totalPercent - 100,
     fallback: {
       count: 0,
-      operators: [],
+      operators: candidates.flatMap((candidate) => candidate?.fallback?.operators || []),
+      fallbackOperatorIds: candidates.flatMap((candidate) =>
+        (candidate?.fallback?.operators || []).map((operator) => operator.charId),
+      ),
       materialized: true,
     },
     selectionMode: "individual",

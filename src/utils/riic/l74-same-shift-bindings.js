@@ -173,7 +173,7 @@ function getEntryScope(entry) {
   };
 }
 
-function getActiveRosterBonusHours({
+export function getActiveRosterBonusHours({
   groupEntries = [],
   ownedOperators = [],
 } = {}) {
@@ -412,7 +412,7 @@ function replaceCandidateInEntries(groupEntries, groupId, candidateKey, update) 
   });
 }
 
-function alignActiveRosterHangerAssignments(groupEntries) {
+function alignActiveRosterHangerAssignments(groupEntries, controlCandidate) {
   let alignedEntries = [...(groupEntries || [])];
   const transfers = [];
   const teamDiagnostics = [];
@@ -465,6 +465,9 @@ function alignActiveRosterHangerAssignments(groupEntries) {
     });
 
     for (const source of teams) {
+      if (source.candidate?.selectionMode === "individual") {
+        continue;
+      }
       const hanger = (source.candidate?.fallback?.operators || []).find(
         (operator) =>
           rule.taggedOperatorIds.has(String(operator?.charId || "").trim()) &&
@@ -504,20 +507,36 @@ function alignActiveRosterHangerAssignments(groupEntries) {
         continue;
       }
 
-      alignedEntries = replaceCandidateInEntries(
+      let updatedEntries = replaceCandidateInEntries(
         alignedEntries,
         source.groupId,
         source.candidateKey,
         (candidate) =>
           replaceFallbackOperator(candidate, hanger.charId, replacement),
       );
-      alignedEntries = replaceCandidateInEntries(
-        alignedEntries,
+      updatedEntries = replaceCandidateInEntries(
+        updatedEntries,
         target.groupId,
         target.candidateKey,
         (candidate) =>
           replaceFallbackOperator(candidate, replacement.charId, hanger),
       );
+      const previousEntry = alignedEntries.find(
+        (entry) => String(entry?.group?.id || "").trim() === source.groupId,
+      );
+      const updatedEntry = updatedEntries.find(
+        (entry) => String(entry?.group?.id || "").trim() === source.groupId,
+      );
+      if (
+        !preservesControlBindings({
+          entry: previousEntry,
+          candidate: updatedEntry?.candidate,
+          controlCandidate,
+        })
+      ) {
+        continue;
+      }
+      alignedEntries = updatedEntries;
       transfers.push({
         groupId: source.groupId,
         triggerOperatorId: rule.triggerOperatorId,
@@ -806,7 +825,7 @@ function getStationSummaryStatus(summary) {
   return "partial";
 }
 
-function summarizeCandidateBindings({
+export function summarizeCandidateBindings({
   controlCandidate,
   group,
   candidate,
@@ -1035,9 +1054,50 @@ function rotateEntryCandidate({ entry, offset, controlCandidate }) {
   };
 }
 
+function introducesOperatorConflict(groupEntries, entryIndex, rotatedCandidate) {
+  const candidates = groupEntries.map((entry) => entry?.candidate);
+  const cycles = [...candidates, rotatedCandidate]
+    .map((candidate) => getSegmentCycleHours(candidate?.segments))
+    .filter((cycle) => cycle > 0);
+  const cycleHours = cycles.reduce(
+    (cycle, current) => cycle > 0 ? leastCommonMultiple(cycle, current) : current,
+    0,
+  );
+  const boundaries = getTimelineBoundaries([...candidates, rotatedCandidate], cycleHours);
+  return boundaries.slice(0, -1).some((hour) => {
+    const before = getCandidateOperatorIdsAtHour(candidates[entryIndex], hour);
+    const after = getCandidateOperatorIdsAtHour(rotatedCandidate, hour);
+    const occupied = new Set(candidates.flatMap((candidate, index) =>
+      index === entryIndex ? [] : [...getCandidateOperatorIdsAtHour(candidate, hour)],
+    ));
+    return [...after].some((operatorId) => !before.has(operatorId) && occupied.has(operatorId));
+  });
+}
+
+function preservesControlBindings({ entry, candidate, controlCandidate }) {
+  const before = summarizeCandidateBindings({
+    controlCandidate,
+    group: entry.group,
+    candidate: entry.candidate,
+  });
+  const after = summarizeCandidateBindings({
+    controlCandidate,
+    group: entry.group,
+    candidate,
+  });
+  return [
+    "coreTeamSynergyWeightedBonus",
+    "realizedBindingHours",
+    "realizedWeightedBonus",
+  ].every(
+    (key) => Number(after[key] || 0) + EPSILON >= Number(before[key] || 0),
+  );
+}
+
 function alignPreferredSameShiftPairs({
   groupEntries = [],
   controlCandidate,
+  ownedOperators = [],
 } = {}) {
   const alignedEntries = [...groupEntries];
   const debug = [];
@@ -1095,6 +1155,10 @@ function alignPreferredSameShiftPairs({
     };
     const leftSegmentCount = leftCandidate?.segments?.length || 1;
     const rightSegmentCount = rightCandidate?.segments?.length || 1;
+    const initialActiveRosterBonus = getActiveRosterBonusHours({
+      groupEntries: alignedEntries,
+      ownedOperators,
+    });
 
     for (let leftOffset = 0; leftOffset < leftSegmentCount; leftOffset += 1) {
       for (
@@ -1102,9 +1166,43 @@ function alignPreferredSameShiftPairs({
         rightOffset < rightSegmentCount;
         rightOffset += 1
       ) {
+        const rotatedLeft = rotateCandidateSegments(leftCandidate, leftOffset);
+        const rotatedRight = rotateCandidateSegments(
+          rightCandidate,
+          rightOffset,
+        );
+        if (
+          !preservesControlBindings({
+            entry: alignedEntries[leftIndex],
+            candidate: rotatedLeft,
+            controlCandidate,
+          }) ||
+          !preservesControlBindings({
+            entry: alignedEntries[rightIndex],
+            candidate: rotatedRight,
+            controlCandidate,
+          })
+        ) {
+          continue;
+        }
+        const rotatedEntries = alignedEntries.map((entry, index) =>
+          index === leftIndex
+            ? { ...entry, candidate: rotatedLeft }
+            : index === rightIndex
+              ? { ...entry, candidate: rotatedRight }
+              : entry,
+        );
+        if (
+          getActiveRosterBonusHours({
+            groupEntries: rotatedEntries,
+            ownedOperators,
+          }) + EPSILON < initialActiveRosterBonus
+        ) {
+          continue;
+        }
         const sameShiftHours = getCandidatePairSameShiftHours({
-          leftCandidate: rotateCandidateSegments(leftCandidate, leftOffset),
-          rightCandidate: rotateCandidateSegments(rightCandidate, rightOffset),
+          leftCandidate: rotatedLeft,
+          rightCandidate: rotatedRight,
           leftOperatorId: pair.leftOperatorId,
           rightOperatorId: pair.rightOperatorId,
         });
@@ -1394,6 +1492,15 @@ export function alignRiicScheduleSameShiftBindings({
 
     for (let offset = 1; offset < segmentCount; offset += 1) {
       const rotatedCandidate = rotateCandidateSegments(candidate, offset);
+      if (
+        !preservesControlBindings({
+          entry: activeRosterAlignedEntries[index],
+          candidate: rotatedCandidate,
+          controlCandidate,
+        })
+      ) {
+        continue;
+      }
       const rotatedEntries = activeRosterAlignedEntries.map(
         (currentEntry, currentIndex) =>
           currentIndex === index
@@ -1443,18 +1550,90 @@ export function alignRiicScheduleSameShiftBindings({
     }
   }
 
-  const activeRosterHangerAlignment = alignActiveRosterHangerAssignments(
-    activeRosterAlignedEntries,
-  );
   const preferredSameShiftAlignment = alignPreferredSameShiftPairs({
-    groupEntries: activeRosterHangerAlignment.groupEntries,
+    groupEntries: activeRosterAlignedEntries,
     controlCandidate,
+    ownedOperators,
+  });
+  const individualAlignedEntries = [...preferredSameShiftAlignment.groupEntries];
+  for (const [index, entry] of individualAlignedEntries.entries()) {
+    const candidate = entry?.candidate;
+    const assignments = (candidate?.segments || []).flatMap((segment) => segment?.stationAssignments || []);
+    if (
+      (lockedOperatorIds || []).some((operatorId) => candidateHasOperator(candidate, operatorId)) ||
+      !assignments.some((assignment) =>
+        assignment?.candidate?.selectionMode === "individual" &&
+        (assignment.candidate.fallback?.operators || []).some((operator) =>
+          RIIC_ACTIVE_ROSTER_SELECTION_PRIORITY_RULES.some((rule) =>
+            rule.taggedOperatorIds.has(operator.charId) &&
+            (operator.idleFill || Number(operator.hangerPriority) > 0),
+          ),
+        ),
+      )
+    ) continue;
+
+    let bestOffset = 0;
+    let bestBonus = getActiveRosterBonusHours({ groupEntries: individualAlignedEntries, ownedOperators });
+    for (let offset = 1; offset < candidate.segments.length; offset += 1) {
+      const rotated = rotateCandidateSegments(candidate, offset);
+      if (
+        introducesOperatorConflict(individualAlignedEntries, index, rotated) ||
+        !preservesControlBindings({ entry, candidate: rotated, controlCandidate })
+      ) continue;
+      const rotatedEntries = individualAlignedEntries.map((current, currentIndex) =>
+        currentIndex === index ? { ...current, candidate: rotated } : current,
+      );
+      const bonus = getActiveRosterBonusHours({ groupEntries: rotatedEntries, ownedOperators });
+      if (bonus > bestBonus + EPSILON) {
+        bestBonus = bonus;
+        bestOffset = offset;
+      }
+    }
+    if (bestOffset > 0) {
+      individualAlignedEntries[index] = rotateEntryCandidate({ entry, offset: bestOffset, controlCandidate });
+    }
+  }
+  const activeRosterHangerAlignment = alignActiveRosterHangerAssignments(
+    individualAlignedEntries,
+    controlCandidate,
+  );
+
+  const finalSummary = summary.map((item) => {
+    const entry = activeRosterHangerAlignment.groupEntries.find(
+      ({ group }) => String(group?.id || "").trim() === item.groupId,
+    );
+    if (!entry) return item;
+    const resolved = {
+      ...summarizeCandidateBindings({ controlCandidate, ...entry }),
+      groupId: item.groupId,
+      rotationOffset: Number(entry.candidate?.sameShiftBindingOffset || 0),
+    };
+    entry.candidate.sameShiftBindingSummary = resolved;
+    const debugGroup = debugGroups.find(
+      (group) => group.groupId === item.groupId,
+    );
+    if (debugGroup) {
+      debugGroup.selectedOffset = resolved.rotationOffset;
+      debugGroup.selected = {
+        coreTeamSynergyWeightedBonus: resolved.coreTeamSynergyWeightedBonus,
+        realizedBindingHours: resolved.realizedBindingHours,
+        expectedBindingHours: resolved.expectedBindingHours,
+        realizedWeightedBonus: resolved.realizedWeightedBonus,
+        trace: resolved.trace,
+      };
+      for (const attempt of debugGroup.attempts) {
+        attempt.selected =
+          attempt.offset === resolved.rotationOffset &&
+          JSON.stringify(attempt.trace) === JSON.stringify(resolved.trace);
+      }
+    }
+    return resolved;
   });
 
   return {
-    groupEntries: preferredSameShiftAlignment.groupEntries,
-    summary,
-    signature: summary
+    groupEntries: activeRosterHangerAlignment.groupEntries,
+    summary: finalSummary,
+    signature: finalSummary
       .map((entry) => `${entry.groupId}:${entry.rotationOffset}`)
       .join("|"),
     debug: {
