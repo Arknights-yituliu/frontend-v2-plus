@@ -64,7 +64,7 @@ let currentTheme = ref('dark')
 let naiveTheme = shallowRef(null)
 
 function setTheme(value) {
-  theme.global.name.value = value
+  theme.change(value)
   document.getElementsByTagName("html").item(0).className = value;
   customTheme.value = `theme-${value}`
   if (value === 'dark') {
