@@ -14,6 +14,7 @@ import {
 
 const props = defineProps({
   tableKey: String,
+  totalCostFlag: Boolean
 })
 
 const emits = defineEmits(['openDetailDialog'])
@@ -43,7 +44,7 @@ defineExpose({
     :headers="options"
     :items="tableData"
     hide-default-footer
-    striped
+    striped="odd"
     items-per-page="-1"
     height="calc(100vh - 213px - 2rem)"
   >
@@ -53,7 +54,7 @@ defineExpose({
           <!-- 二级模组材料消耗 -->
           <span v-if="tableKey === 'mods' && t.key === 'rank2.totalCost'">{{ formatNumber(item.rank1.totalCost + item.rank2.totalCost) }}</span>
           <!-- 材料消耗列 -->
-          <span v-else-if="t.key.includes('totalCost')">{{ costFormatter(item, t.key) }}</span>
+          <span v-else-if="t.key.includes('totalCost')">{{ costFormatter(item, totalCostFlag ? 'elite.totalCost2' : 'elite.totalCost') }}</span>
           <!-- 精二/专三/模组升级率列 -->
           <span v-else-if="t.key.includes('rate')">{{ percentFormatter(item, t.key) }}</span>
           <!-- 其他列 -->

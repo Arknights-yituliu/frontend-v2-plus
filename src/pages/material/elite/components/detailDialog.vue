@@ -14,6 +14,7 @@ import { noModIcon } from '../js/baseData' // 无模组图片的图标
 
 const props = defineProps({
   modelValue: Boolean,
+  totalCostFlag: Boolean
 })
 const collapseActive = ref(['1'])
 
@@ -65,7 +66,7 @@ function getEquipIcon(typeIcon){
             :headers="options"
             :items="detailTableData"
             hide-default-footer
-            striped
+            striped="odd"
             items-per-page="-1"
           >
             <template v-slot:item="{ item }">
@@ -83,7 +84,7 @@ function getEquipIcon(typeIcon){
                   </div>
                 </td>
                 <!-- 材料开销 -->
-                <td>{{ costFormatter(item, 'totalCost') }}</td>
+                <td>{{ costFormatter(item, totalCostFlag && item.totalCost2 ? 'totalCost2' : 'totalCost') }}</td>
                 <!-- 排名 -->
                 <td>{{ item.position }}/{{ item.totalPosition }}</td>
                 <!-- 位于 -->

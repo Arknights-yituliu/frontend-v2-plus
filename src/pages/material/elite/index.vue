@@ -16,6 +16,11 @@ const tabsActiveName = ref(null)
 const detailDialog = ref(false)
 const createDialog = ref(false)
 const tableRefs = ref([])
+const totalCostFlag = ref(JSON.parse(localStorage.getItem('totalCostFlag')) || false)
+
+const changeTotalCostFlag = (v) => {
+  localStorage.setItem('totalCostFlag', JSON.stringify(v))
+}
 
 const tabs = [
   { label: '干员排名表', name: 'operatorTable', ref: 'operatorTableRef', tableKey: 'elite' },
@@ -93,6 +98,10 @@ const openDetailDialog = (v) => {
           placeholder="选择干员子职业"
           clearable
         />
+        <div class="switch">
+          <span>材料开销算上升级用的经验书和龙门币</span>
+          <el-switch v-model="totalCostFlag" @change="changeTotalCostFlag" />
+        </div>
         <el-button @click="createDialog = true">新建自定义干员材料信息</el-button>
         <el-button @click="exportData">导出</el-button>
       </div>
@@ -106,80 +115,17 @@ const openDetailDialog = (v) => {
     <v-card-text>
       <v-tabs-window v-model="tabsActiveName">
         <v-tabs-window-item v-for="item in tabs" :key="item.name" :value="item.name">
-          <Table :tableKey="item.tableKey" ref="tableRefs" @openDetailDialog="openDetailDialog"></Table>
+          <Table :tableKey="item.tableKey" :totalCostFlag="totalCostFlag" ref="tableRefs" @openDetailDialog="openDetailDialog"></Table>
         </v-tabs-window-item>
       </v-tabs-window>
     </v-card-text>
     <!-- 内容区域End -->
 
-    <DetailDialog v-model="detailDialog" @reset="reset"></DetailDialog>
+    <DetailDialog v-model="detailDialog" @reset="reset" :totalCostFlag="totalCostFlag"></DetailDialog>
     <CreateOperatorDialog v-model="createDialog" @reset=reset></CreateOperatorDialog>
   </div>
 </template>
 
 <style lang="scss">
 @import "./style.scss";
-
-.elite-page {
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 68px);
-
-  .op_title {
-    margin-bottom: 6px;
-  }
-  .option {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-
-
-    .el-checkbox-group {
-      margin-bottom: 12px;
-      margin-right: 10px;
-
-      .el-checkbox-button {
-        &.is-focus .el-checkbox-button__inner {
-          border-color: var(--el-checkbox-button-checked-border-color);
-        }
-
-        &:first-child .el-checkbox-button__inner {
-          border-left: var(--el-border);
-        }
-
-        .el-checkbox-button__inner {
-          border-left-style: solid;
-          border-left-color: transparent;
-          border-left-width: 1px;
-        }
-      }
-    }
-
-    .right {
-      > .el-input, .el-cascader, .el-button {
-        margin-bottom: 6px;
-      }
-    }
-
-    .el-input {
-      width: 200px;
-      margin-right: 10px;
-    }
-  }
-
-  .v-table__wrapper {
-    border: 1px solid #eee;
-    //tbody tr:nth-child(even) {
-    //  background-color: #fafafa;
-    //}
-  }
-
-  .v-card-text {
-    padding: 0;
-  }
-
-  .el-cascader-menu__wrap.el-scrollbar__wrap {
-    height: 285px;
-  }
-}
 </style>
