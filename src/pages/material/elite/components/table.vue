@@ -20,6 +20,12 @@ const props = defineProps({
 const emits = defineEmits(['openDetailDialog'])
 const { current, tableData, options, loadmore, getTableData, sortChange } = usePaginationParams(props.tableKey)
 
+const getIconIndex = (iconId) => {
+  if (typeof iconId !== 'string') return null;
+  const match = iconId.match(/(\d+)$/);
+  return match ? Number(match[1]) : null;
+}
+
 // 表格数据
 const tableRef = ref(null);
 
@@ -51,10 +57,14 @@ defineExpose({
     <template v-slot:item="{ item }">
       <tr @click="rowClick(item, emits)" class="clickable">
         <td v-for="(t, i) in options" :key="i">
+          <!-- 技能编号 -->
+          <span v-if="tableKey === 'skills' && t.key === 'code'">{{ `${getIconIndex(item.iconId) || 1}技能` }}</span>
           <!-- 二级模组材料消耗 -->
-          <span v-if="tableKey === 'mods' && t.key === 'rank2.totalCost'">{{ formatNumber(item.rank1.totalCost + item.rank2.totalCost) }}</span>
+          <span v-else-if="tableKey === 'mods' && t.key === 'rank2.totalCost'">{{ formatNumber(item.rank1.totalCost + item.rank2.totalCost) }}</span>
+          <!-- 精英化材料消耗列 -->
+          <span v-else-if="tableKey === 'elite' && t.key.includes('totalCost')">{{ costFormatter(item, totalCostFlag ? 'elite.totalCost2' : 'elite.totalCost') }}</span>
           <!-- 材料消耗列 -->
-          <span v-else-if="t.key.includes('totalCost')">{{ costFormatter(item, totalCostFlag ? 'elite.totalCost2' : 'elite.totalCost') }}</span>
+          <span v-else-if="t.key.includes('totalCost')">{{ costFormatter(item, t.key) }}</span>
           <!-- 精二/专三/模组升级率列 -->
           <span v-else-if="t.key.includes('rate')">{{ percentFormatter(item, t.key) }}</span>
           <!-- 其他列 -->
