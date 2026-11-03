@@ -24,6 +24,7 @@ const operatorList = ref([]) // 干员列表
 // 插入新建自定义干员信息
 export const insertOperatorData = (charId, charInfo) => {
   const operatorData = createOperatorData(charId, charInfo);
+  if (operatorData.name.includes('行铃')) console.log('operatorData', operatorData)
   operatorOriginData.push(operatorData);
 }
 // 删除新建自定义干员信息

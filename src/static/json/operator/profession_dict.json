@@ -168,6 +168,10 @@
       {
         "value": "loopshooter",
         "label": "回环射手"
+      },
+      {
+        "value": "skybreaker",
+        "label": "裂空炮手"
       }
     ]
   },
@@ -240,6 +244,10 @@
       {
         "value": "chainhealer",
         "label": "链愈师"
+      },
+      {
+        "value": "watchman",
+        "label": "守望者"
       }
     ]
   },
@@ -274,6 +282,10 @@
       {
         "value": "ritualist",
         "label": "巫役"
+      },
+      {
+        "value": "supportiveranger",
+        "label": "游击手"
       }
     ]
   },
@@ -320,6 +332,10 @@
       {
         "value": "skywalker",
         "label": "巡空者"
+      },
+      {
+        "value": "dispatcher",
+        "label": "调度者"
       }
     ]
   }
