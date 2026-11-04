@@ -4,7 +4,7 @@ import {createMessage} from "/src/utils/message";
 import userInfoAPI from "/src/api/backend/userInfo"
 import "/src/assets/css/account/home.scss";
 import {userInfo} from '/src/api/backend/userSession.js'
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import LogoutConfirmDialog from "/src/components/account/LogoutConfirmDialog.vue";
 import {operatorTableV2} from '/src/utils/gameData.js'
 const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
@@ -119,7 +119,9 @@ onMounted(() => {
             头像
           </v-list-item-title>
           <div class="flex align-center user-card-bar justify-between">
-            <OperatorAvatar :char-id="userInfo.avatar" rounded :size="50"></OperatorAvatar>
+            <img class="operator-avatar-img operator-avatar-img--rounded"
+                 :style="getOperatorAvatarStyle({ size: 50, mobileSize: 40 })"
+                 :src="getOperatorAvatarUrl(userInfo.avatar)" alt="">
             <v-btn color="primary" variant="text" text="修改头像" @click="displayOrUpdateInfo = 'avatar'"></v-btn>
           </div>
         </v-list-item>
@@ -160,13 +162,16 @@ onMounted(() => {
 
 
       <div class="flex align-center justify-center">
-        <OperatorAvatar :char-id="selectedAvatar" rounded :size="80" :mobile-size="80"></OperatorAvatar>
+        <img class="operator-avatar-img operator-avatar-img--rounded"
+             :style="getOperatorAvatarStyle({ size: 80, mobileSize: 80 })"
+             :src="getOperatorAvatarUrl(selectedAvatar)" alt="">
       </div>
       <div class="user-avatar-checkbox flex flex-wrap justify-center p-16-0 overflow-auto">
-        <OperatorAvatar v-for="(avatar,index) in avatarList" :key="index" :char-id="avatar.charId"
-                        :size="60" :mobile-size="60"
-                        @click="chooseAvatar(avatar.charId)" class="m-4" rounded>
-        </OperatorAvatar>
+        <img v-for="(avatar,index) in avatarList" :key="index"
+             class="operator-avatar-img operator-avatar-img--rounded m-4"
+             :style="getOperatorAvatarStyle({ size: 60, mobileSize: 60 })"
+             :src="getOperatorAvatarUrl(avatar.charId)"
+             @click="chooseAvatar(avatar.charId)" alt="">
       </div>
       <div class="flex justify-center">
         <v-btn variant="text" color="primary" text="确认修改" @click="updateAvatar"></v-btn>

@@ -14,6 +14,7 @@ import {
   buildRiicActiveOperatorIdsByStateIndex,
   buildRiicActiveOperatorIdsBySelectionKey,
 } from "./l65-active-roster-effects.js";
+import { getRiicReservedDormitorySupportOperatorIds } from "./l30-rules.js";
 
 const SKILLS_BY_OPERATOR_ID = new Map();
 
@@ -168,6 +169,7 @@ function getSelectedEntries(group, state, selections) {
       if (candidate) {
         selectedEntries.push({
           groupId: group.id,
+          scope: { roomType: group.facility },
           selectionKey: `${cohort.id}:${teamIndex}`,
           candidate,
           cohort,
@@ -342,10 +344,12 @@ export function buildRiicTailFillResult({
   controlCenterOperatorIds = [],
   controlCenterSegments = [],
   ownedOperators = [],
+  layoutData,
   activeOperatorIds = [],
   idleFillOperators = [],
   fiammettaRecovery = null,
   fiammettaControlUsage = null,
+  reservedDormitoryOperatorIds: priorReservedDormitoryOperatorIds = [],
   onProgress,
 } = {}) {
   onProgress?.("L71_FILL");
@@ -402,6 +406,14 @@ export function buildRiicTailFillResult({
       getSelectedEntries(group, state, nextSelections),
     );
   }
+  const reservedDormitoryOperatorIds = new Set([
+    ...priorReservedDormitoryOperatorIds,
+    ...getRiicReservedDormitorySupportOperatorIds({
+      selectedEntries: [...selectedEntriesByGroupId.values()].flat(),
+      ownedOperators,
+      layoutData,
+    }),
+  ]);
   // 每个班次单独算在岗名单：挂件只在它的主人当班的那一班停靠。
   const activeOperatorIdsBySelectionKey =
     buildRiicActiveOperatorIdsBySelectionKey({
@@ -433,9 +445,10 @@ export function buildRiicTailFillResult({
       activeOperatorIdsBySelectionKey,
       preferredOperatorIdBySlotKey:
         nextFallbackOperatorIdBySlotKeyByGroup[group.id] || {},
-      excludedOperatorIds: selectedEntries.flatMap(
-        (entry) => entry.candidate?.operatorIds || [],
-      ),
+      excludedOperatorIds: [
+        ...selectedEntries.flatMap((entry) => entry.candidate?.operatorIds || []),
+        ...reservedDormitoryOperatorIds,
+      ],
       fiammettaRecovery: {
         ...recovery,
         usedStateIndexes: [...fiammettaUsage.stateIndexes],
@@ -474,6 +487,34 @@ export function buildRiicTailFillResult({
     for (const stateIndex of fallbackPlan.fiammettaTargetStateIndexes || []) {
       fiammettaUsage.stateIndexes.add(stateIndex);
     }
+  }
+
+  const finalSelectedEntries = [...selectedEntriesByGroupId.entries()].flatMap(
+    ([groupId, entries]) => entries.map((entry) => ({
+      ...entry,
+      candidate: {
+        ...entry.candidate,
+        operatorIds: [
+          ...(entry.candidate?.operatorIds || []),
+          ...(fallbackOperatorsBySelectionKeyByGroup[groupId]?.[entry.selectionKey] || [])
+            .map((operator) => operator.charId),
+        ],
+      },
+    })),
+  );
+  const finalReservedIds = getRiicReservedDormitorySupportOperatorIds({
+    selectedEntries: finalSelectedEntries,
+    ownedOperators,
+    layoutData,
+  });
+  if (finalReservedIds.some((operatorId) => !reservedDormitoryOperatorIds.has(operatorId))) {
+    return buildRiicTailFillResult({
+      groups, candidateStatesByGroupId, selections, fallbackOperatorIdBySlotKeyByGroup,
+      controlCenterOperatorIds, controlCenterSegments, ownedOperators, layoutData,
+      activeOperatorIds, idleFillOperators, fiammettaRecovery, fiammettaControlUsage,
+      reservedDormitoryOperatorIds: [...reservedDormitoryOperatorIds, ...finalReservedIds],
+      onProgress,
+    });
   }
 
   return {

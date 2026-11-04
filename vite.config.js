@@ -2,6 +2,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import { visualizer } from "rollup-plugin-visualizer";
+import vuetify from 'vite-plugin-vuetify'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver, NaiveUiResolver } from 'unplugin-vue-components/resolvers'
 
 // 自定义插件，用于生成构建时间
 function buildTimePlugin() {
@@ -21,6 +25,8 @@ function buildTimePlugin() {
 }
 
 // 自定义插件，构建完成后预渲染公开路由为静态 HTML（用于 SEO）
+// 已改为构建后独立进程（scripts/prerender.mjs），避免浏览器堆与 Vite/Rollup 堆叠加。
+// 保留此插件仅供需要单进程行为的场景显式启用。
 function prerenderPlugin() {
     return {
         name: 'prerender-plugin',
@@ -34,7 +40,7 @@ function prerenderPlugin() {
 }
 
 // https://vitejs.dev/config/
-// 使用 `vite build --mode no-prerender` 时跳过 SEO 预渲染，供本地快速构建验证
+// 使用 `vite build --mode no-prerender` 时跳过统计分析插件，供本地快速构建验证
 export default defineConfig(({ mode }) => ({
     resolve: {
         alias: {
@@ -44,10 +50,23 @@ export default defineConfig(({ mode }) => ({
     },
     plugins: [
         vue(),
+        // Vuetify 官方自动 tree-shaking：组件/指令按模板用法自动引入，
+        // 对应 main.js 与 plugins/vuetify 中的通配符 import 已移除
+        vuetify({ autoImport: true }),
+        // Element Plus 服务型 API（ElMessage 等）也能被模板外的代码使用时自动解析，dts 关闭避免生成类型文件
+        AutoImport({
+            resolvers: [ElementPlusResolver()],
+            dts: false,
+        }),
+        // Element Plus + Naive UI 模板组件按需自动引入
+        Components({
+            resolvers: [ElementPlusResolver(), NaiveUiResolver()],
+            dts: false,
+        }),
         // 快速构建模式跳过统计分析插件，减少 gzip 统计与 stats.html 生成开销
         ...(mode === 'no-prerender'
             ? []
-            : [visualizer({ open: false, gzipSize: true }), prerenderPlugin()]),
+            : [visualizer({ open: false, gzipSize: true })]),
         buildTimePlugin()
     ],
     server: {

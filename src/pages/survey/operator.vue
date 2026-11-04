@@ -31,13 +31,11 @@ import {operatorFilterCondition, filterOperatorList} from "/src/utils/survey/ope
 // ===== 页面内组件 =====
 import OperatorStatisticalTable from "/src/components/survey/OperatorStatisticalTable.vue";
 import deepClone from "/src/utils/deepClone.js";
-import EquipIcon from "/src/components/sprite/EquipIcon.vue";
 import OperatorBar from "/src/components/survey/OperatorBar.vue";
 import OperatorEditBar from "/src/components/survey/OperatorEditBar.vue";
 import ImportCommonQuestions from "/src/components/survey/ImportCommonQuestions.vue";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getSkillIconUrl, getEquipIconUrl } from "/src/utils/arknightsResource.js";
 import {formatNumber} from "/src/utils/format.js";
-import SkillIcon from "@/components/sprite/SkillIcon.vue";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
@@ -1383,10 +1381,10 @@ function toggleOperatorViewMode() {
 }
 
 /**
- * 保存手动版修改：只提交本次变更过的干员
+ * 全量上传手动版数据：提交当前列表中的全部干员
  */
 async function saveManualOperatorData() {
-  if (manualSaving.value || manualDirtyCount.value === 0) {
+  if (manualSaving.value || operatorList.value.length === 0) {
     return
   }
 
@@ -1395,8 +1393,7 @@ async function saveManualOperatorData() {
     return
   }
 
-  const dirtyCharIds = manualDirtyCharIds.value
-  const operators = operatorList.value.filter((operator) => dirtyCharIds.has(operator.charId))
+  const operators = operatorList.value
   manualSaving.value = true
   try {
     const result = await saveManualOperators(buildManualOperatorSavePayload(operators))
@@ -1406,7 +1403,7 @@ async function saveManualOperatorData() {
     manualDirtyCharIds.value.clear()
     createMessage({
       type: 'success',
-      text: `手动版已保存：新增 ${createdCount} 条，更新 ${updatedCount} 条，未变更 ${unchangedCount} 条`
+      text: `手动版已全量上传：新增 ${createdCount} 条，更新 ${updatedCount} 条，未变更 ${unchangedCount} 条`
     })
   } catch (error) {
     console.error(error)
@@ -1755,14 +1752,16 @@ onBeforeUnmount(() => {
               color="primary"
               variant="outlined"
               :loading="manualSaving"
-              :disabled="manualDirtyCount === 0"
+              :disabled="operatorList.length === 0"
               @click="saveManualOperatorData()"
             >
               <v-icon class="operator-import-action-icon">mdi-cloud-upload</v-icon>
               <span class="operator-import-action-copy">
                 <span class="operator-import-action-title">上传</span>
                 <span class="operator-import-action-desc">
-                  {{ manualDirtyCount > 0 ? `保存本次修改（待上传 ${manualDirtyCount} 名干员）` : '修改等级或持有状态后可上传' }}
+                  {{ manualDirtyCount > 0
+                    ? `全量上传（当前待上传修改 ${manualDirtyCount} 名，共 ${operatorList.length} 名干员）`
+                    : `全量上传当前 ${operatorList.length} 名干员` }}
                 </span>
               </span>
             </v-btn>
@@ -2063,12 +2062,10 @@ onBeforeUnmount(() => {
     <v-dialog v-model="operatorsStatisticsDetailDialog" max-width="500">
       <v-card>
         <div class="operator-detail-dialog-title">
-          <OperatorAvatar
-              :char-id="operatorsStatisticsDetailOperator.charId"
-              :size="40"
-              :mobile-size="36"
-              :border="true"
-          ></OperatorAvatar>
+          <div class="operator-detail-dialog-avatar">
+            <img :src="getOperatorAvatarUrl(operatorsStatisticsDetailOperator.charId)"
+                 :alt="operatorsStatisticsDetailOperator.name" loading="lazy">
+          </div>
           <div class="operator-detail-dialog-copy">
             <div class="operator-detail-dialog-name">{{ operatorsStatisticsDetailOperator.name }}</div>
             <div class="operator-detail-dialog-desc">表中数值为全服平均练度，蓝色高亮为博士当前练度</div>
@@ -2087,8 +2084,11 @@ onBeforeUnmount(() => {
                 <td class="operator-detail-item-cell">
                   <div class="operator-detail-item">
                     <div class="operator-detail-item-icon">
-                      <EquipIcon :icon="item.iconId" :size="34" v-show="item.type==='equip'"></EquipIcon>
-                      <SkillIcon size="36" :mobile-size="32" :border="true" :icon="`${item.iconId}`" v-show="item.type==='skill'"></SkillIcon>
+                      <img class="operator-detail-equip-icon" :src="getEquipIconUrl(item.iconId)"
+                           alt="" loading="lazy" v-show="item.type==='equip'">
+                      <div class="operator-detail-skill-icon" v-show="item.type==='skill'">
+                        <img :src="getSkillIconUrl(item.iconId)" alt="" loading="lazy">
+                      </div>
                     </div>
                     <div class="operator-detail-item-label">{{ item.label }}</div>
                   </div>

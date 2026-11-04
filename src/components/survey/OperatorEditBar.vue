@@ -3,9 +3,7 @@
 import '/src/assets/css/survey/operator_info_bar.scss'
 import '/src/assets/css/survey/operator_info_bar.phone.scss'
 
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import SkillIcon from "/src/components/sprite/SkillIcon.vue";
-import EquipIcon from "/src/components/sprite/EquipIcon.vue";
+import { getOperatorAvatarUrl, getSkillIconUrl, getEquipIconUrl } from "/src/utils/arknightsResource.js";
 
 defineProps({
   // 干员记录：包含 own / elite / level / 技能专精 / 模组等级等字段
@@ -49,7 +47,8 @@ function handleOwnedChange(value) {
       <div v-if="!operatorInfo.own" class="operator-unowned-badge"><span>未招募</span></div>
 
       <div class="operator-avatar-area">
-        <OperatorAvatar :size="56" :mobile-size="44" :char-id="operatorInfo.charId"></OperatorAvatar>
+        <img class="operator-avatar-image" :src="getOperatorAvatarUrl(operatorInfo.charId)"
+             :alt="operatorInfo.name" loading="lazy">
       </div>
 
       <div class="operator-info operator-edit-info">
@@ -102,7 +101,8 @@ function handleOwnedChange(value) {
           @keydown.enter="handleIconClick($event, 'skill' + (index + 1))"
         >
           <div class="operator-skill-frame">
-            <SkillIcon :size="40" :mobile-size="30" :icon="`${skill.skillIcon}`"></SkillIcon>
+            <img class="operator-skill-icon" :src="getSkillIconUrl(skill.skillIcon)"
+                 :alt="skill.skillName" loading="lazy">
           </div>
           <img :src="`/image/survey/skill-rank-${operatorInfo[`skill${index + 1}`]}-v1.jpg`"
                v-show="operatorInfo[`skill${index + 1}`] > 0"
@@ -122,7 +122,7 @@ function handleOwnedChange(value) {
           @keydown.enter="handleIconClick($event, 'mod' + equip.typeName2)"
         >
           <div class="operator-equip">
-            <EquipIcon :icon="equip.typeIcon" :mobile-size="20" :size="24" class="equip-icon"></EquipIcon>
+            <img class="equip-icon" :src="getEquipIconUrl(equip.typeIcon)" alt="" loading="lazy">
             <img :src="`/image/survey/mod-rank-${operatorInfo[`mod${equip.typeName2}`]}-v1.jpg`"
                  v-show="operatorInfo[`mod${equip.typeName2}`] > 0" class="equip-rank-icon" alt="">
             <div class="equip-name">{{ `${equip.typeName1}-${equip.typeName2}` }}</div>

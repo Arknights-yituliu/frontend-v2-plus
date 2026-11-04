@@ -7,6 +7,7 @@ import {
   onMounted,
   reactive,
   ref,
+  shallowRef,
   toRaw,
   watch,
 } from "vue";
@@ -91,6 +92,7 @@ import {
 import {
   getRiicLayer3RuleConditionChecks,
   getRiicLayer3SupportRoomPlacements,
+  getRiicReservedDormitorySupportOperatorIds,
 } from "/src/utils/riic/l30-rules.js";
 import {
   createRiicRoomGroupFallbackPlan,
@@ -168,6 +170,7 @@ import {
   buildRiicControlCenterCandidateOperators,
 } from "/src/utils/riic/l50-control-candidates.js";
 import { alignRiicScheduleSameShiftBindings } from "/src/utils/riic/l74-same-shift-bindings.js";
+import { optimizeRiicAssembledTradingShifts, optimizeRiicPerceptionTradingSwap, optimizeRiicAutomationPowerShifts } from "/src/utils/riic/l72-fallback-shift-optimization.js";
 import {
   getRiicScheduleTrainingRecommendations,
 } from "/src/utils/riic/l83-training-recommendations.js";
@@ -3884,7 +3887,8 @@ const alignedCoreRotationOffsetByGroupId = computed(() => {
   );
 });
 
-const roomGroupFallbackPlanStates = computed(() => {
+const roomGroupFallbackPlanStates = computed(() => buildRoomGroupFallbackPlans());
+function buildRoomGroupFallbackPlans(previousReservedIds = []) {
   const recovery = fiammettaRecoveryConfig.value;
   const planningGroups = getRiicAutomaticRoomGroupPlanningOrder(
     candidateEnabledScheduleRoomGroups.value,
@@ -4017,6 +4021,15 @@ const roomGroupFallbackPlanStates = computed(() => {
       selectedEntries: activeRosterSelectedEntries,
       baseActiveOperatorIdsByStateIndex: activeOperatorIdsByStateIndex,
     });
+  const reservedDormitoryOperatorIds = [...new Set([
+    ...previousReservedIds,
+    ...getRiicReservedDormitorySupportOperatorIds({
+      selectedEntries: activeRosterSelectedEntries,
+      ownedOperators: virtualOperators.value || [],
+      layoutData: activeLayoutFacilityCounts.value,
+      dormitoryCapacity: riicStaticRoomCapacityByType.value.dormitory,
+    }),
+  ])];
   const getSelectionActiveOperatorIds = (groupId, selectionKey) =>
     activeOperatorIdsBySelectionKey[`${groupId}:${selectionKey}`] || [];
   const getSelectionActiveOperatorIdsByScope = (groupId, selectionKey) => {
@@ -4073,8 +4086,9 @@ const roomGroupFallbackPlanStates = computed(() => {
           ...coreOperatorIds,
           ...parkedOperatorIds,
           ...manualScheduleOperatorIds,
+          ...reservedDormitoryOperatorIds,
         ]
-      : coreOperatorIds;
+      : [...coreOperatorIds, ...reservedDormitoryOperatorIds];
     // Static support placements already occupy this shift and count toward the
     // same active-roster limit when the recycle room selects its fallback.
     const fallbackActiveOperatorIdsBySelectionKey = isRecycleGroup
@@ -4194,13 +4208,55 @@ const roomGroupFallbackPlanStates = computed(() => {
     }
   }
 
+  const finalEntries = activeRosterSelectedEntries.map((entry) => ({
+    ...entry,
+    candidate: {
+      ...entry.candidate,
+      operatorIds: [
+        ...(entry.candidate?.operatorIds || []),
+        ...(plans[entry.groupId]?.assignmentsBySelectionKey?.[entry.selectionKey] || [])
+          .map((operator) => operator.charId),
+      ],
+    },
+  }));
+  const finalReservedIds = getRiicReservedDormitorySupportOperatorIds({
+    selectedEntries: finalEntries,
+    ownedOperators: virtualOperators.value || [],
+    layoutData: activeLayoutFacilityCounts.value,
+    dormitoryCapacity: riicStaticRoomCapacityByType.value.dormitory,
+  });
+  if (finalReservedIds.some((operatorId) => !reservedDormitoryOperatorIds.includes(operatorId))) {
+    return buildRoomGroupFallbackPlans([...reservedDormitoryOperatorIds, ...finalReservedIds]);
+  }
   return plans;
-});
+}
 
 const controlCenterLateFillState = computed(() => {
+  const fallbackPlans = roomGroupFallbackPlanStates.value;
+  const selectedEntries = candidateEnabledScheduleRoomGroups.value.flatMap((group) => {
+    const selected = getSelectedRoomGroupCandidateEntries(
+      group, roomGroupCandidateStates.value[group.id], { allowPartial: true },
+    );
+    return (selected?.selectedEntries || []).map((entry) => ({
+      scope: { roomType: group.facility },
+      candidate: {
+        operatorIds: [
+          ...(entry.candidate?.operatorIds || []),
+          ...(fallbackPlans[group.id]?.assignmentsBySelectionKey?.[entry.selectionKey] || [])
+            .map((operator) => operator.charId),
+        ],
+      },
+    }));
+  });
   return buildRiicControlCenterLateFillState({
     baseState: controlCenterRoleState.value,
-    fallbackPlans: roomGroupFallbackPlanStates.value,
+    fallbackPlans,
+    excludedOperatorIds: getRiicReservedDormitorySupportOperatorIds({
+      selectedEntries,
+      ownedOperators: virtualOperators.value || [],
+      layoutData: activeLayoutFacilityCounts.value,
+      dormitoryCapacity: riicStaticRoomCapacityByType.value.dormitory,
+    }),
     excludedOperatorIdsByTeamIndex:
       controlCenterLateFillExcludedOperatorIdsByTeamIndex.value,
     idleFillOperators: riicIdleFillOperators.value,
@@ -4710,7 +4766,7 @@ const assembledScheduleCandidateState = computed(() => {
     };
   }
 
-  const sameShiftAlignment = alignRiicScheduleSameShiftBindings({
+  const alignment = alignRiicScheduleSameShiftBindings({
     groupEntries: selectedGroups,
     ownedOperators: virtualOperators.value || [],
     lockedOperatorIds: [
@@ -4719,6 +4775,38 @@ const assembledScheduleCandidateState = computed(() => {
       "char_436_whispr",
       "char_4109_baslin",
     ],
+  });
+  const hasManualOverrides = [
+    scheduleRoomOperatorOverrides.value,
+    scheduleRoomProductOverrides.value,
+    invalidatedScheduleRoomKeys.value,
+  ].some((overrides) => Object.keys(overrides || {}).length > 0);
+  const perceptionAlignment = optimizeRiicPerceptionTradingSwap({
+    alignment: optimizeRiicAssembledTradingShifts({
+      alignment,
+      ownedOperators: virtualOperators.value || [],
+      fiammettaRecovery: fiammettaRecoveryConfig.value,
+      lockedOperatorIds: [
+        "char_391_rosmon",
+        "char_4046_ebnhlz",
+        "char_436_whispr",
+        "char_4109_baslin",
+      ],
+      hasManualOverrides,
+    }),
+    ownedOperators: virtualOperators.value || [],
+    fiammettaRecovery: fiammettaRecoveryConfig.value,
+    lockedOperatorIds: ["char_391_rosmon", "char_436_whispr", "char_4109_baslin"],
+    hasManualOverrides,
+    layoutData: activeLayoutFacilityCounts.value,
+  });
+  const sameShiftAlignment = optimizeRiicAutomationPowerShifts({
+    alignment: perceptionAlignment,
+    ownedOperators: virtualOperators.value || [],
+    fiammettaRecovery: fiammettaRecoveryConfig.value,
+    lockedOperatorIds: ["char_391_rosmon", "char_4046_ebnhlz", "char_436_whispr", "char_4109_baslin"],
+    hasManualOverrides,
+    layoutData: activeLayoutFacilityCounts.value,
   });
   const alignedGroups = sameShiftAlignment.groupEntries;
 
@@ -4729,7 +4817,7 @@ const assembledScheduleCandidateState = computed(() => {
         key: alignedGroups
           .map(
             ({ group, candidate }) =>
-              `${group.id}:${candidate.key}:${candidate.sameShiftBindingOffset || 0}`,
+              `${group.id}:${candidate.key}:${candidate.sameShiftBindingOffset || 0}:${candidate.independentStationSwap || ""}:${candidate.perceptionOperatorSwap || ""}:${candidate.automationPowerSwap || ""}`,
           )
           .join("|"),
         groups: alignedGroups.map(({ group, candidate }) => ({
@@ -5378,7 +5466,7 @@ const riicLegacyL79Settlement = computed(() => {
       })
     : null;
 });
-const riicEfficiencyCalculation = computed(() => {
+const riicEfficiencyCalculationSource = computed(async () => {
   const input = riicL79InputDebugState.value;
   if (!input?.schedule) {
     return { result: null, error: "当前没有可计算的排班" };
@@ -5393,7 +5481,7 @@ const riicEfficiencyCalculation = computed(() => {
       efficiencySettings: scheduleExecutionSettings.riicEfficiencySettings,
       treatSkillsAsUnlocked: riicTrainingMode.value === "ideal",
     });
-    const result = calculateRiicEfficiency(schedule);
+    const result = await calculateRiicEfficiency(schedule);
     const yieldSummary = createRiicEfficiencyYield(
       result,
       riicSchedulePreviewBase.value,
@@ -5424,6 +5512,13 @@ const riicEfficiencyCalculation = computed(() => {
       warnings: [],
     };
   }
+});
+
+// 干员目录改为按需加载后计算变为异步：用 ref 承接结果，
+// 下游仍按同步方式读取 riicEfficiencyCalculation.value.result 等字段。
+const riicEfficiencyCalculation = shallowRef({
+  result: null,
+  error: "当前没有可计算的排班",
 });
 // 「排班分析报告」只展示可行动的检查结果，以下几项包内引擎提示在生成器场景下隐藏。
 // 在消费端按 code 过滤，而不是改动 src/vendor 的同步产物，同时让 ?mode=dev
@@ -6148,6 +6243,34 @@ const riicL79InputDebugState = computed(() => {
     console.error(error);
     return null;
   }
+});
+// 必须放在所有依赖声明之后：riicEfficiencyCalculationSource 读取
+// riicL79InputDebugState（下方声明），若在声明前 immediate 求值会抛
+// “Cannot access before initialization”，异步结果将永远不写回。
+let riicEfficiencyCalcDisposed = false;
+watch(
+  riicEfficiencyCalculationSource,
+  (pending) => {
+    pending
+      .then((calculation) => {
+        if (!riicEfficiencyCalcDisposed) {
+          riicEfficiencyCalculation.value = calculation;
+        }
+      })
+      .catch((error) => {
+        if (!riicEfficiencyCalcDisposed) {
+          riicEfficiencyCalculation.value = {
+            result: null,
+            error: String(error?.message || "riic-efficiency 计算失败"),
+          };
+        }
+        console.error("riic-efficiency calculation failed", error);
+      });
+  },
+  { immediate: true },
+);
+onBeforeUnmount(() => {
+  riicEfficiencyCalcDisposed = true;
 });
 const riicScheduleResultSnapshot = computed(() =>
   createRiicScheduleResultSnapshot({

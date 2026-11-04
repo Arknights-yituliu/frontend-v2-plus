@@ -1,5 +1,25 @@
 [
   {
+    "name": "塔露拉",
+    "profession": "近卫/术师",
+    "max_efficiency": 0.75,
+    "conditions": {
+      "target_profession": [
+        "近卫",
+        "术师"
+      ],
+      "skill_name": "剑与昔时/火旁新事",
+      "branch": [
+        "本源近卫",
+        "本源术师"
+      ],
+      "efficiency_base": 0.3,
+      "efficiency_bonus": 0.45
+    },
+    "skill_name": "进驻训练室协助位时，近卫与术师干员的专精技能训练速度+30%，如果训练位干员分支为本源近卫或本源术师，则训练速度额外+45%",
+    "charId": "char_4247_oxi"
+  },
+  {
     "name": "岳羽由加莉",
     "profession": "狙击/医疗",
     "max_efficiency": 0.45,

@@ -1,7 +1,7 @@
 <script setup>
 import {translate} from "/src/utils/i18n.js";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import {operatorTableV2} from '/src/utils/gameData.js'
 import { buildRiicOperatorIdByName } from "/src/utils/riicOperatorIdentity.js";
 
@@ -49,11 +49,12 @@ const translateKey = {
                  :item-id="props.product"></ItemImage>
     </div>
     <div class="flex justify-center">
-      <OperatorAvatar
+      <img
           v-for="(name, operatorIndex) in props.operators"
           :key="operatorIndex"
-          :char-id="characterIdAndName[name]" class="m-4" :size="50" :mobile-size="50">
-      </OperatorAvatar>
+          class="operator-avatar-img m-4"
+          :style="getOperatorAvatarStyle({ size: 50, mobileSize: 50 })"
+          :src="getOperatorAvatarUrl(characterIdAndName[name])" alt="">
     </div>
   </div>
 </template>

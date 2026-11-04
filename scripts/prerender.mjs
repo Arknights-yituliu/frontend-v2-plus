@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
-import { resolve, join } from 'node:path'
+import { resolve, join, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import express from 'express'
 import history from 'connect-history-api-fallback'
 import puppeteer from 'puppeteer-core'
@@ -90,4 +91,25 @@ export async function prerender({ outDir, log = console }) {
         }
         server.close()
     }
+}
+
+// 作为独立进程运行：在 vite build 结束后执行，让 Vite/Rollup 的堆先被释放，
+// 预渲染浏览器不再与 2.4GB 的构建进程叠加。
+// 用法：node scripts/prerender.mjs [distDir]
+const isDirectRun = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+
+if (isDirectRun) {
+    const scriptDir = dirname(fileURLToPath(import.meta.url))
+    const outDir = resolve(process.argv[2] || join(scriptDir, '..', 'dist'))
+    const startedAt = Date.now()
+    prerender({ outDir })
+        .then((ok) => {
+            const seconds = ((Date.now() - startedAt) / 1000).toFixed(1)
+            console.info(`[prerender] ${ok ? '完成' : '已跳过'}，耗时 ${seconds}s`)
+            process.exit(ok ? 0 : 0)
+        })
+        .catch((error) => {
+            console.error(`[prerender] 失败: ${error?.stack || error}`)
+            process.exit(1)
+        })
 }

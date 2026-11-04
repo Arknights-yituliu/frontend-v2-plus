@@ -1,7 +1,6 @@
 import BUILDING_TABLE from "../../static/json/build/building_table.json";
 import OPERATOR_TABLE from "../../static/json/operator/character_table_simple.v2.json";
 import PROFESSION_DICT from "../../static/json/operator/profession_dict.json";
-import RECYCLE_OPERATOR from "/src/vendor/riic-efficiency/data/operators/char_4232_hbound.json";
 import { getRiicOperatorProfile } from "/src/utils/riicOperatorIdentity.js";
 
 const SKILLS_BY_OPERATOR_ID = new Map();
@@ -65,27 +64,30 @@ export function getRiicOperatorSkillDetails(charId) {
     unlock: `精${skill.phase} ${skill.level}级`,
     description: stripMarkup(skill.description),
   }));
-  if (localSkills.length > 0) {
-    return localSkills;
+  return localSkills;
+}
+
+/**
+ * 获取干员的职业大类与职业分支名称
+ * @param {string} charId 干员 ID
+ * @param {Object} [operator] 可选：调用方已持有的干员数据，缺省时回落到内置干员表
+ * @returns {{profession: string, branch: string, label: string}} 职业、分支及拼接后的展示文案
+ */
+export function getRiicOperatorClassLabel(charId, operator = null) {
+  const key = String(charId || "").trim();
+  const metadata =
+    operator || (key ? OPERATOR_TABLE?.[key] : null) || getRiicOperatorProfile(key);
+  if (!metadata) {
+    return { profession: "", branch: "", label: "" };
   }
 
-  const packageSkillFile =
-    charId === RECYCLE_OPERATOR.id ? RECYCLE_OPERATOR : null;
-  return (packageSkillFile?.chains || []).flatMap(
-    (chain) =>
-      (chain.stages || []).map((stage) => ({
-        name: stage.name,
-        facility: chain.room,
-        unlock:
-          stage.unlock?.type === "elite"
-            ? `精英${stage.unlock.value}`
-            : `${stage.unlock?.value || 1}级`,
-        description: (stage.effects || [])
-          .map((effect) => stripMarkup(effect.text))
-          .filter(Boolean)
-          .join("；"),
-      })),
-  );
+  const profession = PROFESSION_LABELS.get(metadata.profession) || "";
+  const branch = PROFESSION_LABELS.get(metadata.subProfessionId) || "";
+  return {
+    profession,
+    branch,
+    label: [profession, branch].filter(Boolean).join(" · "),
+  };
 }
 
 export function formatRiicOperatorTooltip(operator, skillTooltip) {
@@ -100,9 +102,7 @@ export function formatRiicOperatorTooltip(operator, skillTooltip) {
   const rarity = Number(metadata.rarity);
   const rarityLabel =
     Number.isInteger(rarity) && rarity > 0 ? `${rarity}星` : "";
-  const profession = PROFESSION_LABELS.get(metadata.profession);
-  const branch = PROFESSION_LABELS.get(metadata.subProfessionId);
-  const classLabel = [profession, branch].filter(Boolean).join(" · ");
+  const classLabel = getRiicOperatorClassLabel(charId, metadata).label;
   const header = [name, rarityLabel, classLabel].filter(Boolean).join("｜");
 
   return [header, String(skillTooltip || "")].filter(Boolean).join("\n");
@@ -136,32 +136,7 @@ export function getRiicOperatorSkillTooltip(operator, fallbackOperator = null) {
     })
     .filter(Boolean);
 
-  const packageSkillFile =
-    charId === RECYCLE_OPERATOR.id ? RECYCLE_OPERATOR : null;
-  const packageDescriptions = (packageSkillFile?.chains || []).flatMap((chain) =>
-    (chain.stages || [])
-      .filter((stage) => {
-        const unlock = stage.unlock || {};
-        if (unlock.type === "elite") {
-          return Number(source?.elite) >= Number(unlock.value || 0);
-        }
-        return Number(source?.level) >= Number(unlock.value || 1);
-      })
-      .map((stage) => {
-        const effectText = (stage.effects || [])
-          .map((effect) => stripMarkup(effect.text))
-          .filter(Boolean)
-          .join("；");
-        return effectText
-          ? `${String(stage.name || "").trim()}：${effectText}`
-          : String(stage.name || "").trim();
-      })
-      .filter(Boolean),
-  );
-
   return descriptions.length > 0
     ? [...new Set(descriptions)].join("\n")
-    : packageDescriptions.length > 0
-      ? [...new Set(packageDescriptions)].join("\n")
-      : "暂无已解锁基建技能";
+    : "暂无已解锁基建技能";
 }

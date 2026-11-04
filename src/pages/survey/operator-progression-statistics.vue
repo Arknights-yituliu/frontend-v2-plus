@@ -3,7 +3,7 @@ import "/src/assets/css/survey/rank.v3.scss";
 import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {match} from "pinyin-pro";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import operatorProgressionStatisticsDataCache from "/src/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import {dateFormat} from "/src/utils/dateUtil.js";
 
@@ -748,7 +748,8 @@ onUnmounted(() => {
             <div class="c-op">
               <div class="op-identity">
                 <div class="op-avatar">
-                  <OperatorAvatar :char-id="op.charId" :rarity="Number(op.rarity)" :size="36" :mobile-size="32"/>
+                  <img class="operator-avatar-img" :style="getOperatorAvatarStyle({ size: 36, mobileSize: 32 })"
+                       :src="getOperatorAvatarUrl(op.charId)" alt="">
                 </div>
                 <div>
                   <div class="op-identity__name">{{ op.name }}</div>
@@ -906,7 +907,8 @@ onUnmounted(() => {
 
           <div class="op-drawer__head">
             <div class="op-avatar">
-              <OperatorAvatar :char-id="activeOperator.charId" :rarity="Number(activeOperator.rarity)" :size="64"/>
+              <img class="operator-avatar-img" :style="getOperatorAvatarStyle({ size: 64, mobileSize: 40 })"
+                   :src="getOperatorAvatarUrl(activeOperator.charId)" alt="">
             </div>
             <div>
               <div class="op-drawer__name">{{ activeOperator.name }}</div>

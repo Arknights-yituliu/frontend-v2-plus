@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
 import buildingTable from "/src/static/json/build/building_table.json";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import { operatorTableV2 } from "/src/utils/gameData.js";
 import {
   evaluateRiicCrossRoomGroupAvailability,
@@ -2434,12 +2434,12 @@ onMounted(() => {
                   'is-disabled': !operator.enabled,
                 }"
               >
-                <OperatorAvatar
+                <img
                   v-if="operator.charId"
-                  :char-id="operator.charId"
-                  :rarity="operator.rarity"
-                  :size="42"
-                  :border="true"
+                  class="operator-avatar-img operator-avatar-img--bordered"
+                  :style="getOperatorAvatarStyle({ size: 42, mobileSize: 40, rarity: operator.rarity, bordered: true })"
+                  :src="getOperatorAvatarUrl(operator.charId)"
+                  alt=""
                 />
                 <div class="operator-fact-content">
                   <div class="operator-fact-title">
@@ -2523,12 +2523,12 @@ onMounted(() => {
                   'is-disabled': !operator.enabled,
                 }"
               >
-                <OperatorAvatar
+                <img
                   v-if="operator.charId"
-                  :char-id="operator.charId"
-                  :rarity="operator.rarity"
-                  :size="42"
-                  :border="true"
+                  class="operator-avatar-img operator-avatar-img--bordered"
+                  :style="getOperatorAvatarStyle({ size: 42, mobileSize: 40, rarity: operator.rarity, bordered: true })"
+                  :src="getOperatorAvatarUrl(operator.charId)"
+                  alt=""
                 />
                 <div class="operator-fact-content">
                   <div class="operator-fact-title">
@@ -2707,12 +2707,12 @@ onMounted(() => {
                   :key="`${room.id}:${assignment.name}`"
                   class="system-plan-operator"
                 >
-                  <OperatorAvatar
-                  v-if="getAssessmentOperator(assignment.name).charId"
-                    :char-id="getAssessmentOperator(assignment.name).charId"
-                    :rarity="getAssessmentOperator(assignment.name).rarity"
-                    :size="30"
-                    :border="true"
+                  <img
+                    v-if="getAssessmentOperator(assignment.name).charId"
+                    class="operator-avatar-img operator-avatar-img--bordered"
+                    :style="getOperatorAvatarStyle({ size: 30, mobileSize: 40, rarity: getAssessmentOperator(assignment.name).rarity, bordered: true })"
+                    :src="getOperatorAvatarUrl(getAssessmentOperator(assignment.name).charId)"
+                    alt=""
                   />
                   <span>{{ assignment.name }}</span>
                   <strong>
@@ -2819,12 +2819,12 @@ onMounted(() => {
                   :class="{ active: choice.selectedNames.includes(name) }"
                   @click="updateSystemPlacementChoice(choice, name)"
                 >
-                  <OperatorAvatar
+                  <img
                     v-if="getAssessmentOperator(name).charId"
-                    :char-id="getAssessmentOperator(name).charId"
-                    :rarity="getAssessmentOperator(name).rarity"
-                    :size="28"
-                    :border="true"
+                    class="operator-avatar-img operator-avatar-img--bordered"
+                    :style="getOperatorAvatarStyle({ size: 28, mobileSize: 40, rarity: getAssessmentOperator(name).rarity, bordered: true })"
+                    :src="getOperatorAvatarUrl(getAssessmentOperator(name).charId)"
+                    alt=""
                   />
                   <span>{{ name }}</span>
                 </button>

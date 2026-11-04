@@ -1,15 +1,13 @@
 import {createApp} from 'vue'
 import {createHead} from '@unhead/vue/client'
 
-import ElementPlus from 'element-plus'
-import naive from 'naive-ui'
 import { plugin as Slicksort } from 'vue-slicksort'
 import App from './App.vue'
 import router from "/src/router/index.js";
 
+// Element Plus 与 Naive UI 的组件由 unplugin-vue-components 在构建时按需引入，
 import 'element-plus/dist/index.css'
 import "element-plus/theme-chalk/dark/css-vars.css";
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 
 import 'vuetify/styles'
 import vuetify from "/src/plugins/vuetify/vuetify.js";
@@ -26,8 +24,6 @@ const head = createHead()
 // }
 
 
-app.use(ElementPlus, {locale: zhCn,})
-app.use(naive)
 app.use(Slicksort)
 app.use(router)
 app.use(vuetify)

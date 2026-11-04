@@ -13,7 +13,7 @@ import {translate} from '/src/utils/i18n.js'
 import {readFileToString} from '/src/utils/fileUtils.js'
 import {debounce} from "/src/utils/debounce.js";
 import {createMessage} from '/src/utils/message.js'
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import {getOperatorAvatarUrl} from "/src/utils/arknightsResource.js";
 import {useDisplay} from 'vuetify'
 import {useRouter} from 'vue-router';
 import {saveAs} from 'file-saver';
@@ -1531,8 +1531,13 @@ function useNewUI() {
               <div class="flex align-center ">
                 <div class="opacity-70">{{ translate('schedule', 'schedule.RecoveryTarget') }}</div>
                 <div class="spacer-12"></div>
-                <OperatorAvatar :size="50" rounded @click="openFiammettaDialog(scheduleIndex)"
-                                :char-id="getCharId(plansTemplate[scheduleIndex].Fiammetta.target)"></OperatorAvatar>
+                <img v-if="plansTemplate[scheduleIndex].Fiammetta.target"
+                     class="operator-avatar-image avatar-rounded avatar-50" @click="openFiammettaDialog(scheduleIndex)"
+                     :src="getOperatorAvatarUrl(getCharId(plansTemplate[scheduleIndex].Fiammetta.target))" alt="">
+                <div v-else class="operator-avatar-empty avatar-rounded avatar-50"
+                     @click="openFiammettaDialog(scheduleIndex)">
+                  {{ translate('schedule', 'schedule.NotSelected') }}
+                </div>
               </div>
 
 
@@ -1673,8 +1678,8 @@ function useNewUI() {
             <div class="selected-operator"
                  v-for="(charName, index) in getRoomOperators(selectedScheduleIndex,selectedRoomType, selectedRoomIndex)"
                  :key="index">
-              <OperatorAvatar :size="60" :mobile-size="32" @click="deleteOperator(charName)"
-                              :char-id="getCharId(charName)" class="m-4"></OperatorAvatar>
+              <img class="operator-avatar-image avatar-60-m32 m-4" @click="deleteOperator(charName)"
+                   :src="getOperatorAvatarUrl(getCharId(charName))" alt="">
               <v-icon icon="mdi-close" class="selected-operator-icon-close" @click="deleteOperator(charName)"></v-icon>
             </div>
           </div>
@@ -1707,7 +1712,7 @@ function useNewUI() {
                    @click="chooseOperator(operator.name)"
                    :text="operator.name" variant="tonal" color="primary" class="m-2">
               <template v-slot:prepend>
-                <OperatorAvatar :size="28" :mobile-size="30" rounded :char-id="operator.charId"></OperatorAvatar>
+                <img class="operator-avatar-image avatar-rounded avatar-28-m30" :src="getOperatorAvatarUrl(operator.charId)" alt="">
               </template>
             </v-btn>
           </div>
@@ -1745,7 +1750,7 @@ function useNewUI() {
                    @click="setFiammetta(selectedScheduleIndex,'target', operator.name)"
                    :text="operator.name" variant="tonal" color="primary" class="m-2">
               <template v-slot:prepend>
-                <OperatorAvatar :size="28" :mobile-size="30" rounded :char-id="operator.charId"></OperatorAvatar>
+                <img class="operator-avatar-image avatar-rounded avatar-28-m30" :src="getOperatorAvatarUrl(operator.charId)" alt="">
               </template>
             </v-btn>
           </div>

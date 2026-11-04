@@ -14,7 +14,7 @@ import {computed, onMounted, ref} from "vue";
 import {debounce} from "/src/utils/debounce";
 import {translate} from "/src/utils/i18n";
 import DescriptionExplain from "/src/components/tools/shared/DescriptionExplain.vue";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "@/utils/arknightsResource.js";
 
 let buildingTable = {}
 for (const operator of building_table) {
@@ -690,8 +690,8 @@ onMounted(() => {
           <td :rowspan="mergeRow(operator.charId,index).rowCount"
               v-if="mergeRow(operator.charId,index).index===index">
             <div class="flex flex-col align-center ">
-              <OperatorAvatar :char-id="operator.charId" :size="50">
-              </OperatorAvatar>
+              <img class="operator-avatar-img" :style="getOperatorAvatarStyle({ size: 50, mobileSize: 40 })"
+                   :src="getOperatorAvatarUrl(operator.charId)" alt="">
               <div>{{ operator.name }}</div>
             </div>
           </td>

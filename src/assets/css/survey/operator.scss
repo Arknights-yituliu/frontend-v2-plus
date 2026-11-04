@@ -396,6 +396,22 @@
       background-color: var(--c-background-color);
     }
 
+    .operator-equip-icon {
+      display: block;
+      width: 30px;
+      height: 30px;
+      margin: auto;
+      filter: drop-shadow(2px 2px 2px rgb(100, 100, 100));
+    }
+
+    /* 干员推荐技能图标：与原先组件 40px（内缩 4px）尺寸保持一致 */
+    .operator-skill-image {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      object-fit: cover;
+    }
+
     .equip-name {
       width: 100%;
       text-align: center;
@@ -985,6 +1001,27 @@
   white-space: normal;
 }
 
+/* 干员详情弹窗头像：保留原先 6 星头像的金色描边观感 */
+.operator-detail-dialog-avatar {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 2px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #ff8a3d, #ffd24a);
+  overflow: hidden;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+    object-fit: cover;
+    background-color: var(--c-background-color);
+  }
+}
+
 .operator-detail-dialog-copy {
   display: flex;
   min-width: 0;
@@ -1060,6 +1097,32 @@
   height: 36px;
   align-items: center;
   justify-content: center;
+}
+
+/* 详情弹窗模组图标：与原先组件 34px 尺寸、阴影保持一致 */
+.operator-detail-equip-icon {
+  width: 34px;
+  height: 34px;
+  filter: drop-shadow(1px 1px 1px rgb(0, 0, 0));
+}
+
+/* 详情弹窗技能图标：保留原先组件的蓝色描边观感 */
+.operator-detail-skill-icon {
+  width: 36px;
+  height: 36px;
+  box-sizing: border-box;
+  padding: 2px;
+  border-radius: 4px;
+  background: rgb(33, 150, 243);
+  overflow: hidden;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+    object-fit: cover;
+  }
 }
 
 .operator-detail-item-label {

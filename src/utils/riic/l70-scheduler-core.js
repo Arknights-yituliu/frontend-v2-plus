@@ -10,6 +10,9 @@ import {
 import {
   reconcileRiicControlCenterAfterRoomSelection,
 } from "./l73-control-center-reconciliation.js";
+import { getRiicReservedDormitorySupportOperatorIds } from "./l30-rules.js";
+import { getRiicFiammettaTeamStateIndexes } from "./l65-fiammetta-recovery.js";
+import { optimizeRiicFallbackSameShift, optimizeRiicTradingTeamRotations } from "./l72-fallback-shift-optimization.js";
 
 export function buildRiicFinalSelectedRoomTeams({
   groups = [],
@@ -43,6 +46,17 @@ export function buildRiicFinalSelectedRoomTeams({
               cohortId: cohort.id,
               selectionKey,
               teamIndex,
+              activeStateIndexes: getRiicFiammettaTeamStateIndexes(cohort, teamIndex),
+              stationLevel: cohort.stationLevel,
+              stationIndexByStateIndex: Object.fromEntries(
+                (cohort.rotationSegments || []).flatMap((segment) =>
+                  (segment.assignments || []).flatMap((assignment) =>
+                    (assignment.candidateIndexes || [assignment.teamIndex]).includes(teamIndex)
+                      ? [[segment.index, assignment.stationIndex]]
+                      : [],
+                  ),
+                ),
+              ),
               facility:
                 candidate?.candidateScope?.roomType || group.facility || "",
               product:
@@ -101,6 +115,7 @@ export function runRiicAutomaticSchedule(input = {}) {
     controlCenterOperatorIds: input.controlCenterOperatorIds,
     controlCenterSegments: input.controlCenterSegments,
     ownedOperators: input.ownedOperators,
+    layoutData: input.layoutData,
     idleFillOperators: input.idleFillOperators,
     fiammettaRecovery: input.fiammettaRecovery,
     fiammettaControlUsage: input.fiammettaControlUsage,
@@ -114,6 +129,7 @@ export function runRiicAutomaticSchedule(input = {}) {
     tailFillResult,
     controlCenterOperatorIds: input.controlCenterOperatorIds,
     ownedOperators: input.ownedOperators,
+    layoutData: input.layoutData,
     idleFillOperators: input.idleFillOperators,
     fiammettaRecovery: input.fiammettaRecovery,
     fiammettaControlUsage: input.fiammettaControlUsage,
@@ -135,16 +151,49 @@ export function runRiicAutomaticSchedule(input = {}) {
         finalRoomTeams.length > 0,
       manualOperatorIdsByTeamIndex:
         input.manualControlCenterOperatorIdsByTeamIndex,
+      excludedOperatorIds: getRiicReservedDormitorySupportOperatorIds({
+        selectedEntries: finalRoomTeams.map((team) => ({
+          scope: { roomType: team.facility },
+          candidate: { operatorIds: team.operatorIds },
+        })),
+        ownedOperators: input.ownedOperators,
+        layoutData: input.layoutData,
+      }),
       excludedOperatorIdsByTeamIndex:
         input.controlCenterLateFillExcludedOperatorIdsByTeamIndex,
       idleFillOperators: input.idleFillOperators,
+      ownedOperators: input.ownedOperators,
       fiammettaRecovery: input.fiammettaRecovery,
     });
+
+  const optimizedTailFillResult = optimizeRiicFallbackSameShift({
+    groups: input.groups,
+    candidateStatesByGroupId: input.candidateStatesByGroupId,
+    tailFillResult: resourceSuiteResult.tailFillResult,
+    selectedRoomTeams: finalRoomTeams,
+    controlState: controlCenterReconciliation.controlState,
+    ownedOperators: input.ownedOperators,
+    fiammettaRecovery: input.fiammettaRecovery,
+  });
+  const optimizedRoomTeams = buildRiicFinalSelectedRoomTeams({
+    groups: input.groups,
+    candidateStatesByGroupId: input.candidateStatesByGroupId,
+    tailFillResult: optimizedTailFillResult,
+  });
+  const finalTailFillResult = controlCenterReconciliation.status === "ready"
+    ? optimizeRiicTradingTeamRotations({
+        tailFillResult: optimizedTailFillResult,
+        selectedRoomTeams: optimizedRoomTeams,
+        controlState: controlCenterReconciliation.controlState,
+        ownedOperators: input.ownedOperators,
+        fiammettaRecovery: input.fiammettaRecovery,
+      })
+    : optimizedTailFillResult;
 
   return {
     automaticSelection,
     tailFillResult,
-    resourceSuiteResult,
+    resourceSuiteResult: { ...resourceSuiteResult, tailFillResult: finalTailFillResult },
     controlCenterReconciliation,
   };
 }

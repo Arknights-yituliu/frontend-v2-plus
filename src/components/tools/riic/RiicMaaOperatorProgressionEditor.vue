@@ -1,7 +1,7 @@
 <script setup>
 import { computed, reactive, ref, watch } from "vue";
 import { ElMessage } from "element-plus";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import { operatorTableV2 } from "/src/utils/gameData.js";
 import BUILDING_TABLE from "/src/static/json/build/building_table.json";
 import PROFESSION_DICT from "/src/static/json/operator/profession_dict.json";
@@ -492,7 +492,8 @@ watch(
       <div class="operator-progression-list">
         <article v-for="operator in filteredOperators" :key="operator.charId" class="operator-progression-row">
           <div class="operator-progression-card-main">
-            <OperatorAvatar :char-id="operator.charId" :rarity="operator.rarity" :size="42" :mobile-size="42" />
+            <img class="operator-avatar-img" :style="getOperatorAvatarStyle({ size: 42, mobileSize: 42 })"
+                 :src="getOperatorAvatarUrl(operator.charId)" alt="">
             <div class="operator-progression-identity">
               <strong>{{ operator.name }}</strong>
               <span class="operator-progression-metadata">

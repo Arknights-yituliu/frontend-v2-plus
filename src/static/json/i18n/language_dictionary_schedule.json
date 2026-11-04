@@ -196,6 +196,10 @@
       "cn": "恢复目标",
       "en": "Recovery Target"
     },
+    "NotSelected": {
+      "cn": "未选择",
+      "en": "Not selected"
+    },
     "OrderedStationing": {
       "cn": "按顺序入驻",
       "en": "Station in order"

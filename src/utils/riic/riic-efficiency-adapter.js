@@ -31,9 +31,11 @@ export {
   signedNumber,
 } from "/src/vendor/riic-efficiency/dist/index.js";
 
+// 干员目录数据按需加载：432 个干员 JSON 在构建时各自成为独立模块，
+// 只有真正打开基建计算页面时才并行拉取，避免进入主包、撑大 Rollup 模块图。
 const operatorModules = import.meta.glob(
   "/src/vendor/riic-efficiency/data/operators/*.json",
-  { eager: true, import: "default" },
+  { import: "default" },
 );
 const rulesetModules = import.meta.glob(
   "/src/vendor/riic-efficiency/data/ruleset.json",
@@ -109,13 +111,27 @@ export const RIIC_RECYCLE_BOOST_OPTIONS = Object.freeze(
   })),
 );
 
-const catalog = {
-  ...createEfficiencyCatalog(
-    Object.values(operatorModules),
-    termsData.terms,
-  ),
-  ruleset: rulesetWithRecycle,
-};
+let catalogPromise = null;
+
+// 惰性构建干员目录，首次调用时并发加载全部干员数据并缓存结果。
+export function loadRiicEfficiencyCatalog() {
+  if (!catalogPromise) {
+    catalogPromise = Promise.all(Object.values(operatorModules).map((load) => load()))
+      .then((operators) => {
+        const loadedCatalog = {
+          ...createEfficiencyCatalog(operators, termsData.terms),
+          ruleset: rulesetWithRecycle,
+        };
+        return loadedCatalog;
+      })
+      .catch((error) => {
+        // 加载失败时清空缓存，允许下次重试
+        catalogPromise = null;
+        throw error;
+      });
+  }
+  return catalogPromise;
+}
 
 export function buildResultDisplay(result, options = {}) {
   return buildPackageResultDisplay(result, {
@@ -126,12 +142,13 @@ export function buildResultDisplay(result, options = {}) {
   });
 }
 
-export function calculateRiicDroneAcceleration(result, strategyText = "") {
+export async function calculateRiicDroneAcceleration(result, strategyText = "") {
   const document = result?.document;
   if (!document) {
     return null;
   }
 
+  const catalog = await loadRiicEfficiencyCatalog()
   const override = String(strategyText ?? "").trim();
   const droneDocument = {
     ...document,
@@ -439,7 +456,8 @@ export function buildRiicEfficiencySchedule(
   };
 }
 
-export function calculateRiicEfficiency(schedule) {
+export async function calculateRiicEfficiency(schedule) {
+  const catalog = await loadRiicEfficiencyCatalog()
   return calculateEfficiency(schedule, {
     catalog,
     ruleset: rulesetWithRecycle,

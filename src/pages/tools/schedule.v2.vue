@@ -13,7 +13,7 @@ import { translate } from "/src/utils/i18n.js";
 import { readFileToString } from "/src/utils/fileUtils.js";
 import { debounce } from "/src/utils/debounce.js";
 import { cMessage } from "/src/utils/message.js";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl } from "/src/utils/arknightsResource.js";
 import { saveAs } from "file-saver";
 import { useRouter } from "vue-router";
 import {
@@ -1594,8 +1594,12 @@ function openMaaScheduleCalculator() {
               <!--  <div :class="getAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
               <!--</div>-->
 
-              <OperatorAvatar @click="FiammettaTargetVisible = true" :size="60" :char-id="getCharId(plansTemplate[selectedPlanIndex].Fiammetta.target)">
-              </OperatorAvatar>
+              <img v-if="plansTemplate[selectedPlanIndex].Fiammetta.target" class="operator-avatar-image avatar-60"
+                   @click="FiammettaTargetVisible = true"
+                   :src="getOperatorAvatarUrl(getCharId(plansTemplate[selectedPlanIndex].Fiammetta.target))" alt="">
+              <div v-else class="operator-avatar-empty avatar-60" @click="FiammettaTargetVisible = true">
+                {{ translate("schedule", "schedule.NotSelected") }}
+              </div>
 
               <!--              <div class="option-avatar-sprite-wrap" @click="FiammettaTargetVisible = true">-->
               <!--                <div :class="getOptionAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
@@ -1656,7 +1660,7 @@ function openMaaScheduleCalculator() {
                   FiammettaTargetVisible = false;
                 "
               >
-                <OperatorAvatar :size="60" :char-id="operator.charId"> </OperatorAvatar>
+                <img class="operator-avatar-image avatar-60" :src="getOperatorAvatarUrl(operator.charId)" alt="">
                 <div class="operator-check-label-v2">{{ operator.name }}</div>
               </div>
               <!--                <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"-->
@@ -1752,13 +1756,13 @@ function openMaaScheduleCalculator() {
               <span>{{ translate("schedule", "schedule.TradingPost") }}#{{ num }}</span>
               <div :class="getRoomProduct('trading', index)"></div>
             </div>
-            <OperatorAvatar
-              :size="44"
+            <img
+              class="operator-avatar-image avatar-44 m-4"
               v-for="(charName, index) in getRoomOperators('trading', index)"
               :key="index"
-              :char-id="getCharId(charName)"
-              class="m-4"
-            ></OperatorAvatar>
+              :src="getOperatorAvatarUrl(getCharId(charName))"
+              alt=""
+            >
           </div>
 
           <!--制造站-->
@@ -1774,13 +1778,13 @@ function openMaaScheduleCalculator() {
               <span>{{ translate("schedule", "schedule.Factory") }}#{{ num }}</span>
               <div :class="getRoomProduct('manufacture', index)"></div>
             </div>
-            <OperatorAvatar
-              :size="44"
+            <img
+              class="operator-avatar-image avatar-44 m-4"
               v-for="(charName, index) in getRoomOperators('manufacture', index)"
               :key="index"
-              :char-id="getCharId(charName)"
-              class="m-4"
-            ></OperatorAvatar>
+              :src="getOperatorAvatarUrl(getCharId(charName))"
+              alt=""
+            >
           </div>
 
           <!--  发电站-->
@@ -1793,13 +1797,13 @@ function openMaaScheduleCalculator() {
             @click="chooseRoom('power', index)"
           >
             <div class="room-name">{{ translate("schedule", "schedule.PowerPlant") }}#{{ num }}</div>
-            <OperatorAvatar
-              :size="44"
+            <img
+              class="operator-avatar-image avatar-44 m-4"
               v-for="(charName, index) in getRoomOperators('power', index)"
               :key="index"
-              :char-id="getCharId(charName)"
-              class="m-4"
-            ></OperatorAvatar>
+              :src="getOperatorAvatarUrl(getCharId(charName))"
+              alt=""
+            >
           </div>
         </div>
 
@@ -1807,13 +1811,13 @@ function openMaaScheduleCalculator() {
           <!--     控制中枢-->
           <div class="room-template control" :id="`control#0`" :class="roomSelectedClass('control', 0)" @click="chooseRoom('control', 0)">
             <div class="room-name">{{ translate("schedule", "schedule.ControlCenter") }}</div>
-            <OperatorAvatar
-              :size="44"
+            <img
+              class="operator-avatar-image avatar-44 m-4"
               v-for="(charName, index) in getRoomOperators('control', 0)"
               :key="index"
-              :char-id="getCharId(charName)"
-              class="m-4"
-            ></OperatorAvatar>
+              :src="getOperatorAvatarUrl(getCharId(charName))"
+              alt=""
+            >
           </div>
           <!--     宿舍-->
           <div
@@ -1825,14 +1829,13 @@ function openMaaScheduleCalculator() {
             @click="chooseRoom('dormitory', index)"
           >
             <div class="room-name">{{ translate("schedule", "schedule.Dormitory") }}#{{ num }}</div>
-            <OperatorAvatar
-              :size="44"
+            <img
+              class="operator-avatar-image avatar-44 m-4"
               v-for="(charName, index) in getRoomOperators('dormitory', index)"
               :key="index"
-              :char-id="getCharId(charName)"
-              class="m-4"
+              :src="getOperatorAvatarUrl(getCharId(charName))"
+              alt=""
             >
-            </OperatorAvatar>
           </div>
         </div>
 
@@ -1840,59 +1843,59 @@ function openMaaScheduleCalculator() {
           <!--     会客室-->
           <div class="room-template meeting" :id="`meeting#0`" :class="roomSelectedClass('meeting', 0)" @click="chooseRoom('meeting', 0)">
             <div class="room-name">{{ translate("schedule", "schedule.ReceptionRoom") }}</div>
-            <OperatorAvatar
-              :size="44"
+            <img
+              class="operator-avatar-image avatar-44 m-4"
               v-for="(charName, index) in getRoomOperators('meeting', 0)"
               :key="index"
-              :char-id="getCharId(charName)"
-              class="m-4"
-            ></OperatorAvatar>
+              :src="getOperatorAvatarUrl(getCharId(charName))"
+              alt=""
+            >
           </div>
           <!--      加工站-->
           <div class="room-template processing" :id="`processing#0`" :class="roomSelectedClass('processing', 0)" @click="chooseRoom('processing', 0)">
             <div class="room-name">{{ translate("schedule", "schedule.Workshop") }}</div>
-            <OperatorAvatar
-              :size="44"
+            <img
+              class="operator-avatar-image avatar-44 m-4"
               v-for="(charName, index) in getRoomOperators('processing', 0)"
               :key="index"
-              :char-id="getCharId(charName)"
-              class="m-4"
-            ></OperatorAvatar>
+              :src="getOperatorAvatarUrl(getCharId(charName))"
+              alt=""
+            >
           </div>
 
           <!--     办公室 -->
           <div class="room-template hire" :id="`hire#0`" :class="roomSelectedClass('hire', 0)" @click="chooseRoom('hire', 0)">
             <div class="room-name">{{ translate("schedule", "schedule.Office") }}</div>
-            <OperatorAvatar
-              :size="44"
+            <img
+              class="operator-avatar-image avatar-44 m-4"
               v-for="(charName, index) in getRoomOperators('hire', 0)"
               :key="index"
-              :char-id="getCharId(charName)"
-              class="m-4"
-            ></OperatorAvatar>
+              :src="getOperatorAvatarUrl(getCharId(charName))"
+              alt=""
+            >
           </div>
           <!--     训练室 -->
           <div class="room-template training" :id="`training#0`" :class="roomSelectedClass('training', 0)" @click="chooseRoom('training', 0)">
             <div class="room-name">{{ translate("schedule", "schedule.Training") }}</div>
-            <OperatorAvatar
-              :size="44"
+            <img
+              class="operator-avatar-image avatar-44 m-4"
               v-for="(charName, index) in getRoomOperators('training', 0)"
               :key="index"
-              :char-id="getCharId(charName)"
-              class="m-4"
-            ></OperatorAvatar>
+              :src="getOperatorAvatarUrl(getCharId(charName))"
+              alt=""
+            >
           </div>
 
           <!--     回收站 -->
           <div class="room-template recycle" :id="`recycle#0`" :class="roomSelectedClass('recycle', 0)" @click="chooseRoom('recycle', 0)">
             <div class="room-name">{{ translate("schedule", "schedule.Recycle") }}</div>
-            <OperatorAvatar
-              :size="44"
+            <img
+              class="operator-avatar-image avatar-44 m-4"
               v-for="(charName, index) in getRoomOperators('recycle', 0)"
               :key="index"
-              :char-id="getCharId(charName)"
-              class="m-4"
-            ></OperatorAvatar>
+              :src="getOperatorAvatarUrl(getCharId(charName))"
+              alt=""
+            >
           </div>
           <div class="room-template blank" style="width: 100px"></div>
         </div>
@@ -1921,7 +1924,7 @@ function openMaaScheduleCalculator() {
           <span class="room-set-description">{{ translate("schedule", "schedule.OperatorsStationed") }}</span>
           <div class="selected-operator-wrap">
             <div class="room-operator" v-for="(charId, index) in getRoomOperators(selectedRoomType, selectedRoomIndex)" :key="index">
-              <OperatorAvatar :size="40" :char-id="getCharId(charId)"> </OperatorAvatar>
+              <img class="operator-avatar-image avatar-40" :src="getOperatorAvatarUrl(getCharId(charId))" alt="">
               <v-icon icon="mdi-close" size="16" @click="deleteOperator(charId)" class="operator-delete-icon"></v-icon>
             </div>
 
@@ -1938,7 +1941,8 @@ function openMaaScheduleCalculator() {
           <!--复制的干员-->
           <span class="room-set-description">{{ translate("schedule", "schedule.OperatorsClipboard") }}</span>
           <div class="selected-operator-wrap">
-            <OperatorAvatar v-for="(charId, index) in tmpOperatorList" :key="index" :size="40" :char-id="getCharId(charId)"> </OperatorAvatar>
+            <img v-for="(charId, index) in tmpOperatorList" :key="index" class="operator-avatar-image avatar-40"
+                 :src="getOperatorAvatarUrl(getCharId(charId))" alt="">
             <!--              <div class="room-avatar-sprite-wrap" v-for="(charId, index) in tmpOperatorList" :key="index">-->
             <!--                <div :class="getAvatar(charId)"></div>-->
             <!--              </div>-->
@@ -2000,7 +2004,8 @@ function openMaaScheduleCalculator() {
 
         <div class="operator-check-box-group">
           <div class="operator-check-box-option-v2" v-for="(operator, charId) in filterOperatorList" :key="charId">
-            <OperatorAvatar @click="chooseOperator(operator.name)" :size="60" :char-id="operator.charId" class="m-a"> </OperatorAvatar>
+            <img class="operator-avatar-image avatar-60 m-a" @click="chooseOperator(operator.name)"
+                 :src="getOperatorAvatarUrl(operator.charId)" alt="">
             <div class="operator-check-label-v2">{{ operator.name }}</div>
             <v-tooltip activator="parent" location="top">
               <span v-html="operator.description"></span>

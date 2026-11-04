@@ -154,6 +154,35 @@
   }
 }
 
+@media screen and (max-width: 600px) {
+  /* 手机端详情弹窗头像：与原先组件的 mobileSize 36 保持一致 */
+  .operator-detail-dialog-avatar {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    padding: 1px;
+  }
+
+  /* 手机端详情弹窗技能图标：与原先组件的 mobileSize 32 保持一致 */
+  .operator-detail-skill-icon {
+    width: 32px;
+    height: 32px;
+    padding: 1px;
+  }
+
+  /* 手机端详情弹窗模组图标：与原先组件的 mobileSize 40 保持一致 */
+  .operator-detail-equip-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* 手机端干员推荐技能图标：与原先组件 mobileSize 40（内缩 2px）保持一致 */
+  .operator-skill-image {
+    width: 38px;
+    height: 38px;
+  }
+}
+
 @media screen and (max-width: 1080px) {
   .operator-statistical-page {
     .operator-statistical-card {

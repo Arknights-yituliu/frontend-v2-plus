@@ -6,20 +6,21 @@
  * - 保存：POST /oauth2/ak-accounts/operators/save
  *
  * UC 与前端字段名不同，读写两侧在此集中对齐：
- * charId↔id、elite↔evolvePhase、mainSkill↔mainSkillLevel、
+ * charId↔id、own↔owned、elite↔evolvePhase、mainSkill↔mainSkillLevel、
  * modX/Y/D/A/B↔equipX/Y/D/A/B，potential 与 potentialRank 同值传递
  */
 
 /**
  * 将森空岛同步数据转换为 UC 保存接口的请求体
- * @param {Object} warehouseData 森空岛同步数据（含 uid 与已格式化的 operatorDataList）
- * @returns {{playerInfo: {akUid: string}, operators: Array<Object>}} UC 保存接口请求体
+ * @param {Object} warehouseData 森空岛同步数据（含 uid、已格式化的 operatorDataList 与 itemList）
+ * @returns {{playerInfo: {akUid: string}, operators: Array<Object>, items: Array<{itemId: string, count: string}>}} UC 保存接口请求体
  */
 function buildUcOperatorSavePayload(warehouseData) {
   return {
     playerInfo: {akUid: String(warehouseData?.uid ?? "")},
     operators: (warehouseData?.operatorDataList || []).map((operator) => ({
       id: operator.charId,
+      owned: operator.own ? 1 : 0,
       rarity: operator.rarity,
       level: operator.level,
       evolvePhase: operator.elite,
@@ -33,6 +34,10 @@ function buildUcOperatorSavePayload(warehouseData) {
       equipA: operator.modA,
       equipB: operator.modB,
       potentialRank: operator.potential,
+    })),
+    items: (warehouseData?.itemList || []).map((item) => ({
+      itemId: String(item.itemId),
+      count: String(item.quantity),
     })),
   }
 }

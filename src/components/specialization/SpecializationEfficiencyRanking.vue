@@ -1,7 +1,7 @@
 <script setup>
 import {computed, onMounted, ref} from "vue";
 import maxEfficiency from "@/static/json/build/maximum_efficiency.json";
-import OperatorAvatar from "@/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "@/utils/arknightsResource.js";
 import SpecializationFilter from "@/components/specialization/SpecializationFilter.vue";
 import {calculateEfficiency, getEfficiencyExplanation} from "@/utils/specializationEfficiencyCalculator";
 
@@ -41,6 +41,8 @@ const branches = ref([
   "领主",
   "斗士",
   "驭法铁卫",
+  "本源近卫",
+  "本源术师",
 ]);
 
 // 专精阶段列表
@@ -100,7 +102,8 @@ const sortOperatorsByEfficiency = () => {
     // 分支筛选
     if (filters.value.branch && filters.value.branch !== "全部") {
       const branch = operator.conditions.branch;
-      if (!branch || branch !== filters.value.branch) {
+      const branchList = Array.isArray(branch) ? branch : [branch];
+      if (!branchList.includes(filters.value.branch)) {
         return false;
       }
     }
@@ -264,7 +267,9 @@ const getSpecialEffectInfo = (operator) => {
         <el-table-column fixed="left" label="干员" width="170">
           <template #default="scope">
             <div class="flex align-center">
-              <OperatorAvatar v-if="scope.row.charId" :char-id="scope.row.charId" :size="50" rounded/>
+              <img v-if="scope.row.charId" class="operator-avatar-img operator-avatar-img--rounded"
+                   :style="getOperatorAvatarStyle({ size: 50, mobileSize: 40 })"
+                   :src="getOperatorAvatarUrl(scope.row.charId)" alt=""/>
               <span class="ml-2">{{ scope.row.name }}</span>
             </div>
           </template>
@@ -322,7 +327,11 @@ const getSpecialEffectInfo = (operator) => {
         <!-- 子分支要求 -->
         <el-table-column label="子分支要求" width="100">
           <template #default="scope">
-            {{ scope.row.conditions.branch || '无' }}
+            {{
+              Array.isArray(scope.row.conditions.branch)
+                  ? scope.row.conditions.branch.join('、')
+                  : (scope.row.conditions.branch || '无')
+            }}
           </template>
         </el-table-column>
 

@@ -459,9 +459,9 @@
   }
 }
 
-.c-op { flex: 0 0 200px; }
-.c-own { flex: 0 0 132px; }
-.c-elite { flex: 0 0 168px; }
+.c-op { flex: 0 0 180px; }
+.c-own { flex: 0 0 96px; }
+.c-elite { flex: 0 0 148px; }
 .c-skill { flex: 1 1 298px; min-width: 282px; }
 .c-mod { flex: 1 1 298px; min-width: 298px; margin-left: 20px; }
 .c-act { flex: 0 0 60px; display: flex; justify-content: flex-end; }
@@ -587,9 +587,12 @@
 .op-mod {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  gap: 3px;
+  box-sizing: border-box;
+  width: 64px;
   height: 32px;
-  padding: 0 11px;
+  padding: 0 6px;
   border-radius: 6px;
   background: var(--op-tint);
   color: var(--op-tint-text);

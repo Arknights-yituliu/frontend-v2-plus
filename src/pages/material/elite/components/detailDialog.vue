@@ -2,9 +2,7 @@
 // import RankBar from "./rankBar";
 // import RankBarContent from "./rankBarContent";
 import MaterialItem from "./materialItem";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
-import SkillIcon from "/src/components/sprite/SkillIcon.vue";
-import EquipIcon from "/src/components/sprite/EquipIcon.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle, getSkillIconUrl, getEquipIconUrl } from "/src/utils/arknightsResource.js";
 
 import { ref } from 'vue';
 import { detailData, detailTableData, costFormatter, percentFormatter } from '../js/table'
@@ -77,9 +75,11 @@ function getEquipIcon(typeIcon){
                 <!-- 图标 -->
                 <td>
                   <div class="icon-container">
-                    <OperatorAvatar :size="48" :mobile-size="40" :char-id="item.charId" v-if="item.iconType === 'operator'"></OperatorAvatar>
-                    <SkillIcon :size="50" :mobile-size="42" :icon="item.iconId" v-else-if="item.iconType === 'skill'"></SkillIcon>
-                    <EquipIcon :size="50" :mobile-size="42" :icon="item.typeIcon" class="equip-icon" v-else="item.iconType === 'equip'"></EquipIcon>
+                    <img class="operator-avatar-img" :style="getOperatorAvatarStyle({ size: 48, mobileSize: 40 })"
+                         :src="getOperatorAvatarUrl(item.charId)" alt="" v-if="item.iconType === 'operator'">
+                    <img class="skill-icon-image" :src="getSkillIconUrl(item.iconId)" alt=""
+                         v-else-if="item.iconType === 'skill'">
+                    <img class="equip-icon-image" :src="getEquipIconUrl(item.typeIcon)" alt="" v-else loading="lazy">
                   </div>
                 </td>
                 <!-- 材料开销 -->
@@ -212,6 +212,21 @@ function getEquipIcon(typeIcon){
           position: relative;
           height: 55px;
           line-height: 55px;
+
+          .equip-icon-image {
+            width: 50px;
+            height: 50px;
+            vertical-align: middle;
+            filter: drop-shadow(1px 1px 1px rgb(0, 0, 0));
+          }
+
+          /* 技能图标：与原先组件 50px（内缩 4px）尺寸保持一致 */
+          .skill-icon-image {
+            width: 46px;
+            height: 46px;
+            vertical-align: middle;
+            object-fit: cover;
+          }
         }
       }
     
@@ -224,6 +239,20 @@ function getEquipIcon(typeIcon){
         padding: 0 50px;
       }
     }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  /* 手机端模组图标：与原先组件的 mobileSize 42 保持一致 */
+  .icon-container .equip-icon-image {
+    width: 42px;
+    height: 42px;
+  }
+
+  /* 手机端技能图标：与原先组件的 mobileSize 42（内缩 2px）保持一致 */
+  .icon-container .skill-icon-image {
+    width: 40px;
+    height: 40px;
   }
 }
 </style>
