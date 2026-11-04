@@ -3755,23 +3755,6 @@ const manualControlRoomGroupCandidate = computed(() => {
 
 // 静态房间（加工站、训练室、宿舍……）的容量，供挂件停靠和回收站补位共用。
 // 定义在 roomGroupFallbackPlanStates 之前，避免计算顺序上互相依赖。
-const schedulePreviewStaticRoomKeys = computed(
-  () =>
-    new Set(
-      scheduleRoomRows.value
-        .flatMap((row) => row.groups)
-        .filter(
-          (group) =>
-            !group.candidateGenerationAvailable && !group.manualControl,
-        )
-        .flatMap((group) =>
-          Array.from(
-            { length: Math.max(0, Number(group.count) || 0) },
-            (_, index) => `${group.id}:${index}`,
-          ),
-        ),
-    ),
-);
 const riicStaticRoomCapacityByType = computed(() =>
   scheduleRoomRows.value
     .flatMap((row) => row.groups)
@@ -3925,40 +3908,10 @@ function buildRoomGroupFallbackPlans(previousReservedIds = []) {
       )].filter((charId) => charId !== recovery.targetOperatorId),
     ]),
   );
-  // 手动编辑（含静态房间与回收站本身）已经摆了人的槽位，也算作当班在岗。
-  const manualScheduleOperatorIds = [
-    ...new Set(
-      Object.values(scheduleRoomOperatorOverrides.value || {})
-        .flatMap((operators) =>
-          (operators || []).map((operator) =>
-            String(operator?.charId || "").trim(),
-          ),
-        )
-        .filter(Boolean),
-    ),
-  ];
   const activeOperatorIdsByStateIndex =
     buildRiicActiveOperatorIdsByStateIndex(
       controlCenterRoleState.value.segments || [],
     );
-  const manualPreviewStateIndex = Number(
-    activeSchedulePreviewStateIndex.value,
-  );
-  const manualScheduleStateIndex = getSchedulePreviewStateOrder(
-    confirmedLayoutPlan.value?.shiftMode,
-    twoShiftRotationMode.value,
-  )[manualPreviewStateIndex];
-  if (
-    Number.isInteger(manualScheduleStateIndex) &&
-    manualScheduleStateIndex >= 0
-  ) {
-    activeOperatorIdsByStateIndex[manualScheduleStateIndex] = [
-      ...new Set([
-        ...(activeOperatorIdsByStateIndex[manualScheduleStateIndex] || []),
-        ...manualScheduleOperatorIds,
-      ]),
-    ];
-  }
 
   const groupContexts = [];
   for (const group of planningGroups) {
@@ -4085,7 +4038,6 @@ function buildRoomGroupFallbackPlans(previousReservedIds = []) {
       ? [
           ...coreOperatorIds,
           ...parkedOperatorIds,
-          ...manualScheduleOperatorIds,
           ...reservedDormitoryOperatorIds,
         ]
       : [...coreOperatorIds, ...reservedDormitoryOperatorIds];
@@ -4776,11 +4728,6 @@ const assembledScheduleCandidateState = computed(() => {
       "char_4109_baslin",
     ],
   });
-  const hasManualOverrides = [
-    scheduleRoomOperatorOverrides.value,
-    scheduleRoomProductOverrides.value,
-    invalidatedScheduleRoomKeys.value,
-  ].some((overrides) => Object.keys(overrides || {}).length > 0);
   const perceptionAlignment = optimizeRiicPerceptionTradingSwap({
     alignment: optimizeRiicAssembledTradingShifts({
       alignment,
@@ -4792,12 +4739,10 @@ const assembledScheduleCandidateState = computed(() => {
         "char_436_whispr",
         "char_4109_baslin",
       ],
-      hasManualOverrides,
     }),
     ownedOperators: virtualOperators.value || [],
     fiammettaRecovery: fiammettaRecoveryConfig.value,
     lockedOperatorIds: ["char_391_rosmon", "char_436_whispr", "char_4109_baslin"],
-    hasManualOverrides,
     layoutData: activeLayoutFacilityCounts.value,
   });
   const sameShiftAlignment = optimizeRiicAutomationPowerShifts({
@@ -4805,7 +4750,6 @@ const assembledScheduleCandidateState = computed(() => {
     ownedOperators: virtualOperators.value || [],
     fiammettaRecovery: fiammettaRecoveryConfig.value,
     lockedOperatorIds: ["char_391_rosmon", "char_4046_ebnhlz", "char_436_whispr", "char_4109_baslin"],
-    hasManualOverrides,
     layoutData: activeLayoutFacilityCounts.value,
   });
   const alignedGroups = sameShiftAlignment.groupEntries;
@@ -4895,9 +4839,6 @@ const riicSchedulePreviewWithoutSupportRooms = computed(() =>
       confirmedLayoutPlan.value?.shiftMode,
       twoShiftRotationMode.value,
     ),
-    roomOperatorOverrides: activeScheduleRoomOperatorOverrides.value,
-    productOverrides: scheduleRoomProductOverrides.value,
-    invalidatedRoomKeys: invalidatedScheduleRoomKeys.value,
     stickyOperatorIds: [
       operatorNameToCharId.get("但书"),
       operatorNameToCharId.get("龙舌兰"),
@@ -4907,22 +4848,6 @@ const riicSchedulePreviewWithoutSupportRooms = computed(() =>
 const activeScheduleRoomOperatorOverrides = computed(() => {
   return scheduleRoomOperatorOverrides.value;
 });
-
-function getSchedulePreviewManualStaticOperatorIds(stateIndex) {
-  const prefix = `${stateIndex}:`;
-  const staticRoomKeys = schedulePreviewStaticRoomKeys.value;
-
-  return Object.entries(activeScheduleRoomOperatorOverrides.value).flatMap(
-    ([overrideKey, operators]) => {
-      const roomKey = String(overrideKey || "").slice(prefix.length);
-      return overrideKey.startsWith(prefix) && staticRoomKeys.has(roomKey)
-        ? (operators || [])
-            .map((operator) => String(operator?.charId || "").trim())
-            .filter(Boolean)
-        : [];
-    },
-  );
-}
 
 // 先补排班房间的实际空位，再停靠加工站和训练室。
 function addActiveRosterHangerPlacements({
@@ -5142,11 +5067,6 @@ const riicSupportRoomPlacementsBySourceStateIndex = computed(() =>
         const claimedOperatorIds = new Set(
           roomAssignments.flatMap((assignment) => assignment.operatorIds),
         );
-        for (const operatorId of getSchedulePreviewManualStaticOperatorIds(
-          state.index,
-        )) {
-          claimedOperatorIds.add(operatorId);
-        }
         const sourceStateIndex = Number.isInteger(state?.sourceStateIndex)
           ? state.sourceStateIndex
           : state?.index;
@@ -5347,7 +5267,15 @@ const riicSchedulePreviewBase = computed(() => {
         ...state,
         rooms: (state.rooms || []).map((room) => {
           const placements = placementsByRoomKey.get(room.key) || [];
-          if (placements.length === 0) {
+          const overrideKey = getScheduleRoomOverrideKey(state.index, room.key);
+          if (
+            placements.length === 0 ||
+            room.manuallyEdited === true ||
+            Object.prototype.hasOwnProperty.call(
+              activeScheduleRoomOperatorOverrides.value,
+              overrideKey,
+            )
+          ) {
             return room;
           }
 
