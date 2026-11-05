@@ -139,6 +139,7 @@ const tableOptions = new Map([
   ]],
   ['skills', [
     { key: 'index', title: '排名', minWidth: '90' },
+    { key: 'code', title: '技能编号', sortable: false },
     { key: 'name', title: '技能名称', sortable: false },
     { key: 'totalCost', title: '材料开销' },
     { key: 'rank3.rate', title: '专三率' },
