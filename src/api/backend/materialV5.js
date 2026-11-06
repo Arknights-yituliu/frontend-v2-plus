@@ -28,12 +28,5 @@ export default {
             url: "/item/v5/store/pack",
             method: "GET",
         })
-    },
-
-    listCustomItem(){
-        return request({
-            url: "/item/v5/custom",
-            method: "GET",
-        })
     }
 }

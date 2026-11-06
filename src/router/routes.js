@@ -116,18 +116,6 @@ const routes = [
         }
     },
     {
-        path: '/material/drop',
-        text: '关卡掉落查询',
-        name: 'StageDrop',
-        display: false,
-        module: 'material',
-        icon: "mdi-account-details",
-        component: () => import('/src/pages/material/drop.vue'),
-        meta: {
-            title: '关卡掉落查询'
-        }
-    },
-    {
         path: '/tools/gachaCal',
         text: '攒抽计算器',
         name: 'GachaCalculator1',
@@ -840,22 +828,10 @@ const routes = [
         component: () => import('/src/pages/dev/pie-chart.vue')
     },
     {
-        path: '/media/weekly',
-        text: '周报做图用',
-        display: false,
-        component: () => import('/src/pages/video-material/weekly.page.vue')
-    },
-    {
         path: '/test/sandbox',
         text: '收益速览做图用',
         display: false,
         component: () => import('/src/pages/sandbox/sb.page.vue')
-    },
-    {
-        path: '/material/skland',
-        text: '收益速览做图用',
-        display: false,
-        component: () => import('/src/pages/video-material/stageV3.vue')
     },
     {
         path: '/video/ytl/main1',
@@ -864,22 +840,10 @@ const routes = [
         component: () => import('/src/pages/video/ytl1.vue')
     },
     {
-        path: '/video/sysl/main1',
-        text: '视频-收益速览-掉率',
-        display: false,
-        component: () => import('/src/pages/video/sysl1.vue')
-    },
-    {
         path: '/video/sysl/main2',
         text: '视频-收益速览-商店性价比',
         display: false,
         component: () => import('/src/pages/video/sysl2.vue')
-    },
-    {
-        path: '/video/sysl/main3',
-        text: '视频-收益速览-礼包性价比',
-        display: false,
-        component: () => import('/src/pages/video/sysl3.vue')
     },
     {
         path: '/lb/elite',
