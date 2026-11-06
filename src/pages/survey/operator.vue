@@ -1124,7 +1124,7 @@ async function switchAkAccount(account) {
     applyDefaultOwnFilter()
     createMessage({type: 'success', text: `已切换至账号 ${account.akUid}，共 ${list.length} 条数据`})
 
-    // 切换成功后把该账号设为默认数据来源：下次进入页面或不传 akUid 读取时优先返回它
+    // 切换成功后把该账号设为默认数据来源：下次进入页面或第三方 API 不传 akUid 读取时优先返回它
     // 设置失败不影响本次切换，错误提示由 ucService 响应拦截器统一弹出
     if (account.source) {
       try {
@@ -1789,6 +1789,10 @@ onBeforeUnmount(() => {
           </span>
         </v-expansion-panel-title>
         <v-expansion-panel-text>
+          <div class="operator-account-history-tip">
+            <v-icon icon="mdi-information-outline" size="16"></v-icon>
+            <span>切换后会将选中的账号设为默认账号；第三方 API 读取干员数据不传 akUid 时，默认返回该账号的数据。</span>
+          </div>
           <div class="operator-account-history-actions">
             <v-btn
                 v-for="account in akAccountList"

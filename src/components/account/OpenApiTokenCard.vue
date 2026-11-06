@@ -279,6 +279,9 @@ onMounted(async () => {
       <p class="text-caption opacity-70 mb-4">
         只读 Token 用于读取干员练度数据，只写 Token 仅用于写入干员练度数据。
       </p>
+      <p class="text-caption opacity-70 mb-4">
+        读取干员数据时不传 akUid，默认返回您在「我的干员」页切换时设为默认的账号数据；如需读取其他账号，请显式传入 akUid。
+      </p>
 
       <div class="token-actions">
         <v-btn
