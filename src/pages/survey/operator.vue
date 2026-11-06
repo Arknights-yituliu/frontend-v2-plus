@@ -40,7 +40,7 @@ import {formatNumber} from "/src/utils/format.js";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
-import { userInfo } from "/src/api/backend/userSession.js";
+import { userInfo } from "/src/api/user-center/userSession.js";
 import { useRoute, useRouter } from "vue-router";
 import Login from "/src/pages/account/login.vue";
 import QRCode from 'qrcode';

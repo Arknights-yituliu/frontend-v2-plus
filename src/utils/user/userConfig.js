@@ -1,4 +1,4 @@
-import {getUid} from "@/api/backend/userSession.js";
+import {getUid} from "@/api/user-center/userSession.js";
 import {ref} from "vue";
 
 

@@ -53,7 +53,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {getUserInfo, userInfo} from "/src/api/backend/userSession.js";
+import {getUserInfo, userInfo} from "/src/api/user-center/userSession.js";
 import {useRouter} from "vue-router";
 import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import Login from "/src/pages/account/login.vue";
@@ -67,7 +67,7 @@ const logoutDialog = ref(false);
 
 
 function getUserInfoByToken() {
-  getUserInfo("User")
+  getUserInfo()
 }
 
 function handleLoginNavigate(routeName) {

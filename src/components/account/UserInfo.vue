@@ -3,7 +3,7 @@ import {onMounted, ref} from "vue";
 import {createMessage} from "/src/utils/message";
 import userInfoAPI from "/src/api/backend/userInfo"
 import "/src/assets/css/account/home.scss";
-import {userInfo} from '/src/api/backend/userSession.js'
+import {userInfo} from '/src/api/user-center/userSession.js'
 import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import LogoutConfirmDialog from "/src/components/account/LogoutConfirmDialog.vue";
 import {operatorTableV2} from '/src/utils/gameData.js'

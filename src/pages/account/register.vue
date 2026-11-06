@@ -3,7 +3,7 @@ import {ref} from "vue";
 import '/src/assets/css/account/login.v2.scss'
 import {createMessage} from "/src/utils/message.js";
 import {useRouter} from "vue-router";
-import {getUserInfo} from "/src/api/backend/userSession.js";
+import {getUserInfo} from "/src/api/user-center/userSession.js";
 import {
   emailRules,
   registerPasswordRules,
@@ -89,7 +89,7 @@ async function toRegister() {
     localStorage.setItem("USER_TOKEN", token.toString());
     // 后端随登录响应一并回带 UC access_token，存起来供调用 UC 接口（F1/F2）
     saveUcToken({accessToken: ucAccessToken, expiresIn: ucTokenExpiresIn, scope: ucTokenScope});
-    await getUserInfo("Register");
+    await getUserInfo();
     createMessage({type:'success',text:'注册成功，即将跳转到我的干员导入流程'})
     setTimeout(() => {
       router.push({
