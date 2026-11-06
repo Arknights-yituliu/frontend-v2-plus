@@ -2,6 +2,9 @@ import ucService from "/src/api/user-center/ucClient.js";
 
 // UC OAuth 游戏数据接口路径：读写游戏账号与干员数据
 const OAUTH_AK_ACCOUNTS_PATH = "/oauth2/ak-accounts";
+// 默认数据来源路径：设置读取干员数据不传 akUid 时默认返回的条目
+const OAUTH_AK_ACCOUNTS_DEFAULT_UPDATE_PATH = "/oauth2/ak-accounts/default/update";
+const OAUTH_AK_ACCOUNTS_ITEMS_PATH = "/oauth2/ak-accounts/items";
 const OAUTH_AK_ACCOUNTS_OPERATOR_SAVE_PATH = "/oauth2/ak-accounts/operators/save";
 // UC 手动修改版干员数据路径：每个用户一份个人副本，额外包含 owned（是否持有）
 const OAUTH_AK_ACCOUNTS_MANUAL_OPERATORS_PATH = "/oauth2/ak-accounts/manual-operators";
@@ -28,14 +31,30 @@ async function saveAkAccountOperators(data) {
 /**
  * 查询当前用户已绑定的游戏账号列表（UC OAuth 游戏数据接口）
  *
- * <p>需要 UC access_token 具备 gama-data.read 授权范围。UC 侧按最近导入时间倒序返回，
- * 首条即最新导入的账号，前端取首条即可默认展示最新账号的数据。
+ * <p>需要 UC access_token 具备 gama-data.read 授权范围。UC 侧把用户设置的默认来源
+ * （defaultFlag=true）排在最前，其余按最近一次变更时间倒序，前端取首条即为默认展示的数据来源。
  * 失败提示由 ucService 响应拦截器统一弹出。</p>
  *
- * @returns {Promise<Array<{akUid: string, createTime: string, updateTime: string}>>} 已绑定游戏账号列表，最近导入的在前
+ * @returns {Promise<Array<{akUid: string, source: string, defaultFlag: boolean, createTime: string, updateTime: string}>>} 数据条目列表，默认来源在前
  */
 async function listAkAccounts() {
   return ucService.get(OAUTH_AK_ACCOUNTS_PATH);
+}
+
+/**
+ * 设置默认数据来源（UC OAuth 游戏数据接口）
+ *
+ * <p>需要 UC access_token 具备 gama-data.write 授权范围。每个用户只保留一条默认偏好，重复设置直接覆盖；
+ * 设置成功后该条目在账号列表中 defaultFlag=true 并排在最前，读取干员数据不传 akUid 时返回该条目。
+ * 失败提示由 ucService 响应拦截器统一弹出。</p>
+ *
+ * @param {Object} data 默认来源参数
+ * @param {string} data.akUid 数据条目 UID：skland 为游戏账号 UID，manual 为用户中心 UID
+ * @param {string} data.source 数据来源：skland 森空岛自动导入，manual 用户手动上传
+ * @returns {Promise<null>} 成功时 data 为 null
+ */
+async function setDefaultAkAccount(data) {
+  return ucService.post(OAUTH_AK_ACCOUNTS_DEFAULT_UPDATE_PATH, data);
 }
 
 /**
@@ -49,6 +68,21 @@ async function listAkAccounts() {
  */
 async function getAkAccountOperators(akUid) {
   return ucService.get(`${OAUTH_AK_ACCOUNTS_PATH}/operators`, {params: {akUid}});
+}
+
+/**
+ * 按游戏账号 UID 全量拉取物品存量快照（UC OAuth 游戏数据接口）
+ *
+ * <p>需要 UC access_token 具备 gama-data.read 授权范围，且该 akUid 在当前用户名下；
+ * 物品没有手动/自动来源之分，akUid 必须是游戏账号 UID。
+ * 该账号从未上报过物品时 items 为空数组，updateTime 为 null。
+ * 失败提示由 ucService 响应拦截器统一弹出。</p>
+ *
+ * @param {string} akUid 游戏账号 UID
+ * @returns {Promise<{akUid: string, items: Array<{itemId: string, count: number}>, updateTime: string|null}>} 物品存量快照
+ */
+async function getAkAccountItems(akUid) {
+  return ucService.get(OAUTH_AK_ACCOUNTS_ITEMS_PATH, {params: {akUid}});
 }
 
 /**
@@ -94,7 +128,9 @@ async function getAkOperatorStatisticsResult() {
 export {
   saveAkAccountOperators,
   listAkAccounts,
+  setDefaultAkAccount,
   getAkAccountOperators,
+  getAkAccountItems,
   getManualOperators,
   saveManualOperators,
   getAkOperatorStatisticsResult,

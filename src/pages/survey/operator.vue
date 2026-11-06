@@ -8,6 +8,7 @@ import sklandCredentialAPI from "/src/api/backend/sklandCredential.js"
 import {
   saveAkAccountOperators,
   listAkAccounts,
+  setDefaultAkAccount,
   getAkAccountOperators,
   saveManualOperators
 } from "/src/api/user-center/gameData.js"
@@ -1073,7 +1074,7 @@ async function loadAkAccountList() {
   try {
     const accounts = await listAkAccounts()
     akAccountList.value = accounts || []
-    // 干员数据默认取最近导入的账号，列表首条即页面上当前展示的账号
+    // 干员数据默认取用户设置的默认来源（未设置时按最近变更倒序），列表首条即页面上当前展示的账号
     currentAkUid.value = accounts?.[0]?.akUid || ''
   } catch (error) {
     console.error(error)
@@ -1100,7 +1101,7 @@ function formatAkAccountDate(account) {
 }
 
 /**
- * 切换到指定历史导入账号：拉取该账号的干员数据并刷新列表
+ * 切换到指定历史导入账号：拉取该账号的干员数据并刷新列表，同时把该账号设为默认数据来源
  * @param {Object} account 游戏账号
  */
 async function switchAkAccount(account) {
@@ -1122,6 +1123,16 @@ async function switchAkAccount(account) {
     currentAkUid.value = account.akUid
     applyDefaultOwnFilter()
     createMessage({type: 'success', text: `已切换至账号 ${account.akUid}，共 ${list.length} 条数据`})
+
+    // 切换成功后把该账号设为默认数据来源：下次进入页面或不传 akUid 读取时优先返回它
+    // 设置失败不影响本次切换，错误提示由 ucService 响应拦截器统一弹出
+    if (account.source) {
+      try {
+        await setDefaultAkAccount({akUid: account.akUid, source: account.source})
+      } catch (error) {
+        console.error(error)
+      }
+    }
   } catch (error) {
     console.error(error)
   } finally {
