@@ -10,6 +10,8 @@ import axios from "axios";
 const SKLAND_DOMAIN = "https://zonai.skland.com";
 const PLAYER_BINDING_URL = '/api/v1/game/player/binding'
 const CULTIVATE_PLAYER_API = '/api/v1/game/cultivate/player'
+// 玩家完整信息接口：时装（data.skins）只在这个接口里返回，cultivate/player 没有
+const PLAYER_INFO_API = '/api/v1/game/player/info'
 
 
 let equipDict = new Map()
@@ -179,6 +181,77 @@ export async function getWarehouseInfo(akUid, cred, token) {
 }
 
 
+/**
+ * 归一化森空岛 player/info 返回的时装集合
+ *
+ * <p>森空岛原始结构为 [{id, ts}]；同时兼容已归一化的 [{skinId, gainTs}] 与以 skinId 为键的对象形态。
+ * 这里只做字段改名与结构展开，去重与合法性校验统一由 buildSkinEntries 处理。</p>
+ *
+ * @param {Array|Object} rawSkins player/info 的 data.skins
+ * @returns {Array<{skinId: string, gainTs: number|undefined}>} 时装条目
+ */
+export function normalizeSklandSkins(rawSkins) {
+    const entries = []
+
+    if (Array.isArray(rawSkins)) {
+        for (const skin of rawSkins) {
+            if (!skin || typeof skin !== 'object') {
+                continue
+            }
+            entries.push({skinId: skin.id ?? skin.skinId, gainTs: skin.ts ?? skin.gainTs})
+        }
+    } else if (rawSkins && typeof rawSkins === 'object') {
+        for (const skinId in rawSkins) {
+            const skin = rawSkins[skinId] || {}
+            entries.push({skinId: skin.id ?? skinId, gainTs: skin.ts ?? skin.gainTs})
+        }
+    }
+
+    return entries
+}
+
+
+/**
+ * 读取账号已拥有的全部时装（森空岛 player/info 的 data.skins）
+ *
+ * <p>player/info 一次返回全量时装集合，因此结果可直接作为「全量对齐」上报的数据源。
+ * 失败时返回 null：调用方应跳过 skins 字段（等价于不上报时装），而不是提交空集合。</p>
+ *
+ * @param {string} akUid 游戏账号 UID
+ * @param {string} cred 森空岛 cred
+ * @param {string} token 森空岛 token，仅用于计算 sign
+ * @returns {Promise<Array<{skinId: string, gainTs: number}>|null>} 时装条目；请求失败为 null
+ */
+export async function getPlayerSkins(akUid, cred, token) {
+
+    const params = `uid=${akUid}`
+    const headers = getHeaders(PLAYER_INFO_API, params, cred, token)
+    const url = `${SKLAND_DOMAIN}${PLAYER_INFO_API}?${params}`
+
+    let skins = null
+
+    await axios.get(url,
+        {
+            headers: headers
+        }
+    ).then(response => {
+        const result = response.data
+
+        if (result.code === 0) {
+            skins = normalizeSklandSkins(result.data?.skins)
+        } else {
+            // 森空岛业务码在 code 字段，HTTP 状态始终 200；文案字段前后不一致，message / msg 都读
+            createMessage({type: 'warn', text: '森空岛：' + (result.message ?? result.msg ?? '读取时装数据失败')})
+        }
+    }).catch(error => {
+        console.log(error)
+        createMessage({type: 'warn', text: '森空岛：' + (error.response?.data?.message || error.message)})
+    })
+
+    return skins
+}
+
+
 function formattingOperatorData(characterList) {
 
     let operatorList = []
@@ -271,5 +344,8 @@ export function getHeaders(url, params, cred, token) {
 export default {
     getPlayBindingV2,
 
-    getWarehouseInfo
+    getWarehouseInfo,
+
+    getPlayerSkins,
+    normalizeSklandSkins
 }
