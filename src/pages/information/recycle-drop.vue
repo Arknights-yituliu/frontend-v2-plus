@@ -35,6 +35,7 @@ const keyDraft = ref('')
 const keyPanelOpen = ref(false)
 
 const rawItems = ref([])
+const statsRange = ref({startDay: '', endDay: ''})
 const loading = ref(false)
 const loaded = ref(false)
 const error = ref('')
@@ -65,7 +66,18 @@ async function load() {
     if (seq !== requestSeq) {
       return
     }
-    rawItems.value = Array.isArray(res?.data) ? res.data : []
+    // 新接口返回 { startDay, endDay, items }；兼容旧版直接返回数组的情况
+    const data = res?.data
+    if (Array.isArray(data)) {
+      rawItems.value = data
+      statsRange.value = {startDay: '', endDay: ''}
+    } else {
+      rawItems.value = Array.isArray(data?.items) ? data.items : []
+      statsRange.value = {
+        startDay: data?.startDay || '',
+        endDay: data?.endDay || '',
+      }
+    }
     loaded.value = true
     updatedAt.value = new Date()
   } catch (e) {
@@ -92,6 +104,27 @@ const totalRecords = computed(() => {
   }
   return rawItems.value.reduce((sum, item) => sum + (Number(item?.quantity) || 0), 0)
 })
+
+const rangeLabel = computed(() => {
+  const {startDay, endDay} = statsRange.value
+  return startDay && endDay ? `${startDay} ~ ${endDay}` : '—'
+})
+
+/* 起止日都算在区间内，所以天数要 +1 */
+const rangeDays = computed(() => {
+  const {startDay, endDay} = statsRange.value
+  if (!startDay || !endDay) {
+    return 0
+  }
+  const start = Date.parse(`${startDay}T00:00:00`)
+  const end = Date.parse(`${endDay}T00:00:00`)
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) {
+    return 0
+  }
+  return Math.round((end - start) / 86400000) + 1
+})
+
+const dailyAverage = computed(() => (rangeDays.value ? Math.round(totalRecords.value / rangeDays.value) : 0))
 
 const items = computed(() => {
   const total = totalRecords.value || 1
@@ -381,6 +414,7 @@ onMounted(() => {
           </p>
         </div>
         <div class="rd-hero__side">
+          <div class="rd-updated">统计区间 <strong>{{ rangeLabel }}</strong></div>
           <div class="rd-updated">最近更新 <strong>{{ updatedText }}</strong></div>
           <div class="rd-hero__btns">
             <button class="rd-btn" :disabled="loading" @click="load">
@@ -433,7 +467,10 @@ onMounted(() => {
               <template v-if="loading && !hasData">—</template>
               <template v-else>{{ formatCount(totalRecords) }}<small>条</small></template>
             </div>
-            <div class="rd-kpi__hint">全部物品的回收站产出记录累计</div>
+            <div class="rd-kpi__hint">
+              <template v-if="rangeDays">区间 {{ rangeDays }} 天 · 日均 {{ formatCount(dailyAverage) }} 条</template>
+              <template v-else>全部物品的回收站产出记录累计</template>
+            </div>
           </article>
 
           <article class="rd-kpi rd-kpi--violet">
@@ -580,7 +617,10 @@ onMounted(() => {
                 </div>
                 <div>
                   <dt>数据范围</dt>
-                  <dd>仅包含未过期的每日统计，重复统计过的日期以最新一次任务结果为准。</dd>
+                  <dd>
+                    仅包含未过期的每日统计，重复统计过的日期以最新一次任务结果为准。
+                    <template v-if="rangeDays">当前统计区间 {{ rangeLabel }}，共 {{ rangeDays }} 天。</template>
+                  </dd>
                 </div>
               </dl>
             </section>

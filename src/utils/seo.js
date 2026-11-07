@@ -74,13 +74,6 @@ export const SEO_ROUTES = [
         priority: 0.8,
     },
     {
-        path: '/riic/recycle-drop',
-        title: '回收站掉落统计',
-        description: '明日方舟回收站掉落统计，汇总玩家上传的产出记录，查看各材料的真实掉落占比与折算理智价值',
-        changefreq: 'daily',
-        priority: 0.7,
-    },
-    {
         path: '/tools/scheduleV3',
         title: '排班表生成器',
         description: '一键生成明日方舟基建排班表，自动分配干员，提升基建收益',

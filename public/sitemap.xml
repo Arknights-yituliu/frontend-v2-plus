@@ -68,13 +68,6 @@
     </url>
 
     <url>
-        <loc>https://ark.yituliu.cn/riic/recycle-drop</loc>
-        <lastmod>2026-11-07</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.7</priority>
-    </url>
-
-    <url>
         <loc>https://ark.yituliu.cn/tools/scheduleV3</loc>
         <lastmod>2026-11-07</lastmod>
         <changefreq>monthly</changefreq>

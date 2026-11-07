@@ -17,4 +17,6 @@ export const LEGACY_ROUTE_REDIRECTS = [
     { from: '/information/logistics', to: '/riic/logistics' },
     // 岁兽残识记录器原先还有一个未展示的快捷路由
     { from: '/sui', to: '/integrated-strategies/sui' },
+    // 2026-11 回收站掉落统计移入 LB 控制台路径，不再挂生息演算/基建导航
+    { from: '/riic/recycle-drop', to: '/lb/recycle-drop' },
 ]

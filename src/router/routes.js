@@ -189,18 +189,6 @@ const routes = [
         }
     },
     {
-        path: '/riic/recycle-drop',
-        text: '回收站掉落统计',
-        name: 'RecycleDropStatistics',
-        display: true,
-        module: 'riic',
-        icon: "mdi-recycle",
-        component: () => import('/src/pages/information/recycle-drop.vue'),
-        meta: {
-            title: '回收站掉落统计'
-        }
-    },
-    {
         path: '/tools/riic-schedule-generator',
         text: '一键生成排班表（beta）',
         name: 'RiicScheduleGenerator',
@@ -482,6 +470,18 @@ const routes = [
         component: () => import('/src/pages/LogicalBytePostMaker/PackProofread.vue'),
         meta: {
             title: '礼包校对'
+        }
+    },
+    {
+        path: '/lb/recycle-drop',
+        text: '回收站掉落统计',
+        name: 'RecycleDropStatistics',
+        display: false,
+        module: 'tools',
+        icon: "mdi-recycle",
+        component: () => import('/src/pages/information/recycle-drop.vue'),
+        meta: {
+            title: '回收站掉落统计'
         }
     },
     {
