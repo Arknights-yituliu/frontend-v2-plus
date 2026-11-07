@@ -351,6 +351,17 @@
     font-weight: 600;
   }
 
+  // 切换导入账号：面板内的默认账号说明
+  .operator-account-history-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    opacity: 0.7;
+  }
+
   // 切换导入账号：折叠面板内沿用导入按钮的图标 + 标题 + 日期风格，横向排列
   .operator-account-history-actions {
     display: flex;

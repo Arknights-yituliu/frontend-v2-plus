@@ -1,17 +1,15 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {createMessage} from "/src/utils/message";
-import userInfoAPI from "/src/api/backend/userInfo"
+import {updateOauthAvatar, updateOauthNickname} from "/src/api/user-center/userInfo.js";
 import "/src/assets/css/account/home.scss";
-import {userInfo} from '/src/api/backend/userSession.js'
+import {userInfo} from '/src/api/user-center/userSession.js'
 import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import LogoutConfirmDialog from "/src/components/account/LogoutConfirmDialog.vue";
 import {operatorTableV2} from '/src/utils/gameData.js'
-const chineseEnglishNumberRegex = /^[\u4e00-\u9fa5A-Za-z0-9]+$/;
-
-const accountRules = [
-  value => !!value || '不能为空',
-  value => chineseEnglishNumberRegex.test(value) || '账号仅可由汉字、数字、英文组成'
+const nicknameRules = [
+  value => String(value ?? '').trim().length > 0 || '昵称不能为空',
+  value => String(value ?? '').trim().length <= 64 || '昵称最长 64 个字符',
 ]
 
 let avatarList = []
@@ -58,25 +56,37 @@ function chooseAvatar(avatar) {
 }
 
 /**
- * 更新头像
+ * 更新头像（走 UC OAuth 资料接口，空串表示清除头像）
  */
 function updateAvatar() {
-  userInfoAPI.updateAvatar(selectedAvatar.value).then(() => {
+  // UC 要求 avatar 显式传值且不接受 null，这里统一归一化为空串（空串表示清除头像）
+  const avatar = String(selectedAvatar.value ?? '')
+  updateOauthAvatar(avatar).then(() => {
     createMessage({type:'success',text:'头像更新成功'})
     // 新接口响应 data 为空，头像新值直接取本地选择
-    userInfo.value.avatar = selectedAvatar.value
+    userInfo.value.avatar = avatar
   })
 }
 
 
 /**
- * 更新用户名（昵称）
+ * 更新昵称（走 UC OAuth 资料接口，不会修改登录用户名）
  */
-function updateUserName() {
-  userInfoAPI.updateNickname(formData.value.userName).then(() => {
-    createMessage({type:'success',text:'用户名更改成功',duration:4000})
+function updateNickname() {
+  const nickname = String(formData.value.userName ?? '').trim()
+  if (!nickname) {
+    createMessage({type:'warn',text:'昵称不能为空'})
+    return
+  }
+  if (nickname.length > 64) {
+    createMessage({type:'warn',text:'昵称最长 64 个字符'})
+    return
+  }
+  updateOauthNickname(nickname).then(() => {
+    createMessage({type:'success',text:'昵称修改成功',duration:4000})
     // 新接口响应 data 为空，昵称新值直接取表单输入
-    userInfo.value.nickname = formData.value.userName
+    formData.value.userName = nickname
+    userInfo.value.nickname = nickname
   })
 }
 
@@ -127,11 +137,11 @@ onMounted(() => {
         </v-list-item>
         <v-list-item>
           <v-list-item-title>
-            用户名（账号）
+            昵称
           </v-list-item-title>
           <div class="flex align-center user-card-bar justify-between">
             <span >{{ userInfo.nickname }}</span>
-            <v-btn color="primary" variant="text" text="修改用户名（账号）"
+            <v-btn color="primary" variant="text" text="修改昵称"
                    @click="displayOrUpdateInfo = 'userName'"></v-btn>
           </div>
         </v-list-item>
@@ -181,18 +191,18 @@ onMounted(() => {
 
     <v-card v-show="displayOrUpdateInfo==='userName'">
       <v-card-text>
-      <div class="m-0-4 opacity-70">输入您的新用户名（账号）,修改后，您仅可通过新用户名作为账号登录</div>
+      <div class="m-0-4 opacity-70">输入您的新昵称，修改后立即生效；昵称与登录用户名无关</div>
       <v-text-field
-          :rules="accountRules"
+          :rules="nicknameRules"
           density="compact"
           v-model="formData.userName"
-          hint="用户名仅可由汉字、数字、英文组成"
+          hint="昵称最长 64 个字符，支持中英文及其他字符"
           color="primary"
           variant="outlined"
           class="m-4"
       ></v-text-field>
       <div class="flex justify-center">
-        <v-btn variant="text" color="primary" text="确认修改" @click="updateUserName" style="width: 100px"></v-btn>
+        <v-btn variant="text" color="primary" text="确认修改" @click="updateNickname" style="width: 100px"></v-btn>
       </div>
       </v-card-text>
     </v-card>

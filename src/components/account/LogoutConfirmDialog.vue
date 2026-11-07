@@ -1,5 +1,5 @@
 <script setup>
-import { clearUserSession } from "/src/api/backend/userSession.js";
+import { clearUserSession } from "/src/api/user-center/userSession.js";
 import UserApiV2 from "/src/api/backend/UserApiV2.js";
 
 const props = defineProps({

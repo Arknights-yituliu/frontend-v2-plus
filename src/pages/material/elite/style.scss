@@ -13,7 +13,7 @@
     //height: 45px;
 
     .el-checkbox-group {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       margin-right: 10px;
 
       .el-checkbox-button {
@@ -34,8 +34,15 @@
     }
 
     .right {
-      > .el-input, .el-cascader, .el-button {
-        margin-bottom: 6px;
+      display: flex;
+      margin-bottom: 10px;
+      .switch {
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+        > span {
+          margin-right: 10px;
+        }
       }
     }
 
@@ -47,9 +54,6 @@
 
   .v-table__wrapper {
     border: 1px solid #eee;
-    tbody tr:nth-child(even) {
-      //background-color: #fafafa;
-    }
   }
 
   .v-card-text {

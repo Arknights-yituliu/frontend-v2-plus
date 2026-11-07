@@ -3,7 +3,7 @@ import {ref} from "vue";
 import '/src/assets/css/account/login.v2.scss'
 import { createMessage} from "/src/utils/message.js";
 import {useRoute, useRouter} from "vue-router";
-import {getUserInfo} from "/src/api/backend/userSession.js";
+import {getUserInfo} from "/src/api/user-center/userSession.js";
 import {
   accountRules,
   passwordRules,
@@ -109,14 +109,14 @@ async function toLogin() {
 
     if (props.dialog) {
       createMessage({type:'success',text:'登录成功'})
-      await getUserInfo("User")
+      await getUserInfo()
       emit('success')
       return
     }
 
     if (route.name === 'User Center' || route.path === '/account/home') {
       createMessage({type:'success',text:'登录成功'})
-      await getUserInfo("AccountHome")
+      await getUserInfo()
       return
     }
 

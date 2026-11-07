@@ -13,7 +13,8 @@ const materialTypeMap = new Map() // 精英材料映射
 const chipsTypeMap = new Map() // 芯片类型id映射
 const baseMaterialIdMap = new Map() // 基础材料id映射
 let operatorRarityBaseMaterialMap = null // 干员养成所需固定材料映射
-let LMDId = ''
+let LMDInfo = {}
+let battleRecordInfo = {}
 const initFlag = ref(false)
 
 // 拆分出精英材料
@@ -76,7 +77,6 @@ const operatorMaterialMap = new Map(
 
 // 通用的干员消耗材料信息映射(老干员如银灰虽然不通用, 但这个主要是给新建自定义角色用的, 不影响)
 const createOperatorRarityBaseMaterialMap = () => {
-  LMDId = baseMaterialIdMap.get('龙门币');
   const skillSummaryId = baseMaterialIdMap.get('技巧概要·卷3');
   const moduleDataBlockId = baseMaterialIdMap.get('模组数据块');
   const dataSupplementStickId = baseMaterialIdMap.get('数据增补条');
@@ -85,7 +85,7 @@ const createOperatorRarityBaseMaterialMap = () => {
   const createEliteMaterials = (materialList) => {
     return materialList.map(([LMDQuantity, chipQuantity, selectMaterialTypes]) => ({
       fixedMaterialList: [
-        { itemId: LMDId, quantity: LMDQuantity }, // 龙门币
+        { itemId: LMDInfo.itemId, quantity: LMDQuantity }, // 龙门币
         { quantity: chipQuantity }, // 芯片
       ],
       selectMaterialTypes
@@ -115,7 +115,7 @@ const createOperatorRarityBaseMaterialMap = () => {
     return moduleUpdateMaterialList.map((item, index) => ({
       fixedMaterialList: [
         { itemId: moduleDataBlockId, quantity: moduleDataBlockQuantity },
-        { itemId: LMDId, quantity: baseLMDQuantity * (1 + index * 0.25) },
+        { itemId: LMDInfo.itemId, quantity: baseLMDQuantity * (1 + index * 0.25) },
         index && item // 没材料会放个0在这, 新建自定义干员的时候遍历到这里会跳过
       ],
       selectMaterialTypes,
@@ -127,7 +127,7 @@ const createOperatorRarityBaseMaterialMap = () => {
       elite: [
         {
           fixedMaterialList: [
-            { itemId: LMDId, quantity: 10000 },
+            { itemId: LMDInfo.itemId, quantity: 10000 },
           ]
         }
       ]
@@ -181,6 +181,8 @@ const init = async () => {
   
   // 遍历材料字典构建映射
   for (const [_, item] of materialMap.entries()) {
+    if (item.itemName === '中级作战记录') battleRecordInfo = item
+    if (item.itemName === '龙门币') LMDInfo = item
     for (const typeItem of allTypeLists) {
       if (!typeItem.materialList) typeItem.materialList = []
       const { rarity, cardNums } = typeItem
@@ -235,6 +237,7 @@ export {
 
 export { 
   professionDictJSON,
-  LMDId,
+  LMDInfo,
+  battleRecordInfo,
   initFlag,
 }

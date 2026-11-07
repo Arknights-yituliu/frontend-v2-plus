@@ -211,17 +211,9 @@
 
 <script setup>
 
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 
 const show_secondary = ref(true);
-
-import materialAPI from '/src/api/backend/material.js'
-
-onMounted(() => {
-  materialAPI.getNewChapterStage().then(response => {
-    tableData.value = response.data
-  })
-})
 
 const tableData = ref([]);
 

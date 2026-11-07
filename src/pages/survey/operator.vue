@@ -8,6 +8,7 @@ import sklandCredentialAPI from "/src/api/backend/sklandCredential.js"
 import {
   saveAkAccountOperators,
   listAkAccounts,
+  setDefaultAkAccount,
   getAkAccountOperators,
   saveManualOperators
 } from "/src/api/user-center/gameData.js"
@@ -39,7 +40,7 @@ import {formatNumber} from "/src/utils/format.js";
 import operatorProgressionStatisticsDataCache from "@/plugins/indexedDB/operatorProgressionStatisticsData.js";
 import SklandAPI from '/src/utils/survey/skland.js';
 import { copyTextToClipboard } from "/src/utils/copyText.js";
-import { userInfo } from "/src/api/backend/userSession.js";
+import { userInfo } from "/src/api/user-center/userSession.js";
 import { useRoute, useRouter } from "vue-router";
 import Login from "/src/pages/account/login.vue";
 import QRCode from 'qrcode';
@@ -1073,7 +1074,7 @@ async function loadAkAccountList() {
   try {
     const accounts = await listAkAccounts()
     akAccountList.value = accounts || []
-    // 干员数据默认取最近导入的账号，列表首条即页面上当前展示的账号
+    // 干员数据默认取用户设置的默认来源（未设置时按最近变更倒序），列表首条即页面上当前展示的账号
     currentAkUid.value = accounts?.[0]?.akUid || ''
   } catch (error) {
     console.error(error)
@@ -1100,7 +1101,7 @@ function formatAkAccountDate(account) {
 }
 
 /**
- * 切换到指定历史导入账号：拉取该账号的干员数据并刷新列表
+ * 切换到指定历史导入账号：拉取该账号的干员数据并刷新列表，同时把该账号设为默认数据来源
  * @param {Object} account 游戏账号
  */
 async function switchAkAccount(account) {
@@ -1122,6 +1123,16 @@ async function switchAkAccount(account) {
     currentAkUid.value = account.akUid
     applyDefaultOwnFilter()
     createMessage({type: 'success', text: `已切换至账号 ${account.akUid}，共 ${list.length} 条数据`})
+
+    // 切换成功后把该账号设为默认数据来源：下次进入页面或第三方 API 不传 akUid 读取时优先返回它
+    // 设置失败不影响本次切换，错误提示由 ucService 响应拦截器统一弹出
+    if (account.source) {
+      try {
+        await setDefaultAkAccount({akUid: account.akUid, source: account.source})
+      } catch (error) {
+        console.error(error)
+      }
+    }
   } catch (error) {
     console.error(error)
   } finally {
@@ -1778,6 +1789,10 @@ onBeforeUnmount(() => {
           </span>
         </v-expansion-panel-title>
         <v-expansion-panel-text>
+          <div class="operator-account-history-tip">
+            <v-icon icon="mdi-information-outline" size="16"></v-icon>
+            <span>切换后会将选中的账号设为默认账号；第三方 API 读取干员数据不传 akUid 时，默认返回该账号的数据。</span>
+          </div>
           <div class="operator-account-history-actions">
             <v-btn
                 v-for="account in akAccountList"

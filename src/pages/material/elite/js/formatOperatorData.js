@@ -9,7 +9,8 @@ import {
   statisticsMap, // 练度调查映射
   operatorMap, // 干员信息映射
   operatorRarityBaseMaterialMap, // 干员养成所需固定材料映射
-  LMDId, // 龙门币ID
+  LMDInfo, // 龙门币对象
+  battleRecordInfo, // 中级作战记录对象
 } from './maps'
 import { initTableData } from './table'
 import { sort } from './utils'
@@ -23,6 +24,7 @@ const operatorList = ref([]) // 干员列表
 // 插入新建自定义干员信息
 export const insertOperatorData = (charId, charInfo) => {
   const operatorData = createOperatorData(charId, charInfo);
+  if (operatorData.name.includes('行铃')) console.log('operatorData', operatorData)
   operatorOriginData.push(operatorData);
 }
 // 删除新建自定义干员信息
@@ -64,6 +66,7 @@ export const initOperatorData = () => {
     skillCosts.sort((a, b) => b - a);
     modCosts.sort((a, b) => b - a);
   });
+  // console.log(`6星总材料消耗列表 totalCostObj.value`, totalCostObj.value['6'])
   // console.log(`总材料消耗列表 totalCostObj.value`, totalCostObj.value)
   // console.log('初始化干员数据:', operatorOriginData);
   operatorList.value = operatorOriginData
@@ -109,12 +112,12 @@ export const createOperatorData = (charId, charInfo) => {
   if (rarity > 3) {
     const baseEliteMaterials = operatorRarityBaseMaterialMap.get(rarity).elite
     baseEliteMaterials.forEach((rankMaterials, index) => {
-      const LMDItem = rankMaterials.fixedMaterialList.find(item => item.itemId === LMDId)
-      filteredElite[index][LMDId] = LMDItem.quantity
+      const LMDItem = rankMaterials.fixedMaterialList.find(item => item.itemId === LMDInfo.itemId)
+      filteredElite[index][LMDInfo.itemId] = LMDItem.quantity
     })
   }
 
-  const eliteInfo = formatElite(filteredElite); // 格式化精英化材料
+  const eliteInfo = formatElite(filteredElite, rarity); // 格式化精英化材料
   const skillsInfo = mergeSkills(skillInfo, skillItems, charId, name) // 格式化技能材料
   const modsInfo = formatMods(equip, name) // 格式化模组材料
   
@@ -159,8 +162,8 @@ const setRateForEntries = (obj, statistics) => {
 }
 
 // 格式化精英化材料对象数组
-const formatElite = (elite) => {
-  return formatTotalMaterials(elite)
+const formatElite = (elite, rarity) => {
+  return formatTotalMaterials(elite, rarity)
 }
 
 // 合并技能信息和技能材料
@@ -187,7 +190,7 @@ const formatMods = (mods, operatorName) => {
 }
 
 // 格式化总材料对象数组
-const formatTotalMaterials = (items) => {
+const formatTotalMaterials = (items, rarity) => {
   // 初始化一个空对象用于存储每个等级的材料和成本
   const obj = {};
   // 初始化总成本变量
@@ -205,6 +208,14 @@ const formatTotalMaterials = (items) => {
   });
   
   obj.totalCost = totalCost
+  /**
+   * 4星干员升级至精二消耗150200经验，131241龙门币
+   * 5星干员升级至精二消耗239400经验，231947龙门币
+   * 6星干员升级至精二消耗361400经验，379841龙门币
+   */
+  if (rarity === 4) obj.totalCost2 = totalCost + battleRecordInfo.itemValue * 150200 / 1000 + LMDInfo.itemValue * 131241
+  else if (rarity === 5) obj.totalCost2 = totalCost + battleRecordInfo.itemValue * 239400 / 1000 + LMDInfo.itemValue * 231947
+  else if (rarity === 6) obj.totalCost2 = totalCost + battleRecordInfo.itemValue * 361400 / 1000 + LMDInfo.itemValue * 379841
   return obj
 }
 
@@ -215,7 +226,7 @@ const formatRankMaterials = (element) => {
   const fixedMaterials = [] // 固定材料列表
   for (const [itemId, quantity] of Object.entries(element)) {
     if (fixedMaterialIds.includes(itemId)) { // 此为固定材料
-      if (itemId === LMDId) LMDQuantity = quantity // 龙门币位置不对, 在下面单独插入
+      if (itemId === LMDInfo.itemId) LMDQuantity = quantity // 龙门币位置不对, 在下面单独插入
       else fixedMaterials.push(getItemInfo(itemId, quantity, materialMap))
       continue
     }
@@ -226,7 +237,6 @@ const formatRankMaterials = (element) => {
   arr.sort((a, b) => b.rarity - a.rarity || b.itemId - a.itemId)
   // 将龙门币位置放在第一个
   if (LMDQuantity) {
-    const LMDInfo = materialMap.get(LMDId)
     fixedMaterials.unshift({
       ...LMDInfo,
       quantity: LMDQuantity,

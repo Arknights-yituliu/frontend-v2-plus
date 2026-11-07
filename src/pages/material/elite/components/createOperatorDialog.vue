@@ -8,7 +8,7 @@ import {
   materialTypeMap, // 精英材料映射
   operatorRarityBaseMaterialMap, // 干员养成所需固定材料映射
   professionDictJSON, // 职业字典JSON
-  LMDId, // 龙门币ID
+  LMDInfo, // 龙门币对象
 } from '../js/maps'
 import {
   operatorList, // 干员列表
@@ -30,13 +30,13 @@ const newOperatorInfo = ref({
   mods: [],
 })
 
-// 通过芯片名字获取芯片ID
+// 通过干员职业名获取芯片信息
 const getChipByName = (professionName, type) => {
   const chipList = chipsTypeMap.get(type)
   return chipList.find(item => item.itemName.includes(professionName))
 }
 
-// 获取芯片名字
+// 获取芯片ID
 const getChipId = (profession, rarity, rank) => {
   const professionName = professionMap.get(profession)
   if (rank === 1) return getChipByName(professionName, 'blue').itemId
@@ -61,7 +61,7 @@ const getNewCharBaseMaterial = () => {
       rankMaterial.fixedMaterialList.forEach(item => {
         if (!item) return
         const { itemId, quantity } = item
-        if (itemId === LMDId) LMDQuantity = quantity // 龙门币位置不对, 在下面单独插入
+        if (itemId === LMDInfo.itemId) LMDQuantity = quantity // 龙门币位置不对, 在下面单独插入
         else materialList.push({
           itemId: itemId || getChipId(profession, rarity, rank), // 芯片无固定ID, 要根据干员职业、星级和精英化等级获取
           quantity
@@ -69,7 +69,7 @@ const getNewCharBaseMaterial = () => {
       })
       if (LMDQuantity) {
         materialList.unshift({
-          itemId: LMDId,
+          itemId: LMDInfo.itemId,
           quantity: LMDQuantity,
         })
       }
