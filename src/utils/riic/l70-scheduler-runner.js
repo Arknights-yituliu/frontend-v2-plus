@@ -88,6 +88,20 @@ export function runRiicAutomaticScheduleInWorker({
   });
 }
 
+export function runRiicPreviewShiftOptimizationInWorker({ input, signal } = {}) {
+  return runRiicAutomaticScheduleInWorker({
+    input: { ...input, task: "optimize-preview" },
+    signal,
+  });
+}
+
+export function validateRiicPreviewShiftOptimizationInWorker({ input, signal } = {}) {
+  return runRiicAutomaticScheduleInWorker({
+    input: { ...input, task: "validate-preview-optimization" },
+    signal,
+  });
+}
+
 export function runRiicTrainingRecommendationInWorker({
   input,
   signal,

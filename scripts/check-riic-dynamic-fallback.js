@@ -55,6 +55,48 @@ try {
     "/src/utils/riic/l79-preview-efficiency-settlement.js",
   );
 
+  const manualEntry = {
+    groupId: "office",
+    selectionKey: "office:0",
+    candidate: {
+      key: "office",
+      fallback: {
+        count: 1,
+        idleCandidateOperators: [
+          { charId: "hanger", name: "挂件" },
+          { charId: "other", name: "其他" },
+        ],
+      },
+    },
+  };
+  const manualPlanOptions = {
+    selectedEntries: [manualEntry],
+    preferredOperatorIdsBySelectionKey: { "office:0": ["hanger"] },
+    allowAutomaticFill: false,
+  };
+  assert.deepEqual(
+    createRiicRoomGroupFallbackPlan(manualPlanOptions).selectedOperatorIds,
+    ["hanger"],
+    "自动队列应继续优先安排挂件",
+  );
+  assert.deepEqual(
+    createRiicRoomGroupFallbackPlan({
+      ...manualPlanOptions,
+      preserveManualSelection: true,
+    }).selectedOperatorIds,
+    [],
+    "手动移出挂件后应保留空位",
+  );
+  assert.deepEqual(
+    createRiicRoomGroupFallbackPlan({
+      ...manualPlanOptions,
+      preserveManualSelection: true,
+      preferredOperatorIdBySlotKey: { "office:0:fallback:0": "other" },
+    }).selectedOperatorIds,
+    ["other"],
+    "手动选择的闲置干员不应被挂件替换",
+  );
+
   const seesRoster = [
     { charId: "char_4217_makoto", name: "结城理", elite: 2, level: 1 },
     { charId: "char_4218_aigis", name: "埃癸斯", elite: 0, level: 1 },
