@@ -549,6 +549,23 @@ try {
     "队列只覆盖部分槽位时回收站仍应补满",
   );
 
+  const manualRecyclePlan = createRiicRoomGroupFallbackPlan({
+    selectedEntries: [shiftEntry("level-3-slot-2:0", recycleShiftCohort, 0)],
+    occupiedOperatorIds: new Set([MAKOTO_ID]),
+    ownedOperators: roster,
+    activeOperatorIds: [MAKOTO_ID],
+    preferredOperatorIdBySlotKey: {
+      "level-3-slot-2:0:fallback:0": TWELVE_F_ID,
+    },
+    preserveManualSelection: true,
+    allowAutomaticFill: false,
+  });
+  assert.deepEqual(
+    manualRecyclePlan.slots.map((slot) => slot.assignedOperatorId),
+    [TWELVE_F_ID, ""],
+    "手动编辑回收站后应保留所选干员和空位",
+  );
+
   // ⑨ 其他房间不受影响：真实倍率仍然优先于闲置补位。
   const manufacturePlan = createRiicRoomGroupFallbackPlan({
     selectedEntries: [

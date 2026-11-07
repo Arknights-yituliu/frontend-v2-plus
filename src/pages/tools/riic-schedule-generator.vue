@@ -4083,6 +4083,8 @@ function buildRoomGroupFallbackPlans(previousReservedIds = []) {
     const savedQueue = roomGroupFallbackQueueStates.value[group.id];
     const hasManualFallbackQueue =
       savedQueue?.signature === fallbackQueueSignature;
+    const preserveManualSelection =
+      hasManualFallbackQueue && savedQueue?.manuallyEdited === true;
     const selectedEntries = withRiicIdleFillOperators(
       selected.selectedEntries,
       riicIdleFillOperators.value,
@@ -4209,8 +4211,8 @@ function buildRoomGroupFallbackPlans(previousReservedIds = []) {
           preferredOperatorIdBySlotKey: savedQueue?.operatorIdBySlotKey,
           preferredOperatorIdsBySelectionKey:
             hangerOperatorIdsBySelectionKey,
-          // 回收站不能留空位：队列里的人不可用时，剩下的槽位继续自动补位。
-          allowAutomaticFill: isRecycleGroup,
+          preserveManualSelection,
+          allowAutomaticFill: isRecycleGroup && !preserveManualSelection,
         })
       : automaticPlan;
 
@@ -4488,6 +4490,7 @@ function setRoomGroupFallbackQueue(group, plan, operatorIdBySlotKey) {
     [group.id]: {
       signature: plan.fallbackQueueSignature,
       operatorIdBySlotKey: nextOperatorIdBySlotKey,
+      manuallyEdited: true,
     },
   };
 }
@@ -8856,7 +8859,8 @@ function normalizeSavedRoomGroupFallbackQueueStates(value) {
       ];
       if (
         Object.keys(operatorIdBySlotKey).length === 0 &&
-        operatorIds.length === 0
+        operatorIds.length === 0 &&
+        queueState?.manuallyEdited !== true
       ) {
         return [];
       }
@@ -8867,6 +8871,7 @@ function normalizeSavedRoomGroupFallbackQueueStates(value) {
           {
             signature,
             operatorIdBySlotKey,
+            ...(queueState?.manuallyEdited === true ? { manuallyEdited: true } : {}),
             ...(operatorIds.length > 0 ? { operatorIds } : {}),
           },
         ],

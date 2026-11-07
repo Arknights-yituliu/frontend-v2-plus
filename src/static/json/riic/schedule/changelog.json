@@ -14,7 +14,7 @@
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20261107.2156"
+      "version": "v20261107.2241"
     },
     "yield": {
       "label": "收益计算器",
@@ -26,6 +26,21 @@
     }
   },
   "entries": [
+    {
+      "date": "2026-11-07",
+      "version": "v20261107.2241",
+      "items": [
+        {
+          "module": "组装器",
+          "type": "fix",
+          "level": 4,
+          "description": "修复手动调整补位队列后，所选干员或空位可能被自动补位替换的问题",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-07",
       "version": "v20261107.2156",
