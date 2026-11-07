@@ -6,7 +6,7 @@
     },
     "data": {
       "label": "数据模块",
-      "version": "v20261101.1439"
+      "version": "v20261107.2156"
     },
     "team": {
       "label": "班组模块",
@@ -14,7 +14,7 @@
     },
     "assembler": {
       "label": "组装器",
-      "version": "v20261104.1734"
+      "version": "v20261107.2156"
     },
     "yield": {
       "label": "收益计算器",
@@ -26,6 +26,39 @@
     }
   },
   "entries": [
+    {
+      "date": "2026-11-07",
+      "version": "v20261107.2156",
+      "items": [
+        {
+          "module": "组装器",
+          "type": "update",
+          "level": 4,
+          "description": "自动排班完成后结合资源产出、无人机收益和干员工作时长，优化跨班次干员安排及同班联动",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "组装器",
+          "type": "fix",
+          "level": 4,
+          "description": "修复手动更换候选班组后，排班预览和导出可能继续使用旧优化人员的问题",
+          "authors": [
+            "Nspace-U"
+          ]
+        },
+        {
+          "module": "数据模块",
+          "type": "update",
+          "level": 3,
+          "description": "将承曦格雷伊的发电站候补效率从 23% 调整为 25%",
+          "authors": [
+            "Nspace-U"
+          ]
+        }
+      ]
+    },
     {
       "date": "2026-11-04",
       "version": "v20261104.1734",

@@ -587,26 +587,6 @@ const pipelineDebugText = computed(() => {
       appendSameShiftTrace(lines, group.selected.trace);
     }
   }
-  if (sameShift.automationPowerAlignment) {
-    const { swaps, before, after } = sameShift.automationPowerAlignment;
-    lines.push(
-      `自动化发电站换班: ${(swaps || []).map((pair) => formatDebugOperatorIds(pair)).join(" ↔ ")} ` +
-        `自动化生效=${formatDebugNumber(before?.supportedAutomationHours)}h -> ${formatDebugNumber(after?.supportedAutomationHours)}h ` +
-        `作业平台冲突=${formatDebugNumber(before?.blockedHours)}h -> ${formatDebugNumber(after?.blockedHours)}h`,
-    );
-  }
-  for (const pair of sameShift.preferredSameShift || []) {
-    lines.push(
-      `同班偏好 ${pair.leftLabel || "--"} + ${pair.rightLabel || "--"}: ` +
-        `状态=${pair.status || "--"} 初始同班=${formatDebugNumber(
-          pair.initialSameShiftHours,
-        )}h 最终同班=${formatDebugNumber(
-          pair.finalSameShiftHours,
-        )}h 迷迭香偏移=${formatDebugNumber(
-          pair.leftOffset,
-        )} 黑键偏移=${formatDebugNumber(pair.rightOffset)}`,
-    );
-  }
   for (const transfer of sameShift.activeRosterHangerTransfers || []) {
     lines.push(
       `跨房挂件 ${transfer.groupId}: ${formatDebugOperatorIds([

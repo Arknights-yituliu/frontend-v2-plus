@@ -1,4 +1,5 @@
 import { getRiicSameShiftBindingAtHour } from "./riic/l74-same-shift-bindings.js";
+import { buildRiicControlCenterRuntimeContext, getRiicControlCenterRoomAdjustment } from "./riic/l51-control-effects.js";
 import {
   normalizeRiicOperator,
   normalizeRiicOperatorId,
@@ -292,6 +293,19 @@ function applyRoomOperatorOverride(room, stateIndex, roomOperatorOverrides) {
     : room;
 }
 
+export function getRiicSchedulePreviewOperatorSignature(preview) {
+  return JSON.stringify((preview?.states || []).map((state) => ({
+    durationHours: Number(state.durationHours || 0),
+    rooms: (state.rooms || []).map((room) => ({
+      key: room.key,
+      facility: room.facility,
+      product: room.product,
+      stationLevel: room.stationLevel,
+      operators: (room.operators || []).map((operator) => normalizeRiicOperatorId(operator?.charId)),
+    })).sort((left, right) => String(left.key).localeCompare(String(right.key))),
+  })));
+}
+
 function findStickyPlacement(groupEntries, stickyOperatorIds) {
   for (const charId of stickyOperatorIds || []) {
     for (const entry of groupEntries) {
@@ -415,6 +429,7 @@ export function buildRiicSchedulePreview({
   staticRooms = [],
   stateOrder = [],
   roomOperatorOverrides = {},
+  automaticRoomOperatorOverrides = {},
   productOverrides = {},
   invalidatedRoomKeys = {},
   stickyOperatorIds = [],
@@ -469,6 +484,19 @@ export function buildRiicSchedulePreview({
   );
   const controlGroupEntry =
     groupEntries.find((entry) => entry.group?.facility === "control") || null;
+  const controlContext = buildRiicControlCenterRuntimeContext({
+    controlState: {
+      status: "ready",
+      segments: (controlGroupEntry?.candidate?.segments || []).map((segment, index) => {
+        const candidates = (segment.stationAssignments || []).map((assignment) => assignment.candidate || {});
+        return {
+          teamIndex: candidates[0]?.controlCenterTeamIndex ?? index,
+          operatorIds: candidates.flatMap((candidate) => candidate.operatorIds || []),
+          operators: candidates.flatMap((candidate) => candidate.operators || []),
+        };
+      }),
+    },
+  });
   const boundaries = getTimelineBoundaries(groupEntries, cycleHours);
   // The control-center rotation defines the displayed shift cards. Other
   // rooms may have extra internal boundaries that must not hide a control team.
@@ -531,9 +559,22 @@ export function buildRiicSchedulePreview({
     stateOrder,
   );
   const states = sourceIndexes.map((sourceStateIndex, index) => {
-    const editedRooms = rawStates[sourceStateIndex].rooms.map((room) =>
-      applyRoomOperatorOverride(room, index, roomOperatorOverrides),
-    );
+    const editedRooms = rawStates[sourceStateIndex].rooms.map((room) => {
+      const automaticOperators = automaticRoomOperatorOverrides?.[`${index}:${room.key}`];
+      const automaticRoom = Array.isArray(automaticOperators) && invalidatedRoomKeys?.[room.key] !== true ? {
+        ...room,
+        operators: normalizePreviewOperators(automaticOperators),
+        automaticOperators: normalizePreviewOperators(automaticOperators),
+        fallbackCount: automaticOperators.filter((operator) => operator?.fallback === true).length,
+        sameShiftBindingDefinitions: getRiicControlCenterRoomAdjustment({
+          context: controlContext,
+          scope: { roomType: room.facility, product: room.product || "all" },
+          operatorIds: automaticOperators.map((operator) => normalizeRiicOperatorId(operator?.charId)).filter(Boolean),
+        }).sameShiftBindings,
+        efficiencySource: { candidate: null },
+      } : room;
+      return applyRoomOperatorOverride(automaticRoom, index, roomOperatorOverrides);
+    });
     const editedControlRoom = editedRooms.find(
       (room) => room.facility === "control",
     );
@@ -590,7 +631,7 @@ export function buildRiicSchedulePreview({
 
   return {
     sourceKey,
-    key: `${sourceKey}:${Object.keys(roomOperatorOverrides || {}).join(",")}:${Object.keys(productOverrides || {}).join(",")}:${Object.keys(invalidatedRoomKeys || {}).join(",")}`,
+    key: `${sourceKey}:${JSON.stringify(automaticRoomOperatorOverrides)}:${Object.keys(roomOperatorOverrides || {}).join(",")}:${Object.keys(productOverrides || {}).join(",")}:${Object.keys(invalidatedRoomKeys || {}).join(",")}`,
     cycleHours,
     states,
     sameShiftBindingSummary: Array.isArray(

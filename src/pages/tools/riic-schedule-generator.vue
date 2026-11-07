@@ -112,6 +112,8 @@ import {
 import {
   isRiicAutomaticScheduleAbortError,
   runRiicAutomaticScheduleInWorker,
+  runRiicPreviewShiftOptimizationInWorker,
+  validateRiicPreviewShiftOptimizationInWorker,
   runRiicTrainingRecommendationInWorker,
   runRiicTrainingImpactInWorker,
 } from "/src/utils/riic/l70-scheduler-runner.js";
@@ -137,7 +139,7 @@ import {
 } from "/src/utils/riic/l60-candidate-ranking.js";
 import { evaluateRiicControlCenterScenarios } from "/src/utils/riic/l40-control-trial.js";
 import { evaluateRiicPerceptionResourceTrials } from "/src/utils/riic/l41-perception-trial.js";
-import { buildRiicSchedulePreview } from "/src/utils/riicSchedulePreview.js";
+import { buildRiicSchedulePreview, getRiicSchedulePreviewOperatorSignature } from "/src/utils/riicSchedulePreview.js";
 import {
   normalizeRiicOperator,
   normalizeRiicOperatorId,
@@ -170,7 +172,7 @@ import {
   buildRiicControlCenterCandidateOperators,
 } from "/src/utils/riic/l50-control-candidates.js";
 import { alignRiicScheduleSameShiftBindings } from "/src/utils/riic/l74-same-shift-bindings.js";
-import { optimizeRiicAssembledTradingShifts, optimizeRiicPerceptionTradingSwap, optimizeRiicAutomationPowerShifts } from "/src/utils/riic/l72-fallback-shift-optimization.js";
+import { optimizeRiicAssembledTradingShifts } from "/src/utils/riic/l72-fallback-shift-optimization.js";
 import {
   getRiicScheduleTrainingRecommendations,
 } from "/src/utils/riic/l83-training-recommendations.js";
@@ -544,6 +546,7 @@ const activeSchedulePreviewStateIndex = ref(0);
 const roomEditorPanel = ref(null);
 const selectedSchedulePreviewRoomKey = ref("");
 const scheduleRoomOperatorOverrides = ref({});
+const automaticScheduleRoomOperatorOverrides = ref({});
 const scheduleRoomProductOverrides = ref({});
 const invalidatedScheduleRoomKeys = ref({});
 const scheduleRoomMaaSettingOverrides = ref({});
@@ -1022,6 +1025,7 @@ function resetScheduleExecutionSettings({
       nextSettings.trainingRoomOperatorCount;
   }
   scheduleExecutionSettings.exportInfo = nextSettings.exportInfo;
+  automaticScheduleRoomOperatorOverrides.value = {};
   clearSchedulePreviewRoomEdits();
   activeSchedulePreviewStateIndex.value =
     getDefaultSchedulePreviewStateIndex();
@@ -2600,6 +2604,13 @@ function canToggleRoomGroupTeamCandidate(group, cohort, candidate) {
 }
 
 function toggleRoomGroupTeamCandidate({ group, cohort, candidate }) {
+  const clearAutomaticOverrides = () => {
+    automaticScheduleRoomOperatorOverrides.value = Object.fromEntries(
+      Object.entries(automaticScheduleRoomOperatorOverrides.value).filter(
+        ([key]) => key.slice(key.indexOf(":") + 1, key.lastIndexOf(":")) !== group.id,
+      ),
+    );
+  };
   const currentGroupSelections =
     selectedRoomGroupTeamCandidateKeys.value[group.id] || {};
   const selectedKeys = getSelectedTeamCandidateKeys(group.id, cohort);
@@ -2625,6 +2636,7 @@ function toggleRoomGroupTeamCandidate({ group, cohort, candidate }) {
       },
     };
     clearRoomGroupFallbackQueue(group.id);
+    clearAutomaticOverrides();
     return;
   }
 
@@ -2645,6 +2657,7 @@ function toggleRoomGroupTeamCandidate({ group, cohort, candidate }) {
     },
   };
   clearRoomGroupFallbackQueue(group.id);
+  clearAutomaticOverrides();
 }
 
 function createAutomaticRoomGroupFallbackQueueStates({
@@ -3145,6 +3158,69 @@ async function generateAutomaticSchedule({
       candidateEnabledScheduleRoomGroups.value[0]?.id ||
       "";
     await nextTick();
+    if (unavailableGroups.length === 0 && riicSchedulePreviewBase.value) {
+      automaticGenerationPhase.value = "正在优化排班联动";
+      const preview = cloneRiicAutomaticScheduleWorkerInput(riicSchedulePreviewBase.value);
+      const previewSignature = getRiicSchedulePreviewOperatorSignature(preview);
+      const editSignature = JSON.stringify({
+        operators: scheduleRoomOperatorOverrides.value,
+        products: scheduleRoomProductOverrides.value,
+        settings: createScheduleExecutionSettingsSnapshot(),
+      });
+      try {
+        const optimizationInput = cloneRiicAutomaticScheduleWorkerInput({
+            preview,
+            ownedOperators: riicL79OperatorProfiles.value.map((profile) => ({
+              ...profile,
+              name: operatorTableV2?.[profile.charId]?.name || profile.charId,
+            })),
+            orundumCraftMaterial: scheduleExecutionSettings.orundumCraftMaterial,
+            efficiencySettings: scheduleExecutionSettings.riicEfficiencySettings,
+            treatSkillsAsUnlocked: riicTrainingMode.value === "ideal",
+            eligibleGroupIds: candidateEnabledScheduleRoomGroups.value
+              .filter((group) => !group.manualControl)
+              .map((group) => group.id),
+            lockedOperatorIds: fiammettaRecoveryConfig.value.enabled
+              ? [fiammettaRecoveryConfig.value.targetOperatorId]
+              : [],
+          });
+        const optimized = await runRiicPreviewShiftOptimizationInWorker({
+          input: optimizationInput,
+          signal: abortController.signal,
+        });
+        if (abortController.signal.aborted || requestId !== automaticGenerationRequestId) return;
+        const canApplyOptimization = () => automaticGenerationTriggerKey.value === generationTriggerKey &&
+          JSON.stringify({ operators: scheduleRoomOperatorOverrides.value, products: scheduleRoomProductOverrides.value,
+            settings: createScheduleExecutionSettingsSnapshot() }) === editSignature &&
+          getRiicSchedulePreviewOperatorSignature(riicSchedulePreviewBase.value) === previewSignature;
+        if (canApplyOptimization() && Object.keys(optimized?.overrides || {}).length > 0) {
+          const previousOverrides = automaticScheduleRoomOperatorOverrides.value;
+          let finalizedPreview;
+          try {
+            automaticScheduleRoomOperatorOverrides.value = optimized.overrides;
+            finalizedPreview = cloneRiicAutomaticScheduleWorkerInput(riicSchedulePreviewBase.value);
+          } finally {
+            automaticScheduleRoomOperatorOverrides.value = previousOverrides;
+          }
+          const finalizedSignature = getRiicSchedulePreviewOperatorSignature(finalizedPreview);
+          const valid = await validateRiicPreviewShiftOptimizationInWorker({
+            input: { ...optimizationInput, finalizedPreview },
+            signal: abortController.signal,
+          });
+          if (abortController.signal.aborted || requestId !== automaticGenerationRequestId) return;
+          if (valid && canApplyOptimization()) {
+            automaticScheduleRoomOperatorOverrides.value = optimized.overrides;
+            if (getRiicSchedulePreviewOperatorSignature(riicSchedulePreviewBase.value) !== finalizedSignature) {
+              automaticScheduleRoomOperatorOverrides.value = previousOverrides;
+            }
+          }
+        }
+      } catch (error) {
+        if (isRiicAutomaticScheduleAbortError(error)) throw error;
+        console.error("RIIC shift optimization failed", error);
+        cMessage("排班已生成，但联动优化失败", "warn");
+      }
+    }
     syncFiammettaRecoveryUsage(
       fiammettaTargetName.value,
       fiammettaRecoveryConfig.value,
@@ -4728,29 +4804,11 @@ const assembledScheduleCandidateState = computed(() => {
       "char_4109_baslin",
     ],
   });
-  const perceptionAlignment = optimizeRiicPerceptionTradingSwap({
-    alignment: optimizeRiicAssembledTradingShifts({
-      alignment,
-      ownedOperators: virtualOperators.value || [],
-      fiammettaRecovery: fiammettaRecoveryConfig.value,
-      lockedOperatorIds: [
-        "char_391_rosmon",
-        "char_4046_ebnhlz",
-        "char_436_whispr",
-        "char_4109_baslin",
-      ],
-    }),
-    ownedOperators: virtualOperators.value || [],
-    fiammettaRecovery: fiammettaRecoveryConfig.value,
-    lockedOperatorIds: ["char_391_rosmon", "char_436_whispr", "char_4109_baslin"],
-    layoutData: activeLayoutFacilityCounts.value,
-  });
-  const sameShiftAlignment = optimizeRiicAutomationPowerShifts({
-    alignment: perceptionAlignment,
+  const sameShiftAlignment = optimizeRiicAssembledTradingShifts({
+    alignment,
     ownedOperators: virtualOperators.value || [],
     fiammettaRecovery: fiammettaRecoveryConfig.value,
     lockedOperatorIds: ["char_391_rosmon", "char_4046_ebnhlz", "char_436_whispr", "char_4109_baslin"],
-    layoutData: activeLayoutFacilityCounts.value,
   });
   const alignedGroups = sameShiftAlignment.groupEntries;
 
@@ -4761,7 +4819,7 @@ const assembledScheduleCandidateState = computed(() => {
         key: alignedGroups
           .map(
             ({ group, candidate }) =>
-              `${group.id}:${candidate.key}:${candidate.sameShiftBindingOffset || 0}:${candidate.independentStationSwap || ""}:${candidate.perceptionOperatorSwap || ""}:${candidate.automationPowerSwap || ""}`,
+              `${group.id}:${candidate.key}:${candidate.sameShiftBindingOffset || 0}:${candidate.independentStationSwap || ""}`,
           )
           .join("|"),
         groups: alignedGroups.map(({ group, candidate }) => ({
@@ -4843,6 +4901,7 @@ const riicSchedulePreviewWithoutSupportRooms = computed(() =>
       operatorNameToCharId.get("但书"),
       operatorNameToCharId.get("龙舌兰"),
     ].filter(Boolean),
+    automaticRoomOperatorOverrides: automaticScheduleRoomOperatorOverrides.value,
   }),
 );
 const activeScheduleRoomOperatorOverrides = computed(() => {
@@ -5234,6 +5293,7 @@ const riicSchedulePreviewBase = computed(() => {
       twoShiftRotationMode.value,
     ),
     roomOperatorOverrides: activeScheduleRoomOperatorOverrides.value,
+    automaticRoomOperatorOverrides: automaticScheduleRoomOperatorOverrides.value,
     productOverrides: scheduleRoomProductOverrides.value,
     invalidatedRoomKeys: invalidatedScheduleRoomKeys.value,
     stickyOperatorIds: [
@@ -8815,7 +8875,7 @@ function normalizeSavedRoomGroupFallbackQueueStates(value) {
   );
 }
 
-function normalizeSavedScheduleRoomOperatorOverrides(value) {
+function normalizeSavedScheduleRoomOperatorOverrides(value, { preserveMetadata = false } = {}) {
   return Object.fromEntries(
     Object.entries(value || {}).flatMap(([key, operators]) => {
       if (
@@ -8826,7 +8886,13 @@ function normalizeSavedScheduleRoomOperatorOverrides(value) {
         return [];
       }
 
-      const normalizedOperators = normalizeScheduleRoomOperatorList(operators);
+      const normalizedOperators = normalizeScheduleRoomOperatorList(operators).map((normalized) => {
+        if (!preserveMetadata) return normalized;
+        const source = operators.find((operator) =>
+          getScheduleRoomEditorOperatorKey(operator) === getScheduleRoomEditorOperatorKey(normalized),
+        );
+        return source && typeof source === "object" ? { ...source, ...normalized } : normalized;
+      });
       return [[key, normalizedOperators]];
     }),
   );
@@ -8966,6 +9032,7 @@ function createWizardStateSnapshot() {
       selectedRoomGroupTeamCandidateKeys:
         selectedRoomGroupTeamCandidateKeys.value,
       roomGroupFallbackQueueStates: roomGroupFallbackQueueStates.value,
+      automaticScheduleRoomOperatorOverrides: automaticScheduleRoomOperatorOverrides.value,
       lastAutomaticGenerationTriggerKey:
         lastAutomaticGenerationTriggerKey.value,
     },
@@ -9143,6 +9210,10 @@ function applySavedWizardState(parsedDraft) {
     normalizeSavedRoomGroupFallbackQueueStates(
       generatedState.roomGroupFallbackQueueStates,
     );
+  automaticScheduleRoomOperatorOverrides.value = normalizeSavedScheduleRoomOperatorOverrides(
+    generatedState.automaticScheduleRoomOperatorOverrides,
+    { preserveMetadata: true },
+  );
   const savedExecutionSettings = normalizeScheduleExecutionSettings(
     editState.scheduleExecutionSettings,
     confirmedLayoutPlan.value?.shiftMode,

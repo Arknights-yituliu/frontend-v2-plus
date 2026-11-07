@@ -47,10 +47,9 @@ try {
   assert.deepEqual(
     trade.segments.map((item) => item.stationAssignments[0].candidate.key),
     ["delphine-trading", "delphine-trading", "ebenholz"],
-    "迷迭香与黑键对齐不得牺牲戴菲恩的已有加成"
+    "同班对齐不得牺牲戴菲恩的已有加成"
   );
   assert.equal(result.summary.find((item) => item.groupId === "trade").realizedWeightedBonus, 360);
-  assert.equal(result.debug.preferredSameShift[0].finalSameShiftHours, 6);
   const tradeSummary = result.summary.find((item) => item.groupId === "trade");
   const tradeDebug = result.debug.groups.find((item) => item.groupId === "trade");
   assert.deepEqual(trade.sameShiftBindingSummary, tradeSummary);
@@ -74,7 +73,8 @@ try {
       : entry
   );
   const noBindingResult = alignRiicScheduleSameShiftBindings({ groupEntries: noBindingEntries });
-  assert.equal(noBindingResult.debug.preferredSameShift[0].finalSameShiftHours, 12);
+  assert.deepEqual(noBindingResult.groupEntries[1].candidate.segments.map((item) => item.stationAssignments[0].candidate.key),
+    ["delphine-trading", "delphine-trading", "ebenholz"], "没有同班绑定时不按特定干员重排");
 
   const makoto = "char_4217_makoto";
   const aigis = "char_4218_aigis";
@@ -182,7 +182,6 @@ try {
     ],
     ownedOperators,
   });
-  assert.equal(protectedRoster.debug.preferredSameShift[0].finalSameShiftHours, 0);
   assert.equal(protectedRoster.debug.activeRosterAlignment[0].finalBonusPercentHours, 18 * 15);
   assert.deepEqual(
     protectedRoster.groupEntries
@@ -212,7 +211,6 @@ try {
   );
   const negativeResult = alignRiicScheduleSameShiftBindings({ groupEntries: negativeEntries });
   assert.equal(negativeResult.summary.find((item) => item.groupId === "trade").realizedWeightedBonus, -360);
-  assert.equal(negativeResult.debug.preferredSameShift[0].finalSameShiftHours, 6);
 
   assert.equal(alignRiicScheduleSameShiftBindings({ groupEntries: [] }).debug.status, "missingControlCandidate");
   console.log("RIIC shift alignment checks passed.");
