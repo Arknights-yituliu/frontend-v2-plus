@@ -89,6 +89,11 @@ export default defineConfig(({ mode }) => ({
         target: "es2015",
         cssTarget: "chrome61",
         rollupOptions: {
+            // Rollup 默认允许 1000 个并发文件操作。本项目的模块图含 438 个干员 JSON
+            // 与 700+ 个产物，构建期间同时打开的文件句柄会顶到该上限；在 nofile
+            // 较低的构建容器里表现为 EMFILE: too many open files。
+            // 20 已足以喂满 libuv 线程池（默认 4 线程），并把峰值句柄数控制在几十以内。
+            maxParallelFileOps: 20,
             input: {
                 main: resolve(__dirname, 'index.html'),
                 docs: resolve(__dirname, 'docs.html')
