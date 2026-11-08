@@ -451,32 +451,6 @@ onMounted(() => {
     </v-dialog>
 
 
-    <!-- 个人结果展示模块 -->
-    <div id="survey_result_personal" class="survey-result-personal" style="display: none">
-      <div class="survey-result-operator" v-for="(operator,index) in listOperators.slice(0,12)" :key="index">
-        <div class="survey-result-avatar" style="">
-          <div :class="`bg-${operator.charId}`">
-          </div>
-        </div>
-        <div class="survey-result-info"
-             style="">
-          <img src="/image/survey/bg/SNIPER.png" alt="" class="survey-result-info-profession-icon">
-          <div class="survey-result-info-profession"
-               style="">SNIPER
-          </div>
-          <div class="survey-result-info-name" style="">
-            {{ operator.name }}
-          </div>
-          <img :src="`/image/survey/bg/rarity-${operator.rarity}.png`" class="survey-result-rarity-icon" alt="">
-        </div>
-        <div class="survey-result-data"
-             style="">
-          <div class="survey_result_text_line">开荒上场率：{{ operator.appearanceRate.toFixed(1) }}%</div>
-          <div class="survey_result_text_line">开荒平均练度：精二 Lv.60</div>
-          <div class="survey_result_text_line">干员持有率：90%</div>
-        </div>
-      </div>
-    </div>
     <!-- 全站结果展示模块 -->
     <!--    这里是使用率最高的前50名干员，可以用tier maker的形式-->
     <!-- 先大概看下统计结果，然后看看怎么划段分级 -->

@@ -215,61 +215,6 @@ async function exportImage() {
     
     const container = exportContainerRef.value
     
-    // 修复 sprite 头像渲染问题
-    const avatarContainers = container.querySelectorAll('.avatar-container')
-    const originalContainerData = []
-    const originalAvatarData = []
-    
-    for (const avatarContainer of avatarContainers) {
-      const wrapper = avatarContainer.querySelector('.sprite-avatar')
-      if (!wrapper) continue
-      
-      const classList = Array.from(wrapper.classList)
-      const charIdClass = classList.find(c => c.startsWith('bg-char_'))
-      if (charIdClass) {
-        const charId = charIdClass.replace('bg-', '')
-        const size = avatarContainer.offsetWidth || 90
-        
-        // 保存原始状态
-        originalContainerData.push({
-          el: avatarContainer,
-          style: avatarContainer.style.cssText
-        })
-        originalAvatarData.push({
-          el: wrapper,
-          style: wrapper.style.cssText
-        })
-        
-        // 修改 avatar-container 样式
-        avatarContainer.style.cssText = `
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          margin-top: -${size / 2}px;
-          margin-left: -${size / 2}px;
-          width: ${size}px;
-          height: ${size}px;
-          z-index: 1;
-          overflow: hidden;
-          transform: none;
-        `
-        
-        // 使用项目 CDN 头像图片替代 sprite
-        wrapper.style.cssText = `
-          background-image: url(https://cos.yituliu.cn/image2/avatar/${charId}.png);
-          background-size: cover;
-          background-position: center 20%;
-          width: ${size}px;
-          height: ${size}px;
-          position: absolute;
-          top: 0;
-          left: 0;
-          margin: 0;
-          transform: none;
-        `
-      }
-    }
-    
     // 等待图片加载
     await new Promise(resolve => setTimeout(resolve, 800))
     
@@ -280,14 +225,6 @@ async function exportImage() {
       allowTaint: true,
       logging: false
     })
-    
-    // 恢复原始样式
-    for (const item of originalContainerData) {
-      item.el.style.cssText = item.style
-    }
-    for (const item of originalAvatarData) {
-      item.el.style.cssText = item.style
-    }
     
     // 转换为图片并下载
     const link = document.createElement('a')

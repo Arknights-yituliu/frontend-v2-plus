@@ -204,15 +204,6 @@ let roomSettlementOperatorMaxQuantity = {
 };
 
 /**
- * 获得干员头像雪碧图样式
- * @param name 干员名称
- * @return {string} 雪碧图样式
- */
-function getAvatar(name) {
-  return characterIdAndName[name];
-}
-
-/**
  * 获得干员id
  * @param name 干员名称
  * @return {string} 干员id
@@ -220,18 +211,6 @@ function getAvatar(name) {
 function getCharId(name) {
   name = characterIdAndName[name];
   return name;
-}
-
-/**
- * 获得干员头像雪碧图样式
- * @param name 干员名称
- * @return {string} 雪碧图样式
- */
-function getOptionAvatar(name) {
-  if (characterIdAndName[name]) {
-    name = characterIdAndName[name];
-  }
-  return `bg-${name} option-avatar-sprite`;
 }
 
 /**
@@ -1590,20 +1569,12 @@ function openMaaScheduleCalculator() {
             <!--恢复目标-->
             <span>{{ translate("schedule", "schedule.RecoveryTarget") }}</span>
             <div style="height: 65px">
-              <!--<div class="room-avatar-sprite-wrap" @click="Fiammetta_target_visible=true">-->
-              <!--  <div :class="getAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
-              <!--</div>-->
-
               <img v-if="plansTemplate[selectedPlanIndex].Fiammetta.target" class="operator-avatar-image avatar-60"
                    @click="FiammettaTargetVisible = true"
                    :src="getOperatorAvatarUrl(getCharId(plansTemplate[selectedPlanIndex].Fiammetta.target))" alt="">
               <div v-else class="operator-avatar-empty avatar-60" @click="FiammettaTargetVisible = true">
                 {{ translate("schedule", "schedule.NotSelected") }}
               </div>
-
-              <!--              <div class="option-avatar-sprite-wrap" @click="FiammettaTargetVisible = true">-->
-              <!--                <div :class="getOptionAvatar(plansTemplate[selectedPlanIndex].Fiammetta.target)"></div>-->
-              <!--              </div>-->
             </div>
           </div>
 
@@ -1663,11 +1634,6 @@ function openMaaScheduleCalculator() {
                 <img class="operator-avatar-image avatar-60" :src="getOperatorAvatarUrl(operator.charId)" alt="">
                 <div class="operator-check-label-v2">{{ operator.name }}</div>
               </div>
-              <!--                <div class="operator-check-box-option" v-for="(operator, charId) in filterOperatorList" :key="charId"-->
-              <!--                     @click="setFiammetta('target', operator.name); FiammettaTargetVisible = false">-->
-              <!--                  <div :class="getOptionAvatar(operator.charId)"></div>-->
-              <!--                  <div class="operator-check-label">{{ operator.name }}</div>-->
-              <!--                </div>-->
             </div>
           </v-card-text>
         </v-card>
@@ -1927,14 +1893,6 @@ function openMaaScheduleCalculator() {
               <img class="operator-avatar-image avatar-40" :src="getOperatorAvatarUrl(getCharId(charId))" alt="">
               <v-icon icon="mdi-close" size="16" @click="deleteOperator(charId)" class="operator-delete-icon"></v-icon>
             </div>
-
-            <!--              <i class="iconfont icon-error operator-delete-icon" >-->
-            <!--              <div class="room-avatar-sprite-wrap"-->
-            <!--                   v-for="(charId, index) in getRoomOperators(selectedRoomType, selectedRoomIndex)" :key="index">-->
-            <!--                <div :class="getAvatar(charId)"></div>-->
-            <!--                <i class="iconfont icon-error operator-delete-icon" @click="deleteOperator(charId)">-->
-            <!--                </i>-->
-            <!--              </div>-->
           </div>
           <v-btn color="primary" variant="tonal" @click="copyOperatorList()" :text="translate('schedule', 'schedule.Copy')"> </v-btn>
           <v-btn color="primary" variant="tonal" @click="pasteOperatorList()" :text="translate('schedule', 'schedule.Paste')"> </v-btn>
@@ -1943,9 +1901,6 @@ function openMaaScheduleCalculator() {
           <div class="selected-operator-wrap">
             <img v-for="(charId, index) in tmpOperatorList" :key="index" class="operator-avatar-image avatar-40"
                  :src="getOperatorAvatarUrl(getCharId(charId))" alt="">
-            <!--              <div class="room-avatar-sprite-wrap" v-for="(charId, index) in tmpOperatorList" :key="index">-->
-            <!--                <div :class="getAvatar(charId)"></div>-->
-            <!--              </div>-->
           </div>
         </div>
 
@@ -2011,24 +1966,6 @@ function openMaaScheduleCalculator() {
               <span v-html="operator.description"></span>
             </v-tooltip>
           </div>
-
-          <!--            <div v-for="(operator, charId) in filterOperatorList" :key="charId"-->
-          <!--                 class="operator-check-box-option-v2">-->
-          <!--              <OperatorAvatar-->
-          <!--                  @click="chooseOperator(operator.name)"-->
-          <!--                  :size="60" :char-id="operator.charId" class="m-a">-->
-          <!--              </OperatorAvatar>-->
-          <!--              <div class="operator-check-label-v2">{{ operator.name }}</div>-->
-          <!--              <span class="operator-building-skill-description" :id="`${operator.charId}-description`"-->
-          <!--                                v-html="operator.description"></span>-->
-          <!--            </div>-->
-          <!--            <div v-for="(operator, charId) in filterOperatorList" :key="charId" @click="chooseOperator(operator.name)"-->
-          <!--                 :id="operator.charId" class="operator-check-box-option">-->
-          <!--              <div :class="getOptionAvatar(operator.charId)" class="option-avatar-sprite"></div>-->
-          <!--              <div class="operator-check-label">{{ operator.name }}</div>-->
-          <!--              <span class="operator-building-skill-description" :id="`${operator.charId}-description`"-->
-          <!--                    v-html="operator.description"></span>-->
-          <!--            </div>-->
         </div>
       </div>
     </div>

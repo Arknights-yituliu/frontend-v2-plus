@@ -240,16 +240,6 @@ let roomSettlementOperatorMaxQuantity = {
 }
 
 /**
- * 获得干员头像雪碧图样式
- * @param name 干员名称
- * @return {string} 雪碧图样式
- */
-function getAvatar(name) {
-  name = characterIdAndName[name]
-  return `bg-${name} room-avatar-sprite`
-}
-
-/**
  * 获得干员id
  * @param name 干员名称
  * @return {string} 干员id
@@ -257,28 +247,6 @@ function getAvatar(name) {
 function getCharId(name) {
   name = characterIdAndName[name]
   return name
-}
-
-/**
- * 获得干员头像雪碧图样式
- * @param name 干员名称
- * @return {string} 雪碧图样式
- */
-function getOptionAvatar(name) {
-  if (characterIdAndName[name]) {
-    name = characterIdAndName[name]
-  }
-  return `bg-${name} option-avatar-sprite`
-}
-
-
-/**
- * 获得材料雪碧图样式
- * @param name 材料名称
- * @return {string} 雪碧图样式
- */
-function getItemSprite(name) {
-  return `bg-${name} product-image`
 }
 
 //控制选择房间内干员的弹窗展开的属性

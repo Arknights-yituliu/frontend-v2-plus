@@ -191,9 +191,8 @@ The project uses CSS sprite sheets for game assets:
 - Avatar sprites: `sprite_avatar.css`
 - Icon sprites: `sprite_icon.css`
 - Item sprites: `sprite_item.css`
-- Skill sprites: `sprite_skill.css`
 
-Custom components like `OperatorAvatar`, `EquipIcon`, `SkillIcon` use these sprites.
+Skill and equip icons no longer use sprites; they load directly from CDN via `getSkillIconUrl()` / `getEquipIconUrl()` in `src/utils/arknightsResource.js`.
 
 ## Automated Scripts
 
