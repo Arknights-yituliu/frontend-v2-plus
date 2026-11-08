@@ -51,8 +51,9 @@
 .sk-cover {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  align-items: end;
+  grid-template-columns: minmax(0, 1fr) 244px;
+  /* 左右两栏垂直居中：原来底部对齐会让左侧文字被压到封面下沿 */
+  align-items: center;
   gap: 56px;
   padding: 10px 0 0;
   background: radial-gradient(78% 62% at 88% -16%, rgba(var(--sk-a1-rgb), 0.1), transparent 62%);
@@ -106,14 +107,6 @@
   }
 }
 
-.sk-cover__lead {
-  margin: 20px 0 0;
-  max-width: 560px;
-  font-size: 13.5px;
-  line-height: 1.9;
-  color: var(--sk-sub);
-}
-
 .sk-figures {
   display: flex;
   flex-wrap: wrap;
@@ -149,19 +142,6 @@
   color: var(--sk-faint);
 }
 
-.sk-cover__foot {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-top: 22px;
-}
-
-.sk-cover__stamp {
-  font-size: 11.5px;
-  color: var(--sk-faint);
-}
-
 /* 通用幽灵按钮：只有字和下划线，没有边框 */
 
 .sk-ghost {
@@ -190,22 +170,12 @@
   }
 
   &--sm {
-    font-size: 11.5px;
+    font-size: 12px;
   }
 }
 
 .theme-dark .sk-ghost:hover:not(:disabled) {
   color: #b3a2ff;
-}
-
-.sk-ghost .is-spinning {
-  animation: sk-rotate 0.9s linear infinite;
-}
-
-@keyframes sk-rotate {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .sk-alert {
@@ -232,7 +202,7 @@
 }
 
 .sk-heroCard {
-  width: 300px;
+  width: 244px;
   margin: 0;
 }
 
@@ -260,8 +230,8 @@
     right: 0;
     bottom: 0;
     z-index: 2;
-    height: 24%;
-    background: linear-gradient(to top, var(--sk-soft), transparent);
+    height: 12%;
+    background: linear-gradient(to top, var(--sk-soft), transparent 80%);
     pointer-events: none;
   }
 }
@@ -272,7 +242,7 @@
   left: 14px;
   z-index: 3;
   font-family: var(--sk-mono);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.14em;
   color: var(--sk-text);
@@ -301,20 +271,20 @@
 }
 
 .sk-heroCard__caption {
-  padding: 12px 2px 0;
+  padding: 10px 2px 0;
 }
 
 .sk-heroCard__series {
   display: block;
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.14em;
   color: var(--sk-faint);
 }
 
 .sk-heroCard__name {
-  margin: 6px 0 0;
-  font-size: 21px;
+  margin: 5px 0 0;
+  font-size: 17px;
   font-weight: 800;
   letter-spacing: -0.4px;
 }
@@ -324,14 +294,14 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 10px;
-  margin-top: 8px;
-  padding-top: 9px;
+  margin-top: 6px;
+  padding-top: 8px;
   border-top: 1px solid var(--sk-line);
-  font-size: 11.5px;
+  font-size: 11px;
   color: var(--sk-sub);
 
   strong {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 800;
     letter-spacing: -0.3px;
     color: var(--sk-text);
@@ -376,6 +346,13 @@
   margin-left: auto;
   font-size: 11.5px;
   color: var(--sk-faint);
+}
+
+/* 区块标题旁的补充说明，紧跟在标题后面，不抢右侧 tab 的位置 */
+.sk-section__note {
+  font-size: 11.5px;
+  color: var(--sk-faint);
+  letter-spacing: 0.02em;
 }
 
 /* 下划线 tab */
@@ -456,7 +433,8 @@
 
 .sk-tile__media {
   position: relative;
-  aspect-ratio: 2 / 3;
+  /* 立绘原图约 206×405，2/3 的容器只露到 309px；5/9 在 206px 宽时约 371px 高，能多显示一截下半身 */
+  aspect-ratio: 5 / 9;
   border-radius: 10px;
   overflow: hidden;
   background: var(--sk-soft);
@@ -470,6 +448,7 @@
     opacity: 0.28;
   }
 
+  /* 立绘底部只留一道很淡的收边：原来的 20% 雾面把下半身盖掉了大半 */
   &::after {
     content: "";
     position: absolute;
@@ -477,8 +456,8 @@
     right: 0;
     bottom: 0;
     z-index: 2;
-    height: 20%;
-    background: linear-gradient(to top, var(--sk-soft), transparent);
+    height: 8%;
+    background: linear-gradient(to top, var(--sk-soft), transparent 80%);
     pointer-events: none;
   }
 }
@@ -524,11 +503,28 @@
 }
 
 .sk-tile__name {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
   font-size: 13px;
   font-weight: 650;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+
+  /* 名字过长时只在名字内部省略，年份始终留在行尾 */
+  .sk-tile__nameText {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sk-tile__year {
+    flex: 0 0 auto;
+    font-style: normal;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--sk-faint);
+  }
 }
 
 .sk-tile__sub {
@@ -569,13 +565,19 @@
 .sk-filters {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  /* 组与组之间（星级 / 年份 / 系列 / 渠道）比组内换行更松，才有层次 */
+  gap: 10px;
+  /* 按可用宽度换行：系列一多，行内的 chip 会自己折到下一行，不把工具栏顶宽 */
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .sk-filters__row {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  /* 列间距放宽好点按，换行后的行距压紧：系列一多会折成好几行，16px 的行距太散 */
+  column-gap: 16px;
+  row-gap: 4px;
 }
 
 .sk-chip {
@@ -583,17 +585,19 @@
   border: 0;
   border-bottom: 2px solid transparent;
   background: transparent;
-  color: var(--sk-sub);
-  font-size: 12px;
+  /* 用主文字色加透明度，比原来的注释灰更实，又不至于和选中的加粗态撞色 */
+  color: var(--sk-text);
+  opacity: 0.72;
+  font-size: 13px;
   cursor: pointer;
-  transition: color 0.16s ease, border-color 0.16s ease;
+  transition: opacity 0.16s ease, border-color 0.16s ease;
 
   &:hover {
-    color: var(--sk-text);
+    opacity: 1;
   }
 
   &.is-active {
-    color: var(--sk-text);
+    opacity: 1;
     font-weight: 700;
     border-bottom-color: var(--sk-a1);
   }
@@ -628,7 +632,7 @@
     outline: none;
     background: transparent;
     color: var(--sk-text);
-    font-size: 12.5px;
+    font-size: 13px;
     font-family: inherit;
 
     &::placeholder {
@@ -825,10 +829,10 @@
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: var(--avatar-size, 30px);
-  height: var(--avatar-size, 30px);
+  width: var(--avatar-size, 39px);
+  height: var(--avatar-size, 39px);
   padding: 1px;
-  border-radius: 8px;
+  border-radius: 10px;
   background: var(--avatar-border-gradient, #d7dae0);
   overflow: hidden;
 
@@ -836,7 +840,7 @@
     display: block;
     width: 100%;
     height: 100%;
-    border-radius: 7px;
+    border-radius: 9px;
     object-fit: cover;
     object-position: center top;
     background: var(--sk-soft);
@@ -1046,7 +1050,8 @@
 
 .sk-drawer__media {
   position: relative;
-  aspect-ratio: 3 / 4;
+  /* 固定 250px 高，立绘按 contain 缩放，整张立绘都能看全 */
+  height: 250px;
   border-radius: 12px;
   overflow: hidden;
   background: var(--sk-soft);
@@ -1067,24 +1072,19 @@
     right: 0;
     bottom: 0;
     z-index: 2;
-    height: 22%;
-    background: linear-gradient(to top, var(--sk-soft), transparent);
+    height: 16%;
+    background: linear-gradient(to top, var(--sk-soft), transparent 80%);
     pointer-events: none;
   }
 
   img {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     z-index: 1;
     width: 100%;
-    height: auto;
-
-    &.is-avatar {
-      height: 100%;
-      object-fit: cover;
-      object-position: center 18%;
-    }
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
   }
 }
 
@@ -1205,12 +1205,12 @@
 
 @media (max-width: 1100px) {
   .sk-cover {
-    grid-template-columns: minmax(0, 1fr) 260px;
+    grid-template-columns: minmax(0, 1fr) 214px;
     gap: 34px;
   }
 
   .sk-heroCard {
-    width: 260px;
+    width: 214px;
   }
 }
 
@@ -1225,7 +1225,7 @@
   }
 
   .sk-heroCard {
-    width: 260px;
+    width: 196px;
   }
 
   .sk-section__meta {

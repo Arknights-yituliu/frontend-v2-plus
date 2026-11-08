@@ -29,9 +29,10 @@ const RARITY_COLORS = {
   0: '#9AA0A6',
 }
 
-/** 获取渠道分组：静态表里的 obtainApproach 取值很碎，页面上归成 5 类 */
+/** 获取渠道分组：静态表里的 obtainApproach 取值很碎，页面上归成 6 类 */
 const CHANNELS = [
   {key: 'shop', label: '商城上架', color: '#2E9BE6'},
+  {key: 'free', label: '商城零元购', color: '#E2593F'},
   {key: 'event', label: '活动产出', color: '#A855C8'},
   {key: 'gameplay', label: '玩法产出', color: '#46A85A'},
   {key: 'exchange', label: '兑换 · 礼包', color: '#D9A300'},
@@ -50,6 +51,19 @@ const APPROACH_CHANNEL = new Map([
   ['特典获得', 'exchange'],
   ['设定集兑换码兑换', 'exchange'],
   ['线下礼包获得', 'exchange'],
+])
+
+/**
+ * 按 skinId 单独指定渠道的特例表，优先级高于 obtainApproach 映射
+ *
+ * <p>静态表只给到获取方式的原文，区分不了「同一个渠道、不同的付钱方式」。
+ * 判定零元购的特征是：obtainApproach 写「采购中心」，但 displayTagId 是「活动获得」——
+ * 即活动期间挂在商城 0 元领取，直接归到商城上架会和源石买的时装混在一起。
+ * 全表符合该特征的就是下面两件，以后遇到同类时装往这里加一行即可。</p>
+ */
+const SKIN_CHANNEL_OVERRIDE = new Map([
+  ['char_123_fang@winter#1', 'free'], // 十字郡（芬）
+  ['char_120_hibisc@nian#1', 'free'], // 守岁人（芙蓉）
 ])
 
 const CHANNEL_BY_KEY = new Map(CHANNELS.map(channel => [channel.key, channel]))
@@ -86,8 +100,15 @@ function resolveSeriesName(groupName) {
   return {full, base}
 }
 
-function resolveChannel(approach) {
-  return CHANNEL_BY_KEY.get(APPROACH_CHANNEL.get(approach) || 'other') || CHANNELS[CHANNELS.length - 1]
+/**
+ * 解析时装的获取渠道
+ * @param {string} approach 静态表里的 obtainApproach 原文
+ * @param {string} skinId 时装 ID，用于查特例表
+ * @returns {{key: string, label: string, color: string}}
+ */
+function resolveChannel(approach, skinId) {
+  const key = SKIN_CHANNEL_OVERRIDE.get(skinId) || APPROACH_CHANNEL.get(approach) || 'other'
+  return CHANNEL_BY_KEY.get(key) || CHANNELS[CHANNELS.length - 1]
 }
 
 /**
@@ -137,7 +158,7 @@ function buildSkinRecords(statRows) {
     const total = stat && stat.total > 0 ? stat.total : sampleAccounts
     const series = resolveSeriesName(display.skinGroupName)
     const approach = String(display.obtainApproach || '').trim() || '未知'
-    const channel = resolveChannel(approach)
+    const channel = resolveChannel(approach, skinId)
     const getTime = toNumber(display.getTime)
     const rarity = Number.isFinite(Number(operator.rarity)) ? Number(operator.rarity) : 0
 

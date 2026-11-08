@@ -3,7 +3,7 @@ import '/src/assets/css/survey/skin-statistics.scss'
 import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
 import {match} from 'pinyin-pro'
 import {dateFormat} from '/src/utils/dateUtil.js'
-import {getOperatorAvatarStyle, getOperatorAvatarUrl, getSkinPortraitUrl} from '/src/utils/arknightsResource.js'
+import {getOperatorAvatarStyle, getOperatorAvatarUrl, getSkinAvatarUrl, getSkinPortraitUrl} from '/src/utils/arknightsResource.js'
 import {getAkSkinStatisticsResult} from '/src/api/user-center/skinStatistics.js'
 import {
   CHANNELS,
@@ -15,7 +15,6 @@ import {
 
 const RANK_METRICS = [
   {key: 'rate', label: '持有率'},
-  {key: 'own', label: '拥有账号'},
   {key: 'releaseTime', label: '最新上线'},
 ]
 
@@ -28,14 +27,19 @@ const sampleAccounts = ref(0)
 const statCount = ref(0)
 const loading = ref(true)
 const loadError = ref('')
-const updatedAt = ref(null)
 
 const rankMetric = ref('rate')
 const rankLimit = ref(12)
 
 const keyword = ref('')
-const rarityFilter = ref('all')
-const channelFilter = ref('all')
+/*
+ * 四行筛选（星级 / 年份 / 系列 / 渠道）各自可以多选：
+ * 空数组 = 该行不设限（等价于「全部」），行与行之间是「且」的关系
+ */
+const rarityFilter = ref([])
+const yearFilter = ref([])
+const seriesFilter = ref([])
+const channelFilter = ref([])
 const sortKey = ref('rate')
 const sortDir = ref('desc')
 const visibleCount = ref(PAGE_SIZE)
@@ -48,7 +52,13 @@ let requestSeq = 0
 /* ---------------- 派生数据 ---------------- */
 
 const summary = computed(() => summarize(records.value))
-const topSkin = computed(() => (sampleAccounts.value > 0 ? summary.value.topSkin : null))
+
+/* 参与排行的渠道：商城上架 + 兑换礼包。活动赠送、集成战略、商城零元购这类渠道获取门槛完全不同，混进来比持有率没有可比性 */
+const RANK_CHANNELS = ['shop', 'exchange']
+
+const rankPool = computed(() => records.value.filter(item => RANK_CHANNELS.includes(item.channelKey)))
+const rankPoolTotal = computed(() => rankPool.value.length)
+const topSkin = computed(() => (sampleAccounts.value > 0 ? rankPool.value[0] || null : null))
 
 const sampleText = computed(() => (sampleAccounts.value > 0 ? formatInt(sampleAccounts.value) : '—'))
 
@@ -59,12 +69,11 @@ const coverFigures = computed(() => {
     {key: 'sample', value: sampleAccounts.value > 0 ? formatInt(sampleAccounts.value) : '—', label: '样本账号'},
     {key: 'total', value: formatInt(data.total), label: '收录时装'},
     {key: 'series', value: formatInt(data.seriesCount), label: '时装系列'},
-    {key: 'avg', value: data.total ? formatPct(data.avgRate) : '—', label: '平均持有率'},
   ]
 })
 
 const rankRows = computed(() => {
-  const list = records.value.filter(item => item.hasData)
+  const list = rankPool.value.filter(item => item.hasData)
   return [...list]
       .sort((a, b) => {
         const diff = rankValue(b) - rankValue(a)
@@ -99,6 +108,38 @@ const channelChips = computed(() => {
   ]
 })
 
+/* 年份取上线时间的年，新的排前面 */
+const yearChips = computed(() => {
+  const counts = new Map()
+  for (const item of records.value) {
+    if (!item.releaseTime) {
+      continue
+    }
+    const year = new Date(item.releaseTime).getFullYear()
+    counts.set(year, (counts.get(year) || 0) + 1)
+  }
+  return [
+    {value: 'all', label: '全部年份'},
+    ...[...counts.keys()]
+        .sort((a, b) => b - a)
+        .map(year => ({value: year, label: `${year} 年`})),
+  ]
+})
+
+/* 系列取归并后的主系列名（去掉罗马数字分卷），件数多的排前面 */
+const seriesChips = computed(() => {
+  const counts = new Map()
+  for (const item of records.value) {
+    counts.set(item.seriesBase, (counts.get(item.seriesBase) || 0) + 1)
+  }
+  return [
+    {value: 'all', label: '全部系列'},
+    ...[...counts.entries()]
+        .sort((a, b) => (b[1] - a[1]) || a[0].localeCompare(b[0], 'zh-CN'))
+        .map(([name]) => ({value: name, label: name})),
+  ]
+})
+
 const filteredRows = computed(() => {
   const kw = keyword.value.trim().toLowerCase()
   let list = records.value
@@ -115,11 +156,17 @@ const filteredRows = computed(() => {
           || match(item.charName, keyword.value.trim())
     })
   }
-  if (rarityFilter.value !== 'all') {
-    list = list.filter(item => item.rarity === rarityFilter.value)
+  if (rarityFilter.value.length) {
+    list = list.filter(item => rarityFilter.value.includes(item.rarity))
   }
-  if (channelFilter.value !== 'all') {
-    list = list.filter(item => item.channelKey === channelFilter.value)
+  if (yearFilter.value.length) {
+    list = list.filter(item => yearFilter.value.includes(releaseYear(item)))
+  }
+  if (seriesFilter.value.length) {
+    list = list.filter(item => seriesFilter.value.includes(item.seriesBase))
+  }
+  if (channelFilter.value.length) {
+    list = list.filter(item => channelFilter.value.includes(item.channelKey))
   }
 
   const factor = sortDir.value === 'asc' ? 1 : -1
@@ -135,25 +182,19 @@ const filteredRows = computed(() => {
 
 const visibleRows = computed(() => filteredRows.value.slice(0, visibleCount.value))
 const filterActive = computed(
-    () => keyword.value.trim() !== '' || rarityFilter.value !== 'all' || channelFilter.value !== 'all',
+    () => keyword.value.trim() !== ''
+        || rarityFilter.value.length > 0
+        || yearFilter.value.length > 0
+        || seriesFilter.value.length > 0
+        || channelFilter.value.length > 0,
 )
 
-const drawerSeries = computed(() => {
+/* 抽屉里只补一句该系列共几件，不再给系列平均值 */
+const drawerSeriesCount = computed(() => {
   if (!drawerSkin.value) {
-    return null
+    return 0
   }
-  const list = records.value.filter(item => item.seriesBase === drawerSkin.value.seriesBase)
-  const rateSum = list.reduce((sum, item) => sum + item.rate, 0)
-  return {count: list.length, avgRate: list.length ? rateSum / list.length : 0}
-})
-
-const updatedText = computed(() => {
-  if (!updatedAt.value) {
-    return '尚未同步'
-  }
-  const time = updatedAt.value
-  const pad = value => String(value).padStart(2, '0')
-  return `${pad(time.getHours())}:${pad(time.getMinutes())}`
+  return records.value.filter(item => item.seriesBase === drawerSkin.value.seriesBase).length
 })
 
 /* ---------------- 格式化 ---------------- */
@@ -181,8 +222,33 @@ function formatDate(timestamp) {
   return dateFormat(new Date(timestamp), 'yyyy-MM-dd')
 }
 
+/* 年份筛选用的取值：没有上线时间的记 0，永远匹配不到具体年份 */
+function releaseYear(item) {
+  return item.releaseTime ? new Date(item.releaseTime).getFullYear() : 0
+}
+
+/* 排行卡片副标题里的年份；静态表缺上线时间时退回占位符 */
+function skinYear(item) {
+  const year = releaseYear(item)
+  return year > 0 ? `${year} 年` : '未知'
+}
+
 function avatarUrl(charId) {
   return getOperatorAvatarUrl(charId)
+}
+
+/* 表格里的小头像用该套时装自己的方形头像，取不到时退回干员默认头像 */
+function skinAvatarUrl(item) {
+  return getSkinAvatarUrl(item?.skinId) || avatarUrl(item?.charId)
+}
+
+function onAvatarError(event, item) {
+  const img = event?.target
+  if (!img || img.dataset.avatarFallback === '1') {
+    return
+  }
+  img.dataset.avatarFallback = '1'
+  img.src = avatarUrl(item?.charId)
 }
 
 /* 立绘取不到（新时装资源还没生成）时退回方形头像，只退一次，避免死循环 */
@@ -216,9 +282,6 @@ function toneStyle(item) {
 /* ---------------- 排行 ---------------- */
 
 function rankValue(item) {
-  if (rankMetric.value === 'own') {
-    return item.own
-  }
   if (rankMetric.value === 'releaseTime') {
     return item.releaseTime
   }
@@ -226,9 +289,6 @@ function rankValue(item) {
 }
 
 function rankMain(item) {
-  if (rankMetric.value === 'own') {
-    return `${formatInt(item.own)} 人`
-  }
   if (rankMetric.value === 'releaseTime') {
     return dateFormat(new Date(item.releaseTime), 'yyyy.MM')
   }
@@ -236,11 +296,8 @@ function rankMain(item) {
 }
 
 function rankSub(item) {
-  if (rankMetric.value === 'own') {
-    return formatPct(item.rate)
-  }
   if (rankMetric.value === 'releaseTime') {
-    return `均 ${formatPct(item.rate)}`
+    return formatPct(item.rate)
   }
   return `${formatInt(item.own)} 人拥有`
 }
@@ -265,8 +322,46 @@ function sortIcon(key) {
 
 function resetFilters() {
   keyword.value = ''
-  rarityFilter.value = 'all'
-  channelFilter.value = 'all'
+  rarityFilter.value = []
+  yearFilter.value = []
+  seriesFilter.value = []
+  channelFilter.value = []
+}
+
+/**
+ * 筛选 chip 的选中态：value 为 all 时看该行是否还没有任何选中项
+ * @param {Array<string|number>} selection 该行已选中的取值
+ * @param {string|number} value chip 的取值
+ * @returns {boolean}
+ */
+function isChipActive(selection, value) {
+  return value === 'all' ? selection.length === 0 : selection.includes(value)
+}
+
+/** 点「全部」清空该行，其余 chip 点一下加入、再点一下取消，多选之间取并集 */
+function pickChip(selection, value) {
+  if (value === 'all') {
+    return []
+  }
+  return selection.includes(value)
+      ? selection.filter(item => item !== value)
+      : [...selection, value]
+}
+
+function toggleRarity(value) {
+  rarityFilter.value = pickChip(rarityFilter.value, value)
+}
+
+function toggleYear(value) {
+  yearFilter.value = pickChip(yearFilter.value, value)
+}
+
+function toggleSeries(value) {
+  seriesFilter.value = pickChip(seriesFilter.value, value)
+}
+
+function toggleChannel(value) {
+  channelFilter.value = pickChip(channelFilter.value, value)
 }
 
 function exportCsv() {
@@ -324,7 +419,6 @@ async function load() {
     records.value = built.records
     sampleAccounts.value = built.sampleAccounts
     statCount.value = built.statCount
-    updatedAt.value = new Date()
   } catch (error) {
     if (seq !== requestSeq) {
       return
@@ -337,7 +431,7 @@ async function load() {
   }
 }
 
-watch([keyword, rarityFilter, channelFilter, sortKey, sortDir], () => {
+watch([keyword, rarityFilter, yearFilter, seriesFilter, channelFilter, sortKey, sortDir], () => {
   visibleCount.value = PAGE_SIZE
 })
 
@@ -366,24 +460,11 @@ onUnmounted(() => {
           干员时装<span class="sk-cover__titleAccent">大数据</span>
         </h1>
 
-        <p class="sk-cover__lead">
-          谁的衣服人手一件，哪套系列最经得起时间考验。以站内玩家上传的持有记录为样本，
-          把 {{ formatInt(summary.total) }} 件时装按持有率排成一张榜单，附可检索的全量目录。
-        </p>
-
         <div class="sk-figures">
           <div v-for="figure in coverFigures" :key="figure.key" class="sk-figure">
             <span class="sk-figure__value">{{ figure.value }}</span>
             <span class="sk-figure__label">{{ figure.label }}</span>
           </div>
-        </div>
-
-        <div class="sk-cover__foot">
-          <button class="sk-ghost" type="button" :disabled="loading" @click="load">
-            <span class="mdi mdi-refresh" :class="{'is-spinning': loading}"/>
-            {{ loading ? '同步中' : '刷新数据' }}
-          </button>
-          <span class="sk-cover__stamp">最近同步 {{ updatedText }} · 每小时 10 分自动跑批</span>
         </div>
       </div>
 
@@ -427,6 +508,7 @@ onUnmounted(() => {
       <div class="sk-section__head">
         <span class="sk-index">01</span>
         <h2 class="sk-section__title">持有率排行</h2>
+        <span class="sk-section__note">商城 + 兑换礼包 · {{ formatInt(rankPoolTotal) }} 件</span>
         <div class="sk-tabs">
           <button
               v-for="metric in RANK_METRICS"
@@ -463,7 +545,10 @@ onUnmounted(() => {
                  loading="lazy" @error="onArtError($event, row)">
           </div>
           <div class="sk-tile__meta">
-            <span class="sk-tile__name">{{ row.name }}</span>
+            <span class="sk-tile__name">
+              <span class="sk-tile__nameText">{{ row.name }}</span>
+              <em class="sk-tile__year">· {{ skinYear(row) }}</em>
+            </span>
             <span class="sk-tile__sub">{{ row.charName }} · {{ row.seriesName }}</span>
             <span class="sk-tile__value">
               {{ rankMain(row) }}
@@ -475,7 +560,7 @@ onUnmounted(() => {
 
       <div v-else class="sk-empty">
         <span class="mdi mdi-inbox-outline"/>
-        <p>本轮还没有持有记录，等统计任务跑过一轮再看。</p>
+        <p>本轮还没有商城或兑换礼包渠道的时装持有记录，等统计任务跑过一轮再看。</p>
       </div>
     </section>
 
@@ -496,9 +581,31 @@ onUnmounted(() => {
                 v-for="chip in rarityChips"
                 :key="chip.value"
                 class="sk-chip"
-                :class="{'is-active': rarityFilter === chip.value}"
+                :class="{'is-active': isChipActive(rarityFilter, chip.value)}"
                 type="button"
-                @click="rarityFilter = chip.value"
+                @click="toggleRarity(chip.value)"
+            >{{ chip.label }}
+            </button>
+          </div>
+          <div class="sk-filters__row">
+            <button
+                v-for="chip in yearChips"
+                :key="chip.value"
+                class="sk-chip"
+                :class="{'is-active': isChipActive(yearFilter, chip.value)}"
+                type="button"
+                @click="toggleYear(chip.value)"
+            >{{ chip.label }}
+            </button>
+          </div>
+          <div class="sk-filters__row">
+            <button
+                v-for="chip in seriesChips"
+                :key="chip.value"
+                class="sk-chip"
+                :class="{'is-active': isChipActive(seriesFilter, chip.value)}"
+                type="button"
+                @click="toggleSeries(chip.value)"
             >{{ chip.label }}
             </button>
           </div>
@@ -507,9 +614,9 @@ onUnmounted(() => {
                 v-for="chip in channelChips"
                 :key="chip.value"
                 class="sk-chip"
-                :class="{'is-active': channelFilter === chip.value}"
+                :class="{'is-active': isChipActive(channelFilter, chip.value)}"
                 type="button"
-                @click="channelFilter = chip.value"
+                @click="toggleChannel(chip.value)"
             >{{ chip.label }}
             </button>
           </div>
@@ -559,8 +666,9 @@ onUnmounted(() => {
           <tr v-for="row in visibleRows" :key="row.skinId" class="sk-row" @click="openSkin(row)">
             <td>
               <div class="sk-cellSkin">
-                <span class="sk-avatar" :style="avatarStyle(row, 30)">
-                  <img :src="avatarUrl(row.charId)" alt="" loading="lazy">
+                <span class="sk-avatar" :style="avatarStyle(row, 39)">
+                  <img :src="skinAvatarUrl(row)" alt="" loading="lazy"
+                       @error="onAvatarError($event, row)">
                 </span>
                 <span class="sk-cellSkin__text">
                   <span class="sk-cellSkin__name">{{ row.name }}</span>
@@ -618,6 +726,8 @@ onUnmounted(() => {
       </button>
       <div v-show="notesOpen" class="sk-notes__grid">
         <p><b>持有率</b>拥有该时装的账号数 ÷ 本轮参与统计的账号总数，尚未被任何账号拥有的时装按 0 计入。</p>
+        <p><b>排行口径</b>持有率排行只收商城上架与兑换礼包的时装（采购中心、特典、设定集兑换码、线下礼包等），活动赠送、集成战略、商城零元购等渠道不参与排名，避免把获取门槛不同的时装放在一起比。</p>
+        <p><b>商城零元购</b>指挂在采购中心、但活动期间标价 0 的时装（目前是芬的十字郡、芙蓉的守岁人）。静态表只记「采购中心」，代码里按时装 ID 单独拎成这一类，不混进商城上架，也不进排行榜。</p>
         <p><b>样本口径</b>只统计在站内上传过数据的账号，本轮 {{ sampleText }} 个；样本扩容后历史数值会整体回落。</p>
         <p><b>更新频率</b>服务端每小时 10 分跑一轮全量统计，页面只读结果表，拿到的永远是最近一轮快照。</p>
         <p><b>系列归并</b>静态表里的系列名带罗马数字分卷（如「珊瑚海岸/VI」），榜单按分卷前的主系列名归并。</p>
@@ -666,8 +776,8 @@ onUnmounted(() => {
             <dt>所属系列</dt>
             <dd>
               {{ drawerSkin.seriesName }}
-              <template v-if="drawerSeries">
-                · {{ drawerSeries.count }} 件 · 均 {{ formatPct(drawerSeries.avgRate) }}
+              <template v-if="drawerSeriesCount">
+                · 共 {{ drawerSeriesCount }} 件
               </template>
             </dd>
           </div>
