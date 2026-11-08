@@ -1,6 +1,9 @@
 // 干员头像资源基础地址，后续如需切换 CDN 或目录，只需修改这里
 export const OPERATOR_AVATAR_BASE_URL = 'https://cos.yituliu.cn/arknights/resources/avatar/'
 
+// 干员立绘资源基础地址（180×360 半身像，含默认立绘与各套时装）
+export const OPERATOR_PORTRAIT_BASE_URL = 'https://cos.yituliu.cn/arknights/resources/portrait/'
+
 // 技能图标资源基础地址，后续如需切换 CDN 或目录，只需修改这里
 export const OPERATOR_SKILL_ICON_BASE_URL = 'https://cos.yituliu.cn/arknights/resources/skills/'
 
@@ -17,6 +20,24 @@ export function getOperatorAvatarUrl(charId) {
     return ''
   }
   return `${OPERATOR_AVATAR_BASE_URL}${charId}.png`
+}
+
+/**
+ * 生成干员立绘（时装）图片地址
+ *
+ * <p>立绘文件名由 skinId 推导：`@` 换成 `_`，`#` 保留但必须转义成 `%23`
+ * （否则浏览器会把 `#` 之后的部分当成锚点丢掉，请求直接 404）。
+ * 默认立绘本身也是皮肤，形如 `char_190_clour#2` → `char_190_clour_2.png`。</p>
+ *
+ * @param {string} skinId 皮肤编码，如 char_124_kroos@witch#1
+ * @returns {string} 完整立绘图片地址，skinId 为空时返回空字符串
+ */
+export function getSkinPortraitUrl(skinId) {
+  const id = String(skinId || '').trim()
+  if (!id) {
+    return ''
+  }
+  return `${OPERATOR_PORTRAIT_BASE_URL}${id.replace(/@/g, '_').replace(/#/g, '%23')}.png`
 }
 
 /**
