@@ -324,7 +324,7 @@ async function uploadToOperatorSurvey() {
   
   try {
     await saveAkAccountOperators(payload)
-    createMessage({ type: 'success', text: '干员与时装数据已同步到练度调查！' })
+    createMessage({ type: 'success', text: '干员数据已同步到练度调查！' })
   } catch (error) {
     console.error(error)
     createMessage({ type: 'error', text: '数据上传失败' })

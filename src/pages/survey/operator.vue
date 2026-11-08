@@ -507,7 +507,7 @@ async function getPlayerDataAndSync(binding) {
     }
 
     await saveAkAccountOperators(payload)
-    createMessage({ type: 'success', text: '干员与时装数据已同步到我的干员！' })
+    createMessage({ type: 'success', text: '干员数据已同步到我的干员！' })
     getOperatorData()
     sklandImportDialog.value = false
     
