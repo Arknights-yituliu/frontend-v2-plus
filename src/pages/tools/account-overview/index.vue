@@ -165,6 +165,8 @@ async function getPlayerData(binding) {
     warehouseData.channelName = channelName
     warehouseData.channelMasterId = channelMasterId
     warehouseData.nickName = nickName
+    // 时装只存在于 player/info，随干员数据一起全量上报
+    warehouseData.skins = data.skins
     rawWarehouseData.value = warehouseData
     
     // 添加干员详细信息
