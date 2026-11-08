@@ -67,6 +67,13 @@
             {
               "target": "any",
               "stat": "moodRecover",
+              "facilities": [
+                "power",
+                "manufacture",
+                "trading",
+                "hire",
+                "meeting"
+              ],
               "per": {
                 "per": 20,
                 "value": 0.05,
