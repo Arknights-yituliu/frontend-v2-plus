@@ -44,6 +44,12 @@ function prerenderPlugin() {
 export default defineConfig(({ mode }) => ({
     worker: {
         format: 'es',
+        // 每个 worker 入口在构建期由一个独立的 Rollup 实例打包，它不继承
+        // build.rollupOptions；不显式限制时仍会按默认 1000 并发打开文件，
+        // 多个 worker 并行打包时句柄峰值可达数百，低 nofile 容器会触发 EMFILE。
+        rollupOptions: {
+            maxParallelFileOps: 20,
+        },
     },
     resolve: {
         alias: {
