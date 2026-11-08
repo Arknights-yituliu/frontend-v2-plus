@@ -576,10 +576,6 @@ function getRoomLabel(type) {
   return roomTypeDict[type]
 }
 
-function getAvatar(id) {
-  return `bg-${id}`
-}
-
 
 onMounted(() => {
   searchOperatorDebounce()

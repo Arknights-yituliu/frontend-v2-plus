@@ -493,26 +493,6 @@
     /*}*/
 
 
-    .room-avatar-sprite-wrap {
-        height: 44px;
-        width: 44px;
-        margin: 4px;
-        position: relative;
-        --base-border-radius: 4px;
-        --avatar-border-radius: calc(var(--base-border-radius) * 4);
-        --avatar-position: calc((44px - 180px) / 2);
-        --avatar-scale: scale(calc(44 / 180));
-        border-radius: var(--base-border-radius);
-        box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
-    }
-
-    .room-avatar-sprite {
-        position: absolute;
-        top: var(--avatar-position);
-        left: var(--avatar-position);
-        transform: var(--avatar-scale);
-    }
-
     .show-name {
         height: 70px;
         margin: 8px;
@@ -710,16 +690,6 @@
         text-align: center;
     }
 
-    .option-avatar-sprite-wrap {
-        margin: 2px 8px 20px;
-        position: relative;
-        font-size: 15px;
-        width: 60px;
-        height: 60px;
-        box-shadow: 1px 1px 10px var(--c-box-shadow-color);;
-    }
-
-
     .operator-building-skill-description {
         position: absolute;
         bottom: 70px;
@@ -738,21 +708,6 @@
             display: block;
         }
     }
-
-    .option-avatar-sprite-wrap:hover {
-        .operator-building-skill-description {
-            display: block;
-        }
-    }
-
-
-    .option-avatar-sprite {
-        position: absolute;
-        top: -60px;
-        left: -60px;
-        transform: scale(0.328);
-    }
-
 
     .product-image-wrap {
         height: 40px;

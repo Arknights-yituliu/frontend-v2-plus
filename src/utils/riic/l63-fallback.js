@@ -993,6 +993,7 @@ export function createRiicRoomGroupFallbackPlan({
   preferredOperatorIds = [],
   preferredOperatorIdsBySelectionKey = {},
   allowAutomaticFill = true,
+  preserveManualSelection = false,
 }) {
   const occupied = new Set(
     [...(occupiedOperatorIds || [])]
@@ -1130,14 +1131,14 @@ export function createRiicRoomGroupFallbackPlan({
           (candidateOperator) => candidateOperator.charId === charId,
         )
       : null;
-    // 只有"房间自带补位（旅骨一类，真实技能倍率）"才保留保存的偏好；
+    // 自动补位时，只有"房间自带补位（旅骨一类，真实技能倍率）"才保留保存的偏好；
     // 偏好落在 1% 兜底条目或闲置池上时，回收站重新按优先级挑人。
     const preferredIsRoomFill =
       Boolean(preferredOperator) &&
       preferredOperator.idleFill !== true &&
       preferredOperator.isDefaultFill !== true;
 
-    if (isRecycleSlot(slot) && !preferredIsRoomFill) {
+    if (!preserveManualSelection && isRecycleSlot(slot) && !preferredIsRoomFill) {
       const recycleOperator =
         pickRecycleRoomFillForSlot(slot) || pickRecycleHangerForSlot(slot);
       if (recycleOperator) {
@@ -1190,20 +1191,22 @@ export function createRiicRoomGroupFallbackPlan({
     }
   }
 
-  for (const slot of slotOptions) {
-    if (assignedSlotKeys.has(slot.key)) {
-      continue;
-    }
+  if (!preserveManualSelection) {
+    for (const slot of slotOptions) {
+      if (assignedSlotKeys.has(slot.key)) {
+        continue;
+      }
 
-    for (const preferredOperatorId of
-      preferredOperatorIdsBySelectionKey?.[slot.selectionKey] || []) {
-      const charId = normalizeOperatorId(preferredOperatorId);
-      const operator = slot.operators.find(
-        (candidateOperator) => candidateOperator.charId === charId,
-      );
-      if (operator && canSelect(slot, operator)) {
-        selectOperatorForSlot(slot, operator);
-        break;
+      for (const preferredOperatorId of
+        preferredOperatorIdsBySelectionKey?.[slot.selectionKey] || []) {
+        const charId = normalizeOperatorId(preferredOperatorId);
+        const operator = slot.operators.find(
+          (candidateOperator) => candidateOperator.charId === charId,
+        );
+        if (operator && canSelect(slot, operator)) {
+          selectOperatorForSlot(slot, operator);
+          break;
+        }
       }
     }
   }

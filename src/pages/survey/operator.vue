@@ -478,10 +478,18 @@ async function getPlayerDataAndSync(binding) {
   
   try {
     // 拉取账号仓库（含干员）数据，并补上昵称 / 区服等账号标识
-    const warehouseData = await SklandAPI.getWarehouseInfo(uid, sklandCred.value, sklandToken.value)
+    // 时装只在 player/info 里，与仓库并行获取；获取失败时跳过 skins 字段，不影响干员上报
+    const [warehouseData, skins] = await Promise.all([
+      SklandAPI.getWarehouseInfo(uid, sklandCred.value, sklandToken.value),
+      SklandAPI.getPlayerSkins(uid, sklandCred.value, sklandToken.value),
+    ])
     warehouseData.channelName = channelName
     warehouseData.channelMasterId = channelMasterId
     warehouseData.nickName = nickName
+    // 全量对齐语义：player/info 返回的就是完整时装集合，直接整份上报
+    if (skins && skins.length > 0) {
+      warehouseData.skins = skins
+    }
     // 缓存本次导入的账号快照，供账号总览等页面复用
     sessionStorage.setItem(SKLAND_ACCOUNT_SESSION_STORAGE_KEY, JSON.stringify({
       ...warehouseData,

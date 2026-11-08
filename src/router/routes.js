@@ -729,6 +729,18 @@ const routes = [
         }
     },
     {
+        path: '/survey/skin-statistics',
+        text: '时装大数据',
+        name: 'SkinStatistics',
+        display: false,
+        module: 'survey',
+        icon: "mdi-tshirt-crew",
+        component: () => import('/src/pages/survey/skin-statistics.vue'),
+        meta: {
+            title: '时装大数据'
+        }
+    },
+    {
         path: '/survey/operator-recommend',
         text: '干员练度推荐',
         name: 'OperatorRecommend',

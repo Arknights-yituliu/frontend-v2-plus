@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { createMessage} from "/src/utils/message";
 import toolAPI from '/src/api/backend/tool.js'
-import { getWarehouseInfo, getHeaders } from "/src/utils/survey/skland.js";
+import { getWarehouseInfo, getHeaders, normalizeSklandSkins } from "/src/utils/survey/skland.js";
 
 // 森空岛域名（与 skland.js 保持一致）
 const SKLAND_DOMAIN = "https://zonai.skland.com";
@@ -45,18 +45,8 @@ async function getPlayerInfoFull(akUid, cred, token) {
                 playerData.chars = data.chars || []
                 playerData.charInfoMap = data.charInfoMap || {}
 
-                // 时装信息（可能是对象或数组）
-                if (data.skins) {
-                    if (Array.isArray(data.skins)) {
-                        playerData.skins = data.skins
-                    } else if (typeof data.skins === 'object') {
-                        // 如果是对象，转换为数组
-                        playerData.skins = Object.keys(data.skins).map(key => ({
-                            skinId: key,
-                            ...data.skins[key]
-                        }))
-                    }
-                }
+                // 时装信息（森空岛原始为 [{id, ts}]，这里统一归一化为 [{skinId, gainTs}]）
+                playerData.skins = normalizeSklandSkins(data.skins)
 
                 // 基建信息
                 playerData.building = data.building || null

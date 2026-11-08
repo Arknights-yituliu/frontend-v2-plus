@@ -31,12 +31,10 @@ export {
   signedNumber,
 } from "/src/vendor/riic-efficiency/dist/index.js";
 
-// 干员目录数据按需加载：432 个干员 JSON 在构建时各自成为独立模块，
-// 只有真正打开基建计算页面时才并行拉取，避免进入主包、撑大 Rollup 模块图。
-const operatorModules = import.meta.glob(
-  "/src/vendor/riic-efficiency/data/operators/*.json",
-  { import: "default" },
-);
+// 干员目录数据聚合为单一模块后按需加载（见 ./riic-operator-data.js）：
+// 首次打开基建计算页面时拉取一次，不再让 438 个干员 JSON 各自成为独立 chunk。
+// 原先的非 eager import.meta.glob 虽标注「按需」，但调用方本就是全量并发加载，
+// 只换来 438 个产物文件与 438 次并发请求，并在构建写盘阶段触发 EMFILE。
 const rulesetModules = import.meta.glob(
   "/src/vendor/riic-efficiency/data/ruleset.json",
   { eager: true, import: "default" },
@@ -113,13 +111,13 @@ export const RIIC_RECYCLE_BOOST_OPTIONS = Object.freeze(
 
 let catalogPromise = null;
 
-// 惰性构建干员目录，首次调用时并发加载全部干员数据并缓存结果。
+// 惰性构建干员目录：首次调用时加载聚合后的干员数据并缓存结果。
 export function loadRiicEfficiencyCatalog() {
   if (!catalogPromise) {
-    catalogPromise = Promise.all(Object.values(operatorModules).map((load) => load()))
-      .then((operators) => {
+    catalogPromise = import("./riic-operator-data.js")
+      .then(({ RIIC_OPERATOR_PROFILES }) => {
         const loadedCatalog = {
-          ...createEfficiencyCatalog(operators, termsData.terms),
+          ...createEfficiencyCatalog(RIIC_OPERATOR_PROFILES, termsData.terms),
           ruleset: rulesetWithRecycle,
         };
         return loadedCatalog;

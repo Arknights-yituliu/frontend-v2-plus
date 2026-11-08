@@ -165,6 +165,13 @@ export const SEO_ROUTES = [
         priority: 0.7,
     },
     {
+        path: '/survey/skin-statistics',
+        title: '时装大数据',
+        description: '明日方舟干员时装持有率大数据，查看每件时装的样本持有率、系列分布与上线年份趋势',
+        changefreq: 'weekly',
+        priority: 0.6,
+    },
+    {
         path: '/survey/maarecruitdata',
         title: '公招 tag 调查',
         description: '明日方舟公开招募 tag 调查，共享公招数据提升招募效率',

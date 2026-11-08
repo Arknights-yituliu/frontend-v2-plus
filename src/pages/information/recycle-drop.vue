@@ -11,14 +11,14 @@ const ENV_KEY = String(import.meta.env.VITE_RECYCLE_DROP_KEY || '').trim()
 
 const ITEM_INFO_BY_ID = new Map(itemInfoList.map(item => [String(item.itemId), item]))
 
-/* 稀有度配色沿用站内材料格子约定（5 金 / 4 橙 / 3 紫 / 2 蓝 / 1 绿），
+/* 稀有度配色对齐游戏内材料档位（5 金 / 4 紫 / 3 蓝 / 2 绿 / 1 白灰），
    针对深浅两套主题做了微调，保证标签文字在两种底色上都能读 */
 const RARITY_COLORS = {
   5: '#D9A300',
-  4: '#EF8B00',
-  3: '#A855C8',
-  2: '#2E9BE6',
-  1: '#46A85A',
+  4: '#A855C8',
+  3: '#2E9BE6',
+  2: '#46A85A',
+  1: '#7C848E',
   0: '#9AA0A6',
 }
 

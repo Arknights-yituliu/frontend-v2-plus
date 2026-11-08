@@ -42,6 +42,9 @@ function prerenderPlugin() {
 // https://vitejs.dev/config/
 // 使用 `vite build --mode no-prerender` 时跳过统计分析插件，供本地快速构建验证
 export default defineConfig(({ mode }) => ({
+    worker: {
+        format: 'es',
+    },
     resolve: {
         alias: {
             '@': resolve(__dirname, 'src'),

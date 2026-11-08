@@ -11,18 +11,6 @@ import {
 } from "./riic-active-roster-rule-data.js";
 
 const EPSILON = 1e-9;
-const PREFERRED_SAME_SHIFT_PAIRS = Object.freeze([
-  Object.freeze({
-    key: "rosmontis-ebenholz",
-    leftOperatorId: "char_391_rosmon",
-    leftLabel: "迷迭香",
-    leftFacility: "manufacture",
-    rightOperatorId: "char_4046_ebnhlz",
-    rightLabel: "黑键",
-    rightFacility: "trading",
-  }),
-]);
-
 function toPositiveHours(value) {
   const hours = Number(value);
   return Number.isFinite(hours) && hours > 0 ? hours : 0;
@@ -556,47 +544,6 @@ function alignActiveRosterHangerAssignments(groupEntries, controlCandidate) {
   };
 }
 
-function getCandidatePairSameShiftHours({
-  leftCandidate,
-  rightCandidate,
-  leftOperatorId,
-  rightOperatorId,
-}) {
-  const leftCycleHours = getSegmentCycleHours(leftCandidate?.segments);
-  const rightCycleHours = getSegmentCycleHours(rightCandidate?.segments);
-  const cycleHours = leastCommonMultiple(leftCycleHours, rightCycleHours);
-  if (cycleHours <= 0) {
-    return 0;
-  }
-
-  const boundaries = getTimelineBoundaries(
-    [leftCandidate, rightCandidate],
-    cycleHours,
-  );
-  let sameShiftHours = 0;
-
-  for (let index = 0; index < boundaries.length - 1; index += 1) {
-    const startHour = boundaries[index];
-    const durationHours = boundaries[index + 1] - startHour;
-    const leftOperatorIds = getCandidateOperatorIdsAtHour(
-      leftCandidate,
-      startHour,
-    );
-    const rightOperatorIds = getCandidateOperatorIdsAtHour(
-      rightCandidate,
-      startHour,
-    );
-    if (
-      leftOperatorIds.has(leftOperatorId) &&
-      rightOperatorIds.has(rightOperatorId)
-    ) {
-      sameShiftHours += durationHours;
-    }
-  }
-
-  return sameShiftHours;
-}
-
 function getCandidateBindings(candidate, group) {
   const roomType = normalizeRoomType(
     candidate?.candidateScope?.roomType || group?.facility,
@@ -1094,171 +1041,6 @@ function preservesControlBindings({ entry, candidate, controlCandidate }) {
   );
 }
 
-function alignPreferredSameShiftPairs({
-  groupEntries = [],
-  controlCandidate,
-  ownedOperators = [],
-} = {}) {
-  const alignedEntries = [...groupEntries];
-  const debug = [];
-
-  for (const pair of PREFERRED_SAME_SHIFT_PAIRS) {
-    const leftIndex = alignedEntries.findIndex(({ group, candidate }) =>
-      candidateHasOperator(candidate, pair.leftOperatorId) &&
-      String(group?.facility || "") === pair.leftFacility,
-    );
-    const rightIndex = alignedEntries.findIndex(({ group, candidate }) =>
-      candidateHasOperator(candidate, pair.rightOperatorId) &&
-      String(group?.facility || "") === pair.rightFacility,
-    );
-
-    if (leftIndex < 0 || rightIndex < 0) {
-      debug.push({
-        key: pair.key,
-        leftLabel: pair.leftLabel,
-        rightLabel: pair.rightLabel,
-        status: "missingOperator",
-        initialSameShiftHours: 0,
-        finalSameShiftHours: 0,
-        leftOffset: 0,
-        rightOffset: 0,
-      });
-      continue;
-    }
-    if (leftIndex === rightIndex) {
-      debug.push({
-        key: pair.key,
-        leftLabel: pair.leftLabel,
-        rightLabel: pair.rightLabel,
-        status: "sameGroup",
-        initialSameShiftHours: 0,
-        finalSameShiftHours: 0,
-        leftOffset: 0,
-        rightOffset: 0,
-      });
-      continue;
-    }
-
-    const leftCandidate = alignedEntries[leftIndex].candidate;
-    const rightCandidate = alignedEntries[rightIndex].candidate;
-    const initialSameShiftHours = getCandidatePairSameShiftHours({
-      leftCandidate,
-      rightCandidate,
-      leftOperatorId: pair.leftOperatorId,
-      rightOperatorId: pair.rightOperatorId,
-    });
-    let best = {
-      leftOffset: 0,
-      rightOffset: 0,
-      sameShiftHours: initialSameShiftHours,
-      changedEntryCount: 0,
-    };
-    const leftSegmentCount = leftCandidate?.segments?.length || 1;
-    const rightSegmentCount = rightCandidate?.segments?.length || 1;
-    const initialActiveRosterBonus = getActiveRosterBonusHours({
-      groupEntries: alignedEntries,
-      ownedOperators,
-    });
-
-    for (let leftOffset = 0; leftOffset < leftSegmentCount; leftOffset += 1) {
-      for (
-        let rightOffset = 0;
-        rightOffset < rightSegmentCount;
-        rightOffset += 1
-      ) {
-        const rotatedLeft = rotateCandidateSegments(leftCandidate, leftOffset);
-        const rotatedRight = rotateCandidateSegments(
-          rightCandidate,
-          rightOffset,
-        );
-        if (
-          !preservesControlBindings({
-            entry: alignedEntries[leftIndex],
-            candidate: rotatedLeft,
-            controlCandidate,
-          }) ||
-          !preservesControlBindings({
-            entry: alignedEntries[rightIndex],
-            candidate: rotatedRight,
-            controlCandidate,
-          })
-        ) {
-          continue;
-        }
-        const rotatedEntries = alignedEntries.map((entry, index) =>
-          index === leftIndex
-            ? { ...entry, candidate: rotatedLeft }
-            : index === rightIndex
-              ? { ...entry, candidate: rotatedRight }
-              : entry,
-        );
-        if (
-          getActiveRosterBonusHours({
-            groupEntries: rotatedEntries,
-            ownedOperators,
-          }) + EPSILON < initialActiveRosterBonus
-        ) {
-          continue;
-        }
-        const sameShiftHours = getCandidatePairSameShiftHours({
-          leftCandidate: rotatedLeft,
-          rightCandidate: rotatedRight,
-          leftOperatorId: pair.leftOperatorId,
-          rightOperatorId: pair.rightOperatorId,
-        });
-        const changedEntryCount =
-          Number(leftOffset > 0) + Number(rightOffset > 0);
-        const accepted =
-          sameShiftHours > best.sameShiftHours + EPSILON ||
-          (Math.abs(sameShiftHours - best.sameShiftHours) <= EPSILON &&
-            changedEntryCount < best.changedEntryCount);
-        if (accepted) {
-          best = {
-            leftOffset,
-            rightOffset,
-            sameShiftHours,
-            changedEntryCount,
-          };
-        }
-      }
-    }
-
-    if (best.leftOffset > 0) {
-      alignedEntries[leftIndex] = rotateEntryCandidate({
-        entry: alignedEntries[leftIndex],
-        offset: best.leftOffset,
-        controlCandidate,
-      });
-    }
-    if (best.rightOffset > 0) {
-      alignedEntries[rightIndex] = rotateEntryCandidate({
-        entry: alignedEntries[rightIndex],
-        offset: best.rightOffset,
-        controlCandidate,
-      });
-    }
-
-    debug.push({
-      key: pair.key,
-      leftLabel: pair.leftLabel,
-      rightLabel: pair.rightLabel,
-      status:
-        best.sameShiftHours > initialSameShiftHours + EPSILON
-          ? "aligned"
-          : "alreadyBest",
-      initialSameShiftHours,
-      finalSameShiftHours: best.sameShiftHours,
-      leftOffset: best.leftOffset,
-      rightOffset: best.rightOffset,
-    });
-  }
-
-  return {
-    groupEntries: alignedEntries,
-    debug,
-  };
-}
-
 /**
  * L74: keeps selected teams intact while selecting the room rotation phase that
  * realizes the most control-center same-shift bonus.
@@ -1550,12 +1332,7 @@ export function alignRiicScheduleSameShiftBindings({
     }
   }
 
-  const preferredSameShiftAlignment = alignPreferredSameShiftPairs({
-    groupEntries: activeRosterAlignedEntries,
-    controlCandidate,
-    ownedOperators,
-  });
-  const individualAlignedEntries = [...preferredSameShiftAlignment.groupEntries];
+  const individualAlignedEntries = [...activeRosterAlignedEntries];
   for (const [index, entry] of individualAlignedEntries.entries()) {
     const candidate = entry?.candidate;
     const assignments = (candidate?.segments || []).flatMap((segment) => segment?.stationAssignments || []);
@@ -1665,7 +1442,6 @@ export function alignRiicScheduleSameShiftBindings({
         activeRosterHangerAlignment.transfers,
       activeRosterHangerDiagnostics:
         activeRosterHangerAlignment.teamDiagnostics,
-      preferredSameShift: preferredSameShiftAlignment.debug,
     },
   };
 }

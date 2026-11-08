@@ -1,12 +1,14 @@
 import { runRiicAutomaticSchedule } from "./l70-scheduler-core.js";
+import { optimizeRiicPreviewShifts, validateRiicPreviewShiftOptimization } from "./l75-general-shift-optimization.js";
 
-self.onmessage = (event) => {
+self.onmessage = async (event) => {
   const { requestId, input } = event?.data || {};
 
   try {
     self.postMessage({
       requestId,
-      result: runRiicAutomaticSchedule({
+      result: input?.task === "optimize-preview" ? await optimizeRiicPreviewShifts(input) :
+        input?.task === "validate-preview-optimization" ? await validateRiicPreviewShiftOptimization(input) : runRiicAutomaticSchedule({
         ...input,
         onProgress: (phase, details) => {
           self.postMessage({

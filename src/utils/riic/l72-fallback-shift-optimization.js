@@ -1,10 +1,9 @@
 import BASELINE from "../../static/json/tools/R00-baseline.json";
 import { settleRiicMaaScheduleEfficiency } from "./l79-preview-efficiency-settlement.js";
+import { summarizeRiicActualSchedule } from "./l80-actual-settlement.js";
 import { buildRiicControlCenterRuntimeContext, getRiicControlCenterRoomAdjustment } from "./l51-control-effects.js";
 import { getActiveRosterBonusHours, getRiicSameShiftBindingAtHour, summarizeCandidateBindings } from "./l74-same-shift-bindings.js";
 import { RIIC_ACTIVE_ROSTER_RUNTIME_RULES, RIIC_ACTIVE_ROSTER_SELECTION_PRIORITY_RULES } from "./riic-active-roster-rule-data.js";
-import { getRiicOperatorTags } from "./riic-operator-tags.js";
-import { mergeRiicUpgradeRequirements } from "./P00-upgrade-requirements.js";
 
 const EPSILON = 1e-9;
 const SCORED_FACILITIES = new Set(["manufacture", "trading", "power", "meeting", "hire"]);
@@ -76,7 +75,7 @@ function createSchedule({ teams, controlState, namesById }) {
   return { plans };
 }
 
-export function evaluateRiicSelectedRoomTeams({ teams, controlState, ownedOperators }) {
+export function evaluateRiicSelectedRoomTeams({ teams, controlState, ownedOperators, orundumCraftMaterial = "orirock", includeDroneOutput = false }) {
   const namesById = new Map((ownedOperators || []).map((operator) => [operator.charId, operator.name]));
   const schedule = createSchedule({ teams, controlState, namesById });
   if (
@@ -87,7 +86,7 @@ export function evaluateRiicSelectedRoomTeams({ teams, controlState, ownedOperat
     )
   )
     return null;
-  const result = settleRiicMaaScheduleEfficiency({ schedule, operatorProfiles: ownedOperators });
+  const result = settleRiicMaaScheduleEfficiency({ schedule, operatorProfiles: ownedOperators, orundumCraftMaterial });
   const issues = new Set(
     (result.issues || []).map(
       (issue) => `${issue.code}:${issue.planIndex}:${issue.facility}:${issue.index}:${issue.operatorId || ""}:${issue.operatorName || ""}`
@@ -115,7 +114,12 @@ export function evaluateRiicSelectedRoomTeams({ teams, controlState, ownedOperat
       roomValues.set(roomKey, Number(roomValues.get(roomKey) || 0) + Number(room.efficiency) * Number(state.durationHours || 0));
     }
   }
-  return { values, issues, grossResources, roomValues, roomResources };
+  let droneOutputPerCycle = 0;
+  if (includeDroneOutput) {
+    const actual = summarizeRiicActualSchedule({ l79: result, orundumCraftMaterial });
+    droneOutputPerCycle = Number(actual.yield?.droneCharge?.droneOutputPerCycle || 0);
+  }
+  return { values, issues, grossResources, droneOutputPerCycle, roomValues, roomResources };
 }
 
 export function compareRiicSelectedRoomTeamResults(before, after) {
@@ -123,142 +127,6 @@ export function compareRiicSelectedRoomTeamResults(before, after) {
   const keys = new Set([...before.values.keys(), ...after.values.keys()]);
   if ([...keys].some((key) => Number(after.values.get(key) || 0) + EPSILON < Number(before.values.get(key) || 0))) return false;
   return [...keys].reduce((sum, key) => sum + Number(after.values.get(key) || 0) - Number(before.values.get(key) || 0), 0) > EPSILON;
-}
-
-// Try the perception core against an ordinary filler in the other shift.
-export function optimizeRiicPerceptionTradingSwap({ alignment, ownedOperators = [], lockedOperatorIds = [], fiammettaRecovery, hasManualOverrides = false, layoutData } = {}) {
-  const entries = alignment?.groupEntries || [];
-  const control = entries.find((entry) => entry.group?.facility === "control")?.candidate;
-  const segments = control?.segments || [];
-  const dormitories = (layoutData?.facilities || []).filter((facility) => facility.facilityType === "dormitory" && Number(facility.stationLevel) > 0);
-  if (hasManualOverrides || segments.length !== 2 || !dormitories.length ||
-    Number(segments[0].durationHours) !== Number(segments[1].durationHours) ||
-    entries.some((entry) => entry.candidate?.segments?.length !== 2 || entry.candidate.segments.some((segment, index) => Number(segment.durationHours) !== Number(segments[index].durationHours)))) return alignment;
-
-  const controlState = { status: "ready", segments: segments.map((segment, index) => ({
-    durationHours: segment.durationHours,
-    teamIndex: segment.stationAssignments?.[0]?.candidate?.controlCenterTeamIndex ?? index,
-    operatorIds: segment.stationAssignments?.flatMap((assignment) => assignment.candidate?.operatorIds || []) || [],
-    operators: segment.stationAssignments?.flatMap((assignment) => assignment.candidate?.operators || []) || [],
-  })) };
-  const context = buildRiicControlCenterRuntimeContext({ controlState });
-  const toTeams = (groupEntries) => [
-    ...groupEntries.flatMap(({ group, candidate }) => group.facility === "control" ? [] : candidate.segments.flatMap((segment, index) =>
-      (segment.stationAssignments || []).map((assignment) => ({ groupId: group.id, facility: group.facility, product: group.candidateProduct,
-        stationLevel: assignment.stationLevel, stationIndexByStateIndex: { [index]: assignment.stationIndex }, activeStateIndexes: [index], operatorIds: assignment.candidate?.operatorIds || [] })))),
-    ...dormitories.map((facility, index) => ({ groupId: "perception-dormitory", facility: "dormitory", stationLevel: facility.stationLevel,
-      stationIndexByStateIndex: { 0: index, 1: index }, activeStateIndexes: [0, 1], operatorIds: [] })),
-  ];
-  const originalTeams = toTeams(entries);
-  const original = evaluateRiicSelectedRoomTeams({ teams: originalTeams, controlState, ownedOperators });
-  if (!original) return alignment;
-  const baselineRosterBonus = getActiveRosterBonusHours({ groupEntries: entries, ownedOperators });
-  const locked = new Set([...lockedOperatorIds, ...(fiammettaRecovery?.enabled ? [fiammettaRecovery.targetOperatorId] : [])]);
-  const blackKey = "char_4046_ebnhlz";
-  const rosmontis = "char_391_rosmon";
-  let best = null;
-  for (const [entryIndex, entry] of entries.entries()) {
-    if (entry.group?.facility !== "trading" || entry.group?.manualControl) continue;
-    for (const blackShift of [0, 1]) {
-      const otherShift = 1 - blackShift;
-      const factoryHasRosmontis = entries.some(({ group, candidate }) => group.facility === "manufacture" &&
-        (candidate.segments[otherShift].stationAssignments || []).some((assignment) => assignment.candidate?.operatorIds?.includes(rosmontis)));
-      if (!factoryHasRosmontis) continue;
-      for (const blackAssignment of entry.candidate.segments[blackShift].stationAssignments || []) {
-        const blackTeam = blackAssignment.candidate;
-        if (!blackTeam?.operatorIds?.includes(blackKey)) continue;
-        const blackFillers = blackTeam.fallback?.operators || [];
-        if (blackTeam.operatorIds.some((id) => id !== blackKey && !blackFillers.some((operator) => operator.charId === id && !operator.taggedMember))) continue;
-        const otherAssignment = (entry.candidate.segments[otherShift].stationAssignments || []).find((assignment) => assignment.stationIndex === blackAssignment.stationIndex);
-        if (!otherAssignment || otherAssignment.stationLevel !== blackAssignment.stationLevel || otherAssignment.candidate?.operatorIds?.includes(blackKey)) continue;
-        for (const filler of otherAssignment.candidate?.fallback?.operators || []) {
-          if (!filler?.charId || filler.taggedMember || filler.idleFill || filler.hangerPriority || locked.has(filler.charId) || locked.has(blackKey)) continue;
-          const blackOperator = (blackTeam.operators || []).find((operator) => operator.charId === blackKey);
-          const fillerOperator = (otherAssignment.candidate.operators || []).find((operator) => operator.charId === filler.charId);
-          if (!blackOperator || !fillerOperator) continue;
-          const replace = (assignment, outgoing, incoming) => {
-            const old = assignment.candidate;
-            const incomingIsFallback = outgoing.charId === blackKey;
-            const operatorIds = old.operatorIds.map((id) => id === outgoing.charId ? incoming.charId : id);
-            const operators = old.operators.map((operator) => operator.charId === outgoing.charId
-              ? { ...incoming, fallback: incomingIsFallback }
-              : operator);
-            const fallbackOperators = (old.fallback?.operators || []).filter((operator) => operator.charId !== outgoing.charId);
-            if (incomingIsFallback) fallbackOperators.push(filler);
-            const members = (old.members || []).filter((member) => member.name !== outgoing.name);
-            if (!incomingIsFallback) {
-              members.push((blackTeam.members || []).find((member) => member.name === incoming.name) || { name: incoming.name });
-            }
-            const coreUpgradeRequirements = mergeRiicUpgradeRequirements([
-              ...(old.coreUpgradeRequirements || []),
-              ...(!incomingIsFallback ? blackTeam.coreUpgradeRequirements || [] : []),
-            ].filter((requirement) => operatorIds.includes(requirement?.charId)));
-            const upgradeRequirements = mergeRiicUpgradeRequirements([
-              ...coreUpgradeRequirements,
-              ...fallbackOperators.map((operator) => operator.upgradeRequirement),
-            ]);
-            const scope = old.candidateScope || { roomType: "trading", product: entry.group.candidateProduct };
-            const adjustment = getRiicControlCenterRoomAdjustment({ context, scope, operatorIds });
-            return {
-              ...assignment,
-              candidate: {
-                key: `${old.key}:perception-swap:${outgoing.charId}:${incoming.charId}`,
-                name: operators.map((operator) => operator.name).filter(Boolean).join(" + "),
-                sourceFile: old.sourceFile,
-                sourceRoomType: old.sourceRoomType || scope.roomType,
-                candidateScope: scope,
-                operatorIds,
-                operators,
-                members,
-                coreUpgradeRequirements,
-                upgradeRequirements,
-                fallback: {
-                  count: Number(old.fallback?.count || 0),
-                  operators: fallbackOperators,
-                  fallbackOperatorIds: fallbackOperators.map((operator) => operator.charId),
-                  totalPercent: fallbackOperators.reduce((total, operator) => total + Number(operator.percent || 0), 0),
-                  materialized: fallbackOperators.length > 0,
-                },
-                controlCenterFacilityBonusPercent: adjustment.facilityBonusPercent,
-                controlCenterOperatorBonusPercent: adjustment.operatorBonusPercent,
-                controlCenterOperatorBonusById: adjustment.operatorBonusById,
-                controlCenterExpectedBonusPercent: adjustment.facilityBonusPercent + adjustment.operatorBonusPercent,
-                controlCenterFacilityCalculation: adjustment.facilityCalculation,
-                controlCenterOperatorCalculation: adjustment.operatorCalculation,
-                sameShiftBindings: adjustment.sameShiftBindings,
-              },
-            };
-          };
-          const nextSegments = entry.candidate.segments.map((segment) => ({ ...segment, stationAssignments: (segment.stationAssignments || []).map((assignment) =>
-            assignment === blackAssignment ? replace(assignment, blackOperator, fillerOperator) : assignment === otherAssignment ? replace(assignment, fillerOperator, blackOperator) : assignment) }));
-          const nextEntries = entries.map((item, index) => index === entryIndex ? { ...item, candidate: { ...item.candidate, segments: nextSegments } } : item);
-          const nextTeams = toTeams(nextEntries);
-          if (hasNewRoomConflicts(originalTeams, nextTeams, controlState) || getActiveRosterBonusHours({ groupEntries: nextEntries, ownedOperators }) + EPSILON < baselineRosterBonus) continue;
-          const result = evaluateRiicSelectedRoomTeams({ teams: nextTeams, controlState, ownedOperators });
-          if (!compareRiicSelectedRoomTeamResults(best?.result || original, result)) continue;
-          const resources = new Set([...original.grossResources.keys(), ...result.grossResources.keys()]);
-          if ([...resources].some((resource) => Number(result.grossResources.get(resource) || 0) + EPSILON < Number(original.grossResources.get(resource) || 0))) continue;
-          best = { result, nextEntries, entryIndex, fillerId: filler.charId };
-        }
-      }
-    }
-  }
-  if (!best) return alignment;
-  const changed = best.nextEntries[best.entryIndex];
-  const summary = { ...summarizeCandidateBindings({ controlCandidate: control, group: changed.group, candidate: changed.candidate }),
-    groupId: changed.group.id, rotationOffset: Number(changed.candidate.sameShiftBindingOffset || 0) };
-  changed.candidate = { ...changed.candidate, perceptionOperatorSwap: best.fillerId, sameShiftBindingSummary: summary };
-  const debug = alignment.debug ? { ...alignment.debug,
-    preferredSameShift: (alignment.debug.preferredSameShift || []).map((pair) => pair.key === "rosmontis-ebenholz"
-      ? { ...pair, status: "aligned", finalSameShiftHours: Number(segments[0].durationHours) } : pair),
-    groups: (alignment.debug.groups || []).map((group) => group.groupId !== summary.groupId ? group : {
-      ...group, selected: { coreTeamSynergyWeightedBonus: summary.coreTeamSynergyWeightedBonus, realizedBindingHours: summary.realizedBindingHours,
-        expectedBindingHours: summary.expectedBindingHours, realizedWeightedBonus: summary.realizedWeightedBonus, trace: summary.trace },
-      attempts: (group.attempts || []).map((attempt) => ({ ...attempt, selected: false })),
-    }),
-  } : alignment.debug;
-  return { ...alignment, groupEntries: best.nextEntries, summary: (alignment.summary || []).map((item) => item.groupId === summary.groupId ? summary : item),
-    signature: `${alignment.signature || ""}|perception:${best.fillerId}`, debug };
 }
 
 function hasNewRoomConflicts(beforeTeams, afterTeams, controlState) {
@@ -275,113 +143,6 @@ function hasNewRoomConflicts(beforeTeams, afterTeams, controlState) {
     const before = countAt(beforeTeams, index);
     return [...countAt(afterTeams, index)].some(([id, count]) => count > Math.max(1, before.get(id) || 0));
   });
-}
-
-// Two equal shifts allow individual power-station teams to exchange places
-// without changing any operator's working time.
-export function optimizeRiicAutomationPowerShifts({ alignment, ownedOperators = [], lockedOperatorIds = [], fiammettaRecovery, hasManualOverrides = false, layoutData } = {}) {
-  const entries = alignment?.groupEntries || [];
-  const controlEntry = entries.find((entry) => entry.group?.facility === "control");
-  const segments = controlEntry?.candidate?.segments || [];
-  if (hasManualOverrides || segments.length !== 2 || Number(segments[0].durationHours) !== Number(segments[1].durationHours) ||
-    entries.some((entry) => entry.candidate?.segments?.length !== 2 || entry.candidate.segments.some((segment, index) => Number(segment.durationHours) !== Number(segments[index].durationHours)))) return alignment;
-  const supportId = "char_1027_greyy2";
-  const support = ownedOperators.find((operator) => operator.charId === supportId);
-  if (Number(support?.elite ?? support?.evolvePhase ?? 0) < 2) return alignment;
-  const supportPlacements = entries.filter(({ group }) => group.facility === "power").flatMap(({ candidate }) =>
-    candidate.segments.flatMap((segment) => (segment.stationAssignments || []).filter((assignment) => assignment.candidate?.operatorIds?.includes(supportId))));
-  if (supportPlacements.length !== 1) return alignment;
-  const isPlatform = (id) => getRiicOperatorTags(id).includes("work-platform");
-  const locked = new Set([...lockedOperatorIds, ...(fiammettaRecovery?.enabled ? [fiammettaRecovery.targetOperatorId] : [])]);
-  const controlState = { status: "ready", segments: segments.map((segment) => ({ durationHours: segment.durationHours,
-    operatorIds: segment.stationAssignments?.flatMap((assignment) => assignment.candidate?.operatorIds || []) || [] })) };
-  const toTeams = (groupEntries) => [
-    ...groupEntries.flatMap(({ group, candidate }) => group.facility === "control" ? [] : candidate.segments.flatMap((segment, index) =>
-      (segment.stationAssignments || []).map((assignment) => ({ groupId: group.id, facility: group.facility, product: group.candidateProduct,
-        stationLevel: assignment.stationLevel, stationIndexByStateIndex: { [index]: assignment.stationIndex }, activeStateIndexes: [index], operatorIds: assignment.candidate?.operatorIds || [] })))),
-    ...(layoutData?.facilities || []).filter((item) => item.facilityType === "dormitory" && Number(item.stationLevel) > 0).map((item, index) => ({
-      groupId: "automation-dormitory", facility: "dormitory", stationLevel: item.stationLevel,
-      stationIndexByStateIndex: { 0: index, 1: index }, activeStateIndexes: [0, 1], operatorIds: [] })),
-  ];
-  const originalTeams = toTeams(entries);
-  const original = evaluateRiicSelectedRoomTeams({ teams: originalTeams, controlState, ownedOperators });
-  if (!original) return alignment;
-  const baselineRosterBonus = getActiveRosterBonusHours({ groupEntries: entries, ownedOperators });
-  const automationIds = new Set(["char_400_weedy", "char_416_zumama", "char_433_windft", "char_472_pasngr"]);
-  const metrics = (groupEntries) => {
-    let blockedHours = 0;
-    let supportedAutomationHours = 0;
-    for (let index = 0; index < 2; index += 1) {
-      const power = groupEntries.filter(({ group }) => group.facility === "power").flatMap(({ candidate }) => candidate.segments[index].stationAssignments || []);
-      const supportRoom = power.find((assignment) => assignment.candidate?.operatorIds?.includes(supportId));
-      if (!supportRoom) continue;
-      const blocked = power.some((assignment) => assignment !== supportRoom && (assignment.candidate?.operatorIds || []).some(isPlatform));
-      if (blocked) blockedHours += Number(segments[index].durationHours);
-      else if (groupEntries.some(({ group, candidate }) => group.facility === "manufacture" &&
-        (candidate.segments[index].stationAssignments || []).some((assignment) => (assignment.candidate?.operatorIds || []).some((id) => automationIds.has(id))))) {
-        supportedAutomationHours += Number(segments[index].durationHours);
-      }
-    }
-    return { blockedHours, supportedAutomationHours };
-  };
-  const initialMetrics = metrics(entries);
-  let best = null;
-  for (const [entryIndex, entry] of entries.entries()) {
-    if (entry.group?.facility !== "power" || entry.group?.manualControl) continue;
-    const left = entry.candidate.segments[0].stationAssignments || [];
-    const right = entry.candidate.segments[1].stationAssignments || [];
-    if (left.length > 3 || right.length > 3) continue;
-    const pairs = left.flatMap((a, leftIndex) => right.flatMap((b, rightIndex) => {
-      const aIds = a.candidate?.operatorIds || [];
-      const bIds = b.candidate?.operatorIds || [];
-      if (aIds.length !== 1 || bIds.length !== 1 || a.stationLevel !== b.stationLevel || aIds[0] === bIds[0] ||
-        locked.has(aIds[0]) || locked.has(bIds[0]) || ![...aIds, ...bIds].some((id) => id === supportId || isPlatform(id))) return [];
-      return [{ leftIndex, rightIndex }];
-    }));
-    const choices = [];
-    const enumerate = (start, selected, usedLeft, usedRight) => {
-      if (selected.length) choices.push(selected);
-      for (let i = start; i < pairs.length; i += 1) {
-        const pair = pairs[i];
-        if (usedLeft.has(pair.leftIndex) || usedRight.has(pair.rightIndex)) continue;
-        enumerate(i + 1, [...selected, pair], new Set([...usedLeft, pair.leftIndex]), new Set([...usedRight, pair.rightIndex]));
-      }
-    };
-    enumerate(0, [], new Set(), new Set());
-    for (const choice of choices) {
-      const nextSegments = entry.candidate.segments.map((segment, index) => ({ ...segment, stationAssignments: (segment.stationAssignments || []).map((assignment, position) => {
-        const pair = choice.find((item) => (index === 0 ? item.leftIndex : item.rightIndex) === position);
-        return pair ? { ...assignment, candidate: (index === 0 ? right[pair.rightIndex] : left[pair.leftIndex]).candidate } : assignment;
-      }) }));
-      const nextEntries = entries.map((item, index) => index === entryIndex ? { ...item, candidate: { ...item.candidate, segments: nextSegments } } : item);
-      const nextMetrics = metrics(nextEntries);
-      if (nextMetrics.supportedAutomationHours < initialMetrics.supportedAutomationHours ||
-        (nextMetrics.supportedAutomationHours === initialMetrics.supportedAutomationHours && nextMetrics.blockedHours >= initialMetrics.blockedHours)) continue;
-      const nextTeams = toTeams(nextEntries);
-      if (hasNewRoomConflicts(originalTeams, nextTeams, controlState) || getActiveRosterBonusHours({ groupEntries: nextEntries, ownedOperators }) + EPSILON < baselineRosterBonus) continue;
-      const result = evaluateRiicSelectedRoomTeams({ teams: nextTeams, controlState, ownedOperators });
-      if (!result || [...result.issues].some((issue) => !original.issues.has(issue))) continue;
-      const valueKeys = new Set([...original.values.keys(), ...result.values.keys()]);
-      const resourceKeys = new Set([...original.grossResources.keys(), ...result.grossResources.keys()]);
-      if ([...valueKeys].some((key) => Number(result.values.get(key) || 0) + EPSILON < Number(original.values.get(key) || 0)) ||
-        [...resourceKeys].some((key) => Number(result.grossResources.get(key) || 0) + EPSILON < Number(original.grossResources.get(key) || 0))) continue;
-      const improvement = [...valueKeys].reduce((sum, key) => sum + Number(result.values.get(key) || 0) - Number(original.values.get(key) || 0), 0);
-      if (!best || improvement > best.improvement + EPSILON || (Math.abs(improvement - best.improvement) <= EPSILON &&
-        (nextMetrics.blockedHours < best.metrics.blockedHours || (nextMetrics.blockedHours === best.metrics.blockedHours && choice.length < best.choice.length)))) {
-        best = { nextEntries, entryIndex, choice, metrics: nextMetrics, improvement,
-          swaps: choice.map(({ leftIndex, rightIndex }) => [left[leftIndex].candidate.operatorIds[0], right[rightIndex].candidate.operatorIds[0]]) };
-      }
-    }
-  }
-  if (!best) return alignment;
-  const changed = best.nextEntries[best.entryIndex];
-  const swap = best.choice.map(({ leftIndex, rightIndex }) => `${leftIndex}-${rightIndex}`).join(",");
-  const summary = { ...summarizeCandidateBindings({ controlCandidate: controlEntry.candidate, group: changed.group, candidate: changed.candidate }),
-    groupId: changed.group.id, rotationOffset: Number(changed.candidate.sameShiftBindingOffset || 0) };
-  changed.candidate = { ...changed.candidate, automationPowerSwap: swap, sameShiftBindingSummary: summary };
-  return { ...alignment, groupEntries: best.nextEntries, summary: (alignment.summary || []).map((item) => item.groupId === summary.groupId ? summary : item),
-    signature: `${alignment.signature || ""}|automation-power:${swap}`,
-    debug: alignment.debug ? { ...alignment.debug, automationPowerAlignment: { swaps: best.swaps, before: initialMetrics, after: best.metrics } } : alignment.debug };
 }
 
 // Refine the assembled timeline: a group-wide rotation cannot move one station
