@@ -5,6 +5,7 @@ import {match} from 'pinyin-pro'
 import {dateFormat} from '/src/utils/dateUtil.js'
 import {getOperatorAvatarStyle, getOperatorAvatarUrl, getSkinAvatarUrl, getSkinPortraitUrl} from '/src/utils/arknightsResource.js'
 import {getAkSkinStatisticsResult} from '/src/api/user-center/skinStatistics.js'
+import {clearAccessKey, readAccessKey, saveAccessKey} from '/src/utils/apiAccessKey.js'
 import {
   CHANNELS,
   buildSkinRecords,
@@ -20,13 +21,21 @@ const RANK_METRICS = [
 
 const PAGE_SIZE = 30
 
+/* 接口密钥：与回收站掉落统计共用同一把（来源见 utils/apiAccessKey），密钥不对时 UC 返回 80008 */
+const KEY_FORBIDDEN_CODE = 80008
+
 /* ---------------- 状态 ---------------- */
 
 const records = ref([])
 const sampleAccounts = ref(0)
 const statCount = ref(0)
-const loading = ref(true)
+const loading = ref(false)
 const loadError = ref('')
+const keyRejected = ref(false)
+
+const accessKey = ref(readAccessKey())
+const keyDraft = ref('')
+const keyPanelOpen = ref(false)
 
 const rankMetric = ref('rate')
 const rankLimit = ref(12)
@@ -53,6 +62,9 @@ let requestSeq = 0
 
 const summary = computed(() => summarize(records.value))
 
+/* 没有密钥（或正在更换密钥）时不渲染数据区：静态表拼出来的全 0 空表没有意义，直接给一张密钥面板 */
+const needKey = computed(() => !accessKey.value || keyPanelOpen.value)
+
 /* 参与排行的渠道：商城上架 + 兑换礼包。活动赠送、集成战略、商城零元购这类渠道获取门槛完全不同，混进来比持有率没有可比性 */
 const RANK_CHANNELS = ['shop', 'exchange']
 
@@ -65,10 +77,12 @@ const sampleText = computed(() => (sampleAccounts.value > 0 ? formatInt(sampleAc
 /* 封面数字 */
 const coverFigures = computed(() => {
   const data = summary.value
+  /* 没拿到数据时一律显示占位符，避免密钥缺失/首屏加载时先闪一排 0 */
+  const empty = records.value.length === 0
   return [
     {key: 'sample', value: sampleAccounts.value > 0 ? formatInt(sampleAccounts.value) : '—', label: '样本账号'},
-    {key: 'total', value: formatInt(data.total), label: '收录时装'},
-    {key: 'series', value: formatInt(data.seriesCount), label: '时装系列'},
+    {key: 'total', value: empty ? '—' : formatInt(data.total), label: '收录时装'},
+    {key: 'series', value: empty ? '—' : formatInt(data.seriesCount), label: '时装系列'},
   ]
 })
 
@@ -407,11 +421,16 @@ function onKeydown(event) {
 /* ---------------- 数据 ---------------- */
 
 async function load() {
+  /* 没有密钥就不发请求：接口会回 80008，白白在控制台留一条报错 */
+  if (!accessKey.value) {
+    loading.value = false
+    return
+  }
   const seq = ++requestSeq
   loading.value = true
   loadError.value = ''
   try {
-    const rows = await getAkSkinStatisticsResult()
+    const rows = await getAkSkinStatisticsResult(accessKey.value)
     if (seq !== requestSeq) {
       return
     }
@@ -419,8 +438,15 @@ async function load() {
     records.value = built.records
     sampleAccounts.value = built.sampleAccounts
     statCount.value = built.statCount
+    keyRejected.value = false
   } catch (error) {
     if (seq !== requestSeq) {
+      return
+    }
+    /* 80008 = FORBIDDEN：密钥缺失或不匹配，单独给一句更明确的提示 */
+    if (error?.code === KEY_FORBIDDEN_CODE) {
+      keyRejected.value = true
+      loadError.value = '访问密钥无效或已失效'
       return
     }
     loadError.value = error?.msg || error?.message || '统计数据获取失败，请稍后重试'
@@ -428,6 +454,47 @@ async function load() {
     if (seq === requestSeq) {
       loading.value = false
     }
+  }
+}
+
+/* ---------------- 访问密钥 ---------------- */
+
+function openKeyPanel() {
+  keyDraft.value = ''
+  keyPanelOpen.value = true
+}
+
+function cancelKeyPanel() {
+  keyDraft.value = ''
+  keyPanelOpen.value = false
+}
+
+function submitKey() {
+  const value = keyDraft.value.trim()
+  if (!value) {
+    return
+  }
+  accessKey.value = value
+  saveAccessKey(value)
+  keyDraft.value = ''
+  keyPanelOpen.value = false
+  keyRejected.value = false
+  load()
+}
+
+/* 清除本机保存的密钥；构建期注入了密钥时仍会回落到那份，不至于把页面锁死 */
+function forgetKey() {
+  clearAccessKey()
+  accessKey.value = readAccessKey()
+  keyDraft.value = ''
+  keyPanelOpen.value = !accessKey.value
+  loadError.value = ''
+  keyRejected.value = false
+  records.value = []
+  sampleAccounts.value = 0
+  statCount.value = 0
+  if (accessKey.value) {
+    load()
   }
 }
 
@@ -491,248 +558,283 @@ onUnmounted(() => {
           </div>
           <figcaption class="sk-heroCard__caption">
             <span class="sk-heroCard__series">暂无封面</span>
-            <h2 class="sk-heroCard__name">{{ loading ? '同步中' : '还没有持有记录' }}</h2>
+            <h2 class="sk-heroCard__name">{{ needKey ? '需要访问密钥' : (loading ? '同步中' : '还没有持有记录') }}</h2>
           </figcaption>
         </div>
       </aside>
     </header>
 
-    <div v-if="loadError" class="sk-alert">
-      <span class="mdi mdi-alert-circle-outline"/>
-      <span>{{ loadError }}</span>
-      <button class="sk-ghost sk-ghost--sm" type="button" @click="load">重试</button>
-    </div>
-
-    <!-- 01 排行 -->
-    <section class="sk-section">
-      <div class="sk-section__head">
-        <span class="sk-index">01</span>
-        <h2 class="sk-section__title">持有率排行</h2>
-        <span class="sk-section__note">商城 + 兑换礼包 · {{ formatInt(rankPoolTotal) }} 件</span>
-        <div class="sk-tabs">
-          <button
-              v-for="metric in RANK_METRICS"
-              :key="metric.key"
-              class="sk-tab"
-              :class="{'is-active': rankMetric === metric.key}"
-              type="button"
-              @click="rankMetric = metric.key"
-          >{{ metric.label }}
-          </button>
-        </div>
-      </div>
-
-      <div v-if="loading && !records.length" class="sk-strip">
-        <article v-for="n in 6" :key="n" class="sk-tile is-skeleton">
-          <div class="sk-tile__media"><span class="sk-skeleton" style="width:100%;height:100%"/></div>
-          <div class="sk-tile__meta">
-            <span class="sk-skeleton" style="height:12px;width:70%"/>
-            <span class="sk-skeleton" style="height:10px;width:45%"/>
-          </div>
-        </article>
-      </div>
-
-      <div v-else-if="rankRows.length" class="sk-strip" tabindex="0" aria-label="持有率排行，可横向滚动">
-        <article
-            v-for="(row, index) in rankRows"
-            :key="row.skinId"
-            class="sk-tile"
-            @click="openSkin(row)"
-        >
-          <div class="sk-tile__media" :style="toneStyle(row)">
-            <span class="sk-tile__no">{{ String(index + 1).padStart(2, '0') }}</span>
-            <img class="sk-tile__img" :src="skinArtUrl(row)" alt=""
-                 loading="lazy" @error="onArtError($event, row)">
-          </div>
-          <div class="sk-tile__meta">
-            <span class="sk-tile__name">
-              <span class="sk-tile__nameText">{{ row.name }}</span>
-              <em class="sk-tile__year">· {{ skinYear(row) }}</em>
-            </span>
-            <span class="sk-tile__sub">{{ row.charName }} · {{ row.seriesName }}</span>
-            <span class="sk-tile__value">
-              {{ rankMain(row) }}
-              <em>{{ rankSub(row) }}</em>
-            </span>
-          </div>
-        </article>
-      </div>
-
-      <div v-else class="sk-empty">
-        <span class="mdi mdi-inbox-outline"/>
-        <p>本轮还没有商城或兑换礼包渠道的时装持有记录，等统计任务跑过一轮再看。</p>
-      </div>
-    </section>
-
-    <!-- 02 全部时装 -->
-    <section class="sk-section sk-catalog">
-      <div class="sk-section__head">
-        <span class="sk-index">02</span>
-        <h2 class="sk-section__title">全部时装</h2>
-        <span class="sk-section__meta">
-          {{ formatInt(records.length) }} 件 · 其中有持有记录 {{ formatInt(statCount) }} 件 · 点击任意一行查看详情
-        </span>
-      </div>
-
-      <div class="sk-toolbar">
-        <div class="sk-filters">
-          <div class="sk-filters__row">
-            <button
-                v-for="chip in rarityChips"
-                :key="chip.value"
-                class="sk-chip"
-                :class="{'is-active': isChipActive(rarityFilter, chip.value)}"
-                type="button"
-                @click="toggleRarity(chip.value)"
-            >{{ chip.label }}
-            </button>
-          </div>
-          <div class="sk-filters__row">
-            <button
-                v-for="chip in yearChips"
-                :key="chip.value"
-                class="sk-chip"
-                :class="{'is-active': isChipActive(yearFilter, chip.value)}"
-                type="button"
-                @click="toggleYear(chip.value)"
-            >{{ chip.label }}
-            </button>
-          </div>
-          <div class="sk-filters__row">
-            <button
-                v-for="chip in seriesChips"
-                :key="chip.value"
-                class="sk-chip"
-                :class="{'is-active': isChipActive(seriesFilter, chip.value)}"
-                type="button"
-                @click="toggleSeries(chip.value)"
-            >{{ chip.label }}
-            </button>
-          </div>
-          <div class="sk-filters__row">
-            <button
-                v-for="chip in channelChips"
-                :key="chip.value"
-                class="sk-chip"
-                :class="{'is-active': isChipActive(channelFilter, chip.value)}"
-                type="button"
-                @click="toggleChannel(chip.value)"
-            >{{ chip.label }}
-            </button>
-          </div>
-        </div>
-
-        <div class="sk-tools">
-          <label class="sk-search">
-            <span class="mdi mdi-magnify"/>
-            <input v-model="keyword" type="search" placeholder="搜索时装 / 干员 / 系列"/>
-          </label>
-          <button class="sk-ghost sk-ghost--sm" type="button" :disabled="!filteredRows.length" @click="exportCsv">
-            <span class="mdi mdi-download-outline"/>
-            CSV
-          </button>
-        </div>
-      </div>
-
-      <div class="sk-catalog__scroll">
-        <table>
-          <thead>
-          <tr>
-            <th class="is-sortable" :class="{'is-active': sortKey === 'name'}" @click="toggleSort('name')">
-              时装 <span class="mdi" :class="sortIcon('name')"/>
-            </th>
-            <th>干员</th>
-            <th class="is-sortable" :class="{'is-active': sortKey === 'releaseTime'}"
-                @click="toggleSort('releaseTime')">
-              上线 <span class="mdi" :class="sortIcon('releaseTime')"/>
-            </th>
-            <th>获取方式</th>
-            <th class="is-num is-sortable" :class="{'is-active': sortKey === 'own'}" @click="toggleSort('own')">
-              拥有 <span class="mdi" :class="sortIcon('own')"/>
-            </th>
-            <th class="is-num is-sortable" :class="{'is-active': sortKey === 'rate'}" @click="toggleSort('rate')">
-              持有率 <span class="mdi" :class="sortIcon('rate')"/>
-            </th>
-          </tr>
-          </thead>
-
-          <tbody v-if="loading && !records.length">
-          <tr v-for="n in 6" :key="n">
-            <td colspan="6"><span class="sk-skeleton" style="display:block;height:14px"/></td>
-          </tr>
-          </tbody>
-
-          <tbody v-else>
-          <tr v-for="row in visibleRows" :key="row.skinId" class="sk-row" @click="openSkin(row)">
-            <td>
-              <div class="sk-cellSkin">
-                <span class="sk-avatar" :style="avatarStyle(row, 39)">
-                  <img :src="skinAvatarUrl(row)" alt="" loading="lazy"
-                       @error="onAvatarError($event, row)">
-                </span>
-                <span class="sk-cellSkin__text">
-                  <span class="sk-cellSkin__name">{{ row.name }}</span>
-                  <span class="sk-cellSkin__series">{{ row.seriesName }}</span>
-                </span>
-              </div>
-            </td>
-            <td>
-              <span class="sk-cellOp">{{ row.charName }}</span>
-              <span class="sk-cellOp__sub">{{ row.rarity }}★ · {{ row.professionLabel }}</span>
-            </td>
-            <td class="sk-cellDate">{{ formatDate(row.releaseTime) }}</td>
-            <td class="sk-cellChannel">{{ row.channelLabel }}</td>
-            <td class="is-num">{{ formatInt(row.own) }}</td>
-            <td class="is-num">
-              <div class="sk-rate">
-                <span class="sk-rate__track">
-                  <i :style="{width: pctWidth(row.rate)}"></i>
-                </span>
-                <span class="sk-rate__num">{{ formatPct(row.rate) }}</span>
-              </div>
-            </td>
-          </tr>
-          <tr v-if="!visibleRows.length">
-            <td colspan="6">
-              <div class="sk-empty">
-                <span class="mdi mdi-text-search"/>
-                <p>没有匹配的时装，换个关键词或清空筛选试试。</p>
-                <button v-if="filterActive" class="sk-link" type="button" @click="resetFilters">清除筛选</button>
-              </div>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="sk-catalog__foot">
-        <span>已显示 {{ formatInt(visibleRows.length) }} / {{ formatInt(filteredRows.length) }} 件</span>
-        <button
-            v-if="visibleRows.length < filteredRows.length"
-            class="sk-ghost sk-ghost--sm"
-            type="button"
-            @click="visibleCount += PAGE_SIZE"
-        >加载更多
+    <!-- 没有密钥 / 正在更换密钥：先填密钥，填完再拉数据 -->
+    <section v-if="needKey" class="sk-key">
+      <h2 class="sk-key__title">{{ accessKey ? '更换访问密钥' : '这一页的数据需要访问密钥' }}</h2>
+      <p class="sk-key__desc">
+        时装统计接口现在和回收站掉落统计共用同一把密钥。密钥只保存在本机浏览器，用于向统计接口发起请求，不会上传到其他位置。
+      </p>
+      <form class="sk-key__form" @submit.prevent="submitKey">
+        <input
+            v-model="keyDraft"
+            class="sk-key__input"
+            type="password"
+            placeholder="粘贴访问密钥"
+            autocomplete="off"
+        />
+        <button class="sk-key__btn" type="submit" :disabled="!keyDraft.trim()">
+          {{ accessKey ? '保存并刷新' : '读取数据' }}
         </button>
+      </form>
+      <p v-if="loadError" class="sk-key__err">{{ loadError }}</p>
+      <div v-if="accessKey" class="sk-key__actions">
+        <button class="sk-ghost sk-ghost--sm" type="button" @click="cancelKeyPanel">取消</button>
+        <button class="sk-ghost sk-ghost--sm" type="button" @click="forgetKey">清除本机密钥</button>
       </div>
+      <p v-else class="sk-key__hint">站点维护者也可以把密钥写进 <code>VITE_RECYCLE_DROP_KEY</code> 环境变量，构建后自动带上。</p>
     </section>
 
-    <!-- 口径 -->
-    <footer class="sk-notes">
-      <button class="sk-notes__toggle" type="button" :aria-expanded="notesOpen" @click="notesOpen = !notesOpen">
-        <span class="mdi mdi-information-outline"/>
-        这些数字怎么来的
-        <span class="mdi mdi-chevron-down sk-notes__chev" :class="{'is-open': notesOpen}"/>
-      </button>
-      <div v-show="notesOpen" class="sk-notes__grid">
-        <p><b>持有率</b>拥有该时装的账号数 ÷ 本轮参与统计的账号总数，尚未被任何账号拥有的时装按 0 计入。</p>
-        <p><b>排行口径</b>持有率排行只收商城上架与兑换礼包的时装（采购中心、特典、设定集兑换码、线下礼包等），活动赠送、集成战略、商城零元购等渠道不参与排名，避免把获取门槛不同的时装放在一起比。</p>
-        <p><b>商城零元购</b>指挂在采购中心、但活动期间标价 0 的时装（目前是芬的十字郡、芙蓉的守岁人）。静态表只记「采购中心」，代码里按时装 ID 单独拎成这一类，不混进商城上架，也不进排行榜。</p>
-        <p><b>样本口径</b>只统计在站内上传过数据的账号，本轮 {{ sampleText }} 个；样本扩容后历史数值会整体回落。</p>
-        <p><b>更新频率</b>服务端每小时 10 分跑一轮全量统计，页面只读结果表，拿到的永远是最近一轮快照。</p>
-        <p><b>系列归并</b>静态表里的系列名带罗马数字分卷（如「珊瑚海岸/VI」），榜单按分卷前的主系列名归并。</p>
+    <template v-else>
+      <div v-if="loadError" class="sk-alert">
+        <span class="mdi mdi-alert-circle-outline"/>
+        <span>{{ loadError }}</span>
+        <button class="sk-ghost sk-ghost--sm" type="button" @click="load">重试</button>
+        <button v-if="keyRejected" class="sk-ghost sk-ghost--sm" type="button" @click="openKeyPanel">更换密钥</button>
       </div>
-    </footer>
+
+      <!-- 01 排行 -->
+      <section class="sk-section">
+        <div class="sk-section__head">
+          <span class="sk-index">01</span>
+          <h2 class="sk-section__title">持有率排行</h2>
+          <span class="sk-section__note">商城 + 兑换礼包 · {{ formatInt(rankPoolTotal) }} 件</span>
+          <div class="sk-tabs">
+            <button
+                v-for="metric in RANK_METRICS"
+                :key="metric.key"
+                class="sk-tab"
+                :class="{'is-active': rankMetric === metric.key}"
+                type="button"
+                @click="rankMetric = metric.key"
+            >{{ metric.label }}
+            </button>
+          </div>
+        </div>
+
+        <div v-if="loading && !records.length" class="sk-strip">
+          <article v-for="n in 6" :key="n" class="sk-tile is-skeleton">
+            <div class="sk-tile__media"><span class="sk-skeleton" style="width:100%;height:100%"/></div>
+            <div class="sk-tile__meta">
+              <span class="sk-skeleton" style="height:12px;width:70%"/>
+              <span class="sk-skeleton" style="height:10px;width:45%"/>
+            </div>
+          </article>
+        </div>
+
+        <div v-else-if="rankRows.length" class="sk-strip" tabindex="0" aria-label="持有率排行，可横向滚动">
+          <article
+              v-for="(row, index) in rankRows"
+              :key="row.skinId"
+              class="sk-tile"
+              @click="openSkin(row)"
+          >
+            <div class="sk-tile__media" :style="toneStyle(row)">
+              <span class="sk-tile__no">{{ String(index + 1).padStart(2, '0') }}</span>
+              <img class="sk-tile__img" :src="skinArtUrl(row)" alt=""
+                   loading="lazy" @error="onArtError($event, row)">
+            </div>
+            <div class="sk-tile__meta">
+              <span class="sk-tile__name">
+                <span class="sk-tile__nameText">{{ row.name }}</span>
+                <em class="sk-tile__year">· {{ skinYear(row) }}</em>
+              </span>
+              <span class="sk-tile__sub">{{ row.charName }} · {{ row.seriesName }}</span>
+              <span class="sk-tile__value">
+                {{ rankMain(row) }}
+                <em>{{ rankSub(row) }}</em>
+              </span>
+            </div>
+          </article>
+        </div>
+
+        <div v-else class="sk-empty">
+          <span class="mdi mdi-inbox-outline"/>
+          <p>本轮还没有商城或兑换礼包渠道的时装持有记录，等统计任务跑过一轮再看。</p>
+        </div>
+      </section>
+
+      <!-- 02 全部时装 -->
+      <section class="sk-section sk-catalog">
+        <div class="sk-section__head">
+          <span class="sk-index">02</span>
+          <h2 class="sk-section__title">全部时装</h2>
+          <span class="sk-section__meta">
+            {{ formatInt(records.length) }} 件 · 其中有持有记录 {{ formatInt(statCount) }} 件 · 点击任意一行查看详情
+          </span>
+        </div>
+
+        <div class="sk-toolbar">
+          <div class="sk-filters">
+            <div class="sk-filters__row">
+              <button
+                  v-for="chip in rarityChips"
+                  :key="chip.value"
+                  class="sk-chip"
+                  :class="{'is-active': isChipActive(rarityFilter, chip.value)}"
+                  type="button"
+                  @click="toggleRarity(chip.value)"
+              >{{ chip.label }}
+              </button>
+            </div>
+            <div class="sk-filters__row">
+              <button
+                  v-for="chip in yearChips"
+                  :key="chip.value"
+                  class="sk-chip"
+                  :class="{'is-active': isChipActive(yearFilter, chip.value)}"
+                  type="button"
+                  @click="toggleYear(chip.value)"
+              >{{ chip.label }}
+              </button>
+            </div>
+            <div class="sk-filters__row">
+              <button
+                  v-for="chip in seriesChips"
+                  :key="chip.value"
+                  class="sk-chip"
+                  :class="{'is-active': isChipActive(seriesFilter, chip.value)}"
+                  type="button"
+                  @click="toggleSeries(chip.value)"
+              >{{ chip.label }}
+              </button>
+            </div>
+            <div class="sk-filters__row">
+              <button
+                  v-for="chip in channelChips"
+                  :key="chip.value"
+                  class="sk-chip"
+                  :class="{'is-active': isChipActive(channelFilter, chip.value)}"
+                  type="button"
+                  @click="toggleChannel(chip.value)"
+              >{{ chip.label }}
+              </button>
+            </div>
+          </div>
+
+          <div class="sk-tools">
+            <label class="sk-search">
+              <span class="mdi mdi-magnify"/>
+              <input v-model="keyword" type="search" placeholder="搜索时装 / 干员 / 系列"/>
+            </label>
+            <button class="sk-ghost sk-ghost--sm" type="button" :disabled="!filteredRows.length" @click="exportCsv">
+              <span class="mdi mdi-download-outline"/>
+              CSV
+            </button>
+          </div>
+        </div>
+
+        <div class="sk-catalog__scroll">
+          <table>
+            <thead>
+            <tr>
+              <th class="is-sortable" :class="{'is-active': sortKey === 'name'}" @click="toggleSort('name')">
+                时装 <span class="mdi" :class="sortIcon('name')"/>
+              </th>
+              <th>干员</th>
+              <th class="is-sortable" :class="{'is-active': sortKey === 'releaseTime'}"
+                  @click="toggleSort('releaseTime')">
+                上线 <span class="mdi" :class="sortIcon('releaseTime')"/>
+              </th>
+              <th>获取方式</th>
+              <th class="is-num is-sortable" :class="{'is-active': sortKey === 'own'}" @click="toggleSort('own')">
+                拥有 <span class="mdi" :class="sortIcon('own')"/>
+              </th>
+              <th class="is-num is-sortable" :class="{'is-active': sortKey === 'rate'}" @click="toggleSort('rate')">
+                持有率 <span class="mdi" :class="sortIcon('rate')"/>
+              </th>
+            </tr>
+            </thead>
+
+            <tbody v-if="loading && !records.length">
+            <tr v-for="n in 6" :key="n">
+              <td colspan="6"><span class="sk-skeleton" style="display:block;height:14px"/></td>
+            </tr>
+            </tbody>
+
+            <tbody v-else>
+            <tr v-for="row in visibleRows" :key="row.skinId" class="sk-row" @click="openSkin(row)">
+              <td>
+                <div class="sk-cellSkin">
+                  <span class="sk-avatar" :style="avatarStyle(row, 39)">
+                    <img :src="skinAvatarUrl(row)" alt="" loading="lazy"
+                         @error="onAvatarError($event, row)">
+                  </span>
+                  <span class="sk-cellSkin__text">
+                    <span class="sk-cellSkin__name">{{ row.name }}</span>
+                    <span class="sk-cellSkin__series">{{ row.seriesName }}</span>
+                  </span>
+                </div>
+              </td>
+              <td>
+                <span class="sk-cellOp">{{ row.charName }}</span>
+                <span class="sk-cellOp__sub">{{ row.rarity }}★ · {{ row.professionLabel }}</span>
+              </td>
+              <td class="sk-cellDate">{{ formatDate(row.releaseTime) }}</td>
+              <td class="sk-cellChannel">{{ row.channelLabel }}</td>
+              <td class="is-num">{{ formatInt(row.own) }}</td>
+              <td class="is-num">
+                <div class="sk-rate">
+                  <span class="sk-rate__track">
+                    <i :style="{width: pctWidth(row.rate)}"></i>
+                  </span>
+                  <span class="sk-rate__num">{{ formatPct(row.rate) }}</span>
+                </div>
+              </td>
+            </tr>
+            <tr v-if="!visibleRows.length">
+              <td colspan="6">
+                <div class="sk-empty">
+                  <span class="mdi mdi-text-search"/>
+                  <p>没有匹配的时装，换个关键词或清空筛选试试。</p>
+                  <button v-if="filterActive" class="sk-link" type="button" @click="resetFilters">清除筛选</button>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sk-catalog__foot">
+          <span>已显示 {{ formatInt(visibleRows.length) }} / {{ formatInt(filteredRows.length) }} 件</span>
+          <button
+              v-if="visibleRows.length < filteredRows.length"
+              class="sk-ghost sk-ghost--sm"
+              type="button"
+              @click="visibleCount += PAGE_SIZE"
+          >加载更多
+          </button>
+        </div>
+      </section>
+
+      <!-- 口径 -->
+      <footer class="sk-notes">
+        <button class="sk-notes__toggle" type="button" :aria-expanded="notesOpen" @click="notesOpen = !notesOpen">
+          <span class="mdi mdi-information-outline"/>
+          这些数字怎么来的
+          <span class="mdi mdi-chevron-down sk-notes__chev" :class="{'is-open': notesOpen}"/>
+        </button>
+        <div v-show="notesOpen" class="sk-notes__grid">
+          <p><b>持有率</b>拥有该时装的账号数 ÷ 本轮参与统计的账号总数，尚未被任何账号拥有的时装按 0 计入。</p>
+          <p><b>排行口径</b>持有率排行只收商城上架与兑换礼包的时装（采购中心、特典、设定集兑换码、线下礼包等），活动赠送、集成战略、商城零元购等渠道不参与排名，避免把获取门槛不同的时装放在一起比。</p>
+          <p><b>商城零元购</b>指挂在采购中心、但活动期间标价 0 的时装（目前是芬的十字郡、芙蓉的守岁人）。静态表只记「采购中心」，代码里按时装 ID 单独拎成这一类，不混进商城上架，也不进排行榜。</p>
+          <p><b>样本口径</b>只统计在站内上传过数据的账号，本轮 {{ sampleText }} 个；样本扩容后历史数值会整体回落。</p>
+          <p><b>更新频率</b>服务端每小时 10 分跑一轮全量统计，页面只读结果表，拿到的永远是最近一轮快照。</p>
+          <p><b>系列归并</b>静态表里的系列名带罗马数字分卷（如「珊瑚海岸/VI」），榜单按分卷前的主系列名归并。</p>
+        </div>
+
+        <div class="sk-notes__api">
+          <span class="mdi mdi-key-outline"/>
+          <span>接口密钥与回收站掉落统计共用</span>
+          <button class="sk-ghost sk-ghost--sm" type="button" @click="openKeyPanel">更换密钥</button>
+        </div>
+      </footer>
+    </template>
 
     <!-- 详情抽屉 -->
     <div v-if="drawerSkin" class="sk-drawer" role="dialog" aria-modal="true">

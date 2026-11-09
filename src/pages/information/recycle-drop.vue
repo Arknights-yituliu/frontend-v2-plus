@@ -4,10 +4,9 @@ import {computed, onMounted, ref, watch} from 'vue'
 import ItemImage from '/src/components/sprite/ItemImage.vue'
 import recycleDropApi from '/src/api/backend/recycleDrop.js'
 import itemInfoList from '/src/static/json/material/item_info.json'
+import {clearAccessKey, readAccessKey, saveAccessKey} from '/src/utils/apiAccessKey.js'
 
-/* 接口密钥：优先读本地保存的值，其次读构建期注入的 VITE_RECYCLE_DROP_KEY */
-const STORAGE_KEY = 'RecycleDropAccessKey'
-const ENV_KEY = String(import.meta.env.VITE_RECYCLE_DROP_KEY || '').trim()
+/* 接口密钥：优先读本地保存的值，其次读构建期注入的 VITE_RECYCLE_DROP_KEY；与时装大数据页共用同一把 */
 
 const ITEM_INFO_BY_ID = new Map(itemInfoList.map(item => [String(item.itemId), item]))
 
@@ -30,7 +29,7 @@ const RANK_METRICS = [
   {key: 'expectValue', label: '折算价值'},
 ]
 
-const accessKey = ref(localStorage.getItem(STORAGE_KEY) || ENV_KEY)
+const accessKey = ref(readAccessKey())
 const keyDraft = ref('')
 const keyPanelOpen = ref(false)
 
@@ -324,7 +323,7 @@ function submitKey() {
     return
   }
   accessKey.value = value
-  localStorage.setItem(STORAGE_KEY, value)
+  saveAccessKey(value)
   keyDraft.value = ''
   keyPanelOpen.value = false
   loaded.value = false
@@ -333,7 +332,7 @@ function submitKey() {
 }
 
 function clearKey() {
-  localStorage.removeItem(STORAGE_KEY)
+  clearAccessKey()
   accessKey.value = ''
   keyDraft.value = ''
   keyPanelOpen.value = false

@@ -194,6 +194,107 @@
   }
 }
 
+/* ---------------- 访问密钥 ---------------- */
+
+.sk-key {
+  max-width: 560px;
+  margin-top: 52px;
+  padding-top: 26px;
+  border-top: 1px solid var(--sk-line);
+}
+
+.sk-key__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 760;
+  letter-spacing: -0.4px;
+}
+
+.sk-key__desc {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.85;
+  color: var(--sk-sub);
+}
+
+.sk-key__form {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.sk-key__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 2px 7px;
+  border: 0;
+  border-bottom: 1px solid var(--sk-border);
+  background: transparent;
+  color: var(--sk-text);
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color 0.16s ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--sk-a1);
+  }
+
+  &::placeholder {
+    color: var(--sk-faint);
+  }
+}
+
+.sk-key__btn {
+  flex: 0 0 auto;
+  padding: 7px 16px;
+  border: 0;
+  border-radius: 7px;
+  background: linear-gradient(100deg, var(--sk-a1), var(--sk-a2));
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: opacity 0.16s ease;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.sk-key__err {
+  margin: 12px 0 0;
+  font-size: 12px;
+  color: #d97706;
+}
+
+.sk-key__hint {
+  margin: 14px 0 0;
+  font-size: 11.5px;
+  color: var(--sk-faint);
+
+  code {
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: var(--sk-soft);
+    font-family: var(--sk-mono);
+    font-size: 11px;
+  }
+}
+
+.sk-key__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+}
+
 /* ---------------- 封面卡 ---------------- */
 
 .sk-cover__aside {
@@ -965,6 +1066,22 @@
     margin-bottom: 1px;
     font-size: 11.5px;
     color: var(--sk-text);
+  }
+}
+
+/* 口径页脚里的接口密钥入口：一行小字，不抢正文 */
+.sk-notes__api {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--sk-line);
+  font-size: 11.5px;
+  color: var(--sk-faint);
+
+  .mdi {
+    font-size: 15px;
   }
 }
 
