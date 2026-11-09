@@ -61,7 +61,6 @@ onUnmounted(() => {
     <div class="update-elite-card" v-for="item in eliteData">
       <div class="update-avatar">
         <img alt="" :src="`https://cos.yituliu.cn/image2/avatar/${charIdMap.get(item.name)}.png`" style="width: 190px">
-        <!--        <OperatorAvatar :char-id="charIdMap.get(item.name)" size="160" ></OperatorAvatar>-->
       </div>
 
       <table class="update-elite-table" :class="`tr-bg-${item.rarity}`">

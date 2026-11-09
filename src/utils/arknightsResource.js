@@ -101,7 +101,7 @@ export function getEquipIconUrl(icon) {
   return `${OPERATOR_EQUIP_ICON_BASE_URL}${icon}.png`
 }
 
-// 头像描边渐变色（与原 OperatorAvatar 组件的 rarity 边框保持一致）
+// 头像描边渐变色（按干员稀有度区分）
 const OPERATOR_RARITY_BORDER_COLORS = {
   6: 'linear-gradient(135deg, #ff8a3d, #ffd24a)',
   5: 'linear-gradient(135deg, #ffffff, #f2c75c)',

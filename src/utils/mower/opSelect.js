@@ -1,7 +1,7 @@
 import { NAvatar, NTag } from "naive-ui";
 import { h } from "vue";
 import OperatorSkillTooltip from "@/pages/tools/mower-plan/components/OperatorSkillTooltip.vue";
-import OperatorAvatar from "/src/components/sprite/OperatorAvatar.vue";
+import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import { nameToCharId, charIdToName } from "./operatorAssets.js";
 
 const getInitial = (label) => (label ? label.slice(0, 1) : "");
@@ -21,11 +21,12 @@ const getCharId = (option) => {
 const renderAvatar = (option, size = 26) => {
   const charId = getCharId(option);
   if (charId && charIdToName[charId]) {
-    return h(OperatorAvatar, {
-      charId,
-      size,
-      mobileSize: size,
-      border: true,
+    return h("img", {
+      src: getOperatorAvatarUrl(charId),
+      alt: "",
+      draggable: false,
+      class: "operator-avatar-img operator-avatar-img--bordered",
+      style: getOperatorAvatarStyle({ size, mobileSize: size, bordered: true }),
     });
   }
   const label = getDisplayName(option);

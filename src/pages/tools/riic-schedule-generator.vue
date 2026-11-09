@@ -29,6 +29,7 @@ import RiicScheduleRoomEditorPanel from "/src/components/tools/riic/RiicSchedule
 import RiicRoomGroupStaffingPanel from "/src/components/tools/riic/RiicRoomGroupStaffingPanel.vue";
 import RiicScheduleSettingsPanel from "/src/components/tools/riic/RiicScheduleSettingsPanel.vue";
 import ItemImage from "/src/components/sprite/ItemImage.vue";
+import { getOperatorAvatarUrl } from "/src/utils/arknightsResource.js";
 import { cMessage } from "/src/utils/message.js";
 import battleRecordImage from "/src/assets/images/riic-schedule-preview/battle-record.png";
 import goldImage from "/src/assets/images/riic-schedule-preview/gold.png";
@@ -10216,10 +10217,11 @@ onBeforeUnmount(() => {
                   :key="`${operator.charId}:${index}`"
                   class="schedule-generation-running-avatar"
                 >
-                  <span
-                    class="sprite-avatar"
-                    :class="`bg-${operator.charId}`"
-                  ></span>
+                  <img
+                    class="schedule-generation-running-avatar-image"
+                    :src="getOperatorAvatarUrl(operator.charId)"
+                    alt=""
+                  >
                 </span>
               </div>
             </div>
@@ -12683,11 +12685,11 @@ onBeforeUnmount(() => {
   background: var(--c-page-background-color);
 }
 
-.schedule-generation-running-avatar .sprite-avatar {
-  position: absolute;
-  top: -73px;
-  left: -73px;
-  transform: scale(0.2);
+.schedule-generation-running-avatar-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 @keyframes schedule-generation-running-avatar-scroll {

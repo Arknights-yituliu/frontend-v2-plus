@@ -416,12 +416,6 @@ onMounted(() => {
             <tr>
               <td>{{ index + 1 }}</td>
               <td>
-<!--                <div class="operator-info">-->
-<!--                  <OperatorAvatar :border="true" :char-id="item.charId" :size="50" class="m-4-a"></OperatorAvatar>-->
-<!--                  {{ item.name }}-->
-<!--                </div>-->
-
-
                   <img class="operator-avatar-img operator-avatar-img--bordered m-4-0"
                        :style="getOperatorAvatarStyle({ size: 50, mobileSize: 40, rarity: item.rarity, bordered: true })"
                        :src="getOperatorAvatarUrl(item.charId)" alt="">

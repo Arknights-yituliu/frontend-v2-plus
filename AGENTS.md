@@ -188,11 +188,12 @@ User info utilities in `src/utils/user/userInfo.js` provide:
 
 ### Sprite Images
 The project uses CSS sprite sheets for game assets:
-- Avatar sprites: `sprite_avatar.css`
 - Icon sprites: `sprite_icon.css`
 - Item sprites: `sprite_item.css`
+- Plane icon sprites: `sprite_plane_icon.css`
+- Gacha sprites: `sprite_gacha.css`
 
-Skill and equip icons no longer use sprites; they load directly from CDN via `getSkillIconUrl()` / `getEquipIconUrl()` in `src/utils/arknightsResource.js`.
+Operator avatars, skill icons and equip icons no longer use sprites; they load directly from CDN via `getOperatorAvatarUrl()` / `getSkillIconUrl()` / `getEquipIconUrl()` in `src/utils/arknightsResource.js`. Avatar `<img>` markup uses `operator-avatar-img` with the `--bordered` / `--rounded` modifiers from `src/assets/css/common/operator_avatar.scss`.
 
 ## Automated Scripts
 
