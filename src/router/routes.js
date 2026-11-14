@@ -413,6 +413,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/json-to-excel',
+        text: 'json拆excel',
+        name: 'LBJsonToExcel',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/JsonToExcel.vue'),
+        meta: {
+            title: 'json拆excel'
+        }
+    },
+    {
         path: '/lb/alchemy-pool',
         text: '炼金池收益计算',
         name: 'LBAlchemyPool',
@@ -638,7 +648,7 @@ const routes = [
         path: '/48-12-1',
         text: '感谢庆典特别招募决策页',
         name: '48-12-1',
-        display: true,
+        display: false,
         module: 'tools',
         icon: "mdi-gift-open-outline",
         component: () => import('/src/pages/tools/48-12-1.vue'),
