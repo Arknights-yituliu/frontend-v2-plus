@@ -5,10 +5,8 @@ import {NConfigProvider} from 'naive-ui'
 import {zhCN, dateZhCN} from 'naive-ui'
 import {darkTheme} from 'naive-ui'
 //雪碧图
-import '/src/assets/css/sprite/sprite_avatar.css'
 import '/src/assets/css/sprite/sprite_icon.css';
 import '/src/assets/css/sprite/sprite_item.css';
-import "/src/assets/css/sprite/sprite_skill.css";
 
 // 通用样式
 import '/src/assets/css/common/title_and_tag.scss'

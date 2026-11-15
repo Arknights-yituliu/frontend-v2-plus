@@ -202,11 +202,6 @@ function getEquipIcon(typeIcon){
         height: 180px;
         background-image: url('../imgs/no_mod_icon_180.png');
       }
-      .bg-skill_icon_undefined {
-        width: 128px;
-        height: 128px;
-        background-image: url('../imgs/no_mod_icon_128.png');
-      }
       .v-table__wrapper tr td {
         padding-top: 6px;
         .icon-container {

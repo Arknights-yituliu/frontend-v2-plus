@@ -28,6 +28,7 @@
 - [生息演算食材一览 - 明日方舟一图流](https://ark.yituliu.cn/reclamation/sandbox-foods): 明日方舟生息演算食材一览，查询各食材属性与获取方式
 - [我的干员 - 明日方舟一图流](https://ark.yituliu.cn/survey/operators): 记录你的明日方舟干员练度，参与干员大数据统计
 - [干员大数据 - 明日方舟一图流](https://ark.yituliu.cn/survey/operator-progression-statistics): 查看明日方舟干员练度大数据统计，了解主流养成趋势
+- [时装大数据 - 明日方舟一图流](https://ark.yituliu.cn/survey/skin-statistics): 明日方舟干员时装持有率大数据，查看每件时装的样本持有率、系列分布与上线年份趋势
 - [公招 tag 调查 - 明日方舟一图流](https://ark.yituliu.cn/survey/maarecruitdata): 明日方舟公开招募 tag 调查，共享公招数据提升招募效率
 - [友情链接 - 明日方舟一图流](https://ark.yituliu.cn/about/links): 明日方舟一图流友情链接，优质明日方舟相关网站与工具推荐
 - [支持我们 - 明日方舟一图流](https://ark.yituliu.cn/about/donate): 支持明日方舟一图流，赞助服务器与开发成本

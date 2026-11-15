@@ -44,6 +44,12 @@ function prerenderPlugin() {
 export default defineConfig(({ mode }) => ({
     worker: {
         format: 'es',
+        // 每个 worker 入口在构建期由一个独立的 Rollup 实例打包，它不继承
+        // build.rollupOptions；不显式限制时仍会按默认 1000 并发打开文件，
+        // 多个 worker 并行打包时句柄峰值可达数百，低 nofile 容器会触发 EMFILE。
+        rollupOptions: {
+            maxParallelFileOps: 20,
+        },
     },
     resolve: {
         alias: {
@@ -92,6 +98,11 @@ export default defineConfig(({ mode }) => ({
         target: "es2015",
         cssTarget: "chrome61",
         rollupOptions: {
+            // Rollup 默认允许 1000 个并发文件操作。本项目的模块图含 438 个干员 JSON
+            // 与 700+ 个产物，构建期间同时打开的文件句柄会顶到该上限；在 nofile
+            // 较低的构建容器里表现为 EMFILE: too many open files。
+            // 20 已足以喂满 libuv 线程池（默认 4 线程），并把峰值句柄数控制在几十以内。
+            maxParallelFileOps: 20,
             input: {
                 main: resolve(__dirname, 'index.html'),
                 docs: resolve(__dirname, 'docs.html')

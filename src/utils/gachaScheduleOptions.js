@@ -6,17 +6,6 @@
 const scheduleDefinitions = [
 
   {
-    id: "thanksgiving",
-    name: "感谢庆典",
-    startDate: "2026-11-01",
-    lastDrawDate: "2026-11-14",
-    activityType: "周年限定",
-    disabled: false,
-    dailyGiftResources: true,
-    accuracyFlag: false,
-    dateString: "(1101-1114)",            // 自定义日期展示文字，覆盖自动生成的格式
-  },
-  {
     id: "spring_festival_2027",
     name: "新年限定",
     startDate: "2027-02-01",
@@ -26,6 +15,17 @@ const scheduleDefinitions = [
     dailyGiftResources: true,
     accuracyFlag: false,
     dateString: "(0201-0214)",
+  },
+  {
+    id: "anniversary_8_2027",
+    name: "8周年",
+    startDate: "2027-05-01",
+    lastDrawDate: "2027-05-14",
+    activityType: "周年限定",
+    disabled: true,
+    dailyGiftResources: true,
+    accuracyFlag: false,
+    dateString: "(0501-0514)",
   },
 ]
 

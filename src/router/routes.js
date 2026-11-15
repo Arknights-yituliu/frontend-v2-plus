@@ -413,6 +413,16 @@ const routes = [
         }
     },
     {
+        path: '/lb/json-to-excel',
+        text: 'json拆excel',
+        name: 'LBJsonToExcel',
+        display: false,
+        component: () => import('/src/pages/LogicalBytePostMaker/JsonToExcel.vue'),
+        meta: {
+            title: 'json拆excel'
+        }
+    },
+    {
         path: '/lb/alchemy-pool',
         text: '炼金池收益计算',
         name: 'LBAlchemyPool',
@@ -638,7 +648,7 @@ const routes = [
         path: '/48-12-1',
         text: '感谢庆典特别招募决策页',
         name: '48-12-1',
-        display: true,
+        display: false,
         module: 'tools',
         icon: "mdi-gift-open-outline",
         component: () => import('/src/pages/tools/48-12-1.vue'),
@@ -726,6 +736,18 @@ const routes = [
         component: () => import('/src/pages/survey/operator-progression-statistics.vue'),
         meta: {
             title: '干员大数据'
+        }
+    },
+    {
+        path: '/survey/skin-statistics',
+        text: '时装大数据',
+        name: 'SkinStatistics',
+        display: false,
+        module: 'survey',
+        icon: "mdi-tshirt-crew",
+        component: () => import('/src/pages/survey/skin-statistics.vue'),
+        meta: {
+            title: '时装大数据'
         }
     },
     {

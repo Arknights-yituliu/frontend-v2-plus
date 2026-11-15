@@ -131,11 +131,6 @@ const moduleDisplay = computed(() => {
 const stars = computed(() => {
   return props.operator.rarity || 1
 })
-
-// 获取干员头像sprite类名
-const avatarClass = computed(() => {
-  return `bg-${props.operator.charId}`
-})
 </script>
 
 <template>
@@ -178,10 +173,6 @@ const avatarClass = computed(() => {
 
     <img alt="" :src='`https://cos.yituliu.cn/arknights/avatar/${operator.charId}.webp`'
          style="width: 90px;height: 90px;display: block;position: absolute;">
-    <!-- 中间：头像（未获得时显示灰色） -->
-    <!--    <div class="avatar-container" :class="{ 'grayscale': isNotOwned }">-->
-    <!--      <div class="sprite-avatar" :class="avatarClass"></div>-->
-    <!--    </div>-->
 
 
     <!-- 以下内容仅在已获得时显示 -->
@@ -290,11 +281,6 @@ const avatarClass = computed(() => {
   );
 }
 
-/* 头像灰度效果 */
-.avatar-container.grayscale {
-  filter: grayscale(100%) brightness(0.6);
-}
-
 /* 星级（绝对定位居中，不受其他元素影响） */
 .star-badge {
   position: absolute;
@@ -370,30 +356,6 @@ const avatarClass = computed(() => {
 
 .collab-badge {
   background: linear-gradient(135deg, #00BCD4 0%, #0097A7 100%);
-}
-
-/* 头像容器 */
-.avatar-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: v-bind('size + "px"');
-  height: v-bind('size + "px"');
-  z-index: 1;
-  overflow: hidden;
-}
-
-.sprite-avatar {
-  position: absolute;
-  width: 180px;
-  height: 180px;
-  transform: scale(v-bind('size / 180'));
-  transform-origin: center center;
-  top: 50%;
-  left: 50%;
-  margin-top: -90px;
-  margin-left: -90px;
 }
 
 /* 底部渐变遮罩（透明到黑色，高度为卡片的1/8） */
