@@ -8,11 +8,12 @@ const MODULE_FIELD_NAME_BY_TYPE = {
     A: 'modA',
     B: 'modB',
 }
+// MAA 作业协议中 requirements.module 为模组编号，1-5 依次对应 χ、γ、α、Δ、β 模组
 const OPERATOR_ZOOT_MATCHER_MODULE_TYPE_BY_NUMBER = {
     1: 'X',
     2: 'Y',
-    3: 'D',
-    4: 'A',
+    3: 'A',
+    4: 'D',
     5: 'B',
 }
 const MODULE_FIELD_NAMES = Object.values(MODULE_FIELD_NAME_BY_TYPE)
