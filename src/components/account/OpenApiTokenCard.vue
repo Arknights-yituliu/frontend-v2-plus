@@ -7,9 +7,9 @@ import { ensureTclToken } from "/src/utils/user/tclToken.js";
 import { createMessage } from "/src/utils/message";
 import { copyTextToClipboard } from "/src/utils/copyText.js";
 
-// 新 PAT 只提供干员读取；保留历史令牌的权限展示。
+// 只读和只写 PAT 分别签发，保持权限独立。
 const READ_SCOPE = "arknights-data.read";
-const WRITE_SCOPE = "gama-data.write";
+const WRITE_SCOPE = "arknights-data.write";
 // 生成的 Token 有效期（秒），10 年
 const TOKEN_EXPIRES_IN = 315360000;
 
@@ -23,10 +23,12 @@ const accountOptions = computed(() => gameAccounts.value.map((account) => ({
   value: String(account.akUid),
 })));
 const tokenList = ref([]);
-const hasTokenForSelectedAccount = computed(() => selectedGameUid.value !== "" && tokenList.value.some((item) => {
-  const gameUid = item.payload?.game_uid ?? item.payload?.gameUid;
-  return String(gameUid ?? "") === selectedGameUid.value;
-}));
+function hasTokenForScope(scope) {
+  return selectedGameUid.value !== "" && tokenList.value.some((item) => {
+    const gameUid = item.payload?.game_uid ?? item.payload?.gameUid;
+    return String(gameUid ?? "") === selectedGameUid.value && parseScope(item.scope).includes(scope);
+  });
+}
 const generatingScope = ref("");
 const isTokenListLoading = ref(true);
 // 待删除的令牌记录；非空时展示删除确认弹窗
@@ -137,9 +139,9 @@ async function fetchTokens() {
 
 /**
  * 生成第三方 Token
- * 调用后端 PAT 签发接口，固定账号与只读权限，有效期为 10 年
+ * 调用后端 PAT 签发接口，固定账号与所选权限，有效期为 10 年
  * 签发成功后重新拉取用户中心列表以展示新令牌
- * @param {string} scope 权限范围标识（arknights-data.read）
+ * @param {string} scope 权限范围标识（arknights-data.read / arknights-data.write）
  * @param {string} tokenType Token 类型文案，用于提示与名称
  */
 async function generateToken(scope, tokenType) {
@@ -148,7 +150,7 @@ async function generateToken(scope, tokenType) {
     if (!account) createMessage({type: "warn", text: "请先选择游戏账号"});
     return;
   }
-  if (isTokenListLoading.value || isAccountsLoading.value || hasTokenForSelectedAccount.value) return;
+  if (isTokenListLoading.value || isAccountsLoading.value || hasTokenForScope(scope)) return;
   generatingScope.value = scope;
   try {
     if (!await ensureTclToken()) throw new Error("未登录");
@@ -279,10 +281,10 @@ onMounted(async () => {
   <v-card class="open-api-token-card" title="第三方 API PAT">
     <v-card-text>
       <p class="text-caption opacity-70 mb-2">
-        PAT 用于在一图流网站之外读取指定游戏账号的干员数据，撤销后立即失效。
+        PAT 用于向第三方应用授权读取或写入指定游戏账号的干员数据，撤销后立即失效。
       </p>
       <p class="text-caption opacity-70 mb-4">
-        当前 PAT 消费接口仅支持读取干员数据，不提供写入接口。历史令牌仍可查看和撤销。
+        只读和只写 PAT 分别签发，权限独立。历史令牌仍可查看和撤销。
       </p>
       <p class="text-caption opacity-70 mb-4">
         新 PAT 在签发时固定游戏账号，读取时不传 akUid；如需切换账号，请重新签发 PAT。
@@ -293,7 +295,7 @@ onMounted(async () => {
         :items="accountOptions"
         item-title="title"
         item-value="value"
-        label="PAT 读取的游戏账号"
+        label="PAT 绑定的游戏账号"
         :loading="isAccountsLoading"
         :disabled="isAccountsLoading || generatingScope !== ''"
         :error-messages="accountLoadError"
@@ -309,12 +311,20 @@ onMounted(async () => {
           variant="elevated"
           text="生成干员只读 PAT"
           :loading="generatingScope === READ_SCOPE"
-          :disabled="isTokenListLoading || isAccountsLoading || !selectedGameUid || generatingScope !== '' || hasTokenForSelectedAccount"
+          :disabled="isTokenListLoading || isAccountsLoading || !selectedGameUid || generatingScope !== '' || hasTokenForScope(READ_SCOPE)"
           @click="generateToken(READ_SCOPE, '干员数据只读 PAT')"
         ></v-btn>
+        <v-btn
+          color="primary"
+          variant="outlined"
+          text="生成干员只写 PAT"
+          :loading="generatingScope === WRITE_SCOPE"
+          :disabled="isTokenListLoading || isAccountsLoading || !selectedGameUid || generatingScope !== '' || hasTokenForScope(WRITE_SCOPE)"
+          @click="generateToken(WRITE_SCOPE, '干员数据只写 PAT')"
+        ></v-btn>
       </div>
-      <div v-if="!isTokenListLoading && hasTokenForSelectedAccount" class="text-caption opacity-70 mb-4">
-        该游戏账号已有 PAT，请先撤销后重新签发。
+      <div v-if="!isTokenListLoading && (hasTokenForScope(READ_SCOPE) || hasTokenForScope(WRITE_SCOPE))" class="text-caption opacity-70 mb-4">
+        该游戏账号已有的同权限 PAT，请先撤销后重新签发；其他权限可单独生成。
       </div>
 
       <div v-if="isTokenListLoading" class="token-empty">

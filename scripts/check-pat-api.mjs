@@ -44,9 +44,9 @@ test('PAT management keeps OAuth authentication and revokes by token rather than
 test('local issuance sends account and expiry as JSON without browser refresh credentials', async () => {
   let sent
   const api = new Function('request', issuanceSource)(async config => {sent = config})
-  await api.generateOpenApiPat(315360000, 'ak-data.read', '只读 PAT', {game_uid: '123'})
+  await api.generateOpenApiPat(315360000, 'arknights-data.read', '只读 PAT', {game_uid: '123'})
   assert.deepEqual(sent, {url: '/auth/pat', method: 'post', data: {
-    expires_in: 315360000, scope: 'ak-data.read', name: '只读 PAT', payload: {game_uid: '123'},
+    expires_in: 315360000, scope: 'arknights-data.read', name: '只读 PAT', payload: {game_uid: '123'},
   }})
   assert.equal('params' in sent, false)
 })
@@ -54,13 +54,29 @@ test('local issuance sends account and expiry as JSON without browser refresh cr
 test('account picker excludes manual entries and issues a read-only PAT for the selected account', async () => {
   const {api, calls} = fixture()
   await api.fetchAccounts()
+  await api.fetchTokens()
   assert.equal(api.isAccountsLoading.value, false)
   assert.deepEqual(api.gameAccounts.value.map(item => item.akUid), ['123'])
   assert.equal(api.selectedGameUid.value, '123')
-  await api.generateToken('ak-data.read', '只读 PAT')
-  assert.deepEqual(calls.issue, [[315360000, 'ak-data.read', '只读 PAT', {game_uid: '123', game_name: '明日方舟', source: 'web'}]])
+  await api.generateToken('arknights-data.read', '只读 PAT')
+  assert.deepEqual(calls.issue, [[315360000, 'arknights-data.read', '只读 PAT', {game_uid: '123', game_name: '明日方舟', source: 'skland'}]])
   assert.equal(api.generatingScope.value, '')
-  assert.doesNotMatch(card, /@click="generateToken\(WRITE_SCOPE/)
+})
+
+test('write-only issuance remains available beside a read-only PAT and blocks duplicate writes', async () => {
+  const {api, calls} = fixture()
+  await api.fetchAccounts()
+  await api.fetchTokens()
+  api.tokenList.value = [{scope: 'arknights-data.read', payload: {game_uid: '123'}}]
+  await api.generateToken('arknights-data.write', '只写 PAT')
+  assert.deepEqual(calls.issue, [[315360000, 'arknights-data.write', '只写 PAT', {game_uid: '123', game_name: '明日方舟', source: 'skland'}]])
+  api.tokenList.value = [{scope: 'arknights-data.write', payload: {game_uid: '123'}}]
+  await api.generateToken('arknights-data.write', '只写 PAT')
+  assert.equal(calls.issue.length, 1)
+  assert.equal(api.hasTokenForScope('arknights-data.read'), false)
+  assert.match(card, /@click="generateToken\(WRITE_SCOPE, '干员数据只写 PAT'\)"/)
+  assert.match(cardSource, /const WRITE_SCOPE = "arknights-data.write"/)
+  assert.doesNotMatch(cardSource, /gama-data\.write/)
 })
 
 test('account load failure clears stale selection and prevents issuance', async () => {
@@ -69,24 +85,26 @@ test('account load failure clears stale selection and prevents issuance', async 
   await api.fetchAccounts()
   assert.equal(api.selectedGameUid.value, '')
   assert.match(api.accountLoadError.value, /读取失败/)
-  await api.generateToken('ak-data.read', '只读 PAT')
+  await api.generateToken('arknights-data.read', '只读 PAT')
   assert.equal(calls.issue.length, 0)
 })
 
-test('duplicate prevention is scoped to target account, read permission and remaining lifetime', () => {
+test('duplicate prevention matches the selected account and permission across supported scope formats', () => {
   const {api} = fixture()
   api.selectedGameUid.value = '123'
-  for (const scope of ['ak-data.read', 'gama-data.read', 'all']) {
+  for (const scope of ['arknights-data.read', ['arknights-data.read'], '["arknights-data.read"]', 'arknights-data.read,arknights-data.write']) {
     api.tokenList.value = [{scope, payload: {game_uid: '123'}, expiresInSeconds: 30}]
-    assert.equal(api.hasTokenForScope('ak-data.read'), true)
+    assert.equal(api.hasTokenForScope('arknights-data.read'), true)
   }
   api.tokenList.value = [
-    {scope: 'ak-data.read', payload: {game_uid: 'different'}, expiresInSeconds: 30},
-    {scope: 'ak-data.read', payload: {game_uid: '123'}, expiresInSeconds: 0},
-    {scope: 'gama-data.write', payload: {game_uid: '123'}, expiresInSeconds: 30},
-    {scope: 'gama-data.read', payload: null, expiresInSeconds: 30},
+    {scope: 'arknights-data.read', payload: {game_uid: 'different'}, expiresInSeconds: 30},
+    {scope: 'arknights-data.write', payload: {game_uid: '123'}, expiresInSeconds: 30},
+    {scope: 'arknights-data.read', payload: null, expiresInSeconds: 30},
   ]
-  assert.equal(api.hasTokenForScope('ak-data.read'), false)
+  assert.equal(api.hasTokenForScope('arknights-data.read'), false)
+  api.tokenList.value = [{scope: ['arknights-data.read', 'arknights-data.write'], payload: {gameUid: '123'}}]
+  assert.equal(api.hasTokenForScope('arknights-data.read'), true)
+  assert.equal(api.hasTokenForScope('arknights-data.write'), true)
 })
 
 test('historical tokens remain visible and revokable without changing OAuth token cache', async () => {
