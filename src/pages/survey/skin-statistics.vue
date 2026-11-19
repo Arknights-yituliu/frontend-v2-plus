@@ -21,7 +21,7 @@ const RANK_METRICS = [
 
 const PAGE_SIZE = 30
 
-/* 接口密钥：与回收站掉落统计共用同一把（来源见 utils/apiAccessKey），密钥不对时 UC 返回 80008 */
+/* 接口密钥：与回收站掉落统计共用同一把（来源见 utils/apiAccessKey），密钥不对时 TCL 返回 80008 */
 const KEY_FORBIDDEN_CODE = 80008
 
 /* ---------------- 状态 ---------------- */

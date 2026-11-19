@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import {readFile} from 'node:fs/promises'
-import {latestMowerSiteAccount, mapUcMowerInventory, mapSiteMowerInventory} from '../src/utils/mower/theoretical-output/siteInventoryMapping.js'
+import {latestMowerSiteAccount, mapTclMowerInventory, mapSiteMowerInventory} from '../src/utils/mower/theoretical-output/siteInventoryMapping.js'
 
 const uid = '12345678'
 const uc = items => ({akUid: uid, items})
@@ -10,32 +10,32 @@ assert.deepEqual(latestMowerSiteAccount([{akUid: uid, updateTime: '2026-10-02'},
 assert.equal(latestMowerSiteAccount([]), null)
 assert.throws(() => latestMowerSiteAccount({items: []}), /列表格式/)
 assert.throws(() => latestMowerSiteAccount([{akUid: null}]), /UID/)
-assert.deepEqual(mapUcMowerInventory(uc([card('char_002_amiya', 1, 12), card('char_103_angel', 0, 1)]), uid), [
+assert.deepEqual(mapTclMowerInventory(uc([card('char_002_amiya', 1, 12), card('char_103_angel', 0, 1)]), uid), [
   {operator: 'char_002_amiya', elitePhase: 1, level: 12},
   {operator: 'char_103_angel', elitePhase: 0, level: 1},
 ])
-assert.deepEqual(mapUcMowerInventory(uc([]), uid), [])
+assert.deepEqual(mapTclMowerInventory(uc([]), uid), [])
 assert.deepEqual(mapSiteMowerInventory([
   {charId: 'char_002_amiya', elite: 0, level: 30, own: true},
   {charId: 'char_103_angel', elite: 0, level: 0, own: false},
   {charId: 'char_999_future', elite: 2, level: 90, own: true},
 ]), [{operator: 'char_002_amiya', elitePhase: 0, level: 30}, {operator: 'char_999_future', elitePhase: 2, level: 90}])
-assert.deepEqual(mapUcMowerInventory(uc([
+assert.deepEqual(mapTclMowerInventory(uc([
   card('char_002_amiya', 1, 70), card('char_1001_amiya2', 2, 1), card('char_1037_amiya3', 2, 20),
 ]), uid), [{operator: 'char_002_amiya', elitePhase: 2, level: 20}])
-assert.deepEqual(mapUcMowerInventory(uc([card('char_1001_amiya2', 2, 20), card('char_002_amiya', 1, 70)]), uid), [
+assert.deepEqual(mapTclMowerInventory(uc([card('char_1001_amiya2', 2, 20), card('char_002_amiya', 1, 70)]), uid), [
   {operator: 'char_002_amiya', elitePhase: 2, level: 20},
 ])
 for (const payload of [null, [], {}, {akUid: uid}, {akUid: uid, items: null}, {akUid: uid, items: {}}, {items: []}]) {
-  assert.throws(() => mapUcMowerInventory(payload, uid))
+  assert.throws(() => mapTclMowerInventory(payload, uid))
 }
-assert.throws(() => mapUcMowerInventory({akUid: '87654321', items: []}, uid), /账号不一致/)
-assert.throws(() => mapUcMowerInventory(uc([card('char_103_angel', 0, 1), card('char_103_angel', 1, 1)]), uid), /重复/)
-assert.throws(() => mapUcMowerInventory(uc([card('char_1001_amiya2', 1, 1), card('char_1001_amiya2', 2, 1)]), uid), /重复/)
+assert.throws(() => mapTclMowerInventory({akUid: '87654321', items: []}, uid), /账号不一致/)
+assert.throws(() => mapTclMowerInventory(uc([card('char_103_angel', 0, 1), card('char_103_angel', 1, 1)]), uid), /重复/)
+assert.throws(() => mapTclMowerInventory(uc([card('char_1001_amiya2', 1, 1), card('char_1001_amiya2', 2, 1)]), uid), /重复/)
 for (const row of [null, [], {}, card('Exusiai', 0, 1), card('char_103_angel', null, 1), card('char_103_angel', '0', 1),
   card('char_103_angel', 3, 1), card('char_103_angel', 0, null), card('char_103_angel', 0, '1'),
   card('char_103_angel', 0, 91), {...card('char_103_angel', 0, 1), own: 'false'}]) {
-  assert.throws(() => mapUcMowerInventory(uc([row]), uid))
+  assert.throws(() => mapTclMowerInventory(uc([row]), uid))
 }
 assert.throws(() => mapSiteMowerInventory([card('char_103_angel', 0, 1)]), /ID/)
 
@@ -44,8 +44,8 @@ assert.throws(() => mapSiteMowerInventory([card('char_103_angel', 0, 1)]), /ID/)
 const source = (await readFile(new URL('../src/utils/mower/theoretical-output/siteInventory.js', import.meta.url), 'utf8'))
   .replace(/^import[^\n]*\n/gm, '').replace('export function useMowerSiteInventory', 'function useMowerSiteInventory')
 const dependencyNames = ['ref', 'watch', 'onActivated', 'onDeactivated', 'onMounted', 'onBeforeUnmount',
-  'listAkAccounts', 'getAkAccountOperators', 'userInfo', 'ensureUcToken', 'refreshUcToken', 'clearUcToken',
-  'latestMowerSiteAccount', 'mapUcMowerInventory', 'localStorage', 'window']
+  'listAkAccounts', 'getAkAccountOperators', 'userInfo', 'ensureTclToken', 'refreshTclToken', 'clearTclToken',
+  'latestMowerSiteAccount', 'mapTclMowerInventory', 'localStorage', 'window']
 const createInventory = new Function(...dependencyNames, `${source}\nreturn useMowerSiteInventory()`)
 const flush = () => new Promise(resolve => setImmediate(resolve))
 function deferred() {
@@ -61,9 +61,9 @@ function fixture(overrides = {}, initialSession = {token: 'session-a', uid: '11'
     onMounted: callback => {hooks.mount = callback}, onBeforeUnmount: callback => {hooks.unmount = callback},
     listAkAccounts: async () => [{akUid: uid, updateTime: '2026-10-02'}],
     getAkAccountOperators: async () => uc([card('char_002_amiya', 1, 12)]),
-    userInfo: {value: {uid: initialSession.uid, token: initialSession.token}}, ensureUcToken: async () => 'uc-token',
-    refreshUcToken: async () => 'refreshed-token', clearUcToken: () => {},
-    latestMowerSiteAccount, mapUcMowerInventory,
+    userInfo: {value: {uid: initialSession.uid, token: initialSession.token}}, ensureTclToken: async () => 'uc-token',
+    refreshTclToken: async () => 'refreshed-token', clearTclToken: () => {},
+    latestMowerSiteAccount, mapTclMowerInventory,
     localStorage: {getItem: key => storage.get(key) ?? null},
     window: {addEventListener: (key, callback) => listeners.set(key, callback), removeEventListener: key => listeners.delete(key)},
     ...overrides,
@@ -123,7 +123,7 @@ olderRows.resolve(uc([card('char_002_amiya', 0, 1)]))
 await flush()
 assert.equal(overlapping.inventory.entries.value[0].elitePhase, 2, 'older reload must not replace the newer result')
 
-// UC helpers share pending promises, so clearing their cache alone does not cancel old exchanges.
+// TCL helpers share pending promises, so clearing their cache alone does not cancel old exchanges.
 const oldIssue = deferred(), oldRefresh = deferred()
 let cachedToken = null
 let issuing = oldIssue.promise.then(token => {cachedToken = token; return token}).finally(() => {issuing = null})
@@ -131,9 +131,9 @@ let refreshing = oldRefresh.promise.then(token => {cachedToken = token; return t
 const observedTokens = []
 let switching
 switching = fixture({
-  clearUcToken: () => {cachedToken = null},
-  ensureUcToken: () => cachedToken ? Promise.resolve(cachedToken) : issuing ?? Promise.resolve(cachedToken = switching.storage.get('USER_TOKEN')),
-  refreshUcToken: () => refreshing ?? Promise.resolve(cachedToken = switching.storage.get('USER_TOKEN')),
+  clearTclToken: () => {cachedToken = null},
+  ensureTclToken: () => cachedToken ? Promise.resolve(cachedToken) : issuing ?? Promise.resolve(cachedToken = switching.storage.get('USER_TOKEN')),
+  refreshTclToken: () => refreshing ?? Promise.resolve(cachedToken = switching.storage.get('USER_TOKEN')),
   listAkAccounts: async () => {observedTokens.push(cachedToken); return [{akUid: uid}]},
 })
 switching.hooks.mount()
@@ -156,12 +156,12 @@ async function checkColdMount({pendingIssue, pendingRefresh, initiallyCached}) {
   const reads = []
   let exchangeCalls = 0, refreshCalls = 0
   const cold = fixture({
-    clearUcToken: () => {token = null},
-    ensureUcToken: () => {
+    clearTclToken: () => {token = null},
+    ensureTclToken: () => {
       exchangeCalls++
       return token ? Promise.resolve(token) : issuePromise ?? Promise.resolve(token = 'fresh-session-b-token')
     },
-    refreshUcToken: () => {refreshCalls++; return refreshPromise ?? Promise.resolve(token = 'refreshed-session-b-token')},
+    refreshTclToken: () => {refreshCalls++; return refreshPromise ?? Promise.resolve(token = 'refreshed-session-b-token')},
     listAkAccounts: async () => {reads.push(token); return [{akUid: uid}]},
   }, {token: 'session-b', uid: '22'})
   cold.hooks.mount()
@@ -189,4 +189,4 @@ await checkColdMount({pendingIssue: true, pendingRefresh: false, initiallyCached
 await checkColdMount({pendingIssue: false, pendingRefresh: true, initiallyCached: true})
 await checkColdMount({pendingIssue: true, pendingRefresh: true, initiallyCached: true})
 
-console.log('Mower site inventory checks passed (UC/schema mapping, progression, aliases, malformed data, stale requests and session token races).')
+console.log('Mower site inventory checks passed (TCL/schema mapping, progression, aliases, malformed data, stale requests and session token races).')

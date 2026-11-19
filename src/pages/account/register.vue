@@ -14,11 +14,11 @@ import {
 import {useVerificationCode} from "/src/api/user-center/verificationCode.js";
 import UserApiV2 from '/src/api/backend/UserApiV2.js'
 import {directRegister} from '/src/api/user-center/auth.js'
-import {saveUcToken} from "/src/utils/user/ucToken.js"
+import {saveTclTokenFromSession} from "/src/utils/user/tclToken.js"
 
 /**
- * 组装直连注册请求参数（映射到 UC /oauth2/direct-register 表单字段）
- * UC 已统一注册形态：邮箱、验证码、用户名、密码必填，昵称选填
+ * 组装直连注册请求参数（映射到 TCL /oauth2/direct-register 表单字段）
+ * TCL 已统一注册形态：邮箱、验证码、用户名、密码必填，昵称选填
  * @returns {Object} 注册请求参数
  */
 function getParam() {
@@ -50,8 +50,8 @@ const {
 /**
  * 直连注册流程：
  * ① 旧系统后端换发起会话凭证 channel；
- * ② 注册信息（含密码）直连提交 UC /oauth2/direct-register，创建用户并签发一次性票据 ticket；
- * ③ 把 ticket 交给旧系统后端 /user/oauth2/complete-login，签发本地会话
+ * ② 注册信息（含密码）直连提交 TCL /oauth2/direct-register，创建用户并签发一次性票据 ticket；
+ * ③ 把 ticket 交给旧系统后端 /complete-login，签发本地会话
  */
 async function toRegister() {
   if (isSubmitting.value) {
@@ -72,7 +72,7 @@ async function toRegister() {
     const channelResp = await UserApiV2.getDirectChannel();
     const channel = channelResp.data.channel;
 
-    // ② 注册信息直接提交 UC，密码/验证码不经旧系统后端
+    // ② 注册信息直接提交 TCL，密码/验证码不经旧系统后端
     const ticketData = await directRegister({
       channel,
       email: param.email,
@@ -84,11 +84,11 @@ async function toRegister() {
 
     // ③ ticket 交后端兑换用户信息并发自家会话
     const registerResp = await UserApiV2.completeDirectLogin(ticketData.ticket);
-    const {token, ucAccessToken, ucTokenExpiresIn, ucTokenScope} = registerResp.data;
+    const {token} = registerResp.data;
 
     localStorage.setItem("USER_TOKEN", token.toString());
-    // 后端随登录响应一并回带 UC access_token，存起来供调用 UC 接口（F1/F2）
-    saveUcToken({accessToken: ucAccessToken, expiresIn: ucTokenExpiresIn, scope: ucTokenScope});
+    // 后端随登录响应一并回带 TCL access_token，存起来供调用 TCL 接口（F1/F2）
+    saveTclTokenFromSession(registerResp.data);
     await getUserInfo();
     createMessage({type:'success',text:'注册成功，即将跳转到我的干员导入流程'})
     setTimeout(() => {
@@ -100,7 +100,7 @@ async function toRegister() {
       })
     }, 3000)
   } catch (error) {
-    // 错误提示已由各请求拦截器（request.js / ucClient.js）统一弹出，这里不再重复处理
+    // 错误提示已由各请求拦截器（request.js / tclClient.js）统一弹出，这里不再重复处理
     console.error('注册失败', error);
   } finally {
     isSubmitting.value = false;

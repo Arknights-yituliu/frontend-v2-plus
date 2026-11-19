@@ -15,7 +15,7 @@ async function getData() {
     //     }
     // }
 
-    // 数据源已切换为 UC 干员数据统计接口：其响应直接就是统计结果数组，此处包成旧缓存结构 {result} 供下游消费
+    // 数据源已切换为 TCL 干员数据统计接口：其响应直接就是统计结果数组，此处包成旧缓存结构 {result} 供下游消费
     await getAkOperatorStatisticsResult().then(result => {
         console.log(cacheKey, '返回来自服务器的数据')
 

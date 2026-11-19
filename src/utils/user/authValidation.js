@@ -31,7 +31,7 @@ const passwordRules = [
   value => passwordRegex.test(String(value)) || '密码需为 6-32 位数字、字母、@ 或下划线'
 ];
 
-// 用户名规则：UC 统一注册形态要求 3-20 位字母、数字、下划线
+// 用户名规则：TCL 统一注册形态要求 3-20 位字母、数字、下划线
 const userNameRegex = /^[A-Za-z0-9_]{3,20}$/;
 const userNameRules = [
   requiredRule,
@@ -53,7 +53,7 @@ function getFirstRuleError(value, rules) {
 }
 
 /**
- * 校验注册表单（UC 统一注册形态：邮箱 + 验证码 + 用户名 + 密码必填，昵称选填）
+ * 校验注册表单（TCL 统一注册形态：邮箱 + 验证码 + 用户名 + 密码必填，昵称选填）
  * @param {Object} inputContent 表单内容
  * @returns {string} 错误文案，校验通过返回空串
  */

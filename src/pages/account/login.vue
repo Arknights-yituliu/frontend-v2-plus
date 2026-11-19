@@ -12,7 +12,7 @@ import {
 import {useVerificationCode} from "/src/api/user-center/verificationCode.js";
 import UserApiV2 from '/src/api/backend/UserApiV2.js'
 import {directLogin} from '/src/api/user-center/auth.js'
-import {saveUcToken} from '/src/utils/user/ucToken.js'
+import {saveTclTokenFromSession} from '/src/utils/user/tclToken.js'
 
 const props = defineProps({
   dialog: {
@@ -61,8 +61,8 @@ function toRegister(){
 /**
  * 直连登录流程：
  * ① 旧系统后端换发起会话凭证 channel；
- * ② 登录凭证（账号密码或邮箱验证码）直连提交 UC /oauth2/direct-login，换一次性票据 ticket；
- * ③ 把 ticket 交给旧系统后端 /user/oauth2/complete-login，签发本地会话
+ * ② 登录凭证（账号密码或邮箱验证码）直连提交 TCL /oauth2/direct-login，换一次性票据 ticket；
+ * ③ 把 ticket 交给旧系统后端 /complete-login，签发本地会话
  */
 async function toLogin() {
   if (isSubmitting.value) {
@@ -81,7 +81,7 @@ async function toLogin() {
     const channelResp = await UserApiV2.getDirectChannel();
     const channel = channelResp.data.channel;
 
-    // ② 按登录方式把凭证直接提交 UC，密码/验证码不经旧系统后端
+    // ② 按登录方式把凭证直接提交 TCL，密码/验证码不经旧系统后端
     let ticketData;
     if (inputContent.value.accountType === 'email') {
       ticketData = await directLogin({
@@ -101,11 +101,11 @@ async function toLogin() {
 
     // ③ ticket 交后端兑换用户信息并发自家会话
     const loginResp = await UserApiV2.completeDirectLogin(ticketData.ticket);
-    const {token, uid, ucAccessToken, ucTokenExpiresIn, ucTokenScope} = loginResp.data;
+    const {token, uid} = loginResp.data;
     localStorage.setItem("USER_TOKEN", token);
     localStorage.setItem("UID", uid);
-    // 后端随登录响应一并回带 UC access_token，存起来供调用 UC 接口（F1/F2）
-    saveUcToken({accessToken: ucAccessToken, expiresIn: ucTokenExpiresIn, scope: ucTokenScope});
+    // 后端随登录响应一并回带 TCL access_token，存起来供调用 TCL 接口（F1/F2）
+    saveTclTokenFromSession(loginResp.data);
 
     if (props.dialog) {
       createMessage({type:'success',text:'登录成功'})
@@ -125,7 +125,7 @@ async function toLogin() {
       window.location.href = '/';
     }, 2000)
   } catch (error) {
-    // 错误提示已由各请求拦截器（request.js / ucClient.js）统一弹出，这里不再重复处理
+    // 错误提示已由各请求拦截器（request.js / tclClient.js）统一弹出，这里不再重复处理
     console.error('登录失败', error);
   } finally {
     isSubmitting.value = false;

@@ -929,7 +929,7 @@ async function importYituliuOperatorSource() {
   try {
     const response = await fetch(RIIC_YITULIU_OPERATOR_API_URL, {
       headers: {
-        Authorization: token,
+        Authorization: /^Bearer\s/i.test(token) ? token : `Bearer ${token}`,
       },
     });
     const payload = await response.json().catch(() => null);

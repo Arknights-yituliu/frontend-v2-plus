@@ -56,10 +56,10 @@ function chooseAvatar(avatar) {
 }
 
 /**
- * 更新头像（走 UC OAuth 资料接口，空串表示清除头像）
+ * 更新头像（走 TCL OAuth 资料接口，空串表示清除头像）
  */
 function updateAvatar() {
-  // UC 要求 avatar 显式传值且不接受 null，这里统一归一化为空串（空串表示清除头像）
+  // TCL 要求 avatar 显式传值且不接受 null，这里统一归一化为空串（空串表示清除头像）
   const avatar = String(selectedAvatar.value ?? '')
   updateOauthAvatar(avatar).then(() => {
     createMessage({type:'success',text:'头像更新成功'})
@@ -70,7 +70,7 @@ function updateAvatar() {
 
 
 /**
- * 更新昵称（走 UC OAuth 资料接口，不会修改登录用户名）
+ * 更新昵称（走 TCL OAuth 资料接口，不会修改登录用户名）
  */
 function updateNickname() {
   const nickname = String(formData.value.userName ?? '').trim()

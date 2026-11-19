@@ -8,7 +8,7 @@ import { createMessage } from "/src/utils/message.js"
 import { operatorTableV2 } from "/src/utils/gameData.js"
 import operatorUpdateTime from '/public/json/operator_update_time.json'
 import { saveAkAccountOperators } from "/src/api/user-center/gameData.js"
-import { buildUcOperatorSavePayload } from "/src/utils/survey/ucOperatorData.js"
+import { buildTclOperatorSavePayload } from "/src/utils/survey/tclOperatorData.js"
 import { userInfo } from "/src/api/user-center/userSession.js"
 
 // 子组件
@@ -251,7 +251,7 @@ async function uploadToOperatorSurvey() {
     return
   }
 
-  const payload = buildUcOperatorSavePayload(rawWarehouseData.value)
+  const payload = buildTclOperatorSavePayload(rawWarehouseData.value)
   if (payload.operators.length === 0) {
     createMessage({ type: 'error', text: '没有可上传的干员数据' })
     return

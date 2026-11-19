@@ -13,10 +13,10 @@ import {
   saveManualOperators
 } from "/src/api/user-center/gameData.js"
 import {
-  buildUcOperatorSavePayload,
+  buildTclOperatorSavePayload,
   toOperatorDataList,
   buildManualOperatorSavePayload
-} from "/src/utils/survey/ucOperatorData.js"
+} from "/src/utils/survey/tclOperatorData.js"
 // ===== Vue API、图鉴数据与通用工具 =====
 import {onBeforeUnmount, onMounted, ref, computed, watch} from "vue";
 import {operatorTableV2} from "/src/utils/gameData.js";
@@ -500,7 +500,7 @@ async function getPlayerDataAndSync(binding) {
     }))
 
     // 转成一图流后端的保存结构后提交
-    const payload = buildUcOperatorSavePayload(warehouseData)
+    const payload = buildTclOperatorSavePayload(warehouseData)
     if (payload.operators.length === 0) {
       createMessage({ type: 'warn', text: '未获取到干员数据，无法同步' })
       return
@@ -1133,7 +1133,7 @@ async function switchAkAccount(account) {
     createMessage({type: 'success', text: `已切换至账号 ${account.akUid}，共 ${list.length} 条数据`})
 
     // 切换成功后把该账号设为默认数据来源：下次进入页面或第三方 API 不传 akUid 读取时优先返回它
-    // 设置失败不影响本次切换，错误提示由 ucService 响应拦截器统一弹出
+    // 设置失败不影响本次切换，错误提示由 tclService 响应拦截器统一弹出
     if (account.source) {
       try {
         await setDefaultAkAccount({akUid: account.akUid, source: account.source})

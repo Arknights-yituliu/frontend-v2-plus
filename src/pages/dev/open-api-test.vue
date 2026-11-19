@@ -11,7 +11,7 @@
         <el-input
           v-model="apiToken"
           type="text"
-          placeholder="请输入第三方 OpenAPI Token"
+          placeholder="请输入 PAT（支持迁移前的旧令牌）"
           clearable
           style="flex: 1"
         >
@@ -82,7 +82,7 @@
       <div v-if="result" class="result-summary">
         <el-descriptions :column="3" border size="small">
           <el-descriptions-item label="code">{{ result.code }}</el-descriptions-item>
-          <el-descriptions-item label="message">{{ result.message }}</el-descriptions-item>
+          <el-descriptions-item label="msg">{{ result.msg }}</el-descriptions-item>
           <el-descriptions-item label="干员数量">
             {{ result.data ? result.data.length : 0 }}
           </el-descriptions-item>
@@ -167,7 +167,7 @@ const sendRequest = async () => {
   try {
     const response = await axios.get(`${baseUrl.value}/open-api/operator/info`, {
       headers: {
-        Authorization: apiToken.value
+        Authorization: /^Bearer\s/i.test(apiToken.value.trim()) ? apiToken.value.trim() : `Bearer ${apiToken.value.trim()}`
       },
       // 不经过项目统一拦截器，直接使用原始 axios
       validateStatus: () => true
@@ -177,12 +177,12 @@ const sendRequest = async () => {
     responseTime.value = Math.round(endTime - startTime)
     httpStatus.value = response.status
 
-    if (response.status === 200) {
+    if (response.status === 200 && response.data?.code === 200) {
       result.value = response.data
       ElMessage.success('请求成功')
     } else {
       result.value = response.data
-      errorMsg.value = `HTTP ${response.status}: ${response.data?.message || response.data?.msg || '未知错误'}`
+      errorMsg.value = `HTTP ${response.status} / code ${response.data?.code ?? '未知'}: ${response.data?.msg || '未知错误'}`
     }
   } catch (err) {
     const endTime = performance.now()

@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from "vue-router";
 import {routes} from "./routes.js";
 import toolApi from "../api/backend/tool.js";
 import {getUserInfo} from "/src/api/user-center/userSession.js";
-import {checkAndRefreshUcToken, ensureUcToken} from "/src/utils/user/ucToken.js";
+import {checkAndRefreshTclToken, ensureTclToken} from "/src/utils/user/tclToken.js";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -33,13 +33,13 @@ router.beforeEach(async (to, from,next) => {
 })
 
 
-// 每次进入页面（含首次加载）触发一次 UC 令牌处理：本地无令牌则兑换，临近过期则提前刷新
+// 每次进入页面（含首次加载）触发一次 TCL 令牌处理：本地无令牌则兑换，临近过期则提前刷新
 router.afterEach(() => {
     // 未登录时没有自签 token，兑换必然失败，直接跳过避免无意义告警
     if (!localStorage.getItem("USER_TOKEN")) {
         return;
     }
-    ensureUcToken().then(() => checkAndRefreshUcToken());
+    ensureTclToken().then(() => checkAndRefreshTclToken());
 })
 
 
