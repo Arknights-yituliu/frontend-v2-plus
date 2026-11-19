@@ -354,17 +354,6 @@ onMounted(async () => {
               </div>
               <code class="token-entry__token">{{ item.token }}</code>
               <div class="text-caption">{{ getTokenAccountText(item) }}</div>
-              <div class="token-entry__title-sub">
-                <v-icon icon="mdi-shield-key-outline" size="13"></v-icon>
-                <span>权限：{{ getScopeDesc(item.scope) }}</span>
-              </div>
-              <div
-                class="token-entry__title-sub"
-                :class="{ 'token-entry__remain--expired': isExpired(item) }"
-              >
-                <v-icon icon="mdi-clock-outline" size="13"></v-icon>
-                <span>{{ getRemainText(item) }}</span>
-              </div>
             </div>
             <div class="token-entry__actions">
               <v-btn
@@ -383,6 +372,19 @@ onMounted(async () => {
               >
                 删除
               </v-btn>
+            </div>
+          </div>
+          <div class="token-entry__details">
+            <div class="token-entry__title-sub">
+              <v-icon icon="mdi-shield-key-outline" size="13"></v-icon>
+              <span>权限：{{ getScopeDesc(item.scope) }}</span>
+            </div>
+            <div
+              class="token-entry__title-sub"
+              :class="{ 'token-entry__remain--expired': isExpired(item) }"
+            >
+              <v-icon icon="mdi-clock-outline" size="13"></v-icon>
+              <span>{{ getRemainText(item) }}</span>
             </div>
           </div>
         </div>
@@ -510,6 +512,10 @@ onMounted(async () => {
   font-size: 12px;
   line-height: 1.5;
   opacity: 0.55;
+}
+
+.token-entry__details {
+  margin-left: 50px;
 }
 
 .token-entry__title-sub {
