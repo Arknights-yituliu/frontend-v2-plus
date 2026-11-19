@@ -1,23 +1,33 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import userInfoAPI from "/src/api/backend/userInfo";
-import { listCustomTokens, listOAuthScopes, revokeCustomToken } from "/src/api/user-center/oauthToken.js";
+import { listPats, listOAuthScopes, revokePat } from "/src/api/user-center/pat.js";
+import { listAkAccounts } from "/src/api/user-center/gameData.js";
 import { ensureTclToken } from "/src/utils/user/tclToken.js";
 import { createMessage } from "/src/utils/message";
 import { copyTextToClipboard } from "/src/utils/copyText.js";
 
-// 用户中心权限范围标识：只读 / 只写
-const READ_SCOPE = "gama-data.read";
+// 新 PAT 只提供干员读取；保留历史令牌的权限展示。
+const READ_SCOPE = "ak-data.read";
 const WRITE_SCOPE = "gama-data.write";
-// 本卡片只提供只读 / 只写两种 Token，其余权限不在此生成
+// 旧权限标签仅用于展示列表中的历史记录。
 const SCOPE_TOKEN_LABELS = {
-  [READ_SCOPE]: "只读 Token",
-  [WRITE_SCOPE]: "只写 Token",
+  [READ_SCOPE]: "干员只读 PAT",
+  ["gama-data.read"]: "历史只读 Token",
+  [WRITE_SCOPE]: "历史只写 Token",
 };
 // 生成的 Token 有效期（秒），10 年
 const TOKEN_EXPIRES_IN = 315360000;
 
 const permissionList = ref([]);
+const gameAccounts = ref([]);
+const selectedGameUid = ref("");
+const isAccountsLoading = ref(true);
+const accountLoadError = ref("");
+const accountOptions = computed(() => gameAccounts.value.map((account) => ({
+  title: `游戏账号 UID ${account.akUid}`,
+  value: String(account.akUid),
+})));
 const tokenList = ref([]);
 const generatingScope = ref("");
 const isTokenListLoading = ref(true);
@@ -89,7 +99,10 @@ function parseScope(scope) {
 function hasTokenForScope(scope) {
   return tokenList.value.some((item) => {
     const scopes = parseScope(item.scope);
-    return scopes.length === 1 && scopes[0] === scope && Number(item.expiresInSeconds) > 0;
+    const gameUid = item.payload?.game_uid ?? item.payload?.gameUid;
+    return scopes.some((value) => [scope, "gama-data.read", "all"].includes(value))
+      && String(gameUid ?? "") === selectedGameUid.value
+      && Number(item.expiresInSeconds) > 0;
   });
 }
 
@@ -152,14 +165,14 @@ async function fetchPermissions() {
 }
 
 /**
- * 拉取当前用户在用户中心的自定义令牌列表
+ * 拉取当前用户在本应用名下的 PAT 列表
  * 用 TCL access_token 认证（tclService 拦截器自动附加）；本地无令牌时先兑换一次
  */
 async function fetchTokens() {
   isTokenListLoading.value = true;
   try {
     await ensureTclToken();
-    tokenList.value = (await listCustomTokens()) || [];
+    tokenList.value = (await listPats()) || [];
   } catch (error) {
     // Token 列表读取失败不影响用户信息页
   } finally {
@@ -169,15 +182,24 @@ async function fetchTokens() {
 
 /**
  * 生成第三方 Token
- * 调用后端转发直签接口，scope 映射为只读 / 只写，有效期为 10 年
+ * 调用后端 PAT 签发接口，固定账号与只读权限，有效期为 10 年
  * 签发成功后重新拉取用户中心列表以展示新令牌
- * @param {string} scope 权限范围标识（gama-data.read / gama-data.write）
+ * @param {string} scope 权限范围标识（ak-data.read）
  * @param {string} tokenType Token 类型文案，用于提示与名称
  */
 async function generateToken(scope, tokenType) {
+  if (!selectedGameUid.value || generatingScope.value) {
+    if (!selectedGameUid.value) createMessage({type: "warn", text: "请先选择游戏账号"});
+    return;
+  }
   generatingScope.value = scope;
   try {
-    await userInfoAPI.generateOpenApiToken(TOKEN_EXPIRES_IN, scope, tokenType);
+    if (!await ensureTclToken()) throw new Error("未登录");
+    await userInfoAPI.generateOpenApiPat(TOKEN_EXPIRES_IN, scope, tokenType, {
+      game_uid: selectedGameUid.value,
+      game_name: "明日方舟",
+      source: "web",
+    });
     createMessage({ type: "success", text: `${tokenType}生成成功` });
     await fetchTokens();
   } catch (error) {
@@ -224,7 +246,7 @@ async function confirmDeleteToken() {
 
   isDeleting.value = true;
   try {
-    await revokeCustomToken(target.token);
+    await revokePat(target.token);
     createMessage({ type: "success", text: "Token 已删除" });
     closeDeleteConfirm();
     await fetchTokens();
@@ -264,44 +286,77 @@ function getRemainText(item) {
   return hours >= 1 ? `剩余 ${hours} 小时` : `剩余 ${Math.floor(seconds / 60)} 分钟`;
 }
 
+/** 新 PAT 强制绑定森空岛账号；手动来源不满足 PAT 消费端的绑定校验。 */
+async function fetchAccounts() {
+  isAccountsLoading.value = true;
+  accountLoadError.value = "";
+  try {
+    if (!await ensureTclToken()) throw new Error("未登录");
+    const accounts = await listAkAccounts();
+    gameAccounts.value = (accounts || []).filter((item) => item.source === "skland" && item.akUid);
+    if (!gameAccounts.value.some((item) => String(item.akUid) === selectedGameUid.value)) {
+      selectedGameUid.value = gameAccounts.value.length ? String(gameAccounts.value[0].akUid) : "";
+    }
+  } catch (error) {
+    gameAccounts.value = [];
+    selectedGameUid.value = "";
+    accountLoadError.value = "游戏账号读取失败，请刷新页面后重试";
+  } finally {
+    isAccountsLoading.value = false;
+  }
+}
+
+function getTokenAccountText(item) {
+  const gameUid = item.payload?.game_uid ?? item.payload?.gameUid;
+  if (gameUid) return `游戏账号 UID ${gameUid}`;
+  return String(item.token || "").startsWith("tlc_pat_")
+    ? "未指定账号，无法读取干员数据" : "历史令牌：沿用默认数据来源";
+}
+
 onMounted(async () => {
-  await fetchPermissions();
-  await fetchTokens();
+  await Promise.all([fetchPermissions(), fetchTokens(), fetchAccounts()]);
 });
 </script>
 
 <template>
-  <v-card class="open-api-token-card" title="第三方 API Token">
+  <v-card class="open-api-token-card" title="第三方 API PAT">
     <v-card-text>
       <p class="text-caption opacity-70 mb-2">
-        第三方token用于在一图流网站之外直接读取或写入您的数据，更换token原token即失效
+        PAT 用于在一图流网站之外读取指定游戏账号的干员数据，撤销后立即失效。
       </p>
       <p class="text-caption opacity-70 mb-4">
-        只读 Token 用于读取干员练度数据，只写 Token 仅用于写入干员练度数据。
+        当前 PAT 消费接口仅支持读取干员数据，不提供写入接口。历史令牌仍可查看和撤销。
       </p>
       <p class="text-caption opacity-70 mb-4">
-        读取干员数据时不传 akUid，默认返回您在「我的干员」页切换时设为默认的账号数据；如需读取其他账号，请显式传入 akUid。
+        新 PAT 在签发时固定游戏账号，读取时不传 akUid；如需切换账号，请重新签发 PAT。
       </p>
 
+      <v-select
+        v-model="selectedGameUid"
+        :items="accountOptions"
+        item-title="title"
+        item-value="value"
+        label="PAT 读取的游戏账号"
+        :loading="isAccountsLoading"
+        :disabled="isAccountsLoading || generatingScope !== ''"
+        :error-messages="accountLoadError"
+        hide-details="auto"
+        class="mb-4"
+      ></v-select>
+      <p v-if="!isAccountsLoading && !accountLoadError && accountOptions.length === 0" class="text-caption mb-4">
+        请先在「我的干员」导入森空岛账号；新 PAT 暂不支持手动数据来源。
+      </p>
       <div class="token-actions">
         <v-btn
           color="primary"
           variant="elevated"
-          text="生成读取用户游戏数据Token"
+          text="生成干员只读 PAT"
           :loading="generatingScope === READ_SCOPE"
-          :disabled="isTokenListLoading || generatingScope !== '' || hasTokenForScope(READ_SCOPE) || !hasScopePermission(READ_SCOPE)"
-          @click="generateToken(READ_SCOPE, '用户游戏数据只读 Token')"
-        ></v-btn>
-        <v-btn
-          color="primary"
-          variant="outlined"
-          text="生成写入用户游戏数据Token"
-          :loading="generatingScope === WRITE_SCOPE"
-          :disabled="isTokenListLoading || generatingScope !== '' || hasTokenForScope(WRITE_SCOPE) || !hasScopePermission(WRITE_SCOPE)"
-          @click="generateToken(WRITE_SCOPE, '用户游戏数据只写 Token')"
+          :disabled="isTokenListLoading || isAccountsLoading || !selectedGameUid || generatingScope !== '' || hasTokenForScope(READ_SCOPE) || !hasScopePermission(READ_SCOPE)"
+          @click="generateToken(READ_SCOPE, '干员数据只读 PAT')"
         ></v-btn>
       </div>
-      <div class="text-caption opacity-70 mb-4">每种权限仅可保留一个 Token，如需重新生成请先删除原 Token。</div>
+      <div class="text-caption opacity-70 mb-4">每个游戏账号在本站页面保留一枚有效的只读 PAT，如需重新生成请先撤销原 PAT。</div>
 
       <div v-if="isTokenListLoading" class="token-empty">
         <v-progress-circular indeterminate size="22" width="2" color="primary"></v-progress-circular>
@@ -339,6 +394,7 @@ onMounted(async () => {
                 </v-chip>
               </div>
               <code class="token-entry__token">{{ item.token }}</code>
+              <div class="text-caption">{{ getTokenAccountText(item) }}</div>
               <div class="token-entry__title-sub">
                 <v-icon icon="mdi-shield-key-outline" size="13"></v-icon>
                 <span>权限：{{ getScopeDesc(item.scope) }}</span>
