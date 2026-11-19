@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 import userInfoAPI from "/src/api/backend/userInfo";
 import { listCustomTokens, listOAuthScopes, revokeCustomToken } from "/src/api/user-center/oauthToken.js";
-import { ensureUcToken } from "/src/utils/user/ucToken.js";
+import { ensureTclToken } from "/src/utils/user/tclToken.js";
 import { createMessage } from "/src/utils/message";
 import { copyTextToClipboard } from "/src/utils/copyText.js";
 
@@ -153,12 +153,12 @@ async function fetchPermissions() {
 
 /**
  * 拉取当前用户在用户中心的自定义令牌列表
- * 用 UC access_token 认证（ucService 拦截器自动附加）；本地无令牌时先兑换一次
+ * 用 TCL access_token 认证（tclService 拦截器自动附加）；本地无令牌时先兑换一次
  */
 async function fetchTokens() {
   isTokenListLoading.value = true;
   try {
-    await ensureUcToken();
+    await ensureTclToken();
     tokenList.value = (await listCustomTokens()) || [];
   } catch (error) {
     // Token 列表读取失败不影响用户信息页

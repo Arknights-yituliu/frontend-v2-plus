@@ -1,8 +1,8 @@
 import {onActivated, onBeforeUnmount, onDeactivated, onMounted, ref, watch} from 'vue'
 import {listAkAccounts, getAkAccountOperators} from '/src/api/user-center/gameData.js'
 import {userInfo} from '/src/api/user-center/userSession.js'
-import {ensureUcToken, refreshUcToken, clearUcToken} from '/src/utils/user/ucToken.js'
-import {latestMowerSiteAccount, mapUcMowerInventory} from './siteInventoryMapping.js'
+import {ensureTclToken, refreshTclToken, clearTclToken} from '/src/utils/user/tclToken.js'
+import {latestMowerSiteAccount, mapTclMowerInventory} from './siteInventoryMapping.js'
 
 function currentSession() {
   const token = localStorage.getItem('USER_TOKEN')
@@ -13,7 +13,7 @@ function sameSession(left, right) {
   return left.token === right.token && left.uid === right.uid
 }
 
-/** The same latest imported UC account as My Operators, with no cross-account snapshot cache. */
+/** The same latest imported TCL account as My Operators, with no cross-account snapshot cache. */
 export function useMowerSiteInventory() {
   const entries = ref(null), status = ref('loading'), error = ref('')
   const accountLabel = ref(''), updatedAt = ref(null)
@@ -36,8 +36,8 @@ export function useMowerSiteInventory() {
     session = latest
     requestId++
     replaceToken = true
-    // UC's in-memory token cache must not retain the preceding account after a tab switch.
-    clearUcToken()
+    // TCL's in-memory token cache must not retain the preceding account after a tab switch.
+    clearTclToken()
     clear(latest.token ? 'loading' : 'unauthenticated')
     return true
   }
@@ -50,19 +50,19 @@ export function useMowerSiteInventory() {
     if (!snapshot.token) return
     const current = () => !disposed && active && id === requestId && sameSession(snapshot, currentSession())
     try {
-      // ensureUcToken checks its cache before its shared issuingPromise. Clear first so
+      // ensureTclToken checks its cache before its shared issuingPromise. Clear first so
       // even a cached current token cannot hide an older account's pending exchange.
-      if (replaceToken) clearUcToken()
-      let token = await ensureUcToken()
+      if (replaceToken) clearTclToken()
+      let token = await ensureTclToken()
       if (!current()) return
       if (replaceToken) {
         // The shared helpers deduplicate exchanges/refreshes. Drain a preceding session's
         // pending operation before clearing its result and obtaining a current-session token.
-        await refreshUcToken().catch(() => null)
+        await refreshTclToken().catch(() => null)
         if (!current()) return
-        clearUcToken()
+        clearTclToken()
         replaceToken = false
-        token = await ensureUcToken()
+        token = await ensureTclToken()
         if (!current()) return
       }
       if (!token) throw new Error('无法读取一图流干员库，请重新登录后重试')
@@ -75,7 +75,7 @@ export function useMowerSiteInventory() {
       }
       const payload = await getAkAccountOperators(account.akUid)
       if (!current()) return
-      const normalized = mapUcMowerInventory(payload, account.akUid)
+      const normalized = mapTclMowerInventory(payload, account.akUid)
       entries.value = normalized
       accountLabel.value = `游戏账号 UID ${account.akUid}`
       updatedAt.value = typeof account.updateTime === 'string' ? account.updateTime : null

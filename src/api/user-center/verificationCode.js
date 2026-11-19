@@ -44,13 +44,13 @@ function useVerificationCode() {
 
     isSendingCode.value = true;
     try {
-      // 验证码由 UC 直接下发（邮箱验证码注册/登录）
+      // 验证码由 TCL 直接下发（邮箱验证码注册/登录）
       await sendEmailCode(normalizedEmail, mailUsage);
       createMessage({type: 'success', text: '验证码发送成功'});
       startCountdown();
       return true;
     } catch (error) {
-      // 错误提示已由 UC 拦截器（ucClient.js）统一弹出，这里仅返回失败状态
+      // 错误提示已由 TCL 拦截器（tclClient.js）统一弹出，这里仅返回失败状态
       console.error('验证码发送失败', error);
       return false;
     } finally {

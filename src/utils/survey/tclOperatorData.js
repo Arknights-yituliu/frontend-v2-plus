@@ -1,11 +1,11 @@
 /**
- * UC OAuth 游戏数据接口（干员数据）字段映射
+ * TCL OAuth 游戏数据接口（干员数据）字段映射
  *
  * 接口见《OAuth游戏数据接口文档》：
  * - 读取：GET /oauth2/ak-accounts/operators?akUid=
  * - 保存：POST /oauth2/ak-accounts/operators/save
  *
- * UC 与前端字段名不同，读写两侧在此集中对齐：
+ * TCL 与前端字段名不同，读写两侧在此集中对齐：
  * charId↔id、own↔owned、elite↔evolvePhase、mainSkill↔mainSkillLevel、
  * modX/Y/D/A/B↔equipX/Y/D/A/B，potential 与 potentialRank 同值传递
  *
@@ -48,11 +48,11 @@ function buildSkinEntries(skins) {
 }
 
 /**
- * 将森空岛同步数据转换为 UC 保存接口的请求体
+ * 将森空岛同步数据转换为 TCL 保存接口的请求体
  * @param {Object} warehouseData 森空岛同步数据（含 uid、已格式化的 operatorDataList 与 itemList，可选 skins）
- * @returns {{playerInfo: {akUid: string}, operators: Array<Object>, items: Array<{itemId: string, count: string}>, skins?: Array<{skinId: string, gainTs: number}>}} UC 保存接口请求体
+ * @returns {{playerInfo: {akUid: string}, operators: Array<Object>, items: Array<{itemId: string, count: string}>, skins?: Array<{skinId: string, gainTs: number}>}} TCL 保存接口请求体
  */
-function buildUcOperatorSavePayload(warehouseData) {
+function buildTclOperatorSavePayload(warehouseData) {
   const payload = {
     playerInfo: {akUid: String(warehouseData?.uid ?? "")},
     operators: (warehouseData?.operatorDataList || []).map((operator) => ({
@@ -88,12 +88,12 @@ function buildUcOperatorSavePayload(warehouseData) {
 }
 
 /**
- * 将单条 UC 干员记录转换为前端干员字段
- * @param {Object} item UC 返回的干员记录
+ * 将单条 TCL 干员记录转换为前端干员字段
+ * @param {Object} item TCL 返回的干员记录
  * @param {boolean} own 是否持有
  * @returns {Object} 前端字段格式的干员记录
  */
-function mapUcOperatorItem(item, own) {
+function mapTclOperatorItem(item, own) {
   return {
     own,
     charId: item.id,
@@ -114,20 +114,20 @@ function mapUcOperatorItem(item, own) {
 }
 
 /**
- * 将 UC 干员数据转换为前端干员列表记录
+ * 将 TCL 干员数据转换为前端干员列表记录
  *
- * <p>UC 的 items 只包含该账号实际拥有的干员，因此 own 恒为 true；
+ * <p>TCL 的 items 只包含该账号实际拥有的干员，因此 own 恒为 true；
  * 未出现在 items 中的干员由调用方补默认值（own: false）。</p>
  *
- * @param {Array<Object>} items UC 返回的干员数组
+ * @param {Array<Object>} items TCL 返回的干员数组
  * @returns {Array<Object>} 前端字段格式的干员记录（charId/elite/potential/skill/mod 等）
  */
 function toOperatorDataList(items) {
-  return (items || []).map((item) => mapUcOperatorItem(item, true))
+  return (items || []).map((item) => mapTclOperatorItem(item, true))
 }
 
 /**
- * 将 UC 手动修改版干员数组转换为前端干员列表记录
+ * 将 TCL 手动修改版干员数组转换为前端干员列表记录
  *
  * <p>手动版额外包含 owned（1 是、0 否，缺省按 0），转换为前端 own 布尔值；
  * 未出现在数组中的干员由调用方补默认值（own: false）。</p>
@@ -136,16 +136,16 @@ function toOperatorDataList(items) {
  * @returns {Array<Object>} 前端字段格式的干员记录（含 own）
  */
 function toManualOperatorDataList(items) {
-  return (items || []).map((item) => mapUcOperatorItem(item, Number(item.owned) === 1))
+  return (items || []).map((item) => mapTclOperatorItem(item, Number(item.owned) === 1))
 }
 
 /**
- * 将前端干员记录转换为 UC 手动修改版保存接口的请求体
+ * 将前端干员记录转换为 TCL 手动修改版保存接口的请求体
  *
  * <p>数值字段统一兜底为 0：接口对缺省 / null / 空字符串按 0 落库，不表示沿用旧值。</p>
  *
  * @param {Array<Object>} operators 前端干员记录（含 own 与各练度字段）
- * @returns {{operators: Array<Object>}} UC 手动版保存接口请求体
+ * @returns {{operators: Array<Object>}} TCL 手动版保存接口请求体
  */
 function buildManualOperatorSavePayload(operators = []) {
   return {
@@ -170,7 +170,7 @@ function buildManualOperatorSavePayload(operators = []) {
 }
 
 export {
-  buildUcOperatorSavePayload,
+  buildTclOperatorSavePayload,
   buildSkinEntries,
   toOperatorDataList,
   toManualOperatorDataList,

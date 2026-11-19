@@ -10,7 +10,7 @@ export function normalizeMowerAccountUid(value) {
   fail('游戏账号 UID 无效')
 }
 
-/** UC lists accounts in most-recent-import order, also used by My Operators. */
+/** TCL lists accounts in most-recent-import order, also used by My Operators. */
 export function latestMowerSiteAccount(accounts) {
   if (!Array.isArray(accounts)) fail('游戏账号列表格式错误')
   if (!accounts.length) return null
@@ -50,8 +50,8 @@ function mapRows(rows, idField, phaseField) {
   return [...entries.values()]
 }
 
-/** Validate the complete UC account response before interpreting any owned rows. */
-export function mapUcMowerInventory(payload, akUid) {
+/** Validate the complete TCL account response before interpreting any owned rows. */
+export function mapTclMowerInventory(payload, akUid) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload) || !Array.isArray(payload.items)) {
     fail('干员接口返回格式错误')
   }

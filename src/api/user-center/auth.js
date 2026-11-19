@@ -1,7 +1,7 @@
-import ucService from "/src/api/user-center/ucClient.js";
+import tclService from "/src/api/user-center/tclClient.js";
 
 /**
- * 直连登录：登录凭证（密码/邮箱验证码）由浏览器直接提交到 UC，校验通过签发一次性票据 ticket
+ * 直连登录：登录凭证（密码/邮箱验证码）由浏览器直接提交到 TCL，校验通过签发一次性票据 ticket
  * @param {Object} params 登录参数
  * @param {string} params.channel 发起会话凭证（由旧系统后端签发）
  * @param {string} [params.accountType] 登录方式：password=账号密码（默认）/ email=邮箱验证码
@@ -22,14 +22,14 @@ async function directLogin({channel, accountType = "password", account, password
     body.append("code", code);
   }
 
-  return ucService.post("/oauth2/direct-login", body, {
+  return tclService.post("/oauth2/direct-login", body, {
     headers: {"Content-Type": "application/x-www-form-urlencoded"},
   });
 }
 
 /**
- * 直连注册：注册信息（含密码）由浏览器直接提交到 UC，创建用户后签发一次性票据 ticket
- * UC 已统一注册形态，旧 register_type 参数服务端不再声明，前端不再携带
+ * 直连注册：注册信息（含密码）由浏览器直接提交到 TCL，创建用户后签发一次性票据 ticket
+ * TCL 已统一注册形态，旧 register_type 参数服务端不再声明，前端不再携带
  * @param {Object} params 注册参数
  * @param {string} params.channel 发起会话凭证（由旧系统后端签发）
  * @param {string} params.email 邮箱（必填，需通过邮箱验证码验证）
@@ -58,19 +58,19 @@ async function directRegister({channel, email, userName, password, code, nicknam
     body.append("nickname", nickname);
   }
 
-  return ucService.post("/oauth2/direct-register", body, {
+  return tclService.post("/oauth2/direct-register", body, {
     headers: {"Content-Type": "application/x-www-form-urlencoded"},
   });
 }
 
 /**
- * 发送邮箱验证码（UC 主站接口，邮箱验证码注册/登录使用）
+ * 发送邮箱验证码（TCL 主站接口，邮箱验证码注册/登录使用）
  * @param {string} email 目标邮箱
  * @param {string} usage 验证码用途：register=注册 / login=登录 / reset=重置密码
  * @returns {Promise<void>}
  */
 async function sendEmailCode(email, usage) {
-  return ucService.post("/auth/send-code", {email, usage});
+  return tclService.post("/auth/send-code", {email, usage});
 }
 
 export {

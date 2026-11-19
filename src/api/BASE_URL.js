@@ -4,7 +4,7 @@ const useLocal = import.meta.env.VITE_USE_LOCAL === '1';
 // 旧系统后端域名
 const DOMAIN = useLocal ? "http://localhost:10010" : "https://backend.yituliu.cn";
 
-// UC（用户中心）根域名：直连登录时前端凭证直接提交到该域，不经过旧系统后端
-const UC_DOMAIN = useLocal ? "http://localhost:8080" : "https://auth.yituliu.cn";
+// TCL（用户中心）根域名：直连登录时前端凭证直接提交到该域，不经过旧系统后端
+const TCL_DOMAIN = useLocal ? "http://localhost:8080" : "https://auth.yituliu.cn";
 
-export { DOMAIN, UC_DOMAIN };
+export { DOMAIN, TCL_DOMAIN };
