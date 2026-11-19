@@ -8,14 +8,8 @@ import { createMessage } from "/src/utils/message";
 import { copyTextToClipboard } from "/src/utils/copyText.js";
 
 // 新 PAT 只提供干员读取；保留历史令牌的权限展示。
-const READ_SCOPE = "ak-data.read";
+const READ_SCOPE = "arknights-data.read";
 const WRITE_SCOPE = "gama-data.write";
-// 旧权限标签仅用于展示列表中的历史记录。
-const SCOPE_TOKEN_LABELS = {
-  [READ_SCOPE]: "干员只读 PAT",
-  ["gama-data.read"]: "历史只读 Token",
-  [WRITE_SCOPE]: "历史只写 Token",
-};
 // 生成的 Token 有效期（秒），10 年
 const TOKEN_EXPIRES_IN = 315360000;
 
@@ -29,6 +23,10 @@ const accountOptions = computed(() => gameAccounts.value.map((account) => ({
   value: String(account.akUid),
 })));
 const tokenList = ref([]);
+const hasTokenForSelectedAccount = computed(() => selectedGameUid.value !== "" && tokenList.value.some((item) => {
+  const gameUid = item.payload?.game_uid ?? item.payload?.gameUid;
+  return String(gameUid ?? "") === selectedGameUid.value;
+}));
 const generatingScope = ref("");
 const isTokenListLoading = ref(true);
 // 待删除的令牌记录；非空时展示删除确认弹窗
@@ -46,20 +44,6 @@ const scopeDescMap = computed(() => {
 const displayTokenList = computed(() => {
   return [...tokenList.value].sort((left, right) => getTokenSortOrder(left.scope) - getTokenSortOrder(right.scope));
 });
-
-/**
- * 判断某权限是否在用户中心在线权限列表中（用于控制生成按钮可用性）
- * 权限列表尚未加载时不做限制，避免网络异常导致按钮全部不可用
- * @param {string} scope 权限标识
- * @returns {boolean} 是否可生成
- */
-function hasScopePermission(scope) {
-  if (permissionList.value.length === 0) {
-    return true;
-  }
-
-  return permissionList.value.some((permission) => permission.code === scope);
-}
 
 /**
  * 解析 Token 的 scope 为字符串数组
@@ -92,21 +76,6 @@ function parseScope(scope) {
 }
 
 /**
- * 判断是否已存在指定 scope 的未过期 Token
- * @param {string} scope 权限范围标识
- * @returns {boolean} 是否已存在
- */
-function hasTokenForScope(scope) {
-  return tokenList.value.some((item) => {
-    const scopes = parseScope(item.scope);
-    const gameUid = item.payload?.game_uid ?? item.payload?.gameUid;
-    return scopes.some((value) => [scope, "gama-data.read", "all"].includes(value))
-      && String(gameUid ?? "") === selectedGameUid.value
-      && Number(item.expiresInSeconds) > 0;
-  });
-}
-
-/**
  * 获取 scope 对应的展示文案
  * @param {*} scope Token 的 scope
  * @returns {string} 展示文案
@@ -114,24 +83,10 @@ function hasTokenForScope(scope) {
 function getScopeDesc(scope) {
   const scopes = parseScope(scope);
   if (scopes.length === 0) {
-    return scope || "未知权限";
+    return "未知权限";
   }
 
-  return scopes.map((item) => scopeDescMap.value[item] || item).join("、");
-}
-
-/**
- * 获取 Token 类型文案
- * @param {*} scope Token 的 scope
- * @returns {string} 类型文案
- */
-function getTokenType(scope) {
-  const scopes = parseScope(scope);
-  if (scopes.length === 1) {
-    return SCOPE_TOKEN_LABELS[scopes[0]] || "其他权限 Token";
-  }
-
-  return "其他权限 Token";
+  return scopes.map((item) => scopeDescMap.value[item] || "未知权限").join("、");
 }
 
 /**
@@ -154,13 +109,13 @@ function getTokenSortOrder(scope) {
 
 /**
  * 在线拉取平台可配置的授权范围列表（公开接口，无需登录）
- * 用于渲染权限中文描述并按后端实际支持情况控制生成按钮可用性
+ * 仅用于渲染 PAT 列表中的权限描述
  */
 async function fetchPermissions() {
   try {
     permissionList.value = (await listOAuthScopes()) || [];
   } catch (error) {
-    // 权限列表读取失败时降级：不回显描述、不限制生成按钮
+    // 权限列表读取失败时显示未知权限，不影响生成按钮
   }
 }
 
@@ -184,21 +139,23 @@ async function fetchTokens() {
  * 生成第三方 Token
  * 调用后端 PAT 签发接口，固定账号与只读权限，有效期为 10 年
  * 签发成功后重新拉取用户中心列表以展示新令牌
- * @param {string} scope 权限范围标识（ak-data.read）
+ * @param {string} scope 权限范围标识（arknights-data.read）
  * @param {string} tokenType Token 类型文案，用于提示与名称
  */
 async function generateToken(scope, tokenType) {
-  if (!selectedGameUid.value || generatingScope.value) {
-    if (!selectedGameUid.value) createMessage({type: "warn", text: "请先选择游戏账号"});
+  const account = gameAccounts.value.find((item) => String(item.akUid) === selectedGameUid.value);
+  if (!account || generatingScope.value) {
+    if (!account) createMessage({type: "warn", text: "请先选择游戏账号"});
     return;
   }
+  if (isTokenListLoading.value || isAccountsLoading.value || hasTokenForSelectedAccount.value) return;
   generatingScope.value = scope;
   try {
     if (!await ensureTclToken()) throw new Error("未登录");
     await userInfoAPI.generateOpenApiPat(TOKEN_EXPIRES_IN, scope, tokenType, {
-      game_uid: selectedGameUid.value,
+      game_uid: String(account.akUid),
       game_name: "明日方舟",
-      source: "web",
+      source: account.source,
     });
     createMessage({ type: "success", text: `${tokenType}生成成功` });
     await fetchTokens();
@@ -352,11 +309,13 @@ onMounted(async () => {
           variant="elevated"
           text="生成干员只读 PAT"
           :loading="generatingScope === READ_SCOPE"
-          :disabled="isTokenListLoading || isAccountsLoading || !selectedGameUid || generatingScope !== '' || hasTokenForScope(READ_SCOPE) || !hasScopePermission(READ_SCOPE)"
+          :disabled="isTokenListLoading || isAccountsLoading || !selectedGameUid || generatingScope !== '' || hasTokenForSelectedAccount"
           @click="generateToken(READ_SCOPE, '干员数据只读 PAT')"
         ></v-btn>
       </div>
-      <div class="text-caption opacity-70 mb-4">每个游戏账号在本站页面保留一枚有效的只读 PAT，如需重新生成请先撤销原 PAT。</div>
+      <div v-if="!isTokenListLoading && hasTokenForSelectedAccount" class="text-caption opacity-70 mb-4">
+        该游戏账号已有 PAT，请先撤销后重新签发。
+      </div>
 
       <div v-if="isTokenListLoading" class="token-empty">
         <v-progress-circular indeterminate size="22" width="2" color="primary"></v-progress-circular>
@@ -384,7 +343,7 @@ onMounted(async () => {
             </div>
             <div class="token-entry__title">
               <div class="token-entry__title-main">
-                <span>{{ getTokenType(item.scope) }}</span>
+                <span>{{ item.name || "未命名 Token" }}</span>
                 <v-chip
                   size="x-small"
                   variant="tonal"
@@ -398,13 +357,13 @@ onMounted(async () => {
               <div class="token-entry__title-sub">
                 <v-icon icon="mdi-shield-key-outline" size="13"></v-icon>
                 <span>权限：{{ getScopeDesc(item.scope) }}</span>
-                <span
-                  class="token-entry__remain"
-                  :class="{ 'token-entry__remain--expired': isExpired(item) }"
-                >
-                  <v-icon icon="mdi-clock-outline" size="13"></v-icon>
-                  <span>{{ getRemainText(item) }}</span>
-                </span>
+              </div>
+              <div
+                class="token-entry__title-sub"
+                :class="{ 'token-entry__remain--expired': isExpired(item) }"
+              >
+                <v-icon icon="mdi-clock-outline" size="13"></v-icon>
+                <span>{{ getRemainText(item) }}</span>
               </div>
             </div>
             <div class="token-entry__actions">
@@ -443,7 +402,7 @@ onMounted(async () => {
         <v-card-title class="token-delete-title">删除 Token</v-card-title>
         <v-card-text class="token-delete-text">
           删除后该 Token 立即失效且无法恢复，确定要删除
-          「{{ getTokenType(pendingDeleteToken?.scope) }}」吗？
+          「{{ pendingDeleteToken?.name || "未命名 Token" }}」吗？
         </v-card-text>
         <v-card-actions class="token-delete-actions">
           <v-btn variant="text" :disabled="isDeleting" @click="closeDeleteConfirm">取消</v-btn>
@@ -568,15 +527,6 @@ onMounted(async () => {
   align-items: center;
   flex-shrink: 0;
   gap: 2px;
-}
-
-.token-entry__remain {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: 10px;
-  padding-left: 10px;
-  border-left: 1px solid rgba(var(--v-theme-on-surface), 0.2);
 }
 
 .token-entry__remain--expired {
