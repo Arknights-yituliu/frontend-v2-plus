@@ -264,5 +264,33 @@
     "stageType": "YTL_VIRTUAL",
     "start": 1746979200000,
     "end": 4081248000000
+  },
+  "31103": {
+    "stageId": "ytl_20",
+    "stageCode": "SideStory",
+    "itemId": "31103",
+    "itemName": "液化高能气体",
+    "quantity": 0,
+    "times": 0,
+    "apCost": 21,
+    "zoneId": "ytl_virtual",
+    "zoneName": "SS平均掉率",
+    "stageType": "YTL_VIRTUAL",
+    "start": 1746979200000,
+    "end": 4081248000000
+  },
+  "31113": {
+    "stageId": "ytl_21",
+    "stageCode": "SideStory",
+    "itemId": "31113",
+    "itemName": "电极单元",
+    "quantity": 0,
+    "times": 0,
+    "apCost": 21,
+    "zoneId": "ytl_virtual",
+    "zoneName": "SS平均掉率",
+    "stageType": "YTL_VIRTUAL",
+    "start": 1746979200000,
+    "end": 4081248000000
   }
 }
