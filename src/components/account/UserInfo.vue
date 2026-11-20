@@ -6,6 +6,7 @@ import "/src/assets/css/account/home.scss";
 import {userInfo} from '/src/api/user-center/userSession.js'
 import { getOperatorAvatarUrl, getOperatorAvatarStyle } from "/src/utils/arknightsResource.js";
 import LogoutConfirmDialog from "/src/components/account/LogoutConfirmDialog.vue";
+import DeleteAccountDialog from "/src/components/account/DeleteAccountDialog.vue";
 import {operatorTableV2} from '/src/utils/gameData.js'
 const nicknameRules = [
   value => String(value ?? '').trim().length > 0 || '昵称不能为空',
@@ -49,6 +50,7 @@ let displayOrUpdateInfo = ref("online")
 //选中的头像id
 let selectedAvatar = ref('')
 const logoutDialog = ref(false)
+const deleteAccountDialog = ref(false)
 
 //选择头像
 function chooseAvatar(avatar) {
@@ -160,6 +162,13 @@ onMounted(() => {
             @click="logoutDialog = true"
             class="m-8"
         ></v-btn>
+        <v-btn
+            color="error"
+            variant="text"
+            text="注销账户"
+            @click="deleteAccountDialog = true"
+            class="m-8"
+        ></v-btn>
       </div>
     </div>
 
@@ -209,5 +218,6 @@ onMounted(() => {
 
  </v-card-text>
     <LogoutConfirmDialog v-model="logoutDialog"></LogoutConfirmDialog>
+    <DeleteAccountDialog v-model="deleteAccountDialog"></DeleteAccountDialog>
   </v-card>
 </template>

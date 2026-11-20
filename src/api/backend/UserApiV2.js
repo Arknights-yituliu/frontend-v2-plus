@@ -42,4 +42,21 @@ export default {
     })
   },
 
+  /** 向当前账户绑定邮箱发送注销验证码，身份由后端根据登录凭据确定。 */
+  sendAccountDeletionCode() {
+    return request({
+      url: "/auth/user/account/send-delete-code",
+      method: "post",
+    })
+  },
+
+  /** 凭 6 位邮箱验证码永久注销当前账户，保留游戏数据。 */
+  deleteAccount(code) {
+    return request({
+      url: "/auth/user/account/delete",
+      method: "post",
+      data: {code},
+    })
+  },
+
 }
