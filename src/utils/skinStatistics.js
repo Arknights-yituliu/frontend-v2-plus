@@ -31,11 +31,11 @@ const RARITY_COLORS = {
 
 /** 获取渠道分组：静态表里的 obtainApproach 取值很碎，页面上归成 6 类 */
 const CHANNELS = [
-  {key: 'shop', label: '商城上架', color: '#2E9BE6'},
-  {key: 'free', label: '商城零元购', color: '#E2593F'},
-  {key: 'event', label: '活动产出', color: '#A855C8'},
-  {key: 'gameplay', label: '玩法产出', color: '#46A85A'},
-  {key: 'exchange', label: '兑换 · 礼包', color: '#D9A300'},
+  {key: 'shop', label: '商城购买', color: '#2E9BE6'},
+  {key: 'free', label: '商城免费领取', color: '#E2593F'},
+  {key: 'event', label: '活动获取', color: '#A855C8'},
+  {key: 'gameplay', label: '玩法奖励', color: '#46A85A'},
+  {key: 'exchange', label: '礼包兑换', color: '#D9A300'},
   {key: 'other', label: '其他来源', color: '#9AA0A6'},
 ]
 

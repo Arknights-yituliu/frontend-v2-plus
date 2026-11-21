@@ -167,7 +167,7 @@ export const SEO_ROUTES = [
     {
         path: '/survey/skin-statistics',
         title: '时装大数据',
-        description: '明日方舟干员时装持有率大数据，查看每件时装的样本持有率、系列分布与上线年份趋势',
+        description: '查看明日方舟样本账号购买最多的商城与礼包时装，在全部时装总表中查询付费和免费时装的拥有账号数与占样本比例',
         changefreq: 'weekly',
         priority: 0.6,
     },

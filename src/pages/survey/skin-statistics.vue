@@ -15,7 +15,7 @@ import {
 /* ---------------- 常量 ---------------- */
 
 const RANK_METRICS = [
-  {key: 'rate', label: '持有率'},
+  {key: 'own', label: '购买最多'},
   {key: 'releaseTime', label: '最新上线'},
 ]
 
@@ -37,7 +37,7 @@ const accessKey = ref(readAccessKey())
 const keyDraft = ref('')
 const keyPanelOpen = ref(false)
 
-const rankMetric = ref('rate')
+const rankMetric = ref('own')
 const rankLimit = ref(12)
 
 const keyword = ref('')
@@ -70,7 +70,9 @@ const RANK_CHANNELS = ['shop', 'exchange']
 
 const rankPool = computed(() => records.value.filter(item => RANK_CHANNELS.includes(item.channelKey)))
 const rankPoolTotal = computed(() => rankPool.value.length)
-const topSkin = computed(() => (sampleAccounts.value > 0 ? rankPool.value[0] || null : null))
+const rankTitle = computed(() => rankMetric.value === 'releaseTime' ? '最新上线的商城与礼包时装' : '购买最多的时装')
+const topSkin = computed(() => rankPool.value.reduce((top, item) =>
+    item.hasData && (!top || item.own > top.own) ? item : top, null))
 
 const sampleText = computed(() => (sampleAccounts.value > 0 ? formatInt(sampleAccounts.value) : '—'))
 
@@ -299,21 +301,21 @@ function rankValue(item) {
   if (rankMetric.value === 'releaseTime') {
     return item.releaseTime
   }
-  return item.rate
+  return item.own
 }
 
 function rankMain(item) {
   if (rankMetric.value === 'releaseTime') {
     return dateFormat(new Date(item.releaseTime), 'yyyy.MM')
   }
-  return formatPct(item.rate)
+  return `${formatInt(item.own)} 个账号拥有`
 }
 
 function rankSub(item) {
   if (rankMetric.value === 'releaseTime') {
-    return formatPct(item.rate)
+    return `${formatInt(item.own)} 个账号拥有`
   }
-  return `${formatInt(item.own)} 人拥有`
+  return `占样本 ${formatPct(item.rate)}`
 }
 
 /* ---------------- 表格交互 ---------------- */
@@ -379,7 +381,7 @@ function toggleChannel(value) {
 }
 
 function exportCsv() {
-  const header = ['时装', '干员', '星级', '系列', '获取方式', '上线日期', '拥有账号', '持有率']
+  const header = ['时装', '干员', '星级', '系列', '获取方式', '上线日期', '拥有账号数', '占样本比例']
   const rows = filteredRows.value.map(item => [
     item.name,
     item.charName,
@@ -397,7 +399,7 @@ function exportCsv() {
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
-  link.download = `干员时装持有统计_${new Date().toISOString().slice(0, 10)}.csv`
+  link.download = `干员时装总表_${new Date().toISOString().slice(0, 10)}.csv`
   link.click()
   URL.revokeObjectURL(url)
 }
@@ -543,11 +545,11 @@ onUnmounted(() => {
                  @error="onArtError($event, topSkin)">
           </div>
           <figcaption class="sk-heroCard__caption">
-            <span class="sk-heroCard__series">{{ topSkin.seriesName }}</span>
+            <span class="sk-heroCard__series">购买最多的时装 · {{ topSkin.seriesName }}</span>
             <h2 class="sk-heroCard__name">{{ topSkin.name }}</h2>
             <div class="sk-heroCard__line">
               <span>{{ topSkin.charName }} · {{ topSkin.rarity }}★ · {{ topSkin.channelLabel }}</span>
-              <strong>{{ formatPct(topSkin.rate) }}</strong>
+              <strong>{{ formatInt(topSkin.own) }} 个账号拥有</strong>
             </div>
           </figcaption>
         </figure>
@@ -557,8 +559,8 @@ onUnmounted(() => {
             <span class="sk-heroCard__no">Nº 01</span>
           </div>
           <figcaption class="sk-heroCard__caption">
-            <span class="sk-heroCard__series">暂无封面</span>
-            <h2 class="sk-heroCard__name">{{ needKey ? '需要访问密钥' : (loading ? '同步中' : '还没有持有记录') }}</h2>
+            <span class="sk-heroCard__series">购买最多的时装</span>
+            <h2 class="sk-heroCard__name">{{ needKey ? '需要访问密钥' : (loading ? '加载中' : '暂无排行数据') }}</h2>
           </figcaption>
         </div>
       </aside>
@@ -602,8 +604,8 @@ onUnmounted(() => {
       <section class="sk-section">
         <div class="sk-section__head">
           <span class="sk-index">01</span>
-          <h2 class="sk-section__title">持有率排行</h2>
-          <span class="sk-section__note">商城 + 兑换礼包 · {{ formatInt(rankPoolTotal) }} 件</span>
+          <h2 class="sk-section__title">{{ rankTitle }}</h2>
+          <span class="sk-section__note">商城购买与礼包兑换共 {{ formatInt(rankPoolTotal) }} 件 · 购买热度按样本中拥有该时装的账号数估算</span>
           <div class="sk-tabs">
             <button
                 v-for="metric in RANK_METRICS"
@@ -627,7 +629,7 @@ onUnmounted(() => {
           </article>
         </div>
 
-        <div v-else-if="rankRows.length" class="sk-strip" tabindex="0" aria-label="持有率排行，可横向滚动">
+        <div v-else-if="rankRows.length" class="sk-strip" tabindex="0" :aria-label="`${rankTitle}，可横向滚动`">
           <article
               v-for="(row, index) in rankRows"
               :key="row.skinId"
@@ -655,7 +657,7 @@ onUnmounted(() => {
 
         <div v-else class="sk-empty">
           <span class="mdi mdi-inbox-outline"/>
-          <p>本轮还没有商城或兑换礼包渠道的时装持有记录，等统计任务跑过一轮再看。</p>
+          <p>本轮样本中暂无账号拥有商城购买或礼包兑换的时装。</p>
         </div>
       </section>
 
@@ -663,9 +665,9 @@ onUnmounted(() => {
       <section class="sk-section sk-catalog">
         <div class="sk-section__head">
           <span class="sk-index">02</span>
-          <h2 class="sk-section__title">全部时装</h2>
+          <h2 class="sk-section__title">全部时装总表</h2>
           <span class="sk-section__meta">
-            {{ formatInt(records.length) }} 件 · 其中有持有记录 {{ formatInt(statCount) }} 件 · 点击任意一行查看详情
+            含付费与免费时装，共 {{ formatInt(records.length) }} 件，样本账号已拥有其中 {{ formatInt(statCount) }} 件。点击时装查看详情。
           </span>
         </div>
 
@@ -743,10 +745,10 @@ onUnmounted(() => {
               </th>
               <th>获取方式</th>
               <th class="is-num is-sortable" :class="{'is-active': sortKey === 'own'}" @click="toggleSort('own')">
-                拥有 <span class="mdi" :class="sortIcon('own')"/>
+                拥有账号数 <span class="mdi" :class="sortIcon('own')"/>
               </th>
               <th class="is-num is-sortable" :class="{'is-active': sortKey === 'rate'}" @click="toggleSort('rate')">
-                持有率 <span class="mdi" :class="sortIcon('rate')"/>
+                占样本比例 <span class="mdi" :class="sortIcon('rate')"/>
               </th>
             </tr>
             </thead>
@@ -816,16 +818,16 @@ onUnmounted(() => {
       <footer class="sk-notes">
         <button class="sk-notes__toggle" type="button" :aria-expanded="notesOpen" @click="notesOpen = !notesOpen">
           <span class="mdi mdi-information-outline"/>
-          这些数字怎么来的
+          统计说明
           <span class="mdi mdi-chevron-down sk-notes__chev" :class="{'is-open': notesOpen}"/>
         </button>
         <div v-show="notesOpen" class="sk-notes__grid">
-          <p><b>持有率</b>拥有该时装的账号数 ÷ 本轮参与统计的账号总数，尚未被任何账号拥有的时装按 0 计入。</p>
-          <p><b>排行口径</b>持有率排行只收商城上架与兑换礼包的时装（采购中心、特典、设定集兑换码、线下礼包等），活动赠送、集成战略、商城零元购等渠道不参与排名，避免把获取门槛不同的时装放在一起比。</p>
-          <p><b>商城零元购</b>指挂在采购中心、但活动期间标价 0 的时装（目前是芬的十字郡、芙蓉的守岁人）。静态表只记「采购中心」，代码里按时装 ID 单独拎成这一类，不混进商城上架，也不进排行榜。</p>
-          <p><b>样本口径</b>只统计在站内上传过数据的账号，本轮 {{ sampleText }} 个；样本扩容后历史数值会整体回落。</p>
-          <p><b>更新频率</b>服务端每小时 10 分跑一轮全量统计，页面只读结果表，拿到的永远是最近一轮快照。</p>
-          <p><b>系列归并</b>静态表里的系列名带罗马数字分卷（如「珊瑚海岸/VI」），榜单按分卷前的主系列名归并。</p>
+          <p><b>购买最多的时装</b>只比较商城购买和礼包兑换的时装，包括特典和设定集兑换码。榜单按拥有该时装的样本账号数排序，每个账号对同一件时装只计一次。</p>
+          <p><b>全部时装总表</b>收录所有获取渠道，包括活动赠送、玩法奖励和商城免费领取。本轮样本中无人拥有的时装也会列出，拥有账号数记为 0。</p>
+          <p><b>占样本比例</b>拥有该时装的账号数除以本轮样本账号总数。付费与免费时装都按这个口径计算。</p>
+          <p><b>样本范围</b>本轮共统计 {{ sampleText }} 个在站内上传过数据的账号。</p>
+          <p><b>更新频率</b>每小时第 10 分钟重新统计，页面展示最近一轮结果。</p>
+          <p><b>时装系列</b>筛选和计数按主系列合并。例如，「珊瑚海岸/VI」计入「珊瑚海岸」。</p>
         </div>
 
         <div class="sk-notes__api">
@@ -862,7 +864,7 @@ onUnmounted(() => {
           <i :style="{width: pctWidth(drawerSkin.rate)}"></i>
         </div>
         <p class="sk-drawer__meterText">
-          {{ formatInt(drawerSkin.own) }} / {{ formatInt(drawerSkin.totalAccounts) }} 个账号拥有
+          本轮 {{ formatInt(drawerSkin.totalAccounts) }} 个样本账号中，有 {{ formatInt(drawerSkin.own) }} 个拥有这件时装。
         </p>
 
         <dl class="sk-drawer__facts">
