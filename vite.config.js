@@ -111,7 +111,11 @@ export default defineConfig(({ mode }) => ({
             output:{
                 globals:{
                     xlsx:'XLSX'
-                }
+                },
+                // 产物包含大量干员数据 chunk，部署容器 fd 上限低时并发写盘会触发
+                // EMFILE（too many open files），这里压低并发，部署端 ulimit 由
+                // scripts/build.mjs 负责抬升
+                maxParallelFileOps: 4
             }
         },
     },
